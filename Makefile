@@ -12,7 +12,7 @@ testall: ## tinytest::build_install_test()
 testone: ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
 	Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
 
-document: ## devtools::document()
+document: ## altdoc::render_docs()
 	Rscript -e "devtools::document()"
 
 check: ## devtools::check()
@@ -46,5 +46,8 @@ clean: ## Clean the book directory
 	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
 	rm -rf ut 
 
-website: ## altdoc::render_docs(verbose = TRUE)
+setvar: ## Set the environment variable
+	export R_BUILD_DOC=true
+
+website: setvar document install ## altdoc::render_docs(verbose = TRUE)
 	Rscript -e "altdoc::render_docs(verbose = TRUE)"

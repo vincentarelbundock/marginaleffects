@@ -341,7 +341,8 @@ response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, de
 }
 
 \examples{
-\dontrun{
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{\}) # examplesIf}
 # Adjusted Prediction for every row of the original dataset
 mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 pred <- predictions(mod)
@@ -437,7 +438,6 @@ by <- data.frame(
     by = c("4,6", "4,6", "8"),
     group = as.character(c(4, 6, 8)))
 predictions(mod, newdata = "mean", byfun = sum, by = by)
-}
 
 }
 \references{

@@ -105,8 +105,8 @@
 #'
 #' See `?print.marginaleffects` for printing options.
 #'
+#' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' @examples
-#' \dontrun{
 #' library(marginaleffects)
 #'
 #' # Linear model
@@ -221,7 +221,6 @@
 #'     group = c("3", "4", "5"),
 #'     by = c("3,4", "3,4", "5"))
 #' comparisons(mod, type = "probs", by = by)
-#' }
 #'
 #' @export
 comparisons <- function(model,

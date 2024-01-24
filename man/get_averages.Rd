@@ -45,10 +45,10 @@ calculate the mean and the \code{quantile} function to the results of Step 1 to
 obtain the Average Marginal Effect and its associated interval.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{\}) # examplesIf}
 mod <- lm(mpg ~ factor(gear), data = mtcars)
-contr <- comparisons(mod, variables = list(gear = "sequential"))
-tidy(contr)
-}
+avg_comparisons(mod, variables = list(gear = "sequential"))
+
 }
 \keyword{internal}
