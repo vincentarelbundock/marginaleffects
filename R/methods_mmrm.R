@@ -29,7 +29,7 @@ get_vcov.mmrm <- function(model, ...) {
 #' @rdname get_predict
 #' @keywords internal
 #' @export
-get_predict.mmrm <- function(model, newdata = model.frame(data), type = "response", ...) {
+get_predict.mmrm <- function(model, newdata = model$data, type = "response", ...) {
   type <- match.arg(type)
   res <- data.frame(
     rowid = seq_len(nrow(newdata)),
