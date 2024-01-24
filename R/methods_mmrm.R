@@ -31,6 +31,9 @@ get_vcov.mmrm <- function(model, ...) {
 #' @export
 get_predict.mmrm <- function(model, newdata = model$data, type = "response", ...) {
   type <- match.arg(type)
-  res <- predict(model, newdata = newdata, ...)
+  res <- data.table(
+    rowid = seq_len(nrow(newdata)),
+    estimate = predict(model, newdata = newdata, ...)
+  )
   return(res)
 }
