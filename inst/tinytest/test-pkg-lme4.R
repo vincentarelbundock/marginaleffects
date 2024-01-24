@@ -101,7 +101,7 @@ expect_equivalent(w, x$estimate)
 tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_glmer
-mfx <- merge(tidy(slopes(mod)), stata)
+mfx <- merge(avg_slopes(mod), stata)
 expect_slopes(mod)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .01)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .01)
@@ -126,7 +126,7 @@ expect_equivalent(w, y$estimate)
 tmp <- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = tmp)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_lmer
-mfx <- merge(tidy(slopes(mod)), stata)
+mfx <- merge(avg_slopes(mod), stata)
 expect_slopes(mod)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
@@ -165,8 +165,7 @@ expect_inherits(k, "data.frame")
 # bug stay dead: tidy without std.error
 tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
-res <- slopes(mod, vcov = FALSE)
-tid <- tidy(res)
+tid <- avg_slopes(mod, vcov = FALSE)
 expect_inherits(tid, "data.frame")
 expect_equivalent(nrow(tid), 2)
 
@@ -207,7 +206,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-3)
 
 # margins
 mar <- tidy(margins(mod))
-mfx <- tidy(slopes(mod))
+mfx <- avg_slopes(mod)
 expect_equivalent(mfx$estimate, mar$estimate, tolerance = .0001)
 expect_equivalent(mfx$std.error, mar$std.error, tolerance = .0001)
 
