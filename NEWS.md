@@ -12,6 +12,7 @@ Breaking changes:
 New:
 
 * `datagrid(grid_type = "balanced")` creates a balanced grid with all unique values of categorical predictors. This can be used with `predictions()` to compute marginal means as in the `emmeans` package.
+* added support for the `mmrm` package for mixed effects modelling
 
 Deprecation warnings:
 
