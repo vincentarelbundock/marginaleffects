@@ -9,14 +9,13 @@ tol <- .0001
 
 # manual average contrast
 mod <- glm(am ~ vs + mpg, data = mtcars, family = binomial)
-cmp1 <- comparisons(
+cmp1 <- avg_comparisons(
     mod,
     variables = list(vs = 0:1),
     comparison = function(hi, lo) mean(hi - lo))
-cmp2 <- comparisons(
+cmp2 <- avg_comparisons(
     mod,
     variables = list(vs = 0:1))
-cmp2 <- tidy(cmp2)
 expect_equivalent(cmp1$estimate, cmp2$estimate)
 expect_equivalent(cmp1$std.error, cmp2$std.error, tolerance = tol)
 
@@ -46,12 +45,12 @@ acs12 <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/
 acs12$disability <- as.numeric(acs12$disability == "yes")
 mod <- glm(disability ~ gender, data = acs12, family = binomial)
 
-ard_r <- comparisons(mod, comparison = function(hi, lo) lo - hi)
-arr_r <- comparisons(mod, comparison = function(hi, lo) mean(lo) / mean(hi))
+ard_r <- avg_comparisons(mod, comparison = function(hi, lo) lo - hi)
+arr_r <- avg_comparisons(mod, comparison = function(hi, lo) mean(lo) / mean(hi))
 
 cols <- c("estimate", "std.error", "conf.low", "conf.high")
-ard_r <- unlist(tidy(ard_r)[, cols])
-arr_r <- unlist(tidy(arr_r)[, cols])
+ard_r <- unlist(ard_r[, cols])
+arr_r <- unlist(arr_r[, cols])
 
 expect_equivalent(arr_r[1:2], arr_s[1:2], tolerance = tol)
 expect_equivalent(ard_r[1:2], ard_s[1:2], tolerance = tol)
@@ -67,18 +66,13 @@ acs12 <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/
 acs12$disability <- as.numeric(acs12$disability == "yes")
 mod <- glm(disability ~ gender + race + married + age, data = acs12, family = binomial)
 
-ard_r <- comparisons(mod, variables = "gender", comparison = function(hi, lo) lo - hi)
-arr_r <- comparisons(mod, variables = "gender", comparison = function(hi, lo) mean(lo) / mean(hi))
+ard_r <- avg_comparisons(mod, variables = "gender", comparison = function(hi, lo) lo - hi)
+arr_r <- avg_comparisons(mod, variables = "gender", comparison = function(hi, lo) mean(lo) / mean(hi))
 
 cols <- c("estimate", "std.error", "conf.low", "conf.high")
-ard_r <- unlist(tidy(ard_r)[, cols])
-arr_r <- unlist(tidy(arr_r)[, cols])
+ard_r <- unlist(ard_r[, cols])
+arr_r <- unlist(arr_r[, cols])
 
-# # Stata not sure how CIs are built in Stata
-# critical_t <- qt(0.025, df = 1999)
-# arr_r <- tidy(arr_r)
-# arr_r$estimate - abs(critical_t) * arr_r$std.error
-# arr_r$estimate + abs(critical_t) * arr_r$std.error
 
 expect_equivalent(arr_r[1:2], arr_s[1:2], tolerance = tol)
 expect_equivalent(arr_r[1:2], arr_s[1:2], tolerance = tol)
@@ -95,36 +89,30 @@ dat$health <- as.factor(dat$health)
 mod <- glm(health ~ insurance + gender + ethnicity + married + age,
            data = dat, family = binomial)
 
-# # Stata CI: exp(r(lnARR)-invnorm(0.975)*r(lnARR_se))
-# lnarr_r <- comparisons(
-#     mod, variables = "insurance",
-#     comparison = function(hi, lo) log(mean(hi) / mean(lo)))
-# lnarr_r <- tidy(lnarr_r)
-# exp(lnarr_r$estimate - qnorm(0.975) * lnarr_r$std.error)
-# exp(lnarr_r$estimate - qnorm(0.025) * lnarr_r$std.error)
 
-ard_r <- comparisons(
+ard_r <- avg_comparisons(
     mod, variables = "insurance",
     comparison = function(hi, lo) hi - lo)
 
-arr_r <- comparisons(
+arr_r <- avg_comparisons(
     mod, variables = "insurance",
     comparison = function(hi, lo) mean(hi) / mean(lo))
 
 cols <- c("estimate", "std.error", "conf.low", "conf.high")
-ard_r <- unlist(tidy(ard_r)[, cols])
-arr_r <- unlist(tidy(arr_r)[, cols])
+ard_r <- unlist(ard_r[, cols])
+arr_r <- unlist(arr_r[, cols])
 
 expect_equivalent(ard_r[1:2], ard_s[1:2], tolerance = tol)
 expect_equivalent(arr_r[1:2], arr_s[1:2], tolerance = tol)
 
 # Using manual back-transformation
 cols <- c("estimate", "conf.low", "conf.high")
-arr_r <- comparisons(
+arr_r <- avg_comparisons(
     mod,
     variables = "insurance",
-    comparison = function(hi, lo) log(mean(hi) / mean(lo)))
-arr_r <- unlist(tidy(arr_r, transform = exp)[, cols])
+    comparison = function(hi, lo) log(mean(hi) / mean(lo)),
+    transform = exp)
+arr_r <- unlist(arr_r[, cols])
 expect_equivalent(arr_r, arr_s[c(1, 3, 4)], tolerance = tol)
 
 
@@ -134,7 +122,7 @@ expect_equivalent(arr_r, arr_s[c(1, 3, 4)], tolerance = tol)
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
 dat$survived <- as.factor(dat$survived)
 mod <- glm(survived ~ passengerClass + sex, data = dat, family = binomial)
-cmp <- tidy(comparisons(mod, comparison = function(hi, lo) mean(hi - lo)))
+cmp <- avg_comparisons(mod, comparison = function(hi, lo) mean(hi - lo))
 # bug created duplicate estimates
 expect_equivalent(length(unique(cmp$estimate)), nrow(cmp))
 

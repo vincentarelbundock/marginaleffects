@@ -12,9 +12,9 @@ dat <- read.csv(
 # marginaleffects: clm: vs. MASS
 known <- MASS::polr(Sat ~ Infl + Type + Cont, weights = Freq, data = dat, Hess = TRUE)
 
-known <- tidy(suppressMessages(slopes(known, type = "probs")))
+known <- suppressMessages(avg_slopes(known, type = "probs"))
 unknown <- clm(Sat ~ Infl + Type + Cont, weights = Freq, data = dat)
-unknown <- tidy(slopes(unknown))
+unknown <- avg_slopes(unknown)
 expect_equivalent(unknown$estimate, known$estimate, tolerance = .00001)
 expect_equivalent(unknown$std.error, known$std.error, tolerance = .00001)
 
@@ -36,8 +36,7 @@ dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 dat$y <- factor(dat$y)
 dat <- dat
 mod <- ordinal::clm(y ~ x1 + x2, data = dat)
-mfx <- slopes(mod)
-mfx <- tidy(mfx)
+mfx <- avg_slopes(mod)
 mfx <- merge(mfx, stata)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
