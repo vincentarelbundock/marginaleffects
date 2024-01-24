@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.533">
+<meta name="generator" content="quarto-1.4.542">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -1558,7 +1558,7 @@ expdydxavg
 <p>The <code>type</code> argument determines the scale of the predictions used to compute quantities of interest with functions from the <code>marginaleffects</code> package. Admissible values for <code>type</code> depend on the model object. When users specify an incorrect value for <code>type</code>, <code>marginaleffects</code> will raise an informative error with a list of valid <code>type</code> values for the specific model object. The first entry in the list in that error message is the default type.</p>
 <p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models and functions. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type=“invlink(link)”</code> will not always be equivalent to the average of estimates with <code>type=“response”</code>.</p>
 <p>Some of the most common <code>type</code> values are:</p>
-<p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, ev, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob</p>
+<p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, detection, disp, ev, expected, expvalue, fitted, invlink(link), latent, latent_N, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob</p>
 </section>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
@@ -1576,119 +1576,385 @@ expdydxavg
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> mtcars</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>tmp<span class="sc">$</span>am <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(tmp<span class="sc">$</span>am)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> am <span class="sc">+</span> <span class="fu">factor</span>(cyl), tmp)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">cyl =</span> <span class="st">"reference"</span>))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">cyl =</span> <span class="st">"sequential"</span>))</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">cyl =</span> <span class="st">"pairwise"</span>))</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># GLM with different scale types</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(am <span class="sc">~</span> <span class="fu">factor</span>(gear), <span class="at">data =</span> mtcars)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">type =</span> <span class="st">"response"</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">type =</span> <span class="st">"link"</span>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrasts at the mean</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">newdata =</span> <span class="st">"mean"</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrasts between marginal means</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">newdata =</span> <span class="st">"marginalmeans"</span>)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrasts at user-specified values</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span>, <span class="at">gear =</span> tmp<span class="sc">$</span>gear))</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> unique, <span class="at">gear =</span> max))</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> drat <span class="sc">+</span> <span class="fu">factor</span>(cyl) <span class="sc">+</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(m, <span class="at">variables =</span> <span class="st">"hp"</span>, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">FUN_factor =</span> unique, <span class="at">FUN_numeric =</span> median))</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Numeric contrasts</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars)</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="dv">1</span>))</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="dv">5</span>))</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="dv">100</span>)))</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="st">"iqr"</span>))</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="st">"sd"</span>))</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="st">"minmax"</span>))</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co"># using a function to specify a custom difference in one regressor</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> mtcars</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>new_hp <span class="ot">&lt;-</span> <span class="dv">49</span> <span class="sc">*</span> (dat<span class="sc">$</span>hp <span class="sc">-</span> <span class="fu">min</span>(dat<span class="sc">$</span>hp)) <span class="sc">/</span> (<span class="fu">max</span>(dat<span class="sc">$</span>hp) <span class="sc">-</span> <span class="fu">min</span>(dat<span class="sc">$</span>hp)) <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>modlog <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">log</span>(new_hp) <span class="sc">+</span> <span class="fu">factor</span>(cyl), <span class="at">data =</span> dat)</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>fdiff <span class="ot">&lt;-</span> \(x) <span class="fu">data.frame</span>(x, x <span class="sc">+</span> <span class="dv">10</span>)</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(modlog, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">new_hp =</span> fdiff))</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted Risk Ratio: see the contrasts vignette</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(vs <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars, <span class="at">family =</span> binomial)</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">comparison =</span> <span class="st">"lnratioavg"</span>, <span class="at">transform =</span> exp)</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted Risk Ratio: Manual specification of the `comparison`</span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>     mod,</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>     <span class="at">comparison =</span> <span class="cf">function</span>(hi, lo) <span class="fu">log</span>(<span class="fu">mean</span>(hi) <span class="sc">/</span> <span class="fu">mean</span>(lo)),</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>     <span class="at">transform =</span> exp)</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co"># cross contrasts</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">factor</span>(cyl) <span class="sc">*</span> <span class="fu">factor</span>(gear) <span class="sc">+</span> hp, <span class="at">data =</span> mtcars)</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"cyl"</span>, <span class="st">"gear"</span>), <span class="at">cross =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="co"># variable-specific contrasts</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">gear =</span> <span class="st">"sequential"</span>, <span class="at">hp =</span> <span class="dv">10</span>))</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="co"># hypothesis test: is the `hp` marginal effect at the mean equal to the `drat` marginal effect</span></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> drat, <span class="at">data =</span> mtcars)</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    mod,</span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="st">"mean"</span>,</span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> <span class="st">"wt = drat"</span>)</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="co"># same hypothesis test using row indices</span></span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>    mod,</span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="st">"mean"</span>,</span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> <span class="st">"b1 - b2 = 0"</span>)</span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="co"># same hypothesis test using numeric vector of weights</span></span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>    mod,</span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="st">"mean"</span>,</span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="co"># two custom contrasts using a matrix of weights</span></span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>lc <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
-<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">3</span>),</span>
-<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
-<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>    mod,</span>
-<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="st">"mean"</span>,</span>
-<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> lc)</span>
-<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Effect of a 1 group-wise standard deviation change</span></span>
-<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a><span class="co"># First we calculate the SD in each group of `cyl`</span></span>
-<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Second, we use that SD as the treatment size in the `variables` argument</span></span>
-<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> <span class="fu">factor</span>(cyl), mtcars)</span>
-<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span></span>
-<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(cyl) <span class="sc">%&gt;%</span></span>
-<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">hp_sd =</span> <span class="fu">sd</span>(hp))</span>
-<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> tmp<span class="sc">$</span>hp_sd), <span class="at">by =</span> <span class="st">"cyl"</span>)</span>
-<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a><span class="co"># `by` argument</span></span>
-<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">*</span> am <span class="sc">*</span> vs, <span class="at">data =</span> mtcars)</span>
-<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">by =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">*</span> am <span class="sc">*</span> vs, <span class="at">data =</span> mtcars)</span>
-<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="st">"hp"</span>, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"vs"</span>, <span class="st">"am"</span>))</span>
-<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nnet)</span>
-<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">multinom</span>(<span class="fu">factor</span>(gear) <span class="sc">~</span> mpg <span class="sc">+</span> am <span class="sc">*</span> vs, <span class="at">data =</span> mtcars, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>by <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">c</span>(<span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span>),</span>
-<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"3,4"</span>, <span class="st">"3,4"</span>, <span class="st">"5"</span>))</span>
-<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">type =</span> <span class="st">"probs"</span>, <span class="at">by =</span> by)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>tmp<span class="sc">$</span>am <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(tmp<span class="sc">$</span>am)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> am <span class="sc">+</span> <span class="fu">factor</span>(cyl), tmp)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">cyl =</span> <span class="st">"reference"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %
+  cyl    6 - 4    -6.16       1.54 -4.01   &lt;0.001 14.0  -9.17  -3.15
+  cyl    8 - 4   -10.07       1.45 -6.93   &lt;0.001 37.8 -12.91  -7.22
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">cyl =</span> <span class="st">"sequential"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %
+  cyl    6 - 4    -6.16       1.54 -4.01  &lt; 0.001 14.0 -9.17  -3.15
+  cyl    8 - 6    -3.91       1.47 -2.66  0.00781  7.0 -6.79  -1.03
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">cyl =</span> <span class="st">"pairwise"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %
+  cyl    6 - 4    -6.16       1.54 -4.01  &lt; 0.001 14.0  -9.17  -3.15
+  cyl    8 - 4   -10.07       1.45 -6.93  &lt; 0.001 37.8 -12.91  -7.22
+  cyl    8 - 6    -3.91       1.47 -2.66  0.00781  7.0  -6.79  -1.03
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GLM with different scale types</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(am <span class="sc">~</span> <span class="fu">factor</span>(gear), <span class="at">data =</span> mtcars)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">type =</span> <span class="st">"response"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ gear    4 - 3    0.667      0.117 5.68   &lt;0.001 26.1 0.436  0.897
+ gear    5 - 3    1.000      0.157 6.39   &lt;0.001 32.5 0.693  1.307
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">type =</span> <span class="st">"link"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ gear    4 - 3    0.667      0.117 5.68   &lt;0.001 26.1 0.436  0.897
+ gear    5 - 3    1.000      0.157 6.39   &lt;0.001 32.5 0.693  1.307
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  link </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrasts at the mean</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">newdata =</span> <span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % gear
+ gear    4 - 3    0.667      0.117 5.68   &lt;0.001 26.1 0.436  0.897    3
+ gear    5 - 3    1.000      0.157 6.39   &lt;0.001 32.5 0.693  1.307    3
+
+Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, am, gear 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrasts between marginal means</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">newdata =</span> <span class="st">"marginalmeans"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ gear    4 - 3    0.667      0.117 5.68   &lt;0.001 26.1 0.436  0.897
+ gear    5 - 3    1.000      0.157 6.39   &lt;0.001 32.5 0.693  1.307
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrasts at user-specified values</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span>, <span class="at">gear =</span> tmp<span class="sc">$</span>gear))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast gear Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ gear    4 - 3    3    0.667      0.117 5.68   &lt;0.001 26.1 0.436  0.897
+ gear    4 - 3    4    0.667      0.117 5.68   &lt;0.001 26.1 0.436  0.897
+ gear    4 - 3    5    0.667      0.117 5.68   &lt;0.001 26.1 0.436  0.897
+ gear    5 - 3    3    1.000      0.157 6.39   &lt;0.001 32.5 0.693  1.307
+ gear    5 - 3    4    1.000      0.157 6.39   &lt;0.001 32.5 0.693  1.307
+ gear    5 - 3    5    1.000      0.157 6.39   &lt;0.001 32.5 0.693  1.307
+
+Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, gear, predicted_lo, predicted_hi, predicted 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> unique, <span class="at">gear =</span> max))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast gear Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ gear    4 - 3    5    0.667      0.117 5.68   &lt;0.001 26.1 0.436  0.897
+ gear    4 - 3    5    0.667      0.117 5.68   &lt;0.001 26.1 0.436  0.897
+ gear    5 - 3    5    1.000      0.157 6.39   &lt;0.001 32.5 0.693  1.307
+ gear    5 - 3    5    1.000      0.157 6.39   &lt;0.001 32.5 0.693  1.307
+
+Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, gear, predicted_lo, predicted_hi, predicted 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> drat <span class="sc">+</span> <span class="fu">factor</span>(cyl) <span class="sc">+</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(m, <span class="at">variables =</span> <span class="st">"hp"</span>, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">FUN_factor =</span> unique, <span class="at">FUN_numeric =</span> median))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error     z Pr(&gt;|z|)   S   2.5 % 97.5 %  hp drat
+   hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
+   hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
+   hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
+   hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
+   hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
+   hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
+ cyl am
+   6  1
+   6  0
+   4  1
+   4  0
+   8  1
+   8  0
+
+Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, hp, drat, cyl, am 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Numeric contrasts</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %  97.5 %
+   hp       +1  -0.0682     0.0101 -6.74   &lt;0.001 35.9 -0.0881 -0.0484
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %
+   hp       +5   -0.341     0.0506 -6.74   &lt;0.001 35.9 -0.44 -0.242
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="dv">100</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %
+   hp 100 - 90   -0.682      0.101 -6.74   &lt;0.001 35.9 -0.881 -0.484
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="st">"iqr"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %
+   hp  Q3 - Q1     -5.7      0.845 -6.74   &lt;0.001 35.9 -7.35  -4.04
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="st">"sd"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term                Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 %
+   hp (x + sd/2) - (x - sd/2)    -4.68      0.694 -6.74   &lt;0.001 35.9 -6.04
+ 97.5 %
+  -3.32
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="st">"minmax"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %
+   hp Max - Min    -19.3       2.86 -6.74   &lt;0.001 35.9 -24.9  -13.7
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using a function to specify a custom difference in one regressor</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>new_hp <span class="ot">&lt;-</span> <span class="dv">49</span> <span class="sc">*</span> (dat<span class="sc">$</span>hp <span class="sc">-</span> <span class="fu">min</span>(dat<span class="sc">$</span>hp)) <span class="sc">/</span> (<span class="fu">max</span>(dat<span class="sc">$</span>hp) <span class="sc">-</span> <span class="fu">min</span>(dat<span class="sc">$</span>hp)) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>modlog <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">log</span>(new_hp) <span class="sc">+</span> <span class="fu">factor</span>(cyl), <span class="at">data =</span> dat)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>fdiff <span class="ot">&lt;-</span> \(x) <span class="fu">data.frame</span>(x, x <span class="sc">+</span> <span class="dv">10</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(modlog, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">new_hp =</span> fdiff))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   Term Contrast Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %
+ new_hp   custom    -1.97      0.711 -2.78  0.00547 7.5 -3.37 -0.581
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted Risk Ratio: see the contrasts vignette</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(vs <span class="sc">~</span> mpg, <span class="at">data =</span> mtcars, <span class="at">family =</span> binomial)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">comparison =</span> <span class="st">"lnratioavg"</span>, <span class="at">transform =</span> exp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Pr(&gt;|z|)    S 2.5 % 97.5 %
+  mpg mean(+1)     1.13   &lt;0.001 31.9  1.09   1.17
+
+Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted Risk Ratio: Manual specification of the `comparison`</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>     mod,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">comparison =</span> <span class="cf">function</span>(hi, lo) <span class="fu">log</span>(<span class="fu">mean</span>(hi) <span class="sc">/</span> <span class="fu">mean</span>(lo)),</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">transform =</span> exp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Pr(&gt;|z|)    S 2.5 % 97.5 %
+  mpg       +1     1.13   &lt;0.001 31.9  1.09   1.17
+
+Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cross contrasts</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">factor</span>(cyl) <span class="sc">*</span> <span class="fu">factor</span>(gear) <span class="sc">+</span> hp, <span class="at">data =</span> mtcars)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"cyl"</span>, <span class="st">"gear"</span>), <span class="at">cross =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 % C: cyl C: gear
+   -0.631       3.40 -0.185    0.853 0.2 -7.30   6.04  6 - 4   4 - 3
+    2.678       4.62  0.580    0.562 0.8 -6.37  11.73  6 - 4   5 - 3
+    3.348       6.43  0.521    0.602 0.7 -9.25  15.95  8 - 4   4 - 3
+    5.525       5.87  0.942    0.346 1.5 -5.98  17.03  8 - 4   5 - 3
+
+Columns: term, contrast_cyl, contrast_gear, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variable-specific contrasts</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">gear =</span> <span class="st">"sequential"</span>, <span class="at">hp =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 %
+ gear    4 - 3    3.409      2.587  1.318   0.1876 2.4 -1.66  8.481
+ gear    5 - 4    2.628      2.747  0.957   0.3387 1.6 -2.76  8.011
+ hp      +10     -0.574      0.225 -2.552   0.0107 6.5 -1.02 -0.133
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hypothesis test: is the `hp` marginal effect at the mean equal to the `drat` marginal effect</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> drat, <span class="at">data =</span> mtcars)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="st">"mean"</span>,</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> <span class="st">"wt = drat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Term Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ wt=drat    -6.23       1.05 -5.92   &lt;0.001 28.2 -8.29  -4.16
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same hypothesis test using row indices</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="st">"mean"</span>,</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> <span class="st">"b1 - b2 = 0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ b1-b2=0     6.23       1.05 5.92   &lt;0.001 28.2  4.16   8.29
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same hypothesis test using numeric vector of weights</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="st">"mean"</span>,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ custom     6.23       1.05 5.92   &lt;0.001 28.2  4.16   8.29
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># two custom contrasts using a matrix of weights</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>lc <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="st">"mean"</span>,</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> lc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %
+ custom     6.23       1.05  5.92   &lt;0.001 28.2   4.16   8.29
+ custom   -11.46       4.92 -2.33   0.0197  5.7 -21.10  -1.83
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Effect of a 1 group-wise standard deviation change</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co"># First we calculate the SD in each group of `cyl`</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Second, we use that SD as the treatment size in the `variables` argument</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> <span class="fu">factor</span>(cyl), mtcars)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(cyl) <span class="sc">%&gt;%</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">hp_sd =</span> <span class="fu">sd</span>(hp))</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, </span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="cf">function</span>(x) <span class="fu">data.frame</span>(x, x <span class="sc">+</span> tmp<span class="sc">$</span>hp_sd)),</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"cyl"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast cyl Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %
+   hp   custom   4   -0.678      0.435 -1.56    0.119 3.1 -1.53  0.174
+   hp   custom   6   -1.122      0.719 -1.56    0.119 3.1 -2.53  0.288
+   hp   custom   8   -0.818      0.525 -1.56    0.119 3.1 -1.85  0.210
+
+Columns: term, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `by` argument</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">*</span> am <span class="sc">*</span> vs, <span class="at">data =</span> mtcars)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">by =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error      z Pr(&gt;|z|)    S  2.5 %  97.5 %
+   am    1 - 0   4.6980     1.0601  4.432   &lt;0.001 16.7  2.620  6.7758
+   hp    +1     -0.0688     0.0182 -3.780   &lt;0.001 12.6 -0.104 -0.0331
+   vs    1 - 0  -0.2943     2.3379 -0.126      0.9  0.2 -4.877  4.2879
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">*</span> am <span class="sc">*</span> vs, <span class="at">data =</span> mtcars)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="st">"hp"</span>, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"vs"</span>, <span class="st">"am"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast vs am Estimate Std. Error     z Pr(&gt;|z|)   S   2.5 %   97.5 %
+   hp mean(+1)  0  0  -0.0422     0.0248 -1.70  0.08879 3.5 -0.0907  0.00639
+   hp mean(+1)  0  1  -0.0368     0.0124 -2.97  0.00297 8.4 -0.0612 -0.01254
+   hp mean(+1)  1  0  -0.0994     0.0534 -1.86  0.06289 4.0 -0.2042  0.00534
+   hp mean(+1)  1  1  -0.1112     0.0463 -2.40  0.01645 5.9 -0.2020 -0.02034
+
+Columns: term, contrast, vs, am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nnet)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">multinom</span>(<span class="fu">factor</span>(gear) <span class="sc">~</span> mpg <span class="sc">+</span> am <span class="sc">*</span> vs, <span class="at">data =</span> mtcars, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>by <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">c</span>(<span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span>),</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"3,4"</span>, <span class="st">"3,4"</span>, <span class="st">"5"</span>))</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">type =</span> <span class="st">"probs"</span>, <span class="at">by =</span> by)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term  By  Estimate Std. Error     z Pr(&gt;|z|)   S   2.5 %  97.5 %
+  am  3,4 -0.222793    0.07959 -2.80  0.00512 7.6 -0.3788 -0.0668
+  mpg 3,4  0.000463    0.00579  0.08  0.93620 0.1 -0.0109  0.0118
+  vs  3,4  0.102102    0.07335  1.39  0.16394 2.6 -0.0417  0.2459
+  am  5    0.445585    0.15918  2.80  0.00512 7.6  0.1336  0.7576
+  mpg 5   -0.000927    0.01158 -0.08  0.93620 0.1 -0.0236  0.0218
+  vs  5   -0.204204    0.14671 -1.39  0.16394 2.6 -0.4917  0.0833
+
+Columns: term, by, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  probs </code></pre>
+</div>
 </div>
 
 

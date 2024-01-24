@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.533">
+<meta name="generator" content="quarto-1.4.542">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -732,21 +732,21 @@ Type:  response </code></pre>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (96, 9)
-┌──────┬──────────┬──────────┬───────────┬───┬──────────┬───────┬───────┬───────┐
-│ Term ┆ Contrast ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S     ┆ 2.5%  ┆ 97.5% │
-│ ---  ┆ ---      ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---   ┆ ---   ┆ ---   │
-│ str  ┆ str      ┆ str      ┆ str       ┆   ┆ str      ┆ str   ┆ str   ┆ str   │
-╞══════╪══════════╪══════════╪═══════════╪═══╪══════════╪═══════╪═══════╪═══════╡
-│ am   ┆ 1 - 0    ┆ 0.325    ┆ 1.68      ┆ … ┆ 0.847    ┆ 0.24  ┆ -2.97 ┆ 3.62  │
-│ am   ┆ 1 - 0    ┆ -0.544   ┆ 1.57      ┆ … ┆ 0.729    ┆ 0.457 ┆ -3.62 ┆ 2.53  │
-│ am   ┆ 1 - 0    ┆ 1.2      ┆ 2.35      ┆ … ┆ 0.609    ┆ 0.715 ┆ -3.4  ┆ 5.8   │
-│ am   ┆ 1 - 0    ┆ -1.7     ┆ 1.87      ┆ … ┆ 0.362    ┆ 1.47  ┆ -5.36 ┆ 1.96  │
-│ …    ┆ …        ┆ …        ┆ …         ┆ … ┆ …        ┆ …     ┆ …     ┆ …     │
-│ wt   ┆ +1       ┆ -1.65    ┆ 3.74      ┆ … ┆ 0.659    ┆ 0.602 ┆ -8.99 ┆ 5.68  │
-│ wt   ┆ +1       ┆ -4.52    ┆ 2.47      ┆ … ┆ 0.0672   ┆ 3.89  ┆ -9.36 ┆ 0.321 │
-│ wt   ┆ +1       ┆ 0.635    ┆ 4.89      ┆ … ┆ 0.897    ┆ 0.157 ┆ -8.95 ┆ 10.2  │
-│ wt   ┆ +1       ┆ -6.65    ┆ 1.86      ┆ … ┆ 0.000355 ┆ 11.5  ┆ -10.3 ┆ -3    │
-└──────┴──────────┴──────────┴───────────┴───┴──────────┴───────┴───────┴───────┘
+┌──────┬──────────────┬──────────┬───────────┬───┬──────────┬───────┬───────┬───────┐
+│ Term ┆ Contrast     ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S     ┆ 2.5%  ┆ 97.5% │
+│ ---  ┆ ---          ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---   ┆ ---   ┆ ---   │
+│ str  ┆ str          ┆ str      ┆ str       ┆   ┆ str      ┆ str   ┆ str   ┆ str   │
+╞══════╪══════════════╪══════════╪═══════════╪═══╪══════════╪═══════╪═══════╪═══════╡
+│ am   ┆ True - False ┆ 0.325    ┆ 1.68      ┆ … ┆ 0.847    ┆ 0.24  ┆ -2.97 ┆ 3.62  │
+│ am   ┆ True - False ┆ -0.544   ┆ 1.57      ┆ … ┆ 0.729    ┆ 0.457 ┆ -3.62 ┆ 2.53  │
+│ am   ┆ True - False ┆ 1.2      ┆ 2.35      ┆ … ┆ 0.609    ┆ 0.715 ┆ -3.4  ┆ 5.8   │
+│ am   ┆ True - False ┆ -1.7     ┆ 1.87      ┆ … ┆ 0.362    ┆ 1.47  ┆ -5.36 ┆ 1.96  │
+│ …    ┆ …            ┆ …        ┆ …         ┆ … ┆ …        ┆ …     ┆ …     ┆ …     │
+│ wt   ┆ +1           ┆ -1.65    ┆ 3.74      ┆ … ┆ 0.659    ┆ 0.602 ┆ -8.99 ┆ 5.68  │
+│ wt   ┆ +1           ┆ -4.52    ┆ 2.47      ┆ … ┆ 0.0672   ┆ 3.89  ┆ -9.36 ┆ 0.321 │
+│ wt   ┆ +1           ┆ 0.635    ┆ 4.89      ┆ … ┆ 0.897    ┆ 0.157 ┆ -8.95 ┆ 10.2  │
+│ wt   ┆ +1           ┆ -6.65    ┆ 1.86      ┆ … ┆ 0.000355 ┆ 11.5  ┆ -10.3 ┆ -3    │
+└──────┴──────────────┴──────────┴───────────┴───┴──────────┴───────┴───────┴───────┘
 
 Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
 </div>
@@ -808,7 +808,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 </div>
 </div>
 </div>
-<p>What happens to the predicted outcome when the <code>wt</code> variable increases by 1 standard deviation about its mean?</p>
+<p>What happens to the predicted outcome when the <code>hp</code> variable increases by 1 standard deviation about its mean?</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Python</a></li></ul>
 <div class="tab-content" data-group="language">
@@ -949,21 +949,21 @@ Type:  response </code></pre>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mfx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (96, 9)
-┌──────┬──────────┬───────────┬───────────┬───┬──────────┬───────┬───────────┬──────────┐
-│ Term ┆ Contrast ┆ Estimate  ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S     ┆ 2.5%      ┆ 97.5%    │
-│ ---  ┆ ---      ┆ ---       ┆ ---       ┆   ┆ ---      ┆ ---   ┆ ---       ┆ ---      │
-│ str  ┆ str      ┆ str       ┆ str       ┆   ┆ str      ┆ str   ┆ str       ┆ str      │
-╞══════╪══════════╪═══════════╪═══════════╪═══╪══════════╪═══════╪═══════════╪══════════╡
-│ am   ┆ dY/dX    ┆ 3.25e+03  ┆ 1.68e+04  ┆ … ┆ 0.847    ┆ 0.24  ┆ -2.97e+04 ┆ 3.62e+04 │
-│ am   ┆ dY/dX    ┆ -5.44e+03 ┆ 1.57e+04  ┆ … ┆ 0.729    ┆ 0.457 ┆ -3.62e+04 ┆ 2.53e+04 │
-│ am   ┆ dY/dX    ┆ 1.2e+04   ┆ 2.35e+04  ┆ … ┆ 0.609    ┆ 0.715 ┆ -3.4e+04  ┆ 5.8e+04  │
-│ am   ┆ dY/dX    ┆ -1.7e+04  ┆ 1.87e+04  ┆ … ┆ 0.362    ┆ 1.47  ┆ -5.36e+04 ┆ 1.96e+04 │
-│ …    ┆ …        ┆ …         ┆ …         ┆ … ┆ …        ┆ …     ┆ …         ┆ …        │
-│ wt   ┆ dY/dX    ┆ -1.65     ┆ 3.74      ┆ … ┆ 0.659    ┆ 0.602 ┆ -8.99     ┆ 5.68     │
-│ wt   ┆ dY/dX    ┆ -4.52     ┆ 2.47      ┆ … ┆ 0.0669   ┆ 3.9   ┆ -9.35     ┆ 0.315    │
-│ wt   ┆ dY/dX    ┆ 0.635     ┆ 4.88      ┆ … ┆ 0.897    ┆ 0.158 ┆ -8.94     ┆ 10.2     │
-│ wt   ┆ dY/dX    ┆ -6.65     ┆ 1.86      ┆ … ┆ 0.000356 ┆ 11.5  ┆ -10.3     ┆ -3       │
-└──────┴──────────┴───────────┴───────────┴───┴──────────┴───────┴───────────┴──────────┘
+┌──────┬──────────────┬──────────┬───────────┬───┬──────────┬───────┬───────┬───────┐
+│ Term ┆ Contrast     ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S     ┆ 2.5%  ┆ 97.5% │
+│ ---  ┆ ---          ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---   ┆ ---   ┆ ---   │
+│ str  ┆ str          ┆ str      ┆ str       ┆   ┆ str      ┆ str   ┆ str   ┆ str   │
+╞══════╪══════════════╪══════════╪═══════════╪═══╪══════════╪═══════╪═══════╪═══════╡
+│ am   ┆ True - False ┆ 0.325    ┆ 1.68      ┆ … ┆ 0.847    ┆ 0.24  ┆ -2.97 ┆ 3.62  │
+│ am   ┆ True - False ┆ -0.544   ┆ 1.57      ┆ … ┆ 0.729    ┆ 0.457 ┆ -3.62 ┆ 2.53  │
+│ am   ┆ True - False ┆ 1.2      ┆ 2.35      ┆ … ┆ 0.609    ┆ 0.715 ┆ -3.4  ┆ 5.8   │
+│ am   ┆ True - False ┆ -1.7     ┆ 1.87      ┆ … ┆ 0.362    ┆ 1.47  ┆ -5.36 ┆ 1.96  │
+│ …    ┆ …            ┆ …        ┆ …         ┆ … ┆ …        ┆ …     ┆ …     ┆ …     │
+│ wt   ┆ dY/dX        ┆ -1.65    ┆ 3.74      ┆ … ┆ 0.659    ┆ 0.602 ┆ -8.99 ┆ 5.68  │
+│ wt   ┆ dY/dX        ┆ -4.52    ┆ 2.47      ┆ … ┆ 0.0677   ┆ 3.89  ┆ -9.37 ┆ 0.329 │
+│ wt   ┆ dY/dX        ┆ 0.635    ┆ 4.88      ┆ … ┆ 0.897    ┆ 0.158 ┆ -8.94 ┆ 10.2  │
+│ wt   ┆ dY/dX        ┆ -6.65    ┆ 1.86      ┆ … ┆ 0.000353 ┆ 11.5  ┆ -10.3 ┆ -3    │
+└──────┴──────────────┴──────────┴───────────┴───┴──────────┴───────┴───────┴───────┘
 
 Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
 </div>
@@ -1007,13 +1007,13 @@ Type:  response </code></pre>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (1, 7)
-┌──────────┬───────────┬─────┬─────────┬─────┬──────┬───────┐
-│ Estimate ┆ Std.Error ┆ z   ┆ P(&gt;|z|) ┆ S   ┆ 2.5% ┆ 97.5% │
-│ ---      ┆ ---       ┆ --- ┆ ---     ┆ --- ┆ ---  ┆ ---   │
-│ str      ┆ str       ┆ str ┆ str     ┆ str ┆ str  ┆ str   │
-╞══════════╪═══════════╪═════╪═════════╪═════╪══════╪═══════╡
-│ 18.4     ┆ 0.68      ┆ 27  ┆ 0       ┆ inf ┆ 17   ┆ 19.7  │
-└──────────┴───────────┴─────┴─────────┴─────┴──────┴───────┘
+┌──────────┬───────────┬──────┬─────────┬─────┬──────┬───────┐
+│ Estimate ┆ Std.Error ┆ z    ┆ P(&gt;|z|) ┆ S   ┆ 2.5% ┆ 97.5% │
+│ ---      ┆ ---       ┆ ---  ┆ ---     ┆ --- ┆ ---  ┆ ---   │
+│ str      ┆ str       ┆ str  ┆ str     ┆ str ┆ str  ┆ str   │
+╞══════════╪═══════════╪══════╪═════════╪═════╪══════╪═══════╡
+│ 17.3     ┆ 0.875     ┆ 19.8 ┆ 0       ┆ inf ┆ 15.6 ┆ 19    │
+└──────────┴───────────┴──────┴─────────┴─────┴──────┴───────┘
 
 Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
 </div>
@@ -1021,13 +1021,13 @@ Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (1, 7)
-┌──────────┬───────────┬─────┬─────────┬─────┬──────┬───────┐
-│ Estimate ┆ Std.Error ┆ z   ┆ P(&gt;|z|) ┆ S   ┆ 2.5% ┆ 97.5% │
-│ ---      ┆ ---       ┆ --- ┆ ---     ┆ --- ┆ ---  ┆ ---   │
-│ str      ┆ str       ┆ str ┆ str     ┆ str ┆ str  ┆ str   │
-╞══════════╪═══════════╪═════╪═════════╪═════╪══════╪═══════╡
-│ 19.4     ┆ 0.646     ┆ 30  ┆ 0       ┆ inf ┆ 18.1 ┆ 20.6  │
-└──────────┴───────────┴─────┴─────────┴─────┴──────┴───────┘
+┌──────────┬───────────┬──────┬─────────┬─────┬──────┬───────┐
+│ Estimate ┆ Std.Error ┆ z    ┆ P(&gt;|z|) ┆ S   ┆ 2.5% ┆ 97.5% │
+│ ---      ┆ ---       ┆ ---  ┆ ---     ┆ --- ┆ ---  ┆ ---   │
+│ str      ┆ str       ┆ str  ┆ str     ┆ str ┆ str  ┆ str   │
+╞══════════╪═══════════╪══════╪═════════╪═════╪══════╪═══════╡
+│ 17.3     ┆ 0.766     ┆ 22.5 ┆ 0       ┆ inf ┆ 15.8 ┆ 18.8  │
+└──────────┴───────────┴──────┴─────────┴─────┴──────┴───────┘
 
 Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
 </div>
@@ -1069,16 +1069,16 @@ Type:  response </code></pre>
 <span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (4, 9)
-┌─────┬──────┬──────────┬───────────┬───┬──────────┬──────┬──────┬───────┐
-│ am  ┆ wt   ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5% ┆ 97.5% │
-│ --- ┆ ---  ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---  ┆ ---   │
-│ str ┆ str  ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str  ┆ str   │
-╞═════╪══════╪══════════╪═══════════╪═══╪══════════╪══════╪══════╪═══════╡
-│ 0   ┆ 1.51 ┆ 23.3     ┆ 2.71      ┆ … ┆ 0        ┆ inf  ┆ 18   ┆ 28.6  │
-│ 0   ┆ 5.42 ┆ 12.8     ┆ 2.98      ┆ … ┆ 1.75e-05 ┆ 15.8 ┆ 6.96 ┆ 18.6  │
-│ 1   ┆ 1.51 ┆ 27.1     ┆ 2.85      ┆ … ┆ 0        ┆ inf  ┆ 21.6 ┆ 32.7  │
-│ 1   ┆ 5.42 ┆ 5.9      ┆ 5.81      ┆ … ┆ 0.31     ┆ 1.69 ┆ -5.5 ┆ 17.3  │
-└─────┴──────┴──────────┴───────────┴───┴──────────┴──────┴──────┴───────┘
+┌─────┬──────┬──────────┬───────────┬───┬──────────┬──────┬───────┬───────┐
+│ am  ┆ wt   ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5%  ┆ 97.5% │
+│ --- ┆ ---  ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---   ┆ ---   │
+│ str ┆ str  ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str   ┆ str   │
+╞═════╪══════╪══════════╪═══════════╪═══╪══════════╪══════╪═══════╪═══════╡
+│ 0   ┆ 1.51 ┆ 25.7     ┆ 3.54      ┆ … ┆ 3.82e-13 ┆ 41.3 ┆ 18.8  ┆ 32.7  │
+│ 0   ┆ 5.42 ┆ 13.2     ┆ 4.44      ┆ … ┆ 0.00302  ┆ 8.37 ┆ 4.47  ┆ 21.9  │
+│ 1   ┆ 1.51 ┆ 29.8     ┆ 1.8       ┆ … ┆ 0        ┆ inf  ┆ 26.3  ┆ 33.3  │
+│ 1   ┆ 5.42 ┆ 3.94     ┆ 5.72      ┆ … ┆ 0.491    ┆ 1.03 ┆ -7.28 ┆ 15.2  │
+└─────┴──────┴──────────┴───────────┴───┴──────────┴──────┴───────┴───────┘
 
 Columns: am, wt, rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, rownames, mpg, cyl, disp, hp, drat, qsec, vs, gear, carb</code></pre>
 </div>
@@ -1116,14 +1116,14 @@ Type:  response </code></pre>
 <span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (2, 10)
-┌─────┬──────┬──────────┬──────────┬───┬─────────┬──────┬───────┬───────┐
-│ am  ┆ Term ┆ Contrast ┆ Estimate ┆ … ┆ P(&gt;|z|) ┆ S    ┆ 2.5%  ┆ 97.5% │
-│ --- ┆ ---  ┆ ---      ┆ ---      ┆   ┆ ---     ┆ ---  ┆ ---   ┆ ---   │
-│ str ┆ str  ┆ str      ┆ str      ┆   ┆ str     ┆ str  ┆ str   ┆ str   │
-╞═════╪══════╪══════════╪══════════╪═══╪═════════╪══════╪═══════╪═══════╡
-│ 0   ┆ wt   ┆ dY/dX    ┆ -2.68    ┆ … ┆ 0.0597  ┆ 4.07 ┆ -5.46 ┆ 0.109 │
-│ 1   ┆ wt   ┆ dY/dX    ┆ -5.43    ┆ … ┆ 0.0116  ┆ 6.43 ┆ -9.65 ┆ -1.21 │
-└─────┴──────┴──────────┴──────────┴───┴─────────┴──────┴───────┴───────┘
+┌─────┬──────┬──────────┬──────────┬───┬─────────┬──────┬───────┬────────┐
+│ am  ┆ Term ┆ Contrast ┆ Estimate ┆ … ┆ P(&gt;|z|) ┆ S    ┆ 2.5%  ┆ 97.5%  │
+│ --- ┆ ---  ┆ ---      ┆ ---      ┆   ┆ ---     ┆ ---  ┆ ---   ┆ ---    │
+│ str ┆ str  ┆ str      ┆ str      ┆   ┆ str     ┆ str  ┆ str   ┆ str    │
+╞═════╪══════╪══════════╪══════════╪═══╪═════════╪══════╪═══════╪════════╡
+│ 0   ┆ wt   ┆ dY/dX    ┆ -2.19    ┆ … ┆ 0.0309  ┆ 5.02 ┆ -4.19 ┆ -0.202 │
+│ 1   ┆ wt   ┆ dY/dX    ┆ -4.36    ┆ … ┆ 0.0853  ┆ 3.55 ┆ -9.32 ┆ 0.606  │
+└─────┴──────┴──────────┴──────────┴───┴─────────┴──────┴───────┴────────┘
 
 Columns: am, rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, gear, carb</code></pre>
 </div>
@@ -1164,7 +1164,9 @@ Columns: am, rowid, term, contrast, estimate, std_error, statistic, p_value, s_v
 <span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>plot_predictions(mod, condition <span class="op">=</span> cond)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;Figure Size: (640 x 480)&gt;</code></pre>
+<pre><code>&lt;Figure Size: (640 x 480)&gt;
+
+/home/vincent/.local/lib/python3.10/site-packages/matplotlib/projections/__init__.py:63: UserWarning: Unable to import Axes3D. This may be due to multiple versions of Matplotlib being installed (e.g. as a system package and as a pip package). As a result, the 3D projection is not available.</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
@@ -1272,7 +1274,7 @@ Columns: estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</
 <div class="cell">
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>np.mean(mod.predict())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>20.09062499999998</code></pre>
+<pre><code>20.090624999999992</code></pre>
 </div>
 </div>
 </div>
@@ -1306,18 +1308,18 @@ Type:  response </code></pre>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (6, 10)
-┌─────┬──────┬───────────────────┬──────────┬───┬─────────┬───────┬─────────┬──────────┐
-│ am  ┆ Term ┆ Contrast          ┆ Estimate ┆ … ┆ P(&gt;|z|) ┆ S     ┆ 2.5%    ┆ 97.5%    │
-│ --- ┆ ---  ┆ ---               ┆ ---      ┆   ┆ ---     ┆ ---   ┆ ---     ┆ ---      │
-│ str ┆ str  ┆ str               ┆ str      ┆   ┆ str     ┆ str   ┆ str     ┆ str      │
-╞═════╪══════╪═══════════════════╪══════════╪═══╪═════════╪═══════╪═════════╪══════════╡
-│ 0   ┆ am   ┆ mean(1) - mean(0) ┆ -1.38    ┆ … ┆ 0.584   ┆ 0.776 ┆ -6.33   ┆ 3.57     │
-│ 1   ┆ am   ┆ mean(1) - mean(0) ┆ 1.9      ┆ … ┆ 0.41    ┆ 1.29  ┆ -2.62   ┆ 6.43     │
-│ 0   ┆ hp   ┆ +1                ┆ -0.0343  ┆ … ┆ 0.0308  ┆ 5.02  ┆ -0.0654 ┆ -0.00317 │
-│ 1   ┆ hp   ┆ +1                ┆ -0.0436  ┆ … ┆ 0.0404  ┆ 4.63  ┆ -0.0854 ┆ -0.00191 │
-│ 0   ┆ wt   ┆ +1                ┆ -2.48    ┆ … ┆ 0.0441  ┆ 4.5   ┆ -4.89   ┆ -0.066   │
-│ 1   ┆ wt   ┆ +1                ┆ -6.07    ┆ … ┆ 0.00212 ┆ 8.88  ┆ -9.95   ┆ -2.2     │
-└─────┴──────┴───────────────────┴──────────┴───┴─────────┴───────┴─────────┴──────────┘
+┌─────┬──────┬──────────────────────────┬──────────┬───┬─────────┬───────┬─────────┬──────────┐
+│ am  ┆ Term ┆ Contrast                 ┆ Estimate ┆ … ┆ P(&gt;|z|) ┆ S     ┆ 2.5%    ┆ 97.5%    │
+│ --- ┆ ---  ┆ ---                      ┆ ---      ┆   ┆ ---     ┆ ---   ┆ ---     ┆ ---      │
+│ str ┆ str  ┆ str                      ┆ str      ┆   ┆ str     ┆ str   ┆ str     ┆ str      │
+╞═════╪══════╪══════════════════════════╪══════════╪═══╪═════════╪═══════╪═════════╪══════════╡
+│ 0   ┆ am   ┆ mean(True) - mean(False) ┆ -1.38    ┆ … ┆ 0.584   ┆ 0.776 ┆ -6.33   ┆ 3.57     │
+│ 1   ┆ am   ┆ mean(True) - mean(False) ┆ 1.9      ┆ … ┆ 0.41    ┆ 1.29  ┆ -2.62   ┆ 6.43     │
+│ 0   ┆ hp   ┆ +1                       ┆ -0.0343  ┆ … ┆ 0.0308  ┆ 5.02  ┆ -0.0654 ┆ -0.00317 │
+│ 1   ┆ hp   ┆ +1                       ┆ -0.0436  ┆ … ┆ 0.0404  ┆ 4.63  ┆ -0.0854 ┆ -0.00191 │
+│ 0   ┆ wt   ┆ +1                       ┆ -2.48    ┆ … ┆ 0.0441  ┆ 4.5   ┆ -4.89   ┆ -0.066   │
+│ 1   ┆ wt   ┆ +1                       ┆ -6.07    ┆ … ┆ 0.00212 ┆ 8.88  ┆ -9.95   ┆ -2.2     │
+└─────┴──────┴──────────────────────────┴──────────┴───┴─────────┴───────┴─────────┴──────────┘
 
 Columns: am, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
 </div>
@@ -1418,8 +1420,8 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  am Estimate Std. Error 2.5 % 97.5 %
-  0     17.1      0.648  16.3   18.7
-  1     24.4      2.924  14.3   26.8
+  0     17.1      0.646  16.2   18.3
+  1     24.4      2.561  12.5   26.4
 
 Columns: am, estimate, std.error, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1546,8 +1548,8 @@ Type:  response </code></pre>
 │ ---  ┆ ---  ┆ ---      ┆ ---      ┆   ┆ ---     ┆ ---  ┆ ---   ┆ ---   │
 │ str  ┆ str  ┆ str      ┆ str      ┆   ┆ str     ┆ str  ┆ str   ┆ str   │
 ╞══════╪══════╪══════════╪══════════╪═══╪═════════╪══════╪═══════╪═══════╡
-│ 14.5 ┆ drat ┆ dY/dX    ┆ 5.22     ┆ … ┆ 0.167   ┆ 2.58 ┆ -2.19 ┆ 12.6  │
-│ 22.9 ┆ drat ┆ dY/dX    ┆ 10.2     ┆ … ┆ 0.0465  ┆ 4.43 ┆ 0.159 ┆ 20.3  │
+│ 14.5 ┆ drat ┆ dY/dX    ┆ 5.22     ┆ … ┆ 0.167   ┆ 2.58 ┆ -2.18 ┆ 12.6  │
+│ 22.9 ┆ drat ┆ dY/dX    ┆ 10.2     ┆ … ┆ 0.0472  ┆ 4.41 ┆ 0.127 ┆ 20.4  │
 └──────┴──────┴──────────┴──────────┴───┴─────────┴──────┴───────┴───────┘
 
 Columns: qsec, rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, vs, am, gear, carb</code></pre>
@@ -1587,13 +1589,13 @@ Type:  response </code></pre>
 <span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (1, 8)
-┌───────┬──────────┬───────────┬────────┬─────────┬──────┬───────┬───────┐
-│ Term  ┆ Estimate ┆ Std.Error ┆ z      ┆ P(&gt;|z|) ┆ S    ┆ 2.5%  ┆ 97.5% │
-│ ---   ┆ ---      ┆ ---       ┆ ---    ┆ ---     ┆ ---  ┆ ---   ┆ ---   │
-│ str   ┆ str      ┆ str       ┆ str    ┆ str     ┆ str  ┆ str   ┆ str   │
-╞═══════╪══════════╪═══════════╪════════╪═════════╪══════╪═══════╪═══════╡
-│ b1=b2 ┆ -5.02    ┆ 8.49      ┆ -0.591 ┆ 0.555   ┆ 0.85 ┆ -21.7 ┆ 11.6  │
-└───────┴──────────┴───────────┴────────┴─────────┴──────┴───────┴───────┘
+┌───────┬──────────┬───────────┬───────┬─────────┬───────┬───────┬───────┐
+│ Term  ┆ Estimate ┆ Std.Error ┆ z     ┆ P(&gt;|z|) ┆ S     ┆ 2.5%  ┆ 97.5% │
+│ ---   ┆ ---      ┆ ---       ┆ ---   ┆ ---     ┆ ---   ┆ ---   ┆ ---   │
+│ str   ┆ str      ┆ str       ┆ str   ┆ str     ┆ str   ┆ str   ┆ str   │
+╞═══════╪══════════╪═══════════╪═══════╪═════════╪═══════╪═══════╪═══════╡
+│ b1=b2 ┆ -5.02    ┆ 8.5       ┆ -0.59 ┆ 0.555   ┆ 0.849 ┆ -21.7 ┆ 11.7  │
+└───────┴──────────┴───────────┴───────┴─────────┴───────┴───────┴───────┘
 
 Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
 </div>
@@ -1640,7 +1642,7 @@ Type:  response </code></pre>
 │ str  ┆ str         ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str   ┆ str   │
 ╞══════╪═════════════╪══════════╪═══════════╪═══╪══════════╪══════╪═══════╪═══════╡
 │ drat ┆ mean(dY/dX) ┆ 7.22     ┆ 1.37      ┆ … ┆ 1.22e-07 ┆ 23   ┆ 4.55  ┆ 9.9   │
-│ qsec ┆ mean(dY/dX) ┆ 1.12     ┆ 0.432     ┆ … ┆ 0.00922  ┆ 6.76 ┆ 0.278 ┆ 1.97  │
+│ qsec ┆ mean(dY/dX) ┆ 1.12     ┆ 0.432     ┆ … ┆ 0.00931  ┆ 6.75 ┆ 0.277 ┆ 1.97  │
 └──────┴─────────────┴──────────┴───────────┴───┴──────────┴──────┴───────┴───────┘
 
 Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
@@ -1693,7 +1695,7 @@ Type:  response </code></pre>
 │ str  ┆ str         ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str   ┆ str   │
 ╞══════╪═════════════╪══════════╪═══════════╪═══╪══════════╪══════╪═══════╪═══════╡
 │ drat ┆ mean(dY/dX) ┆ 7.22     ┆ 1.37      ┆ … ┆ 1.22e-07 ┆ 23   ┆ 4.55  ┆ 9.9   │
-│ qsec ┆ mean(dY/dX) ┆ 1.12     ┆ 0.432     ┆ … ┆ 0.00922  ┆ 6.76 ┆ 0.278 ┆ 1.97  │
+│ qsec ┆ mean(dY/dX) ┆ 1.12     ┆ 0.432     ┆ … ┆ 0.00931  ┆ 6.75 ┆ 0.277 ┆ 1.97  │
 └──────┴─────────────┴──────────┴───────────┴───┴──────────┴──────┴───────┴───────┘
 
 Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, statistic_noninf, statistic_nonsup, p_value_noninf, p_value_nonsup, p_value_equiv</code></pre>
