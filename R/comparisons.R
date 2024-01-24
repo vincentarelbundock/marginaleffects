@@ -206,7 +206,9 @@
 #' tmp <- mtcars %>%
 #'     group_by(cyl) %>%
 #'     mutate(hp_sd = sd(hp))
-#' avg_comparisons(mod, variables = list(hp = tmp$hp_sd), by = "cyl")
+#' avg_comparisons(mod, 
+#'     variables = list(hp = function(x) data.frame(x, x + tmp$hp_sd)),
+#'     by = "cyl")
 #'
 #' # `by` argument
 #' mod <- lm(mpg ~ hp * am * vs, data = mtcars)

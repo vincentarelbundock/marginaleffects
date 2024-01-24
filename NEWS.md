@@ -12,16 +12,26 @@ Breaking changes:
 New:
 
 * `datagrid(grid_type = "balanced")` creates a balanced grid with all unique values of categorical predictors. This can be used with `predictions()` to compute marginal means as in the `emmeans` package.
+* `mvgam` package support (multivariate generalized additive models)
 
 Deprecation warnings:
 
-* `deltamethod()` has been named `hypotheses()` for a while. We now issue a deprecation warning and will be removed eventually.
+* `deltamethod()` has been named `hypotheses()` for a while. We now issue a deprecation warning and it will be removed eventually.
 * `datagridcf()` will eventually be deprecated and removed from the package. We will raise a warning for at least one year before removing the function. Identical results can be obtained with `datagrid(..., grid_type="counterfactual")`
 * `marginal_means()` will eventually be deprecated and removed from the package. We will raise a warning for at least one year before removing the function. Identical results can be obtained using the `predictions()` function and the `grid_type="balanced"` argument of `datagrid()`. Examples are in the marginal means vignette on the website.
+
+Minor:
+
+* Better warning messages for unsupported matrix columns, enhancing user experience and troubleshooting.
+* Various improvements to documentation.
+* Typos
+* Repository hosts model objects for easier testing.
 
 Bug fixes:
 
 * Error on `hypotheses(joint = "string")` for `comparisons()` objects (no result was returned). Thanks to @BorgeJorge for report #981. 
+* Enhanced support for multi-equation Bayesian models with `brms` models. Thanks to @winterstat for report #1006.
+
 
 ## 0.17.0
 
