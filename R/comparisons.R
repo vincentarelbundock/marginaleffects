@@ -105,8 +105,8 @@
 #'
 #' See `?print.marginaleffects` for printing options.
 #'
+#' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' @examples
-#' \dontrun{
 #' library(marginaleffects)
 #'
 #' # Linear model
@@ -206,7 +206,9 @@
 #' tmp <- mtcars %>%
 #'     group_by(cyl) %>%
 #'     mutate(hp_sd = sd(hp))
-#' avg_comparisons(mod, variables = list(hp = tmp$hp_sd), by = "cyl")
+#' avg_comparisons(mod, 
+#'     variables = list(hp = function(x) data.frame(x, x + tmp$hp_sd)),
+#'     by = "cyl")
 #'
 #' # `by` argument
 #' mod <- lm(mpg ~ hp * am * vs, data = mtcars)
@@ -221,7 +223,6 @@
 #'     group = c("3", "4", "5"),
 #'     by = c("3,4", "3,4", "5"))
 #' comparisons(mod, type = "probs", by = by)
-#' }
 #'
 #' @export
 comparisons <- function(model,

@@ -418,11 +418,12 @@ The \code{invlink(link)} is a special type defined by \code{marginaleffects}. It
 
 Some of the most common \code{type} values are:
 
-response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, ev, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, detection, disp, ev, expected, expvalue, fitted, invlink(link), latent, latent_N, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
 }
 
 \examples{
-\dontrun{
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{\}) # examplesIf}
 library(marginaleffects)
 
 # Linear model
@@ -521,7 +522,9 @@ mod <- lm(mpg ~ hp + factor(cyl), mtcars)
 tmp <- mtcars \%>\%
     group_by(cyl) \%>\%
     mutate(hp_sd = sd(hp))
-avg_comparisons(mod, variables = list(hp = tmp$hp_sd), by = "cyl")
+avg_comparisons(mod, 
+    variables = list(hp = function(x) data.frame(x, x + tmp$hp_sd)),
+    by = "cyl")
 
 # `by` argument
 mod <- lm(mpg ~ hp * am * vs, data = mtcars)
@@ -536,7 +539,6 @@ by <- data.frame(
     group = c("3", "4", "5"),
     by = c("3,4", "3,4", "5"))
 comparisons(mod, type = "probs", by = by)
-}
 
 }
 \references{

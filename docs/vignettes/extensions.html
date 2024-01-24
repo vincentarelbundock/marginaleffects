@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.533">
+<meta name="generator" content="quarto-1.4.542">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -519,6 +519,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#fit-function" id="toc-fit-function" class="nav-link" data-scroll-target="#fit-function">Fit function</a></li>
   <li><a href="#marginaleffects-extension" id="toc-marginaleffects-extension" class="nav-link" data-scroll-target="#marginaleffects-extension"><code>marginaleffects</code> extension</a></li>
   </ul></li>
+  <li><a href="#merge-your-extension-into-the-main-package" id="toc-merge-your-extension-into-the-main-package" class="nav-link" data-scroll-target="#merge-your-extension-into-the-main-package">Merge your extension into the main package</a></li>
   <li><a href="#modify-or-extend-supported-models" id="toc-modify-or-extend-supported-models" class="nav-link" data-scroll-target="#modify-or-extend-supported-models">Modify or extend supported models</a></li>
   </ul></li>
   </ul>
@@ -697,6 +698,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Note that, for custom model, we typically have to supply values for the <code>newdata</code> and <code>variables</code> arguments explicitly.</p>
 </section>
+</section>
+<section id="merge-your-extension-into-the-main-package" class="level2">
+<h2 class="anchored" data-anchor-id="merge-your-extension-into-the-main-package">Merge your extension into the main package</h2>
+<p>If you wrote a working extension, please consider contributing back to the community by submitting your code for inclusion in the main package. To do this, all you need to do is follow the steps above, and then:</p>
+<ol type="1">
+<li>Add the package to the permanent list of supported models, to avoid calling <code>options()</code> in every session: <code>R/sanitize_model.R</code></li>
+<li>Add the package to the vignette of supported models by editing: <code>data-raw/supported_models.csv</code></li>
+<li>Add a bullet point to the news file: <code>NEWS.md</code></li>
+</ol>
 </section>
 <section id="modify-or-extend-supported-models" class="level2">
 <h2 class="anchored" data-anchor-id="modify-or-extend-supported-models">Modify or extend supported models</h2>

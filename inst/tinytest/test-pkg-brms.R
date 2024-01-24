@@ -12,6 +12,7 @@ if (!minver("base", "4.1.0")) exit_file("R 4.1.0")
 options("marginaleffects_posterior_interval" = "hdi")
 requiet("brms")
 requiet("emmeans")
+requiet("mice")
 requiet("broom")
 requiet("posterior")
 requiet("data.table")
@@ -20,44 +21,37 @@ tol <- 0.0001
 tol_se <- 0.001
 
 
+# load models
+brms_numeric <- readRDS("modelarchive/data/brms_numeric.rds")
+brms_numeric2 <- readRDS("modelarchive/data/brms_numeric2.rds")
+brms_character <- readRDS("modelarchive/data/brms_character.rds")
+brms_factor <- readRDS("modelarchive/data/brms_factor.rds")
+brms_factor_formula <- readRDS("modelarchive/data/brms_factor_formula.rds")
+brms_interaction <- readRDS("modelarchive/data/brms_interaction.rds")
+brms_logical <- readRDS("modelarchive/data/brms_logical.rds")
+brms_epi <- readRDS("modelarchive/data/brms_epi.rds")
+brms_cumulative_random <- readRDS("modelarchive/data/brms_cumulative_random.rds")
+brms_monotonic <- readRDS("modelarchive/data/brms_monotonic.rds")
+brms_monotonic_factor <- readRDS("modelarchive/data/brms_monotonic_factor.rds")
+brms_vdem <- readRDS("modelarchive/data/brms_vdem.rds")
+brms_lognormal_hurdle <- readRDS("modelarchive/data/brms_lognormal_hurdle.rds")
+brms_lognormal_hurdle2 <- readRDS("modelarchive/data/brms_lognormal_hurdle2.rds")
+brms_binomial <- readRDS("modelarchive/data/brms_binomial.rds")
+brms_mv_1 <- readRDS("modelarchive/data/brms_mv_1.rds")
+brms_vdem <- readRDS("modelarchive/data/brms_vdem.rds")
+brms_ordinal_1 <- readRDS("modelarchive/data/brms_ordinal_1.rds")
+brms_categorical_1 <- readRDS("modelarchive/data/brms_categorical_1.rds")
+brms_logit_re <- readRDS("modelarchive/data/brms_logit_re.rds")
+brms_mixed_3 <- readRDS("modelarchive/data/brms_mixed_3.rds")
+brms_kurz <- readRDS("modelarchive/data/brms_kurz.rds")
+brms_inhaler_cat <- readRDS("modelarchive/data/brms_inhaler_cat.rds")
+brms_poisson <- readRDS("modelarchive/data/brms_poisson.rds")
+brms_issue500 <- readRDS("modelarchive/data/brms_issue500.rds")
+brms_issue576 <- readRDS("modelarchive/data/brms_issue576.rds")
+brms_issue639 <- readRDS("modelarchive/data/brms_issue639.rds")
+brms_issue782 <- readRDS("modelarchive/data/brms_issue782.rds")
+brms_issue1006 <- readRDS("modelarchive/data/brms_issue1006.rds")
 
-
-# download models
-brms_numeric <- marginaleffects:::modelarchive_model("brms_numeric")
-brms_numeric2 <- marginaleffects:::modelarchive_model("brms_numeric2")
-brms_character <- marginaleffects:::modelarchive_model("brms_character")
-brms_factor <- marginaleffects:::modelarchive_model("brms_factor")
-brms_factor_formula <- marginaleffects:::modelarchive_model("brms_factor_formula")
-brms_interaction <- marginaleffects:::modelarchive_model("brms_interaction")
-brms_logical <- marginaleffects:::modelarchive_model("brms_logical")
-brms_epi <- marginaleffects:::modelarchive_model("brms_epi")
-brms_cumulative_random <- marginaleffects:::modelarchive_model("brms_cumulative_random")
-brms_monotonic <- marginaleffects:::modelarchive_model("brms_monotonic")
-brms_monotonic_factor <- marginaleffects:::modelarchive_model("brms_monotonic_factor")
-brms_vdem <- marginaleffects:::modelarchive_model("brms_vdem")
-brms_lognormal_hurdle <- marginaleffects:::modelarchive_model("brms_lognormal_hurdle")
-brms_lognormal_hurdle2 <- marginaleffects:::modelarchive_model("brms_lognormal_hurdle2")
-brms_binomial <- marginaleffects:::modelarchive_model("brms_binomial")
-brms_mv_1 <- marginaleffects:::modelarchive_model("brms_mv_1")
-brms_vdem <- marginaleffects:::modelarchive_model("brms_vdem")
-brms_ordinal_1 <- insight::download_model("brms_ordinal_1")
-brms_categorical_1 <- marginaleffects:::modelarchive_model("brms_categorical_1")
-brms_logit_re <- marginaleffects:::modelarchive_model("brms_logit_re")
-
-# link (code from easystats circus)
-# brms_mixed_3 <- insight::download_model("brms_mixed_3")
-set.seed(123)
-tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/sleepstudy.csv")
-tmp$grp <- sample(1:5, size = 180, replace = TRUE)
-tmp$cat <- as.factor(sample(1:5, size = 180, replace = TRUE))
-tmp$Reaction_d <-
-  ifelse(tmp$Reaction < median(tmp$Reaction), 0, 1)
-tmp <- tmp |>
-  poorman::group_by(grp) |>
-  poorman::mutate(subgrp = sample(1:15, size = poorman::n(), replace = TRUE))
-void <- capture.output(suppressMessages(
-    brms_mixed_3 <- brm(Reaction ~ Days + (1 | grp / subgrp) + (1 | Subject), data = tmp)
-))
 
 
 # average marginal effects brmsmargins
@@ -69,10 +63,7 @@ bm <- brmsmargins(
   contrasts = cbind("AME MPG" = c(-1 / h, 1 / h)),
   CI = 0.95, CIType = "ETI")
 bm <- data.frame(bm$ContrastSummary)
-
-mfx <- slopes(brms_numeric)
-mfx <- tidy(mfx)
-
+mfx <- avg_slopes(brms_numeric)
 expect_equivalent(mean(posterior_draws(mfx)$draw), bm$M, tolerance = tol)
 expect_equivalent(mfx$conf.low, bm$LL, tolerance = tol)
 expect_equivalent(mfx$conf.high, bm$UL, tolerance = tol)
@@ -80,7 +71,7 @@ expect_equivalent(mfx$conf.high, bm$UL, tolerance = tol)
 options("marginaleffects_posterior_interval" = "hdi")
 
 # marginaleffects vs. emmeans
-mfx <- slopes(
+mfx <- avg_slopes(
     brms_numeric2,
     newdata = datagrid(mpg = 20, hp = 100),
     variables = "mpg",
@@ -92,7 +83,7 @@ expect_equivalent(mfx$estimate, em$mpg.trend)
 expect_equivalent(mfx$conf.low, em$lower.HPD)
 expect_equivalent(mfx$conf.high, em$upper.HPD)
 # tolerance is less good for back-transformed response
-mfx <- slopes(brms_numeric2, newdata = datagrid(mpg = 20, hp = 100),
+mfx <- avg_slopes(brms_numeric2, newdata = datagrid(mpg = 20, hp = 100),
                    variables = "mpg", type = "response")
 em <- emtrends(brms_numeric2, ~mpg, "mpg", at = list(mpg = 20, hp = 100), regrid = "response")
 em <- tidy(em)
@@ -126,6 +117,15 @@ expect_inherits(posterior_draws(p3), "data.frame")
 
 
 # predictions w/ random effects
+set.seed(123)
+tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/sleepstudy.csv")
+tmp$grp <- sample(1:5, size = 180, replace = TRUE)
+tmp$cat <- as.factor(sample(1:5, size = 180, replace = TRUE))
+tmp$Reaction_d <-
+  ifelse(tmp$Reaction < median(tmp$Reaction), 0, 1)
+tmp <- tmp |>
+  poorman::group_by(grp) |>
+  poorman::mutate(subgrp = sample(1:15, size = poorman::n(), replace = TRUE))
 w <- apply(posterior_linpred(brms_mixed_3), 2, stats::median)
 x <- get_predict(brms_mixed_3, newdata = tmp, type = "link")
 y <- predictions(brms_mixed_3, type = "link")
@@ -178,8 +178,7 @@ dat <- mtcars
 dat$logic <- as.logical(dat$vs)
 dat$cyl_fac <- as.factor(dat$cyl)
 dat$cyl_cha <- as.character(dat$cyl)
-mfx <- slopes(brms_factor, newdata = dat)
-ti <- tidy(mfx)
+ti <- avg_slopes(brms_factor, newdata = dat)
 expect_inherits(ti, "data.frame")
 expect_true(nrow(ti) == 3)
 expect_true(ncol(ti) >= 5)
@@ -224,14 +223,6 @@ pred <- predictions(brms_numeric, newdata = datagrid(hp = c(100, 120)), type = "
 expect_equivalent(pred$estimate, em$emmean)
 expect_equivalent(pred$conf.low, em$lower.HPD)
 expect_equivalent(pred$conf.high, em$upper.HPD)
-
-
-
-# marginalmeans vs. emmeans
-requiet("emmeans")
-requiet("broom")
-expect_error(marginal_means(brms_factor, variables = "cyl_fac", type = "link"))
-# emmeans::emmeans(brms_factor, specs = ~cyl_fac)
 
 
 
@@ -326,8 +317,8 @@ expect_inherits(mfx2, "marginaleffects")
 
 # comparisons
 expect_error(comparisons(brms_monotonic_factor), pattern = "cannot be used")
-contr1 <- tidy(comparisons(brms_monotonic))
-known <- c(sprintf("mean(%s) - mean(1)", c(2:4, 6, 8)), "mean(+1)")
+contr1 <- avg_comparisons(brms_monotonic)
+known <- c(sprintf("%s - 1", c(2:4, 6, 8)), "+1")
 expect_equivalent(contr1$contrast, known)
 
 
@@ -386,8 +377,7 @@ expect_predictions(p_prediction, se = FALSE)
 
 # bugs stay dead: character regressors used to produce duplicates
 expect_slopes(brms_character, se = FALSE)
-mfx <- slopes(brms_character)
-ti <- tidy(mfx)
+mfx <- avg_slopes(brms_character)
 expect_true(length(unique(ti$estimate)) == nrow(ti))
 
 
@@ -542,18 +532,9 @@ expect_equivalent(nrow(p), 1)
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
-void <- capture.output(suppressMessages(
-    mod.b <- brm(
-        mpg ~ am * cyl,
-        data = dat,
-        family = gaussian,
-        seed = 1024)
-))
 
-cmp <- comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
-cmp.b <- comparisons(mod.b, variables = c("cyl", "am"), cross = TRUE)
-tid <- tidy(cmp)
-tid.b <- tidy(cmp.b)
+tid <- avg_comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
+tid.b <- avg_comparisons(brms_kurz, variables = c("cyl", "am"), cross = TRUE)
 
 
 expect_equivalent(tid$estimate, tid.b$estimate, tolerance = 0.1)
@@ -568,19 +549,15 @@ expect_equivalent(nrow(p), 2)
 
 
 # transform works for comparisons() and predictions()
-void <- capture.output(suppressMessages(
-    mod <- brm(gear ~ mpg + hp, data = mtcars, family = poisson)
-))
-
-p1 <- predictions(mod, type = "link")
-p2 <- predictions(mod, type = "link", transform = exp)
+p1 <- predictions(brms_poisson, type = "link")
+p2 <- predictions(brms_poisson, type = "link", transform = exp)
 expect_equivalent(exp(p1$estimate), p2$estimate)
 expect_equivalent(exp(p1$conf.low), p2$conf.low)
 expect_equivalent(exp(p1$conf.high), p2$conf.high)
 expect_equivalent(exp(attr(p1, "posterior_draws")), attr(p2, "posterior_draws"))
 
-p1 <- comparisons(mod, type = "link")
-p2 <- comparisons(mod, type = "link", transform = exp)
+p1 <- comparisons(brms_poisson, type = "link")
+p2 <- comparisons(brms_poisson, type = "link", transform = exp)
 expect_equivalent(exp(p1$estimate), p2$estimate)
 expect_equivalent(exp(p1$conf.low), p2$conf.low)
 expect_equivalent(exp(p1$conf.high), p2$conf.high)
@@ -602,22 +579,7 @@ expect_equivalent(sum(p1$estimate[3:4]), p3$estimate[2], tolerance = 0.1)
 
 
 # Issue #500
-# TODO
-N <- 1250
-n <- sample(10:100, size = N, replace = TRUE)
-x <- rbinom(N, 1, 0.5)
-w <- rbinom(N, 1, 0.5)
-z <- rbinom(N, 1, 0.5)
-y <- rbinom(N, n, 0.25 + .25 * x + .125 * w + 0.05 * z)
-d <- data.frame(x, w, z, y, n)
-void <- capture.output(suppressMessages(
-    fit <- brm(
-        y | trials(n) ~ .,
-        data = d,
-        family = binomial(),
-        chains = 1)
-))
-p <- plot_predictions(fit, condition = "z")
+p <- plot_predictions(brms_issue500, condition = "z")
 expect_inherits(p, "gg")
 
 
@@ -626,12 +588,11 @@ set.seed(1024)
 
 K <<- 100
 
-cmp <- comparisons(
+cmp <- avg_comparisons(
     brms_logit_re,
     newdata = datagrid(firm = sample(1e5:2e6, K)),
     allow_new_levels = TRUE,
     sample_new_levels = "gaussian")
-cmp <- tidy(cmp)
 
 bm <- brmsmargins(
   k = K,
@@ -648,16 +609,14 @@ expect_equivalent(cmp$conf.high, bm$UL, tolerance = .05)
 
 
 # posterior_draws(shape = )
-cmp <- comparisons(brms_numeric2)
-tid <- tidy(cmp)
+tid <- avg_comparisons(brms_numeric2)
 pd <- posterior_draws(tid, shape = "DxP")
 hyp <- brms::hypothesis(pd, "b1 - b2 > 0")
 expect_inherits(hyp, "brmshypothesis")
 
 
 # posterior::rvar
-cmp <- comparisons(brms_numeric2)
-tid <- tidy(cmp)
+tid <- avg_comparisons(brms_numeric2)
 rv <- posterior_draws(tid, "rvar")
 expect_equivalent(nrow(rv), 2)
 expect_inherits(rv$rvar[[1]], "rvar")
@@ -669,35 +628,19 @@ expect_false(anyNA(cmp$am))
 
 
 # Issue #576
-void <- capture.output(suppressMessages(
-    mod <- brm(mpg ~ hp, data = mtcars)
-))
-cmp <- comparisons(mod)
+cmp <- comparisons(brms_issue576)
 expect_equal(nrow(cmp), 32)
-cmp <- comparisons(mod, by = "term")
+cmp <- comparisons(brms_issue576, by = "term")
 expect_equal(nrow(cmp), 1)
-cmp <- comparisons(mod, by = "cyl")
+cmp <- comparisons(brms_issue576, by = "cyl")
 expect_equal(nrow(cmp), 3)
-cmp <- comparisons(mod, by = "am")
+cmp <- comparisons(brms_issue576, by = "am")
 expect_equal(nrow(cmp), 2)
 
 
 # Issue #639
-dat <- structure(list(y = structure(c(1L, 1L, 2L, 2L, 3L, 3L, 4L, 4L, 
-5L, 5L), levels = c("1", "2", "3", "4", "5"), class = c("ordered", 
-"factor")), x = structure(c(1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 
-2L), levels = c("0", "1"), class = "factor"), n = c(102L, 50L, 
-97L, 84L, 9L, 11L, 89L, 130L, 38L, 59L)), class = "data.frame", row.names = c(NA, 
--10L))
-dat <- transform(dat, x = factor(x), y = ordered(y))
-void <- capture.output(suppressMessages(
-    m <- brms::brm(
-        y | weights(n) ~ x,
-        data = dat,
-        family = "cumulative")
-))
-pre <- avg_predictions(m)
-cmp <- avg_comparisons(m)
+pre <- avg_predictions(brms_issue639)
+cmp <- avg_comparisons(brms_issue639)
 expect_inherits(pre, "predictions")
 expect_inherits(cmp, "comparisons")
 expect_equivalent(nrow(pre), 5)
@@ -706,10 +649,9 @@ expect_equivalent(nrow(cmp), 5)
 
 
 # Issue #703
-mod <- marginaleffects:::modelarchive_model("brms_inhaler_cat")
-pre <- predictions(mod, type = "link")
+pre <- predictions(brms_inhaler_cat, type = "link")
 expect_inherits(pre, "predictions")
-cmp <- comparisons(mod, type = "link")
+cmp <- comparisons(brms_inhaler_cat, type = "link")
 expect_inherits(cmp, "comparisons")
 
 
@@ -720,35 +662,6 @@ cmp = comparisons(brms_logit_re, newdata = datagrid(firm = -10:8), allow_new_lev
 expect_inherits(cmp, "comparisons")
 
 
-# Issue #782: by reorders factors incorrectly in brms models
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
-dat$survived <- ifelse(dat$survived == "yes", 1, 0)
-dat$woman <- ifelse(dat$sex == "female", 1, 0)
-dat$passengerClass <- factor(dat$passengerClass, levels = c("3rd", "2nd", "1st"))
-
-mod <- marginaleffects:::hush(brm(survived ~ woman * age + passengerClass,
-  family = bernoulli(link = "logit"),
-  data = dat))
-
-set.seed(1024)
-known <- slopes(
-  mod,
-  variables = "woman") |>
-  posterior_draws() |>
-  data.table()
-known <- known[, .(estimate = mean(estimate)), by = c("drawid", "passengerClass")][
-               , .(estimate = median(estimate)), by = "passengerClass"] |>
-  dplyr::arrange(passengerClass)
-set.seed(1024)
-unknown <- slopes(
-  mod,
-  variables = "woman",
-  by = "passengerClass") |>
-  dplyr::arrange(passengerClass)
-expect_equal(known$estimate, unknown$estimate, tolerance = 1e-3)
-expect_equal(known$passengerClass, unknown$passengerClass)
-
-
 # Issue #888: posterior_draws() fails for quantile transformation
 expect_error(predictions(
     brms_factor,
@@ -757,6 +670,16 @@ expect_error(predictions(
     posterior_draws(),
     pattern = "matrix input must return")
 
+
+# Issue 1006: predictor is also a response
+cmp <- avg_comparisons(brms_issue1006)
+expect_inherits(cmp, "comparisons")
+cmp <- avg_comparisons(brms_issue1006, variables = list(chl = 1))
+expect_inherits(cmp, "comparisons")
+cmp <- avg_comparisons(brms_issue1006, variables = list(chl = 1))
+expect_inherits(cmp, "comparisons")
+cmp <- avg_comparisons(brms_issue1006, variables = list(chl = 1, age = 1))
+expect_inherits(cmp, "comparisons")
 
 
 

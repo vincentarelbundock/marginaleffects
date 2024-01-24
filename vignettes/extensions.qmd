@@ -150,6 +150,15 @@ predictions(model, newdata = mtcars) |> head()
 
 Note that, for custom model, we typically have to supply values for the `newdata` and `variables` arguments explicitly.
 
+
+## Merge your extension into the main package
+
+If you wrote a working extension, please consider contributing back to the community by submitting your code for inclusion in the main package. To do this, all you need to do is follow the steps above, and then:
+
+1. Add the package to the permanent list of supported models, to avoid calling `options()` in every session: `R/sanitize_model.R`
+2. Add the package to the vignette of supported models by editing: `data-raw/supported_models.csv`
+3. Add a bullet point to the news file: `NEWS.md`
+
 ## Modify or extend supported models
 
 Let's say you want to estimate a model using the `mclogit::mblogit` function.  That package is already supported by `marginaleffects`, but you want to use a `type` (scale) of predictions that is not currently supported: a "centered link scale." 

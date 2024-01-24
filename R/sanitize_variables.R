@@ -29,23 +29,29 @@ sanitize_variables <- function(variables,
         # mhurdle names the variables weirdly
         if (inherits(model, "mhurdle")) {
             predictors <- insight::find_predictors(model, flatten = TRUE)
+            predictors <- list(conditional = predictors)
         } else {
             predictors <- insight::find_variables(model)
         }
-        known <- c("fixed", "conditional", "zero_inflated", "scale", "nonlinear")
-        if (any(known %in% names(predictors))) {
-            predictors <- unlist(predictors[known], recursive = TRUE, use.names = FALSE)
+
+        # unsupported models like pytorch
+        if (length(predictors) == 0 || (length(predictors) == 1 && names(predictors) == "response")) {
+            dv <- hush(unlist(insight::find_response(model, combine = FALSE), use.names = FALSE))
+            predictors <- setdiff(hush(colnames(newdata)), c(dv, "rowid"))
+        } else {
+            known <- c("fixed", "conditional", "zero_inflated", "scale", "nonlinear")
+            if (any(known %in% names(predictors))) {
+                predictors <- predictors[known]
             # sometimes triggered by multivariate brms models where we get nested
             # list: predictors$gear$hp
-        } else {
-            predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
+            } else {
+                predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
+                predictors <- unique(predictors)
+            }
+            # flatten
+            predictors <- unique(unlist(predictors, recursive = TRUE, use.names = FALSE))
         }
-        # response is not a predictor, but sometimes we catch it
-        dv <- hush(unlist(insight::find_response(model, combine = FALSE), use.names = FALSE))
-        predictors <- unique(setdiff(predictors, dv))
-        if (length(predictors) == 0) { # unsupported by insight (e.g., numpyro)
-            predictors <- setdiff(hush(colnames(newdata)), c(dv, "rowid"))
-        }
+
     } else {
         predictors <- variables
     }
@@ -101,7 +107,7 @@ sanitize_variables <- function(variables,
     mc <- attr(newdata, "newdata_matrix_columns")
     if (length(mc) > 0 && any(names(predictors) %in% mc)) {
       predictors <- predictors[!names(predictors) %in% mc]
-      insight::format_warning("Matrix columns are not supported. Use the `variables` argument to specify valid predictors.")
+      insight::format_warning("Matrix columns are not supported. Use the `variables` argument to specify valid predictors, or use a function like `drop()` to convert your matrix columns into vectors.")
     }
 
     # missing variables
@@ -335,10 +341,16 @@ sanitize_variables <- function(variables,
         }
     }
 
-    # can't take the slope of an outcome
-    dv <- hush(insight::find_response(model))
-    if (all(names(predictors) %in% dv)) {
-        insight::format_error("There are no valid predictor variables. Please make sure your model includes predictors and use the `variables` argument.")
+    # can't take the slope of an outcome, except in weird brms models (issue #1006)
+    if (!inherits(model, "brmsfit") || !isTRUE(length(model$formula$forms) > 1)) {
+        dv <- hush(unlist(insight::find_response(model, combine = FALSE), use.names = FALSE))
+        # sometimes insight doesn't work
+        if (length(dv) > 0) {
+            predictors <- predictors[setdiff(names(predictors), dv)]
+        }
+    }
+    if (length(predictors) == 0) {
+        insight::format_error("There is no valid predictor variable. Please make sure your model includes predictors and use the `variables` argument.")
     }
 
     # interaction: get_contrasts() assumes there is only one function when interaction=TRUE

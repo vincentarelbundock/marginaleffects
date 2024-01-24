@@ -33,12 +33,11 @@
 #' obtain the Average Marginal Effect and its associated interval.
 #'
 #' @keywords internal
+#' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' @examples
-#' \dontrun{
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
-#' contr <- comparisons(mod, variables = list(gear = "sequential"))
-#' tidy(contr)
-#' }
+#' avg_comparisons(mod, variables = list(gear = "sequential"))
+#' 
 get_averages <- function (x, by = TRUE, ...) {
     xcall <- substitute(x)
     if (is.call(xcall)) {
@@ -152,13 +151,6 @@ get_averages.slopes <- get_averages.comparisons
 
 
 
-#' @noRd
-get_averages.marginalmeans <- function(x, by = FALSE, ...) {
-    if (!isFALSE(by)) {
-        insight::format_error("The `by` argument is not supported by the `averages()` function for `marginal_means` models.")
-    }
-    x
-}
 
 
 #' @noRd

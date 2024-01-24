@@ -79,8 +79,8 @@
 #'
 #' See `?print.marginaleffects` for printing options.
 #'
+#' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' @examples
-#' \dontrun{
 #' # Adjusted Prediction for every row of the original dataset
 #' mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 #' pred <- predictions(mod)
@@ -176,7 +176,6 @@
 #'     by = c("4,6", "4,6", "8"),
 #'     group = as.character(c(4, 6, 8)))
 #' predictions(mod, newdata = "mean", byfun = sum, by = by)
-#' }
 #'
 #' @inheritParams slopes
 #' @inheritParams comparisons
@@ -290,14 +289,6 @@ predictions <- function(model,
     # user-input sanity checks
     transform_original <- transform
     transform <- sanitize_transform(transform)
-
-    model <- sanitize_model_specific(
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        calling_function = "predictions",
-        ...)
-
 
     conf_level <- sanitize_conf_level(conf_level, ...)
     newdata <- sanitize_newdata(

@@ -21,22 +21,27 @@ get_mean_or_mode <- function(x) {
     UseMethod("get_mean_or_mode")
 }
 
+#' @export
 get_mean_or_mode.default <- function(x) {
     mean(x)
 }
 
+#' @export
 get_mean_or_mode.character <- function(x) {
     get_mode(x)
 }
 
+#' @export
 get_mean_or_mode.factor <- function(x) {
     get_mode(x)
 }
 
+#' @export
 get_mean_or_mode.logical <- function(x) {
     get_mode(x)
 }
 
+#' @export
 get_mean_or_mode.data.frame <- function(x) {
     out <- list()
     for (n in names(x)) {

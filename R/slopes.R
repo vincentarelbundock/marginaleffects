@@ -128,10 +128,8 @@
 #'
 #' See `?print.marginaleffects` for printing options.
 #'
-#' @examplesIf interactive()
+#' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' @examples
-#' \dontrun{
-#'
 #' # Unit-level (conditional) Marginal Effects
 #' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 #' mfx <- slopes(mod)
@@ -199,7 +197,6 @@
 #'     newdata = "mean",
 #'     hypothesis = lc)
 #' 
-#' }
 #' @export
 slopes <- function(model,
                    newdata = NULL,

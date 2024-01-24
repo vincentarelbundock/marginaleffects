@@ -40,6 +40,7 @@ sanity_model_supported_class <- function(model) {
         c("brnb", "negbin", "glm"),
         c("clogit", "coxph"),
         "clm",
+        c("clmm2", "clm2"),
         "coxph",
         "crch",
         "fixest",

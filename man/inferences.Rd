@@ -90,7 +90,8 @@ Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani.
 }
 
 \examples{
-\dontrun{
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{\}) # examplesIf}
 library(marginaleffects)
 library(magrittr)
 set.seed(1024)
@@ -113,5 +114,4 @@ avg_slopes(mod, by = "Species") \%>\%
 slopes(mod) \%>\%
   inferences(method = "simulation") \%>\%
   head()
-}
 }
