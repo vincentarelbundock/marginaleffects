@@ -120,3 +120,38 @@ dat$y <- as.numeric(dat$emp > median(dat$emp))
 brms_logit_re <- brm(y ~ x + (1 | firm), data = dat, backend = "cmdstanr", family = "bernoulli")
 saveRDS(brms_logit_re, "data/brms_logit_re.rds")
 ```
+
+
+```{r}
+set.seed(123)
+tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/sleepstudy.csv")
+tmp$grp <- sample(1:5, size = 180, replace = TRUE)
+tmp$cat <- as.factor(sample(1:5, size = 180, replace = TRUE))
+tmp$Reaction_d <-
+  ifelse(tmp$Reaction < median(tmp$Reaction), 0, 1)
+tmp <- tmp |>
+  poorman::group_by(grp) |>
+  poorman::mutate(subgrp = sample(1:15, size = poorman::n(), replace = TRUE))
+void <- capture.output(suppressMessages(
+    brms_mixed_3 <- brm(Reaction ~ Days + (1 | grp / subgrp) + (1 | Subject), data = tmp)
+))
+```
+
+```{r}
+# Issue #782: by reorders factors incorrectly in brms models
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
+dat$survived <- ifelse(dat$survived == "yes", 1, 0)
+dat$woman <- ifelse(dat$sex == "female", 1, 0)
+dat$passengerClass <- factor(dat$passengerClass, levels = c("3rd", "2nd", "1st"))
+mod <- marginaleffects:::hush(brm(survived ~ woman * age + passengerClass,
+  family = bernoulli(link = "logit"),
+  data = dat))
+saveRDS(mod, "modelarchive/data/brms_issue782.rds")
+```
+
+```{r}
+data("nhanes", package = "mice")
+bform <- bf(bmi | mi() ~ age * mi(chl)) + bf(chl | mi() ~ age) + set_rescor(FALSE)
+fit <- brm(bform, data = nhanes)
+saveRDS(fit, "modelarchive/data/brms_issue1006.rds")
+```
