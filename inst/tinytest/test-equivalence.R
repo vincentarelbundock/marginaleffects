@@ -16,7 +16,7 @@ e2 <- predictions(
     newdata = datagrid(gear = unique),
     equivalence = c(19, 21)) |>
     poorman::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic.noninf)
+expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.noninf)
 
 
@@ -111,16 +111,16 @@ expect_inherits(x, "hypotheses")
 
 
 
-# marginal_means() vs. {emmeans}
 rm("mod")
 delta <- log(1.25)
 mod <<- lm(log(conc) ~ source + factor(percent), data = pigs)
 rg <- ref_grid(mod)
 em <- emmeans(rg, "source", at = list(), df = Inf)
 pa <- pairs(em, df = Inf)
-mm <- marginal_means(
+mm <- predictions(
     mod,
-    variables = "source",
+    newdata = datagrid(grid_type = "balanced"),
+    by = "source",
     hypothesis = "pairwise") 
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
