@@ -2,6 +2,12 @@
 
 ![](man/figures/zoo_banner.png)
 
+<br>
+<a href = "https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
+<a href = "https://marginaleffects.com" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>
+<a href = "https://marginaleffects.com" target = "_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a>
+<br><br>
+
 The parameters of a statistical model can sometimes be difficult to
 interpret substantively, especially when that model includes non-linear
 components, interactions, or transformations. Analysts who fit such
