@@ -20,6 +20,9 @@ knitr::opts_chunk$set(
 library(ggplot2)
 theme_set(theme_minimal())
 ```
+```{python, include = FALSE}
+from plotnine import geom_segment, geoms, aes
+```
 
 ## 2x2 Experiments
 
@@ -35,6 +38,8 @@ We will use the `mtcars` dataset.  We'll analyze fuel efficiency, `mpg` (miles p
 
 Let's start by creating a model for fuel efficiency.  For simplicity, we'll use linear regression and model the interaction between `vs` and `am`.
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 library(tidyverse)
 library(marginaleffects)
@@ -43,6 +48,17 @@ library(modelsummary)
 ## See ?mtcars for variable definitions
 fit <- lm(mpg ~ vs + am + vs:am, data=mtcars) # equivalent to ~ vs*am
 ```
+### Python
+```{python}
+import polars as pl
+import statsmodels.formula.api as smf
+from marginaleffects import *
+
+mtcars = pl.read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv")
+
+fit = smf.ols("mpg ~ vs + am + vs:am", data = mtcars).fit() # equivalent to ~ vs*am
+```
+:::
 
 We can plot the predictions from the model using the `plot_predictions` function.  From the plot below, we can see a few things:
 
@@ -50,17 +66,32 @@ We can plot the predictions from the model using the `plot_predictions` function
 * Manual transmissions (`am=1`) are estimated to have better fuel efficiency for both V-shaped and straight engines.
 * For straight engines, the effect of manual transmissions on fuel efficiency seems to increase.
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 plot_predictions(fit, by = c("vs", "am"))
 ```
+### Python
+```{python}
+plot_predictions(fit, by = ["vs", "am"]).draw(show=True)
+```
+:::
 
 ### Evaluating Effects From The Model Summary
 
-Since this model is fairly simple the estimated differences between any of the four possible combinations of `vs` and `am` can be read from the regression table, which we create using the `modelsummary` package:
+Since this model is fairly simple the estimated differences between any of the four possible combinations of `vs` and `am` can be read from the regression table:
 
+::: {.panel-tabset group="language"}
+### R
+We create the regression table using the `modelsummary` package:
 ```{r}
 modelsummary(fit, gof_map = c("r.squared", "nobs"))
 ```
+### Python
+```{python}
+print(fit.summary())
+```
+:::
 
 We can express the same results in the form of a linear equation:
 
@@ -91,7 +122,8 @@ plot_predictions(fit, by = c("vs", "am")) +
 
 Let's use `avg_comparisons` to get the difference between straight engines and V-shaped engines when the car has automatic transmission. In this call, the `variables` argument indicates that we want to estimate the effect of a change of 1 unit in the `vs` variable. The `newdata=datagrid(am=0)` determines the values of the covariates at which we want to evaluate the contrast.
 
-
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 avg_comparisons(fit,
   variables = "vs",
@@ -108,14 +140,32 @@ plot_predictions(fit, by = c("vs", "am")) +
     arrow = arrow(type = "closed", length = unit(0.02, "npc")))
 ```
 
+### Python
+```{python}
+print(avg_comparisons(fit,
+  variables = "vs",
+  newdata = datagrid(am = 0)))
+```
+
+As expected, the results produced by `avg_comparisons()` are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:
+
+```{python, echo = FALSE}
+plot = plot_predictions(fit, by = ["vs", "am"]) +\
+  geom_segment(mapping=aes(x = 0, y = 15.1, xend = 0.9, yend = 20.7), arrow=geoms.arrow(type = "closed"))
+
+plot.draw(show=True)
+```
+:::
+
 The next difference that we compute is between manual transmissions and automatic transmissions when the car has a V-shaped engine.  Again, the call to `avg_comparisons` is shown below, and the corresponding contrast is indicated in the plot below using an arrow.
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 avg_comparisons(fit,
   variables = "am",
   newdata = datagrid(vs = 0))
 ```
-
 ```{r, echo = FALSE}
 plot_predictions(fit, by = c("vs", "am")) +
   annotate(
@@ -123,15 +173,29 @@ plot_predictions(fit, by = c("vs", "am")) +
     x = 1, y = 15.1, xend = 1, yend = 19.7,
     arrow = arrow(type = "closed", length = unit(0.02, "npc")))
 ```
+### Python
+```{python}
+print(avg_comparisons(fit,
+  variables = "am",
+  newdata = datagrid(vs = 0)))
+```
+```{python, echo = FALSE}
+plot = plot_predictions(fit, by = ["vs", "am"]) +\
+  geom_segment(mapping=aes(x = 0, y = 15.1, xend = 0, yend = 19.7), arrow=geoms.arrow(type = "closed"))
+
+plot.draw(show=True)
+```
+:::
 
 The third difference we estimated was between manual transmissions and automatic transmissions when the car has a straight engine.  The model call and contrast are:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 avg_comparisons(fit,
   variables = "am",
   newdata = datagrid(vs = 1))
 ```
-
 ```{r, echo = FALSE}
 plot_predictions(fit, by = c("vs", "am")) +
   annotate(
@@ -139,15 +203,29 @@ plot_predictions(fit, by = c("vs", "am")) +
     x = 2, y = 20.7, xend = 2, yend = 28.4,
     arrow = arrow(type = "closed", length = unit(0.02, "npc")))
 ```
+### Python
+```{python}
+print(avg_comparisons(fit,
+  variables = "am",
+  newdata = datagrid(vs = 1)))
+```
+```{python, echo = FALSE}
+plot = plot_predictions(fit, by = ["vs", "am"]) +\
+  geom_segment(mapping=aes(x = 1, y = 20.7, xend = 1, yend = 28.4), arrow=geoms.arrow(type = "closed"))
+
+plot.draw(show=True)
+```
+:::
 
 The last difference and contrast between manual transmissions with straight engines and automatic transmissions with V-shaped engines. We call this a "cross-contrast" because we are measuring the difference between two groups that differ on two explanatory variables at the same time. To compute this contrast, we use the `cross` argument of `avg_comparisons`:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 avg_comparisons(fit,
   variables = c("am", "vs"),
   cross = TRUE)
 ```
-
 ```{r, echo = FALSE}
 plot_predictions(fit, by = c("vs", "am")) +
   annotate(
@@ -155,6 +233,17 @@ plot_predictions(fit, by = c("vs", "am")) +
     x = 1, y = 15.1, xend = 2, yend = 28.4,
     arrow = arrow(type = "closed", length = unit(0.02, "npc")))
 ```
+### Python
+```{python}
+# Not implemented yet
+```
+```{python, echo = FALSE}
+plot = plot_predictions(fit, by = ["vs", "am"]) +\
+  geom_segment(mapping=aes(x = 0, y = 15.1, xend = 1, yend = 28.4), arrow=geoms.arrow(type = "closed"))
+
+plot.draw(show=True)
+```
+:::
 
 ### Conclusion
 
@@ -168,6 +257,9 @@ Many analysts who conduct and analyze experiments wish to use regression adjustm
 
 1. Center all predictors by subtracting each of their means.
 2. Estimate a linear model in which the treatment is interacted with each of the covariates.
+
+::: {.panel-tabset group="language"}
+### R
 
 The `estimatr` package includes a convenient function to implement this strategy:
 
@@ -183,9 +275,28 @@ mod <- lm_lin(
     se_type = "HC3")
 summary(mod)
 ```
+### Python
+```{python}
+lalonde = pl.read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv", infer_schema_length=200)
+
+lalonde = lalonde.to_dummies('race')
+lalonde = lalonde.with_columns(
+  pl.col('age').sub(pl.col('age').mean()),
+  pl.col('educ').sub(pl.col('educ').mean()),
+  pl.col('race_hispan').sub(pl.col('race_hispan').mean()),
+  pl.col('race_white').sub(pl.col('race_white').mean()),
+)
+
+mod = smf.ols("re78 ~ treat + age + educ + race_hispan + race_white + treat*(age + educ + race_hispan + race_white)", data = lalonde.to_pandas()).fit()
+
+print(mod.get_robustcov_results(cov_type='HC3').summary())
+```
+:::
 
 We can obtain the same results by fitting a model with the standard `lm` function and using the `comparisons()` function:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 mod <- lm(re78 ~ treat * (age + educ + race), data = lalonde)
 avg_comparisons(
@@ -193,6 +304,14 @@ avg_comparisons(
     variables = "treat",
     vcov = "HC3")
 ```
+### Python
+```{python}
+print(avg_comparisons(
+    mod,
+    variables = "treat",
+    vcov = "HC3"))
+```
+:::
 
 Notice that the `treat` coefficient and associate standard error in the `lm_lin` regression are exactly the same as the estimates produced by the `comparisons()` function.
 

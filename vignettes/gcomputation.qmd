@@ -57,6 +57,8 @@ Follow-up Study (NHEFS). The outcome is `wt82_71`, a measure of weight gain. The
 
 Step 1 is to fit a regression model of the outcome on the treatment and control variables:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 library(boot)
 library(marginaleffects)
@@ -72,6 +74,27 @@ nhefs <- na.omit(nhefs[, all.vars(f)])
 
 fit <- glm(f, data = nhefs)
 ```
+### Python
+```{python}
+import polars as pl
+import statsmodels.formula.api as smf
+from marginaleffects import *
+
+f = "wt82_71 ~ qsmk + sex + race + age + pow(age,2) + C(education) + \
+    smokeintensity + pow(smokeintensity,2) + smokeyrs + \
+    pow(smokeyrs,2) + C(exercise) + C(active) + wt71 + \
+    pow(wt71,2) + qsmk*smokeintensity"
+
+nhefs = pl.read_csv("https://raw.githubusercontent.com/vincentarelbundock/modelarchive/main/data-raw/nhefs.csv")
+
+variables = ["wt82_71", "qsmk", "sex", "race", "age", "education", "smokeintensity", "smokeyrs", "exercise", "active", "wt71"]
+nhefs = nhefs.filter(
+    ~pl.any_horizontal(pl.col(variables).is_null())
+)
+
+fit = smf.glm(f, data=nhefs.to_pandas()).fit()
+```
+:::
 
 Steps 2 and 3 require us to replicate the full dataset by setting the `qsmk` treatment to counterfactual values. We can do this automatically by calling `comparisons()`.
 
@@ -79,9 +102,17 @@ Steps 2 and 3 require us to replicate the full dataset by setting the `qsmk` tre
 
 These simple commands do everything we need to apply the parametric g-formula:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 avg_comparisons(fit, variables = list(qsmk = 0:1))
 ```
+### Python
+```{python}
+cmp = avg_comparisons(fit, variables = {'qsmk' : [0,1]})
+print(cmp)
+```
+:::
 
 The rest of the vignette walks through the process in a bit more detail and compares to replication code from Hernán and Robins.
 
@@ -89,6 +120,8 @@ The rest of the vignette walks through the process in a bit more detail and comp
 
 We can compute average predictions in the original data, and average predictions in the two counterfactual datasets like this:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 ## average predicted outcome in the original data
 p <- predictions(fit)
@@ -98,6 +131,21 @@ mean(p$estimate)
 p <- predictions(fit, newdata = datagrid(qsmk = 0:1, grid_type = "counterfactual"))
 aggregate(estimate ~ qsmk, data = p, FUN = mean)
 ```
+### Python
+```{python}
+## average predicted outcome in the original data
+p = predictions(fit)
+print(p['estimate'].mean())
+
+## average predicted outcome in the two counterfactual datasets
+p = predictions(fit, newdata = datagrid(qsmk = [0,1], grid_type = "counterfactual"))
+agg = p.group_by('qsmk').agg(pl.col('estimate').mean())
+print(agg)
+```
+:::
+
+::: {.panel-tabset group="language"}
+### R
 
 In the `R` code that accompanies their book, Hernán and Robins compute the same quantities manually, as follows:
 
@@ -132,15 +180,72 @@ mean(onesample[which(onesample$interv == -1), ]$predicted_meanY)
 mean(onesample[which(onesample$interv == 0), ]$predicted_meanY)
 mean(onesample[which(onesample$interv == 1), ]$predicted_meanY)
 ```
+### Python
+
+The `R` code manually computing these quantities that accompanies Hernán and Robins' book can be translated into `Python` as follows :
+
+```{python}
+# create a dataset with 3 copies of each subject
+nhefs = nhefs.with_columns(
+    pl.lit(-1).alias('interv') # 1st copy: equal to original one
+)
+
+interv0 = nhefs # 2nd copy: treatment set to 0, outcome to missing
+interv0 = interv0.with_columns(
+    pl.lit(0).alias('interv'),
+    pl.lit(0).alias('qsmk').cast(pl.Int64),
+    pl.lit(None).alias('wt82_71')
+)
+
+interv1 = nhefs # 3rd copy: treatment set to 1, outcome to missing
+interv1 = interv1.with_columns(
+    pl.lit(1).alias('interv'),
+    pl.lit(1).alias('qsmk').cast(pl.Int64),
+    pl.lit(None).alias('wt82_71')
+)
+
+## linear model to estimate mean outcome conditional on treatment and confounders
+## parameters are estimated using original observations only (nhefs)
+
+std = smf.glm(f, data = nhefs.to_pandas()).fit()
+
+onesample = pl.concat([nhefs, interv0, interv1], how='vertical') # combining datasets
+
+## parameter estimates are used to predict mean outcome for observations with 
+## treatment set to 0 (interv=0) and to 1 (interv=1)
+onesample = onesample.with_columns(
+    pl.Series(name = 'predicted_meanY', values = std.predict(onesample.to_pandas()))
+)
+
+## estimate mean outcome in each of the groups interv=0, and interv=1
+## this mean outcome is a weighted average of the mean outcomes in each combination 
+## of values of treatment and confounders, that is, the standardized outcome
+onesample.filter(pl.col('interv') == -1)['predicted_meanY'].mean()
+
+onesample.filter(pl.col('interv') == 0)['predicted_meanY'].mean()
+
+onesample.filter(pl.col('interv') == 1)['predicted_meanY'].mean()
+```
+:::
 
 It may be useful to note that the `datagrid()` function provided by `marginaleffects` can create counterfactual datasets automatically. This is equivalent to the `onesample` dataset:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 nd <- datagrid(
     model = fit,
     qsmk = c(0, 1),
     grid_type = "counterfactual")
 ```
+### Python
+```{python}
+nd = datagrid(
+    model = fit,
+    qsmk = [0,1],
+    grid_type = "counterfactual")
+```
+:::
 
 
 ### Contrast
@@ -150,18 +255,34 @@ Now we want to compute the treatment effect with the parametric g-formula, which
 * The `variables` argument is used to indicate that we want to estimate a "contrast" between adjusted predictions when `qsmk` is equal to 1 or 0.
 * `comparisons()` automatically produces estimates of uncertainty.
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 avg_comparisons(std, variables = list(qsmk = 0:1))
 ```
+### Python
+```{python}
+cmp = avg_comparisons(std, variables = {"qsmk" : [0,1]})
+print(cmp)
+```
+:::
 
 Under the hood, `comparisons()` did exactly what we described in the g-formula steps above:
 
 We can obtain the same result by manually computing the quantities, using the replication code from Hernán and Robins:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 mean(onesample[which(onesample$interv == 1), ]$predicted_meanY) -
 mean(onesample[which(onesample$interv == 0), ]$predicted_meanY)
 ```
+### Python
+```{python}
+onesample.filter(pl.col('interv')==1)["predicted_meanY"].mean() -\
+onesample.filter(pl.col('interv')==0)["predicted_meanY"].mean()
+```
+:::
 
 Although manual computation is simple, it does not provide uncertainty estimates. In contrast, `comparisons()` has already computed the standard error and confidence interval using the delta method.
 
@@ -217,6 +338,14 @@ bootstrap
 
 The results are close to those that we obtained with `comparisons()`, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 avg_comparisons(fit, variables = list(qsmk = 0:1))
 ```
+### Python
+```{python}
+cmp = avg_comparisons(std, variables = {"qsmk" : [0,1]})
+print(cmp)
+```
+:::
