@@ -50,4 +50,4 @@ setvar: ## Set the environment variable
 	export R_BUILD_DOC=true
 
 website: setvar document install ## altdoc::render_docs(verbose = TRUE)
-	Rscript -e "altdoc::render_docs(verbose = TRUE)"
+	Rscript -e "reticulate::use_virtualenv('.venv');altdoc::render_docs(verbose = TRUE)"

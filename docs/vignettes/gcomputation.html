@@ -607,6 +607,10 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="example-with-real-world-data">Example with real-world data</h2>
 <p>Let’s illustrate this method by replicating an example from Chapter 13 of Hernán and Robins. The data come from the National Health and Nutrition Examination Survey Data I Epidemiologic Follow-up Study (NHEFS). The outcome is <code>wt82_71</code>, a measure of weight gain. The treatment is <code>qsmk</code>, a binary measure of smoking cessation. There are many confounders.</p>
 <p>Step 1 is to fit a regression model of the outcome on the treatment and control variables:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
@@ -622,12 +626,40 @@ window.Quarto = {
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(f, <span class="at">data =</span> nhefs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> marginaleffects <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="st">"wt82_71 ~ qsmk + sex + race + age + pow(age,2) + C(education) + </span><span class="ch">\</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">    smokeintensity + pow(smokeintensity,2) + smokeyrs + </span><span class="ch">\</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">    pow(smokeyrs,2) + C(exercise) + C(active) + wt71 + </span><span class="ch">\</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">    pow(wt71,2) + qsmk*smokeintensity"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>nhefs <span class="op">=</span> pl.read_csv(<span class="st">"https://raw.githubusercontent.com/vincentarelbundock/modelarchive/main/data-raw/nhefs.csv"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>variables <span class="op">=</span> [<span class="st">"wt82_71"</span>, <span class="st">"qsmk"</span>, <span class="st">"sex"</span>, <span class="st">"race"</span>, <span class="st">"age"</span>, <span class="st">"education"</span>, <span class="st">"smokeintensity"</span>, <span class="st">"smokeyrs"</span>, <span class="st">"exercise"</span>, <span class="st">"active"</span>, <span class="st">"wt71"</span>]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>nhefs <span class="op">=</span> nhefs.<span class="bu">filter</span>(</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">~</span>pl.any_horizontal(pl.col(variables).is_null())</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> smf.glm(f, data<span class="op">=</span>nhefs.to_pandas()).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
 <p>Steps 2 and 3 require us to replicate the full dataset by setting the <code>qsmk</code> treatment to counterfactual values. We can do this automatically by calling <code>comparisons()</code>.</p>
 <section id="tldr" class="level3">
 <h3 class="anchored" data-anchor-id="tldr">TLDR</h3>
 <p>These simple commands do everything we need to apply the parametric g-formula:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">qsmk =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">qsmk =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
@@ -637,74 +669,201 @@ Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.
 Type:  response </code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> avg_comparisons(fit, variables <span class="op">=</span> {<span class="st">'qsmk'</span> : [<span class="dv">0</span>,<span class="dv">1</span>]})</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (1, 9)
+┌──────┬──────────────────────────┬──────────┬───────────┬───┬──────────┬──────┬──────┬───────┐
+│ Term ┆ Contrast                 ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5% ┆ 97.5% │
+│ ---  ┆ ---                      ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---  ┆ ---   │
+│ str  ┆ str                      ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str  ┆ str   │
+╞══════╪══════════════════════════╪══════════╪═══════════╪═══╪══════════╪══════╪══════╪═══════╡
+│ qsmk ┆ mean(True) - mean(False) ┆ 3.52     ┆ 0.44      ┆ … ┆ 1.33e-15 ┆ 49.4 ┆ 2.65 ┆ 4.38  │
+└──────┴──────────────────────────┴──────────┴───────────┴───┴──────────┴──────┴──────┴───────┘
+
+Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 <p>The rest of the vignette walks through the process in a bit more detail and compares to replication code from Hernán and Robins.</p>
 </section>
 <section id="adjusted-predictions" class="level3">
 <h3 class="anchored" data-anchor-id="adjusted-predictions">Adjusted Predictions</h3>
 <p>We can compute average predictions in the original data, and average predictions in the two counterfactual datasets like this:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## average predicted outcome in the original data</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predictions</span>(fit)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(p<span class="sc">$</span>estimate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## average predicted outcome in the original data</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predictions</span>(fit)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(p<span class="sc">$</span>estimate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.6383</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## average predicted outcome in the two counterfactual datasets</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predictions</span>(fit, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">qsmk =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">grid_type =</span> <span class="st">"counterfactual"</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(estimate <span class="sc">~</span> qsmk, <span class="at">data =</span> p, <span class="at">FUN =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## average predicted outcome in the two counterfactual datasets</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predictions</span>(fit, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">qsmk =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">grid_type =</span> <span class="st">"counterfactual"</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(estimate <span class="sc">~</span> qsmk, <span class="at">data =</span> p, <span class="at">FUN =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  qsmk estimate
 1    0 1.756213
 2    1 5.273587</code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">## average predicted outcome in the original data</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(fit)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p[<span class="st">'estimate'</span>].mean())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2.638299786562712</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">## average predicted outcome in the two counterfactual datasets</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(fit, newdata <span class="op">=</span> datagrid(qsmk <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>], grid_type <span class="op">=</span> <span class="st">"counterfactual"</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>agg <span class="op">=</span> p.group_by(<span class="st">'qsmk'</span>).agg(pl.col(<span class="st">'estimate'</span>).mean())</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(agg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (2, 2)
+┌──────┬──────────┐
+│ qsmk ┆ estimate │
+│ ---  ┆ ---      │
+│ i64  ┆ f64      │
+╞══════╪══════════╡
+│ 1    ┆ 5.273587 │
+│ 0    ┆ 1.756213 │
+└──────┴──────────┘</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <p>In the <code>R</code> code that accompanies their book, Hernán and Robins compute the same quantities manually, as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## create a dataset with 3 copies of each subject</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>nhefs<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="co"># 1st copy: equal to original one</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>interv0 <span class="ot">&lt;-</span> nhefs <span class="co"># 2nd copy: treatment set to 0, outcome to missing</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>interv0<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>interv0<span class="sc">$</span>qsmk <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>interv0<span class="sc">$</span>wt82_71 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>interv1 <span class="ot">&lt;-</span> nhefs <span class="co"># 3rd copy: treatment set to 1, outcome to missing</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>interv1<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>interv1<span class="sc">$</span>qsmk <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>interv1<span class="sc">$</span>wt82_71 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>onesample <span class="ot">&lt;-</span> <span class="fu">rbind</span>(nhefs, interv0, interv1) <span class="co"># combining datasets</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="do">## linear model to estimate mean outcome conditional on treatment and confounders</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="do">## parameters are estimated using original observations only (nhefs)</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="do">## parameter estimates are used to predict mean outcome for observations with </span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="do">## treatment set to 0 (interv=0) and to 1 (interv=1)</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>std <span class="ot">&lt;-</span> <span class="fu">glm</span>(f, <span class="at">data =</span> onesample)</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>onesample<span class="sc">$</span>predicted_meanY <span class="ot">&lt;-</span> <span class="fu">predict</span>(std, onesample)</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="do">## estimate mean outcome in each of the groups interv=0, and interv=1</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="do">## this mean outcome is a weighted average of the mean outcomes in each combination </span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="do">## of values of treatment and confounders, that is, the standardized outcome</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(onesample[<span class="fu">which</span>(onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="sc">-</span><span class="dv">1</span>), ]<span class="sc">$</span>predicted_meanY)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## create a dataset with 3 copies of each subject</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>nhefs<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="co"># 1st copy: equal to original one</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>interv0 <span class="ot">&lt;-</span> nhefs <span class="co"># 2nd copy: treatment set to 0, outcome to missing</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>interv0<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>interv0<span class="sc">$</span>qsmk <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>interv0<span class="sc">$</span>wt82_71 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>interv1 <span class="ot">&lt;-</span> nhefs <span class="co"># 3rd copy: treatment set to 1, outcome to missing</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>interv1<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>interv1<span class="sc">$</span>qsmk <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>interv1<span class="sc">$</span>wt82_71 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>onesample <span class="ot">&lt;-</span> <span class="fu">rbind</span>(nhefs, interv0, interv1) <span class="co"># combining datasets</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="do">## linear model to estimate mean outcome conditional on treatment and confounders</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="do">## parameters are estimated using original observations only (nhefs)</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="do">## parameter estimates are used to predict mean outcome for observations with </span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="do">## treatment set to 0 (interv=0) and to 1 (interv=1)</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>std <span class="ot">&lt;-</span> <span class="fu">glm</span>(f, <span class="at">data =</span> onesample)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>onesample<span class="sc">$</span>predicted_meanY <span class="ot">&lt;-</span> <span class="fu">predict</span>(std, onesample)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="do">## estimate mean outcome in each of the groups interv=0, and interv=1</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="do">## this mean outcome is a weighted average of the mean outcomes in each combination </span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="do">## of values of treatment and confounders, that is, the standardized outcome</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(onesample[<span class="fu">which</span>(onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="sc">-</span><span class="dv">1</span>), ]<span class="sc">$</span>predicted_meanY)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.6383</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(onesample[<span class="fu">which</span>(onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">0</span>), ]<span class="sc">$</span>predicted_meanY)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(onesample[<span class="fu">which</span>(onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">0</span>), ]<span class="sc">$</span>predicted_meanY)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.756213</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(onesample[<span class="fu">which</span>(onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">1</span>), ]<span class="sc">$</span>predicted_meanY)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(onesample[<span class="fu">which</span>(onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">1</span>), ]<span class="sc">$</span>predicted_meanY)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5.273587</code></pre>
 </div>
 </div>
-<p>It may be useful to note that the <code>datagrid()</code> function provided by <code>marginaleffects</code> can create counterfactual datasets automatically. This is equivalent to the <code>onesample</code> dataset:</p>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<p>The <code>R</code> code manually computing these quantities that accompanies Hernán and Robins’ book can be translated into <code>Python</code> as follows :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">datagrid</span>(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> fit,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">qsmk =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid_type =</span> <span class="st">"counterfactual"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a dataset with 3 copies of each subject</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>nhefs <span class="op">=</span> nhefs.with_columns(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    pl.lit(<span class="op">-</span><span class="dv">1</span>).alias(<span class="st">'interv'</span>) <span class="co"># 1st copy: equal to original one</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>interv0 <span class="op">=</span> nhefs <span class="co"># 2nd copy: treatment set to 0, outcome to missing</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>interv0 <span class="op">=</span> interv0.with_columns(</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    pl.lit(<span class="dv">0</span>).alias(<span class="st">'interv'</span>),</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    pl.lit(<span class="dv">0</span>).alias(<span class="st">'qsmk'</span>).cast(pl.Int64),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    pl.lit(<span class="va">None</span>).alias(<span class="st">'wt82_71'</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>interv1 <span class="op">=</span> nhefs <span class="co"># 3rd copy: treatment set to 1, outcome to missing</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>interv1 <span class="op">=</span> interv1.with_columns(</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    pl.lit(<span class="dv">1</span>).alias(<span class="st">'interv'</span>),</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    pl.lit(<span class="dv">1</span>).alias(<span class="st">'qsmk'</span>).cast(pl.Int64),</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    pl.lit(<span class="va">None</span>).alias(<span class="st">'wt82_71'</span>)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="co">## linear model to estimate mean outcome conditional on treatment and confounders</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="co">## parameters are estimated using original observations only (nhefs)</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>std <span class="op">=</span> smf.glm(f, data <span class="op">=</span> nhefs.to_pandas()).fit()</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>onesample <span class="op">=</span> pl.concat([nhefs, interv0, interv1], how<span class="op">=</span><span class="st">'vertical'</span>) <span class="co"># combining datasets</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="co">## parameter estimates are used to predict mean outcome for observations with </span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a><span class="co">## treatment set to 0 (interv=0) and to 1 (interv=1)</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>onesample <span class="op">=</span> onesample.with_columns(</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>    pl.Series(name <span class="op">=</span> <span class="st">'predicted_meanY'</span>, values <span class="op">=</span> std.predict(onesample.to_pandas()))</span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a><span class="co">## estimate mean outcome in each of the groups interv=0, and interv=1</span></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a><span class="co">## this mean outcome is a weighted average of the mean outcomes in each combination </span></span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a><span class="co">## of values of treatment and confounders, that is, the standardized outcome</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>) <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>)[<span class="st">'predicted_meanY'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2.638299786562712</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>) <span class="op">==</span> <span class="dv">0</span>)[<span class="st">'predicted_meanY'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1.7562131154656988</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>) <span class="op">==</span> <span class="dv">1</span>)[<span class="st">'predicted_meanY'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>5.2735873163511755</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>It may be useful to note that the <code>datagrid()</code> function provided by <code>marginaleffects</code> can create counterfactual datasets automatically. This is equivalent to the <code>onesample</code> dataset:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">datagrid</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> fit,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">qsmk =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid_type =</span> <span class="st">"counterfactual"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>nd <span class="op">=</span> datagrid(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> fit,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    qsmk <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>],</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    grid_type <span class="op">=</span> <span class="st">"counterfactual"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
 </div>
 </section>
 <section id="contrast" class="level3">
@@ -714,8 +873,12 @@ Type:  response </code></pre>
 <li>The <code>variables</code> argument is used to indicate that we want to estimate a “contrast” between adjusted predictions when <code>qsmk</code> is equal to 1 or 0.</li>
 <li><code>comparisons()</code> automatically produces estimates of uncertainty.</li>
 </ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(std, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">qsmk =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(std, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">qsmk =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
@@ -725,71 +888,112 @@ Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.
 Type:  response </code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> avg_comparisons(std, variables <span class="op">=</span> {<span class="st">"qsmk"</span> : [<span class="dv">0</span>,<span class="dv">1</span>]})</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (1, 9)
+┌──────┬──────────────────────────┬──────────┬───────────┬───┬──────────┬──────┬──────┬───────┐
+│ Term ┆ Contrast                 ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5% ┆ 97.5% │
+│ ---  ┆ ---                      ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---  ┆ ---   │
+│ str  ┆ str                      ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str  ┆ str   │
+╞══════╪══════════════════════════╪══════════╪═══════════╪═══╪══════════╪══════╪══════╪═══════╡
+│ qsmk ┆ mean(True) - mean(False) ┆ 3.52     ┆ 0.44      ┆ … ┆ 1.33e-15 ┆ 49.4 ┆ 2.65 ┆ 4.38  │
+└──────┴──────────────────────────┴──────────┴───────────┴───┴──────────┴──────┴──────┴───────┘
+
+Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 <p>Under the hood, <code>comparisons()</code> did exactly what we described in the g-formula steps above:</p>
 <p>We can obtain the same result by manually computing the quantities, using the replication code from Hernán and Robins:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(onesample[<span class="fu">which</span>(onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">1</span>), ]<span class="sc">$</span>predicted_meanY) <span class="sc">-</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(onesample[<span class="fu">which</span>(onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">0</span>), ]<span class="sc">$</span>predicted_meanY)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(onesample[<span class="fu">which</span>(onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">1</span>), ]<span class="sc">$</span>predicted_meanY) <span class="sc">-</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(onesample[<span class="fu">which</span>(onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">0</span>), ]<span class="sc">$</span>predicted_meanY)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3.517374</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>)<span class="op">==</span><span class="dv">1</span>)[<span class="st">"predicted_meanY"</span>].mean() <span class="op">-\</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>)<span class="op">==</span><span class="dv">0</span>)[<span class="st">"predicted_meanY"</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3.5173742008854765</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <p>Although manual computation is simple, it does not provide uncertainty estimates. In contrast, <code>comparisons()</code> has already computed the standard error and confidence interval using the delta method.</p>
 <p>Instead of the delta method, most analysts will rely on bootstrapping. For example, the replication code from Hernán and Robins does this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## function to calculate difference in means</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>standardization <span class="ot">&lt;-</span> <span class="cf">function</span>(data, indices) {</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># create a dataset with 3 copies of each subject</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    d <span class="ot">&lt;-</span> data[indices, ] <span class="co"># 1st copy: equal to original one`</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    d<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    d0 <span class="ot">&lt;-</span> d <span class="co"># 2nd copy: treatment set to 0, outcome to missing</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    d0<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    d0<span class="sc">$</span>qsmk <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    d0<span class="sc">$</span>wt82_71 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    d1 <span class="ot">&lt;-</span> d <span class="co"># 3rd copy: treatment set to 1, outcome to missing</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    d1<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    d1<span class="sc">$</span>qsmk <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    d1<span class="sc">$</span>wt82_71 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    d.onesample <span class="ot">&lt;-</span> <span class="fu">rbind</span>(d, d0, d1) <span class="co"># combining datasets</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># linear model to estimate mean outcome conditional on treatment and confounders</span></span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># parameters are estimated using original observations only (interv= -1)</span></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># parameter estimates are used to predict mean outcome for observations with set</span></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># treatment (interv=0 and interv=1)</span></span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(f, <span class="at">data =</span> d.onesample)</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    d.onesample<span class="sc">$</span>predicted_meanY <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit, d.onesample)</span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># estimate mean outcome in each of the groups interv=-1, interv=0, and interv=1</span></span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">mean</span>(d.onesample<span class="sc">$</span>predicted_meanY[d.onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">1</span>]) <span class="sc">-</span></span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>           <span class="fu">mean</span>(d.onesample<span class="sc">$</span>predicted_meanY[d.onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">0</span>]))</span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="do">## bootstrap</span></span>
-<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> nhefs, <span class="at">statistic =</span> standardization, <span class="at">R =</span> <span class="dv">1000</span>)</span>
-<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a><span class="do">## generating confidence intervals</span></span>
-<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">sd</span>(results<span class="sc">$</span>t[, <span class="dv">1</span>])</span>
-<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>meant0 <span class="ot">&lt;-</span> results<span class="sc">$</span>t0</span>
-<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>ll <span class="ot">&lt;-</span> meant0 <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>) <span class="sc">*</span> se</span>
-<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>ul <span class="ot">&lt;-</span> meant0 <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>) <span class="sc">*</span> se</span>
-<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>bootstrap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">" "</span> <span class="ot">=</span> <span class="st">"Treatment - No Treatment"</span>,</span>
-<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimate =</span> meant0,</span>
-<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">std.error =</span> se,</span>
-<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">conf.low =</span> ll,</span>
-<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">conf.high =</span> ul,</span>
-<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">check.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>bootstrap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">## function to calculate difference in means</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>standardization <span class="ot">&lt;-</span> <span class="cf">function</span>(data, indices) {</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># create a dataset with 3 copies of each subject</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    d <span class="ot">&lt;-</span> data[indices, ] <span class="co"># 1st copy: equal to original one`</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    d<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    d0 <span class="ot">&lt;-</span> d <span class="co"># 2nd copy: treatment set to 0, outcome to missing</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    d0<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    d0<span class="sc">$</span>qsmk <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    d0<span class="sc">$</span>wt82_71 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>    d1 <span class="ot">&lt;-</span> d <span class="co"># 3rd copy: treatment set to 1, outcome to missing</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    d1<span class="sc">$</span>interv <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    d1<span class="sc">$</span>qsmk <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    d1<span class="sc">$</span>wt82_71 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    d.onesample <span class="ot">&lt;-</span> <span class="fu">rbind</span>(d, d0, d1) <span class="co"># combining datasets</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># linear model to estimate mean outcome conditional on treatment and confounders</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># parameters are estimated using original observations only (interv= -1)</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># parameter estimates are used to predict mean outcome for observations with set</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># treatment (interv=0 and interv=1)</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(f, <span class="at">data =</span> d.onesample)</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>    d.onesample<span class="sc">$</span>predicted_meanY <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit, d.onesample)</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># estimate mean outcome in each of the groups interv=-1, interv=0, and interv=1</span></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">mean</span>(d.onesample<span class="sc">$</span>predicted_meanY[d.onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">1</span>]) <span class="sc">-</span></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>           <span class="fu">mean</span>(d.onesample<span class="sc">$</span>predicted_meanY[d.onesample<span class="sc">$</span>interv <span class="sc">==</span> <span class="dv">0</span>]))</span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a><span class="do">## bootstrap</span></span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> nhefs, <span class="at">statistic =</span> standardization, <span class="at">R =</span> <span class="dv">1000</span>)</span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a><span class="do">## generating confidence intervals</span></span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">sd</span>(results<span class="sc">$</span>t[, <span class="dv">1</span>])</span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>meant0 <span class="ot">&lt;-</span> results<span class="sc">$</span>t0</span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>ll <span class="ot">&lt;-</span> meant0 <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>) <span class="sc">*</span> se</span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>ul <span class="ot">&lt;-</span> meant0 <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>) <span class="sc">*</span> se</span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a>bootstrap <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">" "</span> <span class="ot">=</span> <span class="st">"Treatment - No Treatment"</span>,</span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimate =</span> meant0,</span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">std.error =</span> se,</span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">conf.low =</span> ll,</span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">conf.high =</span> ul,</span>
+<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">check.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>bootstrap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                           estimate std.error conf.low conf.high
-1 Treatment - No Treatment 3.517374 0.4882843 2.560355  4.474394</code></pre>
+1 Treatment - No Treatment 3.517374 0.4790668 2.578421  4.456328</code></pre>
 </div>
 </div>
 <p>The results are close to those that we obtained with <code>comparisons()</code>, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">qsmk =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">qsmk =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
@@ -797,6 +1001,27 @@ Type:  response </code></pre>
 
 Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> avg_comparisons(std, variables <span class="op">=</span> {<span class="st">"qsmk"</span> : [<span class="dv">0</span>,<span class="dv">1</span>]})</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (1, 9)
+┌──────┬──────────────────────────┬──────────┬───────────┬───┬──────────┬──────┬──────┬───────┐
+│ Term ┆ Contrast                 ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5% ┆ 97.5% │
+│ ---  ┆ ---                      ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---  ┆ ---   │
+│ str  ┆ str                      ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str  ┆ str   │
+╞══════╪══════════════════════════╪══════════╪═══════════╪═══╪══════════╪══════╪══════╪═══════╡
+│ qsmk ┆ mean(True) - mean(False) ┆ 3.52     ┆ 0.44      ┆ … ┆ 1.33e-15 ┆ 49.4 ┆ 2.65 ┆ 4.38  │
+└──────┴──────────────────────────┴──────────┴───────────┴───┴──────────┴──────┴──────┴───────┘
+
+Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 

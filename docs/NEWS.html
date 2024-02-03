@@ -531,16 +531,25 @@ ul.task-list li input[type="checkbox"] {
 <p>New:</p>
 <ul>
 <li><code>datagrid(grid_type = "balanced")</code> creates a balanced grid with all unique values of categorical predictors. This can be used with <code>predictions()</code> to compute marginal means as in the <code>emmeans</code> package.</li>
+<li><code>mvgam</code> package support (multivariate generalized additive models)</li>
 </ul>
 <p>Deprecation warnings:</p>
 <ul>
-<li><code>deltamethod()</code> has been named <code>hypotheses()</code> for a while. We now issue a deprecation warning and will be removed eventually.</li>
+<li><code>deltamethod()</code> has been named <code>hypotheses()</code> for a while. We now issue a deprecation warning and it will be removed eventually.</li>
 <li><code>datagridcf()</code> will eventually be deprecated and removed from the package. We will raise a warning for at least one year before removing the function. Identical results can be obtained with <code>datagrid(..., grid_type="counterfactual")</code></li>
 <li><code>marginal_means()</code> will eventually be deprecated and removed from the package. We will raise a warning for at least one year before removing the function. Identical results can be obtained using the <code>predictions()</code> function and the <code>grid_type="balanced"</code> argument of <code>datagrid()</code>. Examples are in the marginal means vignette on the website.</li>
+</ul>
+<p>Minor:</p>
+<ul>
+<li>Better warning messages for unsupported matrix columns, enhancing user experience and troubleshooting.</li>
+<li>Various improvements to documentation.</li>
+<li>Typos</li>
+<li>Repository hosts model objects for easier testing.</li>
 </ul>
 <p>Bug fixes:</p>
 <ul>
 <li>Error on <code>hypotheses(joint = "string")</code> for <code>comparisons()</code> objects (no result was returned). Thanks to <a href="https://github.com/BorgeJorge"><span class="citation" data-cites="BorgeJorge">@BorgeJorge</span></a> for report <a href="https://github.com/vincentarelbundock/marginaleffects/issues/981">#981</a>.</li>
+<li>Enhanced support for multi-equation Bayesian models with <code>brms</code> models. Thanks to <a href="https://github.com/winterstat"><span class="citation" data-cites="winterstat">@winterstat</span></a> for report <a href="https://github.com/vincentarelbundock/marginaleffects/issues/1006">#1006</a>.</li>
 </ul>
 </section>
 <section id="section" class="level2">

@@ -575,6 +575,10 @@ window.Quarto = {
 <p>We will use the <code>mtcars</code> dataset. We’ll analyze fuel efficiency, <code>mpg</code> (miles per gallon), as a function of <code>am</code> (transmission type) and <code>vs</code> (engine shape).</p>
 <p><code>vs</code> is an indicator variable for if the car has a straight engine (1 = straight engine, 0 = V-shaped). <code>am</code> is an indicator variable for if the car has manual transmission (1 = manual transmission, 0=automatic transmission). There are then four types of cars (1 type for each of the four combinations of binary indicators).</p>
 <p>Let’s start by creating a model for fuel efficiency. For simplicity, we’ll use linear regression and model the interaction between <code>vs</code> and <code>am</code>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
@@ -583,46 +587,84 @@ window.Quarto = {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## See ?mtcars for variable definitions</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> vs <span class="sc">+</span> am <span class="sc">+</span> vs<span class="sc">:</span>am, <span class="at">data=</span>mtcars) <span class="co"># equivalent to ~ vs*am</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> marginaleffects <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mtcars <span class="op">=</span> pl.read_csv(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> smf.ols(<span class="st">"mpg ~ vs + am + vs:am"</span>, data <span class="op">=</span> mtcars).fit() <span class="co"># equivalent to ~ vs*am</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
 <p>We can plot the predictions from the model using the <code>plot_predictions</code> function. From the plot below, we can see a few things:</p>
 <ul>
 <li>Straight engines (<code>vs=1</code>) are estimated to have better expected fuel efficiency than V-shaped engines (<code>vs=0</code>).</li>
 <li>Manual transmissions (<code>am=1</code>) are estimated to have better fuel efficiency for both V-shaped and straight engines.</li>
 <li>For straight engines, the effect of manual transmissions on fuel efficiency seems to increase.</li>
 </ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(fit, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"vs"</span>, <span class="st">"am"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(fit, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"vs"</span>, <span class="st">"am"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="experiments_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plot_predictions(fit, by <span class="op">=</span> [<span class="st">"vs"</span>, <span class="st">"am"</span>]).draw(show<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="experiments_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 </section>
 <section id="evaluating-effects-from-the-model-summary" class="level3">
 <h3 class="anchored" data-anchor-id="evaluating-effects-from-the-model-summary">Evaluating Effects From The Model Summary</h3>
-<p>Since this model is fairly simple the estimated differences between any of the four possible combinations of <code>vs</code> and <code>am</code> can be read from the regression table, which we create using the <code>modelsummary</code> package:</p>
+<p>Since this model is fairly simple the estimated differences between any of the four possible combinations of <code>vs</code> and <code>am</code> can be read from the regression table:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>We create the regression table using the <code>modelsummary</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(fit, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"r.squared"</span>, <span class="st">"nobs"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(fit, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"r.squared"</span>, <span class="st">"nobs"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="ihbcjtfuhj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ihbcjtfuhj table {
+<div id="ywnmbzulpc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ywnmbzulpc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ihbcjtfuhj thead, #ihbcjtfuhj tbody, #ihbcjtfuhj tfoot, #ihbcjtfuhj tr, #ihbcjtfuhj td, #ihbcjtfuhj th {
+#ywnmbzulpc thead, #ywnmbzulpc tbody, #ywnmbzulpc tfoot, #ywnmbzulpc tr, #ywnmbzulpc td, #ywnmbzulpc th {
   border-style: none;
 }
 
-#ihbcjtfuhj p {
+#ywnmbzulpc p {
   margin: 0;
   padding: 0;
 }
 
-#ihbcjtfuhj .gt_table {
+#ywnmbzulpc .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -648,12 +690,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#ihbcjtfuhj .gt_caption {
+#ywnmbzulpc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ihbcjtfuhj .gt_title {
+#ywnmbzulpc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -665,7 +707,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#ihbcjtfuhj .gt_subtitle {
+#ywnmbzulpc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -677,7 +719,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#ihbcjtfuhj .gt_heading {
+#ywnmbzulpc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -689,13 +731,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ihbcjtfuhj .gt_bottom_border {
+#ywnmbzulpc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ihbcjtfuhj .gt_col_headings {
+#ywnmbzulpc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -710,7 +752,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ihbcjtfuhj .gt_col_heading {
+#ywnmbzulpc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -730,7 +772,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#ihbcjtfuhj .gt_column_spanner_outer {
+#ywnmbzulpc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -742,15 +784,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#ihbcjtfuhj .gt_column_spanner_outer:first-child {
+#ywnmbzulpc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ihbcjtfuhj .gt_column_spanner_outer:last-child {
+#ywnmbzulpc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ihbcjtfuhj .gt_column_spanner {
+#ywnmbzulpc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -762,11 +804,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#ihbcjtfuhj .gt_spanner_row {
+#ywnmbzulpc .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ihbcjtfuhj .gt_group_heading {
+#ywnmbzulpc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -792,7 +834,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#ihbcjtfuhj .gt_empty_group_heading {
+#ywnmbzulpc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -807,15 +849,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#ihbcjtfuhj .gt_from_md > :first-child {
+#ywnmbzulpc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ihbcjtfuhj .gt_from_md > :last-child {
+#ywnmbzulpc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ihbcjtfuhj .gt_row {
+#ywnmbzulpc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -834,7 +876,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#ihbcjtfuhj .gt_stub {
+#ywnmbzulpc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -847,7 +889,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ihbcjtfuhj .gt_stub_row_group {
+#ywnmbzulpc .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -861,15 +903,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#ihbcjtfuhj .gt_row_group_first td {
+#ywnmbzulpc .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ihbcjtfuhj .gt_row_group_first th {
+#ywnmbzulpc .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ihbcjtfuhj .gt_summary_row {
+#ywnmbzulpc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -879,16 +921,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ihbcjtfuhj .gt_first_summary_row {
+#ywnmbzulpc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ihbcjtfuhj .gt_first_summary_row.thick {
+#ywnmbzulpc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ihbcjtfuhj .gt_last_summary_row {
+#ywnmbzulpc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -898,7 +940,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ihbcjtfuhj .gt_grand_summary_row {
+#ywnmbzulpc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -908,7 +950,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ihbcjtfuhj .gt_first_grand_summary_row {
+#ywnmbzulpc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -918,7 +960,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#ihbcjtfuhj .gt_last_grand_summary_row_top {
+#ywnmbzulpc .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -928,11 +970,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ihbcjtfuhj .gt_striped {
+#ywnmbzulpc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ihbcjtfuhj .gt_table_body {
+#ywnmbzulpc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -941,7 +983,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ihbcjtfuhj .gt_footnotes {
+#ywnmbzulpc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -955,7 +997,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ihbcjtfuhj .gt_footnote {
+#ywnmbzulpc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -964,7 +1006,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ihbcjtfuhj .gt_sourcenotes {
+#ywnmbzulpc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -978,7 +1020,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ihbcjtfuhj .gt_sourcenote {
+#ywnmbzulpc .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -986,63 +1028,63 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ihbcjtfuhj .gt_left {
+#ywnmbzulpc .gt_left {
   text-align: left;
 }
 
-#ihbcjtfuhj .gt_center {
+#ywnmbzulpc .gt_center {
   text-align: center;
 }
 
-#ihbcjtfuhj .gt_right {
+#ywnmbzulpc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ihbcjtfuhj .gt_font_normal {
+#ywnmbzulpc .gt_font_normal {
   font-weight: normal;
 }
 
-#ihbcjtfuhj .gt_font_bold {
+#ywnmbzulpc .gt_font_bold {
   font-weight: bold;
 }
 
-#ihbcjtfuhj .gt_font_italic {
+#ywnmbzulpc .gt_font_italic {
   font-style: italic;
 }
 
-#ihbcjtfuhj .gt_super {
+#ywnmbzulpc .gt_super {
   font-size: 65%;
 }
 
-#ihbcjtfuhj .gt_footnote_marks {
+#ywnmbzulpc .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ihbcjtfuhj .gt_asterisk {
+#ywnmbzulpc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ihbcjtfuhj .gt_indent_1 {
+#ywnmbzulpc .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ihbcjtfuhj .gt_indent_2 {
+#ywnmbzulpc .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ihbcjtfuhj .gt_indent_3 {
+#ywnmbzulpc .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ihbcjtfuhj .gt_indent_4 {
+#ywnmbzulpc .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ihbcjtfuhj .gt_indent_5 {
+#ywnmbzulpc .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1101,6 +1143,41 @@ window.Quarto = {
 </div>
 </div>
 </div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fit.summary())</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                             OLS Regression Results                            </span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dep. Variable:                    mpg   R-squared:                       0.700</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:                            OLS   Adj. R-squared:                  0.668</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Method:                 Least Squares   F-statistic:                     21.81</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Fri, 02 Feb 2024   Prob (F-statistic):           1.73e-07</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        21:13:20   Log-Likelihood:                -83.098</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; No. Observations:                  32   AIC:                             174.2</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Residuals:                      28   BIC:                             180.1</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Model:                           3                                         </span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Covariance Type:            nonrobust                                         </span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                  coef    std err          t      P&gt;|t|      [0.025      0.975]</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Intercept     15.0500      1.002     15.017      0.000      12.997      17.103</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; vs             5.6929      1.651      3.448      0.002       2.311       9.075</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; am             4.7000      1.736      2.708      0.011       1.144       8.256</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; vs:am          2.9286      2.541      1.153      0.259      -2.276       8.134</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Omnibus:                        0.609   Durbin-Watson:                   1.520</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prob(Omnibus):                  0.738   Jarque-Bera (JB):                0.713</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Skew:                          -0.223   Prob(JB):                        0.700</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Kurtosis:                       2.421   Cond. No.                         6.32</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Notes:</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
 <p>We can express the same results in the form of a linear equation:</p>
 <p><span class="math display">\[ \mbox{mpg} = 15.050 + 5.693 \cdot \mbox{vs} + 4.700 \cdot \mbox{am} + 2.929 \cdot \mbox{vs} \cdot \mbox{am}.\]</span></p>
 <p>With a little arithmetic, we can compute estimated differences in fuel efficiency between different groups:</p>
@@ -1120,66 +1197,28 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Let’s use <code>avg_comparisons</code> to get the difference between straight engines and V-shaped engines when the car has automatic transmission. In this call, the <code>variables</code> argument indicates that we want to estimate the effect of a change of 1 unit in the <code>vs</code> variable. The <code>newdata=datagrid(am=0)</code> determines the values of the covariates at which we want to evaluate the contrast.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"vs"</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span>))</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    vs    1 - 0     5.69       1.65 3.45   &lt;0.001 10.8  2.46   8.93</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>As expected, the results produced by <code>avg_comparisons()</code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>The next difference that we compute is between manual transmissions and automatic transmissions when the car has a V-shaped engine. Again, the call to <code>avg_comparisons</code> is shown below, and the corresponding contrast is indicated in the plot below using an arrow.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"am"</span>,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">vs =</span> <span class="dv">0</span>))</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    am    1 - 0      4.7       1.74 2.71  0.00678 7.2   1.3    8.1</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
 <p><img src="experiments_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>The third difference we estimated was between manual transmissions and automatic transmissions when the car has a straight engine. The model call and contrast are:</p>
+<p>Let’s use <code>avg_comparisons</code> to get the difference between straight engines and V-shaped engines when the car has automatic transmission. In this call, the <code>variables</code> argument indicates that we want to estimate the effect of a change of 1 unit in the <code>vs</code> variable. The <code>newdata=datagrid(am=0)</code> determines the values of the covariates at which we want to evaluate the contrast.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"am"</span>,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">vs =</span> <span class="dv">1</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    am    1 - 0     7.63       1.86 4.11   &lt;0.001 14.6  3.99   11.3</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"vs"</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    vs    1 - 0     5.69       1.65 3.45   &lt;0.001 10.8  2.46   8.93</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>As expected, the results produced by <code>avg_comparisons()</code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -1189,24 +1228,183 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>The last difference and contrast between manual transmissions with straight engines and automatic transmissions with V-shaped engines. We call this a “cross-contrast” because we are measuring the difference between two groups that differ on two explanatory variables at the same time. To compute this contrast, we use the <code>cross</code> argument of <code>avg_comparisons</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"am"</span>, <span class="st">"vs"</span>),</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">cross =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % C: am C: vs</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      13.3       1.65 8.07   &lt;0.001 50.3  10.1   16.6 1 - 0 1 - 0</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast_am, contrast_vs, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(avg_comparisons(fit,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"vs"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(am <span class="op">=</span> <span class="dv">0</span>)))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; shape: (1, 9)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ┌──────┬──────────────────────────┬──────────┬───────────┬───┬──────────┬──────┬──────┬───────┐</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Term ┆ Contrast                 ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5% ┆ 97.5% │</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ ---  ┆ ---                      ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---  ┆ ---   │</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ str  ┆ str                      ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str  ┆ str   │</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ╞══════╪══════════════════════════╪══════════╪═══════════╪═══╪══════════╪══════╪══════╪═══════╡</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ vs   ┆ mean(True) - mean(False) ┆ 5.69     ┆ 1.65      ┆ … ┆ 0.000565 ┆ 10.8 ┆ 2.46 ┆ 8.93  │</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; └──────┴──────────────────────────┴──────────┴───────────┴───┴──────────┴──────┴──────┴───────┘</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As expected, the results produced by <code>avg_comparisons()</code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="experiments_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The next difference that we compute is between manual transmissions and automatic transmissions when the car has a V-shaped engine. Again, the call to <code>avg_comparisons</code> is shown below, and the corresponding contrast is indicated in the plot below using an arrow.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"am"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">vs =</span> <span class="dv">0</span>))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    am    1 - 0      4.7       1.74 2.71  0.00678 7.2   1.3    8.1</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="experiments_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(avg_comparisons(fit,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"am"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(vs <span class="op">=</span> <span class="dv">0</span>)))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; shape: (1, 9)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ┌──────┬──────────────────────────┬──────────┬───────────┬───┬─────────┬──────┬──────┬───────┐</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Term ┆ Contrast                 ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|) ┆ S    ┆ 2.5% ┆ 97.5% │</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ ---  ┆ ---                      ┆ ---      ┆ ---       ┆   ┆ ---     ┆ ---  ┆ ---  ┆ ---   │</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ str  ┆ str                      ┆ str      ┆ str       ┆   ┆ str     ┆ str  ┆ str  ┆ str   │</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ╞══════╪══════════════════════════╪══════════╪═══════════╪═══╪═════════╪══════╪══════╪═══════╡</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ am   ┆ mean(True) - mean(False) ┆ 4.7      ┆ 1.74      ┆ … ┆ 0.00678 ┆ 7.21 ┆ 1.3  ┆ 8.1   │</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; └──────┴──────────────────────────┴──────────┴───────────┴───┴─────────┴──────┴──────┴───────┘</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="experiments_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The third difference we estimated was between manual transmissions and automatic transmissions when the car has a straight engine. The model call and contrast are:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"am"</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">vs =</span> <span class="dv">1</span>))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    am    1 - 0     7.63       1.86 4.11   &lt;0.001 14.6  3.99   11.3</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="experiments_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(avg_comparisons(fit,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"am"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(vs <span class="op">=</span> <span class="dv">1</span>)))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; shape: (1, 9)</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ┌──────┬──────────────────────────┬──────────┬───────────┬───┬──────────┬──────┬──────┬───────┐</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Term ┆ Contrast                 ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5% ┆ 97.5% │</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ ---  ┆ ---                      ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---  ┆ ---   │</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ str  ┆ str                      ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str  ┆ str   │</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ╞══════╪══════════════════════════╪══════════╪═══════════╪═══╪══════════╪══════╪══════╪═══════╡</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ am   ┆ mean(True) - mean(False) ┆ 7.63     ┆ 1.86      ┆ … ┆ 3.94e-05 ┆ 14.6 ┆ 3.99 ┆ 11.3  │</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; └──────┴──────────────────────────┴──────────┴───────────┴───┴──────────┴──────┴──────┴───────┘</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="experiments_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The last difference and contrast between manual transmissions with straight engines and automatic transmissions with V-shaped engines. We call this a “cross-contrast” because we are measuring the difference between two groups that differ on two explanatory variables at the same time. To compute this contrast, we use the <code>cross</code> argument of <code>avg_comparisons</code>:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"am"</span>, <span class="st">"vs"</span>),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">cross =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % C: am C: vs</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      13.3       1.65 8.07   &lt;0.001 50.3  10.1   16.6 1 - 0 1 - 0</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast_am, contrast_vs, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="experiments_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Not implemented yet</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="experiments_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1223,54 +1421,137 @@ window.Quarto = {
 <li>Center all predictors by subtracting each of their means.</li>
 <li>Estimate a linear model in which the treatment is interacted with each of the covariates.</li>
 </ol>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
 <p>The <code>estimatr</code> package includes a convenient function to implement this strategy:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>lalonde <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv"</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm_lin</span>(</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    re78 <span class="sc">~</span> treat,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">covariates =</span> <span class="sc">~</span> age <span class="sc">+</span> educ <span class="sc">+</span> race,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> lalonde,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_type =</span> <span class="st">"HC3"</span>)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm_lin(formula = re78 ~ treat, covariates = ~age + educ + race, </span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data = lalonde, se_type = "HC3")</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Standard error type:  HC3 </span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                    Estimate Std. Error t value  Pr(&gt;|t|) CI Lower CI Upper  DF</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)         6488.05     356.71 18.1885 2.809e-59  5787.50   7188.6 604</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat                489.73     878.52  0.5574 5.774e-01 -1235.59   2215.0 604</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; age_c                 85.88      35.42  2.4248 1.561e-02    16.32    155.4 604</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; educ_c               464.04     131.51  3.5286 4.495e-04   205.77    722.3 604</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; racehispan_c        2775.47    1155.40  2.4022 1.660e-02   506.38   5044.6 604</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; racewhite_c         2291.67     793.30  2.8888 4.006e-03   733.71   3849.6 604</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:age_c           17.23      76.37  0.2256 8.216e-01  -132.75    167.2 604</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:educ_c         226.71     308.43  0.7350 4.626e-01  -379.02    832.4 604</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:racehispan_c -1057.84    2652.42 -0.3988 6.902e-01 -6266.92   4151.2 604</span></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:racewhite_c  -1205.68    1805.21 -0.6679 5.045e-01 -4750.92   2339.6 604</span></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.05722 ,   Adjusted R-squared:  0.04317 </span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 4.238 on 9 and 604 DF,  p-value: 2.424e-05</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>lalonde <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv"</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm_lin</span>(</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    re78 <span class="sc">~</span> treat,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">covariates =</span> <span class="sc">~</span> age <span class="sc">+</span> educ <span class="sc">+</span> race,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> lalonde,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_type =</span> <span class="st">"HC3"</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm_lin(formula = re78 ~ treat, covariates = ~age + educ + race, </span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data = lalonde, se_type = "HC3")</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Standard error type:  HC3 </span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                    Estimate Std. Error t value  Pr(&gt;|t|) CI Lower CI Upper  DF</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)         6488.05     356.71 18.1885 2.809e-59  5787.50   7188.6 604</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat                489.73     878.52  0.5574 5.774e-01 -1235.59   2215.0 604</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; age_c                 85.88      35.42  2.4248 1.561e-02    16.32    155.4 604</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; educ_c               464.04     131.51  3.5286 4.495e-04   205.77    722.3 604</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; racehispan_c        2775.47    1155.40  2.4022 1.660e-02   506.38   5044.6 604</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; racewhite_c         2291.67     793.30  2.8888 4.006e-03   733.71   3849.6 604</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:age_c           17.23      76.37  0.2256 8.216e-01  -132.75    167.2 604</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:educ_c         226.71     308.43  0.7350 4.626e-01  -379.02    832.4 604</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:racehispan_c -1057.84    2652.42 -0.3988 6.902e-01 -6266.92   4151.2 604</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:racewhite_c  -1205.68    1805.21 -0.6679 5.045e-01 -4750.92   2339.6 604</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.05722 ,   Adjusted R-squared:  0.04317 </span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 4.238 on 9 and 604 DF,  p-value: 2.424e-05</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>lalonde <span class="op">=</span> pl.read_csv(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv"</span>, infer_schema_length<span class="op">=</span><span class="dv">200</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>lalonde <span class="op">=</span> lalonde.to_dummies(<span class="st">'race'</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>lalonde <span class="op">=</span> lalonde.with_columns(</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  pl.col(<span class="st">'age'</span>).sub(pl.col(<span class="st">'age'</span>).mean()),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  pl.col(<span class="st">'educ'</span>).sub(pl.col(<span class="st">'educ'</span>).mean()),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  pl.col(<span class="st">'race_hispan'</span>).sub(pl.col(<span class="st">'race_hispan'</span>).mean()),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  pl.col(<span class="st">'race_white'</span>).sub(pl.col(<span class="st">'race_white'</span>).mean()),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(<span class="st">"re78 ~ treat + age + educ + race_hispan + race_white + treat*(age + educ + race_hispan + race_white)"</span>, data <span class="op">=</span> lalonde.to_pandas()).fit()</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mod.get_robustcov_results(cov_type<span class="op">=</span><span class="st">'HC3'</span>).summary())</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                             OLS Regression Results                            </span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dep. Variable:                   re78   R-squared:                       0.057</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:                            OLS   Adj. R-squared:                  0.043</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Method:                 Least Squares   F-statistic:                     4.238</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Fri, 02 Feb 2024   Prob (F-statistic):           2.42e-05</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        21:13:31   Log-Likelihood:                -6328.8</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; No. Observations:                 614   AIC:                         1.268e+04</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Residuals:                     604   BIC:                         1.272e+04</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Model:                           9                                         </span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Covariance Type:                  HC3                                         </span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; =====================================================================================</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                         coef    std err          t      P&gt;|t|      [0.025      0.975]</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -------------------------------------------------------------------------------------</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Intercept          6488.0506    356.712     18.188      0.000    5787.505    7188.597</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat               489.7253    878.517      0.557      0.577   -1235.594    2215.045</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; age                  85.8798     35.417      2.425      0.016      16.324     155.436</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; educ                464.0448    131.509      3.529      0.000     205.774     722.315</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; race_hispan        2775.4733   1155.400      2.402      0.017     506.384    5044.563</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; race_white         2291.6714    793.301      2.889      0.004     733.708    3849.634</span></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:age            17.2262     76.367      0.226      0.822    -132.751     167.203</span></span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:educ          226.7111    308.434      0.735      0.463    -379.023     832.445</span></span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:race_hispan -1057.8406   2652.417     -0.399      0.690   -6266.921    4151.240</span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:race_white  -1205.6827   1805.205     -0.668      0.504   -4750.925    2339.559</span></span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Omnibus:                      195.576   Durbin-Watson:                   1.856</span></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prob(Omnibus):                  0.000   Jarque-Bera (JB):              755.710</span></span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Skew:                           1.434   Prob(JB):                    7.94e-165</span></span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Kurtosis:                       7.616   Cond. No.                         94.5</span></span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Notes:</span></span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] Standard Errors are heteroscedasticity robust (HC3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
 </div>
 <p>We can obtain the same results by fitting a model with the standard <code>lm</code> function and using the <code>comparisons()</code> function:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(re78 <span class="sc">~</span> treat <span class="sc">*</span> (age <span class="sc">+</span> educ <span class="sc">+</span> race), <span class="at">data =</span> lalonde)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    mod,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">"treat"</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">vcov =</span> <span class="st">"HC3"</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Term Contrast Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  treat    1 - 0      490        879 0.557    0.577 0.8 -1232   2212</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(re78 <span class="sc">~</span> treat <span class="sc">*</span> (age <span class="sc">+</span> educ <span class="sc">+</span> race), <span class="at">data =</span> lalonde)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">"treat"</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">vcov =</span> <span class="st">"HC3"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Term Contrast Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  treat    1 - 0      490        879 0.557    0.577 0.8 -1232   2212</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(avg_comparisons(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    variables <span class="op">=</span> <span class="st">"treat"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    vcov <span class="op">=</span> <span class="st">"HC3"</span>))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; shape: (1, 9)</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ┌───────┬──────────────┬──────────┬───────────┬───┬─────────┬───────┬───────────┬──────────┐</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Term  ┆ Contrast     ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|) ┆ S     ┆ 2.5%      ┆ 97.5%    │</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ ---   ┆ ---          ┆ ---      ┆ ---       ┆   ┆ ---     ┆ ---   ┆ ---       ┆ ---      │</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ str   ┆ str          ┆ str      ┆ str       ┆   ┆ str     ┆ str   ┆ str       ┆ str      │</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ╞═══════╪══════════════╪══════════╪═══════════╪═══╪═════════╪═══════╪═══════════╪══════════╡</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ treat ┆ mean(True) - ┆ 490      ┆ 879       ┆ … ┆ 0.577   ┆ 0.793 ┆ -1.23e+03 ┆ 2.21e+03 │</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │       ┆ mean(False)  ┆          ┆           ┆   ┆         ┆       ┆           ┆          │</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; └───────┴──────────────┴──────────┴───────────┴───┴─────────┴───────┴───────────┴──────────┘</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
 </div>
 <p>Notice that the <code>treat</code> coefficient and associate standard error in the <code>lm_lin</code> regression are exactly the same as the estimates produced by the <code>comparisons()</code> function.</p>
 <section id="references" class="level3">

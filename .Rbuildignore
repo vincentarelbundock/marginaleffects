@@ -29,3 +29,7 @@ man-roxygen
 README.qmd
 vignettes/
 vignettes
+\.python-version
+pyproject\.toml
+requirements\.lock
+requirements-dev\.lock
