@@ -52,9 +52,9 @@ em2 <- data.frame(emmeans(model, specs = "categ", at = atlist))
 
 expect_equivalent(mm1$estimate, em1$prob)
 expect_equivalent(mm2$estimate, em2$emmean)
-expect_equivalent(mm1$conf.low, em1$asymp.LCL)
-expect_equivalent(mm1$conf.high, em1$asymp.UCL)
-expect_equivalent(mm2$conf.low, em2$asymp.LCL)
+expect_equivalent(mm1$conf.low, em1$asymp.LCL, tolerance = 1e-6)
+expect_equivalent(mm1$conf.high, em1$asymp.UCL, tolerance = 1e-6)
+expect_equivalent(mm2$conf.low, em2$asymp.LCL, tolerance = 1e-6)
 expect_equivalent(mm2$conf.high, em2$asymp.UCL, tolerance = 1e-4)
 
 

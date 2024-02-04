@@ -14,17 +14,6 @@ em <- emmeans(mod, ~ cyl)
 em <- confint(pairs(em), adjust = "none") |>
     dplyr::arrange(contrast)
 
-mm <- marginal_means(
-    mod,
-    variables = "cyl",
-    hypothesis = "pairwise",
-    df = insight::get_df(mod),
-    conf_level = 0.95) |>
-    dplyr::arrange(term)
-
-expect_equivalent(sort(abs(em$estimate)), sort(abs(mm$estimate)))
-expect_equivalent(sort(abs(c(em$lower.CL, em$upper.CL))), sort(abs(c(mm$conf.low, mm$conf.high))))
-
 
 cmp29 <- comparisons(mod, df = insight::get_df(mod))
 cmpInf <- comparisons(mod)

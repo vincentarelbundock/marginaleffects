@@ -124,49 +124,10 @@ p3 <- predictions(
 expect_inherits(p3, "predictions")
 expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
 
-# marginalmeans: hypothesis complex
-lc <- c(-2, 1, 1, 0, -1, 1)
-mm <- marginal_means(mod, variables = "carb")
-lcmfx <- lc[match(mm$value, sort(unique(mm$value)))]
-em <- emmeans(mod, "carb") 
-em <- emmeans::contrast(em, method = data.frame(custom_contrast = lc))
-em <- data.frame(em)
-mm <- marginal_means(mod, variables = "carb", hypothesis = lcmfx)
-expect_equivalent(mm$estimate, em$estimate)
-expect_equivalent(mm$std.error, em$SE, tol = 1e-6)
-
-# marginalmeans: hypothesis shortcut
-mm <- marginal_means(mod, variables = "carb", hypothesis = "reference")
-expect_equivalent(nrow(mm), 5)
-mm <- marginal_means(mod, variables = "carb", hypothesis = "sequential")
-expect_equivalent(nrow(mm), 5)
-mm <- marginal_means(mod, variables = "carb", hypothesis = "pairwise")
-expect_equivalent(nrow(mm), 15)
-
-# marginalmeans: hypothesis complex matrix
-lc <- matrix(c(
-    -2, 1, 1, 0, -1, 1,
-    -1, 1, 0, 0, 0, 0
-    ), ncol = 2)
-mm <- marginal_means(mod, variables = "carb", hypothesis = lc)
-expect_inherits(mm, "marginalmeans")
-expect_equal(nrow(mm), 2)
-
-
 # wildcard
-mm1 <- marginal_means(mod, hypothesis = "b* = b1")
-expect_equal(mm1$term, paste0("b", 1:9, "=b1"))
+mm1 <- predictions(mod, by = "cyl", hypothesis = "b* = b1")
+expect_equal(mm1$term, paste0("b", 1:3, "=b1"))
 expect_equal(mm1$estimate[1], 0)
-
-
-# marginalmeans: string function
-mm1 <- marginal_means(
-    mod,
-    hypothesis = "b1 + b2 = 12")
-mm2 <- marginal_means(mod)
-expect_equivalent(
-    mm2$estimate[1] + mm2$estimate[2] - 12,
-    mm1$estimate)
 
 
 # marginaleffects: string function

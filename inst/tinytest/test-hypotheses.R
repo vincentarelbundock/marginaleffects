@@ -180,11 +180,6 @@ expect_true(all(hyp$term %in% known))
 # expect_true("b1=0.05" %in% dm$term)
 # expect_equivalent(nrow(dm), 1)
 
-# mod <- glm(vs ~ hp + factor(am), data = mtcars, family = binomial)
-# mm <- marginal_means(mod, "am")
-# dm <- hypotheses(mm, hypothesis = "b1 = b2")
-# expect_true("b1=b2" %in% dm$term)
-# expect_equivalent(nrow(dm), 1)
 
 
 rm(list = ls())
