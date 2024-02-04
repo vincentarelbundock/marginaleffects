@@ -16,7 +16,8 @@ get_coef.default <- function(model, ...) {
     # out <-  stats::coef(model)
 
     # more general
-    out <- insight::get_parameters(model, component = "all")
+    out <- insight_get_parameters(model, component = "all")
+
     out <- stats::setNames(out$Estimate, out$Parameter)
     return(out)
 }

@@ -9,16 +9,16 @@ help:  ## Display this help screen
 testall: ## tinytest::build_install_test()
 	Rscript -e "tinytest::build_install_test(ncpu = 8)"
 
-testone: ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
+testone: install ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
 	Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
 
 document: ## altdoc::render_docs()
 	Rscript -e "devtools::document()"
 
-check: ## devtools::check()
+check: document ## devtools::check()
 	Rscript -e "devtools::check()"
 
-install: ## devtools::install()
+install: document ## devtools::install()
 	Rscript -e "devtools::install()"
 
 news: ## Download the latest changelog

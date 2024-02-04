@@ -126,3 +126,19 @@ is_binary <- function(x) {
         x, null.ok = TRUE, upper = 1, lower = 0, any.missing = FALSE)
     )
 }
+
+
+insight_get_parameters <- function(x, component = "all", ...) {
+    # more general
+    out <- insight::get_parameters(x, component = component, ...)
+
+    # issue #1005: enquote spaces (not preserved by insight)
+    if (is.data.frame(out) && "Parameter" %in% colnames(out)) {
+        out$Parameter <- ifelse(
+            grepl("\\s", out$Parameter),
+            sprintf("`%s`", out$Parameter),
+            out$Parameter)
+    }
+
+    return(out)
+}

@@ -16,7 +16,7 @@ set_coef.multinom <- function(model, coefs, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.multinom <- function(model, ...) {
-    out <- insight::get_parameters(model, ...)
+    out <- insight_get_parameters(model, ...)
     out <- stats::setNames(
         out$Estimate,
         sprintf("%s:%s", out$Response, out$Parameter))

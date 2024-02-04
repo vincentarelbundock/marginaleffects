@@ -17,6 +17,7 @@ set_coef.glm <- function(model, coefs, ...) {
 set_coef.lm <- function(model, coefs, ...) {
     # in lm coefficients are named vector
     model[["coefficients"]][names(coefs)] <- coefs
+    names(coefs) %in% names(model[["coefficients"]])
     model
 }
 

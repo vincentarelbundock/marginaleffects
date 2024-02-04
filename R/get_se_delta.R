@@ -84,7 +84,8 @@ get_se_delta <- function(model,
     # input: named vector of coefficients
     # output: gradient
     inner <- function(x) {
-        model_tmp <- set_coef(model, stats::setNames(x, names(coefs)) ,...)
+        names(x) <- names(coefs)
+        model_tmp <- set_coef(model, x, ...)
         # do not pass NULL arguments. Important for `deltam` to allow users to supply FUN without ...
         args <- c(list(model = model_tmp, hypothesis = hypothesis), list(...))
         if (inherits(model, "gamlss")) args[["safe"]] <- FALSE

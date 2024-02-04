@@ -21,7 +21,7 @@ get_coef.data.frame <- function(model, ...) {
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
-set_coef.data.frame = function(model, coefs, ...) {
+set_coef.data.frame <- function(model, coefs, ...) {
   model$estimate = coefs
   return(model)
 }
