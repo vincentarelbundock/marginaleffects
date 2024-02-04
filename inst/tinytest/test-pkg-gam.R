@@ -40,6 +40,13 @@ model <- gam::gam(Kyphosis ~ gam::s(Age, 4) + Number + categ, family = binomial,
 atlist <- list(Age = round(mean(tmp$Age)), Number = round(mean(tmp$Number)))
 mm1 <- marginal_means(model, numderiv = "richardson") |> dplyr::arrange(value)
 em1 <- data.frame(emmeans(model, specs = "categ", type = "response", at = atlist))
+
+mm1 <- predictions(model,
+    newdata = datagrid(
+        grid_type = "balanced",
+        Age = round(mean(tmp$Age)),
+        Number = round(mean(tmp$Number))),
+    by = "categ")
 mm2 <- marginal_means(model, type = "link", numderiv = "richardson") |> dplyr::arrange(value)
 em2 <- data.frame(emmeans(model, specs = "categ", at = atlist))
 
