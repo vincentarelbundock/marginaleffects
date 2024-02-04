@@ -3,7 +3,14 @@
 #' @export
 set_coef.glm <- function(model, coefs, ...) {
     # in glm coefficients are named vector
-    model[["coefficients"]][names(coefs)] <- coefs
+    # the first one sometimes fails with backtick quoted names
+    if (length(model[["coefficients"]]) != length(coefs)) {
+        model$coefficients[names(coefs)] <- coefs
+    } else {
+        n <- names(model[["coefficients"]])
+        model[["coefficients"]] <- coefs
+        names(model[["coefficients"]]) <- n
+    }
     ## But, there's an edge case!! When `predict(model, se.fit = TRUE)` is called without `newdata`, `predict.lm()` isn't called.
     ## Instead `model$linear.predictors` is returned directly if `type = "link"` and
     ## `model$fitted.values` is returned directly if `type = "response"`.
@@ -16,8 +23,14 @@ set_coef.glm <- function(model, coefs, ...) {
 #' @export
 set_coef.lm <- function(model, coefs, ...) {
     # in lm coefficients are named vector
-    model[["coefficients"]][names(coefs)] <- coefs
-    names(coefs) %in% names(model[["coefficients"]])
+    # the first one sometimes fails with backtick quoted names
+    if (length(model[["coefficients"]]) != length(coefs)) {
+        model$coefficients[names(coefs)] <- coefs
+    } else {
+        n <- names(model[["coefficients"]])
+        model[["coefficients"]] <- coefs
+        names(model[["coefficients"]]) <- n
+    }
     model
 }
 
