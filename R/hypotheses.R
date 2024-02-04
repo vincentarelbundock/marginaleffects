@@ -273,7 +273,7 @@ hypotheses <- function(
                 idx <- intersect(colnames(model), c("term", "group", "estimate"))
                 return(model[, idx])
             } else {
-                param <- insight_get_parameters(model, ...)
+                param <- insight::get_parameters(model, ...)
                 idx <- intersect(colnames(model), c("term", "group", "estimate"))
                 colnames(param)[1:2] <- c("term", "estimate")
                 return(param)

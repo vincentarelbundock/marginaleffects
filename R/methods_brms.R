@@ -16,7 +16,7 @@ sanitize_model_specific.brmsfit <- function(model, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.brmsfit <- function(model, ...) {
-    out <- insight_get_parameters(model)
+    out <- insight::get_parameters(model)
     out <- collapse::dapply(out, MARGIN = 2, FUN = collapse::fmedian)
     return(out)
 }

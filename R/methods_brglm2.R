@@ -1,7 +1,7 @@
 #' @rdname get_coef
 #' @export
 get_coef.brmultinom <- function(model, ...) {
-    out <- insight_get_parameters(model)
+    out <- insight::get_parameters(model)
     out <- stats::setNames(out$Estimate,
                            sprintf("%s:%s", out$Response, out$Parameter))
     return(out)

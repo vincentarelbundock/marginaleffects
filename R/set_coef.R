@@ -25,6 +25,7 @@ set_coef.default <- function(model, coefs, ...) {
     # in ordinal::clm models, there are sometimes duplicates, so name matching doesn't work
     flag <- length(model[["coefficients"]]) == length(coefs) && all(names(model[["coefficients"]]) == names(coefs))
     if (flag) {
+        browser()
         model[["coefficients"]] <- coefs
     } else {
         model[["coefficients"]][names(coefs)] <- coefs

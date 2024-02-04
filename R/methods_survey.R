@@ -2,7 +2,7 @@
 #' @rdname get_coef
 #' @export
 get_coef.svyolr <- function(model, ...) {
-  out <- insight_get_parameters(model)
+  out <- insight::get_parameters(model)
   out <- stats::setNames(out$Estimate, out$Parameter)
 
   return(out)
