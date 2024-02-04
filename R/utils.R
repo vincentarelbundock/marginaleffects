@@ -126,3 +126,23 @@ is_binary <- function(x) {
         x, null.ok = TRUE, upper = 1, lower = 0, any.missing = FALSE)
     )
 }
+
+
+sub_named_vector <- function(x, y) {
+  # issue 1005
+  xlab <- gsub("^`|`$", "", names(x))
+  ylab <- gsub("^`|`$", "", names(y))
+
+  idx <- match(ylab, xlab)
+  if (length(stats::na.omit(idx)) > 0) {
+    x[stats::na.omit(idx)] <- y[!is.na(idx)]
+
+  } else if (length(y) == length(x)) {
+    return(y)
+
+  } else {
+    stop("set_coef() substitution error. Please report on Github with a reproducible example: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
+  }
+
+  return(x)
+}
