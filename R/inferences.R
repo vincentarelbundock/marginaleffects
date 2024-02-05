@@ -54,8 +54,8 @@
 #'
 #' @return
 #' A `marginaleffects` object with simulation or bootstrap resamples and objects attached.
-#' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' @examples
+#' \dontrun{
 #' library(marginaleffects)
 #' library(magrittr)
 #' set.seed(1024)
@@ -78,6 +78,7 @@
 #' slopes(mod) %>%
 #'   inferences(method = "simulation") %>%
 #'   head()
+#' }
 #' @export
 inferences <- function(x,
     method,
