@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.18.0
 
 This release represents a major step towards 1.0.0. Some functions are renamed and now raise deprecation warnings. After 1.0.0, the API will become much more stable, and any change will have to be very deliberate with much lead time and deprecation delays.
 
