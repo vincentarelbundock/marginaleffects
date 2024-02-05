@@ -105,7 +105,6 @@ void <- capture.output({
 
 # class outcome not supported
 expect_error(predictions(m1, type = "class"), pattern = "type")
-expect_error(marginal_means(m1, type = "class"), pattern = "type")
 expect_error(slopes(m1, type = "class"), pattern = "type")
 
 # small predictions
