@@ -47,22 +47,5 @@ expect_equivalent(auto$std.error, manu$std.error, tolerance = 1e-5)
 
 
 
-# Issue #793
-set.seed(1024)
-dat <- iris
-dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA
-dat$Sepal.Width[sample(seq_len(nrow(iris)), 40)] <- NA
-dat$Species[sample(seq_len(nrow(iris)), 40)] <- NA
-dat_amelia <- Amelia::amelia(dat, m = 20, noms = "Species", p2s = 0)
-mod_amelia <- with(dat_amelia, lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species))
-marg_means_amelia = marginal_means(mod_amelia)
-expect_inherits(marg_means_amelia, "marginalmeans")
-
-mod_amelia <- with(dat_amelia, glm(rbinom(n = length(Petal.Width), 1, 0.5) ~ Sepal.Length * Sepal.Width + Species, family = "binomial"))
-expect_error(marginal_means(mod_amelia), pattern = "std.error")
-m <- marginal_means(mod_amelia, type = "response")
-expect_inherits(m, "marginalmeans")
-
-
 
 source("helpers.R")

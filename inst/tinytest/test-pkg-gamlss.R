@@ -54,9 +54,7 @@ expect_predictions(pred, n_row = 6)
 
 
 # marginalmeans: vs. emmeans
-mm <- marginal_means(mod, what = "mu")
-expect_marginal_means(mm, n_row = 10)
-mm <- tidy(mm)
+mm <- predictions(mod, by = "batch", newdata = datagrid(grid_type="balanced"), what = "mu")
 em <- broom::tidy(emmeans::emmeans(mod, "batch", type = "response"))
 expect_equivalent(mm$estimate, em$response, tol = 0.001)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
@@ -101,9 +99,8 @@ expect_predictions(pred, n_row = 6)
 
 
 # marginalmeans: vs. emmeans
-mm <- marginal_means(mod, variables = "Pclass", what = "mu") |>
-    dplyr::arrange(value)
-expect_marginal_means(mm, n_row = 3)
+mm <- predictions(mod, by = "Pclass", what = "mu", newdata = datagrid(grid_type = "balanced")) |>
+    dplyr::arrange(Pclass)
 mm <- tidy(mm)
 em <- broom::tidy(emmeans::emmeans(mod, "Pclass", type = "response"))
 expect_equivalent(mm$estimate, em$response)

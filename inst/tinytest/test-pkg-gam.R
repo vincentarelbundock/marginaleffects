@@ -38,7 +38,7 @@ model <- gam::gam(Kyphosis ~ gam::s(Age, 4) + Number + categ, family = binomial,
 
 # `datagrid()` is smarter than `emmeans()` about integers
 atlist <- list(Age = round(mean(tmp$Age)), Number = round(mean(tmp$Number)))
-mm1 <- marginal_means(model, numderiv = "richardson") |> dplyr::arrange(value)
+mm1 <- predictions(model, by = "categ", newdata = datagrid(grid_type = "balanced"), numderiv = "richardson") |> dplyr::arrange(categ)
 em1 <- data.frame(emmeans(model, specs = "categ", type = "response", at = atlist))
 
 mm1 <- predictions(model,
@@ -47,7 +47,7 @@ mm1 <- predictions(model,
         Age = round(mean(tmp$Age)),
         Number = round(mean(tmp$Number))),
     by = "categ")
-mm2 <- marginal_means(model, type = "link", numderiv = "richardson") |> dplyr::arrange(value)
+mm2 <- predictions(model, type = "link", by = "categ", newdata = datagrid(grid_type = "balanced"), numderiv = "richardson") |> dplyr::arrange(categ)
 em2 <- data.frame(emmeans(model, specs = "categ", at = atlist))
 
 expect_equivalent(mm1$estimate, em1$prob)

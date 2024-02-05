@@ -70,57 +70,6 @@ expect_slopes <- function(
 
 
 
-#' `tinytest` helper
-#' 
-#' @export
-#' @keywords internal
-expect_marginal_means <- function(object,
-                                 se = TRUE,
-                                 n_row = NULL) {
-
-    insight::check_if_installed("tinytest")
-
-    diff <- ""
-
-    # class
-    fail_class <- !isTRUE(checkmate::check_class(object, "marginalmeans"))
-    if (fail_class) {
-        msg <- sprintf("Wrong class: `%s`.", class(object)[1])
-        diff <- c(diff, msg)
-    }
-
-    # se
-    if (isTRUE(se) && !"std.error" %in% colnames(object)) {
-        msg <- "No standard error."
-        diff <- c(diff, msg)
-        fail_se <- TRUE
-    } else {
-        fail_se <- FALSE
-    }
-
-    # rows and cols
-    if (isTRUE(n_row > nrow(object))) {
-        msg <- sprintf("Number of rows: %s", nrow(object))
-        diff <- c(diff, msg)
-        fail_row <- TRUE
-    } else {
-        fail_row <- FALSE
-    }
-
-    # diff message
-    diff <- paste(diff, collapse = "\n")
-
-    # pass/fail
-    fail <- fail_class || fail_se || fail_row
-
-    # tinytest object
-    out <- tinytest::tinytest(
-        result = !fail,
-        call = sys.call(sys.parent(1)),
-        diff = diff)
-
-    return(out)
-}
 
 
 #' `tinytest` helper

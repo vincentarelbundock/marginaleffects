@@ -43,7 +43,8 @@ expect_predictions(pred, n_row = 6)
 
 
 # marginalmeans: vs. emmeans
-mm <- marginal_means(mod, type = "link")
+mm <- predictions(mod, type = "link", by = "batch", newdata = datagrid(grid_type = "balanced")) |> 
+    dplyr::arrange(batch)
 expect_inherits(mm, "marginalmeans")
 expect_equal(nrow(mm), 10)
 em <- broom::tidy(emmeans::emmeans(mod, "batch"))

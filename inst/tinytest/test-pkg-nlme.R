@@ -44,8 +44,7 @@ mod <- gls(follicles ~ sin(2 * pi * Time) + cos(2 * pi * Time) + categ,
     data = tmp, correlation = corAR1(form = ~ 1 | Mare))
 em <- suppressMessages(emmeans(mod, specs = "categ"))
 em <- tidy(em)
-mm <- marginal_means(mod, variables = "categ") |> dplyr::arrange(value)
-expect_marginal_means(mm)
+mm <- predictions(mod, newdata = datagrid(grid_type = "balanced"), by = "categ") |> dplyr::arrange(categ)
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 1e-5)
 
