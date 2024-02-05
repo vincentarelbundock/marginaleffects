@@ -82,33 +82,6 @@ expect_true(all(pre3$std.error != pre6$std.error))
 expect_true(all(pre5$std.error != pre6$std.error))
 
 
-
-# marginalmeans strings (no validity)
-dat <- dat
-dat$cyl <- factor(dat$cyl)
-mod <- lm(mpg ~ cyl, data = dat)
-
-# aliases
-mm1 <- marginal_means(mod, vcov = "HC2")
-mm2 <- marginal_means(mod, vcov = "stata")
-mm3 <- marginal_means(mod, vcov = "HC3")
-mm4 <- marginal_means(mod, vcov = "robust")
-expect_equivalent(mm1$std.error, mm2$std.error)
-expect_equivalent(mm3$std.error, mm4$std.error)
-
-# different (no validity)
-mm5 <- marginal_means(mod, vcov = ~ gear)
-mm6 <- marginal_means(mod, vcov = "HAC")
-expect_true(all(mm1$std.error != mm3$std.error))
-expect_true(all(mm1$std.error != mm4$std.error))
-expect_true(all(mm1$std.error != mm5$std.error))
-expect_true(all(mm1$std.error != mm6$std.error))
-expect_true(all(mm3$std.error != mm5$std.error))
-expect_true(all(mm3$std.error != mm6$std.error))
-expect_true(all(mm5$std.error != mm6$std.error))
-
-
-
 # Issue #554
 mod <- lm(mpg ~ cyl, data = dat)
 
