@@ -8,6 +8,7 @@ Breaking changes:
 
 * `tidy()` no longer takes the average of estimates in the original model object. Users who want an aggregate estimate should call the relevant `avg_*()` function, or use the `by` argument explicitly. The previous behavior led to unexpected behavior and increased code complexity a lot.
 * `summary()` methods are removed. These have never provided any additional information; they just reprinted the output already available with the standard print method. At least the default `summary()` for data frames (which is now triggered on `marginaleffects` object) provides a different view on the content of the object.
+* `plot_cco()`, `plot_cme()`, and `plot_cap()` were renamed in version 0.9.0, one year ago. They are now fully removed from the package.
 
 New:
 

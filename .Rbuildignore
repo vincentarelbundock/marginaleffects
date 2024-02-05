@@ -33,3 +33,5 @@ vignettes
 pyproject\.toml
 requirements\.lock
 requirements-dev\.lock
+inst/tinytest/modelarchive
+inst/tinytest/stata

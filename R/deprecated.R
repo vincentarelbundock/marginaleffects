@@ -1,3 +1,5 @@
+#' Deprecated function
+#'
 #' @keywords internal
 #' @export
 deltamethod <- function(...) {
@@ -5,6 +7,8 @@ deltamethod <- function(...) {
 }
 
 
+#' Deprecated function
+#' 
 #' @keywords internal
 #' @export
 marginaleffects <- function(...) {
@@ -19,30 +23,8 @@ meffects <- marginaleffects
 
 
 
-#' @keywords internal
-#' @export
-plot_cco <- function(...) {
-    .Deprecated("plot_comparisons")
-    plot_comparisons(...)
-}
-
-
-#' @keywords internal
-#' @export
-plot_cme <- function(...) {
-    .Deprecated("plot_slopes()")
-    plot_slopes(...)
-}
-
-
-#' @keywords internal
-#' @export
-plot_cap <- function(...) {
-    .Deprecated("plot_predictions()")
-    plot_predictions(...)
-}
-
-
+#' Deprecated function
+#' 
 #' @keywords internal
 #' @export
 datagridcf <- function(...) {
@@ -51,6 +33,8 @@ datagridcf <- function(...) {
 }
 
 
+#' Deprecated function
+#'
 #' @keywords internal
 #' @export
 marginal_means <- function(model,

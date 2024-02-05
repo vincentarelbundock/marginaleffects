@@ -7,7 +7,7 @@
 #' 
 #' Some of the data columns are not printed by default. You can disable pretty printing and print the full results as a standard data frame using the `style` argument or by applying `as.data.frame()` on the object. See examples below.
 #' 
-#' @param x An object produced by one of the [`marginaleffects`] package functions.
+#' @param x An object produced by one of the `marginaleffects` package functions.
 #' @param digits The number of digits to display.
 #' @param p_eps p values smaller than this number are printed in "<0.001" style.
 #' @param topn The number of rows to be printed from the beginning and end of tables with more than `nrows` rows.

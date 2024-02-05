@@ -18,7 +18,7 @@
 )
 }
 \arguments{
-\item{x}{An object produced by one of the \code{\link{marginaleffects}} package functions.}
+\item{x}{An object produced by one of the \code{marginaleffects} package functions.}
 
 \item{digits}{The number of digits to display.}
 

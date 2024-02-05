@@ -45,7 +45,7 @@ expect_predictions(pred, n_row = 6)
 # marginalmeans: vs. emmeans
 mm <- predictions(mod, type = "link", by = "batch", newdata = datagrid(grid_type = "balanced")) |> 
     dplyr::arrange(batch)
-expect_inherits(mm, "marginalmeans")
+expect_inherits(mm, "predictions")
 expect_equal(nrow(mm), 10)
 em <- broom::tidy(emmeans::emmeans(mod, "batch"))
 expect_equivalent(mm$estimate, em$estimate)
