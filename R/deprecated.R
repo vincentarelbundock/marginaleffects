@@ -17,6 +17,8 @@ marginaleffects <- function(...) {
 }
 
 
+#' Deprecated function
+#' 
 #' @keywords internal
 #' @export
 meffects <- marginaleffects
@@ -437,6 +439,8 @@ get_marginalmeans <- function(model,
 }
 
 
+#' Deprecated function
+#'
 #' @keywords internal
 #' @export
 marginalmeans <- marginal_means
