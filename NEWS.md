@@ -6,6 +6,10 @@ New:
 
 * `print.marginaleffects()` supports `style="tinytable"`, which returns a `tinytable` object. Call `print(avg_slopes(model))` to get a nice printed table in Quarto or Rmarkdown documents, via Typst, LaTeX or HTML.
 
+Bugfix:
+
+* Uninformative error when a custom `comparison` function returns `NA` in bayesian models. Thanks to @Sandhu-SS for report #1017.
+
 ## 0.18.0
 
 This release represents a major step towards 1.0.0. Some functions are renamed and now raise deprecation warnings. After 1.0.0, the API will become much more stable, and any change will have to be very deliberate with much lead time and deprecation delays.
