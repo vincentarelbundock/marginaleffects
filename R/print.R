@@ -13,7 +13,7 @@
 #' @param topn The number of rows to be printed from the beginning and end of tables with more than `nrows` rows.
 #' @param nrows The number of rows which will be printed before truncation.
 #' @param ncols The maximum number of column names to display at the bottom of the printed output.
-#' @param style "summary" or "data.frame"
+#' @param style "summary", "data.frame", or "tinytable"
 #' @param type boolean: should the type be printed?
 #' @param column_names boolean: should the column names be printed?
 #' @param ... Other arguments are currently ignored.
@@ -45,7 +45,7 @@ print.marginaleffects <- function(x,
     checkmate::assert_number(digits)
     checkmate::assert_number(topn)
     checkmate::assert_number(nrows)
-    checkmate::assert_choice(style, choices = c("data.frame", "summary"))
+    checkmate::assert_choice(style, choices = c("data.frame", "summary", "tinytable"))
 
     if (isTRUE(style == "data.frame")) {
         print(as.data.frame(x))
@@ -205,6 +205,16 @@ print.marginaleffects <- function(x,
         } else if (inherits(x, "slopes")) {
             rec <- "?avg_slopes and "
         }
+    }
+
+    if (style == "tinytable") {
+        insight::check_if_installed("tinytable")
+        tab <- as.data.frame(out)
+        at <- attributes(tab)
+        attributes(tab) <- at[names(at) %in% c("row.names", "names", "class")]
+        tab <- tinytable::tt(tab)
+        tab <- tinytable::format_tt(tab, escape = TRUE)
+        return(tab)
     }
 
     # head

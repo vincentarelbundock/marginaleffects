@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.18.0
+Version: 0.18.0.9000
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -158,6 +158,7 @@ Suggests:
     tidyr,
     tidyverse,
     tinysnapshot,
+    tinytable (>= 0.0.4),
     tinytest,
     titanic,
     truncreg,
