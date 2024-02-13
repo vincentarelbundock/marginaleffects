@@ -1,7 +1,3 @@
-
-# Predictions 
-
-
 ```{r, include = FALSE}
 options(width = 1000)
 knitr::opts_chunk$set(
@@ -20,25 +16,15 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
+# Predictions
+
 In the context of this package, an "Adjusted Prediction" is defined as:
 
 > The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
 
 Here, the word "Adjusted" simply means "model-derived" or "model-based."
 
-## Prediction type (or scale)
-
-Using the `type` argument of the `predictions()` function we can specify the "scale" on which to make predictions. This refers to either the scale used to estimate the model (i.e., link scale) or to a more interpretable scale (e.g., response scale). For example, when fitting a linear regression model using the `lm()` function, the link scale and the response scale are identical. An "Adjusted Prediction" computed on either scale will be expressed as the mean value of the response variable at the given values of the predictor variables.
-
-On the other hand, when fitting a binary logistic regression model using the `glm()` function (which uses a binomial family and a logit link ), the link scale and the response scale will be different: an "Adjusted Prediction" computed on the link scale will be expressed as a log odds of a "successful" response at the given values of the predictor variables, whereas an "Adjusted Prediction" computed on the response scale will be expressed as a probability that the response variable equals 1.
-
-The default value of the `type` argument for most models is "response", which means that the `predictions()` function will compute predicted probabilities (binomial family), Poisson means (poisson family), etc.
-
-## Prediction grid
-
-To compute adjusted predictions we must first specify the values of the predictors to consider: a "reference grid." For example, if our model is a linear model fitted with the lm() function which relates the response variable Happiness with the predictor variables Age, Gender and Income, the reference grid could be a `data.frame` with values for Age, Gender and Income: Age = 40, Gender = Male, Income = 60000.
-
-The "reference grid" may or may not correspond to actual observations in the dataset used to fit the model; the example values given above could match the mean values of each variable, or they could represent a specific observed (or hypothetical) individual. The reference grid can include many different rows if we want to make predictions for different combinations of predictors. By default, the `predictions()` function uses the full original dataset as a reference grid, which means it will compute adjusted predictions for each of the individuals observed in the dataset that was used to fit the model.
+# Quantity
 
 ## The `predictions()` function
 
@@ -47,43 +33,69 @@ By default, `predictions` calculates the regression-adjusted predicted values fo
 ```{r}
 library(marginaleffects)
 
-mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+lm_mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 
-pred <- predictions(mod)
+pred <- predictions(lm_mod)
 
 head(pred)
 ```
 
-In many cases, this is too limiting, and researchers will want to specify a grid of "typical" values over which to compute adjusted predictions.
 
-## Adjusted Predictions at User-Specified values (aka Adjusted Predictions at Representative values, APR)
+In many cases, this is too limiting. The function `predictions()` allows to specify a grid of 'typical' values over which to compute adjusted predictions. For more details, proceed to the Grid section.
 
-There are two main ways to select the reference grid over which we want to compute adjusted predictions. The first is using the `variables` argument. The second is with the `newdata` argument and the [`datagrid()` function](slopes.html) 
+## Prediction type (scale)
 
-### `variables`: Counterfactual predictions
+By default, predict produces predictions on the "response" scale, so the adjusted predictions should be interpreted on that scale. However, users can pass a string to the type argument, and predictions will consider different outcomes.
 
-The `variables` argument is a handy way to create and make predictions on counterfactual datasets. For example, here the dataset that we used to fit the model has 32 rows. The counterfactual dataset with two distinct values of `hp` has 64 rows: each of the original rows appears twice, that is, once with each of the values that we specified in the `variables` argument:
+Using the `type` argument of the `predictions()` function we can specify the "scale" on which to make predictions. This refers to either the scale used to estimate the model (i.e., link scale) or to a more interpretable scale (e.g., response scale). For example, when fitting a linear regression model using the `lm()` function, the `"link"` scale and the response scale are identical. An "Adjusted Prediction" computed on either scale will be expressed as the mean value of the response variable at the given values of the predictor variables.
+
+On the other hand, when fitting a binary logistic regression model using the `glm()` function (which uses a binomial family and a logit link ), the link scale and the response scale will be different: an "Adjusted Prediction" computed on the `"link"` scale will be expressed as a log odds of a "successful" response at the given values of the predictor variables, whereas an "Adjusted Prediction" computed on the `"response"` scale will be expressed as a probability that the response variable equals 1.
 
 ```{r}
-p <- predictions(mod, variables = list(hp = c(100, 120)))
-head(p)
-nrow(p)
+glm_mod <- glm(am ~ mpg, family = binomial, data = mtcars)
+pred <- predictions(glm_mod, type = "response")
+head(pred)
+
+pred <- predictions(glm_mod, type = "link")
+head(pred)
+
 ```
 
-### `newdata` and `datagrid`
+The default value of the `type` argument for most models is `"response"`, which means that the `predictions()` function will compute predicted probabilities (binomial family), Poisson means (poisson family), etc. Users should refer to the documentation of the `predict` of the package they used to fit the model to know what values are allowable.  
 
-A second strategy to construct grids of predictors for adjusted predictions is to combine the `newdata` argument and the `datagrid` function. Recall that this function creates a "typical" dataset with all variables at their means or modes, except those we explicitly define:
+
+# Grid 
+
+### Prediction grid
+
+The reference grid can include many different rows if we want to make predictions for different combinations of predictors. By default, the `predictions()` function uses the full original dataset as a reference grid, which means it will compute adjusted predictions for each of the individuals observed in the dataset that was used to fit the model.
+
+To compute adjusted predictions we must first specify the values of the predictors to consider: a "reference grid." For example, if our model is a linear model fitted with the lm() function which relates the response variable Happiness with the predictor variables Age, Gender and Income, the reference grid could be a `data.frame` with values for Age, Gender and Income: Age = 40, Gender = Male, Income = 60000. 
+
+The "reference grid" may or may not correspond to actual observations in the dataset used to fit the model; the example values given above could match the mean values of each variable, or they could represent a specific observed (or hypothetical) individual. 
+
+The following sections will introduce to different ways to select a reference grid over which we want to compute adjusted predictions.
+
+### Adjusted Predictions at User-Specified values (aka Adjusted Predictions at Representative values, APR)
+
+There are two main ways to select the reference grid over which we want to compute adjusted predictions. The first is using the `newdata` argument and the [`datagrid()` function](slopes.html). The second is with the `variables` argument.
+
+We can also create a counterfactual data grid with the argument `grid_type = "counterfactual"`. The dataset is duplicated for each combination of the variable values specified in. Variables not explicitly supplied to `datagrid()` are set to their observed values in the original dataset. There is also an alternative approach to construct grids of predictors using the `grid_type = "counterfactual"` argument value.
+
+#### **1. `newdata` and `datagrid`**
+
+The first strategy is to construct grids of predictors for adjusted predictions is to combine the `newdata` argument and the `datagrid` function. This function creates a "typical" dataset with all variables at their means or modes, except those we explicitly define:
 
 ```{r}
-datagrid(cyl = c(4, 6, 8), model = mod)
+datagrid(cyl = c(4, 6, 8), model = lm_mod)
 ```
 
 We can also use this `datagrid` function in a `predictions` call (omitting the `model` argument):
 
 ```{r}
-predictions(mod, newdata = datagrid())
+predictions(lm_mod, newdata = datagrid())
 
-predictions(mod, newdata = datagrid(cyl = c(4, 6, 8)))
+predictions(lm_mod, newdata = datagrid(cyl = c(4, 6, 8)))
 ```
 
 Users can change the summary function used to summarize each type of variables using the `FUN_numeric`, `FUN_factor`, and related arguments. For example:
@@ -95,31 +107,46 @@ predictions(m, newdata = datagrid(FUN_factor = unique, FUN_numeric = median))
 
 The `data.frame` produced by `predictions` is "tidy", which makes it easy to manipulate with other `R` packages and functions:
 
+<!-- Revoir le titre du tableau pour mettre cyl -->
+<!-- Mettre KableExtra faciliterait probablement la compréhension de marginaleffects -->
+
 ```{r, message = FALSE}
-library(kableExtra)
+library(tinytable)
 library(tidyverse)
 
 predictions(
-    mod,
-    newdata = datagrid(cyl = mtcars$cyl, hp = c(100, 110))) |>
-    select(hp, cyl, estimate) |>
-    pivot_wider(values_from = estimate, names_from = cyl) |>
-    kbl(caption = "A table of Adjusted Predictions") |>
-    kable_styling() |>
-    add_header_above(header = c(" " = 1, "cyl" = 3))
+  lm_mod,
+  newdata = datagrid(cyl = mtcars$cyl, hp = c(100, 110))) |>
+  select(hp, cyl, estimate) |>
+  pivot_wider(values_from = estimate, names_from = cyl) |>
+  tt(caption = "A table of Adjusted Predictions", theme = "bootstrap", digits = 4, width = 0.8) |>
+  group_tt(j = list("cyl" = 3)) |>
+  style_tt(bootstrap_css_rule = "caption{
+    font-weight: bold
+  }")
 ```
 
 
-### `counterfactual` data grid
+#### **2. `variables`: Counterfactual predictions**
+
+The `variables` argument is a handy way to create and make predictions on counterfactual datasets. For example, here the dataset that we used to fit the model has 32 rows. The counterfactual dataset with two distinct values of `hp` has 64 rows: each of the original rows appears twice, that is, once with each of the values that we specified in the `variables` argument:
+
+```{r}
+p <- predictions(lm_mod, variables = list(hp = c(100, 120)))
+head(p)
+nrow(p)
+```
+
+#### **3. `counterfactual` data grid <!-- Pas certain de comment l'inclure dans la section -->**
 
 An alternative approach to construct grids of predictors is to use `grid_type = "counterfactual"` argument value. This will duplicate the *whole* dataset, with the different values specified by the user. 
 
 For example, the `mtcars` dataset has 32 rows. This command produces a new dataset with 64 rows, with each row of the original dataset duplicated with the two values of the `am` variable supplied (0 and 1):
 
 ```{r}
-mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)
+glm_mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)
 
-nd <- datagrid(model = mod, am = 0:1, grid_type = "counterfactual")
+nd <- datagrid(model = glm_mod, am = 0:1, grid_type = "counterfactual")
 
 dim(nd)
 ```
@@ -127,7 +154,7 @@ dim(nd)
 Then, we can use this dataset and the `predictions` function to create interesting visualizations:
 
 ```{r, fig.asp = 1}
-pred <- predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) |>
+pred <- predictions(glm_mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) |>
     select(am, estimate, rowidcf) |>
     pivot_wider(id_cols = rowidcf, 
                 names_from = am,
@@ -142,29 +169,32 @@ ggplot(pred, aes(x = `0`, y = `1`)) +
 
 In this graph, each dot represents the predicted probability that `vs=1` for one observation of the dataset, in the counterfactual worlds where `am` is either 0 or 1. 
 
-## Adjusted Prediction at the Mean (APM)
+# Aggregation
+
+
+### Adjusted Prediction at the Mean (APM)
 
 Some analysts may want to calculate an "Adjusted Prediction at the Mean," that is, the predicted outcome when all the regressors are held at their mean (or mode). To achieve this, we use the `datagrid` function. By default, this function produces a grid of data with regressors at their means or modes, so all we need to do to get the APM is:
 
 ```{r}
-predictions(mod, newdata = "mean")
+predictions(lm_mod, newdata = "mean")
 ```
-
+<!-- À VÉRIFIER SI C'EST LE BON MODÈLE QUI EST UTILISÉ ICI -->
 
 This is equivalent to calling:
 
 ```{r}
-predictions(mod, newdata = datagrid())
+predictions(lm_mod, newdata = datagrid())
 ```
 
-## Average Adjusted Predictions (AAP)
+### Average Adjusted Predictions (AAP)
 
 An "Average Adjusted Prediction" is the outcome of a two step process:
 
 1. Create a new dataset with each of the original regressor values, but fixing some regressors to values of interest.
 2. Take the average of the predicted values in this new dataset.
 
-We can obtain AAPs by applying the `avg_*()` functions or `by` argument:
+We can obtain AAPs by applying the `avg_predictions()` functions or `by` argument:
 
 ```{r}
 modlin <- lm(mpg ~ hp + factor(cyl), mtcars)
@@ -181,22 +211,22 @@ mean(pred$estimate)
 Note that in GLM models with a non-linear link function, the default `type` is `invlink(link)`. This means that predictions are first made on the link scale, averaged, and then back transformed. Thus, the average prediction may not be exactly identical to the average of predictions:
 
 ```{r}
-mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)
+glm_mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)
 
-avg_predictions(mod)$estimate
+avg_predictions(glm_mod)$estimate
 
 ## Step 1: predict on the link scale
-p <- predictions(mod, type = "link")$estimate
+p <- predictions(glm_mod, type = "link")$estimate
 ## Step 2: average
 p <- mean(p)
 ## Step 3: backtransform
-mod$family$linkinv(p)
+glm_mod$family$linkinv(p)
 ```
 
 Users who want the average of individual-level predictions on the response scale can specify the `type` argument explicitly:
 
 ```{r}
-avg_predictions(mod, type = "response")
+avg_predictions(glm_mod, type = "response")
 ```
 
 ## Average Adjusted Predictions by Group
@@ -204,20 +234,20 @@ avg_predictions(mod, type = "response")
 We can compute average adjusted predictions for different subsets of the data with the `by` argument.
 
 ```{r}
-predictions(mod, by = "am")
+predictions(glm_mod, by = "am")
 ```
 
 In the next example, we create a "counterfactual" data grid where each observation of the dataset is repeated twice, with different values of the `am` variable, and all other variables held at the observed values. We also show the equivalent results using `dplyr`:
 
 ```{r}
 predictions(
-    mod,
+    glm_mod,
     type = "response",
     by = "am",
     newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 
 predictions(
-    mod,
+    glm_mod,
     type = "response",
     newdata = datagrid(am = 0:1, grid_type = "counterfactual")) |>
     group_by(am) |>
@@ -228,16 +258,16 @@ Note that the two results are exactly identical when we specify `type="response"
 
 ```{r}
 predictions(
-    mod,
+    glm_mod,
     by = "am",
     newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 
 predictions(
-    mod,
+    glm_mod,
     type = "link",
     newdata = datagrid(am = 0:1, grid_type = "counterfactual")) |>
     group_by(am) |>
-    summarize(AAP = mod$family$linkinv(mean(estimate)))
+    summarize(AAP = glm_mod$family$linkinv(mean(estimate)))
 ```
 
 ### Multinomial models
@@ -296,7 +326,6 @@ predictions(nom, by = by, hypothesis = "pairwise")
 ```
 
 
-
 ### Bayesian models
 
 The same strategy works for Bayesian models:
@@ -323,7 +352,16 @@ quantile(rowMeans(draws[, mtcars$vs == 0]), probs = c(.5, .025, .975))
 quantile(rowMeans(draws[, mtcars$vs == 1]), probs = c(.5, .025, .975))
 ```
 
-## Conditional Adjusted Predictions (Plot)
+
+# Uncertainty
+
+<!-- Ajouter paragraphes avec vcov et conf_level ? ou 'get started' est assez -->
+
+# Visualization
+
+It is very easy to plot average predictions using the parallel syntax of the `plot_predictions()` function. This section introduce to some of its core arguments.
+
+## Conditional Adjusted Predictions
 
 First, we download the `ggplot2movies` dataset from the [RDatasets archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html). Then, we create a variable called `certified_fresh` for movies with a rating of at least 8. Finally, we discard some outliers and fit a logistic regression model: 
 
@@ -355,6 +393,18 @@ We can also introduce another condition which will display a categorical variabl
 mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
 
 plot_predictions(mod, condition = c("length", "style"))
+```
+
+With the `plot_predictions()` function, we can plot predictions on different outcome scales:
+
+```{r}
+mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
+
+plot_predictions(mod, condition = "length", type = "response")
+```
+
+```{r}
+plot_predictions(mod, condition = "length", type = "link")
 ```
 
 Since the output of `plot_predictions()` is a `ggplot2` object, it is very easy to customize. For example, we can add points for the actual observations of our dataset like so:
@@ -405,28 +455,35 @@ plot_predictions(
     facet_wrap(~group)
 ```
 
-## Prediction types
 
-The `predictions` function computes model-adjusted means on the scale of the output of the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the adjusted predictions should be interpreted on that scale. However, users can pass a string to the `type` argument, and `predictions` will consider different outcomes. 
+## Prediction types 
 
-Typical values include `"response"` and `"link"`, but users should refer to the documentation of the `predict` of the package they used to fit the model to know what values are allowable. documentation. 
+The predictions function computes model-adjusted means on the scale of the output of the predict(model) function. By default, predict produces predictions on the "response" scale, so the adjusted predictions should be interpreted on that scale. However, users can pass a string to the type argument, and predictions will consider different outcomes.
+
+We can plot predictions on different outcome scales:
 
 ```{r}
 mod <- glm(am ~ mpg, family = binomial, data = mtcars)
-pred <- predictions(mod, type = "response")
-head(pred)
 
-pred <- predictions(mod, type = "link")
-head(pred)
-
-```
-
-We can also plot predictions on different outcome scales:
-
-```{r}
 plot_predictions(mod, condition = "mpg", type = "response")
 ```
 
 ```{r}
 plot_predictions(mod, condition = "mpg", type = "link")
 ```
+
+
+
+
+# Test
+
+<!-- Ajouter éléments de l'article de la section test à propos de la fonction hypothesis() ? ou 'get started' est assez-->
+
+
+
+
+
+
+
+
+
