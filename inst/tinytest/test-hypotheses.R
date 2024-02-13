@@ -159,7 +159,13 @@ hyp <- hypotheses(mod, hypothesis = "b* = b2")
 known <- c("b1 = b2", "b2 = b2", "b3 = b2", "b4 = b2", "b5 = b2")
 expect_true(all(hyp$term %in% known))
 
+# Custom labels
+hyp <- hypotheses(mod, hypothesis = c("equal" = "b1 = b2", "sums to zero" = "wt + hp = 0"))
+expect_true(hyp$term == c("equal", "sums to zero"))
 
+# Does not mess up *
+hyp <- hypotheses(mod, hypothesis = c("equal" = "b* = 0"))
+expect_true(all(hyp$term != "equal"))
 
 # hypotheses() applied to {marginaleffects} package objects
 # commented out because doesn't work in environments because of match.call()
