@@ -17,6 +17,7 @@ get_predict <- function(model, newdata, type, ...) {
 get_predict.default <- function(model,
                                 newdata = insight::get_data(model),
                                 type = "response",
+                                newparams = NULL,
                                 ...) {
 
     dots <- list(...)
@@ -32,6 +33,7 @@ get_predict.default <- function(model,
     # first argument in the predict methods is not always named "x" or "model"
     dots[["newdata"]] <- newdata
     dots[["type"]] <- type
+    dots[["newparams"]] <- newparams
     args <- c(list(model), dots)
 
     # `pred` is a secret argument called by `predict.lm` to turn a numeric vector into a data frame with correct `rowid`

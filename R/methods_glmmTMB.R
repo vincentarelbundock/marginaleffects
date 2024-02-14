@@ -5,6 +5,7 @@
 get_predict.glmmTMB <- function(model,
                                 newdata = insight::get_data(model),
                                 type = "response",
+                                newparams = NULL,
                                 ...) {
 
     if (inherits(vcov, "vcov.glmmTMB")) {
@@ -16,6 +17,7 @@ get_predict.glmmTMB <- function(model,
         newdata = newdata,
         type = type,
         allow.new.levels = TRUE, # otherwise we get errors in marginal_means()
+        newparams = newparams,
         ...)
     return(out)
 }
@@ -26,7 +28,9 @@ get_predict.glmmTMB <- function(model,
 #' @rdname get_vcov
 #' @export
 get_vcov.glmmTMB <- function(model, ...) {
-    out <- stats::vcov(model, full = TRUE)
+    s <- TMB::sdreport(model$obj, getJointPrecision = TRUE)
+    out <- solve(s$jointPrecision)
+    # out <- stats::vcov(model, full = TRUE)
     return(out)
 }
 
@@ -35,8 +39,9 @@ get_vcov.glmmTMB <- function(model, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.glmmTMB <- function(model, ...) {
-    out <- model$fit$par
-    names(out) <- colnames(stats::vcov(model, full = TRUE))
+    # out <- model$fit$par
+    out <- model$fit$parfull
+    # names(out) <- colnames(stats::vcov(model, full = TRUE))
     return(out)
 }
 
@@ -51,27 +56,32 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
     # random parameters are ignored: named "b"
     # the order matters; I think we can rely on it, but this still feels like a HACK
     # In particular, this assumes that the order of presentation in coef() is always: beta -> betazi -> betad
-    out <- model
-    out$fit$parfull[names(out$fit$parfull) != "b"] <- coefs
-    out$fit$par <- stats::setNames(coefs, names(out$fit$par))
-    return(out)
+    # out <- model
+    # out$fit$parfull[names(out$fit$parfull) != "b"] <- coefs
+    # out$fit$par <- stats::setNames(coefs, names(out$fit$par))
+    # return(out)
+
+
+    # Issue #810 and others.
+    # we now use `newparams` instead of modifying the model object directly.
+    return(model)
 }
 
 
 
 #' @rdname sanitize_model_specific
 sanitize_model_specific.glmmTMB <- function(model, vcov = NULL, calling_function = "marginaleffects", ...) {
-    if (isTRUE(vcov) || is.null(vcov)) {
-        insight::format_error(
-            "By default, standard errors for models of class `glmmTMB` are not calculated. For further details, see discussion at {https://github.com/glmmTMB/glmmTMB/issues/915}.",
-            "Set `vcov = FALSE` or explicitly provide a variance-covariance-matrix for the `vcov` argument to calculate standard errors."
-        )
-    }
-    REML <- as.list(insight::get_call(model))[["REML"]]
-    if (isTRUE(REML) && !identical(vcov, FALSE)) {
-        msg <- insight::format_message("Uncertainty estimates cannot be computed for `glmmTMB` models with the `REML=TRUE` option. Either set `REML=FALSE` when fitting the model, or set `vcov=FALSE` when calling a `slopes` function to avoid this error.")
-        stop(msg, call. = FALSE)
-    }
+    # if (isTRUE(vcov) || is.null(vcov)) {
+    #     insight::format_error(
+    #         "By default, standard errors for models of class `glmmTMB` are not calculated. For further details, see discussion at {https://github.com/glmmTMB/glmmTMB/issues/915}.",
+    #         "Set `vcov = FALSE` or explicitly provide a variance-covariance-matrix for the `vcov` argument to calculate standard errors."
+    #     )
+    # }
+    # REML <- as.list(insight::get_call(model))[["REML"]]
+    # if (isTRUE(REML) && !identical(vcov, FALSE)) {
+    #     msg <- insight::format_message("Uncertainty estimates cannot be computed for `glmmTMB` models with the `REML=TRUE` option. Either set `REML=FALSE` when fitting the model, or set `vcov=FALSE` when calling a `slopes` function to avoid this error.")
+    #     stop(msg, call. = FALSE)
+    # }
 
     # we need an explicit check because predict.glmmTMB() generates other
     # warnings related to openMP, so our default warning-detection does not
