@@ -31,3 +31,4 @@ vignettes
 pyproject\.toml
 requirements\.lock
 requirements-dev\.lock
+.venv
