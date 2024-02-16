@@ -8,12 +8,12 @@
 #' Some of the data columns are not printed by default. You can disable pretty printing and print the full results as a standard data frame using the `style` argument or by applying `as.data.frame()` on the object. See examples below.
 #' 
 #' @param x An object produced by one of the `marginaleffects` package functions.
+#' @param style "summary", "data.frame", or "tinytable"
 #' @param digits The number of digits to display.
 #' @param p_eps p values smaller than this number are printed in "<0.001" style.
 #' @param topn The number of rows to be printed from the beginning and end of tables with more than `nrows` rows.
 #' @param nrows The number of rows which will be printed before truncation.
 #' @param ncols The maximum number of column names to display at the bottom of the printed output.
-#' @param style "summary", "data.frame", or "tinytable"
 #' @param type boolean: should the type be printed?
 #' @param column_names boolean: should the column names be printed?
 #' @param ... Other arguments are currently ignored.

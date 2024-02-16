@@ -6,12 +6,12 @@
 \usage{
 \method{print}{marginaleffects}(
   x,
+  style = getOption("marginaleffects_print_style", default = "summary"),
   digits = getOption("marginaleffects_print_digits", default = 3),
   p_eps = getOption("marginaleffects_print_p_eps", default = 0.001),
   topn = getOption("marginaleffects_print_topn", default = 5),
   nrows = getOption("marginaleffects_print_nrows", default = 30),
   ncols = getOption("marginaleffects_print_ncols", default = 30),
-  style = getOption("marginaleffects_print_style", default = "summary"),
   type = getOption("marginaleffects_print_type", default = TRUE),
   column_names = getOption("marginaleffects_print_column_names", default = TRUE),
   ...
@@ -19,6 +19,8 @@
 }
 \arguments{
 \item{x}{An object produced by one of the \code{marginaleffects} package functions.}
+
+\item{style}{"summary", "data.frame", or "tinytable"}
 
 \item{digits}{The number of digits to display.}
 
@@ -29,8 +31,6 @@
 \item{nrows}{The number of rows which will be printed before truncation.}
 
 \item{ncols}{The maximum number of column names to display at the bottom of the printed output.}
-
-\item{style}{"summary" or "data.frame"}
 
 \item{type}{boolean: should the type be printed?}
 
