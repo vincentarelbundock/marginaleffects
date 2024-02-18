@@ -541,12 +541,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code class="language-R">## S3 method for class 'marginaleffects'
 print(
   x,
+  style = getOption("marginaleffects_print_style", default = "summary"),
   digits = getOption("marginaleffects_print_digits", default = 3),
   p_eps = getOption("marginaleffects_print_p_eps", default = 0.001),
   topn = getOption("marginaleffects_print_topn", default = 5),
   nrows = getOption("marginaleffects_print_nrows", default = 30),
   ncols = getOption("marginaleffects_print_ncols", default = 30),
-  style = getOption("marginaleffects_print_style", default = "summary"),
   type = getOption("marginaleffects_print_type", default = TRUE),
   column_names = getOption("marginaleffects_print_column_names", default = TRUE),
   ...
@@ -562,6 +562,14 @@ print(
 </td>
 <td>
 An object produced by one of the <code>marginaleffects</code> package functions.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="print.marginaleffects_:_style">style</code>
+</td>
+<td>
+"summary", "data.frame", or "tinytable"
 </td>
 </tr>
 <tr>
@@ -602,14 +610,6 @@ The number of rows which will be printed before truncation.
 </td>
 <td>
 The maximum number of column names to display at the bottom of the printed output.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="print.marginaleffects_:_style">style</code>
-</td>
-<td>
-"summary" or "data.frame"
 </td>
 </tr>
 <tr>
