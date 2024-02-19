@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -507,33 +507,33 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><a href="fig/meme_log_odds_ratios.jpg" class="lightbox" data-description="meme
+<p><a href="fig/meme_log_odds_ratios.jpg" class="lightbox" data-gallery="elsewhere" data-description="meme
 
-a" data-gallery="elsewhere"><img src="fig/meme_log_odds_ratios.jpg" class="img-fluid"></a></p>
+a"><img src="fig/meme_log_odds_ratios.jpg" class="img-fluid"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><a href="fig/meme_plot_comparisons.png" class="lightbox" data-description="meme
+<p><a href="fig/meme_plot_comparisons.png" class="lightbox" data-gallery="elsewhere" data-description="meme
 
-c" data-gallery="elsewhere"><img src="fig/meme_plot_comparisons.png" class="img-fluid"></a></p>
+c"><img src="fig/meme_plot_comparisons.png" class="img-fluid"></a></p>
 </div>
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><a href="fig/meme_raw_model_output.jpg" class="lightbox" data-description="meme
+<p><a href="fig/meme_raw_model_output.jpg" class="lightbox" data-gallery="elsewhere" data-description="meme
 
-b" data-gallery="elsewhere"><img src="fig/meme_raw_model_output.jpg" class="img-fluid"></a></p>
+b"><img src="fig/meme_raw_model_output.jpg" class="img-fluid"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><a href="fig/meme_full_bayesian_posterior.jpg" class="lightbox" data-description="meme
+<p><a href="fig/meme_full_bayesian_posterior.jpg" class="lightbox" data-gallery="elsewhere" data-description="meme
 
-d" data-gallery="elsewhere"><img src="fig/meme_full_bayesian_posterior.jpg" class="img-fluid"></a></p>
+d"><img src="fig/meme_full_bayesian_posterior.jpg" class="img-fluid"></a></p>
 </div>
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><a href="fig/meme_wrestling.jpg" class="lightbox" data-description="meme
+<p><a href="fig/meme_wrestling.jpg" class="lightbox" data-gallery="elsewhere" data-description="meme
 
-e" data-gallery="elsewhere"><img src="fig/meme_wrestling.jpg" class="img-fluid"></a></p>
+e"><img src="fig/meme_wrestling.jpg" class="img-fluid"></a></p>
 </div>
 </div>
 </div>
@@ -702,7 +702,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -936,7 +941,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"loop":false,"selector":".lightbox","closeEffect":"zoom","descPosition":"bottom","openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","selector":".lightbox","loop":false,"closeEffect":"zoom","openEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

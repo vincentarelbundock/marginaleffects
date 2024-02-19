@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -670,26 +670,26 @@ Columns: am, gear, estimate, std.error, statistic, p.value, s.value, conf.low, c
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p, <span class="at">style =</span> <span class="st">"data.frame"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  am gear estimate std.error statistic       p.value  s.value conf.low
-1  0    3 16.10667 0.7589789  21.22150 6.046992e-100 329.5966 14.61910
-2  0    4 21.05000 1.4697592  14.32207  1.592966e-46 152.1370 18.16932
-3  1    4 26.27500 1.0392746  25.28206 5.032257e-141 466.0607 24.23806
+1  0    3 16.10667 0.7589789  21.22150 6.046968e-100 329.5966 14.61910
+2  0    4 21.05000 1.4697545  14.32212  1.591933e-46 152.1379 18.16933
+3  1    4 26.27500 1.0392747  25.28205 5.032443e-141 466.0606 24.23806
 4  1    5 21.38000 1.3145900  16.26363  1.788354e-59 195.1551 18.80345
   conf.high
 1  17.59424
-2  23.93068
+2  23.93067
 3  28.31194
 4  23.95655</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  am gear estimate std.error statistic       p.value  s.value conf.low
-1  0    3 16.10667 0.7589789  21.22150 6.046992e-100 329.5966 14.61910
-2  0    4 21.05000 1.4697592  14.32207  1.592966e-46 152.1370 18.16932
-3  1    4 26.27500 1.0392746  25.28206 5.032257e-141 466.0607 24.23806
+1  0    3 16.10667 0.7589789  21.22150 6.046968e-100 329.5966 14.61910
+2  0    4 21.05000 1.4697545  14.32212  1.591933e-46 152.1379 18.16933
+3  1    4 26.27500 1.0392747  25.28205 5.032443e-141 466.0606 24.23806
 4  1    5 21.38000 1.3145900  16.26363  1.788354e-59 195.1551 18.80345
   conf.high
 1  17.59424
-2  23.93068
+2  23.93067
 3  28.31194
 4  23.95655</code></pre>
 </div>
@@ -861,7 +861,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {

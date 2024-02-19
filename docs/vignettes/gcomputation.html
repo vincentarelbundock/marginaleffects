@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -722,7 +722,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(fit)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p[<span class="st">'estimate'</span>].mean())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>2.638299786562712</code></pre>
+<pre><code>2.638299786563007</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">## average predicted outcome in the two counterfactual datasets</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(fit, newdata <span class="op">=</span> datagrid(qsmk <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>], grid_type <span class="op">=</span> <span class="st">"counterfactual"</span>))</span>
@@ -829,15 +829,15 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a><span class="co">## of values of treatment and confounders, that is, the standardized outcome</span></span>
 <span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>) <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>)[<span class="st">'predicted_meanY'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>2.638299786562712</code></pre>
+<pre><code>2.6382997865630067</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>) <span class="op">==</span> <span class="dv">0</span>)[<span class="st">'predicted_meanY'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>1.7562131154656988</code></pre>
+<pre><code>1.7562131154659875</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>) <span class="op">==</span> <span class="dv">1</span>)[<span class="st">'predicted_meanY'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>5.2735873163511755</code></pre>
+<pre><code>5.273587316351489</code></pre>
 </div>
 </div>
 </div>
@@ -928,7 +928,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>)<span class="op">==</span><span class="dv">1</span>)[<span class="st">"predicted_meanY"</span>].mean() <span class="op">-\</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>)<span class="op">==</span><span class="dv">0</span>)[<span class="st">"predicted_meanY"</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>3.5173742008854765</code></pre>
+<pre><code>3.5173742008855013</code></pre>
 </div>
 </div>
 </div>
@@ -984,7 +984,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>bootstrap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                           estimate std.error conf.low conf.high
-1 Treatment - No Treatment 3.517374 0.5011838 2.535072  4.499676</code></pre>
+1 Treatment - No Treatment 3.517374 0.4787479 2.579046  4.455703</code></pre>
 </div>
 </div>
 <p>The results are close to those that we obtained with <code>comparisons()</code>, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.</p>
@@ -1192,7 +1192,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
