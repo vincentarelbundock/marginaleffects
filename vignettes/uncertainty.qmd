@@ -42,15 +42,7 @@ All standard errors for the `slopes()` and `comparisons()` functions are compute
 
 ## Standard errors and intervals for `predictions()`
 
-The `predictions()` function can compute the confidence intervals in two ways. If the following conditions hold:
-
-* The user sets: `type = "response"`
-* The model class is `glm`
-* The `transform` argument is `NULL`
-
-then `predictions()` will first compute estimates on the link scale, and then back transform them using the inverse link function supplied by `insight::link_inverse(model)` function.
-
-In all other cases, standard errors are computed using the delta method as described above.
+The `predictions()` function can compute the confidence intervals in two main ways. For certain models, the `type` argument accept this value: `type="invlink(link)"`. In those cases, `predictions()` will first compute estimates on the link scale, and then back transform them using the inverse link function supplied by `insight::link_inverse(model)` function.  In all other cases, standard errors are computed using the delta method directly on the specific scale, and then build symmetric intervals around the estimates.
 
 ## Robust standard errors 
 
