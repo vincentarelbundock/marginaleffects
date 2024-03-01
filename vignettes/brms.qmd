@@ -854,7 +854,7 @@ avg_comparisons(mod, comparison = "differenceavg") |>
 
 Some `brms` models allow users to model distributional parameters:
 
-```{r, results = "hide"}
+```{r, results = "hide", echo=FALSE}
 data(iris)
 library(brms)
 mod <- brm(bf(
