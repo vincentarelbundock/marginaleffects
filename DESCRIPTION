@@ -82,7 +82,6 @@ Suggests:
     gamlss,
     gamlss.dist,
     geepack,
-    ggdag,
     ggdist,
     ggokabeito,
     ggplot2,

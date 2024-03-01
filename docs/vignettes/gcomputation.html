@@ -103,6 +103,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -584,12 +587,18 @@ window.Quarto = {
 <section id="how-does-it-work" class="level2">
 <h2 class="anchored" data-anchor-id="how-does-it-work">How does it work?</h2>
 <p>Imagine a causal model like this:</p>
-<div class="cell" data-align="center">
+<div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="gcomputation_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" style="width:40.0%"></p>
-</figure>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">graph LR;
+    Z --&gt; X;
+    Z --&gt; Y;
+    X --&gt; Y;
+</pre>
+</div>
+<p></p></figure><p></p>
 </div>
 </div>
 </div>
@@ -984,7 +993,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>bootstrap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                           estimate std.error conf.low conf.high
-1 Treatment - No Treatment 3.517374 0.4787479 2.579046  4.455703</code></pre>
+1 Treatment - No Treatment 3.517374 0.4823687 2.571949    4.4628</code></pre>
 </div>
 </div>
 <p>The results are close to those that we obtained with <code>comparisons()</code>, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.</p>

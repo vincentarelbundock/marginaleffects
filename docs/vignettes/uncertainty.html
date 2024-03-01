@@ -588,14 +588,7 @@ window.Quarto = {
 </section>
 <section id="standard-errors-and-intervals-for-predictions" class="level2">
 <h2 class="anchored" data-anchor-id="standard-errors-and-intervals-for-predictions">Standard errors and intervals for <code>predictions()</code></h2>
-<p>The <code>predictions()</code> function can compute the confidence intervals in two ways. If the following conditions hold:</p>
-<ul>
-<li>The user sets: <code>type = "response"</code></li>
-<li>The model class is <code>glm</code></li>
-<li>The <code>transform</code> argument is <code>NULL</code></li>
-</ul>
-<p>then <code>predictions()</code> will first compute estimates on the link scale, and then back transform them using the inverse link function supplied by <code>insight::link_inverse(model)</code> function.</p>
-<p>In all other cases, standard errors are computed using the delta method as described above.</p>
+<p>The <code>predictions()</code> function can compute the confidence intervals in two main ways. For certain models, the <code>type</code> argument accept this value: <code>type="invlink(link)"</code>. In those cases, <code>predictions()</code> will first compute estimates on the link scale, and then back transform them using the inverse link function supplied by <code>insight::link_inverse(model)</code> function. In all other cases, standard errors are computed using the delta method directly on the specific scale, and then build symmetric intervals around the estimates.</p>
 </section>
 <section id="robust-standard-errors" class="level2">
 <h2 class="anchored" data-anchor-id="robust-standard-errors">Robust standard errors</h2>
@@ -669,27 +662,27 @@ window.Quarto = {
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">|&gt;</span> <span class="fu">predictions</span>() <span class="sc">|&gt;</span> <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"simulation"</span>)</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error    2.5 % 97.5 %</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.84e-01      0.197 2.58e-01  0.975</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.84e-01      0.169 3.46e-01  0.960</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.98e-01      0.137 4.71e-01  0.989</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.74e-01      0.235 1.50e-01  0.995</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.31e-02      0.167 6.11e-05  0.631</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.84e-01      0.189 2.80e-01  0.975</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.84e-01      0.159 3.69e-01  0.959</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.98e-01      0.140 4.53e-01  0.989</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.74e-01      0.237 1.67e-01  0.996</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.31e-02      0.192 5.86e-05  0.742</span></span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --- 22 rows omitted. See ?avg_predictions and ?print.marginaleffects --- </span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3.83e-01      0.290 2.16e-02  0.944</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.21e-06      0.112 3.43e-12  0.226</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6.89e-03      0.142 2.50e-05  0.571</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.07e-11      0.141 2.22e-16  0.400</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.95e-01      0.171 3.33e-01  0.966</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3.83e-01      0.293 1.74e-02  0.946</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.21e-06      0.134 3.77e-12  0.459</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6.89e-03      0.144 3.18e-05  0.580</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.07e-11      0.169 2.22e-16  0.838</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.95e-01      0.161 3.78e-01  0.966</span></span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, conf.low, conf.high, vs, hp, wt, gear </span></span>
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">|&gt;</span> <span class="fu">avg_slopes</span>(<span class="at">vcov =</span> <span class="sc">~</span>gear) <span class="sc">|&gt;</span> <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"simulation"</span>)</span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast  Estimate Std. Error   2.5 %  97.5 %</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gear    4 - 3 -3.92e-02    0.04975 -0.0872 0.10416</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gear    5 - 3 -1.93e-01    0.26535 -0.4868 0.32796</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  hp      dY/dX -5.02e-03    0.00445 -0.0116 0.00514</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  wt      dY/dX -3.98e-05    0.30934 -0.6356 0.67370</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gear    4 - 3 -3.92e-02    0.05609 -0.0894 0.13219</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gear    5 - 3 -1.93e-01    0.27239 -0.4883 0.33227</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  hp      dY/dX -5.02e-03    0.00445 -0.0116 0.00434</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  wt      dY/dX -3.98e-05    0.31122 -0.5937 0.71404</span></span>
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, conf.low, conf.high </span></span>
 <span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1028,17 +1021,17 @@ as.numeric(mean(pre1$conf.high - pre1$conf.low))
 ## The CI of the average estimate is:
 pre2 <- tidy(predictions(mod))
 as.numeric(pre2$conf.high - pre2$conf.low)
-#>  [1] 4.186950 3.462026 2.637693 2.770491 2.649390 3.559411 3.639052 4.421776 7.490407 2.335050 2.549076 2.918541 3.095985 3.551588 4.538228 4.685042 4.578458 3.791936 4.262336 4.176961 3.314880 2.742242 2.528468 3.984813 2.655209 3.590124 4.492933 3.521156 6.016142 3.719413 8.511352 2.363565
+#>  [1] 4.186950 3.462026 2.637693 2.770491 2.649389 3.559411 3.639052 4.421775 7.490408 2.335050 2.549076 2.918541 3.095985 3.551588 4.538229 4.685041 4.578458 3.791935 4.262336 4.176961 3.314880 2.742242 2.528468 3.984813 2.655208 3.590125 4.492933 3.521156 6.016142 3.719413 8.511354 2.363565
 
 ## On average CIs around unit-level estimates are:
 cmp1 <- comparisons(mod, variables = "hp")
 mean(cmp1$conf.high - cmp1$conf.low)
-#> [1] 0.05572734
+#> [1] 0.05572725
 
 ## The CI of the average estimate is:
 cmp2 <- comparisons(mod, variables = "hp", comparison = "differenceavg")
 cmp2$conf.high - cmp2$conf.low
-#> [1] 0.04920531
+#> [1] 0.04920535
 ```
 :::
 

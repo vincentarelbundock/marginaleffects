@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -482,6 +516,7 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#stack-overflow-questions" id="toc-stack-overflow-questions" class="nav-link" data-scroll-target="#stack-overflow-questions">Stack Overflow questions</a></li>
   <li><a href="#calling-marginaleffects-in-functions-loops-environments-or-after-re-assigning-variables" id="toc-calling-marginaleffects-in-functions-loops-environments-or-after-re-assigning-variables" class="nav-link" data-scroll-target="#calling-marginaleffects-in-functions-loops-environments-or-after-re-assigning-variables">Calling <code>marginaleffects</code> in functions, loops, environments, or after re-assigning variables</a></li>
+  <li><a href="#equivalence-between-avg_comparisons-and-avg_predictions" id="toc-equivalence-between-avg_comparisons-and-avg_predictions" class="nav-link" data-scroll-target="#equivalence-between-avg_comparisons-and-avg_predictions">Equivalence between <code>avg_comparisons()</code> and <code>avg_predictions()</code></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -515,6 +550,68 @@ ul.task-list li input[type="checkbox"] {
 <li>Supply your dataset explicitly to the <code>newdata</code> argument of <code>slopes</code> functions.</li>
 <li>Avoid assigning a new value to a variable that you use to store a dataset for model fitting.</li>
 </ol>
+</section>
+<section id="equivalence-between-avg_comparisons-and-avg_predictions" class="level2">
+<h2 class="anchored" data-anchor-id="equivalence-between-avg_comparisons-and-avg_predictions">Equivalence between <code>avg_comparisons()</code> and <code>avg_predictions()</code></h2>
+<p>Say we estimate a simple logit regression and want to compute the average log-odds ratio associated with a change from 0 to 1 on the <code>vs</code> variable. We can proceed as follows using the <code>comparisons()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(am <span class="sc">~</span> vs <span class="sc">+</span> <span class="fu">scale</span>(drat), <span class="at">family =</span> binomial, mtcars)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">"vs"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">comparison =</span> <span class="st">"lnoravg"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term              Contrast Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    vs ln(odds(1) / odds(0))   -0.901      0.368 -2.45   0.0143 6.1 -1.62  -0.18</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can specify the function to compare “hi” predictions to “lo” predictions manually and get the same results:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fun <span class="ot">&lt;-</span> <span class="cf">function</span>(hi, lo) <span class="fu">log</span>((<span class="fu">mean</span>(hi) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">mean</span>(hi))) <span class="sc">/</span> (<span class="fu">mean</span>(lo) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">mean</span>(lo))))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">"vs"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">comparison =</span> fun,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    vs     1, 0   -0.901      0.368 -2.45   0.0143 6.1 -1.62  -0.18</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The same results can be obtained using the <code>predictions()</code> function. First, we replicate the entire dataset, and substitute the values of <code>vs</code>. Then, we make predictions. Finally, we compute the log odds ratios:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat0 <span class="ot">&lt;-</span> <span class="fu">transform</span>(mtcars, <span class="at">vs =</span> <span class="dv">0</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dat1 <span class="ot">&lt;-</span> <span class="fu">transform</span>(mtcars, <span class="at">vs =</span> <span class="dv">1</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fu">predictions</span>(mod, <span class="at">newdata =</span> dat0, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">predictions</span>(mod, <span class="at">newdata =</span> dat1, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">fun</span>(p1<span class="sc">$</span>estimate, p0<span class="sc">$</span>estimate)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.9006949</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Notice that the following command gives us a different result. This is because instead of duplicating the full dataset, and computing the “hi” and “lo” as the mean predictions over the full data, we only compute the averages on the subsets of rows where <code>vs</code> is 0 or 1, respectively:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"vs"</span>, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fun</span>(p<span class="sc">$</span>estimate[<span class="dv">2</span>], p<span class="sc">$</span>estimate[<span class="dv">1</span>])</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.6931472</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Which is equivalent to:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dat0 <span class="ot">&lt;-</span> <span class="fu">subset</span>(mtcars, vs <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dat1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(mtcars, vs <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fu">predictions</span>(mod, <span class="at">newdata =</span> dat0, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">predictions</span>(mod, <span class="at">newdata =</span> dat1, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">fun</span>(p1<span class="sc">$</span>estimate, p0<span class="sc">$</span>estimate)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.6931472</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
