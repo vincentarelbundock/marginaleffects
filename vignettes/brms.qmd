@@ -848,3 +848,38 @@ avg_comparisons(mod, comparison = "differenceavg") |>
     posterior_draws(shape = "DxP") |>
     brms::hypothesis("b2 - b1 > .2")
 ```
+
+
+## Distributional parameters
+
+Some `brms` models allow users to model distributional parameters:
+
+```{r, results = "hide"}
+data(iris)
+library(brms)
+mod <- brm(bf(
+    Sepal.Length ~ Sepal.Width * Petal.Length,
+    sigma ~ Sepal.Width * Petal.Length), 
+    family = gaussian(), data = iris,
+    backend = "cmdstanr")
+```
+
+```{r, eval = FALSE}
+data(iris)
+library(brms)
+mod <- brm(bf(
+    Sepal.Length ~ Sepal.Width * Petal.Length,
+    sigma ~ Sepal.Width * Petal.Length), 
+    family = gaussian(), data = iris,
+    backend = "cmdstanr")
+```
+
+We can use `marginaleffects` to compute quantities based on posterior draws of those parameters by specifying the `dpar` argument, which will be passed internally to `brms`'s prediction functions. For example:
+
+```{r}
+avg_predictions(mod)
+
+avg_predictions(mod, dpar = "sigma")
+
+avg_slopes(mod, dpar = "sigma")
+```
