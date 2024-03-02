@@ -5,6 +5,7 @@ sanitize_hypothesis <- function(hypothesis, ...) {
         checkmate::check_choice(hypothesis, choices = c("pairwise", "reference", "sequential", "revpairwise", "revreference", "revsequential")),
         checkmate::check_numeric(hypothesis),
         checkmate::check_matrix(hypothesis),
+        checkmate::check_function(hypothesis),
         checkmate::check_null(hypothesis))
 
     hnull <- 0

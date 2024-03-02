@@ -1,7 +1,16 @@
 
-get_hypothesis <- function(x, hypothesis, column, by = NULL) {
+get_hypothesis <- function(x, hypothesis, by = NULL) {
 
     if (is.null(hypothesis)) return(x)
+
+    if (is.function(hypothesis)) {
+        out <- hypothesis(x)
+        if (!inherits(out, "data.frame") || !"term" %in% colnames(out) || !"estimate" %in% colnames(out)) {
+            msg <- "The `hypothesis` function must return a data frame with `term` and `estimate` columns."
+            stop(msg, call. = FALSE)
+        }
+        return(out)
+    }
 
     lincom <- NULL
 
