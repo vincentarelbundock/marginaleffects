@@ -1,10 +1,23 @@
 
-get_hypothesis <- function(x, hypothesis, by = NULL) {
+get_hypothesis <- function(
+    x,
+    hypothesis,
+    by = NULL,
+    newdata = NULL,
+    draws = NULL) {
 
     if (is.null(hypothesis)) return(x)
 
     if (is.function(hypothesis)) {
-        out <- hypothesis(x)
+        argnames <- names(formals(hypothesis))
+        if (!"x" %in% argnames) stop("The `hypothesis` function must accept an `x` argument.", call. = FALSE)
+        if (any(!argnames %in% c("x", "newdata", "by", "draws"))) {
+            msg <- "The allowable arguments for the `hypothesis` function are: x, newdata`, by, and draws."
+            stop(msg, call. = FALSE)
+        }
+        args <- list(x = x, newdata = newdata, by = by, draws = draws)
+        args <- args[names(args) %in% argnames]
+        out <- do.call(hypothesis, args)
         if (!inherits(out, "data.frame") || !"term" %in% colnames(out) || !"estimate" %in% colnames(out)) {
             msg <- "The `hypothesis` function must return a data frame with `term` and `estimate` columns."
             stop(msg, call. = FALSE)

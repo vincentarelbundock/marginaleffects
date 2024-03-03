@@ -648,7 +648,7 @@ get_predictions <- function(model,
     draws <- attr(out, "posterior_draws")
 
     # hypothesis tests using the delta method
-    out <- get_hypothesis(out, hypothesis = hypothesis, by = by)
+    out <- get_hypothesis(out, hypothesis = hypothesis, by = by, newdata = newdata, draws = draws)
 
     # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
     # applied in the middle, and it must already be sorted in the final order,
