@@ -46,7 +46,7 @@
 #'    - Other: `"NeweyWest"`, `"KernHAC"`, `"OPG"`. See the `sandwich` package documentation.
 #'  * One-sided formula which indicates the name of cluster variables (e.g., `~unit_id`). This formula is passed to the `cluster` argument of the `sandwich::vcovCL` function.
 #'  * Square covariance matrix
-#'  * Function which returns a covariance matrix (e.g., `stats::vcov(model)`)
+#'  * Function which returns a covariance matrix (e.g., `stats::vcov`)
 #' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval.
 #' @param type string indicates the type (scale) of the predictions used to
 #' compute contrasts or slopes. This can differ based on the model
@@ -60,7 +60,8 @@
 #' - "eydx": dY/dX * Y
 #' - "dyex": dY/dX / X
 #' - Y is the predicted value of the outcome; X is the observed value of the predictor.
-#' @param wts string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in `avg_*()` or with the `by` argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the `weighted.mean()` function.
+#' @param wts logical, string, or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in `avg_*()` or with the `by` argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the `weighted.mean()` function.
+#' + logical: if `TRUE`, weights will be extracted from the supplied model using [insight::get_weights()]. Only allowed when `newdata` is not specified.
 #' + string: column name of the weights variable in `newdata`. When supplying a column name to `wts`, it is recommended to supply the original data (including the weights variable) explicitly to `newdata`.
 #' + numeric: vector of length equal to the number of rows in the original data or in `newdata` (if supplied).
 #' @param hypothesis specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, a string formula, or a function.
@@ -200,7 +201,7 @@
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = lc)
-#' 
+#'
 #' @export
 slopes <- function(model,
                    newdata = NULL,

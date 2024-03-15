@@ -103,7 +103,7 @@ add_wts_column <- function(wts, newdata) {
             stop(msg, call. = FALSE)
         }
     }
-    
+
     # weights: before sanitize_variables
     if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
         newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
@@ -191,6 +191,10 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         checkmate::check_data_frame(newdata, null.ok = TRUE),
         checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "marginalmeans")),
         combine = "or")
+
+    if (isTRUE(wts)) wts <- insight::get_weights(model)
+    else if (isFALSE(wts)) wts <- NULL
+
     tmp <- build_newdata(model = model, newdata = newdata, by = by, modeldata = modeldata)
     newdata <- tmp[["newdata"]]
     modeldata <- tmp[["modeldata"]]
@@ -204,7 +208,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         newdata_explicit = newdata_explicit)
 
     # sort rows of output when the user explicitly calls `by` or `datagrid()`
-    # otherwise, we return the same data frame in the same order, but 
+    # otherwise, we return the same data frame in the same order, but
     # here it makes sense to sort for a clean output.
     sortcols <- attr(newdata, "newdata_variables_datagrid")
     if (isTRUE(checkmate::check_character(by))) {
@@ -231,7 +235,7 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
         isFALSE(getOption("marginaleffects_dedup", default = TRUE)))) {
         return(newdata)
     }
-    
+
     vclass <- attr(newdata, "marginaleffects_variable_class")
 
     # copy to allow mod by reference later without overwriting newdata
@@ -246,18 +250,18 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
     if ("rowid" %in% colnames(out)) {
         out[, "rowid" := NULL]
     }
-    
+
     categ <- c("factor", "character", "logical", "strata", "cluster", "binary")
     if (!all(vclass %in% categ)) {
         return(newdata)
     }
-    
+
     cols <- colnames(out)
     out <- out[, .("marginaleffects_wts_internal" = .N), by = cols]
     data.table::setDF(out)
-    
+
     out[["rowid_dedup"]] <- seq_len(nrow(out))
     attr(out, "marginaleffects_variable_class") <- vclass
-    
+
     return(out)
 }
