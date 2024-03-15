@@ -83,7 +83,7 @@ arguments.}
 }
 \item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
 \item Square covariance matrix
-\item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
+\item Function which returns a covariance matrix (e.g., \code{stats::vcov})
 }}
 
 \item{type}{string indicates the type (scale) of the predictions used to

@@ -149,7 +149,7 @@ first entry in the error message is used by default.}
 }
 \item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
 \item Square covariance matrix
-\item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
+\item Function which returns a covariance matrix (e.g., \code{stats::vcov})
 }}
 
 \item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
@@ -171,8 +171,9 @@ first entry in the error message is used by default.}
 \item \code{TRUE}: Contrasts represent the changes in adjusted predictions when all the predictors specified in the \code{variables} argument are manipulated simultaneously (a "cross-contrast").
 }}
 
-\item{wts}{string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the \code{weighted.mean()} function.
+\item{wts}{logical, string, or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the \code{weighted.mean()} function.
 \itemize{
+\item logical: if \code{TRUE}, weights will be extracted from the supplied model using \code{\link[insight:get_weights]{insight::get_weights()}}. Only allowed when \code{newdata} is not specified.
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
 }}
