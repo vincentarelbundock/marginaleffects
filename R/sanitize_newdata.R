@@ -95,6 +95,8 @@ add_wts_column <- function(wts, newdata) {
     # `tidy()`, because comparisons will often duplicate newdata for
     # multivariate outcomes and the like. We need to track which row matches
     # which.
+    if (isTRUE(checkmate::check_flag(wts))) return(newdata)
+
     if (!is.null(wts)) {
         flag1 <- isTRUE(checkmate::check_string(wts)) && isTRUE(wts %in% colnames(newdata))
         flag2 <- isTRUE(checkmate::check_numeric(wts, len = nrow(newdata)))
