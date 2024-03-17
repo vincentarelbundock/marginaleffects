@@ -6,6 +6,8 @@ New:
 
 * `print.marginaleffects()` supports `style="tinytable"`, which returns a `tinytable` object. Call `print(avg_slopes(model))` to get a nice printed table in Quarto or Rmarkdown documents, via Typst, LaTeX or HTML.
 * `hypothesis` argument accepts a function which takes a `marginaleffects` data frame and returns a transformed data frame with `term` and `estimate` columns.
+* The `base::subset()` and `dplyr::filter()` functions can be called with a single argument in `newdata` to select a subset of rows from the dataset used to fit the model.
+  - Example: avg_comparisons(fit, variables = "treatment", newdata = subset(treatment == 1))`
 
 Bugfix:
 

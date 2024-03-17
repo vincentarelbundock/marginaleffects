@@ -52,7 +52,7 @@ avg_comparisons(
 
 \item{newdata}{Grid of predictor values at which we evaluate the comparisons.
 \itemize{
-\item Warning: Please avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
+\item Warning: Avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
 \item \code{NULL} (default): Unit-level contrasts for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[insight:get_data]{insight::get_data()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 \item data frame: Unit-level contrasts for each row of the \code{newdata} data frame.
 \item string:
@@ -69,6 +69,8 @@ avg_comparisons(
 \item \code{newdata = datagrid(mpg = fivenum)}: \code{mpg} variable held at Tukey's five numbers (using the \code{fivenum} function), and other regressors fixed at their means or modes.
 \item See the Examples section and the \link{datagrid} documentation.
 }
+\item \code{\link[=subset]{subset()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = subset(treatment == 1)}
+\item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
 }}
 
 \item{variables}{Focal variables
@@ -318,8 +320,8 @@ https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
     \tab  \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
     \tab  \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
-   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
-    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
    \code{MCMCglmm} \tab \code{MCMCglmm} \tab \code{ndraws} \tab  \cr
 }
 }
