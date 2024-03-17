@@ -30,6 +30,8 @@
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.
+#' + [subset()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = subset(treatment == 1)`
+#' + [dplyr::filter()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = filter(treatment == 1)`
 #' + string:
 #'   - "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
 #'   - "median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.
@@ -224,7 +226,7 @@ slopes <- function(model,
     # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
     # build call: match.call() doesn't work well in *apply()
     call_attr <- c(list(
@@ -331,7 +333,7 @@ avg_slopes <- function(model,
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
 
     # Bootstrap

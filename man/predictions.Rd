@@ -63,6 +63,8 @@ avg_predictions(
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
 \item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
 }
+\item \code{\link[=subset]{subset()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = subset(treatment == 1)}
+\item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
 }}
 
 \item{variables}{Counterfactual variables.
@@ -271,8 +273,8 @@ https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
     \tab  \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
     \tab  \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
-   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
-    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
    \code{MCMCglmm} \tab \code{MCMCglmm} \tab \code{ndraws} \tab  \cr
 }
 }

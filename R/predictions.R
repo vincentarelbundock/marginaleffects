@@ -45,6 +45,8 @@
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.
+#' + [subset()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = subset(treatment == 1)`
+#' + [dplyr::filter()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = filter(treatment == 1)`
 #' @param byfun A function such as `mean()` or `sum()` used to aggregate
 #' estimates within the subgroups defined by the `by` argument. `NULL` uses the
 #' `mean()` function. Must accept a numeric vector and return a single numeric
@@ -207,7 +209,7 @@ predictions <- function(model,
     # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
     if ("cross" %in% names(dots)) {
         insight::format_error("The `cross` argument is not available in this function.")
@@ -684,7 +686,7 @@ avg_predictions <- function(model,
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
     # group by focal variable automatically unless otherwise stated
     if (isTRUE(by)) {
