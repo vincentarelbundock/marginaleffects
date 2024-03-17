@@ -84,6 +84,7 @@ sanity_model_supported_class <- function(model) {
         "mhurdle",
         "mira",
         "mlogit",
+        "mmrm",
         "model_fit",
         c("multinom", "nnet"),
         "mvgam",
