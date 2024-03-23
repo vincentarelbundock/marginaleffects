@@ -195,7 +195,7 @@ AMCE incorporates comparisons and averages over both direct and indirect attribu
 
 To estimate AFCP, we once again start by estimating a linear regression model. This time, the model is even more flexible. Specifically, the model allows the effect of language skills in the first profile to depend on the value of language skills in the second profile. Likewise, other attributes can influence the probability of selection differently based on attributes in the comparison profile. To achieve this, we interact `language_1` with `language_2`, and `job_1` with `job_2`. 
 
-Moreover, since the data is in "long" format, with one profile per row, we must also allow each variable to have different coefficients based on `profile` number: the effect of `language_1` on the probability of selection is obviously different for `profile=1` and for `profile=2`. Indeed, when `profile=1` the `language_1` column records the profile's own language skills. When `profile=2`, the `language_2` column records the alternative profile's language skills.
+Moreover, since the data is in "long" format, with one profile per row, we must also allow each variable to have different coefficients based on `profile` number: the effect of `language_1` on the probability of selection is obviously different for `profile=1` and for `profile=2`. Indeed, when `profile=1` the `language_1` column records the profile's own language skills. When `profile=2`, the same column records the alternative profile's language skills.
 
 Thankfully, it is trivial to allow this flexibility by interacting the attributes with the `profile` variable:
 
