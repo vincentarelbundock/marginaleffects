@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -274,6 +274,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../vignettes/conformal.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conformal prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -731,7 +737,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(fit)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p[<span class="st">'estimate'</span>].mean())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>2.638299786563007</code></pre>
+<pre><code>2.638299786562712</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">## average predicted outcome in the two counterfactual datasets</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(fit, newdata <span class="op">=</span> datagrid(qsmk <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>], grid_type <span class="op">=</span> <span class="st">"counterfactual"</span>))</span>
@@ -744,8 +750,8 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 │ ---  ┆ ---      │
 │ i64  ┆ f64      │
 ╞══════╪══════════╡
-│ 0    ┆ 1.756213 │
 │ 1    ┆ 5.273587 │
+│ 0    ┆ 1.756213 │
 └──────┴──────────┘</code></pre>
 </div>
 </div>
@@ -838,15 +844,15 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a><span class="co">## of values of treatment and confounders, that is, the standardized outcome</span></span>
 <span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>) <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>)[<span class="st">'predicted_meanY'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>2.6382997865630067</code></pre>
+<pre><code>2.638299786562712</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>) <span class="op">==</span> <span class="dv">0</span>)[<span class="st">'predicted_meanY'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>1.7562131154659875</code></pre>
+<pre><code>1.7562131154656988</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>) <span class="op">==</span> <span class="dv">1</span>)[<span class="st">'predicted_meanY'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>5.273587316351489</code></pre>
+<pre><code>5.2735873163511755</code></pre>
 </div>
 </div>
 </div>
@@ -937,7 +943,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>)<span class="op">==</span><span class="dv">1</span>)[<span class="st">"predicted_meanY"</span>].mean() <span class="op">-\</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>onesample.<span class="bu">filter</span>(pl.col(<span class="st">'interv'</span>)<span class="op">==</span><span class="dv">0</span>)[<span class="st">"predicted_meanY"</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>3.5173742008855013</code></pre>
+<pre><code>3.5173742008854765</code></pre>
 </div>
 </div>
 </div>
@@ -993,7 +999,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>bootstrap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                           estimate std.error conf.low conf.high
-1 Treatment - No Treatment 3.517374 0.4823687 2.571949    4.4628</code></pre>
+1 Treatment - No Treatment 3.517374 0.4983647 2.540597  4.494151</code></pre>
 </div>
 </div>
 <p>The results are close to those that we obtained with <code>comparisons()</code>, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.</p>
@@ -1119,6 +1125,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1153,7 +1177,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1429,7 +1457,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/gam.html" class="pagination-link  aria-label=" gam"="">
+      <a href="../vignettes/gam.html" class="pagination-link" aria-label="GAM">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">GAM</span>
       </a>          
   </div>

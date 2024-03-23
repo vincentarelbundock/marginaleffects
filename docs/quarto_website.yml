@@ -37,6 +37,7 @@ website:
           - vignettes/bootstrap.qmd
           - vignettes/categorical.qmd
           - vignettes/conformal.qmd
+          - vignettes/conjoint.qmd
           - vignettes/elasticity.qmd
           - vignettes/equivalence.qmd
           - vignettes/experiments.qmd

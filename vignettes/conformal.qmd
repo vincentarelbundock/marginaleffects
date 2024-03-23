@@ -1,8 +1,4 @@
-
 # Conformal prediction
-execute:
-    cache: true
-
 
 This notebook shows how to estimate conformal prediction intervals with the `marginaleffects` package for `R`.
 
@@ -61,9 +57,20 @@ The main caveats are:
 Download data, split it into training and testing sets, and estimate a few different models:
 
 ```{r}
+#| include: false
+if (file.exists("~/Downloads/military.csv")) {
+  dat <- read.csv("~/Downloads/military.csv")
+} else {
+  dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/military.csv")
+}
+```
+
+```{r}
+#| eval: false
 # download data
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/military.csv")
-
+```
+```{r}
 # create a binary outcome variable
 dat <- transform(dat, officer = as.numeric(grepl("officer", grade)))
 

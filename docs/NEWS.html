@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -208,6 +208,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="./vignettes/conformal.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conformal prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -526,6 +532,11 @@ ul.task-list li input[type="checkbox"] {
 <p>New:</p>
 <ul>
 <li><code>print.marginaleffects()</code> supports <code>style="tinytable"</code>, which returns a <code>tinytable</code> object. Call <code>print(avg_slopes(model))</code> to get a nice printed table in Quarto or Rmarkdown documents, via Typst, LaTeX or HTML.</li>
+<li><code>hypothesis</code> argument accepts a function which takes a <code>marginaleffects</code> data frame and returns a transformed data frame with <code>term</code> and <code>estimate</code> columns.</li>
+<li>The <code>base::subset()</code> and <code>dplyr::filter()</code> functions can be called with a single argument in <code>newdata</code> to select a subset of rows from the dataset used to fit the model.
+<ul>
+<li>Example: avg_comparisons(fit, variables = “treatment”, newdata = subset(treatment == 1))`</li>
+</ul></li>
 </ul>
 <p>Bugfix:</p>
 <ul>
@@ -1374,6 +1385,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1408,7 +1437,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1684,7 +1717,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./man/print.marginaleffects.html" class="pagination-link  aria-label=" `print.marginaleffects`"="">
+      <a href="./man/print.marginaleffects.html" class="pagination-link" aria-label="`print.marginaleffects`">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>print.marginaleffects</code></span>
       </a>          
   </div>

@@ -126,8 +126,4 @@ ways:
 
 <a href="https://marginaleffects.com">
 <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="center" alt="marginaleffects logo" width="200" />
-</a> <br><br>
-<img src="https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg">
-<img src="https://img.shields.io/badge/license-GPLv3-blue">
-<a href = "https://marginaleffects.com" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>
-<br><br>
+</a>
