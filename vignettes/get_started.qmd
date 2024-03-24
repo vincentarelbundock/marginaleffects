@@ -1,6 +1,11 @@
 
 # Get started
 
+```{css, echo=FALSE}
+.table {
+  font-size: .8em;
+}
+```
 
 ```{r, include = FALSE}
 options(width = 10000)
@@ -10,6 +15,9 @@ options(ggplot2.discrete.fill = okabeito)
 url <- "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv"
 dat <- read.csv(url)
 n_support <- nrow(dat)
+
+options(marginaleffects_print_style = "tinytable")
+options("tinytable_theme_placement_latex_float" = "H")
 ```
 
 This page explains how to interpret statistical results using the `marginaleffects` package for `R` and `Python`. The workflow that we propose rests on 5 conceptual pillars:
