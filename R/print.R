@@ -7,7 +7,8 @@ knit_print.marginaleffects <- function(x, ...) {
   if (isTRUE(getOption("marginaleffects_print_style") == "tinytable")) {
     insight::check_if_installed("tinytable")
     x <- print(x, "tinytable")
-    tinytable:::knit_print.tinytable(x)
+    printfun <- utils::getFromNamespace("knit_print.tinytable", "tinytable")
+    printfun(x)
   } else {
     print(x)
   }

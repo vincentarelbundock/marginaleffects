@@ -39,6 +39,7 @@ Imports:
     insight (>= 0.19.7),
     methods,
     rlang,
+    utils,
     Rcpp (>= 1.0.0)
 Enhances:
     knitr

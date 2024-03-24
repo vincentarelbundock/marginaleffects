@@ -532,6 +532,7 @@ ul.task-list li input[type="checkbox"] {
 <p>New:</p>
 <ul>
 <li><code>print.marginaleffects()</code> supports <code>style="tinytable"</code>, which returns a <code>tinytable</code> object. Call <code>print(avg_slopes(model))</code> to get a nice printed table in Quarto or Rmarkdown documents, via Typst, LaTeX or HTML.</li>
+<li>print as HTML, Typst, or LaTeX format automatically via <code>tinytable</code>: <code>options(marginaleffects_print_style="tinytable")</code></li>
 <li><code>hypothesis</code> argument accepts a function which takes a <code>marginaleffects</code> data frame and returns a transformed data frame with <code>term</code> and <code>estimate</code> columns.</li>
 <li>The <code>base::subset()</code> and <code>dplyr::filter()</code> functions can be called with a single argument in <code>newdata</code> to select a subset of rows from the dataset used to fit the model.
 <ul>
