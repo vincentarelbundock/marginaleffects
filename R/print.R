@@ -1,3 +1,20 @@
+#' Print a marginaleffects object in knitr
+#'
+#' @keywords internal
+#' @return A string with class `knit_asis` to be printed in Rmarkdown or Quarto documents.
+#' @exportS3Method knitr::knit_print
+knit_print.marginaleffects <- function(x, ...) {
+  if (isTRUE(getOption("marginaleffects_print_style") == "tinytable")) {
+    insight::check_if_installed("tinytable")
+    x <- print(x, "tinytable")
+    tinytable:::knit_print.tinytable(x)
+  } else {
+    print(x)
+  }
+}
+
+
+
 #' Print `marginaleffects` objects
 #' 
 #' @description
@@ -41,11 +58,13 @@ print.marginaleffects <- function(x,
                                   column_names = getOption("marginaleffects_print_column_names", default = TRUE),
                                   ...) {
 
-
     checkmate::assert_number(digits)
     checkmate::assert_number(topn)
     checkmate::assert_number(nrows)
-    checkmate::assert_choice(style, choices = c("data.frame", "summary", "tinytable"))
+    checkmate::assert_choice(
+      style,
+      choices = c("data.frame", "summary", "tinytable", "html", "latex", "markdown", "typst")
+    )
 
     if (isTRUE(style == "data.frame")) {
         print(as.data.frame(x))
@@ -207,14 +226,19 @@ print.marginaleffects <- function(x,
         }
     }
 
-    if (style == "tinytable") {
+    if (style %in% c("tinytable", "html", "latex", "typst", "markdown")) {
         insight::check_if_installed("tinytable")
         tab <- as.data.frame(out)
         at <- attributes(tab)
         attributes(tab) <- at[names(at) %in% c("row.names", "names", "class")]
         tab <- tinytable::tt(tab)
         tab <- tinytable::format_tt(tab, escape = TRUE)
-        return(tab)
+        tab@output <- style
+        if (style == "tinytable") {
+          return(tab)
+        }
+        print(tab)
+        return(invisible(tab))
     }
 
     # head
@@ -285,4 +309,22 @@ print.comparisons <- print.marginaleffects
 #' @noRd
 #' @export
 print.slopes <- print.marginaleffects
+
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.hypotheses <- knit_print.marginaleffects
+
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.predictions <- knit_print.marginaleffects
+
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.comparisons <- knit_print.marginaleffects
+
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.slopes <- knit_print.marginaleffects
+
+
 

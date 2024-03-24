@@ -40,6 +40,8 @@ Imports:
     methods,
     rlang,
     Rcpp (>= 1.0.0)
+Enhances:
+    knitr
 LinkingTo: Rcpp, RcppEigen
 Suggests: 
     AER,
@@ -93,7 +95,6 @@ Suggests:
     itsadug,
     ivreg,
     kableExtra,
-    knitr,
     lme4,
     lmerTest,
     logistf,
@@ -157,7 +158,7 @@ Suggests:
     tidyr,
     tidyverse,
     tinysnapshot,
-    tinytable (>= 0.0.4),
+    tinytable (>= 0.2.0),
     tinytest,
     titanic,
     truncreg,
