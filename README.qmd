@@ -65,9 +65,3 @@ The `marginaleffects` package and the Marginal Effects Zoo book will always be f
 3. [Cite the `marginaleffects` package](https://marginaleffects.com/CITATION.html) in your work and tell your friends about it.
 4. Create a new entry [for the Meme Gallery!](https://marginaleffects.com/vignettes/meme.html)
 
-
-<div align="center">
-<a href="https://marginaleffects.com">
-    <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="center" alt="marginaleffects logo" width="200" />
-</a>
-</div>
