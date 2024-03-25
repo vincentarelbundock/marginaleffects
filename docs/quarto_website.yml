@@ -61,7 +61,7 @@ website:
           - vignettes/extensions.qmd
           - vignettes/links.qmd
           - vignettes/performance.qmd
-          - vignettes/python.qmd
+          - vignettes/numpyro.qmd
           - vignettes/supported_models.qmd
           - vignettes/tables.qmd
           - vignettes/uncertainty.qmd

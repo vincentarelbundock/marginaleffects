@@ -153,35 +153,36 @@ hypotheses <- function(
     ...) {
 
   
-  dots <- list(...)
-  
-  call_attr <- c(list(
-    name = "hypotheses",
-    model = model,
-    hypothesis = hypothesis,
-    vcov = vcov,
-    conf_level = conf_level,
-    df = df,
-    equivalence = equivalence,
-    joint = joint,
-    joint_test = joint_test,
-    FUN = FUN,
-    numderiv = numderiv),
-    dots)
-  if ("modeldata" %in% names(dots)) {
-    call_attr[["modeldata"]] <- dots[["modeldata"]]
-  }
-  call_attr <- do.call("call", call_attr)
-  
-  ## Bootstrap
-  # restore an already sanitized hypothesis if necessary
-  hypothesis <- 
-    if(is.null(attr(hypothesis, "label"))){
-      hypothesis
-    } else{ 
-      attr(hypothesis, "label")
+    dots <- list(...)
+    
+    call_attr <- c(list(
+      name = "hypotheses",
+      model = model,
+      hypothesis = hypothesis,
+      vcov = vcov,
+      conf_level = conf_level,
+      df = df,
+      equivalence = equivalence,
+      joint = joint,
+      joint_test = joint_test,
+      FUN = FUN,
+      numderiv = numderiv),
+      dots)
+    if ("modeldata" %in% names(dots)) {
+      call_attr[["modeldata"]] <- dots[["modeldata"]]
     }
-  # Apply inferences method
+    call_attr <- do.call("call", call_attr)
+    
+    ## Bootstrap
+    # restore an already sanitized hypothesis if necessary
+    hypothesis <- 
+      if(is.null(attr(hypothesis, "label"))){
+        hypothesis
+      } else{ 
+        attr(hypothesis, "label")
+      }
+
+    # Apply inferences method
     out <- inferences_dispatch(
       INF_FUN = hypotheses,
       model=model,
@@ -196,7 +197,7 @@ hypotheses <- function(
       FUN = FUN,
       ...)
     if (!is.null(out)) {
-        return(out)
+      return(out)
     }
     ## Done with Bootstrap
     
