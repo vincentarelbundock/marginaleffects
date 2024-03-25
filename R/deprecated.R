@@ -444,12 +444,3 @@ get_marginalmeans <- function(model,
 #' @keywords internal
 #' @export
 marginalmeans <- marginal_means
-
-
-#' @noRd
-get_averages.marginalmeans <- function(x, by = FALSE, ...) {
-    if (!isFALSE(by)) {
-        insight::format_error("The `by` argument is not supported by the `averages()` function for `marginal_means` models.")
-    }
-    x
-}

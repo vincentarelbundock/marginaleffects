@@ -185,7 +185,6 @@ Collate:
     'datagrid.R'
     'deprecated.R'
     'equivalence.R'
-    'get_averages.R'
     'get_coef.R'
     'get_contrast_data.R'
     'get_contrast_data_character.R'
