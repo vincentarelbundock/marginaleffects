@@ -97,6 +97,8 @@ format:
   html:
     toc: true
     theme:
-      light: flatly
+      - flatly
+      - custom.scss
+    highlight-style: nord
     code-copy: true
     code-overflow: scroll
