@@ -45,7 +45,7 @@ hypotheses(
 }
 \item Function:
 \itemize{
-\item Accepts an argument \code{x}: data frame with column \code{rowid} and \code{estimate}
+\item Accepts an argument \code{x}: object produced by a \code{marginaleffects} function or a data frame with column \code{rowid} and \code{estimate}
 \item Returns a data frame with columns \code{term} and \code{estimate} (mandatory) and \code{rowid} (optional).
 \item The function can also accept and operation on optional input arguments: \code{newdata}, \code{by}, \code{draws}.
 }
@@ -84,12 +84,6 @@ hypotheses(
 }}
 
 \item{joint_test}{A character string specifying the type of test, either "f" or "chisq". The null hypothesis is set by the \code{hypothesis} argument, with default null equal to 0 for all parameters.}
-
-\item{FUN}{\code{NULL} or function.
-\itemize{
-\item \code{NULL} (default): hypothesis test on a model's coefficients, or on the quantities estimated by one of the \code{marginaleffects} package functions.
-\item Function which accepts a model object and returns a numeric vector or a data.frame with two columns called \code{term} and \code{estimate}. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object. See examples below.
-}}
 
 \item{numderiv}{string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
 \itemize{

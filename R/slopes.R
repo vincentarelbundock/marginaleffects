@@ -81,7 +81,7 @@
 #'   - "sequential": difference between an estimate and the estimate in the next row.
 #'   - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 #' + Function:
-#'   - Accepts an argument `x`: data frame with column `rowid` and `estimate`
+#'   - Accepts an argument `x`: object produced by a `marginaleffects` function or a data frame with column `rowid` and `estimate`
 #'   - Returns a data frame with columns `term` and `estimate` (mandatory) and `rowid` (optional).
 #'   - The function can also accept and operation on optional input arguments: `newdata`, `by`, `draws`.
 #' + See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html

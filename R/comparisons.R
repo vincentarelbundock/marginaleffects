@@ -323,9 +323,6 @@ comparisons <- function(model,
     cross <- sanitize_cross(cross, variables, model)
     type <- sanitize_type(model = model, type = type, calling_function = "comparisons")
     sanity_comparison(comparison)
-    tmp <- sanitize_hypothesis(hypothesis, ...)
-    hypothesis <- tmp$hypothesis
-    hypothesis_null <- tmp$hypothesis_null
 
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {
@@ -421,6 +418,10 @@ comparisons <- function(model,
         return(out)
     }
 
+    # after inferences dispatch
+    tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis <- tmp$hypothesis
+    hypothesis_null <- tmp$hypothesis_null
 
     # compute contrasts and standard errors
     args <- list(model = model,
