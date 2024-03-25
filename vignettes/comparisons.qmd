@@ -39,89 +39,121 @@ The `comparisons()` function is *extremely* flexible, and it allows users to est
 
 These steps can be combined, mixed, and matched to define and compute many different estimands.
 
-
-# Quantity of interest
-
-The question that interests us is:
+Throughout this vignette, we will consider a logistic regression model of passenger survival aboard the Titanic. We will consider variations on this questions:
 
 > How does the probability of survival (outcome) change if a passenger travels in 1st class vs. 3rd class?
-
-To estimate a quantity of interest, we define the following logistic regression model estimated using the Titanic mortality data:
 
 ```{r}
 library(marginaleffects)
 
 dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
-dat <- read.csv(dat)
-dat$PClass[dat$PClass == "*"] <- NA
+dat <- read.csv(dat, na.strings = c("*", ""))
+
 mod <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
+
+summary(mod)
 ```
 
-Since we are comparing two predicted outcomes, we will use `comparisons()`. To indicate that our focal variable is `PClass` and that we are interested in the comparison between 1st and 3rd class, we will use the `variables` argument:
+These coefficient estimates are interesting, but difficult to interpret. In many applications, analysts will want to call the `comparisons()` or `avg_comparisons()` functions to report more meaningful quantities of interest. The rest of explains in detail how to interpret and customize calls like this one:
 
-```{r, eval = FALSE}
-comparisons(mod, variables = list(PClass = c("1st", "3rd")))
+```{r}
+avg_comparisons(mod)
 ```
+
+
+# Quantity of interest
+
+To investigate the effect of gender, age, and passenger class on survival aboard the Titanic, we will conduct a series of "comparisons" between predicted outcomes computed for different preditor values. The quantity of interest will vary in two main respects:
+
+* *Predictor type*: How does the explanator of interest change?
+* *Comparison type*: How do we compare the two predicted outcomes?
+
+By default, the `comparisons()` function will estimate the "effect" of different changes for different types of predictors:
+
+* Numeric: Increase of 1 unit.
+* Logical: Change from `FALSE` to `TRUE`.
+* Factor or character: Changes from the reference to each other level.
 
 
 ## Comparison type
 
+The default comparison type in  `comparisons()` is the "difference", which means that the  `comparisons()` function will typically produce quantities which are often interpreted as a measure of "effect" in applications: risk differences, average treatment effects, G-computation estimates, etc. But `comparisons()` is not limited to differences, Indeed, it allows analysts to call on many built-in functions for comparison, and also to supply their own.
+
 ### Differences
 
-The default contrast calculate by the `comparisons()` function is a (untransformed) difference between two adjusted predictions. For instance, to estimate the effect of a change of 1 unit, we do:
+By default, the `comparisons()` function will compare the predicted values by differencing (subtraction). For example, consider a hypothetical Titanic passenger with these characteristics:
 
 ```{r}
-library(marginaleffects)
-
-mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
-
-## construct data
-
-mtcars_minus <- mtcars_plus <- mtcars
-mtcars_minus$mpg <- mtcars_minus$mpg - 0.5
-mtcars_plus$mpg <- mtcars_plus$mpg + 0.5
-
-## adjusted predictions
-yhat_minus <- predict(mod, newdata = mtcars_minus, type = "response")
-yhat_plus <- predict(mod, newdata = mtcars_plus, type = "response")
-
-## unit-level contrasts
-con <- yhat_plus - yhat_minus
-
-## average contrasts
-mean(con)
+passenger <- data.frame(
+    PClass = "3rd",
+    Age = 20,
+    SexCode = 0
+)
 ```
 
-We can use the `avg_comparisons()` function , or the `by` argument to obtain the same results:
+What would happen to the predicted probability of survival if we were to increase the `SexCode` from 0 to 1? Or increase `Age` by 1 unit? Or change `PClass` from "3rd" to "1st"? To answer these questions, we could proceed manually by computing two predictions and then subtracting one from the other:
 
 ```{r}
-avg_comparisons(mod)
+passenger_0 <- subset()
+passenger_1 <- transform(passenger, SexCode = 1)
 
-comparisons(mod, by = TRUE)
+prediction_0 = predict(mod, newdata = passenger_0, type = "response")
+prediction_1 = predict(mod, newdata = passenger_1, type = "response")
+
+prediction_1 - prediction_0
+```
+
+The result above shows that modifying the `SexCode` variable of this hypothetical passenger from 0 to 1 increases the predicted probability of survival by about `r sprintf("%.f%%", 100 * (prediction_1-prediction_0))`
+
+Instead of computing this estimate by hand, we could call `comparisons()` to get analogous results for all predictors in the model at once:
+
+```{r}
+comparisons(mod, newdata = passenger)
 ```
 
 ### Ratios
 
-Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute ratios or other functions of predictions. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we use the `comparison` argument:
+Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute ratios or other functions of predictions. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we could use the same predictions we computed above:
 
 ```{r}
-avg_comparisons(mod, comparison = "ratio")
+prediction_1 / prediction_0
 ```
 
-This result is the average adjusted risk ratio for an increment of 1, that is, the adjusted predictions when the `mpg` are incremented by 0.5, divided by the adjusted predictions when `mpg` is decremented by 0.5.
+This shows that the predicted probability of survival would be about `r sprintf("%.1f%%", (prediction_1/prediction_0))` larger if our hypothetical passenger were a woman than a man. 
 
-The `comparison` accepts different values for common types of contrasts: 'difference', 'ratio', 'lnratio', 'ratioavg', 'lnratioavg', 'lnoravg', 'differenceavg'. These strings are shortcuts for functions that accept two vectors of adjusted predictions and returns a single vector of contrasts. For example, these two commands yield identical results:
+The same result can be obtained by setting the `comparison` argument:
 
 ```{r}
-avg_comparisons(mod, comparison = "ratio")
-
-avg_comparisons(mod, comparison = function(hi, lo) hi / lo)
+comparisons(mod, comparison = "ratio", newdata = passenger)
 ```
 
 
 ### Built-in functions
 
+Beyond differences and ratios, `comparisons()` supports many other built-in functions to compare predictions, such as log odds ratios, lift, etc. See `?comparisons` for a complete list.
+
+These built-in functions allow us convenient access to complex transformations. For example, this code computes the log odds ratio associated with a change in predictors:
+
+```{r}
+comparisons(mod, 
+    comparison = "lnor", 
+    newdata = passenger)
+```
+
+This call adds the `transform` argument to exponentiate the log-odds ratios at the very end of calculations:
+
+```{r}
+comparisons(mod, 
+    comparison = "lnor", 
+    transform = exp,
+    newdata = passenger)
+```
+
 ### Custom functions
+
+```{r}
+comparisons(mod, comparison = function(hi, lo) hi / lo, newdata = passenger)
+```
 
 This mechanism is powerful, because it lets users create fully customized contrasts. Here is a non-sensical example:
 
@@ -129,98 +161,7 @@ This mechanism is powerful, because it lets users create fully customized contra
 avg_comparisons(mod, comparison = function(hi, lo) sqrt(hi) / log(lo + 10))
 ```
 
-The same arguments work in the plotting function `plot_comparisons()` as well, which allows us to plot various custom contrasts. Here is a comparison of Adjusted Risk Ratio and Adjusted Risk Difference in a model of the probability of survival aboard the Titanic:
 
-```{r}
-library(ggplot2)
-library(patchwork)
-titanic <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
-titanic <- read.csv(titanic)
-mod_titanic <- glm(
-    Survived ~ Sex * PClass + Age + I(Age^2),
-    family = binomial,
-    data = titanic)
-
-avg_comparisons(mod_titanic)
-
-p1 <- plot_comparisons(
-    mod_titanic,
-    variables = "Age",
-    condition = "Age",
-    comparison = "ratio") +
-    ylab("Adjusted Risk Ratio\nP(Survival | Age + 1) / P(Survival | Age)")
-
-p2 <- plot_comparisons(
-    mod_titanic,
-    variables = "Age",
-    condition = "Age") +
-    ylab("Adjusted Risk Difference\nP(Survival | Age + 1) - P(Survival | Age)")
-
-p1 + p2
-```
-
-By default, the standard errors around contrasts are computed using the delta method on the scale determined by the `type` argument (e.g., "link" or "response"). Some analysts may prefer to proceed differently. For example, in `Stata`, the `adjrr` computes adjusted risk ratios (ARR) in two steps:
-
-1.  Compute the natural log of the ratio between the mean of adjusted predictions with $x+1$ and the mean of adjusted predictions with $x$.
-2.  Exponentiate the estimate and confidence interval bounds.
-
-Step 1 is easy to achieve with the `comparison` argument described above. Step 2 can be achieved with the `transform` argument:
-
-```{r}
-avg_comparisons(
-    mod,
-    comparison = function(hi, lo) log(hi / lo),
-    transform = exp)
-```
-
-Note that we can use the `lnratioavg` shortcut instead of defining the function ourselves.
-
-The order of operations in previous command was:
-
-1.  Compute the custom unit-level log ratios
-2.  Exponentiate them
-3.  Take the average using the `avg_comparisons()`
-
-There is a very subtle difference between the procedure above and this code:
-
-```{r}
-avg_comparisons(
-    mod,
-    comparison = function(hi, lo) log(hi / lo),
-    transform = exp)
-```
-
-Since the `exp` function is now passed to the `transform` argument of the `comparisons()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to do under the hood, and the results are slightly different.
-
-```{r}
-comparisons(
-    mod,
-    comparison = function(hi, lo) log(mean(hi) / mean(lo)),
-    transform = exp)
-```
-
-Note that equivalent results can be obtained using shortcut strings in the `comparison` argument: "ratio", "lnratio", "lnratioavg".
-
-```{r}
-comparisons(
-    mod,
-    comparison = "lnratioavg",
-    transform = exp)
-```
-
-All the same arguments apply to the plotting functions of the `marginaleffects` package as well. For example we can plot the Adjusted Risk Ratio in a model with a quadratic term:
-
-```{r}
-library(ggplot2)
-dat_titanic <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv")
-mod2 <- glm(Survived  ~ Age, data = dat_titanic, family = binomial)
-plot_comparisons(
-    mod2,
-    variables = list("Age" = 10),
-    condition = "Age",
-    comparison = "ratio") +
-    ylab("Adjusted Risk Ratio\nP(Survived = 1 | Age + 10) / P(Survived = 1 | Age)")
-```
 
 ## Predictor types
 
@@ -505,6 +446,57 @@ cmp$estimate
 mean(cmp$estimate)
 ```
 
+# Uncertainty
+
+By default, the standard errors around contrasts are computed using the delta method on the scale determined by the `type` argument (e.g., "link" or "response"). Some analysts may prefer to proceed differently. For example, in `Stata`, the `adjrr` computes adjusted risk ratios (ARR) in two steps:
+
+1.  Compute the natural log of the ratio between the mean of adjusted predictions with $x+1$ and the mean of adjusted predictions with $x$.
+2.  Exponentiate the estimate and confidence interval bounds.
+
+Step 1 is easy to achieve with the `comparison` argument described above. Step 2 can be achieved with the `transform` argument:
+
+```{r}
+avg_comparisons(
+    mod,
+    comparison = function(hi, lo) log(hi / lo),
+    transform = exp)
+```
+
+Note that we can use the `lnratioavg` shortcut instead of defining the function ourselves.
+
+The order of operations in previous command was:
+
+1.  Compute the custom unit-level log ratios
+2.  Exponentiate them
+3.  Take the average using the `avg_comparisons()`
+
+There is a very subtle difference between the procedure above and this code:
+
+```{r}
+avg_comparisons(
+    mod,
+    comparison = function(hi, lo) log(hi / lo),
+    transform = exp)
+```
+
+Since the `exp` function is now passed to the `transform` argument of the `comparisons()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to do under the hood, and the results are slightly different.
+
+```{r}
+comparisons(
+    mod,
+    comparison = function(hi, lo) log(mean(hi) / mean(lo)),
+    transform = exp)
+```
+
+Note that equivalent results can be obtained using shortcut strings in the `comparison` argument: "ratio", "lnratio", "lnratioavg".
+
+```{r}
+comparisons(
+    mod,
+    comparison = "lnratioavg",
+    transform = exp)
+```
+
 
 # Hypothesis
 
@@ -594,6 +586,37 @@ The `transform` argument of the `comparisons()` function applies a custom transf
 The `transform` argument applies a custom transformation to the final quantity, as would be returned if we evaluated the same call without `transform`.
 
 
+# Plotting
+
+The same arguments work in the plotting function `plot_comparisons()` as well, which allows us to plot various custom contrasts. Here is a comparison of Adjusted Risk Ratio and Adjusted Risk Difference in a model of the probability of survival aboard the Titanic:
+
+```{r}
+library(ggplot2)
+library(patchwork)
+titanic <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
+titanic <- read.csv(titanic)
+mod_titanic <- glm(
+    Survived ~ Sex * PClass + Age + I(Age^2),
+    family = binomial,
+    data = titanic)
+
+avg_comparisons(mod_titanic)
+
+p1 <- plot_comparisons(
+    mod_titanic,
+    variables = "Age",
+    condition = "Age",
+    comparison = "ratio") +
+    ylab("Adjusted Risk Ratio\nP(Survival | Age + 1) / P(Survival | Age)")
+
+p2 <- plot_comparisons(
+    mod_titanic,
+    variables = "Age",
+    condition = "Age") +
+    ylab("Adjusted Risk Difference\nP(Survival | Age + 1) - P(Survival | Age)")
+
+p1 + p2
+```
 
 # Visual guide
 
