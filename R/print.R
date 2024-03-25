@@ -229,11 +229,27 @@ print.marginaleffects <- function(x,
 
     if (style %in% c("tinytable", "html", "latex", "typst", "markdown")) {
         insight::check_if_installed("tinytable")
+
         tab <- as.data.frame(out)
-        at <- attributes(tab)
-        attributes(tab) <- at[names(at) %in% c("row.names", "names", "class")]
+
+        if (isTRUE(splitprint)) {
+          tab <- rbind(utils::head(tab, topn), utils::tail(tab, topn))
+        }
+
+        # at <- attributes(tab)
+        # attributes(tab) <- at[names(at) %in% c("row.names", "names", "class")]
+
         tab <- tinytable::tt(tab)
         tab <- tinytable::format_tt(tab, escape = TRUE)
+
+        if (isTRUE(splitprint)) {
+          msg <- "%s rows omitted"
+          msg <- sprintf(msg, nrow(x) - 2 * topn)
+          msg <- stats::setNames(list(topn + 1), msg)
+          tab <- tinytable::group_tt(tab, i = msg)
+          tab <- tinytable::style_tt(tab, i = topn + 1, align = "c")
+        }
+
         tab@output <- style
         if (style == "tinytable") {
           return(tab)
