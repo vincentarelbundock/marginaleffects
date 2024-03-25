@@ -5,6 +5,9 @@
 .table {
   font-size: .8em;
 }
+.table td, .table th {
+  white-space: nowrap;
+}
 ```
 
 ```{r, include = FALSE}
