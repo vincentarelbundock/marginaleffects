@@ -58,13 +58,13 @@ N <- 100
 dat <- rbind(data.frame(y = rnorm(N), x = 0),
              data.frame(y = rnorm(N, mean = 0.3), x = 1))
 mod <- lm(y ~ x, data = dat)
-FUN <- function(model, ...) {
-    data.frame(term = "t-test", estimate = coef(model)[2])
+FUN <- function(x) {
+    data.frame(term = "t-test", estimate = coef(x)[2])
 }
 e1 <- tost(dat$y[dat$x == 0], dat$y[dat$x == 1], epsilon = .05)
 e2 <- hypotheses(
     mod,
-    FUN = FUN,
+    hypothesis = FUN,
     equivalence = c(-.05, .05),
     df = e1$parameter)
 expect_true(e1$tost.p.value > .5 && e1$tost.p.value < .9)

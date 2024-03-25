@@ -278,6 +278,7 @@ hypotheses <- function(
             out <- data.frame(term = seq_along(out), estimate = out)
 
         } else if (inherits(model, "data.frame")) {
+            out <- model
             if (any(!c("term", "estimate") %in% colnames(out))) {
                 msg <- "`hypothesis` function must return a data.frame with two columns named `term` and `estimate`."
                 insight::format_error(msg)

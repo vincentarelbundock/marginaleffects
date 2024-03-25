@@ -294,9 +294,49 @@ avg_predictions(mod, hypothesis = fun)
 ```
 
 
+### Comparisons and slopes
+
+In the same ordinal logit model, we can estimate the average effect of an increase of 1 unit in `hp` on the expected probability of every level of the outcome:
+
+```{r}
+avg_comparisons(mod, variables = "hp")
+```
+
+Compare estimate for different outcome levels:
+
+```{r}
+fun <- function(x) {
+    x |> 
+    mutate(estimate = (estimate - lag(estimate)),
+           group = sprintf("%s - %s", group, lag(group))) |>
+    filter(!is.na(estimate))
+}
+avg_comparisons(mod, variables = "hp", hypothesis = fun)
+```
+
+Now suppose we want to compare the effect of `hp` for different levels of the outcome, but this time we do the computation  *within levels of* `cyl`:
+
+```{r}
+avg_comparisons(mod, variables = "hp", by = "cyl")
+```
+
+```{r}
+fun <- function(x) {
+    x |> 
+    mutate(estimate = (estimate - lag(estimate)),
+           group = sprintf("%s - %s", group, lag(group)), 
+           .by = "cyl") |>
+    filter(!is.na(estimate))
+}
+avg_comparisons(mod, variables = "hp", by = "cyl", hypothesis = fun)
+```
+
+
 ### Fitted models 
 
-The `FUN` argument can be used to compute standard errors for arbitrary functions of model parameters. This user-supplied function must accept a single model object, and return a numeric vector or a data.frame with two columns named `term` and `estimate`.
+The `hypothesis` argument can be used to compute standard errors for arbitrary functions of model parameters. This user-supplied function must accept a single model object, and return a data.frame with two columns named `term` and `estimate`.
+
+Here, we test if the sum of the `hp` and `mpg` coefficients is equal to 2:
 
 ```{r}
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
@@ -325,8 +365,6 @@ fun <- function(x) {
 hypotheses(mod, hypothesis = fun)
 ```
 
-Note that we specified the `newdata` argument in the `f` function. This is because the `predict()` method associated with `lm` objects will automatically the original fitted values when `newdata` is `NULL`, instead of returning the slightly altered fitted values which we need to compute numerical derivatives in the delta method.
-
 We can also use more complex aggregation patterns. In this ordinal logistic regression model, we model the number of gears for each ar. If we compute fitted values with the `predictions()` function, we obtain one predicted probability for each individual car and for each level of the response variable:
 
 ```{r}
@@ -342,10 +380,10 @@ mod <- polr(gear ~ cyl + hp, dat)
 predictions(mod)
 ```
 
-There are three levels to the outcome: 3, 4, and 5. Imagine that, for each car in the dataset, we want to collapse categories of the output variable into two categories ("3 & 4" and "5") by taking sums of predicted probabilities. Then, we want to take the average of those predicted probabilities for each level of `cyl`. To do so, we define a custom function, and pass it to the `FUN` argument of the `hypotheses()` function:
+There are three levels to the outcome: 3, 4, and 5. Imagine that, for each car in the dataset, we want to collapse categories of the output variable into two categories ("3 & 4" and "5") by taking sums of predicted probabilities. Then, we want to take the average of those predicted probabilities for each level of `cyl`. To do so, we define a custom function, and pass it to the `hypothesis` argument of the `hypotheses()` function:
 
 ```{r}
-aggregation_fun <- function(x) {
+fun <- function(x) {
     predictions(x, vcov = FALSE) |>
         # label the new categories of outcome levels
         mutate(group = ifelse(group %in% c("3", "4"), "3 & 4", "5")) |>
@@ -357,7 +395,7 @@ aggregation_fun <- function(x) {
         rename(term = cyl)
 }
 
-hypotheses(mod, hypothesis = aggregation_fun)
+hypotheses(mod, hypothesis = fun)
 ```
 
 Note that this workflow will not work for bayesian models or with bootstrap. However, with those models it is trivial to do the same kind of aggregation by calling `posterior_draws()` and operating directly on draws from the posterior distribution. See the vignette on bayesian analysis for examples with the `posterior_draws()` function.
@@ -366,7 +404,9 @@ Note that this workflow will not work for bayesian models or with bootstrap. How
 
 ## Vectors and Matrices
 
-The `predictions()` function can compute [estimated marginal means.](marginalmeans.html) The `hypothesis` argument of that function offers a powerful mechanism to estimate custom contrasts between marginal means, by way of linear combination.
+The `predictions()` function can estimate marginal means. The `hypothesis` argument of that function offers a powerful mechanism to estimate custom contrasts between marginal means, by way of linear combination.
+
+### Simple contrast
 
 Consider a simple example:
 
@@ -413,7 +453,6 @@ c(21.66232, 21.34058) %*% c(1, -1)
 
 The last two commands express the contrast of interest as [a linear combination](https://en.wikipedia.org/wiki/Linear_combination) of marginal means.
 
-### Simple contrast
 
 In the `predictions()` function, we can supply a `hypothesis` argument to compute linear combinations of marginal means. This argument must be a numeric vector of the same length as the number of rows in the output. For example, in the previous there were six rows, and the two marginal means we want to compare are at in the first two positions:
 
@@ -610,43 +649,3 @@ hyp
 ```
 
 
-## Complex aggregations and tests
-
-The `FUN` argument of the `hypotheses()` function can be used to conduct complex aggregations and tests of various quantities of interest. For example, consider this ordered logit model fitted on a dataset of cars:
-
-
-```{r}
-#| messages: false
-library(MASS)
-library(dplyr)
-
-dat <- transform(mtcars, gear = factor(gear))
-mod <- polr(gear ~ factor(cyl) + hp, dat)
-summary(mod)
-```
-
-If we compute fitted values with the `predictions()` function, we obtain one predicted probability for each individual car and for each level of the response variable:
-
-```{r}
-predictions(mod)
-```
-
-There are three levels to the outcome: 3, 4, and 5. Imagine that, for each car in the dataset, we want to collapse categories of the output variable into two categories ("3 & 4" and "5") by taking sums of predicted probabilities. Then, we want to take the average of those predicted probabilities for each level of `cyl`. To do so, we define a custom function, and pass it to the `FUN` argument of the `hypotheses()` function:
-
-```{r}
-aggregation_fun <- function(model) {
-    predictions(model, vcov = FALSE) |>
-        # label the new categories of outcome levels
-        mutate(group = ifelse(group %in% c("3", "4"), "3 & 4", "5")) |>
-        # sum of probabilities at the individual level
-        summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) |>
-        # average probabilities for each value of `cyl`
-        summarize(estimate = mean(estimate), .by = c("cyl", "group")) |>
-        # the `FUN` argument requires a `term` column
-        rename(term = cyl)
-}
-
-hypotheses(mod, FUN = aggregation_fun)
-```
-
-Note that this workflow will not work for bayesian models or with bootstrap. However, with those models it is trivial to do the same kind of aggregation by calling `posterior_draws()` and operating directly on draws from the posterior distribution. See the vignette on bayesian analysis for examples with the `posterior_draws()` function.
