@@ -1,5 +1,4 @@
-![](man/figures/zoo_banner.png)
-
+![](man/figures/mfx_slopes.png)
 <br>
 <a href = "https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
 <a href = "https://marginaleffects.com" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>

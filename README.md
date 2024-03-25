@@ -1,8 +1,6 @@
 
 
-![](man/figures/zoo_banner.png)
-
-<br>
+![](man/figures/mfx_slopes.png) <br>
 <a href = "https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
 <a href = "https://marginaleffects.com" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>
 <a href = "https://marginaleffects.com" target = "_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a>
@@ -38,32 +36,32 @@ including linear, GLM, GAM, mixed-effects, bayesian, categorical
 outcomes, XGBoost, and more. With a single unified interface, users can
 compute and plot many estimands, including:
 
--   Predictions (aka fitted values or adjusted predictions)
--   Comparisons such as contrasts, risk differences, risk ratios, odds,
-    etc.
--   Slopes (aka marginal effects or partial derivatives)
--   Marginal means
--   Linear and non-linear hypothesis tests
--   Equivalence tests
--   Uncertainty estimates using the delta method, bootstrapping,
-    simulation, or conformal inference.
--   Much more!
+- Predictions (aka fitted values or adjusted predictions)
+- Comparisons such as contrasts, risk differences, risk ratios, odds,
+  etc.
+- Slopes (aka marginal effects or partial derivatives)
+- Marginal means
+- Linear and non-linear hypothesis tests
+- Equivalence tests
+- Uncertainty estimates using the delta method, bootstrapping,
+  simulation, or conformal inference.
+- Much more!
 
 [The Marginal Effects Zoo](https://marginaleffects.com/) book includes
 over 30 chapters of tutorials, case studies, and technical notes. It
 covers a wide range of topics, including how the `marginaleffects`
 package can facilitate the analysis of:
 
--   Experiments
--   Observational data
--   Causal inference with G-Computation
--   Machine learning models
--   Bayesian modeling
--   Multilevel regression with post-stratification (MRP)
--   Missing data
--   Matching
--   Inverse probability weighting
--   Conformal prediction
+- Experiments
+- Observational data
+- Causal inference with G-Computation
+- Machine learning models
+- Bayesian modeling
+- Multilevel regression with post-stratification (MRP)
+- Missing data
+- Matching
+- Inverse probability weighting
+- Conformal prediction
 
 [Get started by clicking
 here!](https://marginaleffects.com/vignettes/get_started.html)
@@ -75,32 +73,32 @@ of entry to easily interpret the results of [over 100 classes of
 models,](https://marginaleffects.com/vignettes/supported_models.html)
 using a simple and consistent user interface. Its benefits include:
 
--   *Powerful:* It can compute and plot predictions; comparisons
-    (contrasts, risk ratios, etc.); slopes; and conduct hypothesis and
-    equivalence tests for over 100 different classes of models in `R`.
--   *Simple:* All functions share a simple and unified interface.
--   *Documented*: Each function is thoroughly documented with abundant
-    examples. The Marginal Effects Zoo website includes 20,000+ words of
-    vignettes and case studies.
--   *Efficient:* [Some
-    operations](https://marginaleffects.com/vignettes/performance.html)
-    can be up to 1000 times faster and use 30 times less memory than
-    with the `margins` package.  
--   *Valid:* When possible, [numerical results are
-    checked](https://marginaleffects.com/vignettes/supported_models.html)
-    against alternative software like `Stata` or other `R` packages.
--   *Thin:* The `R` package requires relatively few dependencies.
--   *Standards-compliant:* `marginaleffects` follows “tidy” principles
-    and returns objects that work with standard functions like
-    `summary()`, `tidy()`, and `glance()`. These objects are easy to
-    program with and feed to other packages like
-    [`ggplot2`](https://marginaleffects.com/vignettes/plot.html) or
-    [`modelsummary`.](https://marginaleffects.com/vignettes/tables.html)
--   *Extensible:* Adding support for new models is very easy, often
-    requiring less than 10 lines of new code. Please submit [feature
-    requests on
-    Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
--   *Active development*: Bugs are fixed promptly.
+- *Powerful:* It can compute and plot predictions; comparisons
+  (contrasts, risk ratios, etc.); slopes; and conduct hypothesis and
+  equivalence tests for over 100 different classes of models in `R`.
+- *Simple:* All functions share a simple and unified interface.
+- *Documented*: Each function is thoroughly documented with abundant
+  examples. The Marginal Effects Zoo website includes 20,000+ words of
+  vignettes and case studies.
+- *Efficient:* [Some
+  operations](https://marginaleffects.com/vignettes/performance.html)
+  can be up to 1000 times faster and use 30 times less memory than with
+  the `margins` package.  
+- *Valid:* When possible, [numerical results are
+  checked](https://marginaleffects.com/vignettes/supported_models.html)
+  against alternative software like `Stata` or other `R` packages.
+- *Thin:* The `R` package requires relatively few dependencies.
+- *Standards-compliant:* `marginaleffects` follows “tidy” principles and
+  returns objects that work with standard functions like `summary()`,
+  `tidy()`, and `glance()`. These objects are easy to program with and
+  feed to other packages like
+  [`ggplot2`](https://marginaleffects.com/vignettes/plot.html) or
+  [`modelsummary`.](https://marginaleffects.com/vignettes/tables.html)
+- *Extensible:* Adding support for new models is very easy, often
+  requiring less than 10 lines of new code. Please submit [feature
+  requests on
+  Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
+- *Active development*: Bugs are fixed promptly.
 
 ## How to help
 
@@ -124,6 +122,10 @@ ways:
 4.  Create a new entry [for the Meme
     Gallery!](https://marginaleffects.com/vignettes/meme.html)
 
+<div align="center">
+
 <a href="https://marginaleffects.com">
 <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="center" alt="marginaleffects logo" width="200" />
 </a>
+
+</div>
