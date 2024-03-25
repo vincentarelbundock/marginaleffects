@@ -31,7 +31,7 @@ estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects,
 and other model types. This can lead to wasted effort, confusion, and
 mistakes, and it can hinder the implementation of best practices.
 
-## Book
+## Free Book
 
 [This free online book](https://marginaleffects.com/) introduces a
 conceptual framework to clearly define statistical quantities of
@@ -74,7 +74,7 @@ package can facilitate the analysis of:
 [Get started by clicking
 here!](https://marginaleffects.com/vignettes/get_started.html)
 
-## Software
+## Free Software
 
 The `marginaleffects` package for `R` and `Python` offers a single point
 of entry to easily interpret the results of [over 100 classes of
@@ -97,9 +97,9 @@ using a simple and consistent user interface. Its benefits include:
     against alternative software like `Stata` or other `R` packages.
 -   *Thin:* The `R` package requires relatively few dependencies.
 -   *Standards-compliant:* `marginaleffects` follows “tidy” principles
-    and returns objects that work with standard functions like
-    `summary()`, `tidy()`, and `glance()`. These objects are easy to
-    program with and feed to other packages like
+    and returns simple data frames that work with all standard `R`
+    functions. The outputs are easy to program with and feed to other
+    packages like
     [`ggplot2`](https://marginaleffects.com/vignettes/plot.html) or
     [`modelsummary`.](https://marginaleffects.com/vignettes/tables.html)
 -   *Extensible:* Adding support for new models is very easy, often

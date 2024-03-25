@@ -482,8 +482,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#book" id="toc-book" class="nav-link active" data-scroll-target="#book">Book</a></li>
-  <li><a href="#software" id="toc-software" class="nav-link" data-scroll-target="#software">Software</a></li>
+  <li><a href="#free-book" id="toc-free-book" class="nav-link active" data-scroll-target="#free-book">Free Book</a></li>
+  <li><a href="#free-software" id="toc-free-software" class="nav-link" data-scroll-target="#free-software">Free Software</a></li>
   <li><a href="#how-to-help" id="toc-how-to-help" class="nav-link" data-scroll-target="#how-to-help">How to help</a></li>
   </ul>
 </nav>
@@ -505,8 +505,8 @@ How to interpret statistical models in R and Python
 </center>
 <p>The parameters of a statistical model can sometimes be difficult to interpret substantively, especially when that model includes non-linear components, interactions, or transformations. Analysts who fit such complex models often seek to transform raw parameter estimates into quantities that are easier for domain experts and stakeholders to understand, such as predictions, contrasts, risk differences, ratios, odds, lift, slopes, and so on.</p>
 <p>Unfortunately, computing these quantities—along with associated standard errors—can be a tedious and error-prone task. This problem is compounded by the fact that modeling packages in <code>R</code> and <code>Python</code> produce objects with varied structures, which hold different information. This means that end-users often have to write customized code to interpret the estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects, and other model types. This can lead to wasted effort, confusion, and mistakes, and it can hinder the implementation of best practices.</p>
-<section id="book" class="level2">
-<h2 class="anchored" data-anchor-id="book">Book</h2>
+<section id="free-book" class="level2">
+<h2 class="anchored" data-anchor-id="free-book">Free Book</h2>
 <p><a href="https://marginaleffects.com/">This free online book</a> introduces a conceptual framework to clearly define statistical quantities of interest, and shows how to estimate those quantities using the <code>marginaleffects</code> package for <code>R</code> and <code>Python</code>. The techniques introduced herein can enhance the interpretability of <a href="https://marginaleffects.com/vignettes/supported_models.html">over 100 classes of statistical and machine learning models</a>, including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, XGBoost, and more. With a single unified interface, users can compute and plot many estimands, including:</p>
 <ul>
 <li>Predictions (aka fitted values or adjusted predictions)</li>
@@ -533,8 +533,8 @@ How to interpret statistical models in R and Python
 </ul>
 <p><a href="https://marginaleffects.com/vignettes/get_started.html">Get started by clicking here!</a></p>
 </section>
-<section id="software" class="level2">
-<h2 class="anchored" data-anchor-id="software">Software</h2>
+<section id="free-software" class="level2">
+<h2 class="anchored" data-anchor-id="free-software">Free Software</h2>
 <p>The <code>marginaleffects</code> package for <code>R</code> and <code>Python</code> offers a single point of entry to easily interpret the results of <a href="https://marginaleffects.com/vignettes/supported_models.html">over 100 classes of models,</a> using a simple and consistent user interface. Its benefits include:</p>
 <ul>
 <li><em>Powerful:</em> It can compute and plot predictions; comparisons (contrasts, risk ratios, etc.); slopes; and conduct hypothesis and equivalence tests for over 100 different classes of models in <code>R</code>.</li>
@@ -544,7 +544,7 @@ How to interpret statistical models in R and Python
 </li>
 <li><em>Valid:</em> When possible, <a href="https://marginaleffects.com/vignettes/supported_models.html">numerical results are checked</a> against alternative software like <code>Stata</code> or other <code>R</code> packages.</li>
 <li><em>Thin:</em> The <code>R</code> package requires relatively few dependencies.</li>
-<li><em>Standards-compliant:</em> <code>marginaleffects</code> follows “tidy” principles and returns objects that work with standard functions like <code>summary()</code>, <code>tidy()</code>, and <code>glance()</code>. These objects are easy to program with and feed to other packages like <a href="https://marginaleffects.com/vignettes/plot.html"><code>ggplot2</code></a> or <a href="https://marginaleffects.com/vignettes/tables.html"><code>modelsummary</code>.</a></li>
+<li><em>Standards-compliant:</em> <code>marginaleffects</code> follows “tidy” principles and returns simple data frames that work with all standard <code>R</code> functions. The outputs are easy to program with and feed to other packages like <a href="https://marginaleffects.com/vignettes/plot.html"><code>ggplot2</code></a> or <a href="https://marginaleffects.com/vignettes/tables.html"><code>modelsummary</code>.</a></li>
 <li><em>Extensible:</em> Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit <a href="https://github.com/vincentarelbundock/marginaleffects/issues">feature requests on Github.</a></li>
 <li><em>Active development</em>: Bugs are fixed promptly.</li>
 </ul>
