@@ -1,5 +1,4 @@
 <center>
-<img src="man/figures/mfx_slopes.png">
 <h1>The Marginal Effects Zoo</h1>
 <h3>How to interpret statistical models in R and Python</h3>
 <br>
@@ -9,11 +8,13 @@
 <br><br>
 </center>
 
+
 The parameters of a statistical model can sometimes be difficult to interpret substantively, especially when that model includes non-linear components, interactions, or transformations. Analysts who fit such complex models often seek to transform raw parameter estimates into quantities that are easier for domain experts and stakeholders to understand, such as predictions, contrasts, risk differences, ratios, odds, lift, slopes, and so on.
 
 Unfortunately, computing these quantities---along with associated standard errors---can be a tedious and error-prone task. This problem is compounded by the fact that modeling packages in `R` and `Python` produce objects with varied structures, which hold different information. This means that end-users often have to write customized code to interpret the estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects, and other model types. This can lead to wasted effort, confusion, and mistakes, and it can hinder the implementation of best practices.
 
-## Marginal Effects Zoo: The Book
+
+## Book
 
 [This free online book ](https://marginaleffects.com/) introduces a conceptual framework to clearly define statistical quantities of interest, and shows how to estimate those quantities using the `marginaleffects` package for `R` and `Python`. The techniques introduced herein can enhance the interpretability of [over 100 classes of statistical and machine learning models](https://marginaleffects.com/vignettes/supported_models.html), including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, XGBoost, and more. With a single unified interface, users can compute and plot many estimands, including:
 
@@ -41,7 +42,8 @@ Unfortunately, computing these quantities---along with associated standard error
 
 [Get started by clicking here!](https://marginaleffects.com/vignettes/get_started.html)
 
-## `marginaleffects`: The Package
+
+## Software
 
 The `marginaleffects` package for `R` and `Python` offers a single point of entry to easily interpret the results of [over 100 classes of models,](https://marginaleffects.com/vignettes/supported_models.html) using a simple and consistent user interface. Its benefits include:
 

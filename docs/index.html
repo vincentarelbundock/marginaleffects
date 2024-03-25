@@ -482,8 +482,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#marginal-effects-zoo-the-book" id="toc-marginal-effects-zoo-the-book" class="nav-link active" data-scroll-target="#marginal-effects-zoo-the-book">Marginal Effects Zoo: The Book</a></li>
-  <li><a href="#marginaleffects-the-package" id="toc-marginaleffects-the-package" class="nav-link" data-scroll-target="#marginaleffects-the-package"><code>marginaleffects</code>: The Package</a></li>
+  <li><a href="#book" id="toc-book" class="nav-link active" data-scroll-target="#book">Book</a></li>
+  <li><a href="#software" id="toc-software" class="nav-link" data-scroll-target="#software">Software</a></li>
   <li><a href="#how-to-help" id="toc-how-to-help" class="nav-link" data-scroll-target="#how-to-help">How to help</a></li>
   </ul>
 </nav>
@@ -494,12 +494,19 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p><img src="man/figures/zoo_banner.png" class="img-fluid"></p>
-<p><br> <a href="https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target="_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://img.shields.io/static/v1?label=Website&amp;message=Visit&amp;color=blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a> <br><br></p>
+<center>
+<h1>
+The Marginal Effects Zoo
+</h1>
+<h3 class="anchored">
+How to interpret statistical models in R and Python
+</h3>
+<br> <a href="https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target="_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://img.shields.io/static/v1?label=Website&amp;message=Visit&amp;color=blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a> <br><br>
+</center>
 <p>The parameters of a statistical model can sometimes be difficult to interpret substantively, especially when that model includes non-linear components, interactions, or transformations. Analysts who fit such complex models often seek to transform raw parameter estimates into quantities that are easier for domain experts and stakeholders to understand, such as predictions, contrasts, risk differences, ratios, odds, lift, slopes, and so on.</p>
 <p>Unfortunately, computing these quantities—along with associated standard errors—can be a tedious and error-prone task. This problem is compounded by the fact that modeling packages in <code>R</code> and <code>Python</code> produce objects with varied structures, which hold different information. This means that end-users often have to write customized code to interpret the estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects, and other model types. This can lead to wasted effort, confusion, and mistakes, and it can hinder the implementation of best practices.</p>
-<section id="marginal-effects-zoo-the-book" class="level2">
-<h2 class="anchored" data-anchor-id="marginal-effects-zoo-the-book">Marginal Effects Zoo: The Book</h2>
+<section id="book" class="level2">
+<h2 class="anchored" data-anchor-id="book">Book</h2>
 <p><a href="https://marginaleffects.com/">This free online book</a> introduces a conceptual framework to clearly define statistical quantities of interest, and shows how to estimate those quantities using the <code>marginaleffects</code> package for <code>R</code> and <code>Python</code>. The techniques introduced herein can enhance the interpretability of <a href="https://marginaleffects.com/vignettes/supported_models.html">over 100 classes of statistical and machine learning models</a>, including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, XGBoost, and more. With a single unified interface, users can compute and plot many estimands, including:</p>
 <ul>
 <li>Predictions (aka fitted values or adjusted predictions)</li>
@@ -526,8 +533,8 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p><a href="https://marginaleffects.com/vignettes/get_started.html">Get started by clicking here!</a></p>
 </section>
-<section id="marginaleffects-the-package" class="level2">
-<h2 class="anchored" data-anchor-id="marginaleffects-the-package"><code>marginaleffects</code>: The Package</h2>
+<section id="software" class="level2">
+<h2 class="anchored" data-anchor-id="software">Software</h2>
 <p>The <code>marginaleffects</code> package for <code>R</code> and <code>Python</code> offers a single point of entry to easily interpret the results of <a href="https://marginaleffects.com/vignettes/supported_models.html">over 100 classes of models,</a> using a simple and consistent user interface. Its benefits include:</p>
 <ul>
 <li><em>Powerful:</em> It can compute and plot predictions; comparisons (contrasts, risk ratios, etc.); slopes; and conduct hypothesis and equivalence tests for over 100 different classes of models in <code>R</code>.</li>
@@ -551,9 +558,6 @@ ul.task-list li input[type="checkbox"] {
 <li><a href="https://marginaleffects.com/CITATION.html">Cite the <code>marginaleffects</code> package</a> in your work and tell your friends about it.</li>
 <li>Create a new entry <a href="https://marginaleffects.com/vignettes/meme.html">for the Meme Gallery!</a></li>
 </ol>
-<div data-align="center">
-<p><a href="https://marginaleffects.com"> <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="center" alt="marginaleffects logo" width="200"> </a></p>
-</div>
 
 
 </section>
