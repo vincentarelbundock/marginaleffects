@@ -1,0 +1,2003 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.551">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Marginal Effects Zoo</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../man/comparisons.html" rel="next">
+<link href="../vignettes/uncertainty.html" rel="prev">
+<link href="../images/favicon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Marginal Effects Zoo</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
+<span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/vincentab"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/predictions.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/predictions.html"><code>predictions</code></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Get started</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+ <span class="menu-text">Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Predictions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/comparisons.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Comparisons</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/slopes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Slopes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/hypothesis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hypothesis Tests</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/plot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Plots</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+ <span class="menu-text">Case studies</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bayes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/bootstrap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bootstrap &amp; Simulation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/categorical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Categorical outcomes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/conformal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conformal prediction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Elasticity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/equivalence.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Equivalence Tests</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/gam.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GAM</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Heterogeneity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inverse Probability Weighting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/logit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Logit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/lme4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mixed Effects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Machine Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/marginalmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Marginal Means</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Matching</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/mrp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">MrP</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/multiple_imputation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Missing Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/svalues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">S Values</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+ <span class="menu-text">Miscellaneous</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FAQ</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/meme.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Meme gallery</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/alternative_software.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternative Software</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/extensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Extensions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/links.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Links</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/performance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Performance</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+ <span class="menu-text">vignettes/python.qmd</span>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/supported_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Supported Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/tables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/uncertainty.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Standard Errors</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Functions</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/predictions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><code>predictions</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/comparisons.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>comparisons</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/slopes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>slopes</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/plot_predictions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>plot_predictions</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/plot_comparisons.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>plot_comparisons</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/plot_slopes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>plot_slopes</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/hypotheses.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>hypotheses</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/inferences.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>inferences</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/posterior_draws.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>posterior_draws</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/datagrid.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>datagrid</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/print.marginaleffects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>print.marginaleffects</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">News</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../LICENSE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">License</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CITATION.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citation</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#predictions" id="toc-predictions" class="nav-link active" data-scroll-target="#predictions">Predictions</a>
+  <ul class="collapse">
+  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
+  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
+  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions">Functions</a></li>
+  <li><a href="#standard-errors-using-the-delta-method" id="toc-standard-errors-using-the-delta-method" class="nav-link" data-scroll-target="#standard-errors-using-the-delta-method">Standard errors using the delta method</a></li>
+  <li><a href="#model-specific-arguments" id="toc-model-specific-arguments" class="nav-link" data-scroll-target="#model-specific-arguments">Model-Specific Arguments</a></li>
+  <li><a href="#bayesian-posterior-summaries" id="toc-bayesian-posterior-summaries" class="nav-link" data-scroll-target="#bayesian-posterior-summaries">Bayesian posterior summaries</a></li>
+  <li><a href="#equivalence-inferiority-superiority" id="toc-equivalence-inferiority-superiority" class="nav-link" data-scroll-target="#equivalence-inferiority-superiority">Equivalence, Inferiority, Superiority</a></li>
+  <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types">Prediction types</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="predictions" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="predictions">Predictions</h2>
+<section id="description" class="level3">
+<h3 class="anchored" data-anchor-id="description">Description</h3>
+<p>Outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").</p>
+<ul>
+<li>
+<p><code>predictions()</code>: unit-level (conditional) estimates.</p>
+</li>
+<li>
+<p><code>avg_predictions()</code>: average (marginal) estimates.</p>
+</li>
+</ul>
+<p>The <code>newdata</code> argument and the <code>datagrid()</code> function can be used to control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.</p>
+<p>See the predictions vignette and package website for worked examples and case studies:</p>
+<ul>
+<li>
+<p><a href="https://marginaleffects.com/vignettes/predictions.html">https://marginaleffects.com/vignettes/predictions.html</a></p>
+</li>
+<li>
+<p><a href="https://marginaleffects.com/">https://marginaleffects.com/</a></p>
+</li>
+</ul>
+</section>
+<section id="usage" class="level3">
+<h3 class="anchored" data-anchor-id="usage">Usage</h3>
+<pre><code class="language-R">predictions(
+  model,
+  newdata = NULL,
+  variables = NULL,
+  vcov = TRUE,
+  conf_level = 0.95,
+  type = NULL,
+  by = FALSE,
+  byfun = NULL,
+  wts = NULL,
+  transform = NULL,
+  hypothesis = NULL,
+  equivalence = NULL,
+  p_adjust = NULL,
+  df = Inf,
+  numderiv = "fdforward",
+  ...
+)
+
+avg_predictions(
+  model,
+  newdata = NULL,
+  variables = NULL,
+  vcov = TRUE,
+  conf_level = 0.95,
+  type = NULL,
+  by = TRUE,
+  byfun = NULL,
+  wts = NULL,
+  transform = NULL,
+  hypothesis = NULL,
+  equivalence = NULL,
+  p_adjust = NULL,
+  df = Inf,
+  numderiv = "fdforward",
+  ...
+)
+</code></pre>
+</section>
+<section id="arguments" class="level3">
+<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
+<table>
+<tbody><tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_model">model</code>
+</td>
+<td>
+Model object
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_newdata">newdata</code>
+</td>
+<td>
+<p>Grid of predictor values at which we evaluate predictions.</p>
+<ul>
+<li>
+<p>Warning: Please avoid modifying your dataset between fitting the model and calling a <code>marginaleffects</code> function. This can sometimes lead to unexpected results.</p>
+</li>
+<li>
+<p><code>NULL</code> (default): Unit-level predictions for each observed value in the dataset (empirical distribution). The dataset is retrieved using <code>insight::get_data()</code>, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.</p>
+</li>
+<li>
+<p>string:</p>
+<ul>
+<li>
+<p>"mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.</p>
+</li>
+<li>
+<p>"median": Predictions at the Median. Predictions when each predictor is held at its median or mode.</p>
+</li>
+<li>
+<p>"marginalmeans": Predictions at Marginal Means. See Details section below.</p>
+</li>
+<li>
+<p>"tukey": Predictions at Tukey’s 5 numbers.</p>
+</li>
+<li>
+<p>"grid": Predictions on a grid of representative numbers (Tukey’s 5 numbers and unique values of categorical predictors).</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>datagrid()</code> call to specify a custom grid of regressors. For example:</p>
+<ul>
+<li>
+<p><code>newdata = datagrid(cyl = c(4, 6))</code>: <code>cyl</code> variable equal to 4 and 6 and other regressors fixed at their means or modes.</p>
+</li>
+<li>
+<p>See the Examples section and the <code>datagrid()</code> documentation.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>subset()</code> call with a single argument to select a subset of the dataset used to fit the model, ex: <code>newdata = subset(treatment == 1)</code></p>
+</li>
+<li>
+<p><code>dplyr::filter()</code> call with a single argument to select a subset of the dataset used to fit the model, ex: <code>newdata = filter(treatment == 1)</code></p>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_variables">variables</code>
+</td>
+<td>
+<p>Counterfactual variables.</p>
+<ul>
+<li>
+<p>Output:</p>
+<ul>
+<li>
+<p><code>predictions()</code>: The entire dataset is replicated once for each unique combination of <code>variables</code>, and predictions are made.</p>
+</li>
+<li>
+<p><code>avg_predictions()</code>: The entire dataset is replicated, predictions are made, and they are marginalized by <code>variables</code> categories.</p>
+</li>
+<li>
+<p>Warning: This can be expensive in large datasets.</p>
+</li>
+<li>
+<p>Warning: Users who need "conditional" predictions should use the <code>newdata</code> argument instead of <code>variables</code>.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Input:</p>
+<ul>
+<li>
+<p><code>NULL</code>: computes one prediction per row of <code>newdata</code></p>
+</li>
+<li>
+<p>Character vector: the dataset is replicated once of every combination of unique values of the variables identified in <code>variables</code>.</p>
+</li>
+<li>
+<p>Named list: names identify the subset of variables of interest and their values. For numeric variables, the <code>variables</code> argument supports functions and string shortcuts:</p>
+<ul>
+<li>
+<p>A function which returns a numeric value</p>
+</li>
+<li>
+<p>Numeric vector: Contrast between the 2nd element and the 1st element of the <code>x</code> vector.</p>
+</li>
+<li>
+<p>"iqr": Contrast across the interquartile range of the regressor.</p>
+</li>
+<li>
+<p>"sd": Contrast across one standard deviation around the regressor mean.</p>
+</li>
+<li>
+<p>"2sd": Contrast across two standard deviations around the regressor mean.</p>
+</li>
+<li>
+<p>"minmax": Contrast between the maximum and the minimum values of the regressor.</p>
+</li>
+<li>
+<p>"threenum": mean and 1 standard deviation on both sides</p>
+</li>
+<li>
+<p>"fivenum": Tukey’s five numbers</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_vcov">vcov</code>
+</td>
+<td>
+<p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:</p>
+<ul>
+<li>
+<p>FALSE: Do not compute standard errors. This can speed up computation considerably.</p>
+</li>
+<li>
+<p>TRUE: Unit-level standard errors using the default <code>vcov(model)</code> variance-covariance matrix.</p>
+</li>
+<li>
+<p>String which indicates the kind of uncertainty estimates to return.</p>
+<ul>
+<li>
+<p>Heteroskedasticity-consistent: <code>“HC”</code>, <code>“HC0”</code>, <code>“HC1”</code>, <code>“HC2”</code>, <code>“HC3”</code>, <code>“HC4”</code>, <code>“HC4m”</code>, <code>“HC5”</code>. See <code>?sandwich::vcovHC</code></p>
+</li>
+<li>
+<p>Heteroskedasticity and autocorrelation consistent: <code>“HAC”</code></p>
+</li>
+<li>
+<p>Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"</p>
+</li>
+<li>
+<p>Other: <code>“NeweyWest”</code>, <code>“KernHAC”</code>, <code>“OPG”</code>. See the <code>sandwich</code> package documentation.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>One-sided formula which indicates the name of cluster variables (e.g., <code>~unit_id</code>). This formula is passed to the <code>cluster</code> argument of the <code>sandwich::vcovCL</code> function.</p>
+</li>
+<li>
+<p>Square covariance matrix</p>
+</li>
+<li>
+<p>Function which returns a covariance matrix (e.g., <code>stats::vcov(model)</code>)</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_conf_level">conf_level</code>
+</td>
+<td>
+numeric value between 0 and 1. Confidence level to use to build a confidence interval.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_type">type</code>
+</td>
+<td>
+string indicates the type (scale) of the predictions used to compute contrasts or slopes. This can differ based on the model type, but will typically be a string such as: "response", "link", "probs", or "zero". When an unsupported string is entered, the model-specific list of acceptable values is returned in an error message. When <code>type</code> is <code>NULL</code>, the first entry in the error message is used by default.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_by">by</code>
+</td>
+<td>
+<p>Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:</p>
+<ul>
+<li>
+<p><code>FALSE</code>: return the original unit-level estimates.</p>
+</li>
+<li>
+<p><code>TRUE</code>: aggregate estimates for each term.</p>
+</li>
+<li>
+<p>Character vector of column names in <code>newdata</code> or in the data frame produced by calling the function without the <code>by</code> argument.</p>
+</li>
+<li>
+<p>Data frame with a <code>by</code> column of group labels, and merging columns shared by <code>newdata</code> or the data frame produced by calling the same function without the <code>by</code> argument.</p>
+</li>
+<li>
+<p>See examples below.</p>
+</li>
+<li>
+<p>For more complex aggregations, you can use the <code>FUN</code> argument of the <code>hypotheses()</code> function. See that function’s documentation and the Hypothesis Test vignettes on the <code>marginaleffects</code> website.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_byfun">byfun</code>
+</td>
+<td>
+A function such as <code>mean()</code> or <code>sum()</code> used to aggregate estimates within the subgroups defined by the <code>by</code> argument. <code>NULL</code> uses the <code>mean()</code> function. Must accept a numeric vector and return a single numeric value. This is sometimes used to take the sum or mean of predicted probabilities across outcome or predictor levels. See examples section.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_wts">wts</code>
+</td>
+<td>
+<p>string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in <code style="white-space: pre;">avg_*()</code> or with the <code>by</code> argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the <code>weighted.mean()</code> function.</p>
+<ul>
+<li>
+<p>string: column name of the weights variable in <code>newdata</code>. When supplying a column name to <code>wts</code>, it is recommended to supply the original data (including the weights variable) explicitly to <code>newdata</code>.</p>
+</li>
+<li>
+<p>numeric: vector of length equal to the number of rows in the original data or in <code>newdata</code> (if supplied).</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_transform">transform</code>
+</td>
+<td>
+A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_hypothesis">hypothesis</code>
+</td>
+<td>
+<p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, a string formula, or a function.</p>
+<ul>
+<li>
+<p>Numeric:</p>
+<ul>
+<li>
+<p>Single value: the null hypothesis used in the computation of Z and p (before applying <code>transform</code>).</p>
+</li>
+<li>
+<p>Vector: Weights to compute a linear combination of (custom contrast between) estimates. Length equal to the number of rows generated by the same function call, but without the <code>hypothesis</code> argument.</p>
+</li>
+<li>
+<p>Matrix: Each column is a vector of weights, as describe above, used to compute a distinct linear combination of (contrast between) estimates. The column names of the matrix are used as labels in the output.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>String formula to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. The <code style="white-space: pre;">b*</code> wildcard can be used to test hypotheses on all estimates. If a named vector is used, the names are used as labels in the output. Examples:</p>
+<ul>
+<li>
+<p><code>hp = drat</code></p>
+</li>
+<li>
+<p><code>hp + drat = 12</code></p>
+</li>
+<li>
+<p><code>b1 + b2 + b3 = 0</code></p>
+</li>
+<li>
+<p><code style="white-space: pre;">b* / b1 = 1</code></p>
+</li>
+</ul>
+</li>
+<li>
+<p>String:</p>
+<ul>
+<li>
+<p>"pairwise": pairwise differences between estimates in each row.</p>
+</li>
+<li>
+<p>"reference": differences between the estimates in each row and the estimate in the first row.</p>
+</li>
+<li>
+<p>"sequential": difference between an estimate and the estimate in the next row.</p>
+</li>
+<li>
+<p>"revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Function:</p>
+<ul>
+<li>
+<p>Accepts an argument <code>x</code>: object produced by a <code>marginaleffects</code> function or a data frame with column <code>rowid</code> and <code>estimate</code></p>
+</li>
+<li>
+<p>Returns a data frame with columns <code>term</code> and <code>estimate</code> (mandatory) and <code>rowid</code> (optional).</p>
+</li>
+<li>
+<p>The function can also accept and operation on optional input arguments: <code>newdata</code>, <code>by</code>, <code>draws</code>.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_equivalence">equivalence</code>
+</td>
+<td>
+Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_p_adjust">p_adjust</code>
+</td>
+<td>
+Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See stats::p.adjust
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_df">df</code>
+</td>
+<td>
+Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and <code>Inf</code>. When <code>df</code> is <code>Inf</code>, the normal distribution is used. When <code>df</code> is finite, the <code>t</code> distribution is used. See insight::get_df for a convenient function to extract degrees of freedom. Ex: <code>slopes(model, df = insight::get_df(model))</code>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_numderiv">numderiv</code>
+</td>
+<td>
+<p>string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.</p>
+<ul>
+<li>
+<p>"fdforward": finite difference method with forward differences</p>
+</li>
+<li>
+<p>"fdcenter": finite difference method with central differences (default)</p>
+</li>
+<li>
+<p>"richardson": Richardson extrapolation method</p>
+</li>
+<li>
+<p>Extra arguments can be specified by passing a list to the <code>numDeriv</code> argument, with the name of the method first and named arguments following, ex: <code>numderiv=list(“fdcenter”, eps = 1e-5)</code>. When an unknown argument is used, <code>marginaleffects</code> prints the list of valid arguments for each method.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="predictions_:_...">…</code>
+</td>
+<td>
+Additional arguments are passed to the <code>predict()</code> method supplied by the modeling package.These arguments are particularly useful for mixed-effects or bayesian models (see the online vignettes on the <code>marginaleffects</code> website). Available arguments can vary from model to model, depending on the range of supported arguments by each modeling package. See the "Model-Specific Arguments" section of the <code>?slopes</code> documentation for a non-exhaustive list of available arguments.
+</td>
+</tr>
+</tbody></table>
+</section>
+<section id="value" class="level3">
+<h3 class="anchored" data-anchor-id="value">Value</h3>
+<p>A <code>data.frame</code> with one row per observation and several columns:</p>
+<ul>
+<li>
+<p><code>rowid</code>: row number of the <code>newdata</code> data frame</p>
+</li>
+<li>
+<p><code>type</code>: prediction type, as defined by the <code>type</code> argument</p>
+</li>
+<li>
+<p><code>group</code>: (optional) value of the grouped outcome (e.g., categorical outcome models)</p>
+</li>
+<li>
+<p><code>estimate</code>: predicted outcome</p>
+</li>
+<li>
+<p><code>std.error</code>: standard errors computed using the delta method.</p>
+</li>
+<li>
+<p><code>p.value</code>: p value associated to the <code>estimate</code> column. The null is determined by the <code>hypothesis</code> argument (0 by default), and p values are computed before applying the <code>transform</code> argument. For models of class <code>feglm</code>, <code>Gam</code>, <code>glm</code> and <code>negbin</code>, p values are computed on the link scale by default unless the <code>type</code> argument is specified explicitly.</p>
+</li>
+<li>
+<p><code>s.value</code>: Shannon information transforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "surprise") against the null hypothesis that the coin is fair? The purpose of S is to calibrate the analyst’s intuition about the strength of evidence encoded in p against a well-known physical phenomenon. See Greenland (2019) and Cole et al.&nbsp;(2020).</p>
+</li>
+<li>
+<p><code>conf.low</code>: lower bound of the confidence interval (or equal-tailed interval for bayesian models)</p>
+</li>
+<li>
+<p><code>conf.high</code>: upper bound of the confidence interval (or equal-tailed interval for bayesian models)</p>
+</li>
+</ul>
+<p>See <code>?print.marginaleffects</code> for printing options.</p>
+</section>
+<section id="functions" class="level3">
+<h3 class="anchored" data-anchor-id="functions">Functions</h3>
+<ul>
+<li>
+<p><code>avg_predictions()</code>: Average predictions</p>
+</li>
+</ul>
+</section>
+<section id="standard-errors-using-the-delta-method" class="level3">
+<h3 class="anchored" data-anchor-id="standard-errors-using-the-delta-method">Standard errors using the delta method</h3>
+<p>Standard errors for all quantities estimated by <code>marginaleffects</code> can be obtained via the delta method. This requires differentiating a function with respect to the coefficients in the model using a finite difference approach. In some models, the delta method standard errors can be sensitive to various aspects of the numeric differentiation strategy, including the step size. By default, the step size is set to <code>1e-8</code>, or to <code>1e-4</code> times the smallest absolute model coefficient, whichever is largest.</p>
+<p><code>marginaleffects</code> can delegate numeric differentiation to the <code>numDeriv</code> package, which allows more flexibility. To do this, users can pass arguments to the <code>numDeriv::jacobian</code> function through a global option. For example:</p>
+<ul>
+<li>
+<p><code>options(marginaleffects_numDeriv = list(method = “simple”, method.args = list(eps = 1e-6)))</code></p>
+</li>
+<li>
+<p><code>options(marginaleffects_numDeriv = list(method = “Richardson”, method.args = list(eps = 1e-5)))</code></p>
+</li>
+<li>
+<p><code>options(marginaleffects_numDeriv = NULL)</code></p>
+</li>
+</ul>
+<p>See the "Standard Errors and Confidence Intervals" vignette on the <code>marginaleffects</code> website for more details on the computation of standard errors:</p>
+<p>https://marginaleffects.com/vignettes/uncertainty.html</p>
+<p>Note that the <code>inferences()</code> function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:</p>
+<p>https://marginaleffects.com/vignettes/bootstrap.html</p>
+</section>
+<section id="model-specific-arguments" class="level3">
+<h3 class="anchored" data-anchor-id="model-specific-arguments">Model-Specific Arguments</h3>
+<p>Some model types allow model-specific arguments to modify the nature of marginal effects, predictions, marginal means, and contrasts. Please report other package-specific <code>predict()</code> arguments on Github so we can add them to the table below.</p>
+<p>https://github.com/vincentarelbundock/marginaleffects/issues</p>
+<table>
+<tbody><tr>
+<td style="text-align: left;">
+Package
+</td>
+<td style="text-align: left;">
+Class
+</td>
+<td style="text-align: left;">
+Argument
+</td>
+<td style="text-align: left;">
+Documentation
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>brms</code>
+</td>
+<td style="text-align: left;">
+<code>brmsfit</code>
+</td>
+<td style="text-align: left;">
+<code>ndraws</code>
+</td>
+<td style="text-align: left;">
+brms::posterior_predict
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+<code>re_formula</code>
+</td>
+<td style="text-align: left;">
+brms::posterior_predict
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>lme4</code>
+</td>
+<td style="text-align: left;">
+<code>merMod</code>
+</td>
+<td style="text-align: left;">
+<code>re.form</code>
+</td>
+<td style="text-align: left;">
+lme4::predict.merMod
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+<code>allow.new.levels</code>
+</td>
+<td style="text-align: left;">
+lme4::predict.merMod
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>glmmTMB</code>
+</td>
+<td style="text-align: left;">
+<code>glmmTMB</code>
+</td>
+<td style="text-align: left;">
+<code>re.form</code>
+</td>
+<td style="text-align: left;">
+glmmTMB::predict.glmmTMB
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+<code>allow.new.levels</code>
+</td>
+<td style="text-align: left;">
+glmmTMB::predict.glmmTMB
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+<code>zitype</code>
+</td>
+<td style="text-align: left;">
+glmmTMB::predict.glmmTMB
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>mgcv</code>
+</td>
+<td style="text-align: left;">
+<code>bam</code>
+</td>
+<td style="text-align: left;">
+<code>exclude</code>
+</td>
+<td style="text-align: left;">
+mgcv::predict.bam
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>robustlmm</code>
+</td>
+<td style="text-align: left;">
+<code>rlmerMod</code>
+</td>
+<td style="text-align: left;">
+<code>re.form</code>
+</td>
+<td style="text-align: left;">
+robustlmm::predict.rlmerMod
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+<code>allow.new.levels</code>
+</td>
+<td style="text-align: left;">
+robustlmm::predict.rlmerMod
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>MCMCglmm</code>
+</td>
+<td style="text-align: left;">
+<code>MCMCglmm</code>
+</td>
+<td style="text-align: left;">
+<code>ndraws</code>
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</tbody></table>
+</section>
+<section id="bayesian-posterior-summaries" class="level3">
+<h3 class="anchored" data-anchor-id="bayesian-posterior-summaries">Bayesian posterior summaries</h3>
+<p>By default, credible intervals in bayesian models are built as equal-tailed intervals. This can be changed to a highest density interval by setting a global option:</p>
+<p><code>options(“marginaleffects_posterior_interval” = “eti”)</code></p>
+<p><code>options(“marginaleffects_posterior_interval” = “hdi”)</code></p>
+<p>By default, the center of the posterior distribution in bayesian models is identified by the median. Users can use a different summary function by setting a global option:</p>
+<p><code>options(“marginaleffects_posterior_center” = “mean”)</code></p>
+<p><code>options(“marginaleffects_posterior_center” = “median”)</code></p>
+<p>When estimates are averaged using the <code>by</code> argument, the <code>tidy()</code> function, or the <code>summary()</code> function, the posterior distribution is marginalized twice over. First, we take the average <em>across</em> units but <em>within</em> each iteration of the MCMC chain, according to what the user requested in <code>by</code> argument or <code>tidy()/summary()</code> functions. Then, we identify the center of the resulting posterior using the function supplied to the <code>“marginaleffects_posterior_center”</code> option (the median by default).</p>
+</section>
+<section id="equivalence-inferiority-superiority" class="level3">
+<h3 class="anchored" data-anchor-id="equivalence-inferiority-superiority">Equivalence, Inferiority, Superiority</h3>
+<p><span class="math inline">\(\theta\)</span> is an estimate, <span class="math inline">\(\sigma_\theta\)</span> its estimated standard error, and <span class="math inline">\([a, b]\)</span> are the bounds of the interval supplied to the <code>equivalence</code> argument.</p>
+<p>Non-inferiority:</p>
+<ul>
+<li>
+<p><span class="math inline">\(H_0\)</span>: <span class="math inline">\(\theta \leq a\)</span></p>
+</li>
+<li>
+<p><span class="math inline">\(H_1\)</span>: <span class="math inline">\(\theta &gt; a\)</span></p>
+</li>
+<li>
+<p><span class="math inline">\(t=(\theta - a)/\sigma_\theta\)</span></p>
+</li>
+<li>
+<p>p: Upper-tail probability</p>
+</li>
+</ul>
+<p>Non-superiority:</p>
+<ul>
+<li>
+<p><span class="math inline">\(H_0\)</span>: <span class="math inline">\(\theta \geq b\)</span></p>
+</li>
+<li>
+<p><span class="math inline">\(H_1\)</span>: <span class="math inline">\(\theta &lt; b\)</span></p>
+</li>
+<li>
+<p><span class="math inline">\(t=(\theta - b)/\sigma_\theta\)</span></p>
+</li>
+<li>
+<p>p: Lower-tail probability</p>
+</li>
+</ul>
+<p>Equivalence: Two One-Sided Tests (TOST)</p>
+<ul>
+<li>
+<p>p: Maximum of the non-inferiority and non-superiority p values.</p>
+</li>
+</ul>
+<p>Thanks to Russell V. Lenth for the excellent <code>emmeans</code> package and documentation which inspired this feature.</p>
+</section>
+<section id="prediction-types" class="level3">
+<h3 class="anchored" data-anchor-id="prediction-types">Prediction types</h3>
+<p>The <code>type</code> argument determines the scale of the predictions used to compute quantities of interest with functions from the <code>marginaleffects</code> package. Admissible values for <code>type</code> depend on the model object. When users specify an incorrect value for <code>type</code>, <code>marginaleffects</code> will raise an informative error with a list of valid <code>type</code> values for the specific model object. The first entry in the list in that error message is the default type.</p>
+<p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models and functions. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type=“invlink(link)”</code> will not always be equivalent to the average of estimates with <code>type=“response”</code>.</p>
+<p>Some of the most common <code>type</code> values are:</p>
+<p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, detection, disp, ev, expected, expvalue, fitted, invlink(link), latent, latent_N, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob</p>
+</section>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<ul>
+<li>
+<p>Greenland S. 2019. "Valid P-Values Behave Exactly as They Should: Some Misleading Criticisms of P-Values and Their Resolution With S-Values." The American Statistician. 73(S1): 106–114.</p>
+</li>
+<li>
+<p>Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020. "Surprise!" American Journal of Epidemiology 190 (2): 191–93. https://doi.org/10.1093/aje/kwaa136</p>
+</li>
+</ul>
+</section>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted Prediction for every row of the original dataset</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> <span class="fu">factor</span>(cyl), <span class="at">data =</span> mtcars)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predictions</span>(mod)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+     20.0      1.204 16.6   &lt;0.001 204.1  17.7   22.4
+     20.0      1.204 16.6   &lt;0.001 204.1  17.7   22.4
+     26.4      0.962 27.5   &lt;0.001 549.0  24.5   28.3
+     20.0      1.204 16.6   &lt;0.001 204.1  17.7   22.4
+     15.9      0.992 16.0   &lt;0.001 190.0  14.0   17.9
+     20.2      1.219 16.5   &lt;0.001 201.8  17.8   22.5
+
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted Predictions at User-Specified Values of the Regressors</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">hp =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">120</span>), <span class="at">cyl =</span> <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  hp cyl Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+ 100   4     26.2      0.986 26.6   &lt;0.001 516.6  24.3   28.2
+ 120   4     25.8      1.110 23.2   &lt;0.001 393.8  23.6   27.9
+
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> drat <span class="sc">+</span> <span class="fu">factor</span>(cyl) <span class="sc">+</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(m, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">FUN_factor =</span> unique, <span class="at">FUN_numeric =</span> median))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp drat cyl am
+     22.0       1.29 17.0   &lt;0.001 214.0  19.4   24.5 123  3.7   6  1
+     18.2       1.27 14.3   &lt;0.001 151.9  15.7   20.7 123  3.7   6  0
+     25.5       1.32 19.3   &lt;0.001 274.0  23.0   28.1 123  3.7   4  1
+     21.8       1.54 14.1   &lt;0.001 148.3  18.8   24.8 123  3.7   4  0
+     22.6       2.14 10.6   &lt;0.001  84.2  18.4   26.8 123  3.7   8  1
+     18.9       1.73 10.9   &lt;0.001  89.0  15.5   22.3 123  3.7   8  0
+
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, drat, cyl, am 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Average Adjusted Predictions (AAP)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">*</span> am <span class="sc">*</span> vs, mtcars)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %
+     20.1      0.484 41.5   &lt;0.001 Inf  19.1     21
+
+Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">by =</span> <span class="st">"am"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ am Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+  0     17.1      0.629 27.3   &lt;0.001 541.7  15.9   18.4
+  1     24.4      0.760 32.1   &lt;0.001 748.3  22.9   25.9
+
+Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Adjusted Predictions</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(mod, <span class="at">condition =</span> <span class="st">"hp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="predictions_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Counterfactual predictions with the `variables` argument</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the `mtcars` dataset has 32 rows</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> am, <span class="at">data =</span> mtcars)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predictions</span>(mod)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+     25.4      0.818 31.0   &lt;0.001 700.5  23.8   27.0
+     25.4      0.818 31.0   &lt;0.001 700.5  23.8   27.0
+     26.4      0.850 31.1   &lt;0.001 701.1  24.7   28.1
+     20.1      0.775 25.9   &lt;0.001 490.0  18.6   21.6
+     16.3      0.677 24.0   &lt;0.001 421.6  15.0   17.6
+     20.4      0.796 25.6   &lt;0.001 478.6  18.8   22.0
+
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, am 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 32</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># average counterfactual predictions</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">variables =</span> <span class="st">"am"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ am Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+  0     17.9      0.676 26.6   &lt;0.001 513.7  16.6   19.3
+  1     23.2      0.822 28.3   &lt;0.001 581.2  21.6   24.8
+
+Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># counterfactual predictions obtained by replicating the entire for different</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># values of the predictors</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predictions</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="dv">110</span>)))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 64</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hypothesis test: is the prediction in the 1st row equal to the prediction in the 2nd row</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt <span class="sc">+</span> drat, <span class="at">data =</span> mtcars)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">wt =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> <span class="st">"b1 = b2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  Term Estimate Std. Error z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ b1=b2     4.78      0.797 6   &lt;0.001 28.9  3.22   6.35
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same hypothesis test using row indices</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">wt =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> <span class="st">"b1 - b2 = 0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Term Estimate Std. Error z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ b1-b2=0     4.78      0.797 6   &lt;0.001 28.9  3.22   6.35
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same hypothesis test using numeric vector of weights</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">wt =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   Term Estimate Std. Error z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ custom     4.78      0.797 6   &lt;0.001 28.9  3.22   6.35
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># two custom contrasts using a matrix of weights</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>lc <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">wt =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>),</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">hypothesis =</span> lc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   Term wt Estimate Std. Error    z Pr(&gt;|z|)     S  2.5 % 97.5 % drat
+ custom  2     4.78      0.797  6.0   &lt;0.001  28.9   3.22   6.35  3.6
+ custom  3   115.21      3.647 31.6   &lt;0.001 725.0 108.07 122.36  3.6
+
+Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, drat, wt 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `by` argument</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">*</span> am <span class="sc">*</span> vs, <span class="at">data =</span> mtcars)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"am"</span>, <span class="st">"vs"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ am vs Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+  0  0     15.0      0.791 19.0   &lt;0.001 265.7  13.5   16.6
+  0  1     20.7      1.036 20.0   &lt;0.001 294.0  18.7   22.8
+  1  0     19.7      1.119 17.7   &lt;0.001 229.3  17.6   21.9
+  1  1     28.4      1.036 27.4   &lt;0.001 546.3  26.3   30.4
+
+Columns: am, vs, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nnet)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>nom <span class="ot">&lt;-</span> <span class="fu">multinom</span>(<span class="fu">factor</span>(gear) <span class="sc">~</span> mpg <span class="sc">+</span> am <span class="sc">*</span> vs, <span class="at">data =</span> mtcars, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># first 5 raw predictions</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(nom, <span class="at">type =</span> <span class="st">"probs"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Group Estimate Std. Error        z Pr(&gt;|z|)   S     2.5 %   97.5 %
+     3 3.62e-05   2.00e-03   0.0181   0.9856 0.0 -3.89e-03 3.96e-03
+     3 3.62e-05   2.00e-03   0.0181   0.9856 0.0 -3.89e-03 3.96e-03
+     3 9.35e-08   6.91e-06   0.0135   0.9892 0.0 -1.35e-05 1.36e-05
+     3 4.04e-01   1.97e-01   2.0567   0.0397 4.7  1.90e-02 7.90e-01
+     3 1.00e+00   1.25e-03 802.4784   &lt;0.001 Inf  9.98e-01 1.00e+00
+     3 5.18e-01   2.90e-01   1.7884   0.0737 3.8 -4.97e-02 1.09e+00
+
+Columns: rowid, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, gear, mpg, am, vs 
+Type:  probs </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># average predictions</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(nom, <span class="at">type =</span> <span class="st">"probs"</span>, <span class="at">by =</span> <span class="st">"group"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Group Estimate Std. Error     z Pr(&gt;|z|)     S  2.5 % 97.5 %
+     3    0.469     0.0404 11.60   &lt;0.001 100.9 0.3895  0.548
+     4    0.375     0.0614  6.11   &lt;0.001  29.9 0.2546  0.495
+     5    0.156     0.0462  3.38   &lt;0.001  10.4 0.0656  0.247
+
+Columns: group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  probs </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>by <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">c</span>(<span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span>),</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"3,4"</span>, <span class="st">"3,4"</span>, <span class="st">"5"</span>))</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(nom, <span class="at">type =</span> <span class="st">"probs"</span>, <span class="at">by =</span> by)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  By Estimate Std. Error     z Pr(&gt;|z|)     S  2.5 % 97.5 %
+ 3,4    0.422     0.0231 18.25   &lt;0.001 244.7 0.3766  0.467
+ 5      0.156     0.0462  3.38   &lt;0.001  10.4 0.0656  0.247
+
+Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, by 
+Type:  probs </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sum of predicted probabilities for combined response levels</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">multinom</span>(<span class="fu">factor</span>(cyl) <span class="sc">~</span> mpg <span class="sc">+</span> am, <span class="at">data =</span> mtcars, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>by <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"4,6"</span>, <span class="st">"4,6"</span>, <span class="st">"8"</span>),</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">as.character</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)))</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> <span class="st">"mean"</span>, <span class="at">byfun =</span> sum, <span class="at">by =</span> by)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  By Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %
+ 4,6    0.876      0.147 5.955   &lt;0.001 28.5  0.588  1.165
+ 8      0.124      0.147 0.842      0.4  1.3 -0.165  0.412
+
+Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, by 
+Type:  probs </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../vignettes/uncertainty.html" class="pagination-link" aria-label="Standard Errors">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Standard Errors</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../man/comparisons.html" class="pagination-link" aria-label="`comparisons`">
+        <span class="nav-page-text"><code>comparisons</code></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
