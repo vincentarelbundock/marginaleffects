@@ -64,15 +64,18 @@ The default value of the `type` argument for most models is `"response"`, which 
 
 A "profile" is a combination of values of the predictor variables in a model. A "grid" is a collection of one or more profiles. You can think of a "grid" as different rows in a dataset, where each row contains the information necessary to predict the outcome for one individual or unit of observation.
 
-The reference grid can include many different rows if we want to make predictions for different combinations of predictors. By default, the `predictions()` function uses the full original dataset as a reference grid, which means it will compute adjusted predictions for each of the individuals observed in the dataset that was used to fit the model.
+To compute adjusted predictions we must first specify the values of the predictors to consider: a "reference grid." For example, if our model is a linear model fitted with the lm() function which relates the response variable Happiness with the predictor variables Age, Gender and Income, the reference grid could be a `data.frame` with values for Age, Gender and Income: Age = 40, Gender = Male, Income = 60000. The reference grid can include many different rows if we want to make predictions for different combinations of predictors. The reference grid may or may not correspond to actual observations in the dataset used to fit the model; the example values given above could match the mean values of each variable, or they could represent a specific observed (or hypothetical) individual. 
 
-To compute adjusted predictions we must first specify the values of the predictors to consider: a "reference grid." For example, if our model is a linear model fitted with the lm() function which relates the response variable Happiness with the predictor variables Age, Gender and Income, the reference grid could be a `data.frame` with values for Age, Gender and Income: Age = 40, Gender = Male, Income = 60000. 
 
-The "reference grid" may or may not correspond to actual observations in the dataset used to fit the model; the example values given above could match the mean values of each variable, or they could represent a specific observed (or hypothetical) individual. 
+### Empirical distribution
 
-The following sections will introduce to different ways to select a reference grid over which we want to compute adjusted predictions.
+By default, the `predictions()` function uses the full original dataset as a reference grid. This means it will compute adjusted predictions for each of the individuals observed in the dataset that was used to fit the model:
 
-### User-specified values: `newdata` and `datagrid()`
+```{r}
+predictions(lm_mod)
+```
+
+### User-specified values
 
 There are two main ways to select the reference grid over which we want to compute adjusted predictions. The first is using the `newdata` argument and the [`datagrid()` function](slopes.html). The second is with the `variables` argument.
 

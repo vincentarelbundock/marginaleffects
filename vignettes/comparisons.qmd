@@ -58,8 +58,15 @@ avg_comparisons(mod)
 
 To investigate the effect of gender, age, and passenger class on survival aboard the Titanic, we will conduct a series of "comparisons" between predicted outcomes computed for different preditor values. The quantity of interest will vary in two main respects:
 
-* *Predictor type*: How does the explanator of interest change?
-* *Comparison type*: How do we compare the two predicted outcomes?
+* *Predictor type*
+    * How does the explanator of interest change?
+    * Ex: +1 on a numeric variable, or the difference between a factor level and its reference leve.
+* *Comparison type*
+    * How do we compare the two predicted outcomes?
+    * Ex: difference, ratio, log odds, lift, etc.
+* Outcome type
+    * What is the scale of the response variable?
+    * Ex: response, link, hazard, etc.
 
 By default, the `comparisons()` function will estimate the "effect" of different changes for different types of predictors:
 
@@ -241,17 +248,37 @@ cmp
 This tells us that changing our hypothetical passenger from `SexCode=0` to 1, and from `Age=20` to 25 *simultaneously* is associated with a change of `r sprintf("%.2f", cmp$estimate[1])` in the predicted probability of survival (on a 0 to 1 scale).
 
 
+### Outcome type
+
+We can compute contrasts on different response scales. In GLM model, for example, we tend to estimate contrasts and comparisons on the "response" scale, becasue the results are expressed on the natural unit of measurement of the dependent variable. However, we an also compute the quantity on the "link" scale, by changing the `type` argument:
+
+```{r}
+comparisons(mod, type = "response", newdata = passenger)
+
+comparisons(mod, type = "link", newdata = passenger)
+```
+
+The support `type` values depend on the kind of fitted model at hand. Supported types for a specific model are printed to screen when a bad type is entered:
+
+```{r}
+#| error: true
+comparisons(mod, type = "bad type name")
+```
+
+
 ## Grid 
 
 In most statistical models, comparisons (differences, ratios, etc.) are *conditional* quantities, in the sense that they typically depend on the values of all the predictors in the model. Therefore, when we compute a comparison, we need to decide *where* to evaluate it in the predictor space. 
+
+A "profile" is a combination of values of the predictor variables in a model. A "grid" is a collection of one or more profiles. You can think of a "grid" as different rows in a dataset, where each row contains the information necessary to predict the outcome for one individual or unit of observation.
 
 A "profile" can be defined as a specific combination of predictor values, and a "grid" can be defined as a collection of profiles for which we can evaluate quantities of interest.
 
 There are many possible grids:
 
 * Empirical distribution
-* Specific individual(s)
-* Representative individual(s)
+* User-specified values
+* Representative values
 
 
 ### Empirical distribution
@@ -285,7 +312,7 @@ comparisons(mod) |>
 The plot above suggests that there is substantial heterogeneity in treatment effects across different unit characteristics.
 
 
-### Specific unit
+### User-specified values
 
 In some contexts, it is interesting to estimate a contrast for a specific individual with characteristics of interest. To achieve this, we can supply a data frame to the `newdata` argument. 
 
@@ -314,7 +341,7 @@ Notice that the contrasts are different for the man and the woman. It appears th
 Note that when using `datagrid()` in this manner, variables that are not specified explicitly by the user are held at their mean or mode.
 
 
-### Representative unit
+### Representative values
 
 An alternative which used to be very common but has now fallen into a bit of disfavor is to compute "Contrasts at the mean." The idea is to create a "representative" or "synthetic" individual (row of the dataset) whose characteristics are completely average (or modal). Then, we compute and report the contrast for this specific hypothetical individual. For example:
 
