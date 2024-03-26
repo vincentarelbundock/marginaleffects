@@ -60,7 +60,7 @@ To investigate the effect of gender, age, and passenger class on survival aboard
 
 * *Predictor type*
     * How does the explanator of interest change?
-    * Ex: +1 on a numeric variable, or the difference between a factor level and its reference leve.
+    * Ex: +1 on a numeric variable, or the difference between a factor level and its baseline.
 * *Comparison type*
     * How do we compare the two predicted outcomes?
     * Ex: difference, ratio, log odds, lift, etc.
