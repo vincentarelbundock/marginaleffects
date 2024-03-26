@@ -1,11 +1,3 @@
----
-format: 
-  html: 
-    toc: true
-    toc-expand: 2
----
-
-
 # Comparisons 
 
 ```{r, include = FALSE}
@@ -62,7 +54,7 @@ avg_comparisons(mod)
 ```
 
 
-# Quantity of interest
+## Quantity of interest
 
 To investigate the effect of gender, age, and passenger class on survival aboard the Titanic, we will conduct a series of "comparisons" between predicted outcomes computed for different preditor values. The quantity of interest will vary in two main respects:
 
@@ -76,11 +68,11 @@ By default, the `comparisons()` function will estimate the "effect" of different
 * Factor or character: Changes from the reference to each other level.
 
 
-## Comparison type
+### Comparison type
 
 The default comparison type in  `comparisons()` is the "difference", which means that the  `comparisons()` function will typically produce quantities which are often interpreted as a measure of "effect" in applications: risk differences, average treatment effects, G-computation estimates, etc. But `comparisons()` is not limited to differences, Indeed, it allows analysts to call on many built-in functions for comparison, and also to supply their own.
 
-### Differences
+#### Differences
 
 By default, the `comparisons()` function will compare the predicted values by differencing (subtraction). For example, consider a hypothetical Titanic passenger with these characteristics:
 
@@ -112,7 +104,7 @@ Instead of computing this estimate by hand, we could call `comparisons()` to get
 comparisons(mod, newdata = passenger)
 ```
 
-### Ratios
+#### Ratios
 
 Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute ratios or other functions of predictions. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we could use the same predictions we computed above:
 
@@ -129,7 +121,7 @@ comparisons(mod, comparison = "ratio", newdata = passenger)
 ```
 
 
-### Built-in functions
+#### Built-in functions
 
 Beyond differences and ratios, `comparisons()` supports many other built-in functions to compare predictions, such as log odds ratios, lift, etc. See `?comparisons` for a complete list.
 
@@ -141,7 +133,7 @@ comparisons(mod,
     newdata = passenger)
 ```
 
-### Custom functions
+#### Custom functions
 
 
 Analysts who need more flexibility can define their own comparison functions. For example, these two calls are equivalent:
@@ -159,16 +151,18 @@ comparisons(mod,
 This mechanism is powerful, because it lets users create fully customized contrasts. Here is a non-sensical example:
 
 ```{r}
-avg_comparisons(mod, comparison = function(hi, lo) sqrt(hi) / log(lo + 10))
+comparisons(mod,
+    comparison = function(hi, lo) sqrt(hi) / log(lo + 10), 
+    newdata = passenger)
 ```
 
 
-## Predictor types
+### Predictor types
 
 The types of comparisons that one might care about depend on the kinds of predictors in our model: numeric, binary, or categorical.
 
 
-### Numeric
+#### Numeric
 
 We can also compute contrasts for differences in numeric variables. For example, we can see what happens to the adjusted predictions when we increment the `Age` variable by 1 unit (default) or by 5 units:
 
@@ -197,7 +191,7 @@ comparisons(mod, variables = list(Age = "minmax"), newdata = passenger)
 ```
 
 
-### Binary or Logical
+#### Binary or Logical
 
 For logical or binary variables, the default comparison correponds to a change from 0 to 1, or from `FALSE` to `TRUE`:
 
@@ -210,28 +204,28 @@ comparisons(mod, variables = "SexCode", newdata = passenger)
 comparisons(mod2, variables = "SexCode", newdata = passenger)
 ```
 
-### Factor or Character
+#### Factor or Character
 
 
 The `comparisons()` function automatically computes contrasts for each level of a categorical variable (factor or character), relative to the baseline category, while holding all other values at their observed values. We can obtain different contrasts by using the `variables` argument:
 
 ```{r}
-avg_comparisons(mod, variables = list(PClass = "sequential"), newdata = passenger)
+comparisons(mod, variables = list(PClass = "sequential"), newdata = passenger)
 
-avg_comparisons(mod, variables = list(PClass = "pairwise"), newdata = passenger)
+comparisons(mod, variables = list(PClass = "pairwise"), newdata = passenger)
 
-avg_comparisons(mod, variables = list(PClass = "reference"), newdata = passenger)
+comparisons(mod, variables = list(PClass = "reference"), newdata = passenger)
 ```
 
 We can also specify a particular contrast of interest in `variables`:
 
 ```{r}
-avg_comparisons(mod, 
+comparisons(mod, 
     variables = list(PClass = c("3rd", "1st")),
     newdata = passenger)
 ```
 
-### Cross-contrasts
+#### Cross-contrasts
 
 
 In other contexts, we are interested in a "cross-contrast" or "cross-comparisons", that is, we would like to know what happens when two (or more) predictors change at the same time. To assess this, we can specify the regressors of interest in the `variables` argument, and set the `cross=TRUE`.
@@ -247,7 +241,7 @@ cmp
 This tells us that changing our hypothetical passenger from `SexCode=0` to 1, and from `Age=20` to 25 *simultaneously* is associated with a change of `r sprintf("%.2f", cmp$estimate[1])` in the predicted probability of survival (on a 0 to 1 scale).
 
 
-# Grid 
+## Grid 
 
 In most statistical models, comparisons (differences, ratios, etc.) are *conditional* quantities, in the sense that they typically depend on the values of all the predictors in the model. Therefore, when we compute a comparison, we need to decide *where* to evaluate it in the predictor space. 
 
@@ -260,7 +254,7 @@ There are many possible grids:
 * Representative individual(s)
 
 
-## Empirical distribution
+### Empirical distribution
 
 By default, the `comparisons()` function returns estimates for every single row of the original data frame which was used to fit the model. The Titanic dataset includes `r nobs(mod)` complete observations (after dropping missing data), so this command will yield `r nobs(mod)` estimates:
 
@@ -274,7 +268,24 @@ If we do not specify the `variables` argument, `comparisons()` computes 4 distin
 comparisons(mod)
 ```
 
-## Specific unit
+We can plot the full distribution of unit-specific contrasts easily:
+
+```{r}
+#| warning: false
+#| message: false
+#| fig-asp: .3
+library(ggplot2)
+
+comparisons(mod) |>
+    ggplot(aes(x = estimate)) +
+    geom_histogram(bins = 30) +
+    facet_grid(. ~ term + contrast, scales = "free")
+```
+
+The plot above suggests that there is substantial heterogeneity in treatment effects across different unit characteristics.
+
+
+### Specific unit
 
 In some contexts, it is interesting to estimate a contrast for a specific individual with characteristics of interest. To achieve this, we can supply a data frame to the `newdata` argument. 
 
@@ -303,7 +314,7 @@ Notice that the contrasts are different for the man and the woman. It appears th
 Note that when using `datagrid()` in this manner, variables that are not specified explicitly by the user are held at their mean or mode.
 
 
-## Representative unit
+### Representative unit
 
 An alternative which used to be very common but has now fallen into a bit of disfavor is to compute "Contrasts at the mean." The idea is to create a "representative" or "synthetic" individual (row of the dataset) whose characteristics are completely average (or modal). Then, we compute and report the contrast for this specific hypothetical individual. For example:
 
@@ -318,7 +329,7 @@ Contrasts at the mean can differ substantially from average contrasts.
 The advantage of this approach is that it is very cheap and fast computationally. The disadvantage is that the interpretation is somewhat ambiguous. Often times, there simply does not exist an individual who is perfectly average across all dimensions of the dataset. It is also not clear why the analyst should be particularly interested in the contrast for this one, synthetic, perfectly average individual.
 
 
-## Balanced grids
+### Balanced grids
 
 One type of grid which may be particularly useful in experimental setting is the "balanced grid", which includes all unique combinations of categorical variables, while holding numeric variables a their means. For example, in the Titanic dataset there are two categorical variables, `SexCode` and `PClass`, with 2 and 3 categories respectively. A balanced grid, will thus have rows. We can create this grid with:
 
@@ -336,7 +347,7 @@ comparisons(mod,
 ```
 
 
-# Aggregation
+## Aggregation
 
 As discussed above, the default behavior of `comparisons()` is to estimate quantities of interest for all the actually observed units in our dataset. Sometimes, it is convenient to marginalize those conditional estimates, in order to obtain an "average contrast". The procedure is as follows:
 
@@ -349,7 +360,17 @@ To average estimates, we call the same function as before, with the previx `avg_
 avg_comparisons(mod)
 ```
 
-## Subgroups
+This is equivalent to:
+
+```{r}
+cmp <- comparisons(mod)
+
+mean(cmp$estimate[cmp$term == "Age"])
+
+aggregate(estimate ~ term + contrast, data = cmp, FUN = mean)
+```
+
+### Subgroups
 
 Using the `by` argument we can compute the "average effect" (i.e., "contrast" or "risk difference") of an increase of 10 years of `Age` in each of the passenger classes:
 
@@ -360,7 +381,7 @@ avg_comparisons(mod,
 ```
 
 
-## Marginal means
+### Marginal means
 
 In experimental studies, it can often make sense to estimate contrasts, averaged across a balanced grid of treatment conditions:
 
@@ -374,13 +395,13 @@ Note that the results are slightly different than when averaging across the empi
 avg_comparisons(mod)
 ```
 
-# Uncertainty
+## Uncertainty
 
 By default, the standard errors around contrasts are computed using the delta method. This vignette offers extensive discussion and examples:
 
 <https://marginaleffects.com/vignettes/uncertainty.html>
 
-## Robust (clustered) standard errors
+### Robust (clustered) standard errors
 
 The standard errors reported by default for most models are "classical" (or "iid"). For models supported by the `sandwich` or `clubSandwich` packages, we can call on the `vcov` argument to report robust standard errors (and confidence intervales, p values, etc.):
 
@@ -396,7 +417,7 @@ Heteroskedasticity-robust:
 avg_comparisons(mod, vcov = "HC3", variables = "SexCode")
 ```
 
-## Bootstrap and simulation
+### Bootstrap and simulation
 
 We can use bootstrapping or simulations to compute uncertainty estimates, via the  `inferences()` function. Notice that, for some quantities, the classical intervals are very different (here: symmetric) than boostrap intervals (here: asymmetric):
 
@@ -411,7 +432,7 @@ avg_comparisons(mod, comparison = "lnor", variables = "SexCode") |>
     inferences("rsample")
 ```
 
-## Transformation
+### Transformation
 
 By default, the standard errors around contrasts are computed on the scale determined by the `type` argument (e.g., "link" or "response"). Some analysts may prefer to proceed differently. For example, in `Stata`, the `adjrr` computes adjusted risk ratios (ARR) in two steps:
 
@@ -463,88 +484,60 @@ comparisons(
 ```
 
 
-# Hypothesis
+## Hypothesis
 
-Finally, imagine we are interested in this question:
+Now, let's see how we can conduct even more specific queries, using hypothesis tests. The `marginaleffects` website includes [a very detailed vignette on hypothesis tests.](https://marginaleffects.com/vignettes/hypothesis.html). It showcases very complex aggregations, comparisons, and tests. Here, we only introduce simple tests.
+
+Imagine one is interested in this question:
 
 > Does moving from 1st to 3rd class have a bigger effect on the probability of survival for 50 year old men, or for 50 year old women?
 
-To answer this, we use the `hypothesis` argument:
+To answer this, we can start by using the `comparisons()` and the `datagrid()` functions:
+
+```{r}
+cmp <- comparisons(mod,
+  variables = list(PClass = c("1st", "3rd")),
+  newdata = datagrid(Age = 50, SexCode = 0:1))
+```
+
+At first glane, it looks like the estimated contrast is more negative for women (`r sprintf("%.3f", cmp$estimate[2])`) than for men (`r sprintf("%.3f", cmp$estimate[1])`). But is the difference between then statistical significant? To answer this question, we express the test of equality as a string formula, where  `b1` identifies the estimate in the first row and  `b2` the second row:
 
 ```{r}
 comparisons(mod,
-  variables = list(PClass = c("1st", "3rd")),  # Step 1: Quantity
-  newdata = datagrid(Age = 50, SexCode = 0:1), # Step 2: Grid
-  hypothesis = "b1 = b2")                      # Step 4: Hypothesis
+  hypothesis = "b1 = b2",
+  variables = list(PClass = c("1st", "3rd")),
+  newdata = datagrid(Age = 50, SexCode = 0:1))
 ```
 
-This result maps directly onto the estimates we had above. It is the difference in the contrast for 50-men and 50-women:
+The p value is small, which means we can reject the null hypothesis that the effect of moving from 1st to 3rd class on the probability of survival is the same for men and women.
+
+The calculation above is equivalent to:
 
 ```{r}
-diff(cmp$estimate)
+cmp$estimate[1] - cmp$estimate[2]
 ```
 
-This result can be interpreted as a "difference-in-differences": Moving from 1st to 3rd has a much larger negative effect on the probability of survival for a 50 year old woman than for a 50 year old man. This difference is statistically significant.
-
-We can do a similar comparison, but instead of fixing a conditional grid, we can average over subgroups of the empirical distribution, using the `by` argument:
+We can also compare all the average contrasts in a call, by specifying `hypothesis="pairwise"`:
 
 ```{r}
-avg_comparisons(mod,
-  variables = list(PClass = c("1st", "3rd")),  # Step 1: Quantity
-  by = "SexCode",                              # Step 3: Average
-  hypothesis = "b1 = b2")                      # Step 4: Hypothesis
+avg_comparisons(mod, hypothesis = "pairwise")
 ```
 
 
-````{comment}
-### Average contrasts
+## Plot
 
-By default, the `slopes()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](logit.html). Nevertheless, one may want to focus on one-number summaries: the `avg_*()` functions or the `by` argument compute the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
+The `plot_comparisons()` function can plot comparisons, differences, risk ratios, etc. The [plotting vignette gives detailed insight into the use of this function.](https://marginaleffects.com/vignettes/plot.html) Here, it will be sufficient to illustrate its use by a few examples, and to note that most of the arguments of `comparisons()` are supported by `plot_comparisons()`.
 
-```{r}
-avg_comparisons(mod, variables = "mpg")
-
-comparisons(mod, variables = "mpg", by = TRUE)
-```
-
-which are equivalent to:
-
-```{r}
-mean(cmp$estimate)
-```
-
-We could also show the full distribution of contrasts across our dataset with a histogram:
-
-```{r}
-#| fig.asp = .4
-library(ggplot2)
-
-cmp <- comparisons(mod, variables = "gear")
-
-ggplot(cmp, aes(estimate)) +
-    geom_histogram(bins = 30) +
-    facet_wrap(~contrast, scale = "free_x") +
-    labs(x = "Distribution of unit-level contrasts")
-```
-
-This graph displays the effect of a change of 1 unit in the `gear` variable, for each individual in the observed data.
-
-
-# Plot
-
-The same arguments work in the plotting function `plot_comparisons()` as well, which allows us to plot various custom contrasts. Here is a comparison of Adjusted Risk Ratio and Adjusted Risk Difference in a model of the probability of survival aboard the Titanic:
+Here, we plot Adjusted Risk Ratio and Adjusted Risk Difference in a model with a quadratic term:
 
 ```{r}
 library(ggplot2)
 library(patchwork)
-titanic <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
-titanic <- read.csv(titanic)
+
 mod_titanic <- glm(
     Survived ~ Sex * PClass + Age + I(Age^2),
     family = binomial,
-    data = titanic)
-
-avg_comparisons(mod_titanic)
+    data = dat)
 
 p1 <- plot_comparisons(
     mod_titanic,
@@ -556,48 +549,15 @@ p1 <- plot_comparisons(
 p2 <- plot_comparisons(
     mod_titanic,
     variables = "Age",
-    condition = "Age") +
+    condition = "Age",) +
     ylab("Adjusted Risk Difference\nP(Survival | Age + 1) - P(Survival | Age)")
 
 p1 + p2
 ```
 
 
-# Transformations
 
-So far we have focused on simple differences between adjusted predictions. Now, we show how to use ratios, back transformations, and arbitrary functions to estimate a slew of quantities of interest. Powerful transformations and custom contrasts are made possible by using three arguments which act at different stages of the computation process:
-
--   `comparison`
--   `transform`
-
-Consider the case of a model with a single predictor $x$. To compute average contrasts, we proceed as follows:
-
-1.  Compute adjusted predictions for each row of the dataset for the observed values $x$: $\hat{y}_x$
-2.  Compute adjusted predictions for each row of the dataset for the observed values $x + 1$: $\hat{y}_{x+1}$
-3.  `comparison`: Compute unit-level contrasts by taking the difference between (or some other function of) adjusted predictions: $\hat{y}_{x+1} - \hat{y}_x$
-4.  Compute the average contrast by taking the mean of unit-level contrasts: $1/N \sum_{i=1}^N \hat{y}_{x+1} - \hat{y}_x$
-5.  `transform`: Transform the average contrast or return them as-is.
-
-The `comparison` argument of the `comparisons()` function determines how adjusted predictions are combined to create a contrast. By default, we take a simple difference between predictions with `hi` value of $x$, and predictions with a `lo` value of $x$: `function(hi, lo) hi-lo`.
-
-The `transform` argument of the `comparisons()` function applies a custom transformation to the unit-level contrasts.
-
-The `transform` argument applies a custom transformation to the final quantity, as would be returned if we evaluated the same call without `transform`.
-
-
-This call adds the `transform` argument to exponentiate the log-odds ratios at the very end of calculations:
-
-```{r}
-mod <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
-
-comparisons(mod, 
-    comparison = "lnor", 
-    transform = exp,
-    newdata = passenger)
-```
-
-
-# Visual guide
+## Visual guide
 
 This section illustrates some of the concepts in this vignette visually.
 
@@ -606,10 +566,10 @@ Consider a model with an interaction term. What happens to the dependent variabl
 ```{r}
 library(marginaleffects)
 
-mod <- lm(mpg ~ hp * wt, data = mtcars)
+mt <- lm(mpg ~ hp * wt, data = mtcars)
 
 plot_comparisons(
-    mod,
+    mt,
     variables = list(hp = 10),
     condition = "wt")
 ```
@@ -670,58 +630,9 @@ comparisons(model1,
   hypothesis = "b1 = b2")          # hypothesis
 ```
 
-# Difference-in-Differences
+## More
 
-Going back to our Titanic example:
-
-```{r}
-dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
-dat <- read.csv(dat)
-titanic <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
-```
-
-In this case, a contrast is a difference between predicted probabilities. We can compute that contrast for different types of individuals:
-
-```{r}
-comparisons(
-  titanic,
-  variables = "SexCode",
-  newdata = datagrid(PClass = c("1st", "3rd")))
-```
-
-One we can notice above, is that the gap in predicted probabilities of survival between men and women is larger in 1st class than in 3rd class. Being a woman matters more for your chances of survival if you travel in first class. Is the difference between those contrasts (diff-in-diff) statistically significant?
-
-To answer this question, we can compute a difference-in-difference using the `hypothesis` argument ([see the Hypothesis vignette for details](hypothesis.html)). For example, using `b1` and `b2` to refer to the contrasts in the first and second rows of the output above, we can test if the difference between the two quantities is different from 0:
-
-```{r}
-comparisons(
-  titanic,
-  hypothesis = "b1 - b2 = 0",
-  variables = "SexCode",
-  newdata = datagrid(PClass = c("1st", "3rd")))
-```
-
-Now, let's say we consider more types of individuals:
-
-```{r}
-comparisons(
-  titanic,
-  variables = "SexCode",
-  newdata = datagrid(PClass = c("1st", "3rd"), Age = range))
-```
-
-With these results, we could compute a triple difference:
-
-```{r}
-comparisons(
-  titanic,
-  hypothesis = "(b1 - b3) - (b2 - b4) = 0",
-  variables = "SexCode",
-  newdata = datagrid(PClass = c("1st", "3rd"), Age = range))
-```
-
-
-# Manual computation
+### Manual computation
 
 Now we show how to use the base `R` `predict()` function to compute some of the same quantities as above. This exercise may be clarifying for some users.
 
@@ -737,11 +648,11 @@ yhat_50_1_1 <- predict(mod, newdata = grid_50_1_1, type = "response")
 yhat_50_0_3 <- predict(mod, newdata = grid_50_0_3, type = "response")
 yhat_50_0_1 <- predict(mod, newdata = grid_50_0_1, type = "response")
 
-## prediction on a grid
+### prediction on a grid
 predictions(mod, newdata = datagrid(Age = 50, SexCode = 1, PClass = "3rd"))
 yhat_50_1_3
 
-## contrast on a grid
+### contrast on a grid
 comparisons(mod,
   variables = list(PClass = c("1st", "3rd")),
   newdata = datagrid(Age = 50, SexCode = 0:1))
@@ -749,7 +660,7 @@ comparisons(mod,
 yhat_50_0_3 - yhat_50_0_1
 yhat_50_1_3 - yhat_50_1_1
 
-## difference-in-differences 
+### difference-in-differences 
 comparisons(mod,
   variables = list(PClass = c("1st", "3rd")),
   newdata = datagrid(Age = 50, SexCode = 0:1),
@@ -757,7 +668,7 @@ comparisons(mod,
 
 (yhat_50_0_3 - yhat_50_0_1) - (yhat_50_1_3 - yhat_50_1_1)
 
-## average of the empirical distribution of contrasts
+### average of the empirical distribution of contrasts
 avg_comparisons(mod, variables = list(PClass = c("1st", "3rd")), by = "SexCode")
 
 grid_empirical_1_3 <- dat |> subset(SexCode == 1) |> transform(PClass = "3rd")
@@ -772,20 +683,96 @@ mean(yhat_empirical_0_3, na.rm = TRUE) - mean(yhat_empirical_0_1, na.rm = TRUE)
 mean(yhat_empirical_1_3, na.rm = TRUE) - mean(yhat_empirical_1_1, na.rm = TRUE)
 ```
 
+### Transformations
 
-# More
+So far we have focused on simple differences between adjusted predictions. Now, we show how to use ratios, back transformations, and arbitrary functions to estimate a slew of quantities of interest. Powerful transformations and custom contrasts are made possible by using three arguments which act at different stages of the computation process:
 
-## Forward, Backward, Centered
+-   `comparison`
+-   `transform`
+
+Consider the case of a model with a single predictor $x$. To compute average contrasts, we proceed as follows:
+
+1.  Compute adjusted predictions for each row of the dataset for the observed values $x$: $\hat{y}_x$
+2.  Compute adjusted predictions for each row of the dataset for the observed values $x + 1$: $\hat{y}_{x+1}$
+3.  `comparison`: Compute unit-level contrasts by taking the difference between (or some other function of) adjusted predictions: $\hat{y}_{x+1} - \hat{y}_x$
+4.  Compute the average contrast by taking the mean of unit-level contrasts: $1/N \sum_{i=1}^N \hat{y}_{x+1} - \hat{y}_x$
+5.  `transform`: Transform the average contrast or return them as-is.
+
+The `comparison` argument of the `comparisons()` function determines how adjusted predictions are combined to create a contrast. By default, we take a simple difference between predictions with `hi` value of $x$, and predictions with a `lo` value of $x$: `function(hi, lo) hi-lo`.
+
+The `transform` argument of the `comparisons()` function applies a custom transformation to the unit-level contrasts.
+
+The `transform` argument applies a custom transformation to the final quantity, as would be returned if we evaluated the same call without `transform`.
+
+
+This call adds the `transform` argument to exponentiate the log-odds ratios at the very end of calculations:
+
+```{r}
+mod <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
+
+comparisons(mod, 
+    comparison = "lnor", 
+    transform = exp,
+    newdata = passenger)
+```
+
+
+### Difference-in-Differences
+
+One thing we can notice in the Titanic example, is that the gap in predicted probabilities of survival between men and women is larger in 1st class than in 3rd class. 
+
+```{r}
+comparisons(
+  mod,
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd")))
+```
+
+Indeed, being a woman matters more for your chances of survival if you travel in first class. Is the difference between those contrasts (diff-in-diff) statistically significant?
+
+To answer this question, we can compute a difference-in-difference using the `hypothesis` argument ([see the Hypothesis vignette for details](hypothesis.html)). For example, using `b1` and `b2` to refer to the contrasts in the first and second rows of the output above, we can test if the difference between the two quantities is different from 0:
+
+```{r}
+comparisons(
+  mod,
+  hypothesis = "b1 - b2 = 0",
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd")))
+```
+
+Now, let's say we consider more types of individuals:
+
+```{r}
+comparisons(
+  mod,
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd"), Age = range))
+```
+
+With these results, we could compute a triple difference:
+
+```{r}
+comparisons(
+  mod,
+  hypothesis = "(b1 - b3) - (b2 - b4) = 0",
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd"), Age = range))
+```
+
+
+
+
+### Forward, Backward, Centered
 
 By default, the `comparisons()` function computes a "forward" difference. For example, if we ask `comparisons()` to estimate the effect of a 10-unit change in predictor `x` on outcome `y`, `comparisons()` will compare the predicted values with `x` and `x+10`.
 
 ```{r}
-dat <- mtcars
-dat$new_hp <- 49 * (mtcars$hp - min(mtcars$hp)) / (max(mtcars$hp) - min(mtcars$hp)) + 1
-mod <- lm(mpg ~ log(new_hp), data = dat)
+mt <- mtcars
+mt$new_hp <- 49 * (mt$hp - min(mt$hp)) / (max(mt$hp) - min(mt$hp)) + 1
+mod_mt <- lm(mpg ~ log(new_hp), data = mt)
 
 avg_comparisons(
-  mod,
+  mod_mt,
   variables = list(new_hp = 10))
 ```
 
@@ -797,22 +784,22 @@ backward_diff <- \(x) data.frame(x - 10, x)
 center_diff <- \(x) data.frame(x - 5, x + 5)
 
 avg_comparisons(
-  mod,
+  mod_mt,
   variables = list(new_hp = forward_diff))
 
 avg_comparisons(
-  mod,
+  mod_mt,
   variables = list(new_hp = backward_diff))
 
 avg_comparisons(
-  mod,
+  mod_mt,
   variables = list(new_hp = center_diff))
 ```
 
 Notice that the last "centered" difference gives the same results as the default `comparisons()` call.
 
 
-## Observation-Wise Categorical Marginal Effect
+### Observation-Wise Categorical Marginal Effect
 
 For categorical predictors, [Scholbeck et al. 2023](https://arxiv.org/pdf/2201.08837.pdf) recommend that analysts report what they call the "observation-wise categorical marginal effects." They describe the procedure as follows:
 
@@ -825,15 +812,14 @@ To achieve this with `marginaleffects`, we proceed in three simple steps:
 3.  Apply the `avg_comparisons()` with the `"revreference"` option.
 
 ```{r}
-tmp <- transform(mtcars, cyl = factor(cyl, levels = c(6, 4, 8)))
+mt <- transform(mtcars, cyl = factor(cyl, levels = c(6, 4, 8)))
 
-mod <- glm(vs ~ mpg * factor(cyl), data = tmp, family = binomial)
+mod_mt <- glm(vs ~ mpg * factor(cyl), data = mt, family = binomial)
 
-avg_comparisons(mod,
+avg_comparisons(mod_mt,
   variables = list(cyl = "revreference"),
-  newdata = subset(tmp, cyl != 6))
+  newdata = subset(mt, cyl != 6))
 ```
-````
 
 
 
