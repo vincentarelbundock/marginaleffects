@@ -103,7 +103,7 @@ prediction_1 = predict(mod, newdata = passenger_1, type = "response")
 prediction_1 - prediction_0
 ```
 
-The result above shows that modifying the `SexCode` variable of this hypothetical passenger from 0 to 1 increases the predicted probability of survival by about `r sprintf("%.f%%", 100 * (prediction_1-prediction_0))`
+The result above shows that modifying the `SexCode` variable of this hypothetical passenger from 0 to 1 increases the predicted probability of survival by about `r sprintf("%.f", 100 * (prediction_1-prediction_0))` percentage points.
 
 Instead of computing this estimate by hand, we could call `comparisons()` to get analogous results for all predictors in the model at once:
 
