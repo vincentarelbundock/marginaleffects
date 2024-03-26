@@ -134,7 +134,7 @@ predictions(lm_mod, newdata = datagrid())
 ```
 
 
-#### Counterfactual predictions
+### Counterfactual predictions
 
 An alternative approach to construct grids of predictors is to use `grid_type = "counterfactual"` argument value. This will duplicate the *whole* dataset, with the different values specified by the user. 
 
@@ -180,7 +180,7 @@ nrow(p)
 
 Computing predictions for a large grid or for every observation in a dataset can be useful, but analysts may also find the results unwieldy and difficult to interpret. In many contexts, it makes sense to compute *aggregated* predictions, such as the average predicted outcome in the whole dataset, or by subgroups of the data.
 
-### Average Adjusted Predictions (AAP)
+## Average Adjusted Predictions (AAP)
 
 An "Average Adjusted Prediction" is the outcome of a two step process:
 
