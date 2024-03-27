@@ -35,7 +35,7 @@ Estimating predictions can allow us to answer a variety of important questions, 
 * _Political Science_: What is the expected turnout for elections in rural and urban areas, adjusting for national voting intentions and democratic characteristics.
 * _Real Estate Pricing_: What is the expected price for a three-bedroom house in a suburban area, adjusting for the house's size, age, local amenities, and the current real estate market conditions?
 
-In addition, the `marginaleffects` package allows analysts to conduct hypothesis tests to compare different predictions. As we will see below, the `hypothesis` argument of the `predictions()` can test questions such as:
+In addition, the `marginaleffects` package allows analysts to conduct hypothesis tests to compare different predictions. As we will see below, the `hypothesis` argument of the `predictions()` function can test questions such as:
 
 * Is the expected probability of developing a heart disease higher for a 40 year old man, or for a 55 year old woman?
 * Is the expected grade point average of students in a 20-person class higher than the expected grade point average of students in a 30-person class, accounting for socio-demographic characteristics?
