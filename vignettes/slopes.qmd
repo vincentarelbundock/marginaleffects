@@ -1,5 +1,6 @@
-
-# Slopes 
+---
+title: Slopes
+---
 
 
 ```{r, include = FALSE}
@@ -21,21 +22,20 @@ library(knitr)
 theme_set(theme_minimal())
 ```
 
-## Definition
+# Definition and motivation
 
 Slopes are defined as:
 
-> Partial derivatives of the regression equation with respect to a regressor of interest. a.k.a. Marginal effects, trends.
+> Partial derivatives of the regression equation with respect to a regressor of interest. a.k.a. Marginal effects, trends, velocity.
 
-This vignette follows the econometrics tradition by referring to "slopes" and "marginal effects" interchangeably. In this context, the word "marginal" refers to the idea of a "small change," in the calculus sense.
+In some disciplines, like economics and political science, slopes are called "marginal effects," where marginal refers to the idea of a "small change," in the calculus sense. In other disciplines, they are called "trends" or "velocity." In this vignette, we use these terms interchageably.
 
-A marginal effect measures the association between a change in a regressor $x$, and a change in the response $y$. Put differently, differently, the marginal effect is the slope of the prediction function, measured at a specific value of the regressor $x$.
+A slope measures the association between a change in a regressor $x$, and a change in the response $y$, estimated at a specific values of the regressor $x$. Slopes are extremely useful, because they are intuitive and easy to interpret. They are often the main quantity of interest in an empirical analysis.
 
-Marginal effects are extremely useful, because they are intuitive and easy to interpret. They are often the main quantity of interest in an empirical analysis.
+In scientific practice, slopes fall in the same toolbox as the ["Contrast."](comparisons.html) Both try to answer a counterfactual question: What would happen to $y$ if $x$ were different? They allow us to model the "effect" of a change in the explanator $x$ on the response $y$.[^slopes-1]
 
-In scientific practice, the "Marginal Effect" falls in the same toolbox as the ["Contrast."](comparisons.html) Both try to answer a counterfactual question: What would happen to $y$ if $x$ were different? They allow us to model the "effect" of a change/difference in the regressor $x$ on the response $y$.[^slopes-1]
+[^slopes-1]: The term "effect" is tricky. To be clear, this vignette does *not* use the word "effect" to imply "causality".
 
-[^slopes-1]: The term "effect" is itself tricky. To be clear, this vignette does *not* use the word "effect" to imply "causality".
 
 To illustrate the concept, consider this quadratic function:
 
@@ -81,34 +81,77 @@ p1 <- ggplot(dat, aes(x, y)) +
 p1
 ```
 
-Below, we show how to reach the same conclusions in an estimation context, with simulated data and the `slopes` function.
+Above, we considered how marginal effects can be computed analytically in a simple quadratic equation context. We can now use the `slopes` function to replicate our analysis of the quadratic function in a regression application.
 
-## `slopes` function
+Say you estimate a linear regression model with a quadratic term:
 
-The marginal effect is a *unit-level* measure of association between changes in a regressor and changes in the response. Except in the simplest linear models, the value of the marginal effect will be different from individual to individual, because it will depend on the values of the other covariates for each individual.
+$$Y = \beta_0 + \beta_1 X^2 + \varepsilon$$
 
-The `slopes` function thus produces distinct estimates of the marginal effect for each row of the data used to fit the model. The output of `marginaleffects` is a simple `data.frame`, which can be inspected with all the usual `R` commands.
+and obtain estimates of $\beta_0=1$ and $\beta_1=2$. Taking the partial derivative with respect to $X$ and plugging in our estimates gives us the marginal effect of $X$ on $Y$:
 
-To show this, we load the library, download the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/), and estimate a GLM model:
+$$\partial Y / \partial X = \beta_0 + 2 \cdot \beta_1 X$$ $$\partial Y / \partial X = 1 + 4X$$
 
-```{r}
-library(marginaleffects)
+This result suggests that the effect of a *change* in $X$ on $Y$ depends on the *level* of $X$. When $X$ is large and positive, an increase in $X$ is associated to a large increase in $Y$. When $X$ is small and positive, an increase in $X$ is associated to a small increase in $Y$. When $X$ is a large negative value, an increase in $X$ is associated with a *decrease* in $Y$.
 
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
-dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
+`marginaleffects` arrives at the same conclusion in simulated data:
 
-mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species,
-           data = dat, family = binomial)
+```{r, message = FALSE}
+library(tidyverse)
+N <- 1e5
+quad <- data.frame(x = rnorm(N))
+quad$y <- 1 + 1 * quad$x + 2 * quad$x^2 + rnorm(N)
+mod_quad <- lm(y ~ x + I(x^2), quad)
+
+slopes(mod_quad, newdata = datagrid(x = -2:2))  |>
+    mutate(truth = 1 + 4 * x) |>
+    select(estimate, truth)
 ```
 
+We can plot conditional adjusted predictions with `plot_predictions` function:
+
 ```{r}
-mfx <- slopes(mod)
+plot_predictions(mod_quad, condition = "x")
+```
+
+We can plot conditional marginal effects with the `plot_slopes` function (see section below):
+
+```{r}
+plot_slopes(mod_quad, variables = "x", condition = "x")
+```
+
+Again, the conclusion is the same. When $x<0$, an increase in $x$ is associated with an decrease in $y$. When $x>1/4$, the marginal effect is positive, which suggests that an increase in $x$ is associated with an increase in $y$.
+
+
+## The `slopes()` function
+
+Slopes are *unit-level* measures of association between changes in a regressor and changes in the response. Except in the simplest linear models, the value of the marginal effect will be different from individual to individual, because it will depend on the values of the other covariates for each individual.
+
+By default, the `slopes()` function thus produces distinct estimates of the marginal effect for each row of the data used to fit the model:
+
+```{r}
+mfx <- slopes(mod_quad)
+
+dim(mfx)
+
 head(mfx)
+
+mfx
 ```
 
-## The Marginal Effects Zoo
 
-A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. There are ways to make this information easier to digest, by computing various quantities of interest. [In a characteristically excellent blog post,](https://www.andrewheiss.com/blog/2022/05/20/marginalia/) Professor Andrew Heiss introduces many such quantities:
+# The Marginal Effects Zoo
+
+Analysts often use the term "marginal effects" to refer to slopes. And since slopes are conditional unit-level quantities, they can be aggregated and reported in various ways. This gave rise to nomenclature that can be confusion to newcomers. 
+
+In this section, we show how the conceptual framework introduced in the ["Get Started"](get_started.html), the ["Predictions"](predictions.html), and the ["Comparisons"](comparisons.html) vignettes can help us understand these different quantities. Throughout, we lean on the five pillars:
+
+1. Quantity of interest
+2. Grid
+3. Aggregation
+4. Uncertainty
+5. Test
+
+This allows us to understand various estimates described in [Andrew Heiss' characteristically excellent blog post:](https://www.andrewheiss.com/blog/2022/05/20/marginalia/):
 
 -   Average Marginal Effects
 -   Group-Average Marginal Effects
@@ -117,13 +160,21 @@ A dataset with one marginal effect estimate per unit of observation is a bit unw
 -   Counterfactual Marginal Effects
 -   Conditional Marginal Effects
 
-The rest of this vignette defines each of those quantities and explains how to use the `slopes()` and `plot_slopes()` functions to compute them. The main differences between these quantities pertain to (a) the regressor values at which we estimate marginal effects, and (b) the way in which unit-level marginal effects are aggregated.
-
-Heiss drew this exceedingly helpful graph which summarizes the information in the rest of this vignette:
-
 ![](fig/heiss_mfx.png)
 
-### Average Marginal Effect (AME)
+Throughout this section, we will illustrate various concepts using a logistic regression model fit on data from the [Palmer Penguins dataset](https://allisonhorst.github.io/palmerpenguins/):
+
+```{r}
+library(marginaleffects)
+
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
+
+mod <- glm(large_penguin ~ bill_length_mm * flipper_length_mm + species,
+           data = dat, family = binomial)
+```
+
+## Average Marginal Effect (AME)
 
 A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `avg_slopes()` function is convenient:
 
@@ -133,23 +184,17 @@ avg_slopes(mod)
 
 Note that since marginal effects are derivatives, they are only properly defined for continuous numeric variables. When the model also includes categorical regressors, the `summary` function will try to display relevant (regression-adjusted) contrasts between different categories, as shown above.
 
-You can also extract average marginal effects using `tidy` and `glance` methods which conform to the [`broom` package specification](https://broom.tidymodels.org/):
 
-```{r}
-tidy(mfx)
-
-glance(mfx)
-```
-
-### Group-Average Marginal Effect (G-AME)
+## Group-Average Marginal Effect (G-AME)
 
 We can also use the `by` argument the average marginal effects *within different subgroups* of the observed data, based on values of the regressors. For example, to compute the average marginal effects of Bill Length for each Species, we do:
 
 ```{r}
-avg_slopes(
+mfx <- avg_slopes(
   mod,
   by = "species",
   variables = "bill_length_mm")
+mfx
 ```
 
 This is equivalent to manually taking the mean of the observation-level marginal effect for each species sub-group:
@@ -163,7 +208,7 @@ aggregate(
 
 Note that `marginaleffects` follows `Stata` and the `margins` package in computing standard errors using the group-wise averaged Jacobian.
 
-### Marginal Effect at User-Specified Values
+## Marginal Effect at User-Specified Values
 
 Sometimes, we are not interested in *all* the unit-specific marginal effects, but would rather look at the estimated marginal effects for certain "typical" individuals, or for user-specified values of the regressors. The `datagrid` function helps us build a data grid full of "typical" rows. For example, to generate artificial Adelies and Gentoos with 180mm flippers:
 
@@ -185,7 +230,7 @@ slopes(
 
 When variables are omitted from the `datagrid` call, they will automatically be set at their mean or mode (depending on variable type).
 
-### Marginal Effect at the Mean (MEM)
+## Marginal Effect at the Mean (MEM)
 
 The "Marginal Effect at the Mean" is a marginal effect calculated for a hypothetical observation where each regressor is set at its mean or mode. By default, the `datagrid` function that we used in the previous section sets all regressors to their means or modes. To calculate the MEM, we can set the `newdata` argument, which determines the values of predictors at which we want to compute marginal effects:
 
@@ -193,7 +238,7 @@ The "Marginal Effect at the Mean" is a marginal effect calculated for a hypothet
 slopes(mod, newdata = "mean")
 ```
 
-### Counterfactual Marginal Effects
+## Counterfactual Marginal Effects
 
 The `datagrid` function allowed us look at completely fictional individuals. Setting the `grid_type` argument of this function to `"counterfactual"` lets us compute the marginal effects for the actual observations in our dataset, but with a few manipulated values. For example, this code will create a `data.frame` twice as long as the original `dat`, where each observation is repeated with different values of the `flipper_length_mm` variable:
 
@@ -219,7 +264,7 @@ slopes(mod, newdata = nd) |>
     summarize(estimate = median(estimate))
 ```
 
-### Conditional Marginal Effects (Plot)
+## Conditional Marginal Effects (Plot)
 
 The `plot_slopes` function can be used to draw "Conditional Marginal Effects." This is useful when a model includes interaction terms and we want to plot how the marginal effect of a variable changes as the value of a "condition" (or "moderator") variable changes:
 
@@ -238,48 +283,6 @@ plot_slopes(mod, variables = "hp", condition = "wt") +
     geom_rug(aes(x = wt), data = mtcars) +
     theme_classic()
 ```
-
-## Example: Quadratic
-
-In the "Definition" section of this vignette, we considered how marginal effects can be computed analytically in a simple quadratic equation context. We can now use the `slopes` function to replicate our analysis of the quadratic function in a regression application.
-
-Say you estimate a linear regression model with a quadratic term:
-
-$$Y = \beta_0 + \beta_1 X^2 + \varepsilon$$
-
-and obtain estimates of $\beta_0=1$ and $\beta_1=2$. Taking the partial derivative with respect to $X$ and plugging in our estimates gives us the marginal effect of $X$ on $Y$:
-
-$$\partial Y / \partial X = \beta_0 + 2 \cdot \beta_1 X$$ $$\partial Y / \partial X = 1 + 4X$$
-
-This result suggests that the effect of a *change* in $X$ on $Y$ depends on the *level* of $X$. When $X$ is large and positive, an increase in $X$ is associated to a large increase in $Y$. When $X$ is small and positive, an increase in $X$ is associated to a small increase in $Y$. When $X$ is a large negative value, an increase in $X$ is associated with a *decrease* in $Y$.
-
-`marginaleffects` arrives at the same conclusion in simulated data:
-
-```{r, message = FALSE}
-library(tidyverse)
-N <- 1e5
-quad <- data.frame(x = rnorm(N))
-quad$y <- 1 + 1 * quad$x + 2 * quad$x^2 + rnorm(N)
-mod <- lm(y ~ x + I(x^2), quad)
-
-slopes(mod, newdata = datagrid(x = -2:2))  |>
-    mutate(truth = 1 + 4 * x) |>
-    select(estimate, truth)
-```
-
-We can plot conditional adjusted predictions with `plot_predictions` function:
-
-```{r}
-plot_predictions(mod, condition = "x")
-```
-
-We can plot conditional marginal effects with the `plot_slopes` function (see section below):
-
-```{r}
-plot_slopes(mod, variables = "x", condition = "x")
-```
-
-Again, the conclusion is the same. When $x<0$, an increase in $x$ is associated with an decrease in $y$. When $x>1/4$, the marginal effect is positive, which suggests that an increase in $x$ is associated with an increase in $y$.
 
 ## Slopes vs Predictions: A Visual Interpretation
 
@@ -337,21 +340,8 @@ plot_slopes(mod, variables = "hp", condition = "qsec") +
 
 This plot shows that the marginal effect of `hp` on `mpg` is always negative (the slope is always below zero), and that this effect becomes even more negative as `qsec` increases.
 
-## Prediction types
 
-The `marginaleffect` function takes the derivative of the fitted (or predicted) values of the model, as is typically generated by the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the marginal effects should be interpreted on that scale. However, users can pass a string or a vector of strings to the `type` argument, and `marginaleffects` will consider different outcomes.
-
-Typical values include `"response"` and `"link"`, but users should refer to the documentation of the `predict` of the package they used to fit the model to know what values are allowable. documentation.
-
-```{r}
-mod <- glm(am ~ mpg, family = binomial, data = mtcars)
-avg_slopes(mod, type = "response")
-
-avg_slopes(mod, type = "link")
-```
-
-
-## Minimum or maximum slope (velocity)
+# Minimum velocity 
 
 In some fields such as epidemiology, it is common to compute the minimum or maximum slope, as a measure of the "velocity" of the response function. To achieve this, we can use the `comparisons()` function and define custom functions. Here, we present a quick example without much detail, but you can refer to [the comparisons vignette](comparisons.html) for more explanations on custom functions in the `comparison` argument.
 
@@ -415,7 +405,7 @@ comparisons(model,
   comparison = low)
 ```
 
-## Manual computation
+# Manual computation
 
 Now we illustrate how to reproduce the output of `slopes` manually:
 
