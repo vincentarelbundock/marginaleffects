@@ -122,8 +122,6 @@ plot_slopes(mod_quad, variables = "x", condition = "x")
 Again, the conclusion is the same. When $x<0$, an increase in $x$ is associated with an decrease in $y$. When $x>1/4$, the marginal effect is positive, which suggests that an increase in $x$ is associated with an increase in $y$.
 
 
-## The `slopes()` function
-
 Slopes are *unit-level* measures of association between changes in a regressor and changes in the response. Except in the simplest linear models, the value of the marginal effect will be different from individual to individual, because it will depend on the values of the other covariates for each individual.
 
 By default, the `slopes()` function thus produces distinct estimates of the marginal effect for each row of the data used to fit the model:
