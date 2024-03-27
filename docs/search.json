@@ -637,6 +637,18 @@
     ]
   },
   {
+    "objectID": "vignettes/hypothesis.html#difference-in-differences",
+    "href": "vignettes/hypothesis.html#difference-in-differences",
+    "title": "Hypothesis Tests",
+    "section": "Difference-in-Differences",
+    "text": "Difference-in-Differences\nNow we illustrate how to use the machinery described above to do pairwise comparisons between contrasts, a type of analysis often associated with a “Difference-in-Differences” research design.\nFirst, we simulate data with two treatment groups and pre/post periods:\n\nlibrary(data.table)\n\nN &lt;- 1000\ndid &lt;- data.table(\n    id = 1:N,\n    pre = rnorm(N),\n    trt = sample(0:1, N, replace = TRUE))\ndid$post &lt;- did$pre + did$trt * 0.3 + rnorm(N)\ndid &lt;- melt(\n    did,\n    value.name = \"y\",\n    variable.name = \"time\",\n    id.vars = c(\"id\", \"trt\"))\nhead(did)\n#&gt;       id   trt   time          y\n#&gt;    &lt;int&gt; &lt;int&gt; &lt;fctr&gt;      &lt;num&gt;\n#&gt; 1:     1     1    pre -1.7451614\n#&gt; 2:     2     0    pre -0.6572841\n#&gt; 3:     3     0    pre  0.5989490\n#&gt; 4:     4     0    pre -0.6343567\n#&gt; 5:     5     0    pre -0.4826380\n#&gt; 6:     6     0    pre  1.2042403\n\nThen, we estimate a linear model with a multiple interaction between the time and the treatment indicators. We also compute contrasts at the mean for each treatment level:\n\ndid_model &lt;- lm(y ~ time * trt, data = did)\n\ncomparisons(\n    did_model,\n    newdata = datagrid(trt = 0:1),\n    variables = \"time\")\n#&gt; \n#&gt;  Term   Contrast trt Estimate Std. Error      z Pr(&gt;|z|)    S  2.5 % 97.5 % time\n#&gt;  time post - pre   0  -0.0638     0.0790 -0.807     0.42  1.3 -0.219 0.0911  pre\n#&gt;  time post - pre   1   0.3270     0.0806  4.055   &lt;0.001 14.3  0.169 0.4850  pre\n#&gt; \n#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, trt, predicted_lo, predicted_hi, predicted, y, time \n#&gt; Type:  response\n\nFinally, we compute pairwise differences between contrasts. This is the Diff-in-Diff estimate:\n\ncomparisons(\n    did_model,\n    variables = \"time\",\n    newdata = datagrid(trt = 0:1),\n    hypothesis = \"pairwise\")\n#&gt; \n#&gt;           Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %\n#&gt;  Row 1 - Row 2   -0.391      0.113 -3.46   &lt;0.001 10.9 -0.612 -0.169\n#&gt; \n#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high \n#&gt; Type:  response",
+    "crumbs": [
+      "Get started",
+      "Tutorials",
+      "Hypothesis Tests"
+    ]
+  },
+  {
     "objectID": "vignettes/gcomputation.html",
     "href": "vignettes/gcomputation.html",
     "title": "G-Computation",

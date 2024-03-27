@@ -99,6 +99,6 @@ format:
     theme:
       - flatly
       - custom.scss
-    highlight-style: nord
+    highlight-style: atom-one
     code-copy: true
     code-overflow: scroll
