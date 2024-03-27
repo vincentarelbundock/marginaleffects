@@ -20,19 +20,13 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
+# Definition and motivation
+
 In this vignette, we introduce "comparisons", defined as:
 
 > Comparisons are functions of two or more predictions. Example of comparisons include contrasts, differences, risks ratios, odds, etc.
 
-The `comparisons()` function is *extremely* flexible, and it allows users to estimate a vast array of quantities of interest. To describe those quantities, we will break the problem down into in 4 steps:
-
-1. Quantity
-2. Grid
-3. Aggregation
-4. Uncertainty
-5. Test
-
-These steps can be combined, mixed, and matched to define and compute many different estimands. With comparisons, we can answer questions like these:
+A very large number of quantities of interest can be built as a function of two (or more) predictions. Indeed, with the `comparisons()`, we can answer questions like these:
 
 - _Medical Treatment Efficacy_: How does probability of survival differ for patients who receive a new medication relative to a placebo?
 - _Education Policy_: How do standardized test scores differ between students who attended preschool programs and those who did not?
@@ -46,26 +40,15 @@ Using the `hypothesis` argument of the `comparisons()` function, we will also be
 * Is the effect of an educational intervention on mathematical competency stronger for older or younger students?
 * Does a work training program in a carceral setting have a greater effect on the probability of recidivism for first or second time offenders?
 
-In this vignette, we will illustrate these concepts by focusing on variations on this question:
+The `comparisons()` function is *extremely* flexible, and it allows users to estimate a vast array of quantities of interest. To describe those quantities, the vignette breaks the problem down into into 5 steps:
 
-> How does the probability of survival (outcome) change if a passenger travels in 1st class vs. 3rd class?
+1. Quantity
+2. Grid
+3. Aggregation
+4. Uncertainty
+5. Test
 
-```{r}
-library(marginaleffects)
-
-dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
-dat <- read.csv(dat, na.strings = c("*", ""))
-
-mod <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
-
-summary(mod)
-```
-
-These coefficient estimates are interesting, but difficult to interpret. In many applications, analysts will want to call the `comparisons()` or `avg_comparisons()` functions to report more meaningful quantities of interest. The rest of explains in detail how to interpret and customize calls like this one:
-
-```{r}
-avg_comparisons(mod)
-```
+These steps can be combined, mixed, and matched to define and compute many different estimands. 
 
 
 # Quantity of interest
@@ -88,6 +71,28 @@ By default, the `comparisons()` function will estimate the "effect" of different
 * Logical: Change from `FALSE` to `TRUE`.
 * Factor or character: Changes from the reference to each other level.
 
+In this vignette, we will illustrate these concepts by studying variations on this question:
+
+> How does the probability of survival (outcome) change if a passenger travels in 1st class vs. 3rd class?
+
+Here, we download data about the Titanic from the [Rdatasets archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html), and fit a logistic regression model with passenger survival as outcome variable:
+
+```{r}
+library(marginaleffects)
+
+dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
+dat <- read.csv(dat, na.strings = c("*", ""))
+
+mod <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
+
+summary(mod)
+```
+
+These coefficient estimates are interesting, but difficult to interpret. In many applications, analysts will want to call the `comparisons()` or `avg_comparisons()` functions to report more meaningful quantities of interest. The rest of explains in detail how to interpret and customize calls like this one:
+
+```{r}
+avg_comparisons(mod)
+```
 
 ## Comparison type
 

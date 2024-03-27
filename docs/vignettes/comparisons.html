@@ -544,7 +544,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#quantity-of-interest" id="toc-quantity-of-interest" class="nav-link active" data-scroll-target="#quantity-of-interest">Quantity of interest</a>
+  <li><a href="#definition-and-motivation" id="toc-definition-and-motivation" class="nav-link active" data-scroll-target="#definition-and-motivation">Definition and motivation</a></li>
+  <li><a href="#quantity-of-interest" id="toc-quantity-of-interest" class="nav-link" data-scroll-target="#quantity-of-interest">Quantity of interest</a>
   <ul class="collapse">
   <li><a href="#comparison-type" id="toc-comparison-type" class="nav-link" data-scroll-target="#comparison-type">Comparison type</a>
   <ul class="collapse">
@@ -616,19 +617,13 @@ window.Quarto = {
 </header>
 
 
+<section id="definition-and-motivation" class="level1">
+<h1>Definition and motivation</h1>
 <p>In this vignette, we introduce “comparisons”, defined as:</p>
 <blockquote class="blockquote">
 <p>Comparisons are functions of two or more predictions. Example of comparisons include contrasts, differences, risks ratios, odds, etc.</p>
 </blockquote>
-<p>The <code>comparisons()</code> function is <em>extremely</em> flexible, and it allows users to estimate a vast array of quantities of interest. To describe those quantities, we will break the problem down into in 4 steps:</p>
-<ol type="1">
-<li>Quantity</li>
-<li>Grid</li>
-<li>Aggregation</li>
-<li>Uncertainty</li>
-<li>Test</li>
-</ol>
-<p>These steps can be combined, mixed, and matched to define and compute many different estimands. With comparisons, we can answer questions like these:</p>
+<p>A very large number of quantities of interest can be built as a function of two (or more) predictions. Indeed, with the <code>comparisons()</code>, we can answer questions like these:</p>
 <ul>
 <li><em>Medical Treatment Efficacy</em>: How does probability of survival differ for patients who receive a new medication relative to a placebo?</li>
 <li><em>Education Policy</em>: How do standardized test scores differ between students who attended preschool programs and those who did not?</li>
@@ -642,10 +637,47 @@ window.Quarto = {
 <li>Is the effect of an educational intervention on mathematical competency stronger for older or younger students?</li>
 <li>Does a work training program in a carceral setting have a greater effect on the probability of recidivism for first or second time offenders?</li>
 </ul>
-<p>In this vignette, we will illustrate these concepts by focusing on variations on this question:</p>
+<p>The <code>comparisons()</code> function is <em>extremely</em> flexible, and it allows users to estimate a vast array of quantities of interest. To describe those quantities, the vignette breaks the problem down into into 5 steps:</p>
+<ol type="1">
+<li>Quantity</li>
+<li>Grid</li>
+<li>Aggregation</li>
+<li>Uncertainty</li>
+<li>Test</li>
+</ol>
+<p>These steps can be combined, mixed, and matched to define and compute many different estimands.</p>
+</section>
+<section id="quantity-of-interest" class="level1">
+<h1>Quantity of interest</h1>
+<p>To investigate the effect of gender, age, and passenger class on survival aboard the Titanic, we will conduct a series of “comparisons” between predicted outcomes computed for different preditor values. The quantity of interest will vary in two main respects:</p>
+<ul>
+<li><em>Predictor type</em>
+<ul>
+<li>How does the explanator of interest change?</li>
+<li>Ex: +1 on a numeric variable, or the difference between a factor level and its baseline.</li>
+</ul></li>
+<li><em>Comparison type</em>
+<ul>
+<li>How do we compare the two predicted outcomes?</li>
+<li>Ex: difference, ratio, log odds, lift, etc.</li>
+</ul></li>
+<li>Outcome type
+<ul>
+<li>What is the scale of the response variable?</li>
+<li>Ex: response, link, hazard, etc.</li>
+</ul></li>
+</ul>
+<p>By default, the <code>comparisons()</code> function will estimate the “effect” of different changes for different types of predictors:</p>
+<ul>
+<li>Numeric: Increase of 1 unit.</li>
+<li>Logical: Change from <code>FALSE</code> to <code>TRUE</code>.</li>
+<li>Factor or character: Changes from the reference to each other level.</li>
+</ul>
+<p>In this vignette, we will illustrate these concepts by studying variations on this question:</p>
 <blockquote class="blockquote">
 <p>How does the probability of survival (outcome) change if a passenger travels in 1st class vs.&nbsp;3rd class?</p>
 </blockquote>
+<p>Here, we download data about the Titanic from the <a href="https://vincentarelbundock.github.io/Rdatasets/articles/data.html">Rdatasets archive</a>, and fit a logistic regression model with passenger survival as outcome variable:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -699,32 +731,6 @@ window.Quarto = {
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="quantity-of-interest" class="level1">
-<h1>Quantity of interest</h1>
-<p>To investigate the effect of gender, age, and passenger class on survival aboard the Titanic, we will conduct a series of “comparisons” between predicted outcomes computed for different preditor values. The quantity of interest will vary in two main respects:</p>
-<ul>
-<li><em>Predictor type</em>
-<ul>
-<li>How does the explanator of interest change?</li>
-<li>Ex: +1 on a numeric variable, or the difference between a factor level and its baseline.</li>
-</ul></li>
-<li><em>Comparison type</em>
-<ul>
-<li>How do we compare the two predicted outcomes?</li>
-<li>Ex: difference, ratio, log odds, lift, etc.</li>
-</ul></li>
-<li>Outcome type
-<ul>
-<li>What is the scale of the response variable?</li>
-<li>Ex: response, link, hazard, etc.</li>
-</ul></li>
-</ul>
-<p>By default, the <code>comparisons()</code> function will estimate the “effect” of different changes for different types of predictors:</p>
-<ul>
-<li>Numeric: Increase of 1 unit.</li>
-<li>Logical: Change from <code>FALSE</code> to <code>TRUE</code>.</li>
-<li>Factor or character: Changes from the reference to each other level.</li>
-</ul>
 <section id="comparison-type" class="level2">
 <h2 class="anchored" data-anchor-id="comparison-type">Comparison type</h2>
 <p>The default comparison type in <code>comparisons()</code> is the “difference”, which means that the <code>comparisons()</code> function will typically produce quantities which are often interpreted as a measure of “effect” in applications: risk differences, average treatment effects, G-computation estimates, etc. But <code>comparisons()</code> is not limited to differences, Indeed, it allows analysts to call on many built-in functions for comparison, and also to supply their own.</p>
@@ -1352,7 +1358,7 @@ window.Quarto = {
 <span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inferences</span>(<span class="st">"rsample"</span>)</span>
 <span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Term              Contrast Estimate 2.5 % 97.5 %</span></span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.98  2.64   7.64</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.98  2.59    4.5</span></span>
 <span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
 <span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

@@ -1,11 +1,12 @@
-
-# Hypothesis Tests
+---
+title: Hypothesis Tests
+---
 
 
 ```{r, include = FALSE}
 options(width = 1000)
-## this vignette is in .Rbuildignore because lme4 is not available on old CRAN
-## test machines.
+# this vignette is in .Rbuildignore because lme4 is not available on old CRAN
+# test machines.
 
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -42,12 +43,12 @@ This vignette shows how to use each of these strategies to conduct hypothesis te
 * Cross-level contrasts: In a multinomial model, the effect of $X$ on the 1st outcome level is equal to the effect of $X$ on the 2nd outcome level.
 
 
-## Numeric (null hypothesis)
+# Numeric (null hypothesis)
 
 The simplest way to modify a hypothesis test is to change the null hypothesis. By default, all functions in the `marginaleffects` package assume that the null is 0. This can be changed with the `hypothesis` argument. 
 
 
-### Coefficients
+## Coefficients
 
 Consider a simple logistic regression model:
 
@@ -68,7 +69,7 @@ Using `hypotheses()`, we can easily change the null hypothesis:
 hypotheses(mod, hypothesis = 6)
 ```
 
-### Predictions
+## Predictions
 
 Changing the value of the null is particularly important in the context of predictions, where the 0 baseline may not be particularly meaningful. For example, here we compute the predicted outcome for a hypothetical unit where all regressors are fixed to their sample means:
 
@@ -82,7 +83,7 @@ The Z statistic and p value reported above assume that the null hypothesis equal
 predictions(mod, newdata = "mean", hypothesis = .5)
 ```
 
-### Comparisons and slopes
+## Comparisons and slopes
 
 When computing different quantities of interest like risk ratios, it can make sense to set the null hypothesis to 1 rather than 0:
 
@@ -96,14 +97,14 @@ avg_comparisons(
 ```
 
 
-## Formula
+# Formula
 
 The `hypotheses()` function emulates the formula-based syntax of the well-established `car::deltaMethod` and `car::linearHypothesis` functions. However, `marginaleffects` supports more models, requires fewer dependencies, and offers some convenience features like the  `vcov` argument for robust standard errors.
 
 The syntax we illustrate in this section takes the form a string formula, ex: `"am = 2 * vs"`
 
 
-### Coefficients
+## Coefficients
 
 Let's start by estimating a simple model:
 
@@ -152,7 +153,7 @@ Term names with special characters must be enclosed in backticks:
 hypotheses(mod, "`factor(cyl)6` = `factor(cyl)8`")
 ```
 
-### Predictions
+## Predictions
 
 Now consider the case of adjusted predictions:
 
@@ -197,7 +198,7 @@ predictions(
     newdata = datagrid(am = 0:1, vs = 0:1))
 ```
 
-### Comparisons and slopes
+## Comparisons and slopes
 
 The `avg_comparisons()` function allows us to answer questions of this form: On average, how does the expected outcome change when I change one regressor by some amount? Consider this:
 
@@ -243,13 +244,13 @@ avg_slopes(mod, hypothesis = "10 * hp - qsec = 0")
 ```
 
 
-## Functions
+# Functions
 
 Hypothesis tests can also be conducted using arbitrary `R` functions. This allows users to test hypotheses on complex aggregations or transformations. To achieve this, we define a custom function which accepts a fitted model or `marginaleffects` objects, and returns a data frame with at least two columns: `term` and `estimate`.
 
 
 
-### Predictions
+## Predictions
 
 When supplying a function to the `hypothesis` argument to produce a `marginaleffects` function, the function must accept an argument `x` which is a data frame with columns `rowid` and `estimate` (with optional argument `newdata`, `by`, `draws`).
 
@@ -294,7 +295,7 @@ avg_predictions(mod, hypothesis = fun)
 ```
 
 
-### Comparisons and slopes
+## Comparisons and slopes
 
 In the same ordinal logit model, we can estimate the average effect of an increase of 1 unit in `hp` on the expected probability of every level of the outcome:
 
@@ -332,7 +333,7 @@ avg_comparisons(mod, variables = "hp", by = "cyl", hypothesis = fun)
 ```
 
 
-### Fitted models 
+## Fitted models 
 
 The `hypothesis` argument can be used to compute standard errors for arbitrary functions of model parameters. This user-supplied function must accept a single model object, and return a data.frame with two columns named `term` and `estimate`.
 
@@ -402,11 +403,11 @@ Note that this workflow will not work for bayesian models or with bootstrap. How
 
 
 
-## Vectors and Matrices
+# Vectors and Matrices
 
 The `predictions()` function can estimate marginal means. The `hypothesis` argument of that function offers a powerful mechanism to estimate custom contrasts between marginal means, by way of linear combination.
 
-### Simple contrast
+## Simple contrast
 
 Consider a simple example:
 
@@ -464,7 +465,7 @@ predictions(mod,
     hypothesis = lc)
 ```
 
-### Complex contrast
+## Complex contrast
 
 Of course, we can also estimate more complex contrasts:
 
@@ -485,7 +486,7 @@ lc <- data.frame(custom_contrast = c(0, -2, 1, 1, -1, 1))
 contrast(em, method = lc)
 ```
 
-### Multiple contrasts
+## Multiple contrasts
 
 Users can also compute multiple linear combinations simultaneously by supplying a numeric matrix to `hypotheses`. This matrix must have the same number of rows as the output of `slopes()`, and each column represents a distinct set of weights for different linear combinations. The column names of the matrix become labels in the output. For example:
 
@@ -503,7 +504,7 @@ predictions(mod,
     hypothesis = lc)
 ```
 
-## Difference-in-Differences
+# Difference-in-Differences
 
 Now we illustrate how to use the machinery described above to do pairwise comparisons between contrasts, a type of analysis often associated with a "Difference-in-Differences" research design.
 
@@ -547,7 +548,7 @@ comparisons(
     hypothesis = "pairwise")
 ```
 
-## Arbitrary quantities
+# Arbitrary quantities
 
 `marginaleffects` can also compute uncertainty estimates for arbitrary quantities hosted in a data frame, as long as the user can supply a variance-covariance matrix. (Thanks to Kyle F Butts for this cool feature and example!)
 
@@ -579,7 +580,7 @@ hypotheses(
 )
 ```
 
-## Unsupported S3 Objects
+# Unsupported S3 Objects
 
 `marginaleffects` provides a generic interface for hypothesis tests for linear models by providing (1) a data.frame containing point estimates (consiting of columns `term` containing the names and `estimate` containing the point estiamtes) and (2) a variance-covariance matrix of estimates.
 
@@ -595,7 +596,7 @@ hypotheses(
 )
 ```
 
-## Joint hypotheses tests
+# Joint hypotheses tests
 
 The `hypotheses()` function can also test multiple hypotheses jointly. For example, consider this model:
 
@@ -618,14 +619,14 @@ Naturally, the `hypotheses` function also works with `marginaleffects` objects.
 # ## joint hypotheses: regular expression
 hypotheses(model, joint = "cyl")
 
-## joint hypotheses: integer indices
+# joint hypotheses: integer indices
 hypotheses(model, joint = 2:3)
 
-## joint hypotheses: different null hypotheses
+# joint hypotheses: different null hypotheses
 hypotheses(model, joint = 2:3, hypothesis = 1)
 hypotheses(model, joint = 2:3, hypothesis = 1:2)
 
-## joint hypotheses: marginaleffects object
+# joint hypotheses: marginaleffects object
 cmp <- avg_comparisons(model)
 hypotheses(cmp, joint = "cyl")
 ```
@@ -633,18 +634,18 @@ hypotheses(cmp, joint = "cyl")
 We can also combine multiple calls to `hypotheses` to execute a joint test on linear combinations of coefficients:
 
 ```{r}
-## fit model
+# fit model
 mod <- lm(mpg ~ factor(carb), mtcars)
 
-## hypothesis matrix for linear combinations
+# hypothesis matrix for linear combinations
 H <- matrix(0, nrow = length(coef(mod)), ncol = 2)
 H[2:3, 1] <- H[4:6, 2] <- 1
 
-## test individual linear combinations
+# test individual linear combinations
 hyp <- hypotheses(mod, hypothesis = H)
 hyp
 
-## test joint hypotheses
+# test joint hypotheses
 #hypotheses(hyp, joint = TRUE, hypothesis = c(-10, -20))
 ```
 

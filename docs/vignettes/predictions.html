@@ -515,7 +515,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#quantity-of-interest" id="toc-quantity-of-interest" class="nav-link active" data-scroll-target="#quantity-of-interest">Quantity of interest</a>
+  <li><a href="#definition-and-motivation" id="toc-definition-and-motivation" class="nav-link active" data-scroll-target="#definition-and-motivation">Definition and motivation</a></li>
+  <li><a href="#quantity-of-interest" id="toc-quantity-of-interest" class="nav-link" data-scroll-target="#quantity-of-interest">Quantity of interest</a>
   <ul class="collapse">
   <li><a href="#prediction-type-scale" id="toc-prediction-type-scale" class="nav-link" data-scroll-target="#prediction-type-scale">Prediction type (scale)</a></li>
   </ul></li>
@@ -570,6 +571,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="definition-and-motivation" class="level1">
+<h1>Definition and motivation</h1>
 <p>In the context of this package, an “adjusted prediction” is defined as:</p>
 <blockquote class="blockquote">
 <p>The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. “reference grid”).</p>
@@ -587,6 +590,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Is the expected probability of developing a heart disease higher for a 40 year old man, or for a 55 year old woman?</li>
 <li>Is the expected grade point average of students in a 20-person class higher than the expected grade point average of students in a 30-person class, accounting for socio-demographic characteristics?</li>
 </ul>
+<p>The <code>predictions()</code> function is <em>extremely</em> flexible, and it allows users to estimate a vast array of quantities of interest. To describe those quantities, this vignette breaks the problem down into 5 steps:</p>
+<ol type="1">
+<li>Quantity</li>
+<li>Grid</li>
+<li>Aggregation</li>
+<li>Uncertainty</li>
+<li>Test</li>
+</ol>
+</section>
 <section id="quantity-of-interest" class="level1">
 <h1>Quantity of interest</h1>
 <p>By default, the <code>predictions()</code> function calculates the regression-adjusted predicted values for every observation in the original dataset:</p>
@@ -741,11 +753,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_vyzwzqx7s04lbz61tfk8</title>
+    <title>tinytable_v9nify5z4rpyynrv7z7r</title>
     <style>
-.table td.tinytable_css_vtinrp6gei8i1of0m7h3, .table th.tinytable_css_vtinrp6gei8i1of0m7h3 {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_k6mh9sux0pt1iw6fbmep, .table th.tinytable_css_k6mh9sux0pt1iw6fbmep {    text-align: center; }
-.table td.tinytable_css_usj62y4c45brtfuirsp2, .table th.tinytable_css_usj62y4c45brtfuirsp2 {    border-bottom: solid 0.05em #d3d8dc; }
+.table td.tinytable_css_08pofj1wzbbafvxzp0nt, .table th.tinytable_css_08pofj1wzbbafvxzp0nt {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_q02pohk530nvnw5erbj4, .table th.tinytable_css_q02pohk530nvnw5erbj4 {    text-align: center; }
+.table td.tinytable_css_oqpbezfiy94pqzj7v2oh, .table th.tinytable_css_oqpbezfiy94pqzj7v2oh {    border-bottom: solid 0.05em #d3d8dc; }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -763,7 +775,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   
     <div class="container">
-      <table class="table table-borderless" id="tinytable_vyzwzqx7s04lbz61tfk8" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_v9nify5z4rpyynrv7z7r" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
 <tr>
 <th scope="col" align="center" colspan="1"> </th>
@@ -798,12 +810,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
 
     <script>
-      function styleCell_tinytable_sq12xyhyj56394io76l1(i, j, css_id) {
-        var table = document.getElementById("tinytable_vyzwzqx7s04lbz61tfk8");
+      function styleCell_tinytable_ygcwr6kcblcjten2u2dm(i, j, css_id) {
+        var table = document.getElementById("tinytable_v9nify5z4rpyynrv7z7r");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_vyzwzqx7s04lbz61tfk8');
+        var table = document.getElementById('tinytable_v9nify5z4rpyynrv7z7r');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -811,8 +823,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_sq12xyhyj56394io76l1(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_vyzwzqx7s04lbz61tfk8");
+      function spanCell_tinytable_ygcwr6kcblcjten2u2dm(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_v9nify5z4rpyynrv7z7r");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -839,15 +851,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(1, 0, 'tinytable_css_vtinrp6gei8i1of0m7h3') })
-window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(1, 1, 'tinytable_css_vtinrp6gei8i1of0m7h3') })
-window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(1, 2, 'tinytable_css_vtinrp6gei8i1of0m7h3') })
-window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(1, 3, 'tinytable_css_vtinrp6gei8i1of0m7h3') })
-window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(0, 0, 'tinytable_css_k6mh9sux0pt1iw6fbmep') })
-window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(0, 1, 'tinytable_css_k6mh9sux0pt1iw6fbmep') })
-window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(0, 2, 'tinytable_css_k6mh9sux0pt1iw6fbmep') })
-window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(0, 3, 'tinytable_css_k6mh9sux0pt1iw6fbmep') })
-window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(0, 2, 'tinytable_css_usj62y4c45brtfuirsp2') })
+window.addEventListener('load', function () { styleCell_tinytable_ygcwr6kcblcjten2u2dm(1, 0, 'tinytable_css_08pofj1wzbbafvxzp0nt') })
+window.addEventListener('load', function () { styleCell_tinytable_ygcwr6kcblcjten2u2dm(1, 1, 'tinytable_css_08pofj1wzbbafvxzp0nt') })
+window.addEventListener('load', function () { styleCell_tinytable_ygcwr6kcblcjten2u2dm(1, 2, 'tinytable_css_08pofj1wzbbafvxzp0nt') })
+window.addEventListener('load', function () { styleCell_tinytable_ygcwr6kcblcjten2u2dm(1, 3, 'tinytable_css_08pofj1wzbbafvxzp0nt') })
+window.addEventListener('load', function () { styleCell_tinytable_ygcwr6kcblcjten2u2dm(0, 0, 'tinytable_css_q02pohk530nvnw5erbj4') })
+window.addEventListener('load', function () { styleCell_tinytable_ygcwr6kcblcjten2u2dm(0, 1, 'tinytable_css_q02pohk530nvnw5erbj4') })
+window.addEventListener('load', function () { styleCell_tinytable_ygcwr6kcblcjten2u2dm(0, 2, 'tinytable_css_q02pohk530nvnw5erbj4') })
+window.addEventListener('load', function () { styleCell_tinytable_ygcwr6kcblcjten2u2dm(0, 3, 'tinytable_css_q02pohk530nvnw5erbj4') })
+window.addEventListener('load', function () { styleCell_tinytable_ygcwr6kcblcjten2u2dm(0, 2, 'tinytable_css_oqpbezfiy94pqzj7v2oh') })
     </script>
 
   

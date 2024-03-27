@@ -20,6 +20,8 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
+# Definition and motivation
+
 In the context of this package, an "adjusted prediction" is defined as:
 
 > The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
@@ -37,6 +39,14 @@ In addition, the `marginaleffects` package allows analysts to conduct hypothesis
 
 * Is the expected probability of developing a heart disease higher for a 40 year old man, or for a 55 year old woman?
 * Is the expected grade point average of students in a 20-person class higher than the expected grade point average of students in a 30-person class, accounting for socio-demographic characteristics?
+
+The `predictions()` function is *extremely* flexible, and it allows users to estimate a vast array of quantities of interest. To describe those quantities, this vignette breaks the problem down into 5 steps:
+
+1. Quantity
+2. Grid
+3. Aggregation
+4. Uncertainty
+5. Test
 
 
 # Quantity of interest
