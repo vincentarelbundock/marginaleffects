@@ -1,3 +1,7 @@
+---
+title: Predictions
+---
+
 ```{r, include = FALSE}
 options(width = 1000)
 knitr::opts_chunk$set(
@@ -16,13 +20,24 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-# Predictions
-
 In the context of this package, an "adjusted prediction" is defined as:
 
 > The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
 
 Here, the word "Adjusted" simply means "model-derived" or "model-based."
+
+Estimating predictions can allow us to answer a variety of important questions, such as:
+
+* _Healthcare Research_: What is the expected probability of a 50-year-old smoker developing heart disease, adjusting for diet, exercise, and family history factors?
+* _Sports Analytics_: What is the expected probability of a professional basketball team winning their next game, taking into account the team's recent performance, injuries, and the strength of the opposing team?
+* _Political Science_: What is the expected turnout for elections in rural and urban areas, adjusting for national voting intentions and democratic characteristics.
+* _Real Estate Pricing_: What is the expected price for a three-bedroom house in a suburban area, adjusting for the house's size, age, local amenities, and the current real estate market conditions?
+
+In addition, the `marginaleffects` package allows analysts to conduct hypothesis tests to compare different predictions. As we will see below, the `hypothesis` argument of the `predictions()` can test questions such as:
+
+* Is the expected probability of developing a heart disease higher for a 40 year old man, or for a 55 year old woman?
+* Is the expected grade point average of students in a 20-person class higher than the expected grade point average of students in a 30-person class, accounting for socio-demographic characteristics?
+
 
 # Quantity of interest
 
@@ -421,7 +436,7 @@ plot_predictions(mod, condition = "hp") +
 ```
 
 
-# Nominal and ordinal outcomes
+# Categorical outcomes
 
 One place where this is particularly useful is in multinomial models with different response levels. For example, here we compute the average predicted outcome for each outcome level in a multinomial logit model. Note that response levels are identified by the "group" column.
 
@@ -507,37 +522,4 @@ plot_predictions(
     condition = "mpg") +
     facet_wrap(~group)
 ```
-
-
-
-# Bayes
-
-The same strategy works for Bayesian models:
-```{r, eval = FALSE}
-library(brms)
-mod <- brm(am ~ mpg * vs, data = mtcars, family = bernoulli)
-```
-
-```{r, include=FALSE}
-library(brms)
-download.file("https://github.com/vincentarelbundock/modelarchive/raw/main/data/brms_interaction.rds", tmp <- tempfile())
-mod <- readRDS(tmp)
-```
-
-```{r}
-predictions(mod, by = "vs")
-```
-
-The results above show the median of the posterior distribution of group-wise means. Note that we take the mean of predicted values for each MCMC draw before computing quantiles. This is equivalent to:
-
-```{r}
-draws <- posterior_epred(mod)
-quantile(rowMeans(draws[, mtcars$vs == 0]), probs = c(.5, .025, .975))
-quantile(rowMeans(draws[, mtcars$vs == 1]), probs = c(.5, .025, .975))
-```
-
-
-
-
-
 

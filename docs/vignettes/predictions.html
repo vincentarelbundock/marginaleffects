@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Marginal Effects Zoo</title>
+<title>Marginal Effects Zoo - Predictions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -515,8 +515,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#predictions" id="toc-predictions" class="nav-link active" data-scroll-target="#predictions">Predictions</a></li>
-  <li><a href="#quantity-of-interest" id="toc-quantity-of-interest" class="nav-link" data-scroll-target="#quantity-of-interest">Quantity of interest</a>
+  <li><a href="#quantity-of-interest" id="toc-quantity-of-interest" class="nav-link active" data-scroll-target="#quantity-of-interest">Quantity of interest</a>
   <ul class="collapse">
   <li><a href="#prediction-type-scale" id="toc-prediction-type-scale" class="nav-link" data-scroll-target="#prediction-type-scale">Prediction type (scale)</a></li>
   </ul></li>
@@ -525,6 +524,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#empirical-distribution" id="toc-empirical-distribution" class="nav-link" data-scroll-target="#empirical-distribution">Empirical distribution</a></li>
   <li><a href="#user-specified-values" id="toc-user-specified-values" class="nav-link" data-scroll-target="#user-specified-values">User-specified values</a></li>
   <li><a href="#representative-values" id="toc-representative-values" class="nav-link" data-scroll-target="#representative-values">Representative values</a></li>
+  <li><a href="#counterfactual-predictions" id="toc-counterfactual-predictions" class="nav-link" data-scroll-target="#counterfactual-predictions">Counterfactual predictions</a></li>
   </ul></li>
   <li><a href="#aggregation" id="toc-aggregation" class="nav-link" data-scroll-target="#aggregation">Aggregation</a>
   <ul class="collapse">
@@ -540,29 +540,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types">Prediction types</a></li>
   <li><a href="#themes-and-styles" id="toc-themes-and-styles" class="nav-link" data-scroll-target="#themes-and-styles">Themes and styles</a></li>
   </ul></li>
-  <li><a href="#nominal-and-ordinal-outcomes" id="toc-nominal-and-ordinal-outcomes" class="nav-link" data-scroll-target="#nominal-and-ordinal-outcomes">Nominal and ordinal outcomes</a>
+  <li><a href="#categorical-outcomes" id="toc-categorical-outcomes" class="nav-link" data-scroll-target="#categorical-outcomes">Categorical outcomes</a>
   <ul class="collapse">
   <li><a href="#custom-aggregation" id="toc-custom-aggregation" class="nav-link" data-scroll-target="#custom-aggregation">Custom aggregation</a></li>
   <li><a href="#themes-and-styles-1" id="toc-themes-and-styles-1" class="nav-link" data-scroll-target="#themes-and-styles-1">Themes and styles</a></li>
   </ul></li>
-  <li><a href="#bayes" id="toc-bayes" class="nav-link" data-scroll-target="#bayes">Bayes</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/predictions.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../vignettes/predictions.html">Predictions</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Predictions</h1>
+</div>
 
 
 
-<section id="predictions" class="level1">
-<h1>Predictions</h1>
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
 <p>In the context of this package, an “adjusted prediction” is defined as:</p>
 <blockquote class="blockquote">
 <p>The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. “reference grid”).</p>
 </blockquote>
 <p>Here, the word “Adjusted” simply means “model-derived” or “model-based.”</p>
-</section>
+<p>Estimating predictions can allow us to answer a variety of important questions, such as:</p>
+<ul>
+<li><em>Healthcare Research</em>: What is the expected probability of a 50-year-old smoker developing heart disease, adjusting for diet, exercise, and family history factors?</li>
+<li><em>Sports Analytics</em>: What is the expected probability of a professional basketball team winning their next game, taking into account the team’s recent performance, injuries, and the strength of the opposing team?</li>
+<li><em>Political Science</em>: What is the expected turnout for elections in rural and urban areas, adjusting for national voting intentions and democratic characteristics.</li>
+<li><em>Real Estate Pricing</em>: What is the expected price for a three-bedroom house in a suburban area, adjusting for the house’s size, age, local amenities, and the current real estate market conditions?</li>
+</ul>
+<p>In addition, the <code>marginaleffects</code> package allows analysts to conduct hypothesis tests to compare different predictions. As we will see below, the <code>hypothesis</code> argument of the <code>predictions()</code> can test questions such as:</p>
+<ul>
+<li>Is the expected probability of developing a heart disease higher for a 40 year old man, or for a 55 year old woman?</li>
+<li>Is the expected grade point average of students in a 20-person class higher than the expected grade point average of students in a 30-person class, accounting for socio-demographic characteristics?</li>
+</ul>
 <section id="quantity-of-interest" class="level1">
 <h1>Quantity of interest</h1>
 <p>By default, the <code>predictions()</code> function calculates the regression-adjusted predicted values for every observation in the original dataset:</p>
@@ -717,11 +741,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_xcpssm5k66otun6f55g7</title>
+    <title>tinytable_vyzwzqx7s04lbz61tfk8</title>
     <style>
-.table td.tinytable_css_1zydqr8jdpnjsjbtsedt, .table th.tinytable_css_1zydqr8jdpnjsjbtsedt {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_fq1ynv5gygsg41fql01n, .table th.tinytable_css_fq1ynv5gygsg41fql01n {    text-align: center; }
-.table td.tinytable_css_psq7u4ntse7zb39byz0a, .table th.tinytable_css_psq7u4ntse7zb39byz0a {    border-bottom: solid 0.05em #d3d8dc; }
+.table td.tinytable_css_vtinrp6gei8i1of0m7h3, .table th.tinytable_css_vtinrp6gei8i1of0m7h3 {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_k6mh9sux0pt1iw6fbmep, .table th.tinytable_css_k6mh9sux0pt1iw6fbmep {    text-align: center; }
+.table td.tinytable_css_usj62y4c45brtfuirsp2, .table th.tinytable_css_usj62y4c45brtfuirsp2 {    border-bottom: solid 0.05em #d3d8dc; }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -739,7 +763,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   
     <div class="container">
-      <table class="table table-borderless" id="tinytable_xcpssm5k66otun6f55g7" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_vyzwzqx7s04lbz61tfk8" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
 <tr>
 <th scope="col" align="center" colspan="1"> </th>
@@ -774,12 +798,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
 
     <script>
-      function styleCell_tinytable_lzfdpyplmhc2xos0on7v(i, j, css_id) {
-        var table = document.getElementById("tinytable_xcpssm5k66otun6f55g7");
+      function styleCell_tinytable_sq12xyhyj56394io76l1(i, j, css_id) {
+        var table = document.getElementById("tinytable_vyzwzqx7s04lbz61tfk8");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_xcpssm5k66otun6f55g7');
+        var table = document.getElementById('tinytable_vyzwzqx7s04lbz61tfk8');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -787,8 +811,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_lzfdpyplmhc2xos0on7v(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_xcpssm5k66otun6f55g7");
+      function spanCell_tinytable_sq12xyhyj56394io76l1(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_vyzwzqx7s04lbz61tfk8");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -815,15 +839,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xos0on7v(1, 0, 'tinytable_css_1zydqr8jdpnjsjbtsedt') })
-window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xos0on7v(1, 1, 'tinytable_css_1zydqr8jdpnjsjbtsedt') })
-window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xos0on7v(1, 2, 'tinytable_css_1zydqr8jdpnjsjbtsedt') })
-window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xos0on7v(1, 3, 'tinytable_css_1zydqr8jdpnjsjbtsedt') })
-window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xos0on7v(0, 0, 'tinytable_css_fq1ynv5gygsg41fql01n') })
-window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xos0on7v(0, 1, 'tinytable_css_fq1ynv5gygsg41fql01n') })
-window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xos0on7v(0, 2, 'tinytable_css_fq1ynv5gygsg41fql01n') })
-window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xos0on7v(0, 3, 'tinytable_css_fq1ynv5gygsg41fql01n') })
-window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xos0on7v(0, 2, 'tinytable_css_psq7u4ntse7zb39byz0a') })
+window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(1, 0, 'tinytable_css_vtinrp6gei8i1of0m7h3') })
+window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(1, 1, 'tinytable_css_vtinrp6gei8i1of0m7h3') })
+window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(1, 2, 'tinytable_css_vtinrp6gei8i1of0m7h3') })
+window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(1, 3, 'tinytable_css_vtinrp6gei8i1of0m7h3') })
+window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(0, 0, 'tinytable_css_k6mh9sux0pt1iw6fbmep') })
+window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(0, 1, 'tinytable_css_k6mh9sux0pt1iw6fbmep') })
+window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(0, 2, 'tinytable_css_k6mh9sux0pt1iw6fbmep') })
+window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(0, 3, 'tinytable_css_k6mh9sux0pt1iw6fbmep') })
+window.addEventListener('load', function () { styleCell_tinytable_sq12xyhyj56394io76l1(0, 2, 'tinytable_css_usj62y4c45brtfuirsp2') })
     </script>
 
   
@@ -855,8 +879,9 @@ window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xo
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl </span></span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="counterfactual-predictions" class="level4">
-<h4 class="anchored" data-anchor-id="counterfactual-predictions">Counterfactual predictions</h4>
+</section>
+<section id="counterfactual-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="counterfactual-predictions">Counterfactual predictions</h3>
 <p>An alternative approach to construct grids of predictors is to use <code>grid_type = "counterfactual"</code> argument value. This will duplicate the <em>whole</em> dataset, with the different values specified by the user.</p>
 <p>For example, the <code>mtcars</code> dataset has 32 rows. This command produces a new dataset with 64 rows, with each row of the original dataset duplicated with the two values of the <code>am</code> variable supplied (0 and 1):</p>
 <div class="cell">
@@ -909,12 +934,11 @@ window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xo
 </div>
 </section>
 </section>
-</section>
 <section id="aggregation" class="level1">
 <h1>Aggregation</h1>
 <p>Computing predictions for a large grid or for every observation in a dataset can be useful, but analysts may also find the results unwieldy and difficult to interpret. In many contexts, it makes sense to compute <em>aggregated</em> predictions, such as the average predicted outcome in the whole dataset, or by subgroups of the data.</p>
-<section id="average-adjusted-predictions-aap" class="level3">
-<h3 class="anchored" data-anchor-id="average-adjusted-predictions-aap">Average Adjusted Predictions (AAP)</h3>
+<section id="average-adjusted-predictions-aap" class="level2">
+<h2 class="anchored" data-anchor-id="average-adjusted-predictions-aap">Average Adjusted Predictions (AAP)</h2>
 <p>An “Average Adjusted Prediction” is the outcome of a two step process:</p>
 <ol type="1">
 <li>Create a new dataset with each of the original regressor values, but fixing some regressors to values of interest.</li>
@@ -1251,8 +1275,8 @@ window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xo
 </div>
 </section>
 </section>
-<section id="nominal-and-ordinal-outcomes" class="level1">
-<h1>Nominal and ordinal outcomes</h1>
+<section id="categorical-outcomes" class="level1">
+<h1>Categorical outcomes</h1>
 <p>One place where this is particularly useful is in multinomial models with different response levels. For example, here we compute the average predicted outcome for each outcome level in a multinomial logit model. Note that response levels are identified by the “group” column.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nnet)</span>
@@ -1401,37 +1425,9 @@ window.addEventListener('load', function () { styleCell_tinytable_lzfdpyplmhc2xo
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="bayes" class="level1">
-<h1>Bayes</h1>
-<p>The same strategy works for Bayesian models:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">brm</span>(am <span class="sc">~</span> mpg <span class="sc">*</span> vs, <span class="at">data =</span> mtcars, <span class="at">family =</span> bernoulli)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">by =</span> <span class="st">"vs"</span>)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  vs Estimate 2.5 % 97.5 %</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0    0.327 0.182  0.507</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1    0.499 0.366  0.672</span></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: vs, estimate, conf.low, conf.high </span></span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>The results above show the median of the posterior distribution of group-wise means. Note that we take the mean of predicted values for each MCMC draw before computing quantiles. This is equivalent to:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">posterior_epred</span>(mod)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(<span class="fu">rowMeans</span>(draws[, mtcars<span class="sc">$</span>vs <span class="sc">==</span> <span class="dv">0</span>]), <span class="at">probs =</span> <span class="fu">c</span>(.<span class="dv">5</span>, .<span class="dv">025</span>, .<span class="dv">975</span>))</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       50%      2.5%     97.5% </span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.3271836 0.1824479 0.5072074</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(<span class="fu">rowMeans</span>(draws[, mtcars<span class="sc">$</span>vs <span class="sc">==</span> <span class="dv">1</span>]), <span class="at">probs =</span> <span class="fu">c</span>(.<span class="dv">5</span>, .<span class="dv">025</span>, .<span class="dv">975</span>))</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       50%      2.5%     97.5% </span></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.4993250 0.3657956 0.6721267</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

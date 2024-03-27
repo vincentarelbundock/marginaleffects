@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Marginal Effects Zoo</title>
+<title>Marginal Effects Zoo - Comparisons</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -544,12 +544,22 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#comparisons" id="toc-comparisons" class="nav-link active" data-scroll-target="#comparisons">Comparisons</a>
+  <li><a href="#quantity-of-interest" id="toc-quantity-of-interest" class="nav-link active" data-scroll-target="#quantity-of-interest">Quantity of interest</a>
   <ul class="collapse">
-  <li><a href="#quantity-of-interest" id="toc-quantity-of-interest" class="nav-link" data-scroll-target="#quantity-of-interest">Quantity of interest</a>
+  <li><a href="#comparison-type" id="toc-comparison-type" class="nav-link" data-scroll-target="#comparison-type">Comparison type</a>
   <ul class="collapse">
-  <li><a href="#comparison-type" id="toc-comparison-type" class="nav-link" data-scroll-target="#comparison-type">Comparison type</a></li>
-  <li><a href="#predictor-types" id="toc-predictor-types" class="nav-link" data-scroll-target="#predictor-types">Predictor types</a></li>
+  <li><a href="#differences" id="toc-differences" class="nav-link" data-scroll-target="#differences">Differences</a></li>
+  <li><a href="#ratios" id="toc-ratios" class="nav-link" data-scroll-target="#ratios">Ratios</a></li>
+  <li><a href="#built-in-functions" id="toc-built-in-functions" class="nav-link" data-scroll-target="#built-in-functions">Built-in functions</a></li>
+  <li><a href="#custom-functions" id="toc-custom-functions" class="nav-link" data-scroll-target="#custom-functions">Custom functions</a></li>
+  </ul></li>
+  <li><a href="#predictor-types" id="toc-predictor-types" class="nav-link" data-scroll-target="#predictor-types">Predictor types</a>
+  <ul class="collapse">
+  <li><a href="#numeric" id="toc-numeric" class="nav-link" data-scroll-target="#numeric">Numeric</a></li>
+  <li><a href="#binary-or-logical" id="toc-binary-or-logical" class="nav-link" data-scroll-target="#binary-or-logical">Binary or Logical</a></li>
+  <li><a href="#factor-or-character" id="toc-factor-or-character" class="nav-link" data-scroll-target="#factor-or-character">Factor or Character</a></li>
+  <li><a href="#cross-contrasts" id="toc-cross-contrasts" class="nav-link" data-scroll-target="#cross-contrasts">Cross-contrasts</a></li>
+  </ul></li>
   <li><a href="#outcome-type" id="toc-outcome-type" class="nav-link" data-scroll-target="#outcome-type">Outcome type</a></li>
   </ul></li>
   <li><a href="#grid" id="toc-grid" class="nav-link" data-scroll-target="#grid">Grid</a>
@@ -581,18 +591,31 @@ window.Quarto = {
   <li><a href="#forward-backward-centered" id="toc-forward-backward-centered" class="nav-link" data-scroll-target="#forward-backward-centered">Forward, Backward, Centered</a></li>
   <li><a href="#observation-wise-categorical-marginal-effect" id="toc-observation-wise-categorical-marginal-effect" class="nav-link" data-scroll-target="#observation-wise-categorical-marginal-effect">Observation-Wise Categorical Marginal Effect</a></li>
   </ul></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/predictions.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../vignettes/comparisons.html">Comparisons</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Comparisons</h1>
+</div>
 
 
 
-<section id="comparisons" class="level1">
-<h1>Comparisons</h1>
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
 <p>In this vignette, we introduce “comparisons”, defined as:</p>
 <blockquote class="blockquote">
 <p>Comparisons are functions of two or more predictions. Example of comparisons include contrasts, differences, risks ratios, odds, etc.</p>
@@ -605,8 +628,21 @@ window.Quarto = {
 <li>Uncertainty</li>
 <li>Test</li>
 </ol>
-<p>These steps can be combined, mixed, and matched to define and compute many different estimands.</p>
-<p>Throughout this vignette, we will consider a logistic regression model of passenger survival aboard the Titanic. We will consider variations on this questions:</p>
+<p>These steps can be combined, mixed, and matched to define and compute many different estimands. With comparisons, we can answer questions like these:</p>
+<ul>
+<li><em>Medical Treatment Efficacy</em>: How does probability of survival differ for patients who receive a new medication relative to a placebo?</li>
+<li><em>Education Policy</em>: How do standardized test scores differ between students who attended preschool programs and those who did not?</li>
+<li><em>Environmental Conservation</em>: What is the impact of new conseration policies on forest coverage?</li>
+<li><em>Economic Development</em>: What difference does participation in microfinance programs make on household income?</li>
+<li><em>Sports Performance</em>: How does the win ratio of teams change after the introduction of a new training regimen?</li>
+<li><em>Cultural Studies</em>: What is the difference in cultural engagement levels between communities with access to public libraries and those without?</li>
+</ul>
+<p>Using the <code>hypothesis</code> argument of the <code>comparisons()</code> function, we will also be able to compare contrasts to one another, answering questions such as:</p>
+<ul>
+<li>Is the effect of an educational intervention on mathematical competency stronger for older or younger students?</li>
+<li>Does a work training program in a carceral setting have a greater effect on the probability of recidivism for first or second time offenders?</li>
+</ul>
+<p>In this vignette, we will illustrate these concepts by focusing on variations on this question:</p>
 <blockquote class="blockquote">
 <p>How does the probability of survival (outcome) change if a passenger travels in 1st class vs.&nbsp;3rd class?</p>
 </blockquote>
@@ -663,14 +699,14 @@ window.Quarto = {
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="quantity-of-interest" class="level2">
-<h2 class="anchored" data-anchor-id="quantity-of-interest">Quantity of interest</h2>
+<section id="quantity-of-interest" class="level1">
+<h1>Quantity of interest</h1>
 <p>To investigate the effect of gender, age, and passenger class on survival aboard the Titanic, we will conduct a series of “comparisons” between predicted outcomes computed for different preditor values. The quantity of interest will vary in two main respects:</p>
 <ul>
 <li><em>Predictor type</em>
 <ul>
 <li>How does the explanator of interest change?</li>
-<li>Ex: +1 on a numeric variable, or the difference between a factor level and its reference leve.</li>
+<li>Ex: +1 on a numeric variable, or the difference between a factor level and its baseline.</li>
 </ul></li>
 <li><em>Comparison type</em>
 <ul>
@@ -689,11 +725,11 @@ window.Quarto = {
 <li>Logical: Change from <code>FALSE</code> to <code>TRUE</code>.</li>
 <li>Factor or character: Changes from the reference to each other level.</li>
 </ul>
-<section id="comparison-type" class="level3">
-<h3 class="anchored" data-anchor-id="comparison-type">Comparison type</h3>
+<section id="comparison-type" class="level2">
+<h2 class="anchored" data-anchor-id="comparison-type">Comparison type</h2>
 <p>The default comparison type in <code>comparisons()</code> is the “difference”, which means that the <code>comparisons()</code> function will typically produce quantities which are often interpreted as a measure of “effect” in applications: risk differences, average treatment effects, G-computation estimates, etc. But <code>comparisons()</code> is not limited to differences, Indeed, it allows analysts to call on many built-in functions for comparison, and also to supply their own.</p>
-<section id="differences" class="level4">
-<h4 class="anchored" data-anchor-id="differences">Differences</h4>
+<section id="differences" class="level3">
+<h3 class="anchored" data-anchor-id="differences">Differences</h3>
 <p>By default, the <code>comparisons()</code> function will compare the predicted values by differencing (subtraction). For example, consider a hypothetical Titanic passenger with these characteristics:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>passenger <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
@@ -714,7 +750,7 @@ window.Quarto = {
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         1 </span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.2716978</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The result above shows that modifying the <code>SexCode</code> variable of this hypothetical passenger from 0 to 1 increases the predicted probability of survival by about 27%</p>
+<p>The result above shows that modifying the <code>SexCode</code> variable of this hypothetical passenger from 0 to 1 increases the predicted probability of survival by about 27 percentage points.</p>
 <p>Instead of computing this estimate by hand, we could call <code>comparisons()</code> to get analogous results for all predictors in the model at once:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">newdata =</span> passenger)</span>
@@ -729,8 +765,8 @@ window.Quarto = {
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="ratios" class="level4">
-<h4 class="anchored" data-anchor-id="ratios">Ratios</h4>
+<section id="ratios" class="level3">
+<h3 class="anchored" data-anchor-id="ratios">Ratios</h3>
 <p>Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute ratios or other functions of predictions. For example, <a href="https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304">the <code>adjrr</code> function the <code>Stata</code> software package</a> can compute “adjusted risk ratios”, which are ratios of adjusted predictions. To do this in <code>R</code>, we could use the same predictions we computed above:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>prediction_1 <span class="sc">/</span> prediction_0</span>
@@ -752,8 +788,8 @@ window.Quarto = {
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="built-in-functions" class="level4">
-<h4 class="anchored" data-anchor-id="built-in-functions">Built-in functions</h4>
+<section id="built-in-functions" class="level3">
+<h3 class="anchored" data-anchor-id="built-in-functions">Built-in functions</h3>
 <p>Beyond differences and ratios, <code>comparisons()</code> supports many other built-in functions to compare predictions, such as log odds ratios, lift, etc. See <code>?comparisons</code> for a complete list.</p>
 <p>These built-in functions allow us convenient access to complex transformations. For example, this code computes the log odds ratio associated with a change in predictors:</p>
 <div class="cell">
@@ -771,8 +807,8 @@ window.Quarto = {
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="custom-functions" class="level4">
-<h4 class="anchored" data-anchor-id="custom-functions">Custom functions</h4>
+<section id="custom-functions" class="level3">
+<h3 class="anchored" data-anchor-id="custom-functions">Custom functions</h3>
 <p>Analysts who need more flexibility can define their own comparison functions. For example, these two calls are equivalent:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, </span>
@@ -818,11 +854,11 @@ window.Quarto = {
 </div>
 </section>
 </section>
-<section id="predictor-types" class="level3">
-<h3 class="anchored" data-anchor-id="predictor-types">Predictor types</h3>
+<section id="predictor-types" class="level2">
+<h2 class="anchored" data-anchor-id="predictor-types">Predictor types</h2>
 <p>The types of comparisons that one might care about depend on the kinds of predictors in our model: numeric, binary, or categorical.</p>
-<section id="numeric" class="level4">
-<h4 class="anchored" data-anchor-id="numeric">Numeric</h4>
+<section id="numeric" class="level3">
+<h3 class="anchored" data-anchor-id="numeric">Numeric</h3>
 <p>We can also compute contrasts for differences in numeric variables. For example, we can see what happens to the adjusted predictions when we increment the <code>Age</code> variable by 1 unit (default) or by 5 units:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">variables =</span> <span class="st">"Age"</span>, <span class="at">newdata =</span> passenger)</span>
@@ -886,8 +922,8 @@ window.Quarto = {
 <span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="binary-or-logical" class="level4">
-<h4 class="anchored" data-anchor-id="binary-or-logical">Binary or Logical</h4>
+<section id="binary-or-logical" class="level3">
+<h3 class="anchored" data-anchor-id="binary-or-logical">Binary or Logical</h3>
 <p>For logical or binary variables, the default comparison correponds to a change from 0 to 1, or from <code>FALSE</code> to <code>TRUE</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dat2 <span class="ot">&lt;-</span> <span class="fu">transform</span>(dat, <span class="at">SexCode =</span> <span class="fu">as.logical</span>(SexCode))</span>
@@ -910,8 +946,8 @@ window.Quarto = {
 <span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="factor-or-character" class="level4">
-<h4 class="anchored" data-anchor-id="factor-or-character">Factor or Character</h4>
+<section id="factor-or-character" class="level3">
+<h3 class="anchored" data-anchor-id="factor-or-character">Factor or Character</h3>
 <p>The <code>comparisons()</code> function automatically computes contrasts for each level of a categorical variable (factor or character), relative to the baseline category, while holding all other values at their observed values. We can obtain different contrasts by using the <code>variables</code> argument:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">PClass =</span> <span class="st">"sequential"</span>), <span class="at">newdata =</span> passenger)</span>
@@ -955,8 +991,8 @@ window.Quarto = {
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="cross-contrasts" class="level4">
-<h4 class="anchored" data-anchor-id="cross-contrasts">Cross-contrasts</h4>
+<section id="cross-contrasts" class="level3">
+<h3 class="anchored" data-anchor-id="cross-contrasts">Cross-contrasts</h3>
 <p>In other contexts, we are interested in a “cross-contrast” or “cross-comparisons”, that is, we would like to know what happens when two (or more) predictors change at the same time. To assess this, we can specify the regressors of interest in the <code>variables</code> argument, and set the <code>cross=TRUE</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cmp <span class="ot">&lt;-</span> <span class="fu">comparisons</span>(mod, </span>
@@ -974,8 +1010,8 @@ window.Quarto = {
 <p>This tells us that changing our hypothetical passenger from <code>SexCode=0</code> to 1, and from <code>Age=20</code> to 25 <em>simultaneously</em> is associated with a change of 0.27 in the predicted probability of survival (on a 0 to 1 scale).</p>
 </section>
 </section>
-<section id="outcome-type" class="level3">
-<h3 class="anchored" data-anchor-id="outcome-type">Outcome type</h3>
+<section id="outcome-type" class="level2">
+<h2 class="anchored" data-anchor-id="outcome-type">Outcome type</h2>
 <p>We can compute contrasts on different response scales. In GLM model, for example, we tend to estimate contrasts and comparisons on the “response” scale, becasue the results are expressed on the natural unit of measurement of the dependent variable. However, we an also compute the quantity on the “link” scale, by changing the <code>type</code> argument:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">type =</span> <span class="st">"response"</span>, <span class="at">newdata =</span> passenger)</span>
@@ -1007,8 +1043,8 @@ window.Quarto = {
 </div>
 </section>
 </section>
-<section id="grid" class="level2">
-<h2 class="anchored" data-anchor-id="grid">Grid</h2>
+<section id="grid" class="level1">
+<h1>Grid</h1>
 <p>In most statistical models, comparisons (differences, ratios, etc.) are <em>conditional</em> quantities, in the sense that they typically depend on the values of all the predictors in the model. Therefore, when we compute a comparison, we need to decide <em>where</em> to evaluate it in the predictor space.</p>
 <p>A “profile” is a combination of values of the predictor variables in a model. A “grid” is a collection of one or more profiles. You can think of a “grid” as different rows in a dataset, where each row contains the information necessary to predict the outcome for one individual or unit of observation.</p>
 <p>A “profile” can be defined as a specific combination of predictor values, and a “grid” can be defined as a collection of profiles for which we can evaluate quantities of interest.</p>
@@ -1018,8 +1054,8 @@ window.Quarto = {
 <li>User-specified values</li>
 <li>Representative values</li>
 </ul>
-<section id="empirical-distribution" class="level3">
-<h3 class="anchored" data-anchor-id="empirical-distribution">Empirical distribution</h3>
+<section id="empirical-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="empirical-distribution">Empirical distribution</h2>
 <p>By default, the <code>comparisons()</code> function returns estimates for every single row of the original data frame which was used to fit the model. The Titanic dataset includes 756 complete observations (after dropping missing data), so this command will yield 756 estimates:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">variables =</span> <span class="st">"Age"</span>)</span>
@@ -1076,8 +1112,8 @@ window.Quarto = {
 </div>
 <p>The plot above suggests that there is substantial heterogeneity in treatment effects across different unit characteristics.</p>
 </section>
-<section id="user-specified-values" class="level3">
-<h3 class="anchored" data-anchor-id="user-specified-values">User-specified values</h3>
+<section id="user-specified-values" class="level2">
+<h2 class="anchored" data-anchor-id="user-specified-values">User-specified values</h2>
 <p>In some contexts, it is interesting to estimate a contrast for a specific individual with characteristics of interest. To achieve this, we can supply a data frame to the <code>newdata</code> argument.</p>
 <p>This code shows the expected change in probability of survival in the counterfactual world where Mr Harry Anderson had been 20 years older:</p>
 <div class="cell">
@@ -1116,8 +1152,8 @@ window.Quarto = {
 <p>Notice that the contrasts are different for the man and the woman. It appears that changing class has a larger effect on the expected probability of survival for men than for women.</p>
 <p>Note that when using <code>datagrid()</code> in this manner, variables that are not specified explicitly by the user are held at their mean or mode.</p>
 </section>
-<section id="representative-values" class="level3">
-<h3 class="anchored" data-anchor-id="representative-values">Representative values</h3>
+<section id="representative-values" class="level2">
+<h2 class="anchored" data-anchor-id="representative-values">Representative values</h2>
 <p>An alternative which used to be very common but has now fallen into a bit of disfavor is to compute “Contrasts at the mean.” The idea is to create a “representative” or “synthetic” individual (row of the dataset) whose characteristics are completely average (or modal). Then, we compute and report the contrast for this specific hypothetical individual. For example:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">newdata =</span> <span class="st">"mean"</span>)</span>
@@ -1145,8 +1181,8 @@ window.Quarto = {
 <p>Contrasts at the mean can differ substantially from average contrasts.</p>
 <p>The advantage of this approach is that it is very cheap and fast computationally. The disadvantage is that the interpretation is somewhat ambiguous. Often times, there simply does not exist an individual who is perfectly average across all dimensions of the dataset. It is also not clear why the analyst should be particularly interested in the contrast for this one, synthetic, perfectly average individual.</p>
 </section>
-<section id="balanced-grids" class="level3">
-<h3 class="anchored" data-anchor-id="balanced-grids">Balanced grids</h3>
+<section id="balanced-grids" class="level2">
+<h2 class="anchored" data-anchor-id="balanced-grids">Balanced grids</h2>
 <p>One type of grid which may be particularly useful in experimental setting is the “balanced grid”, which includes all unique combinations of categorical variables, while holding numeric variables a their means. For example, in the Titanic dataset there are two categorical variables, <code>SexCode</code> and <code>PClass</code>, with 2 and 3 categories respectively. A balanced grid, will thus have rows. We can create this grid with:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datagrid</span>(<span class="at">model =</span> mod, <span class="at">grid_type =</span> <span class="st">"balanced"</span>)</span>
@@ -1189,8 +1225,8 @@ window.Quarto = {
 </div>
 </section>
 </section>
-<section id="aggregation" class="level2">
-<h2 class="anchored" data-anchor-id="aggregation">Aggregation</h2>
+<section id="aggregation" class="level1">
+<h1>Aggregation</h1>
 <p>As discussed above, the default behavior of <code>comparisons()</code> is to estimate quantities of interest for all the actually observed units in our dataset. Sometimes, it is convenient to marginalize those conditional estimates, in order to obtain an “average contrast”. The procedure is as follows:</p>
 <ol type="1">
 <li>Compute estimates for each row of the original dataset.</li>
@@ -1223,8 +1259,8 @@ window.Quarto = {
 <span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  PClass 2nd - 1st -0.22483577</span></span>
 <span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  PClass 3rd - 1st -0.39567579</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="subgroups" class="level3">
-<h3 class="anchored" data-anchor-id="subgroups">Subgroups</h3>
+<section id="subgroups" class="level2">
+<h2 class="anchored" data-anchor-id="subgroups">Subgroups</h2>
 <p>Using the <code>by</code> argument we can compute the “average effect” (i.e., “contrast” or “risk difference”) of an increase of 10 years of <code>Age</code> in each of the passenger classes:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod,</span>
@@ -1240,8 +1276,8 @@ window.Quarto = {
 <span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="marginal-means" class="level3">
-<h3 class="anchored" data-anchor-id="marginal-means">Marginal means</h3>
+<section id="marginal-means" class="level2">
+<h2 class="anchored" data-anchor-id="marginal-means">Marginal means</h2>
 <p>In experimental studies, it can often make sense to estimate contrasts, averaged across a balanced grid of treatment conditions:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">grid_type =</span> <span class="st">"balanced"</span>))</span>
@@ -1270,12 +1306,12 @@ window.Quarto = {
 </div>
 </section>
 </section>
-<section id="uncertainty" class="level2">
-<h2 class="anchored" data-anchor-id="uncertainty">Uncertainty</h2>
+<section id="uncertainty" class="level1">
+<h1>Uncertainty</h1>
 <p>By default, the standard errors around contrasts are computed using the delta method. This vignette offers extensive discussion and examples:</p>
 <p><a href="https://marginaleffects.com/vignettes/uncertainty.html" class="uri">https://marginaleffects.com/vignettes/uncertainty.html</a></p>
-<section id="robust-clustered-standard-errors" class="level3">
-<h3 class="anchored" data-anchor-id="robust-clustered-standard-errors">Robust (clustered) standard errors</h3>
+<section id="robust-clustered-standard-errors" class="level2">
+<h2 class="anchored" data-anchor-id="robust-clustered-standard-errors">Robust (clustered) standard errors</h2>
 <p>The standard errors reported by default for most models are “classical” (or “iid”). For models supported by the <code>sandwich</code> or <code>clubSandwich</code> packages, we can call on the <code>vcov</code> argument to report robust standard errors (and confidence intervales, p values, etc.):</p>
 <p>Classical:</p>
 <div class="cell">
@@ -1298,8 +1334,8 @@ window.Quarto = {
 <span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="bootstrap-and-simulation" class="level3">
-<h3 class="anchored" data-anchor-id="bootstrap-and-simulation">Bootstrap and simulation</h3>
+<section id="bootstrap-and-simulation" class="level2">
+<h2 class="anchored" data-anchor-id="bootstrap-and-simulation">Bootstrap and simulation</h2>
 <p>We can use bootstrapping or simulations to compute uncertainty estimates, via the <code>inferences()</code> function. Notice that, for some quantities, the classical intervals are very different (here: symmetric) than boostrap intervals (here: asymmetric):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># classical</span></span>
@@ -1316,14 +1352,14 @@ window.Quarto = {
 <span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inferences</span>(<span class="st">"rsample"</span>)</span>
 <span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Term              Contrast Estimate 2.5 % 97.5 %</span></span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.98  2.59   7.39</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.98  2.64   7.64</span></span>
 <span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
 <span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="transformation" class="level3">
-<h3 class="anchored" data-anchor-id="transformation">Transformation</h3>
+<section id="transformation" class="level2">
+<h2 class="anchored" data-anchor-id="transformation">Transformation</h2>
 <p>By default, the standard errors around contrasts are computed on the scale determined by the <code>type</code> argument (e.g., “link” or “response”). Some analysts may prefer to proceed differently. For example, in <code>Stata</code>, the <code>adjrr</code> computes adjusted risk ratios (ARR) in two steps:</p>
 <ol type="1">
 <li>Compute the natural log of the ratio between the mean of adjusted predictions with <span class="math inline">\(x+1\)</span> and the mean of adjusted predictions with <span class="math inline">\(x\)</span>.</li>
@@ -1402,8 +1438,8 @@ window.Quarto = {
 </div>
 </section>
 </section>
-<section id="hypothesis" class="level2">
-<h2 class="anchored" data-anchor-id="hypothesis">Hypothesis</h2>
+<section id="hypothesis" class="level1">
+<h1>Hypothesis</h1>
 <p>Now, let’s see how we can conduct even more specific queries, using hypothesis tests. The <code>marginaleffects</code> website includes <a href="https://marginaleffects.com/vignettes/hypothesis.html">a very detailed vignette on hypothesis tests.</a>. It showcases very complex aggregations, comparisons, and tests. Here, we only introduce simple tests.</p>
 <p>Imagine one is interested in this question:</p>
 <blockquote class="blockquote">
@@ -1450,8 +1486,8 @@ window.Quarto = {
 <span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="plot" class="level2">
-<h2 class="anchored" data-anchor-id="plot">Plot</h2>
+<section id="plot" class="level1">
+<h1>Plot</h1>
 <p>The <code>plot_comparisons()</code> function can plot comparisons, differences, risk ratios, etc. The <a href="https://marginaleffects.com/vignettes/plot.html">plotting vignette gives detailed insight into the use of this function.</a> Here, it will be sufficient to illustrate its use by a few examples, and to note that most of the arguments of <code>comparisons()</code> are supported by <code>plot_comparisons()</code>.</p>
 <p>Here, we plot Adjusted Risk Ratio and Adjusted Risk Difference in a model with a quadratic term:</p>
 <div class="cell">
@@ -1486,8 +1522,8 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="visual-guide" class="level2">
-<h2 class="anchored" data-anchor-id="visual-guide">Visual guide</h2>
+<section id="visual-guide" class="level1">
+<h1>Visual guide</h1>
 <p>This section illustrates some of the concepts in this vignette visually.</p>
 <p>Consider a model with an interaction term. What happens to the dependent variable when the <code>hp</code> variable increases by 10 units?</p>
 <div class="cell">
@@ -1536,7 +1572,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="do">## do episodes 1 and 2 differ when `cond=0`</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># do episodes 1 and 2 differ when `cond=0`</span></span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(p, <span class="fu">aes</span>(<span class="at">x =</span> cond, <span class="at">y =</span> estimate, <span class="at">shape =</span> episode, <span class="at">color =</span> episode)) <span class="sc">+</span></span>
 <span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">xend =</span> <span class="dv">1</span>, <span class="at">y =</span> p<span class="sc">$</span>estimate[<span class="dv">1</span>], <span class="at">yend =</span> p<span class="sc">$</span>estimate[<span class="dv">2</span>]), <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
@@ -1559,7 +1595,7 @@ window.Quarto = {
 <span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, cond, predicted_lo, predicted_hi, predicted, y, episode </span></span>
 <span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
 <span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="do">## do cond=0 and cond=1 differ when episode = 1</span></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="co"># do cond=0 and cond=1 differ when episode = 1</span></span>
 <span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(p, <span class="fu">aes</span>(<span class="at">x =</span> cond, <span class="at">y =</span> estimate, <span class="at">shape =</span> episode, <span class="at">color =</span> episode)) <span class="sc">+</span></span>
 <span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">xend =</span> <span class="dv">2</span>, <span class="at">y =</span> p<span class="sc">$</span>estimate[<span class="dv">1</span>], <span class="at">yend =</span> p<span class="sc">$</span>estimate[<span class="dv">4</span>]), <span class="at">color =</span> okabeito[<span class="dv">1</span>]) <span class="sc">+</span></span>
@@ -1582,8 +1618,8 @@ window.Quarto = {
 <span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, episode, predicted_lo, predicted_hi, predicted, y, cond </span></span>
 <span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
 <span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Is the difference between episode 1 and 2 larger in cond=0 or cond=1? </span></span>
-<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="do">## try this without the `hypothesis` argument to see what we are comparing more clearly</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Is the difference between episode 1 and 2 larger in cond=0 or cond=1? </span></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="co"># try this without the `hypothesis` argument to see what we are comparing more clearly</span></span>
 <span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(p, <span class="fu">aes</span>(<span class="at">x =</span> cond, <span class="at">y =</span> estimate, <span class="at">shape =</span> episode, <span class="at">color =</span> episode)) <span class="sc">+</span></span>
 <span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"rect"</span>, <span class="at">xmin =</span> .<span class="dv">9</span>, <span class="at">xmax =</span> <span class="fl">1.1</span>, <span class="at">ymin =</span> p<span class="sc">$</span>estimate[<span class="dv">1</span>], <span class="at">ymax =</span> p<span class="sc">$</span>estimate[<span class="dv">2</span>], <span class="at">alpha =</span> .<span class="dv">2</span>, <span class="at">fill =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
@@ -1609,10 +1645,10 @@ window.Quarto = {
 <span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="more" class="level2">
-<h2 class="anchored" data-anchor-id="more">More</h2>
-<section id="manual-computation" class="level3">
-<h3 class="anchored" data-anchor-id="manual-computation">Manual computation</h3>
+<section id="more" class="level1">
+<h1>More</h1>
+<section id="manual-computation" class="level2">
+<h2 class="anchored" data-anchor-id="manual-computation">Manual computation</h2>
 <p>Now we show how to use the base <code>R</code> <code>predict()</code> function to compute some of the same quantities as above. This exercise may be clarifying for some users.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>grid_50_1_3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Age =</span> <span class="dv">50</span>, <span class="at">SexCode =</span> <span class="dv">1</span>, <span class="at">PClass =</span> <span class="st">"3rd"</span>)</span>
@@ -1626,7 +1662,7 @@ window.Quarto = {
 <span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>yhat_50_0_3 <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod, <span class="at">newdata =</span> grid_50_0_3, <span class="at">type =</span> <span class="st">"response"</span>)</span>
 <span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>yhat_50_0_1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod, <span class="at">newdata =</span> grid_50_0_1, <span class="at">type =</span> <span class="st">"response"</span>)</span>
 <span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a><span class="do">### prediction on a grid</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a><span class="do">## prediction on a grid</span></span>
 <span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">Age =</span> <span class="dv">50</span>, <span class="at">SexCode =</span> <span class="dv">1</span>, <span class="at">PClass =</span> <span class="st">"3rd"</span>))</span>
 <span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Age SexCode PClass Estimate Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
@@ -1638,7 +1674,7 @@ window.Quarto = {
 <span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         1 </span></span>
 <span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.4463379</span></span>
 <span id="cb51-23"><a href="#cb51-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-24"><a href="#cb51-24" aria-hidden="true" tabindex="-1"></a><span class="do">### contrast on a grid</span></span>
+<span id="cb51-24"><a href="#cb51-24" aria-hidden="true" tabindex="-1"></a><span class="do">## contrast on a grid</span></span>
 <span id="cb51-25"><a href="#cb51-25" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod,</span>
 <span id="cb51-26"><a href="#cb51-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">PClass =</span> <span class="fu">c</span>(<span class="st">"1st"</span>, <span class="st">"3rd"</span>)),</span>
 <span id="cb51-27"><a href="#cb51-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">Age =</span> <span class="dv">50</span>, <span class="at">SexCode =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span>
@@ -1657,7 +1693,7 @@ window.Quarto = {
 <span id="cb51-40"><a href="#cb51-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          1 </span></span>
 <span id="cb51-41"><a href="#cb51-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.5113098</span></span>
 <span id="cb51-42"><a href="#cb51-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-43"><a href="#cb51-43" aria-hidden="true" tabindex="-1"></a><span class="do">### difference-in-differences </span></span>
+<span id="cb51-43"><a href="#cb51-43" aria-hidden="true" tabindex="-1"></a><span class="do">## difference-in-differences </span></span>
 <span id="cb51-44"><a href="#cb51-44" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod,</span>
 <span id="cb51-45"><a href="#cb51-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">PClass =</span> <span class="fu">c</span>(<span class="st">"1st"</span>, <span class="st">"3rd"</span>)),</span>
 <span id="cb51-46"><a href="#cb51-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">Age =</span> <span class="dv">50</span>, <span class="at">SexCode =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>),</span>
@@ -1673,7 +1709,7 @@ window.Quarto = {
 <span id="cb51-56"><a href="#cb51-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         1 </span></span>
 <span id="cb51-57"><a href="#cb51-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.3268809</span></span>
 <span id="cb51-58"><a href="#cb51-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-59"><a href="#cb51-59" aria-hidden="true" tabindex="-1"></a><span class="do">### average of the empirical distribution of contrasts</span></span>
+<span id="cb51-59"><a href="#cb51-59" aria-hidden="true" tabindex="-1"></a><span class="do">## average of the empirical distribution of contrasts</span></span>
 <span id="cb51-60"><a href="#cb51-60" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">PClass =</span> <span class="fu">c</span>(<span class="st">"1st"</span>, <span class="st">"3rd"</span>)), <span class="at">by =</span> <span class="st">"SexCode"</span>)</span>
 <span id="cb51-61"><a href="#cb51-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb51-62"><a href="#cb51-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    Term              Contrast SexCode Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
@@ -1697,8 +1733,8 @@ window.Quarto = {
 <span id="cb51-80"><a href="#cb51-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.4956673</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="transformations" class="level3">
-<h3 class="anchored" data-anchor-id="transformations">Transformations</h3>
+<section id="transformations" class="level2">
+<h2 class="anchored" data-anchor-id="transformations">Transformations</h2>
 <p>So far we have focused on simple differences between adjusted predictions. Now, we show how to use ratios, back transformations, and arbitrary functions to estimate a slew of quantities of interest. Powerful transformations and custom contrasts are made possible by using three arguments which act at different stages of the computation process:</p>
 <ul>
 <li><code>comparison</code></li>
@@ -1734,8 +1770,8 @@ window.Quarto = {
 <span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="difference-in-differences" class="level3">
-<h3 class="anchored" data-anchor-id="difference-in-differences">Difference-in-Differences</h3>
+<section id="difference-in-differences" class="level2">
+<h2 class="anchored" data-anchor-id="difference-in-differences">Difference-in-Differences</h2>
 <p>One thing we can notice in the Titanic example, is that the gap in predicted probabilities of survival between men and women is larger in 1st class than in 3rd class.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
@@ -1796,8 +1832,8 @@ window.Quarto = {
 <span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="forward-backward-centered" class="level3">
-<h3 class="anchored" data-anchor-id="forward-backward-centered">Forward, Backward, Centered</h3>
+<section id="forward-backward-centered" class="level2">
+<h2 class="anchored" data-anchor-id="forward-backward-centered">Forward, Backward, Centered</h2>
 <p>By default, the <code>comparisons()</code> function computes a “forward” difference. For example, if we ask <code>comparisons()</code> to estimate the effect of a 10-unit change in predictor <code>x</code> on outcome <code>y</code>, <code>comparisons()</code> will compare the predicted values with <code>x</code> and <code>x+10</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">&lt;-</span> mtcars</span>
@@ -1852,8 +1888,8 @@ window.Quarto = {
 </div>
 <p>Notice that the last “centered” difference gives the same results as the default <code>comparisons()</code> call.</p>
 </section>
-<section id="observation-wise-categorical-marginal-effect" class="level3">
-<h3 class="anchored" data-anchor-id="observation-wise-categorical-marginal-effect">Observation-Wise Categorical Marginal Effect</h3>
+<section id="observation-wise-categorical-marginal-effect" class="level2">
+<h2 class="anchored" data-anchor-id="observation-wise-categorical-marginal-effect">Observation-Wise Categorical Marginal Effect</h2>
 <p>For categorical predictors, <a href="https://arxiv.org/pdf/2201.08837.pdf">Scholbeck et al.&nbsp;2023</a> recommend that analysts report what they call the “observation-wise categorical marginal effects.” They describe the procedure as follows:</p>
 <blockquote class="blockquote">
 <p>Recall that the common definition of categorical MEs is based on first changing all observations’ value of <span class="math inline">\(x_j\)</span> to each category and then computing the difference in predictions when changing it to the reference category. However, one is often interested in prediction changes if aspects of an actual observation change. We therefore propose an observation-wise categorical ME. We first select a single reference category <span class="math inline">\(c_h\)</span>. For each observation whose feature value <span class="math inline">\(x_j \neq c_h\)</span>, we predict once with the observed value <span class="math inline">\(x_j\)</span> and once where <span class="math inline">\(x_j\)</span> has been replaced by <span class="math inline">\(c_h\)</span>.</p>
@@ -1882,7 +1918,6 @@ window.Quarto = {
 </div>
 
 
-</section>
 </section>
 </section>
 
