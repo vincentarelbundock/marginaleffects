@@ -65,7 +65,7 @@ hypotheses(
 }
 \item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
 \item Square covariance matrix
-\item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
+\item Function which returns a covariance matrix (e.g., \code{stats::vcov})
 }}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}

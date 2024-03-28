@@ -40,6 +40,14 @@ cmp1 <- comparisons(fit, variables = "treat", wts = "w")
 cmp2 <- comparisons(fit, variables = "treat", wts = "w", comparison = "differenceavg")
 expect_equivalent(cmp2$estimate, weighted.mean(cmp1$estimate, k$w))
 
+# wts = TRUE correctly extracts weights
+a1 <- avg_comparisons(fit, variables = "treat", wts = "w")
+a2 <- avg_comparisons(fit, variables = "treat", wts = TRUE)
+expect_equivalent(a1, a2)
+
+a1 <- avg_comparisons(fit, variables = "treat", by = "married", wts = k$w)
+a2 <- avg_comparisons(fit, variables = "treat", by = "married", wts = TRUE)
+expect_equivalent(a1, a2)
 
 # sanity check
 expect_error(comparisons(mod, wts = "junk"), pattern = "explicitly")
@@ -84,7 +92,7 @@ cmp1 <- avg_comparisons(fit,
     newdata = tmp,
     comparison = "lnratioavg",
     transform = exp)
-cmp2 <- predictions(fit, variables = list(g = c("Control", "Z"))) |> 
+cmp2 <- predictions(fit, variables = list(g = c("Control", "Z"))) |>
     dplyr::group_by(g) |>
     dplyr::summarise(estimate = weighted.mean(estimate, N)) |>
     as.data.frame()
@@ -179,11 +187,11 @@ expect_true(all(cmp1$estimate != cmp2$estimate))
 
 # . logit am mpg [pw=weights]
 #
-# Iteration 0:   log pseudolikelihood = -365.96656  
-# Iteration 1:   log pseudolikelihood = -255.02961  
-# Iteration 2:   log pseudolikelihood = -253.55843  
-# Iteration 3:   log pseudolikelihood = -253.55251  
-# Iteration 4:   log pseudolikelihood = -253.55251  
+# Iteration 0:   log pseudolikelihood = -365.96656
+# Iteration 1:   log pseudolikelihood = -255.02961
+# Iteration 2:   log pseudolikelihood = -253.55843
+# Iteration 3:   log pseudolikelihood = -253.55251
+# Iteration 4:   log pseudolikelihood = -253.55251
 #
 # Logistic regression                                     Number of obs =     32
 #                                                         Wald chi2(1)  =   8.75
