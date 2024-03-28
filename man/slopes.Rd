@@ -347,6 +347,21 @@ Some of the most common \code{type} values are:
 response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, detection, disp, ev, expected, expvalue, fitted, invlink(link), latent, latent_N, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
 }
 
+\section{Order of operations}{
+
+
+Behind the scenes, the arguments of \code{marginaleffects} functions are evaluated in this order:
+\enumerate{
+\item `newdata``
+\item \code{variables}
+\item \code{comparison} and \code{slopes}
+\item \code{by}
+\item \code{vcov}
+\item \code{hypothesis}
+\item \code{transform}
+}
+}
+
 \examples{
 \dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{\}) # examplesIf}

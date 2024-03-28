@@ -66,6 +66,7 @@
 #' @template bayesian
 #' @template equivalence
 #' @template type
+#' @template order_of_operations
 #' @template references
 #'
 #' @return A `data.frame` with one row per observation and several columns:
