@@ -63,8 +63,15 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
 sanitize_model_specific.glmmTMB <- function(model, vcov = NULL, calling_function = "marginaleffects", ...) {
     if (isTRUE(vcov) || is.null(vcov)) {
         insight::format_error(
-            "By default, standard errors for models of class `glmmTMB` are not calculated. For further details, see discussion at {https://github.com/glmmTMB/glmmTMB/issues/915}.",
-            "Set `vcov = FALSE` or explicitly provide a variance-covariance-matrix for the `vcov` argument to calculate standard errors."
+            "Standard errors are not reported for models of class `glmmTMB`, because `marginaleffects` tends to compute standard errors that are *much* too small.", 
+            "",
+            "To learn more or to contribute a solution, see:",
+            "",
+            "{https://github.com/vincentarelbundock/marginaleffects/issues/1064}.",
+            "",
+            "To silence this warning, set `vcov=FALSE`.",
+            "",
+            "To report standard errors, supply a square variance-covariance matrix to the `vcov` argument. The `marginaleffects` maintainers *strongly* discourage this approach, because it can vastly understimate standard errors."
         )
     }
     REML <- as.list(insight::get_call(model))[["REML"]]
