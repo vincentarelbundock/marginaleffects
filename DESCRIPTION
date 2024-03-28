@@ -134,6 +134,7 @@ Suggests:
     purrr,
     quantreg,
     Rchoice,
+    REndo,
     rcmdcheck,
     remotes,
     rmarkdown,
