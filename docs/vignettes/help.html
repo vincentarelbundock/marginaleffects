@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Marginal Effects Zoo</title>
+<title>Marginal Effects Zoo - Help</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -64,8 +30,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../man/posterior_draws.html" rel="next">
-<link href="../man/hypotheses.html" rel="prev">
+<link href="../vignettes/heterogeneity.html" rel="next">
+<link href="../vignettes/gcomputation.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -156,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/predictions.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/inferences.html"><code>inferences</code></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/help.html">Help</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -217,13 +183,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
@@ -286,7 +252,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Help</span></a>
   </div>
 </li>
@@ -425,13 +391,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
@@ -476,7 +442,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/inferences.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/inferences.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>inferences</code></span></a>
   </div>
 </li>
@@ -528,235 +494,85 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#experimental-bootstrap-conformal-and-simulation-based-inference" id="toc-experimental-bootstrap-conformal-and-simulation-based-inference" class="nav-link active" data-scroll-target="#experimental-bootstrap-conformal-and-simulation-based-inference">(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference</a>
-  <ul class="collapse">
-  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
-  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
-  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
-  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
-  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
-  </ul></li>
+  <li><a href="#giving-help" id="toc-giving-help" class="nav-link active" data-scroll-target="#giving-help">Giving help</a></li>
+  <li><a href="#getting-help" id="toc-getting-help" class="nav-link" data-scroll-target="#getting-help">Getting help</a></li>
+  <li><a href="#bugs-and-feature-requests" id="toc-bugs-and-feature-requests" class="nav-link" data-scroll-target="#bugs-and-feature-requests">Bugs and feature requests</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-
-
-
-<section id="experimental-bootstrap-conformal-and-simulation-based-inference" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="experimental-bootstrap-conformal-and-simulation-based-inference">(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference</h2>
-<section id="description" class="level3">
-<h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other <code>marginaleffects</code> functions.</p>
-<p>Apply this function to a <code>marginaleffects</code> object to change the inferential method used to compute uncertainty estimates.</p>
-</section>
-<section id="usage" class="level3">
-<h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">inferences(
-  x,
-  method,
-  R = 1000,
-  conf_type = "perc",
-  conformal_test = NULL,
-  conformal_calibration = NULL,
-  conformal_score = "residual_abs",
-  ...
-)
-</code></pre>
-</section>
-<section id="arguments" class="level3">
-<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
-<table>
-<tbody><tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_x">x</code>
-</td>
-<td>
-Object produced by one of the core <code>marginaleffects</code> functions.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_method">method</code>
-</td>
-<td>
-<p>String</p>
-<ul>
-<li>
-<p>"delta": delta method standard errors</p>
-</li>
-<li>
-<p>"boot" package</p>
-</li>
-<li>
-<p>"fwb": fractional weighted bootstrap</p>
-</li>
-<li>
-<p>"rsample" package</p>
-</li>
-<li>
-<p>"simulation" from a multivariate normal distribution (Krinsky &amp; Robb, 1986)</p>
-</li>
-<li>
-<p>"mi" multiple imputation for missing data</p>
-</li>
-<li>
-<p>"conformal_split": prediction intervals using split conformal prediction (see Angelopoulos &amp; Bates, 2022)</p>
-</li>
-<li>
-<p>"conformal_cv+": prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_R">R</code>
-</td>
-<td>
-Number of resamples, simulations, or cross-validation folds.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_conf_type">conf_type</code>
-</td>
-<td>
-<p>String: type of bootstrap interval to construct.</p>
-<ul>
-<li>
-<p><code>boot</code>: "perc", "norm", "basic", or "bca"</p>
-</li>
-<li>
-<p><code>fwb</code>: "perc", "norm", "basic", "bc", or "bca"</p>
-</li>
-<li>
-<p><code>rsample</code>: "perc" or "bca"</p>
-</li>
-<li>
-<p><code>simulation</code>: argument ignored.</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_conformal_test">conformal_test</code>
-</td>
-<td>
-Data frame of test data for conformal prediction.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_conformal_calibration">conformal_calibration</code>
-</td>
-<td>
-Data frame of calibration data for split conformal prediction (<code style="white-space: pre;">method=“conformal_split</code>).
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_conformal_score">conformal_score</code>
-</td>
-<td>
-<p>String. Warning: The <code>type</code> argument in <code>predictions()</code> must generate predictions which are on the same scale as the outcome variable. Typically, this means that <code>type</code> must be "response" or "probs".</p>
-<ul>
-<li>
-<p>"residual_abs" or "residual_sq" for regression tasks (numeric outcome)</p>
-</li>
-<li>
-<p>"softmax" for classification tasks (when <code>predictions()</code> returns a <code>group</code> columns, such as multinomial or ordinal logit models.</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_...">…</code>
-</td>
-<td>
-<ul>
-<li>
-<p>If <code>method=“boot”</code>, additional arguments are passed to <code>boot::boot()</code>.</p>
-</li>
-<li>
-<p>If <code>method=“fwb”</code>, additional arguments are passed to <code>fwb::fwb()</code>.</p>
-</li>
-<li>
-<p>If <code>method=“rsample”</code>, additional arguments are passed to <code>rsample::bootstraps()</code>.</p>
-</li>
-<li>
-<p>Additional arguments are ignored for all other methods.</p>
-</li>
-</ul>
-</td>
-</tr>
-</tbody></table>
-</section>
-<section id="details" class="level3">
-<h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>When <code>method=“simulation”</code>, we conduct simulation-based inference following the method discussed in Krinsky &amp; Robb (1986):</p>
-<ol>
-<li>
-<p>Draw <code>R</code> sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model’s estimated coefficients and variance equal to the model’s variance-covariance matrix (classical, "HC3", or other).</p>
-</li>
-<li>
-<p>Use the <code>R</code> sets of coefficients to compute <code>R</code> sets of estimands: predictions, comparisons, slopes, or hypotheses.</p>
-</li>
-<li>
-<p>Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.</p>
-</li>
-</ol>
-<p>When <code>method=“fwb”</code>, drawn weights are supplied to the model fitting function’s <code>weights</code> argument; if the model doesn’t accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by <code>weights()</code> and multiplied by the drawn weights. These weights are supplied to the <code>wts</code> argument of the estimation function (e.g., <code>comparisons()</code>).</p>
-</section>
-<section id="value" class="level3">
-<h3 class="anchored" data-anchor-id="value">Value</h3>
-<p>A <code>marginaleffects</code> object with simulation or bootstrap resamples and objects attached.</p>
-</section>
-<section id="references" class="level3">
-<h3 class="anchored" data-anchor-id="references">References</h3>
-<p>Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” Review of Economics and Statistics 68 (4): 715–9.</p>
-<p>King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361</p>
-<p>Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standard errors." Health services research 49.2 (2014): 731-750.</p>
-<p>Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.</p>
-<p>Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.</p>
-</section>
-<section id="examples" class="level3">
-<h3 class="anchored" data-anchor-id="examples">Examples</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1024</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Sepal.Width <span class="sc">*</span> Species, <span class="at">data =</span> iris)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># bootstrap</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"boot"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"rsample"</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Fractional (bayesian) bootstrap</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"fwb"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">posterior_draws</span>(<span class="st">"rvar"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>()</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation-based inference</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod) <span class="sc">%&gt;%</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"simulation"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/help.html">Help</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Help</h1>
 </div>
 
 
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="giving-help" class="level1">
+<h1>Giving help</h1>
+<p>The <code>marginaleffects</code> package and <a href="https://marginaleffects.com">the Marginal Effects Zoo online book</a> will always be free. If you like this project, you can contribute in four ways:</p>
+<ol type="1">
+<li>Make a donation to the <a href="https://www.nwsm.info/">Native Women’s Shelter of Montreal</a> or to <a href="https://www.givedirectly.org/">Give Directly</a>, and send me (Vincent) a quick note. You’ll make my day.</li>
+<li>Submit bug reports, documentation improvements, or code contributions to the Github repositories of the <a href="https://github.com/vincentarelbundock/marginaleffects">R version</a> or the <a href="https://github.com/vincentarelbundock/pymarginaleffects">Python version</a> of the package.</li>
+<li><a href="https://marginaleffects.com/CITATION.html">Cite the <code>marginaleffects</code> package</a> in your work and tell your friends about it.</li>
+<li>Create a new entry <a href="https://marginaleffects.com/vignettes/meme.html">for the Meme Gallery!</a></li>
+</ol>
 </section>
+<section id="getting-help" class="level1">
+<h1>Getting help</h1>
+<p>If you need help with <code>marginaleffects</code>, there are several possible venues:</p>
+<ul>
+<li>Statistical question: Ask on Cross Validated, <a href="https://stats.stackexchange.com/questions/tagged/marginal-effect">using the <code>marginal-effect</code> tag.</a></li>
+<li>Programming question: Ask on Stack Overflow, <a href="https://stackoverflow.com/questions/tagged/r-marginaleffects?tab=Newest">using the <code>r-marginaleffects</code> tag.</a></li>
+<li>Post on <a href="https://github.com/vincentarelbundock/marginaleffects/discussions">the <code>marginaleffects</code> discussions forum on Github.</a> Warning: Stack Overflow and Cross Validate have much more traffic than the forum. So you have a greater chance of getting an answer there.</li>
+</ul>
+<p>It is considered polite to avoid posting on multiple sites at once.</p>
+<p>When you ask for help, you will have a much better chance of obtaining useful answers if you provide an example with these characteristics:</p>
+<ul>
+<li><em>Public data:</em>
+<ul>
+<li>Use a publicly available dataset like <code>mtcars</code> or a CSV from the <a href="https://vincentarelbundock.github.io/Rdatasets/articles/data.html">Rdatasets archive.</a></li>
+</ul></li>
+<li><em>Minimal</em>:
+<ul>
+<li>Avoid loading irrelevant libraries and extra code. Only show the relevant bits.</li>
+</ul></li>
+<li>Error messages and warnings:
+<ul>
+<li>Show the complete errors and warnings. They are usually informative.</li>
+</ul></li>
+<li>Cut &amp; Paste ready:
+<ul>
+<li>Make sure we can just copy your entire code and paste it directly into an <code>R</code> console to reproduce your problem. People are much less likely to take the time to investigate if they have to clean up your code before they can use it. For example, do not supply the console output with <code>+</code> at the start of each line. This output is not executable.</li>
+</ul></li>
+<li><code>sessionInfo()</code>
+<ul>
+<li>Paste the output of this command at the bottom of your question so we know in what environment the code is run and what package versions are used.</li>
+</ul></li>
+</ul>
+<p>For more information about asking good questions about software, see this classic post on Stack Overflow: <a href="https://stackoverflow.com/a/5963610/342331" class="uri">https://stackoverflow.com/a/5963610/342331</a></p>
+<p>Finally, remember that the people who maintain, contribute, and answer questions about <code>marginaleffects</code> do it for free, on nights and weekends. Please be patient. And please be forgiving if we do not find the time to answer your question at all.</p>
+</section>
+<section id="bugs-and-feature-requests" class="level1">
+<h1>Bugs and feature requests</h1>
+<p>To report bugs or feature requests, please visit the Github issue tracker here:</p>
+<p><a href="https://github.com/vincentarelbundock/marginaleffects/issues" class="uri">https://github.com/vincentarelbundock/marginaleffects/issues</a></p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -1171,13 +987,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../man/hypotheses.html" class="pagination-link" aria-label="`hypotheses`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>hypotheses</code></span>
+      <a href="../vignettes/gcomputation.html" class="pagination-link" aria-label="G-Computation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">G-Computation</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../man/posterior_draws.html" class="pagination-link" aria-label="`posterior_draws`">
-        <span class="nav-page-text"><code>posterior_draws</code></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../vignettes/heterogeneity.html" class="pagination-link" aria-label="Heterogeneity">
+        <span class="nav-page-text">Heterogeneity</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

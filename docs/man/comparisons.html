@@ -160,6 +160,10 @@ window.Quarto = {
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
@@ -311,6 +315,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Heterogeneity</span></a>
   </div>
@@ -417,8 +427,11 @@ window.Quarto = {
   </div>
 </li>
           <li class="sidebar-item">
- <span class="menu-text">vignettes/python.qmd</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
+  </div>
+</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/supported_models.html" class="sidebar-item-text sidebar-link">
@@ -557,6 +570,7 @@ window.Quarto = {
   <li><a href="#bayesian-posterior-summaries" id="toc-bayesian-posterior-summaries" class="nav-link" data-scroll-target="#bayesian-posterior-summaries">Bayesian posterior summaries</a></li>
   <li><a href="#equivalence-inferiority-superiority" id="toc-equivalence-inferiority-superiority" class="nav-link" data-scroll-target="#equivalence-inferiority-superiority">Equivalence, Inferiority, Superiority</a></li>
   <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types">Prediction types</a></li>
+  <li><a href="#order-of-operations" id="toc-order-of-operations" class="nav-link" data-scroll-target="#order-of-operations">Order of operations</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
@@ -1582,6 +1596,33 @@ expdydxavg
 <p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models and functions. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type=“invlink(link)”</code> will not always be equivalent to the average of estimates with <code>type=“response”</code>.</p>
 <p>Some of the most common <code>type</code> values are:</p>
 <p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, detection, disp, ev, expected, expvalue, fitted, invlink(link), latent, latent_N, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob</p>
+</section>
+<section id="order-of-operations" class="level3">
+<h3 class="anchored" data-anchor-id="order-of-operations">Order of operations</h3>
+<p>Behind the scenes, the arguments of <code>marginaleffects</code> functions are evaluated in this order:</p>
+<ol>
+<li>
+<p>’newdata“</p>
+</li>
+<li>
+<p><code>variables</code></p>
+</li>
+<li>
+<p><code>comparison</code> and <code>slopes</code></p>
+</li>
+<li>
+<p><code>by</code></p>
+</li>
+<li>
+<p><code>vcov</code></p>
+</li>
+<li>
+<p><code>hypothesis</code></p>
+</li>
+<li>
+<p><code>transform</code></p>
+</li>
+</ol>
 </section>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
