@@ -1,6 +1,14 @@
 
 # Get started
 
+```{css, echo=FALSE}
+.table {
+  font-size: .8em;
+}
+.table td, .table th {
+  white-space: nowrap;
+}
+```
 
 ```{r, include = FALSE}
 options(width = 10000)
@@ -10,11 +18,14 @@ options(ggplot2.discrete.fill = okabeito)
 url <- "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv"
 dat <- read.csv(url)
 n_support <- nrow(dat)
+
+options(marginaleffects_print_style = "tinytable")
+options("tinytable_theme_placement_latex_float" = "H")
 ```
 
 This page explains how to interpret statistical results using the `marginaleffects` package for `R` and `Python`. The workflow that we propose rests on 5 conceptual pillars:
 
-1. _Estimand:_ What is the quantity of interest? Do we want to estimate a prediction or a function of predictions (average, difference, ratio, derivative, etc.)? 
+1. _Quantity:_ What is the quantity of interest? Do we want to estimate a prediction or a function of predictions (average, difference, ratio, derivative, etc.)? 
 2. _Grid:_ What regressor values are we interested in? Do we want to produce estimates for the units in our dataset, or for hypothetical or representative individuals? 
 3. _Aggregation:_ Do we report estimates for every observation in the grid or a global summary?
 4. _Uncertainty:_ How do we quantify uncertainty about our estimates?
@@ -45,9 +56,9 @@ pip install marginaleffects
 :::
 
 
-## Estimands
+## Quantity
 
-The `marginaleffects` package allows `R` users to compute and plot three principal quantities of interest: (1) predictions, (2) comparisons, and (3) slopes. In addition, the package includes a convenience function to compute a fourth estimand, "marginal means", which is a special case of averaged predictions. `marginaleffects` can also average (or "marginalize") unit-level (or "conditional") estimates of all those quantities, and conduct hypothesis tests on them.
+The `marginaleffects` package allows `R` users to compute and plot three principal quantities of interest: (1) predictions, (2) comparisons, and (3) slopes. In addition, the package includes a convenience function to compute a fourth quantity of interest, "marginal means", which is a special case of averaged predictions. `marginaleffects` can also average (or "marginalize") unit-level (or "conditional") estimates of all those quantities, and conduct hypothesis tests on them.
 
 [_Predictions_:](predictions.html)
 
@@ -80,7 +91,7 @@ On this website and in this package, we reserve the expression "marginal effect"
 
 The `marginaleffects` package includes functions to estimate, average, plot, and summarize all of the estimands described above. The objects produced by `marginaleffects` are "tidy": they produce simple data frames in "long" format. They are also "standards-compliant" and work seamlessly with standard functions like `summary()`, `head()`, `tidy()`, and `glance()`, as well with [external packages like `modelsummary`](https://vincentarelbundock.github.io/modelsummary/) or `ggplot2`.
 
-We now apply `marginaleffects` functions to compute each of the estimands described above. First, we fit a linear regression model with multiplicative interactions:
+We now apply `marginaleffects` functions to compute each of the quantities of interest described above. First, we fit a linear regression model with multiplicative interactions:
 
 ::: {.panel-tabset group="language"}
 ### R

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -160,6 +160,10 @@ window.Quarto = {
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
@@ -275,6 +279,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -301,6 +311,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -412,8 +428,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -554,6 +570,7 @@ window.Quarto = {
   <li><a href="#bayesian-posterior-summaries" id="toc-bayesian-posterior-summaries" class="nav-link" data-scroll-target="#bayesian-posterior-summaries">Bayesian posterior summaries</a></li>
   <li><a href="#equivalence-inferiority-superiority" id="toc-equivalence-inferiority-superiority" class="nav-link" data-scroll-target="#equivalence-inferiority-superiority">Equivalence, Inferiority, Superiority</a></li>
   <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types">Prediction types</a></li>
+  <li><a href="#order-of-operations" id="toc-order-of-operations" class="nav-link" data-scroll-target="#order-of-operations">Order of operations</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
@@ -654,7 +671,7 @@ Model object
 <p>Grid of predictor values at which we evaluate the comparisons.</p>
 <ul>
 <li>
-<p>Warning: Please avoid modifying your dataset between fitting the model and calling a <code>marginaleffects</code> function. This can sometimes lead to unexpected results.</p>
+<p>Warning: Avoid modifying your dataset between fitting the model and calling a <code>marginaleffects</code> function. This can sometimes lead to unexpected results.</p>
 </li>
 <li>
 <p><code>NULL</code> (default): Unit-level contrasts for each observed value in the dataset (empirical distribution). The dataset is retrieved using <code>insight::get_data()</code>, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.</p>
@@ -695,6 +712,12 @@ Model object
 <p>See the Examples section and the datagrid documentation.</p>
 </li>
 </ul>
+</li>
+<li>
+<p><code>subset()</code> call with a single argument to select a subset of the dataset used to fit the model, ex: <code>newdata = subset(treatment == 1)</code></p>
+</li>
+<li>
+<p><code>dplyr::filter()</code> call with a single argument to select a subset of the dataset used to fit the model, ex: <code>newdata = filter(treatment == 1)</code></p>
 </li>
 </ul>
 </td>
@@ -971,7 +994,7 @@ string or function. Transformation applied to unit-level estimates and confidenc
 <code id="comparisons_:_hypothesis">hypothesis</code>
 </td>
 <td>
-<p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.</p>
+<p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, a string formula, or a function.</p>
 <ul>
 <li>
 <p>Numeric:</p>
@@ -988,7 +1011,7 @@ string or function. Transformation applied to unit-level estimates and confidenc
 </ul>
 </li>
 <li>
-<p>String formula to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. The <code style="white-space: pre;">b*</code> wildcard can be used to test hypotheses on all estimates. Examples:</p>
+<p>String formula to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. The <code style="white-space: pre;">b*</code> wildcard can be used to test hypotheses on all estimates. If a named vector is used, the names are used as labels in the output. Examples:</p>
 <ul>
 <li>
 <p><code>hp = drat</code></p>
@@ -1018,6 +1041,20 @@ string or function. Transformation applied to unit-level estimates and confidenc
 </li>
 <li>
 <p>"revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Function:</p>
+<ul>
+<li>
+<p>Accepts an argument <code>x</code>: object produced by a <code>marginaleffects</code> function or a data frame with column <code>rowid</code> and <code>estimate</code></p>
+</li>
+<li>
+<p>Returns a data frame with columns <code>term</code> and <code>estimate</code> (mandatory) and <code>rowid</code> (optional).</p>
+</li>
+<li>
+<p>The function can also accept and operation on optional input arguments: <code>newdata</code>, <code>by</code>, <code>draws</code>.</p>
 </li>
 </ul>
 </li>
@@ -1560,6 +1597,33 @@ expdydxavg
 <p>Some of the most common <code>type</code> values are:</p>
 <p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, detection, disp, ev, expected, expvalue, fitted, invlink(link), latent, latent_N, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob</p>
 </section>
+<section id="order-of-operations" class="level3">
+<h3 class="anchored" data-anchor-id="order-of-operations">Order of operations</h3>
+<p>Behind the scenes, the arguments of <code>marginaleffects</code> functions are evaluated in this order:</p>
+<ol>
+<li>
+<p>’newdata“</p>
+</li>
+<li>
+<p><code>variables</code></p>
+</li>
+<li>
+<p><code>comparison</code> and <code>slopes</code></p>
+</li>
+<li>
+<p><code>by</code></p>
+</li>
+<li>
+<p><code>vcov</code></p>
+</li>
+<li>
+<p><code>hypothesis</code></p>
+</li>
+<li>
+<p><code>transform</code></p>
+</li>
+</ol>
+</section>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
 <ul>
@@ -2041,6 +2105,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -2075,7 +2157,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -2123,7 +2209,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -2346,7 +2437,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../man/predictions.html" class="pagination-link  aria-label=" `predictions`"="">
+      <a href="../man/predictions.html" class="pagination-link" aria-label="`predictions`">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>predictions</code></span>
       </a>          
   </div>

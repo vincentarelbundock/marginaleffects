@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -130,6 +130,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
@@ -246,6 +250,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -272,6 +282,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -383,8 +399,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -582,9 +598,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"boot"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         Term Contrast    Species Estimate Std. Error  2.5 % 97.5 %</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) setosa      -0.1103      0.252 -0.612  0.411</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) versicolor  -0.0201      0.158 -0.332  0.291</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) virginica    0.0216      0.187 -0.331  0.400</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) setosa      -0.1103      0.267 -0.608  0.451</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) versicolor  -0.0201      0.162 -0.334  0.299</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) virginica    0.0216      0.180 -0.331  0.392</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, Species, estimate, predicted_lo, predicted_hi, predicted, std.error, conf.low, conf.high </span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -596,9 +612,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>est</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         Term Contrast    Species Estimate Std. Error  2.5 % 97.5 %</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) setosa      -0.1103      0.269 -0.642  0.428</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) versicolor  -0.0201      0.156 -0.321  0.289</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) virginica    0.0216      0.178 -0.337  0.340</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) setosa      -0.1103      0.255 -0.628  0.378</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) versicolor  -0.0201      0.158 -0.354  0.267</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) virginica    0.0216      0.179 -0.357  0.367</span></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, Species, estimate, predicted_lo, predicted_hi, predicted, std.error, conf.low, conf.high </span></span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -618,21 +634,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Bootstrap Statistics :</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        original        bias    std. error</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t1* -0.11025325  0.0008633517   0.2692557</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t2* -0.02006005 -0.0017439125   0.1557867</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t3*  0.02158742 -0.0029478386   0.1778836</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        original      bias    std. error</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t1* -0.11025325 0.004909763   0.2554734</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t2* -0.02006005 0.001983212   0.1577290</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t3*  0.02158742 0.000631853   0.1786953</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Or we can extract the individual draws with the <code>posterior_draws()</code> function:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_draws</span>(est) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   drawid        draw        term contrast    Species    estimate predicted_lo predicted_hi predicted std.error   conf.low conf.high</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      1  0.07255892 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 0.2692557 -0.6424603 0.4276898</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      1  0.10107780 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 0.1557867 -0.3213672 0.2891737</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      1  0.11424663 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 0.1778836 -0.3370956 0.3397995</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      2  0.26746606 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 0.2692557 -0.6424603 0.4276898</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      2 -0.08242427 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 0.1557867 -0.3213672 0.2891737</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      2 -0.24398906 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 0.1778836 -0.3370956 0.3397995</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      1 -0.20121641 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 0.2554734 -0.6281585 0.3777624</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      1 -0.10922040 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 0.1577290 -0.3536007 0.2672890</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      1 -0.06674047 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 0.1786953 -0.3572359 0.3674249</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      2  0.23549280 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 0.2554734 -0.6281585 0.3777624</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      2 -0.10328514 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 0.1577290 -0.3536007 0.2672890</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      2 -0.25971870 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 0.1786953 -0.3572359 0.3674249</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_draws</span>(est, <span class="at">shape =</span> <span class="st">"DxP"</span>) <span class="sc">|&gt;</span> <span class="fu">dim</span>()</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 500   3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -647,9 +663,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>est</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         Term Contrast    Species Estimate  2.5 % 97.5 %</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) setosa      -0.1103 -0.794  0.428</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) versicolor  -0.0201 -0.298  0.329</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) virginica    0.0216 -0.268  0.433</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) setosa      -0.1103 -0.677  0.347</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) versicolor  -0.0201 -0.294  0.228</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) virginica    0.0216 -0.292  0.286</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, Species, estimate, predicted_lo, predicted_hi, predicted, conf.low, conf.high </span></span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
@@ -659,28 +675,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 101 × 3</span></span>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    splits           id           estimates       </span></span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;list&gt;           &lt;chr&gt;        &lt;list&gt;          </span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 &lt;split [150/50]&gt; Bootstrap001 &lt;tibble [3 × 7]&gt;</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 &lt;split [150/49]&gt; Bootstrap002 &lt;tibble [3 × 7]&gt;</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 &lt;split [150/57]&gt; Bootstrap003 &lt;tibble [3 × 7]&gt;</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 &lt;split [150/54]&gt; Bootstrap004 &lt;tibble [3 × 7]&gt;</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 &lt;split [150/50]&gt; Bootstrap005 &lt;tibble [3 × 7]&gt;</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 &lt;split [150/56]&gt; Bootstrap006 &lt;tibble [3 × 7]&gt;</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 &lt;split [150/55]&gt; Bootstrap007 &lt;tibble [3 × 7]&gt;</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 &lt;split [150/55]&gt; Bootstrap008 &lt;tibble [3 × 7]&gt;</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 &lt;split [150/62]&gt; Bootstrap009 &lt;tibble [3 × 7]&gt;</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 &lt;split [150/57]&gt; Bootstrap010 &lt;tibble [3 × 7]&gt;</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 &lt;split [150/53]&gt; Bootstrap001 &lt;tibble [3 × 7]&gt;</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 &lt;split [150/56]&gt; Bootstrap002 &lt;tibble [3 × 7]&gt;</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 &lt;split [150/50]&gt; Bootstrap003 &lt;tibble [3 × 7]&gt;</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 &lt;split [150/62]&gt; Bootstrap004 &lt;tibble [3 × 7]&gt;</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 &lt;split [150/59]&gt; Bootstrap005 &lt;tibble [3 × 7]&gt;</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 &lt;split [150/51]&gt; Bootstrap006 &lt;tibble [3 × 7]&gt;</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 &lt;split [150/53]&gt; Bootstrap007 &lt;tibble [3 × 7]&gt;</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 &lt;split [150/56]&gt; Bootstrap008 &lt;tibble [3 × 7]&gt;</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 &lt;split [150/55]&gt; Bootstrap009 &lt;tibble [3 × 7]&gt;</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 &lt;split [150/55]&gt; Bootstrap010 &lt;tibble [3 × 7]&gt;</span></span>
 <span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 91 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Or we can extract the individual draws with the <code>posterior_draws()</code> function:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_draws</span>(est) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   drawid         draw        term contrast    Species    estimate predicted_lo predicted_hi predicted   conf.low conf.high</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      1 -0.095909433 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 -0.7944981 0.4284371</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      1  0.003610066 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 -0.2981615 0.3289560</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      1  0.049564030 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 -0.2682528 0.4331478</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      2 -0.262357744 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 -0.7944981 0.4284371</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      2  0.008702166 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 -0.2981615 0.3289560</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      2  0.133866356 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 -0.2682528 0.4331478</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   drawid       draw        term contrast    Species    estimate predicted_lo predicted_hi predicted   conf.low conf.high</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      1 0.14990409 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 -0.6766071 0.3474814</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      1 0.08470886 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 -0.2939193 0.2277918</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      1 0.05460441 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 -0.2920676 0.2858381</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      2 0.14067520 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 -0.6766071 0.3474814</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      2 0.12429203 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 -0.2939193 0.2277918</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      2 0.11672696 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 -0.2920676 0.2858381</span></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_draws</span>(est, <span class="at">shape =</span> <span class="st">"PxD"</span>) <span class="sc">|&gt;</span> <span class="fu">dim</span>()</span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]   3 100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -697,10 +713,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod) <span class="sc">|&gt;</span> <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"fwb"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Term            Contrast Estimate Std. Error  2.5 % 97.5 %</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Length +1                    0.8929     0.0836  0.733  1.055</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width  +1                   -0.0362     0.1588 -0.335  0.302</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      versicolor - setosa  -1.4629     0.3401 -2.145 -0.801</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      virginica - setosa   -1.9842     0.3962 -2.775 -1.200</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Length +1                    0.8929     0.0813  0.735  1.047</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width  +1                   -0.0362     0.1641 -0.354  0.296</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      versicolor - setosa  -1.4629     0.3301 -2.141 -0.796</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      virginica - setosa   -1.9842     0.3940 -2.787 -1.229</span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, conf.low, conf.high </span></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -724,9 +740,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"simulation"</span>)</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         Term Contrast    Species Estimate Std. Error  2.5 % 97.5 %</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) setosa      -0.1103      0.291 -0.688  0.447</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) versicolor  -0.0201      0.158 -0.345  0.270</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) virginica    0.0216      0.169 -0.319  0.345</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) setosa      -0.1103      0.279 -0.671  0.419</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) versicolor  -0.0201      0.157 -0.292  0.292</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Width mean(+1) virginica    0.0216      0.167 -0.262  0.363</span></span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, Species, estimate, std.error, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -835,6 +851,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -869,7 +903,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -917,7 +955,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -1140,7 +1183,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/brms.html" class="pagination-link  aria-label=" bayes"="">
+      <a href="../vignettes/brms.html" class="pagination-link" aria-label="Bayes">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Bayes</span>
       </a>          
   </div>

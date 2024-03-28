@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -130,6 +130,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
@@ -246,6 +250,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -272,6 +282,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -383,8 +399,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -715,82 +731,28 @@ Data frame of calibration data for split conformal prediction (<code style="whit
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1024</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Sepal.Width <span class="sc">*</span> Species, <span class="at">data =</span> iris)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># bootstrap</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"boot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Species Estimate Std. Error 2.5 % 97.5 %
- setosa         5.01     0.0344  4.93   5.07
- versicolor     5.94     0.0619  5.82   6.07
- virginica      6.59     0.0788  6.44   6.75
-
-Columns: Species, estimate, std.error, conf.low, conf.high 
-Type:  response </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"rsample"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Species Estimate 2.5 % 97.5 %
- setosa         5.01  4.94   5.07
- versicolor     5.94  5.82   6.06
- virginica      6.59  6.44   6.75
-
-Columns: Species, estimate, conf.low, conf.high 
-Type:  response </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fractional (bayesian) bootstrap</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"fwb"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">posterior_draws</span>(<span class="st">"rvar"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         term                        contrast    Species  estimate predicted_lo
-1 Sepal.Width                     mean(dY/dX)     setosa 0.6904897     5.055632
-2 Sepal.Width                     mean(dY/dX) versicolor 0.8650777     6.307880
-3 Sepal.Width                     mean(dY/dX)  virginica 0.9015345     6.881792
-4     Species mean(versicolor) - mean(setosa)     setosa 1.4992211     5.055715
-5     Species mean(versicolor) - mean(setosa) versicolor 1.3843422     4.848568
-6     Species mean(versicolor) - mean(setosa)  virginica 1.4199582     4.917617
-7     Species  mean(virginica) - mean(setosa)     setosa 1.9912967     5.055715
-8     Species  mean(virginica) - mean(setosa) versicolor 1.8524292     4.848568
-9     Species  mean(virginica) - mean(setosa)  virginica 1.8954823     4.917617
-  predicted_hi predicted  std.error  conf.low conf.high         rvar
-1     5.055798  5.055715 0.08102709 0.5487008 0.8583514 0.69 ± 0.081
-2     6.308087  6.307983 0.20712193 0.4808519 1.2809997 0.88 ± 0.207
-3     6.882008  6.881900 0.23704875 0.3867165 1.3338278 0.89 ± 0.237
-4     6.567507  5.055715 0.15703739 1.1938793 1.8029866 1.50 ± 0.157
-5     6.307983  6.307983 0.08826337 1.2195456 1.5571902 1.38 ± 0.088
-6     6.394491  6.881900 0.08953022 1.2398508 1.5943526 1.42 ± 0.090
-7     7.062207  5.055715 0.12186825 1.7328154 2.2008295 1.99 ± 0.122
-8     6.791747  6.307983 0.12589634 1.6219132 2.1241761 1.86 ± 0.126
-9     6.881900  6.881900 0.09759147 1.7143852 2.0999024 1.90 ± 0.098</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation-based inference</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"simulation"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-        Term Contrast Estimate Std. Error 2.5 % 97.5 %
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
-
-Columns: rowid, term, contrast, estimate, std.error, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx, Sepal.Length, Sepal.Width, Species 
-Type:  response </code></pre>
-</div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1024</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Sepal.Width <span class="sc">*</span> Species, <span class="at">data =</span> iris)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># bootstrap</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"boot"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"rsample"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Fractional (bayesian) bootstrap</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"fwb"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">posterior_draws</span>(<span class="st">"rvar"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>()</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation-based inference</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod) <span class="sc">%&gt;%</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"simulation"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
@@ -877,6 +839,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -911,7 +891,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -959,7 +943,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -1182,7 +1171,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../man/hypotheses.html" class="pagination-link  aria-label=" `hypotheses`"="">
+      <a href="../man/hypotheses.html" class="pagination-link" aria-label="`hypotheses`">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>hypotheses</code></span>
       </a>          
   </div>

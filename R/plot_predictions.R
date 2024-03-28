@@ -74,7 +74,7 @@ plot_predictions <- function(model,
 
     # order of the first few paragraphs is important
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
     if (!is.null(wts) && is.null(by)) {
         insight::format_error("The `wts` argument requires a `by` argument.")
     }

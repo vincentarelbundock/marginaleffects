@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -130,6 +130,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
@@ -246,6 +250,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -272,6 +282,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -383,8 +399,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -544,6 +560,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#bayesian-estimates-and-credible-intervals" id="toc-bayesian-estimates-and-credible-intervals" class="nav-link" data-scroll-target="#bayesian-estimates-and-credible-intervals">Bayesian estimates and credible intervals</a></li>
   <li><a href="#random-variables-posterior-and-ggdist" id="toc-random-variables-posterior-and-ggdist" class="nav-link" data-scroll-target="#random-variables-posterior-and-ggdist">Random variables: <code>posterior</code> and <code>ggdist</code></a></li>
   <li><a href="#non-linear-hypothesis-testing" id="toc-non-linear-hypothesis-testing" class="nav-link" data-scroll-target="#non-linear-hypothesis-testing">Non-linear hypothesis testing</a></li>
+  <li><a href="#distributional-parameters" id="toc-distributional-parameters" class="nav-link" data-scroll-target="#distributional-parameters">Distributional parameters</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1160,8 +1177,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"x"</span>)</span>
 <span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  x Estimate 2.5 % 97.5 %</span></span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0    0.452 0.339  0.569</span></span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1    0.551 0.436  0.667</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0    0.452 0.339  0.564</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1    0.553 0.438  0.668</span></span>
 <span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: x, estimate, conf.low, conf.high </span></span>
 <span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1175,7 +1192,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample_new_levels =</span> <span class="st">"gaussian"</span>)</span>
 <span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate  2.5 % 97.5 %</span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    1 - 0    0.096 0.0483  0.162</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    1 - 0    0.096 0.0496   0.16</span></span>
 <span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
 <span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1192,8 +1209,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">cbind</span>(<span class="st">"AME x"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)),</span>
 <span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">effects =</span> <span class="st">"integrateoutRE"</span>)</span>
 <span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>bm<span class="sc">$</span>ContrastSummary <span class="sc">|&gt;</span> <span class="fu">data.frame</span>()</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           M        Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.0984403 0.09620434 0.04680514 0.1612366          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            M       Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.09847395 0.0961394 0.04735219 0.1617211          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>See the <a href="alternative_software.html">alternative software vignette</a> for more information on <code>brmsmargins</code>.</p>
 </section>
@@ -1674,6 +1691,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; for two-sided hypotheses, the value tested against lies outside the 95%-CI.</span></span>
 <span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Posterior probabilities of point hypotheses assume equal prior probabilities.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="distributional-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="distributional-parameters">Distributional parameters</h2>
+<p>Some <code>brms</code> models allow users to model distributional parameters:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">brm</span>(<span class="fu">bf</span>(</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>    Sepal.Length <span class="sc">~</span> Sepal.Width <span class="sc">*</span> Petal.Length,</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> Sepal.Width <span class="sc">*</span> Petal.Length), </span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">gaussian</span>(), <span class="at">data =</span> iris,</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">backend =</span> <span class="st">"cmdstanr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can use <code>marginaleffects</code> to compute quantities based on posterior draws of those parameters by specifying the <code>dpar</code> argument, which will be passed internally to <code>brms</code>’s prediction functions. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod)</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      5.84  5.79   5.89</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: estimate, conf.low, conf.high </span></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">dpar =</span> <span class="st">"sigma"</span>)</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     0.329 0.293  0.371</span></span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: estimate, conf.low, conf.high </span></span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
+<span id="cb65-16"><a href="#cb65-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-17"><a href="#cb65-17" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">dpar =</span> <span class="st">"sigma"</span>)</span>
+<span id="cb65-18"><a href="#cb65-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb65-19"><a href="#cb65-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Term Estimate   2.5 % 97.5 %</span></span>
+<span id="cb65-20"><a href="#cb65-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Petal.Length   0.0451  0.0167 0.0754</span></span>
+<span id="cb65-21"><a href="#cb65-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width   -0.0119 -0.1257 0.0993</span></span>
+<span id="cb65-22"><a href="#cb65-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb65-23"><a href="#cb65-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, estimate, conf.low, conf.high </span></span>
+<span id="cb65-24"><a href="#cb65-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
@@ -1759,6 +1816,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1793,7 +1868,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1841,7 +1920,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -2064,7 +2148,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/plot.html" class="pagination-link  aria-label=" plots"="">
+      <a href="../vignettes/plot.html" class="pagination-link" aria-label="Plots">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Plots</span>
       </a>          
   </div>

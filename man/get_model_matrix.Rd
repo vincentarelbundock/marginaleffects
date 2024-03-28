@@ -21,6 +21,8 @@ get_model_matrix(model, newdata)
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
 \item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
 }
+\item \code{\link[=subset]{subset()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = subset(treatment == 1)}
+\item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
 \item string:
 \itemize{
 \item "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.

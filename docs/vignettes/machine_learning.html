@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -130,6 +130,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
@@ -246,6 +250,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -272,6 +282,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -383,8 +399,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -621,23 +637,24 @@ Type:  numeric </code></pre>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"sex"</span>,</span>
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_rename =</span> coef_rename)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="jcmikandry" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#jcmikandry table {
+<div>
+<div id="qtfuwafodr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qtfuwafodr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jcmikandry thead, #jcmikandry tbody, #jcmikandry tfoot, #jcmikandry tr, #jcmikandry td, #jcmikandry th {
+#qtfuwafodr thead, #qtfuwafodr tbody, #qtfuwafodr tfoot, #qtfuwafodr tr, #qtfuwafodr td, #qtfuwafodr th {
   border-style: none;
 }
 
-#jcmikandry p {
+#qtfuwafodr p {
   margin: 0;
   padding: 0;
 }
 
-#jcmikandry .gt_table {
+#qtfuwafodr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -663,12 +680,12 @@ Type:  numeric </code></pre>
   border-left-color: #D3D3D3;
 }
 
-#jcmikandry .gt_caption {
+#qtfuwafodr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jcmikandry .gt_title {
+#qtfuwafodr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -680,7 +697,7 @@ Type:  numeric </code></pre>
   border-bottom-width: 0;
 }
 
-#jcmikandry .gt_subtitle {
+#qtfuwafodr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -692,7 +709,7 @@ Type:  numeric </code></pre>
   border-top-width: 0;
 }
 
-#jcmikandry .gt_heading {
+#qtfuwafodr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -704,13 +721,13 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jcmikandry .gt_bottom_border {
+#qtfuwafodr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jcmikandry .gt_col_headings {
+#qtfuwafodr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -725,7 +742,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jcmikandry .gt_col_heading {
+#qtfuwafodr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -745,7 +762,7 @@ Type:  numeric </code></pre>
   overflow-x: hidden;
 }
 
-#jcmikandry .gt_column_spanner_outer {
+#qtfuwafodr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -757,15 +774,15 @@ Type:  numeric </code></pre>
   padding-right: 4px;
 }
 
-#jcmikandry .gt_column_spanner_outer:first-child {
+#qtfuwafodr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jcmikandry .gt_column_spanner_outer:last-child {
+#qtfuwafodr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jcmikandry .gt_column_spanner {
+#qtfuwafodr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -777,11 +794,11 @@ Type:  numeric </code></pre>
   width: 100%;
 }
 
-#jcmikandry .gt_spanner_row {
+#qtfuwafodr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jcmikandry .gt_group_heading {
+#qtfuwafodr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -807,7 +824,7 @@ Type:  numeric </code></pre>
   text-align: left;
 }
 
-#jcmikandry .gt_empty_group_heading {
+#qtfuwafodr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -822,15 +839,15 @@ Type:  numeric </code></pre>
   vertical-align: middle;
 }
 
-#jcmikandry .gt_from_md > :first-child {
+#qtfuwafodr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jcmikandry .gt_from_md > :last-child {
+#qtfuwafodr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jcmikandry .gt_row {
+#qtfuwafodr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -849,7 +866,7 @@ Type:  numeric </code></pre>
   overflow-x: hidden;
 }
 
-#jcmikandry .gt_stub {
+#qtfuwafodr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -862,7 +879,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#jcmikandry .gt_stub_row_group {
+#qtfuwafodr .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -876,15 +893,15 @@ Type:  numeric </code></pre>
   vertical-align: top;
 }
 
-#jcmikandry .gt_row_group_first td {
+#qtfuwafodr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jcmikandry .gt_row_group_first th {
+#qtfuwafodr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jcmikandry .gt_summary_row {
+#qtfuwafodr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -894,16 +911,16 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#jcmikandry .gt_first_summary_row {
+#qtfuwafodr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#jcmikandry .gt_first_summary_row.thick {
+#qtfuwafodr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jcmikandry .gt_last_summary_row {
+#qtfuwafodr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -913,7 +930,7 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#jcmikandry .gt_grand_summary_row {
+#qtfuwafodr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -923,7 +940,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#jcmikandry .gt_first_grand_summary_row {
+#qtfuwafodr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -933,7 +950,7 @@ Type:  numeric </code></pre>
   border-top-color: #D3D3D3;
 }
 
-#jcmikandry .gt_last_grand_summary_row_top {
+#qtfuwafodr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -943,11 +960,11 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#jcmikandry .gt_striped {
+#qtfuwafodr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jcmikandry .gt_table_body {
+#qtfuwafodr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -956,7 +973,7 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#jcmikandry .gt_footnotes {
+#qtfuwafodr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -970,7 +987,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jcmikandry .gt_footnote {
+#qtfuwafodr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -979,7 +996,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#jcmikandry .gt_sourcenotes {
+#qtfuwafodr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -993,7 +1010,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jcmikandry .gt_sourcenote {
+#qtfuwafodr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1001,63 +1018,63 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#jcmikandry .gt_left {
+#qtfuwafodr .gt_left {
   text-align: left;
 }
 
-#jcmikandry .gt_center {
+#qtfuwafodr .gt_center {
   text-align: center;
 }
 
-#jcmikandry .gt_right {
+#qtfuwafodr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jcmikandry .gt_font_normal {
+#qtfuwafodr .gt_font_normal {
   font-weight: normal;
 }
 
-#jcmikandry .gt_font_bold {
+#qtfuwafodr .gt_font_bold {
   font-weight: bold;
 }
 
-#jcmikandry .gt_font_italic {
+#qtfuwafodr .gt_font_italic {
   font-style: italic;
 }
 
-#jcmikandry .gt_super {
+#qtfuwafodr .gt_super {
   font-size: 65%;
 }
 
-#jcmikandry .gt_footnote_marks {
+#qtfuwafodr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jcmikandry .gt_asterisk {
+#qtfuwafodr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jcmikandry .gt_indent_1 {
+#qtfuwafodr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jcmikandry .gt_indent_2 {
+#qtfuwafodr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jcmikandry .gt_indent_3 {
+#qtfuwafodr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jcmikandry .gt_indent_4 {
+#qtfuwafodr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jcmikandry .gt_indent_5 {
+#qtfuwafodr .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1079,7 +1096,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  ">+1</td>
 <td class="gt_row gt_left" headers="   ">female</td>
 <td class="gt_row gt_center" headers="Logit">-0.101</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.078</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.079</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.098</td>
 </tr>
 <tr class="even">
@@ -1095,7 +1112,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  "></td>
 <td class="gt_row gt_left" headers="   ">male</td>
 <td class="gt_row gt_center" headers="Logit">0.101</td>
-<td class="gt_row gt_center" headers="Random Forest">0.078</td>
+<td class="gt_row gt_center" headers="Random Forest">0.079</td>
 <td class="gt_row gt_center" headers="XGBoost">0.098</td>
 </tr>
 <tr class="even">
@@ -1111,7 +1128,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  ">Dream - Biscoe</td>
 <td class="gt_row gt_left" headers="   ">female</td>
 <td class="gt_row gt_center" headers="Logit">-0.044</td>
-<td class="gt_row gt_center" headers="Random Forest">0.011</td>
+<td class="gt_row gt_center" headers="Random Forest">0.004</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.004</td>
 </tr>
 <tr class="even">
@@ -1127,7 +1144,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  "></td>
 <td class="gt_row gt_left" headers="   ">male</td>
 <td class="gt_row gt_center" headers="Logit">0.044</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.011</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.004</td>
 <td class="gt_row gt_center" headers="XGBoost">0.004</td>
 </tr>
 <tr class="even">
@@ -1175,7 +1192,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  ">Chinstrap - Adelie</td>
 <td class="gt_row gt_left" headers="   ">female</td>
 <td class="gt_row gt_center" headers="Logit">0.562</td>
-<td class="gt_row gt_center" headers="Random Forest">0.170</td>
+<td class="gt_row gt_center" headers="Random Forest">0.166</td>
 <td class="gt_row gt_center" headers="XGBoost">0.441</td>
 </tr>
 <tr class="even">
@@ -1191,7 +1208,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  "></td>
 <td class="gt_row gt_left" headers="   ">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.562</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.170</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.166</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.441</td>
 </tr>
 <tr class="even">
@@ -1207,7 +1224,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  ">Gentoo - Adelie</td>
 <td class="gt_row gt_left" headers="   ">female</td>
 <td class="gt_row gt_center" headers="Logit">0.453</td>
-<td class="gt_row gt_center" headers="Random Forest">0.133</td>
+<td class="gt_row gt_center" headers="Random Forest">0.129</td>
 <td class="gt_row gt_center" headers="XGBoost">0.361</td>
 </tr>
 <tr class="even">
@@ -1223,7 +1240,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  "></td>
 <td class="gt_row gt_left" headers="   ">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.453</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.133</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.129</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.361</td>
 </tr>
 <tr class="even">
@@ -1272,6 +1289,7 @@ Type:  numeric </code></pre>
 </div>
 </div>
 </div>
+</div>
 </section>
 <section id="mlr3" class="level2">
 <h2 class="anchored" data-anchor-id="mlr3"><code>mlr3</code></h2>
@@ -1289,39 +1307,39 @@ Type:  numeric </code></pre>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(forest, <span class="at">newdata =</span> bikes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-       Term      Contrast Estimate
- count      +1               0.000
- holiday    False - True    10.380
- humidity   +1             -20.842
- month      +1               4.015
- season     spring - fall  -30.087
- season     summer - fall   -7.105
- season     winter - fall    4.332
- temp       +1               2.404
- weather    misty - clear   -8.035
- weather    rain - clear   -58.179
- weekday    Fri - Sun       67.174
- weekday    Mon - Sun       75.023
- weekday    Sat - Sun       19.593
- weekday    Thu - Sun       82.488
- weekday    Tue - Sun       80.519
- weekday    Wed - Sun       83.105
- windspeed  +1              -0.039
- workingday False - True  -192.855
- year       1 - 0           97.572
+       Term      Contrast  Estimate
+ count      +1             0.00e+00
+ holiday    False - True   1.06e+01
+ humidity   +1            -2.06e+01
+ month      +1             4.06e+00
+ season     spring - fall -2.78e+01
+ season     summer - fall -6.70e+00
+ season     winter - fall  4.66e+00
+ temp       +1             2.45e+00
+ weather    misty - clear -7.93e+00
+ weather    rain - clear  -5.94e+01
+ weekday    Fri - Sun      6.97e+01
+ weekday    Mon - Sun      7.78e+01
+ weekday    Sat - Sun      2.54e+01
+ weekday    Thu - Sun      8.50e+01
+ weekday    Tue - Sun      8.39e+01
+ weekday    Wed - Sun      8.58e+01
+ windspeed  +1             2.92e-03
+ workingday False - True  -1.94e+02
+ year       1 - 0          9.87e+01
 
 Columns: term, contrast, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 2.404 bikes rented per hour.</p>
+<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 2.447 bikes rented per hour.</p>
 <p>We could obtain the same result manually as follows:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lo <span class="ot">&lt;-</span> <span class="fu">transform</span>(bikes, <span class="at">temp =</span> temp <span class="sc">-</span> <span class="fl">0.5</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>hi <span class="ot">&lt;-</span> <span class="fu">transform</span>(bikes, <span class="at">temp =</span> temp <span class="sc">+</span> <span class="fl">0.5</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">predict</span>(forest, <span class="at">newdata =</span> hi) <span class="sc">-</span> <span class="fu">predict</span>(forest, <span class="at">newdata =</span> lo))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.469621</code></pre>
+<pre><code>[1] 3.604194</code></pre>
 </div>
 </div>
 </section>
@@ -1337,12 +1355,12 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate     C: season C: temp    C: weather
-   -35.23 spring - fall      +1 misty - clear
-   -77.59 spring - fall      +1 rain - clear 
-   -13.15 summer - fall      +1 misty - clear
-   -61.36 summer - fall      +1 rain - clear 
-    -1.76 winter - fall      +1 misty - clear
-   -54.30 winter - fall      +1 rain - clear 
+  -32.232 spring - fall      +1 misty - clear
+  -75.958 spring - fall      +1 rain - clear 
+  -12.040 summer - fall      +1 misty - clear
+  -61.850 summer - fall      +1 rain - clear 
+   -0.932 winter - fall      +1 misty - clear
+  -55.349 winter - fall      +1 rain - clear 
 
 Columns: term, contrast_season, contrast_temp, contrast_weather, estimate 
 Type:  response </code></pre>
@@ -1555,6 +1573,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1589,7 +1625,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1637,7 +1677,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -1860,7 +1905,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/lme4.html" class="pagination-link  aria-label=" mixed="" effects"="">
+      <a href="../vignettes/lme4.html" class="pagination-link" aria-label="Mixed Effects">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Mixed Effects</span>
       </a>          
   </div>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -160,6 +160,10 @@ window.Quarto = {
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
@@ -275,6 +279,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -301,6 +311,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -412,8 +428,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -590,23 +606,24 @@ window.Quarto = {
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">datasummary_df</span>(survey[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="cgsatvyhwe" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#cgsatvyhwe table {
+<div>
+<div id="acgsatvyhw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#acgsatvyhw table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#cgsatvyhwe thead, #cgsatvyhwe tbody, #cgsatvyhwe tfoot, #cgsatvyhwe tr, #cgsatvyhwe td, #cgsatvyhwe th {
+#acgsatvyhw thead, #acgsatvyhw tbody, #acgsatvyhw tfoot, #acgsatvyhw tr, #acgsatvyhw td, #acgsatvyhw th {
   border-style: none;
 }
 
-#cgsatvyhwe p {
+#acgsatvyhw p {
   margin: 0;
   padding: 0;
 }
 
-#cgsatvyhwe .gt_table {
+#acgsatvyhw .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -632,12 +649,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#cgsatvyhwe .gt_caption {
+#acgsatvyhw .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#cgsatvyhwe .gt_title {
+#acgsatvyhw .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -649,7 +666,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#cgsatvyhwe .gt_subtitle {
+#acgsatvyhw .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -661,7 +678,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#cgsatvyhwe .gt_heading {
+#acgsatvyhw .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -673,13 +690,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#cgsatvyhwe .gt_bottom_border {
+#acgsatvyhw .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#cgsatvyhwe .gt_col_headings {
+#acgsatvyhw .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -694,7 +711,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#cgsatvyhwe .gt_col_heading {
+#acgsatvyhw .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -714,7 +731,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#cgsatvyhwe .gt_column_spanner_outer {
+#acgsatvyhw .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -726,15 +743,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#cgsatvyhwe .gt_column_spanner_outer:first-child {
+#acgsatvyhw .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#cgsatvyhwe .gt_column_spanner_outer:last-child {
+#acgsatvyhw .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#cgsatvyhwe .gt_column_spanner {
+#acgsatvyhw .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -746,11 +763,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#cgsatvyhwe .gt_spanner_row {
+#acgsatvyhw .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#cgsatvyhwe .gt_group_heading {
+#acgsatvyhw .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -776,7 +793,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#cgsatvyhwe .gt_empty_group_heading {
+#acgsatvyhw .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -791,15 +808,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#cgsatvyhwe .gt_from_md > :first-child {
+#acgsatvyhw .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#cgsatvyhwe .gt_from_md > :last-child {
+#acgsatvyhw .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#cgsatvyhwe .gt_row {
+#acgsatvyhw .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -818,7 +835,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#cgsatvyhwe .gt_stub {
+#acgsatvyhw .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -831,7 +848,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#cgsatvyhwe .gt_stub_row_group {
+#acgsatvyhw .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -845,15 +862,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#cgsatvyhwe .gt_row_group_first td {
+#acgsatvyhw .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#cgsatvyhwe .gt_row_group_first th {
+#acgsatvyhw .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#cgsatvyhwe .gt_summary_row {
+#acgsatvyhw .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -863,16 +880,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#cgsatvyhwe .gt_first_summary_row {
+#acgsatvyhw .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#cgsatvyhwe .gt_first_summary_row.thick {
+#acgsatvyhw .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#cgsatvyhwe .gt_last_summary_row {
+#acgsatvyhw .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -882,7 +899,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#cgsatvyhwe .gt_grand_summary_row {
+#acgsatvyhw .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -892,7 +909,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#cgsatvyhwe .gt_first_grand_summary_row {
+#acgsatvyhw .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -902,7 +919,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#cgsatvyhwe .gt_last_grand_summary_row_top {
+#acgsatvyhw .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -912,11 +929,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#cgsatvyhwe .gt_striped {
+#acgsatvyhw .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#cgsatvyhwe .gt_table_body {
+#acgsatvyhw .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -925,7 +942,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#cgsatvyhwe .gt_footnotes {
+#acgsatvyhw .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -939,7 +956,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#cgsatvyhwe .gt_footnote {
+#acgsatvyhw .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -948,7 +965,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#cgsatvyhwe .gt_sourcenotes {
+#acgsatvyhw .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -962,7 +979,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#cgsatvyhwe .gt_sourcenote {
+#acgsatvyhw .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -970,63 +987,63 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#cgsatvyhwe .gt_left {
+#acgsatvyhw .gt_left {
   text-align: left;
 }
 
-#cgsatvyhwe .gt_center {
+#acgsatvyhw .gt_center {
   text-align: center;
 }
 
-#cgsatvyhwe .gt_right {
+#acgsatvyhw .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#cgsatvyhwe .gt_font_normal {
+#acgsatvyhw .gt_font_normal {
   font-weight: normal;
 }
 
-#cgsatvyhwe .gt_font_bold {
+#acgsatvyhw .gt_font_bold {
   font-weight: bold;
 }
 
-#cgsatvyhwe .gt_font_italic {
+#acgsatvyhw .gt_font_italic {
   font-style: italic;
 }
 
-#cgsatvyhwe .gt_super {
+#acgsatvyhw .gt_super {
   font-size: 65%;
 }
 
-#cgsatvyhwe .gt_footnote_marks {
+#acgsatvyhw .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#cgsatvyhwe .gt_asterisk {
+#acgsatvyhw .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#cgsatvyhwe .gt_indent_1 {
+#acgsatvyhw .gt_indent_1 {
   text-indent: 5px;
 }
 
-#cgsatvyhwe .gt_indent_2 {
+#acgsatvyhw .gt_indent_2 {
   text-indent: 10px;
 }
 
-#cgsatvyhwe .gt_indent_3 {
+#acgsatvyhw .gt_indent_3 {
   text-indent: 15px;
 }
 
-#cgsatvyhwe .gt_indent_4 {
+#acgsatvyhw .gt_indent_4 {
   text-indent: 20px;
 }
 
-#cgsatvyhwe .gt_indent_5 {
+#acgsatvyhw .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1083,6 +1100,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
+</div>
 <p>This dataset includes 1000 observations: one per survey respondent. Unfortunately, it is not straightforward to compute precise city-by-city estimates, because although the number of respondents is large overall, the number of respondents within each of the 40 cities is relatively small. Moreover, the company’s sampling strategy does not guarantee that subsamples are representative of each city’s population. MrP can help us circumvent these problems in two steps:</p>
 <ol type="1">
 <li><em>Multilevel regression (Mr)</em>: Estimate a multilevel regression at the individual level, with random intercepts for cities.</li>
@@ -1123,23 +1141,24 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tucson <span class="ot">&lt;-</span> <span class="fu">subset</span>(stratification, city <span class="sc">==</span> <span class="st">"Tucson, AZ"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">datasummary_df</span>(tucson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="eanfcnfghc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#eanfcnfghc table {
+<div>
+<div id="tkeanfcnfg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tkeanfcnfg table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#eanfcnfghc thead, #eanfcnfghc tbody, #eanfcnfghc tfoot, #eanfcnfghc tr, #eanfcnfghc td, #eanfcnfghc th {
+#tkeanfcnfg thead, #tkeanfcnfg tbody, #tkeanfcnfg tfoot, #tkeanfcnfg tr, #tkeanfcnfg td, #tkeanfcnfg th {
   border-style: none;
 }
 
-#eanfcnfghc p {
+#tkeanfcnfg p {
   margin: 0;
   padding: 0;
 }
 
-#eanfcnfghc .gt_table {
+#tkeanfcnfg .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1165,12 +1184,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#eanfcnfghc .gt_caption {
+#tkeanfcnfg .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#eanfcnfghc .gt_title {
+#tkeanfcnfg .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1182,7 +1201,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#eanfcnfghc .gt_subtitle {
+#tkeanfcnfg .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1194,7 +1213,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#eanfcnfghc .gt_heading {
+#tkeanfcnfg .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1206,13 +1225,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#eanfcnfghc .gt_bottom_border {
+#tkeanfcnfg .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#eanfcnfghc .gt_col_headings {
+#tkeanfcnfg .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1227,7 +1246,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#eanfcnfghc .gt_col_heading {
+#tkeanfcnfg .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1247,7 +1266,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#eanfcnfghc .gt_column_spanner_outer {
+#tkeanfcnfg .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1259,15 +1278,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#eanfcnfghc .gt_column_spanner_outer:first-child {
+#tkeanfcnfg .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#eanfcnfghc .gt_column_spanner_outer:last-child {
+#tkeanfcnfg .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#eanfcnfghc .gt_column_spanner {
+#tkeanfcnfg .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1279,11 +1298,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#eanfcnfghc .gt_spanner_row {
+#tkeanfcnfg .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#eanfcnfghc .gt_group_heading {
+#tkeanfcnfg .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1309,7 +1328,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#eanfcnfghc .gt_empty_group_heading {
+#tkeanfcnfg .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1324,15 +1343,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#eanfcnfghc .gt_from_md > :first-child {
+#tkeanfcnfg .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#eanfcnfghc .gt_from_md > :last-child {
+#tkeanfcnfg .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#eanfcnfghc .gt_row {
+#tkeanfcnfg .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1351,7 +1370,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#eanfcnfghc .gt_stub {
+#tkeanfcnfg .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1364,7 +1383,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#eanfcnfghc .gt_stub_row_group {
+#tkeanfcnfg .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1378,15 +1397,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#eanfcnfghc .gt_row_group_first td {
+#tkeanfcnfg .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#eanfcnfghc .gt_row_group_first th {
+#tkeanfcnfg .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#eanfcnfghc .gt_summary_row {
+#tkeanfcnfg .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1396,16 +1415,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#eanfcnfghc .gt_first_summary_row {
+#tkeanfcnfg .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#eanfcnfghc .gt_first_summary_row.thick {
+#tkeanfcnfg .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#eanfcnfghc .gt_last_summary_row {
+#tkeanfcnfg .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1415,7 +1434,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#eanfcnfghc .gt_grand_summary_row {
+#tkeanfcnfg .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1425,7 +1444,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#eanfcnfghc .gt_first_grand_summary_row {
+#tkeanfcnfg .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1435,7 +1454,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#eanfcnfghc .gt_last_grand_summary_row_top {
+#tkeanfcnfg .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1445,11 +1464,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#eanfcnfghc .gt_striped {
+#tkeanfcnfg .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#eanfcnfghc .gt_table_body {
+#tkeanfcnfg .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1458,7 +1477,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#eanfcnfghc .gt_footnotes {
+#tkeanfcnfg .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1472,7 +1491,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#eanfcnfghc .gt_footnote {
+#tkeanfcnfg .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1481,7 +1500,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#eanfcnfghc .gt_sourcenotes {
+#tkeanfcnfg .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1495,7 +1514,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#eanfcnfghc .gt_sourcenote {
+#tkeanfcnfg .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1503,63 +1522,63 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#eanfcnfghc .gt_left {
+#tkeanfcnfg .gt_left {
   text-align: left;
 }
 
-#eanfcnfghc .gt_center {
+#tkeanfcnfg .gt_center {
   text-align: center;
 }
 
-#eanfcnfghc .gt_right {
+#tkeanfcnfg .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#eanfcnfghc .gt_font_normal {
+#tkeanfcnfg .gt_font_normal {
   font-weight: normal;
 }
 
-#eanfcnfghc .gt_font_bold {
+#tkeanfcnfg .gt_font_bold {
   font-weight: bold;
 }
 
-#eanfcnfghc .gt_font_italic {
+#tkeanfcnfg .gt_font_italic {
   font-style: italic;
 }
 
-#eanfcnfghc .gt_super {
+#tkeanfcnfg .gt_super {
   font-size: 65%;
 }
 
-#eanfcnfghc .gt_footnote_marks {
+#tkeanfcnfg .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#eanfcnfghc .gt_asterisk {
+#tkeanfcnfg .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#eanfcnfghc .gt_indent_1 {
+#tkeanfcnfg .gt_indent_1 {
   text-indent: 5px;
 }
 
-#eanfcnfghc .gt_indent_2 {
+#tkeanfcnfg .gt_indent_2 {
   text-indent: 10px;
 }
 
-#eanfcnfghc .gt_indent_3 {
+#tkeanfcnfg .gt_indent_3 {
   text-indent: 15px;
 }
 
-#eanfcnfghc .gt_indent_4 {
+#tkeanfcnfg .gt_indent_4 {
   text-indent: 20px;
 }
 
-#eanfcnfghc .gt_indent_5 {
+#tkeanfcnfg .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1604,22 +1623,23 @@ window.Quarto = {
 </div>
 </div>
 </div>
+</div>
 <p>According to these (simulated) data, the share of Tucson residents who are between 18 and 54 year old and have a High School degree or less is about 16%.</p>
 <p>We can use the <code>predictions()</code> function from the <code>marginaleffects</code> package to predict the value of the <code>meat_substitute</code> variable for each of the four categories of residents in Tucson:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> tucson)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      1.81  1.50   2.13</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      3.02  2.70   3.35</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      3.01  2.70   3.32</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      4.23  3.91   4.54</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      1.81  1.50   2.12</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      3.03  2.71   3.34</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      3.01  2.69   3.33</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      4.23  3.91   4.55</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, city, education, age, population_share, meat_substitute </span></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The MrP estimate for this city is simply the weighted average of predicted values, where weights are the population shares of each category of residents. In this context, we have:</p>
-<p><span class="math display">\[0.16 \times 1.81 + 0.38 \times 3.02 + 0.20 \times 3.01 + 0.25 \times 4.23 = 3.13\]</span></p>
+<p><span class="math display">\[0.16 \times 1.81 + 0.38 \times 3.03 + 0.20 \times 3.01 + 0.25 \times 4.23 = 3.13\]</span></p>
 <p>Instead of computing estimates by hand for each city, we can use the <code>by</code> and <code>wts</code> arguments of the <code>predictions()</code> function to do everything everywhere all at once:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predictions</span>(              <span class="co"># Compute predictions,</span></span>
@@ -1630,17 +1650,17 @@ window.Quarto = {
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>p</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               city Estimate 2.5 % 97.5 %</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Washington, DC        4.30  3.97   4.62</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Washington, DC        4.31  3.98   4.63</span></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Tucson, AZ            3.13  2.82   3.44</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Seattle, WA           5.06  4.74   5.38</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  San Jose, CA          3.92  3.57   4.25</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  San Francisco, CA     5.07  4.71   5.40</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Seattle, WA           5.06  4.73   5.39</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  San Jose, CA          3.92  3.57   4.27</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  San Francisco, CA     5.07  4.72   5.40</span></span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --- 30 rows omitted. See ?print.marginaleffects --- </span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Boston, MA            3.65  3.38   3.92</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Baltimore, MD         2.94  2.58   3.31</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Austin, TX            2.88  2.57   3.18</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Boston, MA            3.65  3.37   3.92</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Baltimore, MD         2.94  2.57   3.31</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Austin, TX            2.88  2.58   3.19</span></span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Atlanta, GA           4.60  4.28   4.91</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Albuquerque, NM       2.67  2.34   3.00</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Albuquerque, NM       2.67  2.35   2.99</span></span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: city, estimate, conf.low, conf.high </span></span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1714,14 +1734,14 @@ window.Quarto = {
 
 </section>
 </section>
-
-
-<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
 <ol>
 <li id="fn1"><p>See the bottom of this page for the simulation code.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section></div></main> <!-- /main -->
+</aside>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1801,6 +1821,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1835,7 +1873,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1883,7 +1925,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -2106,7 +2153,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/matching.html" class="pagination-link  aria-label=" matching"="">
+      <a href="../vignettes/matching.html" class="pagination-link" aria-label="Matching">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Matching</span>
       </a>          
   </div>

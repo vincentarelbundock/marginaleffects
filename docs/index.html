@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -94,6 +94,10 @@ ul.task-list li input[type="checkbox"] {
   <li class="nav-item">
     <a class="nav-link active" href="./vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
@@ -210,6 +214,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -236,6 +246,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="./vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -347,8 +363,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="./vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -476,8 +492,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#marginal-effects-zoo-the-book" id="toc-marginal-effects-zoo-the-book" class="nav-link active" data-scroll-target="#marginal-effects-zoo-the-book">Marginal Effects Zoo: The Book</a></li>
-  <li><a href="#marginaleffects-the-package" id="toc-marginaleffects-the-package" class="nav-link" data-scroll-target="#marginaleffects-the-package"><code>marginaleffects</code>: The Package</a></li>
+  <li><a href="#free-book" id="toc-free-book" class="nav-link active" data-scroll-target="#free-book">Free Book</a></li>
+  <li><a href="#free-software" id="toc-free-software" class="nav-link" data-scroll-target="#free-software">Free Software</a></li>
   <li><a href="#how-to-help" id="toc-how-to-help" class="nav-link" data-scroll-target="#how-to-help">How to help</a></li>
   </ul>
 </nav>
@@ -488,12 +504,19 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p><img src="man/figures/zoo_banner.png" class="img-fluid"></p>
-<p><br> <a href="https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target="_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://img.shields.io/static/v1?label=Website&amp;message=Visit&amp;color=blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a> <br><br></p>
+<center>
+<h1>
+The Marginal Effects Zoo
+</h1>
+<h3 class="anchored">
+How to interpret statistical models in R and Python
+</h3>
+<br> <a href="https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target="_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://img.shields.io/static/v1?label=Website&amp;message=Visit&amp;color=blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a> <br><br>
+</center>
 <p>The parameters of a statistical model can sometimes be difficult to interpret substantively, especially when that model includes non-linear components, interactions, or transformations. Analysts who fit such complex models often seek to transform raw parameter estimates into quantities that are easier for domain experts and stakeholders to understand, such as predictions, contrasts, risk differences, ratios, odds, lift, slopes, and so on.</p>
 <p>Unfortunately, computing these quantities—along with associated standard errors—can be a tedious and error-prone task. This problem is compounded by the fact that modeling packages in <code>R</code> and <code>Python</code> produce objects with varied structures, which hold different information. This means that end-users often have to write customized code to interpret the estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects, and other model types. This can lead to wasted effort, confusion, and mistakes, and it can hinder the implementation of best practices.</p>
-<section id="marginal-effects-zoo-the-book" class="level2">
-<h2 class="anchored" data-anchor-id="marginal-effects-zoo-the-book">Marginal Effects Zoo: The Book</h2>
+<section id="free-book" class="level2">
+<h2 class="anchored" data-anchor-id="free-book">Free Book</h2>
 <p><a href="https://marginaleffects.com/">This free online book</a> introduces a conceptual framework to clearly define statistical quantities of interest, and shows how to estimate those quantities using the <code>marginaleffects</code> package for <code>R</code> and <code>Python</code>. The techniques introduced herein can enhance the interpretability of <a href="https://marginaleffects.com/vignettes/supported_models.html">over 100 classes of statistical and machine learning models</a>, including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, XGBoost, and more. With a single unified interface, users can compute and plot many estimands, including:</p>
 <ul>
 <li>Predictions (aka fitted values or adjusted predictions)</li>
@@ -520,8 +543,8 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p><a href="https://marginaleffects.com/vignettes/get_started.html">Get started by clicking here!</a></p>
 </section>
-<section id="marginaleffects-the-package" class="level2">
-<h2 class="anchored" data-anchor-id="marginaleffects-the-package"><code>marginaleffects</code>: The Package</h2>
+<section id="free-software" class="level2">
+<h2 class="anchored" data-anchor-id="free-software">Free Software</h2>
 <p>The <code>marginaleffects</code> package for <code>R</code> and <code>Python</code> offers a single point of entry to easily interpret the results of <a href="https://marginaleffects.com/vignettes/supported_models.html">over 100 classes of models,</a> using a simple and consistent user interface. Its benefits include:</p>
 <ul>
 <li><em>Powerful:</em> It can compute and plot predictions; comparisons (contrasts, risk ratios, etc.); slopes; and conduct hypothesis and equivalence tests for over 100 different classes of models in <code>R</code>.</li>
@@ -531,7 +554,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
 <li><em>Valid:</em> When possible, <a href="https://marginaleffects.com/vignettes/supported_models.html">numerical results are checked</a> against alternative software like <code>Stata</code> or other <code>R</code> packages.</li>
 <li><em>Thin:</em> The <code>R</code> package requires relatively few dependencies.</li>
-<li><em>Standards-compliant:</em> <code>marginaleffects</code> follows “tidy” principles and returns objects that work with standard functions like <code>summary()</code>, <code>tidy()</code>, and <code>glance()</code>. These objects are easy to program with and feed to other packages like <a href="https://marginaleffects.com/vignettes/plot.html"><code>ggplot2</code></a> or <a href="https://marginaleffects.com/vignettes/tables.html"><code>modelsummary</code>.</a></li>
+<li><em>Standards-compliant:</em> <code>marginaleffects</code> follows “tidy” principles and returns simple data frames that work with all standard <code>R</code> functions. The outputs are easy to program with and feed to other packages like <a href="https://marginaleffects.com/vignettes/plot.html"><code>ggplot2</code></a> or <a href="https://marginaleffects.com/vignettes/tables.html"><code>modelsummary</code>.</a></li>
 <li><em>Extensible:</em> Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit <a href="https://github.com/vincentarelbundock/marginaleffects/issues">feature requests on Github.</a></li>
 <li><em>Active development</em>: Bugs are fixed promptly.</li>
 </ul>
@@ -545,9 +568,6 @@ ul.task-list li input[type="checkbox"] {
 <li><a href="https://marginaleffects.com/CITATION.html">Cite the <code>marginaleffects</code> package</a> in your work and tell your friends about it.</li>
 <li>Create a new entry <a href="https://marginaleffects.com/vignettes/meme.html">for the Meme Gallery!</a></li>
 </ol>
-<div data-align="center">
-<p><a href="https://marginaleffects.com"> <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="center" alt="marginaleffects logo" width="200"> </a> <br><br> <img src="https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg"> <img src="https://img.shields.io/badge/license-GPLv3-blue"> <a href="https://marginaleffects.com" target="_blank"><img src="https://img.shields.io/static/v1?label=Website&amp;message=Visit&amp;color=blue"></a> <br><br></p>
-</div>
 
 
 </section>
@@ -632,6 +652,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -666,7 +704,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -714,7 +756,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {

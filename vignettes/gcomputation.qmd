@@ -24,21 +24,14 @@ The parametric g-formula is a method of standardization which can be used to add
 
 Imagine a causal model like this:
 
-```{r, out.width = "40%"}
-#| echo = FALSE,
-#| message = FALSE,
-#| align = "center",
-#| fig.width = 4,
-#| fig.height = 3
-library(ggdag)
-coords <- list(
-  x = c(X = 0, Y = 2, W = 1),
-  y = c(X = 0, Y = 0, W = 1))
-d <- dagify(Y ~ X + W,
-            X ~ W,
-            coords = coords)
-ggdag(d) + theme_dag()
+
+```{mermaid}
+graph LR;
+    Z --> X;
+    Z --> Y;
+    X --> Y;
 ```
+
 
 We want to estimate the effect of a binary treatment $X$ on outcome $Y$, but there is a confounding variable $W$. We can use standardization with the parametric g-formula to handle this. Roughly speaking, the procedure is as follows:
 

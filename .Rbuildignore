@@ -16,10 +16,8 @@ Makefile
 ^README\.html$
 ^README\.Rmd$
 ^sandbox$
-inst/tinytest/_tinysnapshot_review
 \.code-workspace$
 ^vignettes$
-inst/tinytest/stata/databases/.*\.dta
 ^.*\.Rproj$
 ^\.Rproj\.user$
 man-roxygen
@@ -33,5 +31,4 @@ vignettes
 pyproject\.toml
 requirements\.lock
 requirements-dev\.lock
-inst/tinytest/modelarchive
-inst/tinytest/stata
+.venv
