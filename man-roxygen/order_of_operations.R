@@ -2,7 +2,7 @@
 #'
 #' Behind the scenes, the arguments of `marginaleffects` functions are evaluated in this order:
 #'
-#' 1. `newdata``
+#' 1. `newdata`
 #' 2. `variables`
 #' 3. `comparison` and `slopes`
 #' 4. `by`
