@@ -1,53 +1,67 @@
 source("helpers.R")
 using("marginaleffects")
-requiet("MASS")
+library("MASS")
+# library("brms")
 
 dat <- transform(mtcars, gear = factor(gear))
 mod <- polr(gear ~ mpg + qsec, data = dat, Hess = TRUE)
 mod <- lm(hp ~ mpg * qsec * am, data = dat)
+# mod <- brm(hp ~ mpg * qsec * am, data = dat, backend = "cmdstanr")
 
-# library(collapse)
-# k = matrix(rnorm(50), nrow = 10)
-# g = factor(rep(1:2, each = 5))
-# sta <- BY(k, g = g, FUN = function(x) x[1])
-# out <- TRA(k, g = g, FUN = "-", STATS = sta)
-
-
-Q
+# Q
 pkgload::load_all()
 
-fun_reference <- function(x, newdata = NULL, hypothesis_by = NULL) {
-    checkmate::assert_character(hypothesis_by, null.ok = TRUE)
-    flag_merge <- any(!hypothesis_by %in% colnames(x)) && !is.null(newdata)
-    if (flag_merge) {
+fun_hyp_reference <- function(x, newdata = NULL, hypothesis_by = NULL, draws = NULL) {
+
+    flag_extra_columns <- any(!hypothesis_by %in% colnames(x)) && !is.null(newdata)
+    if (flag_extra_columns) {
         x <- merge(x, newdata)
+        data.table::setDT(x)
     }
-    data.table::setDT(x)
+
     x[, term := get_hypothesis_row_labels(x, newdata = newdata, by = NULL, hypothesis_by = hypothesis_by)]
-    x[, term := as.character(term)]
+
     if (is.null(hypothesis_by)) {
-        x[, term := sprintf("%s vs. %s", term, term[1])]
-        x[, estimate := estimate - estimate[1]]
+        out <- x[, list(term = sprintf("%s vs. %s", term, term[1]),
+                        estimate = estimate - estimate[1])]
     } else {
-        x[, term := sprintf("%s vs. %s", term, .SD$term[1]), by = hypothesis_by]
-        x[, estimate := estimate - estimate[1], by = hypothesis_by]
-    }
-    x <- x[estimate != 0]
-
-    # otherwise we get useless and MISLEADING columns from `newdata` 
-    # ex: comparing two rows with different values of `qsec`, but the qsec column only 
-    # gives one number because we only modified estimate column
-    if (flag_merge) {
-        idx <- c("term", "estimate", hypothesis_by)
-        x <- x[, ..idx]
+        out <- x[, list(term = sprintf("%s vs. %s", term, term[1]),
+                        estimate = estimate - estimate[1]), 
+                 by = hypothesis_by]
     }
 
-    return(x)
+    idx <- out$estimate != 0
+    out <- out[idx]
+
+    if (is.matrix(draws)) {
+        if (!is.null(hypothesis_by)) {
+            g <- data.table(newdata)
+            g <- as.list(g[, ..hypothesis_by])
+            sta <- collapse::BY(draws, g = g, FUN = function(x) x[1])
+            dr <- collapse::TRA(draws, g = g, FUN = "-", STATS = sta)
+        } else {
+            sta <- collapse::BY(draws, FUN = function(x) x[1])
+            dr <- collapse::TRA(draws, FUN = "-", STATS = sta)
+        }
+        dr <- dr[idx,]
+        attr(out, "posterior_draws") <- dr
+    }
+
+    return(out)
 }
+
+
 
 predictions(mod,
     hypothesis_by = "mpg",
-    hypothesis = fun_reference,
+    hypothesis = fun_hyp_reference,
     newdata = datagrid(mpg = range, qsec = fivenum)
 )
 
+
+
+# predictions(mod,
+#     hypothesis_by = "mpg",
+#     hypothesis = fun_hyp_reference,
+#     newdata = datagrid(mpg = range, qsec = fivenum)
+# )
