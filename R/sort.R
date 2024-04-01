@@ -16,6 +16,7 @@ sort_columns <- function(x, newdata = data.frame(), by = NULL) {
         bycols,
         "estimate", "std.error", "statistic", "p.value", "s.value", "conf.low", "conf.high",
         attr(newdata, "newdata_variables_datagrid"),
+        attr(x, "hypothesis_by"),
         "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(x))

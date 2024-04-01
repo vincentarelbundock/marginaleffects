@@ -4,18 +4,17 @@ get_hypothesis <- function(
     hypothesis,
     by = NULL,
     newdata = NULL,
-    draws = NULL) {
+    draws = NULL,
+    ...) {
 
     if (is.null(hypothesis)) return(x)
 
     if (is.function(hypothesis)) {
         argnames <- names(formals(hypothesis))
-        if (!"x" %in% argnames) stop("The `hypothesis` function must accept an `x` argument.", call. = FALSE)
-        if (any(!argnames %in% c("x", "newdata", "by", "draws", "..."))) {
-            msg <- "The allowable arguments for the `hypothesis` function are: x, newdata`, by, and draws."
-            stop(msg, call. = FALSE)
-        }
+        msg <- "The `hypothesis` function must accept an `x` argument."
+        if (!"x" %in% argnames) insight::format_error(msg)
         args <- list(x = x, newdata = newdata, by = by, draws = draws)
+        args <- c(args, list(...))
         args <- args[names(args) %in% argnames]
         out <- do.call(hypothesis, args)
 
@@ -102,17 +101,28 @@ get_hypothesis <- function(
 }
 
 
-get_hypothesis_row_labels <- function(x, by = NULL) {
+get_hypothesis_row_labels <- function(x, by = NULL, hypothesis_by = NULL) {
     lab <- grep("^term$|^by$|^group$|^value$|^contrast$|^contrast_", colnames(x), value = TRUE)
     lab <- Filter(function(z) length(unique(x[[z]])) > 1, lab)
     if (isTRUE(checkmate::check_character(by))) {
         lab <- unique(c(lab, by))
     }
+    if (isTRUE(checkmate::check_character(hypothesis_by))) {
+        lab <- unique(c(lab, hypothesis_by))
+    }
     if (length(lab) == 0) {
-        lab <- NULL
+        lab <- sprintf("rowid[%s]", seq_len(nrow(x)))
+
     } else {
         lab_df <- data.frame(x)[, lab, drop = FALSE]
         idx <- vapply(lab_df, FUN = function(x) length(unique(x)) > 1, FUN.VALUE = logical(1))
+
+        for (l in c(by, hypothesis_by)) {
+            if (l %in% names(lab_df)) {
+                lab_df[[l]] <- sprintf("%s[%s]", l, lab_df[[l]])
+            }
+        }
+
         if (sum(idx) > 0) {
             lab <- apply(lab_df[, idx, drop = FALSE], 1, paste, collapse = ", ")
         } else {
