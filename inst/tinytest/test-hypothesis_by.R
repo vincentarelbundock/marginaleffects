@@ -9,7 +9,7 @@ mod <- lm(hp ~ mpg * qsec * am, data = dat)
 # mod <- brm(hp ~ mpg * qsec * am, data = dat, backend = "cmdstanr")
 
 # Q
-pkgload::load_all()
+# pkgload::load_all()
 
 fun_hyp_reference <- function(x, newdata = NULL, hypothesis_by = NULL, draws = NULL) {
 

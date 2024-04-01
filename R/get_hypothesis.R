@@ -110,9 +110,6 @@ get_hypothesis_row_labels <- function(x, by = NULL, hypothesis_by = NULL, newdat
     lab <- c(lab, attr(newdata, "variables_datagrid"))
     lab <- c(lab, attr(newdata, "newdata_variables_datagrid"))
     lab <- unique(lab)
-    if (isTRUE(checkmate::check_character(hypothesis_by))) {
-        lab <- setdiff(lab, hypothesis_by)
-    }
 
     if (length(lab) == 0) {
         lab <- as.character(seq_len(nrow(x)))
@@ -137,6 +134,10 @@ get_hypothesis_row_labels <- function(x, by = NULL, hypothesis_by = NULL, newdat
             lab_df <- lab_df[, lapply(.SD, dedup), by = hypothesis_by]
         } else {
             lab_df <- lab_df[, lapply(.SD, dedup)]
+        }
+        if (isTRUE(checkmate::check_character(hypothesis_by))) {
+            idx <- setdiff(lab, hypothesis_by)
+            lab_df <- lab_df[, ..idx]
         }
         lab_df <- as.list(lab_df)
         lab_df[["sep"]] <- ","
