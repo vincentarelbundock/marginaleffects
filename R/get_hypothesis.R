@@ -118,19 +118,32 @@ get_hypothesis_row_labels <- function(x, by = NULL, hypothesis_by = NULL, newdat
         lab <- as.character(seq_len(nrow(x)))
 
     } else {
-        lab_df <- data.frame(x)[, lab, drop = FALSE]
+        lab_df <- data.table(x)[, ..lab, drop = FALSE]
         for (l in colnames(lab_df)) {
             if (l %in% names(lab_df)) {
                 lab_df[[l]] <- sprintf("%s[%s]", l, lab_df[[l]])
             }
         }
+
+        dedup <- function(k) {
+            if (length(unique(k)) < 2) {
+                return(rep("", length(k))) 
+            }  else {
+                return(k)
+            }
+        }
+
+        if (!is.null(hypothesis_by)) {
+            lab_df <- lab_df[, lapply(.SD, dedup), by = hypothesis_by]
+        } else {
+            lab_df <- lab_df[, lapply(.SD, dedup)]
+        }
         lab_df <- as.list(lab_df)
         lab_df[["sep"]] <- ","
         lab <- do.call(paste, lab_df)
+        lab <- gsub(",+", ",", lab)
+        lab <- gsub("^,|,$", "", lab)
     }
-
-
-    
 
     # wrap in parentheses to avoid a-b-c-d != (a-b)-(c-d)
     if (any(grepl("-", lab))) {
