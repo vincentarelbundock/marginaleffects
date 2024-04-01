@@ -101,34 +101,36 @@ get_hypothesis <- function(
 }
 
 
-get_hypothesis_row_labels <- function(x, by = NULL, hypothesis_by = NULL) {
-    lab <- grep("^term$|^by$|^group$|^value$|^contrast$|^contrast_", colnames(x), value = TRUE)
+get_hypothesis_row_labels <- function(x, by = NULL, hypothesis_by = NULL, newdata = NULL, ...) {
+    lab <- grep("^rowid$|^term$|^by$|^group$|^value$|^contrast$|^contrast_", colnames(x), value = TRUE)
     lab <- Filter(function(z) length(unique(x[[z]])) > 1, lab)
     if (isTRUE(checkmate::check_character(by))) {
         lab <- unique(c(lab, by))
     }
+    lab <- c(lab, attr(newdata, "variables_datagrid"))
+    lab <- c(lab, attr(newdata, "newdata_variables_datagrid"))
+    lab <- unique(lab)
     if (isTRUE(checkmate::check_character(hypothesis_by))) {
-        lab <- unique(c(lab, hypothesis_by))
+        lab <- setdiff(lab, hypothesis_by)
     }
+
     if (length(lab) == 0) {
-        lab <- sprintf("rowid[%s]", seq_len(nrow(x)))
+        lab <- as.character(seq_len(nrow(x)))
 
     } else {
         lab_df <- data.frame(x)[, lab, drop = FALSE]
-        idx <- vapply(lab_df, FUN = function(x) length(unique(x)) > 1, FUN.VALUE = logical(1))
-
-        for (l in c(by, hypothesis_by)) {
+        for (l in colnames(lab_df)) {
             if (l %in% names(lab_df)) {
                 lab_df[[l]] <- sprintf("%s[%s]", l, lab_df[[l]])
             }
         }
-
-        if (sum(idx) > 0) {
-            lab <- apply(lab_df[, idx, drop = FALSE], 1, paste, collapse = ", ")
-        } else {
-            lab <- apply(lab_df, 1, paste, collapse = ", ")
-        }
+        lab_df <- as.list(lab_df)
+        lab_df[["sep"]] <- ","
+        lab <- do.call(paste, lab_df)
     }
+
+
+    
 
     # wrap in parentheses to avoid a-b-c-d != (a-b)-(c-d)
     if (any(grepl("-", lab))) {

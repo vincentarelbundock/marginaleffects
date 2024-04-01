@@ -13,25 +13,35 @@ mod <- lm(hp ~ mpg * qsec * am, data = dat)
 # out <- TRA(k, g = g, FUN = "-", STATS = sta)
 
 
-# Q
-# pkgload::load_all()
+Q
+pkgload::load_all()
 
 fun_reference <- function(x, newdata = NULL, hypothesis_by = NULL) {
     checkmate::assert_character(hypothesis_by, null.ok = TRUE)
-    if (any(!hypothesis_by %in% colnames(x)) && !is.null(newdata)) {
+    flag_merge <- any(!hypothesis_by %in% colnames(x)) && !is.null(newdata)
+    if (flag_merge) {
         x <- merge(x, newdata)
     }
     data.table::setDT(x)
-    x[, term := get_hypothesis_row_labels(x, by = NULL)]
+    x[, term := get_hypothesis_row_labels(x, newdata = newdata, by = NULL, hypothesis_by = hypothesis_by)]
     x[, term := as.character(term)]
     if (is.null(hypothesis_by)) {
-        x[, term := sprintf("%s - %s", term, term[1])]
+        x[, term := sprintf("%s vs. %s", term, term[1])]
         x[, estimate := estimate - estimate[1]]
     } else {
-        x[, term := sprintf("%s - %s", term, .SD$term[1]), by = hypothesis_by]
+        x[, term := sprintf("%s vs. %s", term, .SD$term[1]), by = hypothesis_by]
         x[, estimate := estimate - estimate[1], by = hypothesis_by]
     }
     x <- x[estimate != 0]
+
+    # otherwise we get useless and MISLEADING columns from `newdata` 
+    # ex: comparing two rows with different values of `qsec`, but the qsec column only 
+    # gives one number because we only modified estimate column
+    if (flag_merge) {
+        idx <- c("term", "estimate", hypothesis_by)
+        x <- x[, ..idx]
+    }
+
     return(x)
 }
 
