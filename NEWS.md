@@ -9,6 +9,7 @@ New:
 * `hypothesis` argument accepts a function which takes a `marginaleffects` data frame and returns a transformed data frame with `term` and `estimate` columns.
 * The `base::subset()` and `dplyr::filter()` functions can be called with a single argument in `newdata` to select a subset of rows from the dataset used to fit the model.
   - Example: avg_comparisons(fit, variables = "treatment", newdata = subset(treatment == 1))`
+* Better warning for unsupported arguments.
 
 Bugfix:
 
