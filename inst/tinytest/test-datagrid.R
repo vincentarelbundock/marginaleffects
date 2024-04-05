@@ -113,6 +113,15 @@ expect_equivalent(a, b$estimate)
 
 
 
+# Issue #1058:  Missing attributes for marginaleffects::datagrid(..., by = ) #1058 
+tmp <- mtcars
+tmp <- tmp[c('mpg', 'cyl', 'hp')]
+tmp$cyl <- as.factor(tmp$cyl)
+tmp$hp  <- as.factor(tmp$hp)
+at1 <- attributes(datagrid(newdata = tmp, by = "cyl", hp = unique))
+at2 <- attributes(datagrid(newdata = tmp, cyl = unique, hp = unique))
+expect_equivalent(names(at1), names(at2))
+
 
 
 
