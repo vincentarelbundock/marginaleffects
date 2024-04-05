@@ -162,8 +162,15 @@ datagrid <- function(
             }
             newdata_list[[i]] <- do.call(datagrid_engine, args)
         }
+
+        # Issue 1058: missing attributes with `by`
+        at <- attributes(newdata_list[[1]])
+
         out <- data.table::rbindlist(newdata_list)
         data.table::setDF(out)
+
+        # Issue 1058: missing attributes with `by`
+        attributes(out) <- at
         return(out)
     }
     
