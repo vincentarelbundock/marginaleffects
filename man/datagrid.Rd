@@ -10,6 +10,7 @@ datagrid(
   newdata = NULL,
   by = NULL,
   grid_type = "mean_or_mode",
+  response = FALSE,
   FUN_character = NULL,
   FUN_factor = NULL,
   FUN_logical = NULL,
@@ -39,6 +40,8 @@ datagrid(
 \item "balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use \code{grid_type="mean_or_mode"} and to specify the unique levels of a subset of named variables explicitly.
 \item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}. Variables not explicitly supplied to \code{datagrid()} are set to their observed values in the original dataset.
 }}
+
+\item{response}{Logical should the response variable be included in the grid, even if it is not specified explicitly.}
 
 \item{FUN_character}{the function to be applied to character variables.}
 

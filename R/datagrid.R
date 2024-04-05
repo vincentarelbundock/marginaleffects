@@ -10,6 +10,7 @@
 #' @param model Model object
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments can be used.)
 #' @param by character vector with grouping variables within which `FUN_*` functions are applied to create "sub-grids" with unspecified variables.
+#' @param response Logical should the response variable be included in the grid, even if it is not specified explicitly.
 #' @param FUN_character the function to be applied to character variables.
 #' @param FUN_factor the function to be applied to factor variables.
 #' @param FUN_logical the function to be applied to logical variables.
@@ -75,6 +76,7 @@ datagrid <- function(
     newdata = NULL,
     by = NULL,
     grid_type = "mean_or_mode",
+    response = FALSE,
     FUN_character = NULL,
     FUN_factor = NULL,
     FUN_logical = NULL,
@@ -101,6 +103,7 @@ datagrid <- function(
     checkmate::assert_function(FUN_other, null.ok = TRUE)
     checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_data_frame(newdata, null.ok = TRUE)
+    checkmate::assert_flag(response)
 
     if (grid_type == "mean_or_mode") {
         if (is.null(FUN_character)) FUN_character <- get_mode
@@ -149,6 +152,7 @@ datagrid <- function(
             args <- c(list(...), list(
                 model = model,
                 newdata = newdata_list[[i]],
+                response = response,
                 FUN_character = FUN_character,
                 FUN_factor = FUN_factor,
                 FUN_logical = FUN_logical,
@@ -177,6 +181,7 @@ datagrid <- function(
     out <- datagrid_engine(...,
                 model = model,
                 newdata = newdata,
+                response = response,
                 FUN_character = FUN_character,
                 FUN_factor = FUN_factor,
                 FUN_logical = FUN_logical,
@@ -192,6 +197,7 @@ datagrid_engine <- function(
     ...,
     model = NULL,
     newdata = NULL,
+    response = response,
     FUN_character = get_mode,
     # need to be explicit for numeric variables transfered to factor in model formula
     FUN_factor = get_mode,
@@ -212,12 +218,12 @@ datagrid_engine <- function(
     variables_manual <- names(at)
     variables_automatic <- tmp$automatic
     
-    # commented out because we want to keep the response in
+    # usually we don't want the response in the grid, but 
     # sometimes there are two responses and we need one of them:
     # brms::brm(y | trials(n) ~ x + w + z)
-    # if (!is.null(model)) {
-    #     variables_automatic <- setdiff(variables_automatic, insight::find_response(model))
-    # }
+    if (!is.null(model) && isFALSE(response)) {
+        variables_automatic <- setdiff(variables_automatic, insight::find_response(model))
+    }
 
 
     if (length(variables_automatic) > 0) {
