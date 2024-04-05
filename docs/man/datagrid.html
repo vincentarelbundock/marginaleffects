@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -560,6 +560,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   newdata = NULL,
   by = NULL,
   grid_type = "mean_or_mode",
+  response = FALSE,
   FUN_character = NULL,
   FUN_factor = NULL,
   FUN_logical = NULL,
@@ -634,6 +635,14 @@ character vector with grouping variables within which <code style="white-space: 
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="datagrid_:_response">response</code>
+</td>
+<td>
+Logical should the response variable be included in the grid, even if it is not specified explicitly.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="datagrid_:_FUN_character">FUN_character</code>
 </td>
 <td>
@@ -645,7 +654,7 @@ the function to be applied to character variables.
 <code id="datagrid_:_FUN_factor">FUN_factor</code>
 </td>
 <td>
-the function to be applied to factor variables.
+the function to be applied to factor variables. This only applies if the variable in the original data is a factor. For variables converted to factor in a model-fitting formula, for example, <code>FUN_character</code> is used.
 </td>
 </tr>
 <tr>
@@ -721,9 +730,9 @@ predictions(model, newdata = datagrid_bal(cyl = 4))
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp, mtcars)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">datagrid</span>(<span class="at">model =</span> mod, <span class="at">hp =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">110</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>       mpg  hp
-1 20.09062 100
-2 20.09062 110</code></pre>
+<pre><code>   hp
+1 100
+2 110</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use in `marginaleffects` to compute "Typical Marginal Effects". When used</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># in `slopes()` or `predictions()` we do not need to specify the</span></span>

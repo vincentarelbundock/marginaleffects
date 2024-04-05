@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -993,9 +993,9 @@ window.Quarto = {
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod, <span class="at">newdata =</span> <span class="st">"mean"</span>)</span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942     0.5503 -1.71   0.0871  3.5 -2.0202  0.13695</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942     0.5511 -1.71   0.0875  3.5 -2.0217  0.13847</span></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp    -0.018     0.0119 -1.52   0.1288  3.0 -0.0413  0.00524</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt    -3.167     0.7407 -4.28   &lt;0.001 15.7 -4.6187 -1.71521</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt    -3.167     0.7407 -4.28   &lt;0.001 15.7 -4.6187 -1.71523</span></span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, cyl, hp, wt </span></span>
 <span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1028,14 +1028,14 @@ window.Quarto = {
 <span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">cyl =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)), <span class="at">grid_type =</span> <span class="st">"counterfactual"</span>)</span>
 <span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term    Contrast cyl Estimate Std. Error       z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl mean(dY/dX)   4   0.0381     0.5999  0.0636  0.94931  0.1 -1.1376  1.21390</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl mean(dY/dX)   4   0.0381     0.5998  0.0636  0.94930  0.1 -1.1375  1.21377</span></span>
 <span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl mean(dY/dX)   6   0.0381     0.5998  0.0636  0.94930  0.1 -1.1375  1.21377</span></span>
 <span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl mean(dY/dX)   8   0.0381     0.5998  0.0636  0.94930  0.1 -1.1375  1.21377</span></span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp  mean(dY/dX)   4  -0.0878     0.0267 -3.2938  &lt; 0.001 10.0 -0.1400 -0.03555</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp  mean(dY/dX)   4  -0.0878     0.0266 -3.2941  &lt; 0.001 10.0 -0.1400 -0.03555</span></span>
 <span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp  mean(dY/dX)   6  -0.0499     0.0154 -3.2401  0.00119  9.7 -0.0800 -0.01970</span></span>
 <span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp  mean(dY/dX)   8  -0.0120     0.0108 -1.1065  0.26851  1.9 -0.0332  0.00923</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt  mean(dY/dX)   4  -3.1198     0.6612 -4.7182  &lt; 0.001 18.7 -4.4158 -1.82383</span></span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt  mean(dY/dX)   6  -3.1198     0.6612 -4.7182  &lt; 0.001 18.7 -4.4158 -1.82383</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt  mean(dY/dX)   4  -3.1198     0.6611 -4.7190  &lt; 0.001 18.7 -4.4156 -1.82406</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt  mean(dY/dX)   6  -3.1198     0.6611 -4.7190  &lt; 0.001 18.7 -4.4156 -1.82406</span></span>
 <span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt  mean(dY/dX)   8  -3.1198     0.6612 -4.7182  &lt; 0.001 18.7 -4.4158 -1.82383</span></span>
 <span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
@@ -1107,9 +1107,9 @@ cyl |  -.9416168   .5509164    -1.71   0.098    -2.070118    .1868842
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942     0.5510 -1.71   0.0875  3.5 -2.0215  0.13828</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942     0.5510 -1.71   0.0875  3.5 -2.0215  0.13832</span></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp    -0.018     0.0119 -1.52   0.1288  3.0 -0.0413  0.00524</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt    -3.167     0.7406 -4.28   &lt;0.001 15.7 -4.6185 -1.71541</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt    -3.167     0.7405 -4.28   &lt;0.001 15.7 -4.6184 -1.71553</span></span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1555,7 +1555,7 @@ Expression   : Linear prediction, predict()
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(forest, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">temp =</span> <span class="dv">1</span>), <span class="at">newdata =</span> bikes)</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  temp       +1     2.34</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  temp       +1     2.37</span></span>
 <span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate </span></span>
 <span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1568,7 +1568,7 @@ Expression   : Linear prediction, predict()
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">target =</span> <span class="st">"count"</span>,</span>
 <span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">feature =</span> <span class="st">"temp"</span>,</span>
 <span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">step.size =</span> <span class="dv">1</span>)<span class="sc">$</span>ame</span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2.34429</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2.3673</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Another interesting feature of <code>fmeffects</code> is the ability treat categorical predictors in an unconventional way: pick a reference level, then compute the average difference between the predicted values for that level, and the predicted values for the observed levels (which may be the same as the reference level).</p>
 <p>In the <code>bikes</code> example, we can answer the question: how does the expected number of bike rentals increases, on average, if all days were misty? With <code>marginaleffects</code>, we can use a function in the <code>variables</code> argument to specify a custom contrast:</p>
@@ -1582,7 +1582,7 @@ Expression   : Linear prediction, predict()
 <span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Term Contrast Estimate</span></span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  weather   custom     2.19</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  weather   custom     2.09</span></span>
 <span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate </span></span>
 <span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

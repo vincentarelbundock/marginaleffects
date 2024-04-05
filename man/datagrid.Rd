@@ -45,7 +45,7 @@ datagrid(
 
 \item{FUN_character}{the function to be applied to character variables.}
 
-\item{FUN_factor}{the function to be applied to factor variables.}
+\item{FUN_factor}{the function to be applied to factor variables. This only applies if the variable in the original data is a factor. For variables converted to factor in a model-fitting formula, for example, \code{FUN_character} is used.}
 
 \item{FUN_logical}{the function to be applied to logical variables.}
 
