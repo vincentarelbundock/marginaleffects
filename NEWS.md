@@ -5,6 +5,7 @@
 Breaking changes:
 
 * `datagrid()` no longer includes the response variable by default when it is not explicitly specified by the user. Use the new `response` argument to include it.
+* `datagrid(grid_type="balanced")` returns factors ordered by level rather than by order of appearance in the original data.
 
 New:
 
