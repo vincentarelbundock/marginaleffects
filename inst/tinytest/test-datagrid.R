@@ -70,7 +70,7 @@ expect_error(
 # Issue #688
 dat <<- transform(mtcars, cyl = factor(cyl))
 mod <- lm(mpg ~ hp, data = dat)
-d <- datagrid(model = mod, by = c("carb", "cyl"))
+d <- datagrid(model = mod, by = c("carb", "cyl"), response = TRUE)
 k <- aggregate(cbind(mpg, hp) ~ carb + cyl, data = dat, FUN = mean)
 expect_equivalent(k$mpg, d$mpg)
 

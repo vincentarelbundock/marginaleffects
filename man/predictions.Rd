@@ -353,7 +353,7 @@ response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, de
 
 Behind the scenes, the arguments of \code{marginaleffects} functions are evaluated in this order:
 \enumerate{
-\item `newdata``
+\item \code{newdata}
 \item \code{variables}
 \item \code{comparison} and \code{slopes}
 \item \code{by}

@@ -2,11 +2,16 @@
 
 ## Development
 
+Breaking changes:
+
+* `datagrid()` no longer includes the response variable by default when it is not explicitly specified by the user. Use the new `response` argument to include it.
+
 New:
 
 * `print.marginaleffects()` supports `style="tinytable"`, which returns a `tinytable` object. Call `print(avg_slopes(model))` to get a nice printed table in Quarto or Rmarkdown documents, via Typst, LaTeX or HTML.
 * print as HTML, Typst, or LaTeX format automatically via `tinytable`: `options(marginaleffects_print_style="tinytable")`
 * `hypothesis` argument accepts a function which takes a `marginaleffects` data frame and returns a transformed data frame with `term` and `estimate` columns.
+* `datagrid()` gets a `response` argument to control if the response variable is included or excluded from the grid-building process.
 * The `base::subset()` and `dplyr::filter()` functions can be called with a single argument in `newdata` to select a subset of rows from the dataset used to fit the model.
   - Example: avg_comparisons(fit, variables = "treatment", newdata = subset(treatment == 1))`
 * Better warning for unsupported arguments.
