@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.18.0.5
+Version: 0.18.0.7
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -80,6 +80,7 @@ Suggests:
     fmeffects,
     fontquiver,
     future,
+    future.apply,
     fwb,
     gam,
     gamlss,
@@ -155,6 +156,7 @@ Suggests:
     svglite,
     systemfonts,
     tibble,
+    tictoc,
     tidymodels,
     tidyr,
     tidyverse,

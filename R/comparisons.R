@@ -92,6 +92,7 @@
 #' @template equivalence
 #' @template type
 #' @template order_of_operations
+#' @template parallel
 #' @template references
 #'
 #' @return A `data.frame` with one row per observation (per term/group) and several columns:

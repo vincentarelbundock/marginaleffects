@@ -118,6 +118,7 @@
 #' @template bayesian
 #' @template equivalence
 #' @template type
+#' @template parallel
 #' @template references
 #' @template order_of_operations
 #'
