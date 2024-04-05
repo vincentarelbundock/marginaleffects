@@ -174,7 +174,13 @@ datagrid <- function(
         data.table::setDF(out)
 
         # Issue 1058: missing attributes with `by`
-        attributes(out) <- at
+        # overwriting everything corrupts the data frame
+        for (n in names(at)) {
+            if (!n %in% names(attributes(out))) {
+                attr(out, n) <- at[[n]]
+            }
+        }
+
         return(out)
     }
     
