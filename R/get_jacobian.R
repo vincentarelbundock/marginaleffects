@@ -28,6 +28,27 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
     # h <- max(1e-8, 1e-4 * min(abs(x), na.rm = TRUE))
     baseline <- func(x)
     df <- matrix(NA_real_, length(baseline), length(x))
+
+    cores <- getOption("marginaleffects_cores", default = 1)
+    checkmate::assert_integerish(cores, lower = 1)
+    if (cores > 1) {
+        insight::check_if_installed("parallel")
+        inner_loop <- function(i) {
+            if (is.null(eps)) {
+                h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
+            } else {
+                h <- eps
+            }
+            dx <- x
+            dx[i] <- dx[i] + h
+            out <- (func(dx) - baseline) / h
+            return(out)
+        }
+        df <- parallel::mclapply(seq_along(x), inner_loop, mc.cores = cores)
+        df <- do.call("cbind", df)
+        return(df)
+    }
+
     for (i in seq_along(x)) {
         if (is.null(eps)) {
             h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
