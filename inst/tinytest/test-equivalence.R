@@ -113,10 +113,12 @@ expect_inherits(x, "hypotheses")
 
 rm("mod")
 delta <- log(1.25)
-mod <<- lm(log(conc) ~ source + factor(percent), data = pigs)
+data(pigs, package = "emmeans")
+mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
 rg <- ref_grid(mod)
 em <- emmeans(rg, "source", at = list(), df = Inf)
 pa <- pairs(em, df = Inf)
+
 mm <- predictions(
     mod,
     newdata = datagrid(grid_type = "balanced"),
@@ -125,16 +127,22 @@ mm <- predictions(
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
+e1 <- e1[order(e1$contrast),]
+e2 <- e2[order(e2$term),]
 expect_equivalent(e1$z.ratio, e2$statistic.nonsup, tol = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.nonsup, tol = 1e-6)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
+e1 <- e1[order(e1$contrast),]
+e2 <- e2[order(e2$term),]
 expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.noninf)
 
 e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
+e1 <- e1[order(e1$contrast),]
+e2 <- e2[order(e2$term),]
 expect_equivalent(e1$p.value, e2$p.value.equiv)
 
 

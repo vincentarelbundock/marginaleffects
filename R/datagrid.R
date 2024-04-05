@@ -12,7 +12,7 @@
 #' @param by character vector with grouping variables within which `FUN_*` functions are applied to create "sub-grids" with unspecified variables.
 #' @param response Logical should the response variable be included in the grid, even if it is not specified explicitly.
 #' @param FUN_character the function to be applied to character variables.
-#' @param FUN_factor the function to be applied to factor variables.
+#' @param FUN_factor the function to be applied to factor variables. This only applies if the variable in the original data is a factor. For variables converted to factor in a model-fitting formula, for example, `FUN_character` is used.
 #' @param FUN_logical the function to be applied to logical variables.
 #' @param FUN_integer the function to be applied to integer variables.
 #' @param FUN_binary the function to be applied to binary variables.
@@ -223,7 +223,7 @@ datagrid_engine <- function(
     variables_all <- tmp$all
     variables_manual <- names(at)
     variables_automatic <- tmp$automatic
-    
+
     # usually we don't want the response in the grid, but 
     # sometimes there are two responses and we need one of them:
     # brms::brm(y | trials(n) ~ x + w + z)
@@ -241,7 +241,11 @@ datagrid_engine <- function(
         # created by insight::get_data
         for (n in names(dat_automatic)) {
             if (get_variable_class(dat, n, c("factor", "strata", "cluster")) || n %in% tmp[["cluster"]]) {
-                out[[n]] <- FUN_factor(dat_automatic[[n]])
+                if (is.factor(dat_automatic[[n]])) {
+                    out[[n]] <- FUN_factor(dat_automatic[[n]])
+                } else {
+                    out[[n]] <- FUN_character(dat_automatic[[n]])
+                }
             } else if (get_variable_class(dat, n, "binary")) {
                 out[[n]] <- FUN_binary(dat_automatic[[n]])
             } else if (get_variable_class(dat, n, "logical")) {
