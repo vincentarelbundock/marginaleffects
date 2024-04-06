@@ -1,9 +1,3 @@
-#' @rdname get_coef
-#' @export
-get_coef.flexsurvreg <- function(model, ...) {
-  return(stats::coef(model))
-}
-
 #' @rdname set_coef
 #' @export
 set_coef.flexsurvreg <- function(model, coefs, ...) {
@@ -13,11 +7,6 @@ set_coef.flexsurvreg <- function(model, coefs, ...) {
   return(out)
 }
 
-#' @rdname get_vcov
-#' @export
-get_vcov.flexsurvreg <- function(model, ...) {
-  return(stats::vcov(model))
-}
 
 #' @rdname get_predict
 #' @export
