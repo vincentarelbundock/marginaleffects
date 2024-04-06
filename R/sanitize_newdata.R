@@ -102,12 +102,23 @@ build_newdata <- function(model, newdata, by, modeldata) {
 }
 
 
-add_wts_column <- function(wts, newdata) {
+add_wts_column <- function(wts, newdata, model) {
     # weights must be available in the `comparisons()` function, NOT in
     # `tidy()`, because comparisons will often duplicate newdata for
     # multivariate outcomes and the like. We need to track which row matches
     # which.
-    if (isTRUE(checkmate::check_flag(wts))) return(newdata)
+    if (isFALSE(wts)) {
+        return(newdata)
+    } else if (isTRUE(wts)) {
+        wtsname <- insight::find_weights(model)
+        if (!is.character(wtsname) || length(wtsname) != 1 || !wtsname %in% colnames(newdata)) {
+            msg <- "Unable to retrieve weights automatically from the model. Please specify `wts` argument explicitly."
+            insight::format_error(msg)
+        } else {
+            newdata[["marginaleffects_wts_internal"]] <- newdata[[wtsname]]
+            return(newdata)
+        }
+    }
 
     if (!is.null(wts)) {
         flag1 <- isTRUE(checkmate::check_string(wts)) && isTRUE(wts %in% colnames(newdata))
@@ -210,7 +221,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
     modeldata <- tmp[["modeldata"]]
     newdata_explicit <- tmp[["newdata_explicit"]]
     newdata <- clean_newdata(model, newdata)
-    newdata <- add_wts_column(newdata = newdata, wts = wts)
+    newdata <- add_wts_column(newdata = newdata, wts = wts, model = model)
     newdata <- set_newdata_attributes(
         model = model,
         modeldata = modeldata,

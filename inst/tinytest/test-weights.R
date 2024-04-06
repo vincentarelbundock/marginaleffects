@@ -41,6 +41,16 @@ cmp2 <- comparisons(fit, variables = "treat", wts = "w", comparison = "differenc
 expect_equivalent(cmp2$estimate, weighted.mean(cmp1$estimate, k$w))
 
 
+# wts = TRUE correctly extracts weights
+a1 <- avg_comparisons(fit, variables = "treat", wts = "w")
+a2 <- avg_comparisons(fit, variables = "treat", wts = TRUE)
+expect_equivalent(a1, a2)
+
+a1 <- avg_comparisons(fit, variables = "treat", by = "married", wts = k$w)
+a2 <- avg_comparisons(fit, variables = "treat", by = "married", wts = TRUE)
+expect_equivalent(a1, a2)
+
+
 # sanity check
 expect_error(comparisons(mod, wts = "junk"), pattern = "explicitly")
 expect_error(slopes(mod, wts = "junk"), pattern = "explicitly")
