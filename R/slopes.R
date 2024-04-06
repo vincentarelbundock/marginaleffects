@@ -84,7 +84,7 @@
 #'   - Accepts an argument `x`: object produced by a `marginaleffects` function or a data frame with column `rowid` and `estimate`
 #'   - Returns a data frame with columns `term` and `estimate` (mandatory) and `rowid` (optional).
 #'   - The function can also accept and operation on optional input arguments: `newdata`, `by`, `draws`.
-#'   - This function approach will not work for Bayesian models or with bootstraping. In those cases, it is easy to use `posterior_draws()` to extract and manipulate the draws directly.
+#'   - This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use `posterior_draws()` to extract and manipulate the draws directly.
 #' + See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 #' @param p_adjust Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See [stats::p.adjust]
 #' @param df Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and `Inf`. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. See [insight::get_df] for a convenient function to extract degrees of freedom. Ex: `slopes(model, df = insight::get_df(model))`
