@@ -311,31 +311,6 @@ hypotheses <- function(
 
     b <- FUNouter(model = model, hypothesis = hypothesis)
     
-    # For simulation based inference generate posterior draws from inferences_coefmat
-    # Doesn't support data.frames which aren't mfx objects
-    if (inherits(model, "inferences_simulation")){
-      if (inherits(model, "data.frame")){
-        msg <- "Simulation based inference not yet supported for data.frame type."
-        insight::format_error(msg)
-      }
-      
-      model_sim <- sanitize_model(
-        model = model,
-        vcov = vcov,
-        calling_function = "hypotheses",
-        ...)
-      
-      posterior_draws <- matrix(nrow=length(attr(b, "label")), ncol = nrow(attr(model_sim, "inferences_coefmat")))
-      rownames(posterior_draws) <- attr(b, "label")
-      
-      for (sim_n in 1:ncol(posterior_draws)) {
-        model_tmp <- set_coef(model_sim, attr(model_sim, "inferences_coefmat")[sim_n,])
-        b_tmp <- FUNouter(model = model_tmp, hypothesis = hypothesis)
-        posterior_draws[,sim_n]<- b_tmp
-      }
-      attr(b, "posterior_draws") <- posterior_draws
-    }
-    
     # bayesian posterior
     if (!is.null(attr(b, "posterior_draws"))) {
       draws <- attr(b, "posterior_draws")
