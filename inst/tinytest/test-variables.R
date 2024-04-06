@@ -13,18 +13,17 @@ expect_equivalent(cmp1$contrast, "+1")
 cmp2 <- comparisons(mod, variables = list("hp" = 1), newdata = head(tmp, 1))
 expect_equivalent(cmp1, cmp2)
 
-cmp1 <- comparisons(
+cmp1 <- avg_comparisons(
     mod,
-    variables = list(gear = "sequential", hp = 10, cyl = "pairwise"))
-cmp1 <- tidy(cmp1)
-cmp2 <- comparisons(
+    variables = list(gear = "sequential", hp = 10, cyl = "pairwise")) |>
+    dplyr::arrange(term, contrast)
+cmp2 <- avg_comparisons(
     mod,
-    variables = list(gear = "sequential", hp = 1, cyl = "pairwise"))
-cmp2 <- tidy(cmp2)
+    variables = list(gear = "sequential", hp = 1, cyl = "pairwise")) |>
+    dplyr::arrange(term, contrast)
 # known <- c("4 - 3", "5 - 4", "+10", "6 - 4", "8 - 4", "8 - 6")
 # aggregate refactor gave us new labels
-known <- c("mean(+10)", "mean(4) - mean(3)", "mean(5) - mean(4)", "mean(6) - mean(4)", 
-"mean(8) - mean(4)", "mean(8) - mean(6)")
+known <- c("+10", "4 - 3", "5 - 4", "6 - 4", "8 - 4", "8 - 6")
 expect_true(all(known %in% cmp1$contrast))
 expect_equivalent(cmp1$estimate[6], cmp2$estimate[6] * 10)
 
@@ -43,12 +42,6 @@ mod <- glm(am ~ hp + vs, dat = mtcars, family = binomial)
 cmp3 <- comparisons(mod, variables = list(vs = 1))
 expect_inherits(cmp3, "comparisons")
 
-
-# Issue #582: sanitize_variables should reject reponse as 
-mod <- lm(mpg ~ hp + qsec, data = mtcars)
-expect_error(slopes(mod, variables = "mpg"), pattern = "outcome variable")
-
-
 # no need to include categorical focal variable when there is only one of them
 mod <- lm(mpg ~ hp + factor(am) + wt, mtcars)
 nd <- data.frame(hp = 120, am = 1)
@@ -66,6 +59,76 @@ expect_error(suppressWarnings(comparisons(mod, newdata = nd), pattern = "is incl
 mod <- lm(mpg ~ hp, mtcars)
 comparisons(mod, variables = list(hp = data.frame(mtcars$hp, mtcars$hp + 1:32)))
 
+
+# Issue #757: rev
+mod <- lm(mpg ~ factor(cyl), mtcars)
+a <- avg_comparisons(mod, variables = list(cyl = "pairwise"))
+b <- avg_comparisons(mod, variables = list(cyl = "revpairwise"))
+expect_equal(a$estimate, -1 * b$estimate)
+a <- avg_comparisons(mod, variables = list(cyl = "reference"))
+b <- avg_comparisons(mod, variables = list(cyl = "revreference"))
+expect_equal(a$estimate, -1 * b$estimate)
+a <- avg_comparisons(mod, variables = list(cyl = "sequential"))
+b <- avg_comparisons(mod, variables = list(cyl = "revsequential"))
+expect_equal(a$estimate, -1 * b$estimate)
+
+
+# Custom vector
+mod <- lm(mpg ~ hp, mtcars)
+cmp <- avg_comparisons(mod, variables = list(hp = \(x) data.frame(mtcars$hp, mtcars$cyl)), by = "cyl")
+expect_equal(length(unique(cmp$estimate)), 3)
+expect_equal(length(unique(round(cmp$statistic, 5))), 1)
+
+
+
+# Issue 953: Custom functions or data frames for factors/logical columns
+requiet("ordinal")
+
+dat <- wine |> transform(
+    rating = ordered(ifelse(rating == 5, 1, rating)),
+    temp = as.character(temp)
+)
+mod <- clm(rating ~ response * temp, data = dat)
+
+DF = data.frame(
+    lo = dat$temp,
+    hi = ifelse(dat$temp == "cold", "warm", "cold")
+)
+
+cmp <- comparisons(mod, variables = list(temp = DF))
+expect_inherits(cmp, "comparisons")
+p1 <- predictions(mod)
+p2 <- predictions(mod, newdata = transform(dat, temp = ifelse(temp == "cold", "warm", "cold")))
+expect_equal(p2$estimate - p1$estimate, cmp$estimate)
+
+cmp <- avg_comparisons(mod, variables = list(temp = DF))
+expect_inherits(cmp, "comparisons")
+expect_equal(nrow(cmp), 4)
+
+dat$temp <- dat$temp == "cold"
+mod <- clm(rating ~ response * temp, data = dat)
+
+DF = data.frame(
+    lo = dat$temp,
+    hi = ifelse(dat$temp == FALSE, TRUE, FALSE)
+)
+cmp <- comparisons(mod, variables = list(temp = DF))
+expect_inherits(cmp, "comparisons")
+p1 <- predictions(mod)
+p2 <- predictions(mod, newdata = transform(dat, temp = ifelse(temp == FALSE, TRUE, FALSE)))
+expect_equal(p2$estimate - p1$estimate, cmp$estimate)
+
+cmp <- avg_comparisons(mod, variables = list(temp = DF))
+expect_inherits(cmp, "comparisons")
+expect_equal(nrow(cmp), 4)
+
+DF = \(x) data.frame(
+    lo = x,
+    hi = ifelse(x == FALSE, TRUE, FALSE)
+)
+cmp <- comparisons(mod, variables = list(temp = DF))
+expect_inherits(cmp, "comparisons")
+expect_equal(nrow(cmp), 288)
 
 
 rm(list = ls())

@@ -13,7 +13,6 @@ get_model_matrix <- function(model, newdata) {
 #' @keywords internal
 #' @export
 get_model_matrix.default <- function(model, newdata) {
-
     # faster
     if (class(model)[1] %in% c("lm", "glm")) { 
         out <- hush(stats::model.matrix(model, data = newdata))

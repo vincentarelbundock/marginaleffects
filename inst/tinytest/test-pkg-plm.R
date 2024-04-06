@@ -1,4 +1,5 @@
 source("helpers.R")
+# exit_file("CHECK THIS")
 using("marginaleffects")
 
 requiet("margins")
@@ -9,7 +10,7 @@ tol <- .001
 tol_se <- .01 # BDR emergency email about tiny numerical differences
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/Grunfeld.csv")
-dat$X <- NULL
+dat$rownames <- NULL
 dat <<- pdata.frame(dat)
 pool <- plm(inv ~ value * capital, data = dat, model = "pooling")
 swamy <- plm(
@@ -29,7 +30,7 @@ walhus <- plm(
 
 # pooling vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$plm_pooling
-mfx <- merge(tidy(slopes(pool)), stata)
+mfx <- merge(avg_slopes(pool), stata)
 expect_slopes(pool, n_unique = 1)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = tol)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
@@ -38,13 +39,13 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
 
 # Swamy-Arora vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$plm_sa
-mfx <- merge(tidy(slopes(swamy)), stata)
+mfx <- merge(avg_slopes(swamy), stata)
 expect_slopes(swamy)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = tol)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
 
 # margins
-mfx <- tidy(slopes(swamy))
+mfx <- avg_slopes(swamy)
 mar <- tidy(margins(swamy))
 mfx <- mfx[order(mfx$term),]
 expect_equivalent(mfx$estimate, mar$estimate, tolerance = tol)
@@ -55,9 +56,9 @@ expect_equivalent(mfx$std.error, mar$std.error, tolerance = tol_se)
 # no validity checks
 expect_slopes(amemiya)
 # margins
-tidy(slopes(amemiya, type = "link"))
-tidy(slopes(amemiya, type = "response"))
-mfx <- tidy(slopes(amemiya))
+avg_slopes(amemiya, type = "link")
+avg_slopes(amemiya, type = "response")
+mfx <- avg_slopes(amemiya)
 mar <- tidy(margins(amemiya))
 mfx <- mfx[order(mfx$term),]
 expect_equivalent(mfx$estimate, mar$estimate, tolerance = tol)
@@ -66,7 +67,7 @@ expect_equivalent(mfx$std.error, mar$std.error, tolerance = tol_se)
 expect_slopes(walhus)
 
 # margins
-mfx <- tidy(slopes(walhus))
+mfx <- avg_slopes(walhus)
 mar <- tidy(margins(walhus))
 mfx <- mfx[order(mfx$term),]
 expect_equivalent(mfx$estimate, mar$estimate, tolerance = tol)

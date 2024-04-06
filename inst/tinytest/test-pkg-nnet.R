@@ -2,6 +2,8 @@ source("helpers.R")
 using("marginaleffects")
 
 requiet("nnet")
+requiet("carData")
+requiet("prediction")
 
 # multinom group estimates
 TitanicSurvival <- "https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv"
@@ -18,7 +20,9 @@ mfx <- slopes(
     type = "probs",
     variables = "sex",
     by = "age3",
-    newdata = datagridcf(age3 = c("[0,25)","[25,50)","[50,80]")))
+    newdata = datagrid(
+        age3 = c("[0,25)","[25,50)","[50,80]"),
+        grid_type = "counterfactual"))
 expect_equivalent(nrow(mfx), 9)
 
 
@@ -35,8 +39,7 @@ dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 void <- capture.output(
     mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true)
 )
-mfx <- slopes(mod, type = "probs")
-s <- tidy(mfx)
+s <- avg_slopes(mod, type = "probs")
 expect_false(anyNA(s$estimate))
 expect_false(anyNA(s$std.error))
 
@@ -48,8 +51,8 @@ dat$y <- as.factor(dat$y)
 void <- capture.output(
     mod <- nnet::multinom(y ~ x1 + x2, data = dat, quiet = true)
 )
-mfx <- slopes(mod, type = "probs")
-mfx <- merge(tidy(mfx), stata, all = TRUE)
+mfx <- avg_slopes(mod, type = "probs")
+mfx <- merge(mfx, stata, all = TRUE)
 mfx <- na.omit(mfx)
 expect_true(nrow(mfx) == 6) # na.omit doesn't trash everything
 # standard errors match now!!
@@ -102,7 +105,6 @@ void <- capture.output({
 
 # class outcome not supported
 expect_error(predictions(m1, type = "class"), pattern = "type")
-expect_error(marginal_means(m1, type = "class"), pattern = "type")
 expect_error(slopes(m1, type = "class"), pattern = "type")
 
 # small predictions
@@ -168,6 +170,20 @@ expect_equivalent(nrow(p2), 2)
 expect_equivalent(nrow(p3), 2)
 expect_equivalent(sum(p1$estimate[1:2]), p2$estimate[1])
 expect_equivalent(mean(p1$estimate[1:2]), p3$estimate[1])
+
+
+
+# Issue #788: match with {predictions::prediction}
+reg <- nnet::multinom(poverty ~ religion + degree + gender,
+    family = multinomial(refLevel = 1),
+    trace = FALSE,
+    data = carData::WVS)
+p1 <- avg_predictions(reg, variables = list(religion = c("no"), gender = c("male")))
+p1 <- p1$estimate
+p2 <- prediction::prediction(reg , at = list(religion=c("no"), gender=c("male")))
+p2 <- colMeans(p2[, grep("^Pr", colnames(p2))])
+expect_equivalent(p1, p2, ignore_attr = TRUE)
+
 
 
 

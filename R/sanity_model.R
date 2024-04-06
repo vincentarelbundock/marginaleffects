@@ -26,10 +26,12 @@ sanity_model_supported_class <- function(model) {
     custom_classes <- as.list(custom_classes)
     supported <- append(custom_classes, list(
         "afex_aov",
+        "amest", #package: Amelia
+        "bart", # package: dbarts
         "betareg",
         "bglmerMod",
         "blmerMod",
-        "bife",
+        # "bife",
         "biglm",
         c("bigglm", "biglm"),
         "brglmFit",
@@ -38,14 +40,18 @@ sanity_model_supported_class <- function(model) {
         c("brnb", "negbin", "glm"),
         c("clogit", "coxph"),
         "clm",
+        c("clmm2", "clm2"),
         "coxph",
         "crch",
         "flexsurvreg", # package: flexsurv
         "fixest",
+        "flic",
+        "flac",
         c("Gam", "glm", "lm"), # package: gam
         c("gam", "glm", "lm"), # package: mgcv
         c("gamlss", "gam", "glm", "lm"), # package: gamlss
         c("geeglm", "gee", "glm"),
+        c("Gls", "rms", "gls"),
         "glm",
         "gls",
         "glmerMod",
@@ -60,6 +66,7 @@ sanity_model_supported_class <- function(model) {
         "ivreg",
         "iv_robust",
         "ivpml",
+        "Learner",
         "lm",
         "lme",
         "lmerMod",
@@ -69,6 +76,7 @@ sanity_model_supported_class <- function(model) {
         "lm_robust",
         # "logitr",
         "loess",
+        "logistf",
         c("lrm", "lm"),
         c("lrm", "rms", "glm"),
         c("mblogit", "mclogit"),
@@ -77,15 +85,20 @@ sanity_model_supported_class <- function(model) {
         "mhurdle",
         "mira",
         "mlogit",
+        "model_fit",
         c("multinom", "nnet"),
+        "mvgam",
         c("negbin", "glm", "lm"),
+        "nls",
         c("ols", "rms", "lm"),
         c("orm", "rms"),
+        c("oohbchoice", "dbchoice"),
         "phylolm",
         "phyloglm",
         c("plm", "panelmodel"),
         "polr",
         "Rchoice",
+        "rendo.base",
         "rlmerMod",
         "rq",
         c("scam", "glm", "lm"),
@@ -93,9 +106,12 @@ sanity_model_supported_class <- function(model) {
         "speedglm",
         "speedlm",
         "stanreg",
+        "survreg",
+        "svyolr",
         c("tobit", "survreg"),
         "tobit1",
         "truncreg",
+        "workflow",
         "zeroinfl"))
     flag <- FALSE
     for (sup in supported) {
@@ -121,11 +137,6 @@ sanitize_model <- function(model,
                            newdata = NULL,
                            vcov = NULL,
                            ...) {
-
-    # tidymodels appear to store the model fit in `model[["fit"]]`
-    if (inherits(model, "model_fit") && "fit" %in% names(model)) {
-        model <- model[["fit"]]
-    }
 
     model <- sanitize_model_specific(model, vcov = vcov, newdata = newdata, ...)
     sanity_model_supported_class(model)

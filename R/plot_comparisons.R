@@ -5,18 +5,17 @@
 #'
 #' The `by` argument is used to plot marginal comparisons, that is, comparisons made on the original data, but averaged by subgroups. This is analogous to using the `by` argument in the `comparisons()` function.
 #'
-#' The `condition` argument is used to plot conditional comparisons, that is, comparisons made on a user-specified grid. This is analogous to using the `newdata` argument and `datagrid()` function in a `comparisons()` call.
+#' The `condition` argument is used to plot conditional comparisons, that is, comparisons made on a user-specified grid. This is analogous to using the `newdata` argument and `datagrid()` function in a `comparisons()` call. All variables whose values are not specified explicitly are treated as usual by `datagrid()`, that is, they are held at their mean or mode (or rounded mean for integers). This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the `condition` argument, or supply model-specific arguments to compute population-level estimates. See details below.
 #' 
-#' All unspecified variables are held at their mean or mode. This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the `variables` argument, or supply model-specific arguments to compute population-level estimates. See details below.
-
 #' See the "Plots" vignette and website for tutorials and information on how to customize plots:
 #'
-#' * https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
-#' * https://vincentarelbundock.github.io/marginaleffects
+#' * https://marginaleffects.com/vignettes/plot.html
+#' * https://marginaleffects.com
 #' 
 #' @param variables Name of the variable whose contrast we want to plot on the y-axis.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams comparisons
+#' @param newdata When `newdata` is `NULL`, the grid is determined by the `condition` argument. When `newdata` is not `NULL`, the argument behaves in the same way as in the `comparisons()` function.
 #' @inheritParams plot_slopes
 #' @inheritParams slopes
 #' @template model_specific_arguments
@@ -64,14 +63,8 @@ plot_comparisons <- function(model,
     }
 
     # order of the first few paragraphs is important
-    scall <- substitute(newdata)
-    if (!is.null(condition) && !is.null(newdata)) {
-        insight::format_error("The `condition` and `newdata` arguments cannot be used simultaneously.")
-    }
-    newdata <- sanitize_newdata_call(scall, newdata, model)
-    if (!is.null(newdata) && is.null(by)) {
-        insight::format_error("The `newdata` argument requires a `by` argument.")
-    }
+    scall <- rlang::enquo(newdata)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
     if (!is.null(wts) && is.null(by)) {
         insight::format_error("The `wts` argument requires a `by` argument.")
     }
@@ -88,13 +81,23 @@ plot_comparisons <- function(model,
         checkmate::check_list(variables, names = "unique"),
         .var.name = "variables")
 
+    modeldata <- get_modeldata(
+        model,
+        additional_variables = c(names(condition), by),
+        wts = wts)
+
+    # mlr3 and tidymodels
+    if (is.null(modeldata) || nrow(modeldata) == 0) {
+        modeldata <- newdata
+    }
+
     # conditional
     if (!is.null(condition)) {
-        modeldata <- get_modeldata(model, additional_variables = names(condition))
         condition <- sanitize_condition(model, condition, variables, modeldata = modeldata)
         v_x <- condition$condition1
         v_color <- condition$condition2
-        v_facet <- condition$condition3
+        v_facet_1 <- condition$condition3
+        v_facet_2 <- condition$condition4
         datplot <- comparisons(
             model,
             newdata = condition$newdata,
@@ -113,12 +116,12 @@ plot_comparisons <- function(model,
 
     # marginal
     if (!is.null(by)) {
-        modeldata <- get_modeldata(model, additional_variables = by)
         newdata <- sanitize_newdata(
             model = model,
             newdata = newdata,
             modeldata = modeldata,
-            by = by)
+            by = by,
+            wts = wts)
         datplot <- comparisons(
             model,
             by = by,
@@ -135,10 +138,11 @@ plot_comparisons <- function(model,
             ...)
         v_x <- by[[1]]
         v_color <- hush(by[[2]])
-        v_facet <- hush(by[[3]])
+        v_facet_1 <- hush(by[[3]])
+        v_facet_2 <- hush(by[[4]])
     }
 
-    datplot <- plot_preprocess(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet, condition = condition, modeldata = modeldata)
+    datplot <- plot_preprocess(datplot, v_x = v_x, v_color = v_color, v_facet_1 = v_facet_1, v_facet_2 = v_facet_2, condition = condition, modeldata = modeldata)
 
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
@@ -149,17 +153,9 @@ plot_comparisons <- function(model,
     
     # ggplot2
     insight::check_if_installed("ggplot2")
-    p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet, gray = gray, rug = rug, modeldata = modeldata)
+    p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet_1 = v_facet_1, v_facet_2 = v_facet_2, gray = gray, rug = rug, modeldata = modeldata)
     p <- p + ggplot2::labs(x = v_x, y = sprintf("Comparison"))
 
     return(p)
 }
 
-
-#' `plot_comparisons()` is an alias to `plot_comparisons()`
-#'
-#' This alias is kept for backward compatibility.
-#' @inherit plot_predictions
-#' @keywords internal
-#' @export
-plot_cco <- plot_comparisons

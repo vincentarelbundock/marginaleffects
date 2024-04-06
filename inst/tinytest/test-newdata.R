@@ -3,6 +3,8 @@ using("marginaleffects")
 
 requiet("modelbased")
 requiet("emmeans")
+requiet("dplyr")
+requiet("MatchIt")
 
 
 # # this seems deprecated in modelbased in favor of get_datagrid(). Have not investidated yet
@@ -44,7 +46,7 @@ emm <- emmeans(mod, specs = "gear")
 emm <- data.frame(emmeans::contrast(emm, method = "trt.vs.ctrl1"))
 
 expect_equivalent(cmp$estimate, emm$estimate)
-expect_equivalent(cmp$std.error, emm$SE)
+expect_equivalent(cmp$std.error, emm$SE, tolerance = 1e-6)
 
 
 
@@ -77,6 +79,39 @@ expect_inherits(slopes(mod, newdata = dat, by = "cyl"), "slopes")
 # expect_equivalent(sort(cmp$std.error), sort(emm$SE))
 
 
+# Issue #814
+data(lalonde, package = "MatchIt")
+if(exists("mdata")) rm(mdata)
+test <- function() {
+    mdata <- lalonde
+    m0 <- lm(re78 ~ nodegree, data = mdata)
+    comparisons(m0, variables = "nodegree", newdata = subset(mdata, nodegree == 1))
+}
+cmp1 <- test()
+mdata <- subset(lalonde, married == 1)
+m0 <- lm(re78 ~ nodegree, data = mdata)
+cmp2 <- comparisons(m0, variables = "nodegree", newdata = subset(mdata, nodegree == 1))
+cmp3 <- test()
+expect_equal(nrow(cmp1), nrow(subset(lalonde, nodegree == 1)))
+expect_equal(nrow(cmp2), nrow(subset(lalonde, nodegree == 1 & married == 1)))
+expect_equal(nrow(cmp3), nrow(subset(lalonde, nodegree == 1)))
+
+
+
+# Issue 1045: subset in newdata
+data("lalonde", package = "MatchIt")
+fit <- lm(re78 ~ treat * (age + educ), data = lalonde)
+k = avg_comparisons(fit, variables = "treat", newdata = subset(lalonde, treat == 1))$estimate
+x = avg_comparisons(fit, variables = "treat", newdata = base::subset(treat == 1))$estimate
+y = avg_comparisons(fit, variables = "treat", newdata = filter(treat == 1))$estimate
+w = avg_comparisons(fit, variables = "treat", newdata = dplyr::filter(treat == 1))$estimate
+expect_equal(k, x)
+expect_equal(k, y)
+expect_equal(k, w)
+
+
+
 
 
 rm(list = ls())
+

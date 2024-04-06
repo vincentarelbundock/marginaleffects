@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
-# if (ON_WINDOWS || ON_OSX) exit_file("linux only")
+if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 using("tinysnapshot")
 requiet("nnet")
 
@@ -19,7 +19,7 @@ p2 <- predictions(
     mod,
     newdata = datagrid(mpg = range, am_fct = 0:1))
 p2$am_fct <- as.numeric(as.character(p2$am_fct))
-p2 <- p2[order(-p2$am_fct, p2$mpg),]
+data.table::setorder(p2, am_fct, mpg)
 expect_equivalent(p1$estimate, p2$estimate)
 
 p1$condition1 <- as.character(p1$am_fct)
@@ -43,7 +43,7 @@ p2 <- predictions(
     mod,
     newdata = datagrid(mpg = threenum, am_fct = 0:1))
 p2$am_fct <- as.numeric(as.character(p2$am_fct))
-p2 <- p2[order(-p2$am_fct, p2$mpg),]
+data.table::setorder(p2, am_fct, mpg)
 expect_equivalent(p1$estimate, p2$estimate)
 
 
@@ -63,6 +63,7 @@ expect_equal(nrow(p), 50)
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_predictions(mod, condition = list("hp", "wt" = "threenum"), points = .5)
 expect_snapshot_plot(p, "plot_predictions-alpha")
+
 
 
 # two conditions
@@ -89,6 +90,17 @@ p1 <- plot_predictions(mod, condition = "hp", conf.level = .99)
 p2 <- plot_predictions(mod, condition = "hp", conf.level = .4)
 expect_snapshot_plot(p1, "plot_predictions_conf_99")
 expect_snapshot_plot(p2, "plot_predictions_conf_40")
+
+p1 <- plot_predictions(mod, condition = "hp", conf.level = .99, draw = FALSE)
+p2 <- data.frame(predict(mod, newdata = p1, se.fit = TRUE))
+expect_equivalent(p1$estimate, p2$fit)
+expect_equivalent(p1$std.error, p2$se.fit, tolerance = 1e-6)
+expect_equivalent(
+    p1$conf.low,
+    p2$fit - qnorm(.995) * p2$se.fit, tolerance = 1e-6)
+expect_equivalent(
+    p1$conf.high,
+    p2$fit + qnorm(.995) * p2$se.fit, tolerance = 1e-6)
 
 
 # link vs response
@@ -157,7 +169,7 @@ expect_error(
 dat <- transform(mtcars, am_fct = factor(am))
 mod <- lm(wt ~ am_fct * mpg, data = dat)
 
-p1 <- plot_cap(
+p1 <- plot_predictions(
     mod,
     condition = list("am_fct", mpg = "minmax")) 
 expect_inherits(p1, "gg")
@@ -184,8 +196,10 @@ expect_true("qsec" %in% colnames(p))
 
 # Issue #725: `newdata` argument in plotting functions
 mod <- lm(mpg ~ hp + am + factor(cyl), mtcars)
-p1 <- plot_predictions(mod, by = "am", newdata = datagridcf(am = 0:1), draw = FALSE)
-p2 <- avg_predictions(mod, by = "am", newdata = datagridcf(am = 0:1), draw = FALSE)
+p1 <- plot_predictions(mod, by = "am", draw = FALSE,
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
+p2 <- avg_predictions(mod, by = "am", draw = FALSE,
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$conf.low, p2$conf.low)
 p3 <- plot_predictions(mod, by = "am", draw = FALSE)
@@ -202,6 +216,11 @@ expect_true(all(p3$conf.low != p5$conf.low))
 expect_error(plot_predictions(mod, condition = "am", by = "am"))
 expect_error(plot_predictions(mod, newdata = mtcars))
 
+
+# Plot 4 variables in condition using facet_grid
+mod <- lm(hp~mpg*am*gear*carb, data=mtcars)
+p <- plot_predictions(mod, condition = list("mpg"=1:5, "am"=0:1, "gear"=1:3, "carb"=1:2))
+expect_inherits(p, "gg")
 
 
 

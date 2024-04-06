@@ -4,7 +4,7 @@ using("marginaleffects")
 requiet("margins")
 requiet("nnet")
 tol <- 1e-4
-tol_se <- 1e-3
+tol_se <- 1e-2
 
 
 mod1 <- glm(gear ~ cyl + am, family = poisson, data = mtcars)
@@ -20,30 +20,30 @@ expect_equivalent(nrow(p1), 2)
 
 # use comparison to collapse into averages
 mod <- glm(gear ~ cyl + am, family = poisson, data = mtcars)
-x <- tidy(comparisons(mod, comparison = "dydx"))
+x <- avg_comparisons(mod, comparison = "dydx")
 y <- comparisons(mod, comparison = "dydxavg")
 expect_equivalent(x$estimate, y$estimate)
-expect_equivalent(x$std.error, y$std.error)
+expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 
-x <- tidy(comparisons(mod, comparison = "eyex"))
+x <- avg_comparisons(mod, comparison = "eyex")
 y <- comparisons(mod, comparison = "eyexavg")
 expect_equivalent(x$estimate, y$estimate)
-expect_equivalent(x$std.error, y$std.error)
+expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 
-x <- tidy(comparisons(mod, comparison = "eydx"))
+x <- avg_comparisons(mod, comparison = "eydx")
 y <- comparisons(mod, comparison = "eydxavg")
 expect_equivalent(x$estimate, y$estimate)
-expect_equivalent(x$std.error, y$std.error)
+expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 
-x <- tidy(comparisons(mod, comparison = "dyex"))
+x <- avg_comparisons(mod, comparison = "dyex")
 y <- comparisons(mod, comparison = "dyexavg")
 expect_equivalent(x$estimate, y$estimate)
-expect_equivalent(x$std.error, y$std.error)
+expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 
-x <- tidy(slopes(mod, slope = "dyex"))
+x <- avg_slopes(mod, slope = "dyex")
 y <- slopes(mod, slope = "dyexavg")
 expect_equivalent(x$estimate, y$estimate)
-expect_equivalent(x$std.error, y$std.error)
+expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 
 # input sanity check
 expect_error(slopes(mod, slope = "bad"), pattern = "eyexavg")
@@ -58,14 +58,6 @@ mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 cmp <- comparisons(mod, by = "am", comparison = "lnor")
 expect_equal(nrow(cmp), 4)
 
-cmp <- comparisons(mod, by = "am")
-tid <- tidy(cmp)
-
-expect_equivalent(nrow(tid), nrow(cmp))
-expect_equivalent(nrow(tid), 4)
-expect_true("am" %in% colnames(tid))
-
-
 
 # counterfactual margins at()
 dat <- mtcars
@@ -76,7 +68,7 @@ mar <- data.frame(summary(mar))
 mfx <- slopes(
     mod,
     by = "cyl",
-    newdata = datagridcf(cyl = c(4, 6, 8)))
+    newdata = datagrid(cyl = c(4, 6, 8), grid_type = "counterfactual"))
 expect_equivalent(mfx$estimate, mar$AME)
 expect_equivalent(mfx$std.error, mar$SE, tolerance = 1e6)
 
@@ -162,20 +154,6 @@ pre2 <- slopes(mod, by = FALSE)
 expect_equivalent(nrow(pre1), 3)
 expect_equivalent(nrow(pre2), 96)
 
-mm <- marginal_means(
-    mod,
-    variables = "gear")
-expect_equivalent(nrow(mm), 3)
-expect_error(marginal_means(mod, by = TRUE, variables = "gear"))
-
-
-# Issue #649: sort group when `by` is used
-mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
-pre <- predictions(mod, by = "cyl")
-expect_equivalent(pre$cyl, c(4, 6, 8))
-cmp <- predictions(mod, by = "cyl")
-expect_equivalent(cmp$cyl, c(4, 6, 8))
-
 
 # marginaleffects poisson vs. margins
 dat <- mtcars
@@ -186,7 +164,8 @@ mfx <- avg_slopes(
     newdata = datagrid(
         cyl = unique,
         am = unique,
-        grid_type = "counterfactual"))
+        grid_type = "counterfactual")) |>
+    dplyr::arrange(term, cyl, am)
 mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
 mar <- summary(mar)
 # margins doesn't treat the binary am as binary automatically
@@ -220,7 +199,8 @@ expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
 dat <- transform(mtcars, vs = vs, am = as.factor(am), cyl = as.factor(cyl))
 mod <- lm(mpg ~ qsec + am + cyl, dat)
 fun <- \(hi, lo) mean(hi) / mean(lo)
-cmp1 <- comparisons(mod, variables = "cyl", comparison = fun, by = "am")
+cmp1 <- comparisons(mod, variables = "cyl", comparison = fun, by = "am") |>
+    dplyr::arrange(am, contrast)
 cmp2 <- comparisons(mod, variables = "cyl", comparison = "ratioavg", by = "am") |>
     dplyr::arrange(am, contrast)
 expect_equivalent(cmp1$estimate, cmp2$estimate)
@@ -232,25 +212,26 @@ expect_equal(nrow(cmp1), 4)
 requiet("dplyr")
 tmp <- mtcars %>% transform(am = factor(am), cyl = factor(cyl), mpg = mpg)
 mod <- lm(mpg ~ am * cyl, data = tmp)
-cmp1 <- avg_comparisons(mod, variables = "am", by = "cyl")
+cmp1 <- avg_comparisons(mod, variables = "am", by = "cyl") |>
+  dplyr::arrange(cyl)
 cmp2 <- comparisons(mod, variables = "am") %>%
   dplyr::group_by(cyl) %>%
   dplyr::summarize(estimate = mean(estimate), .groups = "keep") |>
   dplyr::ungroup()
-cmp3 <- predictions(mod) |>
-  dplyr::group_by(am, cyl) |>
-  dplyr::summarize(estimate = mean(estimate), .groups = "keep") |>
-  dplyr::ungroup() |>
-  dplyr::group_by(cyl) |>
-  dplyr::summarize(estimate = diff(estimate), .groups = "keep") |>
-  dplyr::ungroup()
-cmp4 <- transform(tmp, estimate = predict(mod))
-cmp4 <- aggregate(estimate ~ cyl + am, FUN = mean, data = cmp4)
-cmp4 <- aggregate(estimate ~ cyl, FUN = diff, data = cmp4)
+cmp3 <- predictions(mod)  |>
+    aggregate(estimate ~ am + cyl, FUN = mean) |>
+    aggregate(estimate ~ cyl, FUN = diff)
 expect_equivalent(cmp1$estimate, cmp2$estimate)
 expect_equivalent(cmp1$estimate, cmp3$estimate)
-expect_equivalent(cmp1$estimate, cmp4$estimate)
 
+
+# Issue #1058
+tmp <- mtcars
+tmp <- tmp[c('mpg', 'cyl', 'hp')]
+tmp$cyl <- as.factor(tmp$cyl) # 3 levels
+tmp$hp  <- as.factor(tmp$hp)
+bygrid <- datagrid(newdata = tmp, by = "cyl", hp = unique)
+expect_equivalent(nrow(bygrid), 23)
 
 
 

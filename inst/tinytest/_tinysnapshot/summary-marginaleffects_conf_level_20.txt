@@ -5,4 +5,5 @@
   hp  mean(dY/dX)         -0.024     0.0154 -1.56    0.119 -0.0279 -0.0201
 
 Columns: term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high 
+Type:  response 
 

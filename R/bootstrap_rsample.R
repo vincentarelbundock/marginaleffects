@@ -1,10 +1,8 @@
-bootstrap_rsample <- function(model, FUN, ...) {
+bootstrap_rsample <- function(model, INF_FUN, ...) {
 
     # attached by `inferences()`
     conf_type <- attr(model, "inferences_conf_type")
     checkmate::assert_choice(conf_type, choices = c("perc", "bca"))
-
-    insight::check_if_installed("boot")
 
     # attached by `inferences()`
     conf_type <- attr(model, "inferences_conf_type")
@@ -22,7 +20,7 @@ bootstrap_rsample <- function(model, FUN, ...) {
 
     # avoid recursion
     attr(model, "inferences_method") <- NULL
-    out <- do.call(FUN, c(list(model), dots))
+    out <- do.call(INF_FUN, c(list(model), dots))
 
     # default confidence level may be implicit in original call, but we need numeric
     if (is.null(dots[["conf_level"]])) {
@@ -36,7 +34,7 @@ bootstrap_rsample <- function(model, FUN, ...) {
         modboot <- eval(modcall)
         modboot <- eval(modboot)
         args <- c(list(modboot, modeldata = data$data), dots)
-        out <- do.call(FUN, args)
+        out <- do.call(INF_FUN, args)
         out <- tidy(out)
         # `rsample` averages by `term` columns; we don't use it anyway and assume things line up
         out$term <- seq_len(nrow(out))

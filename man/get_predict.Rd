@@ -2,12 +2,13 @@
 % Please edit documentation in R/get_predict.R, R/methods_MASS.R,
 %   R/methods_MCMCglmm.R, R/methods_afex.R, R/methods_aod.R,
 %   R/methods_betareg.R, R/methods_bife.R, R/methods_biglm.R, R/methods_nnet.R,
-%   R/methods_brglm2.R, R/methods_brms.R, R/methods_crch.R, R/methods_fixest.R,
-%   R/methods_gamlss.R, R/methods_glmmTMB.R, R/methods_inferences_simulation.R,
+%   R/methods_brglm2.R, R/methods_brms.R, R/methods_crch.R, R/methods_dbarts.R,
+%   R/methods_fixest.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
 %   R/methods_lme4.R, R/methods_mclogit.R, R/methods_mhurdle.R,
-%   R/methods_mlogit.R, R/methods_ordinal.R, R/methods_quantreg.R,
-%   R/methods_rms.R, R/methods_robustlmm.R, R/methods_rstanarm.R,
-%   R/methods_stats.R, R/methods_survival.R, R/methods_tobit1.R
+%   R/methods_mlogit.R, R/methods_mlr3.R, R/methods_ordinal.R,
+%   R/methods_quantreg.R, R/methods_rms.R, R/methods_robustlmm.R,
+%   R/methods_rstanarm.R, R/methods_stats.R, R/methods_survey.R,
+%   R/methods_survival.R, R/methods_tidymodels.R, R/methods_tobit1.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -23,16 +24,17 @@
 \alias{get_predict.brmultinom}
 \alias{get_predict.brmsfit}
 \alias{get_predict.crch}
+\alias{get_predict.bart}
 \alias{get_predict.fixest}
 \alias{get_predict.gamlss}
 \alias{get_predict.glmmTMB}
-\alias{get_predict.inferences_simulation}
 \alias{get_predict.merMod}
 \alias{get_predict.lmerModLmerTest}
 \alias{get_predict.lmerMod}
 \alias{get_predict.mblogit}
 \alias{get_predict.mhurdle}
 \alias{get_predict.mlogit}
+\alias{get_predict.Learner}
 \alias{get_predict.clm}
 \alias{get_predict.rq}
 \alias{get_predict.rms}
@@ -43,7 +45,10 @@
 \alias{get_predict.stanreg}
 \alias{get_predict.lm}
 \alias{get_predict.glm}
+\alias{get_predict.svyolr}
 \alias{get_predict.coxph}
+\alias{get_predict.model_fit}
+\alias{get_predict.workflow}
 \alias{get_predict.tobit1}
 \title{Get predicted values from a model object (internal function)}
 \usage{
@@ -75,13 +80,13 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{crch}(model, newdata = NULL, type = "location", ...)
 
+\method{get_predict}{bart}(model, newdata = NULL, ...)
+
 \method{get_predict}{fixest}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{gamlss}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{glmmTMB}(model, newdata = insight::get_data(model), type = "response", ...)
-
-\method{get_predict}{inferences_simulation}(model, newdata, ...)
 
 \method{get_predict}{merMod}(model, newdata = insight::get_data(model), type = "response", ...)
 
@@ -94,6 +99,8 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{mhurdle}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{mlogit}(model, newdata, ...)
+
+\method{get_predict}{Learner}(model, newdata, type = NULL, ...)
 
 \method{get_predict}{clm}(model, newdata = insight::get_data(model), type = "prob", ...)
 
@@ -115,7 +122,13 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{glm}(model, newdata = insight::get_data(model), type = "response", ...)
 
+\method{get_predict}{svyolr}(model, newdata = insight::get_data(model), type = "probs", ...)
+
 \method{get_predict}{coxph}(model, newdata = insight::get_data(model), type = "lp", ...)
+
+\method{get_predict}{model_fit}(model, newdata, type = NULL, ...)
+
+\method{get_predict}{workflow}(model, newdata, type = NULL, ...)
 
 \method{get_predict}{tobit1}(model, newdata = insight::get_data(model), type = "response", ...)
 }
@@ -124,13 +137,15 @@ get_predict(model, newdata, type, ...)
 
 \item{newdata}{Grid of predictor values at which we evaluate the slopes.
 \itemize{
-\item \code{NULL} (default): Unit-level slopes for each observed value in the original dataset. See \code{\link[insight:get_data]{insight::get_data()}}
-\item data frame: Unit-level slopes for each row of the \code{newdata} data frame.
+\item Warning: Please avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
+\item \code{NULL} (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[insight:get_data]{insight::get_data()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
 \item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
 }
+\item \code{\link[=subset]{subset()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = subset(treatment == 1)}
+\item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
 \item string:
 \itemize{
 \item "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
@@ -146,8 +161,7 @@ compute contrasts or slopes. This can differ based on the model
 type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
-default value is used. This default is the first model-related row in
-the \code{marginaleffects:::type_dictionary} dataframe.}
+first entry in the error message is used by default.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful
@@ -155,7 +169,7 @@ for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
-\code{?marginaleffects} documentation for a non-exhaustive list of available
+\code{?slopes} documentation for a non-exhaustive list of available
 arguments.}
 }
 \value{

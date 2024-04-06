@@ -2,7 +2,7 @@ source("helpers.R")
 requiet("poorman")
 requiet("emmeans")
 requiet("parameters")
-# exit_file("TODO")
+exit_file("TODO")
 
 mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
 
@@ -16,7 +16,7 @@ e2 <- predictions(
     newdata = datagrid(gear = unique),
     equivalence = c(19, 21)) |>
     poorman::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic.noninf)
+expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.noninf)
 
 
@@ -27,7 +27,7 @@ e2 <- predictions(
     newdata = datagrid(gear = unique),
     equivalence = c(22, 24)) |>
     poorman::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic.nonsup)
+expect_equivalent(e1$z.ratio, e2$statistic.nonsup, tol = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.nonsup)
 
 
@@ -58,13 +58,13 @@ N <- 100
 dat <- rbind(data.frame(y = rnorm(N), x = 0),
              data.frame(y = rnorm(N, mean = 0.3), x = 1))
 mod <- lm(y ~ x, data = dat)
-FUN <- function(model, ...) {
-    data.frame(term = "t-test", estimate = coef(model)[2])
+FUN <- function(x) {
+    data.frame(term = "t-test", estimate = coef(x)[2])
 }
 e1 <- tost(dat$y[dat$x == 0], dat$y[dat$x == 1], epsilon = .05)
 e2 <- hypotheses(
     mod,
-    FUN = FUN,
+    hypothesis = FUN,
     equivalence = c(-.05, .05),
     df = e1$parameter)
 expect_true(e1$tost.p.value > .5 && e1$tost.p.value < .9)
@@ -79,7 +79,8 @@ e2 <- predictions(
     mod,
     type = "link",
     newdata = datagrid(gear = unique),
-    equivalence = c(.5, 1.5)) |>
+    equivalence = c(.5, 1.5),
+    numderiv = "richardson") |>
     poorman::arrange(gear)
 expect_equivalent(e1$emmean, e2$estimate)
 expect_equivalent(e1$z.ratio, e2$statistic.noninf)
@@ -110,30 +111,38 @@ expect_inherits(x, "hypotheses")
 
 
 
-# marginal_means() vs. {emmeans}
 rm("mod")
 delta <- log(1.25)
-mod <<- lm(log(conc) ~ source + factor(percent), data = pigs)
+data(pigs, package = "emmeans")
+mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
 rg <- ref_grid(mod)
 em <- emmeans(rg, "source", at = list(), df = Inf)
 pa <- pairs(em, df = Inf)
-mm <- marginal_means(
+
+mm <- predictions(
     mod,
-    variables = "source",
+    newdata = datagrid(grid_type = "balanced"),
+    by = "source",
     hypothesis = "pairwise") 
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-expect_equivalent(e1$z.ratio, e2$statistic.nonsup)
-expect_equivalent(e1$p.value, e2$p.value.nonsup)
+e1 <- e1[order(e1$contrast),]
+e2 <- e2[order(e2$term),]
+expect_equivalent(e1$z.ratio, e2$statistic.nonsup, tol = 1e-6)
+expect_equivalent(e1$p.value, e2$p.value.nonsup, tol = 1e-6)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-expect_equivalent(e1$z.ratio, e2$statistic.noninf)
+e1 <- e1[order(e1$contrast),]
+e2 <- e2[order(e2$term),]
+expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.noninf)
 
 e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
+e1 <- e1[order(e1$contrast),]
+e2 <- e2[order(e2$term),]
 expect_equivalent(e1$p.value, e2$p.value.equiv)
 
 

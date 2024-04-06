@@ -17,7 +17,7 @@ requiet("mlogit")
 requiet("data.table")
 
 TravelMode <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/TravelMode.csv")
-TravelMode$X <- NULL # {mlogit} assumes first column is the index
+TravelMode$rownames <- NULL # {mlogit} assumes first column is the index
 mod <- mlogit(choice ~ wait + gcost | income + size, data = TravelMode)
 
 # no validity

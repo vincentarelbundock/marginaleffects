@@ -46,8 +46,8 @@ dat <- data.frame(
     y = rbinom(N, 1, prob = .9),
     x = rnorm(N))
 mod <- glm(y ~ x, family = binomial, data = dat)
-p1 <- tidy(predictions(mod)) # average prediction outside [0,1]
-p2 <- tidy(predictions(mod, type = "link"), transform = insight::link_inverse(mod)) # average prediction inside [0,1]
+p1 <- avg_predictions(mod) # average prediction outside [0,1]
+p2 <- avg_predictions(mod, type = "link", transform = insight::link_inverse(mod)) # average prediction inside [0,1]
 expect_equivalent(p1$estimate, p2$estimate, tolerance = .001)
 expect_equivalent(p1$conf.low, p2$conf.low, tolerance = .01)
 expect_equivalent(p1$conf.high, p2$conf.high, tolerance = .01)
@@ -84,12 +84,9 @@ expect_equivalent(pre1$estimate, pre2$estimate)
 #########################################
 #  weigted average adjusted predictions #
 #########################################
-pre1 <- predictions(mod, wts = mtcars$w)
-pre2 <- predictions(mod)
-tid1 <- tidy(pre1)
-tid2 <- tidy(pre2)
-expect_equivalent(pre1$estimate, pre2$estimate)
-expect_true(all(tid1$estimate != tid2$estimate))
+pre1 <- avg_predictions(mod, wts = mtcars$w)
+pre2 <- avg_predictions(mod)
+expect_true(all(pre1$estimate != pre2$estimate))
 
 
 
@@ -191,7 +188,9 @@ expect_equivalent(nrow(p), nrow(dat) * 3)
 
 expect_error(predictions(fit, variables = list(race = "all"), newdata = dat), pattern = "Check")
 
-p <- predictions(fit, newdata = datagridcf(race = c("black", "hispan", "white")))
+p <- predictions(fit, newdata = datagrid(
+    race = c("black", "hispan", "white"),
+    grid_type = "counterfactual"))
 expect_equivalent(nrow(p), nrow(dat) * 3)
 
 dat <- transform(mtcars, am = as.logical(am))
@@ -220,7 +219,9 @@ expect_equivalent(nrow(pre), 3)
 pre <- avg_predictions(mod, variables = list(cyl = c(4, 6)))
 expect_inherits(pre, "predictions")
 expect_equivalent(nrow(pre), 2)
-pre <- avg_predictions(mod, by = "cyl", newdata = datagridcf(cyl = c(4, 6)))
+pre <- avg_predictions(mod,
+    by = "cyl",
+    newdata = datagrid(cyl = c(4, 6), grid_type = "counterfactual"))
 expect_inherits(pre, "predictions")
 expect_equivalent(nrow(pre), 2)
 

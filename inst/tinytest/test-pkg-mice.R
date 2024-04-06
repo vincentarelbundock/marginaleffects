@@ -40,4 +40,9 @@ manu <- suppressWarnings(summary(pool(mod_imputation), conf.int = TRUE))
 fit <- with(imp,  glm(endp ~ trt, family = binomial(link = "logit")))
 auto <- suppressWarnings(avg_slopes(fit))
 expect_equivalent(auto$estimate, manu$estimate)
-expect_equivalent(auto$std.error, manu$std.error)
+expect_equivalent(auto$std.error, manu$std.error, tolerance = 1e-6)
+
+
+
+
+source("helpers.R")

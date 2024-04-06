@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
-# if (ON_WINDOWS || ON_OSX) exit_file("linux only")
+if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 using("tinysnapshot")
 
 # character predictors
@@ -60,8 +60,10 @@ expect_snapshot_plot(p, "plot_slopes_two_conditions", tol = 500)
 
 # Issue #725: `newdata` argument in plotting functions
 mod <- glm(vs ~ hp + am, mtcars, family = binomial)
-p1 <- plot_slopes(mod, variables = "hp", by = "am", newdata = datagridcf(am = 0:1), draw = FALSE)
-p2 <- avg_slopes(mod, variables = "hp", by = "am", newdata = datagridcf(am = 0:1), draw = FALSE)
+p1 <- plot_slopes(mod, variables = "hp", by = "am", draw = FALSE,
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
+p2 <- avg_slopes(mod, variables = "hp", by = "am",
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$conf.low, p2$conf.low, tolerance = 1e-6)
 p3 <- plot_slopes(mod, variables = "hp", by = "am", draw = FALSE)
@@ -78,7 +80,10 @@ expect_true(all(p3$conf.low != p5$conf.low))
 expect_error(plot_slopes(mod, variables = "hp", condition = "am", by = "am"))
 expect_error(plot_slopes(mod, variables = "hp", newdata = mtcars))
 
-
+# Plot 4 variables in condition using facet_grid
+mod <- lm(mpg ~ hp * drat * factor(am)*carb, data = mtcars)
+p <- plot_slopes(mod, variables = c("hp", "drat"), condition = list("am", "drat" = 3:5, "hp"=c(10,15), "carb"=c(2,3)))
+expect_inherits(p, "gg")
 
 
 rm(list = ls())

@@ -201,7 +201,7 @@ fit = function(data) {
         variables = list(Z1 = 0:1),
         # evaluated on a counter-factual grid where the full dataset is
         # replicated once for each value of Z2 
-        newdata = datagridcf(Z2 = 0:1),
+        newdata = datagrid(Z2 = 0:1, grid_type = "counterfactual"),
         # marginalized by value of Z2
         by = "Z2")
     tidy(cmp)

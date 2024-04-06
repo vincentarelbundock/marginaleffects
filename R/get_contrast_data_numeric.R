@@ -1,17 +1,10 @@
 get_contrast_data_numeric <- function(model,
                                       newdata,
                                       variable,
-                                      modeldata = NULL,
+                                      modeldata,
                                       ...) {
     
     h <- variable[["eps"]]
-
-    if (is.null(modeldata)) {
-        modeldata <- get_modeldata(model, additional_variables = FALSE)
-    }
-    if (is.null(modeldata)) {
-        modeldata <- newdata
-    }
 
     s <- m <- NA
     if (is.numeric(modeldata[[variable$name]])) {
@@ -54,10 +47,8 @@ get_contrast_data_numeric <- function(model,
         lab <- "manual"
 
     } else if (isTRUE(variable$label %in% slopes)) {
-        # low <- x - h / 2
-        # high <- x + h / 2
-        low <- x
-        high <- x + h
+        low <- x - h / 2
+        high <- x + h / 2
         lab <- variable$label
 
     } else if (identical(variable$label, "exp(dY/dX)")) {
@@ -68,8 +59,19 @@ get_contrast_data_numeric <- function(model,
     # contrast_label is designed for categorical predictors
     # numeric contrasts first
     } else if (isTRUE(checkmate::check_numeric(variable$value, len = 1))) {
-        low <- x - variable$value / 2
-        high <- x + variable$value / 2
+
+        direction <- getOption("marginaleffects_contrast_direction", default = "forward")
+        if (isTRUE(direction == "center")) {
+            low <- x - variable$value / 2
+            high <- x + variable$value / 2
+        } else if (isTRUE(direction == "backward")) {
+            low <- x - variable$value
+            high <- x
+        } else {
+            low <- x
+            high <- x + variable$value
+        }
+
         # wrap in parentheses, unless mean() because there are already parentheses
         # important to display ratios of x+1, etc.
         # label should not be `(mpg+1) - mpg` because that is misleading for centered contrast

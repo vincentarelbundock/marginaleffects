@@ -1,22 +1,27 @@
-sanitize_newdata_call <- function(scall, newdata = NULL, model) {
-    if (is.call(scall)) {
-        out <- NULL
-        lcall <- as.list(scall)
-        fun_name <- as.character(scall)[1]
-        if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
-            if (!"model" %in% names(lcall)) {
-                lcall <- c(lcall, list("model" = model))
-                out <- evalup(as.call(lcall))
+sanitize_newdata_call <- function(scall, newdata = NULL, model, by = NULL) {
+    if (rlang::quo_is_call(scall)) {
+        if (grepl("^datagrid", rlang::call_name(scall))) {
+            if (!"model" %in% rlang::call_args_names(scall)) {
+                scall <- rlang::call_modify(scall, model = model)
             }
-        } else if (fun_name == "visualisation_matrix") {
-            if (!"x" %in% names(lcall)) {
-                lcall <- c(lcall, list("x" = get_modeldata))
-                out <- evalup(as.call(lcall))
+        } else if (isTRUE(rlang::call_name(scall) == "subset")) {
+          argnames <- rlang::call_args_names(scall)
+          if (!"x" %in% argnames && length(argnames) == 1) {
+            tmp <- get_modeldata(model, additional_variables = by)
+            scall <- rlang::call_modify(scall, x = tmp)
+          }
+        } else if (isTRUE(rlang::call_name(scall) == "filter")) {
+          argnames <- rlang::call_args_names(scall)
+          if (!".data" %in% argnames && length(argnames) == 1) {
+            tmp <- get_modeldata(model, additional_variables = by)
+            scall <- rlang::call_modify(scall, .data = tmp)
+          }
+        } else if (rlang::call_name(scall) %in% "visualisation_matrix") {
+            if (!"x" %in% rlang::call_args_names(scall)) {
+                scall <- rlang::call_modify(scall, x = get_modeldata)
             }
         }
-        if (is.null(out)) {
-            out <- evalup(scall)
-        }
+        out <- rlang::eval_tidy(scall)
     } else {
         out <- newdata
     }
@@ -24,14 +29,7 @@ sanitize_newdata_call <- function(scall, newdata = NULL, model) {
 }
 
 
-sanitize_newdata <- function(model, newdata, by, modeldata) {
-
-    checkmate::assert(
-        checkmate::check_data_frame(newdata, null.ok = TRUE),
-        checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "marginalmeans")),
-        combine = "or")
-
-    # to respect the `by` argument, we need all values to be preserved
+build_newdata <- function(model, newdata, by, modeldata) {
     if (isTRUE(checkmate::check_data_frame(by))) {
         by <- setdiff(colnames(by), "by")
     } else if (isTRUE(checkmate::check_flag(by))) {
@@ -44,15 +42,17 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
 
     newdata_explicit <- TRUE
 
+    # NULL -> modeldata
     if (is.null(newdata)) {
         newdata <- modeldata
         newdata_explicit <- FALSE
 
+    # string -> datagrid()
     } else if (identical(newdata, "mean")) {
         newdata <- do.call("datagrid", args)
 
     } else if (identical(newdata, "median")) {
-        args[["FUN_numeric"]] <- function(x) stats::median(x, na.rm = TRUE)
+        args[["FUN_numeric"]] <- args[["FUN_integer"]] <- args[["FUN_logical"]] <- function(x) stats::median(x, na.rm = TRUE)
         newdata <- do.call("datagrid", args)
 
     } else if (identical(newdata, "tukey")) {
@@ -87,9 +87,50 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
         modeldata$idx <- NULL
     }
 
+    # required by some model-fitting functions
     data.table::setDT(modeldata)
 
-    # column attributes
+    # required for the type of column indexing to follow
+    data.table::setDF(newdata)
+
+    out <- list(
+        "newdata" = newdata,
+        "newdata_explicit" = newdata_explicit,
+        "modeldata" = modeldata
+    )
+    return(out)
+}
+
+
+add_wts_column <- function(wts, newdata) {
+    # weights must be available in the `comparisons()` function, NOT in
+    # `tidy()`, because comparisons will often duplicate newdata for
+    # multivariate outcomes and the like. We need to track which row matches
+    # which.
+    if (!is.null(wts)) {
+        flag1 <- isTRUE(checkmate::check_string(wts)) && isTRUE(wts %in% colnames(newdata))
+        flag2 <- isTRUE(checkmate::check_numeric(wts, len = nrow(newdata)))
+        if (!flag1 && !flag2) {
+            msg <- sprintf("The `wts` argument must be a numeric vector of length %s, or a string which matches a column name in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `wts` variable may not have been available. The easiest strategy is often to supply a data frame such as the original data to `newdata` explicitly, and to make sure that it includes an appropriate column of weights, identified by the `wts` argument.", nrow(newdata))
+            stop(msg, call. = FALSE)
+        }
+    }
+    
+    # weights: before sanitize_variables
+    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
+        newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
+    } else {
+        newdata[["marginaleffects_wts_internal"]] <- wts
+    }
+
+    return(newdata)
+}
+
+
+set_newdata_attributes <- function(model, modeldata, newdata, newdata_explicit) {
+    attr(newdata, "newdata_explicit") <- newdata_explicit
+
+    # column classes
     mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
     cl <- Filter(function(x) is.character(modeldata[[x]]), colnames(modeldata))
     cl <- lapply(modeldata[, ..cl], unique)
@@ -98,22 +139,25 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
         "matrix_columns" = mc,
         "character_levels" = cl,
         "variable_class" = vc)
+    newdata <- set_marginaleffects_attributes(newdata, column_attributes, prefix = "newdata_")
 
     # {modelbased} sometimes attaches useful attributes
     exclude <- c("class", "row.names", "names", "data", "reference")
     modelbased_attributes <- get_marginaleffects_attributes(newdata, exclude = exclude)
+    newdata <- set_marginaleffects_attributes(newdata, modelbased_attributes, prefix = "newdata_")
 
-    # required for the type of column indexing to follow
-    data.table::setDF(newdata)
+    # original data
+    attr(newdata, "newdata_modeldata") <- modeldata
 
-    # mlogit: each row is an individual-choice, but the index is not easily
-    # trackable, so we pre-sort it here, and the sort in `get_predict()`. We
-    # need to cross our fingers, but this probably works.
-    if (inherits(model, "mlogit") && isTRUE(inherits(newdata[["idx"]], "idx"))) {
-        idx <- list(newdata[["idx"]][, 1], newdata[["idx"]][, 2])
-        newdata <- newdata[order(newdata[["idx"]][, 1], newdata[["idx"]][, 2]),]
+    if (is.null(attr(newdata, "marginaleffects_variable_class"))) {
+        newdata <- set_variable_class(newdata, model = model)
     }
 
+    return(newdata)
+}
+
+
+clean_newdata <- function(model, newdata) {
     # rbindlist breaks on matrix columns
     idx <- sapply(newdata, function(x) class(x)[1] == "matrix")
     if (any(idx)) {
@@ -126,27 +170,18 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
         }
     }
 
-    # if there are no categorical variables in `newdata`, check the model terms
-    # to find transformation and warn accordingly.
-    categorical_variables <- get_variable_class(newdata, compare = "categorical")
-    flag <- FALSE
-    if (length(categorical_variables) == 0) {
-        termlabs <- try(attr(stats::terms(model), "term.labels"), silent = TRUE)
-        termlabs <- try(any(grepl("^factor\\(|^as.factor\\(|^as.logical\\(", termlabs)), silent = TRUE)
-        if (isTRUE(termlabs)) {
-            flag <- TRUE
-        }
-    }
-
-    # attributes
-    newdata <- set_marginaleffects_attributes(newdata, modelbased_attributes, prefix = "newdata_")
-    newdata <- set_marginaleffects_attributes(newdata, column_attributes, prefix = "newdata_")
-    attr(newdata, "newdata_modeldata") <- modeldata
-
     # we will need this to merge the original data back in, and it is better to
     # do it in a centralized upfront way.
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- seq_len(nrow(newdata))
+    }
+
+    # mlogit: each row is an individual-choice, but the index is not easily
+    # trackable, so we pre-sort it here, and the sort in `get_predict()`. We
+    # need to cross our fingers, but this probably works.
+    if (inherits(model, "mlogit") && isTRUE(inherits(newdata[["idx"]], "idx"))) {
+        idx <- list(newdata[["idx"]][, 1], newdata[["idx"]][, 2])
+        newdata <- newdata[order(newdata[["idx"]][, 1], newdata[["idx"]][, 2]),]
     }
 
     # placeholder response
@@ -159,14 +194,41 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
             newdata[[resp]] <- y[1]
         }
     }
+    return(newdata)
+}
 
-    if (is.null(attr(newdata, "marginaleffects_variable_class"))) {
-        newdata <- set_variable_class(newdata, model = model)
+
+sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
+    checkmate::assert(
+        checkmate::check_data_frame(newdata, null.ok = TRUE),
+        checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "marginalmeans")),
+        combine = "or")
+    tmp <- build_newdata(model = model, newdata = newdata, by = by, modeldata = modeldata)
+    newdata <- tmp[["newdata"]]
+    modeldata <- tmp[["modeldata"]]
+    newdata_explicit <- tmp[["newdata_explicit"]]
+    newdata <- clean_newdata(model, newdata)
+    newdata <- add_wts_column(newdata = newdata, wts = wts)
+    newdata <- set_newdata_attributes(
+        model = model,
+        modeldata = modeldata,
+        newdata = newdata,
+        newdata_explicit = newdata_explicit)
+
+    # sort rows of output when the user explicitly calls `by` or `datagrid()`
+    # otherwise, we return the same data frame in the same order, but 
+    # here it makes sense to sort for a clean output.
+    sortcols <- attr(newdata, "newdata_variables_datagrid")
+    if (isTRUE(checkmate::check_character(by))) {
+        sortcols <- c(by, sortcols)
+    }
+    sortcols <- intersect(sortcols, colnames(newdata))
+    out <- data.table::copy(newdata)
+    if (length(sortcols) > 0) {
+        data.table::setorderv(out, cols = sortcols)
     }
 
-    attr(newdata, "newdata_explicit") <- newdata_explicit
-
-    return(newdata)
+    return(out)
 }
 
 

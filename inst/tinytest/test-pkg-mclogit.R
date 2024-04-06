@@ -89,7 +89,7 @@ p3 <- data.frame(
 p3 <- transform(p3, variant = as.character(variant))
 p3 <- p3[order(p3$variant),]
 expect_equivalent(p3$emmean, p2[p2$rowid == 160, "estimate"])
-expect_equivalent(p3$SE, p2[p2$rowid == 160, "std.error"])
+expect_equivalent(p3$SE, p2[p2$rowid == 160, "std.error"], tolerance = 1e-5)
 expect_equivalent(as.character(p3$variant), p2[p2$rowid == 160, "group"])
 
 

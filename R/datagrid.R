@@ -3,9 +3,6 @@
 #' @description
 #' Generate a data grid of user-specified values for use in the `newdata` argument of the `predictions()`, `comparisons()`, and `slopes()` functions. This is useful to define where in the predictor space we want to evaluate the quantities of interest. Ex: the predicted outcome or slope for a 37 year old college graduate.
 #'
-#' * `datagrid()` generates data frames with combinations of "typical" or user-supplied predictor values.
-#' * `datagridcf()` generates "counter-factual" data frames, by replicating the entire dataset once for every combination of predictor values supplied by the user.
-#'
 #' @param ... named arguments with vectors of values or functions for user-specified variables.
 #' + Functions are applied to the variable in the `model` dataset or `newdata`, and must return a vector of the appropriate type.
 #' + Character vectors are automatically transformed to factors if necessary.
@@ -13,19 +10,30 @@
 #' @param model Model object
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments can be used.)
 #' @param by character vector with grouping variables within which `FUN_*` functions are applied to create "sub-grids" with unspecified variables.
+#' @param response Logical should the response variable be included in the grid, even if it is not specified explicitly.
 #' @param FUN_character the function to be applied to character variables.
-#' @param FUN_factor the function to be applied to factor variables.
-#' @param FUN_logical the function to be applied to factor variables.
+#' @param FUN_factor the function to be applied to factor variables. This only applies if the variable in the original data is a factor. For variables converted to factor in a model-fitting formula, for example, `FUN_character` is used.
+#' @param FUN_logical the function to be applied to logical variables.
 #' @param FUN_integer the function to be applied to integer variables.
+#' @param FUN_binary the function to be applied to binary variables.
 #' @param FUN_numeric the function to be applied to numeric variables.
 #' @param FUN_other the function to be applied to other variable types.
-#' @param grid_type character
-#'   * "typical": variables whose values are not explicitly specified by the user in `...` are set to their mean or mode, or to the output of the functions supplied to `FUN_type` arguments.
+#' @param grid_type character. Determines the functions to apply to each variable. The defaults can be overridden by defining individual variables explicitly in `...`, or by supplying a function to one of the `FUN_*` arguments.
+#'   * "mean_or_mode": Character, factor, logical, and binary variables are set to their modes. Numeric, integer, and other variables are set to their means.
+#'   * "balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use `grid_type="mean_or_mode"` and to specify the unique levels of a subset of named variables explicitly.
 #'   * "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in `...`. Variables not explicitly supplied to `datagrid()` are set to their observed values in the original dataset.
 #' @details
 #' If `datagrid` is used in a `predictions()`, `comparisons()`, or `slopes()` call as the
 #' `newdata` argument, the model is automatically inserted in the `model` argument of `datagrid()`
-#' call, and users do not need to specify either the `model` or `newdata` arguments.
+#' call, and users do not need to specify either the `model` or `newdata` arguments. The same behavior will occur when the value supplied to `newdata=` is a function call which starts with "datagrid". This is intended to allow users to create convenience shortcuts like:
+#' 
+#' \preformatted{
+#' library(marginaleffects)
+#' mod <- lm(mpg ~ am + vs + factor(cyl) + hp, mtcars)
+#' datagrid_bal <- function(...) datagrid(..., grid_type = "balanced")
+#' predictions(model, newdata = datagrid_bal(cyl = 4))
+#' }
+#' 
 #'
 #' If users supply a model, the data used to fit that model is retrieved using
 #' the `insight::get_data` function.
@@ -67,28 +75,56 @@ datagrid <- function(
     model = NULL,
     newdata = NULL,
     by = NULL,
-    FUN_character = get_mode,
-    # need to be explicit for numeric variables transfered to factor in model formula
-    FUN_factor = get_mode,
-    FUN_logical = get_mode,
-    FUN_numeric = function(x) mean(x, na.rm = TRUE),
-    FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
-    FUN_other = function(x) mean(x, na.rm = TRUE),
-    grid_type = "typical") {
+    grid_type = "mean_or_mode",
+    response = FALSE,
+    FUN_character = NULL,
+    FUN_factor = NULL,
+    FUN_logical = NULL,
+    FUN_numeric = NULL,
+    FUN_integer = NULL,
+    FUN_binary = NULL,
+    FUN_other = NULL) {
 
     dots <- list(...)
 
+    # backward compatibility: 20231220
+    if (identical(grid_type, "typical")) {
+        grid_type <- "mean_or_mode"
+    }
+
     # sanity
-    checkmate::assert_choice(grid_type, choices = c("typical", "counterfactual"))
-    checkmate::assert_function(FUN_character)
-    checkmate::assert_function(FUN_factor)
-    checkmate::assert_function(FUN_logical)
-    checkmate::assert_function(FUN_numeric)
-    checkmate::assert_function(FUN_other)
+    checkmate::assert_choice(grid_type, choices = c("mean_or_mode", "balanced", "counterfactual"))
+    checkmate::assert_function(FUN_character, null.ok = TRUE)
+    checkmate::assert_function(FUN_factor, null.ok = TRUE)
+    checkmate::assert_function(FUN_logical, null.ok = TRUE)
+    checkmate::assert_function(FUN_binary, null.ok = TRUE)
+    checkmate::assert_function(FUN_integer, null.ok = TRUE)
+    checkmate::assert_function(FUN_numeric, null.ok = TRUE)
+    checkmate::assert_function(FUN_other, null.ok = TRUE)
     checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_data_frame(newdata, null.ok = TRUE)
-    
-    if (grid_type == "counterfactual") {
+    checkmate::assert_flag(response)
+
+    if (grid_type == "mean_or_mode") {
+        if (is.null(FUN_character)) FUN_character <- get_mode
+        if (is.null(FUN_logical)) FUN_logical <- get_mode
+        if (is.null(FUN_factor)) FUN_factor <- get_mode
+        if (is.null(FUN_binary)) FUN_binary <- get_mode
+        if (is.null(FUN_numeric)) FUN_numeric <- function(x) mean(x, na.rm = TRUE)
+        if (is.null(FUN_other)) FUN_other <- function(x) mean(x, na.rm = TRUE)
+        if (is.null(FUN_integer)) FUN_integer <- function(x) round(mean(x, na.rm = TRUE))
+
+    } else if (grid_type == "balanced") {
+        if (is.null(FUN_character)) FUN_character <- unique
+        if (is.null(FUN_logical)) FUN_logical <- unique
+        # not just levels(), because that is string, and sorts badly ex: "2" vs "10"
+        if (is.null(FUN_factor)) FUN_factor <- function(k) sort(unique(k))
+        if (is.null(FUN_binary)) FUN_binary <- unique
+        if (is.null(FUN_numeric)) FUN_numeric <- function(x) mean(x, na.rm = TRUE)
+        if (is.null(FUN_other)) FUN_other <- function(x) mean(x, na.rm = TRUE)
+        if (is.null(FUN_integer)) FUN_integer <- function(x) round(mean(x, na.rm = TRUE))
+
+    } else if (grid_type == "counterfactual") {
         if (!is.null(by)) {
             insight::format_error("The `by` argument is not supported for counterfactual grids.")
         }
@@ -96,10 +132,10 @@ datagrid <- function(
             model = model,
             newdata = newdata)
         args <- c(dots, args)
-        out <- do.call("datagridcf", args)
+        out <- do.call("datagridcf_internal", args)
         return(out)
     }
-    
+
     if (!is.null(by)) {
         if (is.null(newdata) && is.null(model)) {
             insight::format_error("One of `newdata` and `model` must not be `NULL`.")
@@ -117,9 +153,11 @@ datagrid <- function(
             args <- c(list(...), list(
                 model = model,
                 newdata = newdata_list[[i]],
+                response = response,
                 FUN_character = FUN_character,
                 FUN_factor = FUN_factor,
                 FUN_logical = FUN_logical,
+                FUN_binary = FUN_binary,
                 FUN_numeric = FUN_numeric,
                 FUN_integer = FUN_integer,
                 FUN_other = FUN_other,
@@ -129,17 +167,32 @@ datagrid <- function(
             }
             newdata_list[[i]] <- do.call(datagrid_engine, args)
         }
+
+        # Issue 1058: missing attributes with `by`
+        at <- attributes(newdata_list[[1]])
+
         out <- data.table::rbindlist(newdata_list)
         data.table::setDF(out)
+
+        # Issue 1058: missing attributes with `by`
+        # overwriting everything corrupts the data frame
+        for (n in names(at)) {
+            if (!n %in% names(attributes(out))) {
+                attr(out, n) <- at[[n]]
+            }
+        }
+
         return(out)
     }
     
     out <- datagrid_engine(...,
                 model = model,
                 newdata = newdata,
+                response = response,
                 FUN_character = FUN_character,
                 FUN_factor = FUN_factor,
                 FUN_logical = FUN_logical,
+                FUN_binary = FUN_binary,
                 FUN_numeric = FUN_numeric,
                 FUN_integer = FUN_integer,
                 FUN_other = FUN_other)
@@ -151,10 +204,12 @@ datagrid_engine <- function(
     ...,
     model = NULL,
     newdata = NULL,
+    response = response,
     FUN_character = get_mode,
     # need to be explicit for numeric variables transfered to factor in model formula
     FUN_factor = get_mode,
     FUN_logical = get_mode,
+    FUN_binary = get_mode,
     FUN_numeric = function(x) mean(x, na.rm = TRUE),
     FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
     FUN_other = function(x) mean(x, na.rm = TRUE),
@@ -169,13 +224,13 @@ datagrid_engine <- function(
     variables_all <- tmp$all
     variables_manual <- names(at)
     variables_automatic <- tmp$automatic
-    
-    # commented out because we want to keep the response in
+
+    # usually we don't want the response in the grid, but 
     # sometimes there are two responses and we need one of them:
     # brms::brm(y | trials(n) ~ x + w + z)
-    # if (!is.null(model)) {
-    #     variables_automatic <- setdiff(variables_automatic, insight::find_response(model))
-    # }
+    if (!is.null(model) && isFALSE(response)) {
+        variables_automatic <- setdiff(variables_automatic, insight::find_response(model))
+    }
 
 
     if (length(variables_automatic) > 0) {
@@ -187,7 +242,13 @@ datagrid_engine <- function(
         # created by insight::get_data
         for (n in names(dat_automatic)) {
             if (get_variable_class(dat, n, c("factor", "strata", "cluster")) || n %in% tmp[["cluster"]]) {
-                out[[n]] <- FUN_factor(dat_automatic[[n]])
+                if (is.factor(dat_automatic[[n]])) {
+                    out[[n]] <- FUN_factor(dat_automatic[[n]])
+                } else {
+                    out[[n]] <- FUN_character(dat_automatic[[n]])
+                }
+            } else if (get_variable_class(dat, n, "binary")) {
+                out[[n]] <- FUN_binary(dat_automatic[[n]])
             } else if (get_variable_class(dat, n, "logical")) {
                 out[[n]] <- FUN_logical(dat_automatic[[n]])
             } else if (get_variable_class(dat, n, "character")) {
@@ -241,11 +302,8 @@ datagrid_engine <- function(
 }
 
 
-#' Counterfactual data grid
-#' @describeIn datagrid Counterfactual data grid
-#' @export
-#'
-datagridcf <- function(
+
+datagridcf_internal <- function(
     ...,
     model = NULL,
     newdata = NULL) {
@@ -253,7 +311,7 @@ datagridcf <- function(
     dots <- list(...)
 
     if (length(dots) == 0) {
-        insight::format_error("Users must specify variable values in the `datagridcf()` call.")
+        insight::format_error("Users must specify variable values when `grid_type='counterfactual'")
     }
 
     tmp <- prep_datagrid(..., model = model, newdata = newdata)

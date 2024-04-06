@@ -54,9 +54,7 @@ expect_predictions(pred, n_row = 6)
 
 
 # marginalmeans: vs. emmeans
-mm <- marginal_means(mod, what = "mu")
-expect_marginal_means(mm, n_row = 10)
-mm <- tidy(mm)
+mm <- predictions(mod, by = "batch", newdata = datagrid(grid_type="balanced"), what = "mu")
 em <- broom::tidy(emmeans::emmeans(mod, "batch", type = "response"))
 expect_equivalent(mm$estimate, em$response, tol = 0.001)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
@@ -101,14 +99,30 @@ expect_predictions(pred, n_row = 6)
 
 
 # marginalmeans: vs. emmeans
-mm <- marginal_means(mod, variables = "Pclass", what = "mu")
-expect_marginal_means(mm, n_row = 3)
+mm <- predictions(mod, by = "Pclass", what = "mu", newdata = datagrid(grid_type = "balanced")) |>
+    dplyr::arrange(Pclass)
 mm <- tidy(mm)
 em <- broom::tidy(emmeans::emmeans(mod, "Pclass", type = "response"))
 expect_equivalent(mm$estimate, em$response)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 
 
+# Issue #933
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv", na.strings = "")
+dat <- dat |>
+    transform(prop = rBE(nrow(dat), mu = 0.5, sigma = 0.2)) |> 
+    na.omit()
+mod <- gamlss::gamlss(
+        prop ~ sex * body_mass_g + year + re(random = list(~ 1 | species, ~ 1 | island)),
+        family = BE(),
+        data = dat,
+        trace = FALSE)
+cmp <- avg_comparisons(mod, what = "mu") |> suppressWarnings()
+expect_inherits(cmp, "comparisons")
+
+
+
+# end.  
 
 
 source("helpers.R")

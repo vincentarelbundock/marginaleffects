@@ -1,15 +1,220 @@
-# marginaleffects DEVELOPMENT
+# News
 
-Breaking change:
+## Development
 
-* Row order of output has changed for a few calls such as `avg_comparisons(by=...)`. This may break hypothesis tests conducted by indexing `b1`, `b2`, etc. This was necessary to fix Issue #776. Thanks to @marcora for the report.
+Breaking changes:
+
+* `datagrid()` no longer includes the response variable by default when it is not explicitly specified by the user. Use the new `response` argument to include it.
+* `datagrid(grid_type="balanced")` returns factors ordered by level rather than by order of appearance in the original data.
 
 New:
 
+* `print.marginaleffects()` supports `style="tinytable"`, which returns a `tinytable` object. Call `print(avg_slopes(model))` to get a nice printed table in Quarto or Rmarkdown documents, via Typst, LaTeX or HTML.
+* print as HTML, Typst, or LaTeX format automatically via `tinytable`: `options(marginaleffects_print_style="tinytable")`
+* `hypothesis` argument accepts a function which takes a `marginaleffects` data frame and returns a transformed data frame with `term` and `estimate` columns.
+* `datagrid()` gets a `response` argument to control if the response variable is included or excluded from the grid-building process.
+* The `base::subset()` and `dplyr::filter()` functions can be called with a single argument in `newdata` to select a subset of rows from the dataset used to fit the model.
+  - Example: avg_comparisons(fit, variables = "treatment", newdata = subset(treatment == 1))`
+* Better warning for unsupported arguments.
+
+Bugfix:
+
+* Uninformative error when a custom `comparison` function returns `NA` in bayesian models. Thanks to @Sandhu-SS for report #1017.
+* `datagrid()` returns an object with full attributes when `by` is used. Thanks to @Sandhu-SS for report #1058.
+* `inferences(method="simulation")` with `inferences()` function. Thanks to @davidarmstrong for report #1054.
+
+## 0.18.0
+
+This release represents a major step towards 1.0.0. Some functions are renamed and now raise deprecation warnings. After 1.0.0, the API will become much more stable, and any change will have to be very deliberate with much lead time and deprecation delays.
+
+Breaking changes:
+
+* `tidy()` no longer takes the average of estimates in the original model object. Users who want an aggregate estimate should call the relevant `avg_*()` function, or use the `by` argument explicitly. The previous behavior led to unexpected behavior and increased code complexity a lot.
+* `summary()` methods are removed. These have never provided any additional information; they just reprinted the output already available with the standard print method. At least the default `summary()` for data frames (which is now triggered on `marginaleffects` object) provides a different view on the content of the object.
+* `plot_cco()`, `plot_cme()`, and `plot_cap()` were renamed in version 0.9.0, one year ago. They are now fully removed from the package.
+
+New:
+
+* `datagrid(grid_type = "balanced")` creates a balanced grid with all unique values of categorical predictors. This can be used with `predictions()` to compute marginal means as in the `emmeans` package.
+* `mvgam` package support (multivariate generalized additive models)
+
+Deprecation warnings:
+
+* `deltamethod()` has been named `hypotheses()` for a while. We now issue a deprecation warning and it will be removed eventually.
+* `datagridcf()` will eventually be deprecated and removed from the package. We will raise a warning for at least one year before removing the function. Identical results can be obtained with `datagrid(..., grid_type="counterfactual")`
+* `marginal_means()` will eventually be deprecated and removed from the package. We will raise a warning for at least one year before removing the function. Identical results can be obtained using the `predictions()` function and the `grid_type="balanced"` argument of `datagrid()`. Examples are in the marginal means vignette on the website.
+
+Minor:
+
+* Better warning messages for unsupported matrix columns, enhancing user experience and troubleshooting.
+* Various improvements to documentation.
+* Typos
+* Repository hosts model objects for easier testing.
+
+Bug fixes:
+
+* Error on `hypotheses(joint = "string")` for `comparisons()` objects (no result was returned). Thanks to @BorgeJorge for report #981. 
+* Enhanced support for multi-equation Bayesian models with `brms` models. Thanks to @winterstat for report #1006.
+* Parameter names with spaces could break standard errors. Thanks to @Lefty2021 for report #1005.
+
+
+## 0.17.0
+
+Breaking changes:
+
+* The `comparisons()` now uses "forward contrasts" by default for numeric predictors, instead of "centered  contrasts". This can lead to small numerical differences in non-linear models.
+* The `variables` argument of the `comparisons()` function no longer accepts numeric vectors unless they are of length 2, specifying the low and high contrast values. This is to avoid ambiguity between the two vector version. Users should supply a data frame or a function instead. This is nearly as easy, and removes ambiguity.
+
+New supported packages:
+
+* `dbarts`: https://cran.r-project.org/package=dbarts
+* `mvgam`: https://nicholasjclark.github.io/mvgam/ Not available on CRAN yet, but this package maintains its own `marginaleffects` support function.
+* `rms::Gls`: https://cran.r-project.org/package=rms
+
+Misc:
+
+* `comparisons()`: The `variables` argument now accepts functions and data frames for factor, character, and logical variables.
+* Deprecation warning for: `plot_cap()`, `plot_cme()`, and `plot_cco()`. These function names will be removed in version 1.0.0.
+* `options(modelsummary_factory_default=...)` is respected in Quarto and Rmarkdown documents.
+
+Bugs:
+
+* `wts` argument now respected in `avg_slopes()` for binary variables. Thanks to @trose64 for report #961
+* Custom functions in the `comparison` argument of `comparisons()` did not supply the correct `x` vector length for bayesian models when the `by` argument is used. Thanks to @Sandhu-SS for report #931.
+* Add support for two facet variables (through `facet_grid`) when plotting using `condition`
+* `comparisons()`: When `variables` is a vector of length two and `newdata` has exactly two columns, there was ambiguity between custom vectors and length two vector of contrasts. Bug reported by C. Rainey on Twitter.
+* Superfluous warning with `fixest::fenegbin`.
+
+## 0.16.0
+
+Machine learning support:
+
+* `tidymodels` package
+* `mlr3` package
+
+Misc:
+
+* New vignettes:
+  - Inverse Probability Weighting 
+  - Machine Learning
+  - Matching
+* Add support for `hypotheses()` to `inferences()`. Thanks to @Tristan-Siegfried for code contribution #908.
+* Support `survival::survreg()`. Thanks to Carlisle Rainey for Report #911.
+* `column_names` argument in `print.marginaleffects()` to suppress the printed column names at the bottom of the printout.
+* The function supplied to the `comparison` argument of the `comparisons()` function can now operate on `x` and on `newdata` directly (e.g., to check the number of observations).
+* More informative errors from `predict()`.
+
+Bugs:
+
+* Some `gamlss` models generated an error related to the `what` argument. Thanks to @DHLocke for Issue #933
+
+## 0.15.1
+
+* `hypotheses()`: The `FUN` argument handles `group` columns gracefully.
+* Native support for `Amelia` for multiple imputation.
+
+Documentation:
+
+* New section on "Complex aggregations" in the Hypothesis testing vignette.
+
+Bug fix:
+
+* Results of the `predictions()` function could be inaccurate when (a) running version 0.15.0, (b) `type` is `NULL` or `invlink(link)`, (c) model is `glm()`, and (d) the `hypothesis` argument is non-numeric. Thanks to @strengejacke for report [#903](https://github.com/vincentarelbundock/marginaleffects/issues/903)
+
+## 0.15.0
+
+New:
+
+* Conformal prediction via `inferences()`
+* `hypothesis` argument now accepts multiple string formulas.
+* The `type` argument now accepts an explicit `invlink(link)` value instead of silently back-transforming. Users are no longer pointed to `type_dictionary`. Instead, they should call their function with a bad `type` value, and they will obtain a list of valid types. The default `type` value is printed in the output. This is useful because the default `type` value is `NULL`, so the user often does not explicitly decide.
+* Allow install with Rcpp 1.0.0 and greater.
+
+Support new models:
+
+* `survey::svyolr()`
+
+Misc:
+
+* `inferences(method="simulation")` uses the original point estimate rather than the mean of the simulation distribution. Issue #851.
+* Better documentation and error messages for `newdata=NULL`
+* Some performance improvements for `predictions()` and `marginalmeans()` (#880, #882, @etiennebacher).
+
+Bug fix:
+
+* `newdata="median"` returned mean of binary variables. Thanks to @jkhanson1970 for report #896.
+
+## 0.14.0
+
+Breaking changes:
+
+* Row order of the output changes for some objects. Rows are not sorted alphabetically by `term`, `by`, and variables explicitly supplied to `datagrid`. This can affect hypothesis tests computed using the b1, b2, b3, and other indices.
+* New procedure `numderiv` argument use a different procedure to select the step size used in the finite difference numeric derivative used to compute standard errors: abs(x) * sqrt(.Machine$double.eps). The numerical results may not be exactly identical to previous versions of `marginaleffects`, but the step size should be adequate in a broader variety of cases. Note that users can use the `numderiv` argument for more control on numeric differentiation, as documented.
+* `bife` models are no longer supported pending investigation in weird results in the tests. Looking for volunteers write more thorough tests.
+
+New:
+
+* Support: `logistf` package.
+* Support: `DCchoice` package.
+* Support: `stats::nls`
+* `hypotheses()` can now accept raw data frame, which gives a lot of flexibility for custom contrasts and functions. See the Hypothesis vignette for an example.
+* `numderiv` argument allows users to use finite difference (center or forward) or Richardson's method to compute the numerical derivatives used in the calculation of standard errors.
+
+Bug fixes:
+
+* `inferences()` supports the `cross` argument for `comparisons()` objects. Thanks to Kirill Solovev for report #856.
+* `splines::bs()` in formulas could produce incorrect results due to weirdness in `stats::model.matrix()`. Thanks to @chiungming for report #831.
+* `mgcv` with `ocat` are now supported. Thanks to Lorenzo Fabbri for Issue #844.
+* `quantreg` problem with `rowid` merge did not affect estimates but did not return the full original data. Issue #829.
+* `get_modeldata()` extracts weights variable when available.
+* `predictions()` is no longer broken in some `inferences()` calls. Issue #853
+* Inaccurate averaging with `comparison=differenceavg` some models where all predictors are categorical. Thanks to Karl Ove Hufthammer for report #865.
+
+Misc:
+
+* Major refactor to simplify the code base and make maintenance easier.
+
+## 0.13.0
+
+Breaking change:
+
+* `glmmTMB`: Standard errors are no longer supported because they may have been erroneous. Follow Issue #810 on Github for developments: https://github.com/vincentarelbundock/marginaleffects/issues/810
+
+New:
+
+* `hypothesis` argument accepts wildcards: `hypothesis = "b*=b1"`
+* `s.value` column in all output: Shannon transforms for p values. See Greenland (2019).
+* `marginal_means` supports `mira` (`mice` objects).
+* `comparisons()`: The `variables` arguments now accepts arbitrary numeric vectors of length equal to the number of rows in `newdata`. This allows users to specify fully custom treatment sizes. In the documentation examples, we show how to estimate the difference for a 1 standard deviation shift in a regressor, where the standard deviation is calculated on a group-wise basis.
+* `comparisons()`: the `variables` argument now accepts "revpairwise", "revsequential", "revreference" for factor and character variables.
+* `comparisons()`: the `comparison` argument now accept "lift" and "liftavg".
+
+Performance:
+
+* Computing elasticities for linear models is now up to 30% faster (#787, @etiennebacher).
+
+Bug fixes:
+
+* Better handling of environments when `newdata` is a function call. Thanks to @jcccf for report #814 and to @capnrefsmmat for the proposed fix using the `rlang` package.
+* Degrees of freedom mismatch for joint hypothesis tests. Thanks to @snhansen for report #789.
+
+## 0.12.0
+
+Breaking change:
+
+* Row order of output has changed for many calls, especially those using the `by` argument. This may break hypothesis tests conducted by indexing `b1`, `b2`, etc. This was necessary to fix Issue #776. Thanks to @marcora for the report.
+
+New:
+
+* `hypotheses()`: Joint hypothesis tests (F and Chi-square) with the `joint` and `joint_test` arguments.
 * `vcov.hypotheses` method.
 * `wts` is now available in `plot_predictions()`, `plot_comparisons()`, and `plot_slopes()`.
 
-# marginaleffects 0.11.2
+Bug:
+
+* Wrong order of rows in bayesian models with `by` argument. Thanks to @shirdekel for report #782.
+
+## 0.11.2
 
 * `vcov()` and `coef()` methods for `marginaleffects` objects.
 * Strings in `wts` are accepted with the `by` argument.
@@ -29,7 +234,7 @@ Bugs:
 * Bug when `datagrid()` when called inside a user-written function. Thanks to @NickCH-K for report #769 and to @capnrefsmmat for the diagnostics.
 
 
-# marginaleffects 0.11.1
+## 0.11.1
 
 Breaking change:
 
@@ -58,7 +263,7 @@ Bug:
 * Elasticities are now supported for `ordinal::clm()` models. Thanks to MrJerryTAO for report #729.
 * `glmmTMB` models with zero-inflated components are supported. Thanks to @Helsinki-Ronan and @strengejacke for report #734.
 
-# marginaleffects 0.11.0
+## 0.11.0
 
 Breaking changes:
 
@@ -95,7 +300,7 @@ Bugs:
 * `by` with user-specified function in `comparison` and factor predictor did not aggregate correctly. Thanks to @joaotedde for report #715.
 * `ordinal::clm`: Support `cum.prob` and `linear.predictor` prediction types. Thanks to @MrJerryTAO for report #717.
 
-# marginaleffects 0.10.0
+## 0.10.0
 
 Performance:
 
@@ -145,7 +350,7 @@ Bugfixes:
 * `brms` models with multivariate outcome collapsed categories in `comparisons()`. Issue #639.
 * `hypotheses()` now works on lists and in calls to `lapply()`, `purrr::map()`, etc. Issue #660.
 
-# marginaleffects 0.9.0
+## 0.9.0
 
 Breaking changes:
 
@@ -193,7 +398,7 @@ Other:
 
 * Removed major performance bottleneck for `slopes()`
 
-# marginaleffects 0.8.1
+## 0.8.1
 
 * `deltamethod()` can run hypothesis tests on objects produced by the `comparisons()`, `marginaleffects()`, `predictions()`, and `marginalmeans()` functions. This feature relies on `match.call()`, which means it may not always work when used programmatically, inside functions and nested environments. It is generally safer and more efficient to use the `hypothesis` argument.
 * `plot_cme()` and `plot_cco()` accept lists with user-specified values for the regressors, and can display nice labels for shortcut string-functions like "threenum" or "quartile".
@@ -207,7 +412,7 @@ Bug fixes:
 * `hypothesis` argument with bayesian models and `tidy()` used to raise an error.
 * Missing values for some regressors in the `comparisons()` output for `brms` models.
 
-# marginaleffects 0.8.0
+## 0.8.0
 
 Breaking change:
 
@@ -244,7 +449,7 @@ Bug fixes and minor improvements:
 * For objects from `crch` package, a number of bugs have been fixed; standard errors should now be correct for `deltamethod()`, `marginaleffects()`, etc.
 * Fixed a bug in the `tidy()` function for `glmmTMB` models without random effects, which caused all t statistics to be identical.
 
-# marginaleffects 0.7.1
+## 0.7.1
 
 * New supported model class: `gamlss`. Thanks to Marcio Augusto Diniz.
 * `marginalmeans()` accepts a `wts` argument with values: "equal", "proportional", "cells".
@@ -262,10 +467,10 @@ Bug fixes and minor improvements:
 * `tidy.predictions()` and `tidy.marginalmeans()` get a new `transform_avg` argument.
 * New vignettes: 
   - Unit-level contrasts in logistic regressions. Thanks to @arthur-albuquerque.
-  - Python Numpy models in `marginaleffects`. Thanks to @timpipeseek.
+  - Python Numpy models in `marginaleffects`. Thanks to timpipeseek.
   - Bootstrap example in standard errors vignette.
 
-# marginaleffects 0.7.0
+## 0.7.0
 
 Breaking changes:
 
@@ -299,7 +504,7 @@ New features:
 * The default contrast in `comparisons()` for binary predictors is now a difference between 1 and 0, rather than +1 relative to baseline.
 * documentation improvements
 
-# marginaleffects 0.6.0
+## 0.6.0
 
 New supported packages and models:
 
@@ -318,9 +523,9 @@ New arguments:
 
 New or improved vignettes:
 
-* Hypothesis Tests and Custom Contrasts using the Delta Method: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
-* Multiple Imputation: https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html
-* Causal Inference with the g-Formula: https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html
+* Hypothesis Tests and Custom Contrasts using the Delta Method: https://marginaleffects.com/vignettes/hypothesis.html
+* Multiple Imputation: https://marginaleffects.com/vignettes/multiple_imputation.html
+* Causal Inference with the g-Formula: https://marginaleffects.com/vignettes/gcomputation.html
  (Thanks to Rohan Kapre for the idea)
 
 Deprecated or renamed arguments:
@@ -337,7 +542,7 @@ Misc:
 * New `transform_pre` shortcuts: dydx, expdydx
 * `tidy.predictions()` computes standard errors and confidence intervals for linear models or GLM on the link scale.
 
-# marginaleffects 0.5.0
+## 0.5.0
 
 Breaking changes:
 
@@ -372,7 +577,7 @@ New features:
 * More informative error messages and warnings
 * Bug fixes and performance improvements
 
-New pages on the `marginaleffects` website: https://vincentarelbundock.github.io/marginaleffects/
+New pages on the `marginaleffects` website: https://marginaleffects.com/
 
 * Alternative software packages
 * Robust standard errors (and more)
@@ -391,7 +596,7 @@ Argument name changes (backward compatibility is preserved:
     - `FUN.factor` -> `FUN_factor` (same for related arguments)
     - `grid.type` -> `grid_type`
 
-# marginaleffects 0.4.1
+## 0.4.1
 
 New supported packages and models: 
 
@@ -406,7 +611,7 @@ Misc:
 * New tests
 * Bug fixes
 
-# marginaleffects 0.4.0
+## 0.4.0
 
 New function:
 
@@ -419,11 +624,11 @@ Misc:
 * More robust handling of in-formula functions: factor(), strata(), mo()
 * Do not overwrite user's `ggplot2::theme_set()` call
 
-# marginaleffects 0.3.4
+## 0.3.4
 
 * Bug fixes
 
-# marginaleffects 0.3.3
+## 0.3.3
 
 New supported models:
 
@@ -439,7 +644,7 @@ Misc:
 * Documentation improvements.
 * CRAN test fixes
 
-# marginaleffects 0.3.2
+## 0.3.2
 
 Support for new models and packages:
 
@@ -456,11 +661,11 @@ Misc:
 * Documentation improvements
 * CRAN tests
 
-# marginaleffects 0.3.1
+## 0.3.1
 
 documentation bugfix
 
-# marginaleffects 0.3.0
+## 0.3.0
 
 Breaking changes:
 
@@ -495,7 +700,7 @@ Misc:
 * Many bug fixes
 * Many new tests, including several against `emmeans`
 
-# marginaleffects 0.2.0
+## 0.2.0
 
 Breaking change:
 
@@ -524,7 +729,7 @@ Misc:
 
 * New validity checks and tests
 
-# marginaleffects 0.1.0
+## 0.1.0
 
 First release. Bravo!
 

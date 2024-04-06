@@ -1,10 +1,22 @@
-process_imputation <- function(x, call_attr) {
+process_imputation <- function(x, call_attr, marginal_means = FALSE) {
     insight::check_if_installed("mice")
-    mfx_list <- list()
-    for (i in seq_along(x$analyses)) {
+
+    if (inherits(x, "mira")) {
+      x <- x$analyses
+    } else if (inherits(x, "amest")) {
+      x <- x
+    }
+
+    mfx_list <- vector("list", length(x))
+    for (i in seq_along(x)) {
         calltmp <- call_attr
-        calltmp[["model"]] <- x$analyses[[i]]
-        calltmp[["modeldata"]] <- get_modeldata(x$analyses[[i]], additional_variables = FALSE)
+        calltmp[["model"]] <- x[[i]]
+
+        # not sure why but this breaks marginal_means on "modeldata specified twice"
+        if (isFALSE(marginal_means)) {
+            calltmp[["modeldata"]] <- get_modeldata( x[[i]], additional_variables = FALSE)
+        }
+
         mfx_list[[i]] <- evalup(calltmp)
         if (i == 1) {
             out <- mfx_list[[1]]
@@ -36,10 +48,13 @@ process_imputation <- function(x, call_attr) {
 
 
 #' tidy helper
-#' 
+#'
 #' @noRd
 #' @export
 tidy.marginaleffects_mids <- function(x, ...) {
+    if (!"std.error" %in% colnames(x)) {
+        insight::format_error('The output of `marginal_means` does not include a `std.error` column. Some models do not generate standard errors when estimates are backtransformed (e.g., GLM models). One solution is to use `type="response"` for those models.')
+    }
     out <- as.data.frame(x[, c("estimate", "std.error")])
     out$term <- seq_len(nrow(out))
     return(out)
@@ -47,7 +62,7 @@ tidy.marginaleffects_mids <- function(x, ...) {
 
 
 #' glance helper
-#' 
+#'
 #' @noRd
 #' @export
 glance.marginaleffects_mids <- function(x, ...) {

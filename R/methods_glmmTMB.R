@@ -22,14 +22,21 @@ get_predict.glmmTMB <- function(model,
 
 
 
+#' @include get_vcov.R
+#' @rdname get_vcov
+#' @export
+get_vcov.glmmTMB <- function(model, ...) {
+    out <- stats::vcov(model, full = TRUE)
+    return(out)
+}
+
+
 #' @include get_coef.R
 #' @rdname get_coef
 #' @export
 get_coef.glmmTMB <- function(model, ...) {
-    out <- insight::get_parameters(model, component = "all")
-    out$Parameter <- ifelse(out$Component == "zero_inflated", paste0("zi~", out$Parameter), out$Parameter)
-    out$Parameter <- ifelse(out$Component == "dispersion", paste0("d~", out$Parameter), out$Parameter)
-    out <- stats::setNames(out$Estimate, out$Parameter)
+    out <- model$fit$par
+    names(out) <- colnames(stats::vcov(model, full = TRUE))
     return(out)
 }
 
@@ -45,19 +52,8 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
     # the order matters; I think we can rely on it, but this still feels like a HACK
     # In particular, this assumes that the order of presentation in coef() is always: beta -> betazi -> betad
     out <- model
-    idx <- grepl("^beta", names(out$fit$parfull))
-    if (length(coefs) == length(out$fit$parfull[idx])) {
-        out$fit$parfull[idx] <- stats::setNames(coefs, names(out$fit$parfull)[idx])
-    } else {
-        insight::format_error("Unable to compute standard errors for this model.")
-    }
-    idx <- grepl("^beta", names(out$fit$par))
-    if (length(coefs) == length(out$fit$par[idx])) {
-        out$fit$par[idx] <- stats::setNames(coefs, names(out$fit$par)[idx])
-    } else {
-        insight::format_error("Unable to compute standard errors for this model.")
-    }
-
+    out$fit$parfull[names(out$fit$parfull) != "b"] <- coefs
+    out$fit$par <- stats::setNames(coefs, names(out$fit$par))
     return(out)
 }
 
@@ -65,6 +61,19 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
 
 #' @rdname sanitize_model_specific
 sanitize_model_specific.glmmTMB <- function(model, vcov = NULL, calling_function = "marginaleffects", ...) {
+    if (isTRUE(vcov) || is.null(vcov)) {
+        insight::format_error(
+            "Standard errors are not reported for models of class `glmmTMB`, because `marginaleffects` tends to compute standard errors that are *much* too small.", 
+            "",
+            "To learn more or to contribute a solution, see:",
+            "",
+            "{https://github.com/vincentarelbundock/marginaleffects/issues/1064}.",
+            "",
+            "To silence this warning, set `vcov=FALSE`.",
+            "",
+            "To report standard errors, supply a square variance-covariance matrix to the `vcov` argument. The `marginaleffects` maintainers *strongly* discourage this approach, because it can vastly understimate standard errors."
+        )
+    }
     REML <- as.list(insight::get_call(model))[["REML"]]
     if (isTRUE(REML) && !identical(vcov, FALSE)) {
         msg <- insight::format_message("Uncertainty estimates cannot be computed for `glmmTMB` models with the `REML=TRUE` option. Either set `REML=FALSE` when fitting the model, or set `vcov=FALSE` when calling a `slopes` function to avoid this error.")

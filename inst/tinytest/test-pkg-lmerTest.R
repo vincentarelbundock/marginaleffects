@@ -17,14 +17,12 @@ expect_predictions(predictions(mod))
 # emmeans
 em <- suppressMessages(emmeans::emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0)))
 em <- tidy(em)
-me <- slopes(mod, newdata = datagrid(x1 = 0, x2 = 0, clus = 1))
-me <- tidy(me)
+me <- avg_slopes(mod, newdata = datagrid(x1 = 0, x2 = 0, clus = 1))
 expect_equivalent(me$std.error[1], em$std.error, tolerance = .01)
 expect_equivalent(me$estimate[1], em$x1.trend)
 
 # margins
-me <- slopes(mod)
-me <- tidy(me)
+me <- avg_slopes(mod)
 ma <- margins(mod)
 ma <- tidy(ma)
 expect_equivalent(me$std.error, ma$std.error, tolerance = .0001)

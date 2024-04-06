@@ -1,5 +1,5 @@
 source("helpers.R")
-if (!EXPENSIVE) exit_file("EXPENSIVE")
+# if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
 
@@ -151,5 +151,42 @@ expect_true(nrow(p) > 1)
 
 
 
+# Issue #844
+df <- transform(mtcars, gear = as.integer(gear))
+
+mod <- gam(
+    gear ~ s(hp) + cyl,
+    data = df,
+    family = ocat(R = 5)
+)
+
+pre <- avg_predictions(model = mod)
+slo <- avg_slopes(mod)
+cmp <- comparisons(mod)
+expect_inherits(pre, "predictions")
+expect_inherits(slo, "slopes")
+expect_inherits(cmp, "comparisons")
+
+
+
+
+# Issue #931
+simdat$Subject <- as.factor(simdat$Subject)
+model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"),
+             data = simdat)
+
+low = function(hi, lo, x) {
+    dydx <- (hi - lo) / 1e-6
+    dydx_min <- min(dydx)
+    x[dydx == dydx_min][1]
+}
+cmp <- comparisons(model,
+  variables = list("Time" = 1e-6),
+  vcov = FALSE,
+  by = "Group",
+  comparison = low
+)
+expect_inherits(cmp, "comparisons")
+expect_equal(nrow(cmp), 2)
 
 rm(list = ls())

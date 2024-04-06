@@ -1,5 +1,6 @@
 # TODO: high tolerance
 source("helpers.R")
+exit_file("memory explosion")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 requiet("brms")

@@ -70,16 +70,20 @@ get_predict.default <- function(model,
             # already numeric
             class(pred) <- "numeric"
             if ("rowid" %in% colnames(newdata)) {
-                out <- list(estimate = pred,
-                            rowid = newdata$rowid)
+                out <- list(
+                    rowid = newdata$rowid,
+                    estimate = pred)
             } else {
-                out <- list(estimate = pred, rowid = seq_len(length(pred)))
+                out <- list(rowid = seq_len(length(pred)), estimate = pred)
             }
         }
         
 
     # matrix with outcome levels as columns
     } else if (is.matrix(pred)) {
+        if (is.null(colnames(pred))) {
+            colnames(pred) <- seq_len(ncol(pred))
+        }
         # internal calls always includes "rowid" as a column in `newdata`
         if ("rowid" %in% colnames(newdata)) {
             out <- list(
@@ -87,7 +91,7 @@ get_predict.default <- function(model,
                 group = rep(colnames(pred), each = nrow(pred)),
                 estimate = c(pred))
         } else {
-            out <- list(
+                        out <- list(
                 rowid = rep(seq_len(nrow(pred)), times = ncol(pred)),
                 group = rep(colnames(pred), each = nrow(pred)),
                 estimate = c(pred))
@@ -97,8 +101,6 @@ get_predict.default <- function(model,
     }
 
     data.table::setDF(out)
-
-    out <- sort_columns(out, first = c("rowid", "group", "estimate"))
 
     return(out)
 }

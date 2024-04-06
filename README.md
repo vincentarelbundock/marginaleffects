@@ -1,158 +1,131 @@
 
-# The `marginaleffects` package for `R` <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="right" alt="" width="120" />
 
-<!--
-[![Codecov test coverage](https://codecov.io/gh/vincentarelbundock/marginaleffects/branch/main/graph/badge.svg)](https://app.codecov.io/gh/vincentarelbundock/marginaleffects?branch=main)
-[![R-CMD-check](https://github/To cl.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/marginaleffects/actions)
-[![CRAN status](https://www.r-pkg.org/badges/version/marginaleffects)](https://CRAN.R-project.org/package=marginaleffects)
-[![status](https://tinyverse.netlify.com/badge/marginaleffects)](https://CRAN.R-project.org/package=marginaleffects)
--->
+<center>
+<h1>
+The Marginal Effects Zoo
+</h1>
+<h3>
+How to interpret statistical models in R and Python
+</h3>
+<br>
+<a href = "https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
+<a href = "https://marginaleffects.com" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>
+<a href = "https://marginaleffects.com" target = "_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a>
+<br><br>
+</center>
 
-Compute and plot predictions, slopes, marginal means, and comparisons
-(contrasts, risk ratios, odds, etc.) for over [80
-classes](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
-of statistical models in R. Conduct linear and non-linear hypothesis
-tests, or equivalence tests. Calculate uncertainty estimates using the
-delta method, bootstrapping, or simulation-based inference.
+The parameters of a statistical model can sometimes be difficult to
+interpret substantively, especially when that model includes non-linear
+components, interactions, or transformations. Analysts who fit such
+complex models often seek to transform raw parameter estimates into
+quantities that are easier for domain experts and stakeholders to
+understand, such as predictions, contrasts, risk differences, ratios,
+odds, lift, slopes, and so on.
 
-[The `marginaleffects`
-website](https://vincentarelbundock.github.io/marginaleffects/) includes
-a [“Get
-started”](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
-tutorial and 25+ [vignettes, case studies, and technical
-notes.](https://vincentarelbundock.github.io/marginaleffects/articles/index.html)
+Unfortunately, computing these quantities—along with associated standard
+errors—can be a tedious and error-prone task. This problem is compounded
+by the fact that modeling packages in `R` and `Python` produce objects
+with varied structures, which hold different information. This means
+that end-users often have to write customized code to interpret the
+estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects,
+and other model types. This can lead to wasted effort, confusion, and
+mistakes, and it can hinder the implementation of best practices.
 
-# Installation
+## Free Book
 
-Install the latest CRAN release:
+[This free online book](https://marginaleffects.com/) introduces a
+conceptual framework to clearly define statistical quantities of
+interest, and shows how to estimate those quantities using the
+`marginaleffects` package for `R` and `Python`. The techniques
+introduced herein can enhance the interpretability of [over 100 classes
+of statistical and machine learning
+models](https://marginaleffects.com/vignettes/supported_models.html),
+including linear, GLM, GAM, mixed-effects, bayesian, categorical
+outcomes, XGBoost, and more. With a single unified interface, users can
+compute and plot many estimands, including:
 
-``` r
-install.packages("marginaleffects")
-```
+-   Predictions (aka fitted values or adjusted predictions)
+-   Comparisons such as contrasts, risk differences, risk ratios, odds,
+    etc.
+-   Slopes (aka marginal effects or partial derivatives)
+-   Marginal means
+-   Linear and non-linear hypothesis tests
+-   Equivalence tests
+-   Uncertainty estimates using the delta method, bootstrapping,
+    simulation, or conformal inference.
+-   Much more!
 
-Install the development version:
+[The Marginal Effects Zoo](https://marginaleffects.com/) book includes
+over 30 chapters of tutorials, case studies, and technical notes. It
+covers a wide range of topics, including how the `marginaleffects`
+package can facilitate the analysis of:
 
-``` r
-install.packages(
-    c("marginaleffects", "insight"),
-    repos = c("https://vincentarelbundock.r-universe.dev", "https://easystats.r-universe.dev"))
-```
+-   Experiments
+-   Observational data
+-   Causal inference with G-Computation
+-   Machine learning models
+-   Bayesian modeling
+-   Multilevel regression with post-stratification (MRP)
+-   Missing data
+-   Matching
+-   Inverse probability weighting
+-   Conformal prediction
 
-*Restart `R` completely before moving on.*
+[Get started by clicking
+here!](https://marginaleffects.com/vignettes/get_started.html)
 
-# Citing `marginaleffects`
+## Free Software
 
-Arel-Bundock V (2023). *marginaleffects: Predictions, Comparisons,
-Slopes, Marginal Means, and Hypothesis Tests*. R package version 0.9.0,
-<https://vincentarelbundock.github.io/marginaleffects/>.
+The `marginaleffects` package for `R` and `Python` offers a single point
+of entry to easily interpret the results of [over 100 classes of
+models,](https://marginaleffects.com/vignettes/supported_models.html)
+using a simple and consistent user interface. Its benefits include:
 
-``` bibtex
-@Manual{marginaleffects,
-  title = {marginaleffects: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis
-Tests},
-  author = {Vincent Arel-Bundock},
-  year = {2023},
-  note = {R package version 0.9.0},
-  url = {https://vincentarelbundock.github.io/marginaleffects/},
-}
-```
-
-# Why?
-
-Parameter estimates are often hard to interpret substantively,
-especially when they are generated by complex models with non-linear
-components or transformations. Many applied researchers would rather
-focus on simple quantities of interest, which have straightforward
-scientific interpretations. Unfortunately, these estimands (and their
-standard errors) are tedious to compute. Moreover, the different
-modeling packages in `R` often produce inconsistent objects that require
-special treatment.
-
-`marginaleffects` offers a single point of entry to easily interpret the
-results of over 80 classes of models, using a simple and consistent user
-interface.
-
-Benefits of `marginaleffects` include:
-
-  - *Powerful:* It can compute predictions, comparisons (contrasts, risk
-    ratios, etc.), slopes, and conduct hypothesis tests for 80 different
-    classes of models in `R`.
-  - *Simple:* All functions share a simple and unified interface.
-  - *Documented*: Each function is thoroughly documented with abundant
-    examples. The website includes 20,000+ words of vignettes and case
-    studies.
-  - *Efficient:* [Some
-    operations](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
-    are orders of magnitude faster than with the `margins` package, and
-    the memory footprint is much smaller.
-  - *Thin:* Few dependencies.
-  - *Standards-compliant:* `marginaleffects` follows “tidy” principles
-    and returns objects that work with standard functions like
-    `summary()`, `head()`, `tidy()`, and `glance()`. These objects are
-    easy to program with and feed to [other packages like
-    `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/)
-  - *Valid:* When possible, [numerical results are
-    checked](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
+-   *Powerful:* It can compute and plot predictions; comparisons
+    (contrasts, risk ratios, etc.); slopes; and conduct hypothesis and
+    equivalence tests for over 100 different classes of models in `R`.
+-   *Simple:* All functions share a simple and unified interface.
+-   *Documented*: Each function is thoroughly documented with abundant
+    examples. The Marginal Effects Zoo website includes 20,000+ words of
+    vignettes and case studies.
+-   *Efficient:* [Some
+    operations](https://marginaleffects.com/vignettes/performance.html)
+    can be up to 1000 times faster and use 30 times less memory than
+    with the `margins` package.  
+-   *Valid:* When possible, [numerical results are
+    checked](https://marginaleffects.com/vignettes/supported_models.html)
     against alternative software like `Stata` or other `R` packages.
-    Unfortunately, it is not possible to test every model type, so users
-    are still strongly encouraged to cross-check their results.
-  - *Extensible:* Adding support for new models is very easy, often
+-   *Thin:* The `R` package requires relatively few dependencies.
+-   *Standards-compliant:* `marginaleffects` follows “tidy” principles
+    and returns simple data frames that work with all standard `R`
+    functions. The outputs are easy to program with and feed to other
+    packages like
+    [`ggplot2`](https://marginaleffects.com/vignettes/plot.html) or
+    [`modelsummary`.](https://marginaleffects.com/vignettes/tables.html)
+-   *Extensible:* Adding support for new models is very easy, often
     requiring less than 10 lines of new code. Please submit [feature
     requests on
     Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
-  - *Active development*: Bugs are fixed promptly.
+-   *Active development*: Bugs are fixed promptly.
 
-# What?
+## How to help
 
-The `marginaleffects` package allows `R` users to compute and plot three
-principal quantities of interest: (1) predictions, (2) comparisons, and
-(3) slopes. In addition, the package includes a convenience function to
-compute a fourth estimand, “marginal means”, which is a special case of
-averaged predictions. `marginaleffects` can also average (or
-“marginalize”) unit-level (or “conditional”) estimates of all those
-quantities, and conduct hypothesis tests on them.
+The `marginaleffects` package and the Marginal Effects Zoo book will
+always be free. If you like this project, you can contribute in four
+ways:
 
-[Predictions:](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
-
-> The outcome predicted by a fitted model on a specified scale for a
-> given combination of values of the predictor variables, such as their
-> observed values, their means, or factor levels. a.k.a. Fitted values,
-> adjusted predictions. `predictions()`, `avg_predictions()`,
-> `plot_predictions()`.
-
-[Comparisons:](https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html)
-
-> Compare the predictions made by a model for different regressor values
-> (e.g., college graduates vs. others): contrasts, differences, risk
-> ratios, odds, etc. `comparisons()`, `avg_comparisons()`,
-> `plot_comparisons()`.
-
-[Slopes:](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)
-
-> Partial derivative of the regression equation with respect to a
-> regressor of interest. a.k.a. Marginal effects, trends. `slopes()`,
-> `avg_slopes()`, `plot_slopes()`.
-
-[Marginal
-Means:](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
-
-> Predictions of a model, averaged across a “reference grid” of
-> categorical predictors. `marginalmeans()`.
-
-| Goal                         | Function                                                                                                     |
-| :--------------------------- | :----------------------------------------------------------------------------------------------------------- |
-| Predictions                  | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)           |
-|                              | [`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)       |
-|                              | [`plot_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html) |
-| Comparisons                  | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)           |
-|                              | [`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)       |
-|                              | [`plot_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html) |
-| Slopes                       | [`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)                     |
-|                              | [`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)                 |
-|                              | [`plot_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_slopes.html)           |
-| Marginal Means               | [`marginal_means()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginal_means.html)     |
-| Grids                        | [`datagrid()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)                 |
-|                              | [`datagridcf()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)               |
-| Hypothesis & Equivalence     | [`hypotheses()`](https://vincentarelbundock.github.io/marginaleffects/reference/hypotheses.html)             |
-| Bayes, Bootstrap, Simulation | [`posterior_draws()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)        |
-|                              | [`inferences()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)             |
+1.  Make a donation to the [Native Women’s Shelter of
+    Montreal](https://www.nwsm.info/) or to [Give
+    Directly](https://www.givedirectly.org/), and send me (Vincent) a
+    quick note. You’ll make my day.
+2.  Submit bug reports, documentation improvements, or code
+    contributions to the Github repositories of the [R
+    version](https://github.com/vincentarelbundock/marginaleffects) or
+    the [Python
+    version](https://github.com/vincentarelbundock/pymarginaleffects) of
+    the package.
+3.  [Cite the `marginaleffects`
+    package](https://marginaleffects.com/CITATION.html) in your work and
+    tell your friends about it.
+4.  Create a new entry [for the Meme
+    Gallery!](https://marginaleffects.com/vignettes/meme.html)

@@ -15,10 +15,10 @@ sanitize_variables <- function(variables,
         checkmate::check_character(variables, min.len = 1, names = "unnamed"),
         checkmate::check_list(variables, min.len = 1, names = "unique"),
         combine = "or")
-    
+
     # extensions with no `get_data()`
     if (is.null(modeldata) || nrow(modeldata) == 0) {
-        modeldata <- set_variable_class(newdata)
+        modeldata <- set_variable_class(newdata, model)
         no_modeldata <- TRUE
     } else {
         no_modeldata <- FALSE
@@ -29,23 +29,29 @@ sanitize_variables <- function(variables,
         # mhurdle names the variables weirdly
         if (inherits(model, "mhurdle")) {
             predictors <- insight::find_predictors(model, flatten = TRUE)
+            predictors <- list(conditional = predictors)
         } else {
             predictors <- insight::find_variables(model)
         }
-        known <- c("fixed", "conditional", "zero_inflated", "scale", "nonlinear")
-        if (any(known %in% names(predictors))) {
-            predictors <- unlist(predictors[known], recursive = TRUE, use.names = FALSE)
+
+        # unsupported models like pytorch
+        if (length(predictors) == 0 || (length(predictors) == 1 && names(predictors) == "response")) {
+            dv <- hush(unlist(insight::find_response(model, combine = FALSE), use.names = FALSE))
+            predictors <- setdiff(hush(colnames(newdata)), c(dv, "rowid"))
+        } else {
+            known <- c("fixed", "conditional", "zero_inflated", "scale", "nonlinear")
+            if (any(known %in% names(predictors))) {
+                predictors <- predictors[known]
             # sometimes triggered by multivariate brms models where we get nested
             # list: predictors$gear$hp
-        } else {
-            predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
+            } else {
+                predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
+                predictors <- unique(predictors)
+            }
+            # flatten
+            predictors <- unique(unlist(predictors, recursive = TRUE, use.names = FALSE))
         }
-        # response is not a predictor, but sometimes we catch it
-        dv <- hush(unlist(insight::find_response(model, combine = FALSE), use.names = FALSE))
-        predictors <- unique(setdiff(predictors, dv))
-        if (length(predictors) == 0) { # unsupported by insight (e.g., numpyro)
-            predictors <- hush(colnames(newdata))
-        }
+
     } else {
         predictors <- variables
     }
@@ -54,7 +60,7 @@ sanitize_variables <- function(variables,
     if (isTRUE(checkmate::check_character(predictors))) {
         predictors <- stats::setNames(rep(list(NULL), length(predictors)), predictors)
     }
-    
+
     # reserved keywords
     # Issue #697: we used to allow "group", as long as it wasn't in
     # `variables`, but this created problems with automatic `by=TRUE`. Perhaps
@@ -95,13 +101,13 @@ sanitize_variables <- function(variables,
             found <- c(found, v)
         }
     }
-    
+
 
     # matrix predictors
     mc <- attr(newdata, "newdata_matrix_columns")
     if (length(mc) > 0 && any(names(predictors) %in% mc)) {
       predictors <- predictors[!names(predictors) %in% mc]
-      insight::format_warning("Matrix columns are not supported. Use the `variables` argument to specify valid predictors.")
+      insight::format_warning("Matrix columns are not supported. Use the `variables` argument to specify valid predictors, or use a function like `drop()` to convert your matrix columns into vectors.")
     }
 
     # missing variables
@@ -113,7 +119,7 @@ sanitize_variables <- function(variables,
             paste(miss, collapse = ", "))
         insight::format_warning(msg)
     }
-    
+
     # sometimes `insight` returns interaction component as if it were a constituent variable
     idx <- !grepl(":", names(predictors))
     predictors <- predictors[idx]
@@ -123,7 +129,7 @@ sanitize_variables <- function(variables,
         msg <- "There is no valid predictor variable. Please change the `variables` argument or supply a new data frame to the `newdata` argument."
         insight::format_error(msg)
     }
-   
+
     # functions to values
     # only for predictions; get_contrast_data_numeric handles this for comparisons()
     # do this before NULL-to-defaults so we can fill it in with default in case of failure
@@ -143,7 +149,6 @@ sanitize_variables <- function(variables,
     # NULL to defaults
     for (v in names(predictors)) {
         if (is.null(predictors[[v]])) {
-
             if (get_variable_class(modeldata, v, "binary")) {
                 predictors[[v]] <- 0:1
 
@@ -158,7 +163,7 @@ sanitize_variables <- function(variables,
                         predictors[[v]] <- stats::fivenum(modeldata[[v]])
                     }
                 }
-            
+
             } else {
                 if (calling_function == "comparisons") {
                     predictors[[v]] <- "reference"
@@ -169,16 +174,16 @@ sanitize_variables <- function(variables,
             }
         }
     }
-    
+
     # shortcuts and validity
     for (v in names(predictors)) {
 
         if (isTRUE(checkmate::check_data_frame(predictors[[v]], nrows = nrow(newdata)))) {
             # do nothing, but don't take the other validity check branches
-        
+
         } else if (get_variable_class(modeldata, v, "binary")) {
-            if (!isTRUE(checkmate::check_numeric(predictors[[v]])) || !all(predictors[[v]] %in% 0:1)) {
-                msg <- sprintf("The `%s` variable is binary. The corresponding entry in the `variables` argument must be 0 or 1.")
+            if (!isTRUE(checkmate::check_numeric(predictors[[v]])) || !is_binary(predictors[[v]])) {
+                msg <- sprintf("The `%s` variable is binary. The corresponding entry in the `variables` argument must be 0 or 1.", v)
                 insight::format_error(msg)
             }
             # get_contrast_data requires both levels
@@ -228,15 +233,17 @@ sanitize_variables <- function(variables,
 
         } else {
             if (calling_function == "comparisons") {
-                valid <- c("reference", "sequential", "pairwise", "all")
+                valid <- c("reference", "sequential", "pairwise", "all", "revpairwise", "revsequential", "revreference")
                 # minmax needs an actual factor in the original data to guarantee correct order of levels.
-                if (is.factor(modeldata[[v]])) { 
+                if (is.factor(modeldata[[v]])) {
                     valid <- c(valid, "minmax")
                 }
                 flag1 <- checkmate::check_choice(predictors[[v]], choices = valid)
                 flag2 <- checkmate::check_vector(predictors[[v]], len = 2)
                 flag3 <- checkmate::check_data_frame(predictors[[v]], nrows = nrow(newdata), ncols = 2)
-                if (!isTRUE(flag1) && !isTRUE(flag2) && !isTRUE(flag3)) {
+                flag4 <- checkmate::check_function(predictors[[v]])
+                flag5 <- checkmate::check_data_frame(predictors[[v]])
+                if (!isTRUE(flag1) && !isTRUE(flag2) && !isTRUE(flag3) && !isTRUE(flag4) && !isTRUE(flag5)) {
                     msg <- "The %s element of the `variables` argument must be a vector of length 2 or one of: %s"
                     msg <- sprintf(msg, v, paste(valid, collapse = ", "))
                     insight::format_error(msg)
@@ -267,7 +274,7 @@ sanitize_variables <- function(variables,
     w <- intersect(w, colnames(newdata))
     others <- w
 
- 
+
     # goals:
     # allow multiple function types: slopes() uses both difference and dydx
     # when comparison is defined, use that if it works or turn back to defaults
@@ -294,7 +301,10 @@ sanitize_variables <- function(variables,
 
         fun_numeric <- fun_categorical <- comparison_function_dict[[comparison]]
         lab_numeric <- lab_categorical <- comparison_label_dict[[comparison]]
-        if (isTRUE(grepl("dydxavg|eyexavg|dyexavg|eydxavg", comparison))) {
+        if (isTRUE(grepl("dydxavgwts|eyexavgwts|dyexavgwts|eydxavgwts", comparison))) {
+            fun_categorical <- comparison_function_dict[["differenceavgwts"]]
+            lab_categorical <- comparison_label_dict[["differenceavgwts"]]
+        } else if (isTRUE(grepl("dydxavg|eyexavg|dyexavg|eydxavg", comparison))) {
             fun_categorical <- comparison_function_dict[["differenceavg"]]
             lab_categorical <- comparison_label_dict[["differenceavg"]]
         } else if (isTRUE(grepl("dydx$|eyex$|dyex$|eydx$", comparison))) {
@@ -319,7 +329,7 @@ sanitize_variables <- function(variables,
             "value" = predictors[[v]],
             "comparison" = comparison)
     }
-    
+
     # epsilon for finite difference
     for (v in names(predictors)) {
         if (!is.null(eps)) {
@@ -331,12 +341,18 @@ sanitize_variables <- function(variables,
         }
     }
 
-    # can't take the slope of an outcome
-    dv <- hush(insight::find_response(model))
-    if (any(names(predictors) %in% dv)) {
-        insight::format_error("The outcome variable cannot be used in the `variables` argument.")
+    # can't take the slope of an outcome, except in weird brms models (issue #1006)
+    if (!inherits(model, "brmsfit") || !isTRUE(length(model$formula$forms) > 1)) {
+        dv <- hush(unlist(insight::find_response(model, combine = FALSE), use.names = FALSE))
+        # sometimes insight doesn't work
+        if (length(dv) > 0) {
+            predictors <- predictors[setdiff(names(predictors), dv)]
+        }
     }
-    
+    if (length(predictors) == 0) {
+        insight::format_error("There is no valid predictor variable. Please make sure your model includes predictors and use the `variables` argument.")
+    }
+
     # interaction: get_contrasts() assumes there is only one function when interaction=TRUE
     if (isTRUE(interaction)) {
         for (p in predictors) {
@@ -348,9 +364,12 @@ sanitize_variables <- function(variables,
         }
     }
 
+    # sort variables alphabetically
+    predictors <- predictors[sort(names(predictors))]
+    others <- others[sort(names(others))]
 
     # output
     out <- list(conditional = predictors, others = others)
-    
+
     return(out)
 }

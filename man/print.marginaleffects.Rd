@@ -6,17 +6,21 @@
 \usage{
 \method{print}{marginaleffects}(
   x,
+  style = getOption("marginaleffects_print_style", default = "summary"),
   digits = getOption("marginaleffects_print_digits", default = 3),
   p_eps = getOption("marginaleffects_print_p_eps", default = 0.001),
   topn = getOption("marginaleffects_print_topn", default = 5),
   nrows = getOption("marginaleffects_print_nrows", default = 30),
   ncols = getOption("marginaleffects_print_ncols", default = 30),
-  style = getOption("marginaleffects_print_style", default = "summary"),
+  type = getOption("marginaleffects_print_type", default = TRUE),
+  column_names = getOption("marginaleffects_print_column_names", default = TRUE),
   ...
 )
 }
 \arguments{
-\item{x}{An object produced by one of the \code{\link{marginaleffects}} package functions.}
+\item{x}{An object produced by one of the \code{marginaleffects} package functions.}
+
+\item{style}{"summary", "data.frame", or "tinytable"}
 
 \item{digits}{The number of digits to display.}
 
@@ -28,12 +32,14 @@
 
 \item{ncols}{The maximum number of column names to display at the bottom of the printed output.}
 
-\item{style}{"summary" or "data.frame"}
+\item{type}{boolean: should the type be printed?}
+
+\item{column_names}{boolean: should the column names be printed?}
 
 \item{...}{Other arguments are currently ignored.}
 }
 \description{
-This function controls the text which is printed to the console when one of the core \code{marginalefffects} functions is called and the object is returned: \code{predictions()}, \code{comparisons()}, \code{slopes()}, \code{marginal_means()}, \code{hypotheses()}, \code{avg_predictions()}, \code{avg_comparisons()}, \code{avg_slopes()}.
+This function controls the text which is printed to the console when one of the core \code{marginalefffects} functions is called and the object is returned: \code{predictions()}, \code{comparisons()}, \code{slopes()}, \code{hypotheses()}, \code{avg_predictions()}, \code{avg_comparisons()}, \code{avg_slopes()}.
 
 All of those functions return standard data frames. Columns can be extracted by name, \code{predictions(model)$estimate}, and all the usual data manipulation functions work out-of-the-box:  \code{colnames()}, \code{head()}, \code{subset()}, \code{dplyr::filter()}, \code{dplyr::arrange()}, etc.
 

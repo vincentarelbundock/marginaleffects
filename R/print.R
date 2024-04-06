@@ -1,19 +1,39 @@
+#' Print a marginaleffects object in knitr
+#'
+#' @keywords internal
+#' @return A string with class `knit_asis` to be printed in Rmarkdown or Quarto documents.
+#' @exportS3Method knitr::knit_print
+knit_print.marginaleffects <- function(x, ...) {
+  if (isTRUE(getOption("marginaleffects_print_style") == "tinytable")) {
+    insight::check_if_installed("tinytable")
+    x <- print(x, "tinytable")
+    printfun <- utils::getFromNamespace("knit_print.tinytable", "tinytable")
+    printfun(x)
+  } else {
+    print(x)
+  }
+}
+
+
+
 #' Print `marginaleffects` objects
 #' 
 #' @description
-#' This function controls the text which is printed to the console when one of the core `marginalefffects` functions is called and the object is returned: `predictions()`, `comparisons()`, `slopes()`, `marginal_means()`, `hypotheses()`, `avg_predictions()`, `avg_comparisons()`, `avg_slopes()`.
+#' This function controls the text which is printed to the console when one of the core `marginalefffects` functions is called and the object is returned: `predictions()`, `comparisons()`, `slopes()`, `hypotheses()`, `avg_predictions()`, `avg_comparisons()`, `avg_slopes()`.
 #' 
 #' All of those functions return standard data frames. Columns can be extracted by name, `predictions(model)$estimate`, and all the usual data manipulation functions work out-of-the-box:  `colnames()`, `head()`, `subset()`, `dplyr::filter()`, `dplyr::arrange()`, etc.
 #' 
 #' Some of the data columns are not printed by default. You can disable pretty printing and print the full results as a standard data frame using the `style` argument or by applying `as.data.frame()` on the object. See examples below.
 #' 
-#' @param x An object produced by one of the [`marginaleffects`] package functions.
+#' @param x An object produced by one of the `marginaleffects` package functions.
+#' @param style "summary", "data.frame", or "tinytable"
 #' @param digits The number of digits to display.
 #' @param p_eps p values smaller than this number are printed in "<0.001" style.
 #' @param topn The number of rows to be printed from the beginning and end of tables with more than `nrows` rows.
 #' @param nrows The number of rows which will be printed before truncation.
 #' @param ncols The maximum number of column names to display at the bottom of the printed output.
-#' @param style "summary" or "data.frame"
+#' @param type boolean: should the type be printed?
+#' @param column_names boolean: should the column names be printed?
 #' @param ... Other arguments are currently ignored.
 #' @export
 #' @examples
@@ -29,19 +49,23 @@
 #' data.frame(p)
 #'
 print.marginaleffects <- function(x,
+                                  style = getOption("marginaleffects_print_style", default = "summary"),
                                   digits = getOption("marginaleffects_print_digits", default = 3),
                                   p_eps = getOption("marginaleffects_print_p_eps", default = 0.001),
                                   topn = getOption("marginaleffects_print_topn", default = 5),
                                   nrows = getOption("marginaleffects_print_nrows", default = 30),
                                   ncols = getOption("marginaleffects_print_ncols", default = 30),
-                                  style = getOption("marginaleffects_print_style", default = "summary"),
+                                  type = getOption("marginaleffects_print_type", default = TRUE),
+                                  column_names = getOption("marginaleffects_print_column_names", default = TRUE),
                                   ...) {
-
 
     checkmate::assert_number(digits)
     checkmate::assert_number(topn)
     checkmate::assert_number(nrows)
-    checkmate::assert_choice(style, choices = c("data.frame", "summary"))
+    checkmate::assert_choice(
+      style,
+      choices = c("data.frame", "summary", "tinytable", "html", "latex", "markdown", "typst")
+    )
 
     if (isTRUE(style == "data.frame")) {
         print(as.data.frame(x))
@@ -71,6 +95,8 @@ print.marginaleffects <- function(x,
     for (i in seq_along(out)) {
         if (colnames(out)[i] %in% ps) {
             out[[i]] <- format.pval(out[[i]], digits = digits, eps = p_eps)
+        } else if (isTRUE("s.value" == colnames(out)[i])) {
+            out[[i]] <- sprintf("%.1f", out[[i]])
         } else {
             out[[i]] <- format(out[[i]], digits = digits)
         }
@@ -87,32 +113,50 @@ print.marginaleffects <- function(x,
         out$contrast <- NULL
     }
 
+    statistic_label <- attr(x, "statistic_label")
+    if (is.null(statistic_label)) {
+        if (any(out[["df"]] < Inf)) {
+            statistic_label <- "t"
+        } else {
+            statistic_label <- "z"
+        }
+    }
+
     # rename
     dict <- c(
         "group" = "Group",
         "term" = "Term",
-        "by" = "By",
         "contrast" = "Contrast",
         "value" = "Value",
+        "by" = "By",
         "estimate" = "Estimate",
         "std.error" = "Std. Error",
-        "statistic" = "z",
-        "p.value" = "Pr(>|z|)",
+        "statistic" = statistic_label,
+        "p.value" = sprintf("Pr(>|%s|)", statistic_label),
+        "s.value" = "S",
         "conf.low" = ifelse(is.null(alpha),
             "CI low",
             sprintf("%.1f %%", alpha / 2)),
         "conf.high" = ifelse(is.null(alpha),
             "CI high",
             sprintf("%.1f %%", 100 - alpha / 2)),
+        "pred.low" = ifelse(is.null(alpha),
+            "Pred low",
+            sprintf("Pred. %.1f %%", alpha / 2)),
+        "pred.high" = ifelse(is.null(alpha),
+            "Pred high",
+            sprintf("Pred. %.1f %%", 100 - alpha / 2)),
+        "pred.set" = ifelse(is.null(alpha),
+            "Pred Set",
+            sprintf("Pred Set %.1f %%", 100 - alpha / 2)),
         "p.value.nonsup" = "p (NonSup)",
         "p.value.noninf" = "p (NonInf)",
-        "p.value.equiv" = "p (Equiv)"
+        "p.value.equiv" = "p (Equiv)",
+        "df" = "Df",
+        "df1" = "Df 1",
+        "df2" = "Df 2"
         )
 
-    if (any(out[["df"]] < Inf)) {
-        dict["statistic"] <- "t"
-        dict["p.value"] <- "Pr(>|t|)"
-    }
 
     if (inherits(x, "marginalmeans")) {
         dict["estimate"] <- "Mean"
@@ -124,18 +168,26 @@ print.marginaleffects <- function(x,
         grep("^contrast_", colnames(x), value = TRUE))
 
     # explicitly given by user in `datagrid()` or `by` or `newdata`
-    idx <- c(idx, attr(x, "newdata_variables_datagrid"))
-    if (isTRUE(checkmate::check_character(attr(x, "by")))) {
-        idx <- c(idx, attr(x, "by"))
+    nd <- attr(x, "newdata")
+    if (is.null(nd)) {
+        nd <- attr(x, "newdata_newdata")
     }
-    if (isTRUE(attr(out, "newdata_explicit"))) {
-        idx_nd <- c(tryCatch(colnames(attr(x, "newdata")), error = function(e) NULL),
-                    tryCatch(colnames(attr(x, "call")[["newdata"]]), error = function(e) NULL))
-        idx <- c(idx, idx_nd)
+    tmp <- c("by",
+        attr(nd, "variables_datagrid"),
+        attr(nd, "newdata_variables_datagrid"),
+        attr(x, "variables_datagrid"),
+        attr(x, "newdata_variables_datagrid")
+    )
+    if (isTRUE(checkmate::check_character(attr(x, "by")))) {
+        tmp <- c(tmp, attr(x, "by"))
+    }
+    idx <- c(idx[1:grep("by", idx)], tmp, idx[(grep("by", idx) + 1):length(idx)])
+    if (isTRUE(attr(nd, "newdata_newdata_explicit")) || isTRUE(attr(nd, "newdata_explicit"))) {
+        idx <- c(idx, colnames(nd))
     }
 
     # drop useless columns: rowid
-    useless <- "rowid"
+    useless <- c("rowid", "rowidcf")
 
     # drop useless columns: dv
     dv <- tryCatch(
@@ -143,19 +195,15 @@ print.marginaleffects <- function(x,
         error = function(e) NULL)
     useless <- c(useless, dv)
 
-    # drop useless columns: comparisons() with a single focal variable
-    if (inherits(x, "comparisons")) {
-        v <- attr(x, "variables")
-        if (isTRUE(checkmate::check_list(v, len = 1, names = "named"))) {
-            useless <- c(useless, names(v)[1])
-        }
-    }
+    # selection style
+    data.table::setDT(out)
 
     # drop useless columns
     idx <- setdiff(unique(idx), useless)
-    out <- out[, colnames(out) %in% idx, drop = FALSE]
+    idx <- intersect(idx, colnames(out))
+    out <- out[, ..idx, drop = FALSE]
 
-    if (all(out$term == "cross")) {
+    if ("term" %in% colnames(out) && all(out$term == "cross")) {
         out[["term"]] <- NULL
         colnames(out) <- gsub("^contrast_", "C: ", colnames(out))
     }
@@ -165,7 +213,7 @@ print.marginaleffects <- function(x,
     }
 
     # avoid infinite recursion by stripping marginaleffect.summary class
-    out <- as.data.frame(out)
+    data.table::setDF(out)
 
     # recommend avg_*()
     rec <- ""
@@ -179,8 +227,45 @@ print.marginaleffects <- function(x,
         }
     }
 
-    # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
+    if (style %in% c("tinytable", "html", "latex", "typst", "markdown")) {
+        insight::check_if_installed("tinytable")
+
+        tab <- as.data.frame(out)
+
+        if (isTRUE(splitprint)) {
+          tab <- rbind(utils::head(tab, topn), utils::tail(tab, topn))
+        }
+
+        # at <- attributes(tab)
+        # attributes(tab) <- at[names(at) %in% c("row.names", "names", "class")]
+
+        tab <- tinytable::tt(tab)
+        tab <- tinytable::format_tt(tab, escape = TRUE)
+
+        if (isTRUE(splitprint)) {
+          msg <- "%s rows omitted"
+          msg <- sprintf(msg, nrow(x) - 2 * topn)
+          msg <- stats::setNames(list(topn + 1), msg)
+          tab <- tinytable::group_tt(tab, i = msg)
+          tab <- tinytable::style_tt(tab, i = topn + 1, align = "c")
+        }
+
+        tab@output <- style
+        if (style == "tinytable") {
+          return(tab)
+        }
+        print(tab)
+        return(invisible(tab))
+    }
+
+    # head
     cat("\n")
+    print_head <- attr(x, "print_head")
+    if (!is.null(print_head)) {
+        cat(print_head, "\n")
+    }
+
+    # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
     if (splitprint) {
         print(utils::head(out, n = topn), row.names = FALSE)
         msg <- "--- %s rows omitted. See %s?print.marginaleffects ---"
@@ -210,10 +295,18 @@ print.marginaleffects <- function(x,
         cat(sprintf("Results averaged over levels of: %s",
                     paste(vg, collapse = ", ")), "\n")
     }
-    if (ncol(x) <= ncols) {
+    if (ncol(x) <= ncols && isTRUE(column_names)) {
         cat("Columns:", paste(colnames(x), collapse = ", "), "\n")
     }
+    if (isTRUE(type) && !is.null(attr(x, "type"))) {
+        cat("Type: ", attr(x, "type"), "\n")
+    }
     cat("\n")
+
+    print_tail <- attr(x, "print_tail")
+    if (!is.null(print_tail)) {
+        cat(print_tail, "\n")
+    }
 
     return(invisible(x))
 }
@@ -235,5 +328,20 @@ print.comparisons <- print.marginaleffects
 print.slopes <- print.marginaleffects
 
 #' @noRd
-#' @export
-print.marginalmeans <- print.marginaleffects
+#' @exportS3Method knitr::knit_print
+knit_print.hypotheses <- knit_print.marginaleffects
+
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.predictions <- knit_print.marginaleffects
+
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.comparisons <- knit_print.marginaleffects
+
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.slopes <- knit_print.marginaleffects
+
+
+

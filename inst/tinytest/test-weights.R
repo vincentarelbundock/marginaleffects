@@ -11,25 +11,22 @@ mod <- suppressWarnings(svyglm(
     design = svydesign(ids = ~1, weights = ~weights, data = dat),
     family = binomial))
 
-p1 <- predictions(mod, newdata = dat)
-p2 <- predictions(mod, wts = "weights", newdata = dat)
-p3 <- predictions(mod, wts = "w", newdata = dat)
-p4 <- predictions(mod, wts = dat$weights)
-expect_false(tidy(p1)$estimate == tidy(p2)$estimate)
-expect_false(tidy(p1)$std.error == tidy(p2)$std.error)
-expect_equivalent(tidy(p2), tidy(p3))
-expect_equivalent(tidy(p2), tidy(p4))
+p1 <- avg_predictions(mod, newdata = dat)
+p2 <- avg_predictions(mod, wts = "weights", newdata = dat)
+p3 <- avg_predictions(mod, wts = "w", newdata = dat)
+p4 <- avg_predictions(mod, wts = dat$weights)
+expect_false(p1$estimate == p2$estimate)
+expect_false(p1$std.error == p2$std.error)
+expect_equivalent(p2, p3)
+expect_equivalent(p2, p4)
 
 
 # by supports weights
-p1 <- predictions(mod, wts = "weights", newdata = dat)
-p1 <- tidy(p1)
+p1 <- avg_predictions(mod, wts = "weights", newdata = dat)
 expect_inherits(p1, "data.frame")
-m1 <- slopes(mod, wts = "weights", newdata = dat, by = "cyl")
-m1 <- tidy(m1)
+m1 <- avg_slopes(mod, wts = "weights", newdata = dat, by = "cyl")
 expect_inherits(m1, "data.frame")
-c1 <- comparisons(mod, wts = "weights", newdata = dat, by = "cyl")
-c1 <- tidy(c1)
+c1 <- avg_comparisons(mod, wts = "weights", newdata = dat, by = "cyl")
 expect_inherits(c1, "data.frame")
 
 
@@ -41,7 +38,6 @@ fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
           data = k, weights = w)
 cmp1 <- comparisons(fit, variables = "treat", wts = "w")
 cmp2 <- comparisons(fit, variables = "treat", wts = "w", comparison = "differenceavg")
-expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$estimate, k$w))
 expect_equivalent(cmp2$estimate, weighted.mean(cmp1$estimate, k$w))
 
 
@@ -86,8 +82,8 @@ cmp1 <- avg_comparisons(fit,
     variables = list(g = c("Control", "Z")),
     wts = "N",
     newdata = tmp,
-    transform_pre = "lnratioavg",
-    transform_post = exp)
+    comparison = "lnratioavg",
+    transform = exp)
 cmp2 <- predictions(fit, variables = list(g = c("Control", "Z"))) |> 
     dplyr::group_by(g) |>
     dplyr::summarise(estimate = weighted.mean(estimate, N)) |>
@@ -132,6 +128,45 @@ cmp2 <- avg_comparisons(fit,
     transform = exp)
 expect_equivalent(cmp1, cmp2)
 
+
+# Issue #865
+d = data.frame(
+  outcome = c(0,0,1,0,0,1,1,1,0,0,0,1,0,1,0,
+              0,0,0,0,1,0,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,
+              0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0,1,0,1,
+              1,1,0,0,0,0,0,0,0,1,0,1,0,1,1,1,1,0,1,1,1,
+              0,0,0,0,1,1,0,0,1,0,1,0,1,0,1,0,1,0,0,1,1,0),
+  foo = c(1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,
+          1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,
+          1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,
+          1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,
+          1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1),
+  bar = c(1,1,1,0,0,0,1,1,0,0,1,0,1,0,1,
+          1,1,1,0,1,1,1,1,0,1,0,0,1,0,0,1,1,1,1,0,0,
+          1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,0,0,0,0,0,1,
+          1,0,0,0,0,1,0,1,1,0,0,1,1,1,1,1,1,1,1,0,1,
+          0,1,1,0,1,0,1,1,1,0,1,0,1,1,0,0,1,1,0,1,1,1)
+)
+mod = glm(
+  outcome ~ foo + bar,
+  family = "binomial",
+  data = d
+)
+cmp1 <- avg_comparisons(mod, variables = list(foo = 0:1),
+                type = "response", comparison = "difference")
+cmp2 <- comparisons(mod, variables = list(foo = 0:1),
+            type = "response", comparison = "differenceavg")
+expect_equivalent(cmp1$estimate, cmp2$estimate)
+
+
+# Issue #870
+Guerry <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv", na.strings = "")
+Guerry <- na.omit(Guerry)
+mod <- lm(Literacy ~ Pop1831 * Desertion, data = Guerry)
+p1 <- predictions(mod, by = "Region", wts = "Donations")
+p2 <- predictions(mod, by = "Region")
+expect_inherits(p1, "predictions")
+expect_false(any(p1$estimate == p2$estimate))
 
 
 # brms

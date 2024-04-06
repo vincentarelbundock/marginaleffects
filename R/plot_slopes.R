@@ -5,27 +5,26 @@
 #'
 #' The `by` argument is used to plot marginal slopes, that is, slopes made on the original data, but averaged by subgroups. This is analogous to using the `by` argument in the `slopes()` function.
 #'
-#' The `condition` argument is used to plot conditional slopes, that is, slopes made on a user-specified grid. This is analogous to using the `newdata` argument and `datagrid()` function in a `slopes()` call.
-#' 
-#' All unspecified variables are held at their mean or mode. This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the `variables` argument, or supply model-specific arguments to compute population-level estimates. See details below.
+#' The `condition` argument is used to plot conditional slopes, that is, slopes computed on a user-specified grid. This is analogous to using the `newdata` argument and `datagrid()` function in a `slopes()` call. All variables whose values are not specified explicitly are treated as usual by `datagrid()`, that is, they are held at their mean or mode (or rounded mean for integers). This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the `condition` argument, or supply model-specific arguments to compute population-level estimates. See details below.
 
 #' See the "Plots" vignette and website for tutorials and information on how to customize plots:
 #'
-#' * https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
-#' * https://vincentarelbundock.github.io/marginaleffects
+#' * https://marginaleffects.com/vignettes/plot.html
+#' * https://marginaleffects.com
 #' 
 #' @param variables Name of the variable whose marginal effect (slope) we want to plot on the y-axis.
 #' @param condition Conditional slopes
-#' + Character vector (max length 3): Names of the predictors to display.
-#' + Named list (max length 3): List names correspond to predictors. List elements can be:
+#' + Character vector (max length 4): Names of the predictors to display.
+#' + Named list (max length 4): List names correspond to predictors. List elements can be:
 #'   - Numeric vector
 #'   - Function which returns a numeric vector or a set of unique categorical values 
 #'   - Shortcut strings for common reference values: "minmax", "quartile", "threenum"
-#' + 1: x-axis. 2: color/shape. 3: facets.
+#' + 1: x-axis. 2: color/shape. 3: facet (wrap if no fourth variable, otherwise cols of grid). 4: facet (rows of grid).
 #' + Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers `?stats::fivenum`.
 #' @param rug TRUE displays tick marks on the axes to mark the distribution of raw data.
 #' @param gray FALSE grayscale or color plot
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
+#' @param newdata When `newdata` is `NULL`, the grid is determined by the `condition` argument. When `newdata` is not `NULL`, the argument behaves in the same way as in the `slopes()` function.
 #' @inheritParams slopes
 #' @template model_specific_arguments
 #' @return A `ggplot2` object
@@ -71,7 +70,7 @@ plot_slopes <- function(model,
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
-    scall <- substitute(newdata)
+    scall <- rlang::enquo(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, model)
 
     valid <- c("dydx", "eyex", "eydx", "dyex")
@@ -100,11 +99,3 @@ plot_slopes <- function(model,
     return(out)
 }
 
-
-#' `plot_slopes()` is an alias to `plot_slopes()`
-#'
-#' This alias is kept for backward compatibility.
-#' @inherit plot_predictions
-#' @keywords internal
-#' @export
-plot_cme <- plot_slopes

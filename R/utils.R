@@ -1,37 +1,6 @@
-sort_columns <- function(x, first = NULL, alpha = FALSE) {
-    cols <- colnames(x)
-
-    forget <- c("names", "row.names", "class")
-    attr_save <- attributes(x)
-    attr_save <- attr_save[!names(attr_save) %in% forget]
-
-    if (isTRUE(alpha)) {
-        cols <- sort(cols)
-    }
-
-    if (!is.null(first)) {
-        cols <- unique(c(first, cols))
-    }
-
-    cols <- intersect(cols, colnames(x))
-
-    if (inherits(x, "data.table")) {
-        out <- x[, ..cols, drop = FALSE]
-    } else {
-        out <- x[, cols, drop = FALSE]
-    }
-
-    for (n in names(attr_save)) {
-        attr(out, n) <- attr_save[[n]]
-    }
-
-    return(out)
-}
-
-
 get_unique_index <- function(x, term_only = FALSE) {
     idx <- c("term", "contrast", grep("^contrast_", colnames(x), value = TRUE))
-    
+
     if (!term_only) {
         by <- attr(x, "by")
         if (isTRUE(checkmate::check_data_frame(by))) {
@@ -44,9 +13,9 @@ get_unique_index <- function(x, term_only = FALSE) {
             idx <- explicit
         }
     }
-    
+
     idx <- intersect(unique(idx), colnames(x))
-    
+
     if (length(idx) == 0) {
         return(NULL)
     } else if (length(idx) == 1) {
@@ -60,7 +29,7 @@ get_unique_index <- function(x, term_only = FALSE) {
             out[[i]] <- NULL
         }
     }
-    
+
     out <- apply(out, 1, paste, collapse = ", ")
     return(out)
 }
@@ -134,7 +103,8 @@ merge_by_rowid <- function(x, y) {
     if ("rowid" %in% colnames(x) && "rowid" %in% colnames(y) && length(mergein) > 0) {
         idx <- c("rowid", mergein)
         if (!data.table::is.data.table(y)) {
-            tmp <- data.table::data.table(y)[, ..idx]
+            data.table::setDT(y)
+            tmp <- y[, ..idx]
         } else {
             tmp <- y[, ..idx]
         }
@@ -148,4 +118,31 @@ merge_by_rowid <- function(x, y) {
         out <- x
     }
     return(out)
+}
+
+# faster than all(x %in% 0:1)
+is_binary <- function(x) {
+    isTRUE(checkmate::check_integerish(
+        x, null.ok = TRUE, upper = 1, lower = 0, any.missing = FALSE)
+    )
+}
+
+
+sub_named_vector <- function(x, y) {
+  # issue 1005
+  xlab <- gsub("^`|`$", "", names(x))
+  ylab <- gsub("^`|`$", "", names(y))
+
+  idx <- match(ylab, xlab)
+  if (length(stats::na.omit(idx)) > 0) {
+    x[stats::na.omit(idx)] <- y[!is.na(idx)]
+
+  } else if (length(y) == length(x)) {
+    return(y)
+
+  } else {
+    stop("set_coef() substitution error. Please report on Github with a reproducible example: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
+  }
+
+  return(x)
 }

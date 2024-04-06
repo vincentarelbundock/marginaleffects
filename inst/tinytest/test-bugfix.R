@@ -71,7 +71,7 @@ p1 <- predictions(m2, type = "link")
 p2 <- predictions(m2, newdata = dat, type = "link")
 p3 <- as.data.frame(predict(m2, se.fit = TRUE, type = "link"))
 
-exit_file("works locally")
+# exit_file("works locally")
 expect_equal(p1$estimate, p3$fit)
 expect_equal(p1$std.error, p3$se.fit)
 expect_equal(p2$estimate, p3$fit)
@@ -139,8 +139,19 @@ expect_equivalent(
   coef(mod)["treatmentB"] + coef(mod)["treatmentB:countryNZ"])
 
 
+# Issue #1005
+d1 <- d2 <- mtcars
+d2[["horse power"]] <- d2$hp
+m1 <- lm(mpg ~ hp, data = d1)
+m2 <- lm(mpg ~ `horse power`, data = d2)
+p1 <- plot_predictions(m1, condition = 'hp', draw = FALSE)
+p2 <- plot_predictions(m2, condition = 'horse power', draw = FALSE)
+expect_equivalent(p1$estimate, p2$estimate)
+expect_equivalent(p1$std.error, p2$std.error)
+
 
 
 source("helpers.R")
 rm(list = ls())
+
 

@@ -61,6 +61,8 @@ utils::globalVariables(c(
 "predicted",
 "rowid",
 "rowidunique",
+"hi",
+"lo",
 "section",
 "stars_note",
 "statistic",

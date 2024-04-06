@@ -1,4 +1,4 @@
-bootstrap_boot <- function(model, FUN, ...) {
+bootstrap_boot <- function(model, INF_FUN, ...) {
 
     # attached by `inferences()`
     conf_type <- attr(model, "inferences_conf_type")
@@ -15,7 +15,7 @@ bootstrap_boot <- function(model, FUN, ...) {
 
     # avoid recursion
     attr(model, "inferences_method") <- NULL
-    out <- do.call(FUN, c(list(model), dots))
+    out <- do.call(INF_FUN, c(list(model), dots))
 
     # default confidence level may be implicit in original call, but we need numeric
     if (is.null(dots[["conf_level"]])) {
@@ -30,7 +30,7 @@ bootstrap_boot <- function(model, FUN, ...) {
         modboot <- eval(modcall)
         modboot <- eval(modboot)
         args <- c(list(modboot, modeldata = d), dots)
-        out <- do.call(FUN, args)$estimate
+        out <- do.call(INF_FUN, args)$estimate
         return(out)
     }
     args <- list("data" = modeldata, "statistic" = bootfun)

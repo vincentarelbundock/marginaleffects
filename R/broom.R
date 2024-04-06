@@ -8,18 +8,28 @@ generics::tidy
 generics::glance
 
 
-
 #' tidy helper
 #' 
 #' @noRd
 #' @export
 tidy.comparisons <- function(x, ...) {
     insight::check_if_installed("tibble")
-    if ("transform_avg" %in% names(list(...))) {
-        insight::format_error("The `transform_avg` argument is deprecated. Use `transform` instead.")
+    out <- tibble::as_tibble(x)
+    if (!"term" %in% names(out)) {
+        lab <- seq_len(nrow(out))
+        if ("group" %in% colnames(out) || is.character(attr(x, "by"))) {
+            tmp <- c("group", attr(x, "by"))
+            tmp <- Filter(function(j) j %in% colnames(x), tmp)
+            if (length(tmp) > 0) {
+                tmp <- do.call(paste, out[, tmp])
+                if (anyDuplicated(tmp)) {
+                    tmp <- paste(seq_len(nrow(out)), tmp)
+                }
+                lab <- tmp
+            }
+        }
+        out[["term"]] <- lab
     }
-    out <- get_averages(x, ...)
-    out <- tibble::as_tibble(out)
     return(out)
 }
 
@@ -37,20 +47,12 @@ tidy.slopes <- tidy.comparisons
 #' @export
 tidy.predictions <- tidy.comparisons
 
+
 #' tidy helper
 #' 
 #' @noRd
 #' @export
-tidy.hypotheses <- function(x, ...) {
-    insight::check_if_installed("tibble")
-    if (any(!c("term", "estimate") %in% colnames(x)) || !inherits(x, c("hypotheses", "deltamethod", "data.frame"))) {
-        insight::format_error("The `tidy()` method only supports `hypotheses` objects produced by the `marginaleffects::hypotheses()` function.")
-    }
-    # the object is already in a tidy format. We need this method for
-    # `modelsummary` and other functions that rely on `tidy()`.
-    x <- tibble::as_tibble(x)
-    return(x)
-}
+tidy.hypotheses <- tidy.comparisons
 
 
 #' tidy helper
@@ -58,27 +60,8 @@ tidy.hypotheses <- function(x, ...) {
 #' @noRd
 #' @export
 tidy.marginalmeans <- function(x, ...) {
-    insight::check_if_installed("insight")
-    if ("transform_avg" %in% names(list(...))) {
-        insight::format_error("The `transform_avg` argument is deprecated. Use `transform` instead.")
-    }
-    first = c("term", "value", "estimate", "std.error",
-    "statistic", "p.value", "conf.low", "conf.high")
-    out <- sort_columns(x, first)
-    out <- tibble::as_tibble(out)
-    attr(out, "conf_level") <- attr(x, "conf_level")
-    return(out)
-}
-
-
-#' tidy helper
-#' 
-#' @noRd
-#' @export
-tidy.hypotheses <- function(x, ...) {
     insight::check_if_installed("tibble")
-    out <- tibble::as_tibble(x)
-    return(out)
+    tibble::as_tibble(x)
 }
 
 
@@ -111,16 +94,19 @@ glance.slopes <- function(x, ...) {
 
 #' @noRd
 #' @export
-glance.marginalmeans <- glance.slopes
-
-#' @noRd
-#' @export
 glance.predictions <- glance.slopes
+
 
 #' @noRd
 #' @export
 glance.comparisons <- glance.slopes
 
+
 #' @noRd
 #' @export
 glance.hypotheses <- glance.slopes
+
+
+#' @noRd
+#' @export
+glance.marginalmeans <- glance.slopes

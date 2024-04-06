@@ -4,6 +4,13 @@ requiet("survival")
 requiet("emmeans")
 requiet("broom")
 
+
+# Issue #911: survreg support
+fit <- survreg(Surv(futime, fustat) ~ ecog.ps + rx, ovarian, dist='weibull', scale=1)
+s <- avg_slopes(fit)
+expect_inherits(s, "slopes")
+
+
 # clogit 
 N  <- 10000
 ng <- 5000
@@ -36,14 +43,14 @@ mod <- coxph(Surv(time, status) ~ x + strata(sex),
 mfx <- merge(avg_slopes(mod, type = "lp"), stata)
 expect_slopes(mod, type = "risk", n_unique = 4)
 expect_equivalent(mfx$estimate, mfx$dydxstata)
-expect_equivalent(mfx$std.error, mfx$std.errorstata)
+expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = 1e-5)
 
 # emtrends
 em <- emtrends(mod, ~x, "x", at = list(time = 4, status = 1, x = 0, sex = factor(0, levels = 0:1)))
 em <- tidy(em)
 mfx <- slopes(mod, variables = "x", type = "lp")
 expect_equivalent(mfx$estimate[1], em$x.trend)
-expect_equivalent(mfx$std.error[1], em$std.error)
+expect_equivalent(mfx$std.error[1], em$std.error, tolerance = 1e-5)
 
 
 

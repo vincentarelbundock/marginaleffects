@@ -21,10 +21,8 @@ expect_true(all(coef(mod1) != coef(mod2)))
 # hurdle: marginaleffects vs margins vs emtrends
 data("bioChemists", package = "pscl")
 model <- hurdle(art ~ phd + fem | ment, data = bioChemists, dist = "negbin")
-mfx1 <- slopes(model, type = "response")
-mfx2 <- slopes(model, type = "zero")
-mfx1 <- tidy(mfx1)
-mfx2 <- tidy(mfx2)
+mfx1 <- avg_slopes(model, type = "response")
+mfx2 <- avg_slopes(model, type = "zero")
 expect_false(any(mfx1$estimate == 0))
 expect_false(any(mfx2$estimate == 0))
 expect_false(any(mfx1$std.error == 0))
@@ -67,7 +65,7 @@ model <- zeroinfl(art ~ kid5 + phd | ment,
 
 # stata
 stata <- readRDS(testing_path("stata/stata.rds"))$pscl_zeroinfl_01
-mfx <- merge(tidy(slopes(model)), stata)
+mfx <- merge(avg_slopes(model), stata)
 expect_slopes(model)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = 1e-3)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
@@ -81,8 +79,8 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
 
 # margins: does not support standard errors (all zeros)
 mar <- margins(model, data = head(bioChemists), unit_ses = TRUE)
-mfx <- slopes(model, variables = c("kid5", "phd", "ment"), newdata = head(bioChemists))
-expect_equivalent(sort(summary(mar)$AME), sort(summary(mfx)$estimate), tolerance = 1e-3)
+mfx <- avg_slopes(model, variables = c("kid5", "phd", "ment"), newdata = head(bioChemists))
+expect_equivalent(sort(summary(mar)$AME), sort(mfx$estimate), tolerance = 1e-3)
 
 
 ### predictions
@@ -105,10 +103,8 @@ data("bioChemists", package = "pscl")
 model <- zeroinfl(art ~ kid5 + phd + mar | ment,
               dist = "negbin",
               data = bioChemists)
-mm <- marginal_means(model)
-expect_marginal_means(mm)
 # response
-mm <- tidy(marginal_means(model))
+mm <- predictions(model, by = "mar", newdata = datagrid(grid_type = "balanced")) |> dplyr::arrange(mar)
 em <- tidy(emmeans(model, specs = "mar", df = Inf))
 expect_equivalent(mm$estimate, em$estimate, tol = 0.01)
 expect_equivalent(mm$std.error, em$std.error, tolerance = .01)

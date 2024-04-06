@@ -16,7 +16,7 @@ fdiff <- function(x) data.frame(x, x + 10)
 cmp1 <- comparisons(mod, variables = list(new_hp = fdiff))
 cmp2 <- comparisons(mod, variables = list(new_hp = 10))
 expect_equivalent(nrow(cmp1), 32)
-expect_equivalent(nrow(cmp2), 27)
+expect_equivalent(nrow(cmp2), 32)
 
 
 # Issue #720
@@ -32,6 +32,16 @@ cmp <- comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
 expect_equivalent(nrow(cmp), 64)
 cmp <- avg_comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
 expect_equivalent(nrow(cmp), 2)
+
+
+
+# Issue #794
+mod <- glm(am ~ hp, data = mtcars, family = binomial())
+cmp1 <- comparisons(mod, comparison = "lift")
+cmp2 <- comparisons(mod, comparison = "liftavg")
+expect_equal(nrow(cmp1), 32)
+expect_equal(nrow(cmp2), 1)
+expect_error(comparisons(mod, comparison = "liftr"))
 
 
 

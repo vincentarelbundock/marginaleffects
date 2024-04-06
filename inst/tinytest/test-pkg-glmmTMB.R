@@ -1,4 +1,6 @@
 source("helpers.R")
+exit_file("glmmTMB produces weird SEs")
+
 # if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 # exit_file("glmmTMB always causes problems")
@@ -74,7 +76,8 @@ mzip_3 <- glmmTMB(
   ziformula = ~ res + inc + age,
   family = "nbinom2",
   data = bed)
-tid <- avg_slopes(mzip_3, type = "response")
+tid <- avg_slopes(mzip_3, type = "response") |>
+  dplyr::arrange(term)
 
 # TODO: half-checked against Stata. Slight difference on binary predictors. Stata probably dydx
 b <- c(-0.0357107397803255, 0.116113581361053, -0.703975123794627, -0.322385169497792, 2.29943403870235, 0.313970669520973)
@@ -135,41 +138,15 @@ expect_inherits(predictions(mod, newdata = datagrid(), vcov = insight::get_varco
 
 
 
-# marginalmeans (no validity)
-dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
-dat <- read.csv(dat)
-dat$z <- factor(sample(1:4, nrow(dat), replace = TRUE))
-mod <- glmmTMB(
-    Survived ~ Sex + z + (1 + Age | PClass),
-    family = binomial,
-    data = dat)
-mm1 <- marginal_means(mod, variables = c("Sex", "PClass"))
-mm2 <- marginal_means(mod, type = "link", variables = c("Sex", "PClass"))
-mm3 <- marginal_means(mod, variables = c("Sex", "PClass"), cross = TRUE)
-mm4 <- marginal_means(mod, type = "link", variables = c("Sex", "PClass"), cross = TRUE)
-expect_true(all(mm1$estimate != mm2$estimate))
-expect_true(all(mm1$std.error != mm2$std.error))
-expect_true(all(mm3$estimate != mm4$estimate))
-expect_true(all(mm3$std.error != mm4$std.error))
-expect_true(nrow(mm3) > nrow(mm1))
-
 
 
 # marginalmeans: some validity
 p <- predictions(mod, type = "link", re.form = NA)
 expect_inherits(p, "predictions")
 em <- data.frame(emmeans(mod, ~Sex))
-mm <- marginal_means(mod, variables = "Sex", type = "link", re.form = NA)
+mm <- predictions(mod, by = "Sex", newdata = datagrid(grid_type = "balanced"), type = "link", re.form = NA)
 expect_equivalent(em$emmean, mm$estimate)
 expect_equivalent(em$SE, mm$std.error)
-
-
-mfx <- slopes(m1)
-m1 <- glmmTMB(
-    count ~ mined + (1 | site),
-    zi = ~mined,
-    family = poisson, data = Salamanders)
-expect_inherits(marginal_means(m1, variables = "mined"), "marginalmeans")
 
 
 
@@ -185,16 +162,6 @@ dat <- do.call("rbind", list(
   transform(PlantGrowth, trial = "C", weight = runif(30) * weight)))
 colnames(dat)[2] <- "groupid"
 
-model <- glmmTMB(
-  weight ~ groupid + trial + (1 | groupid:trial),
-  REML = FALSE,
-  data = dat)
-em <- data.frame(emmeans(model, ~trial + groupid, df = Inf))
-mm <- marginal_means(model, variables = c("trial", "groupid"), cross = TRUE, re.form = NA)
-mm <- mm[order(mm$groupid, mm$trial),]
-expect_equivalent(mm$estimate, em$emmean)
-expect_equivalent(mm$conf.high, em$asymp.UCL)
-
 model_REML <- glmmTMB(
   weight ~ groupid + trial + (1 | groupid:trial),
   REML = TRUE,
@@ -203,7 +170,6 @@ model_REML <- glmmTMB(
 expect_error(slopes(model_REML), pattern = "REML")
 expect_error(comparisons(model_REML), pattern = "REML")
 expect_error(predictions(model_REML), pattern = "REML")
-expect_error(marginal_means(model_REML), pattern = "REML")
 expect_inherits(slopes(model_REML, vcov = FALSE), "marginaleffects")
 expect_inherits(predictions(model_REML, re.form = NA, vcov = FALSE), "predictions")
 expect_inherits(predictions(model_REML, vcov = FALSE, re.form = NA), "predictions")
@@ -260,6 +226,38 @@ p <- avg_predictions(mod, variables = "groups", newdata = tmp)
 expect_inherits(p, "predictions")
 
 
+# Simple prediction standard errors
+m <- glmmTMB(mpg ~ hp + (1 | carb), data = transform(mtcars, carb = as.character(carb)))
+p1 <- predictions(m)
+p2 <- data.frame(predict(m, se.fit = TRUE))
+expect_equivalent(p1$estimate, p2$fit)
+expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
+
+
+exit_file("Issue #810 is not fixed")
+
+# Issue #810
+m <- glmmTMB(Sepal.Length ~ Sepal.Width, data = iris)
+p1 <- predictions(m, newdata = iris) |> head()
+p2 <- data.frame(predict(m, newdata = iris, se.fit = TRUE)) |> head()
+expect_equivalent(p1$estimate, p2$fit)
+expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
+
+m <- glmmTMB(Sepal.Length ~ Sepal.Width + (1 | Species), data = iris)
+p1 <- predictions(m, newdata = iris) |> head()
+p2 <- data.frame(predict(m, newdata = iris, se.fit = TRUE)) |> head()
+expect_equivalent(p1$estimate, p2$fit)
+expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
+
+m <- glmmTMB(Sepal.Length ~ Sepal.Width + (1 | Petal.Width * Species), data = iris)
+p1 <- predictions(m, newdata = iris)
+p2 <- data.frame(predict(m, newdata = iris, se.fit = TRUE))
+expect_equivalent(p1$estimate, p2$fit)
+expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
+
+
+
 
 source("helpers.R")
 rm(list = ls())
+

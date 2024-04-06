@@ -1,4 +1,4 @@
-plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet = NULL, condition = NULL, modeldata = NULL) {
+plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet_1 = NULL, v_facet_2 = NULL, condition = NULL, modeldata = NULL) {
     for (v in names(condition$condition)) {
         fun <- function(x, lab) {
             idx <- match(x, sort(unique(x)))
@@ -19,8 +19,11 @@ plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet = NULL, condition 
     if (isTRUE(v_color %in% colnames(dat))) {
         dat[[v_color]] <- factor(dat[[v_color]])
     }
-    if (isTRUE(v_facet %in% colnames(dat))) {
-        dat[[v_facet]] <- factor(dat[[v_facet]])
+    if (isTRUE(v_facet_1 %in% colnames(dat))) {
+        dat[[v_facet_1]] <- factor(dat[[v_facet_1]])
+    }
+    if (isTRUE(v_facet_2 %in% colnames(dat))) {
+      dat[[v_facet_2]] <- factor(dat[[v_facet_2]])
     }
     return(dat)
 }
@@ -30,7 +33,8 @@ plot_build <- function(
     dat,
     v_x,
     v_color = NULL,
-    v_facet = NULL,
+    v_facet_1 = NULL,
+    v_facet_2 = NULL,
     dv = NULL,
     modeldata = NULL,
     points = 0,
@@ -67,83 +71,78 @@ plot_build <- function(
         }
     }
 
+    aes_args <- list(
+        x = substitute(.data[[v_x]]),
+        y = substitute(estimate)
+    )
+
+    if ("conf.low" %in% colnames(dat)) {
+        aes_args$ymin <- substitute(conf.low)
+        aes_args$ymax <- substitute(conf.high)
+    }
+
+    aes_args_ribbon <- aes_args
+    aes_args_ribbon$fill <- aes_args$color
+    aes_args_ribbon$color <- NULL
+
     # discrete x-axis
     if (is.factor(dat[[v_x]])) {
-        ggpoint <- ggplot2::geom_point(data = dat,
-            ggplot2::aes(x = .data[[v_x]], y = estimate))
-        ggpointrange <- ggplot2::geom_pointrange(data = dat,
-            ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high))
-        if (gray) {
-            ggpointcol <- ggplot2::geom_point(
-                data = dat,
-                ggplot2::aes(x = .data[[v_x]], y = estimate, shape = .data[[v_color]]))
-            ggpointrangecol <- ggplot2::geom_pointrange(data = dat,
-                ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, shape = .data[[v_color]]),
-                position = ggplot2::position_dodge(.15))
-        } else {
-            ggpointcol <- ggplot2::geom_point(
-                data = dat,
-                ggplot2::aes(x = .data[[v_x]], y = estimate, color = .data[[v_color]]))
-            ggpointrangecol <- ggplot2::geom_pointrange(data = dat,
-                ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, color = .data[[v_color]]),
-                position = ggplot2::position_dodge(.15))
+        if (!is.null(v_color)) {
+            if (gray) {
+                aes_args$shape <- substitute(factor(.data[[v_color]]))
+            } else {
+                aes_args$color <- substitute(factor(.data[[v_color]]))
+            }
         }
-
+        aes_obj <- do.call(ggplot2::aes, aes_args)
         if ("conf.low" %in% colnames(dat)) {
-            if (is.null(v_color)) {
-                p <- p + ggpointrange
-            } else {
-                p <- p + ggpointrangecol
-            }
+            p <- p + ggplot2::geom_pointrange(
+                data = dat,
+                mapping = aes_obj,
+                position = ggplot2::position_dodge(.15))
         } else {
-            if (is.null(v_color)) {
-                p <- p + ggpointcol
-            } else {
-                p <- p + ggpoint
-            }
+            p <- p + ggplot2::geom_point(
+                data = dat,
+                mapping = aes_obj,
+                position = ggplot2::position_dodge(.15))
         }
 
     # continuous x-axis
     } else {
-        ggrib <- ggplot2::geom_ribbon(data = dat, ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high), alpha = .1)
-        ggline <- ggplot2::geom_line(data = dat, ggplot2::aes(x = .data[[v_x]], y = estimate))
-        if (gray) {
-            gglinecol <- ggplot2::geom_line(data = dat, ggplot2::aes(x = .data[[v_x]], y = estimate, linetype = .data[[v_color]]))
-            ggribcol <- ggplot2::geom_ribbon(data = dat,
-                ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, group = .data[[v_color]]), alpha = .1)
-        } else {
-            gglinecol <- ggplot2::geom_line(data = dat,
-                ggplot2::aes(x = .data[[v_x]], y = estimate, color = .data[[v_color]]))
-            ggribcol <- ggplot2::geom_ribbon(data = dat,
-                ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, fill = .data[[v_color]]), alpha = .1)
-        }
-
-        if ("conf.low" %in% colnames(dat)) {
-            if (is.null(v_color)) {
-                p <- p + ggrib
+        if (!is.null(v_color)) {
+            if (gray) {
+                aes_args$linetype <- substitute(factor(.data[[v_color]]))
+                aes_args_ribbon$linetype <- substitute(factor(.data[[v_color]]))
             } else {
-                p <- p + ggribcol
+                aes_args$color <- substitute(factor(.data[[v_color]]))
+                aes_args_ribbon$fill <- substitute(factor(.data[[v_color]]))
             }
         }
-        if (is.null(v_color)) {
-            p <- p + ggline
-        } else {
-            p <- p + gglinecol
+        aes_obj_ribbon <- do.call(ggplot2::aes, aes_args_ribbon)
+        aes_args$ymin <- aes_args$ymax <- NULL
+        aes_obj <- do.call(ggplot2::aes, aes_args)
+        if ("conf.low" %in% colnames(dat)) {
+            p <- p + ggplot2::geom_ribbon(data = dat, aes_obj_ribbon, alpha = .1)
+            p <- p + ggplot2::geom_line(data = dat, aes_obj)
         }
+        p <- p + ggplot2::geom_line(data = dat, aes_obj)
     }
 
-    # facets: 3rd variable and/or multiple effects
-    
-    if (multi_variables && !is.null(v_facet)) {
-        fo <- stats::as.formula(paste("~ marginaleffects_term_index +", v_facet))
+    # facets: 3rd and 4th variable and/or multiple effects
+    ## If pass two facets then make facet grid
+    if (!is.null(v_facet_1) && !is.null(v_facet_2)) {
+      fo <- stats::as.formula(paste(v_facet_2, "~", ifelse(multi_variables, "marginaleffects_term_index +", ""), v_facet_1))
+      p <- p + ggplot2::facet_grid(fo,
+                                   scales = "free",
+                                   labeller = function(x){
+                                     lapply(ggplot2::label_both(x), gsub, pattern = "marginaleffects_term_index: ", replacement="")
+                                   })
+    ## if pass only 1 facet then facet_wrap
+    } else if (!is.null(v_facet_1) && is.null(v_facet_2)) {
+        fo <- stats::as.formula(paste("~", ifelse(multi_variables, "marginaleffects_term_index +", ""), v_facet_1))
         p <- p + ggplot2::facet_wrap(fo, scales = "free")
-        
     } else if (multi_variables) {
         fo <- stats::as.formula("~ marginaleffects_term_index")
-        p <- p + ggplot2::facet_wrap(fo, scales = "free")
-        
-    } else if (!is.null(v_facet)) {
-        fo <- stats::as.formula(paste("~", v_facet))
         p <- p + ggplot2::facet_wrap(fo, scales = "free")
     }
 

@@ -19,11 +19,11 @@ get_contrast_data <- function(model,
     # safety need for extensions not supported by `insight`
     variable_classes <- attr(newdata, "newdata_variable_class")
     if (length(variable_classes) == 0) {
-        newdata <- set_variable_class(newdata)
+        newdata <- set_variable_class(newdata, model)
         variable_classes <- attr(newdata, "marginaleffects_variable_class")
     }
     if (length(attr(modeldata, "marginaleffects_variable_class")) == 0) {
-        modeldata <- set_variable_class(modeldata)
+        modeldata <- set_variable_class(modeldata, model)
     }
 
     if (any(c("factor", "character") %in% variable_classes)) {
@@ -151,7 +151,7 @@ get_contrast_data <- function(model,
             original[[i]][[paste0("contrast_", names(original)[i])]] <- lab[[i]]
         }
 
-        fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE)
+        fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE, sort = FALSE)
         lo <- Reduce("fun", lo)
         hi <- Reduce("fun", hi)
         original <- Reduce("fun", original)

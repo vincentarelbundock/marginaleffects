@@ -20,6 +20,7 @@ predictions(
   equivalence = NULL,
   p_adjust = NULL,
   df = Inf,
+  numderiv = "fdforward",
   ...
 )
 
@@ -38,6 +39,7 @@ avg_predictions(
   equivalence = NULL,
   p_adjust = NULL,
   df = Inf,
+  numderiv = "fdforward",
   ...
 )
 }
@@ -46,8 +48,8 @@ avg_predictions(
 
 \item{newdata}{Grid of predictor values at which we evaluate predictions.
 \itemize{
-\item \code{NULL} (default): Predictions for each observed value in the original dataset. See \code{\link[insight:get_data]{insight::get_data()}}
-\item data frame: Predictions for each row of the \code{newdata} data frame.
+\item Warning: Please avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
+\item \code{NULL} (default): Unit-level predictions for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[insight:get_data]{insight::get_data()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 \item string:
 \itemize{
 \item "mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.
@@ -61,6 +63,8 @@ avg_predictions(
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
 \item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
 }
+\item \code{\link[=subset]{subset()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = subset(treatment == 1)}
+\item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
 }}
 
 \item{variables}{Counterfactual variables.
@@ -113,8 +117,7 @@ compute contrasts or slopes. This can differ based on the model
 type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
-default value is used. This default is the first model-related row in
-the \code{marginaleffects:::type_dictionary} dataframe. See the details section for a note on backtransformation.}
+first entry in the error message is used by default.}
 
 \item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
 \itemize{
@@ -123,6 +126,7 @@ the \code{marginaleffects:::type_dictionary} dataframe. See the details section 
 \item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
 \item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
 \item See examples below.
+\item For more complex aggregations, you can use the \code{FUN} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
 }}
 
 \item{byfun}{A function such as \code{mean()} or \code{sum()} used to aggregate
@@ -132,9 +136,7 @@ value. This is sometimes used to take the sum or mean of predicted
 probabilities across outcome or predictor
 levels. See examples section.}
 
-\item{wts}{string or numeric: weights to use when computing average
-contrasts or slopes. These weights only affect the averaging in
-\verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves.
+\item{wts}{string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the \code{weighted.mean()} function.
 \itemize{
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
@@ -142,7 +144,7 @@ contrasts or slopes. These weights only affect the averaging in
 
 \item{transform}{A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
-\item{hypothesis}{specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
+\item{hypothesis}{specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, a string formula, or a function.
 \itemize{
 \item Numeric:
 \itemize{
@@ -150,11 +152,12 @@ contrasts or slopes. These weights only affect the averaging in
 \item Vector: Weights to compute a linear combination of (custom contrast between) estimates. Length equal to the number of rows generated by the same function call, but without the \code{hypothesis} argument.
 \item Matrix: Each column is a vector of weights, as describe above, used to compute a distinct linear combination of (contrast between) estimates. The column names of the matrix are used as labels in the output.
 }
-\item String formula to specify linear or non-linear hypothesis tests. If the \code{term} column uniquely identifies rows, terms can be used in the formula. Otherwise, use \code{b1}, \code{b2}, etc. to identify the position of each parameter. Examples:
+\item String formula to specify linear or non-linear hypothesis tests. If the \code{term} column uniquely identifies rows, terms can be used in the formula. Otherwise, use \code{b1}, \code{b2}, etc. to identify the position of each parameter. The \verb{b*} wildcard can be used to test hypotheses on all estimates. If a named vector is used, the names are used as labels in the output. Examples:
 \itemize{
 \item \code{hp = drat}
 \item \code{hp + drat = 12}
 \item \code{b1 + b2 + b3 = 0}
+\item \verb{b* / b1 = 1}
 }
 \item String:
 \itemize{
@@ -163,7 +166,14 @@ contrasts or slopes. These weights only affect the averaging in
 \item "sequential": difference between an estimate and the estimate in the next row.
 \item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 }
-\item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+\item Function:
+\itemize{
+\item Accepts an argument \code{x}: object produced by a \code{marginaleffects} function or a data frame with column \code{rowid} and \code{estimate}
+\item Returns a data frame with columns \code{term} and \code{estimate} (mandatory) and \code{rowid} (optional).
+\item The function can also accept and operation on optional input arguments: \code{newdata}, \code{by}, \code{draws}.
+\item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{posterior_draws()} to extract and manipulate the draws directly.
+}
+\item See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 }}
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
@@ -172,13 +182,21 @@ contrasts or slopes. These weights only affect the averaging in
 
 \item{df}{Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When \code{df} is \code{Inf}, the normal distribution is used. When \code{df} is finite, the \code{t} distribution is used. See \link[insight:get_df]{insight::get_df} for a convenient function to extract degrees of freedom. Ex: \code{slopes(model, df = insight::get_df(model))}}
 
+\item{numderiv}{string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
+\itemize{
+\item "fdforward": finite difference method with forward differences
+\item "fdcenter": finite difference method with central differences (default)
+\item "richardson": Richardson extrapolation method
+\item Extra arguments can be specified by passing a list to the \code{numDeriv} argument, with the name of the method first and named arguments following, ex: \code{numderiv=list("fdcenter", eps = 1e-5)}. When an unknown argument is used, \code{marginaleffects} prints the list of valid arguments for each method.
+}}
+
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful
 for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
-\code{?marginaleffects} documentation for a non-exhaustive list of available
+\code{?slopes} documentation for a non-exhaustive list of available
 arguments.}
 }
 \value{
@@ -189,9 +207,10 @@ A \code{data.frame} with one row per observation and several columns:
 \item \code{group}: (optional) value of the grouped outcome (e.g., categorical outcome models)
 \item \code{estimate}: predicted outcome
 \item \code{std.error}: standard errors computed using the delta method.
+\item \code{p.value}: p value associated to the \code{estimate} column. The null is determined by the \code{hypothesis} argument (0 by default), and p values are computed before applying the \code{transform} argument. For models of class \code{feglm}, \code{Gam}, \code{glm} and \code{negbin}, p values are computed on the link scale by default unless the \code{type} argument is specified explicitly.
+\item \code{s.value}: Shannon information transforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "surprise") against the null hypothesis that the coin is fair? The purpose of S is to calibrate the analyst's intuition about the strength of evidence encoded in p against a well-known physical phenomenon. See Greenland (2019) and Cole et al. (2020).
 \item \code{conf.low}: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 \item \code{conf.high}: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
-\item \code{p.value}: p value associated to the \code{estimate} column. The null is determined by the \code{hypothesis} argument (0 by default), and p values are computed before applying the \code{transform} argument. For models of class \code{feglm}, \code{Gam}, \code{glm} and \code{negbin}, p values are computed on the link scale by default unless the \code{type} argument is specified explicitly.
 }
 
 See \code{?print.marginaleffects} for printing options.
@@ -207,12 +226,9 @@ The \code{newdata} argument and the \code{datagrid()} function can be used to co
 
 See the predictions vignette and package website for worked examples and case studies:
 \itemize{
-\item \url{https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html}
-\item \url{https://vincentarelbundock.github.io/marginaleffects/}
+\item \url{https://marginaleffects.com/vignettes/predictions.html}
+\item \url{https://marginaleffects.com/}
 }
-}
-\details{
-For \code{glm()}, \code{MASS::glm.nb}, \code{gam::gam()}, and \code{feols::feglm} models with \code{type}, \code{transform} and \code{hypothesis} all equal to \code{NULL} (the default), \code{predictions()} first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the \code{estimate} produced by \code{avg_predictions()} will not be exactly equal to the average of the \code{estimate} column produced by \code{predictions()}. Users can circumvent this behavior and average predictions directly on the response scale by setting \code{type="response"} explicitly. With \code{type="response"}, the intervals are symmetric and may have undesirable properties (e.g., stretching beyond the \verb{[0,1]} bounds for a binary outcome regression).
 }
 \section{Functions}{
 \itemize{
@@ -233,11 +249,11 @@ Standard errors for all quantities estimated by \code{marginaleffects} can be ob
 
 See the "Standard Errors and Confidence Intervals" vignette on the \code{marginaleffects} website for more details on the computation of standard errors:
 
-https://vincentarelbundock.github.io/marginaleffects/articles/uncertainty.html
+https://marginaleffects.com/vignettes/uncertainty.html
 
 Note that the \code{inferences()} function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:
 
-https://vincentarelbundock.github.io/marginaleffects/articles/bootstrap.html
+https://marginaleffects.com/vignettes/bootstrap.html
 }
 
 \section{Model-Specific Arguments}{
@@ -321,8 +337,65 @@ Equivalence: Two One-Sided Tests (TOST)
 Thanks to Russell V. Lenth for the excellent \code{emmeans} package and documentation which inspired this feature.
 }
 
+\section{Prediction types}{
+
+
+The \code{type} argument determines the scale of the predictions used to compute quantities of interest with functions from the \code{marginaleffects} package. Admissible values for \code{type} depend on the model object. When users specify an incorrect value for \code{type}, \code{marginaleffects} will raise an informative error with a list of valid \code{type} values for the specific model object. The first entry in the list in that error message is the default type.
+
+The \code{invlink(link)} is a special type defined by \code{marginaleffects}. It is available for some (but not all) models and functions. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with \code{type="invlink(link)"} will not always be equivalent to the average of estimates with \code{type="response"}.
+
+Some of the most common \code{type} values are:
+
+response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, detection, disp, ev, expected, expvalue, fitted, invlink(link), latent, latent_N, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+}
+
+\section{Order of operations}{
+
+
+Behind the scenes, the arguments of \code{marginaleffects} functions are evaluated in this order:
+\enumerate{
+\item \code{newdata}
+\item \code{variables}
+\item \code{comparison} and \code{slopes}
+\item \code{by}
+\item \code{vcov}
+\item \code{hypothesis}
+\item \code{transform}
+}
+}
+
+\section{Parallel computation}{
+
+
+The \code{slopes()} and \code{comparisons()} functions can use parallelism to
+speed up computation. Operations are parallelized for the computation of
+standard errors, at the model coefficient level. There is always
+considerable overhead when using parallel computation, mainly involved
+in passing the whole dataset to the different processes. Thus, parallel
+computation is most likely to be useful when the model includes many parameters
+and the dataset is relatively small.
+
+Warning: In many cases, parallel processing will not be useful at all.
+
+To activate parallel computation, users must load the \code{future.apply} package,
+call \code{plan()} function, and set a global option. For example:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(future.apply)
+plan("multicore", workers = 4)
+options(marginaleffects_parallel = TRUE)
+
+slopes(model)
+}\if{html}{\out{</div>}}
+
+To disable parallelism in \code{marginaleffects} altogether, you can set a global option:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_parallel = FALSE)
+}\if{html}{\out{</div>}}
+}
+
 \examples{
-\dontrun{
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{\}) # examplesIf}
 # Adjusted Prediction for every row of the original dataset
 mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 pred <- predictions(mod)
@@ -418,6 +491,11 @@ by <- data.frame(
     by = c("4,6", "4,6", "8"),
     group = as.character(c(4, 6, 8)))
 predictions(mod, newdata = "mean", byfun = sum, by = by)
-}
 
+}
+\references{
+\itemize{
+\item Greenland S. 2019. "Valid P-Values Behave Exactly as They Should: Some Misleading Criticisms of P-Values and Their Resolution With S-Values." The American Statistician. 73(S1): 106–114.
+\item Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020. "Surprise!" American Journal of Epidemiology 190 (2): 191–93. https://doi.org/10.1093/aje/kwaa136
+}
 }

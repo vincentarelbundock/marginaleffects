@@ -59,10 +59,11 @@ get_se_delta <- function(model,
                          eps = NULL,
                          J = NULL,
                          hypothesis = NULL,
+                         numderiv = NULL,
                          ...) {
 
     # delta method does not work for these models
-    bad <- c("brmsfit", "stanreg")
+    bad <- c("brmsfit", "stanreg", "bart")
     if (any(bad %in% class(model))) {
         return(NULL)
     }
@@ -83,7 +84,8 @@ get_se_delta <- function(model,
     # input: named vector of coefficients
     # output: gradient
     inner <- function(x) {
-        model_tmp <- set_coef(model, stats::setNames(x, names(coefs)) ,...)
+        names(x) <- names(coefs)
+        model_tmp <- set_coef(model, x, ...)
         # do not pass NULL arguments. Important for `deltam` to allow users to supply FUN without ...
         args <- c(list(model = model_tmp, hypothesis = hypothesis), list(...))
         if (inherits(model, "gamlss")) args[["safe"]] <- FALSE
@@ -99,7 +101,8 @@ get_se_delta <- function(model,
     if (is.null(J) || !is.null(hypothesis)) {
         args <- list(
             func = inner,
-            x = coefs)
+            x = coefs,
+            numderiv = numderiv)
         J <- do.call("get_jacobian", args)
         colnames(J) <- names(get_coef(model, ...))
     }
@@ -107,7 +110,7 @@ get_se_delta <- function(model,
     # align J and V: This might be a problematic hack, but I have not found examples yet.
     V <- vcov
     if (!isTRUE(ncol(J) == ncol(V))) {
-        beta <- get_coef(model)
+        beta <- get_coef(model, ...)
         # Issue #718: ordinal::clm in test-pkg-ordinal.R
         if (anyNA(beta) && anyDuplicated(names(beta)) && ncol(J) > ncol(V) && ncol(J) == length(beta) && length(stats::na.omit(beta)) == ncol(V)) {
             J <- J[, !is.na(beta), drop = FALSE]

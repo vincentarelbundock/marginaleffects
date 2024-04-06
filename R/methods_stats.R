@@ -2,8 +2,9 @@
 #' @rdname set_coef
 #' @export
 set_coef.glm <- function(model, coefs, ...) {
-    # in glm coefficients are named vector
-    model[["coefficients"]][names(coefs)] <- coefs
+    model[["coefficients"]] <- sub_named_vector(
+        model[["coefficients"]], coefs
+    )
     ## But, there's an edge case!! When `predict(model, se.fit = TRUE)` is called without `newdata`, `predict.lm()` isn't called.
     ## Instead `model$linear.predictors` is returned directly if `type = "link"` and
     ## `model$fitted.values` is returned directly if `type = "response"`.
@@ -15,8 +16,9 @@ set_coef.glm <- function(model, coefs, ...) {
 #' @rdname set_coef
 #' @export
 set_coef.lm <- function(model, coefs, ...) {
-    # in lm coefficients are named vector
-    model[["coefficients"]][names(coefs)] <- coefs
+    model[["coefficients"]] <- sub_named_vector(
+        model[["coefficients"]], coefs
+    )
     model
 }
 
@@ -68,4 +70,23 @@ get_predict.glm <- function(model, newdata = insight::get_data(model), type = "r
     }
     
     return(out)
+}
+
+
+
+#' @include set_coef.R
+#' @rdname set_coef
+#' @export
+set_coef.nls <- function(model, coefs, ...) {
+    out <- model
+    out$m$setPars(coefs)
+    return(out)
+}
+
+
+#' @include get_coef.R
+#' @rdname get_coef
+#' @export
+get_coef.nls <- function(model, ...) {
+    model$m$getPars()
 }

@@ -10,7 +10,6 @@ get_ci <- function(
     ...) {
 
     checkmate::assert_number(null_hypothesis)
-    checkmate::assert_choice(p_adjust, choices = stats::p.adjust.methods, null.ok = TRUE)
 
     if (!is.null(draws)) {
         out <- get_ci_draws(
@@ -66,9 +65,7 @@ get_ci <- function(
                     is.null(p_adjust)
 
     if (z_overwrite) {
-        if (z_overwrite) {
-            x[["statistic"]] <- (x[["estimate"]] - null_hypothesis) / x[["std.error"]]
-        }
+        x[["statistic"]] <- (x[["estimate"]] - null_hypothesis) / x[["std.error"]]
         if (normal) {
             x[["p.value"]] <- 2 * stats::pnorm(-abs(x$statistic))
         } else {
@@ -89,6 +86,11 @@ get_ci <- function(
     
     if (!is.null(p_adjust) && "p.value" %in% colnames(x)) {
         x$p.value <- stats::p.adjust(x$p.value, method = p_adjust)
+    }
+
+    # s-value
+    if ("p.value" %in% colnames(x)) {
+        x$s.value <- -log2(x$p.value)
     }
 
     return(x)
@@ -112,10 +114,13 @@ get_ci_draws <- function(x, conf_level, draws, model = NULL) {
     } else if (identical("eti", getOption("marginaleffects_posterior_interval", default = "eti")) &&
         identical("median", getOption("marginaleffects_posterior_center", default = "median"))) {
         insight::check_if_installed("collapse", minimum_version = "1.9.0")
-        CIs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fquantile, probs = c(critical, .5, 1 - critical))
-        x$estimate <- CIs[, 2]
-        x$conf.low <- CIs[, 1]
-        x$conf.high <- CIs[, 3]
+        # Issue #1017
+        if (nrow(draws) > 0) {
+            CIs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fquantile, probs = c(critical, .5, 1 - critical))
+            x$estimate <- CIs[, 2]
+            x$conf.low <- CIs[, 1]
+            x$conf.high <- CIs[, 3]
+        }
         return(x)
     }
 

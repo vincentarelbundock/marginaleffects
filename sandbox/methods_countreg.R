@@ -1,5 +1,5 @@
 # marginaleffects extension to zerotrunc model class from countreg package
-# Following https://vincentarelbundock.github.io/marginaleffects/articles/extensions.html
+# Following https://marginaleffects.com/vignettes/extensions.html
 
 library(marginaleffects)
 options("marginaleffects_model_classes" = "zerotrunc")

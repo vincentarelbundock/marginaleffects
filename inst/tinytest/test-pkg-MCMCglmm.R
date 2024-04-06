@@ -1,4 +1,6 @@
 source("helpers.R")
+# https://stackoverflow.com/questions/72533745/loading-logistf-breaks-mcmcglmm
+exit_file("Conflict with logistf")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 requiet("MCMCglmm")
 

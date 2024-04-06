@@ -18,11 +18,3 @@ mfx2 <- avg_slopes(mod, p_adjust = "hochberg")
 expect_true(any(mfx1$p.value < mfx2$p.value))
 expect_true(all(mfx1$p.value <= mfx2$p.value))
 expect_false("conf.low" %in% colnames(mfx2))
-
-mm1 <- marginal_means(mod)
-mm2 <- marginal_means(mod, p_adjust = "hochberg")
-expect_true(any(mm1$p.value < mm2$p.value))
-expect_true(all(mm1$p.value <= mm2$p.value))
-expect_false("conf.low" %in% colnames(mm2))
-
-expect_error(marginal_means(mod, p_adjust = "junk"), pattern = "Assertion")

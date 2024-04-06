@@ -28,14 +28,14 @@ plot_slopes(
 
 \item{condition}{Conditional slopes
 \itemize{
-\item Character vector (max length 3): Names of the predictors to display.
-\item Named list (max length 3): List names correspond to predictors. List elements can be:
+\item Character vector (max length 4): Names of the predictors to display.
+\item Named list (max length 4): List names correspond to predictors. List elements can be:
 \itemize{
 \item Numeric vector
 \item Function which returns a numeric vector or a set of unique categorical values
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 }
-\item 1: x-axis. 2: color/shape. 3: facets.
+\item 1: x-axis. 2: color/shape. 3: facet (wrap if no fourth variable, otherwise cols of grid). 4: facet (rows of grid).
 \item Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers \code{?stats::fivenum}.
 }}
 
@@ -46,34 +46,17 @@ plot_slopes(
 \item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
 \item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
 \item See examples below.
+\item For more complex aggregations, you can use the \code{FUN} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
 }}
 
-\item{newdata}{Grid of predictor values at which we evaluate the slopes.
-\itemize{
-\item \code{NULL} (default): Unit-level slopes for each observed value in the original dataset. See \code{\link[insight:get_data]{insight::get_data()}}
-\item data frame: Unit-level slopes for each row of the \code{newdata} data frame.
-\item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
-\itemize{
-\item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
-\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
-}
-\item string:
-\itemize{
-\item "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
-\item "median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.
-\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-\item "tukey": Marginal Effects at Tukey's 5 numbers.
-\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
-}
-}}
+\item{newdata}{When \code{newdata} is \code{NULL}, the grid is determined by the \code{condition} argument. When \code{newdata} is not \code{NULL}, the argument behaves in the same way as in the \code{slopes()} function.}
 
 \item{type}{string indicates the type (scale) of the predictions used to
 compute contrasts or slopes. This can differ based on the model
 type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
-default value is used. This default is the first model-related row in
-the \code{marginaleffects:::type_dictionary} dataframe.}
+first entry in the error message is used by default.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
@@ -93,9 +76,7 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{wts}{string or numeric: weights to use when computing average
-contrasts or slopes. These weights only affect the averaging in
-\verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves.
+\item{wts}{string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the \code{weighted.mean()} function.
 \itemize{
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
@@ -122,7 +103,7 @@ for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
-\code{?marginaleffects} documentation for a non-exhaustive list of available
+\code{?slopes} documentation for a non-exhaustive list of available
 arguments.}
 }
 \value{
@@ -133,13 +114,11 @@ Plot slopes on the y-axis against values of one or more predictors (x-axis, colo
 
 The \code{by} argument is used to plot marginal slopes, that is, slopes made on the original data, but averaged by subgroups. This is analogous to using the \code{by} argument in the \code{slopes()} function.
 
-The \code{condition} argument is used to plot conditional slopes, that is, slopes made on a user-specified grid. This is analogous to using the \code{newdata} argument and \code{datagrid()} function in a \code{slopes()} call.
-
-All unspecified variables are held at their mean or mode. This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the \code{variables} argument, or supply model-specific arguments to compute population-level estimates. See details below.
+The \code{condition} argument is used to plot conditional slopes, that is, slopes computed on a user-specified grid. This is analogous to using the \code{newdata} argument and \code{datagrid()} function in a \code{slopes()} call. All variables whose values are not specified explicitly are treated as usual by \code{datagrid()}, that is, they are held at their mean or mode (or rounded mean for integers). This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the \code{condition} argument, or supply model-specific arguments to compute population-level estimates. See details below.
 See the "Plots" vignette and website for tutorials and information on how to customize plots:
 \itemize{
-\item https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
-\item https://vincentarelbundock.github.io/marginaleffects
+\item https://marginaleffects.com/vignettes/plot.html
+\item https://marginaleffects.com
 }
 }
 \section{Model-Specific Arguments}{

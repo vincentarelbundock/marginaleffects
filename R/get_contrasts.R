@@ -24,7 +24,7 @@ get_contrasts <- function(model,
     data.table::setDF(original)
 
     # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
-    if (inherits(model, "brmsfit")) {
+    if (inherits(model, c("brmsfit", "bart"))) {
 
         if (!"rowid" %in% colnames(lo)) {
             lo$rowid <- hi$rowid <- seq_len(nrow(lo))
@@ -37,14 +37,14 @@ get_contrasts <- function(model,
             type = type,
             newdata = both,
             ...))
-        
+
         # informative error in case of allow.new.levels level breakage
         if (inherits(pred_both[["error"]], "simpleError")) {
             insight::format_error(pred_both[["error"]][["message"]])
         } else {
             pred_both <- pred_both[["value"]]
         }
-        
+
         data.table::setDT(pred_both)
         pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
 
@@ -65,13 +65,28 @@ get_contrasts <- function(model,
             model,
             type = type,
             newdata = lo,
-            ...))[["value"]]
+            ...))
+
+        # tidymodels
+        if (inherits(pred_lo$error, "rlang_error") &&
+            isTRUE(grepl("the object should be", pred_lo$error$message))) {
+                insight::format_error(pred_lo$error$message)
+        } else {
+            pred_lo <- pred_lo[["value"]]
+        }
 
         pred_hi <- myTryCatch(get_predict(
             model,
             type = type,
             newdata = hi,
-            ...))[["value"]]
+            ...))
+
+        # otherwise we keep the full error object instead of extracting the value
+        if (inherits(pred_hi$value, "data.frame")) {
+            pred_hi <- pred_hi$value
+        } else {
+            pred_hi <- pred_hi$error
+        }
     }
 
     # predict() takes up 2/3 of the wall time. This call is only useful when we
@@ -105,7 +120,12 @@ get_contrasts <- function(model,
     data.table::setDT(original)
 
     if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame") || !inherits(pred_or, c("data.frame", "NULL"))) {
-        insight::format_error("Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument. If this does not work, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
+        msg <- "Unable to compute predicted values with this model. This error can arise when `insight::get_data()` is unable to extract the dataset from the model object, or when the data frame was modified since fitting the model. You can try to supply a different dataset to the `newdata` argument."
+        if (inherits(pred_hi, c("try-error", "error"))) {
+            msg <-c(msg, "", "In addition, this error message was raised:", "", as.character(pred_hi)) 
+        }
+        msg <- c(msg, "", "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
+        insight::format_error(msg)
     }
 
     # output data.frame
@@ -132,7 +152,7 @@ get_contrasts <- function(model,
 
     # cross-contrasts or weird cases
     } else {
-        out <- merge(out, newdata, by = "rowid", all.x = TRUE)
+        out <- merge(out, newdata, by = "rowid", all.x = TRUE, sort = FALSE)
         if (isTRUE(nrow(out) == nrow(lo))) {
             tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast|marginaleffects_wts_internal")]
             out <- cbind(out, tmp)
@@ -157,7 +177,7 @@ get_contrasts <- function(model,
             if (all(colnames(by) %in% c("by", colnames(newdata)))) {
                 nd <- c("rowid", setdiff(colnames(by), "by"))
                 nd <- newdata[, nd, drop = FALSE]
-                out <- merge(out, nd, by = "rowid")
+                out <- merge(out, nd, by = "rowid", sort = FALSE)
                 tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
             } else {
                 insight::format_error("The column in `by` must be present in `newdata`.")
@@ -189,11 +209,25 @@ get_contrasts <- function(model,
     # elasticity requires the original (properly aligned) predictor values
     # this will discard factor variables which are duplicated, so in principle
     # it should be the "correct" size
-    elasticities <- Filter(
-        function(x) is.character(x$comparison) && x$comparison %in% elasticities,
-        variables)
+    # also need `x` when `x` is in the signature of the `comparison` custom function
+
+    FUN <- function(z) {
+        (is.character(z$comparison) && z$comparison %in% elasticities) ||
+        (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
+    }
+    elasticities <- Filter(FUN, variables)
     elasticities <- lapply(elasticities, function(x) x$name)
+
     if (length(elasticities) > 0) {
+        # assigning a subset of "original" to "idx1" takes time and memory
+        # better to do this here for most columns and add the "v" column only
+        # in the loop
+        if (!is.null(original)) {
+            idx1 <- c("rowid", "rowidcf", "term", "group", grep("^contrast", colnames(original), value = TRUE))
+            idx1 <- intersect(idx1, colnames(original))
+            idx1 <- original[, ..idx1]
+        }
+
         for (v in names(elasticities)) {
             idx2 <- unique(c("rowid", "term", "group", by, grep("^contrast", colnames(out), value = TRUE)))
             idx2 <- intersect(idx2, colnames(out))
@@ -201,12 +235,17 @@ get_contrasts <- function(model,
             idx2 <- out[term == v, ..idx2]
             # original is NULL when cross=TRUE
             if (!is.null(original)) {
-                idx1 <- c(v, "rowid", "rowidcf", "term", "group", grep("^contrast", colnames(original), value = TRUE))
-                idx1 <- intersect(idx1, colnames(original))
-                idx1 <- original[, ..idx1]
+                # if not first iteration, need to remove previous "v" and "elast"
+                if (v %in% colnames(idx1)) {
+                    idx1[, (v) := NULL]
+                }
+                if ("elast" %in% colnames(idx1)) {
+                    idx1[, elast := NULL]
+                }
+                idx1[, (v) := original[[v]]]
                 setnames(idx1, old = v, new = "elast")
                 on_cols <- intersect(colnames(idx1), colnames(idx2))
-                unique(idx2[idx1, elast := elast, on = on_cols])
+                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[, elast := elast])
             }
             elasticities[[v]] <- idx2$elast
         }
@@ -263,14 +302,14 @@ get_contrasts <- function(model,
             predicted_hi = mean(predicted_hi),
             predicted = mean(predicted),
             marginaleffects_wts_internal = mean(marginaleffects_wts_internal)),
-        by = idx]
+        keyby = idx]
     }
 
     # safe version of comparison
     # unknown arguments
     # singleton vs vector
     # different terms use different functions
-    safefun <- function(hi, lo, y, n, term, cross, wts, tmp_idx) {
+    safefun <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata) {
         tn <- term[1]
         eps <- variables[[tn]]$eps
         # when cross=TRUE, sanitize_comparison enforces a single function
@@ -284,7 +323,8 @@ get_contrasts <- function(model,
             "lo" = lo,
             "y" = y,
             "eps" = eps,
-            "w" = wts)
+            "w" = wts,
+            "newdata" = newdata)
 
         # sometimes x is exactly the same length, but not always
         args[["x"]] <- elasticities[[tn]][tmp_idx]
@@ -343,7 +383,8 @@ get_contrasts <- function(model,
                     term = out$term[idx],
                     cross = cross,
                     wts = out$marginaleffects_wts_internal[idx],
-                    tmp_idx = out$tmp_idx)
+                    tmp_idx = out$tmp_idx[idx],
+                    newdata = newdata)
             }
         }
 
@@ -380,8 +421,9 @@ get_contrasts <- function(model,
             term = term,
             cross = cross,
             wts = marginaleffects_wts_internal,
-            tmp_idx = tmp_idx),
-        by = idx]
+            tmp_idx = tmp_idx,
+            newdata = newdata),
+        keyby = idx]
         out[, tmp_idx := NULL]
 
         # if comparison returns a single value, then we padded with NA. That
@@ -394,7 +436,7 @@ get_contrasts <- function(model,
         }
         out <- stats::na.omit(out, cols = "estimate")
     }
-    
+
     # clean
     if ("rowid_dedup" %in% colnames(out)) {
         out[, "rowid_dedup" := NULL]
@@ -414,13 +456,10 @@ get_contrasts <- function(model,
                 by = by,
                 verbose = verbose)
             draws <- attr(out, "posterior_draws")
-        } else { 
+        } else {
             bycols <- c(by, "group", "term", "^contrast[_]?")
             bycols <- paste(bycols, collapse = "|")
             bycols <- grep(bycols, colnames(out), value = TRUE)
-            if (length(bycols) > 0) {
-                data.table::setorderv(out, cols = bycols)
-            }
         }
     }
 
@@ -437,7 +476,7 @@ get_contrasts <- function(model,
     attr(out, "posterior_draws") <- draws
 
     # hypothesis tests using the delta method
-    out <- get_hypothesis(out, hypothesis, by = by)
+    out <- get_hypothesis(out, hypothesis, by = by, newdata = original, draws = draws)
 
     # reset settings
     settings_rm("marginaleffects_safefun_return1")

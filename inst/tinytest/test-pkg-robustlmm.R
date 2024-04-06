@@ -1,14 +1,15 @@
-exit_file("Matrix version breakage")
-
 source("helpers.R")
+exit_file("Conflict with logistf")
+if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 using("marginaleffects")
 
 requiet("robustlmm")
 requiet("emmeans")
 requiet("broom")
+requiet("lme4")
 
 # no validity
-mod <- rlmer(Reaction ~ Days + (Days | Subject), sleepstudy,
+mod <- robustlmm::rlmer(Reaction ~ Days + (Days | Subject), sleepstudy,
     rho.sigma.e = psi2propII(smoothPsi, k = 2.28),
     rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))
 expect_predictions(predictions(mod))

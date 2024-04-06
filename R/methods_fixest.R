@@ -8,7 +8,7 @@ get_predict.fixest <- function(model,
     insight::check_if_installed("fixest")
 
     if (is.null(type)) {
-        type <- sanitize_type(model = model, type = type)
+        type <- sanitize_type(model = model, type = type, calling_function = "predictions")
     }
 
     dots <- list(...)
@@ -26,6 +26,10 @@ get_predict.fixest <- function(model,
             newdata = newdata,
             type = type),
         silent = TRUE)
+
+    if (inherits(pred, "try-error")) {
+        return(pred)
+    }
 
     if ("rowid" %in% colnames(newdata)) {
         out <- data.frame(

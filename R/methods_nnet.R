@@ -46,7 +46,7 @@ get_predict.multinom <- function(model,
                                  type = "probs",
                                  ...) {
 
-    type <- sanitize_type(model, type)
+    type <- sanitize_type(model, type, calling_function = "predictions")
 
     is_latent <- is_mclogit <- is_nnet <- FALSE
     if (isTRUE(type == "latent") && inherits(model, c("mblogit", "mclogit"))) {
@@ -88,7 +88,7 @@ get_predict.multinom <- function(model,
             colnames(pred)[1] <- missing_level
             pred <- pred - rowMeans(pred)
         } else {
-            stop("Unable to compute predictions on the latent scale.", call. = FALSE)
+            insight::format_error("Unable to compute predictions on the latent scale.")
         }
 
     } else if (is_latent && is_nnet) {

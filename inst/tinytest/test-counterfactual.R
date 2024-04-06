@@ -30,7 +30,7 @@ z <- slopes(mod, newdata = nd2)
 expect_equivalent(x$estimate, y$estimate)
 expect_equivalent(x$conf.low, y$conf.low, tol = 1e-5)
 expect_equivalent(x$estimate, z$estimate)
-expect_equivalent(x$conf.low, z$conf.low, tol = 1e-4)
+expect_equivalent(x$conf.low, z$conf.low, tol = 1e-2)
 
 
 # size

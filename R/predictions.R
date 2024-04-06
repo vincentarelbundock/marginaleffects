@@ -10,13 +10,10 @@
 #'
 #' See the predictions vignette and package website for worked examples and case studies:
 
-#' * <https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html>
-#' * <https://vincentarelbundock.github.io/marginaleffects/>
+#' * <https://marginaleffects.com/vignettes/predictions.html>
+#' * <https://marginaleffects.com/>
 #'
 #' @rdname predictions
-#' @details
-#' For `glm()`, `MASS::glm.nb`, `gam::gam()`, and `feols::feglm` models with `type`, `transform` and `hypothesis` all equal to `NULL` (the default), `predictions()` first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the `estimate` produced by `avg_predictions()` will not be exactly equal to the average of the `estimate` column produced by `predictions()`. Users can circumvent this behavior and average predictions directly on the response scale by setting `type="response"` explicitly. With `type="response"`, the intervals are symmetric and may have undesirable properties (e.g., stretching beyond the `[0,1]` bounds for a binary outcome regression).
-#' 
 #' @param model Model object
 #' @param variables Counterfactual variables.
 #' * Output:
@@ -37,8 +34,8 @@
 #'     + "threenum": mean and 1 standard deviation on both sides
 #'     + "fivenum": Tukey's five numbers
 #' @param newdata Grid of predictor values at which we evaluate predictions.
-#' + `NULL` (default): Predictions for each observed value in the original dataset. See [insight::get_data()]
-#' + data frame: Predictions for each row of the `newdata` data frame.
+#' + Warning: Please avoid modifying your dataset between fitting the model and calling a `marginaleffects` function. This can sometimes lead to unexpected results.
+#' + `NULL` (default): Unit-level predictions for each observed value in the dataset (empirical distribution). The dataset is retrieved using [insight::get_data()], which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 #' + string:
 #'   - "mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.
 #'   - "median": Predictions at the Median. Predictions when each predictor is held at its median or mode.
@@ -48,6 +45,8 @@
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.
+#' + [subset()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = subset(treatment == 1)`
+#' + [dplyr::filter()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = filter(treatment == 1)`
 #' @param byfun A function such as `mean()` or `sum()` used to aggregate
 #' estimates within the subgroups defined by the `by` argument. `NULL` uses the
 #' `mean()` function. Must accept a numeric vector and return a single numeric
@@ -59,14 +58,17 @@
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message. When `type` is `NULL`, the
-#' default value is used. This default is the first model-related row in
-#' the `marginaleffects:::type_dictionary` dataframe. See the details section for a note on backtransformation.
+#' first entry in the error message is used by default.
 #' @param transform A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
 #'
 #' @template deltamethod
 #' @template model_specific_arguments
 #' @template bayesian
 #' @template equivalence
+#' @template type
+#' @template order_of_operations
+#' @template parallel
+#' @template references
 #'
 #' @return A `data.frame` with one row per observation and several columns:
 #' * `rowid`: row number of the `newdata` data frame
@@ -74,14 +76,15 @@
 #' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
 #' * `estimate`: predicted outcome
 #' * `std.error`: standard errors computed using the delta method.
+#' * `p.value`: p value associated to the `estimate` column. The null is determined by the `hypothesis` argument (0 by default), and p values are computed before applying the `transform` argument. For models of class `feglm`, `Gam`, `glm` and `negbin`, p values are computed on the link scale by default unless the `type` argument is specified explicitly.
+#' * `s.value`: Shannon information transforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "surprise") against the null hypothesis that the coin is fair? The purpose of S is to calibrate the analyst's intuition about the strength of evidence encoded in p against a well-known physical phenomenon. See Greenland (2019) and Cole et al. (2020).
 #' * `conf.low`: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 #' * `conf.high`: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
-#' * `p.value`: p value associated to the `estimate` column. The null is determined by the `hypothesis` argument (0 by default), and p values are computed before applying the `transform` argument. For models of class `feglm`, `Gam`, `glm` and `negbin`, p values are computed on the link scale by default unless the `type` argument is specified explicitly.
 #'
 #' See `?print.marginaleffects` for printing options.
 #'
+#' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' @examples
-#' \dontrun{
 #' # Adjusted Prediction for every row of the original dataset
 #' mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 #' pred <- predictions(mod)
@@ -177,7 +180,6 @@
 #'     by = c("4,6", "4,6", "8"),
 #'     group = as.character(c(4, 6, 8)))
 #' predictions(mod, newdata = "mean", byfun = sum, by = by)
-#' }
 #'
 #' @inheritParams slopes
 #' @inheritParams comparisons
@@ -196,34 +198,41 @@ predictions <- function(model,
                         equivalence = NULL,
                         p_adjust = NULL,
                         df = Inf,
+                        numderiv = "fdforward",
                         ...) {
 
-
     dots <- list(...)
-    
-    # backward compatibility
-    if ("transform_post" %in% names(dots)) transform <- dots[["transform_post"]]
 
-    # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    scall <- substitute(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
-
-    if (!is.null(equivalence) && !is.null(p_adjust)) {
-        insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
+    if ("transform_post" %in% names(dots)) {
+        transform <- dots[["transform_post"]]
+        insight::format_warning("The `transform_post` argument is deprecated. Use `transform` instead.")
     }
-    
-    
-    # is the model supported?
-    model <- sanitize_model(
-        model = model,
-        newdata = newdata,
-        wts = wts,
-        vcov = vcov,
-        calling_function = "predictions",
-        ...)
+
+    # very early, before any use of newdata
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    scall <- rlang::enquo(newdata)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+
+    if ("cross" %in% names(dots)) {
+        insight::format_error("The `cross` argument is not available in this function.")
+    }
+
+    # extracting modeldata repeatedly is slow.
+    # checking dots allows marginalmeans to pass modeldata to predictions.
+    if (isTRUE(by)) {
+        modeldata <- get_modeldata(model,
+            additional_variables = FALSE,
+            modeldata = dots[["modeldata"]],
+            wts = wts)
+    } else {
+        modeldata <- get_modeldata(model,
+            additional_variables = by,
+            modeldata = dots[["modeldata"]],
+            wts = wts)
+    }
 
     # build call: match.call() doesn't work well in *apply()
+    # after sanitize_newdata_call
     call_attr <- c(list(
         name = "predictions",
         model = model,
@@ -238,81 +247,60 @@ predictions <- function(model,
         transform = transform,
         hypothesis = hypothesis,
         df = df),
-        list(...))
+        dots)
+    if ("modeldata" %in% names(dots)) {
+        call_attr[["modeldata"]] <- modeldata
+    }
     call_attr <- do.call("call", call_attr)
 
+    # sanity checks
+    sanity_dots(model = model, ...)
+    numderiv <- sanitize_numderiv(numderiv)
+    sanity_df(df, newdata)
+    sanity_equivalence_p_adjust(equivalence, p_adjust)
+    model <- sanitize_model(
+        model = model,
+        newdata = newdata,
+        wts = wts,
+        vcov = vcov,
+        calling_function = "predictions",
+        ...)
+    tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis <- tmp$hypothesis
+    hypothesis_null <- tmp$hypothesis_null
+
     # multiple imputation
-    if (inherits(model, "mira")) {
+    if (inherits(model, c("mira", "amest"))) {
         out <- process_imputation(model, call_attr)
         return(out)
     }
 
-    # extracting modeldata repeatedly is slow.
-    # checking dots allows marginalmeans to pass modeldata to predictions.
-    if ("modeldata" %in% names(dots)) {
-        modeldata <- dots[["modeldata"]]
-    } else {
-        addvar <- NULL
-        if (isTRUE(checkmate::check_character(by))) {
-            addvar <- c(addvar, by)
-        }
-        if (isTRUE(checkmate::check_data_frame(by))) {
-            addvar <- c(addvar, colnames(by))
-        }
-        if (isTRUE(checkmate::check_string(wts))) {
-            addvar <- c(addvar, wts)
-        }
-        if (is.null(addvar)) {
-            addvar <- FALSE
-        }
-        modeldata <- get_modeldata(model, additional_variables = addvar)
-    }
-
     # if type is NULL, we backtransform if relevant
-    flag_class <- isTRUE(class(model)[1] %in% c("glm", "Gam", "negbin")) ||
-                  isTRUE(hush(model[["method_type"]]) %in% c("feglm"))
-    if (is.null(type) &&
-        is.null(transform) &&
-        isTRUE(checkmate::check_number(hypothesis, null.ok = TRUE)) &&
-        flag_class) {
-        dict <- subset(type_dictionary, class == class(model)[1])$type
-        type <- sanitize_type(model = model, type = type)
-        linv <- tryCatch(insight::link_inverse(model), error = function(e) NULL)
-        if (isTRUE(type == "response") && isTRUE("link" %in% dict) && is.function(linv)) {
-            type <- "link"
-            transform <- linv
+    type_string <- sanitize_type(model = model, type = type, calling_function = "predictions")
+    if (identical(type_string, "invlink(link)")) {
+        if (is.null(hypothesis)) {
+            type_call <- "link"
         } else {
-            type <- sanitize_type(model = model, type = type)
+            type_call <- "response"
+            type_string <- "response"
+            insight::format_warning('The `type="invlink"` argument is not available unless `hypothesis` is `NULL` or a single number. The value of the `type` argument was changed to "response" automatically. To suppress this warning, use `type="response"` explicitly in your function call.')
         }
     } else {
-        type <- sanitize_type(model = model, type = type)
+        type_call <- type_string
     }
 
-    # do not check the model because `insight` supports more models than `marginaleffects`
-    # model <- sanitize_model(model)
-
-    # input sanity checks
-    sanity_df(df, newdata)
-
+    # save the original because it gets converted to a named list, which breaks
+    # user-input sanity checks
+    transform_original <- transform
     transform <- sanitize_transform(transform)
-    sanity_dots(model = model, ...)
-    model <- sanitize_model_specific(
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        calling_function = "predictions",
-        ...)
-
-    tmp <- sanitize_hypothesis(hypothesis, ...)
-    hypothesis <- tmp$hypothesis
-    hypothesis_null <- tmp$hypothesis_null
 
     conf_level <- sanitize_conf_level(conf_level, ...)
     newdata <- sanitize_newdata(
         model = model,
         newdata = newdata,
         modeldata = modeldata,
-        by = by)
+        by = by,
+        wts = wts)
 
     # after sanitize_newdata
     sanity_by(by, newdata)
@@ -324,16 +312,9 @@ predictions <- function(model,
         wts = wts,
         by = by,
         byfun = byfun)
+
     if (is.null(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
         wts <- "marginaleffects_wts_internal"
-    }
-
-    # weights: after sanitize_newdata; before sanitize_variables
-    sanity_wts(wts, newdata) # after sanity_newdata
-    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
-        newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
-    } else {
-        newdata[["marginaleffects_wts_internal"]] <- wts
     }
 
     # analogous to comparisons(variables=list(...))
@@ -398,14 +379,14 @@ predictions <- function(model,
 
     # Bootstrap
     out <- inferences_dispatch(
-        FUN = predictions,
-        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
+        INF_FUN = predictions,
+        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type_call, by = by,
         conf_level = conf_level,
-        byfun = byfun, wts = wts, transform = transform, hypothesis = hypothesis, ...)
+        byfun = byfun, wts = wts, transform = transform_original, hypothesis = hypothesis, ...)
     if (!is.null(out)) {
         return(out)
     }
-    
+
 
     # pre-building the model matrix can speed up repeated predictions
     newdata <- get_model_matrix_attribute(model, newdata)
@@ -415,7 +396,7 @@ predictions <- function(model,
     args <- list(
         model = model,
         newdata = newdata,
-        type = type,
+        type = type_call,
         hypothesis = hypothesis,
         wts = wts,
         by = by,
@@ -465,7 +446,7 @@ predictions <- function(model,
     V <- NULL
     J <- NULL
     if (!isFALSE(vcov)) {
-        V <- get_vcov(model, vcov = vcov, ...)
+        V <- get_vcov(model, vcov = vcov, type = type, ...)
 
         # Delta method
         if (!"std.error" %in% colnames(tmp) && is.null(draws)) {
@@ -478,12 +459,13 @@ predictions <- function(model,
                     model,
                     newdata = newdata,
                     vcov = V,
-                    type = type,
+                    type = type_call,
                     FUN = fun,
                     J = J,
                     hypothesis = hypothesis,
                     by = by,
-                    byfun = byfun)
+                    byfun = byfun,
+                    numderiv = numderiv)
                 args <- utils::modifyList(args, dots)
                 se <- do.call(get_se_delta, args)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
@@ -532,7 +514,7 @@ predictions <- function(model,
     stubcols <- c(
         "rowid", "rowidcf", "term", "group", "hypothesis",
         bycols,
-        "estimate", "std.error", "statistic", "p.value", "conf.low",
+        "estimate", "std.error", "statistic", "p.value", "s.value", "conf.low",
         "conf.high", "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
@@ -545,13 +527,17 @@ predictions <- function(model,
     out <- equivalence(out, equivalence = equivalence, df = df, ...)
 
     # after rename to estimate / after assign draws
+    if (identical(type_string, "invlink(link)")) {
+        linv <- tryCatch(insight::link_inverse(model), error = function(e) identity)
+        out <- backtransform(out, transform = linv)
+    }
     out <- backtransform(out, transform = transform)
 
     data.table::setDF(out)
     class(out) <- c("predictions", class(out))
     out <- set_marginaleffects_attributes(out, attr_cache = newdata_attr_cache)
     attr(out, "model") <- model
-    attr(out, "type") <- type
+    attr(out, "type") <- type_string
     attr(out, "model_type") <- class(model)[1]
     attr(out, "vcov.type") <- get_vcov_label(vcov)
     attr(out, "jacobian") <- J
@@ -565,11 +551,6 @@ predictions <- function(model,
     attr(out, "transform") <- transform[[1]]
     # save newdata for use in recall()
     attr(out, "newdata") <- newdata
-
-    if (inherits(model, "brmsfit")) {
-        insight::check_if_installed("brms")
-        attr(out, "nchains") <- brms::nchains(model)
-    }
 
     if (inherits(model, "brmsfit")) {
         insight::check_if_installed("brms")
@@ -605,10 +586,21 @@ get_predictions <- function(model,
 
     if (inherits(out$value, "data.frame")) {
         out <- out$value
+
     } else {
+
+        # tidymodels
+        if (inherits(out$error, "rlang_error") &&
+            isTRUE(grepl("the object should be", out$error$message))) {
+                insight::format_error(out$error$message)
+        }
+
         msg <- "Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument."
         if (!is.null(out$error)) {
             msg <- c(paste(msg, "This error was also raised:"), "", out$error$message)
+        }
+        if (inherits(out$value, "try-error")) {
+            msg <- c(paste(msg, "", "This error was also raised:"), "", as.character(out$value))
         }
         msg <- c(msg, "", "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
         insight::format_error(msg)
@@ -660,7 +652,13 @@ get_predictions <- function(model,
     draws <- attr(out, "posterior_draws")
 
     # hypothesis tests using the delta method
-    out <- get_hypothesis(out, hypothesis = hypothesis, by = by)
+    out <- get_hypothesis(out, hypothesis = hypothesis, by = by, newdata = newdata, draws = draws)
+
+    # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
+    # applied in the middle, and it must already be sorted in the final order,
+    # otherwise, users cannot know for sure what is going to be the first and
+    # second rows, etc.
+    out <- sort_columns(out, newdata, by)
 
     return(out)
 }
@@ -684,12 +682,13 @@ avg_predictions <- function(model,
                             equivalence = NULL,
                             p_adjust = NULL,
                             df = Inf,
+                            numderiv = "fdforward",
                             ...) {
 
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    scall <- substitute(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+    scall <- rlang::enquo(newdata)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
     # group by focal variable automatically unless otherwise stated
     if (isTRUE(by)) {
@@ -702,7 +701,7 @@ avg_predictions <- function(model,
 
     # Bootstrap
     out <- inferences_dispatch(
-        FUN = avg_predictions,
+        INF_FUN = avg_predictions,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
         conf_level = conf_level,
         byfun = byfun, wts = wts, transform = transform, hypothesis = hypothesis, ...)

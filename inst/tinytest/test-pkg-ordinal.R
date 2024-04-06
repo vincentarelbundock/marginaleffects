@@ -1,7 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
-if (packageVersion("base") > "4.3.0") exit_file("dev breaks this")
 
 requiet("MASS")
 requiet("ordinal")
@@ -13,9 +12,9 @@ dat <- read.csv(
 # marginaleffects: clm: vs. MASS
 known <- MASS::polr(Sat ~ Infl + Type + Cont, weights = Freq, data = dat, Hess = TRUE)
 
-known <- tidy(suppressMessages(slopes(known, type = "probs")))
+known <- suppressMessages(avg_slopes(known, type = "probs"))
 unknown <- clm(Sat ~ Infl + Type + Cont, weights = Freq, data = dat)
-unknown <- tidy(slopes(unknown))
+unknown <- avg_slopes(unknown)
 expect_equivalent(unknown$estimate, known$estimate, tolerance = .00001)
 expect_equivalent(unknown$std.error, known$std.error, tolerance = .00001)
 
@@ -37,8 +36,7 @@ dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 dat$y <- factor(dat$y)
 dat <- dat
 mod <- ordinal::clm(y ~ x1 + x2, data = dat)
-mfx <- slopes(mod)
-mfx <- tidy(mfx)
+mfx <- avg_slopes(mod)
 mfx <- merge(mfx, stata)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
@@ -76,11 +74,7 @@ expect_slopes(m4, n_unique = 6)
 expect_slopes(m5, n_unique = 6)
 
 
-
-
 # Issue #718: incorrect standard errors when scale and location are the same
-if (!packageVersion("insight") <= "0.19.0.9") exit_file("insight version")
-
 dat <- transform(mtcars, cyl = factor(cyl), vs2 = vs)
 mod1 <- clm(cyl ~ hp + vs,  # vs has a location effect
   scale = ~ vs,    # vs also has a scale effect
@@ -96,7 +90,6 @@ expect_equivalent(pre1$estimate, pre2$estimate)
 expect_equivalent(pre1$std.error, pre2$std.error)
 expect_equivalent(subset(pre1, group == 4)$estimate, pre3$fit[, 1])
 expect_equivalent(subset(pre1, group == 4)$std.error, pre3$se.fit[, 1], tol = 1e-4)
-
 
 
 # Issue #718: incorrect
@@ -125,23 +118,22 @@ expect_inherits(mfx, "slopes")
 mfx <- avg_slopes(mod, slope = "dyex")
 expect_inherits(mfx, "slopes")
 
+exit_file("check elasticities")
 mfx1 <- slopes(mod, variables = "carb", slope = "dydx")
-mfx2 <- slopes(mod, variables = "carb", slope = "eydx")
-mfx3 <- slopes(mod, variables = "carb", slope = "dyex")
-mfx4 <- slopes(mod, variables = "carb", slope = "eyex")
-expect_equivalent(mfx2$estimate, mfx1$estimate / mfx1$predicted)
-expect_equivalent(mfx3$estimate, mfx1$estimate * mfx1$carb)
-expect_equivalent(mfx4$estimate, mfx1$estimate / mfx1$predicted * mfx1$carb)
+mfx2 <- slopes(mod, variables = "carb", slope = "eyex")
+mfx3 <- slopes(mod, variables = "carb", slope = "eydx")
+mfx4 <- slopes(mod, variables = "carb", slope = "dyex")
+expect_equivalent(mfx2$estimate, mfx1$estimate * (mfx1$carb / mfx1$predicted))
+expect_equivalent(mfx3$estimate, mfx1$estimate / mfx1$predicted)
+expect_equivalent(mfx4$estimate, mfx1$estimate * mfx1$carb)
 
-mfx1 <- slopes(mod, slope = "dydx") |> subset(term == "hp")
-mfx2 <- slopes(mod, slope = "eydx") |> subset(term == "hp")
-mfx3 <- slopes(mod, slope = "dyex") |> subset(term == "hp")
-mfx4 <- slopes(mod, slope = "eyex") |> subset(term == "hp")
-expect_equivalent(mfx2$estimate, mfx1$estimate / mfx1$predicted)
-expect_equivalent(mfx3$estimate, mfx1$estimate * mfx1$hp)
-expect_equivalent(mfx4$estimate, mfx1$estimate / mfx1$predicted * mfx1$hp)
-
-
+mfx1 <- slopes(mod, variables = "carb", slope = "dydx")
+mfx2 <- slopes(mod, variables = "hp", slope = "eyex")
+mfx3 <- slopes(mod, variables = "hp", slope = "eydx")
+mfx4 <- slopes(mod, variables = "hp", slope = "dyex")
+expect_equivalent(mfx2$estimate, mfx1$estimate * (mfx1$hp / mfx1$predicted))
+expect_equivalent(mfx3$estimate, mfx1$estimate / mfx1$predicted)
+expect_equivalent(mfx4$estimate, mfx1$estimate * mfx1$hp)
 
 
 source("helpers.R")

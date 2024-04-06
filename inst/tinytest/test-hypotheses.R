@@ -2,6 +2,9 @@ source("helpers.R")
 using("marginaleffects")
 requiet("car")
 
+
+
+
 # When `FUN` and `hypotheses` are `NULL`, `hypotheses()` returns a data.frame of parameters
 dat <- mtcars
 mod <- lm(mpg ~ hp + wt + factor(cyl), data = dat)
@@ -34,20 +37,27 @@ expect_inherits(dmm, "data.frame")
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 
 f <- function(x) predict(x, type = "link", newdata = mtcars)
-p <- hypotheses(mod, FUN = f)
+p <- hypotheses(mod, hypothesis = f)
 expect_inherits(p, "data.frame")
 expect_true(all(p$std.error > 0))
 
 f <- function(x) predict(x, type = "response", newdata = mtcars)
-p <- hypotheses(mod, FUN = f)
+p <- hypotheses(mod, hypothesis = f)
 expect_inherits(p, "data.frame")
 expect_true(all(p$std.error > 0))
 
 # equality between predictions: 1 and 2 equal, 2 and 3 different
-f <- function(x) predict(x, type = "link", newdata = mtcars)
-dmm <- hypotheses(mod, FUN = f, hypothesis = "b1 = b2")
+fun <- function(x) {
+    p <- predict(x, type = "link", newdata = mtcars)
+    data.frame(term = "b1 = b2", estimate = p[1] - p[2])
+}
+dmm <- hypotheses(mod, hypothesis = fun)
 expect_equivalent(dmm$estimate, 0)
-dmm <- hypotheses(mod, FUN = f, hypothesis = "b3 = b2")
+fun <- function(x) {
+    p <- predict(x, type = "link", newdata = mtcars)
+    data.frame(term = "b3 = b2", estimate = p[3] - p[2])
+}
+dmm <- hypotheses(mod, hypothesis = fun)
 expect_equivalent(dmm$estimate, 1.33154848763268)
 
 # named matrix
@@ -149,9 +159,20 @@ expect_equal(x$estimate, y)
 expect_equal(z$estimate, y)
 
 
+# labels
+dat <- mtcars
+mod <- lm(mpg ~ hp + wt + factor(cyl), data = dat)
+hyp <- hypotheses(mod, hypothesis = "b* = b2")
+known <- c("b1 = b2", "b2 = b2", "b3 = b2", "b4 = b2", "b5 = b2")
+expect_true(all(hyp$term %in% known))
 
+# Custom labels
+hyp <- hypotheses(mod, hypothesis = c("equal" = "b1 = b2", "sums to zero" = "wt + hp = 0"))
+expect_equivalent(hyp$term, c("equal", "sums to zero"))
 
-
+# Does not mess up *
+hyp <- hypotheses(mod, hypothesis = c("equal" = "b* = 0"))
+expect_equivalent(hyp$term, sprintf("b%s = 0", 1:5))
 
 # hypotheses() applied to {marginaleffects} package objects
 # commented out because doesn't work in environments because of match.call()
@@ -172,11 +193,6 @@ expect_equal(z$estimate, y)
 # expect_true("b1=0.05" %in% dm$term)
 # expect_equivalent(nrow(dm), 1)
 
-# mod <- glm(vs ~ hp + factor(am), data = mtcars, family = binomial)
-# mm <- marginal_means(mod, "am")
-# dm <- hypotheses(mm, hypothesis = "b1 = b2")
-# expect_true("b1=b2" %in% dm$term)
-# expect_equivalent(nrow(dm), 1)
 
 
 rm(list = ls())

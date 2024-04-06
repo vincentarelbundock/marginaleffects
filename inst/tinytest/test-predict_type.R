@@ -10,7 +10,6 @@ mod <- lm(mpg ~ hp + cyl, data = dat)
 expect_error(comparisons(mod, type = "junk"), pattern = "Must be element")
 expect_error(predictions(mod, type = "junk"), pattern = "Must be element")
 expect_error(slopes(mod, type = "junk"), pattern = "Must be element")
-expect_error(marginal_means(mod, type = "junk"), pattern = "Must be element")
 
 
 
