@@ -77,6 +77,7 @@ Suggests:
     equivalence,
     estimatr,
     fixest,
+    flexsurv,
     fmeffects,
     fontquiver,
     future,
@@ -231,6 +232,7 @@ Collate:
     'methods_dataframe.R'
     'methods_dbarts.R'
     'methods_fixest.R'
+    'methods_flexsurv.R'
     'methods_gamlss.R'
     'methods_glmmTMB.R'
     'methods_glmx.R'

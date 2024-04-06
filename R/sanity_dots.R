@@ -40,6 +40,9 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["bife"]] <- c("alpha_new", "corrected") # nlme::lme
     valid[["process_error"]] <-  # mvgam::mvgam
 
+    # flexsurv
+    valid[["flexsurvreg"]] <- c("times", "p", "start")
+
     white_list <- c(
         "conf.int", "modeldata", "internal_call", "df",
         "transform", "comparison", "side", "delta", "null", "equivalence", "draw",

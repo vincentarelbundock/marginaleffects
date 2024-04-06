@@ -7,6 +7,10 @@ Breaking changes:
 * `datagrid()` no longer includes the response variable by default when it is not explicitly specified by the user. Use the new `response` argument to include it.
 * `datagrid(grid_type="balanced")` returns factors ordered by level rather than by order of appearance in the original data.
 
+New modeling packages supported:
+
+* `flexsurv`: Thanks to @mattwarkentin for code contributions in PR #781. https://cran.r-project.org/web/packages/flexsurv/index.html
+
 New:
 
 * `wts=TRUE` tries to retrieves weights used in a weighted fit such as `lm()` with the `weights` argument or a model fitted using the `survey` package. Thanks to @ngreifer for feature request 
