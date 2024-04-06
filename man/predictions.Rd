@@ -14,7 +14,7 @@ predictions(
   type = NULL,
   by = FALSE,
   byfun = NULL,
-  wts = NULL,
+  wts = FALSE,
   transform = NULL,
   hypothesis = NULL,
   equivalence = NULL,
@@ -33,7 +33,7 @@ avg_predictions(
   type = NULL,
   by = TRUE,
   byfun = NULL,
-  wts = NULL,
+  wts = FALSE,
   transform = NULL,
   hypothesis = NULL,
   equivalence = NULL,
@@ -136,10 +136,12 @@ value. This is sometimes used to take the sum or mean of predicted
 probabilities across outcome or predictor
 levels. See examples section.}
 
-\item{wts}{string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the \code{weighted.mean()} function.
+\item{wts}{logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not unit-level estimates. See \code{?weighted.mean}
 \itemize{
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
+\item FALSE: Equal weights.
+\item TRUE: Extract weights from the fitted object with \code{insight::find_weights()} and use them when taking weighted averages of estimates. Warning: \code{newdata=datagrid()} returns a single average weight, which is equivalent to using \code{wts=FALSE}
 }}
 
 \item{transform}{A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}

@@ -40,7 +40,6 @@ cmp1 <- comparisons(fit, variables = "treat", wts = "w")
 cmp2 <- comparisons(fit, variables = "treat", wts = "w", comparison = "differenceavg")
 expect_equivalent(cmp2$estimate, weighted.mean(cmp1$estimate, k$w))
 
-
 # wts = TRUE correctly extracts weights
 a1 <- avg_comparisons(fit, variables = "treat", wts = "w")
 a2 <- avg_comparisons(fit, variables = "treat", wts = TRUE)
@@ -48,6 +47,14 @@ expect_equivalent(a1, a2)
 
 a1 <- avg_comparisons(fit, variables = "treat", by = "married", wts = k$w)
 a2 <- avg_comparisons(fit, variables = "treat", by = "married", wts = TRUE)
+expect_equivalent(a1, a2)
+
+a1 <- avg_predictions(fit, wts = "w")
+a2 <- avg_predictions(fit, wts = TRUE)
+expect_equivalent(a1, a2)
+
+a1 <- avg_predictions(fit, by = "married", wts = k$w)
+a2 <- avg_predictions(fit, by = "married", wts = TRUE)
 expect_equivalent(a1, a2)
 
 

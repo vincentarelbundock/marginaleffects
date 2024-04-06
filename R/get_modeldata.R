@@ -1,4 +1,4 @@
-get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, wts = NULL, ...) {
+get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, wts = FALSE, ...) {
 
     # mice
     if (inherits(model, c("mira", "amest"))) {
