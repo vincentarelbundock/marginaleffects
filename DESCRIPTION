@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.18.0.9003
+Version: 0.18.0.8
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -29,7 +29,7 @@ Encoding: UTF-8
 URL: https://marginaleffects.com/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.1
 Depends: 
     R (>= 3.6.0)
 Imports: 
@@ -39,7 +39,10 @@ Imports:
     insight (>= 0.19.7),
     methods,
     rlang,
+    utils,
     Rcpp (>= 1.0.0)
+Enhances:
+    knitr
 LinkingTo: Rcpp, RcppEigen
 Suggests: 
     AER,
@@ -77,6 +80,7 @@ Suggests:
     fmeffects,
     fontquiver,
     future,
+    future.apply,
     fwb,
     gam,
     gamlss,
@@ -93,7 +97,6 @@ Suggests:
     itsadug,
     ivreg,
     kableExtra,
-    knitr,
     lme4,
     lmerTest,
     logistf,
@@ -132,6 +135,7 @@ Suggests:
     purrr,
     quantreg,
     Rchoice,
+    REndo,
     rcmdcheck,
     remotes,
     rmarkdown,
@@ -153,11 +157,12 @@ Suggests:
     svglite,
     systemfonts,
     tibble,
+    tictoc,
     tidymodels,
     tidyr,
     tidyverse,
     tinysnapshot,
-    tinytable (>= 0.0.4),
+    tinytable (>= 0.2.0),
     tinytest,
     titanic,
     truncreg,
@@ -174,6 +179,7 @@ Collate:
     'bootstrap_boot.R'
     'bootstrap_fwb.R'
     'bootstrap_rsample.R'
+    'bootstrap_simulation.R'
     'broom.R'
     'by.R'
     'ci.R'
@@ -183,7 +189,6 @@ Collate:
     'datagrid.R'
     'deprecated.R'
     'equivalence.R'
-    'get_averages.R'
     'get_coef.R'
     'get_contrast_data.R'
     'get_contrast_data_character.R'
@@ -229,7 +234,6 @@ Collate:
     'methods_gamlss.R'
     'methods_glmmTMB.R'
     'methods_glmx.R'
-    'methods_inferences_simulation.R'
     'methods_lme4.R'
     'methods_mclogit.R'
     'methods_mgcv.R'

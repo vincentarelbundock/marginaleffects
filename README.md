@@ -1,12 +1,18 @@
 
 
-![](man/figures/zoo_banner.png)
-
+<center>
+<h1>
+The Marginal Effects Zoo
+</h1>
+<h3>
+How to interpret statistical models in R and Python
+</h3>
 <br>
 <a href = "https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
 <a href = "https://marginaleffects.com" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>
 <a href = "https://marginaleffects.com" target = "_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a>
 <br><br>
+</center>
 
 The parameters of a statistical model can sometimes be difficult to
 interpret substantively, especially when that model includes non-linear
@@ -25,7 +31,7 @@ estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects,
 and other model types. This can lead to wasted effort, confusion, and
 mistakes, and it can hinder the implementation of best practices.
 
-## Marginal Effects Zoo: The Book
+## Free Book
 
 [This free online book](https://marginaleffects.com/) introduces a
 conceptual framework to clearly define statistical quantities of
@@ -68,7 +74,7 @@ package can facilitate the analysis of:
 [Get started by clicking
 here!](https://marginaleffects.com/vignettes/get_started.html)
 
-## `marginaleffects`: The Package
+## Free Software
 
 The `marginaleffects` package for `R` and `Python` offers a single point
 of entry to easily interpret the results of [over 100 classes of
@@ -91,9 +97,9 @@ using a simple and consistent user interface. Its benefits include:
     against alternative software like `Stata` or other `R` packages.
 -   *Thin:* The `R` package requires relatively few dependencies.
 -   *Standards-compliant:* `marginaleffects` follows “tidy” principles
-    and returns objects that work with standard functions like
-    `summary()`, `tidy()`, and `glance()`. These objects are easy to
-    program with and feed to other packages like
+    and returns simple data frames that work with all standard `R`
+    functions. The outputs are easy to program with and feed to other
+    packages like
     [`ggplot2`](https://marginaleffects.com/vignettes/plot.html) or
     [`modelsummary`.](https://marginaleffects.com/vignettes/tables.html)
 -   *Extensible:* Adding support for new models is very easy, often
@@ -123,11 +129,3 @@ ways:
     tell your friends about it.
 4.  Create a new entry [for the Meme
     Gallery!](https://marginaleffects.com/vignettes/meme.html)
-
-<a href="https://marginaleffects.com">
-<img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="center" alt="marginaleffects logo" width="200" />
-</a> <br><br>
-<img src="https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg">
-<img src="https://img.shields.io/badge/license-GPLv3-blue">
-<a href = "https://marginaleffects.com" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>
-<br><br>

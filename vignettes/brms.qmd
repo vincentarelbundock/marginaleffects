@@ -883,3 +883,5 @@ avg_predictions(mod, dpar = "sigma")
 
 avg_slopes(mod, dpar = "sigma")
 ```
+
+

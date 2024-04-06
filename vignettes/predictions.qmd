@@ -1,3 +1,7 @@
+---
+title: Predictions
+---
+
 ```{r, include = FALSE}
 options(width = 1000)
 knitr::opts_chunk$set(
@@ -16,13 +20,34 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-# Predictions
+# Definition and motivation
 
 In the context of this package, an "adjusted prediction" is defined as:
 
 > The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
 
 Here, the word "Adjusted" simply means "model-derived" or "model-based."
+
+Estimating predictions can allow us to answer a variety of important questions, such as:
+
+* _Healthcare Research_: What is the expected probability of a 50-year-old smoker developing heart disease, adjusting for diet, exercise, and family history factors?
+* _Sports Analytics_: What is the expected probability of a professional basketball team winning their next game, taking into account the team's recent performance, injuries, and the strength of the opposing team?
+* _Political Science_: What is the expected turnout for elections in rural and urban areas, adjusting for national voting intentions and democratic characteristics.
+* _Real Estate Pricing_: What is the expected price for a three-bedroom house in a suburban area, adjusting for the house's size, age, local amenities, and the current real estate market conditions?
+
+In addition, the `marginaleffects` package allows analysts to conduct hypothesis tests to compare different predictions. As we will see below, the `hypothesis` argument of the `predictions()` function can test questions such as:
+
+* Is the expected probability of developing a heart disease higher for a 40 year old man, or for a 55 year old woman?
+* Is the expected grade point average of students in a 20-person class higher than the expected grade point average of students in a 30-person class, accounting for socio-demographic characteristics?
+
+The `predictions()` function is *extremely* flexible, and it allows users to estimate a vast array of quantities of interest. To describe those quantities, this vignette breaks the problem down into 5 steps:
+
+1. Quantity
+2. Grid
+3. Aggregation
+4. Uncertainty
+5. Test
+
 
 # Quantity of interest
 
@@ -64,15 +89,18 @@ The default value of the `type` argument for most models is `"response"`, which 
 
 A "profile" is a combination of values of the predictor variables in a model. A "grid" is a collection of one or more profiles. You can think of a "grid" as different rows in a dataset, where each row contains the information necessary to predict the outcome for one individual or unit of observation.
 
-The reference grid can include many different rows if we want to make predictions for different combinations of predictors. By default, the `predictions()` function uses the full original dataset as a reference grid, which means it will compute adjusted predictions for each of the individuals observed in the dataset that was used to fit the model.
+To compute adjusted predictions we must first specify the values of the predictors to consider: a "reference grid." For example, if our model is a linear model fitted with the lm() function which relates the response variable Happiness with the predictor variables Age, Gender and Income, the reference grid could be a `data.frame` with values for Age, Gender and Income: Age = 40, Gender = Male, Income = 60000. The reference grid can include many different rows if we want to make predictions for different combinations of predictors. The reference grid may or may not correspond to actual observations in the dataset used to fit the model; the example values given above could match the mean values of each variable, or they could represent a specific observed (or hypothetical) individual. 
 
-To compute adjusted predictions we must first specify the values of the predictors to consider: a "reference grid." For example, if our model is a linear model fitted with the lm() function which relates the response variable Happiness with the predictor variables Age, Gender and Income, the reference grid could be a `data.frame` with values for Age, Gender and Income: Age = 40, Gender = Male, Income = 60000. 
 
-The "reference grid" may or may not correspond to actual observations in the dataset used to fit the model; the example values given above could match the mean values of each variable, or they could represent a specific observed (or hypothetical) individual. 
+### Empirical distribution
 
-The following sections will introduce to different ways to select a reference grid over which we want to compute adjusted predictions.
+By default, the `predictions()` function uses the full original dataset as a reference grid. This means it will compute adjusted predictions for each of the individuals observed in the dataset that was used to fit the model:
 
-### User-specified values: `newdata` and `datagrid()`
+```{r}
+predictions(lm_mod)
+```
+
+### User-specified values
 
 There are two main ways to select the reference grid over which we want to compute adjusted predictions. The first is using the `newdata` argument and the [`datagrid()` function](slopes.html). The second is with the `variables` argument.
 
@@ -131,7 +159,7 @@ predictions(lm_mod, newdata = datagrid())
 ```
 
 
-#### Counterfactual predictions
+### Counterfactual predictions
 
 An alternative approach to construct grids of predictors is to use `grid_type = "counterfactual"` argument value. This will duplicate the *whole* dataset, with the different values specified by the user. 
 
@@ -177,7 +205,7 @@ nrow(p)
 
 Computing predictions for a large grid or for every observation in a dataset can be useful, but analysts may also find the results unwieldy and difficult to interpret. In many contexts, it makes sense to compute *aggregated* predictions, such as the average predicted outcome in the whole dataset, or by subgroups of the data.
 
-### Average Adjusted Predictions (AAP)
+## Average Adjusted Predictions (AAP)
 
 An "Average Adjusted Prediction" is the outcome of a two step process:
 
@@ -418,7 +446,7 @@ plot_predictions(mod, condition = "hp") +
 ```
 
 
-# Nominal and ordinal outcomes
+# Categorical outcomes
 
 One place where this is particularly useful is in multinomial models with different response levels. For example, here we compute the average predicted outcome for each outcome level in a multinomial logit model. Note that response levels are identified by the "group" column.
 
@@ -504,37 +532,4 @@ plot_predictions(
     condition = "mpg") +
     facet_wrap(~group)
 ```
-
-
-
-# Bayes
-
-The same strategy works for Bayesian models:
-```{r, eval = FALSE}
-library(brms)
-mod <- brm(am ~ mpg * vs, data = mtcars, family = bernoulli)
-```
-
-```{r, include=FALSE}
-library(brms)
-download.file("https://github.com/vincentarelbundock/modelarchive/raw/main/data/brms_interaction.rds", tmp <- tempfile())
-mod <- readRDS(tmp)
-```
-
-```{r}
-predictions(mod, by = "vs")
-```
-
-The results above show the median of the posterior distribution of group-wise means. Note that we take the mean of predicted values for each MCMC draw before computing quantiles. This is equivalent to:
-
-```{r}
-draws <- posterior_epred(mod)
-quantile(rowMeans(draws[, mtcars$vs == 0]), probs = c(.5, .025, .975))
-quantile(rowMeans(draws[, mtcars$vs == 1]), probs = c(.5, .025, .975))
-```
-
-
-
-
-
 

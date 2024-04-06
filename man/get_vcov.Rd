@@ -2,8 +2,8 @@
 % Please edit documentation in R/get_vcov.R, R/methods_MCMCglmm.R,
 %   R/methods_afex.R, R/methods_aod.R, R/methods_biglm.R, R/methods_brms.R,
 %   R/methods_dbarts.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
-%   R/methods_inferences_simulation.R, R/methods_mhurdle.R, R/methods_mlr3.R,
-%   R/methods_rms.R, R/methods_scam.R, R/methods_tidymodels.R
+%   R/methods_mhurdle.R, R/methods_mlr3.R, R/methods_rms.R, R/methods_scam.R,
+%   R/methods_tidymodels.R
 \name{get_vcov}
 \alias{get_vcov}
 \alias{get_vcov.default}
@@ -15,7 +15,6 @@
 \alias{get_vcov.bart}
 \alias{get_vcov.gamlss}
 \alias{get_vcov.glmmTMB}
-\alias{get_vcov.inferences_simulation}
 \alias{get_vcov.mhurdle}
 \alias{get_vcov.Learner}
 \alias{get_vcov.orm}
@@ -43,8 +42,6 @@ get_vcov(model, ...)
 \method{get_vcov}{gamlss}(model, ...)
 
 \method{get_vcov}{glmmTMB}(model, ...)
-
-\method{get_vcov}{inferences_simulation}(model, ...)
 
 \method{get_vcov}{mhurdle}(model, vcov = NULL, ...)
 

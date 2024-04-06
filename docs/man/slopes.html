@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -160,6 +160,10 @@ window.Quarto = {
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
@@ -275,6 +279,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -301,6 +311,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -412,8 +428,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -554,6 +570,8 @@ window.Quarto = {
   <li><a href="#bayesian-posterior-summaries" id="toc-bayesian-posterior-summaries" class="nav-link" data-scroll-target="#bayesian-posterior-summaries">Bayesian posterior summaries</a></li>
   <li><a href="#equivalence-inferiority-superiority" id="toc-equivalence-inferiority-superiority" class="nav-link" data-scroll-target="#equivalence-inferiority-superiority">Equivalence, Inferiority, Superiority</a></li>
   <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types">Prediction types</a></li>
+  <li><a href="#parallel-computation" id="toc-parallel-computation" class="nav-link" data-scroll-target="#parallel-computation">Parallel computation</a></li>
+  <li><a href="#order-of-operations" id="toc-order-of-operations" class="nav-link" data-scroll-target="#order-of-operations">Order of operations</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
@@ -665,6 +683,12 @@ Model object
 <p>See the Examples section and the <code>datagrid()</code> documentation.</p>
 </li>
 </ul>
+</li>
+<li>
+<p><code>subset()</code> call with a single argument to select a subset of the dataset used to fit the model, ex: <code>newdata = subset(treatment == 1)</code></p>
+</li>
+<li>
+<p><code>dplyr::filter()</code> call with a single argument to select a subset of the dataset used to fit the model, ex: <code>newdata = filter(treatment == 1)</code></p>
 </li>
 <li>
 <p>string:</p>
@@ -837,7 +861,7 @@ numeric value between 0 and 1. Confidence level to use to build a confidence int
 <code id="slopes_:_hypothesis">hypothesis</code>
 </td>
 <td>
-<p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.</p>
+<p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, a string formula, or a function.</p>
 <ul>
 <li>
 <p>Numeric:</p>
@@ -884,6 +908,23 @@ numeric value between 0 and 1. Confidence level to use to build a confidence int
 </li>
 <li>
 <p>"revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Function:</p>
+<ul>
+<li>
+<p>Accepts an argument <code>x</code>: object produced by a <code>marginaleffects</code> function or a data frame with column <code>rowid</code> and <code>estimate</code></p>
+</li>
+<li>
+<p>Returns a data frame with columns <code>term</code> and <code>estimate</code> (mandatory) and <code>rowid</code> (optional).</p>
+</li>
+<li>
+<p>The function can also accept and operation on optional input arguments: <code>newdata</code>, <code>by</code>, <code>draws</code>.</p>
+</li>
+<li>
+<p>This function approach will not work for Bayesian models or with bootstraping. In those cases, it is easy to use <code>posterior_draws()</code> to extract and manipulate the draws directly.</p>
 </li>
 </ul>
 </li>
@@ -1253,6 +1294,52 @@ robustlmm::predict.rlmerMod
 <p>Some of the most common <code>type</code> values are:</p>
 <p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, detection, disp, ev, expected, expvalue, fitted, invlink(link), latent, latent_N, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob</p>
 </section>
+<section id="parallel-computation" class="level3">
+<h3 class="anchored" data-anchor-id="parallel-computation">Parallel computation</h3>
+<p>The <code>slopes()</code> and <code>comparisons()</code> functions can use parallelism to speed up computation. Operations are parallelized for the computation of standard errors, at the model coefficient level. There is always considerable overhead when using parallel computation, mainly involved in passing the whole dataset to the different processes. Thus, parallel computation is most likely to be useful when the model includes many parameters and the dataset is relatively small.</p>
+<p>Warning: In many cases, parallel processing will not be useful at all.</p>
+<p>To activate parallel computation, users must load the <code>future.apply</code> package, call <code>plan()</code> function, and set a global option. For example:</p>
+<div class="sourceCode r">
+<pre>library(future.apply)
+plan("multicore", workers = 4)
+options(marginaleffects_parallel = TRUE)
+
+slopes(model)
+</pre>
+</div>
+<p>To disable parallelism in <code>marginaleffects</code> altogether, you can set a global option:</p>
+<div class="sourceCode r">
+<pre>options(marginaleffects_parallel = FALSE)
+</pre>
+</div>
+</section>
+<section id="order-of-operations" class="level3">
+<h3 class="anchored" data-anchor-id="order-of-operations">Order of operations</h3>
+<p>Behind the scenes, the arguments of <code>marginaleffects</code> functions are evaluated in this order:</p>
+<ol>
+<li>
+<p><code>newdata</code></p>
+</li>
+<li>
+<p><code>variables</code></p>
+</li>
+<li>
+<p><code>comparison</code> and <code>slopes</code></p>
+</li>
+<li>
+<p><code>by</code></p>
+</li>
+<li>
+<p><code>vcov</code></p>
+</li>
+<li>
+<p><code>hypothesis</code></p>
+</li>
+<li>
+<p><code>transform</code></p>
+</li>
+</ol>
+</section>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
 <ul>
@@ -1278,9 +1365,9 @@ robustlmm::predict.rlmerMod
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Estimate Std. Error     z Pr(&gt;|z|)   S     2.5 %   97.5 %
-   hp 0.006989   0.005850 1.195    0.232 2.1 -0.004476 0.018454
-   hp 0.016403   0.012293 1.334    0.182 2.5 -0.007690 0.040496
-   hp 0.002832   0.003769 0.751    0.453 1.1 -0.004556 0.010220
+   hp 0.006989   0.005850 1.195    0.232 2.1 -0.004476 0.018455
+   hp 0.016403   0.012292 1.335    0.182 2.5 -0.007688 0.040494
+   hp 0.002832   0.003769 0.751    0.452 1.1 -0.004556 0.010219
    hp 0.001934   0.002441 0.792    0.428 1.2 -0.002850 0.006717
    hp 0.002991   0.003212 0.931    0.352 1.5 -0.003304 0.009287
    hp 0.000148   0.000321 0.459    0.646 0.6 -0.000482 0.000777
@@ -1293,8 +1380,8 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 %   97.5 %
-   hp  0.00265     0.0021  1.26  0.20718 2.3 -0.00147  0.00678
-   wt -0.43571     0.1434 -3.04  0.00238 8.7 -0.71677 -0.15465
+   hp  0.00265     0.0021  1.26  0.20722 2.3 -0.00147  0.00678
+   wt -0.43571     0.1434 -3.04  0.00238 8.7 -0.71680 -0.15462
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1304,10 +1391,10 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 % 97.5 %
-   hp  0.00852    0.00825  1.03    0.301 1.7 -0.00764 0.0247
-   wt -1.74663    1.55753 -1.12    0.262 1.9 -4.79934 1.3061
+   hp  0.00852    0.00824  1.03    0.301 1.7 -0.00763 0.0247
+   wt -1.74663    1.55772 -1.12    0.262 1.9 -4.79972 1.3064
 
-Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, am, hp, wt 
+Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, hp, wt, am 
 Type:  response </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Marginal Effect at User-Specified Values</span></span>
@@ -1318,10 +1405,10 @@ Type:  response </code></pre>
  Term  hp Estimate Std. Error      z Pr(&gt;|z|)   S    2.5 %  97.5 %
    hp 100  0.00117     0.0017  0.684    0.494 1.0 -0.00217 0.00451
    hp 110  0.00189     0.0024  0.788    0.431 1.2 -0.00282 0.00660
-   wt 100 -0.19499     0.2993 -0.651    0.515 1.0 -0.78162 0.39163
-   wt 110 -0.33208     0.4296 -0.773    0.439 1.2 -1.17399 0.50983
+   wt 100 -0.19499     0.2993 -0.651    0.515 1.0 -0.78161 0.39163
+   wt 110 -0.33208     0.4296 -0.773    0.439 1.2 -1.17398 0.50983
 
-Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, predicted_lo, predicted_hi, predicted, am, wt 
+Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, predicted_lo, predicted_hi, predicted, wt, am 
 Type:  response </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group-Average Marginal Effects (G-AME)</span></span>
@@ -1334,7 +1421,7 @@ Type:  response </code></pre>
 <pre><code>
  Term    Contrast cyl Estimate Std. Error      z Pr(&gt;|z|)   S   2.5 %  97.5 %
    hp mean(dY/dX)   4  -0.0917     0.0353 -2.596  0.00942 6.7 -0.1610 -0.0225
-   hp mean(dY/dX)   6  -0.0523     0.0204 -2.561  0.01044 6.6 -0.0923 -0.0123
+   hp mean(dY/dX)   6  -0.0523     0.0204 -2.561  0.01044 6.6 -0.0922 -0.0123
    hp mean(dY/dX)   8  -0.0128     0.0143 -0.891  0.37280 1.4 -0.0409  0.0153
 
 Columns: term, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
@@ -1351,10 +1438,10 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term   wt  hp Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 %  97.5 %
-   hp 2.62 100 0.012042    0.00995 1.211    0.226 2.1 -0.00745 0.03153
+   hp 2.62 100 0.012042    0.00994 1.211    0.226 2.1 -0.00745 0.03153
    hp 2.62 110 0.006989    0.00585 1.195    0.232 2.1 -0.00448 0.01845
    hp 2.88 100 0.014156    0.01051 1.347    0.178 2.5 -0.00644 0.03475
-   hp 2.88 110 0.016403    0.01229 1.334    0.182 2.5 -0.00769 0.04050
+   hp 2.88 110 0.016403    0.01229 1.335    0.182 2.5 -0.00769 0.04049
    hp 2.32 100 0.001566    0.00220 0.713    0.476 1.1 -0.00274 0.00587
    hp 2.32 110 0.000657    0.00118 0.557    0.577 0.8 -0.00165 0.00297
 
@@ -1367,8 +1454,8 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Estimate Std. Error     z Pr(&gt;|z|)   S     2.5 %   97.5 %
-   hp 0.006989   0.009047 0.773    0.440 1.2 -0.010743 0.024722
-   hp 0.016403   0.012423 1.320    0.187 2.4 -0.007946 0.040753
+   hp 0.006989   0.009049 0.772    0.440 1.2 -0.010746 0.024724
+   hp 0.016403   0.012422 1.320    0.187 2.4 -0.007944 0.040751
    hp 0.002832   0.004879 0.580    0.562 0.8 -0.006732 0.012395
    hp 0.001934   0.002034 0.951    0.342 1.5 -0.002053 0.005920
    hp 0.002991   0.002927 1.022    0.307 1.7 -0.002745 0.008728
@@ -1387,7 +1474,7 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Term Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %
- wt=drat    -6.23       1.05 -5.92   &lt;0.001 28.2 -8.29  -4.17
+ wt=drat    -6.23       1.05 -5.92   &lt;0.001 28.2 -8.29  -4.16
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1400,7 +1487,7 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
- b1-b2=0     6.23       1.05 5.92   &lt;0.001 28.2  4.17   8.29
+ b1-b2=0     6.23       1.05 5.92   &lt;0.001 28.2  4.16   8.29
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1413,7 +1500,7 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
    Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
- custom     6.23       1.05 5.92   &lt;0.001 28.2  4.17   8.29
+ custom     6.23       1.05 5.92   &lt;0.001 28.2  4.16   8.29
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1431,8 +1518,8 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
        Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %
- Contrast A     6.23       1.05  5.92   &lt;0.001 28.2   4.17   8.29
- Contrast B   -11.46       4.91 -2.33   0.0197  5.7 -21.10  -1.83
+ Contrast A     6.23       1.05  5.92   &lt;0.001 28.2   4.16   8.29
+ Contrast B   -11.46       4.92 -2.33   0.0197  5.7 -21.10  -1.83
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1523,6 +1610,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1557,7 +1662,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1833,7 +1942,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../man/comparisons.html" class="pagination-link  aria-label=" `comparisons`"="">
+      <a href="../man/comparisons.html" class="pagination-link" aria-label="`comparisons`">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>comparisons</code></span>
       </a>          
   </div>

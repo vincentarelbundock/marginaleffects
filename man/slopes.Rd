@@ -55,6 +55,8 @@ avg_slopes(
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
 \item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
 }
+\item \code{\link[=subset]{subset()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = subset(treatment == 1)}
+\item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
 \item string:
 \itemize{
 \item "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
@@ -145,9 +147,10 @@ first entry in the error message is used by default.}
 }
 \item Function:
 \itemize{
-\item Accepts an argument \code{x}: data frame with column \code{rowid} and \code{estimate}
+\item Accepts an argument \code{x}: object produced by a \code{marginaleffects} function or a data frame with column \code{rowid} and \code{estimate}
 \item Returns a data frame with columns \code{term} and \code{estimate} (mandatory) and \code{rowid} (optional).
 \item The function can also accept and operation on optional input arguments: \code{newdata}, \code{by}, \code{draws}.
+\item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{posterior_draws()} to extract and manipulate the draws directly.
 }
 \item See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 }}
@@ -343,6 +346,50 @@ The \code{invlink(link)} is a special type defined by \code{marginaleffects}. It
 Some of the most common \code{type} values are:
 
 response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, detection, disp, ev, expected, expvalue, fitted, invlink(link), latent, latent_N, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+}
+
+\section{Parallel computation}{
+
+
+The \code{slopes()} and \code{comparisons()} functions can use parallelism to
+speed up computation. Operations are parallelized for the computation of
+standard errors, at the model coefficient level. There is always
+considerable overhead when using parallel computation, mainly involved
+in passing the whole dataset to the different processes. Thus, parallel
+computation is most likely to be useful when the model includes many parameters
+and the dataset is relatively small.
+
+Warning: In many cases, parallel processing will not be useful at all.
+
+To activate parallel computation, users must load the \code{future.apply} package,
+call \code{plan()} function, and set a global option. For example:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(future.apply)
+plan("multicore", workers = 4)
+options(marginaleffects_parallel = TRUE)
+
+slopes(model)
+}\if{html}{\out{</div>}}
+
+To disable parallelism in \code{marginaleffects} altogether, you can set a global option:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_parallel = FALSE)
+}\if{html}{\out{</div>}}
+}
+
+\section{Order of operations}{
+
+
+Behind the scenes, the arguments of \code{marginaleffects} functions are evaluated in this order:
+\enumerate{
+\item \code{newdata}
+\item \code{variables}
+\item \code{comparison} and \code{slopes}
+\item \code{by}
+\item \code{vcov}
+\item \code{hypothesis}
+\item \code{transform}
+}
 }
 
 \examples{

@@ -1,5 +1,6 @@
 project:
   type: website
+  output-dir: ../docs/
 
 website:
   title: "Marginal Effects Zoo"
@@ -14,6 +15,8 @@ website:
     right:
       - text: Get started
         href: vignettes/get_started.qmd
+      - text: Help
+        href: vignettes/help.qmd
       - icon: github
         href: $ALTDOC_PACKAGE_URL_GITHUB
         aria-label: $ALTDOC_PACKAGE_NAME GitHub
@@ -37,11 +40,13 @@ website:
           - vignettes/bootstrap.qmd
           - vignettes/categorical.qmd
           - vignettes/conformal.qmd
+          - vignettes/conjoint.qmd
           - vignettes/elasticity.qmd
           - vignettes/equivalence.qmd
           - vignettes/experiments.qmd
           - vignettes/gam.qmd
           - vignettes/gcomputation.qmd
+          - vignettes/help.qmd
           - vignettes/heterogeneity.qmd
           - vignettes/ipw.qmd
           - vignettes/logit.qmd
@@ -60,7 +65,7 @@ website:
           - vignettes/extensions.qmd
           - vignettes/links.qmd
           - vignettes/performance.qmd
-          - vignettes/python.qmd
+          - vignettes/numpyro.qmd
           - vignettes/supported_models.qmd
           - vignettes/tables.qmd
           - vignettes/uncertainty.qmd
@@ -96,6 +101,8 @@ format:
   html:
     toc: true
     theme:
-      light: flatly
+      - flatly
+      - custom.scss
+    highlight-style: atom-one
     code-copy: true
     code-overflow: scroll

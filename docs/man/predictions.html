@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -160,6 +160,10 @@ window.Quarto = {
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
@@ -275,6 +279,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -301,6 +311,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -412,8 +428,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -553,6 +569,8 @@ window.Quarto = {
   <li><a href="#bayesian-posterior-summaries" id="toc-bayesian-posterior-summaries" class="nav-link" data-scroll-target="#bayesian-posterior-summaries">Bayesian posterior summaries</a></li>
   <li><a href="#equivalence-inferiority-superiority" id="toc-equivalence-inferiority-superiority" class="nav-link" data-scroll-target="#equivalence-inferiority-superiority">Equivalence, Inferiority, Superiority</a></li>
   <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types">Prediction types</a></li>
+  <li><a href="#order-of-operations" id="toc-order-of-operations" class="nav-link" data-scroll-target="#order-of-operations">Order of operations</a></li>
+  <li><a href="#parallel-computation" id="toc-parallel-computation" class="nav-link" data-scroll-target="#parallel-computation">Parallel computation</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
@@ -684,6 +702,12 @@ Model object
 <p>See the Examples section and the <code>datagrid()</code> documentation.</p>
 </li>
 </ul>
+</li>
+<li>
+<p><code>subset()</code> call with a single argument to select a subset of the dataset used to fit the model, ex: <code>newdata = subset(treatment == 1)</code></p>
+</li>
+<li>
+<p><code>dplyr::filter()</code> call with a single argument to select a subset of the dataset used to fit the model, ex: <code>newdata = filter(treatment == 1)</code></p>
 </li>
 </ul>
 </td>
@@ -878,7 +902,7 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 <code id="predictions_:_hypothesis">hypothesis</code>
 </td>
 <td>
-<p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.</p>
+<p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, a string formula, or a function.</p>
 <ul>
 <li>
 <p>Numeric:</p>
@@ -925,6 +949,23 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 </li>
 <li>
 <p>"revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Function:</p>
+<ul>
+<li>
+<p>Accepts an argument <code>x</code>: object produced by a <code>marginaleffects</code> function or a data frame with column <code>rowid</code> and <code>estimate</code></p>
+</li>
+<li>
+<p>Returns a data frame with columns <code>term</code> and <code>estimate</code> (mandatory) and <code>rowid</code> (optional).</p>
+</li>
+<li>
+<p>The function can also accept and operation on optional input arguments: <code>newdata</code>, <code>by</code>, <code>draws</code>.</p>
+</li>
+<li>
+<p>This function approach will not work for Bayesian models or with bootstraping. In those cases, it is easy to use <code>posterior_draws()</code> to extract and manipulate the draws directly.</p>
 </li>
 </ul>
 </li>
@@ -1278,6 +1319,52 @@ robustlmm::predict.rlmerMod
 <p>Some of the most common <code>type</code> values are:</p>
 <p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, detection, disp, ev, expected, expvalue, fitted, invlink(link), latent, latent_N, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob</p>
 </section>
+<section id="order-of-operations" class="level3">
+<h3 class="anchored" data-anchor-id="order-of-operations">Order of operations</h3>
+<p>Behind the scenes, the arguments of <code>marginaleffects</code> functions are evaluated in this order:</p>
+<ol>
+<li>
+<p><code>newdata</code></p>
+</li>
+<li>
+<p><code>variables</code></p>
+</li>
+<li>
+<p><code>comparison</code> and <code>slopes</code></p>
+</li>
+<li>
+<p><code>by</code></p>
+</li>
+<li>
+<p><code>vcov</code></p>
+</li>
+<li>
+<p><code>hypothesis</code></p>
+</li>
+<li>
+<p><code>transform</code></p>
+</li>
+</ol>
+</section>
+<section id="parallel-computation" class="level3">
+<h3 class="anchored" data-anchor-id="parallel-computation">Parallel computation</h3>
+<p>The <code>slopes()</code> and <code>comparisons()</code> functions can use parallelism to speed up computation. Operations are parallelized for the computation of standard errors, at the model coefficient level. There is always considerable overhead when using parallel computation, mainly involved in passing the whole dataset to the different processes. Thus, parallel computation is most likely to be useful when the model includes many parameters and the dataset is relatively small.</p>
+<p>Warning: In many cases, parallel processing will not be useful at all.</p>
+<p>To activate parallel computation, users must load the <code>future.apply</code> package, call <code>plan()</code> function, and set a global option. For example:</p>
+<div class="sourceCode r">
+<pre>library(future.apply)
+plan("multicore", workers = 4)
+options(marginaleffects_parallel = TRUE)
+
+slopes(model)
+</pre>
+</div>
+<p>To disable parallelism in <code>marginaleffects</code> altogether, you can set a global option:</p>
+<div class="sourceCode r">
+<pre>options(marginaleffects_parallel = FALSE)
+</pre>
+</div>
+</section>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
 <ul>
@@ -1321,22 +1408,17 @@ Type:  response </code></pre>
  100   4     26.2      0.986 26.6   &lt;0.001 516.6  24.3   28.2
  120   4     25.8      1.110 23.2   &lt;0.001 393.8  23.6   27.9
 
-Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl 
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg 
 Type:  response </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> drat <span class="sc">+</span> <span class="fu">factor</span>(cyl) <span class="sc">+</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(m, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">FUN_factor =</span> unique, <span class="at">FUN_numeric =</span> median))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
- Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp drat cyl am
-     22.0       1.29 17.0   &lt;0.001 214.0  19.4   24.5 123  3.7   6  1
-     18.2       1.27 14.3   &lt;0.001 151.9  15.7   20.7 123  3.7   6  0
-     25.5       1.32 19.3   &lt;0.001 274.0  23.0   28.1 123  3.7   4  1
-     21.8       1.54 14.1   &lt;0.001 148.3  18.8   24.8 123  3.7   4  0
-     22.6       2.14 10.6   &lt;0.001  84.2  18.4   26.8 123  3.7   8  1
-     18.9       1.73 10.9   &lt;0.001  89.0  15.5   22.3 123  3.7   8  0
+ Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %  hp drat cyl am
+     18.9       1.73 10.9   &lt;0.001 89.0  15.5   22.3 123  3.7   8  0
 
-Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, drat, cyl, am 
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, drat, cyl, am, mpg 
 Type:  response </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Average Adjusted Predictions (AAP)</span></span>
@@ -1468,7 +1550,7 @@ Type:  response </code></pre>
  custom  2     4.78      0.797  6.0   &lt;0.001  28.9   3.22   6.35  3.6
  custom  3   115.21      3.647 31.6   &lt;0.001 725.0 108.07 122.36  3.6
 
-Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, drat, wt 
+Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, drat, wt, mpg 
 Type:  response </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `by` argument</span></span>
@@ -1630,6 +1712,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1664,7 +1764,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1940,7 +2044,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/uncertainty.html" class="pagination-link  aria-label=" standard="" errors"="">
+      <a href="../vignettes/uncertainty.html" class="pagination-link" aria-label="Standard Errors">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Standard Errors</span>
       </a>          
   </div>

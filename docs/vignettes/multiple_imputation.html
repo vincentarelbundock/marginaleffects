@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -160,6 +160,10 @@ window.Quarto = {
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
@@ -275,6 +279,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -301,6 +311,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -412,8 +428,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -596,12 +612,12 @@ window.Quarto = {
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>mfx_mice</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Term                        Contrast    Species Estimate Std. Error      t Pr(&gt;|t|)     S   2.5 % 97.5 %    Df</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0684     0.0560  1.222  0.22414   2.2 -0.0424  0.179 120.0</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0540     0.0558  0.968  0.33548   1.6 -0.0567  0.165  93.6</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0582     0.0512  1.137  0.25818   2.0 -0.0434  0.160 101.2</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.1890     0.0836  2.260  0.02434   5.4  0.0246  0.353 400.3</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0684     0.0560  1.222  0.22413   2.2 -0.0424  0.179 120.0</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0540     0.0558  0.968  0.33562   1.6 -0.0568  0.165  93.7</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0582     0.0512  1.137  0.25816   2.0 -0.0433  0.160 101.2</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.1890     0.0836  2.260  0.02435   5.4  0.0246  0.353 400.4</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor   0.2092     0.0772  2.710  0.00807   7.0  0.0558  0.363  89.0</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2242     0.1041  2.154  0.03513   4.8  0.0161  0.432  62.0</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2242     0.1041  2.154  0.03511   4.8  0.0162  0.432  61.9</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) setosa       1.1399     0.0977 11.668  &lt; 0.001  68.1  0.9464  1.333 114.8</span></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) versicolor   1.1399     0.0977 11.668  &lt; 0.001  68.1  0.9464  1.333 114.8</span></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) virginica    1.1399     0.0977 11.668  &lt; 0.001  68.1  0.9464  1.333 114.8</span></span>
@@ -632,11 +648,11 @@ window.Quarto = {
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Term                        Contrast    Species Estimate Std. Error      t Pr(&gt;|t|)    S  2.5 % 97.5 %   Df</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.3878     0.0907  4.278  &lt; 0.001 13.3  0.205 0.5705 44.0</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.3231     0.0802  4.030  &lt; 0.001 12.5  0.162 0.4838 55.9</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.3231     0.0802  4.030  &lt; 0.001 12.5  0.163 0.4838 55.9</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.3467     0.0799  4.340  &lt; 0.001 13.6  0.186 0.5077 44.7</span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa      -0.2079     0.1491 -1.395  0.16877  2.6 -0.507 0.0909 55.0</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor  -0.1157     0.1168 -0.991  0.32646  1.6 -0.350 0.1187 51.8</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica   -0.0452     0.1272 -0.355  0.72321  0.5 -0.298 0.2078 82.1</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor  -0.1157     0.1168 -0.991  0.32645  1.6 -0.350 0.1187 51.8</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica   -0.0452     0.1272 -0.355  0.72320  0.5 -0.298 0.2078 82.1</span></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) setosa       0.6127     0.1731  3.541  0.00111  9.8  0.262 0.9635 36.7</span></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) versicolor   0.6127     0.1731  3.541  0.00111  9.8  0.262 0.9635 36.7</span></span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) virginica    0.6127     0.1731  3.541  0.00111  9.8  0.262 0.9635 36.7</span></span>
@@ -674,12 +690,12 @@ window.Quarto = {
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>mfx_missRanger</span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Term                        Contrast    Species Estimate Std. Error     t Pr(&gt;|t|)     S    2.5 % 97.5 %      Df</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0586     0.0414  1.42  0.15671   2.7 -0.02249  0.140 2780618</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0675     0.0392  1.72  0.08515   3.6 -0.00934  0.144  721360</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0643     0.0367  1.75  0.07986   3.6 -0.00765  0.136 1020504</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.2314     0.0690  3.35  &lt; 0.001  10.3  0.09612  0.367 1911470</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor   0.2186     0.0551  3.97  &lt; 0.001  13.8  0.11066  0.327  246670</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2089     0.0687  3.04  0.00237   8.7  0.07422  0.344  194782</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0586     0.0414  1.42  0.15671   2.7 -0.02249  0.140 2780641</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0675     0.0392  1.72  0.08516   3.6 -0.00935  0.144  721507</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0643     0.0367  1.75  0.07986   3.6 -0.00766  0.136 1020580</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.2314     0.0690  3.35  &lt; 0.001  10.3  0.09613  0.367 1911278</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor   0.2186     0.0551  3.97  &lt; 0.001  13.8  0.11066  0.327  246666</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2089     0.0687  3.04  0.00237   8.7  0.07419  0.344  194958</span></span>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) setosa       1.1589     0.0704 16.46  &lt; 0.001 199.8  1.02091  1.297 1115135</span></span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) versicolor   1.1589     0.0704 16.46  &lt; 0.001 199.8  1.02091  1.297 1115135</span></span>
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) virginica    1.1589     0.0704 16.46  &lt; 0.001 199.8  1.02091  1.297 1115135</span></span>
@@ -709,6 +725,7 @@ window.Quarto = {
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"missRanger"</span> <span class="ot">=</span> mfx_missRanger)</span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(models, <span class="at">shape =</span> term <span class="sc">:</span> contrast <span class="sc">+</span> Species <span class="sc">~</span> model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
+<div>
 <div id="edltsovpql" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#edltsovpql table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -1432,6 +1449,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
+</div>
 </section>
 <section id="passing-new-data-arguments-newdata-wts-by-etc." class="level2">
 <h2 class="anchored" data-anchor-id="passing-new-data-arguments-newdata-wts-by-etc.">Passing new data arguments: <code>newdata</code>, <code>wts</code>, <code>by</code>, etc.</h2>
@@ -1566,6 +1584,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1600,7 +1636,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1876,7 +1916,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/mrp.html" class="pagination-link  aria-label=" mrp"="">
+      <a href="../vignettes/mrp.html" class="pagination-link" aria-label="MrP">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">MrP</span>
       </a>          
   </div>

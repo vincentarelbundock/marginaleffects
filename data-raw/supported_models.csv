@@ -68,6 +68,11 @@ pscl,zeroinfl,TRUE,TRUE,TRUE,TRUE,TRUE,U,TRUE,TRUE
 quantreg,rq,TRUE,TRUE,TRUE,TRUE,U,U,TRUE,TRUE
 Rchoice,hetprob,TRUE,TRUE,,,,,,
 Rchoice,ivpml,TRUE,TRUE,,,,,,
+REndo,latentIV,TRUE,TRUE,,,,,,
+REndo,copulaCorrection,TRUE,TRUE,,,,,,
+REndo,higherMomentsIV,TRUE,TRUE,,,,,,
+REndo,hetErrorsIV,TRUE,TRUE,,,,,,
+REndo,multilevelIV,TRUE,TRUE,,,,,,
 rms,ols,TRUE,TRUE,,,,,,
 rms,lrm,TRUE,TRUE,,,,,,
 rms,orm,TRUE,TRUE,,,,,,

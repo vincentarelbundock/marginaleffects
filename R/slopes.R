@@ -30,6 +30,8 @@
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.
+#' + [subset()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = subset(treatment == 1)`
+#' + [dplyr::filter()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = filter(treatment == 1)`
 #' + string:
 #'   - "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
 #'   - "median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.
@@ -79,9 +81,10 @@
 #'   - "sequential": difference between an estimate and the estimate in the next row.
 #'   - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 #' + Function:
-#'   - Accepts an argument `x`: data frame with column `rowid` and `estimate`
+#'   - Accepts an argument `x`: object produced by a `marginaleffects` function or a data frame with column `rowid` and `estimate`
 #'   - Returns a data frame with columns `term` and `estimate` (mandatory) and `rowid` (optional).
 #'   - The function can also accept and operation on optional input arguments: `newdata`, `by`, `draws`.
+#'   - This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use `posterior_draws()` to extract and manipulate the draws directly.
 #' + See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 #' @param p_adjust Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See [stats::p.adjust]
 #' @param df Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and `Inf`. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. See [insight::get_df] for a convenient function to extract degrees of freedom. Ex: `slopes(model, df = insight::get_df(model))`
@@ -116,7 +119,9 @@
 #' @template bayesian
 #' @template equivalence
 #' @template type
+#' @template parallel
 #' @template references
+#' @template order_of_operations
 #'
 #' @return A `data.frame` with one row per observation (per term/group) and several columns:
 #' * `rowid`: row number of the `newdata` data frame
@@ -224,7 +229,7 @@ slopes <- function(model,
     # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
     # build call: match.call() doesn't work well in *apply()
     call_attr <- c(list(
@@ -331,7 +336,7 @@ avg_slopes <- function(model,
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
 
     # Bootstrap

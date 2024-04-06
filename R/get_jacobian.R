@@ -27,8 +27,7 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
     # old version. probably not optimal. Keep for posterity.
     # h <- max(1e-8, 1e-4 * min(abs(x), na.rm = TRUE))
     baseline <- func(x)
-    df <- matrix(NA_real_, length(baseline), length(x))
-    for (i in seq_along(x)) {
+    inner_loop <- function(i, ...) {
         if (is.null(eps)) {
             h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
         } else {
@@ -36,7 +35,18 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
         }
         dx <- x
         dx[i] <- dx[i] + h
-        df[, i] <- (func(dx) - baseline) / h
+        out <- (func(dx) - baseline) / h
+        return(out)
+    }
+    if (isTRUE(getOption("marginaleffects_parallel", default = FALSE))) {
+        insight::check_if_installed("future.apply")
+        df <- future.apply::future_lapply(seq_along(x), inner_loop, future.seed = TRUE)
+        df <- do.call("cbind", df)
+    } else {
+        df <- matrix(NA_real_, length(baseline), length(x))
+        for (i in seq_along(x)) {
+            df[, i] <- inner_loop(i)
+        }
     }
     return(df)
 }
@@ -44,8 +54,7 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
 
 get_jacobian_fdcenter <- function(func, x, eps = NULL) {
     baseline <- func(x)
-    df <- matrix(NA_real_, length(baseline), length(x))
-    for (i in seq_along(x)) {
+    inner_loop <- function(i, ...) {
         if (is.null(eps)) {
             h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
         } else {
@@ -54,7 +63,17 @@ get_jacobian_fdcenter <- function(func, x, eps = NULL) {
         dx_hi <- dx_lo <- x
         dx_hi[i] <- dx_hi[i] + h / 2
         dx_lo[i] <- dx_lo[i] - h / 2
-        df[, i] <- (func(dx_hi) - func(dx_lo)) / h
+        out <- (func(dx_hi) - func(dx_lo)) / h
+    }
+    if (isTRUE(getOption("marginaleffects_parallel", default = FALSE))) {
+        insight::check_if_installed("future.apply")
+        df <- future.apply::future_lapply(seq_along(x), inner_loop, future.seed = TRUE)
+        df <- do.call("cbind", df)
+    } else {
+        df <- matrix(NA_real_, length(baseline), length(x))
+        for (i in seq_along(x)) {
+            df[, i] <- inner_loop(i)
+        }
     }
     return(df)
 }

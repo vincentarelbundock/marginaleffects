@@ -10,8 +10,9 @@
 #' @param model Model object
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments can be used.)
 #' @param by character vector with grouping variables within which `FUN_*` functions are applied to create "sub-grids" with unspecified variables.
+#' @param response Logical should the response variable be included in the grid, even if it is not specified explicitly.
 #' @param FUN_character the function to be applied to character variables.
-#' @param FUN_factor the function to be applied to factor variables.
+#' @param FUN_factor the function to be applied to factor variables. This only applies if the variable in the original data is a factor. For variables converted to factor in a model-fitting formula, for example, `FUN_character` is used.
 #' @param FUN_logical the function to be applied to logical variables.
 #' @param FUN_integer the function to be applied to integer variables.
 #' @param FUN_binary the function to be applied to binary variables.
@@ -75,6 +76,7 @@ datagrid <- function(
     newdata = NULL,
     by = NULL,
     grid_type = "mean_or_mode",
+    response = FALSE,
     FUN_character = NULL,
     FUN_factor = NULL,
     FUN_logical = NULL,
@@ -101,6 +103,7 @@ datagrid <- function(
     checkmate::assert_function(FUN_other, null.ok = TRUE)
     checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_data_frame(newdata, null.ok = TRUE)
+    checkmate::assert_flag(response)
 
     if (grid_type == "mean_or_mode") {
         if (is.null(FUN_character)) FUN_character <- get_mode
@@ -114,7 +117,8 @@ datagrid <- function(
     } else if (grid_type == "balanced") {
         if (is.null(FUN_character)) FUN_character <- unique
         if (is.null(FUN_logical)) FUN_logical <- unique
-        if (is.null(FUN_factor)) FUN_factor <- unique
+        # not just levels(), because that is string, and sorts badly ex: "2" vs "10"
+        if (is.null(FUN_factor)) FUN_factor <- function(k) sort(unique(k))
         if (is.null(FUN_binary)) FUN_binary <- unique
         if (is.null(FUN_numeric)) FUN_numeric <- function(x) mean(x, na.rm = TRUE)
         if (is.null(FUN_other)) FUN_other <- function(x) mean(x, na.rm = TRUE)
@@ -149,6 +153,7 @@ datagrid <- function(
             args <- c(list(...), list(
                 model = model,
                 newdata = newdata_list[[i]],
+                response = response,
                 FUN_character = FUN_character,
                 FUN_factor = FUN_factor,
                 FUN_logical = FUN_logical,
@@ -162,14 +167,28 @@ datagrid <- function(
             }
             newdata_list[[i]] <- do.call(datagrid_engine, args)
         }
+
+        # Issue 1058: missing attributes with `by`
+        at <- attributes(newdata_list[[1]])
+
         out <- data.table::rbindlist(newdata_list)
         data.table::setDF(out)
+
+        # Issue 1058: missing attributes with `by`
+        # overwriting everything corrupts the data frame
+        for (n in names(at)) {
+            if (!n %in% names(attributes(out))) {
+                attr(out, n) <- at[[n]]
+            }
+        }
+
         return(out)
     }
     
     out <- datagrid_engine(...,
                 model = model,
                 newdata = newdata,
+                response = response,
                 FUN_character = FUN_character,
                 FUN_factor = FUN_factor,
                 FUN_logical = FUN_logical,
@@ -185,6 +204,7 @@ datagrid_engine <- function(
     ...,
     model = NULL,
     newdata = NULL,
+    response = response,
     FUN_character = get_mode,
     # need to be explicit for numeric variables transfered to factor in model formula
     FUN_factor = get_mode,
@@ -204,13 +224,13 @@ datagrid_engine <- function(
     variables_all <- tmp$all
     variables_manual <- names(at)
     variables_automatic <- tmp$automatic
-    
-    # commented out because we want to keep the response in
+
+    # usually we don't want the response in the grid, but 
     # sometimes there are two responses and we need one of them:
     # brms::brm(y | trials(n) ~ x + w + z)
-    # if (!is.null(model)) {
-    #     variables_automatic <- setdiff(variables_automatic, insight::find_response(model))
-    # }
+    if (!is.null(model) && isFALSE(response)) {
+        variables_automatic <- setdiff(variables_automatic, insight::find_response(model))
+    }
 
 
     if (length(variables_automatic) > 0) {
@@ -222,7 +242,11 @@ datagrid_engine <- function(
         # created by insight::get_data
         for (n in names(dat_automatic)) {
             if (get_variable_class(dat, n, c("factor", "strata", "cluster")) || n %in% tmp[["cluster"]]) {
-                out[[n]] <- FUN_factor(dat_automatic[[n]])
+                if (is.factor(dat_automatic[[n]])) {
+                    out[[n]] <- FUN_factor(dat_automatic[[n]])
+                } else {
+                    out[[n]] <- FUN_character(dat_automatic[[n]])
+                }
             } else if (get_variable_class(dat, n, "binary")) {
                 out[[n]] <- FUN_binary(dat_automatic[[n]])
             } else if (get_variable_class(dat, n, "logical")) {

@@ -1,9 +1,21 @@
-sanitize_newdata_call <- function(scall, newdata = NULL, model) {
+sanitize_newdata_call <- function(scall, newdata = NULL, model, by = NULL) {
     if (rlang::quo_is_call(scall)) {
         if (grepl("^datagrid", rlang::call_name(scall))) {
             if (!"model" %in% rlang::call_args_names(scall)) {
                 scall <- rlang::call_modify(scall, model = model)
             }
+        } else if (isTRUE(rlang::call_name(scall) == "subset")) {
+          argnames <- rlang::call_args_names(scall)
+          if (!"x" %in% argnames && length(argnames) == 1) {
+            tmp <- get_modeldata(model, additional_variables = by)
+            scall <- rlang::call_modify(scall, x = tmp)
+          }
+        } else if (isTRUE(rlang::call_name(scall) == "filter")) {
+          argnames <- rlang::call_args_names(scall)
+          if (!".data" %in% argnames && length(argnames) == 1) {
+            tmp <- get_modeldata(model, additional_variables = by)
+            scall <- rlang::call_modify(scall, .data = tmp)
+          }
         } else if (rlang::call_name(scall) %in% "visualisation_matrix") {
             if (!"x" %in% rlang::call_args_names(scall)) {
                 scall <- rlang::call_modify(scall, x = get_modeldata)
