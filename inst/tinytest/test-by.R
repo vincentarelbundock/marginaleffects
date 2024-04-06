@@ -154,12 +154,6 @@ pre2 <- slopes(mod, by = FALSE)
 expect_equivalent(nrow(pre1), 3)
 expect_equivalent(nrow(pre2), 96)
 
-mm <- marginal_means(
-    mod,
-    variables = "gear")
-expect_equivalent(nrow(mm), 3)
-expect_error(marginal_means(mod, by = TRUE, variables = "gear"))
-
 
 # marginaleffects poisson vs. margins
 dat <- mtcars
@@ -230,6 +224,14 @@ cmp3 <- predictions(mod)  |>
 expect_equivalent(cmp1$estimate, cmp2$estimate)
 expect_equivalent(cmp1$estimate, cmp3$estimate)
 
+
+# Issue #1058
+tmp <- mtcars
+tmp <- tmp[c('mpg', 'cyl', 'hp')]
+tmp$cyl <- as.factor(tmp$cyl) # 3 levels
+tmp$hp  <- as.factor(tmp$hp)
+bygrid <- datagrid(newdata = tmp, by = "cyl", hp = unique)
+expect_equivalent(nrow(bygrid), 23)
 
 
 

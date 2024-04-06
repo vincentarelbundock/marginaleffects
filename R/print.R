@@ -1,3 +1,21 @@
+#' Print a marginaleffects object in knitr
+#'
+#' @keywords internal
+#' @return A string with class `knit_asis` to be printed in Rmarkdown or Quarto documents.
+#' @exportS3Method knitr::knit_print
+knit_print.marginaleffects <- function(x, ...) {
+  if (isTRUE(getOption("marginaleffects_print_style") == "tinytable")) {
+    insight::check_if_installed("tinytable")
+    x <- print(x, "tinytable")
+    printfun <- utils::getFromNamespace("knit_print.tinytable", "tinytable")
+    printfun(x)
+  } else {
+    print(x)
+  }
+}
+
+
+
 #' Print `marginaleffects` objects
 #' 
 #' @description
@@ -7,13 +25,13 @@
 #' 
 #' Some of the data columns are not printed by default. You can disable pretty printing and print the full results as a standard data frame using the `style` argument or by applying `as.data.frame()` on the object. See examples below.
 #' 
-#' @param x An object produced by one of the [`marginaleffects`] package functions.
+#' @param x An object produced by one of the `marginaleffects` package functions.
+#' @param style "summary", "data.frame", or "tinytable"
 #' @param digits The number of digits to display.
 #' @param p_eps p values smaller than this number are printed in "<0.001" style.
 #' @param topn The number of rows to be printed from the beginning and end of tables with more than `nrows` rows.
 #' @param nrows The number of rows which will be printed before truncation.
 #' @param ncols The maximum number of column names to display at the bottom of the printed output.
-#' @param style "summary" or "data.frame"
 #' @param type boolean: should the type be printed?
 #' @param column_names boolean: should the column names be printed?
 #' @param ... Other arguments are currently ignored.
@@ -31,21 +49,23 @@
 #' data.frame(p)
 #'
 print.marginaleffects <- function(x,
+                                  style = getOption("marginaleffects_print_style", default = "summary"),
                                   digits = getOption("marginaleffects_print_digits", default = 3),
                                   p_eps = getOption("marginaleffects_print_p_eps", default = 0.001),
                                   topn = getOption("marginaleffects_print_topn", default = 5),
                                   nrows = getOption("marginaleffects_print_nrows", default = 30),
                                   ncols = getOption("marginaleffects_print_ncols", default = 30),
-                                  style = getOption("marginaleffects_print_style", default = "summary"),
                                   type = getOption("marginaleffects_print_type", default = TRUE),
                                   column_names = getOption("marginaleffects_print_column_names", default = TRUE),
                                   ...) {
 
-
     checkmate::assert_number(digits)
     checkmate::assert_number(topn)
     checkmate::assert_number(nrows)
-    checkmate::assert_choice(style, choices = c("data.frame", "summary"))
+    checkmate::assert_choice(
+      style,
+      choices = c("data.frame", "summary", "tinytable", "html", "latex", "markdown", "typst")
+    )
 
     if (isTRUE(style == "data.frame")) {
         print(as.data.frame(x))
@@ -207,6 +227,37 @@ print.marginaleffects <- function(x,
         }
     }
 
+    if (style %in% c("tinytable", "html", "latex", "typst", "markdown")) {
+        insight::check_if_installed("tinytable")
+
+        tab <- as.data.frame(out)
+
+        if (isTRUE(splitprint)) {
+          tab <- rbind(utils::head(tab, topn), utils::tail(tab, topn))
+        }
+
+        # at <- attributes(tab)
+        # attributes(tab) <- at[names(at) %in% c("row.names", "names", "class")]
+
+        tab <- tinytable::tt(tab)
+        tab <- tinytable::format_tt(tab, escape = TRUE)
+
+        if (isTRUE(splitprint)) {
+          msg <- "%s rows omitted"
+          msg <- sprintf(msg, nrow(x) - 2 * topn)
+          msg <- stats::setNames(list(topn + 1), msg)
+          tab <- tinytable::group_tt(tab, i = msg)
+          tab <- tinytable::style_tt(tab, i = topn + 1, align = "c")
+        }
+
+        tab@output <- style
+        if (style == "tinytable") {
+          return(tab)
+        }
+        print(tab)
+        return(invisible(tab))
+    }
+
     # head
     cat("\n")
     print_head <- attr(x, "print_head")
@@ -275,4 +326,22 @@ print.comparisons <- print.marginaleffects
 #' @noRd
 #' @export
 print.slopes <- print.marginaleffects
+
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.hypotheses <- knit_print.marginaleffects
+
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.predictions <- knit_print.marginaleffects
+
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.comparisons <- knit_print.marginaleffects
+
+#' @noRd
+#' @exportS3Method knitr::knit_print
+knit_print.slopes <- knit_print.marginaleffects
+
+
 

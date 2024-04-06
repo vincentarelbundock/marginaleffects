@@ -128,6 +128,8 @@ orm,fitted
 orm,mean
 orm,lp
 polr,probs
+rendo.base,response
+rendo.base,link
 rlm,response
 selection,response
 selection,link

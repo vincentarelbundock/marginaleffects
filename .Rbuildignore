@@ -16,10 +16,8 @@ Makefile
 ^README\.html$
 ^README\.Rmd$
 ^sandbox$
-inst/tinytest/_tinysnapshot_review
 \.code-workspace$
 ^vignettes$
-inst/tinytest/stata/databases/.*\.dta
 ^.*\.Rproj$
 ^\.Rproj\.user$
 man-roxygen
@@ -29,3 +27,8 @@ man-roxygen
 README.qmd
 vignettes/
 vignettes
+\.python-version
+pyproject\.toml
+requirements\.lock
+requirements-dev\.lock
+.venv

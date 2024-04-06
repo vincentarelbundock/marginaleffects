@@ -4,8 +4,6 @@ bootstrap_rsample <- function(model, INF_FUN, ...) {
     conf_type <- attr(model, "inferences_conf_type")
     checkmate::assert_choice(conf_type, choices = c("perc", "bca"))
 
-    insight::check_if_installed("boot")
-
     # attached by `inferences()`
     conf_type <- attr(model, "inferences_conf_type")
     checkmate::assert_choice(conf_type, choices = c("perc", "norm", "basic", "bca"))

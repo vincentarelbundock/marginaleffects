@@ -103,10 +103,8 @@ data("bioChemists", package = "pscl")
 model <- zeroinfl(art ~ kid5 + phd + mar | ment,
               dist = "negbin",
               data = bioChemists)
-mm <- marginal_means(model)
-expect_marginal_means(mm)
 # response
-mm <- marginal_means(model) |> dplyr::arrange(value)
+mm <- predictions(model, by = "mar", newdata = datagrid(grid_type = "balanced")) |> dplyr::arrange(mar)
 em <- tidy(emmeans(model, specs = "mar", df = Inf))
 expect_equivalent(mm$estimate, em$estimate, tol = 0.01)
 expect_equivalent(mm$std.error, em$std.error, tolerance = .01)

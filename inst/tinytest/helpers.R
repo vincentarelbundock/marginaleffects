@@ -27,7 +27,7 @@ requiet("tinysnapshot")
 if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") >= "1.4.0") {
     tinytest::register_tinytest_extension(
         "marginaleffects",
-        c("expect_slopes", "expect_predictions", "expect_margins", "expect_marginal_means"))
+        c("expect_slopes", "expect_predictions", "expect_margins"))
 }
 
 # common names of datasets, often assigned to global environment

@@ -114,10 +114,13 @@ get_ci_draws <- function(x, conf_level, draws, model = NULL) {
     } else if (identical("eti", getOption("marginaleffects_posterior_interval", default = "eti")) &&
         identical("median", getOption("marginaleffects_posterior_center", default = "median"))) {
         insight::check_if_installed("collapse", minimum_version = "1.9.0")
-        CIs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fquantile, probs = c(critical, .5, 1 - critical))
-        x$estimate <- CIs[, 2]
-        x$conf.low <- CIs[, 1]
-        x$conf.high <- CIs[, 3]
+        # Issue #1017
+        if (nrow(draws) > 0) {
+            CIs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fquantile, probs = c(critical, .5, 1 - critical))
+            x$estimate <- CIs[, 2]
+            x$conf.low <- CIs[, 1]
+            x$conf.high <- CIs[, 3]
+        }
         return(x)
     }
 

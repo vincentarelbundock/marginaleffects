@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -160,6 +160,10 @@ window.Quarto = {
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
@@ -275,6 +279,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -301,6 +311,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -412,8 +428,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -589,9 +605,9 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod, <span class="at">variables =</span> <span class="st">"mpg"</span>, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">mpg =</span> <span class="dv">25</span>, <span class="at">hp =</span> <span class="dv">110</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Group Term mpg  hp Estimate Std. Error       z Pr(&gt;|z|)    S    2.5 %  97.5 %</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      3  mpg  25 110 -0.06042     0.0169 -3.5811   &lt;0.001 11.5 -0.09349 -0.0274</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      3  mpg  25 110 -0.06042     0.0169 -3.5812   &lt;0.001 11.5 -0.09349 -0.0274</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      4  mpg  25 110 -0.00318     0.0335 -0.0949   0.9244  0.1 -0.06891  0.0625</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      5  mpg  25 110  0.06361     0.0301  2.1134   0.0346  4.9  0.00462  0.1226</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      5  mpg  25 110  0.06361     0.0301  2.1135   0.0346  4.9  0.00462  0.1226</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, predicted_lo, predicted_hi, predicted, gear </span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -604,9 +620,9 @@ window.Quarto = {
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Group Term Estimate Std. Error     z Pr(&gt;|z|)    S     2.5 %   97.5 %</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      3  hp  -0.00377   0.001514 -2.49  0.01285  6.3 -0.006735 -0.00080</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      3  mpg -0.07014   0.015485 -4.53  &lt; 0.001 17.4 -0.100489 -0.03979</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      4  hp   0.00201   0.000958  2.10  0.03555  4.8  0.000136  0.00389</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      4  mpg  0.03748   0.013862  2.70  0.00686  7.2  0.010308  0.06464</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      3  mpg -0.07014   0.015483 -4.53  &lt; 0.001 17.4 -0.100485 -0.03979</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      4  hp   0.00201   0.000958  2.10  0.03554  4.8  0.000136  0.00389</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      4  mpg  0.03748   0.013860  2.70  0.00685  7.2  0.010311  0.06464</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      5  hp   0.00175   0.000833  2.11  0.03518  4.8  0.000122  0.00339</span></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      5  mpg  0.03266   0.009570  3.41  &lt; 0.001 10.6  0.013905  0.05142</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -704,12 +720,12 @@ window.Quarto = {
 <span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Group   Term  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %   97.5 %</span></span>
 <span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   income  0.002786    0.00122  2.289  0.02209  5.5  0.000400  0.00517</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   size   -0.126477    0.02892 -4.373  &lt; 0.001 16.3 -0.183161 -0.06979</span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   income -0.000372    0.00110 -0.338  0.73554  0.4 -0.002531  0.00179</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   size   -0.126477    0.02892 -4.373  &lt; 0.001 16.3 -0.183162 -0.06979</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   income -0.000372    0.00110 -0.338  0.73557  0.4 -0.002531  0.00179</span></span>
 <span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   size    0.011349    0.02587  0.439  0.66084  0.6 -0.039347  0.06204</span></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   income  0.003373    0.00137  2.455  0.01408  6.2  0.000681  0.00607</span></span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   size    0.045887    0.02476  1.854  0.06381  4.0 -0.002635  0.09441</span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train income -0.005787    0.00132 -4.389  &lt; 0.001 16.4 -0.008371 -0.00320</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   income  0.003373    0.00137  2.455  0.01407  6.2  0.000681  0.00607</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   size    0.045887    0.02476  1.853  0.06381  4.0 -0.002636  0.09441</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train income -0.005787    0.00132 -4.390  &lt; 0.001 16.4 -0.008371 -0.00320</span></span>
 <span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train size    0.069241    0.02478  2.794  0.00521  7.6  0.020666  0.11782</span></span>
 <span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
@@ -749,15 +765,15 @@ window.Quarto = {
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">newdata =</span> nd, <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"income"</span>, <span class="st">"size"</span>))</span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Group   Term  Estimate Std. Error      z Pr(&gt;|z|)   S     2.5 %    97.5 %</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   income  6.66e-03   2.42e-03  2.748  0.00599 7.4  0.001909  0.011404</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   size   -1.69e-01   5.87e-02 -2.884  0.00393 8.0 -0.284538 -0.054262</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   income -1.14e-03   9.44e-04 -1.209  0.22656 2.1 -0.002991  0.000708</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   size    4.67e-02   2.72e-02  1.716  0.08617 3.5 -0.006642  0.100073</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   income  6.48e-06   2.01e-05  0.322  0.74761 0.4 -0.000033  0.000046</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   size    1.36e-03   8.81e-04  1.542  0.12304 3.0 -0.000368  0.003084</span></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train income -5.52e-03   1.91e-03 -2.891  0.00384 8.0 -0.009265 -0.001778</span></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train size    1.21e-01   4.45e-02  2.729  0.00635 7.3  0.034200  0.208453</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Group   Term  Estimate Std. Error     z Pr(&gt;|z|)   S     2.5 %    97.5 %</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   income  6.66e-03   2.42e-03  2.75  0.00599 7.4  1.91e-03  1.14e-02</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   size   -1.69e-01   5.87e-02 -2.88  0.00393 8.0 -2.85e-01 -5.43e-02</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   income -1.14e-03   9.43e-04 -1.21  0.22630 2.1 -2.99e-03  7.07e-04</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   size    4.67e-02   2.72e-02  1.72  0.08622 3.5 -6.65e-03  1.00e-01</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   income  6.48e-06   2.02e-05  0.32  0.74885 0.4 -3.32e-05  4.62e-05</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   size    1.36e-03   8.81e-04  1.54  0.12304 3.0 -3.68e-04  3.08e-03</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train income -5.52e-03   1.91e-03 -2.89  0.00384 8.0 -9.27e-03 -1.78e-03</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train size    1.21e-01   4.44e-02  2.73  0.00634 7.3  3.42e-02  2.08e-01</span></span>
 <span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -779,14 +795,14 @@ window.Quarto = {
 <span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">newdata =</span> nd, <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"income"</span>, <span class="st">"size"</span>))</span>
 <span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Group   Term  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %   97.5 %</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   income  0.006015    0.00233  2.586  0.00972  6.7  0.001455  0.01057</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   size   -0.232955    0.05661 -4.115  &lt; 0.001 14.7 -0.343909 -0.12200</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   income -0.000713    0.00146 -0.489  0.62486  0.7 -0.003569  0.00214</span></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   size    0.020447    0.03436  0.595  0.55175  0.9 -0.046890  0.08778</span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   income  0.005445    0.00229  2.382  0.01721  5.9  0.000965  0.00993</span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   size    0.067839    0.04122  1.646  0.09984  3.3 -0.012959  0.14864</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   income  0.006015    0.00233  2.587  0.00968  6.7  0.001458  0.01057</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   size   -0.232955    0.05661 -4.115  &lt; 0.001 14.7 -0.343900 -0.12201</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   income -0.000713    0.00146 -0.489  0.62478  0.7 -0.003568  0.00214</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   size    0.020447    0.03436  0.595  0.55185  0.9 -0.046906  0.08780</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   income  0.005445    0.00229  2.382  0.01724  5.9  0.000964  0.00993</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   size    0.067839    0.04123  1.645  0.09991  3.3 -0.012974  0.14865</span></span>
 <span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train income -0.010748    0.00256 -4.201  &lt; 0.001 15.2 -0.015762 -0.00573</span></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train size    0.144669    0.04775  3.030  0.00245  8.7  0.051080  0.23826</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train size    0.144669    0.04773  3.031  0.00244  8.7  0.051127  0.23821</span></span>
 <span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -818,14 +834,14 @@ window.Quarto = {
 <span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">newdata =</span> nd, <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"income"</span>, <span class="st">"size"</span>))</span>
 <span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Group   Term  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %    97.5 %</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   income  8.24e-03   2.46e-03  3.354   &lt;0.001 10.3  3.42e-03  0.013056</span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   size   -2.12e-01   6.02e-02 -3.526   &lt;0.001 11.2 -3.30e-01 -0.094348</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   income  8.24e-03   2.46e-03  3.352   &lt;0.001 10.3  3.42e-03  0.013058</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  air   size   -2.12e-01   6.02e-02 -3.526   &lt;0.001 11.2 -3.30e-01 -0.094353</span></span>
 <span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   income -1.33e-03   1.30e-03 -1.020    0.308  1.7 -3.88e-03  0.001223</span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   size    6.06e-02   3.79e-02  1.599    0.110  3.2 -1.37e-02  0.134909</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bus   size    6.06e-02   3.79e-02  1.600    0.110  3.2 -1.36e-02  0.134895</span></span>
 <span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   income  2.66e-05   4.31e-05  0.617    0.537  0.9 -5.78e-05  0.000111</span></span>
 <span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  car   size    2.38e-03   1.57e-03  1.512    0.131  2.9 -7.04e-04  0.005459</span></span>
 <span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train income -6.94e-03   1.86e-03 -3.735   &lt;0.001 12.4 -1.06e-02 -0.003298</span></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train size    1.49e-01   4.28e-02  3.489   &lt;0.001 11.0  6.55e-02  0.233366</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  train size    1.49e-01   4.28e-02  3.488   &lt;0.001 11.0  6.55e-02  0.233374</span></span>
 <span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -916,6 +932,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -950,7 +984,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -998,7 +1036,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -1221,7 +1264,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/bootstrap.html" class="pagination-link  aria-label=" bootstrap="" &amp;="" simulation"="">
+      <a href="../vignettes/bootstrap.html" class="pagination-link" aria-label="Bootstrap &amp; Simulation">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Bootstrap &amp; Simulation</span>
       </a>          
   </div>

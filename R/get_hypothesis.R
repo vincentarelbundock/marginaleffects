@@ -1,7 +1,41 @@
 
-get_hypothesis <- function(x, hypothesis, column, by = NULL) {
+get_hypothesis <- function(
+    x,
+    hypothesis,
+    by = NULL,
+    newdata = NULL,
+    draws = NULL) {
 
     if (is.null(hypothesis)) return(x)
+
+    if (is.function(hypothesis)) {
+        argnames <- names(formals(hypothesis))
+        if (!"x" %in% argnames) stop("The `hypothesis` function must accept an `x` argument.", call. = FALSE)
+        if (any(!argnames %in% c("x", "newdata", "by", "draws", "..."))) {
+            msg <- "The allowable arguments for the `hypothesis` function are: x, newdata`, by, and draws."
+            stop(msg, call. = FALSE)
+        }
+        args <- list(x = x, newdata = newdata, by = by, draws = draws)
+        args <- args[names(args) %in% argnames]
+        out <- do.call(hypothesis, args)
+
+        # sanity
+        msg <- "The `hypothesis` argument function must return a data frame with `term` and `estimate` columns."
+        if (inherits(out, "data.frame")) {
+            if (!all(c("term", "estimate") %in% colnames(out))) {
+                insight::format_error(msg)
+            }
+        } else if (isTRUE(checkmate::check_numeric(out))) {
+            if (isTRUE(checkmate::check_data_frame(x, nrows = length(out))) && "term" %in% colnames(out)) {
+                out <- data.frame(term = out$term, estimate = out)
+            } else {
+                out <- data.frame(term = seq_along(out), estimate = out)
+            }
+        } else {
+            insight::format_error(msg)
+        }
+        return(out)
+    }
 
     lincom <- NULL
 
@@ -56,7 +90,11 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
         }
         out <- do.call(rbind, out_list)
         attr(out, "posterior_draws") <- do.call(rbind, draws_list)
-        attr(out, "label") <- labs
+        attr(out, "label") <- if (!is.null(attr(labs, "names"))) {
+            attr(labs, "names")
+        } else {
+            labs
+        }
         return(out)
     }
 
@@ -281,6 +319,12 @@ eval_string_hypothesis <- function(x, hypothesis, lab) {
         return(out)
     }
 
+    if (!is.null(attr(lab, "names"))) {
+        lab = attr(lab, "names")
+    } else {
+        lab = gsub("\\s+", "", lab)
+    }
+
     draws <- attr(x, "posterior_draws")
     if (!is.null(draws)) {
         insight::check_if_installed("collapse", minimum_version = "1.9.0")
@@ -292,7 +336,7 @@ eval_string_hypothesis <- function(x, hypothesis, lab) {
             rowlabels = rowlabels)
         draws <- matrix(tmp, ncol = ncol(draws))
         out <- data.table(
-            term = gsub("\\s+", "", lab),
+            term = lab,
             tmp = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian))
     } else {
         out <- eval_string_function(
@@ -300,7 +344,7 @@ eval_string_hypothesis <- function(x, hypothesis, lab) {
             hypothesis = hypothesis,
             rowlabels = rowlabels)
         out <- data.table(
-            term = gsub("\\s+", "", lab),
+            term = lab,
             tmp = out)
     }
 

@@ -3,6 +3,8 @@ using("marginaleffects")
 
 requiet("modelbased")
 requiet("emmeans")
+requiet("dplyr")
+requiet("MatchIt")
 
 
 # # this seems deprecated in modelbased in favor of get_datagrid(). Have not investidated yet
@@ -96,4 +98,20 @@ expect_equal(nrow(cmp3), nrow(subset(lalonde, nodegree == 1)))
 
 
 
+# Issue 1045: subset in newdata
+data("lalonde", package = "MatchIt")
+fit <- lm(re78 ~ treat * (age + educ), data = lalonde)
+k = avg_comparisons(fit, variables = "treat", newdata = subset(lalonde, treat == 1))$estimate
+x = avg_comparisons(fit, variables = "treat", newdata = base::subset(treat == 1))$estimate
+y = avg_comparisons(fit, variables = "treat", newdata = filter(treat == 1))$estimate
+w = avg_comparisons(fit, variables = "treat", newdata = dplyr::filter(treat == 1))$estimate
+expect_equal(k, x)
+expect_equal(k, y)
+expect_equal(k, w)
+
+
+
+
+
 rm(list = ls())
+

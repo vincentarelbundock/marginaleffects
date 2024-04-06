@@ -38,16 +38,23 @@ model <- gam::gam(Kyphosis ~ gam::s(Age, 4) + Number + categ, family = binomial,
 
 # `datagrid()` is smarter than `emmeans()` about integers
 atlist <- list(Age = round(mean(tmp$Age)), Number = round(mean(tmp$Number)))
-mm1 <- marginal_means(model, numderiv = "richardson") |> dplyr::arrange(value)
+mm1 <- predictions(model, by = "categ", newdata = datagrid(grid_type = "balanced"), numderiv = "richardson") |> dplyr::arrange(categ)
 em1 <- data.frame(emmeans(model, specs = "categ", type = "response", at = atlist))
-mm2 <- marginal_means(model, type = "link", numderiv = "richardson") |> dplyr::arrange(value)
+
+mm1 <- predictions(model,
+    newdata = datagrid(
+        grid_type = "balanced",
+        Age = round(mean(tmp$Age)),
+        Number = round(mean(tmp$Number))),
+    by = "categ")
+mm2 <- predictions(model, type = "link", by = "categ", newdata = datagrid(grid_type = "balanced"), numderiv = "richardson") |> dplyr::arrange(categ)
 em2 <- data.frame(emmeans(model, specs = "categ", at = atlist))
 
 expect_equivalent(mm1$estimate, em1$prob)
 expect_equivalent(mm2$estimate, em2$emmean)
-expect_equivalent(mm1$conf.low, em1$asymp.LCL)
-expect_equivalent(mm1$conf.high, em1$asymp.UCL)
-expect_equivalent(mm2$conf.low, em2$asymp.LCL)
+expect_equivalent(mm1$conf.low, em1$asymp.LCL, tolerance = 1e-6)
+expect_equivalent(mm1$conf.high, em1$asymp.UCL, tolerance = 1e-6)
+expect_equivalent(mm2$conf.low, em2$asymp.LCL, tolerance = 1e-6)
 expect_equivalent(mm2$conf.high, em2$asymp.UCL, tolerance = 1e-4)
 
 

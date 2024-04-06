@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -130,6 +130,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
@@ -246,6 +250,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -272,6 +282,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -383,8 +399,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -625,7 +641,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                231 Chinstrap     4086        469  8.7   &lt;0.001  58.1  3166   5006</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                231 Gentoo        5597        155 36.0   &lt;0.001 940.9  5292   5901</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, body_mass_g, bill_length_mm, island, flipper_length_mm, species </span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, bill_length_mm, island, flipper_length_mm, species, body_mass_g </span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
@@ -640,6 +656,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>pre</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
+<div>
 <div><style>
 .dataframe > thead > tr,
 .dataframe > tbody > tr {
@@ -692,16 +709,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td>0</td>
-<td>3145.853248</td>
-<td>233.843938</td>
-<td>13.452789</td>
-<td>0.0</td>
-<td>inf</td>
-<td>2687.527551</td>
-<td>3604.178945</td>
+<td>2544.81111</td>
+<td>368.939052</td>
+<td>6.897646</td>
+<td>5.2871e-12</td>
+<td>37.460659</td>
+<td>1821.703856</td>
+<td>3267.918365</td>
 <td>172.0</td>
-<td>"Chinstrap"</td>
-<td>224</td>
+<td>"Gentoo"</td>
+<td>213</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -711,16 +728,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td>1</td>
-<td>2544.81111</td>
-<td>368.939089</td>
-<td>6.897646</td>
-<td>5.2871e-12</td>
-<td>37.460659</td>
-<td>1821.703783</td>
-<td>3267.918438</td>
+<td>3145.853248</td>
+<td>233.843751</td>
+<td>13.4528</td>
+<td>0.0</td>
+<td>inf</td>
+<td>2687.527917</td>
+<td>3604.178578</td>
 <td>172.0</td>
-<td>"Gentoo"</td>
-<td>224</td>
+<td>"Chinstrap"</td>
+<td>213</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -731,15 +748,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td>2</td>
 <td>3859.49144</td>
-<td>203.925032</td>
-<td>18.926031</td>
+<td>203.924972</td>
+<td>18.926036</td>
 <td>0.0</td>
 <td>inf</td>
-<td>3459.805722</td>
-<td>4259.177158</td>
+<td>3459.80584</td>
+<td>4259.17704</td>
 <td>172.0</td>
 <td>"Adelie"</td>
-<td>224</td>
+<td>213</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -749,16 +766,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td>3</td>
-<td>4085.954268</td>
-<td>469.430073</td>
-<td>8.704074</td>
+<td>5596.718663</td>
+<td>155.418973</td>
+<td>36.010524</td>
 <td>0.0</td>
 <td>inf</td>
-<td>3165.888232</td>
-<td>5006.020303</td>
+<td>5292.103073</td>
+<td>5901.334254</td>
 <td>231.0</td>
-<td>"Chinstrap"</td>
-<td>224</td>
+<td>"Gentoo"</td>
+<td>213</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -768,16 +785,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td>4</td>
-<td>5596.718663</td>
-<td>155.418892</td>
-<td>36.010543</td>
+<td>4085.954268</td>
+<td>469.42987</td>
+<td>8.704078</td>
 <td>0.0</td>
 <td>inf</td>
-<td>5292.103233</td>
-<td>5901.334094</td>
+<td>3165.888628</td>
+<td>5006.019907</td>
 <td>231.0</td>
-<td>"Gentoo"</td>
-<td>224</td>
+<td>"Chinstrap"</td>
+<td>213</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -788,15 +805,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>5</td>
 <td>4763.826651</td>
-<td>362.093426</td>
-<td>13.156347</td>
+<td>362.093444</td>
+<td>13.156346</td>
 <td>0.0</td>
 <td>inf</td>
-<td>4054.136577</td>
-<td>5473.516725</td>
+<td>4054.136542</td>
+<td>5473.51676</td>
 <td>231.0</td>
 <td>"Adelie"</td>
-<td>224</td>
+<td>213</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -806,6 +823,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 </div>
@@ -953,13 +971,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Term Contrast flipper_length_mm   species Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % bill_length_mm island</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  flipper_length_mm       +1               172 Adelie        15.3       9.25 1.66   0.0976  3.4 -2.81   33.5           43.9 Biscoe</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  flipper_length_mm       +1               172 Chinstrap     15.9      11.37 1.40   0.1610  2.6 -6.34   38.2           43.9 Biscoe</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  flipper_length_mm       +1               172 Chinstrap     15.9      11.37 1.40   0.1609  2.6 -6.34   38.2           43.9 Biscoe</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  flipper_length_mm       +1               172 Gentoo        51.7       8.70 5.95   &lt;0.001 28.5 34.68   68.8           43.9 Biscoe</span></span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  flipper_length_mm       +1               231 Adelie        15.3       9.25 1.66   0.0976  3.4 -2.81   33.5           43.9 Biscoe</span></span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  flipper_length_mm       +1               231 Chinstrap     15.9      11.37 1.40   0.1610  2.6 -6.34   38.2           43.9 Biscoe</span></span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  flipper_length_mm       +1               231 Gentoo        51.7       8.70 5.95   &lt;0.001 28.5 34.68   68.8           43.9 Biscoe</span></span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, flipper_length_mm, species, predicted_lo, predicted_hi, predicted, body_mass_g, bill_length_mm, island </span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, flipper_length_mm, species, predicted_lo, predicted_hi, predicted, bill_length_mm, island, body_mass_g </span></span>
 <span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_comparisons</span>(mod,</span>
@@ -1169,13 +1187,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot_predictions</span>(mod, <span class="at">condition =</span> <span class="fu">c</span>(<span class="st">"Age"</span>, <span class="st">"PClass"</span>), <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(p)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   rowid  estimate    p.value  s.value  conf.low conf.high Survived SexCode     Age PClass</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1 0.8169481 0.01398979 6.159481 0.5751384 0.9363604        0       0 0.17000    1st</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     2 0.8460749 0.01719013 5.862275 0.5750040 0.9571390        0       0 0.17000    2nd</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     3 0.3743476 0.30356427 1.719926 0.1836114 0.6141637        0       0 0.17000    3rd</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     4 0.8049295 0.01596447 5.968992 0.5657542 0.9289214        0       0 1.61551    1st</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     5 0.8170027 0.02633314 5.246977 0.5438874 0.9435524        0       0 1.61551    2nd</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     6 0.3573635 0.21423196 2.222754 0.1805140 0.5840004        0       0 1.61551    3rd</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   rowid  estimate    p.value  s.value  conf.low conf.high SexCode     Age PClass Survived</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1 0.8169481 0.01398980 6.159481 0.5751384 0.9363604       0 0.17000    1st        1</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     2 0.8460749 0.01719013 5.862276 0.5750040 0.9571390       0 0.17000    2nd        1</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     3 0.3743476 0.30356429 1.719926 0.1836114 0.6141637       0 0.17000    3rd        1</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     4 0.8049295 0.01596447 5.968992 0.5657542 0.9289214       0 1.61551    1st        1</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     5 0.8170027 0.02633314 5.246977 0.5438874 0.9435524       0 1.61551    2nd        1</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     6 0.3573635 0.21423192 2.222755 0.1805140 0.5840004       0 1.61551    3rd        1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This allows us to feed the data easily to other functions, such as those in the useful <code>ggdist</code> and <code>distributional</code> packages:</p>
 <div class="cell">
@@ -1410,6 +1428,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1444,7 +1480,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1492,7 +1532,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -1715,7 +1760,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/hypothesis.html" class="pagination-link  aria-label=" hypothesis="" tests"="">
+      <a href="../vignettes/hypothesis.html" class="pagination-link" aria-label="Hypothesis Tests">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Hypothesis Tests</span>
       </a>          
   </div>

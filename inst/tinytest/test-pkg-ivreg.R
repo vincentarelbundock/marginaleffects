@@ -41,16 +41,6 @@ expect_predictions(pred1, n_row = nrow(Kmenta))
 expect_predictions(pred2, n_row = 6)
 
 
-# marginalmeans: no validity
-set.seed(1024)
-data(Kmenta, package = "ivreg")
-tmp <- Kmenta
-tmp$categ <- factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
-mod <- ivreg::ivreg(Q ~ P + D + categ | D + F + A + categ, data = tmp)
-mm <- marginal_means(mod)
-expect_marginal_means(mm)
-
-
 
 
 rm(list = ls())

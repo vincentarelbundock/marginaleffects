@@ -98,6 +98,7 @@ sanity_model_supported_class <- function(model) {
         c("plm", "panelmodel"),
         "polr",
         "Rchoice",
+        "rendo.base",
         "rlmerMod",
         "rq",
         c("scam", "glm", "lm"),

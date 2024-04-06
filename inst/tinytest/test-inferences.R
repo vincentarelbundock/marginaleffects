@@ -16,8 +16,8 @@ x <- mod |> comparisons() |> inferences(method = "simulation", R = R) |> attr("p
 expect_inherits(x, "matrix")
 
 
-# {boot}
 set.seed(1234)
+# {boot}
 x <- mod |> avg_predictions() |> inferences(method = "boot", R = R)
 expect_inherits(x, "predictions")
 expect_equivalent(nrow(x), 1)
@@ -93,10 +93,6 @@ dat <- transform(mtcars, w = runif(32))
 mod <- lm(mpg ~ hp, data = dat)
 expect_error(inferences(comparisons(mod, wts = "w"), method = "fwb"), pattern = "wts")
 
-# marginal_means not supported
-mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width * Species, data = iris)
-expect_error(inferences(marginal_means(mod), method = "fwb"), pattern = "Must inherit")
-
 
 # Issue #856
 tmp <- lm(Petal.Length ~ Sepal.Length * Species, data = iris)
@@ -140,6 +136,43 @@ p <- hypotheses(mod, hypothesis = "hp/cyl=1") |> inferences(method = "boot", R =
 expect_inherits(p, "hypotheses")
 p <- hypotheses(mod, hypothesis = "hp/cyl=1") |> inferences(method = "simulation", R = 25)
 expect_inherits(p, "hypotheses")
+
+
+# Issue #1054
+requiet("lme4")
+mod <- glmer(
+  cbind(incidence, size - incidence) ~ period + (1 | herd),
+  data = cbpp, family = binomial)
+cmp <- avg_comparisons(mod, variables = "period") |>
+    inferences(method="simulation", R = 15)
+expect_inherits(cmp, "comparisons")
+
+
+
+# Clarify comparison
+requiet("clarify")
+requiet("MatchIt")
+data("lalonde", package = "MatchIt")
+set.seed(1025)
+fit <- glm(I(re78 == 0) ~ treat * (age + educ + race + married + nodegree + re74 + re75),
+           data = lalonde, family = binomial)
+sim_coefs <- sim(fit)
+ATT_fun <- function(fit) {
+  d <- subset(lalonde, treat == 1)
+  d$treat <- 1
+  p1 <- mean(predict(fit, newdata = d, type = "response"))
+  d$treat <- 0
+  p0 <- mean(predict(fit, newdata = d, type = "response"))
+  c(`E[Y(0)]` = p0, `E[Y(1)]` = p1, `RR` = p1 / p0)
+}
+sim_est <- sim_apply(sim_coefs, ATT_fun, verbose = FALSE)
+s1 <- summary(sim_est)
+s3 <- avg_predictions(fit, variables = "treat", type = "response", newdata = subset(lalonde, treat == 1)) |>
+    inferences(method = "simulation", R = 1000)
+expect_equivalent(s1[1:2, 2], s3$conf.low, tolerance= .03)
+expect_equivalent(s1[1:2, 3], s3$conf.high, tolerance= .03)
+
+
 
 
 rm(list = ls())

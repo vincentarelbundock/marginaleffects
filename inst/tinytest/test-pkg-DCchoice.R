@@ -2,7 +2,7 @@
 
 source("helpers.R")
 using("marginaleffects")
-requiet("DCchoice")
+if (!requiet("DCchoice")) exit_file("DCchoice not available")
 
 data(oohbsyn)
 mod <- oohbchoice(R1 + R2 ~ age + gender | log(BL) + log(BH), data = oohbsyn)

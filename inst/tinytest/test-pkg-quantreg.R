@@ -35,13 +35,6 @@ expect_equivalent(pred1$estimate, predict(model))
 expect_equivalent(pred2$estimate, predict(model, newdata = head(mtcars)))
 
 
-# marginalmeans: rq: no validity
-tmp <- mtcars
-tmp$cyl <- factor(tmp$cyl)
-model <- quantreg::rq(mpg ~ hp + wt + cyl, data = tmp)
-mm <- marginal_means(model)
-expect_marginal_means(mm)
-
 
 
 # Issue #829

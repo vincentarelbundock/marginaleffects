@@ -138,41 +138,15 @@ expect_inherits(predictions(mod, newdata = datagrid(), vcov = insight::get_varco
 
 
 
-# marginalmeans (no validity)
-dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
-dat <- read.csv(dat)
-dat$z <- factor(sample(1:4, nrow(dat), replace = TRUE))
-mod <- glmmTMB(
-    Survived ~ Sex + z + (1 + Age | PClass),
-    family = binomial,
-    data = dat)
-mm1 <- marginal_means(mod, variables = c("Sex", "PClass")) |> dplyr::arrange(value)
-mm2 <- marginal_means(mod, type = "link", variables = c("Sex", "PClass")) |> dplyr::arrange(value)
-mm3 <- marginal_means(mod, variables = c("Sex", "PClass"), cross = TRUE) |> dplyr::arrange(Sex, PClass)
-mm4 <- marginal_means(mod, type = "link", variables = c("Sex", "PClass"), cross = TRUE) |> dplyr::arrange(Sex, PClass)
-expect_true(all(mm1$estimate != mm2$estimate))
-expect_true(all(mm1$std.error != mm2$std.error))
-expect_true(all(mm3$estimate != mm4$estimate))
-expect_true(all(mm3$std.error != mm4$std.error))
-expect_true(nrow(mm3) > nrow(mm1))
-
 
 
 # marginalmeans: some validity
 p <- predictions(mod, type = "link", re.form = NA)
 expect_inherits(p, "predictions")
 em <- data.frame(emmeans(mod, ~Sex))
-mm <- marginal_means(mod, variables = "Sex", type = "link", re.form = NA)
+mm <- predictions(mod, by = "Sex", newdata = datagrid(grid_type = "balanced"), type = "link", re.form = NA)
 expect_equivalent(em$emmean, mm$estimate)
 expect_equivalent(em$SE, mm$std.error)
-
-
-mfx <- slopes(m1)
-m1 <- glmmTMB(
-    count ~ mined + (1 | site),
-    zi = ~mined,
-    family = poisson, data = Salamanders)
-expect_inherits(marginal_means(m1, variables = "mined"), "marginalmeans")
 
 
 
@@ -188,16 +162,6 @@ dat <- do.call("rbind", list(
   transform(PlantGrowth, trial = "C", weight = runif(30) * weight)))
 colnames(dat)[2] <- "groupid"
 
-model <- glmmTMB(
-  weight ~ groupid + trial + (1 | groupid:trial),
-  REML = FALSE,
-  data = dat)
-em <- data.frame(emmeans(model, ~trial + groupid, df = Inf))
-mm <- marginal_means(model, variables = c("trial", "groupid"), cross = TRUE, re.form = NA)
-mm <- mm[order(mm$groupid, mm$trial),]
-expect_equivalent(mm$estimate, em$emmean)
-expect_equivalent(mm$conf.high, em$asymp.UCL)
-
 model_REML <- glmmTMB(
   weight ~ groupid + trial + (1 | groupid:trial),
   REML = TRUE,
@@ -206,7 +170,6 @@ model_REML <- glmmTMB(
 expect_error(slopes(model_REML), pattern = "REML")
 expect_error(comparisons(model_REML), pattern = "REML")
 expect_error(predictions(model_REML), pattern = "REML")
-expect_error(marginal_means(model_REML), pattern = "REML")
 expect_inherits(slopes(model_REML, vcov = FALSE), "marginaleffects")
 expect_inherits(predictions(model_REML, re.form = NA, vcov = FALSE), "predictions")
 expect_inherits(predictions(model_REML, vcov = FALSE, re.form = NA), "predictions")

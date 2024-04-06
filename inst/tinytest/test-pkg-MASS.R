@@ -146,10 +146,9 @@ dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 dat <- dat
 model <- suppressWarnings(MASS::glm.nb(carb ~ am + cyl, data = dat))
-mm <- marginal_means(model, type = "link", variables = "cyl")
-ti <- mm |> dplyr::arrange(value)
+mm <- predictions(model, type = "link", by = "cyl", newdata = datagrid(grid_type = "balanced"))
+ti <- mm |> dplyr::arrange(cyl)
 em <- tidy(emmeans::emmeans(model, "cyl"))
-expect_marginal_means(mm)
 expect_equivalent(ti$estimate, em$estimate)
 expect_equivalent(ti$std.error, em$std.error, tolerance = 1e-4)
 
@@ -158,9 +157,7 @@ dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 model <- MASS::rlm(mpg ~ cyl + am, dat)
-mm <- marginal_means(model)
-expect_marginal_means(mm)
-ti <- marginal_means(model, variables = "cyl") |> dplyr::arrange(value)
+ti <- predictions(model, by = "cyl", newdata = datagrid(grid_type = "balanced")) |> dplyr::arrange(cyl)
 em <- tidy(emmeans::emmeans(model, "cyl"))
 expect_equivalent(ti$estimate, em$estimate)
 expect_equivalent(ti$std.error, em$std.error, tolerance = 1e-4)
@@ -241,7 +238,7 @@ mod <- suppressWarnings(MASS::polr(factor(gear) ~ vs + am, data = k, Hess = TRUE
 # TODO: emmeans seems broken at the moment
 # em <- emmeans(mod, specs = "am", type = "response")
 # em <- tidy(em)
-mm <- marginal_means(mod, variables = "am", type = "probs")
+mm <- predictions(mod, by = "am", type = "probs", newdata = datagrid(grid_type = "balanced"))
 expect_equivalent(nrow(mm), 6)
 
 

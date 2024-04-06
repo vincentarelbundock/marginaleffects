@@ -1,3 +1,5 @@
+#' Deprecated function
+#'
 #' @keywords internal
 #' @export
 deltamethod <- function(...) {
@@ -5,6 +7,8 @@ deltamethod <- function(...) {
 }
 
 
+#' Deprecated function
+#' 
 #' @keywords internal
 #' @export
 marginaleffects <- function(...) {
@@ -13,36 +17,16 @@ marginaleffects <- function(...) {
 }
 
 
+#' Deprecated function
+#' 
 #' @keywords internal
 #' @export
 meffects <- marginaleffects
 
 
 
-#' @keywords internal
-#' @export
-plot_cco <- function(...) {
-    .Deprecated("plot_comparisons")
-    plot_comparisons(...)
-}
-
-
-#' @keywords internal
-#' @export
-plot_cme <- function(...) {
-    .Deprecated("plot_slopes()")
-    plot_slopes(...)
-}
-
-
-#' @keywords internal
-#' @export
-plot_cap <- function(...) {
-    .Deprecated("plot_predictions()")
-    plot_predictions(...)
-}
-
-
+#' Deprecated function
+#' 
 #' @keywords internal
 #' @export
 datagridcf <- function(...) {
@@ -51,6 +35,8 @@ datagridcf <- function(...) {
 }
 
 
+#' Deprecated function
+#'
 #' @keywords internal
 #' @export
 marginal_means <- function(model,
@@ -453,15 +439,8 @@ get_marginalmeans <- function(model,
 }
 
 
+#' Deprecated function
+#'
 #' @keywords internal
 #' @export
 marginalmeans <- marginal_means
-
-
-#' @noRd
-get_averages.marginalmeans <- function(x, by = FALSE, ...) {
-    if (!isFALSE(by)) {
-        insight::format_error("The `by` argument is not supported by the `averages()` function for `marginal_means` models.")
-    }
-    x
-}

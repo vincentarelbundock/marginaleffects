@@ -23,7 +23,10 @@ set_coef <- function(model, coefs, ...) {
 set_coef.default <- function(model, coefs, ...) {
     # in basic model classes coefficients are named vector
     # in ordinal::clm models, there are sometimes duplicates, so name matching doesn't work
-    flag <- length(model[["coefficients"]]) == length(coefs) && all(names(model[["coefficients"]]) == names(coefs))
+    # sometimes names are backticked, others not Issue #1005
+    a <- gsub("`", "", names(coefs))
+    b <- gsub("`", "", names(model$coefficients))
+    flag <- length(model[["coefficients"]]) == length(coefs) && all(a == b)
     if (flag) {
         model[["coefficients"]] <- coefs
     } else {

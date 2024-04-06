@@ -75,7 +75,6 @@ model <- lm_robust(carb ~ wt + am + cyl,
     data = tmp)
 expect_predictions(predictions(model), n_row = nrow(tmp))
 expect_predictions(predictions(model, newdata = head(tmp)), n_row = 6)
-expect_marginal_means(marginal_means(model))
 
 
 

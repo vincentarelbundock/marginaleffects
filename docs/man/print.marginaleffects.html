@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.542">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -130,6 +130,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/help.html"> 
+<span class="menu-text">Help</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
@@ -246,6 +250,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conjoint experiments</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
@@ -272,6 +282,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -383,8 +399,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NumPyro</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -532,7 +548,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="unnumbered anchored" data-anchor-id="print-marginaleffects-objects">Print <code>marginaleffects</code> objects</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>This function controls the text which is printed to the console when one of the core <code>marginalefffects</code> functions is called and the object is returned: <code>predictions()</code>, <code>comparisons()</code>, <code>slopes()</code>, <code>marginal_means()</code>, <code>hypotheses()</code>, <code>avg_predictions()</code>, <code>avg_comparisons()</code>, <code>avg_slopes()</code>.</p>
+<p>This function controls the text which is printed to the console when one of the core <code>marginalefffects</code> functions is called and the object is returned: <code>predictions()</code>, <code>comparisons()</code>, <code>slopes()</code>, <code>hypotheses()</code>, <code>avg_predictions()</code>, <code>avg_comparisons()</code>, <code>avg_slopes()</code>.</p>
 <p>All of those functions return standard data frames. Columns can be extracted by name, <code>predictions(model)$estimate</code>, and all the usual data manipulation functions work out-of-the-box: <code>colnames()</code>, <code>head()</code>, <code>subset()</code>, <code>dplyr::filter()</code>, <code>dplyr::arrange()</code>, etc.</p>
 <p>Some of the data columns are not printed by default. You can disable pretty printing and print the full results as a standard data frame using the <code>style</code> argument or by applying <code>as.data.frame()</code> on the object. See examples below.</p>
 </section>
@@ -541,12 +557,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code class="language-R">## S3 method for class 'marginaleffects'
 print(
   x,
+  style = getOption("marginaleffects_print_style", default = "summary"),
   digits = getOption("marginaleffects_print_digits", default = 3),
   p_eps = getOption("marginaleffects_print_p_eps", default = 0.001),
   topn = getOption("marginaleffects_print_topn", default = 5),
   nrows = getOption("marginaleffects_print_nrows", default = 30),
   ncols = getOption("marginaleffects_print_ncols", default = 30),
-  style = getOption("marginaleffects_print_style", default = "summary"),
   type = getOption("marginaleffects_print_type", default = TRUE),
   column_names = getOption("marginaleffects_print_column_names", default = TRUE),
   ...
@@ -562,6 +578,14 @@ print(
 </td>
 <td>
 An object produced by one of the <code>marginaleffects</code> package functions.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="print.marginaleffects_:_style">style</code>
+</td>
+<td>
+"summary", "data.frame", or "tinytable"
 </td>
 </tr>
 <tr>
@@ -602,14 +626,6 @@ The number of rows which will be printed before truncation.
 </td>
 <td>
 The maximum number of column names to display at the bottom of the printed output.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="print.marginaleffects_:_style">style</code>
-</td>
-<td>
-"summary" or "data.frame"
 </td>
 </tr>
 <tr>
@@ -670,26 +686,26 @@ Columns: am, gear, estimate, std.error, statistic, p.value, s.value, conf.low, c
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p, <span class="at">style =</span> <span class="st">"data.frame"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  am gear estimate std.error statistic       p.value  s.value conf.low
-1  0    3 16.10667 0.7589789  21.22150 6.047015e-100 329.5966 14.61910
-2  0    4 21.05000 1.4697592  14.32207  1.592966e-46 152.1370 18.16932
-3  1    4 26.27500 1.0392746  25.28206 5.032071e-141 466.0607 24.23806
-4  1    5 21.38000 1.3145899  16.26363  1.788307e-59 195.1552 18.80345
+1  0    3 16.10667 0.7589789  21.22150 6.046968e-100 329.5966 14.61910
+2  0    4 21.05000 1.4697545  14.32212  1.591933e-46 152.1379 18.16933
+3  1    4 26.27500 1.0392747  25.28205 5.032443e-141 466.0606 24.23806
+4  1    5 21.38000 1.3145900  16.26363  1.788354e-59 195.1551 18.80345
   conf.high
 1  17.59424
-2  23.93068
+2  23.93067
 3  28.31194
 4  23.95655</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  am gear estimate std.error statistic       p.value  s.value conf.low
-1  0    3 16.10667 0.7589789  21.22150 6.047015e-100 329.5966 14.61910
-2  0    4 21.05000 1.4697592  14.32207  1.592966e-46 152.1370 18.16932
-3  1    4 26.27500 1.0392746  25.28206 5.032071e-141 466.0607 24.23806
-4  1    5 21.38000 1.3145899  16.26363  1.788307e-59 195.1552 18.80345
+1  0    3 16.10667 0.7589789  21.22150 6.046968e-100 329.5966 14.61910
+2  0    4 21.05000 1.4697545  14.32212  1.591933e-46 152.1379 18.16933
+3  1    4 26.27500 1.0392747  25.28205 5.032443e-141 466.0606 24.23806
+4  1    5 21.38000 1.3145900  16.26363  1.788354e-59 195.1551 18.80345
   conf.high
 1  17.59424
-2  23.93068
+2  23.93067
 3  28.31194
 4  23.95655</code></pre>
 </div>
@@ -779,6 +795,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -813,7 +847,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -861,7 +899,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      return note.innerHTML;
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {
@@ -1084,7 +1127,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../man/datagrid.html" class="pagination-link  aria-label=" `datagrid`"="">
+      <a href="../man/datagrid.html" class="pagination-link" aria-label="`datagrid`">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>datagrid</code></span>
       </a>          
   </div>

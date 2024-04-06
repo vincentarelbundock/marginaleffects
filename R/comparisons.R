@@ -52,7 +52,7 @@
 #'     + `variables = list(hp = \(x) data.frame(low = x - 5, high = x + 10))`
 #'     + See the Examples section below for more.
 #' @param newdata Grid of predictor values at which we evaluate the comparisons.
-#' + Warning: Please avoid modifying your dataset between fitting the model and calling a `marginaleffects` function. This can sometimes lead to unexpected results.
+#' + Warning: Avoid modifying your dataset between fitting the model and calling a `marginaleffects` function. This can sometimes lead to unexpected results.
 #' + `NULL` (default): Unit-level contrasts for each observed value in the dataset (empirical distribution). The dataset is retrieved using [insight::get_data()], which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 #' + data frame: Unit-level contrasts for each row of the `newdata` data frame.
 #' + string:
@@ -65,6 +65,8 @@
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - `newdata = datagrid(mpg = fivenum)`: `mpg` variable held at Tukey's five numbers (using the `fivenum` function), and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid] documentation.
+#' + [subset()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = subset(treatment == 1)`
+#' + [dplyr::filter()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = filter(treatment == 1)`
 #' @param comparison How should pairs of predictions be compared? Difference, ratio, odds ratio, or user-defined functions.
 #' * string: shortcuts to common contrast functions.
 #'   - Supported shortcuts strings: `r paste(names(marginaleffects:::comparison_function_dict), collapse = ", ")`
@@ -89,6 +91,8 @@
 #' @template bayesian
 #' @template equivalence
 #' @template type
+#' @template order_of_operations
+#' @template parallel
 #' @template references
 #'
 #' @return A `data.frame` with one row per observation (per term/group) and several columns:
@@ -259,7 +263,7 @@ comparisons <- function(model,
     # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
     # extracting modeldata repeatedly is slow.
     # checking dots allows marginalmeans to pass modeldata to predictions.
@@ -321,9 +325,6 @@ comparisons <- function(model,
     cross <- sanitize_cross(cross, variables, model)
     type <- sanitize_type(model = model, type = type, calling_function = "comparisons")
     sanity_comparison(comparison)
-    tmp <- sanitize_hypothesis(hypothesis, ...)
-    hypothesis <- tmp$hypothesis
-    hypothesis_null <- tmp$hypothesis_null
 
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {
@@ -419,6 +420,10 @@ comparisons <- function(model,
         return(out)
     }
 
+    # after inferences dispatch
+    tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis <- tmp$hypothesis
+    hypothesis_null <- tmp$hypothesis_null
 
     # compute contrasts and standard errors
     args <- list(model = model,
@@ -599,7 +604,7 @@ avg_comparisons <- function(model,
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
     # Bootstrap
     out <- inferences_dispatch(

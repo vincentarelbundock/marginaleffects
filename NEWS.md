@@ -2,12 +2,36 @@
 
 ## Development
 
+Breaking changes:
+
+* `datagrid()` no longer includes the response variable by default when it is not explicitly specified by the user. Use the new `response` argument to include it.
+* `datagrid(grid_type="balanced")` returns factors ordered by level rather than by order of appearance in the original data.
+
+New:
+
+* `print.marginaleffects()` supports `style="tinytable"`, which returns a `tinytable` object. Call `print(avg_slopes(model))` to get a nice printed table in Quarto or Rmarkdown documents, via Typst, LaTeX or HTML.
+* print as HTML, Typst, or LaTeX format automatically via `tinytable`: `options(marginaleffects_print_style="tinytable")`
+* `hypothesis` argument accepts a function which takes a `marginaleffects` data frame and returns a transformed data frame with `term` and `estimate` columns.
+* `datagrid()` gets a `response` argument to control if the response variable is included or excluded from the grid-building process.
+* The `base::subset()` and `dplyr::filter()` functions can be called with a single argument in `newdata` to select a subset of rows from the dataset used to fit the model.
+  - Example: avg_comparisons(fit, variables = "treatment", newdata = subset(treatment == 1))`
+* Better warning for unsupported arguments.
+
+Bugfix:
+
+* Uninformative error when a custom `comparison` function returns `NA` in bayesian models. Thanks to @Sandhu-SS for report #1017.
+* `datagrid()` returns an object with full attributes when `by` is used. Thanks to @Sandhu-SS for report #1058.
+* `inferences(method="simulation")` with `inferences()` function. Thanks to @davidarmstrong for report #1054.
+
+## 0.18.0
+
 This release represents a major step towards 1.0.0. Some functions are renamed and now raise deprecation warnings. After 1.0.0, the API will become much more stable, and any change will have to be very deliberate with much lead time and deprecation delays.
 
 Breaking changes:
 
 * `tidy()` no longer takes the average of estimates in the original model object. Users who want an aggregate estimate should call the relevant `avg_*()` function, or use the `by` argument explicitly. The previous behavior led to unexpected behavior and increased code complexity a lot.
 * `summary()` methods are removed. These have never provided any additional information; they just reprinted the output already available with the standard print method. At least the default `summary()` for data frames (which is now triggered on `marginaleffects` object) provides a different view on the content of the object.
+* `plot_cco()`, `plot_cme()`, and `plot_cap()` were renamed in version 0.9.0, one year ago. They are now fully removed from the package.
 
 New:
 
@@ -32,6 +56,7 @@ Bug fixes:
 
 * Error on `hypotheses(joint = "string")` for `comparisons()` objects (no result was returned). Thanks to @BorgeJorge for report #981. 
 * Enhanced support for multi-equation Bayesian models with `brms` models. Thanks to @winterstat for report #1006.
+* Parameter names with spaces could break standard errors. Thanks to @Lefty2021 for report #1005.
 
 
 ## 0.17.0
@@ -58,7 +83,7 @@ Bugs:
 * `wts` argument now respected in `avg_slopes()` for binary variables. Thanks to @trose64 for report #961
 * Custom functions in the `comparison` argument of `comparisons()` did not supply the correct `x` vector length for bayesian models when the `by` argument is used. Thanks to @Sandhu-SS for report #931.
 * Add support for two facet variables (through `facet_grid`) when plotting using `condition`
-* `comparisons()`: When `variables` is a vector of length two and `newdata` has exactly two columns, there was ambiguity between custom vectors and length two vector of contrasts. But reported by C. Rainey on Twitter.
+* `comparisons()`: When `variables` is a vector of length two and `newdata` has exactly two columns, there was ambiguity between custom vectors and length two vector of contrasts. Bug reported by C. Rainey on Twitter.
 * Superfluous warning with `fixest::fenegbin`.
 
 ## 0.16.0

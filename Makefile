@@ -7,18 +7,19 @@ help:  ## Display this help screen
 	@grep -E '^[a-z.A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}' | sort
 
 testall: ## tinytest::build_install_test()
-	Rscript -e "tinytest::build_install_test(ncpu = 8)"
+	# Rscript -e "pkgload::load_all();cl <- parallel::makeCluster(5);tinytest::run_test_dir(cluster = cl)"
+	Rscript -e "pkgload::load_all();tinytest::run_test_dir()"
 
-testone: ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
+testone: install ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
 	Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
 
 document: ## altdoc::render_docs()
 	Rscript -e "devtools::document()"
 
-check: ## devtools::check()
+check: document ## devtools::check()
 	Rscript -e "devtools::check()"
 
-install: ## devtools::install()
+install: document ## devtools::install()
 	Rscript -e "devtools::install()"
 
 news: ## Download the latest changelog
@@ -49,5 +50,5 @@ clean: ## Clean the book directory
 setvar: ## Set the environment variable
 	export R_BUILD_DOC=true
 
-website: setvar document install ## altdoc::render_docs(verbose = TRUE)
-	Rscript -e "altdoc::render_docs(verbose = TRUE)"
+website: setvar ## altdoc::render_docs(verbose = TRUE)
+	Rscript -e "reticulate::use_virtualenv(here::here('.venv'));altdoc::render_docs(verbose = TRUE, freeze = TRUE)"

@@ -103,9 +103,7 @@ Plot predictions on the y-axis against values of one or more predictors (x-axis,
 
 The \code{by} argument is used to plot marginal predictions, that is, predictions made on the original data, but averaged by subgroups. This is analogous to using the \code{by} argument in the \code{predictions()} function.
 
-The \code{condition} argument is used to plot conditional predictions, that is, predictions made on a user-specified grid. This is analogous to using the \code{newdata} argument and \code{datagrid()} function in a \code{predictions()} call.
-
-All unspecified variables are held at their mean or mode. This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the \code{variables} argument, or supply model-specific arguments to compute population-level estimates. See details below.
+The \code{condition} argument is used to plot conditional predictions, that is, predictions made on a user-specified grid. This is analogous to using the \code{newdata} argument and \code{datagrid()} function in a \code{predictions()} call. All variables whose values are not specified explicitly are treated as usual by \code{datagrid()}, that is, they are held at their mean or mode (or rounded mean for integers). This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the \code{condition} argument, or supply model-specific arguments to compute population-level estimates. See details below.
 
 See the "Plots" vignette and website for tutorials and information on how to customize plots:
 \itemize{
