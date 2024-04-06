@@ -117,7 +117,8 @@ datagrid <- function(
     } else if (grid_type == "balanced") {
         if (is.null(FUN_character)) FUN_character <- unique
         if (is.null(FUN_logical)) FUN_logical <- unique
-        if (is.null(FUN_factor)) FUN_factor <- levels
+        # not just levels(), because that is string, and sorts badly ex: "2" vs "10"
+        if (is.null(FUN_factor)) FUN_factor <- function(k) sort(unique(k))
         if (is.null(FUN_binary)) FUN_binary <- unique
         if (is.null(FUN_numeric)) FUN_numeric <- function(x) mean(x, na.rm = TRUE)
         if (is.null(FUN_other)) FUN_other <- function(x) mean(x, na.rm = TRUE)
