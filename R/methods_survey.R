@@ -68,8 +68,8 @@ get_predict.svyolr <- function(model,
 #' @include sanity_model.R
 #' @rdname sanitize_model_specific
 #' @export
-sanitize_model_specific.svyolr <- function(model, wts = NULL, ...) {
-  if (is.null(wts)) {
+sanitize_model_specific.svyolr <- function(model, wts = FALSE, ...) {
+  if (isFALSE(wts)) {
     warning("With models of this class, it is normally good practice to specify weights using the `wts` argument. Otherwise, weights will be ignored in the computation of quantities of interest.", call. = FALSE)
   }
   return(model)

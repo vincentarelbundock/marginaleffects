@@ -239,7 +239,7 @@ comparisons <- function(model,
                         conf_level = 0.95,
                         transform = NULL,
                         cross = FALSE,
-                        wts = NULL,
+                        wts = FALSE,
                         hypothesis = NULL,
                         equivalence = NULL,
                         p_adjust = NULL,
@@ -367,7 +367,7 @@ comparisons <- function(model,
         by = by,
         cross = cross,
         comparison = comparison)
-    if (is.null(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
         wts <- "marginaleffects_wts_internal"
     }
 
@@ -592,7 +592,7 @@ avg_comparisons <- function(model,
                             comparison = "difference",
                             transform = NULL,
                             cross = FALSE,
-                            wts = NULL,
+                            wts = FALSE,
                             hypothesis = NULL,
                             equivalence = NULL,
                             p_adjust = NULL,

@@ -41,7 +41,7 @@ plot_comparisons <- function(model,
                              type = "response",
                              vcov = NULL,
                              conf_level = 0.95,
-                             wts = NULL,
+                             wts = FALSE,
                              comparison = "difference",
                              transform = NULL,
                              rug = FALSE,
@@ -65,7 +65,7 @@ plot_comparisons <- function(model,
     # order of the first few paragraphs is important
     scall <- rlang::enquo(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-    if (!is.null(wts) && is.null(by)) {
+    if (!isFALSE(wts) && is.null(by)) {
         insight::format_error("The `wts` argument requires a `by` argument.")
     }
 

@@ -16,7 +16,7 @@ comparisons(
   conf_level = 0.95,
   transform = NULL,
   cross = FALSE,
-  wts = NULL,
+  wts = FALSE,
   hypothesis = NULL,
   equivalence = NULL,
   p_adjust = NULL,
@@ -37,7 +37,7 @@ avg_comparisons(
   comparison = "difference",
   transform = NULL,
   cross = FALSE,
-  wts = NULL,
+  wts = FALSE,
   hypothesis = NULL,
   equivalence = NULL,
   p_adjust = NULL,
@@ -173,10 +173,12 @@ first entry in the error message is used by default.}
 \item \code{TRUE}: Contrasts represent the changes in adjusted predictions when all the predictors specified in the \code{variables} argument are manipulated simultaneously (a "cross-contrast").
 }}
 
-\item{wts}{string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the \code{weighted.mean()} function.
+\item{wts}{logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not unit-level estimates. See \code{?weighted.mean}
 \itemize{
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
+\item FALSE: Equal weights.
+\item TRUE: Extract weights from the fitted object with \code{insight::find_weights()} and use them when taking weighted averages of estimates. Warning: \code{newdata=datagrid()} returns a single average weight, which is equivalent to using \code{wts=FALSE}
 }}
 
 \item{hypothesis}{specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, a string formula, or a function.
