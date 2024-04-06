@@ -21,6 +21,7 @@ Bugfix:
 
 * Uninformative error when a custom `comparison` function returns `NA` in bayesian models. Thanks to @Sandhu-SS for report #1017.
 * `datagrid()` returns an object with full attributes when `by` is used. Thanks to @Sandhu-SS for report #1058.
+* `inferences(method="simulation")` with `inferences()` function. Thanks to @davidarmstrong for report #1054.
 
 ## 0.18.0
 
