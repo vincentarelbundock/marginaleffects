@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -707,10 +707,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The first strategy is to construct grids of predictors for adjusted predictions is to combine the <code>newdata</code> argument and the <code>datagrid</code> function. This function creates a “typical” dataset with all variables at their means or modes, except those we explicitly define:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datagrid</span>(<span class="at">cyl =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>), <span class="at">model =</span> lm_mod)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        mpg       hp cyl</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 20.09062 146.6875   4</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 20.09062 146.6875   6</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 20.09062 146.6875   8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         hp cyl</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 146.6875   4</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 146.6875   6</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 146.6875   8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can also use this <code>datagrid</code> function in a <code>predictions</code> call (omitting the <code>model</code> argument):</p>
 <div class="cell">
@@ -719,7 +719,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error  z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp cyl</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      16.6       1.28 13   &lt;0.001 125.6  14.1   19.1 147   8</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg </span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(lm_mod, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">cyl =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)))</span>
@@ -729,7 +729,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    6     19.2       1.25 15.4   &lt;0.001 174.5  16.7   21.6 147</span></span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    8     16.6       1.28 13.0   &lt;0.001 125.6  14.1   19.1 147</span></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl </span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg </span></span>
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Users can change the summary function used to summarize each type of variables using the <code>FUN_numeric</code>, <code>FUN_factor</code>, and related arguments. For example:</p>
@@ -737,16 +737,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> drat <span class="sc">+</span> <span class="fu">factor</span>(cyl) <span class="sc">+</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(m, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">FUN_factor =</span> unique, <span class="at">FUN_numeric =</span> median))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp drat cyl am</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      22.0       1.29 17.0   &lt;0.001 214.0  19.4   24.5 123  3.7   6  1</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      18.2       1.27 14.3   &lt;0.001 151.9  15.7   20.7 123  3.7   6  0</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      25.5       1.32 19.3   &lt;0.001 274.0  23.0   28.1 123  3.7   4  1</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      21.8       1.54 14.1   &lt;0.001 148.3  18.8   24.8 123  3.7   4  0</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      22.6       2.14 10.6   &lt;0.001  84.2  18.4   26.8 123  3.7   8  1</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      18.9       1.73 10.9   &lt;0.001  89.0  15.5   22.3 123  3.7   8  0</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, drat, cyl, am </span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %  hp drat cyl am</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      18.9       1.73 10.9   &lt;0.001 89.0  15.5   22.3 123  3.7   8  0</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, drat, cyl, am, mpg </span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <code>data.frame</code> produced by <code>predictions</code> is “tidy”, which makes it easy to manipulate with other <code>R</code> packages and functions:</p>
 <div class="cell">
@@ -766,11 +761,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_aiyzglobq7fggptgaylo</title>
+    <title>tinytable_j2wg26x2xzkd8wakxt1d</title>
     <style>
-.table td.tinytable_css_i1ta6xgxy1v8iflxlban, .table th.tinytable_css_i1ta6xgxy1v8iflxlban {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_i8q4bfpuj8vbyongg709, .table th.tinytable_css_i8q4bfpuj8vbyongg709 {    text-align: center; }
-.table td.tinytable_css_okga3ya1alf4uhdo0jfd, .table th.tinytable_css_okga3ya1alf4uhdo0jfd {    border-bottom: solid 0.05em #d3d8dc; }
+.table td.tinytable_css_gnlmmfgl5hbzp5utdeug, .table th.tinytable_css_gnlmmfgl5hbzp5utdeug {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_cx8rqxukfdf0sdlxux4f, .table th.tinytable_css_cx8rqxukfdf0sdlxux4f {    text-align: center; }
+.table td.tinytable_css_xcbhkpgh8yz2vo2vsxc2, .table th.tinytable_css_xcbhkpgh8yz2vo2vsxc2 {    border-bottom: solid 0.05em #d3d8dc; }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -788,7 +783,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   
     <div class="container">
-      <table class="table table-borderless" id="tinytable_aiyzglobq7fggptgaylo" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_j2wg26x2xzkd8wakxt1d" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
 <tr>
 <th scope="col" align="center" colspan="1"> </th>
@@ -823,12 +818,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
 
     <script>
-      function styleCell_tinytable_6lmzjhn0p7q78evg2eug(i, j, css_id) {
-        var table = document.getElementById("tinytable_aiyzglobq7fggptgaylo");
+      function styleCell_tinytable_87cjvju8du1oyygsy5kx(i, j, css_id) {
+        var table = document.getElementById("tinytable_j2wg26x2xzkd8wakxt1d");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_aiyzglobq7fggptgaylo');
+        var table = document.getElementById('tinytable_j2wg26x2xzkd8wakxt1d');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -836,8 +831,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_6lmzjhn0p7q78evg2eug(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_aiyzglobq7fggptgaylo");
+      function spanCell_tinytable_87cjvju8du1oyygsy5kx(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_j2wg26x2xzkd8wakxt1d");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -864,15 +859,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78evg2eug(1, 0, 'tinytable_css_i1ta6xgxy1v8iflxlban') })
-window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78evg2eug(1, 1, 'tinytable_css_i1ta6xgxy1v8iflxlban') })
-window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78evg2eug(1, 2, 'tinytable_css_i1ta6xgxy1v8iflxlban') })
-window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78evg2eug(1, 3, 'tinytable_css_i1ta6xgxy1v8iflxlban') })
-window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78evg2eug(0, 0, 'tinytable_css_i8q4bfpuj8vbyongg709') })
-window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78evg2eug(0, 1, 'tinytable_css_i8q4bfpuj8vbyongg709') })
-window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78evg2eug(0, 2, 'tinytable_css_i8q4bfpuj8vbyongg709') })
-window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78evg2eug(0, 3, 'tinytable_css_i8q4bfpuj8vbyongg709') })
-window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78evg2eug(0, 2, 'tinytable_css_okga3ya1alf4uhdo0jfd') })
+window.addEventListener('load', function () { styleCell_tinytable_87cjvju8du1oyygsy5kx(1, 0, 'tinytable_css_gnlmmfgl5hbzp5utdeug') })
+window.addEventListener('load', function () { styleCell_tinytable_87cjvju8du1oyygsy5kx(1, 1, 'tinytable_css_gnlmmfgl5hbzp5utdeug') })
+window.addEventListener('load', function () { styleCell_tinytable_87cjvju8du1oyygsy5kx(1, 2, 'tinytable_css_gnlmmfgl5hbzp5utdeug') })
+window.addEventListener('load', function () { styleCell_tinytable_87cjvju8du1oyygsy5kx(1, 3, 'tinytable_css_gnlmmfgl5hbzp5utdeug') })
+window.addEventListener('load', function () { styleCell_tinytable_87cjvju8du1oyygsy5kx(0, 0, 'tinytable_css_cx8rqxukfdf0sdlxux4f') })
+window.addEventListener('load', function () { styleCell_tinytable_87cjvju8du1oyygsy5kx(0, 1, 'tinytable_css_cx8rqxukfdf0sdlxux4f') })
+window.addEventListener('load', function () { styleCell_tinytable_87cjvju8du1oyygsy5kx(0, 2, 'tinytable_css_cx8rqxukfdf0sdlxux4f') })
+window.addEventListener('load', function () { styleCell_tinytable_87cjvju8du1oyygsy5kx(0, 3, 'tinytable_css_cx8rqxukfdf0sdlxux4f') })
+window.addEventListener('load', function () { styleCell_tinytable_87cjvju8du1oyygsy5kx(0, 2, 'tinytable_css_xcbhkpgh8yz2vo2vsxc2') })
     </script>
 
   
@@ -890,7 +885,7 @@ window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78e
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error  z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp cyl</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      16.6       1.28 13   &lt;0.001 125.6  14.1   19.1 147   8</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl </span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg </span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!-- À VÉRIFIER SI C'EST LE BON MODÈLE QUI EST UTILISÉ ICI -->
@@ -901,7 +896,7 @@ window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78e
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error  z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp cyl</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      16.6       1.28 13   &lt;0.001 125.6  14.1   19.1 147   8</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl </span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg </span></span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -1427,13 +1422,13 @@ window.addEventListener('load', function () { styleCell_tinytable_6lmzjhn0p7q78e
 <span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(p)</span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   rowid group  estimate  std.error statistic       p.value  s.value  conf.low conf.high gear      mpg</span></span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1     3 0.9714990 0.03873404  25.08127 7.962555e-139 458.7548 0.8955817  1.047416    3 10.40000</span></span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     2     3 0.9656724 0.04394086  21.97664 4.818284e-107 353.1778 0.8795499  1.051795    3 10.87959</span></span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     3     3 0.9586759 0.04964165  19.31193  4.263532e-83 273.6280 0.8613801  1.055972    3 11.35918</span></span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     4     3 0.9502914 0.05581338  17.02623  5.247849e-65 213.5336 0.8408992  1.059684    3 11.83878</span></span>
-<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     5     3 0.9402691 0.06240449  15.06733  2.656268e-51 168.0089 0.8179586  1.062580    3 12.31837</span></span>
-<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     6     3 0.9283274 0.06932768  13.39043  6.878233e-41 133.4170 0.7924476  1.064207    3 12.79796</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   rowid group  estimate  std.error statistic       p.value  s.value  conf.low conf.high      mpg gear</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1     3 0.9714990 0.03873404  25.08127 7.962555e-139 458.7548 0.8955817  1.047416 10.40000    4</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     2     3 0.9656724 0.04394086  21.97664 4.818284e-107 353.1778 0.8795499  1.051795 10.87959    4</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     3     3 0.9586759 0.04964165  19.31193  4.263532e-83 273.6280 0.8613801  1.055972 11.35918    4</span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     4     3 0.9502914 0.05581338  17.02623  5.247849e-65 213.5336 0.8408992  1.059684 11.83878    4</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     5     3 0.9402691 0.06240449  15.06733  2.656268e-51 168.0089 0.8179586  1.062580 12.31837    4</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     6     3 0.9283274 0.06932768  13.39043  6.878233e-41 133.4170 0.7924476  1.064207 12.79796    4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we use the <code>group</code> column:</p>
 <div class="cell">

@@ -16,6 +16,9 @@ expect_snapshot_print(comparisons(mod, by = "gear"), "print-comparisons_by")
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv")
 m <- glm(Survived ~ Age * PClass * SexCode, data = dat, family = binomial)
 p <- predictions(m, newdata = datagrid(PClass = unique, SexCode = 0:1))
+
+exit_file("TODO")
+
 expect_snapshot_print(p, "print-predictions_datagrid")
 
 

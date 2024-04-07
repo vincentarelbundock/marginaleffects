@@ -43,6 +43,7 @@ sanity_model_supported_class <- function(model) {
         c("clmm2", "clm2"),
         "coxph",
         "crch",
+        "flexsurvreg", # package: flexsurv
         "fixest",
         "flic",
         "flac",
@@ -97,6 +98,7 @@ sanity_model_supported_class <- function(model) {
         c("plm", "panelmodel"),
         "polr",
         "Rchoice",
+        "rendo.base",
         "rlmerMod",
         "rq",
         c("scam", "glm", "lm"),

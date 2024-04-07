@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -571,6 +571,7 @@ window.Quarto = {
   <li><a href="#equivalence-inferiority-superiority" id="toc-equivalence-inferiority-superiority" class="nav-link" data-scroll-target="#equivalence-inferiority-superiority">Equivalence, Inferiority, Superiority</a></li>
   <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types">Prediction types</a></li>
   <li><a href="#order-of-operations" id="toc-order-of-operations" class="nav-link" data-scroll-target="#order-of-operations">Order of operations</a></li>
+  <li><a href="#parallel-computation" id="toc-parallel-computation" class="nav-link" data-scroll-target="#parallel-computation">Parallel computation</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
@@ -1055,6 +1056,9 @@ string or function. Transformation applied to unit-level estimates and confidenc
 </li>
 <li>
 <p>The function can also accept and operation on optional input arguments: <code>newdata</code>, <code>by</code>, <code>draws</code>.</p>
+</li>
+<li>
+<p>This function approach will not work for Bayesian models or with bootstraping. In those cases, it is easy to use <code>posterior_draws()</code> to extract and manipulate the draws directly.</p>
 </li>
 </ul>
 </li>
@@ -1602,7 +1606,7 @@ expdydxavg
 <p>Behind the scenes, the arguments of <code>marginaleffects</code> functions are evaluated in this order:</p>
 <ol>
 <li>
-<p>’newdata“</p>
+<p><code>newdata</code></p>
 </li>
 <li>
 <p><code>variables</code></p>
@@ -1623,6 +1627,25 @@ expdydxavg
 <p><code>transform</code></p>
 </li>
 </ol>
+</section>
+<section id="parallel-computation" class="level3">
+<h3 class="anchored" data-anchor-id="parallel-computation">Parallel computation</h3>
+<p>The <code>slopes()</code> and <code>comparisons()</code> functions can use parallelism to speed up computation. Operations are parallelized for the computation of standard errors, at the model coefficient level. There is always considerable overhead when using parallel computation, mainly involved in passing the whole dataset to the different processes. Thus, parallel computation is most likely to be useful when the model includes many parameters and the dataset is relatively small.</p>
+<p>Warning: In many cases, parallel processing will not be useful at all.</p>
+<p>To activate parallel computation, users must load the <code>future.apply</code> package, call <code>plan()</code> function, and set a global option. For example:</p>
+<div class="sourceCode r">
+<pre>library(future.apply)
+plan("multicore", workers = 4)
+options(marginaleffects_parallel = TRUE)
+
+slopes(model)
+</pre>
+</div>
+<p>To disable parallelism in <code>marginaleffects</code> altogether, you can set a global option:</p>
+<div class="sourceCode r">
+<pre>options(marginaleffects_parallel = FALSE)
+</pre>
+</div>
 </section>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
@@ -1709,7 +1732,7 @@ Type:  link </code></pre>
  gear    4 - 3    0.667      0.117 5.68   &lt;0.001 26.1 0.436  0.897    3
  gear    5 - 3    1.000      0.157 6.39   &lt;0.001 32.5 0.693  1.307    3
 
-Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, am, gear 
+Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, gear, am 
 Type:  response </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrasts between marginal means</span></span>
@@ -1756,20 +1779,10 @@ Type:  response </code></pre>
 <pre><code>
  Term Contrast Estimate Std. Error     z Pr(&gt;|z|)   S   2.5 % 97.5 %  hp drat
    hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
-   hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
-   hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
-   hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
-   hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
-   hp       +1  -0.0452     0.0149 -3.04  0.00239 8.7 -0.0744 -0.016 123  3.7
  cyl am
-   6  1
-   6  0
-   4  1
-   4  0
-   8  1
    8  0
 
-Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, hp, drat, cyl, am 
+Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, hp, drat, cyl, am, mpg 
 Type:  response </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Numeric contrasts</span></span>

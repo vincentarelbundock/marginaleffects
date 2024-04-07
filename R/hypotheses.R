@@ -39,7 +39,6 @@
 #' library(marginaleffects)
 #' mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
 #' 
-#' # When `FUN` and `hypotheses` are `NULL`, `hypotheses()` returns a data.frame of parameters
 #' hypotheses(mod)
 #' 
 #' # Test of equality between coefficients
@@ -52,7 +51,7 @@
 #' hypotheses(mod, hypothesis = "hp = wt", vcov = "HC3")
 #' 
 #' # b1, b2, ... shortcuts can be used to identify the position of the
-#' # parameters of interest in the output of FUN
+#' # parameters of interest in the output of
 #' hypotheses(mod, hypothesis = "b2 = b3")
 #' 
 #' # wildcard
@@ -75,15 +74,15 @@
 #' pre <- predictions(mod, newdata = datagrid(hp = 110, mpg = c(30, 35)))
 #' hypotheses(pre, hypothesis = "b1 = b2")
 #' 
-#' # The `FUN` argument can be used to compute standard errors for fitted values
+#' # The `hypothesis` argument can be used to compute standard errors for fitted values
 #' mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 #' 
 #' f <- function(x) predict(x, type = "link", newdata = mtcars)
-#' p <- hypotheses(mod, FUN = f)
+#' p <- hypotheses(mod, hypothesis = f)
 #' head(p)
 #' 
 #' f <- function(x) predict(x, type = "response", newdata = mtcars)
-#' p <- hypotheses(mod, FUN = f)
+#' p <- hypotheses(mod, hypothesis = f)
 #' head(p)
 #' 
 #' # Complex aggregation
@@ -96,15 +95,15 @@
 #' dat <- transform(mtcars, gear = factor(gear))
 #' mod <- polr(gear ~ factor(cyl) + hp, dat)
 #' 
-#' aggregation_fun <- function(model) {
-#'     predictions(model, vcov = FALSE) |>
+#' aggregation_fun <- function(x) {
+#'     predictions(x, vcov = FALSE) |>
 #'         mutate(group = ifelse(group %in% c("3", "4"), "3 & 4", "5")) |>
 #'         summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) |>
 #'         summarize(estimate = mean(estimate), .by = c("cyl", "group")) |>
 #'         rename(term = cyl)
 #' }
 #' 
-#' hypotheses(mod, FUN = aggregation_fun)
+#' hypotheses(mod, hypothesis = aggregation_fun)
 #' 
 #' # Equivalence, non-inferiority, and non-superiority tests
 #' mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
@@ -145,7 +144,6 @@ hypotheses <- function(
     equivalence = NULL,
     joint = FALSE,
     joint_test = "f",
-    FUN = NULL,
     numderiv = "fdforward",
     ...) {
 
@@ -154,7 +152,7 @@ hypotheses <- function(
 
     # deprecation
     if ("FUN" %in% names(dots)) {
-        msg <- "`FUN` is deprecated. Please supply your function to the `hypothesis` argument insteadl."
+        msg <- "`FUN` is deprecated. Please supply your function to the `hypothesis` argument instead."
         if (is.null(hypothesis)) {
             hypothesis <- dots[["FUN"]]
             insight::format_warning(msg)
@@ -312,31 +310,6 @@ hypotheses <- function(
     }
 
     b <- FUNouter(model = model, hypothesis = hypothesis)
-    
-    # For simulation based inference generate posterior draws from inferences_coefmat
-    # Doesn't support data.frames which aren't mfx objects
-    if (inherits(model, "inferences_simulation")){
-      if (inherits(model, "data.frame")){
-        msg <- "Simulation based inference not yet supported for data.frame type."
-        insight::format_error(msg)
-      }
-      
-      model_sim <- sanitize_model(
-        model = model,
-        vcov = vcov,
-        calling_function = "hypotheses",
-        ...)
-      
-      posterior_draws <- matrix(nrow=length(attr(b, "label")), ncol = nrow(attr(model_sim, "inferences_coefmat")))
-      rownames(posterior_draws) <- attr(b, "label")
-      
-      for (sim_n in 1:ncol(posterior_draws)) {
-        model_tmp <- set_coef(model_sim, attr(model_sim, "inferences_coefmat")[sim_n,])
-        b_tmp <- FUNouter(model = model_tmp, hypothesis = hypothesis)
-        posterior_draws[,sim_n]<- b_tmp
-      }
-      attr(b, "posterior_draws") <- posterior_draws
-    }
     
     # bayesian posterior
     if (!is.null(attr(b, "posterior_draws"))) {

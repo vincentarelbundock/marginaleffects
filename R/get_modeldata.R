@@ -1,4 +1,4 @@
-get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, wts = NULL, ...) {
+get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, wts = FALSE, ...) {
 
     # mice
     if (inherits(model, c("mira", "amest"))) {
@@ -61,19 +61,25 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
     }
 
     # always extract weights variable if available
-    wts <- hush(insight::find_weights(model))
-    if (isTRUE(checkmate::check_formula(wts))) {
-        additional_variables <- c(additional_variables, hush(all.vars(wts)))
-    } else if (isTRUE(checkmate::check_character(wts, max.len = 4))) {
-        if (isTRUE(grepl("~", wts))) {
-            additional_variables <- c(additional_variables, hush(all.vars(stats::as.formula(wts))))
+    wtsvname <- hush(insight::find_weights(model))
+    if (isTRUE(checkmate::check_formula(wtsvname))) {
+        additional_variables <- c(additional_variables, hush(all.vars(wtsvname)))
+    } else if (isTRUE(checkmate::check_character(wtsvname, max.len = 4))) {
+        if (isTRUE(grepl("~", wtsvname))) {
+            additional_variables <- c(additional_variables, hush(all.vars(stats::as.formula(wtsvname))))
         } else {
-            additional_variables <- c(additional_variables, wts)
+            additional_variables <- c(additional_variables, wtsvname)
         }
     }
 
-
     out <- hush(insight::get_data(model, verbose = FALSE, additional_variables = additional_variables))
+
+    if (isTRUE(wts)) {
+      tmp <- insight::get_weights(model)
+      if (is.numeric(tmp) && length(tmp) == nrow(out)) {
+        out[["marginaleffects_wts_internal"]] <- tmp
+      }
+    }
 
     # iv_robust and some others
     if (is.null(out)) {

@@ -40,6 +40,9 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["bife"]] <- c("alpha_new", "corrected") # nlme::lme
     valid[["process_error"]] <-  # mvgam::mvgam
 
+    # flexsurv
+    valid[["flexsurvreg"]] <- c("times", "p", "start")
+
     white_list <- c(
         "conf.int", "modeldata", "internal_call", "df",
         "transform", "comparison", "side", "delta", "null", "equivalence", "draw",
@@ -62,10 +65,10 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     bad <- setdiff(names(dots), c(good, white_list))
     if (length(bad) > 0) {
         if (model_class %in% names(valid)) {
-            msg <- sprintf("These arguments are not supported for models of class `%s`: %s. Valid arguments include: %s. Please file a request on Github if you believe that additional arguments should be supported: https://github.com/vincentarelbundock/marginaleffects/issues",
+            msg <- sprintf("These arguments are not known to be supported for models of class `%s`: %s. These arguments are known to be valid: %s. All arguments are still passed to the model-specific prediction function, but users are encouraged to check if the argument is indeed supported by their modeling package. Please file a request on Github if you believe that an unknown argument should be added to the `marginaleffects` white list of known arguments, in order to avoid raising this warning: https://github.com/vincentarelbundock/marginaleffects/issues",
                            model_class, paste(bad, collapse = ", "), paste(valid[[model_class]], collapse = ", "))
         } else {
-            msg <- sprintf("These arguments are not supported for models of class `%s`: %s. Please file a request on Github if you believe that additional arguments should be supported: https://github.com/vincentarelbundock/marginaleffects/issues",
+            msg <- sprintf("These arguments are not known to be supported for models of class `%s`: %s. All arguments are still passed to the model-specific prediction function, but users are encouraged to check if the argument is indeed supported by their modeling package. Please file a request on Github if you believe that an unknown argument should be added to the `marginaleffects` white list of known arguments, in order to avoid raising this warning: https://github.com/vincentarelbundock/marginaleffects/issues",
                        model_class, paste(bad, collapse = ", "))
         }
         warning(msg, call. = FALSE)

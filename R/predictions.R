@@ -67,6 +67,7 @@
 #' @template equivalence
 #' @template type
 #' @template order_of_operations
+#' @template parallel
 #' @template references
 #'
 #' @return A `data.frame` with one row per observation and several columns:
@@ -191,7 +192,7 @@ predictions <- function(model,
                         type = NULL,
                         by = FALSE,
                         byfun = NULL,
-                        wts = NULL,
+                        wts = FALSE,
                         transform = NULL,
                         hypothesis = NULL,
                         equivalence = NULL,
@@ -312,7 +313,7 @@ predictions <- function(model,
         by = by,
         byfun = byfun)
 
-    if (is.null(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
         wts <- "marginaleffects_wts_internal"
     }
 
@@ -572,7 +573,7 @@ get_predictions <- function(model,
                             byfun = byfun,
                             hypothesis = NULL,
                             verbose = TRUE,
-                            wts = NULL,
+                            wts = FALSE,
                             ...) {
 
 
@@ -627,7 +628,7 @@ get_predictions <- function(model,
     }
 
     # expensive: only do this inside the jacobian if necessary
-    if (!is.null(wts) ||
+    if (!isFALSE(wts) ||
         !isTRUE(checkmate::check_flag(by, null.ok = TRUE)) ||
         inherits(model, "mclogit")) { # not sure why sorting is so finicky here
         out <- merge_by_rowid(out, newdata)
@@ -675,7 +676,7 @@ avg_predictions <- function(model,
                             type = NULL,
                             by = TRUE,
                             byfun = NULL,
-                            wts = NULL,
+                            wts = FALSE,
                             transform = NULL,
                             hypothesis = NULL,
                             equivalence = NULL,

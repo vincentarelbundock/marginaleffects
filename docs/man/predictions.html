@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -570,6 +570,7 @@ window.Quarto = {
   <li><a href="#equivalence-inferiority-superiority" id="toc-equivalence-inferiority-superiority" class="nav-link" data-scroll-target="#equivalence-inferiority-superiority">Equivalence, Inferiority, Superiority</a></li>
   <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types">Prediction types</a></li>
   <li><a href="#order-of-operations" id="toc-order-of-operations" class="nav-link" data-scroll-target="#order-of-operations">Order of operations</a></li>
+  <li><a href="#parallel-computation" id="toc-parallel-computation" class="nav-link" data-scroll-target="#parallel-computation">Parallel computation</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
@@ -963,6 +964,9 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 <li>
 <p>The function can also accept and operation on optional input arguments: <code>newdata</code>, <code>by</code>, <code>draws</code>.</p>
 </li>
+<li>
+<p>This function approach will not work for Bayesian models or with bootstraping. In those cases, it is easy to use <code>posterior_draws()</code> to extract and manipulate the draws directly.</p>
+</li>
 </ul>
 </li>
 <li>
@@ -1320,7 +1324,7 @@ robustlmm::predict.rlmerMod
 <p>Behind the scenes, the arguments of <code>marginaleffects</code> functions are evaluated in this order:</p>
 <ol>
 <li>
-<p>’newdata“</p>
+<p><code>newdata</code></p>
 </li>
 <li>
 <p><code>variables</code></p>
@@ -1341,6 +1345,25 @@ robustlmm::predict.rlmerMod
 <p><code>transform</code></p>
 </li>
 </ol>
+</section>
+<section id="parallel-computation" class="level3">
+<h3 class="anchored" data-anchor-id="parallel-computation">Parallel computation</h3>
+<p>The <code>slopes()</code> and <code>comparisons()</code> functions can use parallelism to speed up computation. Operations are parallelized for the computation of standard errors, at the model coefficient level. There is always considerable overhead when using parallel computation, mainly involved in passing the whole dataset to the different processes. Thus, parallel computation is most likely to be useful when the model includes many parameters and the dataset is relatively small.</p>
+<p>Warning: In many cases, parallel processing will not be useful at all.</p>
+<p>To activate parallel computation, users must load the <code>future.apply</code> package, call <code>plan()</code> function, and set a global option. For example:</p>
+<div class="sourceCode r">
+<pre>library(future.apply)
+plan("multicore", workers = 4)
+options(marginaleffects_parallel = TRUE)
+
+slopes(model)
+</pre>
+</div>
+<p>To disable parallelism in <code>marginaleffects</code> altogether, you can set a global option:</p>
+<div class="sourceCode r">
+<pre>options(marginaleffects_parallel = FALSE)
+</pre>
+</div>
 </section>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
@@ -1385,22 +1408,17 @@ Type:  response </code></pre>
  100   4     26.2      0.986 26.6   &lt;0.001 516.6  24.3   28.2
  120   4     25.8      1.110 23.2   &lt;0.001 393.8  23.6   27.9
 
-Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl 
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg 
 Type:  response </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> drat <span class="sc">+</span> <span class="fu">factor</span>(cyl) <span class="sc">+</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(m, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">FUN_factor =</span> unique, <span class="at">FUN_numeric =</span> median))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
- Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp drat cyl am
-     22.0       1.29 17.0   &lt;0.001 214.0  19.4   24.5 123  3.7   6  1
-     18.2       1.27 14.3   &lt;0.001 151.9  15.7   20.7 123  3.7   6  0
-     25.5       1.32 19.3   &lt;0.001 274.0  23.0   28.1 123  3.7   4  1
-     21.8       1.54 14.1   &lt;0.001 148.3  18.8   24.8 123  3.7   4  0
-     22.6       2.14 10.6   &lt;0.001  84.2  18.4   26.8 123  3.7   8  1
-     18.9       1.73 10.9   &lt;0.001  89.0  15.5   22.3 123  3.7   8  0
+ Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %  hp drat cyl am
+     18.9       1.73 10.9   &lt;0.001 89.0  15.5   22.3 123  3.7   8  0
 
-Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, drat, cyl, am 
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, drat, cyl, am, mpg 
 Type:  response </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Average Adjusted Predictions (AAP)</span></span>
@@ -1532,7 +1550,7 @@ Type:  response </code></pre>
  custom  2     4.78      0.797  6.0   &lt;0.001  28.9   3.22   6.35  3.6
  custom  3   115.21      3.647 31.6   &lt;0.001 725.0 108.07 122.36  3.6
 
-Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, drat, wt 
+Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, drat, wt, mpg 
 Type:  response </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `by` argument</span></span>

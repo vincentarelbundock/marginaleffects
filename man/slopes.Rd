@@ -14,7 +14,7 @@ slopes(
   vcov = TRUE,
   conf_level = 0.95,
   slope = "dydx",
-  wts = NULL,
+  wts = FALSE,
   hypothesis = NULL,
   equivalence = NULL,
   p_adjust = NULL,
@@ -33,7 +33,7 @@ avg_slopes(
   vcov = TRUE,
   conf_level = 0.95,
   slope = "dydx",
-  wts = NULL,
+  wts = FALSE,
   hypothesis = NULL,
   equivalence = NULL,
   p_adjust = NULL,
@@ -117,10 +117,12 @@ first entry in the error message is used by default.}
 \item Y is the predicted value of the outcome; X is the observed value of the predictor.
 }}
 
-\item{wts}{string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the \code{weighted.mean()} function.
+\item{wts}{logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not unit-level estimates. See \code{?weighted.mean}
 \itemize{
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
+\item FALSE: Equal weights.
+\item TRUE: Extract weights from the fitted object with \code{insight::find_weights()} and use them when taking weighted averages of estimates. Warning: \code{newdata=datagrid()} returns a single average weight, which is equivalent to using \code{wts=FALSE}
 }}
 
 \item{hypothesis}{specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, a string formula, or a function.
@@ -150,6 +152,7 @@ first entry in the error message is used by default.}
 \item Accepts an argument \code{x}: object produced by a \code{marginaleffects} function or a data frame with column \code{rowid} and \code{estimate}
 \item Returns a data frame with columns \code{term} and \code{estimate} (mandatory) and \code{rowid} (optional).
 \item The function can also accept and operation on optional input arguments: \code{newdata}, \code{by}, \code{draws}.
+\item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{posterior_draws()} to extract and manipulate the draws directly.
 }
 \item See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 }}
@@ -344,7 +347,36 @@ The \code{invlink(link)} is a special type defined by \code{marginaleffects}. It
 
 Some of the most common \code{type} values are:
 
-response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, detection, disp, ev, expected, expvalue, fitted, invlink(link), latent, latent_N, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+response, link, E, Ep, average, class, conditional, count, cum.prob, cumhaz, cumprob, density, detection, disp, ev, expected, expvalue, fitted, hazard, invlink(link), latent, latent_N, linear, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, rmst, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+}
+
+\section{Parallel computation}{
+
+
+The \code{slopes()} and \code{comparisons()} functions can use parallelism to
+speed up computation. Operations are parallelized for the computation of
+standard errors, at the model coefficient level. There is always
+considerable overhead when using parallel computation, mainly involved
+in passing the whole dataset to the different processes. Thus, parallel
+computation is most likely to be useful when the model includes many parameters
+and the dataset is relatively small.
+
+Warning: In many cases, parallel processing will not be useful at all.
+
+To activate parallel computation, users must load the \code{future.apply} package,
+call \code{plan()} function, and set a global option. For example:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(future.apply)
+plan("multicore", workers = 4)
+options(marginaleffects_parallel = TRUE)
+
+slopes(model)
+}\if{html}{\out{</div>}}
+
+To disable parallelism in \code{marginaleffects} altogether, you can set a global option:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_parallel = FALSE)
+}\if{html}{\out{</div>}}
 }
 
 \section{Order of operations}{
@@ -352,7 +384,7 @@ response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, de
 
 Behind the scenes, the arguments of \code{marginaleffects} functions are evaluated in this order:
 \enumerate{
-\item `newdata``
+\item \code{newdata}
 \item \code{variables}
 \item \code{comparison} and \code{slopes}
 \item \code{by}

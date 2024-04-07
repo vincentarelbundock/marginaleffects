@@ -10,6 +10,7 @@ datagrid(
   newdata = NULL,
   by = NULL,
   grid_type = "mean_or_mode",
+  response = FALSE,
   FUN_character = NULL,
   FUN_factor = NULL,
   FUN_logical = NULL,
@@ -40,9 +41,11 @@ datagrid(
 \item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}. Variables not explicitly supplied to \code{datagrid()} are set to their observed values in the original dataset.
 }}
 
+\item{response}{Logical should the response variable be included in the grid, even if it is not specified explicitly.}
+
 \item{FUN_character}{the function to be applied to character variables.}
 
-\item{FUN_factor}{the function to be applied to factor variables.}
+\item{FUN_factor}{the function to be applied to factor variables. This only applies if the variable in the original data is a factor. For variables converted to factor in a model-fitting formula, for example, \code{FUN_character} is used.}
 
 \item{FUN_logical}{the function to be applied to logical variables.}
 

@@ -1,21 +1,23 @@
 #' @section Parallel computation:
 #'
 #' The `slopes()` and `comparisons()` functions can use parallelism to
-#' speed up computation. Operations are parallelized at the "term" or
-#' "variable" level. This means that no speed gain is available when the user
-#' computes marginal effects for only one right-hand side variable. There is
-#' always some overhead when using parallel computation. Thus, parallel
-#' computation is most likely to be useful when: 
+#' speed up computation. Operations are parallelized for the computation of 
+#' standard errors, at the model coefficient level. There is always 
+#' considerable overhead when using parallel computation, mainly involved
+#' in passing the whole dataset to the different processes. Thus, parallel
+#' computation is most likely to be useful when the model includes many parameters
+#' and the dataset is relatively small.
 #' 
-#' 1. The model includes many right-hand side variables.
-#' 2. `marginaleffects` must compute pairwise contrasts for multiple factor variables.
+#' Warning: In many cases, parallel processing will not be useful at all.
 #'
-#' To activate parallel computation, users must load the `future.apply` package
-#' and call `plan()` function. For example:
+#' To activate parallel computation, users must load the `future.apply` package,
+#' call `plan()` function, and set a global option. For example:
 #'
 #' ```{r, eval = FALSE}
 #' library(future.apply)
-#' plan("multisession")
+#' plan("multicore", workers = 4)
+#' options(marginaleffects_parallel = TRUE)
+#'
 #' slopes(model)
 #' ```
 #'
@@ -23,4 +25,4 @@
 #' 
 #' ```{r, eval = FALSE}
 #' options(marginaleffects_parallel = FALSE)
-#'
+#' ```

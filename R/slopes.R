@@ -62,9 +62,11 @@
 #' - "eydx": dY/dX * Y
 #' - "dyex": dY/dX / X
 #' - Y is the predicted value of the outcome; X is the observed value of the predictor.
-#' @param wts string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in `avg_*()` or with the `by` argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the `weighted.mean()` function.
+#' @param wts logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in `avg_*()` or with the `by` argument, and not unit-level estimates. See `?weighted.mean`
 #' + string: column name of the weights variable in `newdata`. When supplying a column name to `wts`, it is recommended to supply the original data (including the weights variable) explicitly to `newdata`.
 #' + numeric: vector of length equal to the number of rows in the original data or in `newdata` (if supplied).
+#' + FALSE: Equal weights.
+#' + TRUE: Extract weights from the fitted object with `insight::find_weights()` and use them when taking weighted averages of estimates. Warning: `newdata=datagrid()` returns a single average weight, which is equivalent to using `wts=FALSE`
 #' @param hypothesis specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, a string formula, or a function.
 #' + Numeric:
 #'   - Single value: the null hypothesis used in the computation of Z and p (before applying `transform`).
@@ -84,6 +86,7 @@
 #'   - Accepts an argument `x`: object produced by a `marginaleffects` function or a data frame with column `rowid` and `estimate`
 #'   - Returns a data frame with columns `term` and `estimate` (mandatory) and `rowid` (optional).
 #'   - The function can also accept and operation on optional input arguments: `newdata`, `by`, `draws`.
+#'   - This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use `posterior_draws()` to extract and manipulate the draws directly.
 #' + See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 #' @param p_adjust Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See [stats::p.adjust]
 #' @param df Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and `Inf`. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. See [insight::get_df] for a convenient function to extract degrees of freedom. Ex: `slopes(model, df = insight::get_df(model))`
@@ -118,6 +121,7 @@
 #' @template bayesian
 #' @template equivalence
 #' @template type
+#' @template parallel
 #' @template references
 #' @template order_of_operations
 #'
@@ -213,7 +217,7 @@ slopes <- function(model,
                    vcov = TRUE,
                    conf_level = 0.95,
                    slope = "dydx",
-                   wts = NULL,
+                   wts = FALSE,
                    hypothesis = NULL,
                    equivalence = NULL,
                    p_adjust = NULL,
@@ -321,7 +325,7 @@ avg_slopes <- function(model,
                        vcov = TRUE,
                        conf_level = 0.95,
                        slope = "dydx",
-                       wts = NULL,
+                       wts = FALSE,
                        hypothesis = NULL,
                        equivalence = NULL,
                        p_adjust = NULL,

@@ -225,6 +225,14 @@ expect_equivalent(cmp1$estimate, cmp2$estimate)
 expect_equivalent(cmp1$estimate, cmp3$estimate)
 
 
+# Issue #1058
+tmp <- mtcars
+tmp <- tmp[c('mpg', 'cyl', 'hp')]
+tmp$cyl <- as.factor(tmp$cyl) # 3 levels
+tmp$hp  <- as.factor(tmp$hp)
+bygrid <- datagrid(newdata = tmp, by = "cyl", hp = unique)
+expect_equivalent(nrow(bygrid), 23)
+
 
 
 rm(list = ls())

@@ -24,6 +24,8 @@ DCchoice,oohbchoice,TRUE,TRUE,,,,,,
 estimatr,lm_lin,TRUE,TRUE,,,,,,
 estimatr,lm_robust,TRUE,TRUE,TRUE,TRUE,TRUE,U,TRUE,TRUE
 estimatr,iv_robust,TRUE,TRUE,TRUE,TRUE,U,U,U,U
+flexsurv,flexsurvreg,TRUE,TRUE,,,,,,
+flexsurv,flexsurvspline,TRUE,TRUE,,,,,,
 fixest,feols,TRUE,TRUE,TRUE,TRUE,U,U,U,U
 fixest,feglm,TRUE,TRUE,,,U,U,U,U
 fixest,fenegbin,TRUE,TRUE,,,U,U,U,U
@@ -46,8 +48,8 @@ MASS,glmmPQL,TRUE,TRUE,,,U,U,TRUE,TRUE
 MASS,glm.nb,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 MASS,polr,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE
 MASS,rlm,TRUE,TRUE,,,TRUE,TRUE,TRUE,TRUE
-mclogit,mblogit,TRUE,TRUE,,,U,U,U,U 
-mclogit,mclogit,TRUE,TRUE,,,U,U,U,U 
+mclogit,mblogit,TRUE,TRUE,,,U,U,U,U
+mclogit,mclogit,TRUE,TRUE,,,U,U,U,U
 MCMCglmm,MCMCglmm,TRUE,TRUE,U,U,U,U,U,U
 mgcv,gam,TRUE,TRUE,,,U,U,TRUE,TRUE
 mgcv,bam,TRUE,TRUE,,,U,U,TRUE,FALSE
@@ -68,6 +70,11 @@ pscl,zeroinfl,TRUE,TRUE,TRUE,TRUE,TRUE,U,TRUE,TRUE
 quantreg,rq,TRUE,TRUE,TRUE,TRUE,U,U,TRUE,TRUE
 Rchoice,hetprob,TRUE,TRUE,,,,,,
 Rchoice,ivpml,TRUE,TRUE,,,,,,
+REndo,latentIV,TRUE,TRUE,,,,,,
+REndo,copulaCorrection,TRUE,TRUE,,,,,,
+REndo,higherMomentsIV,TRUE,TRUE,,,,,,
+REndo,hetErrorsIV,TRUE,TRUE,,,,,,
+REndo,multilevelIV,TRUE,TRUE,,,,,,
 rms,ols,TRUE,TRUE,,,,,,
 rms,lrm,TRUE,TRUE,,,,,,
 rms,orm,TRUE,TRUE,,,,,,
