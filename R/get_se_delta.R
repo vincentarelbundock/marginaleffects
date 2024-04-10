@@ -94,7 +94,12 @@ get_se_delta <- function(model,
         if (!is.null(newdata)) args[["newdata"]] <- newdata
         if (!is.null(J)) args[["J"]] <- J
         if (!is.null(eps)) args[["eps"]] <- eps
+
+        # glmmTMB needs this
+        args$newparams <- x
+
         g <- do.call("FUN", args)
+
         return(g)
     }
 

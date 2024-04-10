@@ -256,6 +256,12 @@ expect_equivalent(p1$estimate, p2$fit)
 expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
 
 
+# Issue #1064
+m <- glmmTMB(mpg ~ hp + am + (1|cyl), data = mtcars)
+p1 <- predictions(m, newdata = mtcars, re.form = NA)
+p2 <- predict(m, se.fit = TRUE, re.form = NA)
+expect_equivalent(p1$estimate, p2$fit)
+expect_equivalent(p1$std.error, p2$se.fit)
 
 
 source("helpers.R")
