@@ -63,6 +63,7 @@ Suggests:
     car,
     carData,
     causaldata,
+    clarify,
     collapse,
     conflicted,
     countrycode,
