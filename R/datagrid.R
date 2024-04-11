@@ -196,6 +196,11 @@ datagrid <- function(
                 FUN_numeric = FUN_numeric,
                 FUN_integer = FUN_integer,
                 FUN_other = FUN_other)
+
+    if (!"rowid" %in% colnames(out)) {
+        out$rowid <- seq_len(nrow(out))
+    }
+
     return(out)
 }
 
