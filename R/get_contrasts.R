@@ -87,6 +87,7 @@ get_contrasts <- function(model,
         } else {
             pred_hi <- pred_hi$error
         }
+
     }
 
     # predict() takes up 2/3 of the wall time. This call is only useful when we

@@ -359,6 +359,7 @@ comparisons <- function(model,
     # after sanitize_newdata
     sanity_by(by, newdata)
 
+
     # after sanity_by
     newdata <- dedup_newdata(
         model = model,
