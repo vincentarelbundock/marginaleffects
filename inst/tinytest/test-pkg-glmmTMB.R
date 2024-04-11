@@ -80,8 +80,7 @@ tid <- avg_slopes(mzip_3, type = "response", re.form = NA) |>
 # TODO: half-checked against Stata. Slight difference on binary predictors. Stata probably dydx
 # Stata can't be right here, or I mischecked.
 b <- c(-0.0357107397803255, 0.116113581361053, -0.703975123794627, -0.322385169497792, 2.29943403870235, 0.313970669520973)
-# se <- c(0.0137118286464027, 0.335617116221601, 0.333707103584788, 0.0899355981887107, 
-2.51759246321455, 2.10076503002941)
+# se <- c(0.0137118286464027, 0.335617116221601, 0.333707103584788, 0.0899355981887107, 2.51759246321455, 2.10076503002941)
 expect_equivalent(b, tid$estimate, tolerance = 1e-3)
 # expect_equivalent(se, tid$std.error, tolerance = 1e-4)
 
@@ -129,11 +128,12 @@ mod <- glmmTMB(
     woman ~ btype + resp + (1 + Anger | item),
     family = binomial,
     data = dat)
-expect_error(predictions(mod, newdata = datagrid(), vcov = "HC3", re.form = NA), pattern = "not supported")
-expect_inherits(predictions(mod, newdata = datagrid(), vcov = NULL, re.form = NA), "predictions")
+
+expect_error(predictions(mod, newdata = datagrid(), vcov = "HC3", re.form = NA), pattern = "vcov")
+expect_error(predictions(mod, newdata = datagrid(), vcov = NULL, re.form = NA), pattern = "vcov")
+expect_error(predictions(mod, newdata = datagrid(), vcov = insight::get_varcov(mod), re.form = NA), pattern = "vcov")
 expect_inherits(predictions(mod, newdata = datagrid(), vcov = FALSE, re.form = NA), "predictions")
 expect_inherits(predictions(mod, newdata = datagrid(), vcov = TRUE, re.form = NA), "predictions")
-expect_inherits(predictions(mod, newdata = datagrid(), vcov = insight::get_varcov(mod), re.form = NA), "predictions")
 
 
 
@@ -221,13 +221,13 @@ expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
 
 m <- glmmTMB(Sepal.Length ~ Sepal.Width + (1 | Species), data = iris)
 p1 <- predictions(m, newdata = iris, re.form = NA) |> head()
-p2 <- data.frame(predict(m, newdata = iris, se.fit = TRUE)) |> head()
+p2 <- data.frame(predict(m, newdata = iris, se.fit = TRUE, re.form = NA)) |> head()
 expect_equivalent(p1$estimate, p2$fit)
 expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
 
 m <- glmmTMB(Sepal.Length ~ Sepal.Width + (1 | Petal.Width * Species), data = iris)
 p1 <- predictions(m, newdata = iris, re.form = NA)
-p2 <- data.frame(predict(m, newdata = iris, se.fit = TRUE))
+p2 <- data.frame(predict(m, newdata = iris, se.fit = TRUE, re.form = NA))
 expect_equivalent(p1$estimate, p2$fit)
 expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
 
