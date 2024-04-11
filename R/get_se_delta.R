@@ -95,8 +95,9 @@ get_se_delta <- function(model,
         if (!is.null(J)) args[["J"]] <- J
         if (!is.null(eps)) args[["eps"]] <- eps
 
-        # glmmTMB needs this
-        args$newparams <- x
+        if (inherits(model, "glmmTMB")) {
+            args$newparams <- x
+        }
 
         g <- do.call("FUN", args)
 

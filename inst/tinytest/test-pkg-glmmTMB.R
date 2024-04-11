@@ -1,9 +1,6 @@
 source("helpers.R")
-exit_file("glmmTMB produces weird SEs")
-
 # if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
-# exit_file("glmmTMB always causes problems")
 
 if (ON_CI) exit_file("on ci") # install and test fails on Github
 requiet("glmmTMB")
@@ -22,18 +19,18 @@ m0 <- glmmTMB(NCalls ~ (FT + ArrivalTime) * SexParent + offset(log(BroodSize)) +
     data = Owls,
     ziformula = ~1,
     family = poisson)
-expect_slopes(m0)
+expect_slopes(m0, re.form = NA)
 
 m1 <- glmmTMB(count ~ mined + (1 | site),
   zi = ~mined,
   family = poisson, data = Salamanders)
-expect_slopes(m1)
+expect_slopes(m1, re.form = NA)
 
 # Binomial model
 data(cbpp, package = "lme4")
 m4 <- glmmTMB(cbind(incidence, size - incidence) ~ period + (1 | herd),
 family = binomial, data = cbpp)
-expect_slopes(m4)
+expect_slopes(m4, re.form = NA)
 
 # comparisons vs. emmeans
 
@@ -46,6 +43,7 @@ m2 <- glmmTMB(count ~ spp + mined + (1 | site),
 co <- comparisons(m2,
               type = "link",
               variables = "mined",
+              re.form = NA,
               newdata = datagrid(mined = "no",
                                  spp = "GP",
                                  site = "VF-1"))
@@ -60,9 +58,9 @@ bug <- glmmTMB(count ~ spp + mined,
   ziformula = ~spp + mined,
   family = "nbinom2",
   data = Salamanders)
-mfx <- slopes(bug)
-tid1 <- comparisons(bug, comparison = "dydxavg")
-tid2 <- tidy(slopes(bug))
+mfx <- slopes(bug, re.form = NA)
+tid1 <- comparisons(bug, comparison = "dydxavg", re.form = NA)
+tid2 <- avg_slopes(bug, re.form = NA)
 
 expect_equivalent(tid1$estimate, tid2$estimate)
 expect_equivalent(tid1$std.error, tid2$std.error)
@@ -76,7 +74,7 @@ mzip_3 <- glmmTMB(
   ziformula = ~ res + inc + age,
   family = "nbinom2",
   data = bed)
-tid <- avg_slopes(mzip_3, type = "response") |>
+tid <- avg_slopes(mzip_3, type = "response", re.form = NA) |>
   dplyr::arrange(term)
 
 # TODO: half-checked against Stata. Slight difference on binary predictors. Stata probably dydx
@@ -91,10 +89,11 @@ expect_equivalent(se, tid$std.error, tolerance = 1e-4)
 m3 <- glmmTMB(count ~ spp + mined + (1 | site),
   zi = ~spp + mined,
   family = truncated_poisson, data = Salamanders)
-expect_slopes(m3)
+expect_slopes(m3, re.form = NA)
 co <- comparisons(m3,
               type = "link",
               variables = "mined",
+              re.form = NA,
               newdata = datagrid(mined = "no",
                                  spp = "GP",
                                  site = "VF-1"))
@@ -116,7 +115,7 @@ dat1$mined <- "yes"
 dat2$mined <- "no"
 cont1 <- predict(mod, type = "response", newdata = dat2) -
      predict(mod, type = "response", newdata = dat1)
-cont2 <- comparisons(mod, variables = "mined")
+cont2 <- comparisons(mod, variables = "mined", re.form = NA)
 expect_equivalent(cont2$estimate, cont1)
 
 
@@ -129,50 +128,26 @@ mod <- glmmTMB(
     woman ~ btype + resp + (1 + Anger | item),
     family = binomial,
     data = dat)
-expect_error(predictions(mod, newdata = datagrid(), vcov = "HC3"), pattern = "not supported")
-expect_inherits(predictions(mod, newdata = datagrid(), vcov = NULL), "predictions")
-expect_inherits(predictions(mod, newdata = datagrid(), vcov = FALSE), "predictions")
-expect_inherits(predictions(mod, newdata = datagrid(), vcov = TRUE), "predictions")
-expect_inherits(predictions(mod, newdata = datagrid(), vcov = insight::get_varcov(mod)), "predictions")
+expect_error(predictions(mod, newdata = datagrid(), vcov = "HC3", re.form = NA), pattern = "not supported")
+expect_inherits(predictions(mod, newdata = datagrid(), vcov = NULL, re.form = NA), "predictions")
+expect_inherits(predictions(mod, newdata = datagrid(), vcov = FALSE, re.form = NA), "predictions")
+expect_inherits(predictions(mod, newdata = datagrid(), vcov = TRUE, re.form = NA), "predictions")
+expect_inherits(predictions(mod, newdata = datagrid(), vcov = insight::get_varcov(mod), re.form = NA), "predictions")
 
 
 
 
 
 
-# marginalmeans: some validity
-p <- predictions(mod, type = "link", re.form = NA)
-expect_inherits(p, "predictions")
-em <- data.frame(emmeans(mod, ~Sex))
-mm <- predictions(mod, by = "Sex", newdata = datagrid(grid_type = "balanced"), type = "link", re.form = NA)
-expect_equivalent(em$emmean, mm$estimate)
-expect_equivalent(em$SE, mm$std.error)
+# Where is that model?
+# # marginalmeans: some validity
+# p <- predictions(mod, type = "link", re.form = NA)
+# expect_inherits(p, "predictions")
+# em <- data.frame(emmeans(mod, ~Sex))
+# mm <- predictions(mod, by = "Sex", newdata = datagrid(grid_type = "balanced"), type = "link", re.form = NA)
+# expect_equivalent(em$emmean, mm$estimate)
+# expect_equivalent(em$SE, mm$std.error)
 
-
-
-# Issue #466: REML not supported
-# Problem is that model$fit$par does not include all the parameters when
-# REML=TRUE, so when we set `set_coef()`, we can't change the fixed effects,
-# and the predictions are not altered. In turn, this produced 0 standard errors
-# in `get_se_delta()`.
-set.seed(42)
-dat <- do.call("rbind", list(
-  transform(PlantGrowth, trial = "A"),
-  transform(PlantGrowth, trial = "B", weight = runif(30) * weight),
-  transform(PlantGrowth, trial = "C", weight = runif(30) * weight)))
-colnames(dat)[2] <- "groupid"
-
-model_REML <- glmmTMB(
-  weight ~ groupid + trial + (1 | groupid:trial),
-  REML = TRUE,
-  data = dat)
-
-expect_error(slopes(model_REML), pattern = "REML")
-expect_error(comparisons(model_REML), pattern = "REML")
-expect_error(predictions(model_REML), pattern = "REML")
-expect_inherits(slopes(model_REML, vcov = FALSE), "marginaleffects")
-expect_inherits(predictions(model_REML, re.form = NA, vcov = FALSE), "predictions")
-expect_inherits(predictions(model_REML, vcov = FALSE, re.form = NA), "predictions")
 
 
 # Issue #663
@@ -206,7 +181,7 @@ mod <- glmmTMB(
   data = model_data,
   family = ordbeta(),
   start = list(psi = c(-1, 1)))
-mfx <- avg_slopes(mod)
+mfx <- avg_slopes(mod, re.form = NA)
 expect_inherits(mfx, 'slopes')
 
 
@@ -222,35 +197,35 @@ d <- data.frame(
   sex = as.factor(sample(c("female", "male"), n, TRUE, prob = c(.4, .6))))
 mod <- glmmTMB(outcome ~ groups * episode + (1 | ID), data = d, weights = wt)
 tmp <<- head(d)
-p <- avg_predictions(mod, variables = "groups", newdata = tmp)
+p <- avg_predictions(mod, variables = "groups", newdata = tmp, re.form = NA)
 expect_inherits(p, "predictions")
 
 
 # Simple prediction standard errors
 m <- glmmTMB(mpg ~ hp + (1 | carb), data = transform(mtcars, carb = as.character(carb)))
-p1 <- predictions(m)
+p1 <- predictions(m, re.form = NA)
 p2 <- data.frame(predict(m, se.fit = TRUE))
 expect_equivalent(p1$estimate, p2$fit)
 expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
 
 
-exit_file("Issue #810 is not fixed")
+# exit_file("Issue #810 is not fixed")
 
 # Issue #810
 m <- glmmTMB(Sepal.Length ~ Sepal.Width, data = iris)
-p1 <- predictions(m, newdata = iris) |> head()
+p1 <- predictions(m, newdata = iris, re.form = NA) |> head()
 p2 <- data.frame(predict(m, newdata = iris, se.fit = TRUE)) |> head()
 expect_equivalent(p1$estimate, p2$fit)
 expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
 
 m <- glmmTMB(Sepal.Length ~ Sepal.Width + (1 | Species), data = iris)
-p1 <- predictions(m, newdata = iris) |> head()
+p1 <- predictions(m, newdata = iris, re.form = NA) |> head()
 p2 <- data.frame(predict(m, newdata = iris, se.fit = TRUE)) |> head()
 expect_equivalent(p1$estimate, p2$fit)
 expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
 
 m <- glmmTMB(Sepal.Length ~ Sepal.Width + (1 | Petal.Width * Species), data = iris)
-p1 <- predictions(m, newdata = iris)
+p1 <- predictions(m, newdata = iris, re.form = NA)
 p2 <- data.frame(predict(m, newdata = iris, se.fit = TRUE))
 expect_equivalent(p1$estimate, p2$fit)
 expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)

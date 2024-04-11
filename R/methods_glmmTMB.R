@@ -12,14 +12,18 @@ get_predict.glmmTMB <- function(model,
         vcov <- vcov[[1]]
     }
 
+    # hack to avoid re-optimization
+    # see https://github.com/vincentarelbundock/marginaleffects/issues/1064
     b_vec <- model$obj$env$parList()$b
     if (length(b_vec)>0) {
         model$modelInfo$map$b <- factor(rep(NA,length(b_vec)))
     }
+
     np <- model$fit$par
     if (!is.null(newparams)) {
         np[1:length(newparams)] <- newparams
     }
+
     out <- get_predict.default(
         model = model,
         newdata = newdata,
@@ -27,6 +31,7 @@ get_predict.glmmTMB <- function(model,
         allow.new.levels = TRUE, # otherwise we get errors in marginal_means()
         newparams = np,
         ...)
+
     return(out)
 }
 
@@ -57,11 +62,12 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
      return(model)
 }
 
-
-
 #' @rdname sanitize_model_specific
-sanitize_model_specific.glmmTMB <- function(model, ...) {
-    # REML
+sanitize_model_specific.glmmTMB <- function(model, re.form = NULL, ...) {
     # re.form=NA
+    if (!isTRUE(is.na(re.form))) {
+        msg <- "For this model type, `marginaleffects` only takes into account the uncertainty in fixed-effect parameters. You can use the `re.form=NA` argument to acknowledge this explicitly and silence this warning."
+        insight::format_warning(msg)
+    }
     return(model)
 }
