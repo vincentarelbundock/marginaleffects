@@ -29,6 +29,11 @@ Major bugs:
 
 Minor bugs:
 
+* Some results could be mislabelled with factor variables used in combination with `datagrid()` or `condition`. Thanks to @snhansen for report #1079.
+
+Minor bugs:
+
+* `glmmTMB` models now report correct standard errors, and raise a warning that these standard errors only account for uncertainty in fixed effect parameters. Thanks to contributors to Issue #1024 and especially to @bbolker for discussion and solution.
 * Uninformative error when a custom `comparison` function returns `NA` in bayesian models. Thanks to @Sandhu-SS for report #1017.
 * `datagrid()` returns an object with full attributes when `by` is used. Thanks to @Sandhu-SS for report #1058.
 * `inferences(method="simulation")` with `inferences()` function. Thanks to @davidarmstrong for report #1054.
