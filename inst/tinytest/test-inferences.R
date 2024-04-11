@@ -156,7 +156,7 @@ data("lalonde", package = "MatchIt")
 set.seed(1025)
 fit <- glm(I(re78 == 0) ~ treat * (age + educ + race + married + nodegree + re74 + re75),
            data = lalonde, family = binomial)
-sim_coefs <- sim(fit)
+sim_coefs <- clarify::sim(fit)
 ATT_fun <- function(fit) {
   d <- subset(lalonde, treat == 1)
   d$treat <- 1

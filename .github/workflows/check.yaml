@@ -57,6 +57,9 @@ jobs:
       - name: glmmTMB source
         run: ./run.sh install_source glmmTMB
 
+      - name: tinysnapshot dev
+        run: ./run.sh install_github vincentarelbundock/tinysnapshot
+
       - name: Matrix source
         run: ./run.sh install_source Matrix
 

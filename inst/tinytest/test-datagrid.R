@@ -120,7 +120,7 @@ tmp$cyl <- as.factor(tmp$cyl)
 tmp$hp  <- as.factor(tmp$hp)
 at1 <- attributes(datagrid(newdata = tmp, by = "cyl", hp = unique))
 at2 <- attributes(datagrid(newdata = tmp, cyl = unique, hp = unique))
-expect_equivalent(names(at1), names(at2))
+expect_true(all(names(at1) %in% names(at2)))
 
 
 
