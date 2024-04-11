@@ -45,7 +45,7 @@ if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
 using("tinysnapshot")
 
 
-exit_file("tinysnapshot false error")
+exit_file("tinysnapshot false negative")
 mod <- lm(mpg ~ hp, mtcars)
 expect_snapshot_print(avg_comparisons(mod), "df-z")
 expect_snapshot_print(avg_comparisons(mod, df = 30), "df-t")

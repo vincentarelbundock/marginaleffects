@@ -234,9 +234,22 @@ datagrid_engine <- function(
     # sometimes there are two responses and we need one of them:
     # brms::brm(y | trials(n) ~ x + w + z)
     if (!is.null(model) && isFALSE(response)) {
-        variables_automatic <- setdiff(variables_automatic, insight::find_response(model))
-    }
+        resp <- insight::find_response(model)
+        if (inherits(model, "brmsfit")) {
+            fl <- as.character(stats::formula(model))
+            matches <- regexpr("trials\\(.*?\\)", fl)
+            extracted <- regmatches(fl, matches)[1]
+            if (isFALSE(is.na(extracted[1]))) {
+                extracted <- gsub("trials\\((.*)\\)", "\\1", extracted)
+            } else {
+                extracted <- NULL
+            }
+            extracted <- unlist(extracted)
+            resp <- setdiff(resp, extracted)
+        }
 
+        variables_automatic <- setdiff(variables_automatic, resp)
+    }
 
     if (length(variables_automatic) > 0) {
         idx <- intersect(variables_automatic, colnames(dat))
@@ -271,6 +284,7 @@ datagrid_engine <- function(
     } else {
         out <- list()
     }
+
 
     if (!is.null(at)) {
         for (n in names(at)) {

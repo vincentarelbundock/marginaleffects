@@ -228,7 +228,6 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         newdata = newdata,
         newdata_explicit = newdata_explicit)
 
-    # browser()
     # # sort rows of output when the user explicitly calls `by` or `datagrid()`
     # # otherwise, we return the same data frame in the same order, but 
     # # here it makes sense to sort for a clean output.
