@@ -20,10 +20,10 @@ check: document ## devtools::check()
 	Rscript -e "devtools::check()"
 
 install: document ## devtools::install(dependencies = FALSE)
-	Rscript -e "devtools::install(depencies = FALSE)"
+	Rscript -e "devtools::install(dependencies = FALSE)"
 
 deps: document ## devtools::install(dependencies = TRUE)
-	Rscript -e "devtools::install(depencies = TRUE)"
+	Rscript -e "devtools::install(dependencies = TRUE)"
 
 news: ## Download the latest changelog
 	Rscript -e "source('book/utils/utils.R');get_news()"
