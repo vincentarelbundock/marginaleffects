@@ -2,7 +2,6 @@ source("helpers.R")
 requiet("poorman")
 requiet("emmeans")
 requiet("parameters")
-exit_file("TODO")
 
 mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
 
