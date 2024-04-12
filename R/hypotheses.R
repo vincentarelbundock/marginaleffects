@@ -24,6 +24,7 @@
 #' - Character vector of parameter names to be tested. Characters refer to the names of the vector returned by `coef(object)`.
 #' - Integer vector of indices. Which parameters positions to test jointly.
 #' @param joint_test A character string specifying the type of test, either "f" or "chisq". The null hypothesis is set by the `hypothesis` argument, with default null equal to 0 for all parameters.
+#' @param df Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and `Inf`. When using `joint_test="f"`, the `df` argument should be a numeric vector of length 2.
 #'
 #' @section Joint hypothesis tests:
 #' The test statistic for the joint Wald test is calculated as (R * theta_hat - r)' * inv(R * V_hat * R') * (R * theta_hat - r) / Q,
@@ -140,7 +141,7 @@ hypotheses <- function(
     hypothesis = NULL,
     vcov = NULL,
     conf_level = 0.95,
-    df = Inf,
+    df = NULL,
     equivalence = NULL,
     joint = FALSE,
     joint_test = "f",
@@ -206,9 +207,12 @@ hypotheses <- function(
     ## Done with Bootstrap
     
     if (!isFALSE(joint)) {
-        out <- joint_test(model, joint_index = joint, joint_test = joint_test, hypothesis = hypothesis)
+        out <- joint_test(object = model, joint_index = joint, joint_test = joint_test, hypothesis = hypothesis, df = df)
         return(out)
     }
+
+    # after joint_test
+    if (is.null(df)) df <- Inf
 
     args <- list(
         conf_level = conf_level,

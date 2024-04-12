@@ -22,6 +22,8 @@ New:
 * The `base::subset()` and `dplyr::filter()` functions can be called with a single argument in `newdata` to select a subset of rows from the dataset used to fit the model.
   - Ex: avg_comparisons(fit, variables = "treatment", newdata = subset(treatment == 1))`
 * Better warning for unsupported arguments.
+* `df` argument in `hypotheses()` accepts a vector of length 2 to control degrees of freedom in F tests.
+* `nlme::lme()` objects raise a warning about degrees of freedom. Thanks to and @stefgehrig and @huftis for discussion in Issue #960.
 
 Major bugs:
 
