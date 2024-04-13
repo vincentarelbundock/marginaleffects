@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("margins")
+if (!requiet("margins")) exit_file("margins")
 requiet("nnet")
 tol <- 1e-4
 tol_se <- 1e-2

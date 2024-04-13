@@ -2,7 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 if (!requiet("speedglm")) exit_file("speedglm not on CRAN")
-requiet("margins")
+if (!requiet("margins")) exit_file("margins")
 
 # glm vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_glm_01"]]

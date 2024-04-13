@@ -2,7 +2,7 @@ source("helpers.R")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
-requiet("margins")
+if (!requiet("margins")) exit_file("margins")
 requiet("haven")
 requiet("lme4")
 requiet("insight")

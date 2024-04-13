@@ -7,7 +7,7 @@ using("marginaleffects")
 options("marginaleffects_posterior_interval" = "hdi")
 requiet("rstanarm")
 requiet("emmeans")
-requiet("margins")
+if (!requiet("margins")) exit_file("margins")
 requiet("broom")
 if (!require("rstanarm")) exit_file("rstanarm") # after requiet to avoid messages
 
