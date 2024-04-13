@@ -3,7 +3,7 @@ using("marginaleffects")
 
 requiet("nnet")
 requiet("carData")
-requiet("prediction")
+if (!requiet("prediction")) exit_file("prediction")
 
 # multinom group estimates
 TitanicSurvival <- "https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv"
