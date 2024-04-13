@@ -50,7 +50,6 @@ get_vcov.glmmTMB <- function(model, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.glmmTMB <- function(model, ...) {
-    insight::check_if_installed("glmmTMB")
     glmmTMB::fixef(model)$cond
 }
 
