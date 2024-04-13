@@ -50,7 +50,7 @@ get_vcov.glmmTMB <- function(model, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.glmmTMB <- function(model, ...) {
-    fixef(model)$cond
+    lme4::fixef(model)$cond
 }
 
 
