@@ -11,8 +11,10 @@ mod <- polr(gear ~ mpg + qsec, data = dat, Hess = TRUE)
 
 factory <- function(var_by = NULL,
                     var_label = c("rowid", var_by),
-                    fun_estimate = function(z) z - z[1],
-                    fun_label = function(z) sprintf("[%s] - [%s]", z, z[1])) {
+                    fun_hi = function(z) z,
+                    fun_lo = function(z) z[1],
+                    fun_comparison = function(hi, lo) hi - lo,
+                    fun_label = function(z) sprintf("%s - %s", z, z[1])) {
 
     checkmate::assert_character(var_label, min.len = 1)
 
@@ -39,13 +41,10 @@ factory <- function(var_by = NULL,
         x[, term := tmp]
 
         if (is.null(var_by)) {
-            out <- x[, list(term = fun_label(term), estimate = fun_estimate(estimate))]
+            out <- x[, list(term = fun_label(term), estimate = fun_comparison(fun_hi(estimate), fun_lo(estimate)))]
         } else {
-            out <- x[, list(term = fun_label(term), estimate = fun_estimate(estimate)), by = var_by]
+            out <- x[, list(term = fun_label(term), estimate = fun_comparison(fun_hi(estimate), fun_lo(estimate))), by = var_by]
         }
-
-        idx <- out$estimate != 0
-        out <- out[idx]
 
         return(out)
     }
@@ -56,9 +55,8 @@ factory <- function(var_by = NULL,
 
 f <- factory(
     var_by = "mpg",
-    var_label = "group",
-    fun_estimate = function(z) z - data.table::shift(z),
-    fun_label = function(z) sprintf("%s - %s", z, data.table::shift(z)))
+    var_label = "group"
+)
 
 avg_predictions(mod,
     by = "mpg",
@@ -69,8 +67,10 @@ avg_predictions(mod,
 f <- factory(
     var_by = "mpg",
     var_label = "group",
-    fun_estimate = function(z) z - z[1],
-    fun_label = function(z) sprintf("%s vs. %s", z, z[1]))
+    fun_hi = function(z) z,
+    fun_lo = function(z) z[1],
+    fun_comparison = function(hi, lo) hi / lo,
+    fun_label = function(z) sprintf("%s / %s", z, z[1]))
 
 predictions(mod,
     by = "mpg",
