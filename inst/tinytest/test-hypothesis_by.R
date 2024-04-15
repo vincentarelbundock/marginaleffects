@@ -11,57 +11,57 @@ mod <- lm(hp ~ mpg * qsec * am, data = dat)
 # Q
 # pkgload::load_all()
 
-fun_hyp_reference <- function(x, newdata = NULL, hypothesis_by = NULL, draws = NULL) {
+factory <- function(x,
+                    newdata = NULL,
+                    hypothesis_by = NULL,
+                    lab_columns = c("rowid", hypothesis_by),
+                    fun_estimate = function(z) z - z[1],
+                    fun_lab = function(z) sprintf("[%s] - [%s]", z, z[1]),
+                    draws = NULL) {
 
-    flag_extra_columns <- any(!hypothesis_by %in% colnames(x)) && !is.null(newdata)
+    checkmate::assert_character(lab_columns, min.len = 1)
+
+    if (!is.null(draws)) {
+        insight::format_error("The `hypothesis_by` argument is not supported for models with draws.")
+    }
+
+    extra <- c(hypothesis_by, lab_columns)
+    if ("rowid" %in% extra) extra <- unique(c("rowid", extra))
+
+    flag_extra_columns <- any(!extra %in% colnames(x)) && !is.null(newdata)
     if (flag_extra_columns) {
         x <- merge(x, newdata)
         data.table::setDT(x)
     }
 
-    x[, term := get_hypothesis_row_labels(x, newdata = newdata, by = NULL, hypothesis_by = hypothesis_by)]
+    tmp <- apply(x[, ..extra], 1, paste, collapse = "; ")
+    x[, term := tmp]
 
     if (is.null(hypothesis_by)) {
-        out <- x[, list(term = sprintf("%s vs. %s", term, term[1]),
-                        estimate = estimate - estimate[1])]
+        out <- x[, list(term = fun_lab(term), estimate = fun_estimate(estimate))]
     } else {
-        out <- x[, list(term = sprintf("%s vs. %s", term, term[1]),
-                        estimate = estimate - estimate[1]), 
-                 by = hypothesis_by]
+        out <- x[, list(term = fun_lab(term), estimate = fun_estimate(estimate)), by = hypothesis_by]
     }
 
     idx <- out$estimate != 0
     out <- out[idx]
 
-    if (is.matrix(draws)) {
-        if (!is.null(hypothesis_by)) {
-            g <- data.table(newdata)
-            g <- as.list(g[, ..hypothesis_by])
-            sta <- collapse::BY(draws, g = g, FUN = function(x) x[1])
-            dr <- collapse::TRA(draws, g = g, FUN = "-", STATS = sta)
-        } else {
-            sta <- collapse::BY(draws, FUN = function(x) x[1])
-            dr <- collapse::TRA(draws, FUN = "-", STATS = sta)
-        }
-        dr <- dr[idx,]
-        attr(out, "posterior_draws") <- dr
-    }
-
     return(out)
 }
 
 
-
 predictions(mod,
+    hypothesis = factory,
     hypothesis_by = "mpg",
-    hypothesis = fun_hyp_reference,
+    newdata = datagrid(mpg = range, qsec = fivenum)
+
+)
+predictions(mod,
+
+    hypothesis = hyp_by,
+    hypothesis_by = "mpg",
+    fun_estimate = function(z) z - data.table::shift(z),
+    fun_lab = function(z) sprintf("%s vs. %s", z, data.table::shift(z)),
     newdata = datagrid(mpg = range, qsec = fivenum)
 )
 
-
-
-# predictions(mod,
-#     hypothesis_by = "mpg",
-#     hypothesis = fun_hyp_reference,
-#     newdata = datagrid(mpg = range, qsec = fivenum)
-# )
