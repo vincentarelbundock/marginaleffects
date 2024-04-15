@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -544,8 +544,13 @@ ul.task-list li input[type="checkbox"] {
 <li><code>datagrid()</code> no longer includes the response variable by default when it is not explicitly specified by the user. Use the new <code>response</code> argument to include it.</li>
 <li><code>datagrid(grid_type="balanced")</code> returns factors ordered by level rather than by order of appearance in the original data.</li>
 </ul>
+<p>New modeling packages supported:</p>
+<ul>
+<li><code>flexsurv</code>: Thanks to <a href="https://github.com/mattwarkentin"><span class="citation" data-cites="mattwarkentin">@mattwarkentin</span></a> for code contributions in PR <a href="https://github.com/vincentarelbundock/marginaleffects/issues/781">#781</a>. https://cran.r-project.org/web/packages/flexsurv/index.html</li>
+</ul>
 <p>New:</p>
 <ul>
+<li><code>wts=TRUE</code> tries to retrieves weights used in a weighted fit such as <code>lm()</code> with the <code>weights</code> argument or a model fitted using the <code>survey</code> package. Thanks to <a href="https://github.com/ngreifer"><span class="citation" data-cites="ngreifer">@ngreifer</span></a> for feature request</li>
 <li><code>print.marginaleffects()</code> supports <code>style="tinytable"</code>, which returns a <code>tinytable</code> object. Call <code>print(avg_slopes(model))</code> to get a nice printed table in Quarto or Rmarkdown documents, via Typst, LaTeX or HTML.</li>
 <li>print as HTML, Typst, or LaTeX format automatically via <code>tinytable</code>: <code>options(marginaleffects_print_style="tinytable")</code></li>
 <li><code>hypothesis</code> argument accepts a function which takes a <code>marginaleffects</code> data frame and returns a transformed data frame with <code>term</code> and <code>estimate</code> columns.</li>
@@ -560,6 +565,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Uninformative error when a custom <code>comparison</code> function returns <code>NA</code> in bayesian models. Thanks to <a href="https://github.com/Sandhu-SS"><span class="citation" data-cites="Sandhu-SS">@Sandhu-SS</span></a> for report <a href="https://github.com/vincentarelbundock/marginaleffects/issues/1017">#1017</a>.</li>
 <li><code>datagrid()</code> returns an object with full attributes when <code>by</code> is used. Thanks to <a href="https://github.com/Sandhu-SS"><span class="citation" data-cites="Sandhu-SS">@Sandhu-SS</span></a> for report <a href="https://github.com/vincentarelbundock/marginaleffects/issues/1058">#1058</a>.</li>
+<li><code>inferences(method="simulation")</code> with <code>inferences()</code> function. Thanks to <a href="https://github.com/davidarmstrong"><span class="citation" data-cites="davidarmstrong">@davidarmstrong</span></a> for report <a href="https://github.com/vincentarelbundock/marginaleffects/issues/1054">#1054</a>.</li>
 </ul>
 </section>
 <section id="section" class="level2">

@@ -90,7 +90,13 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{gamlss}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{glmmTMB}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{glmmTMB}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  newparams = NULL,
+  ...
+)
 
 \method{get_predict}{merMod}(model, newdata = insight::get_data(model), type = "response", ...)
 

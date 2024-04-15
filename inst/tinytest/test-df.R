@@ -33,21 +33,23 @@ preInf <- predictions(mod)
 expect_true(all(pre29$p.value > preInf$p.value))
 expect_true(all(pre29$conf.low < preInf$conf.low))
 
+# Issue #754: allow df vector
+mod <- lm(mpg ~ hp, mtcars)
+a <- predictions(mod, df = 1:32)
+b <- predictions(mod, df = 1)
+expect_equal(sum(a$p.value == b$p.value), 1)
+
 
 # Issue #627: print t instead of z in column names
 if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
 using("tinysnapshot")
+
 
 mod <- lm(mpg ~ hp, mtcars)
 expect_snapshot_print(avg_comparisons(mod), "df-z")
 expect_snapshot_print(avg_comparisons(mod, df = 30), "df-t")
 
 
-# Issue #754: allow df vector
-mod <- lm(mpg ~ hp, mtcars)
-a <- predictions(mod, df = 1:32)
-b <- predictions(mod, df = 1)
-expect_equal(sum(a$p.value == b$p.value), 1)
 
 
 rm(list = ls())

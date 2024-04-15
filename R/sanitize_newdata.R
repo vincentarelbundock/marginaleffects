@@ -221,6 +221,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
     modeldata <- tmp[["modeldata"]]
     newdata_explicit <- tmp[["newdata_explicit"]]
     newdata <- clean_newdata(model, newdata)
+    if (is.null(wts)) wts <- FALSE
     newdata <- add_wts_column(newdata = newdata, wts = wts, model = model)
     newdata <- set_newdata_attributes(
         model = model,
@@ -228,19 +229,19 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         newdata = newdata,
         newdata_explicit = newdata_explicit)
 
-    # sort rows of output when the user explicitly calls `by` or `datagrid()`
-    # otherwise, we return the same data frame in the same order, but 
-    # here it makes sense to sort for a clean output.
-    sortcols <- attr(newdata, "newdata_variables_datagrid")
-    if (isTRUE(checkmate::check_character(by))) {
-        sortcols <- c(by, sortcols)
-    }
-    sortcols <- intersect(sortcols, colnames(newdata))
+    # # sort rows of output when the user explicitly calls `by` or `datagrid()`
+    # # otherwise, we return the same data frame in the same order, but 
+    # # here it makes sense to sort for a clean output.
+    # sortcols <- attr(newdata, "newdata_variables_datagrid")
+    # if (isTRUE(checkmate::check_character(by))) {
+    #     sortcols <- c(by, sortcols)
+    # }
+    # sortcols <- intersect(sortcols, colnames(newdata))
     out <- data.table::copy(newdata)
-    if (length(sortcols) > 0) {
-        data.table::setorderv(out, cols = sortcols)
-    }
-
+    # if (length(sortcols) > 0) {
+    #     data.table::setorderv(out, cols = sortcols)
+    # }
+    #
     return(out)
 }
 

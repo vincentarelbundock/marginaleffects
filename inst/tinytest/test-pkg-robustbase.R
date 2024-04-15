@@ -2,7 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 requiet("robustbase")
-requiet("margins")
+if (!requiet("margins")) exit_file("margins")
 
 # lmrob vs. margins
 data(coleman, package = "robustbase")

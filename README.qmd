@@ -1,6 +1,6 @@
 <center>
-<h1>The Marginal Effects Zoo</h1>
-<h3>How to interpret statistical models in R and Python</h3>
+<a href = "https://marginaleffects.com" target = "_blank"><img src="man/figures/marginaleffects_logo_word.svg" width = "100%"></a>
+<br>
 <br>
 <a href = "https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
 <a href = "https://marginaleffects.com" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>

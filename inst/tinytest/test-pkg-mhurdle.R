@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("mhurdle")
+if (!requiet("mhurdle")) exit_file("mhurdle")
 
 tol <- 0.001
 tol_se <- 0.001

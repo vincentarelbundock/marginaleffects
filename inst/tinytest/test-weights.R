@@ -21,6 +21,14 @@ expect_equivalent(p2, p3)
 expect_equivalent(p2, p4)
 
 
+# backward compatibility
+p1 <- avg_predictions(mod, wts = "weights", newdata = dat)
+p2 <- avg_predictions(mod, wts = NULL, newdata = dat)
+p3 <- suppressWarnings(avg_predictions(mod, wts = FALSE, newdata = dat))
+expect_equivalent(p2$estimate, p3$estimate)
+expect_true(p1$estimate != p2$estimate)
+
+
 # by supports weights
 p1 <- avg_predictions(mod, wts = "weights", newdata = dat)
 expect_inherits(p1, "data.frame")

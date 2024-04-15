@@ -4,8 +4,8 @@ if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
 using("tinysnapshot")
 
 mod <- lm(mpg ~ hp * factor(gear), mtcars)
-expect_snapshot_print(predictions(mod), "print-predictions")
-expect_snapshot_print(predictions(mod, by = "gear"), "print-predictions_by")
+expect_snapshot_print(predictions(mod), "print-predictions", ignore.white.space = TRUE)
+expect_snapshot_print(predictions(mod, by = "gear"), "print-predictions_by", ignore.white.space = TRUE)
 
 ## guides()-related error in diffObj. Does not seem marginaleffects-related
 # expect_snapshot_print(comparisons(mod), "print-comparisons")

@@ -70,10 +70,10 @@ tmp$am <- as.logical(tmp$am)
 tmp$gear <- as.factor(tmp$gear)
 res <- datagrid(newdata = tmp)
 expect_inherits(res, "data.frame")
-expect_equivalent(dim(res), c(1, 11))
+expect_equivalent(dim(res), c(1, 12))
 expect_equivalent(sum(sapply(res, is.logical)), 1)
 expect_equivalent(sum(sapply(res, is.factor)), 1)
-expect_equivalent(sum(sapply(res, is.numeric)), 9)
+expect_equivalent(sum(sapply(res, is.numeric)), 10)
 
 
 

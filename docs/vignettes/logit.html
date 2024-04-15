@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
-
+<meta name="generator" content="quarto-1.4.551">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
 <title>Marginal Effects Zoo</title>
 <style>
 code{white-space: pre-wrap;}
@@ -55,26 +53,13 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-
-
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
 <link href="../vignettes/lme4.html" rel="next">
 <link href="../vignettes/ipw.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -103,20 +88,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-
-
 </head>
-
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
-    </a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -127,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
+<li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -146,29 +125,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-          </div> <!-- /navcollapse -->
+</div> <!-- /navcollapse -->
           <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/logit.html">Logit</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
+<li class="breadcrumb-item"><a href="../vignettes/logit.html">Logit</a></li>
+</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -182,8 +157,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -214,7 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
@@ -223,8 +198,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -351,7 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
@@ -360,8 +335,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -422,7 +397,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
@@ -431,8 +406,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -499,7 +474,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -519,37 +494,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#logit" id="toc-logit" class="nav-link active" data-scroll-target="#logit">Logit</a>
+<li>
+<a href="#logit" id="toc-logit" class="nav-link active" data-scroll-target="#logit">Logit</a>
   <ul class="collapse">
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a>
+<li>
+<a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a>
   <ul class="collapse">
-  <li><a href="#one-number-summaries" id="toc-one-number-summaries" class="nav-link" data-scroll-target="#one-number-summaries">One-Number Summaries</a></li>
+<li><a href="#one-number-summaries" id="toc-one-number-summaries" class="nav-link" data-scroll-target="#one-number-summaries">One-Number Summaries</a></li>
   <li><a href="#unit-level-summaries" id="toc-unit-level-summaries" class="nav-link" data-scroll-target="#unit-level-summaries">Unit-level Summaries</a></li>
   <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">Appendix</a></li>
-  </ul></li>
-  </ul></li>
   </ul>
-</nav>
-    </div>
+</li>
+  </ul>
+</li>
+  </ul></nav>
+</div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-
-
-<section id="logit" class="level1">
-<h1>Logit</h1>
-<p>This vignette replicates some of the analyses in this excellent blog post by Frank Harrell: <a href="https://www.fharrell.com/post/rdist/">Avoiding One-Number Summaries of Treatment Effects for RCTs with Binary Outcomes</a>. Here, we show how one-number summaries and the entire distribution unit-level contrasts can be easily computed with <code>comparisons()</code>.</p>
-<p>Dr.&nbsp;Harrell discusses summaries from logistic regression models in the blog post above. He focuses on a context in which one is interested in comparing two groups, such as in randomized controlled trials. He highlights potential pitfalls of presenting “one-number summaries”, e.g., odds ratio and mean proportion difference. Finally, he recommends focusing on the entire distribution of proportion difference between groups.</p>
+<main class="content" id="quarto-document-content"><section id="logit" class="level1"><h1>Logit</h1>
+<p>This vignette replicates some of the analyses in this excellent blog post by Frank Harrell: <a href="https://www.fharrell.com/post/rdist/">Avoiding One-Number Summaries of Treatment Effects for RCTs with Binary Outcomes</a>. Here, we show how one-number summaries and the entire distribution unit-level contrasts can be easily computed with <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>.</p>
+<p>Dr. Harrell discusses summaries from logistic regression models in the blog post above. He focuses on a context in which one is interested in comparing two groups, such as in randomized controlled trials. He highlights potential pitfalls of presenting “one-number summaries”, e.g., odds ratio and mean proportion difference. Finally, he recommends focusing on the entire distribution of proportion difference between groups.</p>
 <p>For clarification, we use the following terms interchangeably in the context of logistic regression where the covariate of interest is categorical:</p>
 <ul>
 <li>Contrast</li>
@@ -557,52 +527,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Risk difference</li>
 <li>Absolute risk reduction</li>
 </ul>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
+<section id="data" class="level2"><h2 class="anchored" data-anchor-id="data">Data</h2>
 <p>We focus on subset data from the <a href="https://www.nejm.org/doi/full/10.1056/NEJM199309023291001">GUSTO-I study</a>, where patients were randomly assigned to accelerated tissue plasminogen activator (tPA) or streptokinase (SK).</p>
 <p>Load libraries, data and fit a covariate-adjusted logistic regression model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rms)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">"https://github.com/vincentarelbundock/modelarchive/raw/main/data-raw/gusto.rda"</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>))</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>gusto <span class="ot">&lt;-</span> <span class="fu">subset</span>(gusto, tx <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"tPA"</span>, <span class="st">"SK"</span>))</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>gusto<span class="sc">$</span>tx <span class="ot">&lt;-</span> <span class="fu">factor</span>(gusto<span class="sc">$</span>tx, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"tPA"</span>, <span class="st">"SK"</span>))</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    day30 <span class="sc">~</span> tx <span class="sc">+</span> <span class="fu">rcs</span>(age, <span class="dv">4</span>) <span class="sc">+</span> Killip <span class="sc">+</span> <span class="fu">pmin</span>(sysbp, <span class="dv">120</span>) <span class="sc">+</span> <span class="fu">lsp</span>(pulse, <span class="dv">50</span>) <span class="sc">+</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    pmi <span class="sc">+</span> miloc <span class="sc">+</span> sex, <span class="at">family =</span> <span class="st">"binomial"</span>,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> gusto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://hbiostat.org/R/rms/">rms</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html">url</a></span><span class="op">(</span></span>
+<span><span class="st">"https://github.com/vincentarelbundock/modelarchive/raw/main/data-raw/gusto.rda"</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">gusto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">gusto</span>, <span class="va">tx</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"tPA"</span>, <span class="st">"SK"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">gusto</span><span class="op">$</span><span class="va">tx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">gusto</span><span class="op">$</span><span class="va">tx</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"tPA"</span>, <span class="st">"SK"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span></span>
+<span>    <span class="va">day30</span> <span class="op">~</span> <span class="va">tx</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/rms/man/rms.trans.html">rcs</a></span><span class="op">(</span><span class="va">age</span>, <span class="fl">4</span><span class="op">)</span> <span class="op">+</span> <span class="va">Killip</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmin</a></span><span class="op">(</span><span class="va">sysbp</span>, <span class="fl">120</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/rms/man/rms.trans.html">lsp</a></span><span class="op">(</span><span class="va">pulse</span>, <span class="fl">50</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="va">pmi</span> <span class="op">+</span> <span class="va">miloc</span> <span class="op">+</span> <span class="va">sex</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">gusto</span><span class="op">)</span></span></code></pre></div>
 </div>
-<section id="one-number-summaries" class="level3">
-<h3 class="anchored" data-anchor-id="one-number-summaries">One-Number Summaries</h3>
+<section id="one-number-summaries" class="level3"><h3 class="anchored" data-anchor-id="one-number-summaries">One-Number Summaries</h3>
 <p>As usual, we can produce a one-number summary of the relationship of interest by exponentiating the coefficients, which yields an Odds Ratio (OR):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(mod, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">coef_omit =</span> <span class="st">"^(?!txSK)"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/reference/modelsummary.html">modelsummary</a></span><span class="op">(</span><span class="va">mod</span>, exponentiate <span class="op">=</span> <span class="cn">TRUE</span>, coef_omit <span class="op">=</span> <span class="st">"^(?!txSK)"</span><span class="op">)</span> </span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<div id="thraifoqnv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#thraifoqnv table {
+<div id="xjtrmvdxko" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xjtrmvdxko table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#thraifoqnv thead, #thraifoqnv tbody, #thraifoqnv tfoot, #thraifoqnv tr, #thraifoqnv td, #thraifoqnv th {
+#xjtrmvdxko thead, #xjtrmvdxko tbody, #xjtrmvdxko tfoot, #xjtrmvdxko tr, #xjtrmvdxko td, #xjtrmvdxko th {
   border-style: none;
 }
 
-#thraifoqnv p {
+#xjtrmvdxko p {
   margin: 0;
   padding: 0;
 }
 
-#thraifoqnv .gt_table {
+#xjtrmvdxko .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -628,12 +598,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#thraifoqnv .gt_caption {
+#xjtrmvdxko .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#thraifoqnv .gt_title {
+#xjtrmvdxko .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -645,7 +615,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#thraifoqnv .gt_subtitle {
+#xjtrmvdxko .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -657,7 +627,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#thraifoqnv .gt_heading {
+#xjtrmvdxko .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -669,13 +639,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#thraifoqnv .gt_bottom_border {
+#xjtrmvdxko .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#thraifoqnv .gt_col_headings {
+#xjtrmvdxko .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -690,7 +660,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#thraifoqnv .gt_col_heading {
+#xjtrmvdxko .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -710,7 +680,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#thraifoqnv .gt_column_spanner_outer {
+#xjtrmvdxko .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -722,15 +692,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#thraifoqnv .gt_column_spanner_outer:first-child {
+#xjtrmvdxko .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#thraifoqnv .gt_column_spanner_outer:last-child {
+#xjtrmvdxko .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#thraifoqnv .gt_column_spanner {
+#xjtrmvdxko .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -742,11 +712,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#thraifoqnv .gt_spanner_row {
+#xjtrmvdxko .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#thraifoqnv .gt_group_heading {
+#xjtrmvdxko .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -772,7 +742,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#thraifoqnv .gt_empty_group_heading {
+#xjtrmvdxko .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -787,15 +757,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#thraifoqnv .gt_from_md > :first-child {
+#xjtrmvdxko .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#thraifoqnv .gt_from_md > :last-child {
+#xjtrmvdxko .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#thraifoqnv .gt_row {
+#xjtrmvdxko .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -814,7 +784,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#thraifoqnv .gt_stub {
+#xjtrmvdxko .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -827,7 +797,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#thraifoqnv .gt_stub_row_group {
+#xjtrmvdxko .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -841,15 +811,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#thraifoqnv .gt_row_group_first td {
+#xjtrmvdxko .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#thraifoqnv .gt_row_group_first th {
+#xjtrmvdxko .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#thraifoqnv .gt_summary_row {
+#xjtrmvdxko .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -859,16 +829,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#thraifoqnv .gt_first_summary_row {
+#xjtrmvdxko .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#thraifoqnv .gt_first_summary_row.thick {
+#xjtrmvdxko .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#thraifoqnv .gt_last_summary_row {
+#xjtrmvdxko .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -878,7 +848,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#thraifoqnv .gt_grand_summary_row {
+#xjtrmvdxko .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -888,7 +858,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#thraifoqnv .gt_first_grand_summary_row {
+#xjtrmvdxko .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -898,7 +868,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#thraifoqnv .gt_last_grand_summary_row_top {
+#xjtrmvdxko .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -908,11 +878,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#thraifoqnv .gt_striped {
+#xjtrmvdxko .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#thraifoqnv .gt_table_body {
+#xjtrmvdxko .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -921,7 +891,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#thraifoqnv .gt_footnotes {
+#xjtrmvdxko .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -935,7 +905,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#thraifoqnv .gt_footnote {
+#xjtrmvdxko .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -944,7 +914,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#thraifoqnv .gt_sourcenotes {
+#xjtrmvdxko .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -958,7 +928,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#thraifoqnv .gt_sourcenote {
+#xjtrmvdxko .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -966,74 +936,71 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#thraifoqnv .gt_left {
+#xjtrmvdxko .gt_left {
   text-align: left;
 }
 
-#thraifoqnv .gt_center {
+#xjtrmvdxko .gt_center {
   text-align: center;
 }
 
-#thraifoqnv .gt_right {
+#xjtrmvdxko .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#thraifoqnv .gt_font_normal {
+#xjtrmvdxko .gt_font_normal {
   font-weight: normal;
 }
 
-#thraifoqnv .gt_font_bold {
+#xjtrmvdxko .gt_font_bold {
   font-weight: bold;
 }
 
-#thraifoqnv .gt_font_italic {
+#xjtrmvdxko .gt_font_italic {
   font-style: italic;
 }
 
-#thraifoqnv .gt_super {
+#xjtrmvdxko .gt_super {
   font-size: 65%;
 }
 
-#thraifoqnv .gt_footnote_marks {
+#xjtrmvdxko .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#thraifoqnv .gt_asterisk {
+#xjtrmvdxko .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#thraifoqnv .gt_indent_1 {
+#xjtrmvdxko .gt_indent_1 {
   text-indent: 5px;
 }
 
-#thraifoqnv .gt_indent_2 {
+#xjtrmvdxko .gt_indent_2 {
   text-indent: 10px;
 }
 
-#thraifoqnv .gt_indent_3 {
+#xjtrmvdxko .gt_indent_3 {
   text-indent: 15px;
 }
 
-#thraifoqnv .gt_indent_4 {
+#xjtrmvdxko .gt_indent_4 {
   text-indent: 20px;
 }
 
-#thraifoqnv .gt_indent_5 {
+#xjtrmvdxko .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
-
 <table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="header gt_col_headings">
+<thead><tr class="header gt_col_headings">
 <th id=" " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="(1)" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">(1)</th>
-</tr>
-</thead>
+</tr></thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers=" ">txSK</td>
@@ -1069,167 +1036,165 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-
 </div>
 </div>
 </div>
 </div>
-<p>Unlike ORs, adjusted risk differences vary from individual to individual based on the values of the control variables. The <code>comparisons()</code> function can compute adjusted risk differences for every individual. Here, we display only the first 6 of them:</p>
+<p>Unlike ORs, adjusted risk differences vary from individual to individual based on the values of the control variables. The <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function can compute adjusted risk differences for every individual. Here, we display only the first 6 of them:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    mod,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">"tx"</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S    2.5 %  97.5 %</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.001074   0.000497 2.16  0.03060 5.0 0.000100 0.00205</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.000857   0.000380 2.26  0.02410 5.4 0.000112 0.00160</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.001780   0.000779 2.29  0.02229 5.5 0.000253 0.00331</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.001137   0.000500 2.27  0.02302 5.4 0.000157 0.00212</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.001366   0.000594 2.30  0.02143 5.5 0.000202 0.00253</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --- 30500 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- </span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.002429   0.000808 3.00  0.00266  8.6 0.000844 0.00401</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.012130   0.003900 3.11  0.00187  9.1 0.004486 0.01977</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.036812   0.010361 3.55  &lt; 0.001 11.4 0.016505 0.05712</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.022969   0.006975 3.29  &lt; 0.001 10.0 0.009298 0.03664</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.049707   0.012843 3.87  &lt; 0.001 13.2 0.024535 0.07488</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, day30, tx, age, Killip, sysbp, pulse, pmi, miloc, sex </span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
+<span>    <span class="va">mod</span>,</span>
+<span>    variables <span class="op">=</span> <span class="st">"tx"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S    2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.001074   0.000497 2.16  0.03060 5.0 0.000100 0.00205</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.000857   0.000380 2.26  0.02410 5.4 0.000112 0.00160</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.001780   0.000779 2.29  0.02229 5.5 0.000253 0.00331</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.001137   0.000500 2.27  0.02302 5.4 0.000157 0.00212</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.001366   0.000594 2.30  0.02143 5.5 0.000202 0.00253</span></span>
+<span><span class="co">#&gt; --- 30500 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- </span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.002429   0.000808 3.00  0.00266  8.6 0.000844 0.00401</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.012130   0.003900 3.11  0.00187  9.1 0.004486 0.01977</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.036812   0.010361 3.55  &lt; 0.001 11.4 0.016505 0.05712</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.022969   0.006975 3.29  &lt; 0.001 10.0 0.009298 0.03664</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.049707   0.012843 3.87  &lt; 0.001 13.2 0.024535 0.07488</span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, day30, tx, age, Killip, sysbp, pulse, pmi, miloc, sex </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
 <p>Population-averaged (aka “marginal”) adjusted risk difference (<a href="gcomputation.html">see this vignette</a>) can be obtained using the <code>avg_*()</code> functions or using the <code>by</code> argument:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="st">"tx"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S   2.5 % 97.5 %</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA   0.0111    0.00277 4.01   &lt;0.001 14.0 0.00566 0.0165</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"tx"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S   2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;    tx SK - tPA   0.0111    0.00277 4.01   &lt;0.001 14.0 0.00566 0.0165</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
-<p>The <code>comparisons()</code> function above computed the predicted probability of mortality (<code>day30==1</code>) for each observed row of the data in two counterfactual cases: when <code>tx</code> is “SK”, and when <code>tx</code> is “tPA”. Then, it computed the differences between these two sets of predictions. Finally, it computed the population-average of risk differences.</p>
+<p>The <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function above computed the predicted probability of mortality (<code>day30==1</code>) for each observed row of the data in two counterfactual cases: when <code>tx</code> is “SK”, and when <code>tx</code> is “tPA”. Then, it computed the differences between these two sets of predictions. Finally, it computed the population-average of risk differences.</p>
 <p>Instead of risk <em>differences</em>, we could compute population-averaged (marginal) adjusted risk <em>ratios</em>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    mod,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">"tx"</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">comparison =</span> <span class="st">"lnratioavg"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">transform =</span> exp)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term                 Contrast Estimate Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx ln(mean(SK) / mean(tPA))     1.18   &lt;0.001 13.3  1.08   1.28</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span>    <span class="va">mod</span>,</span>
+<span>    variables <span class="op">=</span> <span class="st">"tx"</span>,</span>
+<span>    comparison <span class="op">=</span> <span class="st">"lnratioavg"</span>,</span>
+<span>    transform <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term                 Contrast Estimate Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;    tx ln(mean(SK) / mean(tPA))     1.18   &lt;0.001 13.3  1.08   1.28</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
 <p>Population-averaged (marginal) odds ratios:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    mod,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">"tx"</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">comparison =</span> <span class="st">"lnoravg"</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">transform =</span> <span class="st">"exp"</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term                 Contrast Estimate Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx ln(odds(SK) / odds(tPA))     1.19   &lt;0.001 13.4  1.09    1.3</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span>    <span class="va">mod</span>,</span>
+<span>    variables <span class="op">=</span> <span class="st">"tx"</span>,</span>
+<span>    comparison <span class="op">=</span> <span class="st">"lnoravg"</span>,</span>
+<span>    transform <span class="op">=</span> <span class="st">"exp"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term                 Contrast Estimate Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;    tx ln(odds(SK) / odds(tPA))     1.19   &lt;0.001 13.4  1.09    1.3</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
-</section>
-<section id="unit-level-summaries" class="level3">
-<h3 class="anchored" data-anchor-id="unit-level-summaries">Unit-level Summaries</h3>
-<p>Instead of estimating one-number summaries, we can focus on unit-level proportion differences using <code>comparisons()</code>. This function applies the fitted logistic regression model to predict outcome probabilities for each patient, i.e., unit-level.</p>
+</section><section id="unit-level-summaries" class="level3"><h3 class="anchored" data-anchor-id="unit-level-summaries">Unit-level Summaries</h3>
+<p>Instead of estimating one-number summaries, we can focus on unit-level proportion differences using <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>. This function applies the fitted logistic regression model to predict outcome probabilities for each patient, i.e., unit-level.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cmp <span class="ot">&lt;-</span> <span class="fu">comparisons</span>(mod, <span class="at">variables =</span> <span class="st">"tx"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>cmp</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S    2.5 %  97.5 %</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.001074   0.000497 2.16  0.03060 5.0 0.000100 0.00205</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.000857   0.000380 2.26  0.02410 5.4 0.000112 0.00160</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.001780   0.000779 2.29  0.02229 5.5 0.000253 0.00331</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.001137   0.000500 2.27  0.02302 5.4 0.000157 0.00212</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.001366   0.000594 2.30  0.02143 5.5 0.000202 0.00253</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --- 30500 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- </span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.002429   0.000808 3.00  0.00266  8.6 0.000844 0.00401</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.012130   0.003900 3.11  0.00187  9.1 0.004486 0.01977</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.036812   0.010361 3.55  &lt; 0.001 11.4 0.016505 0.05712</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.022969   0.006975 3.29  &lt; 0.001 10.0 0.009298 0.03664</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tx SK - tPA 0.049707   0.012843 3.87  &lt; 0.001 13.2 0.024535 0.07488</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, day30, tx, age, Killip, sysbp, pulse, pmi, miloc, sex </span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"tx"</span><span class="op">)</span></span>
+<span><span class="va">cmp</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S    2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.001074   0.000497 2.16  0.03060 5.0 0.000100 0.00205</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.000857   0.000380 2.26  0.02410 5.4 0.000112 0.00160</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.001780   0.000779 2.29  0.02229 5.5 0.000253 0.00331</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.001137   0.000500 2.27  0.02302 5.4 0.000157 0.00212</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.001366   0.000594 2.30  0.02143 5.5 0.000202 0.00253</span></span>
+<span><span class="co">#&gt; --- 30500 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- </span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.002429   0.000808 3.00  0.00266  8.6 0.000844 0.00401</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.012130   0.003900 3.11  0.00187  9.1 0.004486 0.01977</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.036812   0.010361 3.55  &lt; 0.001 11.4 0.016505 0.05712</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.022969   0.006975 3.29  &lt; 0.001 10.0 0.009298 0.03664</span></span>
+<span><span class="co">#&gt;    tx SK - tPA 0.049707   0.012843 3.87  &lt; 0.001 13.2 0.024535 0.07488</span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, day30, tx, age, Killip, sysbp, pulse, pmi, miloc, sex </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
 <p>Show the predicted probability for individual patients under both treatment alternatives.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cmp, <span class="fu">aes</span>(predicted_hi, predicted_lo)) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"SK"</span>, <span class="at">y =</span> <span class="st">"tPA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">cmp</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">predicted_hi</span>, <span class="va">predicted_lo</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">1</span>, intercept <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_fixed</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"SK"</span>, y <span class="op">=</span> <span class="st">"tPA"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="logit_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="logit_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We can present the entire distribution of unit-level proportion differences an a cumulative distribution function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cmp, <span class="fu">aes</span>(estimate)) <span class="sc">+</span> <span class="fu">stat_ecdf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">cmp</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_ecdf.html">stat_ecdf</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="logit_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="logit_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Or the same information as a histogram with the mean and median.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cmp, <span class="fu">aes</span>(estimate)) <span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(cmp<span class="sc">$</span>estimate), <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(cmp<span class="sc">$</span>estimate), <span class="at">color =</span> <span class="st">"darkgreen"</span>) <span class="sc">+</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"SK - TPA"</span>, <span class="at">title =</span> <span class="st">"Distribution of unit-level contrasts"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">cmp</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">cmp</span><span class="op">$</span><span class="va">estimate</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">cmp</span><span class="op">$</span><span class="va">estimate</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"darkgreen"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"SK - TPA"</span>, title <span class="op">=</span> <span class="st">"Distribution of unit-level contrasts"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="logit_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="logit_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="appendix" class="level3">
-<h3 class="anchored" data-anchor-id="appendix">Appendix</h3>
-<p><code>comparisons()</code> performed the following calculations under the hood:</p>
+</section><section id="appendix" class="level3"><h3 class="anchored" data-anchor-id="appendix">Appendix</h3>
+<p><code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> performed the following calculations under the hood:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>d  <span class="ot">&lt;-</span> gusto</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>tx <span class="ot">=</span> <span class="st">"SK"</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>predicted_hi <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod, <span class="at">newdata =</span> d, <span class="at">type =</span> <span class="st">"response"</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>tx <span class="ot">=</span> <span class="st">"tPA"</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>predicted_lo <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod, <span class="at">newdata =</span> d, <span class="at">type =</span> <span class="st">"response"</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>comparison <span class="ot">&lt;-</span> predicted_hi <span class="sc">-</span> predicted_lo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">d</span>  <span class="op">&lt;-</span> <span class="va">gusto</span></span>
+<span></span>
+<span><span class="va">d</span><span class="op">$</span><span class="va">tx</span> <span class="op">=</span> <span class="st">"SK"</span></span>
+<span><span class="va">predicted_hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">d</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">d</span><span class="op">$</span><span class="va">tx</span> <span class="op">=</span> <span class="st">"tPA"</span></span>
+<span><span class="va">predicted_lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">d</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="va">predicted_hi</span> <span class="op">-</span> <span class="va">predicted_lo</span></span></code></pre></div>
 </div>
-<p>The original dataset contains 30510 patients, thus <code>comparisons()</code> generates an output with same amount of rows.</p>
+<p>The original dataset contains 30510 patients, thus <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> generates an output with same amount of rows.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(gusto)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 30510</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">gusto</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 30510</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(cmp)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 30510</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">cmp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 30510</span></span></code></pre></div>
 </div>
 
 
-</section>
-</section>
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1637,9 +1602,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../vignettes/ipw.html" class="pagination-link" aria-label="Inverse Probability Weighting">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Inverse Probability Weighting</span>
       </a>          
@@ -1655,4 +1618,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+</body>
+</html>

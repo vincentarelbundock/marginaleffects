@@ -1,4 +1,4 @@
-
+ 
  Estimate Std. Error     z Pr(>|z|)     S 2.5 % 97.5 %
      20.9      0.973 21.43   <0.001 336.2 18.95   22.8
      20.9      0.973 21.43   <0.001 336.2 18.95   22.8
@@ -13,4 +13,5 @@
      21.0      0.954 22.05   <0.001 355.5 19.17   22.9
 Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, gear 
 Type:  response 
+
 

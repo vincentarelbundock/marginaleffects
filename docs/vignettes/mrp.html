@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
-
+<meta name="generator" content="quarto-1.4.551">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
 <title>Marginal Effects Zoo</title>
 <style>
 code{white-space: pre-wrap;}
@@ -55,26 +53,13 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-
-
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
 <link href="../vignettes/multiple_imputation.html" rel="next">
 <link href="../vignettes/matching.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -102,12 +87,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script>
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
+}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -133,19 +113,14 @@ window.Quarto = {
   typesetMath
 };
 </script>
-
 </head>
-
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
-    </a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -156,7 +131,7 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
+<li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -175,29 +150,25 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-          </div> <!-- /navcollapse -->
+</div> <!-- /navcollapse -->
           <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/mrp.html">MrP</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
+<li class="breadcrumb-item"><a href="../vignettes/mrp.html">MrP</a></li>
+</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -211,8 +182,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -243,7 +214,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
@@ -252,8 +223,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -380,7 +351,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
@@ -389,8 +360,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -451,7 +422,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
@@ -460,8 +431,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -528,7 +499,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -548,63 +519,57 @@ window.Quarto = {
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#mrp" id="toc-mrp" class="nav-link active" data-scroll-target="#mrp">MrP</a>
+<li>
+<a href="#mrp" id="toc-mrp" class="nav-link active" data-scroll-target="#mrp">MrP</a>
   <ul class="collapse">
-  <li><a href="#mrp-for-surveys-and-market-research" id="toc-mrp-for-surveys-and-market-research" class="nav-link" data-scroll-target="#mrp-for-surveys-and-market-research">MrP for surveys and market research</a></li>
+<li><a href="#mrp-for-surveys-and-market-research" id="toc-mrp-for-surveys-and-market-research" class="nav-link" data-scroll-target="#mrp-for-surveys-and-market-research">MrP for surveys and market research</a></li>
   <li><a href="#mr-for-multilevel-regression" id="toc-mr-for-multilevel-regression" class="nav-link" data-scroll-target="#mr-for-multilevel-regression">“Mr” for “Multilevel regression”</a></li>
   <li><a href="#p-for-poststratification" id="toc-p-for-poststratification" class="nav-link" data-scroll-target="#p-for-poststratification">“P” for “Poststratification”</a></li>
   <li><a href="#data-simulation" id="toc-data-simulation" class="nav-link" data-scroll-target="#data-simulation">Data simulation</a></li>
-  </ul></li>
   </ul>
-</nav>
-    </div>
+</li>
+  </ul></nav>
+</div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-
-
-<section id="mrp" class="level1">
-<h1>MrP</h1>
+<main class="content" id="quarto-document-content"><section id="mrp" class="level1"><h1>MrP</h1>
 <p>Data analysts often want to learn about a population using samples that are not representative of that population. Consider a few examples:</p>
 <ul>
-<li><em>Market research:</em> A supermarket chain wants to assess consumer preferences in each of the markets where it operates, but it would be too expensive to collect distinct representative samples for many cities.</li>
-<li><em>Political polling:</em> A newspaper conducts a nationally representative survey in the lead up to a Presidential election, and wishes to compute state-by-state estimates of voting intentions.</li>
-<li><em>Online surveys:</em> A researcher conducts a poll online, but the respondents are younger and more highly educated than the general population.</li>
+<li>
+<em>Market research:</em> A supermarket chain wants to assess consumer preferences in each of the markets where it operates, but it would be too expensive to collect distinct representative samples for many cities.</li>
+<li>
+<em>Political polling:</em> A newspaper conducts a nationally representative survey in the lead up to a Presidential election, and wishes to compute state-by-state estimates of voting intentions.</li>
+<li>
+<em>Online surveys:</em> A researcher conducts a poll online, but the respondents are younger and more highly educated than the general population.</li>
 </ul>
 <p>This notebook introduces <a href="https://en.wikipedia.org/wiki/Multilevel_regression_with_poststratification">Multilevel Regression with Poststratification (MrP)</a>, a popular strategy which can be used to limit the distortions in unrepresentative data, or to estimate subgroup characteristics on the basis of data gathered at a different level of aggregation. MrP can be deployed in a wide range of contexts (see this <a href="https://www.monicaalexander.com/pdf/mrp_chapter.pdf">paper</a> and this <a href="https://www.monicaalexander.com/posts/2019-08-07-mrp/">blog post</a> by the always excellent <a href="https://www.monicaalexander.com/">Monica Alexander</a>).</p>
 <p>As we will see below, MrP is super easy to implement using the <code>marginaleffects</code> package for <code>R</code>. <code>marginaleffects</code> also offers tremendous benefits to analysts, including a consistent user interface to over 100 classes of statistical models, as well as many post-estimation and hypothesis testing tools. To illustrate these benefits, we will consider a hypothetical example with simulated data.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/mrt.jpg" class="img-fluid figure-img"></p>
-<figcaption>MrP, not Mister T.</figcaption>
-</figure>
+<figure class="figure"><p><img src="fig/mrt.jpg" class="img-fluid figure-img"></p>
+<figcaption>MrP, not Mister T.</figcaption></figure>
 </div>
-<section id="mrp-for-surveys-and-market-research" class="level2">
-<h2 class="anchored" data-anchor-id="mrp-for-surveys-and-market-research">MrP for surveys and market research</h2>
+<section id="mrp-for-surveys-and-market-research" class="level2"><h2 class="anchored" data-anchor-id="mrp-for-surveys-and-market-research">MrP for surveys and market research</h2>
 <p>Imagine that a national supermarket chain plans to introduce a line of meat substitutes in some of its stores. To guide marketing and distribution efforts, the company would like to know the share of the population in each city that is interested in tasting meat substitutes.</p>
 <p>The company conducts a telephone survey of 1000 randomly selected adults from 40 large American cities. For each survey respondent, we record the city of residence, age, level of education, and whether they are interested in tasting meat substitutes. The variable we focus on is “interest in meat substitutes,” measured on a scale of 1 to 7 where 7 means “very interested” and 1 means “not at all interested”. Our ultimate goal is to estimate the average of this 7 point scale for each city.</p>
-<p>The (simulated) data that we will use is stored in a <code>R</code> data frame called <code>survey</code>. We can use the <code>nrow()</code> function to confirm the sample size, and the <code>datasummary_df()</code> function from the <code>modelsummary</code> package to display the first few rows of data:</p>
+<p>The (simulated) data that we will use is stored in a <code>R</code> data frame called <code>survey</code>. We can use the <code><a href="https://rdrr.io/r/base/nrow.html">nrow()</a></code> function to confirm the sample size, and the <code><a href="https://modelsummary.com/reference/datasummary_df.html">datasummary_df()</a></code> function from the <code>modelsummary</code> package to display the first few rows of data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggridges)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(survey)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1000</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">datasummary_df</span>(survey[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/ggridges/">ggridges</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/paul-buerkner/brms">brms</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">survey</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1000</span></span>
+<span></span>
+<span><span class="fu"><a href="https://modelsummary.com/reference/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">survey</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <div id="acgsatvyhw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
@@ -1047,17 +1012,14 @@ window.Quarto = {
   text-indent: 25px;
 }
 </style>
-
 <table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="header gt_col_headings">
+<thead><tr class="header gt_col_headings">
 <th id="respondent" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">respondent</th>
 <th id="city" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">city</th>
 <th id="age" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">age</th>
 <th id="education" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">education</th>
 <th id="meat_substitute" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">meat_substitute</th>
-</tr>
-</thead>
+</tr></thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="respondent">0001</td>
@@ -1096,50 +1058,50 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-
 </div>
 </div>
 </div>
 </div>
 <p>This dataset includes 1000 observations: one per survey respondent. Unfortunately, it is not straightforward to compute precise city-by-city estimates, because although the number of respondents is large overall, the number of respondents within each of the 40 cities is relatively small. Moreover, the company’s sampling strategy does not guarantee that subsamples are representative of each city’s population. MrP can help us circumvent these problems in two steps:</p>
 <ol type="1">
-<li><em>Multilevel regression (Mr)</em>: Estimate a multilevel regression at the individual level, with random intercepts for cities.</li>
-<li><em>Poststratification (P)</em>: Adjust the predictions of the model based on the demographic characteristics of each city.</li>
+<li>
+<em>Multilevel regression (Mr)</em>: Estimate a multilevel regression at the individual level, with random intercepts for cities.</li>
+<li>
+<em>Poststratification (P)</em>: Adjust the predictions of the model based on the demographic characteristics of each city.</li>
 </ol>
 <p>In the rest of this notebook, we show that the <code>marginaleffects</code> package makes it very easy to apply these steps.</p>
-</section>
-<section id="mr-for-multilevel-regression" class="level2">
-<h2 class="anchored" data-anchor-id="mr-for-multilevel-regression">“Mr” for “Multilevel regression”</h2>
+</section><section id="mr-for-multilevel-regression" class="level2"><h2 class="anchored" data-anchor-id="mr-for-multilevel-regression">“Mr” for “Multilevel regression”</h2>
 <p>The first step of MrP is to use individual-level data to estimate a model that predicts the value of the variable of interest. One of the great benefits of using <code>marginaleffects</code> for MrP, is that this package is agnostic to the type of model used to make predictions. Analysts can use almost any model they like, and the workflow described below would remain the same.</p>
-<p>One popular choice for MrP is to estimate a multilevel regression model with random intercepts for each of the geographic regions of interest. To do so, analysts could use many different <code>R</code> packages, including <a href="https://cran.r-project.org/package=lme4"><code>lme4</code></a>, <a href="https://cran.r-project.org/package=glmmTMB"><code>glmmTMB</code></a>, or <a href="https://cran.r-project.org/package=brms"><code>brms</code></a>. In this notebook, we use the <code>brms::brm()</code> function to estimate a bayesian multilevel model, with the <code>age</code> and <code>education</code> variables as fixed components, and random intercepts at the city level:</p>
+<p>One popular choice for MrP is to estimate a multilevel regression model with random intercepts for each of the geographic regions of interest. To do so, analysts could use many different <code>R</code> packages, including <a href="https://cran.r-project.org/package=lme4"><code>lme4</code></a>, <a href="https://cran.r-project.org/package=glmmTMB"><code>glmmTMB</code></a>, or <a href="https://cran.r-project.org/package=brms"><code>brms</code></a>. In this notebook, we use the <code><a href="https://paul-buerkner.github.io/brms/reference/brm.html">brms::brm()</a></code> function to estimate a bayesian multilevel model, with the <code>age</code> and <code>education</code> variables as fixed components, and random intercepts at the city level:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">brm</span>(meat_substitute <span class="sc">~</span> age <span class="sc">+</span> education <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> city), <span class="at">data =</span> survey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://paul-buerkner.github.io/brms/reference/brm.html">brm</a></span><span class="op">(</span><span class="va">meat_substitute</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">education</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">city</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">survey</span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>We can visualize the model estimates using the <code>modelplot()</code> function from the <code>modelsummary</code> package:</p>
+<p>We can visualize the model estimates using the <code><a href="https://modelsummary.com/reference/modelplot.html">modelplot()</a></code> function from the <code>modelsummary</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelplot</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/reference/modelplot.html">modelplot</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="mrp_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="mrp_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We are now ready for the second MrP step: poststratification.</p>
-</section>
-<section id="p-for-poststratification" class="level2">
-<h2 class="anchored" data-anchor-id="p-for-poststratification">“P” for “Poststratification”</h2>
+</section><section id="p-for-poststratification" class="level2"><h2 class="anchored" data-anchor-id="p-for-poststratification">“P” for “Poststratification”</h2>
 <p>In the second MrP step, we use data from the US Census (or a similar source) to create a “poststratification table.” This table includes one row for each combination of the predictor values in our model. In our model, the <code>age</code> variable has 2 categories (“18-54” and “54+”); the <code>education</code> variables has 2 categories (“High school or less” and “Post-secondary”); and the <code>city</code> variable has 40 unique entries. Therefore, the poststratification table must have <span class="math inline">\(2 \times 2 \times 40 = 160\)</span> entries.</p>
 <p>Crucially, the poststratification dataset must also include a column with the population share of each combination of predictor values. Consider the table used by our hypothetical supermarket chain. This table includes 160 rows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(stratification)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 160</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">stratification</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 160</span></span></code></pre></div>
 </div>
 <p>And here are the entries for the city of Tucson, AZ:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tucson <span class="ot">&lt;-</span> <span class="fu">subset</span>(stratification, city <span class="sc">==</span> <span class="st">"Tucson, AZ"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">datasummary_df</span>(tucson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tucson</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">stratification</span>, <span class="va">city</span> <span class="op">==</span> <span class="st">"Tucson, AZ"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://modelsummary.com/reference/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">tucson</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <div id="tkeanfcnfg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
@@ -1582,16 +1544,13 @@ window.Quarto = {
   text-indent: 25px;
 }
 </style>
-
 <table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="header gt_col_headings">
+<thead><tr class="header gt_col_headings">
 <th id="city" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">city</th>
 <th id="education" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">education</th>
 <th id="age" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">age</th>
 <th id="population_share" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">population_share</th>
-</tr>
-</thead>
+</tr></thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="city">Tucson, AZ</td>
@@ -1619,130 +1578,123 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-
 </div>
 </div>
 </div>
 </div>
 <p>According to these (simulated) data, the share of Tucson residents who are between 18 and 54 year old and have a High School degree or less is about 16%.</p>
-<p>We can use the <code>predictions()</code> function from the <code>marginaleffects</code> package to predict the value of the <code>meat_substitute</code> variable for each of the four categories of residents in Tucson:</p>
+<p>We can use the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function from the <code>marginaleffects</code> package to predict the value of the <code>meat_substitute</code> variable for each of the four categories of residents in Tucson:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> tucson)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      1.81  1.50   2.12</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      3.03  2.71   3.34</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      3.01  2.69   3.33</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      4.23  3.91   4.55</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, city, education, age, population_share, meat_substitute </span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">tucson</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;      1.81  1.50   2.12</span></span>
+<span><span class="co">#&gt;      3.03  2.71   3.34</span></span>
+<span><span class="co">#&gt;      3.01  2.69   3.33</span></span>
+<span><span class="co">#&gt;      4.23  3.91   4.55</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, city, education, age, population_share, meat_substitute </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
 <p>The MrP estimate for this city is simply the weighted average of predicted values, where weights are the population shares of each category of residents. In this context, we have:</p>
 <p><span class="math display">\[0.16 \times 1.81 + 0.38 \times 3.03 + 0.20 \times 3.01 + 0.25 \times 4.23 = 3.13\]</span></p>
-<p>Instead of computing estimates by hand for each city, we can use the <code>by</code> and <code>wts</code> arguments of the <code>predictions()</code> function to do everything everywhere all at once:</p>
+<p>Instead of computing estimates by hand for each city, we can use the <code>by</code> and <code>wts</code> arguments of the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function to do everything everywhere all at once:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predictions</span>(              <span class="co"># Compute predictions,</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> mod,               <span class="co"># using the multilevel regression model `mod`, </span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> stratification,  <span class="co"># for each row of the `stratification` table.</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"city"</span>,               <span class="co"># Then, take the weighted average of predictions by city,</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">wts =</span> <span class="st">"population_share"</span>)  <span class="co"># using demographic weights.</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>p</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               city Estimate 2.5 % 97.5 %</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Washington, DC        4.31  3.98   4.63</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Tucson, AZ            3.13  2.82   3.44</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Seattle, WA           5.06  4.73   5.39</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  San Jose, CA          3.92  3.57   4.27</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  San Francisco, CA     5.07  4.72   5.40</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --- 30 rows omitted. See ?print.marginaleffects --- </span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Boston, MA            3.65  3.37   3.92</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Baltimore, MD         2.94  2.57   3.31</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Austin, TX            2.88  2.58   3.19</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Atlanta, GA           4.60  4.28   4.91</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Albuquerque, NM       2.67  2.35   2.99</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: city, estimate, conf.low, conf.high </span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span>              <span class="co"># Compute predictions,</span></span>
+<span>    model <span class="op">=</span> <span class="va">mod</span>,               <span class="co"># using the multilevel regression model `mod`, </span></span>
+<span>    newdata <span class="op">=</span> <span class="va">stratification</span>,  <span class="co"># for each row of the `stratification` table.</span></span>
+<span>    by <span class="op">=</span> <span class="st">"city"</span>,               <span class="co"># Then, take the weighted average of predictions by city,</span></span>
+<span>    wts <span class="op">=</span> <span class="st">"population_share"</span><span class="op">)</span>  <span class="co"># using demographic weights.</span></span>
+<span><span class="va">p</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;               city Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  Washington, DC        4.31  3.98   4.63</span></span>
+<span><span class="co">#&gt;  Tucson, AZ            3.13  2.82   3.44</span></span>
+<span><span class="co">#&gt;  Seattle, WA           5.06  4.73   5.39</span></span>
+<span><span class="co">#&gt;  San Jose, CA          3.92  3.57   4.27</span></span>
+<span><span class="co">#&gt;  San Francisco, CA     5.07  4.72   5.40</span></span>
+<span><span class="co">#&gt; --- 30 rows omitted. See ?print.marginaleffects --- </span></span>
+<span><span class="co">#&gt;  Boston, MA            3.65  3.37   3.92</span></span>
+<span><span class="co">#&gt;  Baltimore, MD         2.94  2.57   3.31</span></span>
+<span><span class="co">#&gt;  Austin, TX            2.88  2.58   3.19</span></span>
+<span><span class="co">#&gt;  Atlanta, GA           4.60  4.28   4.91</span></span>
+<span><span class="co">#&gt;  Albuquerque, NM       2.67  2.35   2.99</span></span>
+<span><span class="co">#&gt; Columns: city, estimate, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
-<p>Since we estimated a bayesian model in the “Mr” step, we can now use the <code>posterior_draws()</code> function to extract draws from the posterior distribution of the MrP estimates. This allows us to compute credible intervals for each city, and draw many fancy plots like this one:</p>
+<p>Since we estimated a bayesian model in the “Mr” step, we can now use the <code><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws()</a></code> function to extract draws from the posterior distribution of the MrP estimates. This allows us to compute credible intervals for each city, and draw many fancy plots like this one:</p>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">|&gt;</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># extract draws from the posterior distribution</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">posterior_draws</span>() <span class="sc">|&gt;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># sort cities by interest in meat substitutes</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(estimate) <span class="sc">|&gt;</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">city =</span> <span class="fu">factor</span>(city, <span class="at">levels =</span> <span class="fu">rev</span>(<span class="fu">unique</span>(city)))) <span class="sc">|&gt;</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plot the results</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> draw, <span class="at">y =</span> city)) <span class="sc">+</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density_ridges</span>() <span class="sc">+</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Average interest in meat substitutes"</span>,</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="cn">NULL</span>,</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Estimated interest in meat substitutes by city"</span>,</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"Multilevel Regression and Poststratification"</span>,</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Source: Simulated data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="co"># extract draws from the posterior distribution</span></span>
+<span>    <span class="fu"><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="co"># sort cities by interest in meat substitutes</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>city <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">city</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">city</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="co"># plot the results</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">draw</span>, y <span class="op">=</span> <span class="va">city</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://wilkelab.org/ggridges/reference/geom_density_ridges.html">geom_density_ridges</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>        x <span class="op">=</span> <span class="st">"Average interest in meat substitutes"</span>,</span>
+<span>        y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>        title <span class="op">=</span> <span class="st">"Estimated interest in meat substitutes by city"</span>,</span>
+<span>        subtitle <span class="op">=</span> <span class="st">"Multilevel Regression and Poststratification"</span>,</span>
+<span>        caption <span class="op">=</span> <span class="st">"Source: Simulated data"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="mrp_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="mrp_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="data-simulation" class="level2">
-<h2 class="anchored" data-anchor-id="data-simulation">Data simulation</h2>
+</section><section id="data-simulation" class="level2"><h2 class="anchored" data-anchor-id="data-simulation">Data simulation</h2>
 <p>All the data used on this page were simulated using this code:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(countrycode)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1024</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>cities <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"New York City, NY"</span>, <span class="st">"Los Angeles, CA"</span>, <span class="st">"Chicago, IL"</span>, <span class="st">"Houston, TX"</span>, <span class="st">"Phoenix, AZ"</span>, <span class="st">"Philadelphia, PA"</span>, <span class="st">"San Antonio, TX"</span>, <span class="st">"San Diego, CA"</span>, <span class="st">"Dallas, TX"</span>, <span class="st">"San Jose, CA"</span>, <span class="st">"Austin, TX"</span>, <span class="st">"Jacksonville, FL"</span>, <span class="st">"Fort Worth, TX"</span>, <span class="st">"Columbus, OH"</span>, <span class="st">"San Francisco, CA"</span>, <span class="st">"Charlotte, NC"</span>, <span class="st">"Indianapolis, IN"</span>, <span class="st">"Seattle, WA"</span>, <span class="st">"Denver, CO"</span>, <span class="st">"Washington, DC"</span>, <span class="st">"Boston, MA"</span>, <span class="st">"Nashville, TN"</span>, <span class="st">"El Paso, TX"</span>, <span class="st">"Detroit, MI"</span>, <span class="st">"Memphis, TN"</span>, <span class="st">"Portland, OR"</span>, <span class="st">"Oklahoma City, OK"</span>, <span class="st">"Las Vegas, NV"</span>, <span class="st">"Louisville, KY"</span>, <span class="st">"Baltimore, MD"</span>, <span class="st">"Milwaukee, WI"</span>, <span class="st">"Albuquerque, NM"</span>, <span class="st">"Tucson, AZ"</span>, <span class="st">"Fresno, CA"</span>, <span class="st">"Sacramento, CA"</span>, <span class="st">"Mesa, AZ"</span>, <span class="st">"Atlanta, GA"</span>, <span class="st">"Kansas City, MO"</span>, <span class="st">"Colorado Springs, CO"</span>, <span class="st">"Miami, FL"</span>)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>cities <span class="ot">&lt;-</span> <span class="fu">rev</span>(<span class="fu">sort</span>(cities))</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>education <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"High school or less"</span>, <span class="st">"Post-secondary"</span>)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"18-54"</span>, <span class="st">"55+"</span>)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>stratification <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">city =</span> cities,</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">education =</span> education,</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">age =</span> age) <span class="sc">|&gt;</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">population_share =</span> <span class="fu">runif</span>(<span class="fu">n</span>(), <span class="at">min =</span> .<span class="dv">25</span>, <span class="at">max =</span> .<span class="dv">75</span>),</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">population_share =</span> population_share <span class="sc">/</span> <span class="fu">sum</span>(population_share),</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">.by =</span> <span class="st">"city"</span>,) <span class="sc">|&gt;</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(city)</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>survey <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">city =</span> <span class="fu">sample</span>(cities, N, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">age =</span> <span class="fu">sample</span>(age, N, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">education =</span> <span class="fu">sample</span>(education, N, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>survey <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">respondent =</span> <span class="fu">sprintf</span>(<span class="st">"%04d"</span>, <span class="dv">1</span><span class="sc">:</span>N),</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    survey)</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span>., survey)</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="fu">ncol</span>(M))</span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>survey<span class="sc">$</span>meat_substitute <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">cut</span>(M <span class="sc">%*%</span> b, <span class="at">breaks =</span> <span class="dv">7</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/countrycode/">countrycode</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com">gt</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/paul-buerkner/brms">brms</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1024</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cities</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"New York City, NY"</span>, <span class="st">"Los Angeles, CA"</span>, <span class="st">"Chicago, IL"</span>, <span class="st">"Houston, TX"</span>, <span class="st">"Phoenix, AZ"</span>, <span class="st">"Philadelphia, PA"</span>, <span class="st">"San Antonio, TX"</span>, <span class="st">"San Diego, CA"</span>, <span class="st">"Dallas, TX"</span>, <span class="st">"San Jose, CA"</span>, <span class="st">"Austin, TX"</span>, <span class="st">"Jacksonville, FL"</span>, <span class="st">"Fort Worth, TX"</span>, <span class="st">"Columbus, OH"</span>, <span class="st">"San Francisco, CA"</span>, <span class="st">"Charlotte, NC"</span>, <span class="st">"Indianapolis, IN"</span>, <span class="st">"Seattle, WA"</span>, <span class="st">"Denver, CO"</span>, <span class="st">"Washington, DC"</span>, <span class="st">"Boston, MA"</span>, <span class="st">"Nashville, TN"</span>, <span class="st">"El Paso, TX"</span>, <span class="st">"Detroit, MI"</span>, <span class="st">"Memphis, TN"</span>, <span class="st">"Portland, OR"</span>, <span class="st">"Oklahoma City, OK"</span>, <span class="st">"Las Vegas, NV"</span>, <span class="st">"Louisville, KY"</span>, <span class="st">"Baltimore, MD"</span>, <span class="st">"Milwaukee, WI"</span>, <span class="st">"Albuquerque, NM"</span>, <span class="st">"Tucson, AZ"</span>, <span class="st">"Fresno, CA"</span>, <span class="st">"Sacramento, CA"</span>, <span class="st">"Mesa, AZ"</span>, <span class="st">"Atlanta, GA"</span>, <span class="st">"Kansas City, MO"</span>, <span class="st">"Colorado Springs, CO"</span>, <span class="st">"Miami, FL"</span><span class="op">)</span></span>
+<span><span class="va">cities</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="va">cities</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">education</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"High school or less"</span>, <span class="st">"Post-secondary"</span><span class="op">)</span></span>
+<span><span class="va">age</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"18-54"</span>, <span class="st">"55+"</span><span class="op">)</span></span>
+<span><span class="va">stratification</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span></span>
+<span>    city <span class="op">=</span> <span class="va">cities</span>,</span>
+<span>    education <span class="op">=</span> <span class="va">education</span>,</span>
+<span>    age <span class="op">=</span> <span class="va">age</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>        population_share <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>, min <span class="op">=</span> <span class="fl">.25</span>, max <span class="op">=</span> <span class="fl">.75</span><span class="op">)</span>,</span>
+<span>        population_share <span class="op">=</span> <span class="va">population_share</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">population_share</span><span class="op">)</span>,</span>
+<span>        .by <span class="op">=</span> <span class="st">"city"</span>,<span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">city</span><span class="op">)</span></span>
+<span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
+<span><span class="va">survey</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>    city <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">cities</span>, <span class="va">N</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">age</span>, <span class="va">N</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    education <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">education</span>, <span class="va">N</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">survey</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>    respondent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%04d"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">)</span>,</span>
+<span>    <span class="va">survey</span><span class="op">)</span></span>
+<span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="op">~</span><span class="va">.</span>, <span class="va">survey</span><span class="op">)</span></span>
+<span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">M</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">survey</span><span class="op">$</span><span class="va">meat_substitute</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">M</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">b</span>, breaks <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 
 
-</section>
-</section>
-<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
-<hr>
+</section></section><aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
 <ol>
 <li id="fn1"><p>See the bottom of this page for the simulation code.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</aside>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</ol></aside></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -2150,9 +2102,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../vignettes/matching.html" class="pagination-link" aria-label="Matching">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Matching</span>
       </a>          
@@ -2168,4 +2118,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+</body>
+</html>

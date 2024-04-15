@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -505,13 +505,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <center>
-<h1>
-The Marginal Effects Zoo
-</h1>
-<h3 class="anchored">
-How to interpret statistical models in R and Python
-</h3>
-<br> <a href="https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target="_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://img.shields.io/static/v1?label=Website&amp;message=Visit&amp;color=blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a> <br><br>
+<a href="https://marginaleffects.com" target="_blank"><img src="man/figures/marginaleffects_logo_word.svg" width="100%"></a> <br> <br> <a href="https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target="_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://img.shields.io/static/v1?label=Website&amp;message=Visit&amp;color=blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a> <br><br>
 </center>
 <p>The parameters of a statistical model can sometimes be difficult to interpret substantively, especially when that model includes non-linear components, interactions, or transformations. Analysts who fit such complex models often seek to transform raw parameter estimates into quantities that are easier for domain experts and stakeholders to understand, such as predictions, contrasts, risk differences, ratios, odds, lift, slopes, and so on.</p>
 <p>Unfortunately, computing these quantities—along with associated standard errors—can be a tedious and error-prone task. This problem is compounded by the fact that modeling packages in <code>R</code> and <code>Python</code> produce objects with varied structures, which hold different information. This means that end-users often have to write customized code to interpret the estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects, and other model types. This can lead to wasted effort, confusion, and mistakes, and it can hinder the implementation of best practices.</p>

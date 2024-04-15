@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
-
+<meta name="generator" content="quarto-1.4.551">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
 <title>Marginal Effects Zoo</title>
 <style>
 code{white-space: pre-wrap;}
@@ -55,26 +53,13 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-
-
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
 <link href="../vignettes/gcomputation.html" rel="next">
 <link href="../vignettes/experiments.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -103,20 +88,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-
-
 </head>
-
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
-    </a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -127,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
+<li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -146,29 +125,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-          </div> <!-- /navcollapse -->
+</div> <!-- /navcollapse -->
           <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/gam.html">GAM</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
+<li class="breadcrumb-item"><a href="../vignettes/gam.html">GAM</a></li>
+</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -182,8 +157,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -214,7 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
@@ -223,8 +198,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -351,7 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
@@ -360,8 +335,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -422,7 +397,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
@@ -431,8 +406,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -499,7 +474,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -519,169 +494,158 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#gam" id="toc-gam" class="nav-link active" data-scroll-target="#gam">GAM</a>
+<li>
+<a href="#gam" id="toc-gam" class="nav-link active" data-scroll-target="#gam">GAM</a>
   <ul class="collapse">
-  <li><a href="#estimate-a-generalized-additive-model" id="toc-estimate-a-generalized-additive-model" class="nav-link" data-scroll-target="#estimate-a-generalized-additive-model">Estimate a Generalized Additive Model</a></li>
+<li><a href="#estimate-a-generalized-additive-model" id="toc-estimate-a-generalized-additive-model" class="nav-link" data-scroll-target="#estimate-a-generalized-additive-model">Estimate a Generalized Additive Model</a></li>
   <li><a href="#adjusted-predictions-predictions-and-plot_predictions" id="toc-adjusted-predictions-predictions-and-plot_predictions" class="nav-link" data-scroll-target="#adjusted-predictions-predictions-and-plot_predictions">Adjusted Predictions: <code>predictions()</code> and <code>plot_predictions()</code></a></li>
   <li><a href="#marginal-effects-slopes-and-plot_slopes" id="toc-marginal-effects-slopes-and-plot_slopes" class="nav-link" data-scroll-target="#marginal-effects-slopes-and-plot_slopes">Marginal Effects: <code>slopes()</code> and <code>plot_slopes()</code></a></li>
   <li><a href="#excluding-terms" id="toc-excluding-terms" class="nav-link" data-scroll-target="#excluding-terms">Excluding terms</a></li>
-  </ul></li>
   </ul>
-</nav>
-    </div>
+</li>
+  </ul></nav>
+</div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-
-
-<section id="gam" class="level1">
-<h1>GAM</h1>
-<section id="estimate-a-generalized-additive-model" class="level2">
-<h2 class="anchored" data-anchor-id="estimate-a-generalized-additive-model">Estimate a Generalized Additive Model</h2>
+<main class="content" id="quarto-document-content"><section id="gam" class="level1"><h1>GAM</h1>
+<section id="estimate-a-generalized-additive-model" class="level2"><h2 class="anchored" data-anchor-id="estimate-a-generalized-additive-model">Estimate a Generalized Additive Model</h2>
 <p>We will estimate a GAM model using the <code>mgcv</code> package and the <code>simdat</code> dataset distributed with the <code>itsadug</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(itsadug)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>simdat<span class="sc">$</span>Subject <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(simdat<span class="sc">$</span>Subject)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(simdat)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 75600     6</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(simdat)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    Group      Time Trial Condition Subject         Y</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Adults   0.00000   -10        -1     a01 0.7554469</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Adults  20.20202   -10        -1     a01 2.7834759</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Adults  40.40404   -10        -1     a01 1.9696963</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Adults  60.60606   -10        -1     a01 0.6814298</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Adults  80.80808   -10        -1     a01 1.6939195</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Adults 101.01010   -10        -1     a01 2.3651969</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">itsadug</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">mgcv</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">simdat</span><span class="op">$</span><span class="va">Subject</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">simdat</span><span class="op">$</span><span class="va">Subject</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">simdat</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 75600     6</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">simdat</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Group      Time Trial Condition Subject         Y</span></span>
+<span><span class="co">#&gt; 1 Adults   0.00000   -10        -1     a01 0.7554469</span></span>
+<span><span class="co">#&gt; 2 Adults  20.20202   -10        -1     a01 2.7834759</span></span>
+<span><span class="co">#&gt; 3 Adults  40.40404   -10        -1     a01 1.9696963</span></span>
+<span><span class="co">#&gt; 4 Adults  60.60606   -10        -1     a01 0.6814298</span></span>
+<span><span class="co">#&gt; 5 Adults  80.80808   -10        -1     a01 1.6939195</span></span>
+<span><span class="co">#&gt; 6 Adults 101.01010   -10        -1     a01 2.3651969</span></span></code></pre></div>
 </div>
 <p>Fit a model with a random effect and group-time smooths:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">bam</span>(Y <span class="sc">~</span> Group <span class="sc">+</span> <span class="fu">s</span>(Time, <span class="at">by =</span> Group) <span class="sc">+</span> <span class="fu">s</span>(Subject, <span class="at">bs =</span> <span class="st">"re"</span>),</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> simdat)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Family: gaussian </span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Link function: identity </span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Formula:</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re")</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Parametric coefficients:</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             Estimate Std. Error t value Pr(&gt;|t|)   </span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)   2.0574     0.6903   2.980  0.00288 **</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GroupAdults   3.1265     0.9763   3.202  0.00136 **</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Approximate significance of smooth terms:</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                         edf Ref.df    F p-value    </span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; s(Time):GroupChildren  8.26  8.850 3649  &lt;2e-16 ***</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; s(Time):GroupAdults    8.66  8.966 6730  &lt;2e-16 ***</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; s(Subject)            33.94 34.000  569  &lt;2e-16 ***</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R-sq.(adj) =  0.609   Deviance explained =   61%</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fREML = 2.3795e+05  Scale est. = 31.601    n = 75600</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/bam.html">bam</a></span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">Group</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">Time</span>, by <span class="op">=</span> <span class="va">Group</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">Subject</span>, bs <span class="op">=</span> <span class="st">"re"</span><span class="op">)</span>,</span>
+<span>             data <span class="op">=</span> <span class="va">simdat</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/PairedData/man/summary.html">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Family: gaussian </span></span>
+<span><span class="co">#&gt; Link function: identity </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Formula:</span></span>
+<span><span class="co">#&gt; Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re")</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parametric coefficients:</span></span>
+<span><span class="co">#&gt;             Estimate Std. Error t value Pr(&gt;|t|)   </span></span>
+<span><span class="co">#&gt; (Intercept)   2.0574     0.6903   2.980  0.00288 **</span></span>
+<span><span class="co">#&gt; GroupAdults   3.1265     0.9763   3.202  0.00136 **</span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Approximate significance of smooth terms:</span></span>
+<span><span class="co">#&gt;                         edf Ref.df    F p-value    </span></span>
+<span><span class="co">#&gt; s(Time):GroupChildren  8.26  8.850 3649  &lt;2e-16 ***</span></span>
+<span><span class="co">#&gt; s(Time):GroupAdults    8.66  8.966 6730  &lt;2e-16 ***</span></span>
+<span><span class="co">#&gt; s(Subject)            33.94 34.000  569  &lt;2e-16 ***</span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; R-sq.(adj) =  0.609   Deviance explained =   61%</span></span>
+<span><span class="co">#&gt; fREML = 2.3795e+05  Scale est. = 31.601    n = 75600</span></span></code></pre></div>
 </div>
-</section>
-<section id="adjusted-predictions-predictions-and-plot_predictions" class="level2">
-<h2 class="anchored" data-anchor-id="adjusted-predictions-predictions-and-plot_predictions">Adjusted Predictions: <code>predictions()</code> and <code>plot_predictions()</code></h2>
+</section><section id="adjusted-predictions-predictions-and-plot_predictions" class="level2"><h2 class="anchored" data-anchor-id="adjusted-predictions-predictions-and-plot_predictions">Adjusted Predictions: <code>predictions()</code> and <code>plot_predictions()</code>
+</h2>
 <p>Compute adjusted predictions for each observed combination of regressor in the dataset used to fit the model. This gives us a dataset with the same number of rows as the original data, but new columns with predicted values and uncertainty estimates:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predictions</span>(model)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pred)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 75600    12</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %  97.5 %</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    -1.874      0.199 -9.41   &lt;0.001 67.4 -2.2643 -1.4834</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    -1.346      0.182 -7.41   &lt;0.001 42.8 -1.7025 -0.9901</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    -0.819      0.167 -4.90   &lt;0.001 20.0 -1.1467 -0.4916</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    -0.293      0.156 -1.88   0.0605  4.0 -0.5988  0.0129</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     0.231      0.149  1.55   0.1204  3.1 -0.0606  0.5232</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     0.753      0.146  5.17   &lt;0.001 22.0  0.4675  1.0379</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, Y, Group, Time, Subject </span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 75600    12</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;    -1.874      0.199 -9.41   &lt;0.001 67.4 -2.2643 -1.4834</span></span>
+<span><span class="co">#&gt;    -1.346      0.182 -7.41   &lt;0.001 42.8 -1.7025 -0.9901</span></span>
+<span><span class="co">#&gt;    -0.819      0.167 -4.90   &lt;0.001 20.0 -1.1467 -0.4916</span></span>
+<span><span class="co">#&gt;    -0.293      0.156 -1.88   0.0605  4.0 -0.5988  0.0129</span></span>
+<span><span class="co">#&gt;     0.231      0.149  1.55   0.1204  3.1 -0.0606  0.5232</span></span>
+<span><span class="co">#&gt;     0.753      0.146  5.17   &lt;0.001 22.0  0.4675  1.0379</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, Y, Group, Time, Subject </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
-<p>We can easily plot adjusted predictions for different values of a regressor using the <code>plot_predictions()</code> function:</p>
+<p>We can easily plot adjusted predictions for different values of a regressor using the <code><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions()</a></code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(model, <span class="at">condition =</span> <span class="st">"Time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">model</span>, condition <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="gam_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="gam_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="marginal-effects-slopes-and-plot_slopes" class="level2">
-<h2 class="anchored" data-anchor-id="marginal-effects-slopes-and-plot_slopes">Marginal Effects: <code>slopes()</code> and <code>plot_slopes()</code></h2>
-<p>Marginal effects are slopes of the prediction equation. They are an observation-level quantity. The <code>slopes()</code> function produces a dataset with the same number of rows as the original data, but with new columns for the slop and uncertainty estimates:</p>
+</section><section id="marginal-effects-slopes-and-plot_slopes" class="level2"><h2 class="anchored" data-anchor-id="marginal-effects-slopes-and-plot_slopes">Marginal Effects: <code>slopes()</code> and <code>plot_slopes()</code>
+</h2>
+<p>Marginal effects are slopes of the prediction equation. They are an observation-level quantity. The <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> function produces a dataset with the same number of rows as the original data, but with new columns for the slop and uncertainty estimates:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mfx <span class="ot">&lt;-</span> <span class="fu">slopes</span>(model, <span class="at">variables =</span> <span class="st">"Time"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mfx)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Estimate Std. Error    z Pr(&gt;|z|)     S  2.5 % 97.5 %</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Time   0.0261    0.00137 19.1   &lt;0.001 267.9 0.0234 0.0288</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Time   0.0261    0.00136 19.2   &lt;0.001 270.3 0.0234 0.0288</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Time   0.0261    0.00133 19.5   &lt;0.001 280.1 0.0235 0.0287</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Time   0.0260    0.00128 20.3   &lt;0.001 301.0 0.0235 0.0285</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Time   0.0259    0.00120 21.6   &lt;0.001 339.9 0.0235 0.0282</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Time   0.0257    0.00109 23.5   &lt;0.001 404.5 0.0236 0.0279</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, Y, Group, Time, Subject </span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">model</span>, variables <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Estimate Std. Error    z Pr(&gt;|z|)     S  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  Time   0.0261    0.00137 19.1   &lt;0.001 267.9 0.0234 0.0288</span></span>
+<span><span class="co">#&gt;  Time   0.0261    0.00136 19.2   &lt;0.001 270.3 0.0234 0.0288</span></span>
+<span><span class="co">#&gt;  Time   0.0261    0.00133 19.5   &lt;0.001 280.1 0.0235 0.0287</span></span>
+<span><span class="co">#&gt;  Time   0.0260    0.00128 20.3   &lt;0.001 301.0 0.0235 0.0285</span></span>
+<span><span class="co">#&gt;  Time   0.0259    0.00120 21.6   &lt;0.001 339.9 0.0235 0.0282</span></span>
+<span><span class="co">#&gt;  Time   0.0257    0.00109 23.5   &lt;0.001 404.5 0.0236 0.0279</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, Y, Group, Time, Subject </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
-<p>We can plot marginal effects for different values of a regressor using the <code>plot_slopes()</code> function. This next plot shows the slope of the prediction equation, that is, the slope of the previous plot, at every value of the <code>Time</code> variable.</p>
+<p>We can plot marginal effects for different values of a regressor using the <code><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes()</a></code> function. This next plot shows the slope of the prediction equation, that is, the slope of the previous plot, at every value of the <code>Time</code> variable.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(model, <span class="at">variables =</span> <span class="st">"Time"</span>, <span class="at">condition =</span> <span class="st">"Time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">model</span>, variables <span class="op">=</span> <span class="st">"Time"</span>, condition <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="gam_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="gam_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The marginal effects in this plot can be interpreted as measuring the change in <code>Y</code> that is associated with a small increase in <code>Time</code>, for different baseline values of <code>Time</code>.</p>
-</section>
-<section id="excluding-terms" class="level2">
-<h2 class="anchored" data-anchor-id="excluding-terms">Excluding terms</h2>
-<p>The <code>predict()</code> method of the <code>mgcv</code> package allows users to “exclude” some smoothing terms, using the <code>exclude</code> argument. You can pass the same argument to any function in the <code>marginaleffects</code> package:</p>
+</section><section id="excluding-terms" class="level2"><h2 class="anchored" data-anchor-id="excluding-terms">Excluding terms</h2>
+<p>The <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method of the <code>mgcv</code> package allows users to “exclude” some smoothing terms, using the <code>exclude</code> argument. You can pass the same argument to any function in the <code>marginaleffects</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(model, <span class="at">newdata =</span> <span class="st">"mean"</span>, <span class="at">exclude =</span> <span class="st">"s(Subject)"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %  Group Time Subject</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      11.7      0.695 16.9   &lt;0.001 210.8  10.4   13.1 Adults 1000     a01</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, Group, Time, Subject, Y </span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span>, newdata <span class="op">=</span> <span class="st">"mean"</span>, exclude <span class="op">=</span> <span class="st">"s(Subject)"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %  Group Time Subject</span></span>
+<span><span class="co">#&gt;      11.7      0.695 16.9   &lt;0.001 210.8  10.4   13.1 Adults 1000     a01</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, Group, Time, Subject, Y </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
 <p>See the documentation in <code>?mgcv:::predict.bam</code> for details.</p>
 
 
-</section>
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1089,9 +1053,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../vignettes/experiments.html" class="pagination-link" aria-label="Experiments">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Experiments</span>
       </a>          
@@ -1107,4 +1069,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+</body>
+</html>

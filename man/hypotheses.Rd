@@ -9,7 +9,7 @@ hypotheses(
   hypothesis = NULL,
   vcov = NULL,
   conf_level = 0.95,
-  df = Inf,
+  df = NULL,
   equivalence = NULL,
   joint = FALSE,
   joint_test = "f",
@@ -70,7 +70,7 @@ hypotheses(
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{df}{Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When \code{df} is \code{Inf}, the normal distribution is used. When \code{df} is finite, the \code{t} distribution is used. See \link[insight:get_df]{insight::get_df} for a convenient function to extract degrees of freedom. Ex: \code{slopes(model, df = insight::get_df(model))}}
+\item{df}{Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When using \code{joint_test="f"}, the \code{df} argument should be a numeric vector of length 2.}
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
 
