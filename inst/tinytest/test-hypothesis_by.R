@@ -8,8 +8,6 @@ mod <- lm(hp ~ mpg * qsec * am, data = dat)
 mod <- polr(gear ~ mpg + qsec, data = dat, Hess = TRUE)
 # mod <- brm(hp ~ mpg * qsec * am, data = dat, backend = "cmdstanr")
 
-# Q
-# pkgload::load_all()
 
 factory <- function(var_by = NULL,
                     var_label = c("rowid", var_by),
@@ -32,7 +30,12 @@ factory <- function(var_by = NULL,
             data.table::setDT(x)
         }
 
-        tmp <- apply(x[, ..var_label], 1, paste, collapse = "; ")
+        var_label <- setdiff(var_label, var_by)
+        tmp <- x[, ..var_label]
+        for (col in colnames(tmp)) {
+            tmp[, (col) := sprintf("%s[%s]", col, tmp[[col]])]
+        }
+        tmp <- apply(tmp, 1, paste, collapse = " & ")
         x[, term := tmp]
 
         if (is.null(var_by)) {
@@ -52,12 +55,12 @@ factory <- function(var_by = NULL,
 
 
 f <- factory(
-    var_by = c("mpg"),
-    var_label = c("mpg", "group"),
+    var_by = "mpg",
+    var_label = "group",
     fun_estimate = function(z) z - data.table::shift(z),
-    fun_label = function(z) sprintf("[%s] - [%s]", z, data.table::shift(z)))
+    fun_label = function(z) sprintf("%s - %s", z, data.table::shift(z)))
 
-predictions(mod,
+avg_predictions(mod,
     by = "mpg",
     hypothesis = f,
     newdata = datagrid(mpg = range, qsec = fivenum)
@@ -65,11 +68,12 @@ predictions(mod,
 
 f <- factory(
     var_by = "mpg",
-    var_label = c("rowid", "mpg"),
+    var_label = "group",
     fun_estimate = function(z) z - z[1],
-    fun_label = function(z) sprintf("[%s] - [%s]", z, z[1]))
+    fun_label = function(z) sprintf("%s vs. %s", z, z[1]))
 
 predictions(mod,
+    by = "mpg",
     hypothesis = f,
     newdata = datagrid(mpg = range, qsec = fivenum)
 )
