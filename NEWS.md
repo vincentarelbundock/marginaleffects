@@ -1,5 +1,12 @@
 # News
 
+## Development
+
+Bugs:
+
+* `mlogit` `predict()` method does not play well with `data.table`. Thanks to @andrewheiss for report #1086.
+
+
 ## 0.19.0
 
 Breaking changes:

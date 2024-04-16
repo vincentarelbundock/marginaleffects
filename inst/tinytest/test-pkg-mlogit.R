@@ -13,6 +13,7 @@ source("helpers.R")
 using("marginaleffects")
 if (ON_CI) exit_file("on ci")
 requiet("nnet")
+requiet("dfidx")
 requiet("mlogit")
 requiet("data.table")
 
@@ -83,6 +84,33 @@ TravelMode$dsize <- as.factor(TravelMode$dsize)
 mod3 <- mlogit(choice ~ wait + gcost | income + dsize, TravelMode) 
 mfx <- slopes(mod3, variables = c("income", "dsize"))
 expect_inherits(mfx, "marginaleffects")
+
+# Issue #1086
+requiet("dplyr")
+chocolate <- read.csv("modelarchive/data-raw/choco_candy.csv") |>
+  mutate(
+    dark = case_match(dark, 0 ~ "Milk", 1 ~ "Dark"),
+    dark = factor(dark, levels = c("Milk", "Dark")),
+    soft = case_match(soft, 0 ~ "Chewy", 1 ~ "Soft"),
+    soft = factor(soft, levels = c("Chewy", "Soft")),
+    nuts = case_match(nuts, 0 ~ "No nuts", 1 ~ "Nuts"),
+    nuts = factor(nuts, levels = c("No nuts", "Nuts"))
+  )
+chocolate_idx <- dfidx(
+  chocolate,
+  idx = list("subj", "alt"),
+  choice = "choice",
+  shape = "long"
+)
+m <- mlogit(
+  choice ~ dark + soft + nuts | 0 | 0, 
+  data = chocolate_idx
+)
+by <- data.frame(dark = c("Milk", "Dark"), by = c("Milk", "Dark"))
+p <- predictions(m, newdata = chocolate, by = by)
+expect_inherits(p, "predictions")
+expect_equivalent(p$estimate, c(0.0500000000082118, 0.199999999991788), tolerance = 1e-5)
+expect_equivalent(p$std.error, c(0.0316227771712602, 0.0316227779679258), tolerance = 1e-5)
 
 
 
