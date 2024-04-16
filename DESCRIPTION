@@ -68,6 +68,7 @@ Suggests:
     DCchoice,
     dbarts,
     distributional,
+    dfidx,
     dplyr,
     emmeans,
     equivalence,

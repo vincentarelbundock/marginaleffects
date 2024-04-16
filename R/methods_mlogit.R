@@ -4,7 +4,7 @@ get_predict.mlogit <- function(model,
                                newdata,
                                ...) {
 
-    mat <- stats::predict(model, newdata = newdata)
+    mat <- stats::predict(model, newdata = as.data.frame(newdata))
     if (isTRUE(checkmate::check_atomic_vector(mat))) {
         out <- data.table(rowid = seq_along(mat),
                           group = names(mat),
