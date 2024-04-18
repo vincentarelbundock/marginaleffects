@@ -58,12 +58,3 @@ The `marginaleffects` package for `R` and `Python` offers a single point of entr
 - *Active development*: Bugs are fixed promptly.
 
 
-## How to help
-
-The `marginaleffects` package and the Marginal Effects Zoo book will always be free. If you like this project, you can contribute in four ways:
-
-1. Make a donation to the [Native Women's Shelter of Montreal](https://www.nwsm.info/) or to [Give Directly](https://www.givedirectly.org/), and send me (Vincent) a quick note. You'll make my day.
-2. Submit bug reports, documentation improvements, or code contributions to the Github repositories of the [R version](https://github.com/vincentarelbundock/marginaleffects) or the [Python version](https://github.com/vincentarelbundock/pymarginaleffects) of the package.
-3. [Cite the `marginaleffects` package](https://marginaleffects.com/CITATION.html) in your work and tell your friends about it.
-4. Create a new entry [for the Meme Gallery!](https://marginaleffects.com/vignettes/meme.html)
-
