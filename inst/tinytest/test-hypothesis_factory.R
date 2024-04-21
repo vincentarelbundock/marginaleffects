@@ -33,6 +33,11 @@ factory <- function(var_by = NULL,
         }
 
         var_label <- setdiff(var_label, var_by)
+        var_label <- intersect(var_label, colnames(x))
+        if (length(var_label) == 0 && !"rowid" %in% colnames(x)) {
+            x[, "rowid" := seq_len(.N)]
+            var_label <- "rowid"
+        }
         tmp <- x[, ..var_label]
         for (col in colnames(tmp)) {
             tmp[, (col) := sprintf("%s[%s]", col, tmp[[col]])]
@@ -58,7 +63,6 @@ factory <- function(var_by = NULL,
 }
 fun <- factory()
 comparisons(mod, hypothesis = fun)
-
 
 avg_predictions(mod,
     by = "mpg",

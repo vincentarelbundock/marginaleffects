@@ -27,7 +27,7 @@ get_hypothesis <- function(
         # sanity
         msg <- "The `hypothesis` argument function must return a data frame with `term` (or `hypothesis`) and `estimate` columns."
         if (inherits(out, "data.frame")) {
-            if (!all(c("term", "estimate") %in% colnames(out)) ) {
+            if (!all(c("term", "estimate") %in% colnames(out)) && !all(c("hypothesis", "estimate") %in% colnames(out))) {
                 insight::format_error(msg)
             }
         } else if (isTRUE(checkmate::check_numeric(out))) {
