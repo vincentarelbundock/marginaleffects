@@ -31,11 +31,9 @@ get_vcov.mmrm <- function(model, ...) {
 #' @export
 get_predict.mmrm <- function(model, newdata = model$data, type = "response", ...) {
   type <- match.arg(type)
-  response_var <- all.vars(fit$formula_parts$formula[[2]])
-  newdata[[response_var]] <- NA_real_
   res <- data.frame(
     rowid = seq_len(nrow(newdata)),
-    estimate = predict(model, newdata = newdata, ...)
+    estimate = predict(model, newdata = newdata, conditional = FALSE, ...)
   )
   return(res)
 }

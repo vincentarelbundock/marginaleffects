@@ -113,7 +113,7 @@ Suggests:
     miceadds,
     mlogit,
     mlr3verse,
-    mmrm,
+    mmrm (>= 0.3.11.9001),
     modelbased,
     modelsummary,
     nlme,
