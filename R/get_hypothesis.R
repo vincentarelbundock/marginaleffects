@@ -27,6 +27,7 @@ get_hypothesis <- function(
         args <- list(x = x, newdata = newdata, by = by, draws = draws)
         args <- args[names(args) %in% argnames]
         out <- do.call(hypothesis, args)
+        at <- attr(out, "hypothesis_function_by")
 
         # sanity
         msg <- "The `hypothesis` argument function must return a data frame with `term` (or `hypothesis`) and `estimate` columns."
@@ -43,6 +44,8 @@ get_hypothesis <- function(
         } else {
             insight::format_error(msg)
         }
+
+        attr(out, "hypothesis_function_by") <- at
         return(out)
     }
 

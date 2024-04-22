@@ -62,6 +62,7 @@ factory <- function(by = c("term", "group", "contrast"),
             by = by]
         }
 
+        attr(out, "hypothesis_function_by") <- by
         return(out)
     }
 
@@ -69,22 +70,23 @@ factory <- function(by = c("term", "group", "contrast"),
 }
 
 
-fun <- factory(label_row = c("rowid", "group", "mpg"), by = c("group", "mpg"))
+fun <- factory(label_row = c("rowid", "group", "mpg"))
 
-comparisons(mod, hypothesis = fun) |> data.frame()
+comparisons(mod, hypothesis = factory())
 
+fun <- factory(label_row = c("rowid", "group", "mpg"))
 predictions(mod, newdata = datagrid(mpg = range, qsec = fivenum))
 
 fun <- factory(
     by = "mpg",
     FUN = \(x) x / x[1],
     label = \(x) sprintf("%s / %s", x, x[1]),
-    label_row = c("rowid", "group", "mpg")
+    label_row = "group"
 )
 
-avg_predictions(mod,
-    by = "mpg",
+fun = factory(by = c("group", "mpg"))
+p = predictions(mod,
     hypothesis = fun,
-    newdata = datagrid(mpg = range, qsec = fivenum)
-)
+    newdata = datagrid(mpg = range, qsec = fivenum))
+p
 

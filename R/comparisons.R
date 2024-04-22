@@ -453,6 +453,8 @@ comparisons <- function(model,
     args <- c(args, dots)
     mfx <- do.call("get_contrasts", args)
 
+    hyp_by <- attr(mfx, "hypothesis_function_by")
+
     # bayesian posterior
     if (!is.null(attr(mfx, "posterior_draws"))) {
         draws <- attr(mfx, "posterior_draws")
@@ -565,6 +567,7 @@ comparisons <- function(model,
     attr(out, "comparison") <- comparison
     attr(out, "transform") <- transform[[1]]
     attr(out, "comparison_label") <- comparison_label
+    attr(out, "hypothesis_by") <- hyp_by
     attr(out, "transform_label") <- transform_label
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by

@@ -174,6 +174,7 @@ print.marginaleffects <- function(x,
         nd <- attr(x, "newdata_newdata")
     }
     tmp <- c("by",
+        attr(x, "hypothesis_by"),
         attr(nd, "variables_datagrid"),
         attr(nd, "newdata_variables_datagrid"),
         attr(x, "variables_datagrid"),

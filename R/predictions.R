@@ -405,6 +405,8 @@ predictions <- function(model,
     args <- utils::modifyList(args, dots)
     tmp <- do.call(get_predictions, args)
 
+    hyp_by <- attr(tmp, "hypothesis_function_by")
+
     # two cases when tmp is a data.frame
     # get_predict gets us rowid with the original rows
     if (inherits(tmp, "data.frame")) {
@@ -547,6 +549,7 @@ predictions <- function(model,
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
     attr(out, "call") <- call_attr
+    attr(out, "hypothesis_by") <- hyp_by
     attr(out, "transform_label") <- names(transform)[1]
     attr(out, "transform") <- transform[[1]]
     # save newdata for use in recall()
