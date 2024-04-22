@@ -18,6 +18,10 @@ get_hypothesis <- function(
         } else if (nrow(x) == nrow(newdata)) {
             x <- cbind(x, newdata)
         }
+
+        attr(x, "variables_datagrid") <- attr(newdata, "variables_datagrid")
+        attr(x, "by") <- if (is.character(by)) by else names(by)
+
         argnames <- names(formals(hypothesis))
         if (!"x" %in% argnames) insight::format_error("The `hypothesis` function must accept an `x` argument.")
         if (any(!argnames %in% c("x", "draws"))) {
