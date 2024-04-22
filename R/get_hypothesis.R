@@ -15,7 +15,7 @@ get_hypothesis <- function(
         }
         if ("rowid" %in% colnames(x) && "rowid" %in% colnames(newdata)) {
             x <- merge(x, newdata, all.x = TRUE, by = intersect(colnames(x), colnames(newdata)))
-        } else if (nrow(x) == nrow(newdata)) {
+        } else if (isTRUE(nrow(x) == nrow(newdata))) {
             x <- cbind(x, newdata)
         }
 
