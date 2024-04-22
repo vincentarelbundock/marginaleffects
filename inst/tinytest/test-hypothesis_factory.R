@@ -9,16 +9,33 @@ library("MASS")
 
 dat <- transform(mtcars, gear = factor(gear))
 mod <- lm(hp ~ mpg * qsec * am, data = dat)
-mod <- polr(gear ~ mpg + qsec, data = dat, Hess = TRUE)
+# mod <- polr(gear ~ mpg + qsec, data = dat, Hess = TRUE)
 # mod <- brm(hp ~ mpg * qsec * am, data = dat, backend = "cmdstanr")
 
 
-factory <- function(by = c("term", "group", "contrast"),
-                    FUN = function(x) x - x[1],
-                    label = function(x) sprintf("%s - %s", x, x[1]),
-                    label_row = "rowid") {
+hypothesis_helper <- function(
+    by = c("term", "group", "contrast"),
+    hypothesis = "reference",
+    label = NULL,
+    label_columns = NULL) {
 
     checkmate::assert_character(by, null.ok = TRUE)
+    checkmate::assert_function(label, null.ok = TRUE)
+    checkmate::assert_character(label_columns, null.ok = TRUE)
+    checkmate::assert(
+        checkmate::check_function(hypothesis),
+        checkmate::check_choice(hypothesis, choices = c("reference", "sequential"))
+    )
+
+    if (is.null(label)) label <- function(estimate) "custom"
+
+    if (identical(hypothesis, "reference")) {
+        hypothesis <- function(x) (x - x[1])[2:length(x)]
+        label = function(x) sprintf("%s - %s", x, x[1])[2:length(x)]
+    } else if (identical(hypothesis, "sequential")) {
+        hypothesis <- function(x) (x - data.table::shift(x))[2:length(x)]
+        label = function(x) sprintf("%s - %s", x, data.table::shift(x))[2:length(x)]
+    }
 
     fun <- function(x) {
 
@@ -40,11 +57,12 @@ factory <- function(by = c("term", "group", "contrast"),
 
         # row labels
         if (!"rowid" %in% colnames(x)) x[, "rowid" := seq_len(.N)]
-        label_row <- setdiff(label_row, setdiff(by, "rowid"))
-        label_row <- intersect(label_row, colnames(x))
-        if (length(label_row) == 0) label_row <- "rowid"
+        if (is.null(label_columns)) label_columns <- c("group", "term", "rowid")
+        label_columns <- setdiff(label_columns, setdiff(by, "rowid"))
+        label_columns <- intersect(label_columns, colnames(x))
+        if (length(label_columns) == 0) label_columns <- "rowid"
 
-        tmp <- x[, ..label_row]
+        tmp <- x[, ..label_columns]
         for (col in colnames(tmp)) {
             tmp[, (col) := sprintf("%s[%s]", col, tmp[[col]])]
         }
@@ -54,11 +72,11 @@ factory <- function(by = c("term", "group", "contrast"),
         if (is.null(by)) {
             out <- x[, list(
                 hypothesis = label(marginaleffects_internal_label),
-                estimate = FUN(estimate))]
+                estimate = hypothesis(estimate))]
         } else {
             out <- x[, list(
                 hypothesis = label(marginaleffects_internal_label),
-                estimate = FUN(estimate)),
+                estimate = hypothesis(estimate)),
             by = by]
         }
 
@@ -69,24 +87,29 @@ factory <- function(by = c("term", "group", "contrast"),
     return(fun)
 }
 
+fun <- hypothesis_helper(by = c("term", "contrast", "am"), hypothesis = "sequential")
+comparisons(mod, hypothesis = fun) |> dplyr::arrange(term) |>  print(nrows = 100)
 
-fun <- factory(label_row = c("rowid", "group", "mpg"))
+nd <- datagrid(am = 0:1, qsec = fivenum, model = mod)
 
-comparisons(mod, hypothesis = factory())
+predictions(mod, newdata = nd)
 
-fun <- factory(label_row = c("rowid", "group", "mpg"))
-predictions(mod, newdata = datagrid(mpg = range, qsec = fivenum))
+hyp <- hypothesis_helper()
+predictions(mod, newdata = nd, hypothesis = hyp)
 
-fun <- factory(
-    by = "mpg",
-    FUN = \(x) x / x[1],
+hyp <- hypothesis_helper(by = "am")
+predictions(mod, newdata = nd, hypothesis = hyp)
+
+hyp <- hypothesis_helper(by = "am", hypothesis = "sequential")
+predictions(mod, newdata = nd, hypothesis = hyp)
+
+hyp <- hypothesis_helper(
+    by = "am",
+    hypothesis = \(x) x / x[1],
     label = \(x) sprintf("%s / %s", x, x[1]),
-    label_row = "group"
+    label_columns = c("rowid", "mpg")
 )
-
-fun = factory(by = c("group", "mpg"))
-p = predictions(mod,
-    hypothesis = fun,
-    newdata = datagrid(mpg = range, qsec = fivenum))
-p
+predictions(mod, 
+    newdata = datagrid(am = unique, qsec = fivenum, mpg = range), 
+    hypothesis = hyp)
 
