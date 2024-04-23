@@ -347,90 +347,91 @@ avg_comparisons(mod, variables = "hp", by = "cyl", hypothesis = fun)
 
 ## `hypothesis_helper()`
 
-Supplying a function to the `hypothesis` argument is a powerful strategy, but it can sometimes be inconvenient, because there is a lot of "boilerplate" code to write. `hypothesis_helper()` is an experimental function which handles a lot of the annoying work automatically for us: label creation, group-wise estimates, etc.
+Supplying a function to the `hypothesis` argument is a powerful strategy, but it can sometimes be a bit tedious, because there is a lot of "boilerplate" code to write. `hypothesis_helper()` is an experimental function which handles a lot of the annoying work automatically for us: label creation, group-wise estimates, etc.
+
+To begin, we estimate a simple model and make predictions on a grid wih 6 rows:
 
 ```{r}
 dat <- transform(mtcars, gear = factor(gear))
-mod <- lm(hp ~ mpg * qsec * am + factor(cyl), data = dat)
+mod <- lm(hp ~ mpg * am * factor(cyl), data = dat)
 
 nd <- datagrid(am = 0:1, cyl = sort(unique(dat$cyl)), model = mod)
 
 predictions(mod, newdata = nd)
+```
 
+By default, `hypothesis_helper()` computes a `reference` hypothesis, that is, the difference between each row and the first row in the output (`rowid[1]`):
+
+```{r}
 hyp <- hypothesis_helper()
 predictions(mod, newdata = nd, hypothesis = hyp)
+```
 
-hyp <- hypothesis_helper(by = "am")
-predictions(mod, newdata = nd, hypothesis = hyp)
+Alternatively, we can specify a `"sequential"` hypothesis to compare each row to its previous one:
 
+
+```{r}
 hyp <- hypothesis_helper(hypothesis = "sequential")
 predictions(mod, newdata = nd, hypothesis = hyp)
+```
 
+A more powerful customization option is to supply one's own comparison function, along with a function to create labels. Compare each row to the global mean:
+
+```{r}
 hyp <- hypothesis_helper(
     hypothesis = \(x) x - mean(x),
-    label = \(x) sprintf("(%s) - ȳ", x))
+    label = \(x) sprintf("(%s) - ȳ", x)
+)
 predictions(mod, newdata = nd, hypothesis = hyp)
+```
 
+The ratio of each row to the first:
+
+```{r}
 hyp <- hypothesis_helper(
-    by = "am",
-    hypothesis = \(x) x - mean(x),
-    label = \(x) sprintf("(%s) - ȳ", x))
+    hypothesis =  \(x) x / x[1],
+    label = \(x) sprintf("(%s) / (%s)", x, x[1])
+)
 predictions(mod, newdata = nd, hypothesis = hyp)
+```
 
-hyp <- hypothesis_helper(
-    by = "am",
-    hypothesis = \(x) x - mean(x),
-    label = \(x) sprintf("%s - ȳ", x),
-    label_columns = "cyl")
-predictions(mod, newdata = nd, hypothesis = hyp)
+We can use the `by` argument to specify subgroups in which to apply the function. For example, we may want to compute the ratio of each row to the reference (first) row of each subgroup of `am`. Notice that the denomiator `rowid` changes depending on the `am` subgroup:
 
+```{r}
 hyp <- hypothesis_helper(
     by = "am",
     hypothesis =  \(x) x / x[1],
-    label = \(x) sprintf("(%s) / (%s)", x, x[1]))
+    label = \(x) sprintf("(%s) / (%s)", x, x[1])
+)
 predictions(mod, newdata = nd, hypothesis = hyp)
+```
 
+###  `term`, `contrast`, and `group`
 
-# library("MASS")
-# # library("brms")
-#
-# # mod <- polr(gear ~ mpg + qsec, data = dat, Hess = TRUE)
-# # mod <- brm(hp ~ mpg * qsec * am, data = dat, backend = "cmdstanr")
-#
-#
-# # fun <- hypothesis_helper(by = c("term", "contrast", "am"), hypothesis = "sequential")
-# # comparisons(mod, hypothesis = fun) |> dplyr::arrange(term) |>  print(nrows = 100)
-#
-# nd <- datagrid(am = 0:1, qsec = fivenum, model = mod)
-#
-# predictions(mod, newdata = nd)
-#
-# hyp <- hypothesis_helper()
-# pkgload::load_all()
-# predictions(mod, newdata = nd, hypothesis = hyp)
-#
-# hyp <- hypothesis_helper(by = "am")
-# predictions(mod, newdata = nd, hypothesis = hyp)
-#
-# hyp <- hypothesis_helper(by = "am", hypothesis = "sequential")
-# predictions(mod, newdata = nd, hypothesis = hyp)
-#
-# hyp <- hypothesis_helper(hypothesis = "sequential")
-# predictions(mod, by = c("am", "cyl"))
-# predictions(mod, newdata = nd, hypothesis = hyp)
-#
-# hyp <- hypothesis_helper(hypothesis = "reference", by = "am")
-# predictions(mod, by = c("am", "cyl"), hypothesis = hyp)
-#
-# hyp <- hypothesis_helper(
-#     by = "am",
-#     hypothesis = \(x) (x / x[1])[2:length(x)],
-#     label = \(x) sprintf("(%s) / (%s)", x, x[1])[2:length(x)],
-#     label_columns = c("rowid", "mpg")
-# )
-# predictions(mod, 
-#     newdata = datagrid(am = unique, qsec = fivenum, mpg = range), 
-#     hypothesis = hyp)
+By default, `hypothesis_helper()` will always apply comparison functions within subgroups of the `term`, `contrast`, and `group` columns. For example:
+
+```{r}
+library(MASS)
+dat <- transform(mtcars, gear = factor(gear), cyl = factor(cyl))
+mod <- polr(gear ~ cyl + hp, dat, Hess = TRUE)
+
+avg_predictions(mod, by = "am")
+
+hyp <- hypothesis_helper()
+avg_predictions(mod, by = "am", hypothesis = hyp)
+```
+
+To avoid applying the function within `group` and compare group levels to one another, we can specify `by="rowid"`:
+
+```{r}
+avg_predictions(mod)
+
+hyp <- hypothesis_helper(
+    by = "rowid",
+    hypothesis = "sequential",
+    label_columns = "group"
+)
+avg_predictions(mod, hypothesis = hyp)
 ```
 
 
