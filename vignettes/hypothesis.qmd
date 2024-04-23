@@ -246,13 +246,29 @@ avg_slopes(mod, hypothesis = "10 * hp - qsec = 0")
 
 # Functions
 
-Hypothesis tests can also be conducted using arbitrary `R` functions. This allows users to test hypotheses on complex aggregations or transformations. To achieve this, we define a custom function which accepts a fitted model or `marginaleffects` objects, and returns a data frame with at least two columns: `term` and `estimate`.
-
+Hypothesis tests can also be conducted using arbitrary `R` functions. This allows users to test hypotheses on complex aggregations or transformations. To achieve this, we define a custom function which accepts a fitted model or `marginaleffects` objects, and returns a data frame with at least two columns: `term` (or `hypothesis`) and `estimate`.
 
 
 ## Predictions
 
-When supplying a function to the `hypothesis` argument to produce a `marginaleffects` function, the function must accept an argument `x` which is a data frame with columns `rowid` and `estimate` (with optional argument `newdata`, `by`, `draws`).
+When supplying a function to the `hypothesis` argument to produce a `marginaleffects` function, the function must accept an argument `x` which is a data frame with columns `rowid` and `estimate` (with optional columns for other elements of `newdata`). The function must return a data frame with columns `term` (or `hypothesis`) and `estimate`.
+
+In this example, we test if the mean predicted value is different from 2:
+
+
+```{r}
+dat <- transform(mtcars, gear = factor(gear), cyl = factor(cyl))
+
+mod <- lm(wt ~ mpg * hp * cyl, data = dat)
+
+hyp <- function(x) {
+    data.frame(
+        hypothesis = "Avg(Yhat) = 2",
+        estimate = mean(x$estimate) - 2
+    )
+}
+predictions(mod, hypothesis = hyp)
+```
 
 In this ordinal logit model, the `predictions()` function returns one row per observation and per level of the outcome variable:
 
@@ -261,9 +277,6 @@ In this ordinal logit model, the `predictions()` function returns one row per ob
 library(MASS)
 library(dplyr)
 
-dat <- transform(mtcars, 
-    gear = factor(gear),
-    cyl = factor(cyl))
 mod <- polr(gear ~ cyl + hp, dat)
 
 avg_predictions(mod)
@@ -330,6 +343,94 @@ fun <- function(x) {
     filter(!is.na(estimate))
 }
 avg_comparisons(mod, variables = "hp", by = "cyl", hypothesis = fun)
+```
+
+## `hypothesis_helper()`
+
+Supplying a function to the `hypothesis` argument is a powerful strategy, but it can sometimes be inconvenient, because there is a lot of "boilerplate" code to write. `hypothesis_helper()` is an experimental function which handles a lot of the annoying work automatically for us: label creation, group-wise estimates, etc.
+
+```{r}
+dat <- transform(mtcars, gear = factor(gear))
+mod <- lm(hp ~ mpg * qsec * am + factor(cyl), data = dat)
+
+nd <- datagrid(am = 0:1, cyl = sort(unique(dat$cyl)), model = mod)
+
+predictions(mod, newdata = nd)
+
+hyp <- hypothesis_helper()
+predictions(mod, newdata = nd, hypothesis = hyp)
+
+hyp <- hypothesis_helper(by = "am")
+predictions(mod, newdata = nd, hypothesis = hyp)
+
+hyp <- hypothesis_helper(hypothesis = "sequential")
+predictions(mod, newdata = nd, hypothesis = hyp)
+
+hyp <- hypothesis_helper(
+    hypothesis = \(x) x - mean(x),
+    label = \(x) sprintf("(%s) - ȳ", x))
+predictions(mod, newdata = nd, hypothesis = hyp)
+
+hyp <- hypothesis_helper(
+    by = "am",
+    hypothesis = \(x) x - mean(x),
+    label = \(x) sprintf("(%s) - ȳ", x))
+predictions(mod, newdata = nd, hypothesis = hyp)
+
+hyp <- hypothesis_helper(
+    by = "am",
+    hypothesis = \(x) x - mean(x),
+    label = \(x) sprintf("%s - ȳ", x),
+    label_columns = "cyl")
+predictions(mod, newdata = nd, hypothesis = hyp)
+
+hyp <- hypothesis_helper(
+    by = "am",
+    hypothesis =  \(x) x / x[1],
+    label = \(x) sprintf("(%s) / (%s)", x, x[1]))
+predictions(mod, newdata = nd, hypothesis = hyp)
+
+
+# library("MASS")
+# # library("brms")
+#
+# # mod <- polr(gear ~ mpg + qsec, data = dat, Hess = TRUE)
+# # mod <- brm(hp ~ mpg * qsec * am, data = dat, backend = "cmdstanr")
+#
+#
+# # fun <- hypothesis_helper(by = c("term", "contrast", "am"), hypothesis = "sequential")
+# # comparisons(mod, hypothesis = fun) |> dplyr::arrange(term) |>  print(nrows = 100)
+#
+# nd <- datagrid(am = 0:1, qsec = fivenum, model = mod)
+#
+# predictions(mod, newdata = nd)
+#
+# hyp <- hypothesis_helper()
+# pkgload::load_all()
+# predictions(mod, newdata = nd, hypothesis = hyp)
+#
+# hyp <- hypothesis_helper(by = "am")
+# predictions(mod, newdata = nd, hypothesis = hyp)
+#
+# hyp <- hypothesis_helper(by = "am", hypothesis = "sequential")
+# predictions(mod, newdata = nd, hypothesis = hyp)
+#
+# hyp <- hypothesis_helper(hypothesis = "sequential")
+# predictions(mod, by = c("am", "cyl"))
+# predictions(mod, newdata = nd, hypothesis = hyp)
+#
+# hyp <- hypothesis_helper(hypothesis = "reference", by = "am")
+# predictions(mod, by = c("am", "cyl"), hypothesis = hyp)
+#
+# hyp <- hypothesis_helper(
+#     by = "am",
+#     hypothesis = \(x) (x / x[1])[2:length(x)],
+#     label = \(x) sprintf("(%s) / (%s)", x, x[1])[2:length(x)],
+#     label_columns = c("rowid", "mpg")
+# )
+# predictions(mod, 
+#     newdata = datagrid(am = unique, qsec = fivenum, mpg = range), 
+#     hypothesis = hyp)
 ```
 
 
