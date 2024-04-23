@@ -11,9 +11,9 @@
 #' @param by Character vector. Variable names which indicate subgroups in which the `hypothesis` function should be applied.
 #' @param label Function. Accepts a vector of row labels and combines them to create hypothesis labels. 
 #' @param label_columns Character vector. Column names to use for hypothesis labels. Default is `c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))`.
-#' @return `hypothesis_helper()` is a "function factory", which means that executing it will return a function suitable for use in the `hypothesis` argument of a `marginaleffects` function.
+#' @return `specify_hypothesis()` is a "function factory", which means that executing it will return a function suitable for use in the `hypothesis` argument of a `marginaleffects` function.
 #' @export
-hypothesis_helper <- function(
+specify_hypothesis <- function(
     hypothesis = "reference",
     label = NULL,
     label_columns = NULL,
