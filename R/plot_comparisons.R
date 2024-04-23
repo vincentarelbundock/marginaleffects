@@ -62,6 +62,11 @@ plot_comparisons <- function(model,
         transform <- dots[["transform_post"]]
     }
 
+    if (inherits(model, "mira") && is.null(newdata)) {
+        msg <- "Please supply a data frame to the `newdata` argument explicitly."
+        insight::format_error(msg)
+    }
+
     # order of the first few paragraphs is important
     scall <- rlang::enquo(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, model, by = by)

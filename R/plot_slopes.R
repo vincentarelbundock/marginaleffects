@@ -67,6 +67,11 @@ plot_slopes <- function(model,
         }
     }
 
+    if (inherits(model, "mira") && is.null(newdata)) {
+        msg <- "Please supply a data frame to the `newdata` argument explicitly."
+        insight::format_error(msg)
+    }
+
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
