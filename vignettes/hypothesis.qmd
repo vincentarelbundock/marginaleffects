@@ -263,7 +263,7 @@ mod <- lm(wt ~ mpg * hp * cyl, data = dat)
 
 hyp <- function(x) {
     data.frame(
-        hypothesis = "Avg(Yhat) = 2",
+        hypothesis = "Avg(Ŷ) = 2",
         estimate = mean(x$estimate) - 2
     )
 }
