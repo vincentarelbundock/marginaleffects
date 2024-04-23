@@ -3,9 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.5.30">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo - Hypothesis Tests</title>
+<title>Marginal Effects Zoo – Hypothesis Tests</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -87,7 +87,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -151,7 +151,7 @@ window.Quarto = {
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
@@ -547,6 +547,12 @@ window.Quarto = {
   <ul class="collapse">
 <li><a href="#predictions-2" id="toc-predictions-2" class="nav-link" data-scroll-target="#predictions-2">Predictions</a></li>
   <li><a href="#comparisons-and-slopes-2" id="toc-comparisons-and-slopes-2" class="nav-link" data-scroll-target="#comparisons-and-slopes-2">Comparisons and slopes</a></li>
+  <li>
+<a href="#specify_hypothesis" id="toc-specify_hypothesis" class="nav-link" data-scroll-target="#specify_hypothesis"><code>specify_hypothesis()</code></a>
+  <ul class="collapse">
+<li><a href="#term-contrast-and-group" id="toc-term-contrast-and-group" class="nav-link" data-scroll-target="#term-contrast-and-group"><code>term</code>, <code>contrast</code>, and <code>group</code></a></li>
+  </ul>
+</li>
   <li><a href="#fitted-models" id="toc-fitted-models" class="nav-link" data-scroll-target="#fitted-models">Fitted models</a></li>
   </ul>
 </li>
@@ -926,18 +932,36 @@ window.Quarto = {
 <span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
 </section></section><section id="functions" class="level1"><h1>Functions</h1>
-<p>Hypothesis tests can also be conducted using arbitrary <code>R</code> functions. This allows users to test hypotheses on complex aggregations or transformations. To achieve this, we define a custom function which accepts a fitted model or <code>marginaleffects</code> objects, and returns a data frame with at least two columns: <code>term</code> and <code>estimate</code>.</p>
+<p>Hypothesis tests can also be conducted using arbitrary <code>R</code> functions. This allows users to test hypotheses on complex aggregations or transformations. To achieve this, we define a custom function which accepts a fitted model or <code>marginaleffects</code> objects, and returns a data frame with at least two columns: <code>term</code> (or <code>hypothesis</code>) and <code>estimate</code>.</p>
 <section id="predictions-2" class="level2"><h2 class="anchored" data-anchor-id="predictions-2">Predictions</h2>
-<p>When supplying a function to the <code>hypothesis</code> argument to produce a <code>marginaleffects</code> function, the function must accept an argument <code>x</code> which is a data frame with columns <code>rowid</code> and <code>estimate</code> (with optional argument <code>newdata</code>, <code>by</code>, <code>draws</code>).</p>
+<p>When supplying a function to the <code>hypothesis</code> argument to produce a <code>marginaleffects</code> function, the function must accept an argument <code>x</code> which is a data frame with columns <code>rowid</code> and <code>estimate</code> (with optional columns for other elements of <code>newdata</code>). The function must return a data frame with columns <code>term</code> (or <code>hypothesis</code>) and <code>estimate</code>.</p>
+<p>In this example, we test if the mean predicted value is different from 2:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">mtcars</span>, gear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span>, cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">wt</span> <span class="op">~</span> <span class="va">mpg</span> <span class="op">*</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">cyl</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">hyp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>        hypothesis <span class="op">=</span> <span class="st">"Avg(Yhat) = 2"</span>,</span>
+<span>        estimate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">estimate</span><span class="op">)</span> <span class="op">-</span> <span class="fl">2</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="va">hyp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     Hypothesis Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  Avg(Yhat) = 2     1.22     0.0914 13.3   &lt;0.001 132.0  1.04    1.4</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: hypothesis, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+</div>
 <p>In this ordinal logit model, the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function returns one row per observation and per level of the outcome variable:</p>
 <div class="cell" data-messages="false">
-<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">mtcars</span>, </span>
-<span>    gear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span>,</span>
-<span>    cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MASS/man/polr.html">polr</a></span><span class="op">(</span><span class="va">gear</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">hp</span>, <span class="va">dat</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
@@ -952,7 +976,7 @@ window.Quarto = {
 </div>
 <p>We can use a function in the <code>hypothesis</code> argument to collapse the rows, displaying the average predicted values in groups 3-4 vs. 5:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">out</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">|&gt;</span> </span>
 <span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>term <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">group</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fl">3</span><span class="op">:</span><span class="fl">4</span>, <span class="st">"3 &amp; 4"</span>, <span class="st">"5"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -970,7 +994,7 @@ window.Quarto = {
 </div>
 <p>And we can compare the two categories by doing:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">out</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">|&gt;</span> </span>
 <span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>term <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">group</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fl">3</span><span class="op">:</span><span class="fl">4</span>, <span class="st">"3 &amp; 4"</span>, <span class="st">"5"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -989,7 +1013,7 @@ window.Quarto = {
 </section><section id="comparisons-and-slopes-2" class="level2"><h2 class="anchored" data-anchor-id="comparisons-and-slopes-2">Comparisons and slopes</h2>
 <p>In the same ordinal logit model, we can estimate the average effect of an increase of 1 unit in <code>hp</code> on the expected probability of every level of the outcome:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S    2.5 %   97.5 %</span></span>
@@ -1002,7 +1026,7 @@ window.Quarto = {
 </div>
 <p>Compare estimate for different outcome levels:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">x</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>estimate <span class="op">=</span> <span class="op">(</span><span class="va">estimate</span> <span class="op">-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html">lag</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -1020,7 +1044,7 @@ window.Quarto = {
 </div>
 <p>Now suppose we want to compare the effect of <code>hp</code> for different levels of the outcome, but this time we do the computation <em>within levels of</em> <code>cyl</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span>, by <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Term Contrast cyl  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %   97.5 %</span></span>
@@ -1038,7 +1062,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Type:  probs</span></span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">x</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>estimate <span class="op">=</span> <span class="op">(</span><span class="va">estimate</span> <span class="op">-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html">lag</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -1059,11 +1083,188 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: term, group, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  probs</span></span></code></pre></div>
 </div>
-</section><section id="fitted-models" class="level2"><h2 class="anchored" data-anchor-id="fitted-models">Fitted models</h2>
+</section><section id="specify_hypothesis" class="level2"><h2 class="anchored" data-anchor-id="specify_hypothesis"><code>specify_hypothesis()</code></h2>
+<p>Supplying a function to the <code>hypothesis</code> argument is a powerful strategy, but it can sometimes be a bit tedious, because there is a lot of “boilerplate” code to write. <code><a href="https://marginaleffects.com/man/specify_hypothesis.html">specify_hypothesis()</a></code> is an experimental function which handles a lot of the annoying work automatically for us: label creation, group-wise estimates, etc.</p>
+<p>To begin, we estimate a simple model and make predictions on a grid wih 6 rows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">mtcars</span>, gear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">hp</span> <span class="op">~</span> <span class="va">mpg</span> <span class="op">*</span> <span class="va">am</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span>, model <span class="op">=</span> <span class="va">mod</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  am cyl Estimate Std. Error      z Pr(&gt;|z|)    S  2.5 % 97.5 %  mpg</span></span>
+<span><span class="co">#&gt;   0   4      119       36.1  3.306   &lt;0.001 10.0   48.6    190 20.1</span></span>
+<span><span class="co">#&gt;   0   6      114       14.7  7.726   &lt;0.001 46.4   85.0    143 20.1</span></span>
+<span><span class="co">#&gt;   0   8      163       15.1 10.842   &lt;0.001 88.6  133.9    193 20.1</span></span>
+<span><span class="co">#&gt;   1   4      105       18.5  5.681   &lt;0.001 26.2   68.9    141 20.1</span></span>
+<span><span class="co">#&gt;   1   6      155       17.8  8.735   &lt;0.001 58.5  120.6    190 20.1</span></span>
+<span><span class="co">#&gt;   1   8     -117      202.6 -0.576    0.564  0.8 -513.9    280 20.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, am, cyl, hp </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+</div>
+<p>By default, <code><a href="https://marginaleffects.com/man/specify_hypothesis.html">specify_hypothesis()</a></code> computes a <code>reference</code> hypothesis, that is, the difference between each row and the first row in the output (<code>rowid[1]</code>):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hyp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/specify_hypothesis.html">specify_hypothesis</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, hypothesis <span class="op">=</span> <span class="va">hyp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                                             Hypothesis Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  (rowid[2], am[0], cyl[6]) - (rowid[1], am[0], cyl[4])    -5.58       39.0 -0.143    0.886 0.2  -82.1   70.9</span></span>
+<span><span class="co">#&gt;  (rowid[3], am[0], cyl[8]) - (rowid[1], am[0], cyl[4])    43.96       39.2  1.123    0.262 1.9  -32.8  120.7</span></span>
+<span><span class="co">#&gt;  (rowid[4], am[1], cyl[4]) - (rowid[1], am[0], cyl[4])   -14.32       40.6 -0.353    0.724 0.5  -93.9   65.3</span></span>
+<span><span class="co">#&gt;  (rowid[5], am[1], cyl[6]) - (rowid[1], am[0], cyl[4])    35.98       40.3  0.893    0.372 1.4  -43.0  114.9</span></span>
+<span><span class="co">#&gt;  (rowid[6], am[1], cyl[8]) - (rowid[1], am[0], cyl[4])  -236.28      205.8 -1.148    0.251 2.0 -639.7  167.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: hypothesis, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+</div>
+<p>Alternatively, we can specify a <code>"sequential"</code> hypothesis to compare each row to its previous one:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hyp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/specify_hypothesis.html">specify_hypothesis</a></span><span class="op">(</span>hypothesis <span class="op">=</span> <span class="st">"sequential"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, hypothesis <span class="op">=</span> <span class="va">hyp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                                             Hypothesis Estimate Std. Error      z Pr(&gt;|z|)   S     2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  (rowid[2], am[0], cyl[6]) - (rowid[1], am[0], cyl[4])    -5.58       39.0 -0.143   0.8863 0.2  -82.0816   70.9</span></span>
+<span><span class="co">#&gt;  (rowid[3], am[0], cyl[8]) - (rowid[2], am[0], cyl[6])    49.54       21.1  2.349   0.0188 5.7    8.2139   90.9</span></span>
+<span><span class="co">#&gt;  (rowid[4], am[1], cyl[4]) - (rowid[3], am[0], cyl[8])   -58.29       23.9 -2.442   0.0146 6.1 -105.0756  -11.5</span></span>
+<span><span class="co">#&gt;  (rowid[5], am[1], cyl[6]) - (rowid[4], am[1], cyl[4])    50.31       25.7  1.959   0.0501 4.3   -0.0202  100.6</span></span>
+<span><span class="co">#&gt;  (rowid[6], am[1], cyl[8]) - (rowid[5], am[1], cyl[6])  -272.26      203.4 -1.339   0.1807 2.5 -670.8987  126.4</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: hypothesis, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+</div>
+<p>A more powerful customization option is to supply one’s own comparison function, along with a function to create labels. Compare each row to the global mean:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hyp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/specify_hypothesis.html">specify_hypothesis</a></span><span class="op">(</span></span>
+<span>    hypothesis <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>    label <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"(%s) - ȳ"</span>, <span class="va">x</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, hypothesis <span class="op">=</span> <span class="va">hyp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                     Hypothesis am cyl Estimate Std. Error      z Pr(&gt;|z|)   S   2.5 % 97.5 %  mpg</span></span>
+<span><span class="co">#&gt;  (rowid[1], am[0], cyl[4]) - ȳ  0   4     29.4       45.6  0.644   0.5194 0.9  -59.97  118.7 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[2], am[0], cyl[6]) - ȳ  0   6     23.8       36.8  0.647   0.5176 1.0  -48.28   95.9 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[3], am[0], cyl[8]) - ȳ  0   8     73.3       36.9  1.990   0.0466 4.4    1.09  145.6 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[4], am[1], cyl[4]) - ȳ  1   4     15.0       37.9  0.397   0.6913 0.5  -59.22   89.3 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[5], am[1], cyl[6]) - ȳ  1   6     65.4       37.7  1.735   0.0827 3.6   -8.46  139.2 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[6], am[1], cyl[8]) - ȳ  1   8   -206.9      169.0 -1.224   0.2210 2.2 -538.22  124.4 20.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, hypothesis, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, am, cyl, hp </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+</div>
+<p>The ratio of each row to the first:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hyp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/specify_hypothesis.html">specify_hypothesis</a></span><span class="op">(</span></span>
+<span>    hypothesis <span class="op">=</span>  \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">/</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
+<span>    label <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"(%s) / (%s)"</span>, <span class="va">x</span>, <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, hypothesis <span class="op">=</span> <span class="va">hyp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                                             Hypothesis am cyl Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 % 97.5 %  mpg</span></span>
+<span><span class="co">#&gt;  (rowid[1], am[0], cyl[4]) / (rowid[1], am[0], cyl[4])  0   4    1.000         NA     NA       NA  NA     NA     NA 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[2], am[0], cyl[6]) / (rowid[1], am[0], cyl[4])  0   6    0.953      0.314  3.039  0.00237 8.7  0.339   1.57 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[3], am[0], cyl[8]) / (rowid[1], am[0], cyl[4])  0   8    1.368      0.433  3.162  0.00157 9.3  0.520   2.22 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[4], am[1], cyl[4]) / (rowid[1], am[0], cyl[4])  1   4    0.880      0.308  2.857  0.00427 7.9  0.276   1.48 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[5], am[1], cyl[6]) / (rowid[1], am[0], cyl[4])  1   6    1.301      0.421  3.092  0.00199 9.0  0.476   2.13 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[6], am[1], cyl[8]) / (rowid[1], am[0], cyl[4])  1   8   -0.977      1.721 -0.568  0.57012 0.8 -4.351   2.40 20.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, hypothesis, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, am, cyl, hp </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+</div>
+<p>We can use the <code>by</code> argument to specify subgroups in which to apply the function. For example, we may want to compute the ratio of each row to the reference (first) row of each subgroup of <code>am</code>. Notice that the denomiator <code>rowid</code> changes depending on the <code>am</code> subgroup:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hyp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/specify_hypothesis.html">specify_hypothesis</a></span><span class="op">(</span></span>
+<span>    by <span class="op">=</span> <span class="st">"am"</span>,</span>
+<span>    hypothesis <span class="op">=</span>  \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">/</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
+<span>    label <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"(%s) / (%s)"</span>, <span class="va">x</span>, <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, hypothesis <span class="op">=</span> <span class="va">hyp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                               Hypothesis am cyl Estimate Std. Error      z Pr(&gt;|z|)    S  2.5 % 97.5 %  mpg</span></span>
+<span><span class="co">#&gt;  (rowid[1], cyl[4]) / (rowid[1], cyl[4])  0   4    1.000         NA     NA       NA   NA     NA     NA 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[2], cyl[6]) / (rowid[1], cyl[4])  0   6    0.953      0.314  3.039  0.00237  8.7  0.339   1.57 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[3], cyl[8]) / (rowid[1], cyl[4])  0   8    1.368      0.433  3.162  0.00157  9.3  0.520   2.22 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[4], cyl[4]) / (rowid[4], cyl[4])  1   4    1.000         NA     NA       NA   NA     NA     NA 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[5], cyl[6]) / (rowid[4], cyl[4])  1   6    1.478      0.310  4.763  &lt; 0.001 19.0  0.870   2.09 20.1</span></span>
+<span><span class="co">#&gt;  (rowid[6], cyl[8]) / (rowid[4], cyl[4])  1   8   -1.111      1.937 -0.573  0.56631  0.8 -4.906   2.68 20.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, hypothesis, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, mpg, cyl, hp </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+</div>
+<section id="term-contrast-and-group" class="level3"><h3 class="anchored" data-anchor-id="term-contrast-and-group">
+<code>term</code>, <code>contrast</code>, and <code>group</code>
+</h3>
+<p>By default, <code><a href="https://marginaleffects.com/man/specify_hypothesis.html">specify_hypothesis()</a></code> will always apply comparison functions within subgroups of the <code>term</code>, <code>contrast</code>, and <code>group</code> columns. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/">MASS</a></span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">mtcars</span>, gear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span>, cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MASS/man/polr.html">polr</a></span><span class="op">(</span><span class="va">gear</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">hp</span>, <span class="va">dat</span>, Hess <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"am"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Group am Estimate Std. Error     z Pr(&gt;|z|)     S   2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;      3  1   0.1877     0.0709  2.65  0.00811   6.9 0.04874  0.327</span></span>
+<span><span class="co">#&gt;      3  0   0.6642     0.0575 11.56  &lt; 0.001 100.3 0.55163  0.777</span></span>
+<span><span class="co">#&gt;      4  1   0.4984     0.0982  5.08  &lt; 0.001  21.3 0.30597  0.691</span></span>
+<span><span class="co">#&gt;      4  0   0.2761     0.0617  4.48  &lt; 0.001  17.0 0.15523  0.397</span></span>
+<span><span class="co">#&gt;      5  1   0.3138     0.0791  3.97  &lt; 0.001  13.7 0.15871  0.469</span></span>
+<span><span class="co">#&gt;      5  0   0.0597     0.0289  2.06  0.03907   4.7 0.00299  0.116</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: group, am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Type:  probs</span></span>
+<span></span>
+<span><span class="va">hyp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/specify_hypothesis.html">specify_hypothesis</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"am"</span>, hypothesis <span class="op">=</span> <span class="va">hyp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Group                            Hypothesis Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;      3 (rowid[2], am[0]) - (rowid[1], am[1])    0.477     0.0494  9.65   &lt;0.001 70.7  0.380  0.5733</span></span>
+<span><span class="co">#&gt;      4 (rowid[4], am[0]) - (rowid[3], am[1])   -0.222     0.0664 -3.35   &lt;0.001 10.3 -0.352 -0.0923</span></span>
+<span><span class="co">#&gt;      5 (rowid[6], am[0]) - (rowid[5], am[1])   -0.254     0.0559 -4.54   &lt;0.001 17.5 -0.364 -0.1446</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: group, hypothesis, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Type:  probs</span></span></code></pre></div>
+</div>
+<p>To avoid applying the function within <code>group</code> and compare group levels to one another, we can specify <code>by="rowid"</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Group Estimate Std. Error    z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;      3    0.471     0.0584 8.05   &lt;0.001 50.2 0.3561  0.585</span></span>
+<span><span class="co">#&gt;      4    0.366     0.0715 5.12   &lt;0.001 21.7 0.2263  0.507</span></span>
+<span><span class="co">#&gt;      5    0.163     0.0478 3.41   &lt;0.001 10.6 0.0692  0.257</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Type:  probs</span></span>
+<span></span>
+<span><span class="va">hyp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/specify_hypothesis.html">specify_hypothesis</a></span><span class="op">(</span></span>
+<span>    by <span class="op">=</span> <span class="st">"rowid"</span>,</span>
+<span>    hypothesis <span class="op">=</span> <span class="st">"sequential"</span>,</span>
+<span>    label_columns <span class="op">=</span> <span class="st">"group"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="va">hyp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;               Hypothesis Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;  (group[4]) - (group[3])   -0.104      0.122 -0.858   0.3911 1.4 -0.342 0.13396</span></span>
+<span><span class="co">#&gt;  (group[5]) - (group[4])   -0.204      0.107 -1.907   0.0565 4.1 -0.413 0.00564</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: hypothesis, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Type:  probs</span></span></code></pre></div>
+</div>
+</section></section><section id="fitted-models" class="level2"><h2 class="anchored" data-anchor-id="fitted-models">Fitted models</h2>
 <p>The <code>hypothesis</code> argument can be used to compute standard errors for arbitrary functions of model parameters. This user-supplied function must accept a single model object, and return a data.frame with two columns named <code>term</code> and <code>estimate</code>.</p>
 <p>Here, we test if the sum of the <code>hp</code> and <code>mpg</code> coefficients is equal to 2:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">mpg</span>, data <span class="op">=</span> <span class="va">mtcars</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1085,7 +1286,7 @@ window.Quarto = {
 </div>
 <p>Test of equality between two two predictions:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">x</span>, newdata <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span>    <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>term <span class="op">=</span> <span class="st">"pred[2] = pred[3]"</span>, estimate <span class="op">=</span> <span class="va">p</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">p</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
@@ -1100,7 +1301,7 @@ window.Quarto = {
 </div>
 <p>We can also use more complex aggregation patterns. In this ordinal logistic regression model, we model the number of gears for each ar. If we compute fitted values with the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function, we obtain one predicted probability for each individual car and for each level of the response variable:</p>
 <div class="cell" data-messages="false">
-<div class="sourceCode cell-code" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span></span>
@@ -1128,7 +1329,7 @@ window.Quarto = {
 </div>
 <p>There are three levels to the outcome: 3, 4, and 5. Imagine that, for each car in the dataset, we want to collapse categories of the output variable into two categories (“3 &amp; 4” and “5”) by taking sums of predicted probabilities. Then, we want to take the average of those predicted probabilities for each level of <code>cyl</code>. To do so, we define a custom function, and pass it to the <code>hypothesis</code> argument of the <code><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses()</a></code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">x</span>, vcov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>        <span class="co"># label the new categories of outcome levels</span></span>
@@ -1159,7 +1360,7 @@ window.Quarto = {
 <section id="simple-contrast" class="level2"><h2 class="anchored" data-anchor-id="simple-contrast">Simple contrast</h2>
 <p>Consider a simple example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rvlenth/emmeans">emmeans</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/">nnet</a></span><span class="op">)</span></span>
@@ -1188,25 +1389,25 @@ window.Quarto = {
 </div>
 <p>The contrast between marginal means for <code>carb==1</code> and <code>carb==2</code> is:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fl">21.66232</span> <span class="op">-</span> <span class="fl">21.34058</span> </span>
 <span><span class="co">#&gt; [1] 0.32174</span></span></code></pre></div>
 </div>
 <p>or</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fl">21.66232</span> <span class="op">+</span> <span class="op">-</span><span class="op">(</span><span class="fl">21.34058</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.32174</span></span></code></pre></div>
 </div>
 <p>or</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">21.66232</span>, <span class="fl">21.34058</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.32174</span></span></code></pre></div>
 </div>
 <p>or</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">21.66232</span>, <span class="fl">21.34058</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         [,1]</span></span>
 <span><span class="co">#&gt; [1,] 0.32174</span></span></code></pre></div>
@@ -1214,7 +1415,7 @@ window.Quarto = {
 <p>The last two commands express the contrast of interest as <a href="https://en.wikipedia.org/wiki/Linear_combination">a linear combination</a> of marginal means.</p>
 <p>In the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function, we can supply a <code>hypothesis</code> argument to compute linear combinations of marginal means. This argument must be a numeric vector of the same length as the number of rows in the output. For example, in the previous there were six rows, and the two marginal means we want to compare are at in the first two positions:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"carb"</span>,</span>
@@ -1230,7 +1431,7 @@ window.Quarto = {
 </section><section id="complex-contrast" class="level2"><h2 class="anchored" data-anchor-id="complex-contrast">Complex contrast</h2>
 <p>Of course, we can also estimate more complex contrasts:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"carb"</span>,</span>
@@ -1245,7 +1446,7 @@ window.Quarto = {
 </div>
 <p><code>emmeans</code> produces similar results:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rvlenth/emmeans">emmeans</a></span><span class="op">)</span></span>
 <span><span class="va">em</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, <span class="st">"carb"</span><span class="op">)</span></span>
 <span><span class="va">lc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>custom_contrast <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
@@ -1258,7 +1459,7 @@ window.Quarto = {
 </section><section id="multiple-contrasts" class="level2"><h2 class="anchored" data-anchor-id="multiple-contrasts">Multiple contrasts</h2>
 <p>Users can also compute multiple linear combinations simultaneously by supplying a numeric matrix to <code>hypotheses</code>. This matrix must have the same number of rows as the output of <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code>, and each column represents a distinct set of weights for different linear combinations. The column names of the matrix become labels in the output. For example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>    <span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>,</span>
 <span>    <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span></span>
@@ -1289,7 +1490,7 @@ window.Quarto = {
 <p><code>marginaleffects</code> can also compute uncertainty estimates for arbitrary quantities hosted in a data frame, as long as the user can supply a variance-covariance matrix. (Thanks to Kyle F Butts for this cool feature and example!)</p>
 <p>Say you run a monte-carlo simulation and you want to perform hypothesis of various quantities returned from each simulation. The quantities are correlated within each draw:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># simulated means and medians</span></span>
 <span><span class="va">draw</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span> </span>
 <span>  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10000</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -1322,7 +1523,7 @@ window.Quarto = {
 </section><section id="joint-hypotheses-tests" class="level1"><h1>Joint hypotheses tests</h1>
 <p>The <code><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses()</a></code> function can also test multiple hypotheses jointly. For example, consider this model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">*</span> <span class="va">hp</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        (Intercept)    as.factor(cyl)6    as.factor(cyl)8                 hp as.factor(cyl)6:hp as.factor(cyl)8:hp </span></span>
@@ -1330,7 +1531,7 @@ window.Quarto = {
 </div>
 <p>We may want to test the null hypothesis that two of the coefficients are jointly (both) equal to zero.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"as.factor(cyl)6:hp"</span>, <span class="st">"as.factor(cyl)8:hp"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1346,7 +1547,7 @@ window.Quarto = {
 <p>The <code>joint</code> argument allows users to flexibly specify the parameters to be tested, using character vectors, integer indices, or Perl-compatible regular expressions. We can also specify the null hypothesis for each parameter individually using the <code>hypothesis</code> argument.</p>
 <p>Naturally, the <code>hypotheses</code> function also works with <code>marginaleffects</code> objects.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ## joint hypotheses: regular expression</span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1415,7 +1616,7 @@ window.Quarto = {
 </div>
 <p>We can also combine multiple calls to <code>hypotheses</code> to execute a joint test on linear combinations of coefficients:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># fit model</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">carb</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">)</span></span>
 <span></span>
@@ -1441,7 +1642,7 @@ window.Quarto = {
 <p>Now we illustrate how to use the machinery described above to do pairwise comparisons between contrasts, a type of analysis often associated with a “Difference-in-Differences” research design.</p>
 <p>First, we simulate data with two treatment groups and pre/post periods:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
@@ -1467,7 +1668,7 @@ window.Quarto = {
 </div>
 <p>Then, we estimate a linear model with a multiple interaction between the time and the treatment indicators. We also compute contrasts at the mean for each treatment level:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">did_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">time</span> <span class="op">*</span> <span class="va">trt</span>, data <span class="op">=</span> <span class="va">did</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
@@ -1484,7 +1685,7 @@ window.Quarto = {
 </div>
 <p>Finally, we compute pairwise differences between contrasts. This is the Diff-in-Diff estimate:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">did_model</span>,</span>
 <span>    variables <span class="op">=</span> <span class="st">"time"</span>,</span>
@@ -1534,18 +1735,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1577,7 +1767,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1585,7 +1797,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

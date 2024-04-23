@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.5.30">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo</title>
+
+
+<title>Marginal Effects Zoo – plot_slopes</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -53,13 +55,26 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../man/hypotheses.html" rel="next">
 <link href="../man/plot_comparisons.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -88,14 +103,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+
+
 </head>
+
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -106,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-<li class="nav-item">
+  <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -125,25 +146,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-</div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../man/predictions.html">Functions</a></li>
-<li class="breadcrumb-item"><a href="../man/plot_slopes.html"><code>plot_slopes</code></a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/predictions.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/plot_slopes.html"><code>plot_slopes</code></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -157,8 +182,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -189,7 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
@@ -198,8 +223,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -326,7 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
@@ -335,8 +360,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -397,7 +422,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
@@ -406,8 +431,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -474,7 +499,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -494,32 +519,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
    
   <ul>
-<li>
-<a href="#plot-conditional-or-marginal-slopes" id="toc-plot-conditional-or-marginal-slopes" class="nav-link active" data-scroll-target="#plot-conditional-or-marginal-slopes">Plot Conditional or Marginal Slopes</a>
+  <li><a href="#plot-conditional-or-marginal-slopes" id="toc-plot-conditional-or-marginal-slopes" class="nav-link active" data-scroll-target="#plot-conditional-or-marginal-slopes">Plot Conditional or Marginal Slopes</a>
   <ul class="collapse">
-<li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
+  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
   <li><a href="#model-specific-arguments" id="toc-model-specific-arguments" class="nav-link" data-scroll-target="#model-specific-arguments">Model-Specific Arguments</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  </ul></li>
   </ul>
-</li>
-  </ul></nav>
-</div>
+</nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><section id="plot-conditional-or-marginal-slopes" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="plot-conditional-or-marginal-slopes">Plot Conditional or Marginal Slopes</h2>
-<section id="description" class="level3"><h3 class="anchored" data-anchor-id="description">Description</h3>
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="plot-conditional-or-marginal-slopes" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="plot-conditional-or-marginal-slopes">Plot Conditional or Marginal Slopes</h2>
+<section id="description" class="level3">
+<h3 class="anchored" data-anchor-id="description">Description</h3>
 <p>Plot slopes on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).</p>
-<p>The <code>by</code> argument is used to plot marginal slopes, that is, slopes made on the original data, but averaged by subgroups. This is analogous to using the <code>by</code> argument in the <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> function.</p>
-<p>The <code>condition</code> argument is used to plot conditional slopes, that is, slopes computed on a user-specified grid. This is analogous to using the <code>newdata</code> argument and <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> function in a <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> call. All variables whose values are not specified explicitly are treated as usual by <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code>, that is, they are held at their mean or mode (or rounded mean for integers). This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the <code>condition</code> argument, or supply model-specific arguments to compute population-level estimates. See details below. See the "Plots" vignette and website for tutorials and information on how to customize plots:</p>
+<p>The <code>by</code> argument is used to plot marginal slopes, that is, slopes made on the original data, but averaged by subgroups. This is analogous to using the <code>by</code> argument in the <code>slopes()</code> function.</p>
+<p>The <code>condition</code> argument is used to plot conditional slopes, that is, slopes computed on a user-specified grid. This is analogous to using the <code>newdata</code> argument and <code>datagrid()</code> function in a <code>slopes()</code> call. All variables whose values are not specified explicitly are treated as usual by <code>datagrid()</code>, that is, they are held at their mean or mode (or rounded mean for integers). This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the <code>condition</code> argument, or supply model-specific arguments to compute population-level estimates. See details below. See the "Plots" vignette and website for tutorials and information on how to customize plots:</p>
 <ul>
 <li>
 <p>https://marginaleffects.com/vignettes/plot.html</p>
@@ -527,7 +560,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>
 <p>https://marginaleffects.com</p>
 </li>
-</ul></section><section id="usage" class="level3"><h3 class="anchored" data-anchor-id="usage">Usage</h3>
+</ul>
+</section>
+<section id="usage" class="level3">
+<h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">plot_slopes(
   model,
   variables = NULL,
@@ -545,9 +581,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   ...
 )
 </code></pre>
-</section><section id="arguments" class="level3"><h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
-<table><tbody>
-<tr>
+</section>
+<section id="arguments" class="level3">
+<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
+<table>
+<tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="plot_slopes_:_model">model</code>
 </td>
@@ -591,7 +629,7 @@ Name of the variable whose marginal effect (slope) we want to plot on the y-axis
 <p>1: x-axis. 2: color/shape. 3: facet (wrap if no fourth variable, otherwise cols of grid). 4: facet (rows of grid).</p>
 </li>
 <li>
-<p>Numeric variables in positions 2 and 3 are summarized by Tukey’s five numbers <code><a href="https://rdrr.io/r/stats/fivenum.html">?stats::fivenum</a></code>.</p>
+<p>Numeric variables in positions 2 and 3 are summarized by Tukey’s five numbers <code>?stats::fivenum</code>.</p>
 </li>
 </ul>
 </td>
@@ -619,7 +657,7 @@ Name of the variable whose marginal effect (slope) we want to plot on the y-axis
 <p>See examples below.</p>
 </li>
 <li>
-<p>For more complex aggregations, you can use the <code>FUN</code> argument of the <code><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses()</a></code> function. See that function’s documentation and the Hypothesis Test vignettes on the <code>marginaleffects</code> website.</p>
+<p>For more complex aggregations, you can use the <code>FUN</code> argument of the <code>hypotheses()</code> function. See that function’s documentation and the Hypothesis Test vignettes on the <code>marginaleffects</code> website.</p>
 </li>
 </ul>
 </td>
@@ -629,7 +667,7 @@ Name of the variable whose marginal effect (slope) we want to plot on the y-axis
 <code id="plot_slopes_:_newdata">newdata</code>
 </td>
 <td>
-When <code>newdata</code> is <code>NULL</code>, the grid is determined by the <code>condition</code> argument. When <code>newdata</code> is not <code>NULL</code>, the argument behaves in the same way as in the <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> function.
+When <code>newdata</code> is <code>NULL</code>, the grid is determined by the <code>condition</code> argument. When <code>newdata</code> is not <code>NULL</code>, the argument behaves in the same way as in the <code>slopes()</code> function.
 </td>
 </tr>
 <tr>
@@ -657,7 +695,7 @@ string indicates the type (scale) of the predictions used to compute contrasts o
 <p>String which indicates the kind of uncertainty estimates to return.</p>
 <ul>
 <li>
-<p>Heteroskedasticity-consistent: <code>“HC”</code>, <code>“HC0”</code>, <code>“HC1”</code>, <code>“HC2”</code>, <code>“HC3”</code>, <code>“HC4”</code>, <code>“HC4m”</code>, <code>“HC5”</code>. See <code><a href="https://sandwich.R-Forge.R-project.org/reference/vcovHC.html">?sandwich::vcovHC</a></code></p>
+<p>Heteroskedasticity-consistent: <code>“HC”</code>, <code>“HC0”</code>, <code>“HC1”</code>, <code>“HC2”</code>, <code>“HC3”</code>, <code>“HC4”</code>, <code>“HC4m”</code>, <code>“HC5”</code>. See <code>?sandwich::vcovHC</code></p>
 </li>
 <li>
 <p>Heteroskedasticity and autocorrelation consistent: <code>“HAC”</code></p>
@@ -671,7 +709,7 @@ string indicates the type (scale) of the predictions used to compute contrasts o
 </ul>
 </li>
 <li>
-<p>One-sided formula which indicates the name of cluster variables (e.g., <code>~unit_id</code>). This formula is passed to the <code>cluster</code> argument of the <code><a href="https://sandwich.R-Forge.R-project.org/reference/vcovCL.html">sandwich::vcovCL</a></code> function.</p>
+<p>One-sided formula which indicates the name of cluster variables (e.g., <code>~unit_id</code>). This formula is passed to the <code>cluster</code> argument of the <code>sandwich::vcovCL</code> function.</p>
 </li>
 <li>
 <p>Square covariance matrix</p>
@@ -695,7 +733,7 @@ numeric value between 0 and 1. Confidence level to use to build a confidence int
 <code id="plot_slopes_:_wts">wts</code>
 </td>
 <td>
-<p>logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in <code style="white-space: pre;">avg_*()</code> or with the <code>by</code> argument, and not unit-level estimates. See <code><a href="https://rdrr.io/r/stats/weighted.mean.html">?weighted.mean</a></code></p>
+<p>logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in <code style="white-space: pre;">avg_*()</code> or with the <code>by</code> argument, and not unit-level estimates. See <code>?weighted.mean</code></p>
 <ul>
 <li>
 <p>string: column name of the weights variable in <code>newdata</code>. When supplying a column name to <code>wts</code>, it is recommended to supply the original data (including the weights variable) explicitly to <code>newdata</code>.</p>
@@ -707,7 +745,7 @@ numeric value between 0 and 1. Confidence level to use to build a confidence int
 <p>FALSE: Equal weights.</p>
 </li>
 <li>
-<p>TRUE: Extract weights from the fitted object with <code><a href="https://easystats.github.io/insight/reference/find_weights.html">insight::find_weights()</a></code> and use them when taking weighted averages of estimates. Warning: <code>newdata=datagrid()</code> returns a single average weight, which is equivalent to using <code>wts=FALSE</code></p>
+<p>TRUE: Extract weights from the fitted object with <code>insight::find_weights()</code> and use them when taking weighted averages of estimates. Warning: <code>newdata=datagrid()</code> returns a single average weight, which is equivalent to using <code>wts=FALSE</code></p>
 </li>
 </ul>
 </td>
@@ -766,16 +804,21 @@ FALSE grayscale or color plot
 <code id="plot_slopes_:_...">…</code>
 </td>
 <td>
-Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method supplied by the modeling package.These arguments are particularly useful for mixed-effects or bayesian models (see the online vignettes on the <code>marginaleffects</code> website). Available arguments can vary from model to model, depending on the range of supported arguments by each modeling package. See the "Model-Specific Arguments" section of the <code><a href="https://marginaleffects.com/man/slopes.html">?slopes</a></code> documentation for a non-exhaustive list of available arguments.
+Additional arguments are passed to the <code>predict()</code> method supplied by the modeling package.These arguments are particularly useful for mixed-effects or bayesian models (see the online vignettes on the <code>marginaleffects</code> website). Available arguments can vary from model to model, depending on the range of supported arguments by each modeling package. See the "Model-Specific Arguments" section of the <code>?slopes</code> documentation for a non-exhaustive list of available arguments.
 </td>
 </tr>
-</tbody></table></section><section id="value" class="level3"><h3 class="anchored" data-anchor-id="value">Value</h3>
+</tbody></table>
+</section>
+<section id="value" class="level3">
+<h3 class="anchored" data-anchor-id="value">Value</h3>
 <p>A <code>ggplot2</code> object</p>
-</section><section id="model-specific-arguments" class="level3"><h3 class="anchored" data-anchor-id="model-specific-arguments">Model-Specific Arguments</h3>
-<p>Some model types allow model-specific arguments to modify the nature of marginal effects, predictions, marginal means, and contrasts. Please report other package-specific <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> arguments on Github so we can add them to the table below.</p>
+</section>
+<section id="model-specific-arguments" class="level3">
+<h3 class="anchored" data-anchor-id="model-specific-arguments">Model-Specific Arguments</h3>
+<p>Some model types allow model-specific arguments to modify the nature of marginal effects, predictions, marginal means, and contrasts. Please report other package-specific <code>predict()</code> arguments on Github so we can add them to the table below.</p>
 <p>https://github.com/vincentarelbundock/marginaleffects/issues</p>
-<table><tbody>
-<tr>
+<table>
+<tbody><tr>
 <td style="text-align: left;">
 Package
 </td>
@@ -936,57 +979,64 @@ robustlmm::predict.rlmerMod
 <td style="text-align: left;">
 </td>
 </tr>
-</tbody></table></section><section id="examples" class="level3"><h3 class="anchored" data-anchor-id="examples">Examples</h3>
+</tbody></table>
+</section>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">drat</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">am</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span>, condition <span class="op">=</span> <span class="st">"drat"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">*</span> drat <span class="sc">*</span> <span class="fu">factor</span>(am), <span class="at">data =</span> mtcars)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"hp"</span>, <span class="at">condition =</span> <span class="st">"drat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="plot_slopes_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure">
+<p><img src="plot_slopes_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"drat"</span>, <span class="st">"am"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"hp"</span>, <span class="at">condition =</span> <span class="fu">c</span>(<span class="st">"drat"</span>, <span class="st">"am"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="plot_slopes_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure">
+<p><img src="plot_slopes_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"drat"</span> <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"hp"</span>, <span class="at">condition =</span> <span class="fu">list</span>(<span class="st">"am"</span>, <span class="st">"drat"</span> <span class="ot">=</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="plot_slopes_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure">
+<p><img src="plot_slopes_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"am"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"drat"</span> <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"am"</span>, <span class="at">condition =</span> <span class="fu">list</span>(<span class="st">"hp"</span>, <span class="st">"drat"</span> <span class="ot">=</span> range))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="plot_slopes_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure">
+<p><img src="plot_slopes_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"am"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"drat"</span> <span class="op">=</span> <span class="st">"threenum"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"am"</span>, <span class="at">condition =</span> <span class="fu">list</span>(<span class="st">"hp"</span>, <span class="st">"drat"</span> <span class="ot">=</span> <span class="st">"threenum"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="plot_slopes_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure">
+<p><img src="plot_slopes_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1021,18 +1071,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1064,7 +1103,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1072,7 +1133,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1394,7 +1455,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="../man/plot_comparisons.html" class="pagination-link" aria-label="`plot_comparisons`">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>plot_comparisons</code></span>
       </a>          
@@ -1410,5 +1473,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body>
-</html>
+</body></html>

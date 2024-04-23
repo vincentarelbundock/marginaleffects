@@ -3,9 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.5.30">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo</title>
+<title>Marginal Effects Zoo – categorical</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -87,7 +87,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -151,7 +151,7 @@ window.Quarto = {
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
@@ -786,23 +786,23 @@ window.Quarto = {
 <span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">nd</span>, gcost <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span> <span class="op">==</span> <span class="va">i</span>, <span class="fl">30</span>, <span class="va">gcost</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html">bind_rows</a></span><span class="op">(</span><span class="va">nd</span><span class="op">)</span></span>
 <span><span class="va">nd</span></span>
-<span><span class="co">#&gt;    individual choice wait vcost travel gcost income size  mode</span></span>
-<span><span class="co">#&gt; 1           1     no   35    48    486    30     35    2   air</span></span>
-<span><span class="co">#&gt; 2           1     no   35    48    486   111     35    2 train</span></span>
-<span><span class="co">#&gt; 3           1     no   35    48    486   111     35    2   bus</span></span>
-<span><span class="co">#&gt; 4           1     no   35    48    486   111     35    2   car</span></span>
-<span><span class="co">#&gt; 5           1     no   35    48    486   111     35    2   air</span></span>
-<span><span class="co">#&gt; 6           1     no   35    48    486    30     35    2 train</span></span>
-<span><span class="co">#&gt; 7           1     no   35    48    486   111     35    2   bus</span></span>
-<span><span class="co">#&gt; 8           1     no   35    48    486   111     35    2   car</span></span>
-<span><span class="co">#&gt; 9           1     no   35    48    486   111     35    2   air</span></span>
-<span><span class="co">#&gt; 10          1     no   35    48    486   111     35    2 train</span></span>
-<span><span class="co">#&gt; 11          1     no   35    48    486    30     35    2   bus</span></span>
-<span><span class="co">#&gt; 12          1     no   35    48    486   111     35    2   car</span></span>
-<span><span class="co">#&gt; 13          1     no   35    48    486   111     35    2   air</span></span>
-<span><span class="co">#&gt; 14          1     no   35    48    486   111     35    2 train</span></span>
-<span><span class="co">#&gt; 15          1     no   35    48    486   111     35    2   bus</span></span>
-<span><span class="co">#&gt; 16          1     no   35    48    486    30     35    2   car</span></span>
+<span><span class="co">#&gt;    individual choice wait vcost travel gcost income size  mode rowid</span></span>
+<span><span class="co">#&gt; 1           1     no   35    48    486    30     35    2   air     1</span></span>
+<span><span class="co">#&gt; 2           1     no   35    48    486   111     35    2 train     2</span></span>
+<span><span class="co">#&gt; 3           1     no   35    48    486   111     35    2   bus     3</span></span>
+<span><span class="co">#&gt; 4           1     no   35    48    486   111     35    2   car     4</span></span>
+<span><span class="co">#&gt; 5           1     no   35    48    486   111     35    2   air     1</span></span>
+<span><span class="co">#&gt; 6           1     no   35    48    486    30     35    2 train     2</span></span>
+<span><span class="co">#&gt; 7           1     no   35    48    486   111     35    2   bus     3</span></span>
+<span><span class="co">#&gt; 8           1     no   35    48    486   111     35    2   car     4</span></span>
+<span><span class="co">#&gt; 9           1     no   35    48    486   111     35    2   air     1</span></span>
+<span><span class="co">#&gt; 10          1     no   35    48    486   111     35    2 train     2</span></span>
+<span><span class="co">#&gt; 11          1     no   35    48    486    30     35    2   bus     3</span></span>
+<span><span class="co">#&gt; 12          1     no   35    48    486   111     35    2   car     4</span></span>
+<span><span class="co">#&gt; 13          1     no   35    48    486   111     35    2   air     1</span></span>
+<span><span class="co">#&gt; 14          1     no   35    48    486   111     35    2 train     2</span></span>
+<span><span class="co">#&gt; 15          1     no   35    48    486   111     35    2   bus     3</span></span>
+<span><span class="co">#&gt; 16          1     no   35    48    486    30     35    2   car     4</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -857,18 +857,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -900,7 +889,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -908,7 +919,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

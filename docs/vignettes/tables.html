@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.5.30">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo</title>
+
+
+<title>Marginal Effects Zoo – tables</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -53,13 +55,26 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../vignettes/uncertainty.html" rel="next">
 <link href="../vignettes/supported_models.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -88,14 +103,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+
+
 </head>
+
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -106,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-<li class="nav-item">
+  <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -125,25 +146,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-</div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../vignettes/faq.html">Miscellaneous</a></li>
-<li class="breadcrumb-item"><a href="../vignettes/tables.html">Tables</a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/faq.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../vignettes/tables.html">Tables</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -157,8 +182,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -189,7 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
@@ -198,8 +223,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -326,7 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
@@ -335,8 +360,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -397,7 +422,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
@@ -406,8 +431,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -474,7 +499,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -494,55 +519,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
    
   <ul>
-<li>
-<a href="#tables" id="toc-tables" class="nav-link active" data-scroll-target="#tables">Tables</a>
+  <li><a href="#tables" id="toc-tables" class="nav-link active" data-scroll-target="#tables">Tables</a>
   <ul class="collapse">
-<li><a href="#marginal-effects" id="toc-marginal-effects" class="nav-link" data-scroll-target="#marginal-effects">Marginal effects</a></li>
+  <li><a href="#marginal-effects" id="toc-marginal-effects" class="nav-link" data-scroll-target="#marginal-effects">Marginal effects</a></li>
   <li><a href="#contrasts" id="toc-contrasts" class="nav-link" data-scroll-target="#contrasts">Contrasts</a></li>
+  </ul></li>
   </ul>
-</li>
-  </ul></nav>
-</div>
+</nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><section id="tables" class="level1"><h1>Tables</h1>
-<section id="marginal-effects" class="level2"><h2 class="anchored" data-anchor-id="marginal-effects">Marginal effects</h2>
-<p>We can summarize the results of the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> or <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> functions using <a href="https://github.com/vincentarelbundock/modelsummary">the <code>modelsummary</code> package.</a></p>
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="tables" class="level1">
+<h1>Tables</h1>
+<section id="marginal-effects" class="level2">
+<h2 class="anchored" data-anchor-id="marginal-effects">Marginal effects</h2>
+<p>We can summarize the results of the <code>comparisons()</code> or <code>slopes()</code> functions using <a href="https://github.com/vincentarelbundock/modelsummary">the <code>modelsummary</code> package.</a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>modelsummary_factory_default <span class="op">=</span> <span class="st">"gt"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">wt</span> <span class="op">+</span> <span class="va">drat</span>, family <span class="op">=</span> <span class="va">binomial</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://modelsummary.com/reference/modelsummary.html">modelsummary</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">modelsummary_factory_default =</span> <span class="st">"gt"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(am <span class="sc">~</span> wt <span class="sc">+</span> drat, <span class="at">family =</span> binomial, <span class="at">data =</span> mtcars)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mfx <span class="ot">&lt;-</span> <span class="fu">avg_slopes</span>(mod)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(mfx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<div id="pqmaezofdi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#pqmaezofdi table {
+<div id="gxcggqwlcl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#gxcggqwlcl table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#pqmaezofdi thead, #pqmaezofdi tbody, #pqmaezofdi tfoot, #pqmaezofdi tr, #pqmaezofdi td, #pqmaezofdi th {
+#gxcggqwlcl thead, #gxcggqwlcl tbody, #gxcggqwlcl tfoot, #gxcggqwlcl tr, #gxcggqwlcl td, #gxcggqwlcl th {
   border-style: none;
 }
 
-#pqmaezofdi p {
+#gxcggqwlcl p {
   margin: 0;
   padding: 0;
 }
 
-#pqmaezofdi .gt_table {
+#gxcggqwlcl .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -568,12 +600,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#pqmaezofdi .gt_caption {
+#gxcggqwlcl .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#pqmaezofdi .gt_title {
+#gxcggqwlcl .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -585,7 +617,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#pqmaezofdi .gt_subtitle {
+#gxcggqwlcl .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -597,7 +629,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#pqmaezofdi .gt_heading {
+#gxcggqwlcl .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -609,13 +641,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#pqmaezofdi .gt_bottom_border {
+#gxcggqwlcl .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#pqmaezofdi .gt_col_headings {
+#gxcggqwlcl .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -630,7 +662,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#pqmaezofdi .gt_col_heading {
+#gxcggqwlcl .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -650,7 +682,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#pqmaezofdi .gt_column_spanner_outer {
+#gxcggqwlcl .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -662,15 +694,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#pqmaezofdi .gt_column_spanner_outer:first-child {
+#gxcggqwlcl .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#pqmaezofdi .gt_column_spanner_outer:last-child {
+#gxcggqwlcl .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#pqmaezofdi .gt_column_spanner {
+#gxcggqwlcl .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -682,11 +714,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#pqmaezofdi .gt_spanner_row {
+#gxcggqwlcl .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#pqmaezofdi .gt_group_heading {
+#gxcggqwlcl .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -712,7 +744,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#pqmaezofdi .gt_empty_group_heading {
+#gxcggqwlcl .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -727,15 +759,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#pqmaezofdi .gt_from_md > :first-child {
+#gxcggqwlcl .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#pqmaezofdi .gt_from_md > :last-child {
+#gxcggqwlcl .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#pqmaezofdi .gt_row {
+#gxcggqwlcl .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -754,7 +786,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#pqmaezofdi .gt_stub {
+#gxcggqwlcl .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -767,7 +799,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#pqmaezofdi .gt_stub_row_group {
+#gxcggqwlcl .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -781,15 +813,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#pqmaezofdi .gt_row_group_first td {
+#gxcggqwlcl .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#pqmaezofdi .gt_row_group_first th {
+#gxcggqwlcl .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#pqmaezofdi .gt_summary_row {
+#gxcggqwlcl .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -799,16 +831,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#pqmaezofdi .gt_first_summary_row {
+#gxcggqwlcl .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#pqmaezofdi .gt_first_summary_row.thick {
+#gxcggqwlcl .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#pqmaezofdi .gt_last_summary_row {
+#gxcggqwlcl .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -818,7 +850,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#pqmaezofdi .gt_grand_summary_row {
+#gxcggqwlcl .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -828,7 +860,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#pqmaezofdi .gt_first_grand_summary_row {
+#gxcggqwlcl .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -838,7 +870,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#pqmaezofdi .gt_last_grand_summary_row_top {
+#gxcggqwlcl .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -848,11 +880,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#pqmaezofdi .gt_striped {
+#gxcggqwlcl .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#pqmaezofdi .gt_table_body {
+#gxcggqwlcl .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -861,7 +893,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#pqmaezofdi .gt_footnotes {
+#gxcggqwlcl .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -875,7 +907,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#pqmaezofdi .gt_footnote {
+#gxcggqwlcl .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -884,7 +916,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#pqmaezofdi .gt_sourcenotes {
+#gxcggqwlcl .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -898,7 +930,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#pqmaezofdi .gt_sourcenote {
+#gxcggqwlcl .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -906,71 +938,74 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#pqmaezofdi .gt_left {
+#gxcggqwlcl .gt_left {
   text-align: left;
 }
 
-#pqmaezofdi .gt_center {
+#gxcggqwlcl .gt_center {
   text-align: center;
 }
 
-#pqmaezofdi .gt_right {
+#gxcggqwlcl .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#pqmaezofdi .gt_font_normal {
+#gxcggqwlcl .gt_font_normal {
   font-weight: normal;
 }
 
-#pqmaezofdi .gt_font_bold {
+#gxcggqwlcl .gt_font_bold {
   font-weight: bold;
 }
 
-#pqmaezofdi .gt_font_italic {
+#gxcggqwlcl .gt_font_italic {
   font-style: italic;
 }
 
-#pqmaezofdi .gt_super {
+#gxcggqwlcl .gt_super {
   font-size: 65%;
 }
 
-#pqmaezofdi .gt_footnote_marks {
+#gxcggqwlcl .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#pqmaezofdi .gt_asterisk {
+#gxcggqwlcl .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#pqmaezofdi .gt_indent_1 {
+#gxcggqwlcl .gt_indent_1 {
   text-indent: 5px;
 }
 
-#pqmaezofdi .gt_indent_2 {
+#gxcggqwlcl .gt_indent_2 {
   text-indent: 10px;
 }
 
-#pqmaezofdi .gt_indent_3 {
+#gxcggqwlcl .gt_indent_3 {
   text-indent: 15px;
 }
 
-#pqmaezofdi .gt_indent_4 {
+#gxcggqwlcl .gt_indent_4 {
   text-indent: 20px;
 }
 
-#pqmaezofdi .gt_indent_5 {
+#gxcggqwlcl .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
+
 <table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="header gt_col_headings">
+<thead>
+<tr class="header gt_col_headings">
 <th id=" " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="(1)" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">(1)</th>
-</tr></thead>
+</tr>
+</thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers=" ">drat</td>
@@ -985,74 +1020,99 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_center" headers="(1)">-0.217</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_center" headers="(1)">(0.080)</td>
+<td class="gt_row gt_left" headers=" " style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="(1)" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.080)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">Num.Obs.</td>
+<td class="gt_row gt_center" headers="(1)">32</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">AIC</td>
+<td class="gt_row gt_center" headers="(1)">22.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">BIC</td>
+<td class="gt_row gt_center" headers="(1)">26.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">Log.Lik.</td>
+<td class="gt_row gt_center" headers="(1)">-8.011</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">F</td>
+<td class="gt_row gt_center" headers="(1)">3.430</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">RMSE</td>
+<td class="gt_row gt_center" headers="(1)">0.28</td>
 </tr>
 </tbody>
 </table>
+
 </div>
 </div>
 </div>
 </div>
-<p>The same results can be visualized with <code><a href="https://modelsummary.com/reference/modelplot.html">modelplot()</a></code>:</p>
+<p>The same results can be visualized with <code>modelplot()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/reference/modelplot.html">modelplot</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelplot</span>(mfx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="tables_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure">
+<p><img src="tables_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-</section><section id="contrasts" class="level2"><h2 class="anchored" data-anchor-id="contrasts">Contrasts</h2>
-<p>When using the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function (or the <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> function with categorical variables), the output will include two columns to uniquely identify the quantities of interest: <code>term</code> and <code>contrast</code>.</p>
+</section>
+<section id="contrasts" class="level2">
+<h2 class="anchored" data-anchor-id="contrasts">Contrasts</h2>
+<p>When using the <code>comparisons()</code> function (or the <code>slopes()</code> function with categorical variables), the output will include two columns to uniquely identify the quantities of interest: <code>term</code> and <code>contrast</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">mtcars</span></span>
-<span><span class="va">dat</span><span class="op">$</span><span class="va">gear</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">gear</span><span class="op">)</span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">vs</span> <span class="op">~</span> <span class="va">gear</span> <span class="op">+</span> <span class="va">mpg</span>, data <span class="op">=</span> <span class="va">dat</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://modelsummary.com/reference/get_estimates.html">get_estimates</a></span><span class="op">(</span><span class="va">cmp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 96 × 16</span></span>
-<span><span class="co">#&gt;    rowid term  contrast estimate std.error statistic p.value s.value conf.low conf.high predicted_lo predicted_hi predicted    vs gear    mpg</span></span>
-<span><span class="co">#&gt;    &lt;int&gt; &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1     1 gear  4 - 3      0.0736    0.264      0.279   0.780   0.358  -0.443      0.590       0.707        0.781     0.781      0 4      21  </span></span>
-<span><span class="co">#&gt;  2     2 gear  4 - 3      0.0736    0.264      0.279   0.780   0.358  -0.443      0.590       0.707        0.781     0.781      0 4      21  </span></span>
-<span><span class="co">#&gt;  3     3 gear  4 - 3      0.0321    0.125      0.257   0.797   0.327  -0.213      0.277       0.892        0.924     0.924      1 4      22.8</span></span>
-<span><span class="co">#&gt;  4     4 gear  4 - 3      0.0636    0.231      0.275   0.783   0.352  -0.389      0.517       0.761        0.824     0.761      1 3      21.4</span></span>
-<span><span class="co">#&gt;  5     5 gear  4 - 3      0.0913    0.324      0.282   0.778   0.362  -0.543      0.725       0.334        0.425     0.334      0 3      18.7</span></span>
-<span><span class="co">#&gt;  6     6 gear  4 - 3      0.0796    0.288      0.276   0.782   0.354  -0.485      0.645       0.250        0.329     0.250      1 3      18.1</span></span>
-<span><span class="co">#&gt;  7     7 gear  4 - 3      0.0111    0.0489     0.227   0.820   0.286  -0.0847     0.107       0.0242       0.0353    0.0242     0 3      14.3</span></span>
-<span><span class="co">#&gt;  8     8 gear  4 - 3      0.0122    0.0517     0.236   0.813   0.298  -0.0891     0.114       0.961        0.973     0.973      1 4      24.4</span></span>
-<span><span class="co">#&gt;  9     9 gear  4 - 3      0.0321    0.125      0.257   0.797   0.327  -0.213      0.277       0.892        0.924     0.924      1 4      22.8</span></span>
-<span><span class="co">#&gt; 10    10 gear  4 - 3      0.0964    0.338      0.285   0.776   0.367  -0.566      0.759       0.414        0.510     0.510      1 4      19.2</span></span>
-<span><span class="co">#&gt; # ℹ 86 more rows</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>gear <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dat<span class="sc">$</span>gear)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(vs <span class="sc">~</span> gear <span class="sc">+</span> mpg, <span class="at">data =</span> dat, <span class="at">family =</span> binomial)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>cmp <span class="ot">&lt;-</span> <span class="fu">comparisons</span>(mod)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">get_estimates</span>(cmp)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 96 × 16</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    rowid term  contrast estimate std.error statistic p.value s.value conf.low conf.high predicted_lo predicted_hi predicted    vs gear    mpg</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt; &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1     1 gear  4 - 3      0.0736    0.264      0.279   0.780   0.358  -0.443      0.590       0.707        0.781     0.781      0 4      21  </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2     2 gear  4 - 3      0.0736    0.264      0.279   0.780   0.358  -0.443      0.590       0.707        0.781     0.781      0 4      21  </span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3     3 gear  4 - 3      0.0321    0.125      0.257   0.797   0.327  -0.213      0.277       0.892        0.924     0.924      1 4      22.8</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4     4 gear  4 - 3      0.0636    0.231      0.275   0.783   0.352  -0.389      0.517       0.761        0.824     0.761      1 3      21.4</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5     5 gear  4 - 3      0.0913    0.324      0.282   0.778   0.362  -0.543      0.725       0.334        0.425     0.334      0 3      18.7</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6     6 gear  4 - 3      0.0796    0.288      0.276   0.782   0.354  -0.485      0.645       0.250        0.329     0.250      1 3      18.1</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7     7 gear  4 - 3      0.0111    0.0489     0.227   0.820   0.286  -0.0847     0.107       0.0242       0.0353    0.0242     0 3      14.3</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8     8 gear  4 - 3      0.0122    0.0517     0.236   0.813   0.298  -0.0891     0.114       0.961        0.973     0.973      1 4      24.4</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9     9 gear  4 - 3      0.0321    0.125      0.257   0.797   0.327  -0.213      0.277       0.892        0.924     0.924      1 4      22.8</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10    10 gear  4 - 3      0.0964    0.338      0.285   0.776   0.367  -0.566      0.759       0.414        0.510     0.510      1 4      19.2</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 86 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can use the <code>shape</code> argument of the <code>modelsummary</code> function to structure the table properly:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/reference/modelsummary.html">modelsummary</a></span><span class="op">(</span><span class="va">cmp</span>, shape <span class="op">=</span> <span class="va">term</span> <span class="op">+</span> <span class="va">contrast</span> <span class="op">~</span> <span class="va">model</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(cmp, <span class="at">shape =</span> term <span class="sc">+</span> contrast <span class="sc">~</span> model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<div id="tzrjyecboy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tzrjyecboy table {
+<div id="jsjcongtte" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jsjcongtte table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#tzrjyecboy thead, #tzrjyecboy tbody, #tzrjyecboy tfoot, #tzrjyecboy tr, #tzrjyecboy td, #tzrjyecboy th {
+#jsjcongtte thead, #jsjcongtte tbody, #jsjcongtte tfoot, #jsjcongtte tr, #jsjcongtte td, #jsjcongtte th {
   border-style: none;
 }
 
-#tzrjyecboy p {
+#jsjcongtte p {
   margin: 0;
   padding: 0;
 }
 
-#tzrjyecboy .gt_table {
+#jsjcongtte .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1078,12 +1138,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#tzrjyecboy .gt_caption {
+#jsjcongtte .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#tzrjyecboy .gt_title {
+#jsjcongtte .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1095,7 +1155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#tzrjyecboy .gt_subtitle {
+#jsjcongtte .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1107,7 +1167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#tzrjyecboy .gt_heading {
+#jsjcongtte .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1119,13 +1179,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tzrjyecboy .gt_bottom_border {
+#jsjcongtte .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tzrjyecboy .gt_col_headings {
+#jsjcongtte .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1140,7 +1200,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tzrjyecboy .gt_col_heading {
+#jsjcongtte .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1160,7 +1220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#tzrjyecboy .gt_column_spanner_outer {
+#jsjcongtte .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1172,15 +1232,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#tzrjyecboy .gt_column_spanner_outer:first-child {
+#jsjcongtte .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tzrjyecboy .gt_column_spanner_outer:last-child {
+#jsjcongtte .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tzrjyecboy .gt_column_spanner {
+#jsjcongtte .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1192,11 +1252,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#tzrjyecboy .gt_spanner_row {
+#jsjcongtte .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#tzrjyecboy .gt_group_heading {
+#jsjcongtte .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1222,7 +1282,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#tzrjyecboy .gt_empty_group_heading {
+#jsjcongtte .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1237,15 +1297,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#tzrjyecboy .gt_from_md > :first-child {
+#jsjcongtte .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tzrjyecboy .gt_from_md > :last-child {
+#jsjcongtte .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tzrjyecboy .gt_row {
+#jsjcongtte .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1264,7 +1324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#tzrjyecboy .gt_stub {
+#jsjcongtte .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1277,7 +1337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tzrjyecboy .gt_stub_row_group {
+#jsjcongtte .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1291,15 +1351,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#tzrjyecboy .gt_row_group_first td {
+#jsjcongtte .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tzrjyecboy .gt_row_group_first th {
+#jsjcongtte .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#tzrjyecboy .gt_summary_row {
+#jsjcongtte .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1309,16 +1369,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tzrjyecboy .gt_first_summary_row {
+#jsjcongtte .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tzrjyecboy .gt_first_summary_row.thick {
+#jsjcongtte .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tzrjyecboy .gt_last_summary_row {
+#jsjcongtte .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1328,7 +1388,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#tzrjyecboy .gt_grand_summary_row {
+#jsjcongtte .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1338,7 +1398,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tzrjyecboy .gt_first_grand_summary_row {
+#jsjcongtte .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1348,7 +1408,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#tzrjyecboy .gt_last_grand_summary_row_top {
+#jsjcongtte .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1358,11 +1418,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#tzrjyecboy .gt_striped {
+#jsjcongtte .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tzrjyecboy .gt_table_body {
+#jsjcongtte .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1371,7 +1431,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#tzrjyecboy .gt_footnotes {
+#jsjcongtte .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1385,7 +1445,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tzrjyecboy .gt_footnote {
+#jsjcongtte .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1394,7 +1454,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tzrjyecboy .gt_sourcenotes {
+#jsjcongtte .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1408,7 +1468,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tzrjyecboy .gt_sourcenote {
+#jsjcongtte .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1416,72 +1476,75 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tzrjyecboy .gt_left {
+#jsjcongtte .gt_left {
   text-align: left;
 }
 
-#tzrjyecboy .gt_center {
+#jsjcongtte .gt_center {
   text-align: center;
 }
 
-#tzrjyecboy .gt_right {
+#jsjcongtte .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tzrjyecboy .gt_font_normal {
+#jsjcongtte .gt_font_normal {
   font-weight: normal;
 }
 
-#tzrjyecboy .gt_font_bold {
+#jsjcongtte .gt_font_bold {
   font-weight: bold;
 }
 
-#tzrjyecboy .gt_font_italic {
+#jsjcongtte .gt_font_italic {
   font-style: italic;
 }
 
-#tzrjyecboy .gt_super {
+#jsjcongtte .gt_super {
   font-size: 65%;
 }
 
-#tzrjyecboy .gt_footnote_marks {
+#jsjcongtte .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#tzrjyecboy .gt_asterisk {
+#jsjcongtte .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tzrjyecboy .gt_indent_1 {
+#jsjcongtte .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tzrjyecboy .gt_indent_2 {
+#jsjcongtte .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tzrjyecboy .gt_indent_3 {
+#jsjcongtte .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tzrjyecboy .gt_indent_4 {
+#jsjcongtte .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tzrjyecboy .gt_indent_5 {
+#jsjcongtte .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
+
 <table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="header gt_col_headings">
+<thead>
+<tr class="header gt_col_headings">
 <th id=" " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="  " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="(1)" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">(1)</th>
-</tr></thead>
+</tr>
+</thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers=" ">gear</td>
@@ -1509,65 +1572,94 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_center" headers="(1)">32</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_left" headers=" " style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_left" headers="  " style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="(1)" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">32</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">Num.Obs.</td>
 <td class="gt_row gt_left" headers="  "></td>
 <td class="gt_row gt_center" headers="(1)">32</td>
 </tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">AIC</td>
+<td class="gt_row gt_left" headers="  "></td>
+<td class="gt_row gt_center" headers="(1)">26.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">BIC</td>
+<td class="gt_row gt_left" headers="  "></td>
+<td class="gt_row gt_center" headers="(1)">32.1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">Log.Lik.</td>
+<td class="gt_row gt_left" headers="  "></td>
+<td class="gt_row gt_center" headers="(1)">-9.101</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">F</td>
+<td class="gt_row gt_left" headers="  "></td>
+<td class="gt_row gt_center" headers="(1)">2.389</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">RMSE</td>
+<td class="gt_row gt_left" headers="  "></td>
+<td class="gt_row gt_center" headers="(1)">0.31</td>
+</tr>
 </tbody>
 </table>
+
 </div>
 </div>
 </div>
 </div>
 <p>Cross-contrasts can be a bit trickier, since there are multiple simultaneous groups. Consider this example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
-<span>  <span class="va">mod</span>,</span>
-<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"gear"</span>, <span class="st">"cyl"</span><span class="op">)</span>,</span>
-<span>  cross <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://modelsummary.com/reference/get_estimates.html">get_estimates</a></span><span class="op">(</span><span class="va">cmp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 128 × 17</span></span>
-<span><span class="co">#&gt;    rowid term  contrast_cyl contrast_gear estimate std.error statistic p.value s.value conf.low conf.high predicted_lo predicted_hi predicted   mpg   cyl  gear</span></span>
-<span><span class="co">#&gt;    &lt;int&gt; &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1     1 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      20.1  21       6     4</span></span>
-<span><span class="co">#&gt;  2     2 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      20.1  21       6     4</span></span>
-<span><span class="co">#&gt;  3     3 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      26.8  22.8     4     4</span></span>
-<span><span class="co">#&gt;  4     4 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      18.8  21.4     6     3</span></span>
-<span><span class="co">#&gt;  5     5 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      14.9  18.7     8     3</span></span>
-<span><span class="co">#&gt;  6     6 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      18.8  18.1     6     3</span></span>
-<span><span class="co">#&gt;  7     7 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      14.9  14.3     8     3</span></span>
-<span><span class="co">#&gt;  8     8 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      26.8  24.4     4     4</span></span>
-<span><span class="co">#&gt;  9     9 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      26.8  22.8     4     4</span></span>
-<span><span class="co">#&gt; 10    10 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      20.1  19.2     6     4</span></span>
-<span><span class="co">#&gt; # ℹ 118 more rows</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">factor</span>(cyl) <span class="sc">+</span> <span class="fu">factor</span>(gear), <span class="at">data =</span> mtcars)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cmp <span class="ot">&lt;-</span> <span class="fu">comparisons</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"gear"</span>, <span class="st">"cyl"</span>),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">cross =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">get_estimates</span>(cmp)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 128 × 17</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    rowid term  contrast_cyl contrast_gear estimate std.error statistic p.value s.value conf.low conf.high predicted_lo predicted_hi predicted   mpg   cyl  gear</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt; &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1     1 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      20.1  21       6     4</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2     2 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      20.1  21       6     4</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3     3 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      26.8  22.8     4     4</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4     4 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      18.8  21.4     6     3</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5     5 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      14.9  18.7     8     3</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6     6 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      18.8  18.1     6     3</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7     7 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      14.9  14.3     8     3</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8     8 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      26.8  24.4     4     4</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9     9 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      26.8  22.8     4     4</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10    10 cross 6 - 4        4 - 3            -5.33      2.77     -1.93  0.0542    4.21    -10.8    0.0953         25.4         20.1      20.1  19.2     6     4</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 118 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As we can see above, there are two relevant grouping columns: <code>contrast_gear</code> and <code>contrast_cyl</code>. We can simply plug those names in the <code>shape</code> argument:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/reference/modelsummary.html">modelsummary</a></span><span class="op">(</span></span>
-<span>  <span class="va">cmp</span>,</span>
-<span>  shape <span class="op">=</span> <span class="va">contrast_gear</span> <span class="op">+</span> <span class="va">contrast_cyl</span> <span class="op">~</span> <span class="va">model</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  cmp,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">shape =</span> contrast_gear <span class="sc">+</span> contrast_cyl <span class="sc">~</span> model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<div id="jgbacnbnwr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#jgbacnbnwr table {
+<div id="eszzpcwlyq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#eszzpcwlyq table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jgbacnbnwr thead, #jgbacnbnwr tbody, #jgbacnbnwr tfoot, #jgbacnbnwr tr, #jgbacnbnwr td, #jgbacnbnwr th {
+#eszzpcwlyq thead, #eszzpcwlyq tbody, #eszzpcwlyq tfoot, #eszzpcwlyq tr, #eszzpcwlyq td, #eszzpcwlyq th {
   border-style: none;
 }
 
-#jgbacnbnwr p {
+#eszzpcwlyq p {
   margin: 0;
   padding: 0;
 }
 
-#jgbacnbnwr .gt_table {
+#eszzpcwlyq .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1593,12 +1685,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#jgbacnbnwr .gt_caption {
+#eszzpcwlyq .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jgbacnbnwr .gt_title {
+#eszzpcwlyq .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1610,7 +1702,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#jgbacnbnwr .gt_subtitle {
+#eszzpcwlyq .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1622,7 +1714,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#jgbacnbnwr .gt_heading {
+#eszzpcwlyq .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1634,13 +1726,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#jgbacnbnwr .gt_bottom_border {
+#eszzpcwlyq .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jgbacnbnwr .gt_col_headings {
+#eszzpcwlyq .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1655,7 +1747,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#jgbacnbnwr .gt_col_heading {
+#eszzpcwlyq .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1675,7 +1767,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#jgbacnbnwr .gt_column_spanner_outer {
+#eszzpcwlyq .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1687,15 +1779,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#jgbacnbnwr .gt_column_spanner_outer:first-child {
+#eszzpcwlyq .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jgbacnbnwr .gt_column_spanner_outer:last-child {
+#eszzpcwlyq .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jgbacnbnwr .gt_column_spanner {
+#eszzpcwlyq .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1707,11 +1799,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#jgbacnbnwr .gt_spanner_row {
+#eszzpcwlyq .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jgbacnbnwr .gt_group_heading {
+#eszzpcwlyq .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1737,7 +1829,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#jgbacnbnwr .gt_empty_group_heading {
+#eszzpcwlyq .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1752,15 +1844,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#jgbacnbnwr .gt_from_md > :first-child {
+#eszzpcwlyq .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jgbacnbnwr .gt_from_md > :last-child {
+#eszzpcwlyq .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jgbacnbnwr .gt_row {
+#eszzpcwlyq .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1779,7 +1871,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#jgbacnbnwr .gt_stub {
+#eszzpcwlyq .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1792,7 +1884,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#jgbacnbnwr .gt_stub_row_group {
+#eszzpcwlyq .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1806,15 +1898,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#jgbacnbnwr .gt_row_group_first td {
+#eszzpcwlyq .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jgbacnbnwr .gt_row_group_first th {
+#eszzpcwlyq .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jgbacnbnwr .gt_summary_row {
+#eszzpcwlyq .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1824,16 +1916,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#jgbacnbnwr .gt_first_summary_row {
+#eszzpcwlyq .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#jgbacnbnwr .gt_first_summary_row.thick {
+#eszzpcwlyq .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jgbacnbnwr .gt_last_summary_row {
+#eszzpcwlyq .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1843,7 +1935,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#jgbacnbnwr .gt_grand_summary_row {
+#eszzpcwlyq .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1853,7 +1945,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#jgbacnbnwr .gt_first_grand_summary_row {
+#eszzpcwlyq .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1863,7 +1955,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#jgbacnbnwr .gt_last_grand_summary_row_top {
+#eszzpcwlyq .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1873,11 +1965,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#jgbacnbnwr .gt_striped {
+#eszzpcwlyq .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jgbacnbnwr .gt_table_body {
+#eszzpcwlyq .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1886,7 +1978,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#jgbacnbnwr .gt_footnotes {
+#eszzpcwlyq .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1900,7 +1992,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#jgbacnbnwr .gt_footnote {
+#eszzpcwlyq .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1909,7 +2001,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#jgbacnbnwr .gt_sourcenotes {
+#eszzpcwlyq .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1923,7 +2015,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#jgbacnbnwr .gt_sourcenote {
+#eszzpcwlyq .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1931,72 +2023,75 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#jgbacnbnwr .gt_left {
+#eszzpcwlyq .gt_left {
   text-align: left;
 }
 
-#jgbacnbnwr .gt_center {
+#eszzpcwlyq .gt_center {
   text-align: center;
 }
 
-#jgbacnbnwr .gt_right {
+#eszzpcwlyq .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jgbacnbnwr .gt_font_normal {
+#eszzpcwlyq .gt_font_normal {
   font-weight: normal;
 }
 
-#jgbacnbnwr .gt_font_bold {
+#eszzpcwlyq .gt_font_bold {
   font-weight: bold;
 }
 
-#jgbacnbnwr .gt_font_italic {
+#eszzpcwlyq .gt_font_italic {
   font-style: italic;
 }
 
-#jgbacnbnwr .gt_super {
+#eszzpcwlyq .gt_super {
   font-size: 65%;
 }
 
-#jgbacnbnwr .gt_footnote_marks {
+#eszzpcwlyq .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jgbacnbnwr .gt_asterisk {
+#eszzpcwlyq .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jgbacnbnwr .gt_indent_1 {
+#eszzpcwlyq .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jgbacnbnwr .gt_indent_2 {
+#eszzpcwlyq .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jgbacnbnwr .gt_indent_3 {
+#eszzpcwlyq .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jgbacnbnwr .gt_indent_4 {
+#eszzpcwlyq .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jgbacnbnwr .gt_indent_5 {
+#eszzpcwlyq .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
+
 <table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="header gt_col_headings">
+<thead>
+<tr class="header gt_col_headings">
 <th id="gear" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">gear</th>
 <th id="cyl" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">cyl</th>
 <th id="(1)" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">(1)</th>
-</tr></thead>
+</tr>
+</thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="gear">4 - 3</td>
@@ -2034,19 +2129,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_center" headers="(1)">32</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="gear"></td>
+<td class="gt_row gt_left" headers="gear" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_left" headers="cyl" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="(1)" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">32</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="gear">Num.Obs.</td>
 <td class="gt_row gt_left" headers="cyl"></td>
 <td class="gt_row gt_center" headers="(1)">32</td>
 </tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="gear">R2</td>
+<td class="gt_row gt_left" headers="cyl"></td>
+<td class="gt_row gt_center" headers="(1)">0.740</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="gear">R2 Adj.</td>
+<td class="gt_row gt_left" headers="cyl"></td>
+<td class="gt_row gt_center" headers="(1)">0.701</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="gear">AIC</td>
+<td class="gt_row gt_left" headers="cyl"></td>
+<td class="gt_row gt_center" headers="(1)">173.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="gear">BIC</td>
+<td class="gt_row gt_left" headers="cyl"></td>
+<td class="gt_row gt_center" headers="(1)">182.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="gear">Log.Lik.</td>
+<td class="gt_row gt_left" headers="cyl"></td>
+<td class="gt_row gt_center" headers="(1)">-80.838</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="gear">F</td>
+<td class="gt_row gt_left" headers="cyl"></td>
+<td class="gt_row gt_center" headers="(1)">19.190</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="gear">RMSE</td>
+<td class="gt_row gt_left" headers="cyl"></td>
+<td class="gt_row gt_center" headers="(1)">3.03</td>
+</tr>
 </tbody>
 </table>
+
 </div>
 </div>
 </div>
 </div>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -2081,18 +2221,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -2124,7 +2253,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -2132,7 +2283,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -2454,7 +2605,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="../vignettes/supported_models.html" class="pagination-link" aria-label="Supported Models">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Supported Models</span>
       </a>          
@@ -2470,5 +2623,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body>
-</html>
+</body></html>

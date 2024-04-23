@@ -2,6 +2,10 @@
 
 ## Development
 
+New function:
+
+* `specify_hypothesis()` returns functions to be used in the `hypothesis` argument of `predictions()`, `comparisons()`, and `slopes()`. This convenience function can be used to specify complex aggregations and estimands for hypothesis tests (ex: by subgroups or with custom functions).
+
 Bugs:
 
 * `mlogit` `predict()` method does not play well with `data.table`. Thanks to @andrewheiss for report #1086.

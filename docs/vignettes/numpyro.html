@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.5.30">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo</title>
+
+
+<title>Marginal Effects Zoo – numpyro</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -53,13 +55,26 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../vignettes/supported_models.html" rel="next">
 <link href="../vignettes/performance.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -88,14 +103,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+
+
 </head>
+
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -106,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-<li class="nav-item">
+  <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -125,25 +146,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-</div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../vignettes/faq.html">Miscellaneous</a></li>
-<li class="breadcrumb-item"><a href="../vignettes/numpyro.html">NumPyro</a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/faq.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../vignettes/numpyro.html">NumPyro</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -157,8 +182,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -189,7 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
@@ -198,8 +223,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -326,7 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
@@ -335,8 +360,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -397,7 +422,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
@@ -406,8 +431,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -474,7 +499,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -494,177 +519,182 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
    
   <ul>
-<li>
-<a href="#numpyro" id="toc-numpyro" class="nav-link active" data-scroll-target="#numpyro">NumPyro</a>
+  <li><a href="#numpyro" id="toc-numpyro" class="nav-link active" data-scroll-target="#numpyro">NumPyro</a>
   <ul class="collapse">
-<li><a href="#fitting-a-numpyro-model" id="toc-fitting-a-numpyro-model" class="nav-link" data-scroll-target="#fitting-a-numpyro-model">Fitting a <code>NumPyro</code> model</a></li>
+  <li><a href="#fitting-a-numpyro-model" id="toc-fitting-a-numpyro-model" class="nav-link" data-scroll-target="#fitting-a-numpyro-model">Fitting a <code>NumPyro</code> model</a></li>
   <li><a href="#analyzing-the-results-in-marginaleffects" id="toc-analyzing-the-results-in-marginaleffects" class="nav-link" data-scroll-target="#analyzing-the-results-in-marginaleffects">Analyzing the results in <code>marginaleffects</code></a></li>
+  </ul></li>
   </ul>
-</li>
-  </ul></nav>
-</div>
+</nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><section id="numpyro" class="level1"><h1>NumPyro</h1>
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="numpyro" class="level1">
+<h1>NumPyro</h1>
 <p>The Python programming language offers several powerful libraries for (bayesian) statistical analysis, such as <a href=""><code>NumPyro</code></a> and <a href="https://www.pymc.io/welcome.html"><code>PyMC</code>.</a> This vignette shows how to use the the full power of <code>marginaleffects</code> to analyze and interpret the results of models estimated by Markov Chain Monte Carlo using the <code>NumPyro</code> Python library.</p>
-<section id="fitting-a-numpyro-model" class="level2"><h2 class="anchored" data-anchor-id="fitting-a-numpyro-model">Fitting a <code>NumPyro</code> model</h2>
-<p>To begin, we load the <code>reticulate</code> package which allows us to interact with the Python interpreter from an <code>R</code> session. Then, we write a <code>NumPyro</code> model and we load it to memory using the <code><a href="https://rstudio.github.io/reticulate/reference/source_python.html">source_python()</a></code> function. The important functions to note in the Python code are:</p>
+<section id="fitting-a-numpyro-model" class="level2">
+<h2 class="anchored" data-anchor-id="fitting-a-numpyro-model">Fitting a <code>NumPyro</code> model</h2>
+<p>To begin, we load the <code>reticulate</code> package which allows us to interact with the Python interpreter from an <code>R</code> session. Then, we write a <code>NumPyro</code> model and we load it to memory using the <code>source_python()</code> function. The important functions to note in the Python code are:</p>
 <ul>
-<li>
-<code>load_df()</code> downloads data on pulmonary fibrosis.</li>
-<li>
-<code>model()</code> defines the <code>NumPyro</code> model.</li>
-<li>
-<code>fit_mcmc_model()</code> fits the model using Markov Chain Monte Carlo.</li>
-<li>
-<code>predict_mcmc()</code>: accepts a data frame and returns a matrix of draws from the posterior distribution of adjusted predictions (fitted values).</li>
+<li><code>load_df()</code> downloads data on pulmonary fibrosis.</li>
+<li><code>model()</code> defines the <code>NumPyro</code> model.</li>
+<li><code>fit_mcmc_model()</code> fits the model using Markov Chain Monte Carlo.</li>
+<li><code>predict_mcmc()</code>: accepts a data frame and returns a matrix of draws from the posterior distribution of adjusted predictions (fitted values).</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/reticulate/">reticulate</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">'</span></span>
-<span><span class="st">## Model code adapted from the NumPyro documtation under Apache License:</span></span>
-<span><span class="st">## https://num.pyro.ai/en/latest/tutorials/bayesian_hierarchical_linear_regression.html</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">import pandas as pd</span></span>
-<span><span class="st">import numpy as np</span></span>
-<span><span class="st">import numpyro</span></span>
-<span><span class="st">from numpyro.infer import SVI, Predictive, MCMC,NUTS, autoguide, TraceMeanField_ELBO</span></span>
-<span><span class="st">import numpyro.distributions as dist</span></span>
-<span><span class="st">from numpyro.infer.initialization import init_to_median, init_to_uniform,init_to_sample</span></span>
-<span><span class="st">from jax import random</span></span>
-<span><span class="st">from sklearn.preprocessing import LabelEncoder</span></span>
-<span><span class="st">import pickle</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">def load_df():</span></span>
-<span><span class="st">    train = pd.read_csv("https://raw.githubusercontent.com/vincentarelbundock/modelarchive/main/data-raw/osic_pulmonary_fibrosis.csv")</span></span>
-<span><span class="st">    return train</span></span>
-<span><span class="st"></span></span>
-<span><span class="st"></span></span>
-<span><span class="st">def model(data, predict = False):</span></span>
-<span><span class="st">    FVC_obs = data["FVC"].values  if predict == False else None</span></span>
-<span><span class="st">    patient_encoder = LabelEncoder()</span></span>
-<span><span class="st">    Age_obs = data["Age"].values</span></span>
-<span><span class="st">    patient_code = patient_encoder.fit_transform(data["Patient"].values)</span></span>
-<span><span class="st">    μ_α = numpyro.sample("μ_α", dist.Normal(0.0, 500.0))</span></span>
-<span><span class="st">    σ_α = numpyro.sample("σ_α", dist.HalfNormal(100.0))</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">    age = numpyro.sample("age", dist.Normal(0.0, 500.0))</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">    n_patients = len(np.unique(patient_code))</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">    with numpyro.plate("plate_i", n_patients):</span></span>
-<span><span class="st">        α = numpyro.sample("α", dist.Normal(μ_α, σ_α))</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">    σ = numpyro.sample("σ", dist.HalfNormal(100.0))</span></span>
-<span><span class="st">    FVC_est = α[patient_code] + age * Age_obs</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">    with numpyro.plate("data", len(patient_code)):</span></span>
-<span><span class="st">        numpyro.sample("obs", dist.Normal(FVC_est, σ), obs=FVC_obs)</span></span>
-<span><span class="st"></span></span>
-<span><span class="st"></span></span>
-<span><span class="st">def fit_mcmc_model(train_df, samples = 1000):</span></span>
-<span><span class="st">    numpyro.set_host_device_count(4)</span></span>
-<span><span class="st">    rng_key = random.PRNGKey(0)</span></span>
-<span><span class="st">    mcmc = MCMC(</span></span>
-<span><span class="st">        NUTS(model),</span></span>
-<span><span class="st">        num_samples=samples,</span></span>
-<span><span class="st">        num_warmup=1000,</span></span>
-<span><span class="st">        progress_bar=True,</span></span>
-<span><span class="st">        num_chains = 4</span></span>
-<span><span class="st">        )</span></span>
-<span><span class="st">    </span></span>
-<span><span class="st">    mcmc.run(rng_key, train_df)</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">    posterior_draws = mcmc.get_samples()</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">    with open("mcmc_posterior_draws.pickle", "wb") as handle:</span></span>
-<span><span class="st">        pickle.dump(posterior_draws, handle, protocol=pickle.HIGHEST_PROTOCOL)</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">def predict_mcmc(data):</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">    with open("mcmc_posterior_draws.pickle", "rb") as handle:</span></span>
-<span><span class="st">        posterior_draws = pickle.load(handle)</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">    predictive = Predictive(model = model,posterior_samples=posterior_draws)</span></span>
-<span><span class="st">    samples = predictive(random.PRNGKey(1), data, predict = True)</span></span>
-<span><span class="st">    y_pred = samples["obs"]</span></span>
-<span><span class="st">    # transpose so that each column is a draw and each row is an observation</span></span>
-<span><span class="st">    y_pred = np.transpose(np.array(y_pred))</span></span>
-<span><span class="st"></span></span>
-<span><span class="st">    return y_pred </span></span>
-<span><span class="st">'</span></span>
-<span></span>
-<span><span class="co">## save python script to temp file</span></span>
-<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="va">model</span>, file <span class="op">=</span> <span class="va">tmp</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## load functions</span></span>
-<span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/source_python.html">source_python</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## download data</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">load_df</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## fit model</span></span>
-<span><span class="fu">fit_mcmc_model</span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="st">## Model code adapted from the NumPyro documtation under Apache License:</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="st">## https://num.pyro.ai/en/latest/tutorials/bayesian_hierarchical_linear_regression.html</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">import pandas as pd</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">import numpy as np</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="st">import numpyro</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">from numpyro.infer import SVI, Predictive, MCMC,NUTS, autoguide, TraceMeanField_ELBO</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="st">import numpyro.distributions as dist</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">from numpyro.infer.initialization import init_to_median, init_to_uniform,init_to_sample</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="st">from jax import random</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="st">from sklearn.preprocessing import LabelEncoder</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="st">import pickle</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="st">def load_df():</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="st">    train = pd.read_csv("https://raw.githubusercontent.com/vincentarelbundock/modelarchive/main/data-raw/osic_pulmonary_fibrosis.csv")</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="st">    return train</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="st">def model(data, predict = False):</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="st">    FVC_obs = data["FVC"].values  if predict == False else None</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="st">    patient_encoder = LabelEncoder()</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="st">    Age_obs = data["Age"].values</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="st">    patient_code = patient_encoder.fit_transform(data["Patient"].values)</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="st">    μ_α = numpyro.sample("μ_α", dist.Normal(0.0, 500.0))</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="st">    σ_α = numpyro.sample("σ_α", dist.HalfNormal(100.0))</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="st">    age = numpyro.sample("age", dist.Normal(0.0, 500.0))</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="st">    n_patients = len(np.unique(patient_code))</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="st">    with numpyro.plate("plate_i", n_patients):</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="st">        α = numpyro.sample("α", dist.Normal(μ_α, σ_α))</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="st">    σ = numpyro.sample("σ", dist.HalfNormal(100.0))</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="st">    FVC_est = α[patient_code] + age * Age_obs</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="st">    with numpyro.plate("data", len(patient_code)):</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="st">        numpyro.sample("obs", dist.Normal(FVC_est, σ), obs=FVC_obs)</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="st">def fit_mcmc_model(train_df, samples = 1000):</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="st">    numpyro.set_host_device_count(4)</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="st">    rng_key = random.PRNGKey(0)</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="st">    mcmc = MCMC(</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="st">        NUTS(model),</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="st">        num_samples=samples,</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="st">        num_warmup=1000,</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="st">        progress_bar=True,</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="st">        num_chains = 4</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="st">        )</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="st">    mcmc.run(rng_key, train_df)</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="st">    posterior_draws = mcmc.get_samples()</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="st">    with open("mcmc_posterior_draws.pickle", "wb") as handle:</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="st">        pickle.dump(posterior_draws, handle, protocol=pickle.HIGHEST_PROTOCOL)</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="st">def predict_mcmc(data):</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="st">    with open("mcmc_posterior_draws.pickle", "rb") as handle:</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="st">        posterior_draws = pickle.load(handle)</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="st">    predictive = Predictive(model = model,posterior_samples=posterior_draws)</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="st">    samples = predictive(random.PRNGKey(1), data, predict = True)</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="st">    y_pred = samples["obs"]</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="st">    # transpose so that each column is a draw and each row is an observation</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="st">    y_pred = np.transpose(np.array(y_pred))</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="st">    return y_pred </span></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="st">'</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="do">## save python script to temp file</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> <span class="fu">tempfile</span>()</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(model, <span class="at">file =</span> tmp)</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a><span class="do">## load functions</span></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="fu">source_python</span>(tmp)</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a><span class="do">## download data</span></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">load_df</span>()</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a><span class="do">## fit model</span></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="fu">fit_mcmc_model</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="analyzing-the-results-in-marginaleffects" class="level2"><h2 class="anchored" data-anchor-id="analyzing-the-results-in-marginaleffects">Analyzing the results in <code>marginaleffects</code>
-</h2>
+</section>
+<section id="analyzing-the-results-in-marginaleffects" class="level2">
+<h2 class="anchored" data-anchor-id="analyzing-the-results-in-marginaleffects">Analyzing the results in <code>marginaleffects</code></h2>
 <p>Each of the functions in the <code>marginaleffects</code> package requires that users supply a <code>model</code> object on which the function will operate. When estimating models outside <code>R</code>, we do not have such a model object. We thus begin by creating a “fake” model object: an empty data frame which we define to be of class “custom”. Then, we set a global option to tell <code>marginaleffects</code> that this “custom” class is supported.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"custom"</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span><span class="st">"marginaleffects_model_classes"</span> <span class="op">=</span> <span class="st">"custom"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(mod) <span class="ot">&lt;-</span> <span class="st">"custom"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="st">"marginaleffects_model_classes"</span> <span class="ot">=</span> <span class="st">"custom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we define a <code>get_predict</code> method for our new custom class. This method must accept three arguments: <code>model</code>, <code>newdata</code>, and <code>...</code>. The <code>get_predict</code> method must return a data frame with one row for each of the rows in <code>newdata</code>, two columns (<code>rowid</code> and <code>estimate</code>), and an attribute called <code>posterior_draws</code> which hosts a matrix of posterior draws with the same number of rows as <code>newdata</code>.</p>
 <p>The method below uses <code>reticulate</code> to call the <code>predict_mcmc()</code> function that we defined in the Python script above. The <code>predict_mcmc()</code> function accepts a data frame and returns a matrix with the same number of rows.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">get_predict.custom</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">model</span>, <span class="va">newdata</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu">predict_mcmc</span><span class="op">(</span><span class="va">newdata</span><span class="op">)</span></span>
-<span>    <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
-<span>        rowid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">newdata</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>        predicted <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">pred</span>, <span class="fl">1</span>, <span class="fu">stats</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">out</span>, <span class="st">"posterior_draws"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">pred</span></span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>get_predict.custom <span class="ot">&lt;-</span> <span class="cf">function</span>(model, newdata, ...) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    pred <span class="ot">&lt;-</span> <span class="fu">predict_mcmc</span>(newdata)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">rowid =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(newdata)),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">predicted =</span> <span class="fu">apply</span>(pred, <span class="dv">1</span>, stats<span class="sc">::</span>median)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">attr</span>(out, <span class="st">"posterior_draws"</span>) <span class="ot">&lt;-</span> pred</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we can use most of the <code>marginaleffects</code> package functions to analyze our results. Since we use a “fake” model object, <code>marginaleffects</code> cannot retrieve the original data from the model object, and we always need to supply a <code>newdata</code> argument:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## predictions on the original dataset</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">df</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## predictions for user-defined predictor values</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>newdata <span class="op">=</span> <span class="va">df</span>, Age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">70</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>newdata <span class="op">=</span> <span class="va">df</span>, Age <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## average predictions by group</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">df</span>, by <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## contrasts (average)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"Age"</span>, newdata <span class="op">=</span> <span class="va">df</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Age"</span> <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">df</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## slope (elasticity)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"Age"</span>, slope <span class="op">=</span> <span class="st">"eyex"</span>, newdata <span class="op">=</span> <span class="va">df</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## predictions on the original dataset</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> df) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">## predictions for user-defined predictor values</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">newdata =</span> df, <span class="at">Age =</span> <span class="fu">c</span>(<span class="dv">60</span>, <span class="dv">70</span>)))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">newdata =</span> df, <span class="at">Age =</span> range))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="do">## average predictions by group</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> df, <span class="at">by =</span> <span class="st">"Sex"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="do">## contrasts (average)</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="st">"Age"</span>, <span class="at">newdata =</span> df)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="st">"Age"</span> <span class="ot">=</span> <span class="st">"sd"</span>), <span class="at">newdata =</span> df)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="do">## slope (elasticity)</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"Age"</span>, <span class="at">slope =</span> <span class="st">"eyex"</span>, <span class="at">newdata =</span> df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -699,18 +729,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -742,7 +761,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -750,7 +791,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1072,7 +1113,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="../vignettes/performance.html" class="pagination-link" aria-label="Performance">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Performance</span>
       </a>          
@@ -1088,5 +1131,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body>
-</html>
+</body></html>

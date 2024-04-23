@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.5.30">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo</title>
+
+
+<title>Marginal Effects Zoo – marginalmeans</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -53,13 +55,26 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../vignettes/matching.html" rel="next">
 <link href="../vignettes/machine_learning.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -87,15 +102,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script src="../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+}</script>
+<script src="../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
 </head>
+
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -106,7 +129,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-<li class="nav-item">
+  <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -125,25 +148,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-</div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
-<li class="breadcrumb-item"><a href="../vignettes/marginalmeans.html">Marginal Means</a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/marginalmeans.html">Marginal Means</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -157,8 +184,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -189,7 +216,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
@@ -198,8 +225,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -326,7 +353,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
@@ -335,8 +362,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -397,7 +424,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
@@ -406,8 +433,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -474,7 +501,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -494,24 +521,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
    
   <ul>
-<li>
-<a href="#marginal-means" id="toc-marginal-means" class="nav-link active" data-scroll-target="#marginal-means">Marginal Means</a>
+  <li><a href="#marginal-means" id="toc-marginal-means" class="nav-link active" data-scroll-target="#marginal-means">Marginal Means</a>
   <ul class="collapse">
-<li><a href="#marginal-means-vs.-average-predictions" id="toc-marginal-means-vs.-average-predictions" class="nav-link" data-scroll-target="#marginal-means-vs.-average-predictions">Marginal Means vs. Average Predictions</a></li>
+  <li><a href="#marginal-means-vs.-average-predictions" id="toc-marginal-means-vs.-average-predictions" class="nav-link" data-scroll-target="#marginal-means-vs.-average-predictions">Marginal Means vs.&nbsp;Average Predictions</a></li>
   <li><a href="#plot-conditional-marginal-means" id="toc-plot-conditional-marginal-means" class="nav-link" data-scroll-target="#plot-conditional-marginal-means">Plot conditional marginal means</a></li>
+  </ul></li>
   </ul>
-</li>
-  </ul></nav>
-</div>
+</nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><section id="marginal-means" class="level1"><h1>Marginal Means</h1>
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="marginal-means" class="level1">
+<h1>Marginal Means</h1>
 <p>In the context of this package, “marginal means” refer to the values obtained by this three step process:</p>
 <ol type="1">
 <li>Construct a “grid” of predictor values with all combinations of categorical variables, and where numeric variables are held at their means.</li>
@@ -520,20 +554,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>For example, consider a model with a numeric, a factor, and a logical predictor:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">mtcars</span></span>
-<span><span class="va">dat</span><span class="op">$</span><span class="va">cyl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span>
-<span><span class="va">dat</span><span class="op">$</span><span class="va">am</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/logical.html">as.logical</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">am</span><span class="op">)</span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">am</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>cyl <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dat<span class="sc">$</span>cyl)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>am <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(dat<span class="sc">$</span>am)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> cyl <span class="sc">+</span> am, <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Using the <code>predictions</code> function, we set the <code>hp</code> variable at its mean and compute predictions for all combinations for <code>am</code> and <code>cyl</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
-<span>    <span class="va">mod</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="va">unique</span>, cyl <span class="op">=</span> <span class="va">unique</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predictions</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> unique, <span class="at">cyl =</span> unique))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>For illustration purposes, it is useful to reshape the above results:</p>
 <div class="cell">
@@ -556,28 +588,28 @@ am
 </tr>
 <tr class="odd">
 <th style="text-align: left;" data-quarto-table-cell-role="th">cyl</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">FALSE</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">TRUE</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">FALSE</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Marginal means by cyl</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">4</td>
-<td style="text-align: left;">20.8</td>
-<td style="text-align: left;">25.0</td>
-<td style="text-align: left;">22.9</td>
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">21.0</td>
+<td style="text-align: left;">16.9</td>
+<td style="text-align: left;">19.0</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">6</td>
-<td style="text-align: left;">16.9</td>
-<td style="text-align: left;">21.0</td>
-<td style="text-align: left;">19.0</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">25.0</td>
+<td style="text-align: left;">20.8</td>
+<td style="text-align: left;">22.9</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">8</td>
-<td style="text-align: left;">17.3</td>
 <td style="text-align: left;">21.4</td>
+<td style="text-align: left;">17.3</td>
 <td style="text-align: left;">19.4</td>
 </tr>
 <tr class="even">
@@ -588,100 +620,98 @@ am
 </tr>
 </tbody>
 </table>
+
+
 </div>
 </div>
 </div>
-<p>The marginal means by <code>am</code> and <code>cyl</code> are obtained by taking the mean of the adjusted predictions across cells. We can achieve the same results with the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function, with <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> to specify a balanced grid, and the <code>by</code> argument to define the marginalization dimension:</p>
+<p>The marginal means by <code>am</code> and <code>cyl</code> are obtained by taking the mean of the adjusted predictions across cells. We can achieve the same results with the <code>predictions()</code> function, with <code>datagrid()</code> to specify a balanced grid, and the <code>by</code> argument to define the marginalization dimension:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
-<span>    <span class="va">mod</span>,</span>
-<span>    by <span class="op">=</span> <span class="st">"am"</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="va">unique</span>, cyl <span class="op">=</span> <span class="va">unique</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     am Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  FALSE     18.3      0.785 23.3   &lt;0.001 397.4  16.8   19.9</span></span>
-<span><span class="co">#&gt;   TRUE     22.5      0.834 26.9   &lt;0.001 528.6  20.8   24.1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"am"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> unique, <span class="at">cyl =</span> unique))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     am Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   TRUE     22.5      0.834 26.9   &lt;0.001 528.6  20.8   24.1</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  FALSE     18.3      0.785 23.3   &lt;0.001 397.4  16.8   19.9</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Alternatively, we can use the convenient <code>grid_type="balanced"</code> argument:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
-<span>    <span class="va">mod</span>,</span>
-<span>    by <span class="op">=</span> <span class="st">"cyl"</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>grid_type <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  cyl Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;    4     22.9       1.36 16.9   &lt;0.001 209.7  20.2   25.5</span></span>
-<span><span class="co">#&gt;    6     19.0       1.07 17.7   &lt;0.001 229.7  16.9   21.1</span></span>
-<span><span class="co">#&gt;    8     19.4       1.38 14.1   &lt;0.001 146.6  16.7   22.1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"cyl"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">grid_type =</span> <span class="st">"balanced"</span>))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cyl Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    4     22.9       1.36 16.9   &lt;0.001 209.7  20.2   25.5</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    6     19.0       1.07 17.7   &lt;0.001 229.7  16.9   21.1</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    8     19.4       1.38 14.1   &lt;0.001 146.6  16.7   22.1</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can of course marginalize over the interaction between more variables, by changing the <code>by</code> argument:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
-<span>    <span class="va">mod</span>,</span>
-<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"cyl"</span><span class="op">)</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>grid_type <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     am cyl Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp</span></span>
-<span><span class="co">#&gt;  FALSE   4     20.8       1.76 11.8   &lt;0.001 105.1  17.4   24.2 147</span></span>
-<span><span class="co">#&gt;  FALSE   6     16.9       1.27 13.3   &lt;0.001 130.9  14.4   19.4 147</span></span>
-<span><span class="co">#&gt;  FALSE   8     17.3       1.12 15.5   &lt;0.001 176.8  15.1   19.5 147</span></span>
-<span><span class="co">#&gt;   TRUE   4     25.0       1.18 21.2   &lt;0.001 329.3  22.7   27.3 147</span></span>
-<span><span class="co">#&gt;   TRUE   6     21.0       1.21 17.3   &lt;0.001 221.4  18.7   23.4 147</span></span>
-<span><span class="co">#&gt;   TRUE   8     21.4       1.83 11.7   &lt;0.001 103.2  17.9   25.0 147</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, am, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, mpg </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"am"</span>, <span class="st">"cyl"</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">grid_type =</span> <span class="st">"balanced"</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     am cyl Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   TRUE   4     25.0       1.18 21.2   &lt;0.001 329.3  22.7   27.3 147</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  FALSE   4     20.8       1.76 11.8   &lt;0.001 105.1  17.4   24.2 147</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   TRUE   6     21.0       1.21 17.3   &lt;0.001 221.4  18.7   23.4 147</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  FALSE   6     16.9       1.27 13.3   &lt;0.001 130.9  14.4   19.4 147</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   TRUE   8     21.4       1.83 11.7   &lt;0.001 103.2  17.9   25.0 147</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  FALSE   8     17.3       1.12 15.5   &lt;0.001 176.8  15.1   19.5 147</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, am, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, mpg </span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The same results can be achieved using the <a href="https://cran.r-project.org/package=emmeans">powerful <code>emmeans</code> package</a>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rvlenth/emmeans">emmeans</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, specs <span class="op">=</span> <span class="op">~</span><span class="va">cyl</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  cyl emmean   SE df lower.CL upper.CL</span></span>
-<span><span class="co">#&gt;  4     22.9 1.36 27     20.1     25.7</span></span>
-<span><span class="co">#&gt;  6     19.0 1.07 27     16.8     21.2</span></span>
-<span><span class="co">#&gt;  8     19.4 1.38 27     16.5     22.2</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Results are averaged over the levels of: am </span></span>
-<span><span class="co">#&gt; Confidence level used: 0.95</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, specs <span class="op">=</span> <span class="op">~</span><span class="va">cyl</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  cyl am    emmean   SE df lower.CL upper.CL</span></span>
-<span><span class="co">#&gt;  4   FALSE   20.8 1.76 27     17.2     24.4</span></span>
-<span><span class="co">#&gt;  6   FALSE   16.9 1.27 27     14.3     19.5</span></span>
-<span><span class="co">#&gt;  8   FALSE   17.3 1.12 27     15.0     19.6</span></span>
-<span><span class="co">#&gt;  4    TRUE   25.0 1.18 27     22.5     27.4</span></span>
-<span><span class="co">#&gt;  6    TRUE   21.0 1.21 27     18.6     23.5</span></span>
-<span><span class="co">#&gt;  8    TRUE   21.4 1.83 27     17.7     25.2</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Confidence level used: 0.95</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(mod, <span class="at">specs =</span> <span class="sc">~</span>cyl)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cyl emmean   SE df lower.CL upper.CL</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4     22.9 1.36 27     20.1     25.7</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6     19.0 1.07 27     16.8     21.2</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8     19.4 1.38 27     16.5     22.2</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results are averaged over the levels of: am </span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Confidence level used: 0.95</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(mod, <span class="at">specs =</span> <span class="sc">~</span>cyl <span class="sc">+</span> am)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cyl am    emmean   SE df lower.CL upper.CL</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4   FALSE   20.8 1.76 27     17.2     24.4</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6   FALSE   16.9 1.27 27     14.3     19.5</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8   FALSE   17.3 1.12 27     15.0     19.6</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4    TRUE   25.0 1.18 27     22.5     27.4</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6    TRUE   21.0 1.21 27     18.6     23.5</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8    TRUE   21.4 1.83 27     17.7     25.2</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Confidence level used: 0.95</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="marginal-means-vs.-average-predictions" class="level2"><h2 class="anchored" data-anchor-id="marginal-means-vs.-average-predictions">Marginal Means vs. Average Predictions</h2>
+<section id="marginal-means-vs.-average-predictions" class="level2">
+<h2 class="anchored" data-anchor-id="marginal-means-vs.-average-predictions">Marginal Means vs.&nbsp;Average Predictions</h2>
 <p>What should scientists report? Marginal means or average predictions?</p>
 <p>Many analysts ask this question, but unfortunately there isn’t a single answer. As explained above, marginal means are a special case of predictions, made on a perfectly balanced grid of categorical predictors, with numeric predictors held at their means, and marginalized with respect to some focal variables. Whether the analyst prefers to report this specific type of marginal means or another kind of average prediction will depend on the characteristics of the sample and the population to which they want to generalize.</p>
 <p>After reading this vignette and the discussion of <code>emmeans</code> in the <a href="alternative_software.html">Alternative Software vignette</a>, you may want to consult with a statistician to discuss your specific real-world problem and make an informed choice.</p>
-</section><section id="plot-conditional-marginal-means" class="level2"><h2 class="anchored" data-anchor-id="plot-conditional-marginal-means">Plot conditional marginal means</h2>
+</section>
+<section id="plot-conditional-marginal-means" class="level2">
+<h2 class="anchored" data-anchor-id="plot-conditional-marginal-means">Plot conditional marginal means</h2>
 <p>The <code>marginaleffects</code> package offers several functions to plot how some quantities vary as a function of others:</p>
 <ul>
-<li>
-<code>plot_predictions</code>: Conditional adjusted predictions – how does the predicted outcome change as a function of regressors?</li>
-<li>
-<code>plot_comparisons</code>: Conditional comparisons – how do contrasts change as a function of regressors?</li>
-<li>
-<code>plot_slopes</code>: Conditional marginal effects – how does the slope change as a function of regressors?</li>
+<li><code>plot_predictions</code>: Conditional adjusted predictions – how does the predicted outcome change as a function of regressors?</li>
+<li><code>plot_comparisons</code>: Conditional comparisons – how do contrasts change as a function of regressors?</li>
+<li><code>plot_slopes</code>: Conditional marginal effects – how does the slope change as a function of regressors?</li>
 </ul>
-<p>There is no analogous function for marginal means. However, it is very easy to achieve a similar effect using the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function, its <code>by</code> argument, and standard plotting functions. In the example below, we take these steps:</p>
+<p>There is no analogous function for marginal means. However, it is very easy to achieve a similar effect using the <code>predictions()</code> function, its <code>by</code> argument, and standard plotting functions. In the example below, we take these steps:</p>
 <ol type="1">
 <li>Estimate a model with one continuous (<code>hp</code>) and one categorical regressor (<code>cyl</code>).</li>
-<li>Create a perfectly “balanced” data grid for each combination of <code>hp</code> and <code>cyl</code>. This is specified by the user in the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> call.</li>
+<li>Create a perfectly “balanced” data grid for each combination of <code>hp</code> and <code>cyl</code>. This is specified by the user in the <code>datagrid()</code> call.</li>
 <li>Compute fitted values (aka “adjusted predictions”) for each cell of the grid.</li>
 <li>Use the <code>by</code> argument to take the average of predicted values for each value of <code>hp</code>, across margins of <code>cyl</code>.</li>
 <li>Compute standard errors around the averaged predicted values (i.e., marginal means).</li>
@@ -689,31 +719,35 @@ am
 <li>Plot the results.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>,</span>
-<span>    by <span class="op">=</span> <span class="st">"hp"</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
-<span>        model <span class="op">=</span> <span class="va">mod</span>,</span>
-<span>        hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">120</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
-<span>        cyl <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">hp</span>, ymin <span class="op">=</span> <span class="va">conf.low</span>, ymax <span class="op">=</span> <span class="va">conf.high</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">estimate</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> <span class="fu">factor</span>(cyl), <span class="at">data =</span> mtcars)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predictions</span>(mod,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"hp"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagrid</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> mod,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">hp =</span> <span class="fu">seq</span>(<span class="dv">100</span>, <span class="dv">120</span>, <span class="at">length.out =</span> <span class="dv">10</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">cyl =</span> mtcars<span class="sc">$</span>cyl))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(p) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(hp, <span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high), <span class="at">alpha =</span> .<span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(hp, estimate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="marginalmeans_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure">
+<p><img src="marginalmeans_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -748,18 +782,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -791,7 +814,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -799,7 +844,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1121,7 +1166,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="../vignettes/machine_learning.html" class="pagination-link" aria-label="Machine Learning">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Machine Learning</span>
       </a>          
@@ -1137,5 +1184,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body>
-</html>
+</body></html>

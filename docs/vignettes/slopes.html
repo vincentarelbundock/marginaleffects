@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.551">
+<meta name="generator" content="quarto-1.5.30">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo - Slopes</title>
+
+
+<title>Marginal Effects Zoo – Slopes</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -53,13 +55,26 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../vignettes/hypothesis.html" rel="next">
 <link href="../vignettes/comparisons.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -87,7 +102,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -113,14 +133,19 @@ window.Quarto = {
   typesetMath
 };
 </script>
+
 </head>
+
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -131,7 +156,7 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-<li class="nav-item">
+  <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -150,25 +175,29 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-</div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../vignettes/predictions.html">Tutorials</a></li>
-<li class="breadcrumb-item"><a href="../vignettes/slopes.html">Slopes</a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/predictions.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../vignettes/slopes.html">Slopes</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -182,8 +211,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -214,7 +243,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
@@ -223,8 +252,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -351,7 +380,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
@@ -360,8 +389,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -422,7 +451,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
@@ -431,8 +460,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -499,7 +528,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -519,35 +548,36 @@ window.Quarto = {
   </div>
 </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#definition-and-motivation" id="toc-definition-and-motivation" class="nav-link active" data-scroll-target="#definition-and-motivation">Definition and motivation</a></li>
-  <li>
-<a href="#the-marginal-effects-zoo" id="toc-the-marginal-effects-zoo" class="nav-link" data-scroll-target="#the-marginal-effects-zoo">The Marginal Effects Zoo</a>
+  <li><a href="#definition-and-motivation" id="toc-definition-and-motivation" class="nav-link active" data-scroll-target="#definition-and-motivation">Definition and motivation</a></li>
+  <li><a href="#the-marginal-effects-zoo" id="toc-the-marginal-effects-zoo" class="nav-link" data-scroll-target="#the-marginal-effects-zoo">The Marginal Effects Zoo</a>
   <ul class="collapse">
-<li><a href="#average-marginal-effect-ame" id="toc-average-marginal-effect-ame" class="nav-link" data-scroll-target="#average-marginal-effect-ame">Average Marginal Effect (AME)</a></li>
+  <li><a href="#average-marginal-effect-ame" id="toc-average-marginal-effect-ame" class="nav-link" data-scroll-target="#average-marginal-effect-ame">Average Marginal Effect (AME)</a></li>
   <li><a href="#group-average-marginal-effect-g-ame" id="toc-group-average-marginal-effect-g-ame" class="nav-link" data-scroll-target="#group-average-marginal-effect-g-ame">Group-Average Marginal Effect (G-AME)</a></li>
   <li><a href="#marginal-effect-at-user-specified-values" id="toc-marginal-effect-at-user-specified-values" class="nav-link" data-scroll-target="#marginal-effect-at-user-specified-values">Marginal Effect at User-Specified Values</a></li>
   <li><a href="#marginal-effect-at-the-mean-mem" id="toc-marginal-effect-at-the-mean-mem" class="nav-link" data-scroll-target="#marginal-effect-at-the-mean-mem">Marginal Effect at the Mean (MEM)</a></li>
   <li><a href="#counterfactual-marginal-effects" id="toc-counterfactual-marginal-effects" class="nav-link" data-scroll-target="#counterfactual-marginal-effects">Counterfactual Marginal Effects</a></li>
   <li><a href="#conditional-marginal-effects-plot" id="toc-conditional-marginal-effects-plot" class="nav-link" data-scroll-target="#conditional-marginal-effects-plot">Conditional Marginal Effects (Plot)</a></li>
   <li><a href="#slopes-vs-predictions-a-visual-interpretation" id="toc-slopes-vs-predictions-a-visual-interpretation" class="nav-link" data-scroll-target="#slopes-vs-predictions-a-visual-interpretation">Slopes vs Predictions: A Visual Interpretation</a></li>
-  </ul>
-</li>
+  </ul></li>
   <li><a href="#minimum-velocity" id="toc-minimum-velocity" class="nav-link" data-scroll-target="#minimum-velocity">Minimum velocity</a></li>
   <li><a href="#manual-computation" id="toc-manual-computation" class="nav-link" data-scroll-target="#manual-computation">Manual computation</a></li>
-  </ul></nav>
-</div>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../vignettes/predictions.html">Tutorials</a></li>
-<li class="breadcrumb-item"><a href="../vignettes/slopes.html">Slopes</a></li>
-</ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/predictions.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../vignettes/slopes.html">Slopes</a></li></ol></nav>
+<div class="quarto-title">
 <h1 class="title">Slopes</h1>
 </div>
 
@@ -562,7 +592,11 @@ window.Quarto = {
   
 
 
-</header><section id="definition-and-motivation" class="level1"><h1>Definition and motivation</h1>
+</header>
+
+
+<section id="definition-and-motivation" class="level1">
+<h1>Definition and motivation</h1>
 <p>Slopes are defined as:</p>
 <blockquote class="blockquote">
 <p>Partial derivatives of the regression equation with respect to a regressor of interest. a.k.a. Marginal effects, trends, velocity.</p>
@@ -578,7 +612,8 @@ window.Quarto = {
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="slopes_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure">
+<p><img src="slopes_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -593,7 +628,8 @@ window.Quarto = {
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="slopes_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure">
+<p><img src="slopes_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -606,89 +642,89 @@ window.Quarto = {
 <p>This result suggests that the effect of a <em>change</em> in <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span> depends on the <em>level</em> of <span class="math inline">\(X\)</span>. When <span class="math inline">\(X\)</span> is large and positive, an increase in <span class="math inline">\(X\)</span> is associated to a large increase in <span class="math inline">\(Y\)</span>. When <span class="math inline">\(X\)</span> is small and positive, an increase in <span class="math inline">\(X\)</span> is associated to a small increase in <span class="math inline">\(Y\)</span>. When <span class="math inline">\(X\)</span> is a large negative value, an increase in <span class="math inline">\(X\)</span> is associated with a <em>decrease</em> in <span class="math inline">\(Y\)</span>.</p>
 <p><code>marginaleffects</code> arrives at the same conclusion in simulated data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1e5</span></span>
-<span><span class="va">quad</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">quad</span><span class="op">$</span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">+</span> <span class="fl">1</span> <span class="op">*</span> <span class="va">quad</span><span class="op">$</span><span class="va">x</span> <span class="op">+</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">quad</span><span class="op">$</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span></span>
-<span><span class="va">mod_quad</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>, <span class="va">quad</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod_quad</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">-</span><span class="fl">2</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>  <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>truth <span class="op">=</span> <span class="fl">1</span> <span class="op">+</span> <span class="fl">4</span> <span class="op">*</span> <span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span>, <span class="va">truth</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Estimate</span></span>
-<span><span class="co">#&gt;    -6.996</span></span>
-<span><span class="co">#&gt;    -3.000</span></span>
-<span><span class="co">#&gt;     0.996</span></span>
-<span><span class="co">#&gt;     4.993</span></span>
-<span><span class="co">#&gt;     8.989</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: estimate, truth</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fl">1e5</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>quad <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rnorm</span>(N))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>quad<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span> <span class="sc">*</span> quad<span class="sc">$</span>x <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> quad<span class="sc">$</span>x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(N)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mod_quad <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>), quad)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod_quad, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">2</span><span class="sc">:</span><span class="dv">2</span>))  <span class="sc">|&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">truth =</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">4</span> <span class="sc">*</span> x) <span class="sc">|&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(estimate, truth)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     -6.99</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     -3.00</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      1.00</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      5.00</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      8.99</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: estimate, truth</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can plot conditional adjusted predictions with <code>plot_predictions</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod_quad</span>, condition <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(mod_quad, <span class="at">condition =</span> <span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="slopes_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure">
+<p><img src="slopes_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We can plot conditional marginal effects with the <code>plot_slopes</code> function (see section below):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod_quad</span>, variables <span class="op">=</span> <span class="st">"x"</span>, condition <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod_quad, <span class="at">variables =</span> <span class="st">"x"</span>, <span class="at">condition =</span> <span class="st">"x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="slopes_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure">
+<p><img src="slopes_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Again, the conclusion is the same. When <span class="math inline">\(x&lt;0\)</span>, an increase in <span class="math inline">\(x\)</span> is associated with an decrease in <span class="math inline">\(y\)</span>. When <span class="math inline">\(x&gt;1/4\)</span>, the marginal effect is positive, which suggests that an increase in <span class="math inline">\(x\)</span> is associated with an increase in <span class="math inline">\(y\)</span>.</p>
 <p>Slopes are <em>unit-level</em> measures of association between changes in a regressor and changes in the response. Except in the simplest linear models, the value of the marginal effect will be different from individual to individual, because it will depend on the values of the other covariates for each individual.</p>
-<p>By default, the <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> function thus produces distinct estimates of the marginal effect for each row of the data used to fit the model:</p>
+<p>By default, the <code>slopes()</code> function thus produces distinct estimates of the marginal effect for each row of the data used to fit the model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod_quad</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 100000     14</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Estimate Std. Error      z Pr(&gt;|z|)     S  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     x    4.947    0.00542  912.1   &lt;0.001   Inf  4.936  4.957</span></span>
-<span><span class="co">#&gt;     x    2.624    0.00365  719.4   &lt;0.001   Inf  2.617  2.632</span></span>
-<span><span class="co">#&gt;     x   -0.108    0.00340  -31.9   &lt;0.001 737.5 -0.115 -0.102</span></span>
-<span><span class="co">#&gt;     x   -1.047    0.00391 -268.1   &lt;0.001   Inf -1.055 -1.040</span></span>
-<span><span class="co">#&gt;     x   -4.969    0.00738 -673.5   &lt;0.001   Inf -4.983 -4.954</span></span>
-<span><span class="co">#&gt;     x   -5.405    0.00782 -691.2   &lt;0.001   Inf -5.420 -5.390</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, y, x </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
-<span></span>
-<span><span class="va">mfx</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Estimate Std. Error      z Pr(&gt;|z|)     S  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     x    4.947    0.00542  912.1   &lt;0.001   Inf  4.936  4.957</span></span>
-<span><span class="co">#&gt;     x    2.624    0.00365  719.4   &lt;0.001   Inf  2.617  2.632</span></span>
-<span><span class="co">#&gt;     x   -0.108    0.00340  -31.9   &lt;0.001 737.5 -0.115 -0.102</span></span>
-<span><span class="co">#&gt;     x   -1.047    0.00391 -268.1   &lt;0.001   Inf -1.055 -1.040</span></span>
-<span><span class="co">#&gt;     x   -4.969    0.00738 -673.5   &lt;0.001   Inf -4.983 -4.954</span></span>
-<span><span class="co">#&gt; --- 99990 rows omitted. See ?avg_slopes and ?print.marginaleffects --- </span></span>
-<span><span class="co">#&gt;     x    2.472    0.00357  693.0   &lt;0.001 Inf  2.465  2.479</span></span>
-<span><span class="co">#&gt;     x    1.200    0.00317  378.1   &lt;0.001 Inf  1.194  1.207</span></span>
-<span><span class="co">#&gt;     x    5.212    0.00567  919.8   &lt;0.001 Inf  5.201  5.224</span></span>
-<span><span class="co">#&gt;     x    0.158    0.00330   47.8   &lt;0.001 Inf  0.152  0.164</span></span>
-<span><span class="co">#&gt;     x    3.412    0.00416  821.1   &lt;0.001 Inf  3.404  3.420</span></span>
-<span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, y, x </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mfx <span class="ot">&lt;-</span> <span class="fu">slopes</span>(mod_quad)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mfx)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 100000     14</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mfx)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    3.327    0.00407  818.4   &lt;0.001 Inf  3.319  3.335</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x   -2.822    0.00533 -529.5   &lt;0.001 Inf -2.832 -2.812</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    3.940    0.00453  870.2   &lt;0.001 Inf  3.931  3.949</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    0.752    0.00317  237.2   &lt;0.001 Inf  0.746  0.758</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x   -0.201    0.00344  -58.3   &lt;0.001 Inf -0.207 -0.194</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    0.761    0.00317  240.1   &lt;0.001 Inf  0.755  0.767</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, y, x </span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>mfx</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    3.327    0.00407  818.4   &lt;0.001 Inf  3.319  3.335</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x   -2.822    0.00533 -529.5   &lt;0.001 Inf -2.832 -2.812</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    3.940    0.00453  870.2   &lt;0.001 Inf  3.931  3.949</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    0.752    0.00317  237.2   &lt;0.001 Inf  0.746  0.758</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x   -0.201    0.00344  -58.3   &lt;0.001 Inf -0.207 -0.194</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --- 99990 rows omitted. See ?avg_slopes and ?print.marginaleffects --- </span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x   -1.170    0.00400 -292.7   &lt;0.001 Inf -1.178 -1.162</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    3.237    0.00400  808.7   &lt;0.001 Inf  3.229  3.245</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    3.095    0.00391  792.1   &lt;0.001 Inf  3.088  3.103</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    1.276    0.00317  402.8   &lt;0.001 Inf  1.270  1.282</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    6.107    0.00648  942.0   &lt;0.001 Inf  6.095  6.120</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, y, x </span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="the-marginal-effects-zoo" class="level1"><h1>The Marginal Effects Zoo</h1>
+</section>
+<section id="the-marginal-effects-zoo" class="level1">
+<h1>The Marginal Effects Zoo</h1>
 <p>Analysts often use the term “marginal effects” to refer to slopes. And since slopes are conditional unit-level quantities, they can be aggregated and reported in various ways. This gave rise to nomenclature that can be confusion to newcomers.</p>
 <p>In this section, we show how the conceptual framework introduced in the <a href="get_started.html">“Get Started”</a>, the <a href="predictions.html">“Predictions”</a>, and the <a href="comparisons.html">“Comparisons”</a> vignettes can help us understand these different quantities. Throughout, we lean on the five pillars:</p>
 <ol type="1">
@@ -710,405 +746,410 @@ window.Quarto = {
 <p><img src="fig/heiss_mfx.png" class="img-fluid"></p>
 <p>Throughout this section, we will illustrate various concepts using a logistic regression model fit on data from the <a href="https://allisonhorst.github.io/palmerpenguins/">Palmer Penguins dataset</a>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv"</span><span class="op">)</span></span>
-<span><span class="va">dat</span><span class="op">$</span><span class="va">large_penguin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">body_mass_g</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">body_mass_g</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">large_penguin</span> <span class="op">~</span> <span class="va">bill_length_mm</span> <span class="op">*</span> <span class="va">flipper_length_mm</span> <span class="op">+</span> <span class="va">species</span>,</span>
-<span>           data <span class="op">=</span> <span class="va">dat</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>large_penguin <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(dat<span class="sc">$</span>body_mass_g <span class="sc">&gt;</span> <span class="fu">median</span>(dat<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(large_penguin <span class="sc">~</span> bill_length_mm <span class="sc">*</span> flipper_length_mm <span class="sc">+</span> species,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> dat, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="average-marginal-effect-ame" class="level2"><h2 class="anchored" data-anchor-id="average-marginal-effect-ame">Average Marginal Effect (AME)</h2>
-<p>A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the “Average Marginal Effect”, that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full <code>data.frame</code> shown above, but the <code><a href="https://marginaleffects.com/man/slopes.html">avg_slopes()</a></code> function is convenient:</p>
+<section id="average-marginal-effect-ame" class="level2">
+<h2 class="anchored" data-anchor-id="average-marginal-effect-ame">Average Marginal Effect (AME)</h2>
+<p>A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the “Average Marginal Effect”, that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full <code>data.frame</code> shown above, but the <code>avg_slopes()</code> function is convenient:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;               Term           Contrast Estimate Std. Error      z Pr(&gt;|z|)    S    2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;  bill_length_mm    dY/dX                0.0279    0.00595  4.685   &lt;0.001 18.4  0.01620  0.0395</span></span>
-<span><span class="co">#&gt;  flipper_length_mm dY/dX                0.0105    0.00237  4.426   &lt;0.001 16.7  0.00585  0.0151</span></span>
-<span><span class="co">#&gt;  species           Chinstrap - Adelie  -0.4128    0.05600 -7.371   &lt;0.001 42.4 -0.52255 -0.3030</span></span>
-<span><span class="co">#&gt;  species           Gentoo - Adelie      0.0609    0.10734  0.568     0.57  0.8 -0.14946  0.2713</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Term           Contrast Estimate Std. Error      z Pr(&gt;|z|)    S    2.5 %  97.5 %</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bill_length_mm    dY/dX                0.0279    0.00595  4.685   &lt;0.001 18.4  0.01620  0.0395</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  flipper_length_mm dY/dX                0.0105    0.00237  4.426   &lt;0.001 16.7  0.00585  0.0151</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  species           Chinstrap - Adelie  -0.4128    0.05600 -7.371   &lt;0.001 42.4 -0.52255 -0.3030</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  species           Gentoo - Adelie      0.0609    0.10734  0.568     0.57  0.8 -0.14946  0.2713</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that since marginal effects are derivatives, they are only properly defined for continuous numeric variables. When the model also includes categorical regressors, the <code>summary</code> function will try to display relevant (regression-adjusted) contrasts between different categories, as shown above.</p>
-</section><section id="group-average-marginal-effect-g-ame" class="level2"><h2 class="anchored" data-anchor-id="group-average-marginal-effect-g-ame">Group-Average Marginal Effect (G-AME)</h2>
+</section>
+<section id="group-average-marginal-effect-g-ame" class="level2">
+<h2 class="anchored" data-anchor-id="group-average-marginal-effect-g-ame">Group-Average Marginal Effect (G-AME)</h2>
 <p>We can also use the <code>by</code> argument the average marginal effects <em>within different subgroups</em> of the observed data, based on values of the regressors. For example, to compute the average marginal effects of Bill Length for each Species, we do:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span></span>
-<span>  <span class="va">mod</span>,</span>
-<span>  by <span class="op">=</span> <span class="st">"species"</span>,</span>
-<span>  variables <span class="op">=</span> <span class="st">"bill_length_mm"</span><span class="op">)</span></span>
-<span><span class="va">mfx</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;            Term    Contrast   species Estimate Std. Error     z Pr(&gt;|z|)    S    2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  bill_length_mm mean(dY/dX) Adelie     0.04392    0.00904 4.860   &lt;0.001 19.7  0.02620 0.0616</span></span>
-<span><span class="co">#&gt;  bill_length_mm mean(dY/dX) Chinstrap  0.03704    0.00970 3.818   &lt;0.001 12.9  0.01803 0.0561</span></span>
-<span><span class="co">#&gt;  bill_length_mm mean(dY/dX) Gentoo     0.00307    0.00313 0.981    0.327  1.6 -0.00306 0.0092</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, species, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mfx <span class="ot">&lt;-</span> <span class="fu">avg_slopes</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"species"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"bill_length_mm"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>mfx</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            Term    Contrast   species Estimate Std. Error     z Pr(&gt;|z|)    S    2.5 % 97.5 %</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bill_length_mm mean(dY/dX) Adelie     0.04392    0.00904 4.860   &lt;0.001 19.7  0.02620 0.0616</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bill_length_mm mean(dY/dX) Chinstrap  0.03704    0.00970 3.818   &lt;0.001 12.9  0.01803 0.0561</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bill_length_mm mean(dY/dX) Gentoo     0.00307    0.00313 0.981    0.327  1.6 -0.00306 0.0092</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, species, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This is equivalent to manually taking the mean of the observation-level marginal effect for each species sub-group:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span></span>
-<span>  <span class="va">mfx</span><span class="op">$</span><span class="va">estimate</span>,</span>
-<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">$</span><span class="va">species</span>, <span class="va">mfx</span><span class="op">$</span><span class="va">term</span><span class="op">)</span>,</span>
-<span>  FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     Group.1        Group.2          x</span></span>
-<span><span class="co">#&gt; 1    Adelie bill_length_mm 0.04391550</span></span>
-<span><span class="co">#&gt; 2 Chinstrap bill_length_mm 0.03704402</span></span>
-<span><span class="co">#&gt; 3    Gentoo bill_length_mm 0.00306904</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  mfx<span class="sc">$</span>estimate,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="fu">list</span>(mfx<span class="sc">$</span>species, mfx<span class="sc">$</span>term),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> mean)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Group.1        Group.2          x</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    Adelie bill_length_mm 0.04391550</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Chinstrap bill_length_mm 0.03704402</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    Gentoo bill_length_mm 0.00306904</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that <code>marginaleffects</code> follows <code>Stata</code> and the <code>margins</code> package in computing standard errors using the group-wise averaged Jacobian.</p>
-</section><section id="marginal-effect-at-user-specified-values" class="level2"><h2 class="anchored" data-anchor-id="marginal-effect-at-user-specified-values">Marginal Effect at User-Specified Values</h2>
+</section>
+<section id="marginal-effect-at-user-specified-values" class="level2">
+<h2 class="anchored" data-anchor-id="marginal-effect-at-user-specified-values">Marginal Effect at User-Specified Values</h2>
 <p>Sometimes, we are not interested in <em>all</em> the unit-specific marginal effects, but would rather look at the estimated marginal effects for certain “typical” individuals, or for user-specified values of the regressors. The <code>datagrid</code> function helps us build a data grid full of “typical” rows. For example, to generate artificial Adelies and Gentoos with 180mm flippers:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>flipper_length_mm <span class="op">=</span> <span class="fl">180</span>,</span>
-<span>         species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Adelie"</span>, <span class="st">"Gentoo"</span><span class="op">)</span>,</span>
-<span>         model <span class="op">=</span> <span class="va">mod</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   bill_length_mm flipper_length_mm species</span></span>
-<span><span class="co">#&gt; 1       43.92193               180  Adelie</span></span>
-<span><span class="co">#&gt; 2       43.92193               180  Gentoo</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datagrid</span>(<span class="at">flipper_length_mm =</span> <span class="dv">180</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">species =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Gentoo"</span>),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">model =</span> mod)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   bill_length_mm flipper_length_mm species rowid</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       43.92193               180  Adelie     1</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       43.92193               180  Gentoo     2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The same command can be used (omitting the <code>model</code> argument) to <code>marginaleffects</code>’s <code>newdata</code> argument to compute marginal effects for those (fictional) individuals:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span></span>
-<span>  <span class="va">mod</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
-<span>    flipper_length_mm <span class="op">=</span> <span class="fl">180</span>,</span>
-<span>    species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Adelie"</span>, <span class="st">"Gentoo"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;               Term           Contrast flipper_length_mm species Estimate Std. Error      z Pr(&gt;|z|)    S    2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;  bill_length_mm    dY/dX                            180  Adelie   0.0578    0.03496  1.652   0.0986  3.3 -0.01078 1.26e-01</span></span>
-<span><span class="co">#&gt;  bill_length_mm    dY/dX                            180  Gentoo   0.0804    0.04314  1.863   0.0624  4.0 -0.00417 1.65e-01</span></span>
-<span><span class="co">#&gt;  flipper_length_mm dY/dX                            180  Adelie   0.0233    0.00555  4.191   &lt;0.001 15.1  0.01238 3.41e-02</span></span>
-<span><span class="co">#&gt;  flipper_length_mm dY/dX                            180  Gentoo   0.0324    0.00880  3.678   &lt;0.001 12.1  0.01512 4.96e-02</span></span>
-<span><span class="co">#&gt;  species           Chinstrap - Adelie               180  Adelie  -0.2106    0.10748 -1.959   0.0501  4.3 -0.42121 9.48e-05</span></span>
-<span><span class="co">#&gt;  species           Chinstrap - Adelie               180  Gentoo  -0.2106    0.10748 -1.959   0.0501  4.3 -0.42121 9.48e-05</span></span>
-<span><span class="co">#&gt;  species           Gentoo - Adelie                  180  Adelie   0.1556    0.30082  0.517   0.6051  0.7 -0.43403 7.45e-01</span></span>
-<span><span class="co">#&gt;  species           Gentoo - Adelie                  180  Gentoo   0.1556    0.30082  0.517   0.6051  0.7 -0.43403 7.45e-01</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, flipper_length_mm, species, predicted_lo, predicted_hi, predicted, bill_length_mm, large_penguin </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">flipper_length_mm =</span> <span class="dv">180</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">species =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Gentoo"</span>)))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Term           Contrast flipper_length_mm species Estimate Std. Error      z Pr(&gt;|z|)    S    2.5 %   97.5 %</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bill_length_mm    dY/dX                            180  Adelie   0.0578    0.03496  1.652   0.0986  3.3 -0.01078 1.26e-01</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bill_length_mm    dY/dX                            180  Gentoo   0.0804    0.04314  1.863   0.0624  4.0 -0.00417 1.65e-01</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  flipper_length_mm dY/dX                            180  Adelie   0.0233    0.00555  4.191   &lt;0.001 15.1  0.01238 3.41e-02</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  flipper_length_mm dY/dX                            180  Gentoo   0.0324    0.00880  3.678   &lt;0.001 12.1  0.01512 4.96e-02</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  species           Chinstrap - Adelie               180  Adelie  -0.2106    0.10748 -1.959   0.0501  4.3 -0.42121 9.48e-05</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  species           Chinstrap - Adelie               180  Gentoo  -0.2106    0.10748 -1.959   0.0501  4.3 -0.42121 9.48e-05</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  species           Gentoo - Adelie                  180  Adelie   0.1556    0.30082  0.517   0.6051  0.7 -0.43403 7.45e-01</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  species           Gentoo - Adelie                  180  Gentoo   0.1556    0.30082  0.517   0.6051  0.7 -0.43403 7.45e-01</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, flipper_length_mm, species, predicted_lo, predicted_hi, predicted, bill_length_mm, large_penguin </span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>When variables are omitted from the <code>datagrid</code> call, they will automatically be set at their mean or mode (depending on variable type).</p>
-</section><section id="marginal-effect-at-the-mean-mem" class="level2"><h2 class="anchored" data-anchor-id="marginal-effect-at-the-mean-mem">Marginal Effect at the Mean (MEM)</h2>
+</section>
+<section id="marginal-effect-at-the-mean-mem" class="level2">
+<h2 class="anchored" data-anchor-id="marginal-effect-at-the-mean-mem">Marginal Effect at the Mean (MEM)</h2>
 <p>The “Marginal Effect at the Mean” is a marginal effect calculated for a hypothetical observation where each regressor is set at its mean or mode. By default, the <code>datagrid</code> function that we used in the previous section sets all regressors to their means or modes. To calculate the MEM, we can set the <code>newdata</code> argument, which determines the values of predictors at which we want to compute marginal effects:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;               Term           Contrast Estimate Std. Error       z Pr(&gt;|z|)    S    2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;  bill_length_mm    dY/dX                0.0519    0.01449   3.581   &lt;0.001 11.5  0.02348  0.0803</span></span>
-<span><span class="co">#&gt;  flipper_length_mm dY/dX                0.0193    0.00558   3.464   &lt;0.001 10.9  0.00839  0.0303</span></span>
-<span><span class="co">#&gt;  species           Chinstrap - Adelie  -0.8088    0.07663 -10.554   &lt;0.001 84.1 -0.95897 -0.6586</span></span>
-<span><span class="co">#&gt;  species           Gentoo - Adelie      0.0818    0.11540   0.709    0.478  1.1 -0.14435  0.3080</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, bill_length_mm, flipper_length_mm, species, large_penguin </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod, <span class="at">newdata =</span> <span class="st">"mean"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Term           Contrast Estimate Std. Error       z Pr(&gt;|z|)    S    2.5 %  97.5 %</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  bill_length_mm    dY/dX                0.0519    0.01449   3.581   &lt;0.001 11.5  0.02348  0.0803</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  flipper_length_mm dY/dX                0.0193    0.00558   3.464   &lt;0.001 10.9  0.00839  0.0303</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  species           Chinstrap - Adelie  -0.8088    0.07663 -10.554   &lt;0.001 84.1 -0.95897 -0.6586</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  species           Gentoo - Adelie      0.0818    0.11540   0.709    0.478  1.1 -0.14435  0.3080</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, bill_length_mm, flipper_length_mm, species, large_penguin </span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="counterfactual-marginal-effects" class="level2"><h2 class="anchored" data-anchor-id="counterfactual-marginal-effects">Counterfactual Marginal Effects</h2>
+</section>
+<section id="counterfactual-marginal-effects" class="level2">
+<h2 class="anchored" data-anchor-id="counterfactual-marginal-effects">Counterfactual Marginal Effects</h2>
 <p>The <code>datagrid</code> function allowed us look at completely fictional individuals. Setting the <code>grid_type</code> argument of this function to <code>"counterfactual"</code> lets us compute the marginal effects for the actual observations in our dataset, but with a few manipulated values. For example, this code will create a <code>data.frame</code> twice as long as the original <code>dat</code>, where each observation is repeated with different values of the <code>flipper_length_mm</code> variable:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>flipper_length_mm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">160</span>, <span class="fl">180</span><span class="op">)</span>,</span>
-<span>               model <span class="op">=</span> <span class="va">mod</span>,</span>
-<span>               grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">datagrid</span>(<span class="at">flipper_length_mm =</span> <span class="fu">c</span>(<span class="dv">160</span>, <span class="dv">180</span>),</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">model =</span> mod,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">grid_type =</span> <span class="st">"counterfactual"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We see that the rows 1, 2, and 3 of the original dataset have been replicated twice, with different values of the <code>flipper_length_mm</code> variable:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nd</span><span class="op">[</span><span class="va">nd</span><span class="op">$</span><span class="va">rowid</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="op">]</span></span>
-<span><span class="co">#&gt;     rowidcf large_penguin bill_length_mm species flipper_length_mm</span></span>
-<span><span class="co">#&gt; 1         1             0           39.1  Adelie               160</span></span>
-<span><span class="co">#&gt; 2         2             0           39.5  Adelie               160</span></span>
-<span><span class="co">#&gt; 3         3             0           40.3  Adelie               160</span></span>
-<span><span class="co">#&gt; 343       1             0           39.1  Adelie               180</span></span>
-<span><span class="co">#&gt; 344       2             0           39.5  Adelie               180</span></span>
-<span><span class="co">#&gt; 345       3             0           40.3  Adelie               180</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>nd[nd<span class="sc">$</span>rowid <span class="sc">%in%</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,]</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     rowidcf large_penguin bill_length_mm species flipper_length_mm</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1         1             0           39.1  Adelie               160</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2         2             0           39.5  Adelie               160</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3         3             0           40.3  Adelie               160</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 343       1             0           39.1  Adelie               180</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 344       2             0           39.5  Adelie               180</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 345       3             0           40.3  Adelie               180</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can use the observation-level marginal effects to compute average (or median, or anything else) marginal effects over the counterfactual individuals:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">term</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>estimate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 2</span></span>
-<span><span class="co">#&gt;   term               estimate</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                 &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 bill_length_mm    0.00940  </span></span>
-<span><span class="co">#&gt; 2 flipper_length_mm 0.00385  </span></span>
-<span><span class="co">#&gt; 3 species           0.0000315</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod, <span class="at">newdata =</span> nd) <span class="sc">|&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(term) <span class="sc">|&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">estimate =</span> <span class="fu">median</span>(estimate))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term               estimate</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                 &lt;dbl&gt;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 bill_length_mm    0.00940  </span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 flipper_length_mm 0.00385  </span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 species           0.0000315</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="conditional-marginal-effects-plot" class="level2"><h2 class="anchored" data-anchor-id="conditional-marginal-effects-plot">Conditional Marginal Effects (Plot)</h2>
+</section>
+<section id="conditional-marginal-effects-plot" class="level2">
+<h2 class="anchored" data-anchor-id="conditional-marginal-effects-plot">Conditional Marginal Effects (Plot)</h2>
 <p>The <code>plot_slopes</code> function can be used to draw “Conditional Marginal Effects.” This is useful when a model includes interaction terms and we want to plot how the marginal effect of a variable changes as the value of a “condition” (or “moderator”) variable changes:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">wt</span> <span class="op">+</span> <span class="va">drat</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span>, condition <span class="op">=</span> <span class="st">"wt"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">*</span> wt <span class="sc">+</span> drat, <span class="at">data =</span> mtcars)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"hp"</span>, <span class="at">condition =</span> <span class="st">"wt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="slopes_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figure class="figure">
+<p><img src="slopes_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" style="width:60.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The marginal effects in the plot above were computed with values of all regressors – except the <code>variables</code> and the <code>condition</code> – held at their means or modes, depending on variable type.</p>
-<p>Since <code><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes()</a></code> produces a <code>ggplot2</code> object, it is easy to customize. For example:</p>
+<p>Since <code>plot_slopes()</code> produces a <code>ggplot2</code> object, it is easy to customize. For example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span>, condition <span class="op">=</span> <span class="st">"wt"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_rug.html">geom_rug</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">wt</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"hp"</span>, <span class="at">condition =</span> <span class="st">"wt"</span>) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_rug</span>(<span class="fu">aes</span>(<span class="at">x =</span> wt), <span class="at">data =</span> mtcars) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="slopes_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure">
+<p><img src="slopes_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
-</section><section id="slopes-vs-predictions-a-visual-interpretation" class="level2"><h2 class="anchored" data-anchor-id="slopes-vs-predictions-a-visual-interpretation">Slopes vs Predictions: A Visual Interpretation</h2>
+</section>
+<section id="slopes-vs-predictions-a-visual-interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="slopes-vs-predictions-a-visual-interpretation">Slopes vs Predictions: A Visual Interpretation</h2>
 <p>Often, analysts will plot predicted values of the outcome with a best fit line:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">qsec</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="st">"hp"</span>, vcov <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">*</span> qsec, <span class="at">data =</span> mtcars)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(mod, <span class="at">condition =</span> <span class="st">"hp"</span>, <span class="at">vcov =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> mtcars, <span class="fu">aes</span>(hp, mpg)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="slopes_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure">
+<p><img src="slopes_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The slope of this line is calculated using the same technique we all learned in grade school: dividing rise over run.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="st">"hp"</span>, vcov <span class="op">=</span> <span class="cn">TRUE</span>, draw <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="st">"hp"</span>, vcov <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html">geom_segment</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">hp</span><span class="op">[</span><span class="fl">10</span><span class="op">]</span>, xend <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">hp</span><span class="op">[</span><span class="fl">10</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">estimate</span><span class="op">[</span><span class="fl">10</span><span class="op">]</span>, yend <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">estimate</span><span class="op">[</span><span class="fl">20</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html">geom_segment</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">hp</span><span class="op">[</span><span class="fl">10</span><span class="op">]</span>, xend <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">hp</span><span class="op">[</span><span class="fl">20</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">estimate</span><span class="op">[</span><span class="fl">20</span><span class="op">]</span>, yend <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">estimate</span><span class="op">[</span><span class="fl">20</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, label <span class="op">=</span> <span class="st">"Rise"</span>, y <span class="op">=</span> <span class="fl">10</span>, x <span class="op">=</span> <span class="fl">140</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, label <span class="op">=</span> <span class="st">"Run"</span>, y <span class="op">=</span> <span class="fl">2</span>, x <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot_predictions</span>(mod, <span class="at">condition =</span> <span class="st">"hp"</span>, <span class="at">vcov =</span> <span class="cn">TRUE</span>, <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(mod, <span class="at">condition =</span> <span class="st">"hp"</span>, <span class="at">vcov =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> p<span class="sc">$</span>hp[<span class="dv">10</span>], <span class="at">xend =</span> p<span class="sc">$</span>hp[<span class="dv">10</span>], <span class="at">y =</span> p<span class="sc">$</span>estimate[<span class="dv">10</span>], <span class="at">yend =</span> p<span class="sc">$</span>estimate[<span class="dv">20</span>])) <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> p<span class="sc">$</span>hp[<span class="dv">10</span>], <span class="at">xend =</span> p<span class="sc">$</span>hp[<span class="dv">20</span>], <span class="at">y =</span> p<span class="sc">$</span>estimate[<span class="dv">20</span>], <span class="at">yend =</span> p<span class="sc">$</span>estimate[<span class="dv">20</span>])) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"Rise"</span>, <span class="at">y =</span> <span class="dv">10</span>, <span class="at">x =</span> <span class="dv">140</span>) <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">label =</span> <span class="st">"Run"</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">x =</span> <span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="slopes_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure">
+<p><img src="slopes_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Instead of computing this slope manually, we can just call:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;    hp   -0.112     0.0126 -8.92   &lt;0.001 61.0 -0.137 -0.0874</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"hp"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 %  97.5 %</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp   -0.112     0.0126 -8.92   &lt;0.001 61.0 -0.137 -0.0874</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, consider the fact that our model includes an interaction between <code>hp</code> and <code>qsec</code>. This means that the slope will actually differ based on the value of the moderator variable <code>qsec</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"qsec"</span> <span class="op">=</span> <span class="st">"quartile"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(mod, <span class="at">condition =</span> <span class="fu">list</span>(<span class="st">"hp"</span>, <span class="st">"qsec"</span> <span class="ot">=</span> <span class="st">"quartile"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="slopes_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure">
+<p><img src="slopes_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We can estimate the slopes of these three fit lines easily:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span></span>
-<span>  <span class="va">mod</span>,</span>
-<span>  variables <span class="op">=</span> <span class="st">"hp"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>qsec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">qsec</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.25</span>, <span class="fl">.5</span>, <span class="fl">.75</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term qsec Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;    hp 16.9  -0.0934     0.0111 -8.43   &lt;0.001 54.7 -0.115 -0.0717</span></span>
-<span><span class="co">#&gt;    hp 17.7  -0.1093     0.0123 -8.92   &lt;0.001 60.8 -0.133 -0.0853</span></span>
-<span><span class="co">#&gt;    hp 18.9  -0.1325     0.0154 -8.60   &lt;0.001 56.8 -0.163 -0.1023</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, qsec, predicted_lo, predicted_hi, predicted, hp, mpg </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"hp"</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">qsec =</span> <span class="fu">quantile</span>(mtcars<span class="sc">$</span>qsec, <span class="at">probs =</span> <span class="fu">c</span>(.<span class="dv">25</span>, .<span class="dv">5</span>, .<span class="dv">75</span>))))</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term qsec Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 %  97.5 %</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp 16.9  -0.0934     0.0111 -8.43   &lt;0.001 54.7 -0.115 -0.0717</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp 17.7  -0.1093     0.0123 -8.92   &lt;0.001 60.8 -0.133 -0.0853</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp 18.9  -0.1325     0.0154 -8.60   &lt;0.001 56.8 -0.163 -0.1023</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, qsec, predicted_lo, predicted_hi, predicted, hp, mpg </span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As we see in the graph, all three slopes are negative, but the Q3 slope is steepest.</p>
-<p>We could then push this one step further, and measure the slope of <code>mpg</code> with respect to <code>hp</code>, <em>for all observed values</em> of <code>qsec</code>. This is achieved with the <code><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes()</a></code> function:</p>
+<p>We could then push this one step further, and measure the slope of <code>mpg</code> with respect to <code>hp</code>, <em>for all observed values</em> of <code>qsec</code>. This is achieved with the <code>plot_slopes()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span>, condition <span class="op">=</span> <span class="st">"qsec"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"hp"</span>, <span class="at">condition =</span> <span class="st">"qsec"</span>) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="slopes_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure">
+<p><img src="slopes_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>This plot shows that the marginal effect of <code>hp</code> on <code>mpg</code> is always negative (the slope is always below zero), and that this effect becomes even more negative as <code>qsec</code> increases.</p>
-</section></section><section id="minimum-velocity" class="level1"><h1>Minimum velocity</h1>
-<p>In some fields such as epidemiology, it is common to compute the minimum or maximum slope, as a measure of the “velocity” of the response function. To achieve this, we can use the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function and define custom functions. Here, we present a quick example without much detail, but you can refer to <a href="comparisons.html">the comparisons vignette</a> for more explanations on custom functions in the <code>comparison</code> argument.</p>
+</section>
+</section>
+<section id="minimum-velocity" class="level1">
+<h1>Minimum velocity</h1>
+<p>In some fields such as epidemiology, it is common to compute the minimum or maximum slope, as a measure of the “velocity” of the response function. To achieve this, we can use the <code>comparisons()</code> function and define custom functions. Here, we present a quick example without much detail, but you can refer to <a href="comparisons.html">the comparisons vignette</a> for more explanations on custom functions in the <code>comparison</code> argument.</p>
 <p>Consider this simple GAM model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">itsadug</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">mgcv</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">simdat</span><span class="op">$</span><span class="va">Subject</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">simdat</span><span class="op">$</span><span class="va">Subject</span><span class="op">)</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/bam.html">bam</a></span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">Group</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">Time</span>, by <span class="op">=</span> <span class="va">Group</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">Subject</span>, bs <span class="op">=</span> <span class="st">"re"</span><span class="op">)</span>,</span>
-<span>             data <span class="op">=</span> <span class="va">simdat</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">model</span>, variables <span class="op">=</span> <span class="st">"Time"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Time"</span>, <span class="st">"Group"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(itsadug)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>simdat<span class="sc">$</span>Subject <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(simdat<span class="sc">$</span>Subject)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">bam</span>(Y <span class="sc">~</span> Group <span class="sc">+</span> <span class="fu">s</span>(Time, <span class="at">by =</span> Group) <span class="sc">+</span> <span class="fu">s</span>(Subject, <span class="at">bs =</span> <span class="st">"re"</span>),</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> simdat)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(model, <span class="at">variables =</span> <span class="st">"Time"</span>, <span class="at">condition =</span> <span class="fu">c</span>(<span class="st">"Time"</span>, <span class="st">"Group"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="slopes_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="576"></p>
+<figure class="figure">
+<p><img src="slopes_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Minimum velocity, overall:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model</span>,</span>
-<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Time"</span> <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span>,</span>
-<span>  vcov <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  comparison <span class="op">=</span> \<span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="op">(</span><span class="va">hi</span> <span class="op">-</span> <span class="va">lo</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e-6</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate</span></span>
-<span><span class="co">#&gt;  Time   +1e-06  -0.0267</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(model,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="st">"Time"</span> <span class="ot">=</span> <span class="fl">1e-6</span>),</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">comparison =</span> \(hi, lo) <span class="fu">min</span>((hi <span class="sc">-</span> lo) <span class="sc">/</span> <span class="fl">1e-6</span>))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Time   +1e-06  -0.0267</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted </span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Minimum velocity by group:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model</span>,</span>
-<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Time"</span> <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span>,</span>
-<span>  by <span class="op">=</span> <span class="st">"Group"</span>,</span>
-<span>  vcov <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  comparison <span class="op">=</span> \<span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="op">(</span><span class="va">hi</span> <span class="op">-</span> <span class="va">lo</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e-6</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast    Group Estimate</span></span>
-<span><span class="co">#&gt;  Time   +1e-06 Children  -0.0153</span></span>
-<span><span class="co">#&gt;  Time   +1e-06 Adults    -0.0267</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, Group, estimate </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(model,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="st">"Time"</span> <span class="ot">=</span> <span class="fl">1e-6</span>),</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"Group"</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">comparison =</span> \(hi, lo) <span class="fu">min</span>((hi <span class="sc">-</span> lo) <span class="sc">/</span> <span class="fl">1e-6</span>))</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast    Group Estimate</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Time   +1e-06 Children  -0.0153</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Time   +1e-06 Adults    -0.0267</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, Group, estimate </span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Difference between the minimum velocity of each group:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model</span>,</span>
-<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Time"</span> <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span>,</span>
-<span>  vcov <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  by <span class="op">=</span> <span class="st">"Group"</span>,</span>
-<span>  hypothesis <span class="op">=</span> <span class="st">"pairwise"</span>,</span>
-<span>  comparison <span class="op">=</span> \<span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="op">(</span><span class="va">hi</span> <span class="op">-</span> <span class="va">lo</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e-6</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;               Term Estimate</span></span>
-<span><span class="co">#&gt;  Children - Adults   0.0114</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, estimate </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(model,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="st">"Time"</span> <span class="ot">=</span> <span class="fl">1e-6</span>),</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"Group"</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">hypothesis =</span> <span class="st">"pairwise"</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">comparison =</span> \(hi, lo) <span class="fu">min</span>((hi <span class="sc">-</span> lo) <span class="sc">/</span> <span class="fl">1e-6</span>))</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Term Estimate</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Children - Adults   0.0114</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, estimate </span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>What <code>Time</code> value corresponds to the minimum velocity?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">low</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span>, <span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">dydx</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">hi</span> <span class="op">-</span> <span class="va">lo</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e-6</span></span>
-<span>    <span class="va">dydx_min</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">dydx</span><span class="op">)</span></span>
-<span>    <span class="va">x</span><span class="op">[</span><span class="va">dydx</span> <span class="op">==</span> <span class="va">dydx_min</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model</span>,</span>
-<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Time"</span> <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span>,</span>
-<span>  vcov <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  by <span class="op">=</span> <span class="st">"Group"</span>,</span>
-<span>  comparison <span class="op">=</span> <span class="va">low</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast    Group Estimate</span></span>
-<span><span class="co">#&gt;  Time   +1e-06 Children     1313</span></span>
-<span><span class="co">#&gt;  Time   +1e-06 Adults       1556</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, Group, estimate </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>low <span class="ot">=</span> <span class="cf">function</span>(hi, lo, x) {</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    dydx <span class="ot">&lt;-</span> (hi <span class="sc">-</span> lo) <span class="sc">/</span> <span class="fl">1e-6</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    dydx_min <span class="ot">&lt;-</span> <span class="fu">min</span>(dydx)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    x[dydx <span class="sc">==</span> dydx_min][<span class="dv">1</span>]</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(model,</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="st">"Time"</span> <span class="ot">=</span> <span class="fl">1e-6</span>),</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"Group"</span>,</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">comparison =</span> low)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast    Group Estimate</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Time   +1e-06 Children     1313</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Time   +1e-06 Adults       1556</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, Group, estimate </span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="manual-computation" class="level1"><h1>Manual computation</h1>
+</section>
+<section id="manual-computation" class="level1">
+<h1>Manual computation</h1>
 <p>Now we illustrate how to reproduce the output of <code>slopes</code> manually:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">hp</span>, family <span class="op">=</span> <span class="va">binomial</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">eps</span> <span class="op">&lt;-</span> <span class="fl">1e-4</span></span>
-<span><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">mtcars</span>, hp <span class="op">=</span> <span class="va">hp</span> <span class="op">-</span> <span class="va">eps</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">d2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">mtcars</span>, hp <span class="op">=</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">eps</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"response"</span>, newdata <span class="op">=</span> <span class="va">d1</span><span class="op">)</span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"response"</span>, newdata <span class="op">=</span> <span class="va">d2</span><span class="op">)</span></span>
-<span><span class="va">s</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p2</span> <span class="op">-</span> <span class="va">p1</span><span class="op">)</span> <span class="op">/</span> <span class="va">eps</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  Porsche 914-2   Lotus Europa Ford Pantera L   Ferrari Dino  Maserati Bora     Volvo 142E </span></span>
-<span><span class="co">#&gt;  -0.0020285496  -0.0020192814  -0.0013143243  -0.0018326764  -0.0008900012  -0.0020233577</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(am <span class="sc">~</span> hp, <span class="at">family =</span> binomial, <span class="at">data =</span> mtcars)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fl">1e-4</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">transform</span>(mtcars, <span class="at">hp =</span> hp <span class="sc">-</span> eps <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">transform</span>(mtcars, <span class="at">hp =</span> hp <span class="sc">+</span> eps <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod, <span class="at">type =</span> <span class="st">"response"</span>, <span class="at">newdata =</span> d1)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod, <span class="at">type =</span> <span class="st">"response"</span>, <span class="at">newdata =</span> d2)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> (p2 <span class="sc">-</span> p1) <span class="sc">/</span> eps</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(s)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Porsche 914-2   Lotus Europa Ford Pantera L   Ferrari Dino  Maserati Bora     Volvo 142E </span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  -0.0020285496  -0.0020192814  -0.0013143243  -0.0018326764  -0.0008900012  -0.0020233577</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Which is equivalent to:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, eps <span class="op">=</span> <span class="va">eps</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 %    97.5 %</span></span>
-<span><span class="co">#&gt;    hp -0.00203   0.001347 -1.51  0.13199 2.9 -0.00467  0.000611</span></span>
-<span><span class="co">#&gt;    hp -0.00202   0.001556 -1.30  0.19440 2.4 -0.00507  0.001031</span></span>
-<span><span class="co">#&gt;    hp -0.00131   0.000441 -2.98  0.00285 8.5 -0.00218 -0.000451</span></span>
-<span><span class="co">#&gt;    hp -0.00183   0.001323 -1.39  0.16591 2.6 -0.00443  0.000760</span></span>
-<span><span class="co">#&gt;    hp -0.00089   0.000283 -3.14  0.00169 9.2 -0.00145 -0.000334</span></span>
-<span><span class="co">#&gt;    hp -0.00202   0.001586 -1.28  0.20206 2.3 -0.00513  0.001085</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, am, hp </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod, <span class="at">eps =</span> eps) <span class="sc">|&gt;</span> <span class="fu">tail</span>()</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 %    97.5 %</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp -0.00203   0.001347 -1.51  0.13199 2.9 -0.00467  0.000611</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp -0.00202   0.001556 -1.30  0.19440 2.4 -0.00507  0.001031</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp -0.00131   0.000441 -2.98  0.00285 8.5 -0.00218 -0.000451</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp -0.00183   0.001323 -1.39  0.16591 2.6 -0.00443  0.000760</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp -0.00089   0.000283 -3.14  0.00169 9.2 -0.00145 -0.000334</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp -0.00202   0.001586 -1.28  0.20206 2.3 -0.00513  0.001085</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, am, hp </span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And we can get average marginal effects by subgroup as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/tapply.html">tapply</a></span><span class="op">(</span><span class="va">s</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mean</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            4            6            8 </span></span>
-<span><span class="co">#&gt; -0.002010526 -0.001990774 -0.001632681</span></span>
-<span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, eps <span class="op">=</span> <span class="va">eps</span>, by <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term    Contrast cyl Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;    hp mean(dY/dX)   4 -0.00201    0.00141 -1.43   0.1540 2.7 -0.00478 0.000754</span></span>
-<span><span class="co">#&gt;    hp mean(dY/dX)   6 -0.00199    0.00150 -1.33   0.1833 2.4 -0.00492 0.000941</span></span>
-<span><span class="co">#&gt;    hp mean(dY/dX)   8 -0.00163    0.00095 -1.72   0.0858 3.5 -0.00350 0.000230</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(s, mtcars<span class="sc">$</span>cyl, mean)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            4            6            8 </span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.002010526 -0.001990774 -0.001632681</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod, <span class="at">eps =</span> eps, <span class="at">by =</span> <span class="st">"cyl"</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term    Contrast cyl Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 %   97.5 %</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp mean(dY/dX)   4 -0.00201    0.00141 -1.43   0.1540 2.7 -0.00478 0.000754</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp mean(dY/dX)   6 -0.00199    0.00150 -1.33   0.1833 2.4 -0.00492 0.000941</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp mean(dY/dX)   8 -0.00163    0.00095 -1.72   0.0858 3.5 -0.00350 0.000230</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
-</section><aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
 <ol>
 <li id="fn1"><p>The term “effect” is tricky. To be clear, this vignette does <em>not</em> use the word “effect” to imply “causality”.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol></aside></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1143,18 +1184,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1186,7 +1216,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1194,7 +1246,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1516,7 +1568,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="../vignettes/comparisons.html" class="pagination-link" aria-label="Comparisons">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Comparisons</span>
       </a>          
@@ -1532,5 +1586,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body>
-</html>
+</body></html>
