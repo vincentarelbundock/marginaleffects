@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.5.30">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
 <title>Marginal Effects Zoo – inferences</title>
 <style>
 code{white-space: pre-wrap;}
@@ -55,26 +53,13 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-
-
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
 <link href="../man/posterior_draws.html" rel="next">
 <link href="../man/hypotheses.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -103,20 +88,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-
-
 </head>
-
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
-    </a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -127,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
+<li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -146,29 +125,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-          </div> <!-- /navcollapse -->
+</div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/predictions.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/inferences.html"><code>inferences</code></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="../man/predictions.html">Functions</a></li>
+<li class="breadcrumb-item"><a href="../man/inferences.html"><code>inferences</code></a></li>
+</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -182,8 +157,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -214,7 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
@@ -223,8 +198,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -351,7 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
@@ -360,8 +335,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -422,7 +397,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
@@ -431,8 +406,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -499,7 +474,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -519,43 +494,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#experimental-bootstrap-conformal-and-simulation-based-inference" id="toc-experimental-bootstrap-conformal-and-simulation-based-inference" class="nav-link active" data-scroll-target="#experimental-bootstrap-conformal-and-simulation-based-inference">(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference</a>
+<li>
+<a href="#experimental-bootstrap-conformal-and-simulation-based-inference" id="toc-experimental-bootstrap-conformal-and-simulation-based-inference" class="nav-link active" data-scroll-target="#experimental-bootstrap-conformal-and-simulation-based-inference">(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference</a>
   <ul class="collapse">
-  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
+<li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
   <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
-  </ul></li>
   </ul>
-</nav>
-    </div>
+</li>
+  </ul></nav>
+</div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-
-
-<section id="experimental-bootstrap-conformal-and-simulation-based-inference" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="experimental-bootstrap-conformal-and-simulation-based-inference">(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference</h2>
-<section id="description" class="level3">
-<h3 class="anchored" data-anchor-id="description">Description</h3>
+<main class="content" id="quarto-document-content"><section id="experimental-bootstrap-conformal-and-simulation-based-inference" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="experimental-bootstrap-conformal-and-simulation-based-inference">(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference</h2>
+<section id="description" class="level3"><h3 class="anchored" data-anchor-id="description">Description</h3>
 <p>Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other <code>marginaleffects</code> functions.</p>
 <p>Apply this function to a <code>marginaleffects</code> object to change the inferential method used to compute uncertainty estimates.</p>
-</section>
-<section id="usage" class="level3">
-<h3 class="anchored" data-anchor-id="usage">Usage</h3>
+</section><section id="usage" class="level3"><h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">inferences(
   x,
   method,
@@ -567,11 +532,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   ...
 )
 </code></pre>
-</section>
-<section id="arguments" class="level3">
-<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
-<table>
-<tbody><tr>
+</section><section id="arguments" class="level3"><h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
+<table><tbody>
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="inferences_:_x">x</code>
 </td>
@@ -664,13 +627,13 @@ Data frame of calibration data for split conformal prediction (<code style="whit
 <code id="inferences_:_conformal_score">conformal_score</code>
 </td>
 <td>
-<p>String. Warning: The <code>type</code> argument in <code>predictions()</code> must generate predictions which are on the same scale as the outcome variable. Typically, this means that <code>type</code> must be "response" or "probs".</p>
+<p>String. Warning: The <code>type</code> argument in <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> must generate predictions which are on the same scale as the outcome variable. Typically, this means that <code>type</code> must be "response" or "probs".</p>
 <ul>
 <li>
 <p>"residual_abs" or "residual_sq" for regression tasks (numeric outcome)</p>
 </li>
 <li>
-<p>"softmax" for classification tasks (when <code>predictions()</code> returns a <code>group</code> columns, such as multinomial or ordinal logit models.</p>
+<p>"softmax" for classification tasks (when <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> returns a <code>group</code> columns, such as multinomial or ordinal logit models.</p>
 </li>
 </ul>
 </td>
@@ -682,13 +645,13 @@ Data frame of calibration data for split conformal prediction (<code style="whit
 <td>
 <ul>
 <li>
-<p>If <code>method=“boot”</code>, additional arguments are passed to <code>boot::boot()</code>.</p>
+<p>If <code>method=“boot”</code>, additional arguments are passed to <code><a href="https://rdrr.io/pkg/boot/man/boot.html">boot::boot()</a></code>.</p>
 </li>
 <li>
-<p>If <code>method=“fwb”</code>, additional arguments are passed to <code>fwb::fwb()</code>.</p>
+<p>If <code>method=“fwb”</code>, additional arguments are passed to <code><a href="https://ngreifer.github.io/fwb/reference/fwb.html">fwb::fwb()</a></code>.</p>
 </li>
 <li>
-<p>If <code>method=“rsample”</code>, additional arguments are passed to <code>rsample::bootstraps()</code>.</p>
+<p>If <code>method=“rsample”</code>, additional arguments are passed to <code><a href="https://rsample.tidymodels.org/reference/bootstraps.html">rsample::bootstraps()</a></code>.</p>
 </li>
 <li>
 <p>Additional arguments are ignored for all other methods.</p>
@@ -696,10 +659,7 @@ Data frame of calibration data for split conformal prediction (<code style="whit
 </ul>
 </td>
 </tr>
-</tbody></table>
-</section>
-<section id="details" class="level3">
-<h3 class="anchored" data-anchor-id="details">Details</h3>
+</tbody></table></section><section id="details" class="level3"><h3 class="anchored" data-anchor-id="details">Details</h3>
 <p>When <code>method=“simulation”</code>, we conduct simulation-based inference following the method discussed in Krinsky &amp; Robb (1986):</p>
 <ol>
 <li>
@@ -712,55 +672,46 @@ Data frame of calibration data for split conformal prediction (<code style="whit
 <p>Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.</p>
 </li>
 </ol>
-<p>When <code>method=“fwb”</code>, drawn weights are supplied to the model fitting function’s <code>weights</code> argument; if the model doesn’t accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by <code>weights()</code> and multiplied by the drawn weights. These weights are supplied to the <code>wts</code> argument of the estimation function (e.g., <code>comparisons()</code>).</p>
-</section>
-<section id="value" class="level3">
-<h3 class="anchored" data-anchor-id="value">Value</h3>
+<p>When <code>method=“fwb”</code>, drawn weights are supplied to the model fitting function’s <code>weights</code> argument; if the model doesn’t accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by <code><a href="https://rdrr.io/r/stats/weights.html">weights()</a></code> and multiplied by the drawn weights. These weights are supplied to the <code>wts</code> argument of the estimation function (e.g., <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>).</p>
+</section><section id="value" class="level3"><h3 class="anchored" data-anchor-id="value">Value</h3>
 <p>A <code>marginaleffects</code> object with simulation or bootstrap resamples and objects attached.</p>
-</section>
-<section id="references" class="level3">
-<h3 class="anchored" data-anchor-id="references">References</h3>
+</section><section id="references" class="level3"><h3 class="anchored" data-anchor-id="references">References</h3>
 <p>Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” Review of Economics and Statistics 68 (4): 715–9.</p>
 <p>King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361</p>
 <p>Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standard errors." Health services research 49.2 (2014): 731-750.</p>
 <p>Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.</p>
 <p>Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.</p>
-</section>
-<section id="examples" class="level3">
-<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+</section><section id="examples" class="level3"><h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1024</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Sepal.Width <span class="sc">*</span> Species, <span class="at">data =</span> iris)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># bootstrap</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"boot"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"rsample"</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Fractional (bayesian) bootstrap</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">by =</span> <span class="st">"Species"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"fwb"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">posterior_draws</span>(<span class="st">"rvar"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>()</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation-based inference</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod) <span class="sc">%&gt;%</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"simulation"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1024</span><span class="op">)</span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span> <span class="op">*</span> <span class="va">Species</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># bootstrap</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"boot"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"rsample"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Fractional (bayesian) bootstrap</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"fwb"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="st">"rvar"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Simulation-based inference</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 
 
-</section>
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1179,9 +1130,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../man/hypotheses.html" class="pagination-link" aria-label="`hypotheses`">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>hypotheses</code></span>
       </a>          
@@ -1197,4 +1146,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+</body>
+</html>
