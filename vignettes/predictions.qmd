@@ -397,7 +397,9 @@ plot_predictions(mod, condition = "length", type = "link")
 
 ## Marginal Adjusted Predictions
 
-The predictions displayed by the `plot_predictions()` function with the `condition` argument can be said to be "conditional" in the sense that they are conditional on the values of the predictors in a constructed grid of values. The same function can also plot "marginal" predictions. The underlying process is to (1) compute predictions for each observation in the actually observed dataset, and then (2) average these predictions across some variable(s). This is equivalent to plotting the `avg_predictions(model, by='z')` call.
+The predictions displayed in the previous section by the `plot_predictions()` function, using the `condition` argument, can be said to be "conditional" in the sense that they are conditional on the values of the predictors in a constructed grid of "representative" values.
+
+An alternative is plot "marginal" predictions using the `by` argument. The underlying process is to (1) compute predictions for each observation in the actually observed dataset, and then (2) average these predictions across some variable(s). This is equivalent to plotting the `avg_predictions(model, by='z')` call.
 
 For example:
 
