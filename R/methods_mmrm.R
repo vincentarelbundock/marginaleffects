@@ -33,7 +33,16 @@ get_predict.mmrm <- function(model, newdata = model$data, type = "response", ...
   type <- match.arg(type)
   res <- data.frame(
     rowid = seq_len(nrow(newdata)),
-    estimate = predict(model, newdata = newdata, conditional = FALSE, ...)
+    estimate = predict(model, newdata = newdata, type = type, conditional = FALSE)
   )
   return(res)
+}
+
+
+#' @include sanity_model.R
+#' @rdname sanitize_model_specific
+#' @keywords internal
+sanitize_model_specific.mmrm <- function(model, ...) {
+    insight::check_if_installed("mmrm", minimum_version = "0.3.11.9000")
+    return(model)
 }
