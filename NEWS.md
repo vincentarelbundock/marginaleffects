@@ -5,6 +5,9 @@
 New function:
 
 * `specify_hypothesis()` returns functions to be used in the `hypothesis` argument of `predictions()`, `comparisons()`, and `slopes()`. This convenience function can be used to specify complex aggregations and estimands for hypothesis tests (ex: by subgroups or with custom functions).
+Minor:
+
+* Do not raise extraneous warning for `survey` package models when the `by` argument is not used.
 
 Bugs:
 

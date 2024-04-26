@@ -48,6 +48,7 @@
 \alias{get_predict.lm}
 \alias{get_predict.glm}
 \alias{get_predict.svyolr}
+\alias{get_predict.svyglm}
 \alias{get_predict.coxph}
 \alias{get_predict.model_fit}
 \alias{get_predict.workflow}
@@ -133,6 +134,8 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{glm}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{svyolr}(model, newdata = insight::get_data(model), type = "probs", ...)
+
+\method{get_predict}{svyglm}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{coxph}(model, newdata = insight::get_data(model), type = "lp", ...)
 

@@ -263,6 +263,7 @@ predictions <- function(model,
         newdata = newdata,
         wts = wts,
         vcov = vcov,
+        by = by,
         calling_function = "predictions",
         ...)
     tmp <- sanitize_hypothesis(hypothesis, ...)

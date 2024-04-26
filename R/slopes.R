@@ -259,7 +259,7 @@ slopes <- function(model,
     checkmate::assert_choice(slope, choices = valid)
 
     # sanity checks and pre-processing
-    model <- sanitize_model(model = model, newdata = newdata, wts = wts, vcov = vcov, calling_function = "marginaleffects", ...)
+    model <- sanitize_model(model = model, newdata = newdata, wts = wts, vcov = vcov, by = by, calling_function = "marginaleffects", ...)
     sanity_dots(model = model, calling_function = "marginaleffects", ...)
     type <- sanitize_type(model = model, type = type, calling_function = "slopes")
 

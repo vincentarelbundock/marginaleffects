@@ -136,9 +136,10 @@ sanity_model_supported_class <- function(model) {
 sanitize_model <- function(model,
                            newdata = NULL,
                            vcov = NULL,
+                           by = FALSE,
                            ...) {
 
-    model <- sanitize_model_specific(model, vcov = vcov, newdata = newdata, ...)
+    model <- sanitize_model_specific(model, vcov = vcov, newdata = newdata, by = by, ...)
     sanity_model_supported_class(model)
     return(model)
 }

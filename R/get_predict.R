@@ -76,6 +76,7 @@ get_predict.default <- function(model,
             } else {
                 out <- list(rowid = seq_len(length(pred)), estimate = pred)
             }
+
         }
         
 

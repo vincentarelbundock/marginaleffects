@@ -320,6 +320,7 @@ comparisons <- function(model,
         newdata = newdata,
         wts = wts,
         vcov = vcov,
+        by = by,
         calling_function = "comparisons",
         ...)
     cross <- sanitize_cross(cross, variables, model)
