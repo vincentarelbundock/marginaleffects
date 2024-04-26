@@ -48,6 +48,23 @@ expect_equivalent(mfx$estimate, sta$dydxstata, tolerance = 1e-2)
 expect_equivalent(mfx$std.error, sta$std.errorstata, tolerance = tolse)
 
 
+# Manual computation
+fit <- lm(formula = mpg ~ cyl * hp + wt, data = mtcars)
+p <- predict(fit)
+x <- mtcars$wt
+
+eyex_a <- dydx * x / p
+eyex_b <- slopes(fit, variables = "wt", slope = "eyex")$estimate
+expect_equivalent(eyex_a, eyex_b)
+
+eydx_a <- dydx / p
+eydx_b <- slopes(fit, variables = "wt", slope = "eydx")$estimate
+expect_equivalent(eydx_a, eydx_b)
+
+dyex_a <- dydx * x
+dyex_b <- slopes(fit, variables = "wt", slope = "dyex")$estimate
+expect_equivalent(dyex_a, dyex_b)
+
 
 source("helpers.R")
 rm(list = ls())
