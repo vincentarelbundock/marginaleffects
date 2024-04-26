@@ -2,7 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 requiet("truncreg")
-requiet("margins")
+if (!requiet("margins")) exit_file("margins")
 
 
 # truncreg: no validity check

@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
-
+<meta name="generator" content="quarto-1.5.30">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>Marginal Effects Zoo</title>
+<title>Marginal Effects Zoo – experiments</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,26 +53,13 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-
-
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
 <link href="../vignettes/gam.html" rel="next">
 <link href="../vignettes/equivalence.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -102,12 +87,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script>
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -133,19 +113,14 @@ window.Quarto = {
   typesetMath
 };
 </script>
-
 </head>
-
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
-    </a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -156,7 +131,7 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
+<li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -175,29 +150,25 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-          </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/experiments.html">Experiments</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
+<li class="breadcrumb-item"><a href="../vignettes/experiments.html">Experiments</a></li>
+</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -211,8 +182,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -243,7 +214,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
@@ -252,8 +223,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -380,7 +351,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
@@ -389,8 +360,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -451,7 +422,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
@@ -460,8 +431,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -528,7 +499,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -548,60 +519,60 @@ window.Quarto = {
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#experiments" id="toc-experiments" class="nav-link active" data-scroll-target="#experiments">Experiments</a>
+<li>
+<a href="#experiments" id="toc-experiments" class="nav-link active" data-scroll-target="#experiments">Experiments</a>
   <ul class="collapse">
-  <li><a href="#x2-experiments" id="toc-x2-experiments" class="nav-link" data-scroll-target="#x2-experiments">2x2 Experiments</a>
+<li>
+<a href="#x2-experiments" id="toc-x2-experiments" class="nav-link" data-scroll-target="#x2-experiments">2x2 Experiments</a>
   <ul class="collapse">
-  <li><a href="#fitting-a-model" id="toc-fitting-a-model" class="nav-link" data-scroll-target="#fitting-a-model">Fitting a Model</a></li>
+<li><a href="#fitting-a-model" id="toc-fitting-a-model" class="nav-link" data-scroll-target="#fitting-a-model">Fitting a Model</a></li>
   <li><a href="#evaluating-effects-from-the-model-summary" id="toc-evaluating-effects-from-the-model-summary" class="nav-link" data-scroll-target="#evaluating-effects-from-the-model-summary">Evaluating Effects From The Model Summary</a></li>
   <li><a href="#using-avg_comparisons-to-estimate-all-differences" id="toc-using-avg_comparisons-to-estimate-all-differences" class="nav-link" data-scroll-target="#using-avg_comparisons-to-estimate-all-differences">Using <code>avg_comparisons</code> To Estimate All Differences</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
-  </ul></li>
-  <li><a href="#regression-adjustment" id="toc-regression-adjustment" class="nav-link" data-scroll-target="#regression-adjustment">Regression adjustment</a>
-  <ul class="collapse">
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  </ul></li>
-  </ul></li>
   </ul>
-</nav>
-    </div>
+</li>
+  <li>
+<a href="#regression-adjustment" id="toc-regression-adjustment" class="nav-link" data-scroll-target="#regression-adjustment">Regression adjustment</a>
+  <ul class="collapse">
+<li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</li>
+  </ul>
+</li>
+  </ul></nav>
+</div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-
-
-<section id="experiments" class="level1">
-<h1>Experiments</h1>
-<section id="x2-experiments" class="level2">
-<h2 class="anchored" data-anchor-id="x2-experiments">2x2 Experiments</h2>
+<main class="content" id="quarto-document-content"><section id="experiments" class="level1"><h1>Experiments</h1>
+<section id="x2-experiments" class="level2"><h2 class="anchored" data-anchor-id="x2-experiments">2x2 Experiments</h2>
 <p>A 2×2 factorial design is a type of experimental design that allows researchers to understand the effects of two independent variables (each with two levels) on a single dependent variable. The design is popular among academic researchers as well as in industry when running A/B tests.</p>
 <p>In this notebook, we illustrate how to analyze these designs with <a href="https://marginaleffects.com">the <code>marginaleffects</code> package for <code>R</code>.</a> As we will see, <code>marginaleffects</code> includes many convenient functions for analyzing both experimental and observational data, and for plotting our results.</p>
-<section id="fitting-a-model" class="level3">
-<h3 class="anchored" data-anchor-id="fitting-a-model">Fitting a Model</h3>
+<section id="fitting-a-model" class="level3"><h3 class="anchored" data-anchor-id="fitting-a-model">Fitting a Model</h3>
 <p>We will use the <code>mtcars</code> dataset. We’ll analyze fuel efficiency, <code>mpg</code> (miles per gallon), as a function of <code>am</code> (transmission type) and <code>vs</code> (engine shape).</p>
 <p><code>vs</code> is an indicator variable for if the car has a straight engine (1 = straight engine, 0 = V-shaped). <code>am</code> is an indicator variable for if the car has manual transmission (1 = manual transmission, 0=automatic transmission). There are then four types of cars (1 type for each of the four combinations of binary indicators).</p>
 <p>Let’s start by creating a model for fuel efficiency. For simplicity, we’ll use linear regression and model the interaction between <code>vs</code> and <code>am</code>.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Python</a></li></ul>
+<div class="tabset-margin-container"></div>
+<div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Python</a></li>
+</ul>
 <div class="tab-content" data-group="language">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## See ?mtcars for variable definitions</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> vs <span class="sc">+</span> am <span class="sc">+</span> vs<span class="sc">:</span>am, <span class="at">data=</span>mtcars) <span class="co"># equivalent to ~ vs*am</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## See ?mtcars for variable definitions</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span> <span class="op">+</span> <span class="va">vs</span><span class="op">:</span><span class="va">am</span>, data<span class="op">=</span><span class="va">mtcars</span><span class="op">)</span> <span class="co"># equivalent to ~ vs*am</span></span></code></pre></div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
@@ -623,16 +594,20 @@ window.Quarto = {
 <li>Manual transmissions (<code>am=1</code>) are estimated to have better fuel efficiency for both V-shaped and straight engines.</li>
 <li>For straight engines, the effect of manual transmissions on fuel efficiency seems to increase.</li>
 </ul>
-<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Python</a></li></ul>
+<div class="tabset-margin-container"></div>
+<div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Python</a></li>
+</ul>
 <div class="tab-content" data-group="language">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(fit, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"vs"</span>, <span class="st">"am"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">fit</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"vs"</span>, <span class="st">"am"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -643,8 +618,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plot_predictions(fit, by <span class="op">=</span> [<span class="st">"vs"</span>, <span class="st">"am"</span>]).draw(show<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -652,36 +626,39 @@ window.Quarto = {
 </div>
 </div>
 </div>
-</section>
-<section id="evaluating-effects-from-the-model-summary" class="level3">
-<h3 class="anchored" data-anchor-id="evaluating-effects-from-the-model-summary">Evaluating Effects From The Model Summary</h3>
+</section><section id="evaluating-effects-from-the-model-summary" class="level3"><h3 class="anchored" data-anchor-id="evaluating-effects-from-the-model-summary">Evaluating Effects From The Model Summary</h3>
 <p>Since this model is fairly simple the estimated differences between any of the four possible combinations of <code>vs</code> and <code>am</code> can be read from the regression table:</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Python</a></li></ul>
+<div class="tabset-margin-container"></div>
+<div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Python</a></li>
+</ul>
 <div class="tab-content" data-group="language">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <p>We create the regression table using the <code>modelsummary</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(fit, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"r.squared"</span>, <span class="st">"nobs"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/reference/modelsummary.html">modelsummary</a></span><span class="op">(</span><span class="va">fit</span>, gof_map <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"r.squared"</span>, <span class="st">"nobs"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<div id="ldmjleuzxe" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ldmjleuzxe table {
+<div id="ugsmgzoltw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ugsmgzoltw table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ldmjleuzxe thead, #ldmjleuzxe tbody, #ldmjleuzxe tfoot, #ldmjleuzxe tr, #ldmjleuzxe td, #ldmjleuzxe th {
+#ugsmgzoltw thead, #ugsmgzoltw tbody, #ugsmgzoltw tfoot, #ugsmgzoltw tr, #ugsmgzoltw td, #ugsmgzoltw th {
   border-style: none;
 }
 
-#ldmjleuzxe p {
+#ugsmgzoltw p {
   margin: 0;
   padding: 0;
 }
 
-#ldmjleuzxe .gt_table {
+#ugsmgzoltw .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -707,12 +684,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#ldmjleuzxe .gt_caption {
+#ugsmgzoltw .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ldmjleuzxe .gt_title {
+#ugsmgzoltw .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -724,7 +701,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#ldmjleuzxe .gt_subtitle {
+#ugsmgzoltw .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -736,7 +713,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#ldmjleuzxe .gt_heading {
+#ugsmgzoltw .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -748,13 +725,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ldmjleuzxe .gt_bottom_border {
+#ugsmgzoltw .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ldmjleuzxe .gt_col_headings {
+#ugsmgzoltw .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -769,7 +746,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ldmjleuzxe .gt_col_heading {
+#ugsmgzoltw .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -789,7 +766,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#ldmjleuzxe .gt_column_spanner_outer {
+#ugsmgzoltw .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -801,15 +778,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#ldmjleuzxe .gt_column_spanner_outer:first-child {
+#ugsmgzoltw .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ldmjleuzxe .gt_column_spanner_outer:last-child {
+#ugsmgzoltw .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ldmjleuzxe .gt_column_spanner {
+#ugsmgzoltw .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -821,11 +798,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#ldmjleuzxe .gt_spanner_row {
+#ugsmgzoltw .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ldmjleuzxe .gt_group_heading {
+#ugsmgzoltw .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -851,7 +828,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#ldmjleuzxe .gt_empty_group_heading {
+#ugsmgzoltw .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -866,15 +843,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#ldmjleuzxe .gt_from_md > :first-child {
+#ugsmgzoltw .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ldmjleuzxe .gt_from_md > :last-child {
+#ugsmgzoltw .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ldmjleuzxe .gt_row {
+#ugsmgzoltw .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -893,7 +870,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#ldmjleuzxe .gt_stub {
+#ugsmgzoltw .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -906,7 +883,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ldmjleuzxe .gt_stub_row_group {
+#ugsmgzoltw .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -920,15 +897,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#ldmjleuzxe .gt_row_group_first td {
+#ugsmgzoltw .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ldmjleuzxe .gt_row_group_first th {
+#ugsmgzoltw .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ldmjleuzxe .gt_summary_row {
+#ugsmgzoltw .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -938,16 +915,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ldmjleuzxe .gt_first_summary_row {
+#ugsmgzoltw .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ldmjleuzxe .gt_first_summary_row.thick {
+#ugsmgzoltw .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ldmjleuzxe .gt_last_summary_row {
+#ugsmgzoltw .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -957,7 +934,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ldmjleuzxe .gt_grand_summary_row {
+#ugsmgzoltw .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -967,7 +944,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ldmjleuzxe .gt_first_grand_summary_row {
+#ugsmgzoltw .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -977,7 +954,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#ldmjleuzxe .gt_last_grand_summary_row_top {
+#ugsmgzoltw .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -987,11 +964,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ldmjleuzxe .gt_striped {
+#ugsmgzoltw .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ldmjleuzxe .gt_table_body {
+#ugsmgzoltw .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1000,7 +977,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ldmjleuzxe .gt_footnotes {
+#ugsmgzoltw .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1014,7 +991,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ldmjleuzxe .gt_footnote {
+#ugsmgzoltw .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1023,7 +1000,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ldmjleuzxe .gt_sourcenotes {
+#ugsmgzoltw .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1037,7 +1014,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ldmjleuzxe .gt_sourcenote {
+#ugsmgzoltw .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1045,74 +1022,71 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ldmjleuzxe .gt_left {
+#ugsmgzoltw .gt_left {
   text-align: left;
 }
 
-#ldmjleuzxe .gt_center {
+#ugsmgzoltw .gt_center {
   text-align: center;
 }
 
-#ldmjleuzxe .gt_right {
+#ugsmgzoltw .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ldmjleuzxe .gt_font_normal {
+#ugsmgzoltw .gt_font_normal {
   font-weight: normal;
 }
 
-#ldmjleuzxe .gt_font_bold {
+#ugsmgzoltw .gt_font_bold {
   font-weight: bold;
 }
 
-#ldmjleuzxe .gt_font_italic {
+#ugsmgzoltw .gt_font_italic {
   font-style: italic;
 }
 
-#ldmjleuzxe .gt_super {
+#ugsmgzoltw .gt_super {
   font-size: 65%;
 }
 
-#ldmjleuzxe .gt_footnote_marks {
+#ugsmgzoltw .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ldmjleuzxe .gt_asterisk {
+#ugsmgzoltw .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ldmjleuzxe .gt_indent_1 {
+#ugsmgzoltw .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ldmjleuzxe .gt_indent_2 {
+#ugsmgzoltw .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ldmjleuzxe .gt_indent_3 {
+#ugsmgzoltw .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ldmjleuzxe .gt_indent_4 {
+#ugsmgzoltw .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ldmjleuzxe .gt_indent_5 {
+#ugsmgzoltw .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
-
 <table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="header gt_col_headings">
+<thead><tr class="header gt_col_headings">
 <th id=" " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="(1)" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">(1)</th>
-</tr>
-</thead>
+</tr></thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers=" ">(Intercept)</td>
@@ -1156,7 +1130,6 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-
 </div>
 </div>
 </div>
@@ -1170,8 +1143,8 @@ window.Quarto = {
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dep. Variable:                    mpg   R-squared:                       0.700</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:                            OLS   Adj. R-squared:                  0.668</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Method:                 Least Squares   F-statistic:                     21.81</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Mon, 25 Mar 2024   Prob (F-statistic):           1.73e-07</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        16:31:33   Log-Likelihood:                -83.098</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Tue, 23 Apr 2024   Prob (F-statistic):           1.73e-07</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        14:04:28   Log-Likelihood:                -83.098</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; No. Observations:                  32   AIC:                             174.2</span></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Residuals:                      28   BIC:                             180.1</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Model:                           3                                         </span></span>
@@ -1206,42 +1179,43 @@ window.Quarto = {
 <li>8.621 mpg between <code>vs=1</code> and <code>vs=0</code>, when <code>am=1</code>.</li>
 <li>13.322 mpg between a car with <code>am=1</code> and <code>vs=1</code>, and a car with <code>am=0</code> and <code>vs=0</code>.</li>
 </ul>
-<p>Reading off these differences from the model summary is relatively straightforward in very simple cases like this one. However, it becomes more difficult as more variables are added to the model, not to mention obtaining estimated standard errors becomes nightmarish. To make the process easier, we can leverage the <code>avg_comparisons()</code> function from the <code>marginaleffects</code> package to compute the appropriate quantities and standard errors.</p>
-</section>
-<section id="using-avg_comparisons-to-estimate-all-differences" class="level3">
-<h3 class="anchored" data-anchor-id="using-avg_comparisons-to-estimate-all-differences">Using <code>avg_comparisons</code> To Estimate All Differences</h3>
+<p>Reading off these differences from the model summary is relatively straightforward in very simple cases like this one. However, it becomes more difficult as more variables are added to the model, not to mention obtaining estimated standard errors becomes nightmarish. To make the process easier, we can leverage the <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> function from the <code>marginaleffects</code> package to compute the appropriate quantities and standard errors.</p>
+</section><section id="using-avg_comparisons-to-estimate-all-differences" class="level3"><h3 class="anchored" data-anchor-id="using-avg_comparisons-to-estimate-all-differences">Using <code>avg_comparisons</code> To Estimate All Differences</h3>
 <p>The grey rectangle in the graph below is the estimated fuel efficiency when <code>vs=0</code> and <code>am=0</code>, that is, for an automatic transmission car with V-shaped engine.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Let’s use <code>avg_comparisons</code> to get the difference between straight engines and V-shaped engines when the car has automatic transmission. In this call, the <code>variables</code> argument indicates that we want to estimate the effect of a change of 1 unit in the <code>vs</code> variable. The <code>newdata=datagrid(am=0)</code> determines the values of the covariates at which we want to evaluate the contrast.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Python</a></li></ul>
+<div class="tabset-margin-container"></div>
+<div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Python</a></li>
+</ul>
 <div class="tab-content" data-group="language">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"vs"</span>,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span>))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    vs    1 - 0     5.69       1.65 3.45   &lt;0.001 10.8  2.46   8.93</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
+<span>  variables <span class="op">=</span> <span class="st">"vs"</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;    vs    1 - 0     5.69       1.65 3.45   &lt;0.001 10.8  2.46   8.93</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
-<p>As expected, the results produced by <code>avg_comparisons()</code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
+<p>As expected, the results produced by <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1263,12 +1237,11 @@ window.Quarto = {
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>As expected, the results produced by <code>avg_comparisons()</code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
+<p>As expected, the results produced by <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1277,26 +1250,30 @@ window.Quarto = {
 </div>
 </div>
 <p>The next difference that we compute is between manual transmissions and automatic transmissions when the car has a V-shaped engine. Again, the call to <code>avg_comparisons</code> is shown below, and the corresponding contrast is indicated in the plot below using an arrow.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Python</a></li></ul>
+<div class="tabset-margin-container"></div>
+<div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Python</a></li>
+</ul>
 <div class="tab-content" data-group="language">
 <div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"am"</span>,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">vs =</span> <span class="dv">0</span>))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    am    1 - 0      4.7       1.74 2.71  0.00678 7.2   1.3    8.1</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
+<span>  variables <span class="op">=</span> <span class="st">"am"</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>vs <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;    am    1 - 0      4.7       1.74 2.71  0.00678 7.2   1.3    8.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1321,8 +1298,7 @@ window.Quarto = {
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1331,26 +1307,30 @@ window.Quarto = {
 </div>
 </div>
 <p>The third difference we estimated was between manual transmissions and automatic transmissions when the car has a straight engine. The model call and contrast are:</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Python</a></li></ul>
+<div class="tabset-margin-container"></div>
+<div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Python</a></li>
+</ul>
 <div class="tab-content" data-group="language">
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"am"</span>,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">vs =</span> <span class="dv">1</span>))</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    am    1 - 0     7.63       1.86 4.11   &lt;0.001 14.6  3.99   11.3</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
+<span>  variables <span class="op">=</span> <span class="st">"am"</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>vs <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;    am    1 - 0     7.63       1.86 4.11   &lt;0.001 14.6  3.99   11.3</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1375,8 +1355,7 @@ window.Quarto = {
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1385,26 +1364,30 @@ window.Quarto = {
 </div>
 </div>
 <p>The last difference and contrast between manual transmissions with straight engines and automatic transmissions with V-shaped engines. We call this a “cross-contrast” because we are measuring the difference between two groups that differ on two explanatory variables at the same time. To compute this contrast, we use the <code>cross</code> argument of <code>avg_comparisons</code>:</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Python</a></li></ul>
+<div class="tabset-margin-container"></div>
+<div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Python</a></li>
+</ul>
 <div class="tab-content" data-group="language">
 <div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(fit,</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"am"</span>, <span class="st">"vs"</span>),</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">cross =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % C: am C: vs</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      13.3       1.65 8.07   &lt;0.001 50.3  10.1   16.6 1 - 0 1 - 0</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast_am, contrast_vs, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"vs"</span><span class="op">)</span>,</span>
+<span>  cross <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % C: am C: vs</span></span>
+<span><span class="co">#&gt;      13.3       1.65 8.07   &lt;0.001 50.3  10.1   16.6 1 - 0 1 - 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: term, contrast_am, contrast_vs, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1417,8 +1400,7 @@ window.Quarto = {
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="experiments_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1426,57 +1408,57 @@ window.Quarto = {
 </div>
 </div>
 </div>
-</section>
-<section id="conclusion" class="level3">
-<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+</section><section id="conclusion" class="level3"><h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
 <p>The 2x2 design is a very popular design, and when using a linear model, the estimated differences between groups can be directly read off from the model summary, if not with a little arithmetic. However, when using models with a non-identity link function, or when seeking to obtain the standard errors for estimated differences, things become considerably more difficult. This vignette showed how to use <code>avg_comparisons</code> to specify contrasts of interests and obtain standard errors for those differences. The approach used applies to all generalized linear models and effects can be further stratified using the <code>by</code> argument (although this is not shown in this vignette.)</p>
-</section>
-</section>
-<section id="regression-adjustment" class="level2">
-<h2 class="anchored" data-anchor-id="regression-adjustment">Regression adjustment</h2>
+</section></section><section id="regression-adjustment" class="level2"><h2 class="anchored" data-anchor-id="regression-adjustment">Regression adjustment</h2>
 <p>Many analysts who conduct and analyze experiments wish to use regression adjustment with a linear regression model to improve the precision of their estimate of the treatment effect. Unfortunately, regression adjustment can introduce small-sample bias and other undesirable properties (Freedman 2008). Lin (2013) proposes a simple strategy to fix these problems in sufficiently large samples:</p>
 <ol type="1">
 <li>Center all predictors by subtracting each of their means.</li>
 <li>Estimate a linear model in which the treatment is interacted with each of the covariates.</li>
 </ol>
-<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">Python</a></li></ul>
+<div class="tabset-margin-container"></div>
+<div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">Python</a></li>
+</ul>
 <div class="tab-content" data-group="language">
 <div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
 <p>The <code>estimatr</code> package includes a convenient function to implement this strategy:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(estimatr)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>lalonde <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv"</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm_lin</span>(</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    re78 <span class="sc">~</span> treat,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">covariates =</span> <span class="sc">~</span> age <span class="sc">+</span> educ <span class="sc">+</span> race,</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> lalonde,</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_type =</span> <span class="st">"HC3"</span>)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod)</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm_lin(formula = re78 ~ treat, covariates = ~age + educ + race, </span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data = lalonde, se_type = "HC3")</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Standard error type:  HC3 </span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                    Estimate Std. Error t value  Pr(&gt;|t|) CI Lower CI Upper  DF</span></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)         6488.05     356.71 18.1885 2.809e-59  5787.50   7188.6 604</span></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat                489.73     878.52  0.5574 5.774e-01 -1235.59   2215.0 604</span></span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; age_c                 85.88      35.42  2.4248 1.561e-02    16.32    155.4 604</span></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; educ_c               464.04     131.51  3.5286 4.495e-04   205.77    722.3 604</span></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; racehispan_c        2775.47    1155.40  2.4022 1.660e-02   506.38   5044.6 604</span></span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; racewhite_c         2291.67     793.30  2.8888 4.006e-03   733.71   3849.6 604</span></span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:age_c           17.23      76.37  0.2256 8.216e-01  -132.75    167.2 604</span></span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:educ_c         226.71     308.43  0.7350 4.626e-01  -379.02    832.4 604</span></span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:racehispan_c -1057.84    2652.42 -0.3988 6.902e-01 -6266.92   4151.2 604</span></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; treat:racewhite_c  -1205.68    1805.21 -0.6679 5.045e-01 -4750.92   2339.6 604</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.05722 ,   Adjusted R-squared:  0.04317 </span></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 4.238 on 9 and 604 DF,  p-value: 2.424e-05</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://declaredesign.org/r/estimatr/">estimatr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span><span class="va">lalonde</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://declaredesign.org/r/estimatr/reference/lm_lin.html">lm_lin</a></span><span class="op">(</span></span>
+<span>    <span class="va">re78</span> <span class="op">~</span> <span class="va">treat</span>,</span>
+<span>    covariates <span class="op">=</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">race</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">lalonde</span>,</span>
+<span>    se_type <span class="op">=</span> <span class="st">"HC3"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/PairedData/man/summary.html">summary</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; lm_lin(formula = re78 ~ treat, covariates = ~age + educ + race, </span></span>
+<span><span class="co">#&gt;     data = lalonde, se_type = "HC3")</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Standard error type:  HC3 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Coefficients:</span></span>
+<span><span class="co">#&gt;                    Estimate Std. Error t value  Pr(&gt;|t|) CI Lower CI Upper  DF</span></span>
+<span><span class="co">#&gt; (Intercept)         6488.05     356.71 18.1885 2.809e-59  5787.50   7188.6 604</span></span>
+<span><span class="co">#&gt; treat                489.73     878.52  0.5574 5.774e-01 -1235.59   2215.0 604</span></span>
+<span><span class="co">#&gt; age_c                 85.88      35.42  2.4248 1.561e-02    16.32    155.4 604</span></span>
+<span><span class="co">#&gt; educ_c               464.04     131.51  3.5286 4.495e-04   205.77    722.3 604</span></span>
+<span><span class="co">#&gt; racehispan_c        2775.47    1155.40  2.4022 1.660e-02   506.38   5044.6 604</span></span>
+<span><span class="co">#&gt; racewhite_c         2291.67     793.30  2.8888 4.006e-03   733.71   3849.6 604</span></span>
+<span><span class="co">#&gt; treat:age_c           17.23      76.37  0.2256 8.216e-01  -132.75    167.2 604</span></span>
+<span><span class="co">#&gt; treat:educ_c         226.71     308.43  0.7350 4.626e-01  -379.02    832.4 604</span></span>
+<span><span class="co">#&gt; treat:racehispan_c -1057.84    2652.42 -0.3988 6.902e-01 -6266.92   4151.2 604</span></span>
+<span><span class="co">#&gt; treat:racewhite_c  -1205.68    1805.21 -0.6679 5.045e-01 -4750.92   2339.6 604</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Multiple R-squared:  0.05722 ,   Adjusted R-squared:  0.04317 </span></span>
+<span><span class="co">#&gt; F-statistic: 4.238 on 9 and 604 DF,  p-value: 2.424e-05</span></span></code></pre></div>
 </div>
 </div>
 <div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
@@ -1499,8 +1481,8 @@ window.Quarto = {
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dep. Variable:                   re78   R-squared:                       0.057</span></span>
 <span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:                            OLS   Adj. R-squared:                  0.043</span></span>
 <span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Method:                 Least Squares   F-statistic:                     4.238</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Mon, 25 Mar 2024   Prob (F-statistic):           2.42e-05</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        16:31:36   Log-Likelihood:                -6328.8</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Tue, 23 Apr 2024   Prob (F-statistic):           2.42e-05</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        14:04:33   Log-Likelihood:                -6328.8</span></span>
 <span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; No. Observations:                 614   AIC:                         1.268e+04</span></span>
 <span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Residuals:                     604   BIC:                         1.272e+04</span></span>
 <span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Model:                           9                                         </span></span>
@@ -1531,23 +1513,28 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>We can obtain the same results by fitting a model with the standard <code>lm</code> function and using the <code>comparisons()</code> function:</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false">Python</a></li></ul>
+<p>We can obtain the same results by fitting a model with the standard <code>lm</code> function and using the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function:</p>
+<div class="tabset-margin-container"></div>
+<div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true">R</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false">Python</a></li>
+</ul>
 <div class="tab-content" data-group="language">
 <div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(re78 <span class="sc">~</span> treat <span class="sc">*</span> (age <span class="sc">+</span> educ <span class="sc">+</span> race), <span class="at">data =</span> lalonde)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    mod,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">"treat"</span>,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">vcov =</span> <span class="st">"HC3"</span>)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Term Contrast Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  treat    1 - 0      490        879 0.557    0.577 0.8 -1232   2212</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">*</span> <span class="op">(</span><span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">race</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">lalonde</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span>    <span class="va">mod</span>,</span>
+<span>    variables <span class="op">=</span> <span class="st">"treat"</span>,</span>
+<span>    vcov <span class="op">=</span> <span class="st">"HC3"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Term Contrast Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  treat    1 - 0      490        879 0.557    0.577 0.8 -1232   2212</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
 </div>
 </div>
 <div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
@@ -1571,21 +1558,12 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Notice that the <code>treat</code> coefficient and associate standard error in the <code>lm_lin</code> regression are exactly the same as the estimates produced by the <code>comparisons()</code> function.</p>
-<section id="references" class="level3">
-<h3 class="anchored" data-anchor-id="references">References</h3>
+<p>Notice that the <code>treat</code> coefficient and associate standard error in the <code>lm_lin</code> regression are exactly the same as the estimates produced by the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function.</p>
+<section id="references" class="level3"><h3 class="anchored" data-anchor-id="references">References</h3>
 <ul>
 <li>Freedman, David A. “On Regression Adjustments to Experimental Data.” Advances in Applied Mathematics 40, no. 2 (February 2008): 180–93.</li>
 <li>Lin, Winston. “Agnostic Notes on Regression Adjustments to Experimental Data: Reexamining Freedman’s Critique.” Annals of Applied Statistics 7, no. 1 (March 2013): 295–318. https://doi.org/10.1214/12-AOAS583.</li>
-</ul>
-
-
-</section>
-</section>
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</ul></section></section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1620,18 +1598,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1663,7 +1630,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1671,7 +1660,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1993,9 +1982,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../vignettes/equivalence.html" class="pagination-link" aria-label="Equivalence Tests">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Equivalence Tests</span>
       </a>          
@@ -2011,4 +1998,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+</body>
+</html>

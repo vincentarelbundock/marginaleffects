@@ -2,7 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 requiet("estimatr")
 requiet("emmeans")
-requiet("margins")
+if (!requiet("margins")) exit_file("margins")
 requiet("broom")
 
 Km <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/sem/Kmenta.csv")

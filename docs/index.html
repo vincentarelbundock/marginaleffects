@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.5.30">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -111,7 +111,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -494,7 +494,6 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#free-book" id="toc-free-book" class="nav-link active" data-scroll-target="#free-book">Free Book</a></li>
   <li><a href="#free-software" id="toc-free-software" class="nav-link" data-scroll-target="#free-software">Free Software</a></li>
-  <li><a href="#how-to-help" id="toc-how-to-help" class="nav-link" data-scroll-target="#how-to-help">How to help</a></li>
   </ul>
 </nav>
     </div>
@@ -505,13 +504,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <center>
-<h1>
-The Marginal Effects Zoo
-</h1>
-<h3 class="anchored">
-How to interpret statistical models in R and Python
-</h3>
-<br> <a href="https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target="_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://img.shields.io/static/v1?label=Website&amp;message=Visit&amp;color=blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a> <br><br>
+<a href="https://marginaleffects.com" target="_blank"><img src="man/figures/marginaleffects_logo_word.svg" width="100%"></a> <br> <br> <a href="https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target="_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://img.shields.io/static/v1?label=Website&amp;message=Visit&amp;color=blue"></a> <a href="https://marginaleffects.com" target="_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a> <br><br>
 </center>
 <p>The parameters of a statistical model can sometimes be difficult to interpret substantively, especially when that model includes non-linear components, interactions, or transformations. Analysts who fit such complex models often seek to transform raw parameter estimates into quantities that are easier for domain experts and stakeholders to understand, such as predictions, contrasts, risk differences, ratios, odds, lift, slopes, and so on.</p>
 <p>Unfortunately, computing these quantities—along with associated standard errors—can be a tedious and error-prone task. This problem is compounded by the fact that modeling packages in <code>R</code> and <code>Python</code> produce objects with varied structures, which hold different information. This means that end-users often have to write customized code to interpret the estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects, and other model types. This can lead to wasted effort, confusion, and mistakes, and it can hinder the implementation of best practices.</p>
@@ -558,16 +551,6 @@ How to interpret statistical models in R and Python
 <li><em>Extensible:</em> Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit <a href="https://github.com/vincentarelbundock/marginaleffects/issues">feature requests on Github.</a></li>
 <li><em>Active development</em>: Bugs are fixed promptly.</li>
 </ul>
-</section>
-<section id="how-to-help" class="level2">
-<h2 class="anchored" data-anchor-id="how-to-help">How to help</h2>
-<p>The <code>marginaleffects</code> package and the Marginal Effects Zoo book will always be free. If you like this project, you can contribute in four ways:</p>
-<ol type="1">
-<li>Make a donation to the <a href="https://www.nwsm.info/">Native Women’s Shelter of Montreal</a> or to <a href="https://www.givedirectly.org/">Give Directly</a>, and send me (Vincent) a quick note. You’ll make my day.</li>
-<li>Submit bug reports, documentation improvements, or code contributions to the Github repositories of the <a href="https://github.com/vincentarelbundock/marginaleffects">R version</a> or the <a href="https://github.com/vincentarelbundock/pymarginaleffects">Python version</a> of the package.</li>
-<li><a href="https://marginaleffects.com/CITATION.html">Cite the <code>marginaleffects</code> package</a> in your work and tell your friends about it.</li>
-<li>Create a new entry <a href="https://marginaleffects.com/vignettes/meme.html">for the Meme Gallery!</a></li>
-</ol>
 
 
 </section>
@@ -608,18 +591,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -651,7 +623,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -659,7 +653,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

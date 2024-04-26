@@ -1,5 +1,11 @@
-joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = "f") {
+joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = "f", df = NULL) {
   checkmate::assert_choice(joint_test, c("f", "chisq"))
+
+  if (joint_test == "f") {
+      checkmate::assert_numeric(df, len = 2, null.ok = TRUE)
+  } else {
+      checkmate::assert_numeric(df, len = 1, null.ok = TRUE)
+  }
 
   # theta_hat: P x 1 vector of estimated parameters
   if (inherits(object, c("slopes", "comparisons"))) {
@@ -11,7 +17,6 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
   } else {
     theta_hat <- get_coef(object) 
   }
-
 
   # index
   checkmate::assert(
@@ -68,10 +73,23 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
   }
   
   # Degrees of freedom
-  df1 <- dim(R)[1]  # Q
-  df2 <- tryCatch(insight::get_df(attr(object, "model")), error = function(e) NULL)
-  if (is.null(df2)) tryCatch(insight::get_df(object), error = function(e) NULL)
-  if (is.null(df2)) df2 <- n - length(theta_hat)  # n - P
+  if (is.null(df)) {
+
+    if (inherits(object, "lme")) {
+        msg <- "The `hypotheses()` functions uses simple heuristics to select degrees of freedom for this test. See the relevant section in `?hypotheses`. These rules are likely to yield inappropriate results for models of class `%s`. Please supply degrees of freedom values explicitly via the `df` argument."
+        msg <- sprintf(msg, class(object)[1])
+        insight::format_warning(msg)
+    }
+
+
+    df1 <- dim(R)[1]  # Q
+    df2 <- tryCatch(insight::get_df(attr(object, "model")), error = function(e) NULL)
+    if (is.null(df2)) tryCatch(insight::get_df(object), error = function(e) NULL)
+    if (is.null(df2)) df2 <- n - length(theta_hat)  # n - P
+  } else {
+    df1 <- df[1]
+    df2 <- df[2]
+  }
   
   # Calculate the p-value
   if (joint_test == "f") {

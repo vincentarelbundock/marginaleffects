@@ -239,7 +239,7 @@ comparisons <- function(model,
                         conf_level = 0.95,
                         transform = NULL,
                         cross = FALSE,
-                        wts = NULL,
+                        wts = FALSE,
                         hypothesis = NULL,
                         equivalence = NULL,
                         p_adjust = NULL,
@@ -359,6 +359,7 @@ comparisons <- function(model,
     # after sanitize_newdata
     sanity_by(by, newdata)
 
+
     # after sanity_by
     newdata <- dedup_newdata(
         model = model,
@@ -367,7 +368,7 @@ comparisons <- function(model,
         by = by,
         cross = cross,
         comparison = comparison)
-    if (is.null(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
         wts <- "marginaleffects_wts_internal"
     }
 
@@ -451,6 +452,8 @@ comparisons <- function(model,
                  modeldata = modeldata)
     args <- c(args, dots)
     mfx <- do.call("get_contrasts", args)
+
+    hyp_by <- attr(mfx, "hypothesis_function_by")
 
     # bayesian posterior
     if (!is.null(attr(mfx, "posterior_draws"))) {
@@ -564,6 +567,7 @@ comparisons <- function(model,
     attr(out, "comparison") <- comparison
     attr(out, "transform") <- transform[[1]]
     attr(out, "comparison_label") <- comparison_label
+    attr(out, "hypothesis_by") <- hyp_by
     attr(out, "transform_label") <- transform_label
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
@@ -592,7 +596,7 @@ avg_comparisons <- function(model,
                             comparison = "difference",
                             transform = NULL,
                             cross = FALSE,
-                            wts = NULL,
+                            wts = FALSE,
                             hypothesis = NULL,
                             equivalence = NULL,
                             p_adjust = NULL,

@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
-
+<meta name="generator" content="quarto-1.5.30">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>Marginal Effects Zoo</title>
+<title>Marginal Effects Zoo – supported_models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,26 +19,13 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 </style>
-
-
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
 <link href="../vignettes/tables.html" rel="next">
 <link href="../vignettes/numpyro.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -68,23 +53,15 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script>
-<script src="../site_libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
-
-
+}</script><script src="../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 </head>
-
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
-    </a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -95,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
+<li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -114,29 +91,25 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-          </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/faq.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../vignettes/supported_models.html">Supported Models</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="../vignettes/faq.html">Miscellaneous</a></li>
+<li class="breadcrumb-item"><a href="../vignettes/supported_models.html">Supported Models</a></li>
+</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -150,8 +123,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -182,7 +155,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
@@ -191,8 +164,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -319,7 +292,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
@@ -328,8 +301,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -390,7 +363,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
@@ -399,8 +372,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -467,7 +440,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -487,28 +460,19 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#supported-models" id="toc-supported-models" class="nav-link active" data-scroll-target="#supported-models">Supported Models</a></li>
-  </ul>
-</nav>
-    </div>
+<li><a href="#supported-models" id="toc-supported-models" class="nav-link active" data-scroll-target="#supported-models">Supported Models</a></li>
+  </ul></nav>
+</div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-
-
-<section id="supported-models" class="level1">
-<h1>Supported Models</h1>
-<p><code>marginaleffects</code> effects supports 90 model types directly, and dozens more via the <code>tidymodels</code> and <code>mlr3</code> frameworks. This table shows the list of directly supported model types. There are three main alternative software packages to compute such slopes (1) <code>Stata</code>’s <code>margins</code> command, (2) <code>R</code>’s <code>margins::margins()</code> function, and (3) <code>R</code>’s <code>emmeans::emtrends()</code> function. The <a href="https://github.com/vincentarelbundock/marginaleffects/tree/main/inst/tinytest">test suite hosted on Github</a> compares the numerical equivalence of results produced by <code>marginaleffects::slopes()</code> to those produced by all 3 alternative software packages:</p>
+<main class="content" id="quarto-document-content"><section id="supported-models" class="level1"><h1>Supported Models</h1>
+<p><code>marginaleffects</code> effects supports 97 model types directly, and dozens more via the <code>tidymodels</code> and <code>mlr3</code> frameworks. This table shows the list of directly supported model types. There are three main alternative software packages to compute such slopes (1) <code>Stata</code>’s <code>margins</code> command, (2) <code>R</code>’s <code><a href="https://rdrr.io/pkg/margins/man/margins.html">margins::margins()</a></code> function, and (3) <code>R</code>’s <code><a href="https://rdrr.io/pkg/emmeans/man/emtrends.html">emmeans::emtrends()</a></code> function. The <a href="https://github.com/vincentarelbundock/marginaleffects/tree/main/inst/tinytest">test suite hosted on Github</a> compares the numerical equivalence of results produced by <code><a href="https://marginaleffects.com/man/slopes.html">marginaleffects::slopes()</a></code> to those produced by all 3 alternative software packages:</p>
 <ul>
 <li>✓: a green check means that the results of at least one model are equal to a reasonable tolerance.</li>
 <li>✖: a red cross means that the results are <em>not</em> identical; extra caution is warranted.</li>
@@ -812,6 +776,26 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">flexsurv</td>
+<td style="text-align: left;">flexsurvreg</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">flexsurvspline</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">fixest</td>
@@ -1254,6 +1238,56 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">REndo</td>
+<td style="text-align: left;">latentIV</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">copulaCorrection</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">higherMomentsIV</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hetErrorsIV</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">multilevelIV</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">rms</td>
 <td style="text-align: left;">ols</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1263,7 +1297,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">lrm</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1273,7 +1307,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">orm</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1283,7 +1317,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">Gls</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1293,7 +1327,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">robust</td>
 <td style="text-align: left;">lmRob</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1303,7 +1337,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">robustbase</td>
 <td style="text-align: left;">glmrob</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1313,7 +1347,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">lmrob</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1323,7 +1357,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">robustlmm</td>
 <td style="text-align: left;">rlmer</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1333,7 +1367,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">rstanarm</td>
 <td style="text-align: left;">stan_glm</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1343,7 +1377,7 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">sampleSelection</td>
 <td style="text-align: left;">selection</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1353,7 +1387,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">heckit</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1363,27 +1397,27 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
+<tr class="even">
+<td style="text-align: left;">scam</td>
+<td style="text-align: left;">scam</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+</tr>
 <tr class="odd">
-<td style="text-align: left;">scam</td>
-<td style="text-align: left;">scam</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: left;">speedglm</td>
+<td style="text-align: left;">speedglm</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">speedglm</td>
-<td style="text-align: left;">speedglm</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">speedlm</td>
 <td style="text-align: center; color: green !important;">✓</td>
@@ -1393,7 +1427,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">survey</td>
 <td style="text-align: left;">svyglm</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1403,7 +1437,7 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">svyolr</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1413,7 +1447,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">survival</td>
 <td style="text-align: left;">clogit</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1423,7 +1457,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">coxph</td>
 <td style="text-align: center; color: green !important;">✓</td>
@@ -1433,7 +1467,7 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">survreg</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1443,7 +1477,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">tobit1</td>
 <td style="text-align: left;">tobit1</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1453,7 +1487,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">truncreg</td>
 <td style="text-align: left;">truncreg</td>
 <td style="text-align: center; color: green !important;">✓</td>
@@ -1465,17 +1499,12 @@ emtrends
 </tr>
 </tbody>
 </table>
-
-
 </div>
 </div>
 </div>
 
 
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1510,18 +1539,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1553,7 +1571,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1561,7 +1601,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1883,9 +1923,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../vignettes/numpyro.html" class="pagination-link" aria-label="NumPyro">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">NumPyro</span>
       </a>          
@@ -1901,4 +1939,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+</body>
+</html>

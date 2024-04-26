@@ -5,7 +5,7 @@ get_contrasts <- function(model,
                           original,
                           lo,
                           hi,
-                          wts = NULL,
+                          wts = FALSE,
                           marginalmeans,
                           by = NULL,
                           hypothesis = NULL,
@@ -87,6 +87,7 @@ get_contrasts <- function(model,
         } else {
             pred_hi <- pred_hi$error
         }
+
     }
 
     # predict() takes up 2/3 of the wall time. This call is only useful when we
@@ -119,7 +120,10 @@ get_contrasts <- function(model,
     # lots of indexing later requires a data.table
     data.table::setDT(original)
 
-    if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame") || !inherits(pred_or, c("data.frame", "NULL"))) {
+    if (!inherits(pred_hi, "data.frame") || 
+        !inherits(pred_lo, "data.frame") || 
+        !inherits(pred_or, c("data.frame", "NULL")) ||
+        all(is.na(pred_lo$estimate))) {
         msg <- "Unable to compute predicted values with this model. This error can arise when `insight::get_data()` is unable to extract the dataset from the model object, or when the data frame was modified since fitting the model. You can try to supply a different dataset to the `newdata` argument."
         if (inherits(pred_hi, c("try-error", "error"))) {
             msg <-c(msg, "", "In addition, this error message was raised:", "", as.character(pred_hi)) 

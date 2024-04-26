@@ -19,8 +19,11 @@ document: ## altdoc::render_docs()
 check: document ## devtools::check()
 	Rscript -e "devtools::check()"
 
-install: document ## devtools::install()
-	Rscript -e "devtools::install()"
+install: document ## devtools::install(dependencies = FALSE)
+	Rscript -e "devtools::install(dependencies = FALSE)"
+
+deps: document ## devtools::install(dependencies = TRUE)
+	Rscript -e "devtools::install(dependencies = TRUE)"
 
 news: ## Download the latest changelog
 	Rscript -e "source('book/utils/utils.R');get_news()"
@@ -51,4 +54,4 @@ setvar: ## Set the environment variable
 	export R_BUILD_DOC=true
 
 website: setvar ## altdoc::render_docs(verbose = TRUE)
-	Rscript -e "reticulate::use_virtualenv(here::here('.venv'));altdoc::render_docs(verbose = TRUE, freeze = TRUE)"
+	Rscript -e "reticulate::use_virtualenv(here::here('.venv'));altdoc::render_docs(verbose = TRUE, freeze = TRUE, autolink = TRUE)"

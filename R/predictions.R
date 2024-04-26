@@ -192,7 +192,7 @@ predictions <- function(model,
                         type = NULL,
                         by = FALSE,
                         byfun = NULL,
-                        wts = NULL,
+                        wts = FALSE,
                         transform = NULL,
                         hypothesis = NULL,
                         equivalence = NULL,
@@ -313,7 +313,7 @@ predictions <- function(model,
         by = by,
         byfun = byfun)
 
-    if (is.null(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
         wts <- "marginaleffects_wts_internal"
     }
 
@@ -404,6 +404,8 @@ predictions <- function(model,
 
     args <- utils::modifyList(args, dots)
     tmp <- do.call(get_predictions, args)
+
+    hyp_by <- attr(tmp, "hypothesis_function_by")
 
     # two cases when tmp is a data.frame
     # get_predict gets us rowid with the original rows
@@ -547,6 +549,7 @@ predictions <- function(model,
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
     attr(out, "call") <- call_attr
+    attr(out, "hypothesis_by") <- hyp_by
     attr(out, "transform_label") <- names(transform)[1]
     attr(out, "transform") <- transform[[1]]
     # save newdata for use in recall()
@@ -573,7 +576,7 @@ get_predictions <- function(model,
                             byfun = byfun,
                             hypothesis = NULL,
                             verbose = TRUE,
-                            wts = NULL,
+                            wts = FALSE,
                             ...) {
 
 
@@ -628,7 +631,7 @@ get_predictions <- function(model,
     }
 
     # expensive: only do this inside the jacobian if necessary
-    if (!is.null(wts) ||
+    if (!isFALSE(wts) ||
         !isTRUE(checkmate::check_flag(by, null.ok = TRUE)) ||
         inherits(model, "mclogit")) { # not sure why sorting is so finicky here
         out <- merge_by_rowid(out, newdata)
@@ -676,7 +679,7 @@ avg_predictions <- function(model,
                             type = NULL,
                             by = TRUE,
                             byfun = NULL,
-                            wts = NULL,
+                            wts = FALSE,
                             transform = NULL,
                             hypothesis = NULL,
                             equivalence = NULL,

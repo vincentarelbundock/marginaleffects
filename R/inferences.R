@@ -141,7 +141,7 @@ inferences <- function(x,
         attr(model, "inferences_method") <- "fwb"
         attr(model, "inferences_dots") <- c(list(R = R), dots)
         attr(model, "inferences_conf_type") <- conf_type
-        if (isTRUE("wts" %in% names(attr(x, "call"))) && !is.null(attr(x, "call")[["wts"]])) {
+        if (isTRUE("wts" %in% names(attr(x, "call"))) && !isFALSE(attr(x, "call")[["wts"]])) {
             insight::format_error('The `fwb` method is not supported with the `wts` argument.')
         }
 

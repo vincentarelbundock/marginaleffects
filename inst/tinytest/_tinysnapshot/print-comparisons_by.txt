@@ -13,3 +13,4 @@
 Columns: term, contrast, gear, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
 Type:  response 
 
+

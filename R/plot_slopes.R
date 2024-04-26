@@ -51,7 +51,7 @@ plot_slopes <- function(model,
                         type = "response",
                         vcov = NULL,
                         conf_level = 0.95,
-                        wts = NULL,
+                        wts = FALSE,
                         slope = "dydx",
                         rug = FALSE,
                         gray = FALSE,
@@ -65,6 +65,11 @@ plot_slopes <- function(model,
         } else {
             insight::format_error("The `effect` argument has been renamed to `variables`.")
         }
+    }
+
+    if (inherits(model, "mira") && is.null(newdata)) {
+        msg <- "Please supply a data frame to the `newdata` argument explicitly."
+        insight::format_error(msg)
     }
 
     # order of the first few paragraphs is important

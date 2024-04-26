@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
-
+<meta name="generator" content="quarto-1.5.30">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>Marginal Effects Zoo</title>
+<title>Marginal Effects Zoo – machine_learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,26 +53,13 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-
-
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
 <link href="../vignettes/marginalmeans.html" rel="next">
 <link href="../vignettes/lme4.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -103,20 +88,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-
-
 </head>
-
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
-    </a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -127,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
+<li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -146,29 +125,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-          </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/machine_learning.html">Machine Learning</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
+<li class="breadcrumb-item"><a href="../vignettes/machine_learning.html">Machine Learning</a></li>
+</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -182,8 +157,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -214,7 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
@@ -223,8 +198,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -351,7 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
@@ -360,8 +335,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -422,7 +397,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
@@ -431,8 +406,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -499,7 +474,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -519,66 +494,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#machine-learning" id="toc-machine-learning" class="nav-link active" data-scroll-target="#machine-learning">Machine Learning</a>
+<li>
+<a href="#machine-learning" id="toc-machine-learning" class="nav-link active" data-scroll-target="#machine-learning">Machine Learning</a>
   <ul class="collapse">
-  <li><a href="#tidymodels" id="toc-tidymodels" class="nav-link" data-scroll-target="#tidymodels"><code>tidymodels</code></a></li>
+<li><a href="#tidymodels" id="toc-tidymodels" class="nav-link" data-scroll-target="#tidymodels"><code>tidymodels</code></a></li>
   <li><a href="#mlr3" id="toc-mlr3" class="nav-link" data-scroll-target="#mlr3"><code>mlr3</code></a></li>
   <li><a href="#simultaneous-changes" id="toc-simultaneous-changes" class="nav-link" data-scroll-target="#simultaneous-changes">Simultaneous changes</a></li>
   <li><a href="#partial-dependence-plots" id="toc-partial-dependence-plots" class="nav-link" data-scroll-target="#partial-dependence-plots">Partial Dependence Plots</a></li>
   <li><a href="#other-plots" id="toc-other-plots" class="nav-link" data-scroll-target="#other-plots">Other Plots</a></li>
-  </ul></li>
   </ul>
-</nav>
-    </div>
+</li>
+  </ul></nav>
+</div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-
-
-<section id="machine-learning" class="level1">
-<h1>Machine Learning</h1>
+<main class="content" id="quarto-document-content"><section id="machine-learning" class="level1"><h1>Machine Learning</h1>
 <p><code>marginaleffects</code> offers several “model-agnostic” functions to interpret statistical and machine learning models. This vignette highlights how the package can be used to extract meaningful insights from models trained using the <code>mlr3</code> and <code>tidymodels</code> frameworks.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"vincentarelbundock/marginaleffects"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"vincentarelbundock/marginaleffects"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>Make sure to restart <code>R</code> after installation. Then, load a few libraries:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"marginaleffects"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"fmeffects"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"ggplot2"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"mlr3verse"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"modelsummary"</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"ggokabeito"</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tidymodels"</span>) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">ggplot2.discrete.colour =</span> <span class="fu">palette_okabe_ito</span>())</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">width =</span> <span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://marginaleffects.com/">"marginaleffects"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://holgstr.github.io/fmeffects/">"fmeffects"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org">"ggplot2"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://mlr3verse.mlr-org.com">"mlr3verse"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://modelsummary.com">"modelsummary"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/malcolmbarrett/ggokabeito">"ggokabeito"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://tidymodels.tidymodels.org">"tidymodels"</a></span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html">theme_set</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>ggplot2.discrete.colour <span class="op">=</span> <span class="fu"><a href="https://malcolmbarrett.github.io/ggokabeito/reference/palette_okabe_ito.html">palette_okabe_ito</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code></pre></div>
 </div>
-<section id="tidymodels" class="level2">
-<h2 class="anchored" data-anchor-id="tidymodels"><code>tidymodels</code></h2>
+<section id="tidymodels" class="level2"><h2 class="anchored" data-anchor-id="tidymodels"><code>tidymodels</code></h2>
 <p><code>marginaleffects</code> also supports the <code>tidymodels</code> machine learning framework. When the underlying engine used by <code>tidymodels</code> to train the model is itself supported as a standalone package by <code>marginaleffects</code>, we can obtain both estimates and their standard errors:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>penguins <span class="ot">&lt;-</span> modeldata<span class="sc">::</span>penguins <span class="sc">|&gt;</span> </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">|&gt;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sex, island, species, bill_length_mm)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">mode =</span> <span class="st">"regression"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit</span>(bill_length_mm <span class="sc">~</span> ., <span class="at">data =</span> penguins)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">type =</span> <span class="st">"numeric"</span>, <span class="at">newdata =</span> penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">penguins</span> <span class="op">&lt;-</span> <span class="fu">modeldata</span><span class="fu">::</span><span class="va"><a href="https://modeldata.tidymodels.org/reference/penguins.html">penguins</a></span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">sex</span>, <span class="va">island</span>, <span class="va">species</span>, <span class="va">bill_length_mm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">linear_reg</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">set_engine</span><span class="op">(</span><span class="st">"lm"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">fit</span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"numeric"</span>, newdata <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Term           Contrast Estimate Std. Error     z Pr(&gt;|z|)     S  2.5 % 97.5 %
@@ -591,13 +561,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  numeric </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">type =</span> <span class="st">"numeric"</span>, <span class="at">newdata =</span> penguins, <span class="at">by =</span> <span class="st">"island"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"numeric"</span>, newdata <span class="op">=</span> <span class="va">penguins</span>, by <span class="op">=</span> <span class="st">"island"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     island Estimate Std. Error   z Pr(&gt;|z|)   S 2.5 % 97.5 %
+ Torgersen     39.0      0.339 115   &lt;0.001 Inf  38.4   39.7
  Biscoe        45.2      0.182 248   &lt;0.001 Inf  44.9   45.6
  Dream         44.2      0.210 211   &lt;0.001 Inf  43.8   44.6
- Torgersen     39.0      0.339 115   &lt;0.001 Inf  38.4   39.7
 
 Columns: island, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  numeric </code></pre>
@@ -605,56 +576,57 @@ Type:  numeric </code></pre>
 </div>
 <p>When the underlying engine that <code>tidymodels</code> uses to fit the model is not supported by <code>marginaleffects</code> as a standalone model, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pre-processing</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>pre <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">recipe</span>(sex <span class="sc">~</span> ., <span class="at">data =</span> _) <span class="sc">|&gt;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_ns</span>(bill_length_mm, <span class="at">deg_free =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>())</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># modelling strategies</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Logit"</span> <span class="ot">=</span> <span class="fu">logistic_reg</span>(<span class="at">mode =</span> <span class="st">"classification"</span>, <span class="at">engine =</span> <span class="st">"glm"</span>),</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Random Forest"</span> <span class="ot">=</span> <span class="fu">rand_forest</span>(<span class="at">mode =</span> <span class="st">"classification"</span>, <span class="at">engine =</span> <span class="st">"ranger"</span>),</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"XGBoost"</span> <span class="ot">=</span> <span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">"classification"</span>, <span class="at">engine =</span> <span class="st">"xgboost"</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># fit to data</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>fits <span class="ot">&lt;-</span> <span class="fu">lapply</span>(models, \(x) {</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  pre <span class="sc">|&gt;</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>(<span class="at">spec =</span> x) <span class="sc">|&gt;</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(penguins)</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co"># marginaleffects</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>cmp <span class="ot">&lt;-</span> <span class="fu">lapply</span>(fits, avg_comparisons, <span class="at">newdata =</span> penguins, <span class="at">type =</span> <span class="st">"prob"</span>)</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co"># summary table</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  cmp,</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">shape =</span> term <span class="sc">+</span> contrast <span class="sc">+</span> group <span class="sc">~</span> model,</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"sex"</span>,</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_rename =</span> coef_rename)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># pre-processing</span></span>
+<span><span class="va">pre</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">recipe</span><span class="op">(</span><span class="va">sex</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">_</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">step_ns</span><span class="op">(</span><span class="va">bill_length_mm</span>, deg_free <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">step_dummy</span><span class="op">(</span><span class="fu">all_nominal_predictors</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># modelling strategies</span></span>
+<span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Logit"</span> <span class="op">=</span> <span class="fu">logistic_reg</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"glm"</span><span class="op">)</span>,</span>
+<span>  <span class="st">"Random Forest"</span> <span class="op">=</span> <span class="fu">rand_forest</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"ranger"</span><span class="op">)</span>,</span>
+<span>  <span class="st">"XGBoost"</span> <span class="op">=</span> <span class="fu">boost_tree</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"xgboost"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># fit to data</span></span>
+<span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">models</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">pre</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">workflow</span><span class="op">(</span>spec <span class="op">=</span> <span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">fit</span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># marginaleffects</span></span>
+<span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">fits</span>, <span class="va">avg_comparisons</span>, newdata <span class="op">=</span> <span class="va">penguins</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># summary table</span></span>
+<span><span class="fu"><a href="https://modelsummary.com/reference/modelsummary.html">modelsummary</a></span><span class="op">(</span></span>
+<span>  <span class="va">cmp</span>,</span>
+<span>  shape <span class="op">=</span> <span class="va">term</span> <span class="op">+</span> <span class="va">contrast</span> <span class="op">+</span> <span class="va">group</span> <span class="op">~</span> <span class="va">model</span>,</span>
+<span>  coef_omit <span class="op">=</span> <span class="st">"sex"</span>,</span>
+<span>  coef_rename <span class="op">=</span> <span class="va">coef_rename</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<div id="xsraicgumd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#xsraicgumd table {
+<div id="eeiwqwzwop" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#eeiwqwzwop table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#xsraicgumd thead, #xsraicgumd tbody, #xsraicgumd tfoot, #xsraicgumd tr, #xsraicgumd td, #xsraicgumd th {
+#eeiwqwzwop thead, #eeiwqwzwop tbody, #eeiwqwzwop tfoot, #eeiwqwzwop tr, #eeiwqwzwop td, #eeiwqwzwop th {
   border-style: none;
 }
 
-#xsraicgumd p {
+#eeiwqwzwop p {
   margin: 0;
   padding: 0;
 }
 
-#xsraicgumd .gt_table {
+#eeiwqwzwop .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -680,12 +652,12 @@ Type:  numeric </code></pre>
   border-left-color: #D3D3D3;
 }
 
-#xsraicgumd .gt_caption {
+#eeiwqwzwop .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#xsraicgumd .gt_title {
+#eeiwqwzwop .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -697,7 +669,7 @@ Type:  numeric </code></pre>
   border-bottom-width: 0;
 }
 
-#xsraicgumd .gt_subtitle {
+#eeiwqwzwop .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -709,7 +681,7 @@ Type:  numeric </code></pre>
   border-top-width: 0;
 }
 
-#xsraicgumd .gt_heading {
+#eeiwqwzwop .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -721,13 +693,13 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#xsraicgumd .gt_bottom_border {
+#eeiwqwzwop .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#xsraicgumd .gt_col_headings {
+#eeiwqwzwop .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -742,7 +714,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#xsraicgumd .gt_col_heading {
+#eeiwqwzwop .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -762,7 +734,7 @@ Type:  numeric </code></pre>
   overflow-x: hidden;
 }
 
-#xsraicgumd .gt_column_spanner_outer {
+#eeiwqwzwop .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -774,15 +746,15 @@ Type:  numeric </code></pre>
   padding-right: 4px;
 }
 
-#xsraicgumd .gt_column_spanner_outer:first-child {
+#eeiwqwzwop .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#xsraicgumd .gt_column_spanner_outer:last-child {
+#eeiwqwzwop .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#xsraicgumd .gt_column_spanner {
+#eeiwqwzwop .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -794,11 +766,11 @@ Type:  numeric </code></pre>
   width: 100%;
 }
 
-#xsraicgumd .gt_spanner_row {
+#eeiwqwzwop .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#xsraicgumd .gt_group_heading {
+#eeiwqwzwop .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -824,7 +796,7 @@ Type:  numeric </code></pre>
   text-align: left;
 }
 
-#xsraicgumd .gt_empty_group_heading {
+#eeiwqwzwop .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -839,15 +811,15 @@ Type:  numeric </code></pre>
   vertical-align: middle;
 }
 
-#xsraicgumd .gt_from_md > :first-child {
+#eeiwqwzwop .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#xsraicgumd .gt_from_md > :last-child {
+#eeiwqwzwop .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#xsraicgumd .gt_row {
+#eeiwqwzwop .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -866,7 +838,7 @@ Type:  numeric </code></pre>
   overflow-x: hidden;
 }
 
-#xsraicgumd .gt_stub {
+#eeiwqwzwop .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -879,7 +851,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#xsraicgumd .gt_stub_row_group {
+#eeiwqwzwop .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -893,15 +865,15 @@ Type:  numeric </code></pre>
   vertical-align: top;
 }
 
-#xsraicgumd .gt_row_group_first td {
+#eeiwqwzwop .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#xsraicgumd .gt_row_group_first th {
+#eeiwqwzwop .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#xsraicgumd .gt_summary_row {
+#eeiwqwzwop .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -911,16 +883,16 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#xsraicgumd .gt_first_summary_row {
+#eeiwqwzwop .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#xsraicgumd .gt_first_summary_row.thick {
+#eeiwqwzwop .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#xsraicgumd .gt_last_summary_row {
+#eeiwqwzwop .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -930,7 +902,7 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#xsraicgumd .gt_grand_summary_row {
+#eeiwqwzwop .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -940,7 +912,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#xsraicgumd .gt_first_grand_summary_row {
+#eeiwqwzwop .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -950,7 +922,7 @@ Type:  numeric </code></pre>
   border-top-color: #D3D3D3;
 }
 
-#xsraicgumd .gt_last_grand_summary_row_top {
+#eeiwqwzwop .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -960,11 +932,11 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#xsraicgumd .gt_striped {
+#eeiwqwzwop .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#xsraicgumd .gt_table_body {
+#eeiwqwzwop .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -973,7 +945,7 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#xsraicgumd .gt_footnotes {
+#eeiwqwzwop .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -987,7 +959,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#xsraicgumd .gt_footnote {
+#eeiwqwzwop .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -996,7 +968,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#xsraicgumd .gt_sourcenotes {
+#eeiwqwzwop .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1010,7 +982,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#xsraicgumd .gt_sourcenote {
+#eeiwqwzwop .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1018,78 +990,75 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#xsraicgumd .gt_left {
+#eeiwqwzwop .gt_left {
   text-align: left;
 }
 
-#xsraicgumd .gt_center {
+#eeiwqwzwop .gt_center {
   text-align: center;
 }
 
-#xsraicgumd .gt_right {
+#eeiwqwzwop .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#xsraicgumd .gt_font_normal {
+#eeiwqwzwop .gt_font_normal {
   font-weight: normal;
 }
 
-#xsraicgumd .gt_font_bold {
+#eeiwqwzwop .gt_font_bold {
   font-weight: bold;
 }
 
-#xsraicgumd .gt_font_italic {
+#eeiwqwzwop .gt_font_italic {
   font-style: italic;
 }
 
-#xsraicgumd .gt_super {
+#eeiwqwzwop .gt_super {
   font-size: 65%;
 }
 
-#xsraicgumd .gt_footnote_marks {
+#eeiwqwzwop .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#xsraicgumd .gt_asterisk {
+#eeiwqwzwop .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#xsraicgumd .gt_indent_1 {
+#eeiwqwzwop .gt_indent_1 {
   text-indent: 5px;
 }
 
-#xsraicgumd .gt_indent_2 {
+#eeiwqwzwop .gt_indent_2 {
   text-indent: 10px;
 }
 
-#xsraicgumd .gt_indent_3 {
+#eeiwqwzwop .gt_indent_3 {
   text-indent: 15px;
 }
 
-#xsraicgumd .gt_indent_4 {
+#eeiwqwzwop .gt_indent_4 {
   text-indent: 20px;
 }
 
-#xsraicgumd .gt_indent_5 {
+#eeiwqwzwop .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
-
 <table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="header gt_col_headings">
+<thead><tr class="header gt_col_headings">
 <th id=" " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="  " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="   " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="Logit" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Logit</th>
 <th id="Random Forest" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Random Forest</th>
 <th id="XGBoost" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">XGBoost</th>
-</tr>
-</thead>
+</tr></thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers=" ">Bill Length Mm</td>
@@ -1160,7 +1129,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  ">Torgersen - Biscoe</td>
 <td class="gt_row gt_left" headers="   ">female</td>
 <td class="gt_row gt_center" headers="Logit">0.015</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.055</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.064</td>
 <td class="gt_row gt_center" headers="XGBoost">0.008</td>
 </tr>
 <tr class="even">
@@ -1176,7 +1145,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  "></td>
 <td class="gt_row gt_left" headers="   ">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.015</td>
-<td class="gt_row gt_center" headers="Random Forest">0.055</td>
+<td class="gt_row gt_center" headers="Random Forest">0.064</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.008</td>
 </tr>
 <tr class="even">
@@ -1192,7 +1161,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  ">Chinstrap - Adelie</td>
 <td class="gt_row gt_left" headers="   ">female</td>
 <td class="gt_row gt_center" headers="Logit">0.562</td>
-<td class="gt_row gt_center" headers="Random Forest">0.163</td>
+<td class="gt_row gt_center" headers="Random Forest">0.159</td>
 <td class="gt_row gt_center" headers="XGBoost">0.441</td>
 </tr>
 <tr class="even">
@@ -1208,7 +1177,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  "></td>
 <td class="gt_row gt_left" headers="   ">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.562</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.163</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.159</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.441</td>
 </tr>
 <tr class="even">
@@ -1224,7 +1193,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  ">Gentoo - Adelie</td>
 <td class="gt_row gt_left" headers="   ">female</td>
 <td class="gt_row gt_center" headers="Logit">0.453</td>
-<td class="gt_row gt_center" headers="Random Forest">0.128</td>
+<td class="gt_row gt_center" headers="Random Forest">0.121</td>
 <td class="gt_row gt_center" headers="XGBoost">0.361</td>
 </tr>
 <tr class="even">
@@ -1240,7 +1209,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="  "></td>
 <td class="gt_row gt_left" headers="   ">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.453</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.128</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.121</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.361</td>
 </tr>
 <tr class="even">
@@ -1285,216 +1254,208 @@ Type:  numeric </code></pre>
 </tr>
 </tbody>
 </table>
-
 </div>
 </div>
 </div>
 </div>
-</section>
-<section id="mlr3" class="level2">
-<h2 class="anchored" data-anchor-id="mlr3"><code>mlr3</code></h2>
+</section><section id="mlr3" class="level2"><h2 class="anchored" data-anchor-id="mlr3"><code>mlr3</code></h2>
 <p><code>mlr3</code> is a machine learning framework for <code>R</code>. It makes it possible for users to train a wide range of models, including linear models, random forests, gradient boosting machines, and neural networks.</p>
 <p>In this example, we use the <code>bikes</code> dataset supplied by the <code>fmeffects</code> package to train a random forest model predicting the number of bikes rented per hour. We then use <code>marginaleffects</code> to interpret the results of the model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3verse)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"bikes"</span>, <span class="at">package =</span> <span class="st">"fmeffects"</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>task <span class="ot">&lt;-</span> <span class="fu">as_task_regr</span>(<span class="at">x =</span> bikes, <span class="at">id =</span> <span class="st">"bikes"</span>, <span class="at">target =</span> <span class="st">"count"</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>forest <span class="ot">&lt;-</span> <span class="fu">lrn</span>(<span class="st">"regr.ranger"</span>)<span class="sc">$</span><span class="fu">train</span>(task)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3verse.mlr-org.com">mlr3verse</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"bikes"</span>, package <span class="op">=</span> <span class="st">"fmeffects"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">task</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/as_task_regr.html">as_task_regr</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bikes</span>, id <span class="op">=</span> <span class="st">"bikes"</span>, target <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span>
+<span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span><span class="op">)</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="va">task</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>As described in other vignettes, we can use the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> function to compute the average change in predicted outcome that is associated with a change in each feature:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(forest, <span class="at">newdata =</span> bikes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
        Term      Contrast  Estimate
  count      +1               0.0000
- holiday    False - True     9.1300
- humidity   +1             -20.1420
- month      +1               3.9603
- season     spring - fall  -30.7140
- season     summer - fall   -9.2913
- season     winter - fall    1.7874
- temp       +1               2.3526
- weather    misty - clear   -8.0574
- weather    rain - clear   -59.6138
- weekday    Fri - Sun       72.8735
- weekday    Mon - Sun       80.8150
- weekday    Sat - Sun       29.6378
- weekday    Thu - Sun       87.4661
- weekday    Tue - Sun       86.5201
- weekday    Wed - Sun       88.5109
- windspeed  +1              -0.0073
- workingday False - True  -194.0564
- year       1 - 0           98.1190
+ holiday    False - True    11.1544
+ humidity   +1             -21.0415
+ month      +1               4.0353
+ season     spring - fall  -34.4640
+ season     summer - fall  -10.3118
+ season     winter - fall    0.9835
+ temp       +1               2.4213
+ weather    misty - clear   -7.7601
+ weather    rain - clear   -59.5241
+ weekday    Fri - Sun       74.1492
+ weekday    Mon - Sun       81.8817
+ weekday    Sat - Sun       28.2682
+ weekday    Thu - Sun       89.2101
+ weekday    Tue - Sun       87.7516
+ weekday    Wed - Sun       89.8822
+ windspeed  +1               0.0228
+ workingday False - True  -192.2028
+ year       1 - 0           99.1688
 
 Columns: term, contrast, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 2.353 bikes rented per hour.</p>
+<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 2.421 bikes rented per hour.</p>
 <p>We could obtain the same result manually as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lo <span class="ot">&lt;-</span> <span class="fu">transform</span>(bikes, <span class="at">temp =</span> temp <span class="sc">-</span> <span class="fl">0.5</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>hi <span class="ot">&lt;-</span> <span class="fu">transform</span>(bikes, <span class="at">temp =</span> temp <span class="sc">+</span> <span class="fl">0.5</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">predict</span>(forest, <span class="at">newdata =</span> hi) <span class="sc">-</span> <span class="fu">predict</span>(forest, <span class="at">newdata =</span> lo))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">hi</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">lo</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.564303</code></pre>
+<pre><code>[1] 3.556145</code></pre>
 </div>
 </div>
-</section>
-<section id="simultaneous-changes" class="level2">
-<h2 class="anchored" data-anchor-id="simultaneous-changes">Simultaneous changes</h2>
-<p>With <code>marginaleffects::avg_comparisons()</code>, we can also compute the average effect of a simultaneous change in multiple predictors, using the <code>variables</code> and <code>cross</code> arguments. In this example, we see what happens (on average) to the predicted outcome when the <code>temp</code>, <code>season</code>, and <code>weather</code> predictors all change together:</p>
+</section><section id="simultaneous-changes" class="level2"><h2 class="anchored" data-anchor-id="simultaneous-changes">Simultaneous changes</h2>
+<p>With <code><a href="https://marginaleffects.com/man/comparisons.html">marginaleffects::avg_comparisons()</a></code>, we can also compute the average effect of a simultaneous change in multiple predictors, using the <code>variables</code> and <code>cross</code> arguments. In this example, we see what happens (on average) to the predicted outcome when the <code>temp</code>, <code>season</code>, and <code>weather</code> predictors all change together:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    forest,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"temp"</span>, <span class="st">"season"</span>, <span class="st">"weather"</span>),</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cross =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> bikes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span>    <span class="va">forest</span>,</span>
+<span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"temp"</span>, <span class="st">"season"</span>, <span class="st">"weather"</span><span class="op">)</span>,</span>
+<span>    cross <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate     C: season C: temp    C: weather
-   -36.50 spring - fall      +1 misty - clear
-   -79.59 spring - fall      +1 rain - clear 
-   -15.64 summer - fall      +1 misty - clear
-   -64.70 summer - fall      +1 rain - clear 
-    -4.85 winter - fall      +1 misty - clear
-   -58.01 winter - fall      +1 rain - clear 
+   -39.69 spring - fall      +1 misty - clear
+   -81.96 spring - fall      +1 rain - clear 
+   -16.17 summer - fall      +1 misty - clear
+   -65.63 summer - fall      +1 rain - clear 
+    -4.82 winter - fall      +1 misty - clear
+   -58.77 winter - fall      +1 rain - clear 
 
 Columns: term, contrast_season, contrast_temp, contrast_weather, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-</section>
-<section id="partial-dependence-plots" class="level2">
-<h2 class="anchored" data-anchor-id="partial-dependence-plots">Partial Dependence Plots</h2>
+</section><section id="partial-dependence-plots" class="level2"><h2 class="anchored" data-anchor-id="partial-dependence-plots">Partial Dependence Plots</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># https://stackoverflow.com/questions/67634344/r-partial-dependence-plots-from-workflow</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tidymodels"</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"marginaleffects"</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(ames, <span class="at">package =</span> <span class="st">"modeldata"</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">transform</span>(ames,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sale_Price =</span> <span class="fu">log10</span>(Sale_Price),</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Gr_Liv_Area =</span> <span class="fu">as.numeric</span>(Gr_Liv_Area))</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span> </span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">recipe</span>(Sale_Price <span class="sc">~</span> Gr_Liv_Area <span class="sc">+</span> Year_Built <span class="sc">+</span> Bldg_Type, <span class="at">data =</span> _) <span class="sc">|&gt;</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">workflow</span>(<span class="at">spec =</span> <span class="fu">rand_forest</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">trees =</span> <span class="dv">1000</span>, <span class="at">engine =</span> <span class="st">"ranger"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit</span>(<span class="at">data =</span> dat)</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Percentiles of the x-axis variable</span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>pctiles <span class="ot">&lt;-</span> <span class="fu">quantile</span>(dat<span class="sc">$</span>Gr_Liv_Area, <span class="at">probs =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">101</span>))</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Select 1000 profiles at random, otherwise this is very memory-intensive</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>profiles <span class="ot">&lt;-</span> dat[<span class="fu">sample</span>(<span class="fu">nrow</span>(dat), <span class="dv">1000</span>), ]</span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Use a counterfactual grid to replicate the full dataset 101 times. Each time, we</span></span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co"># replace the value of `Gr_Liv_Area` by one of the percentiles, but keep the</span></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co"># other profile features as observed.</span></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">datagrid</span>(</span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">Gr_Liv_Area =</span> pctiles, <span class="at">newdata =</span> profiles,</span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_type =</span> <span class="st">"counterfactual"</span>)</span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Partial dependence plot</span></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(m,</span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> nd,</span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"Gr_Liv_Area"</span>, <span class="st">"Bldg_Type"</span>)) <span class="sc">+</span></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Living Area"</span>, <span class="at">y =</span> <span class="st">"Predicted log10(Sale Price)"</span>, <span class="at">color =</span> <span class="st">"Building Type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># https://stackoverflow.com/questions/67634344/r-partial-dependence-plots-from-workflow</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://tidymodels.tidymodels.org">"tidymodels"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://marginaleffects.com/">"marginaleffects"</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">ames</span>, package <span class="op">=</span> <span class="st">"modeldata"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">ames</span>,</span>
+<span>    Sale_Price <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span><span class="op">(</span><span class="va">Sale_Price</span><span class="op">)</span>,</span>
+<span>    Gr_Liv_Area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Gr_Liv_Area</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va">dat</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu">recipe</span><span class="op">(</span><span class="va">Sale_Price</span> <span class="op">~</span> <span class="va">Gr_Liv_Area</span> <span class="op">+</span> <span class="va">Year_Built</span> <span class="op">+</span> <span class="va">Bldg_Type</span>, data <span class="op">=</span> <span class="va">_</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">workflow</span><span class="op">(</span>spec <span class="op">=</span> <span class="fu">rand_forest</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span>, trees <span class="op">=</span> <span class="fl">1000</span>, engine <span class="op">=</span> <span class="st">"ranger"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">fit</span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Percentiles of the x-axis variable</span></span>
+<span><span class="va">pctiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">Gr_Liv_Area</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">101</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Select 1000 profiles at random, otherwise this is very memory-intensive</span></span>
+<span><span class="va">profiles</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="fl">1000</span><span class="op">)</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Use a counterfactual grid to replicate the full dataset 101 times. Each time, we</span></span>
+<span><span class="co"># replace the value of `Gr_Liv_Area` by one of the percentiles, but keep the</span></span>
+<span><span class="co"># other profile features as observed.</span></span>
+<span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
+<span>  Gr_Liv_Area <span class="op">=</span> <span class="va">pctiles</span>, newdata <span class="op">=</span> <span class="va">profiles</span>,</span>
+<span>  grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Partial dependence plot</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">m</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="va">nd</span>,</span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Gr_Liv_Area"</span>, <span class="st">"Bldg_Type"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Living Area"</span>, y <span class="op">=</span> <span class="st">"Predicted log10(Sale Price)"</span>, color <span class="op">=</span> <span class="st">"Building Type"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="machine_learning_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We can replicate this plot using the <code>DALEXtra</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"DALEXtra"</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pdp_rf <span class="ot">&lt;-</span> <span class="fu">explain_tidymodels</span>(</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    m,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dplyr<span class="sc">::</span><span class="fu">select</span>(dat, <span class="sc">-</span>Sale_Price),</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> dat<span class="sc">$</span>Sale_Price,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"random forest"</span>,</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>pdp_rf <span class="ot">&lt;-</span> <span class="fu">model_profile</span>(pdp_rf,</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">N =</span> <span class="dv">1000</span>,</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">"Gr_Liv_Area"</span>,</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">groups =</span> <span class="st">"Bldg_Type"</span>)</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pdp_rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ModelOriented.github.io/DALEXtra/">"DALEXtra"</a></span><span class="op">)</span></span>
+<span><span class="va">pdp_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ModelOriented.github.io/DALEXtra/reference/explain_tidymodels.html">explain_tidymodels</a></span><span class="op">(</span></span>
+<span>    <span class="va">m</span>,</span>
+<span>    data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dat</span>, <span class="op">-</span><span class="va">Sale_Price</span><span class="op">)</span>,</span>
+<span>    y <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">Sale_Price</span>,</span>
+<span>    label <span class="op">=</span> <span class="st">"random forest"</span>,</span>
+<span>    verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pdp_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://modeloriented.github.io/DALEX/reference/model_profile.html">model_profile</a></span><span class="op">(</span><span class="va">pdp_rf</span>,</span>
+<span>    N <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>    variables <span class="op">=</span> <span class="st">"Gr_Liv_Area"</span>,</span>
+<span>    groups <span class="op">=</span> <span class="st">"Bldg_Type"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">pdp_rf</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="machine_learning_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Note that <code>marginaleffects</code> and <code>DALEXtra</code> plots are not exactly identical because the randomly sampled profiles are not the same. You can try the same procedure without sampling — or equivalently with <code>N=2930</code> — to see a perfect equivalence.</p>
-</section>
-<section id="other-plots" class="level2">
-<h2 class="anchored" data-anchor-id="other-plots">Other Plots</h2>
+</section><section id="other-plots" class="level2"><h2 class="anchored" data-anchor-id="other-plots">Other Plots</h2>
 <p>We can plot the results using the standard <code>marginaleffects</code> helpers. For example, to plot predictions, we can do:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr3verse)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"bikes"</span>, <span class="at">package =</span> <span class="st">"fmeffects"</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>task <span class="ot">&lt;-</span> <span class="fu">as_task_regr</span>(<span class="at">x =</span> bikes, <span class="at">id =</span> <span class="st">"bikes"</span>, <span class="at">target =</span> <span class="st">"count"</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>forest <span class="ot">&lt;-</span> <span class="fu">lrn</span>(<span class="st">"regr.ranger"</span>)<span class="sc">$</span><span class="fu">train</span>(task)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(forest, <span class="at">condition =</span> <span class="st">"temp"</span>, <span class="at">newdata =</span> bikes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3verse.mlr-org.com">mlr3verse</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"bikes"</span>, package <span class="op">=</span> <span class="st">"fmeffects"</span><span class="op">)</span></span>
+<span><span class="va">task</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/as_task_regr.html">as_task_regr</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bikes</span>, id <span class="op">=</span> <span class="st">"bikes"</span>, target <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span>
+<span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span><span class="op">)</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="va">task</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, condition <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="machine_learning_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>As documented in <code>?plot_predictions</code>, using <code>condition="temp"</code> is equivalent to creating an equally-spaced grid of <code>temp</code> values, and holding all other predictors at their means or modes. In other words, it is equivalent to:</p>
+<p>As documented in <code><a href="https://marginaleffects.com/man/plot_predictions.html">?plot_predictions</a></code>, using <code>condition="temp"</code> is equivalent to creating an equally-spaced grid of <code>temp</code> values, and holding all other predictors at their means or modes. In other words, it is equivalent to:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">datagrid</span>(<span class="at">temp =</span> <span class="fu">seq</span>(<span class="fu">min</span>(bikes<span class="sc">$</span>temp), <span class="fu">max</span>(bikes<span class="sc">$</span>temp), <span class="at">length.out =</span> <span class="dv">100</span>), <span class="at">newdata =</span> bikes)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">predict</span>(forest, <span class="at">newdata =</span> d)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>temp, p, <span class="at">type =</span> <span class="st">"l"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">p</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>Alternatively, we could plot “marginal” predictions, where replicate the full dataset once for every value of <code>temp</code>, and then average the predicted values over each value of the x-axis:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(forest, <span class="at">by =</span> <span class="st">"temp"</span>, <span class="at">newdata =</span> bikes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="machine_learning_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Of course, we can customize the plot using all the standard <code>ggplot2</code> functions:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(forest, <span class="at">by =</span> <span class="st">"temp"</span>, <span class="at">newdata =</span> d) <span class="sc">+</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> bikes, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> count), <span class="at">alpha =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">data =</span> bikes, <span class="fu">aes</span>(<span class="at">x =</span> temp, <span class="at">y =</span> count), <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Temperature (Celsius)"</span>, <span class="at">y =</span> <span class="st">"Predicted number of bikes rented per hour"</span>,</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"Black: random forest predictions. Orange: LOESS smoother."</span>) <span class="sc">+</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">bikes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">bikes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, color <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Temperature (Celsius)"</span>, y <span class="op">=</span> <span class="st">"Predicted number of bikes rented per hour"</span>,</span>
+<span>         title <span class="op">=</span> <span class="st">"Black: random forest predictions. Orange: LOESS smoother."</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="machine_learning_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 
 
-</section>
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1529,18 +1490,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1572,7 +1522,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1580,7 +1552,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1902,9 +1874,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../vignettes/lme4.html" class="pagination-link" aria-label="Mixed Effects">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Mixed Effects</span>
       </a>          
@@ -1920,4 +1890,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+</body>
+</html>

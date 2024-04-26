@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("margins")
+if (!requiet("margins")) exit_file("margins")
 requiet("emmeans")
 requiet("broom")
 requiet("survey")

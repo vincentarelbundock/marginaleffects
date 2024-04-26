@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
-
+<meta name="generator" content="quarto-1.5.30">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>Marginal Effects Zoo - Conjoint experiments</title>
+<title>Marginal Effects Zoo – Conjoint experiments</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -75,26 +73,13 @@ div.csl-right-inline {
 div.csl-indent {
   margin-left: 2em;
 }</style>
-
-
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
 <link href="../vignettes/elasticity.html" rel="next">
 <link href="../vignettes/conformal.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -122,12 +107,7 @@ div.csl-indent {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script>
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -153,19 +133,14 @@ window.Quarto = {
   typesetMath
 };
 </script>
-
 </head>
-
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
-    </a>
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Marginal Effects Zoo</span>
     </a>
@@ -176,7 +151,7 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
+<li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
@@ -195,29 +170,25 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
 </ul>
-          </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
-    </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/conjoint.html">Conjoint experiments</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
+<li class="breadcrumb-item"><a href="../vignettes/conjoint.html">Conjoint experiments</a></li>
+</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get started</span></a>
@@ -231,8 +202,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
@@ -263,7 +234,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
@@ -272,8 +243,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
@@ -400,7 +371,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
@@ -409,8 +380,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -471,7 +442,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
@@ -480,8 +451,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>predictions</code></span></a>
@@ -548,7 +519,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
@@ -568,37 +539,40 @@ window.Quarto = {
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data" id="toc-data" class="nav-link active" data-scroll-target="#data">Data</a></li>
-  <li><a href="#marginal-means" id="toc-marginal-means" class="nav-link" data-scroll-target="#marginal-means">Marginal means</a>
+<li><a href="#data" id="toc-data" class="nav-link active" data-scroll-target="#data">Data</a></li>
+  <li>
+<a href="#marginal-means" id="toc-marginal-means" class="nav-link" data-scroll-target="#marginal-means">Marginal means</a>
   <ul class="collapse">
-  <li><a href="#hypothesis-tests" id="toc-hypothesis-tests" class="nav-link" data-scroll-target="#hypothesis-tests">Hypothesis tests</a></li>
+<li><a href="#hypothesis-tests" id="toc-hypothesis-tests" class="nav-link" data-scroll-target="#hypothesis-tests">Hypothesis tests</a></li>
   <li><a href="#subgroups" id="toc-subgroups" class="nav-link" data-scroll-target="#subgroups">Subgroups</a></li>
-  </ul></li>
-  <li><a href="#average-marginal-component-effects" id="toc-average-marginal-component-effects" class="nav-link" data-scroll-target="#average-marginal-component-effects">Average Marginal Component Effects</a>
-  <ul class="collapse">
-  <li><a href="#empirical-vs.-balanced-grid" id="toc-empirical-vs.-balanced-grid" class="nav-link" data-scroll-target="#empirical-vs.-balanced-grid">Empirical vs.&nbsp;balanced grid</a></li>
-  </ul></li>
-  <li><a href="#average-feature-choice-probability" id="toc-average-feature-choice-probability" class="nav-link" data-scroll-target="#average-feature-choice-probability">Average Feature Choice Probability</a>
-  <ul class="collapse">
-  <li><a href="#hypothesis-tests-1" id="toc-hypothesis-tests-1" class="nav-link" data-scroll-target="#hypothesis-tests-1">Hypothesis tests</a></li>
-  </ul></li>
   </ul>
-</nav>
-    </div>
+</li>
+  <li>
+<a href="#average-marginal-component-effects" id="toc-average-marginal-component-effects" class="nav-link" data-scroll-target="#average-marginal-component-effects">Average Marginal Component Effects</a>
+  <ul class="collapse">
+<li><a href="#empirical-vs.-balanced-grid" id="toc-empirical-vs.-balanced-grid" class="nav-link" data-scroll-target="#empirical-vs.-balanced-grid">Empirical vs. balanced grid</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#average-feature-choice-probability" id="toc-average-feature-choice-probability" class="nav-link" data-scroll-target="#average-feature-choice-probability">Average Feature Choice Probability</a>
+  <ul class="collapse">
+<li><a href="#hypothesis-tests-1" id="toc-hypothesis-tests-1" class="nav-link" data-scroll-target="#hypothesis-tests-1">Hypothesis tests</a></li>
+  </ul>
+</li>
+  </ul></nav>
+</div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/conjoint.html">Conjoint experiments</a></li></ol></nav>
-<div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
+<li class="breadcrumb-item"><a href="../vignettes/conjoint.html">Conjoint experiments</a></li>
+</ol></nav><div class="quarto-title">
 <h1 class="title">Conjoint experiments</h1>
 </div>
 
@@ -613,10 +587,7 @@ window.Quarto = {
   
 
 
-</header>
-
-
-<div class="cell">
+</header><div class="cell">
 <style type="text/css">
 .table {
   font-size: .8em;
@@ -631,14 +602,12 @@ window.Quarto = {
 
   
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_b4aapht9l4kxyj06z2vu</title>
-    <style>
-.table td.tinytable_css_a15zunjfbps9dw4j5zd2, .table th.tinytable_css_a15zunjfbps9dw4j5zd2 {    border-bottom: solid 0.1em #d3d8dc; }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tinytable_tu50kivt3s7fqppu6x0j</title>
+<style>
+.table td.tinytable_css_uibu6ygc159keeqhq0xa, .table th.tinytable_css_uibu6ygc159keeqhq0xa {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']]
@@ -647,45 +616,38 @@ window.Quarto = {
         fontCache: 'global'
       }
     };
-    </script>
-  
-
-  
-    <div class="container">
-      <table class="table table-borderless" id="tinytable_b4aapht9l4kxyj06z2vu" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true"><caption><p>A single forced-choice task in a conjoint experiment. The survey
+    </script><div class="container">
+      <table class="table table-borderless" id="tinytable_tu50kivt3s7fqppu6x0j" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+<caption><p>A single forced-choice task in a conjoint experiment. The survey
 respondent must choose one of the two profiles before seeing a second
 task.</p></caption>
-        <thead>
-        
-              <tr>
-                <th scope="col">Attributes</th>
+        <thead><tr>
+<th scope="col">Attributes</th>
                 <th scope="col">Profile 1</th>
                 <th scope="col">Profile 2</th>
-              </tr>
-        </thead>
-        
-        <tbody>
-                <tr>
-                  <td>Language Skills</td>
+              </tr></thead>
+<tbody>
+<tr>
+<td>Language Skills</td>
                   <td>Fluent in English  </td>
                   <td>Broken English</td>
                 </tr>
-                <tr>
-                  <td>Job            </td>
+<tr>
+<td>Job            </td>
                   <td>Construction worker</td>
                   <td>Nurse         </td>
                 </tr>
-        </tbody>
-      </table>
-    </div>
+</tbody>
+</table>
+</div>
 
     <script>
-      function styleCell_tinytable_kxzk6j154amjz4e0dv3g(i, j, css_id) {
-        var table = document.getElementById("tinytable_b4aapht9l4kxyj06z2vu");
+      function styleCell_tinytable_cdvzsr2gtesnpsb3kxl1(i, j, css_id) {
+        var table = document.getElementById("tinytable_tu50kivt3s7fqppu6x0j");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_b4aapht9l4kxyj06z2vu');
+        var table = document.getElementById('tinytable_tu50kivt3s7fqppu6x0j');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -693,8 +655,8 @@ task.</p></caption>
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_kxzk6j154amjz4e0dv3g(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_b4aapht9l4kxyj06z2vu");
+      function spanCell_tinytable_cdvzsr2gtesnpsb3kxl1(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_tu50kivt3s7fqppu6x0j");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -721,32 +683,28 @@ task.</p></caption>
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_kxzk6j154amjz4e0dv3g(0, 0, 'tinytable_css_a15zunjfbps9dw4j5zd2') })
-window.addEventListener('load', function () { styleCell_tinytable_kxzk6j154amjz4e0dv3g(0, 1, 'tinytable_css_a15zunjfbps9dw4j5zd2') })
-window.addEventListener('load', function () { styleCell_tinytable_kxzk6j154amjz4e0dv3g(0, 2, 'tinytable_css_a15zunjfbps9dw4j5zd2') })
+window.addEventListener('load', function () { styleCell_tinytable_cdvzsr2gtesnpsb3kxl1(0, 0, 'tinytable_css_uibu6ygc159keeqhq0xa') })
+window.addEventListener('load', function () { styleCell_tinytable_cdvzsr2gtesnpsb3kxl1(0, 1, 'tinytable_css_uibu6ygc159keeqhq0xa') })
+window.addEventListener('load', function () { styleCell_tinytable_cdvzsr2gtesnpsb3kxl1(0, 2, 'tinytable_css_uibu6ygc159keeqhq0xa') })
     </script>
-
-  
-
-
 </div>
 </div>
 <p>The survey respondent has the “task” of choosing one of the two profiles. Then, the researchers display a new task, including profiles with different randomized attributes, and the respondent chooses again.</p>
 <p>By analyzing the choices made by participants, researchers can estimate the relative importance of different attributes in the decision-making process.</p>
 <p>The rest of this vignette shows how to use the <code>marginaleffects</code> package to estimate the main quantities of the quantities of interest in such experiments.</p>
-<section id="data" class="level1">
-<h1>Data</h1>
+<section id="data" class="level1"><h1>Data</h1>
 <p>To illustrate, we use data published alongside the <em>Political Analysis</em> article by <span class="citation" data-cites="HaiHopYam2014">Hainmueller, Hopkins, and Yamamoto (<a href="#ref-HaiHopYam2014" role="doc-biblioref">2014</a>)</span>. In this experiment, each survey respondent <span class="math inline">\(i\)</span> receives several tasks <span class="math inline">\(k\)</span>, in which they select one of two profiles <span class="math inline">\(j\)</span>, characterized by attributes <span class="math inline">\(l\)</span>.</p>
 <p>For simplicity, we consider a subset of the data with 5 tasks per respondent, 2 profiles per task, and 2 attributes per profile. The data is structured in “long” format, with one respondent-task-profile combination per row.</p>
 <p>These are the entries for survey respondent number 4:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">url</span>(<span class="st">"https://marginaleffects.com/data/conjoint_immigration.rds"</span>, <span class="st">"rb"</span>))</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>dat[dat<span class="sc">$</span>respondent <span class="sc">==</span> <span class="dv">4</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/tinytable/">tinytable</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html">url</a></span><span class="op">(</span><span class="st">"https://marginaleffects.com/data/conjoint_immigration.rds"</span>, <span class="st">"rb"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat</span><span class="op">[</span><span class="va">dat</span><span class="op">$</span><span class="va">respondent</span> <span class="op">==</span> <span class="fl">4</span>, <span class="op">]</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    choice                 job         language respondent  task profile
      &lt;num&gt;              &lt;fctr&gt;           &lt;fctr&gt;      &lt;int&gt; &lt;int&gt;   &lt;num&gt;
@@ -763,18 +721,20 @@ window.addEventListener('load', function () { styleCell_tinytable_kxzk6j154amjz4
 </div>
 </div>
 <p>The <code>choice</code> column indicates if the profile in each row was selected by the respondent.</p>
-<p>These data are structured in what could be called a “long” format. Later on in the vignette, it will be useful to have information in a “wide” format, with new columns indicating what attributes characterized every profile in each task. To create these new columns, we use <code>dcast()</code> from the <code>data.table</code> package. This function is analogous to <code>reshape()</code> in base <code>R</code> or <code>pivot_wider()</code> in the <code>tidyverse</code>:</p>
+<p>These data are structured in what could be called a “long” format. Later on in the vignette, it will be useful to have information in a “wide” format, with new columns indicating what attributes characterized every profile in each task. To create these new columns, we use <code><a href="https://rdatatable.gitlab.io/data.table/reference/dcast.data.table.html">dcast()</a></code> from the <code>data.table</code> package. This function is analogous to <code><a href="https://rdrr.io/r/stats/reshape.html">reshape()</a></code> in base <code>R</code> or <code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider()</a></code> in the <code>tidyverse</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.table</span>(dat)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>wide <span class="ot">&lt;-</span> <span class="fu">dcast</span>(dat, </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  respondent <span class="sc">+</span> task <span class="sc">~</span> profile,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">value.var =</span> <span class="fu">c</span>(<span class="st">"language"</span>, <span class="st">"job"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat, wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html">data.table</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span><span class="va">wide</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/dcast.data.table.html">dcast</a></span><span class="op">(</span><span class="va">dat</span>, </span>
+<span>  <span class="va">respondent</span> <span class="op">+</span> <span class="va">task</span> <span class="op">~</span> <span class="va">profile</span>,</span>
+<span>  value.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"job"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">wide</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>We now have new columns called <code>language_1</code> and <code>language_2</code> indicating the language skills of profiles 1 and 2 respectively in each task.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dat[dat<span class="sc">$</span>respondent <span class="sc">==</span> <span class="dv">4</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span><span class="op">[</span><span class="va">dat</span><span class="op">$</span><span class="va">respondent</span> <span class="op">==</span> <span class="fl">4</span>, <span class="op">]</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Key: &lt;respondent, task&gt;
     respondent  task choice                 job         language profile       language_1       language_2    job_1               job_2
@@ -791,9 +751,7 @@ window.addEventListener('load', function () { styleCell_tinytable_kxzk6j154amjz4
 10:          4     5      0               nurse used interpreter       2 used interpreter used interpreter  teacher               nurse</code></pre>
 </div>
 </div>
-</section>
-<section id="marginal-means" class="level1">
-<h1>Marginal means</h1>
+</section><section id="marginal-means" class="level1"><h1>Marginal means</h1>
 <p>As described by <span class="citation" data-cites="LeeHobTil2020">Leeper, Hobolt, and Tilley (<a href="#ref-LeeHobTil2020" role="doc-biblioref">2020</a>)</span>, a “marginal mean describes the level of favorability toward profiles that have a particular feature level, ignoring all other features.”</p>
 <p>To compute marginal means, we proceed in 3 steps:</p>
 <ol type="1">
@@ -803,36 +761,38 @@ window.addEventListener('load', function () { styleCell_tinytable_kxzk6j154amjz4
 </ol>
 <p>To illustrate, we estimate a linear regression model with interactions between the <code>language</code> and <code>job</code> variables:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(choice <span class="sc">~</span> job <span class="sc">*</span> language, <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">choice</span> <span class="op">~</span> <span class="va">job</span> <span class="op">*</span> <span class="va">language</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>Then, we use the <code>avg_predictions()</code> function to compute and marginalize predicted values. Note that we use the <code>vcov</code> argument to report clustered standard errors at the respondent-level.</p>
+<p>Then, we use the <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code> function to compute and marginalize predicted values. Note that we use the <code>vcov</code> argument to report clustered standard errors at the respondent-level.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"language"</span>, <span class="at">vcov =</span> <span class="sc">~</span>respondent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"language"</span>, vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
          language Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %
- fluent              0.588    0.00726 81.0   &lt;0.001 Inf 0.573  0.602
- broken              0.526    0.00746 70.6   &lt;0.001 Inf 0.512  0.541
  tried but unable    0.459    0.00733 62.7   &lt;0.001 Inf 0.445  0.474
  used interpreter    0.424    0.00749 56.6   &lt;0.001 Inf 0.410  0.439
+ fluent              0.588    0.00726 81.0   &lt;0.001 Inf 0.573  0.602
+ broken              0.526    0.00746 70.6   &lt;0.001 Inf 0.512  0.541
 
 Columns: language, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
 </div>
 </div>
 <p>The results above suggests that, ignoring (or averaging over) the <code>job</code> attribute, the “fluent” English speakers are chosen more often than profiles with other <code>language</code> values.</p>
-<section id="hypothesis-tests" class="level2">
-<h2 class="anchored" data-anchor-id="hypothesis-tests">Hypothesis tests</h2>
+<section id="hypothesis-tests" class="level2"><h2 class="anchored" data-anchor-id="hypothesis-tests">Hypothesis tests</h2>
 <p>Using the <code>hypothesis</code> argument, we can easily conduct various null hypothesis tests on the estimated marginal means. For example, is the probability of choosing a “fluent” profile equal to the probability of choosing a “tried but unable” profile?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">hypothesis =</span> <span class="st">"b1 = b3"</span>,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"language"</span>, </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="sc">~</span>respondent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<span>  hypothesis <span class="op">=</span> <span class="st">"b1 = b3"</span>,</span>
+<span>  by <span class="op">=</span> <span class="st">"language"</span>, </span>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-  Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
- b1=b3    0.128     0.0119 10.8   &lt;0.001 87.6 0.105  0.152
+  Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %
+ b1=b3   -0.128     0.0119 -10.8   &lt;0.001 87.6 -0.152 -0.105
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -840,48 +800,45 @@ Type:  response </code></pre>
 </div>
 <p>Is the difference in probabiliy between “fluent” and “broken” equal to the difference in probability between “tried but unable” and “used interpreter”?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">hypothesis =</span> <span class="st">"b1 - b2 = b3 - b4"</span>,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"language"</span>, </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="sc">~</span>respondent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<span>  hypothesis <span class="op">=</span> <span class="st">"b1 - b2 = b3 - b4"</span>,</span>
+<span>  by <span class="op">=</span> <span class="st">"language"</span>, </span>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-        Term Estimate Std. Error    z Pr(&gt;|z|)   S    2.5 % 97.5 %
- b1-b2=b3-b4   0.0264     0.0168 1.57    0.116 3.1 -0.00657 0.0594
+        Term Estimate Std. Error     z Pr(&gt;|z|)   S   2.5 %  97.5 %
+ b1-b2=b3-b4  -0.0264     0.0168 -1.57    0.116 3.1 -0.0594 0.00657
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
 </div>
 </div>
-</section>
-<section id="subgroups" class="level2">
-<h2 class="anchored" data-anchor-id="subgroups">Subgroups</h2>
+</section><section id="subgroups" class="level2"><h2 class="anchored" data-anchor-id="subgroups">Subgroups</h2>
 <p>Modifying the <code>by</code> allows analysts to report marginal means for different subgroups of their data, and <code>newdata</code> can be used to exclude uninteresting profiles:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"language"</span>, <span class="st">"job"</span>),</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">subset</span>(dat, job <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"doctor"</span>, <span class="st">"gardener"</span>)),</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="sc">~</span>respondent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"job"</span><span class="op">)</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">job</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"doctor"</span>, <span class="st">"gardener"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
          language      job Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
  fluent           gardener    0.534     0.0243 22.0   &lt;0.001 353.5 0.486  0.581
  fluent           doctor      0.772     0.0332 23.2   &lt;0.001 394.4 0.707  0.837
- broken           gardener    0.509     0.0245 20.8   &lt;0.001 316.9 0.461  0.557
- broken           doctor      0.712     0.0394 18.1   &lt;0.001 239.6 0.635  0.789
- tried but unable gardener    0.416     0.0237 17.5   &lt;0.001 226.5 0.370  0.463
- tried but unable doctor      0.570     0.0443 12.9   &lt;0.001 123.5 0.483  0.657
- used interpreter gardener    0.387     0.0244 15.8   &lt;0.001 185.1 0.339  0.435
  used interpreter doctor      0.602     0.0427 14.1   &lt;0.001 147.5 0.518  0.685
+ tried but unable gardener    0.416     0.0237 17.5   &lt;0.001 226.5 0.370  0.463
+ used interpreter gardener    0.387     0.0244 15.8   &lt;0.001 185.1 0.339  0.435
+ broken           gardener    0.509     0.0245 20.8   &lt;0.001 316.9 0.461  0.557
+ tried but unable doctor      0.570     0.0443 12.9   &lt;0.001 123.5 0.483  0.657
+ broken           doctor      0.712     0.0394 18.1   &lt;0.001 239.6 0.635  0.789
 
 Columns: language, job, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
 </div>
 </div>
-</section>
-</section>
-<section id="average-marginal-component-effects" class="level1">
-<h1>Average Marginal Component Effects</h1>
+</section></section><section id="average-marginal-component-effects" class="level1"><h1>Average Marginal Component Effects</h1>
 <p>Average Marginal Component Effects (AMCE) are defined and analyzed in <span class="citation" data-cites="HaiHopYam2014">Hainmueller, Hopkins, and Yamamoto (<a href="#ref-HaiHopYam2014" role="doc-biblioref">2014</a>)</span>. Roughly speaking, they can be viewed as the average effects of changing one attribute on choice, while holding all other attributes of the profile constant. To compute an AMCE, we can proceed in 4 steps:</p>
 <ol type="1">
 <li>Create a dataset A where the <code>language</code> column is equal to “fluent English” in every row.</li>
@@ -889,9 +846,10 @@ Type:  response </code></pre>
 <li>Compute predicted (fitted) values for every row in datasets A and B.</li>
 <li>Compute the average difference between predicted values in the two datasets.</li>
 </ol>
-<p>This can be achieved easily using the <code>avg_comparisons()</code> function from the <code>marginaleffects</code> package:</p>
+<p>This can be achieved easily using the <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> function from the <code>marginaleffects</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">variables =</span> <span class="st">"language"</span>, <span class="at">vcov =</span> <span class="sc">~</span>respondent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"language"</span>, vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Term                  Contrast Estimate Std. Error      z Pr(&gt;|z|)     S   2.5 %  97.5 %
@@ -903,30 +861,31 @@ Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.
 Type:  response </code></pre>
 </div>
 </div>
-<section id="empirical-vs.-balanced-grid" class="level2">
-<h2 class="anchored" data-anchor-id="empirical-vs.-balanced-grid">Empirical vs.&nbsp;balanced grid</h2>
-<p>In the example above, <code>avg_predictions()</code> marginalized across the realized distribution of attributes observed in the actual dataset. An alternative would be to marginalzed over a perfectly balanced (“uniform”) grid of treatment conditions. Of course, empirical and uniform grids will yield nearly identical results if the sample is large and randomization successful.</p>
-<p>The uniform approach is the default in the <code>amce()</code> function from the <code>cjoint</code> package, and the behavior can be replicated using the <code>datagrid()</code> function and the <code>newdata</code> argument in <code>avg_comparisons()</code>:</p>
+<section id="empirical-vs.-balanced-grid" class="level2"><h2 class="anchored" data-anchor-id="empirical-vs.-balanced-grid">Empirical vs. balanced grid</h2>
+<p>In the example above, <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code> marginalized across the realized distribution of attributes observed in the actual dataset. An alternative would be to marginalzed over a perfectly balanced (“uniform”) grid of treatment conditions. Of course, empirical and uniform grids will yield nearly identical results if the sample is large and randomization successful.</p>
+<p>The uniform approach is the default in the <code><a href="https://rdrr.io/pkg/cjoint/man/amce.html">amce()</a></code> function from the <code>cjoint</code> package, and the behavior can be replicated using the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> function and the <code>newdata</code> argument in <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cjoint)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>amce_results <span class="ot">&lt;-</span> <span class="fu">amce</span>(</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  choice <span class="sc">~</span> language <span class="sc">*</span> job,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">cluster =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">respondent.id =</span> <span class="st">"respondent"</span>)</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(amce_results)<span class="sc">$</span>amce <span class="sc">|&gt;</span> <span class="fu">subset</span>(Attribute <span class="sc">==</span> <span class="st">"language"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">cjoint</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">amce_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/cjoint/man/amce.html">amce</a></span><span class="op">(</span></span>
+<span>  <span class="va">choice</span> <span class="op">~</span> <span class="va">language</span> <span class="op">*</span> <span class="va">job</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">dat</span>,</span>
+<span>  cluster <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  respondent.id <span class="op">=</span> <span class="st">"respondent"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">amce_results</span><span class="op">)</span><span class="op">$</span><span class="va">amce</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">Attribute</span> <span class="op">==</span> <span class="st">"language"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Attribute            Level    Estimate   Std. Err    z value     Pr(&gt;|z|)    
 11  language           broken -0.06834528 0.01357451  -5.034826 4.782835e-07 ***
 12  language tried but unable -0.12843978 0.01343677  -9.558832 1.190935e-21 ***
 13  language used interpreter -0.16584337 0.01382564 -11.995352 3.758141e-33 ***</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod,</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">FUN_factor =</span> unique, <span class="at">FUN_character =</span> unique),</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"language"</span>,</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="sc">~</span>respondent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>FUN_factor <span class="op">=</span> <span class="va">unique</span>, FUN_character <span class="op">=</span> <span class="va">unique</span><span class="op">)</span>,</span>
+<span>  variables <span class="op">=</span> <span class="st">"language"</span>,</span>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Term                  Contrast Estimate Std. Error      z Pr(&gt;|z|)     S  2.5 %  97.5 %
@@ -938,45 +897,43 @@ Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.
 Type:  response </code></pre>
 </div>
 </div>
-</section>
-</section>
-<section id="average-feature-choice-probability" class="level1">
-<h1>Average Feature Choice Probability</h1>
+</section></section><section id="average-feature-choice-probability" class="level1"><h1>Average Feature Choice Probability</h1>
 <p><span class="citation" data-cites="Abr2024">Abramson et al. (<a href="#ref-Abr2024" role="doc-biblioref">2024</a>)</span> introduce an alternative estimand for forced-choice conjoint experiments: the Average Feature Choice Probability (AFCP). The main difference between AMCE and AFCP lies in their approach to handling attribute comparisons.</p>
 <p>AMCE incorporates comparisons and averages over both direct and indirect attribute comparisons, potentially considering information about irrelevant attributes, thus imposing a strong transitivity assumption. In some cases, AMCE can suggest positive effects even when, in direct comparisons, respondents are on average less likely to choose a profile with the feature of interest over the baseline. In contrast, AFCP focuses solely on direct comparisons between attributes, offering a more accurate representation of respondents’ direct preferences without the influence of irrelevant attributes.</p>
 <p>To estimate AFCP, we once again start by estimating a linear regression model. This time, the model is even more flexible. Specifically, the model allows the effect of language skills in the first profile to depend on the value of language skills in the second profile. Likewise, other attributes can influence the probability of selection differently based on attributes in the comparison profile. To achieve this, we interact <code>language_1</code> with <code>language_2</code>, and <code>job_1</code> with <code>job_2</code>.</p>
 <p>Moreover, since the data is in “long” format, with one profile per row, we must also allow each variable to have different coefficients based on <code>profile</code> number: the effect of <code>language_1</code> on the probability of selection is obviously different for <code>profile=1</code> and for <code>profile=2</code>. Indeed, when <code>profile=1</code> the <code>language_1</code> column records the profile’s own language skills. When <code>profile=2</code>, the same column records the alternative profile’s language skills.</p>
 <p>Thankfully, it is trivial to allow this flexibility by interacting the attributes with the <code>profile</code> variable:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(choice <span class="sc">~</span> <span class="fu">factor</span>(profile) <span class="sc">*</span> (language_1 <span class="sc">*</span> language_2 <span class="sc">+</span> job_1 <span class="sc">*</span> job_2), dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">choice</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">profile</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">language_1</span> <span class="op">*</span> <span class="va">language_2</span> <span class="op">+</span> <span class="va">job_1</span> <span class="op">*</span> <span class="va">job_2</span><span class="op">)</span>, <span class="va">dat</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>As explained above and detailed in <span class="citation" data-cites="Abr2024">Abramson et al. (<a href="#ref-Abr2024" role="doc-biblioref">2024</a>)</span>, the AFCP is a choice pair-specific quantity. This means that we need to average predictions (fitted values) across covariates, within each unique pair of attributes of interest. To allow this, we create a new variable called <code>alternative</code>:<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>alternative <span class="ot">&lt;-</span> <span class="fu">fifelse</span>(</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  dat<span class="sc">$</span>language <span class="sc">==</span> dat<span class="sc">$</span>language_1, </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  dat<span class="sc">$</span>language_2, </span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  dat<span class="sc">$</span>language_1</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span><span class="op">$</span><span class="va">alternative</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fifelse.html">fifelse</a></span><span class="op">(</span></span>
+<span>  <span class="va">dat</span><span class="op">$</span><span class="va">language</span> <span class="op">==</span> <span class="va">dat</span><span class="op">$</span><span class="va">language_1</span>, </span>
+<span>  <span class="va">dat</span><span class="op">$</span><span class="va">language_2</span>, </span>
+<span>  <span class="va">dat</span><span class="op">$</span><span class="va">language_1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>This table shows the language skills and job of both profiles in the first task faced by respondent number 4. The <code>alternative</code> column simply shows the language skills of the alternative profile within each task:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(dat,</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  task <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> respondent <span class="sc">==</span> <span class="dv">4</span>, </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">select =</span> <span class="fu">c</span>(<span class="st">"respondent"</span>, <span class="st">"task"</span>, <span class="st">"profile"</span>, <span class="st">"job"</span>, <span class="st">"language"</span>, <span class="st">"alternative"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>,</span>
+<span>  <span class="va">task</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">&amp;</span> <span class="va">respondent</span> <span class="op">==</span> <span class="fl">4</span>, </span>
+<span>  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"respondent"</span>, <span class="st">"task"</span>, <span class="st">"profile"</span>, <span class="st">"job"</span>, <span class="st">"language"</span>, <span class="st">"alternative"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html">tt</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
  
 
   
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_m9k7v9k135z57wqh5fk4</title>
-    <style>
-.table td.tinytable_css_cp2pafesw2d84phb07nd, .table th.tinytable_css_cp2pafesw2d84phb07nd {    border-bottom: solid 0.1em #d3d8dc; }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tinytable_q0fd5o3l0660wfirfut1</title>
+<style>
+.table td.tinytable_css_fggk6o7xwugq4jnp9nqo, .table th.tinytable_css_fggk6o7xwugq4jnp9nqo {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']]
@@ -985,52 +942,44 @@ Type:  response </code></pre>
         fontCache: 'global'
       }
     };
-    </script>
-  
-
-  
-    <div class="container">
-      <table class="table table-borderless" id="tinytable_m9k7v9k135z57wqh5fk4" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        <thead>
-        
-              <tr>
-                <th scope="col">respondent</th>
+    </script><div class="container">
+      <table class="table table-borderless" id="tinytable_q0fd5o3l0660wfirfut1" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+<thead><tr>
+<th scope="col">respondent</th>
                 <th scope="col">task</th>
                 <th scope="col">profile</th>
                 <th scope="col">job</th>
                 <th scope="col">language</th>
                 <th scope="col">alternative</th>
-              </tr>
-        </thead>
-        
-        <tbody>
-                <tr>
-                  <td>4</td>
+              </tr></thead>
+<tbody>
+<tr>
+<td>4</td>
                   <td>1</td>
                   <td>1</td>
                   <td>nurse              </td>
                   <td>tried but unable</td>
                   <td>used interpreter</td>
                 </tr>
-                <tr>
-                  <td>4</td>
+<tr>
+<td>4</td>
                   <td>1</td>
                   <td>2</td>
                   <td>child care provider</td>
                   <td>used interpreter</td>
                   <td>tried but unable</td>
                 </tr>
-        </tbody>
-      </table>
-    </div>
+</tbody>
+</table>
+</div>
 
     <script>
-      function styleCell_tinytable_ahtwq0i5v9mu31ji9uw8(i, j, css_id) {
-        var table = document.getElementById("tinytable_m9k7v9k135z57wqh5fk4");
+      function styleCell_tinytable_w8q17up0y8xth0ivjhnh(i, j, css_id) {
+        var table = document.getElementById("tinytable_q0fd5o3l0660wfirfut1");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_m9k7v9k135z57wqh5fk4');
+        var table = document.getElementById('tinytable_q0fd5o3l0660wfirfut1');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1038,8 +987,8 @@ Type:  response </code></pre>
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_ahtwq0i5v9mu31ji9uw8(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_m9k7v9k135z57wqh5fk4");
+      function spanCell_tinytable_w8q17up0y8xth0ivjhnh(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_q0fd5o3l0660wfirfut1");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1066,45 +1015,41 @@ Type:  response </code></pre>
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31ji9uw8(0, 0, 'tinytable_css_cp2pafesw2d84phb07nd') })
-window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31ji9uw8(0, 1, 'tinytable_css_cp2pafesw2d84phb07nd') })
-window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31ji9uw8(0, 2, 'tinytable_css_cp2pafesw2d84phb07nd') })
-window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31ji9uw8(0, 3, 'tinytable_css_cp2pafesw2d84phb07nd') })
-window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31ji9uw8(0, 4, 'tinytable_css_cp2pafesw2d84phb07nd') })
-window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31ji9uw8(0, 5, 'tinytable_css_cp2pafesw2d84phb07nd') })
+window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 0, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
+window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 1, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
+window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 2, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
+window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 3, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
+window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 4, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
+window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 5, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
     </script>
-
-  
-
-
 </div>
 </div>
 <p>Now we compute the AFCP by averaging fitted values by unique pairs of attributes for language (the combination of <code>language</code> and <code>alternative</code>). Since we are not interested comparison pairs where both profiles have the same language skills, we use the <code>subset</code> to supply an appropriate grid.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">avg_predictions</span>(mod, </span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"language"</span>, <span class="st">"alternative"</span>), </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">subset</span>(dat, language <span class="sc">!=</span> alternative),</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="sc">~</span>respondent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"alternative"</span><span class="op">)</span>, </span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">language</span> <span class="op">!=</span> <span class="va">alternative</span><span class="op">)</span>,</span>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>Display the results in a nice <code>tinytable</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">which</span>(p<span class="sc">$</span>alternative <span class="sc">==</span> <span class="st">"fluent"</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p, <span class="st">"tinytable"</span>) <span class="sc">|&gt;</span> <span class="fu">style_tt</span>(<span class="at">i =</span> idx, <span class="at">background =</span> <span class="st">"pink"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/tinytable/">tinytable</a></span><span class="op">)</span></span>
+<span><span class="va">idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">alternative</span> <span class="op">==</span> <span class="st">"fluent"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">p</span>, <span class="st">"tinytable"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/style_tt.html">style_tt</a></span><span class="op">(</span>i <span class="op">=</span> <span class="va">idx</span>, background <span class="op">=</span> <span class="st">"pink"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
  
 
   
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_r15sq9d8axax6jk4h2ps</title>
-    <style>
-.table td.tinytable_css_ngvci81p9efhlxjxikmn, .table th.tinytable_css_ngvci81p9efhlxjxikmn {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_ovk0a47ufbgqdk77munz, .table th.tinytable_css_ovk0a47ufbgqdk77munz {    background-color: pink; }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tinytable_zujqrnet82v8c1kw1pxs</title>
+<style>
+.table td.tinytable_css_jibf91vh4hsbxj2z8uid, .table th.tinytable_css_jibf91vh4hsbxj2z8uid {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_r4p72f91tetgeiny7add, .table th.tinytable_css_r4p72f91tetgeiny7add {    background-color: pink; }
     </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']]
@@ -1113,16 +1058,10 @@ window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31
         fontCache: 'global'
       }
     };
-    </script>
-  
-
-  
-    <div class="container">
-      <table class="table table-borderless" id="tinytable_r15sq9d8axax6jk4h2ps" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        <thead>
-        
-              <tr>
-                <th scope="col">language</th>
+    </script><div class="container">
+      <table class="table table-borderless" id="tinytable_zujqrnet82v8c1kw1pxs" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+<thead><tr>
+<th scope="col">language</th>
                 <th scope="col">alternative</th>
                 <th scope="col">Estimate</th>
                 <th scope="col">Std. Error</th>
@@ -1131,100 +1070,10 @@ window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31
                 <th scope="col">S</th>
                 <th scope="col">2.5 %</th>
                 <th scope="col">97.5 %</th>
-              </tr>
-        </thead>
-        
-        <tbody>
-                <tr>
-                  <td>fluent          </td>
-                  <td>broken          </td>
-                  <td>0.593</td>
-                  <td>0.0164</td>
-                  <td>36.1</td>
-                  <td>&lt;0.001</td>
-                  <td>947.4</td>
-                  <td>0.561</td>
-                  <td>0.625</td>
-                </tr>
-                <tr>
-                  <td>fluent          </td>
-                  <td>tried but unable</td>
-                  <td>0.624</td>
-                  <td>0.0165</td>
-                  <td>37.7</td>
-                  <td>&lt;0.001</td>
-                  <td>Inf</td>
-                  <td>0.591</td>
-                  <td>0.656</td>
-                </tr>
-                <tr>
-                  <td>fluent          </td>
-                  <td>used interpreter</td>
-                  <td>0.639</td>
-                  <td>0.0157</td>
-                  <td>40.6</td>
-                  <td>&lt;0.001</td>
-                  <td>Inf</td>
-                  <td>0.608</td>
-                  <td>0.670</td>
-                </tr>
-                <tr>
-                  <td>broken          </td>
-                  <td>fluent          </td>
-                  <td>0.407</td>
-                  <td>0.0164</td>
-                  <td>24.8</td>
-                  <td>&lt;0.001</td>
-                  <td>447.7</td>
-                  <td>0.375</td>
-                  <td>0.439</td>
-                </tr>
-                <tr>
-                  <td>broken          </td>
-                  <td>tried but unable</td>
-                  <td>0.577</td>
-                  <td>0.0166</td>
-                  <td>34.7</td>
-                  <td>&lt;0.001</td>
-                  <td>874.9</td>
-                  <td>0.544</td>
-                  <td>0.609</td>
-                </tr>
-                <tr>
-                  <td>broken          </td>
-                  <td>used interpreter</td>
-                  <td>0.619</td>
-                  <td>0.0163</td>
-                  <td>37.9</td>
-                  <td>&lt;0.001</td>
-                  <td>Inf</td>
-                  <td>0.587</td>
-                  <td>0.651</td>
-                </tr>
-                <tr>
-                  <td>tried but unable</td>
-                  <td>fluent          </td>
-                  <td>0.376</td>
-                  <td>0.0165</td>
-                  <td>22.8</td>
-                  <td>&lt;0.001</td>
-                  <td>378.4</td>
-                  <td>0.344</td>
-                  <td>0.409</td>
-                </tr>
-                <tr>
-                  <td>tried but unable</td>
-                  <td>broken          </td>
-                  <td>0.423</td>
-                  <td>0.0166</td>
-                  <td>25.5</td>
-                  <td>&lt;0.001</td>
-                  <td>474.1</td>
-                  <td>0.391</td>
-                  <td>0.456</td>
-                </tr>
-                <tr>
-                  <td>tried but unable</td>
+              </tr></thead>
+<tbody>
+<tr>
+<td>tried but unable</td>
                   <td>used interpreter</td>
                   <td>0.541</td>
                   <td>0.0183</td>
@@ -1234,30 +1083,8 @@ window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31
                   <td>0.505</td>
                   <td>0.577</td>
                 </tr>
-                <tr>
-                  <td>used interpreter</td>
-                  <td>fluent          </td>
-                  <td>0.361</td>
-                  <td>0.0157</td>
-                  <td>22.9</td>
-                  <td>&lt;0.001</td>
-                  <td>384.5</td>
-                  <td>0.330</td>
-                  <td>0.392</td>
-                </tr>
-                <tr>
-                  <td>used interpreter</td>
-                  <td>broken          </td>
-                  <td>0.381</td>
-                  <td>0.0163</td>
-                  <td>23.3</td>
-                  <td>&lt;0.001</td>
-                  <td>396.6</td>
-                  <td>0.349</td>
-                  <td>0.413</td>
-                </tr>
-                <tr>
-                  <td>used interpreter</td>
+<tr>
+<td>used interpreter</td>
                   <td>tried but unable</td>
                   <td>0.459</td>
                   <td>0.0183</td>
@@ -1267,17 +1094,127 @@ window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31
                   <td>0.423</td>
                   <td>0.495</td>
                 </tr>
-        </tbody>
-      </table>
-    </div>
+<tr>
+<td>broken          </td>
+                  <td>fluent          </td>
+                  <td>0.407</td>
+                  <td>0.0164</td>
+                  <td>24.8</td>
+                  <td>&lt;0.001</td>
+                  <td>447.7</td>
+                  <td>0.375</td>
+                  <td>0.439</td>
+                </tr>
+<tr>
+<td>fluent          </td>
+                  <td>broken          </td>
+                  <td>0.593</td>
+                  <td>0.0164</td>
+                  <td>36.1</td>
+                  <td>&lt;0.001</td>
+                  <td>947.4</td>
+                  <td>0.561</td>
+                  <td>0.625</td>
+                </tr>
+<tr>
+<td>used interpreter</td>
+                  <td>fluent          </td>
+                  <td>0.361</td>
+                  <td>0.0157</td>
+                  <td>22.9</td>
+                  <td>&lt;0.001</td>
+                  <td>384.5</td>
+                  <td>0.330</td>
+                  <td>0.392</td>
+                </tr>
+<tr>
+<td>fluent          </td>
+                  <td>used interpreter</td>
+                  <td>0.639</td>
+                  <td>0.0157</td>
+                  <td>40.6</td>
+                  <td>&lt;0.001</td>
+                  <td>Inf</td>
+                  <td>0.608</td>
+                  <td>0.670</td>
+                </tr>
+<tr>
+<td>broken          </td>
+                  <td>tried but unable</td>
+                  <td>0.577</td>
+                  <td>0.0166</td>
+                  <td>34.7</td>
+                  <td>&lt;0.001</td>
+                  <td>874.9</td>
+                  <td>0.544</td>
+                  <td>0.609</td>
+                </tr>
+<tr>
+<td>tried but unable</td>
+                  <td>broken          </td>
+                  <td>0.423</td>
+                  <td>0.0166</td>
+                  <td>25.5</td>
+                  <td>&lt;0.001</td>
+                  <td>474.1</td>
+                  <td>0.391</td>
+                  <td>0.456</td>
+                </tr>
+<tr>
+<td>used interpreter</td>
+                  <td>broken          </td>
+                  <td>0.381</td>
+                  <td>0.0163</td>
+                  <td>23.3</td>
+                  <td>&lt;0.001</td>
+                  <td>396.6</td>
+                  <td>0.349</td>
+                  <td>0.413</td>
+                </tr>
+<tr>
+<td>broken          </td>
+                  <td>used interpreter</td>
+                  <td>0.619</td>
+                  <td>0.0163</td>
+                  <td>37.9</td>
+                  <td>&lt;0.001</td>
+                  <td>Inf</td>
+                  <td>0.587</td>
+                  <td>0.651</td>
+                </tr>
+<tr>
+<td>fluent          </td>
+                  <td>tried but unable</td>
+                  <td>0.624</td>
+                  <td>0.0165</td>
+                  <td>37.7</td>
+                  <td>&lt;0.001</td>
+                  <td>Inf</td>
+                  <td>0.591</td>
+                  <td>0.656</td>
+                </tr>
+<tr>
+<td>tried but unable</td>
+                  <td>fluent          </td>
+                  <td>0.376</td>
+                  <td>0.0165</td>
+                  <td>22.8</td>
+                  <td>&lt;0.001</td>
+                  <td>378.4</td>
+                  <td>0.344</td>
+                  <td>0.409</td>
+                </tr>
+</tbody>
+</table>
+</div>
 
     <script>
-      function styleCell_tinytable_bip6svsebqs34m1h95i9(i, j, css_id) {
-        var table = document.getElementById("tinytable_r15sq9d8axax6jk4h2ps");
+      function styleCell_tinytable_5yand6f9bfeiz3bh6q19(i, j, css_id) {
+        var table = document.getElementById("tinytable_zujqrnet82v8c1kw1pxs");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_r15sq9d8axax6jk4h2ps');
+        var table = document.getElementById('tinytable_zujqrnet82v8c1kw1pxs');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1285,8 +1222,8 @@ window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_bip6svsebqs34m1h95i9(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_r15sq9d8axax6jk4h2ps");
+      function spanCell_tinytable_5yand6f9bfeiz3bh6q19(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_zujqrnet82v8c1kw1pxs");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1313,61 +1250,58 @@ window.addEventListener('load', function () { styleCell_tinytable_ahtwq0i5v9mu31
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(0, 0, 'tinytable_css_ngvci81p9efhlxjxikmn') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(0, 1, 'tinytable_css_ngvci81p9efhlxjxikmn') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(0, 2, 'tinytable_css_ngvci81p9efhlxjxikmn') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(0, 3, 'tinytable_css_ngvci81p9efhlxjxikmn') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(0, 4, 'tinytable_css_ngvci81p9efhlxjxikmn') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(0, 5, 'tinytable_css_ngvci81p9efhlxjxikmn') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(0, 6, 'tinytable_css_ngvci81p9efhlxjxikmn') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(0, 7, 'tinytable_css_ngvci81p9efhlxjxikmn') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(0, 8, 'tinytable_css_ngvci81p9efhlxjxikmn') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(4, 0, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(7, 0, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(10, 0, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(4, 1, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(7, 1, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(10, 1, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(4, 2, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(7, 2, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(10, 2, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(4, 3, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(7, 3, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(10, 3, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(4, 4, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(7, 4, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(10, 4, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(4, 5, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(7, 5, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(10, 5, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(4, 6, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(7, 6, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(10, 6, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(4, 7, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(7, 7, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(10, 7, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(4, 8, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(7, 8, 'tinytable_css_ovk0a47ufbgqdk77munz') })
-window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m1h95i9(10, 8, 'tinytable_css_ovk0a47ufbgqdk77munz') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 0, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 1, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 2, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 3, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 4, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 5, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 6, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 7, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 8, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 0, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 0, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 0, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 1, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 1, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 1, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 2, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 2, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 2, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 3, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 3, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 3, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 4, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 4, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 4, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 5, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 5, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 5, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 6, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 6, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 6, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 7, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 7, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 7, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 8, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 8, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 8, 'tinytable_css_r4p72f91tetgeiny7add') })
     </script>
-
-  
-
-
 </div>
 </div>
 <p>The results in pink are the same as those produced by <a href="https://github.com/astrezhnev/afcp">the <code>afcp</code> package:</a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(afcp)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>afcp_results <span class="ot">&lt;-</span> <span class="fu">afcp</span>(</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  amce_results,</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">respondent.id =</span> <span class="st">"respondent"</span>,</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">task.id =</span> <span class="st">"task"</span>,</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">profile.id =</span> <span class="st">"profile"</span>,</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">attribute =</span> <span class="st">"language"</span>)</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>afcp_results<span class="sc">$</span>afcp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">afcp</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">afcp_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/afcp/man/afcp.html">afcp</a></span><span class="op">(</span></span>
+<span>  <span class="va">amce_results</span>,</span>
+<span>  respondent.id <span class="op">=</span> <span class="st">"respondent"</span>,</span>
+<span>  task.id <span class="op">=</span> <span class="st">"task"</span>,</span>
+<span>  profile.id <span class="op">=</span> <span class="st">"profile"</span>,</span>
+<span>  attribute <span class="op">=</span> <span class="st">"language"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">afcp_results</span><span class="op">$</span><span class="va">afcp</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            level baseline      afcp         se     zstat         pval conf_high  conf_low conf_level
 1          broken   fluent 0.4067416 0.01658803 -5.622030 1.887265e-08 0.4392535 0.3742296       0.95
@@ -1375,21 +1309,21 @@ window.addEventListener('load', function () { styleCell_tinytable_bip6svsebqs34m
 3 usedinterpreter   fluent 0.3610799 0.01592112 -8.725525 2.649493e-18 0.3922847 0.3298750       0.95</code></pre>
 </div>
 </div>
-<section id="hypothesis-tests-1" class="level2">
-<h2 class="anchored" data-anchor-id="hypothesis-tests-1">Hypothesis tests</h2>
+<section id="hypothesis-tests-1" class="level2"><h2 class="anchored" data-anchor-id="hypothesis-tests-1">Hypothesis tests</h2>
 <p>A powerful feature of <code>marginaleffects</code> is that all its functions include a <code>hypothesis</code> argument which can be used to conduct hypothesis tests on arbitrary functions of estimates. For example, let’s compute the AFCP for a subset of profile comparisons:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">avg_predictions</span>(mod, </span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"language"</span>, <span class="st">"alternative"</span>), </span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">subset</span>(dat, language <span class="sc">!=</span> alternative <span class="sc">&amp;</span> alternative <span class="sc">==</span> <span class="st">"fluent"</span>),</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="sc">~</span>respondent)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"alternative"</span><span class="op">)</span>, </span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">language</span> <span class="op">!=</span> <span class="va">alternative</span> <span class="op">&amp;</span> <span class="va">alternative</span> <span class="op">==</span> <span class="st">"fluent"</span><span class="op">)</span>,</span>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span>
+<span><span class="va">p</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
          language alternative Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
  broken                fluent    0.407     0.0164 24.8   &lt;0.001 447.7 0.375  0.439
- tried but unable      fluent    0.376     0.0165 22.8   &lt;0.001 378.4 0.344  0.409
  used interpreter      fluent    0.361     0.0157 22.9   &lt;0.001 384.5 0.330  0.392
+ tried but unable      fluent    0.376     0.0165 22.8   &lt;0.001 378.4 0.344  0.409
 
 Columns: language, alternative, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1397,17 +1331,18 @@ Type:  response </code></pre>
 </div>
 <p>Now, let’s say we would like to test if any of the pairwise comparisons between AFCP is different from zero. All we need to do is use add a <code>hypothesis="pairwise"</code> argument:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, </span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">hypothesis =</span> <span class="st">"pairwise"</span>,</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"language"</span>, <span class="st">"alternative"</span>), </span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">subset</span>(dat, language <span class="sc">!=</span> alternative <span class="sc">&amp;</span> alternative <span class="sc">==</span> <span class="st">"fluent"</span>),</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="sc">~</span>respondent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<span>  hypothesis <span class="op">=</span> <span class="st">"pairwise"</span>,</span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"alternative"</span><span class="op">)</span>, </span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">language</span> <span class="op">!=</span> <span class="va">alternative</span> <span class="op">&amp;</span> <span class="va">alternative</span> <span class="op">==</span> <span class="st">"fluent"</span><span class="op">)</span>,</span>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-                                Term Estimate Std. Error    z Pr(&gt;|z|)   S    2.5 % 97.5 %
- broken - tried but unable             0.0304     0.0228 1.34   0.1811 2.5 -0.01417 0.0750
- broken - used interpreter             0.0457     0.0226 2.02   0.0429 4.5  0.00146 0.0899
- tried but unable - used interpreter   0.0152     0.0224 0.68   0.4968 1.0 -0.02869 0.0591
+                                Term Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 % 97.5 %
+ broken - used interpreter             0.0457     0.0226  2.02   0.0429 4.5  0.00146 0.0899
+ broken - tried but unable             0.0304     0.0228  1.34   0.1811 2.5 -0.01417 0.0750
+ used interpreter - tried but unable  -0.0152     0.0224 -0.68   0.4968 1.0 -0.05915 0.0287
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1416,16 +1351,9 @@ Type:  response </code></pre>
 
 
 
-</section>
-</section>
-<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
-<hr>
-<ol>
-<li id="fn1"><p>The <code>fifelse()</code> function from <code>data.table</code> preserves factor levels, but not the standard <code>ifelse()</code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</aside>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+</section></section><div id="quarto-appendix" class="default">
+<section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-Abr2024" class="csl-entry" role="listitem">
 Abramson, Scott F, Korhan Kocak, Asya Magazinnik, and Anton Strezhnev. 2024. <span>“Detecting Preference Cycles in Forced-Choice Conjoint Experiments.”</span> SocArXiv. <a href="https://doi.org/10.31235/osf.io/xjre9">https://doi.org/10.31235/osf.io/xjre9</a>.
 </div>
@@ -1435,8 +1363,12 @@ Hainmueller, J., D. Hopkins, and T. Yamamoto. 2014. <span>“Causal Inference in
 <div id="ref-LeeHobTil2020" class="csl-entry" role="listitem">
 Leeper, Thomas J., Sara B. Hobolt, and James Tilley. 2020. <span>“Measuring Subgroup Preferences in Conjoint Experiments.”</span> <em>Political Analysis</em> 28 (2): 207–21. <a href="https://doi.org/10.1017/pan.2019.30">https://doi.org/10.1017/pan.2019.30</a>.
 </div>
-</div></section></div></main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>The <code><a href="https://rdatatable.gitlab.io/data.table/reference/fifelse.html">fifelse()</a></code> function from <code>data.table</code> preserves factor levels, but not the standard <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol></section>
+</div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1471,18 +1403,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1514,7 +1435,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1522,7 +1465,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1844,9 +1787,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../vignettes/conformal.html" class="pagination-link" aria-label="Conformal prediction">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Conformal prediction</span>
       </a>          
@@ -1862,4 +1803,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+</body>
+</html>

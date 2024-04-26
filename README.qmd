@@ -1,6 +1,6 @@
 <center>
-<h1>The Marginal Effects Zoo</h1>
-<h3>How to interpret statistical models in R and Python</h3>
+<a href = "https://marginaleffects.com" target = "_blank"><img src="man/figures/marginaleffects_logo_word.svg" width = "100%"></a>
+<br>
 <br>
 <a href = "https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
 <a href = "https://marginaleffects.com" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>
@@ -57,13 +57,4 @@ The `marginaleffects` package for `R` and `Python` offers a single point of entr
 - *Extensible:* Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit [feature requests on Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
 - *Active development*: Bugs are fixed promptly.
 
-
-## How to help
-
-The `marginaleffects` package and the Marginal Effects Zoo book will always be free. If you like this project, you can contribute in four ways:
-
-1. Make a donation to the [Native Women's Shelter of Montreal](https://www.nwsm.info/) or to [Give Directly](https://www.givedirectly.org/), and send me (Vincent) a quick note. You'll make my day.
-2. Submit bug reports, documentation improvements, or code contributions to the Github repositories of the [R version](https://github.com/vincentarelbundock/marginaleffects) or the [Python version](https://github.com/vincentarelbundock/pymarginaleffects) of the package.
-3. [Cite the `marginaleffects` package](https://marginaleffects.com/CITATION.html) in your work and tell your friends about it.
-4. Create a new entry [for the Meme Gallery!](https://marginaleffects.com/vignettes/meme.html)
 

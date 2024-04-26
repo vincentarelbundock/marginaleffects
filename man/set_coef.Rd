@@ -2,10 +2,11 @@
 % Please edit documentation in R/set_coef.R, R/methods_MASS.R,
 %   R/methods_Rchoice.R, R/methods_afex.R, R/methods_aod.R, R/methods_betareg.R,
 %   R/methods_nnet.R, R/methods_crch.R, R/methods_dataframe.R,
-%   R/methods_gamlss.R, R/methods_glmmTMB.R, R/methods_glmx.R, R/methods_lme4.R,
-%   R/methods_mlm.R, R/methods_nlme.R, R/methods_pscl.R, R/methods_robustlmm.R,
-%   R/methods_sampleSelection.R, R/methods_scam.R, R/methods_stats.R,
-%   R/methods_survey.R, R/methods_tidymodels.R
+%   R/methods_flexsurv.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
+%   R/methods_glmx.R, R/methods_lme4.R, R/methods_mlm.R, R/methods_nlme.R,
+%   R/methods_pscl.R, R/methods_robustlmm.R, R/methods_sampleSelection.R,
+%   R/methods_scam.R, R/methods_stats.R, R/methods_survey.R,
+%   R/methods_tidymodels.R
 \name{set_coef}
 \alias{set_coef}
 \alias{set_coef.default}
@@ -20,6 +21,7 @@
 \alias{set_coef.crch}
 \alias{set_coef.hxlr}
 \alias{set_coef.data.frame}
+\alias{set_coef.flexsurvreg}
 \alias{set_coef.gamlss}
 \alias{set_coef.glmmTMB}
 \alias{set_coef.glmx}
@@ -66,6 +68,8 @@ set_coef(model, coefs, ...)
 \method{set_coef}{hxlr}(model, coefs, ...)
 
 \method{set_coef}{data.frame}(model, coefs, ...)
+
+\method{set_coef}{flexsurvreg}(model, coefs, ...)
 
 \method{set_coef}{gamlss}(model, coefs, ...)
 

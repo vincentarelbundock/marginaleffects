@@ -102,12 +102,25 @@ build_newdata <- function(model, newdata, by, modeldata) {
 }
 
 
-add_wts_column <- function(wts, newdata) {
+add_wts_column <- function(wts, newdata, model) {
     # weights must be available in the `comparisons()` function, NOT in
     # `tidy()`, because comparisons will often duplicate newdata for
     # multivariate outcomes and the like. We need to track which row matches
     # which.
-    if (!is.null(wts)) {
+    if (isFALSE(wts)) {
+        return(newdata)
+    } else if (isTRUE(wts)) {
+        wtsname <- insight::find_weights(model)
+        if (!is.character(wtsname) || length(wtsname) != 1 || !wtsname %in% colnames(newdata)) {
+            msg <- "Unable to retrieve weights automatically from the model. Please specify `wts` argument explicitly."
+            insight::format_error(msg)
+        } else {
+            newdata[["marginaleffects_wts_internal"]] <- newdata[[wtsname]]
+            return(newdata)
+        }
+    }
+
+    if (!isFALSE(wts)) {
         flag1 <- isTRUE(checkmate::check_string(wts)) && isTRUE(wts %in% colnames(newdata))
         flag2 <- isTRUE(checkmate::check_numeric(wts, len = nrow(newdata)))
         if (!flag1 && !flag2) {
@@ -117,7 +130,7 @@ add_wts_column <- function(wts, newdata) {
     }
     
     # weights: before sanitize_variables
-    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
+    if (!isFALSE(wts) && isTRUE(checkmate::check_string(wts))) {
         newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
     } else {
         newdata[["marginaleffects_wts_internal"]] <- wts
@@ -208,26 +221,27 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
     modeldata <- tmp[["modeldata"]]
     newdata_explicit <- tmp[["newdata_explicit"]]
     newdata <- clean_newdata(model, newdata)
-    newdata <- add_wts_column(newdata = newdata, wts = wts)
+    if (is.null(wts)) wts <- FALSE
+    newdata <- add_wts_column(newdata = newdata, wts = wts, model = model)
     newdata <- set_newdata_attributes(
         model = model,
         modeldata = modeldata,
         newdata = newdata,
         newdata_explicit = newdata_explicit)
 
-    # sort rows of output when the user explicitly calls `by` or `datagrid()`
-    # otherwise, we return the same data frame in the same order, but 
-    # here it makes sense to sort for a clean output.
-    sortcols <- attr(newdata, "newdata_variables_datagrid")
-    if (isTRUE(checkmate::check_character(by))) {
-        sortcols <- c(by, sortcols)
-    }
-    sortcols <- intersect(sortcols, colnames(newdata))
+    # # sort rows of output when the user explicitly calls `by` or `datagrid()`
+    # # otherwise, we return the same data frame in the same order, but 
+    # # here it makes sense to sort for a clean output.
+    # sortcols <- attr(newdata, "newdata_variables_datagrid")
+    # if (isTRUE(checkmate::check_character(by))) {
+    #     sortcols <- c(by, sortcols)
+    # }
+    # sortcols <- intersect(sortcols, colnames(newdata))
     out <- data.table::copy(newdata)
-    if (length(sortcols) > 0) {
-        data.table::setorderv(out, cols = sortcols)
-    }
-
+    # if (length(sortcols) > 0) {
+    #     data.table::setorderv(out, cols = sortcols)
+    # }
+    #
     return(out)
 }
 
@@ -237,7 +251,7 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
     flag <- isTRUE(checkmate::check_string(comparison, pattern = "avg"))
     if (!flag && (
         isFALSE(by) || # weights only make sense when we are marginalizing
-        !is.null(wts) ||
+        !isFALSE(wts) ||
         !is.null(byfun) ||
         !isFALSE(cross) ||
         isFALSE(getOption("marginaleffects_dedup", default = TRUE)))) {

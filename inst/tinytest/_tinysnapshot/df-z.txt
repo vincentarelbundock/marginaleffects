@@ -5,3 +5,4 @@
 Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response 
 
+

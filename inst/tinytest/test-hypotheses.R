@@ -194,5 +194,17 @@ expect_equivalent(hyp$term, sprintf("b%s = 0", 1:5))
 # expect_equivalent(nrow(dm), 1)
 
 
+# Issue #960
+requiet("nlme")
+fm1 <- lme(distance ~ age + Sex, data = Orthodont)
+expect_warning(hypotheses(fm1,
+                          hypothesis = c(0,0),
+                          joint = c("SexFemale", "age")))
+# no warning generated
+h <- hypotheses(fm1,
+                 hypothesis = c(0,0),
+                 df = c(1, 3),
+                 joint = c("SexFemale", "age"))
+
 
 rm(list = ls())

@@ -5,10 +5,23 @@
 get_predict.glmmTMB <- function(model,
                                 newdata = insight::get_data(model),
                                 type = "response",
+                                newparams = NULL,
                                 ...) {
 
     if (inherits(vcov, "vcov.glmmTMB")) {
         vcov <- vcov[[1]]
+    }
+
+    # hack to avoid re-optimization
+    # see https://github.com/vincentarelbundock/marginaleffects/issues/1064
+    b_vec <- model$obj$env$parList()$b
+    if (length(b_vec)>0) {
+        model$modelInfo$map$b <- factor(rep(NA,length(b_vec)))
+    }
+
+    np <- model$fit$par
+    if (!is.null(newparams)) {
+        np[1:length(newparams)] <- newparams
     }
 
     out <- get_predict.default(
@@ -16,7 +29,9 @@ get_predict.glmmTMB <- function(model,
         newdata = newdata,
         type = type,
         allow.new.levels = TRUE, # otherwise we get errors in marginal_means()
+        newparams = np,
         ...)
+
     return(out)
 }
 
@@ -35,9 +50,7 @@ get_vcov.glmmTMB <- function(model, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.glmmTMB <- function(model, ...) {
-    out <- model$fit$par
-    names(out) <- colnames(stats::vcov(model, full = TRUE))
-    return(out)
+    glmmTMB::fixef(model)$cond
 }
 
 
@@ -45,53 +58,20 @@ get_coef.glmmTMB <- function(model, ...) {
 #' @rdname set_coef
 #' @export
 set_coef.glmmTMB <- function(model, coefs, ...) {
-    # internally, coefficients are held in model$fit$parfull and in
-    # model$fit$par. It looks like we need to manipulate both for the
-    # predictions and delta method standard errors to be affected.
-    # random parameters are ignored: named "b"
-    # the order matters; I think we can rely on it, but this still feels like a HACK
-    # In particular, this assumes that the order of presentation in coef() is always: beta -> betazi -> betad
-    out <- model
-    out$fit$parfull[names(out$fit$parfull) != "b"] <- coefs
-    out$fit$par <- stats::setNames(coefs, names(out$fit$par))
-    return(out)
+    # use predict(`newparams`) for this kind of model
+     return(model)
 }
 
-
-
 #' @rdname sanitize_model_specific
-sanitize_model_specific.glmmTMB <- function(model, vcov = NULL, calling_function = "marginaleffects", ...) {
-    if (isTRUE(vcov) || is.null(vcov)) {
-        insight::format_error(
-            "Standard errors are not reported for models of class `glmmTMB`, because `marginaleffects` tends to compute standard errors that are *much* too small.", 
-            "",
-            "To learn more or to contribute a solution, see:",
-            "",
-            "{https://github.com/vincentarelbundock/marginaleffects/issues/1064}.",
-            "",
-            "To silence this warning, set `vcov=FALSE`.",
-            "",
-            "To report standard errors, supply a square variance-covariance matrix to the `vcov` argument. The `marginaleffects` maintainers *strongly* discourage this approach, because it can vastly understimate standard errors."
-        )
+sanitize_model_specific.glmmTMB <- function(model, vcov = TRUE, re.form = NULL, ...) {
+    # re.form=NA
+    if (!isTRUE(checkmate::check_flag(vcov))) {
+        msg <- "For this model type, `vcov` must be `TRUE` or `FALSE`."
+        insight::format_error(msg)
     }
-    REML <- as.list(insight::get_call(model))[["REML"]]
-    if (isTRUE(REML) && !identical(vcov, FALSE)) {
-        msg <- insight::format_message("Uncertainty estimates cannot be computed for `glmmTMB` models with the `REML=TRUE` option. Either set `REML=FALSE` when fitting the model, or set `vcov=FALSE` when calling a `slopes` function to avoid this error.")
-        stop(msg, call. = FALSE)
-    }
-
-    # we need an explicit check because predict.glmmTMB() generates other
-    # warnings related to openMP, so our default warning-detection does not
-    # work
-    if (inherits(vcov, "vcov.glmmTMB")) {
-        vcov <- vcov[[1]]
-    }
-    flag <- !isTRUE(checkmate::check_flag(vcov, null.ok = TRUE)) &&
-        !isTRUE(checkmate::check_matrix(vcov)) &&
-        !isTRUE(checkmate::check_function(vcov))
-    if (flag) {
-        msg <- sprintf("This value of the `vcov` argument is not supported for models of class `%s`. Please set `vcov` to `TRUE`, `FALSE`, `NULL`, or supply a variance-covariance matrix.", class(model)[1])
-        stop(msg, call. = FALSE)
+    if (!isTRUE(is.na(re.form))) {
+        msg <- "For this model type, `marginaleffects` only takes into account the uncertainty in fixed-effect parameters. You can use the `re.form=NA` argument to acknowledge this explicitly and silence this warning."
+        insight::format_warning(msg)
     }
     return(model)
 }

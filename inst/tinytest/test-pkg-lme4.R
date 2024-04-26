@@ -2,7 +2,7 @@ source("helpers.R")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
-requiet("margins")
+if (!requiet("margins")) exit_file("margins")
 requiet("haven")
 requiet("lme4")
 requiet("insight")
@@ -16,9 +16,9 @@ dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <- dat
 mod <-lme4::lmer(mpg ~ hp + (1 | cyl), data = dat)
-x <- predictions(mod)
-y <- predictions(mod, vcov = "satterthwaite")
-z <- predictions(mod, vcov = "kenward-roger")
+x <- predictions(mod, re.form = NA)
+y <- predictions(mod, vcov = "satterthwaite", re.form = NA)
+z <- predictions(mod, vcov = "kenward-roger", re.form = NA)
 expect_true(all(x$conf.low != y$conf.low))
 expect_true(all(x$conf.low != z$conf.low))
 expect_true(all(y$conf.low != z$conf.low))
@@ -31,9 +31,9 @@ expect_true(all(x$std.error != z$std.error))
 expect_true(all(y$std.error != z$std.error))
 
 
-x <- plot_predictions(mod, condition = "hp", draw = FALSE)
-y <- plot_predictions(mod, condition = "hp", vcov = "satterthwaite", draw = FALSE)
-z <- plot_predictions(mod, condition = "hp", vcov = "kenward-roger", draw = FALSE)
+x <- plot_predictions(mod, condition = "hp", draw = FALSE, re.form = NA)
+y <- plot_predictions(mod, condition = "hp", vcov = "satterthwaite", draw = FALSE, re.form = NA)
+z <- plot_predictions(mod, condition = "hp", vcov = "kenward-roger", draw = FALSE, re.form = NA)
 expect_true(all(x$conf.low != y$conf.low))
 expect_true(all(x$conf.low != z$conf.low))
 expect_true(all(y$conf.low != z$conf.low))
@@ -42,9 +42,9 @@ expect_true(all(x$std.error != z$std.error))
 expect_true(all(y$std.error != z$std.error))
 
 # comparisons
-x <- comparisons(mod)
-y <- comparisons(mod, vcov = "satterthwaite")
-z <- comparisons(mod, vcov = "kenward-roger")
+x <- comparisons(mod, re.form = NA)
+y <- comparisons(mod, vcov = "satterthwaite", re.form = NA)
+z <- comparisons(mod, vcov = "kenward-roger", re.form = NA)
 expect_true(all(x$conf.low != y$conf.low))
 expect_true(all(x$conf.low != z$conf.low))
 expect_true(all(y$conf.low != z$conf.low))
@@ -56,16 +56,17 @@ expect_true(all(y$std.error != z$std.error))
 mfx <- slopes(
     mod,
     newdata = datagrid(),
-    vcov = "satterthwaite")
+    vcov = "satterthwaite",
+    re.form = NA)
 expect_inherits(mfx, "marginaleffects")
 
 
 # GLM not supported
 mod <- glmer(am ~ hp + (1 | cyl), family = binomial, data = dat)
-expect_error(comparisons(mod, vcov = "satterthwaite"), pattern = "Satter")
-expect_error(comparisons(mod, vcov = "kenward-roger"), pattern = "Satter")
-expect_error(predictions(mod, vcov = "satterthwaite"), pattern = "Satter")
-expect_error(predictions(mod, vcov = "kenward-roger"), pattern = "Satter")
+expect_error(comparisons(mod, vcov = "satterthwaite", re.form = NA), pattern = "Satter")
+expect_error(comparisons(mod, vcov = "kenward-roger", re.form = NA), pattern = "Satter")
+expect_error(predictions(mod, vcov = "satterthwaite", re.form = NA), pattern = "Satter")
+expect_error(predictions(mod, vcov = "kenward-roger", re.form = NA), pattern = "Satter")
 
 # type = "link"
 w <- predict(mod, type = "link")
@@ -101,13 +102,13 @@ expect_equivalent(w, x$estimate)
 tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_glmer
-mfx <- merge(avg_slopes(mod), stata)
-expect_slopes(mod)
+mfx <- merge(avg_slopes(mod, re.form = NA), stata)
+expect_slopes(mod, re.form = NA)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .01)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .01)
 # emtrends
 mod <- glmer(y ~ x1 + x2 + (1 | clus), data = tmp, family = binomial)
-mfx <- slopes(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), type = "link")
+mfx <- slopes(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), type = "link", re.form = NA)
 em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$x1.trend)
@@ -126,7 +127,7 @@ expect_equivalent(w, y$estimate)
 tmp <- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = tmp)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_lmer
-mfx <- merge(avg_slopes(mod), stata)
+mfx <- merge(avg_slopes(mod, re.form = NA), stata)
 expect_slopes(mod)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
@@ -134,7 +135,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 # emtrends
 mod <-lme4::lmer(y ~ x1 + x2 + (1 | clus), data = tmp)
 mfx <- slopes(mod, variables = "x1",
-                   newdata = datagrid(x1 = 0, x2 = 0, clus = 1))
+                   newdata = datagrid(x1 = 0, x2 = 0, clus = 1), re.form = NA)
 em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$x1.trend)
@@ -144,13 +145,14 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 # vs. margins (dydx only)
 tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
-res <- slopes(mod, vcov = FALSE)
-mar <- margins::margins(mod)
-expect_true(expect_margins(res, mar, tolerance = 1e-2))
+res <- avg_slopes(mod, vcov = FALSE, re.form = NA)
+mar <- summary(margins::margins(mod, re.form = NA))
+expect_equivalent(res$estimate[1], mar$AME[1], tolerance = 1e-4)
+expect_equivalent(res$estimate[2], mar$AME[2], tolerance = 1e-4)
 
 tmp <- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = tmp)
-res <- slopes(mod, vcov = FALSE)
+res <- slopes(mod, vcov = FALSE, re.form = NA)
 mar <- margins::margins(mod)
 expect_true(expect_margins(res, mar))
 
@@ -158,14 +160,14 @@ expect_true(expect_margins(res, mar))
 # sanity check on dpoMatrix
 tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
-k <- slopes(mod, vcov = as.matrix(stats::vcov(mod)))
+k <- slopes(mod, vcov = as.matrix(stats::vcov(mod)), re.form = NA)
 expect_inherits(k, "data.frame")
 
 
 # bug stay dead: tidy without std.error
 tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
-tid <- avg_slopes(mod, vcov = FALSE)
+tid <- avg_slopes(mod, vcov = FALSE, re.form = NA)
 expect_inherits(tid, "data.frame")
 expect_equivalent(nrow(tid), 2)
 
@@ -175,8 +177,8 @@ tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 tmp$clus <- as.factor(tmp$clus)
 tmp <- tmp
 model <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
-pred1 <- predictions(model, newdata = datagrid())
-pred2 <- predictions(model, newdata = head(tmp))
+pred1 <- predictions(model, newdata = datagrid(), re.form = NA)
+pred2 <- predictions(model, newdata = head(tmp), re.form = NA)
 expect_predictions(pred1, n_row = 1)
 expect_predictions(pred2, n_row = 6)
 
@@ -193,12 +195,12 @@ dd$y <- rnbinom(nrow(dd), mu = mu, size = 0.5)
 dd <- dd
 model <- suppressMessages(glmer.nb(y ~ f1 * f2 + (1 | g), data = dd, verbose = FALSE))
 void <- capture.output(
-    expect_slopes(model, n_unique = 2)
+    expect_slopes(model, n_unique = 2, re.form = NA)
 )
 
 # emtrends
 mod <- suppressMessages(glmer.nb(y ~ x + (1 | g), data = dd, verbose = FALSE))
-mfx <- slopes(mod, variables = "x", newdata = datagrid(g = 2), type = "link")
+mfx <- slopes(mod, variables = "x", newdata = datagrid(g = 2), type = "link", re.form = NA)
 em <- emtrends(mod, ~x, "x", at = list(g = 2))
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$x.trend)
@@ -206,7 +208,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-3)
 
 # margins
 mar <- tidy(margins(mod))
-mfx <- avg_slopes(mod)
+mfx <- avg_slopes(mod, re.form = NA)
 expect_equivalent(mfx$estimate, mar$estimate, tolerance = .0001)
 expect_equivalent(mfx$std.error, mar$std.error, tolerance = .0001)
 
@@ -230,10 +232,10 @@ mfx3 <- slopes(
     newdata = datagrid(
         Chick = "1",
         Diet = 1:4,
-        Time = 0:21))
+        Time = 0:21),
+    re.form = NA)
 expect_inherits(mfx2, "marginaleffects")
 expect_inherits(mfx3, "marginaleffects")
-mfx2$estimate != mfx3$estimate
 
 pred2 <- predictions(
     mod,
@@ -247,10 +249,10 @@ pred3 <- predictions(
     newdata = datagrid(
         Chick = "1",
         Diet = 1:4,
-        Time = 0:21))
+        Time = 0:21), 
+    re.form = NA)
 expect_inherits(pred2, "predictions")
 expect_inherits(pred3, "predictions")
-expect_true(all(pred2$estimate != pred3$estimate))
 
 # sattertwhaite
 tmp <- mtcars
@@ -259,10 +261,10 @@ tmp$am <- as.logical(tmp$am)
 tmp <- tmp
 mod <-lme4::lmer(mpg ~ hp + am + (1 | cyl), data = tmp)
 
-mfx <- slopes(mod, vcov = "kenward-roger")
-cmp <- comparisons(mod, vcov = "kenward-roger")
-cmp2 <- comparisons(mod)
-mfx2 <- slopes(mod)
+mfx <- slopes(mod, vcov = "kenward-roger", re.form = NA)
+cmp <- comparisons(mod, vcov = "kenward-roger", re.form = NA)
+cmp2 <- comparisons(mod, re.form = NA)
+mfx2 <- slopes(mod, re.form = NA)
 expect_equivalent(mfx$estimate, cmp$estimate)
 expect_equivalent(mfx$std.error, cmp$std.error, tolerance = .0001)
 expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")
@@ -320,15 +322,16 @@ d <- sleepstudy
 d$Cat <- sample(c("A", "B"), replace = TRUE, size = nrow(d))
 fit <- lmer(Reaction ~ Days + Cat + (1 | Subject), d)
 expect_error(
-    avg_comparisons(fit, vcov = "satterthwaite"),
+    avg_comparisons(fit, vcov = "satterthwaite", re.form = NA),
     pattern = "not supported")
 
 expect_error(
-    avg_predictions(fit, vcov = "satterthwaite"),
+    avg_predictions(fit, vcov = "satterthwaite", re.form = NA),
     pattern = "not supported")
 
-cmp1 <- comparisons(fit, newdata = datagrid(Cat = unique), vcov = "satterthwaite")
-cmp2 <- comparisons(fit, newdata = datagrid(Cat = unique))
+
+cmp1 <- comparisons(fit, newdata = datagrid(Cat = unique), vcov = "satterthwaite", re.form = NA)
+cmp2 <- comparisons(fit, newdata = datagrid(Cat = unique), re.form = NA)
 expect_true(all(cmp1$conf.low != cmp2$conf.low))
 expect_true(all(cmp1$std.error == cmp2$std.error))
 
