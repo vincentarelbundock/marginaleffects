@@ -135,7 +135,13 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{svyolr}(model, newdata = insight::get_data(model), type = "probs", ...)
 
-\method{get_predict}{svyglm}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{svyglm}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  se.fit = FALSE,
+  ...
+)
 
 \method{get_predict}{coxph}(model, newdata = insight::get_data(model), type = "lp", ...)
 

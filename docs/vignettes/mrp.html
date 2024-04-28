@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.30">
+<meta name="generator" content="quarto-1.5.29">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – mrp</title>
 <style>
@@ -31,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -53,15 +52,26 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../vignettes/multiple_imputation.html" rel="next">
 <link href="../vignettes/matching.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -158,10 +168,8 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
-<li class="breadcrumb-item"><a href="../vignettes/mrp.html">MrP</a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/mrp.html">MrP</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -536,7 +544,7 @@ window.Quarto = {
   </ul>
 </li>
   </ul></nav>
-</div>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><section id="mrp" class="level1"><h1>MrP</h1>
 <p>Data analysts often want to learn about a population using samples that are not representative of that population. Consider a few examples:</p>
@@ -557,10 +565,9 @@ window.Quarto = {
 <section id="mrp-for-surveys-and-market-research" class="level2"><h2 class="anchored" data-anchor-id="mrp-for-surveys-and-market-research">MrP for surveys and market research</h2>
 <p>Imagine that a national supermarket chain plans to introduce a line of meat substitutes in some of its stores. To guide marketing and distribution efforts, the company would like to know the share of the population in each city that is interested in tasting meat substitutes.</p>
 <p>The company conducts a telephone survey of 1000 randomly selected adults from 40 large American cities. For each survey respondent, we record the city of residence, age, level of education, and whether they are interested in tasting meat substitutes. The variable we focus on is “interest in meat substitutes,” measured on a scale of 1 to 7 where 7 means “very interested” and 1 means “not at all interested”. Our ultimate goal is to estimate the average of this 7 point scale for each city.</p>
-<p>The (simulated) data that we will use is stored in a <code>R</code> data frame called <code>survey</code>. We can use the <code><a href="https://rdrr.io/r/base/nrow.html">nrow()</a></code> function to confirm the sample size, and the <code><a href="https://modelsummary.com/reference/datasummary_df.html">datasummary_df()</a></code> function from the <code>modelsummary</code> package to display the first few rows of data:</p>
+<p>The (simulated) data that we will use is stored in a <code>R</code> data frame called <code>survey</code>. We can use the <code><a href="https://rdrr.io/r/base/nrow.html">nrow()</a></code> function to confirm the sample size, and the <code><a href="https://modelsummary.com/man/datasummary_df.html">datasummary_df()</a></code> function from the <code>modelsummary</code> package to display the first few rows of data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/ggridges/">ggridges</a></span><span class="op">)</span></span>
@@ -569,7 +576,7 @@ window.Quarto = {
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">survey</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1000</span></span>
 <span></span>
-<span><span class="fu"><a href="https://modelsummary.com/reference/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">survey</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://modelsummary.com/man/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">survey</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <div id="acgsatvyhw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
@@ -1074,13 +1081,11 @@ window.Quarto = {
 <p>The first step of MrP is to use individual-level data to estimate a model that predicts the value of the variable of interest. One of the great benefits of using <code>marginaleffects</code> for MrP, is that this package is agnostic to the type of model used to make predictions. Analysts can use almost any model they like, and the workflow described below would remain the same.</p>
 <p>One popular choice for MrP is to estimate a multilevel regression model with random intercepts for each of the geographic regions of interest. To do so, analysts could use many different <code>R</code> packages, including <a href="https://cran.r-project.org/package=lme4"><code>lme4</code></a>, <a href="https://cran.r-project.org/package=glmmTMB"><code>glmmTMB</code></a>, or <a href="https://cran.r-project.org/package=brms"><code>brms</code></a>. In this notebook, we use the <code><a href="https://paul-buerkner.github.io/brms/reference/brm.html">brms::brm()</a></code> function to estimate a bayesian multilevel model, with the <code>age</code> and <code>education</code> variables as fixed components, and random intercepts at the city level:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://paul-buerkner.github.io/brms/reference/brm.html">brm</a></span><span class="op">(</span><span class="va">meat_substitute</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">education</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">city</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">survey</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://paul-buerkner.github.io/brms/reference/brm.html">brm</a></span><span class="op">(</span><span class="va">meat_substitute</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">education</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">city</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">survey</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We can visualize the model estimates using the <code><a href="https://modelsummary.com/reference/modelplot.html">modelplot()</a></code> function from the <code>modelsummary</code> package:</p>
+<p>We can visualize the model estimates using the <code><a href="https://modelsummary.com/man/modelplot.html">modelplot()</a></code> function from the <code>modelsummary</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/reference/modelplot.html">modelplot</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/man/modelplot.html">modelplot</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="mrp_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -1093,15 +1098,13 @@ window.Quarto = {
 <p>In the second MrP step, we use data from the US Census (or a similar source) to create a “poststratification table.” This table includes one row for each combination of the predictor values in our model. In our model, the <code>age</code> variable has 2 categories (“18-54” and “54+”); the <code>education</code> variables has 2 categories (“High school or less” and “Post-secondary”); and the <code>city</code> variable has 40 unique entries. Therefore, the poststratification table must have <span class="math inline">\(2 \times 2 \times 40 = 160\)</span> entries.</p>
 <p>Crucially, the poststratification dataset must also include a column with the population share of each combination of predictor values. Consider the table used by our hypothetical supermarket chain. This table includes 160 rows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">stratification</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 160</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">stratification</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 160</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And here are the entries for the city of Tucson, AZ:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tucson</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">stratification</span>, <span class="va">city</span> <span class="op">==</span> <span class="st">"Tucson, AZ"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://modelsummary.com/reference/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">tucson</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tucson</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">stratification</span>, <span class="va">city</span> <span class="op">==</span> <span class="st">"Tucson, AZ"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://modelsummary.com/man/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">tucson</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <div id="tkeanfcnfg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
@@ -1585,8 +1588,7 @@ window.Quarto = {
 <p>According to these (simulated) data, the share of Tucson residents who are between 18 and 54 year old and have a High School degree or less is about 16%.</p>
 <p>We can use the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function from the <code>marginaleffects</code> package to predict the value of the <code>meat_substitute</code> variable for each of the four categories of residents in Tucson:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">tucson</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">tucson</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;      1.81  1.50   2.12</span></span>
@@ -1595,14 +1597,13 @@ window.Quarto = {
 <span><span class="co">#&gt;      4.23  3.91   4.55</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, city, education, age, population_share, meat_substitute </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The MrP estimate for this city is simply the weighted average of predicted values, where weights are the population shares of each category of residents. In this context, we have:</p>
 <p><span class="math display">\[0.16 \times 1.81 + 0.38 \times 3.03 + 0.20 \times 3.01 + 0.25 \times 4.23 = 3.13\]</span></p>
 <p>Instead of computing estimates by hand for each city, we can use the <code>by</code> and <code>wts</code> arguments of the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function to do everything everywhere all at once:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span>              <span class="co"># Compute predictions,</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span>              <span class="co"># Compute predictions,</span></span>
 <span>    model <span class="op">=</span> <span class="va">mod</span>,               <span class="co"># using the multilevel regression model `mod`, </span></span>
 <span>    newdata <span class="op">=</span> <span class="va">stratification</span>,  <span class="co"># for each row of the `stratification` table.</span></span>
 <span>    by <span class="op">=</span> <span class="st">"city"</span>,               <span class="co"># Then, take the weighted average of predictions by city,</span></span>
@@ -1622,12 +1623,11 @@ window.Quarto = {
 <span><span class="co">#&gt;  Atlanta, GA           4.60  4.28   4.91</span></span>
 <span><span class="co">#&gt;  Albuquerque, NM       2.67  2.35   2.99</span></span>
 <span><span class="co">#&gt; Columns: city, estimate, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Since we estimated a bayesian model in the “Mr” step, we can now use the <code><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws()</a></code> function to extract draws from the posterior distribution of the MrP estimates. This allows us to compute credible intervals for each city, and draw many fancy plots like this one:</p>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="co"># extract draws from the posterior distribution</span></span>
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="co"># sort cities by interest in meat substitutes</span></span>
@@ -1643,7 +1643,7 @@ window.Quarto = {
 <span>        y <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>        title <span class="op">=</span> <span class="st">"Estimated interest in meat substitutes by city"</span>,</span>
 <span>        subtitle <span class="op">=</span> <span class="st">"Multilevel Regression and Poststratification"</span>,</span>
-<span>        caption <span class="op">=</span> <span class="st">"Source: Simulated data"</span><span class="op">)</span></span></code></pre></div>
+<span>        caption <span class="op">=</span> <span class="st">"Source: Simulated data"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="mrp_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -1654,8 +1654,7 @@ window.Quarto = {
 </section><section id="data-simulation" class="level2"><h2 class="anchored" data-anchor-id="data-simulation">Data simulation</h2>
 <p>All the data used on this page were simulated using this code:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/countrycode/">countrycode</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
@@ -1687,12 +1686,11 @@ window.Quarto = {
 <span>    <span class="va">survey</span><span class="op">)</span></span>
 <span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="op">~</span><span class="va">.</span>, <span class="va">survey</span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">M</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">survey</span><span class="op">$</span><span class="va">meat_substitute</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">M</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">b</span>, breaks <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">survey</span><span class="op">$</span><span class="va">meat_substitute</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">M</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">b</span>, breaks <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
 </section></section><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
 <ol>
 <li id="fn1"><p>See the bottom of this page for the simulation code.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
@@ -2129,6 +2127,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-
-</body>
-</html>
+</body></html>

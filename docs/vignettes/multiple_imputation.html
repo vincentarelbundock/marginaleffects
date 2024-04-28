@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.30">
+<meta name="generator" content="quarto-1.5.29">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – multiple_imputation</title>
 <style>
@@ -31,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -53,15 +52,26 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../vignettes/svalues.html" rel="next">
 <link href="../vignettes/mrp.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -158,10 +168,8 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
-<li class="breadcrumb-item"><a href="../vignettes/multiple_imputation.html">Missing Data</a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/multiple_imputation.html">Missing Data</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -537,10 +545,10 @@ window.Quarto = {
   </ul>
 </li>
   </ul></nav>
-</div>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><section id="missing-data" class="level1"><h1>Missing Data</h1>
-<p>The <code>marginaleffects</code> package offers convenience functions to compute and display predictions, contrasts, and marginal effects from models with multiple imputation from the <code>mice</code> and <code>Amelia</code> packages. The workflow follows Rubin’s rules (Rubin, 1987, p. 76), via the following steps:</p>
+<p>The <code>marginaleffects</code> package offers convenience functions to compute and display predictions, contrasts, and marginal effects from models with multiple imputation from the <code>mice</code> and <code>Amelia</code> packages. The workflow follows Rubin’s rules (Rubin, 1987, p.&nbsp;76), via the following steps:</p>
 <ol type="1">
 <li>Impute <span class="math inline">\(M\)</span> data sets.</li>
 <li>Fit a model in each of the <span class="math inline">\(M\)</span> imputed data sets.</li>
@@ -550,32 +558,28 @@ window.Quarto = {
 <p>To highlight the workflow, we consider a simple linear regression model, although the same workflow should work with any model type that is fit using a formula interface and a <code>data</code> argument.</p>
 <p><code>marginaleffects</code> directly supports the <code>mice</code> and <code>Amelia</code> imputation packages, as well as any other package that can return a list of imputed data frames. This is demonstrated below using the <code>iris</code> dataset, in which we insert missing observations randomly and then impute missing values using several packages.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1024</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">iris</span></span>
 <span><span class="va">dat</span><span class="op">$</span><span class="va">Sepal.Length</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span>, <span class="fl">40</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
 <span><span class="va">dat</span><span class="op">$</span><span class="va">Sepal.Width</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span>, <span class="fl">40</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
-<span><span class="va">dat</span><span class="op">$</span><span class="va">Species</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span>, <span class="fl">40</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></code></pre></div>
+<span><span class="va">dat</span><span class="op">$</span><span class="va">Species</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span>, <span class="fl">40</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="mice" class="level2"><h2 class="anchored" data-anchor-id="mice"><code>mice</code></h2>
 <p>First, we impute the dataset using the <code>mice</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/amices/mice">mice</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/amices/mice">mice</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">dat_mice</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://amices.org/mice/reference/mice.html">mice</a></span><span class="op">(</span><span class="va">dat</span>, m <span class="op">=</span> <span class="fl">20</span>, printFlag <span class="op">=</span> <span class="cn">FALSE</span>, .Random.seed <span class="op">=</span> <span class="fl">1024</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">dat_mice</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://amices.org/mice/reference/mice.html">mice</a></span><span class="op">(</span><span class="va">dat</span>, m <span class="op">=</span> <span class="fl">20</span>, printFlag <span class="op">=</span> <span class="cn">FALSE</span>, .Random.seed <span class="op">=</span> <span class="fl">1024</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then, we use the standard <code>mice</code> syntax to produce an object of class <code>mira</code> with all the models:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod_mice</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">dat_mice</span>, <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Petal.Width</span> <span class="op">~</span> <span class="va">Sepal.Length</span> <span class="op">*</span> <span class="va">Sepal.Width</span> <span class="op">+</span> <span class="va">Species</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod_mice</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">dat_mice</span>, <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Petal.Width</span> <span class="op">~</span> <span class="va">Sepal.Length</span> <span class="op">*</span> <span class="va">Sepal.Width</span> <span class="op">+</span> <span class="va">Species</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Finally, we feed the <code>mira</code> object to a <code>marginaleffects</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mfx_mice</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod_mice</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mfx_mice</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod_mice</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span>
 <span><span class="va">mfx_mice</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;          Term                        Contrast    Species Estimate Std. Error      t Pr(&gt;|t|)     S   2.5 % 97.5 %    Df</span></span>
@@ -593,25 +597,22 @@ window.Quarto = {
 <span><span class="co">#&gt;  Species      mean(virginica) - mean(setosa)  virginica    1.7408     0.1108 15.709  &lt; 0.001 100.7  1.5214  1.960 121.6</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, Species, estimate, std.error, s.value, predicted_lo, predicted_hi, predicted, df, statistic, p.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="amelia" class="level2"><h2 class="anchored" data-anchor-id="amelia"><code>Amelia</code></h2>
 <p>With <code>Amelia</code>, the workflow is essentially the same. First, we impute using <code>Amelia</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gking.harvard.edu/amelia">Amelia</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gking.harvard.edu/amelia">Amelia</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">dat_amelia</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Amelia/man/amelia.html">amelia</a></span><span class="op">(</span><span class="va">dat</span>, m <span class="op">=</span> <span class="fl">20</span>, noms <span class="op">=</span> <span class="st">"Species"</span>, p2s <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">dat_amelia</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Amelia/man/amelia.html">amelia</a></span><span class="op">(</span><span class="va">dat</span>, m <span class="op">=</span> <span class="fl">20</span>, noms <span class="op">=</span> <span class="st">"Species"</span>, p2s <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then, we use <code>Amelia</code> syntax to produce an object of class <code>amest</code> with all the models:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod_amelia</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">dat_amelia</span>, <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Petal.Width</span> <span class="op">~</span> <span class="va">Sepal.Length</span> <span class="op">*</span> <span class="va">Sepal.Width</span> <span class="op">+</span> <span class="va">Species</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod_amelia</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">dat_amelia</span>, <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Petal.Width</span> <span class="op">~</span> <span class="va">Sepal.Length</span> <span class="op">*</span> <span class="va">Sepal.Width</span> <span class="op">+</span> <span class="va">Species</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Finally, we feed the <code>amest</code> object to a <code>marginaleffects</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mfx_amelia</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod_amelia</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mfx_amelia</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod_amelia</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span>
 <span><span class="va">mfx_amelia</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;          Term                        Contrast    Species Estimate Std. Error      t Pr(&gt;|t|)    S  2.5 % 97.5 %   Df</span></span>
@@ -629,7 +630,7 @@ window.Quarto = {
 <span><span class="co">#&gt;  Species      mean(virginica) - mean(setosa)  virginica    1.0364     0.2004  5.171  &lt; 0.001 16.6  0.629 1.4436 34.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, Species, estimate, std.error, s.value, predicted_lo, predicted_hi, predicted, df, statistic, p.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="other-imputation-packages-missranger-or-lists-of-imputed-data-frames." class="level2"><h2 class="anchored" data-anchor-id="other-imputation-packages-missranger-or-lists-of-imputed-data-frames.">Other imputation packages: <code>missRanger</code>, or lists of imputed data frames.</h2>
 <p>Several <code>R</code> packages can impute missing data. Indeed, <a href="https://cran.r-project.org/web/views/MissingData.html">the <code>Missing Data CRAN View</code></a> lists at least a dozen alternatives. Since user interfaces change a lot from package to package, <code>marginaleffects</code> supports a single workflow that can be used, with some adaptation, with all imputation packages:</p>
@@ -641,8 +642,7 @@ window.Quarto = {
 </ol>
 <p>Consider the imputation package <code>missRanger</code>, which generates a list of imputed datasets:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/alexanderrobitzsch/miceadds">miceadds</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/alexanderrobitzsch/miceadds">miceadds</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mayer79/missRanger">missRanger</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## convert lists of imputed datasets to `mids` objects</span></span>
@@ -671,13 +671,12 @@ window.Quarto = {
 <span><span class="co">#&gt;  Species      mean(virginica) - mean(setosa)  virginica    1.7781     0.0822 21.64  &lt; 0.001 342.5  1.61703  1.939 1547086</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, Species, estimate, std.error, s.value, predicted_lo, predicted_hi, predicted, df, statistic, p.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="comparing-results-with-different-imputation-software" class="level2"><h2 class="anchored" data-anchor-id="comparing-results-with-different-imputation-software">Comparing results with different imputation software</h2>
 <p>We can use the <code>modelsummary</code> package to compare the results with listwise deletion to the results using different imputations software:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## listwise deletion slopes</span></span>
 <span><span class="va">mod_lwd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Petal.Width</span> <span class="op">~</span> <span class="va">Sepal.Length</span> <span class="op">*</span> <span class="va">Sepal.Width</span> <span class="op">+</span> <span class="va">Species</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
@@ -689,7 +688,7 @@ window.Quarto = {
 <span>    <span class="st">"mice"</span> <span class="op">=</span> <span class="va">mfx_mice</span>,</span>
 <span>    <span class="st">"Amelia"</span> <span class="op">=</span> <span class="va">mfx_amelia</span>,</span>
 <span>    <span class="st">"missRanger"</span> <span class="op">=</span> <span class="va">mfx_missRanger</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://modelsummary.com/reference/modelsummary.html">modelsummary</a></span><span class="op">(</span><span class="va">models</span>, shape <span class="op">=</span> <span class="va">term</span> <span class="op">:</span> <span class="va">contrast</span> <span class="op">+</span> <span class="va">Species</span> <span class="op">~</span> <span class="va">model</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://modelsummary.com/man/modelsummary.html">modelsummary</a></span><span class="op">(</span><span class="va">models</span>, shape <span class="op">=</span> <span class="va">term</span> <span class="op">:</span> <span class="va">contrast</span> <span class="op">+</span> <span class="va">Species</span> <span class="op">~</span> <span class="va">model</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <div id="edltsovpql" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
@@ -1413,11 +1412,10 @@ window.Quarto = {
 </div>
 </div>
 </section><section id="passing-new-data-arguments-newdata-wts-by-etc." class="level2"><h2 class="anchored" data-anchor-id="passing-new-data-arguments-newdata-wts-by-etc.">Passing new data arguments: <code>newdata</code>, <code>wts</code>, <code>by</code>, etc.</h2>
-<p>Sometimes we want to pass arguments changing or specifying the data on which we will do our analysis using <code>marginaleffects</code>. This can be for reasons such as wanting to specify the values or weights at which we evaluate e.g. <code><a href="https://marginaleffects.com/man/slopes.html">avg_slopes()</a></code>, or due to the underlying models not robustly preserving all the original data columns (such as <code>fixest</code> objects not saving their data in the fit object making it potentially challenging to retrieve, and even if retrievable it will not include the weights used during fitting as a column as <code>wts</code> expects when given a string).</p>
+<p>Sometimes we want to pass arguments changing or specifying the data on which we will do our analysis using <code>marginaleffects</code>. This can be for reasons such as wanting to specify the values or weights at which we evaluate e.g.&nbsp;<code><a href="https://marginaleffects.com/man/slopes.html">avg_slopes()</a></code>, or due to the underlying models not robustly preserving all the original data columns (such as <code>fixest</code> objects not saving their data in the fit object making it potentially challenging to retrieve, and even if retrievable it will not include the weights used during fitting as a column as <code>wts</code> expects when given a string).</p>
 <p>If we are not using multiple imputation, or if we want to just pass a single dataset to the several fitted models after multiple imputation, we can pass a single dataset to the <code>newdata</code> argument. However, if we wish to supply each model in our list resulting after multiple imputation with a /different/ dataset on which to calculate results, we cannot use <code>newdata</code>. Instead, in this case it can be useful to revert to a more manual (but still very easy) approach. Here is an example calculating <code>avg_slopes</code> using a different set of weights for each of the <code>fixest</code> models which we fit after multiple imputation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1024</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1024</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/amices/mice">mice</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lrberge.github.io/fixest/">fixest</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
@@ -1458,7 +1456,7 @@ window.Quarto = {
 <span><span class="co">#&gt;   term m     estimate         ubar            b            t dfcom       df      riv    lambda       fmi</span></span>
 <span><span class="co">#&gt; 1  cyl 5 -0.135839444 7.276189e-04 2.481021e-03 0.0037048435    29 2.867574 4.091736 0.8036033 0.8705464</span></span>
 <span><span class="co">#&gt; 2   hp 5  0.001671173 5.697224e-07 1.424648e-06 0.0000022793    29 3.474698 3.000721 0.7500450 0.8272548</span></span>
-<span><span class="co">#&gt; 3  mpg 5  0.006251144 1.055910e-04 2.705239e-04 0.0004302197    29 3.422256 3.074397 0.7545649 0.8309976</span></span></code></pre></div>
+<span><span class="co">#&gt; 3  mpg 5  0.006251144 1.055910e-04 2.705239e-04 0.0004302197    29 3.422256 3.074397 0.7545649 0.8309976</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
@@ -1896,6 +1894,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-
-</body>
-</html>
+</body></html>

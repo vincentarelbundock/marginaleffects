@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.30">
+<meta name="generator" content="quarto-1.5.29">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – hypotheses</title>
 <style>
@@ -31,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -53,15 +52,26 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../man/inferences.html" rel="next">
 <link href="../man/plot_slopes.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -158,10 +168,8 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../man/predictions.html">Functions</a></li>
-<li class="breadcrumb-item"><a href="../man/hypotheses.html"><code>hypotheses</code></a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/predictions.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/hypotheses.html"><code>hypotheses</code></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -538,7 +546,7 @@ window.Quarto = {
   </ul>
 </li>
   </ul></nav>
-</div>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><section id="non-linear-tests-for-null-hypotheses-joint-hypotheses-equivalence-non-superiority-and-non-inferiority" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="non-linear-tests-for-null-hypotheses-joint-hypotheses-equivalence-non-superiority-and-non-inferiority">(Non-)Linear Tests for Null Hypotheses, Joint Hypotheses, Equivalence, Non Superiority, and Non Inferiority</h2>
 <section id="description" class="level3"><h3 class="anchored" data-anchor-id="description">Description</h3>
@@ -570,10 +578,10 @@ window.Quarto = {
 )
 </code></pre>
 </section><section id="arguments" class="level3"><h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
-<table><tbody>
-<tr>
+<table>
+<tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="hypotheses_:_model">model</code>
+<code id="model">model</code>
 </td>
 <td>
 Model object or object generated by the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>, <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code>, or <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> functions.
@@ -581,7 +589,7 @@ Model object or object generated by the <code><a href="https://marginaleffects.c
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="hypotheses_:_hypothesis">hypothesis</code>
+<code id="hypothesis">hypothesis</code>
 </td>
 <td>
 <p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, a string formula, or a function.</p>
@@ -659,7 +667,7 @@ Model object or object generated by the <code><a href="https://marginaleffects.c
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="hypotheses_:_vcov">vcov</code>
+<code id="vcov">vcov</code>
 </td>
 <td>
 <p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:</p>
@@ -701,7 +709,7 @@ Model object or object generated by the <code><a href="https://marginaleffects.c
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="hypotheses_:_conf_level">conf_level</code>
+<code id="conf_level">conf_level</code>
 </td>
 <td>
 numeric value between 0 and 1. Confidence level to use to build a confidence interval.
@@ -709,7 +717,7 @@ numeric value between 0 and 1. Confidence level to use to build a confidence int
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="hypotheses_:_df">df</code>
+<code id="df">df</code>
 </td>
 <td>
 Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and <code>Inf</code>. When using <code>joint_test=“f”</code>, the <code>df</code> argument should be a numeric vector of length 2.
@@ -717,7 +725,7 @@ Degrees of freedom used to compute p values and confidence intervals. A single n
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="hypotheses_:_equivalence">equivalence</code>
+<code id="equivalence">equivalence</code>
 </td>
 <td>
 Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.
@@ -725,7 +733,7 @@ Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equ
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="hypotheses_:_joint">joint</code>
+<code id="joint">joint</code>
 </td>
 <td>
 <p>Joint test of statistical significance. The null hypothesis value can be set using the <code>hypothesis</code> argument.</p>
@@ -750,7 +758,7 @@ Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equ
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="hypotheses_:_joint_test">joint_test</code>
+<code id="joint_test">joint_test</code>
 </td>
 <td>
 A character string specifying the type of test, either "f" or "chisq". The null hypothesis is set by the <code>hypothesis</code> argument, with default null equal to 0 for all parameters.
@@ -758,7 +766,7 @@ A character string specifying the type of test, either "f" or "chisq". The null 
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="hypotheses_:_numderiv">numderiv</code>
+<code id="numderiv">numderiv</code>
 </td>
 <td>
 <p>string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.</p>
@@ -780,7 +788,7 @@ A character string specifying the type of test, either "f" or "chisq". The null 
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="hypotheses_:_...">…</code>
+<code id="...">…</code>
 </td>
 <td>
 Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method supplied by the modeling package.These arguments are particularly useful for mixed-effects or bayesian models (see the online vignettes on the <code>marginaleffects</code> website). Available arguments can vary from model to model, depending on the range of supported arguments by each modeling package. See the "Model-Specific Arguments" section of the <code><a href="https://marginaleffects.com/man/slopes.html">?slopes</a></code> documentation for a non-exhaustive list of available arguments.
@@ -830,13 +838,12 @@ Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/pr
 <p>Thanks to Russell V. Lenth for the excellent <code>emmeans</code> package and documentation which inspired this feature.</p>
 </section><section id="examples" class="level3"><h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">wt</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
          Term Estimate Std. Error     z Pr(&gt;|z|)     S   2.5 %    97.5 %
@@ -848,9 +855,8 @@ Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/pr
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Test of equality between coefficients</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"hp = wt"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Test of equality between coefficients</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"hp = wt"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
@@ -858,9 +864,8 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Non-linear function</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"exp(hp + wt) = 0.1"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Non-linear function</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"exp(hp + wt) = 0.1"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
                Term Estimate Std. Error     z Pr(&gt;|z|)   S  2.5 %  97.5 %
@@ -868,9 +873,8 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Robust standard errors</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"hp = wt"</span>, vcov <span class="op">=</span> <span class="st">"HC3"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Robust standard errors</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"hp = wt"</span>, vcov <span class="op">=</span> <span class="st">"HC3"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
@@ -878,10 +882,9 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># b1, b2, ... shortcuts can be used to identify the position of the</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># b1, b2, ... shortcuts can be used to identify the position of the</span></span>
 <span><span class="co"># parameters of interest in the output of</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"b2 = b3"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"b2 = b3"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
@@ -889,9 +892,8 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># wildcard</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"b* / b2 = 1"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># wildcard</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"b* / b2 = 1"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
         Term Estimate Std. Error     z Pr(&gt;|z|)   S   2.5 % 97.5 %
@@ -903,9 +905,8 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># term names with special characters have to be enclosed in backticks</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"`factor(cyl)6` = `factor(cyl)8`"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># term names with special characters have to be enclosed in backticks</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"`factor(cyl)6` = `factor(cyl)8`"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
                             Term Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 %
@@ -915,9 +916,8 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">drat</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod2</span>, hypothesis <span class="op">=</span> <span class="st">"`hp:drat` = drat"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">drat</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod2</span>, hypothesis <span class="op">=</span> <span class="st">"`hp:drat` = drat"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
              Term Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %
@@ -925,11 +925,10 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># predictions(), comparisons(), and slopes()</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># predictions(), comparisons(), and slopes()</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">mpg</span>, data <span class="op">=</span> <span class="va">mtcars</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">cmp</span>, hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">cmp</span>, hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   Term Estimate Std. Error    z Pr(&gt;|z|)   S  2.5 %  97.5 %
@@ -938,9 +937,8 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">cmp</span>, hypothesis <span class="op">=</span> <span class="st">"b2 = 0.2"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">cmp</span>, hypothesis <span class="op">=</span> <span class="st">"b2 = 0.2"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
    Term Estimate Std. Error     z Pr(&gt;|z|)   S  2.5 % 97.5 %
@@ -949,9 +947,8 @@ Type:  response </code></pre>
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pre</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fl">110</span>, mpg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">35</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">pre</span>, hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pre</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fl">110</span>, mpg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">35</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">pre</span>, hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   Term  Estimate Std. Error      z Pr(&gt;|z|)   S     2.5 %   97.5 %
@@ -960,13 +957,12 @@ Type:  response </code></pre>
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># The `hypothesis` argument can be used to compute standard errors for fitted values</span></span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># The `hypothesis` argument can be used to compute standard errors for fitted values</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">mpg</span>, data <span class="op">=</span> <span class="va">mtcars</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">x</span>, type <span class="op">=</span> <span class="st">"link"</span>, newdata <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="va">f</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 %
@@ -979,10 +975,9 @@ Type:  response </code></pre>
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">x</span>, type <span class="op">=</span> <span class="st">"response"</span>, newdata <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">x</span>, type <span class="op">=</span> <span class="st">"response"</span>, newdata <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="va">f</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Estimate Std. Error     z Pr(&gt;|z|)   S   2.5 % 97.5 %
@@ -995,8 +990,7 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Complex aggregation</span></span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Complex aggregation</span></span>
 <span><span class="co"># Step 1: Collapse predicted probabilities by outcome level, for each individual</span></span>
 <span><span class="co"># Step 2: Take the mean of the collapsed probabilities by group and `cyl`</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
@@ -1014,7 +1008,7 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 <span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>term <span class="op">=</span> <span class="va">cyl</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="va">aggregation_fun</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="va">aggregation_fun</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Group Term Estimate Std. Error     z Pr(&gt;|z|)     S  2.5 % 97.5 %
@@ -1027,11 +1021,10 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 
 Columns: term, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Equivalence, non-inferiority, and non-superiority tests</span></span>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Equivalence, non-inferiority, and non-superiority tests</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"median"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">p</span>, equivalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">17</span>, <span class="fl">18</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">p</span>, equivalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">17</span>, <span class="fl">18</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 % p (NonSup) p (NonInf)
@@ -1042,9 +1035,8 @@ Columns: term, group, estimate, std.error, statistic, p.value, s.value, conf.low
 Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, gear, mpg, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv 
 Type:  response </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mfx</span>, equivalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">.1</span>, <span class="fl">.1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mfx</span>, equivalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">.1</span>, <span class="fl">.1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %  97.5 % p (NonSup)
@@ -1055,9 +1047,8 @@ Type:  response </code></pre>
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv 
 Type:  response </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"gear"</span>, hypothesis <span class="op">=</span> <span class="st">"pairwise"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">cmp</span>, equivalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"gear"</span>, hypothesis <span class="op">=</span> <span class="st">"pairwise"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">cmp</span>, equivalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
               Term Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %
@@ -1068,10 +1059,9 @@ Type:  response </code></pre>
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv 
 Type:  response </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># joint hypotheses: character vector</span></span>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># joint hypotheses: character vector</span></span>
 <span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">*</span> <span class="va">hp</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"as.factor(cyl)6:hp"</span>, <span class="st">"as.factor(cyl)8:hp"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"as.factor(cyl)6:hp"</span>, <span class="st">"as.factor(cyl)8:hp"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 
@@ -1084,9 +1074,8 @@ as.factor(cyl)8:hp = 0
 
 Columns: statistic, p.value, df1, df2 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># joint hypotheses: regular expression</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># joint hypotheses: regular expression</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 
@@ -1101,9 +1090,8 @@ Joint hypothesis test:
 
 Columns: statistic, p.value, df1, df2 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># joint hypotheses: integer indices</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># joint hypotheses: integer indices</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 
@@ -1116,9 +1104,8 @@ Joint hypothesis test:
 
 Columns: statistic, p.value, df1, df2 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># joint hypotheses: different null hypotheses</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">3</span>, hypothesis <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># joint hypotheses: different null hypotheses</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">3</span>, hypothesis <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 
@@ -1131,8 +1118,7 @@ Joint hypothesis test:
 
 Columns: statistic, p.value, df1, df2 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">3</span>, hypothesis <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">model</span>, joint <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">3</span>, hypothesis <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 
@@ -1145,10 +1131,9 @@ Joint hypothesis test:
 
 Columns: statistic, p.value, df1, df2 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb45"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># joint hypotheses: marginaleffects object</span></span>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># joint hypotheses: marginaleffects object</span></span>
 <span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">cmp</span>, joint <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">cmp</span>, joint <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 
@@ -1598,6 +1583,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-
-</body>
-</html>
+</body></html>

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.30">
+<meta name="generator" content="quarto-1.5.29">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – conformal</title>
 <style>
@@ -31,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -53,15 +52,26 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../vignettes/conjoint.html" rel="next">
 <link href="../vignettes/categorical.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -158,10 +168,8 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
-<li class="breadcrumb-item"><a href="../vignettes/conformal.html">Conformal prediction</a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/conformal.html">Conformal prediction</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -529,7 +537,7 @@ window.Quarto = {
 <li>
 <a href="#conformal-prediction" id="toc-conformal-prediction" class="nav-link active" data-scroll-target="#conformal-prediction">Conformal prediction</a>
   <ul class="collapse">
-<li><a href="#confidence-vs.-prediction-intervals" id="toc-confidence-vs.-prediction-intervals" class="nav-link" data-scroll-target="#confidence-vs.-prediction-intervals">Confidence vs. prediction intervals</a></li>
+<li><a href="#confidence-vs.-prediction-intervals" id="toc-confidence-vs.-prediction-intervals" class="nav-link" data-scroll-target="#confidence-vs.-prediction-intervals">Confidence vs.&nbsp;prediction intervals</a></li>
   <li><a href="#conformal-prediction-1" id="toc-conformal-prediction-1" class="nav-link" data-scroll-target="#conformal-prediction-1">Conformal prediction</a></li>
   <li><a href="#data-and-models-linear-logit-multinomial-logit" id="toc-data-and-models-linear-logit-multinomial-logit" class="nav-link" data-scroll-target="#data-and-models-linear-logit-multinomial-logit">Data and models: Linear, Logit, Multinomial Logit</a></li>
   <li>
@@ -549,16 +557,15 @@ window.Quarto = {
   </ul>
 </li>
   </ul></nav>
-</div>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><section id="conformal-prediction" class="level1"><h1>Conformal prediction</h1>
 <p>This notebook shows how to estimate conformal prediction intervals with the <code>marginaleffects</code> package for <code>R</code>.</p>
-<section id="confidence-vs.-prediction-intervals" class="level2"><h2 class="anchored" data-anchor-id="confidence-vs.-prediction-intervals">Confidence vs. prediction intervals</h2>
+<section id="confidence-vs.-prediction-intervals" class="level2"><h2 class="anchored" data-anchor-id="confidence-vs.-prediction-intervals">Confidence vs.&nbsp;prediction intervals</h2>
 <p>The <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function from the <code><a href="https://marginaleffects.com/man/marginaleffects.html">marginaleffects()</a></code> package can compute confidence intervals for fitted values in over 80 model classes in <code>R</code>. These intervals quantify the uncertainty about the expected value of the response. A common misunderstanding is that these confidence intervals should be calibrated to cover a certain percentage of unseen data points. This is not the case. In fact, a 95% confidence interval reported by <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> will typically cover a much smaller share of out-of-sample outcomes.</p>
 <p>Consider this simulation where <span class="math inline">\(Y_{train}\)</span> and <span class="math inline">\(Y_{test}\)</span> are drawn from a normal distribution with mean <span class="math inline">\(\pi\)</span> and standard deviation 1. We estimate a linear model with an intercept only, and compute a 90% confidence interval for the expected value of the response:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/">nnet</a></span><span class="op">)</span></span>
@@ -579,7 +586,7 @@ window.Quarto = {
 <span><span class="op">}</span></span>
 <span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/rbindlist.html">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="va">simulation</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html">colMeans</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Test set coverage True mean coverage 
             0.2498             0.8770 </code></pre>
@@ -602,13 +609,11 @@ window.Quarto = {
 </ol></section><section id="data-and-models-linear-logit-multinomial-logit" class="level2"><h2 class="anchored" data-anchor-id="data-and-models-linear-logit-multinomial-logit">Data and models: Linear, Logit, Multinomial Logit</h2>
 <p>Download data, split it into training and testing sets, and estimate a few different models:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># download data</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/military.csv"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># download data</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/openintro/military.csv"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># create a binary outcome variable</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># create a binary outcome variable</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">dat</span>, officer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"officer"</span>, <span class="va">grade</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># train/test split</span></span>
@@ -626,12 +631,11 @@ window.Quarto = {
 <span></span>
 <span><span class="co"># multinomial logit regression</span></span>
 <span><span class="va">m_mult</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nnet/man/multinom.html">multinom</a></span><span class="op">(</span><span class="va">branch</span> <span class="op">~</span> <span class="va">gender</span> <span class="op">*</span> <span class="va">race</span>, data <span class="op">=</span> <span class="va">train</span>, trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">p_mult</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m_mult</span>, newdata <span class="op">=</span> <span class="va">train</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">p_mult</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m_mult</span>, newdata <span class="op">=</span> <span class="va">train</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>For LM and GLM models, <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> returns a data frame with one prediction for each row of the original data. This data frame includes confidence intervals:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p_glm</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p_glm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate Pr(&gt;|z|)     S  2.5 % 97.5 %
@@ -652,8 +656,7 @@ Type:  invlink(link) </code></pre>
 </div>
 <p>For multinomial models, <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> returns a data frame with one prediction for each row and for each outcome level. We can see the predicted probabilities of each outcome level for the first observation in the original data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p_mult</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">rowid</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p_mult</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">rowid</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
         Group Estimate Std. Error    z Pr(&gt;|z|)     S CI low CI high
@@ -676,13 +679,12 @@ Columns: rowid, group, estimate, std.error, statistic, p.value, s.value, conf.lo
 <section id="cross-validation" class="level3"><h3 class="anchored" data-anchor-id="cross-validation">Cross-validation +</h3>
 <p>The <code>p_lm</code>, <code>p_glm</code>, and <code>p_mult</code> objects are <code>predictions</code> objects. They contain the point predictions and confidence intervals for each observation in the training set. Now, we use the <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> function to compute predictions and <em>prediction</em> intervals for every observation in the test set:</p>
 <div class="cell" data-warnings="false">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m_lm</span>, conf_level <span class="op">=</span> <span class="fl">.9</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m_lm</span>, conf_level <span class="op">=</span> <span class="fl">.9</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span></span>
 <span>        R <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>        method <span class="op">=</span> <span class="st">"conformal_cv+"</span>,</span>
 <span>        conformal_test <span class="op">=</span> <span class="va">test</span><span class="op">)</span></span>
-<span><span class="va">p</span></span></code></pre></div>
+<span><span class="va">p</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate Std. Error   z Pr(&gt;|z|)   S 5.0 % 95.0 % Pred. 5.0 % Pred. 95.0 %
@@ -703,35 +705,32 @@ Type:  response </code></pre>
 </div>
 <p>The prediction interval is expected to cover the (known) true value about 90% of the time:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">rank</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">rank</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">rank</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">rank</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.9082</code></pre>
 </div>
 </div>
 <p>The coverage also seems adequate (about 80%) for the logit model:</p>
 <div class="cell" data-warnings="false">
-<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m_glm</span>, conf_level <span class="op">=</span> <span class="fl">.8</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m_glm</span>, conf_level <span class="op">=</span> <span class="fl">.8</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span></span>
 <span>        R <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>        method <span class="op">=</span> <span class="st">"conformal_cv+"</span>,</span>
 <span>        conformal_test <span class="op">=</span> <span class="va">test</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">officer</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">officer</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">officer</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">officer</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.7998</code></pre>
 </div>
 </div>
 <p>When the outcome is categorical, we use <code>conformal_score="softmax"</code>. With this argument, <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> generates “conformal prediction sets,” that is, sets of possible outcome classes with coverage guarantees. <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> returns a list column of sets for each observation. On average, those sets should cover the true value about 70% of the time:</p>
 <div class="cell" data-warnings="false">
-<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m_mult</span>, conf_level <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m_mult</span>, conf_level <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span></span>
 <span>        R <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>        method <span class="op">=</span> <span class="st">"conformal_cv+"</span>,</span>
 <span>        conformal_score <span class="op">=</span> <span class="st">"softmax"</span>,</span>
 <span>        conformal_test <span class="op">=</span> <span class="va">test</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     branch                        Pred Set
@@ -747,8 +746,7 @@ Columns: rowid, branch, pred.set </code></pre>
 </div>
 <p>For example, for the first observation in the dataset, the conformal prediction is {air force, army} and the true value is army. The conformal prediction set thus covers the true value. The coverage rate is:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span>, \<span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="va">p</span><span class="op">$</span><span class="va">branch</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">p</span><span class="op">$</span><span class="va">pred.set</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span>, \<span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="va">p</span><span class="op">$</span><span class="va">branch</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">p</span><span class="op">$</span><span class="va">pred.set</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.6928</code></pre>
 </div>
@@ -756,15 +754,14 @@ Columns: rowid, branch, pred.set </code></pre>
 </section><section id="split-conformal-prediction" class="level3"><h3 class="anchored" data-anchor-id="split-conformal-prediction">Split conformal prediction</h3>
 <p>For split conformal prediction, we must first split the training set into a training and a calibration set (see <span class="citation" data-cites="AngBat2022">@AngBat2022</span>). Then, we pass the calibration set to the <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="va">train</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>,<span class="op">]</span></span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="va">train</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>,<span class="op">]</span></span>
 <span><span class="va">train</span> <span class="op">&lt;-</span> <span class="va">train</span><span class="op">[</span><span class="fl">1001</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">train</span><span class="op">)</span>,<span class="op">]</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m_lm</span>, conf_level <span class="op">=</span> <span class="fl">.9</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span></span>
 <span>        method <span class="op">=</span> <span class="st">"conformal_split"</span>,</span>
 <span>        conformal_calibration <span class="op">=</span> <span class="va">calibration</span>,</span>
 <span>        conformal_test <span class="op">=</span> <span class="va">test</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">rank</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">rank</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">rank</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">rank</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.9112</code></pre>
 </div>
@@ -773,8 +770,7 @@ Columns: rowid, branch, pred.set </code></pre>
 <section id="polynomials" class="level3"><h3 class="anchored" data-anchor-id="polynomials">Polynomials</h3>
 <p>As noted above, the conformal prediction interval should be valid even if the model is misspecified. To illustrate this, we generate data from a linear model with polynomials, but estimate a linear model without polynomials. Then, we plot the results and compute the coverage of the prediction interval:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
 <span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">N</span> <span class="op">*</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
 <span>    X <span class="op">=</span> <span class="va">X</span>,</span>
@@ -789,12 +785,11 @@ Columns: rowid, branch, pred.set </code></pre>
 <span>        method <span class="op">=</span> <span class="st">"conformal_cv+"</span>,</span>
 <span>        conformal_test <span class="op">=</span> <span class="va">test</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.953</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">X</span>, ymin <span class="op">=</span> <span class="va">pred.low</span>, ymax <span class="op">=</span> <span class="va">pred.high</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">.2</span>, fill <span class="op">=</span> <span class="st">"#F0E442"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html">geom_ribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">X</span>, ymin <span class="op">=</span> <span class="va">conf.low</span>, ymax <span class="op">=</span> <span class="va">conf.high</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">.4</span>, fill <span class="op">=</span> <span class="st">"#D55E00"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -804,7 +799,7 @@ Columns: rowid, branch, pred.set </code></pre>
 <span>        subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span></span>
 <span>            <span class="st">"Confidence coverage (orange): %.2f%%; Prediction coverage (yellow): %.2f%%."</span>,</span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">conf.high</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">conf.low</span><span class="op">)</span>,</span>
-<span>            <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>            <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="conformal_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
@@ -816,8 +811,7 @@ Columns: rowid, branch, pred.set </code></pre>
 </section><section id="poisson-vs-negative-binomial" class="level3"><h3 class="anchored" data-anchor-id="poisson-vs-negative-binomial">Poisson vs Negative Binomial</h3>
 <p>Here is a second example of model misspecification. We generate data from a negative binomial model, but estimate a Poisson model. Nevertheless, the conformal prediction interval has good coverage:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span>
 <span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
 <span><span class="va">eta</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="fl">2</span><span class="op">*</span><span class="va">X</span></span>
 <span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">eta</span><span class="op">)</span></span>
@@ -834,7 +828,7 @@ Columns: rowid, branch, pred.set </code></pre>
 <span>        R <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>        conformal_test <span class="op">=</span> <span class="va">test</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&gt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.low</span> <span class="op">&amp;</span> <span class="va">p</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;=</span> <span class="va">p</span><span class="op">$</span><span class="va">pred.high</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.8968</code></pre>
 </div>
@@ -842,7 +836,6 @@ Columns: rowid, branch, pred.set </code></pre>
 
 
 </section></section></section><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
 <ol>
 <li id="fn1"><p>The usual “independent and identically distributed” assumption is a special case of exchangeability.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
@@ -1279,6 +1272,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-
-</body>
-</html>
+</body></html>

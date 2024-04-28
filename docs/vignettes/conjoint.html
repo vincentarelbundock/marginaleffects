@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.30">
+<meta name="generator" content="quarto-1.5.29">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – Conjoint experiments</title>
 <style>
@@ -31,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -73,15 +72,26 @@ div.csl-right-inline {
 div.csl-indent {
   margin-left: 2em;
 }</style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../vignettes/elasticity.html" rel="next">
 <link href="../vignettes/conformal.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -178,10 +188,8 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
-<li class="breadcrumb-item"><a href="../vignettes/conjoint.html">Conjoint experiments</a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/conjoint.html">Conjoint experiments</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -557,7 +565,7 @@ window.Quarto = {
   <li>
 <a href="#average-marginal-component-effects" id="toc-average-marginal-component-effects" class="nav-link" data-scroll-target="#average-marginal-component-effects">Average Marginal Component Effects</a>
   <ul class="collapse">
-<li><a href="#empirical-vs.-balanced-grid" id="toc-empirical-vs.-balanced-grid" class="nav-link" data-scroll-target="#empirical-vs.-balanced-grid">Empirical vs. balanced grid</a></li>
+<li><a href="#empirical-vs.-balanced-grid" id="toc-empirical-vs.-balanced-grid" class="nav-link" data-scroll-target="#empirical-vs.-balanced-grid">Empirical vs.&nbsp;balanced grid</a></li>
   </ul>
 </li>
   <li>
@@ -567,12 +575,9 @@ window.Quarto = {
   </ul>
 </li>
   </ul></nav>
-</div>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
-<li class="breadcrumb-item"><a href="../vignettes/conjoint.html">Conjoint experiments</a></li>
-</ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/conjoint.html">Conjoint experiments</a></li></ol></nav><div class="quarto-title">
 <h1 class="title">Conjoint experiments</h1>
 </div>
 
@@ -603,9 +608,9 @@ window.Quarto = {
   
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tinytable_tu50kivt3s7fqppu6x0j</title>
+<title>tinytable_90q7h6h0yqfzs6k584lx</title>
 <style>
-.table td.tinytable_css_uibu6ygc159keeqhq0xa, .table th.tinytable_css_uibu6ygc159keeqhq0xa {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_fhkxlgrojgcc1fx2zvq5, .table th.tinytable_css_fhkxlgrojgcc1fx2zvq5 {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
@@ -617,7 +622,7 @@ window.Quarto = {
       }
     };
     </script><div class="container">
-      <table class="table table-borderless" id="tinytable_tu50kivt3s7fqppu6x0j" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_90q7h6h0yqfzs6k584lx" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <caption><p>A single forced-choice task in a conjoint experiment. The survey
 respondent must choose one of the two profiles before seeing a second
 task.</p></caption>
@@ -642,12 +647,12 @@ task.</p></caption>
 </div>
 
     <script>
-      function styleCell_tinytable_cdvzsr2gtesnpsb3kxl1(i, j, css_id) {
-        var table = document.getElementById("tinytable_tu50kivt3s7fqppu6x0j");
+      function styleCell_tinytable_bl4frny49mkrwtkm7tqn(i, j, css_id) {
+        var table = document.getElementById("tinytable_90q7h6h0yqfzs6k584lx");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_tu50kivt3s7fqppu6x0j');
+        var table = document.getElementById('tinytable_90q7h6h0yqfzs6k584lx');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -655,8 +660,8 @@ task.</p></caption>
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_cdvzsr2gtesnpsb3kxl1(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_tu50kivt3s7fqppu6x0j");
+      function spanCell_tinytable_bl4frny49mkrwtkm7tqn(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_90q7h6h0yqfzs6k584lx");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -683,9 +688,9 @@ task.</p></caption>
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_cdvzsr2gtesnpsb3kxl1(0, 0, 'tinytable_css_uibu6ygc159keeqhq0xa') })
-window.addEventListener('load', function () { styleCell_tinytable_cdvzsr2gtesnpsb3kxl1(0, 1, 'tinytable_css_uibu6ygc159keeqhq0xa') })
-window.addEventListener('load', function () { styleCell_tinytable_cdvzsr2gtesnpsb3kxl1(0, 2, 'tinytable_css_uibu6ygc159keeqhq0xa') })
+window.addEventListener('load', function () { styleCell_tinytable_bl4frny49mkrwtkm7tqn(0, 0, 'tinytable_css_fhkxlgrojgcc1fx2zvq5') })
+window.addEventListener('load', function () { styleCell_tinytable_bl4frny49mkrwtkm7tqn(0, 1, 'tinytable_css_fhkxlgrojgcc1fx2zvq5') })
+window.addEventListener('load', function () { styleCell_tinytable_bl4frny49mkrwtkm7tqn(0, 2, 'tinytable_css_fhkxlgrojgcc1fx2zvq5') })
     </script>
 </div>
 </div>
@@ -697,14 +702,13 @@ window.addEventListener('load', function () { styleCell_tinytable_cdvzsr2gtesnps
 <p>For simplicity, we consider a subset of the data with 5 tasks per respondent, 2 profiles per task, and 2 attributes per profile. The data is structured in “long” format, with one respondent-task-profile combination per row.</p>
 <p>These are the entries for survey respondent number 4:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/tinytable/">tinytable</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html">url</a></span><span class="op">(</span><span class="st">"https://marginaleffects.com/data/conjoint_immigration.rds"</span>, <span class="st">"rb"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">dat</span><span class="op">[</span><span class="va">dat</span><span class="op">$</span><span class="va">respondent</span> <span class="op">==</span> <span class="fl">4</span>, <span class="op">]</span></span></code></pre></div>
+<span><span class="va">dat</span><span class="op">[</span><span class="va">dat</span><span class="op">$</span><span class="va">respondent</span> <span class="op">==</span> <span class="fl">4</span>, <span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    choice                 job         language respondent  task profile
      &lt;num&gt;              &lt;fctr&gt;           &lt;fctr&gt;      &lt;int&gt; &lt;int&gt;   &lt;num&gt;
@@ -721,20 +725,18 @@ window.addEventListener('load', function () { styleCell_tinytable_cdvzsr2gtesnps
 </div>
 </div>
 <p>The <code>choice</code> column indicates if the profile in each row was selected by the respondent.</p>
-<p>These data are structured in what could be called a “long” format. Later on in the vignette, it will be useful to have information in a “wide” format, with new columns indicating what attributes characterized every profile in each task. To create these new columns, we use <code><a href="https://rdatatable.gitlab.io/data.table/reference/dcast.data.table.html">dcast()</a></code> from the <code>data.table</code> package. This function is analogous to <code><a href="https://rdrr.io/r/stats/reshape.html">reshape()</a></code> in base <code>R</code> or <code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider()</a></code> in the <code>tidyverse</code>:</p>
+<p>These data are structured in what could be called a “long” format. Later on in the vignette, it will be useful to have information in a “wide” format, with new columns indicating what attributes characterized every profile in each task. To create these new columns, we use <code><a href="https://rdatatable.gitlab.io/data.table/reference/dcast.data.table.html">dcast()</a></code> from the <code>data.table</code> package. This function is analogous to <code><a href="https://rdrr.io/r/stats/reshape.html">reshape()</a></code> in base <code>R</code> or <code>pivot_wider()</code> in the <code>tidyverse</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html">data.table</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html">data.table</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
 <span><span class="va">wide</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/dcast.data.table.html">dcast</a></span><span class="op">(</span><span class="va">dat</span>, </span>
 <span>  <span class="va">respondent</span> <span class="op">+</span> <span class="va">task</span> <span class="op">~</span> <span class="va">profile</span>,</span>
 <span>  value.var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"job"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">wide</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">wide</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We now have new columns called <code>language_1</code> and <code>language_2</code> indicating the language skills of profiles 1 and 2 respectively in each task.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat</span><span class="op">[</span><span class="va">dat</span><span class="op">$</span><span class="va">respondent</span> <span class="op">==</span> <span class="fl">4</span>, <span class="op">]</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dat</span><span class="op">[</span><span class="va">dat</span><span class="op">$</span><span class="va">respondent</span> <span class="op">==</span> <span class="fl">4</span>, <span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Key: &lt;respondent, task&gt;
     respondent  task choice                 job         language profile       language_1       language_2    job_1               job_2
@@ -761,13 +763,11 @@ window.addEventListener('load', function () { styleCell_tinytable_cdvzsr2gtesnps
 </ol>
 <p>To illustrate, we estimate a linear regression model with interactions between the <code>language</code> and <code>job</code> variables:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">choice</span> <span class="op">~</span> <span class="va">job</span> <span class="op">*</span> <span class="va">language</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">choice</span> <span class="op">~</span> <span class="va">job</span> <span class="op">*</span> <span class="va">language</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then, we use the <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code> function to compute and marginalize predicted values. Note that we use the <code>vcov</code> argument to report clustered standard errors at the respondent-level.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"language"</span>, vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"language"</span>, vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
          language Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %
@@ -784,11 +784,10 @@ Type:  response </code></pre>
 <section id="hypothesis-tests" class="level2"><h2 class="anchored" data-anchor-id="hypothesis-tests">Hypothesis tests</h2>
 <p>Using the <code>hypothesis</code> argument, we can easily conduct various null hypothesis tests on the estimated marginal means. For example, is the probability of choosing a “fluent” profile equal to the probability of choosing a “tried but unable” profile?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"b1 = b3"</span>,</span>
 <span>  by <span class="op">=</span> <span class="st">"language"</span>, </span>
-<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %
@@ -800,11 +799,10 @@ Type:  response </code></pre>
 </div>
 <p>Is the difference in probabiliy between “fluent” and “broken” equal to the difference in probability between “tried but unable” and “used interpreter”?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"b1 - b2 = b3 - b4"</span>,</span>
 <span>  by <span class="op">=</span> <span class="st">"language"</span>, </span>
-<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
         Term Estimate Std. Error     z Pr(&gt;|z|)   S   2.5 %  97.5 %
@@ -817,11 +815,10 @@ Type:  response </code></pre>
 </section><section id="subgroups" class="level2"><h2 class="anchored" data-anchor-id="subgroups">Subgroups</h2>
 <p>Modifying the <code>by</code> allows analysts to report marginal means for different subgroups of their data, and <code>newdata</code> can be used to exclude uninteresting profiles:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"job"</span><span class="op">)</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">job</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"doctor"</span>, <span class="st">"gardener"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
          language      job Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
@@ -848,8 +845,7 @@ Type:  response </code></pre>
 </ol>
 <p>This can be achieved easily using the <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> function from the <code>marginaleffects</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"language"</span>, vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"language"</span>, vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Term                  Contrast Estimate Std. Error      z Pr(&gt;|z|)     S   2.5 %  97.5 %
@@ -861,12 +857,11 @@ Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.
 Type:  response </code></pre>
 </div>
 </div>
-<section id="empirical-vs.-balanced-grid" class="level2"><h2 class="anchored" data-anchor-id="empirical-vs.-balanced-grid">Empirical vs. balanced grid</h2>
+<section id="empirical-vs.-balanced-grid" class="level2"><h2 class="anchored" data-anchor-id="empirical-vs.-balanced-grid">Empirical vs.&nbsp;balanced grid</h2>
 <p>In the example above, <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code> marginalized across the realized distribution of attributes observed in the actual dataset. An alternative would be to marginalzed over a perfectly balanced (“uniform”) grid of treatment conditions. Of course, empirical and uniform grids will yield nearly identical results if the sample is large and randomization successful.</p>
 <p>The uniform approach is the default in the <code><a href="https://rdrr.io/pkg/cjoint/man/amce.html">amce()</a></code> function from the <code>cjoint</code> package, and the behavior can be replicated using the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> function and the <code>newdata</code> argument in <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">cjoint</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">cjoint</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">amce_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/cjoint/man/amce.html">amce</a></span><span class="op">(</span></span>
 <span>  <span class="va">choice</span> <span class="op">~</span> <span class="va">language</span> <span class="op">*</span> <span class="va">job</span>,</span>
@@ -874,18 +869,17 @@ Type:  response </code></pre>
 <span>  cluster <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  respondent.id <span class="op">=</span> <span class="st">"respondent"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">amce_results</span><span class="op">)</span><span class="op">$</span><span class="va">amce</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">Attribute</span> <span class="op">==</span> <span class="st">"language"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">amce_results</span><span class="op">)</span><span class="op">$</span><span class="va">amce</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">Attribute</span> <span class="op">==</span> <span class="st">"language"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Attribute            Level    Estimate   Std. Err    z value     Pr(&gt;|z|)    
 11  language           broken -0.06834528 0.01357451  -5.034826 4.782835e-07 ***
 12  language tried but unable -0.12843978 0.01343677  -9.558832 1.190935e-21 ***
 13  language used interpreter -0.16584337 0.01382564 -11.995352 3.758141e-33 ***</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>FUN_factor <span class="op">=</span> <span class="va">unique</span>, FUN_character <span class="op">=</span> <span class="va">unique</span><span class="op">)</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"language"</span>,</span>
-<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Term                  Contrast Estimate Std. Error      z Pr(&gt;|z|)     S  2.5 %  97.5 %
@@ -904,34 +898,31 @@ Type:  response </code></pre>
 <p>Moreover, since the data is in “long” format, with one profile per row, we must also allow each variable to have different coefficients based on <code>profile</code> number: the effect of <code>language_1</code> on the probability of selection is obviously different for <code>profile=1</code> and for <code>profile=2</code>. Indeed, when <code>profile=1</code> the <code>language_1</code> column records the profile’s own language skills. When <code>profile=2</code>, the same column records the alternative profile’s language skills.</p>
 <p>Thankfully, it is trivial to allow this flexibility by interacting the attributes with the <code>profile</code> variable:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">choice</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">profile</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">language_1</span> <span class="op">*</span> <span class="va">language_2</span> <span class="op">+</span> <span class="va">job_1</span> <span class="op">*</span> <span class="va">job_2</span><span class="op">)</span>, <span class="va">dat</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">choice</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">profile</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">language_1</span> <span class="op">*</span> <span class="va">language_2</span> <span class="op">+</span> <span class="va">job_1</span> <span class="op">*</span> <span class="va">job_2</span><span class="op">)</span>, <span class="va">dat</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As explained above and detailed in <span class="citation" data-cites="Abr2024">Abramson et al. (<a href="#ref-Abr2024" role="doc-biblioref">2024</a>)</span>, the AFCP is a choice pair-specific quantity. This means that we need to average predictions (fitted values) across covariates, within each unique pair of attributes of interest. To allow this, we create a new variable called <code>alternative</code>:<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat</span><span class="op">$</span><span class="va">alternative</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fifelse.html">fifelse</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dat</span><span class="op">$</span><span class="va">alternative</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fifelse.html">fifelse</a></span><span class="op">(</span></span>
 <span>  <span class="va">dat</span><span class="op">$</span><span class="va">language</span> <span class="op">==</span> <span class="va">dat</span><span class="op">$</span><span class="va">language_1</span>, </span>
 <span>  <span class="va">dat</span><span class="op">$</span><span class="va">language_2</span>, </span>
 <span>  <span class="va">dat</span><span class="op">$</span><span class="va">language_1</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This table shows the language skills and job of both profiles in the first task faced by respondent number 4. The <code>alternative</code> column simply shows the language skills of the alternative profile within each task:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>,</span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>,</span>
 <span>  <span class="va">task</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">&amp;</span> <span class="va">respondent</span> <span class="op">==</span> <span class="fl">4</span>, </span>
 <span>  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"respondent"</span>, <span class="st">"task"</span>, <span class="st">"profile"</span>, <span class="st">"job"</span>, <span class="st">"language"</span>, <span class="st">"alternative"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html">tt</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html">tt</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
  
 
   
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tinytable_q0fd5o3l0660wfirfut1</title>
+<title>tinytable_44w79vbrz3rk6w9slf8q</title>
 <style>
-.table td.tinytable_css_fggk6o7xwugq4jnp9nqo, .table th.tinytable_css_fggk6o7xwugq4jnp9nqo {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_nic1nxt7ta9ctbaijf5a, .table th.tinytable_css_nic1nxt7ta9ctbaijf5a {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
@@ -943,7 +934,7 @@ Type:  response </code></pre>
       }
     };
     </script><div class="container">
-      <table class="table table-borderless" id="tinytable_q0fd5o3l0660wfirfut1" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_44w79vbrz3rk6w9slf8q" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead><tr>
 <th scope="col">respondent</th>
                 <th scope="col">task</th>
@@ -974,12 +965,12 @@ Type:  response </code></pre>
 </div>
 
     <script>
-      function styleCell_tinytable_w8q17up0y8xth0ivjhnh(i, j, css_id) {
-        var table = document.getElementById("tinytable_q0fd5o3l0660wfirfut1");
+      function styleCell_tinytable_e0jg7c1mjvst0ksju7x6(i, j, css_id) {
+        var table = document.getElementById("tinytable_44w79vbrz3rk6w9slf8q");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_q0fd5o3l0660wfirfut1');
+        var table = document.getElementById('tinytable_44w79vbrz3rk6w9slf8q');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -987,8 +978,8 @@ Type:  response </code></pre>
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_w8q17up0y8xth0ivjhnh(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_q0fd5o3l0660wfirfut1");
+      function spanCell_tinytable_e0jg7c1mjvst0ksju7x6(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_44w79vbrz3rk6w9slf8q");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1015,39 +1006,37 @@ Type:  response </code></pre>
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 0, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
-window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 1, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
-window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 2, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
-window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 3, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
-window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 4, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
-window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0ivjhnh(0, 5, 'tinytable_css_fggk6o7xwugq4jnp9nqo') })
+window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 0, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
+window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 1, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
+window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 2, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
+window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 3, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
+window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 4, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
+window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 5, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
     </script>
 </div>
 </div>
 <p>Now we compute the AFCP by averaging fitted values by unique pairs of attributes for language (the combination of <code>language</code> and <code>alternative</code>). Since we are not interested comparison pairs where both profiles have the same language skills, we use the <code>subset</code> to supply an appropriate grid.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"alternative"</span><span class="op">)</span>, </span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">language</span> <span class="op">!=</span> <span class="va">alternative</span><span class="op">)</span>,</span>
-<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Display the results in a nice <code>tinytable</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/tinytable/">tinytable</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/tinytable/">tinytable</a></span><span class="op">)</span></span>
 <span><span class="va">idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">alternative</span> <span class="op">==</span> <span class="st">"fluent"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">p</span>, <span class="st">"tinytable"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/style_tt.html">style_tt</a></span><span class="op">(</span>i <span class="op">=</span> <span class="va">idx</span>, background <span class="op">=</span> <span class="st">"pink"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">p</span>, <span class="st">"tinytable"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/style_tt.html">style_tt</a></span><span class="op">(</span>i <span class="op">=</span> <span class="va">idx</span>, background <span class="op">=</span> <span class="st">"pink"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
  
 
   
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tinytable_zujqrnet82v8c1kw1pxs</title>
+<title>tinytable_zpw9egipiwb7du60nxcj</title>
 <style>
-.table td.tinytable_css_jibf91vh4hsbxj2z8uid, .table th.tinytable_css_jibf91vh4hsbxj2z8uid {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_r4p72f91tetgeiny7add, .table th.tinytable_css_r4p72f91tetgeiny7add {    background-color: pink; }
+.table td.tinytable_css_i1p1dllfdeo4ewhi585o, .table th.tinytable_css_i1p1dllfdeo4ewhi585o {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_59e6zzsjwshipesr867i, .table th.tinytable_css_59e6zzsjwshipesr867i {    background-color: pink; }
     </style>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
@@ -1059,7 +1048,7 @@ window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0
       }
     };
     </script><div class="container">
-      <table class="table table-borderless" id="tinytable_zujqrnet82v8c1kw1pxs" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_zpw9egipiwb7du60nxcj" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead><tr>
 <th scope="col">language</th>
                 <th scope="col">alternative</th>
@@ -1209,12 +1198,12 @@ window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0
 </div>
 
     <script>
-      function styleCell_tinytable_5yand6f9bfeiz3bh6q19(i, j, css_id) {
-        var table = document.getElementById("tinytable_zujqrnet82v8c1kw1pxs");
+      function styleCell_tinytable_419hawca3l3c68jkrff7(i, j, css_id) {
+        var table = document.getElementById("tinytable_zpw9egipiwb7du60nxcj");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_zujqrnet82v8c1kw1pxs');
+        var table = document.getElementById('tinytable_zpw9egipiwb7du60nxcj');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1222,8 +1211,8 @@ window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_5yand6f9bfeiz3bh6q19(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_zujqrnet82v8c1kw1pxs");
+      function spanCell_tinytable_419hawca3l3c68jkrff7(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_zpw9egipiwb7du60nxcj");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1250,49 +1239,48 @@ window.addEventListener('load', function () { styleCell_tinytable_w8q17up0y8xth0
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 0, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 1, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 2, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 3, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 4, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 5, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 6, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 7, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(0, 8, 'tinytable_css_jibf91vh4hsbxj2z8uid') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 0, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 0, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 0, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 1, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 1, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 1, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 2, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 2, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 2, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 3, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 3, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 3, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 4, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 4, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 4, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 5, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 5, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 5, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 6, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 6, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 6, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 7, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 7, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 7, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(3, 8, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(5, 8, 'tinytable_css_r4p72f91tetgeiny7add') })
-window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3bh6q19(12, 8, 'tinytable_css_r4p72f91tetgeiny7add') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 0, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 1, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 2, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 3, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 4, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 5, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 6, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 7, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 8, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 0, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 0, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 0, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 1, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 1, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 1, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 2, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 2, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 2, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 3, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 3, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 3, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 4, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 4, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 4, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 5, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 5, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 5, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 6, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 6, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 6, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 7, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 7, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 7, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 8, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 8, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 8, 'tinytable_css_59e6zzsjwshipesr867i') })
     </script>
 </div>
 </div>
 <p>The results in pink are the same as those produced by <a href="https://github.com/astrezhnev/afcp">the <code>afcp</code> package:</a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">afcp</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">afcp</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">afcp_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/afcp/man/afcp.html">afcp</a></span><span class="op">(</span></span>
 <span>  <span class="va">amce_results</span>,</span>
@@ -1301,7 +1289,7 @@ window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3
 <span>  profile.id <span class="op">=</span> <span class="st">"profile"</span>,</span>
 <span>  attribute <span class="op">=</span> <span class="st">"language"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">afcp_results</span><span class="op">$</span><span class="va">afcp</span></span></code></pre></div>
+<span><span class="va">afcp_results</span><span class="op">$</span><span class="va">afcp</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            level baseline      afcp         se     zstat         pval conf_high  conf_low conf_level
 1          broken   fluent 0.4067416 0.01658803 -5.622030 1.887265e-08 0.4392535 0.3742296       0.95
@@ -1312,12 +1300,11 @@ window.addEventListener('load', function () { styleCell_tinytable_5yand6f9bfeiz3
 <section id="hypothesis-tests-1" class="level2"><h2 class="anchored" data-anchor-id="hypothesis-tests-1">Hypothesis tests</h2>
 <p>A powerful feature of <code>marginaleffects</code> is that all its functions include a <code>hypothesis</code> argument which can be used to conduct hypothesis tests on arbitrary functions of estimates. For example, let’s compute the AFCP for a subset of profile comparisons:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"alternative"</span><span class="op">)</span>, </span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">language</span> <span class="op">!=</span> <span class="va">alternative</span> <span class="op">&amp;</span> <span class="va">alternative</span> <span class="op">==</span> <span class="st">"fluent"</span><span class="op">)</span>,</span>
 <span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span>
-<span><span class="va">p</span></span></code></pre></div>
+<span><span class="va">p</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
          language alternative Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
@@ -1331,12 +1318,11 @@ Type:  response </code></pre>
 </div>
 <p>Now, let’s say we would like to test if any of the pairwise comparisons between AFCP is different from zero. All we need to do is use add a <code>hypothesis="pairwise"</code> argument:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"pairwise"</span>,</span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"alternative"</span><span class="op">)</span>, </span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">language</span> <span class="op">!=</span> <span class="va">alternative</span> <span class="op">&amp;</span> <span class="va">alternative</span> <span class="op">==</span> <span class="st">"fluent"</span><span class="op">)</span>,</span>
-<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code></pre></div>
+<span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
                                 Term Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 % 97.5 %
@@ -1351,9 +1337,7 @@ Type:  response </code></pre>
 
 
 
-</section></section><div id="quarto-appendix" class="default">
-<section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+</section></section><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-Abr2024" class="csl-entry" role="listitem">
 Abramson, Scott F, Korhan Kocak, Asya Magazinnik, and Anton Strezhnev. 2024. <span>“Detecting Preference Cycles in Forced-Choice Conjoint Experiments.”</span> SocArXiv. <a href="https://doi.org/10.31235/osf.io/xjre9">https://doi.org/10.31235/osf.io/xjre9</a>.
 </div>
@@ -1364,11 +1348,9 @@ Hainmueller, J., D. Hopkins, and T. Yamamoto. 2014. <span>“Causal Inference in
 Leeper, Thomas J., Sara B. Hobolt, and James Tilley. 2020. <span>“Measuring Subgroup Preferences in Conjoint Experiments.”</span> <em>Political Analysis</em> 28 (2): 207–21. <a href="https://doi.org/10.1017/pan.2019.30">https://doi.org/10.1017/pan.2019.30</a>.
 </div>
 </div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
 <ol>
 <li id="fn1"><p>The <code><a href="https://rdatatable.gitlab.io/data.table/reference/fifelse.html">fifelse()</a></code> function from <code>data.table</code> preserves factor levels, but not the standard <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol></section>
-</div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</ol></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1802,6 +1784,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-
-</body>
-</html>
+</body></html>

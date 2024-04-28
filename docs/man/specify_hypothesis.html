@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Marginal Effects Zoo – links</title>
+<title>Marginal Effects Zoo – specify_hypothesis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../vignettes/performance.html" rel="next">
-<link href="../vignettes/extensions.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -122,7 +120,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/faq.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../vignettes/links.html">Links</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -320,13 +318,13 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
@@ -353,7 +351,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/links.html" class="sidebar-item-text sidebar-link active">
+  <a href="../vignettes/links.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Links</span></a>
   </div>
 </li>
@@ -494,7 +492,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#links" id="toc-links" class="nav-link active" data-scroll-target="#links">Links</a></li>
+  <li><a href="#experimental-complex-aggregation-and-test-functions-for-the-hypothesis-argument" id="toc-experimental-complex-aggregation-and-test-functions-for-the-hypothesis-argument" class="nav-link active" data-scroll-target="#experimental-complex-aggregation-and-test-functions-for-the-hypothesis-argument">(EXPERIMENTAL) Complex aggregation and test functions for the <code>hypothesis</code> argument</a>
+  <ul class="collapse">
+  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
+  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -504,21 +508,74 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="links" class="level1">
-<h1>Links</h1>
+<section id="experimental-complex-aggregation-and-test-functions-for-the-hypothesis-argument" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="experimental-complex-aggregation-and-test-functions-for-the-hypothesis-argument">(EXPERIMENTAL) Complex aggregation and test functions for the <code>hypothesis</code> argument</h2>
+<section id="description" class="level3">
+<h3 class="anchored" data-anchor-id="description">Description</h3>
+<p>Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other <code>marginaleffects</code> functions.</p>
+<p>This function creates aggregation and test functions for use with the <code>hypothesis</code> argument in <code>marginaleffects</code> functions like <code>predictions()</code>, <code>slopes()</code>, and <code>comparisons()</code>. The benefit of this function is that it handles a lot of the "boilerplate" code such as label creation and transformations by subgroups.</p>
+</section>
+<section id="usage" class="level3">
+<h3 class="anchored" data-anchor-id="usage">Usage</h3>
+<pre><code class="language-R">specify_hypothesis(
+  hypothesis = "reference",
+  label = NULL,
+  label_columns = NULL,
+  by = c("term", "group", "contrast")
+)
+</code></pre>
+</section>
+<section id="arguments" class="level3">
+<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
+<table>
+<tbody><tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="hypothesis">hypothesis</code>
+</td>
+<td>
+<p>String or Function. Compute a test statistic.</p>
 <ul>
-<li><a href="https://www.carlislerainey.com/blog/2023-08-18-equivalence-tests/">Equivalence Tests Using <code>marginaleffects</code>: Reproducing the Clark and Golder (2006) Example from Rainey (2014)</a> by Carlisle Rainey</li>
-<li><a href="https://cameronpatrick.com/post/2023/07/logit-rd-rr/?twt">You are what you ATE: Choosing an effect size measure for binary outcomes</a> by Cameron Patrick</li>
-<li><a href="https://solomonkurz.netlify.app/blog/2023-04-16-causal-inference-with-potential-outcomes-bootcamp/">Causal inference with potential outcomes bootcamp</a> by Solomon Kurz</li>
-<li><a href="https://www.andrewheiss.com/blog/2022/11/29/conditional-marginal-marginaleffects/">Marginal and conditional effects for GLMMs with <code>marginaleffects</code></a> by Andrew Heiss</li>
-<li><a href="https://www.andrewheiss.com/blog/2022/05/20/marginalia/">Marginalia: A guide to figuring out what the heck marginal effects, marginal slopes, average marginal effects, marginal effects at the mean, and all these other marginal things are</a> by Andrew Heiss</li>
-<li><a href="https://cran.r-project.org/web/packages/MatchIt/vignettes/estimating-effects.html">Matching</a> by Noah Greifer</li>
-<li><a href="https://stats.stackexchange.com/questions/580118/adjusting-the-model-by-propensity-scores-after-propensity-score-matching/580174#580174">Double propensity score adjustment using g-computation</a> by Noah Greifer</li>
-<li><a href="https://ngreifer.github.io/blog/subgroup-analysis-psm/">Subgroup Analysis After Propensity Score Matching Using R</a> by Noah Greifer</li>
-<li><a href="https://www.ajordannafa.com/blog/2022/being-less-wrong/">Bayesian Model Averaged Marginal Effects</a> by A. Jordan Nafa</li>
+<li>
+<p>String: "reference" or "sequential"</p>
+</li>
+<li>
+<p>Function: Accepts a single argument named <code>estimate</code> and returns a numeric vector.</p>
+</li>
 </ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="label">label</code>
+</td>
+<td>
+Function. Accepts a vector of row labels and combines them to create hypothesis labels.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="label_columns">label_columns</code>
+</td>
+<td>
+Character vector. Column names to use for hypothesis labels. Default is <code>c(“group”, “term”, “rowid”, attr(x, “variables_datagrid”), attr(x, “by”))</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="by">by</code>
+</td>
+<td>
+Character vector. Variable names which indicate subgroups in which the <code>hypothesis</code> function should be applied.
+</td>
+</tr>
+</tbody></table>
+</section>
+<section id="value" class="level3">
+<h3 class="anchored" data-anchor-id="value">Value</h3>
+<p><code>specify_hypothesis()</code> is a "function factory", which means that executing it will return a function suitable for use in the <code>hypothesis</code> argument of a <code>marginaleffects</code> function.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -942,18 +999,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../vignettes/extensions.html" class="pagination-link" aria-label="Extensions">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Extensions</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../vignettes/performance.html" class="pagination-link" aria-label="Performance">
-        <span class="nav-page-text">Performance</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 

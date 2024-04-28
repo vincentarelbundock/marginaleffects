@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.30">
+<meta name="generator" content="quarto-1.5.29">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -543,6 +543,10 @@ ul.task-list li input[type="checkbox"] {
 <p>New function:</p>
 <ul>
 <li><code>specify_hypothesis()</code> returns functions to be used in the <code>hypothesis</code> argument of <code>predictions()</code>, <code>comparisons()</code>, and <code>slopes()</code>. This convenience function can be used to specify complex aggregations and estimands for hypothesis tests (ex: by subgroups or with custom functions).</li>
+</ul>
+<p>Minor:</p>
+<ul>
+<li>Do not raise extraneous warning for <code>survey</code> package models when the <code>by</code> argument is not used.</li>
 </ul>
 <p>Bugs:</p>
 <ul>

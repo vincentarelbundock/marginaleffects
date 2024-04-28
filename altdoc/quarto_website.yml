@@ -105,4 +105,5 @@ format:
       - custom.scss
     highlight-style: atom-one
     code-copy: true
+    code-link: true
     code-overflow: scroll
