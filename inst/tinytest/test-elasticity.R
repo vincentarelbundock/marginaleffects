@@ -53,6 +53,8 @@ fit <- lm(formula = mpg ~ cyl * hp + wt, data = mtcars)
 p <- predict(fit)
 x <- mtcars$wt
 
+dydx <- slopes(fit, variables = "wt")$estimate
+
 eyex_a <- dydx * x / p
 eyex_b <- slopes(fit, variables = "wt", slope = "eyex")$estimate
 expect_equivalent(eyex_a, eyex_b)
