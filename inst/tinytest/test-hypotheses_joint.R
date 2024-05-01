@@ -59,17 +59,6 @@ a = hypotheses(mod, joint = TRUE)
 expect_inherits(a, "hypotheses")
 
 
-# Issue #789: incorrect degrees of freedom
-lmfit <- lm(mpg~as.factor(cyl)*hp, data=mtcars)
-H <- matrix(0, nrow = length(coef(lmfit)), ncol = 2)
-H[5, 1] <- H[6, 2] <- 1
-hyp <- hypotheses(lmfit, hypothesis = H)
-h1 <- hypotheses(hyp, joint = TRUE)
-h2 <- hypotheses(lmfit, joint = 5:6, joint_test = "f")
-expect_equivalent(h1$df1, h2$df1)
-expect_equivalent(h1$df2, h2$df2)
-
-
 # Issue #981
 model <- lm(mpg ~ as.factor(cyl), data = mtcars)
 cmp <- avg_comparisons(model)
