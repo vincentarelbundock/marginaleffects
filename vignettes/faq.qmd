@@ -18,7 +18,7 @@ dat <- read.csv(url)
 n_support <- nrow(dat)
 ```
 
-## Stack Overflow questions
+## Questions & Answers
 
 * [Pooling predictions with multiple imputation](https://stackoverflow.com/questions/77686706/how-to-pool-average-predictions-from-a-multinomial-regression-per-category-in-r/77688581#77688581)
 * [Wiggly (non-smooth) confidence intervals in plots.](https://stackoverflow.com/questions/77556969/wiggly-confidence-interval-with-marginaleffectsplot-slopes/77620185#77620185)
@@ -26,6 +26,7 @@ n_support <- nrow(dat)
 * [Plot the marginal effects from a `plm` package model](https://stackoverflow.com/questions/73126378/marginal-effects-plot-of-plm/73127507#73127507)
 * [Models with demeaned, polynomials, or transformed variables](https://stackoverflow.com/questions/73303108/marginal-effects-for-de-meaned-polynomials-in-mixed-models/73305398#73305398)
 * [`nlme::lme` problem with character predictors](https://stackoverflow.com/questions/77516330/marginaleffects-package-refuses-service-with-nlme/77517278#77517278)
+* [Controlling facet rows and columns in `plot_*()` functions.](https://github.com/vincentarelbundock/marginaleffects/issues/1107)
 
 
 ## Calling `marginaleffects` in functions, loops, environments, or after re-assigning variables
