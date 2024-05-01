@@ -148,6 +148,11 @@ hypotheses <- function(
     numderiv = "fdforward",
     ...) {
 
+
+    if (isTRUE(attr(model, "hypotheses_call"))) {
+        msg <- "The `hypotheses()` function cannot be called twice on the same object."
+        insight::format_error(msg)
+    }
   
     dots <- list(...)
 
@@ -407,6 +412,9 @@ hypotheses <- function(
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
     attr(out, "conf_level") <- conf_level
+
+    # Issue #1102: hypotheses() should not be called twice on the same object
+    attr(out, "hypotheses_call") <- TRUE
 
     return(out)
 }
