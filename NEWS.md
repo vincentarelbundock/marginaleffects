@@ -10,6 +10,7 @@ Minor:
 
 * Do not raise extraneous warning for `survey` package models when the `by` argument is not used.
 * Informative error when `hypotheses()` is called twice on the same object.
+* `print("tinytable")` adds footnotes to the table with columns and type information.
 
 Bugs:
 
