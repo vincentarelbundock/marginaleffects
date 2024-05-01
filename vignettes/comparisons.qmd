@@ -26,7 +26,7 @@ In this vignette, we introduce "comparisons", defined as:
 
 > Comparisons are functions of two or more predictions. Example of comparisons include contrasts, differences, risks ratios, odds, etc.
 
-A very large number of quantities of interest can be built as a function of two (or more) predictions. Indeed, with the `comparisons()`, we can answer questions like these:
+A very large number of quantities of interest can be built as a function of two (or more) predictions. Indeed, with the `comparisons()` function, we can answer questions like these:
 
 - _Medical Treatment Efficacy_: How does probability of survival differ for patients who receive a new medication relative to a placebo?
 - _Education Policy_: How do standardized test scores differ between students who attended preschool programs and those who did not?
