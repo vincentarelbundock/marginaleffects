@@ -229,6 +229,7 @@ print.marginaleffects <- function(x,
         }
     }
 
+    print_columns_text <- print_type_text <- NULL
     if (ncol(x) <= ncols && isTRUE(column_names)) {
         print_columns_text <- paste("Columns:", paste(colnames(x), collapse = ", "), "\n")
     }
