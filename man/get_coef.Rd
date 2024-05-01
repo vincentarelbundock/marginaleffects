@@ -3,8 +3,8 @@
 %   R/methods_betareg.R, R/methods_nnet.R, R/methods_brglm2.R, R/methods_brms.R,
 %   R/methods_dataframe.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
 %   R/methods_lme4.R, R/methods_mclogit.R, R/methods_mgcv.R, R/methods_mlm.R,
-%   R/methods_sampleSelection.R, R/methods_scam.R, R/methods_stats.R,
-%   R/methods_survey.R, R/methods_tidymodels.R
+%   R/methods_mmrm.R, R/methods_sampleSelection.R, R/methods_scam.R,
+%   R/methods_stats.R, R/methods_survey.R, R/methods_tidymodels.R
 \name{get_coef}
 \alias{get_coef}
 \alias{get_coef.default}
@@ -24,6 +24,7 @@
 \alias{get_coef.mblogit}
 \alias{get_coef.gam}
 \alias{get_coef.mlm}
+\alias{get_coef.mmrm}
 \alias{get_coef.selection}
 \alias{get_coef.scam}
 \alias{get_coef.nls}
@@ -66,6 +67,8 @@ get_coef(model, ...)
 \method{get_coef}{gam}(model, ...)
 
 \method{get_coef}{mlm}(model, ...)
+
+\method{get_coef}{mmrm}(model, ...)
 
 \method{get_coef}{selection}(model, ...)
 
