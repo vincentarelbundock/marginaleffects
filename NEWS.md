@@ -2,6 +2,10 @@
 
 ## Development
 
+Breaking changes:
+
+* The order of the `group` column is preserved when the original variable is a factor. This may change the order of output, which could have an effect on hypothesis tests using the `hypothesis="b1=b3"` syntax.
+
 New function:
 
 * `specify_hypothesis()` returns functions to be used in the `hypothesis` argument of `predictions()`, `comparisons()`, and `slopes()`. This convenience function can be used to specify complex aggregations and estimands for hypothesis tests (ex: by subgroups or with custom functions).
