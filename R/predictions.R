@@ -423,7 +423,8 @@ predictions <- function(model,
         }
     }
 
-    if (!"rowid" %in% colnames(tmp) && nrow(tmp) == nrow(newdata)) {
+    # issue #1105: hypothesis may change the meaning of rows, so we don't want to force-merge `newdata`
+    if (!"rowid" %in% colnames(tmp) && nrow(tmp) == nrow(newdata) && is.null(hypothesis)) {
         tmp$rowid <- newdata$rowid
     }
 
@@ -622,13 +623,19 @@ get_predictions <- function(model,
     # unpad factors before averaging
     # trust `newdata` rowid more than `out` because sometimes `get_predict()` will add a positive index even on padded data
     # HACK: the padding indexing rowid code is still a mess
-    if ("rowid" %in% colnames(newdata) && nrow(newdata) == nrow(out)) {
+    # Do not merge `newdata` with `hypothesis`, because it may have the same
+    # number of rows but represent different quantities
+    if ("rowid" %in% colnames(newdata) && nrow(newdata) == nrow(out) && is.null(hypothesis)) {
         out$rowid <- newdata$rowid
     }
     if ("rowid" %in% colnames(out)) {
         idx <- out$rowid > 0
         out <- out[idx, drop = FALSE]
         draws <- draws[idx, , drop = FALSE]
+    }
+    if ("rowid" %in% colnames(newdata)) {
+        idx <- newdata$rowid > 0
+        newdata <- newdata[idx, , drop = FALSE]
     }
 
     # expensive: only do this inside the jacobian if necessary

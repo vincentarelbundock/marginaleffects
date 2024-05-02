@@ -19,6 +19,7 @@ Minor:
 Bugs:
 
 * `mlogit` `predict()` method does not play well with `data.table`. Thanks to @andrewheiss for report #1086.
+* Avoid merging `newdata` in `predictions()` when `hypothesis` can change the meaning of rows. Avoid Issue #1105 reported by @strengejacke.
 
 
 ## 0.19.0
