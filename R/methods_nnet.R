@@ -104,7 +104,7 @@ get_predict.multinom <- function(model,
     out <- data.frame(
         group = rep(colnames(pred), each = nrow(pred)),
         estimate = c(pred))
-    out$group <- factor(out$group, unique(out$group))
+    out$group <- group_to_factor(out$group, model)
 
     # usually when `newdata` is supplied by `comparisons`
     if ("rowid" %in% colnames(newdata)) {

@@ -28,7 +28,7 @@ get_predict.flexsurvreg <- function(model, newdata, type, ...) {
         group = as.vector(gp),
         estimate = as.vector(val)
       )
-      out$group <- factor(out$group, unique(out$group))
+      out$group <- group_to_factor(out$group, model)
       return(out)
     }
     out <- data.frame(
@@ -43,6 +43,6 @@ get_predict.flexsurvreg <- function(model, newdata, type, ...) {
     group = as.vector(preds[, 1, drop = TRUE]),
     estimate = as.vector(preds[, 2, drop = TRUE])
   )
-  out$group <- factor(out$group, unique(out$group))
+  out$group <- group_to_factor(out$group, model)
   out
 }
