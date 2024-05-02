@@ -96,6 +96,7 @@ get_predict.brmsfit <- function(model,
             rowid = rep(idx, times = ncol(out)),
             group = rep(colnames(out), each = nrow(out)),
             estimate = c(out))
+        out$group <- factor(out$group, unique(out$group))
     } else {
         stop("marginaleffects cannot extract posterior draws from this model. Please report this problem to the Bug tracker with a reporducible example: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
     }

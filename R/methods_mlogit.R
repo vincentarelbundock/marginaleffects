@@ -18,6 +18,7 @@ get_predict.mlogit <- function(model,
     if ("term" %in% colnames(newdata)) {
         out[, "term" := newdata[["term"]]]
     }
+    out$group <- factor(out$group, unique(out$group))
     return(out)
 }
 
