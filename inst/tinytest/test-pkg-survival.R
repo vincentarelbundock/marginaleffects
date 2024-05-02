@@ -105,7 +105,7 @@ expect_equivalent(mfx1$estimate, mfx2$estimate)
 # Issue #1079
 library(survival)
 set.seed(12345)
-aml <- aml |>
+aml <- survival::aml |>
   transform(z = rnorm(nrow(aml), 0, 1)) |>
   transform(zcat = cut(z, breaks = c(-10,-0.5,0.5,10)))
 mod <- coxph(Surv(time, status == 1) ~ x * zcat, data = aml)
