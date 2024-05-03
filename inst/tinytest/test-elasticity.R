@@ -68,5 +68,31 @@ dyex_b <- slopes(fit, variables = "wt", slope = "dyex")$estimate
 expect_equivalent(dyex_a, dyex_b)
 
 
+# Issue #1113: avg_slopes(slope = "eyex") should skip dedup
+requiet("nnet")
+dat <- structure(list(y_region2 = c(1, 1, 1, 2, 2, 2, 2, 2, 1, 2, 2, 
+2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 1, 2, 2, 3, 3, 3, 3, 
+3, 3, 1, 3, 3, 3, 1, 3, 3, 1, 3, 1, 3, 3, 3, 1, 3, 3), male = c(0, 
+1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 
+1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 0, 0, 1, 0, 0, 1), frenchlanguage = c(1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1)), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, 
+-50L))
+dat$male = dat$male + 1e-6
+mod <- multinom(y_region2 ~ male + frenchlanguage, data = dat, trace = FALSE)
+s1 <- avg_slopes(mod, slope = "dydx")
+s2 <- avg_slopes(mod, slope = "dyex")
+s3 <- avg_slopes(mod, slope = "eyex")
+s4 <- avg_slopes(mod, slope = "eydx")
+expect_inherits(s1, "slopes")
+expect_inherits(s2, "slopes")
+expect_inherits(s3, "slopes")
+expect_inherits(s4, "slopes")
+
+
+
+
 source("helpers.R")
 rm(list = ls())
