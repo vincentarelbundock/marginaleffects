@@ -8,6 +8,24 @@ get_hypothesis <- function(
 
     if (is.null(hypothesis)) return(x)
 
+    if (isTRUE(checkmate::check_choice(hypothesis, "mean"))) {
+        hypothesis <- function(x) {
+            out <- x
+            out$estimate <- out$estimate - mean(out$estimate)
+            out$hypothesis <- "Mean deviation"
+            return(out)
+        }
+    } else if (isTRUE(checkmate::check_choice(hypothesis, "meanother"))) {
+        hypothesis <- function(x) {
+            out <- x
+            s <- sum(out$estimate)
+            m_other <- (s - out$estimate) / (nrow(x) - 1)
+            out$estimate <- out$estimate - m_other
+            out$hypothesis <- "Mean deviation (other)"
+            return(out)
+        }
+    }
+
     if (is.function(hypothesis)) {
         if (!is.null(draws)) {
             msg <- "The `hypothesis` argument does not support function for models with draws. You can use `posterior_draws()` to extract draws and manipulate them directly instead."

@@ -6,12 +6,10 @@ Breaking changes:
 
 * The order of the `group` column is preserved when the original variable is a factor. This may change the order of output, which could have an effect on hypothesis tests using the `hypothesis="b1=b3"` syntax.
 
-New function:
+New:
 
-* `specify_hypothesis()` returns functions to be used in the `hypothesis` argument of `predictions()`, `comparisons()`, and `slopes()`. This convenience function can be used to specify complex aggregations and estimands for hypothesis tests (ex: by subgroups or with custom functions).
-
-Minor:
-
+* New function: `specify_hypothesis()` returns functions to be used in the `hypothesis` argument of `predictions()`, `comparisons()`, and `slopes()`. This convenience function can be used to specify complex aggregations and estimands for hypothesis tests (ex: by subgroups or with custom functions).
+* `hypothesis` argument accepts "mean" and "meanother" to compute deviations from the mean estimate.
 * Do not raise extraneous warning for `survey` package models when the `by` argument is not used.
 * Informative error when `hypotheses()` is called twice on the same object.
 * `print("tinytable")` adds footnotes to the table with columns and type information.

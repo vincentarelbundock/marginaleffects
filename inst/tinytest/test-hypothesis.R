@@ -217,4 +217,14 @@ mfx <- slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothe
 expect_true("setosa, 0 - setosa, 1" %in% mfx$term)
 
 
+# Issue #1092: hypothesis = "mean", "meanother"
+mod <- lm(mpg ~ hp + drat + factor(cyl), data = mtcars)
+p1 <- avg_predictions(mod, by = "cyl")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "mean")
+expect_equivalent(p2$estimate, p1$estimate - mean(p1$estimate))
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "meanother")
+expect_equivalent(p2$estimate, p1$estimate - (sum(p1$estimate) - p1$estimate) / (nrow(p1) - 1))
+
+
+
 rm(list = ls())

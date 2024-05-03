@@ -81,11 +81,13 @@
 #'   - "pairwise": pairwise differences between estimates in each row.
 #'   - "reference": differences between the estimates in each row and the estimate in the first row.
 #'   - "sequential": difference between an estimate and the estimate in the next row.
+#'   - "mean": difference between an estimate and the mean of all estimates.
+#'   - "meanother": difference between an estimate and the mean of all other estimates, excluding the current one.
 #'   - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 #' + Function:
 #'   - Accepts an argument `x`: object produced by a `marginaleffects` function or a data frame with column `rowid` and `estimate`
 #'   - Returns a data frame with columns `term` and `estimate` (mandatory) and `rowid` (optional).
-#'   - The function can also accept and operation on optional input arguments: `newdata`, `by`, `draws`.
+#'   - The function can also accept optional input arguments: `newdata`, `by`, `draws`.
 #'   - This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use `posterior_draws()` to extract and manipulate the draws directly.
 #' + See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 #' @param p_adjust Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See [stats::p.adjust]
