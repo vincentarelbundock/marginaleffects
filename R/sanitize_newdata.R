@@ -248,6 +248,13 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
 
 dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cross = FALSE, byfun = NULL) {
 
+    # issue #1113: elasticities should skip dedup because it is difficult to align x and y
+    elasticities <- c("eyexavg", "eydxavg", "dyexavg")
+    if (isTRUE(checkmate::check_choice(comparison, elasticities))) return(data.table(newdata))
+
+    elasticities <- c("eyex", "eydx", "dyex")
+    if (!isFALSE(by) && isTRUE(checkmate::check_choice(comparison, elasticities)))  return(data.table(newdata))
+
     flag <- isTRUE(checkmate::check_string(comparison, pattern = "avg"))
     if (!flag && (
         isFALSE(by) || # weights only make sense when we are marginalizing
