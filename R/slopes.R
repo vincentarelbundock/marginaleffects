@@ -81,8 +81,8 @@
 #'   - "pairwise": pairwise differences between estimates in each row.
 #'   - "reference": differences between the estimates in each row and the estimate in the first row.
 #'   - "sequential": difference between an estimate and the estimate in the next row.
-#'   - "mean": difference between an estimate and the mean of all estimates.
-#'   - "meanother": difference between an estimate and the mean of all other estimates, excluding the current one.
+#'   - "meandev": difference between an estimate and the mean of all estimates.
+#'   - "meanotherdev": difference between an estimate and the mean of all other estimates, excluding the current one.
 #'   - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 #' + Function:
 #'   - Accepts an argument `x`: object produced by a `marginaleffects` function or a data frame with column `rowid` and `estimate`

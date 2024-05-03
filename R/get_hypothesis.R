@@ -8,14 +8,14 @@ get_hypothesis <- function(
 
     if (is.null(hypothesis)) return(x)
 
-    if (isTRUE(checkmate::check_choice(hypothesis, "mean"))) {
+    if (isTRUE(checkmate::check_choice(hypothesis, "meandev"))) {
         hypothesis <- function(x) {
             out <- x
             out$estimate <- out$estimate - mean(out$estimate)
             out$hypothesis <- "Mean deviation"
             return(out)
         }
-    } else if (isTRUE(checkmate::check_choice(hypothesis, "meanother"))) {
+    } else if (isTRUE(checkmate::check_choice(hypothesis, "meanotherdev"))) {
         hypothesis <- function(x) {
             out <- x
             s <- sum(out$estimate)

@@ -9,7 +9,7 @@ Breaking changes:
 New:
 
 * New function: `specify_hypothesis()` returns functions to be used in the `hypothesis` argument of `predictions()`, `comparisons()`, and `slopes()`. This convenience function can be used to specify complex aggregations and estimands for hypothesis tests (ex: by subgroups or with custom functions).
-* `hypothesis` argument accepts "mean" and "meanother" to compute deviations from the mean estimate.
+* `hypothesis` argument accepts "meandev" and "meanotherdev" to compute deviations from the mean estimate.
 * Do not raise extraneous warning for `survey` package models when the `by` argument is not used.
 * Informative error when `hypotheses()` is called twice on the same object.
 * `print("tinytable")` adds footnotes to the table with columns and type information.
