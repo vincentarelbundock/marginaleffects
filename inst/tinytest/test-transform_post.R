@@ -32,4 +32,21 @@ expect_equivalent(exp(cmp1$conf.high), cmp2$conf.high)
 # expect_equivalent(exp(tid1$conf.high), tid2$conf.high)
 
 
+# issue #1115
+set.seed(0)
+n <- 500
+trt <- rep(0:1, each = 500)
+x <- rnorm(n)
+y <- 2 * x + 1 + 0.5 * trt + rnorm(n, 0, 0.3)
+d <- data.frame(x, trt, y)
+fit <- lm(y ~ trt + x, data = d)
+cmp <- avg_comparisons(
+    fit,
+    variables = "trt",
+    comparison = "lnratioavg",
+    transform = "exp") |>
+    inferences(method = "boot", R = 100)
+expect_inherits(cmp, "comparisons")
+
+
 rm(list = ls())
