@@ -201,13 +201,15 @@ first entry in the error message is used by default.}
 \item "pairwise": pairwise differences between estimates in each row.
 \item "reference": differences between the estimates in each row and the estimate in the first row.
 \item "sequential": difference between an estimate and the estimate in the next row.
+\item "meandev": difference between an estimate and the mean of all estimates.
+\item "meanotherdev": difference between an estimate and the mean of all other estimates, excluding the current one.
 \item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 }
 \item Function:
 \itemize{
 \item Accepts an argument \code{x}: object produced by a \code{marginaleffects} function or a data frame with column \code{rowid} and \code{estimate}
 \item Returns a data frame with columns \code{term} and \code{estimate} (mandatory) and \code{rowid} (optional).
-\item The function can also accept and operation on optional input arguments: \code{newdata}, \code{by}, \code{draws}.
+\item The function can also accept optional input arguments: \code{newdata}, \code{by}, \code{draws}.
 \item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{posterior_draws()} to extract and manipulate the draws directly.
 }
 \item See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
