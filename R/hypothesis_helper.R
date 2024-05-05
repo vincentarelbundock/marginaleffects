@@ -27,11 +27,11 @@ specify_hypothesis <- function(
         checkmate::check_choice(hypothesis, choices = c("reference", "sequential"))
     )
 
-    if (is.null(label)) label <- function(estimate) "custom"
+    if (is.null(label)) label <- function(x) "custom"
 
     if (identical(hypothesis, "reference")) {
         hypothesis <- function(x) (x - x[1])[2:length(x)]
-        label = function(x) sprintf("(%s) - (%s)", x, x[1])[2:length(x)]
+        label <- function(x) sprintf("(%s) - (%s)", x, x[1])[2:length(x)]
     } else if (identical(hypothesis, "sequential")) {
         hypothesis <- function(x) (x - data.table::shift(x))[2:length(x)]
         label = function(x) sprintf("(%s) - (%s)", x, data.table::shift(x))[2:length(x)]
