@@ -27,6 +27,8 @@ utils::globalVariables(c(
 "..w",
 "marginaleffects_lab",
 "marginaleffects_ter",
+"..label_columns",
+"marginaleffects_internal_label",
 ".",
 "tmp_idx",
 "comparison",
