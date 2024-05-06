@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* The `comparison` argument of the `comparisons()` is switched to the `avg` version of the function shortcuts when calling `avg_comparisons()` or setting `by=TRUE`.
+
 ## 0.20.0
 
 Breaking changes:
