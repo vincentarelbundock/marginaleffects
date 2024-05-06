@@ -23,7 +23,7 @@ cmp2 <- avg_comparisons(
     dplyr::arrange(term, contrast)
 # known <- c("4 - 3", "5 - 4", "+10", "6 - 4", "8 - 4", "8 - 6")
 # aggregate refactor gave us new labels
-known <- c("+10", "4 - 3", "5 - 4", "6 - 4", "8 - 4", "8 - 6")
+known <- c("mean(+10)", "mean(4) - mean(3)", "mean(5) - mean(4)", "mean(6) - mean(4)", "mean(8) - mean(4)", "mean(8) - mean(6)")
 expect_true(all(known %in% cmp1$contrast))
 expect_equivalent(cmp1$estimate[6], cmp2$estimate[6] * 10)
 
