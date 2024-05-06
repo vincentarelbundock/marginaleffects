@@ -290,7 +290,7 @@ sanitize_variables <- function(variables,
 
     } else if (is.character(comparison)) {
         # switch to the avg version when there is a `by` function
-        if (isTRUE(checkmate::check_character(by)) && !isTRUE(grepl("avg$", comparison))) {
+        if ((isTRUE(checkmate::check_character(by)) || isTRUE(by)) && !isTRUE(grepl("avg$", comparison))) {
             comparison <- paste0(comparison, "avg")
         }
 

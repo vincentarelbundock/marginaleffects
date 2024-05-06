@@ -22,7 +22,7 @@ expect_equivalent(nrow(cmp2), 32)
 # Issue #720
 mod <- lm(mpg ~ hp * qsec, dat = mtcars)
 cmp <- avg_comparisons(mod, variables = list(hp = "2sd"))
-expect_equivalent(cmp$contrast, "(x + sd) - (x - sd)")
+expect_equivalent(cmp$contrast, "mean(x + sd) - mean(x - sd)")
 
 
 
@@ -42,6 +42,18 @@ cmp2 <- comparisons(mod, comparison = "liftavg")
 expect_equal(nrow(cmp1), 32)
 expect_equal(nrow(cmp2), 1)
 expect_error(comparisons(mod, comparison = "liftr"))
+
+
+# Issue #1120: avg comparison by default with avg_
+mod <- glm(vs ~ am + wt, data = mtcars, family = binomial)
+d0 <- transform(mtcars, am = 0)
+d1 <- transform(mtcars, am = 1)
+p0 <- predict(mod, newdata = d0, type = "response")
+p1 <- predict(mod, newdata = d1, type = "response")
+c1 <- mean(p1 / p0) # marginaleffects 0.20.0
+c2 <- mean(p1) / mean(p0) # after bug fix
+cmp <- avg_comparisons(mod, variables = "am", comparison = "ratio")
+expect_equivalent(cmp$estimate, c2)
 
 
 
