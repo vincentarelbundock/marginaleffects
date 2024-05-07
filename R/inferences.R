@@ -177,14 +177,23 @@ inferences <- function(x,
 
 
 inferences_dispatch <- function(model, INF_FUN, ...) {
+    args <- list(
+        model = model,
+        INF_FUN = INF_FUN
+    )
+    args <- c(args, list(...))
+    if ("rowid" %in% names(args$newdata)) {
+        args$newdata <- subset(args$newdata, rowid > 0)
+    }
+
     if (isTRUE(attr(model, "inferences_method") == "rsample")) {
-        bootstrap_rsample(model = model, INF_FUN = INF_FUN, ...)
+        do.call(bootstrap_rsample, args)
     } else if (isTRUE(attr(model, "inferences_method") == "boot")) {
-        bootstrap_boot(model = model, INF_FUN = INF_FUN, ...)
+        do.call(bootstrap_boot, args)
     } else if (isTRUE(attr(model, "inferences_method") == "fwb")) {
-        bootstrap_fwb(model = model, INF_FUN = INF_FUN, ...)
+        do.call(bootstrap_fwb, args)
     } else if (isTRUE(attr(model, "inferences_method") == "simulation")) {
-        bootstrap_simulation(model = model, INF_FUN = INF_FUN, ...)
+        do.call(bootstrap_simulation, args)
     } else {
         return(NULL)
     }

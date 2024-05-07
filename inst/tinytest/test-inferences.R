@@ -179,11 +179,15 @@ dat <- read.csv("https://marginaleffects.com/data/impartiality.csv")
 m <- glm(
   impartial ~ equal * democracy + continent, 
   data = dat, family = binomial)
-p <- predictions(m, by = "democracy") |> inferences(method = "simulation", R = 100)
+p <- predictions(m, by = "democracy", type = "response") |> 
+     inferences(method = "simulation", R = 100)
 expect_true(all(p$estimate > 0 & p$estimate < 1))
 expect_true(all(p$conf.low > 0 & p$conf.low < 1))
 expect_true(all(p$conf.high > 0 & p$conf.high < 1))
 expect_true(all(p$conf.low < p$estimate & p$conf.high > p$estimate))
+
+p2 <- predictions(m, by = "democracy", type = "response")
+expect_equivalent(p2$estimate, p$estimate)
 
 
 
