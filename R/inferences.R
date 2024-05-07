@@ -155,9 +155,6 @@ inferences <- function(x,
         insight::check_if_installed("MASS")
         attr(model, "inferences_method") <- "simulation"
         attr(model, "inferences_R") <- R
-        # do not use simulation mean as point estimate
-        # https://doi.org/10.1017/psrm.2023.8
-        b <- get_coef(x)
     }
 
     if (isTRUE(grepl("conformal", method))) {
@@ -168,16 +165,12 @@ inferences <- function(x,
             test = conformal_test,
             calibration = conformal_calibration,
             score = conformal_score)
+
     } else {
         mfx_call[["model"]] <- model
         out <- recall(mfx_call)
     }
 
-    # do not use simulation mean as point estimate
-    # https://doi.org/10.1017/psrm.2023.8
-    if (method == "simulation") {
-        out$estimate <- x$estimate
-    }
 
     return(out)
 }

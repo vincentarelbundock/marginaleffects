@@ -12,6 +12,9 @@ bootstrap_simulation <- function(model, INF_FUN, vcov, ...) {
     args <- dots
     args[["vcov"]] <- FALSE
     attr(model, "inferences_method") <- NULL
+
+    # do not use simulation mean as point estimate
+    # https://doi.org/10.1017/psrm.2023.8
     out <- do.call(INF_FUN, c(list(model), args))
 
     inner_fun <- function(i = NULL) {
