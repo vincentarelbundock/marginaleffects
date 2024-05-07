@@ -3,7 +3,7 @@
 #' @param model model object
 #' @param type character vector
 #' @noRd
-sanitize_type <- function(model, type, calling_function = "raw") {
+sanitize_type <- function(model, type, by = FALSE, calling_function = "raw") {
     # mlr3
     if (inherits(model, "Learner")) {
         if (is.null(type)) type <- "response"
@@ -27,7 +27,8 @@ sanitize_type <- function(model, type, calling_function = "raw") {
     dict <- type_dictionary
     # raw is often invoked by `get_predict()`, which is required for {clarify} and others.
     # we only allow invlink(link) in predictions() and marginal_means(), which are handled by {marginaleffects}
-    if (!calling_function %in% c("predictions", "marginal_means")) {
+    
+    if (!calling_function %in% "predictions") {# || !isFALSE(by)) {
         dict <- dict[dict$type != "invlink(link)", , drop = FALSE]
     }
 
