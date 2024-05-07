@@ -4,6 +4,8 @@
 
 * The `comparison` argument of the `comparisons()` function is automatically switched to the `avg` version of the function shortcuts when calling `avg_comparisons()` or setting `by=TRUE`. For example, `comparison="ratio"` becomes `comparison="ratioavg"` when calling `avg_comparisons()`. Note that `comparison="ratioavg"` is equivalent to: `comparison = \(hi,lo) mean(hi)/mean(lo)`
 
+* Fixed a bug ("non-conformable arguments") when using `survreg` objects from `survival::survreg()`.
+
 ## 0.20.0
 
 Breaking changes:
