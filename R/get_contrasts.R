@@ -199,6 +199,11 @@ get_contrasts <- function(model,
         out[by, by := by, on = tmp]
         by <- "by"
 
+    } else if (isTRUE(by)) {
+        regex <- "^term$|^contrast_?|^group$"
+        by <- grep(regex, colnames(out), value = TRUE)
+        by <- unique(by)
+
     } else if (isTRUE(checkmate::check_character(by))) {
         regex <- "^term$|^contrast_?|^group$"
         by <- c(by, grep(regex, colnames(out), value = TRUE))

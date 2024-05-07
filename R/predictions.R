@@ -446,11 +446,6 @@ predictions <- function(model,
     # bayesian posterior draws
     draws <- attr(tmp, "posterior_draws")
 
-    # bayesian: unpad draws (done in get_predictions for frequentist)
-    if (!is.null(draws) && "rowid" %in% colnames(tmp)) {
-        draws <- draws[tmp$rowid > 0, , drop = FALSE]
-    }
-
     V <- NULL
     J <- NULL
     if (!isFALSE(vcov)) {
@@ -632,15 +627,10 @@ get_predictions <- function(model,
     if ("rowid" %in% colnames(newdata) && nrow(newdata) == nrow(out) && is.null(hypothesis)) {
         out$rowid <- newdata$rowid
     }
-    if ("rowid" %in% colnames(out)) {
-        idx <- out$rowid > 0
-        out <- out[idx, drop = FALSE]
-        draws <- draws[idx, , drop = FALSE]
-    }
-    if ("rowid" %in% colnames(newdata)) {
-        idx <- newdata$rowid > 0
-        newdata <- newdata[idx, , drop = FALSE]
-    }
+    # unpad
+    if ("rowid" %in% colnames(out)) draws <- subset(draws, out$rowid > 0)
+    if ("rowid" %in% colnames(out)) out <- subset(out, rowid > 0)
+    if ("rowid" %in% colnames(newdata)) newdata <- subset(newdata, rowid > 0)
 
     # expensive: only do this inside the jacobian if necessary
     if (!isFALSE(wts) ||
@@ -674,6 +664,7 @@ get_predictions <- function(model,
     # otherwise, users cannot know for sure what is going to be the first and
     # second rows, etc.
     out <- sort_columns(out, newdata, by)
+
 
     return(out)
 }
