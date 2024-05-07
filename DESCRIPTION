@@ -212,6 +212,7 @@ Collate:
     'mean_or_mode.R'
     'methods.R'
     'set_coef.R'
+    'methods_AER.R'
     'methods_MASS.R'
     'methods_MCMCglmm.R'
     'methods_Rchoice.R'
