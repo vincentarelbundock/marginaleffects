@@ -120,4 +120,16 @@ expect_equivalent(p$std.error, c(0.0316227771712602, 0.0316227779679258), tolera
 
 
 
+# Issue #1125: regression due to factor conversion
+requiet("AER")
+requiet("mlogit")
+data("TravelMode", package = "AER")
+mod <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
+s <- avg_slopes(mod, variables = c("income", "size"))
+expect_true(all(c("air", "bus", "car", "train") %in% s$group))
+
+
+
 rm(list = ls())
+
+

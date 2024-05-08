@@ -18,7 +18,8 @@ get_predict.mlogit <- function(model,
     if ("term" %in% colnames(newdata)) {
         out[, "term" := newdata[["term"]]]
     }
-    out$group <- group_to_factor(out$group, model)
+    # do not convert to factor because DV is often "yes" or "no" while the "group" is outcome levels.
+    # out$group <- group_to_factor(out$group, model)
     return(out)
 }
 
