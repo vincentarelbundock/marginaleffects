@@ -27,6 +27,7 @@ n_support <- nrow(dat)
 * [Models with demeaned, polynomials, or transformed variables](https://stackoverflow.com/questions/73303108/marginal-effects-for-de-meaned-polynomials-in-mixed-models/73305398#73305398)
 * [`nlme::lme` problem with character predictors](https://stackoverflow.com/questions/77516330/marginaleffects-package-refuses-service-with-nlme/77517278#77517278)
 * [Controlling facet rows and columns in `plot_*()` functions.](https://github.com/vincentarelbundock/marginaleffects/issues/1107)
+* [Bayesian diagnostics (Rhat, etc.) with `brms`](https://stackoverflow.com/questions/78479179/diagnostic-of-marginal-effects-from-a-brms-model)
 
 
 ## Calling `marginaleffects` in functions, loops, environments, or after re-assigning variables
