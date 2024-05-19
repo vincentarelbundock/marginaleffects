@@ -1,0 +1,17 @@
+ bibentry(bibtype = "Article",
+  title        = "How to Intepret Statistical Models Using {marginaleffects} in {R} and {Python}",
+  author       = c(
+    person(given = "Vincent",
+           family = "Arel-Bundock",
+           email = "vincent.arel-bundock@umontreal.ca"),
+    person(given = "Noah",
+           family = "Greifer",
+           email = "ngreifer@iq.harvard.edu"),
+    person(given = "Andrew",
+           family = "Heiss",
+           email = "aheiss@gsu.edu")
+  ),
+  year         = "Forthcoming",
+  journal      = "Journal of Statistical Software",
+  header       = "To cite marginaleffects in publications use:"
+)
