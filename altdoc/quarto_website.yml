@@ -46,7 +46,6 @@ website:
           - vignettes/experiments.qmd
           - vignettes/gam.qmd
           - vignettes/gcomputation.qmd
-          - vignettes/help.qmd
           - vignettes/heterogeneity.qmd
           - vignettes/ipw.qmd
           - vignettes/logit.qmd
@@ -59,6 +58,7 @@ website:
           - vignettes/svalues.qmd
       - section: Miscellaneous
         contents:
+          - vignettes/help.qmd
           - vignettes/faq.qmd
           - vignettes/meme.qmd
           - vignettes/alternative_software.qmd
