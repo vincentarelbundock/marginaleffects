@@ -4,7 +4,6 @@
 
 ```{r}
 #| include: false
-options(modelsummary_factory_default = "gt")
 ## this vignette is in .Rbuildignore
 
 knitr::opts_chunk$set(

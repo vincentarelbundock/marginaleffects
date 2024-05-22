@@ -17,7 +17,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 #| include: false
-options(modelsummary_factory_default = "gt")
 options(width = 120)
 library(marginaleffects)
 library(modelsummary)

@@ -3,7 +3,6 @@
 
 
 ```{r, include = FALSE}
-options(modelsummary_factory_default = "gt")
 options(width = 1000)
 ## this vignette is in .Rbuildignore because lme4 is not available on old CRAN
 ## test machines.

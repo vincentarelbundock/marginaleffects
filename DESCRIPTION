@@ -115,6 +115,7 @@ Suggests:
     nlme,
     nnet,
     numDeriv,
+    nycflights13,
     optmatch,
     ordinal,
     parameters,
