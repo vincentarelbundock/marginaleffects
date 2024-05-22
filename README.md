@@ -26,7 +26,7 @@ estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects,
 and other model types. This can lead to wasted effort, confusion, and
 mistakes, and it can hinder the implementation of best practices.
 
-## Free Book
+## Book
 
 [This free online book](https://marginaleffects.com/) introduces a
 conceptual framework to clearly define statistical quantities of
@@ -69,7 +69,31 @@ package can facilitate the analysis of:
 [Get started by clicking
 here!](https://marginaleffects.com/vignettes/get_started.html)
 
-## Free Software
+## Article
+
+Our article on `marginaleffects` is provisionally accepted for
+publication by the *Journal of Statistical Software*. You can read [the
+preprint
+here.](files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf)
+
+To cite `marginaleffects` in publications please use:
+
+Arel-Bundock V, Greifer N, Heiss A (Forthcoming). “How to Intepret
+Statistical Models Using marginaleffects in R and Python.” *Journal of
+Statistical Software*.
+
+A BibTeX entry for LaTeX users is:
+
+``` {latex}
+@Article{,
+    title = {How to Intepret Statistical Models Using {marginaleffects} in {R} and {Python}},
+    author = {Vincent Arel-Bundock and Noah Greifer and Andrew Heiss},
+    year = {Forthcoming},
+    journal = {Journal of Statistical Software},
+}
+```
+
+## Software
 
 The `marginaleffects` package for `R` and `Python` offers a single point
 of entry to easily interpret the results of [over 100 classes of

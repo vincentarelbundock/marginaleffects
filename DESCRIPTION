@@ -134,6 +134,7 @@ Suggests:
     REndo,
     rcmdcheck,
     remotes,
+    reticulate,
     rmarkdown,
     rms,
     robust,

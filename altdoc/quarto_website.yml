@@ -15,6 +15,8 @@ website:
     right:
       - text: Get started
         href: vignettes/get_started.qmd
+      - text: Article
+        href: files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf
       - text: Help
         href: vignettes/help.qmd
       - icon: github
@@ -93,6 +95,8 @@ website:
             file: man/datagrid.qmd
           - text: "`print.marginaleffects`"
             file: man/print.marginaleffects.qmd
+      - text: Article
+        href: files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf
       - $ALTDOC_NEWS
       - $ALTDOC_LICENSE
       - $ALTDOC_CITATION
