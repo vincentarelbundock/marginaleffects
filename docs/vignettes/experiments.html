@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.29">
+<meta name="generator" content="quarto-1.5.37">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – experiments</title>
 <style>
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -136,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -144,6 +144,10 @@ window.Quarto = {
 <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf"> 
+<span class="menu-text">Article</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/help.html"> 
@@ -165,11 +169,11 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/experiments.html">Experiments</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -184,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -225,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -294,12 +298,6 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Help</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Heterogeneity</span></a>
   </div>
@@ -362,14 +360,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -433,9 +437,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -643,497 +647,147 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/man/modelsummary.html">modelsummary</a></span><span class="op">(</span><span class="va">fit</span>, gof_map <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"r.squared"</span>, <span class="st">"nobs"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<div id="nfuprmwfvg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#nfuprmwfvg table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+ 
 
-#nfuprmwfvg thead, #nfuprmwfvg tbody, #nfuprmwfvg tfoot, #nfuprmwfvg tr, #nfuprmwfvg td, #nfuprmwfvg th {
-  border-style: none;
-}
-
-#nfuprmwfvg p {
-  margin: 0;
-  padding: 0;
-}
-
-#nfuprmwfvg .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#nfuprmwfvg .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#nfuprmwfvg .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#nfuprmwfvg .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#nfuprmwfvg .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#nfuprmwfvg .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#nfuprmwfvg .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#nfuprmwfvg .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#nfuprmwfvg .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#nfuprmwfvg .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#nfuprmwfvg .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#nfuprmwfvg .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#nfuprmwfvg .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#nfuprmwfvg .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#nfuprmwfvg .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#nfuprmwfvg .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#nfuprmwfvg .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#nfuprmwfvg .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#nfuprmwfvg .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#nfuprmwfvg .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#nfuprmwfvg .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#nfuprmwfvg .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#nfuprmwfvg .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#nfuprmwfvg .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#nfuprmwfvg .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#nfuprmwfvg .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#nfuprmwfvg .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#nfuprmwfvg .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#nfuprmwfvg .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#nfuprmwfvg .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#nfuprmwfvg .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#nfuprmwfvg .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#nfuprmwfvg .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#nfuprmwfvg .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#nfuprmwfvg .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#nfuprmwfvg .gt_left {
-  text-align: left;
-}
-
-#nfuprmwfvg .gt_center {
-  text-align: center;
-}
-
-#nfuprmwfvg .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#nfuprmwfvg .gt_font_normal {
-  font-weight: normal;
-}
-
-#nfuprmwfvg .gt_font_bold {
-  font-weight: bold;
-}
-
-#nfuprmwfvg .gt_font_italic {
-  font-style: italic;
-}
-
-#nfuprmwfvg .gt_super {
-  font-size: 65%;
-}
-
-#nfuprmwfvg .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#nfuprmwfvg .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#nfuprmwfvg .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#nfuprmwfvg .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#nfuprmwfvg .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#nfuprmwfvg .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#nfuprmwfvg .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="header gt_col_headings">
-<th id=" " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
-<th id="(1)" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">(1)</th>
-</tr></thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">(Intercept)</td>
-<td class="gt_row gt_center" headers="(1)">15.050</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_center" headers="(1)">(1.002)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">vs</td>
-<td class="gt_row gt_center" headers="(1)">5.693</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_center" headers="(1)">(1.651)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">am</td>
-<td class="gt_row gt_center" headers="(1)">4.700</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_center" headers="(1)">(1.736)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">vs × am</td>
-<td class="gt_row gt_center" headers="(1)">2.929</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" " style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
-<td class="gt_row gt_center" headers="(1)" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(2.541)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">R2</td>
-<td class="gt_row gt_center" headers="(1)">0.700</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" ">Num.Obs.</td>
-<td class="gt_row gt_center" headers="(1)">32</td>
-</tr>
+  
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tinytable_a6mdc62phwjvm1uzkovq</title>
+<style>
+.table td.tinytable_css_1iwlkzbi789aiopn4682, .table th.tinytable_css_1iwlkzbi789aiopn4682 {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_z2b1sjfkreuuxfo0mt6n, .table th.tinytable_css_z2b1sjfkreuuxfo0mt6n {    text-align: left; }
+.table td.tinytable_css_ja8omazeefa63jc5kmm1, .table th.tinytable_css_ja8omazeefa63jc5kmm1 {    text-align: center; }
+.table td.tinytable_css_ve8l5iin90i151g01l7b, .table th.tinytable_css_ve8l5iin90i151g01l7b {    border-bottom: solid 0.05em black; }
+    </style>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script><div class="container">
+      <table class="table table-borderless" id="tinytable_a6mdc62phwjvm1uzkovq" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+<thead><tr>
+<th scope="col"> </th>
+                <th scope="col">(1)</th>
+              </tr></thead>
+<tbody>
+<tr>
+<td>(Intercept)</td>
+                  <td>15.050 </td>
+                </tr>
+<tr>
+<td>           </td>
+                  <td>(1.002)</td>
+                </tr>
+<tr>
+<td>vs         </td>
+                  <td>5.693  </td>
+                </tr>
+<tr>
+<td>           </td>
+                  <td>(1.651)</td>
+                </tr>
+<tr>
+<td>am         </td>
+                  <td>4.700  </td>
+                </tr>
+<tr>
+<td>           </td>
+                  <td>(1.736)</td>
+                </tr>
+<tr>
+<td>vs × am    </td>
+                  <td>2.929  </td>
+                </tr>
+<tr>
+<td>           </td>
+                  <td>(2.541)</td>
+                </tr>
+<tr>
+<td>R2         </td>
+                  <td>0.700  </td>
+                </tr>
+<tr>
+<td>Num.Obs.   </td>
+                  <td>32     </td>
+                </tr>
 </tbody>
 </table>
 </div>
-</div>
+
+    <script>
+      function styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(i, j, css_id) {
+        var table = document.getElementById("tinytable_a6mdc62phwjvm1uzkovq");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_a6mdc62phwjvm1uzkovq');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_p3zcfufpmv5zvr5wj6tr(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_a6mdc62phwjvm1uzkovq");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(0, 0, 'tinytable_css_1iwlkzbi789aiopn4682') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(0, 1, 'tinytable_css_1iwlkzbi789aiopn4682') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(0, 0, 'tinytable_css_z2b1sjfkreuuxfo0mt6n') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(1, 0, 'tinytable_css_z2b1sjfkreuuxfo0mt6n') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(2, 0, 'tinytable_css_z2b1sjfkreuuxfo0mt6n') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(3, 0, 'tinytable_css_z2b1sjfkreuuxfo0mt6n') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(4, 0, 'tinytable_css_z2b1sjfkreuuxfo0mt6n') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(5, 0, 'tinytable_css_z2b1sjfkreuuxfo0mt6n') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(6, 0, 'tinytable_css_z2b1sjfkreuuxfo0mt6n') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(7, 0, 'tinytable_css_z2b1sjfkreuuxfo0mt6n') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(8, 0, 'tinytable_css_z2b1sjfkreuuxfo0mt6n') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(9, 0, 'tinytable_css_z2b1sjfkreuuxfo0mt6n') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(10, 0, 'tinytable_css_z2b1sjfkreuuxfo0mt6n') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(0, 1, 'tinytable_css_ja8omazeefa63jc5kmm1') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(1, 1, 'tinytable_css_ja8omazeefa63jc5kmm1') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(2, 1, 'tinytable_css_ja8omazeefa63jc5kmm1') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(3, 1, 'tinytable_css_ja8omazeefa63jc5kmm1') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(4, 1, 'tinytable_css_ja8omazeefa63jc5kmm1') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(5, 1, 'tinytable_css_ja8omazeefa63jc5kmm1') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(6, 1, 'tinytable_css_ja8omazeefa63jc5kmm1') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(7, 1, 'tinytable_css_ja8omazeefa63jc5kmm1') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(8, 1, 'tinytable_css_ja8omazeefa63jc5kmm1') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(9, 1, 'tinytable_css_ja8omazeefa63jc5kmm1') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(10, 1, 'tinytable_css_ja8omazeefa63jc5kmm1') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(8, 0, 'tinytable_css_ve8l5iin90i151g01l7b') })
+window.addEventListener('load', function () { styleCell_tinytable_p3zcfufpmv5zvr5wj6tr(8, 1, 'tinytable_css_ve8l5iin90i151g01l7b') })
+    </script>
 </div>
 </div>
 </div>
@@ -1145,8 +799,8 @@ window.Quarto = {
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dep. Variable:                    mpg   R-squared:                       0.700</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:                            OLS   Adj. R-squared:                  0.668</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Method:                 Least Squares   F-statistic:                     21.81</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Sun, 28 Apr 2024   Prob (F-statistic):           1.73e-07</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        17:17:53   Log-Likelihood:                -83.098</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Wed, 22 May 2024   Prob (F-statistic):           1.73e-07</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        10:30:31   Log-Likelihood:                -83.098</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; No. Observations:                  32   AIC:                             174.2</span></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Residuals:                      28   BIC:                             180.1</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Model:                           3                                         </span></span>
@@ -1205,8 +859,8 @@ window.Quarto = {
 <span>  variables <span class="op">=</span> <span class="st">"vs"</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;    vs    1 - 0     5.69       1.65 3.45   &lt;0.001 10.8  2.46   8.93</span></span>
+<span><span class="co">#&gt;  Term          Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;    vs mean(1) - mean(0)     5.69       1.65 3.45   &lt;0.001 10.8  2.46   8.93</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1262,8 +916,8 @@ window.Quarto = {
 <span>  variables <span class="op">=</span> <span class="st">"am"</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>vs <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;    am    1 - 0      4.7       1.74 2.71  0.00678 7.2   1.3    8.1</span></span>
+<span><span class="co">#&gt;  Term          Contrast Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;    am mean(1) - mean(0)      4.7       1.74 2.71  0.00678 7.2   1.3    8.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1317,8 +971,8 @@ window.Quarto = {
 <span>  variables <span class="op">=</span> <span class="st">"am"</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>vs <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;    am    1 - 0     7.63       1.86 4.11   &lt;0.001 14.6  3.99   11.3</span></span>
+<span><span class="co">#&gt;  Term          Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;    am mean(1) - mean(0)     7.63       1.86 4.11   &lt;0.001 14.6  3.99   11.3</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1372,10 +1026,10 @@ window.Quarto = {
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"vs"</span><span class="op">)</span>,</span>
 <span>  cross <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % C: am C: vs</span></span>
-<span><span class="co">#&gt;      13.3       1.65 8.07   &lt;0.001 50.3  10.1   16.6 1 - 0 1 - 0</span></span>
+<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %             C: am             C: vs</span></span>
+<span><span class="co">#&gt;      13.3       1.65 8.07   &lt;0.001 50.3  10.1   16.6 mean(1) - mean(0) mean(1) - mean(0)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast_am, contrast_vs, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast_am, contrast_vs, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
@@ -1473,8 +1127,8 @@ window.Quarto = {
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dep. Variable:                   re78   R-squared:                       0.057</span></span>
 <span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:                            OLS   Adj. R-squared:                  0.043</span></span>
 <span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Method:                 Least Squares   F-statistic:                     4.238</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Sun, 28 Apr 2024   Prob (F-statistic):           2.42e-05</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        17:17:59   Log-Likelihood:                -6328.8</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Wed, 22 May 2024   Prob (F-statistic):           2.42e-05</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        10:30:33   Log-Likelihood:                -6328.8</span></span>
 <span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; No. Observations:                 614   AIC:                         1.268e+04</span></span>
 <span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Residuals:                     604   BIC:                         1.272e+04</span></span>
 <span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Model:                           9                                         </span></span>
@@ -1520,10 +1174,10 @@ window.Quarto = {
 <span>    variables <span class="op">=</span> <span class="st">"treat"</span>,</span>
 <span>    vcov <span class="op">=</span> <span class="st">"HC3"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Term Contrast Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  treat    1 - 0      490        879 0.557    0.577 0.8 -1232   2212</span></span>
+<span><span class="co">#&gt;   Term          Contrast Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  treat mean(1) - mean(0)      490        879 0.557    0.577 0.8 -1232   2212</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>

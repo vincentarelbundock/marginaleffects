@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.29">
+<meta name="generator" content="quarto-1.5.37">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – Comparisons</title>
 <style>
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -136,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -144,6 +144,10 @@ window.Quarto = {
 <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf"> 
+<span class="menu-text">Article</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/help.html"> 
@@ -165,11 +169,11 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/predictions.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../vignettes/comparisons.html">Comparisons</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -184,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -225,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -294,12 +298,6 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Help</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Heterogeneity</span></a>
   </div>
@@ -362,14 +360,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -433,9 +437,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -619,7 +623,7 @@ window.Quarto = {
 <blockquote class="blockquote">
 <p>Comparisons are functions of two or more predictions. Example of comparisons include contrasts, differences, risks ratios, odds, etc.</p>
 </blockquote>
-<p>A very large number of quantities of interest can be built as a function of two (or more) predictions. Indeed, with the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>, we can answer questions like these:</p>
+<p>A very large number of quantities of interest can be built as a function of two (or more) predictions. Indeed, with the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function, we can answer questions like these:</p>
 <ul>
 <li>
 <em>Medical Treatment Efficacy</em>: How does probability of survival differ for patients who receive a new medication relative to a placebo?</li>
@@ -727,13 +731,13 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;  Age     +1        -0.00598    0.00109 -5.51   &lt;0.001  24.7 -0.00811 -0.00386</span></span>
-<span><span class="co">#&gt;  PClass  2nd - 1st -0.22484    0.04054 -5.55   &lt;0.001  25.0 -0.30429 -0.14539</span></span>
-<span><span class="co">#&gt;  PClass  3rd - 1st -0.39568    0.04253 -9.30   &lt;0.001  66.0 -0.47904 -0.31231</span></span>
-<span><span class="co">#&gt;  SexCode 1 - 0      0.49731    0.03017 16.48   &lt;0.001 200.3  0.43816  0.55645</span></span>
+<span><span class="co">#&gt;     Term              Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %   97.5 %</span></span>
+<span><span class="co">#&gt;  Age     mean(+1)              -0.00598    0.00109 -5.51   &lt;0.001  24.7 -0.00811 -0.00386</span></span>
+<span><span class="co">#&gt;  PClass  mean(2nd) - mean(1st) -0.22484    0.04054 -5.55   &lt;0.001  25.0 -0.30429 -0.14539</span></span>
+<span><span class="co">#&gt;  PClass  mean(3rd) - mean(1st) -0.39568    0.04253 -9.30   &lt;0.001  66.0 -0.47904 -0.31231</span></span>
+<span><span class="co">#&gt;  SexCode mean(1) - mean(0)      0.49731    0.03017 16.48   &lt;0.001 200.3  0.43816  0.55645</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="comparison-type" class="level2"><h2 class="anchored" data-anchor-id="comparison-type">Comparison type</h2>
@@ -1200,13 +1204,13 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;  Age     +1        -0.00598    0.00109 -5.51   &lt;0.001  24.7 -0.00811 -0.00386</span></span>
-<span><span class="co">#&gt;  PClass  2nd - 1st -0.22484    0.04054 -5.55   &lt;0.001  25.0 -0.30429 -0.14539</span></span>
-<span><span class="co">#&gt;  PClass  3rd - 1st -0.39568    0.04253 -9.30   &lt;0.001  66.0 -0.47904 -0.31231</span></span>
-<span><span class="co">#&gt;  SexCode 1 - 0      0.49731    0.03017 16.48   &lt;0.001 200.3  0.43816  0.55645</span></span>
+<span><span class="co">#&gt;     Term              Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %   97.5 %</span></span>
+<span><span class="co">#&gt;  Age     mean(+1)              -0.00598    0.00109 -5.51   &lt;0.001  24.7 -0.00811 -0.00386</span></span>
+<span><span class="co">#&gt;  PClass  mean(2nd) - mean(1st) -0.22484    0.04054 -5.55   &lt;0.001  25.0 -0.30429 -0.14539</span></span>
+<span><span class="co">#&gt;  PClass  mean(3rd) - mean(1st) -0.39568    0.04253 -9.30   &lt;0.001  66.0 -0.47904 -0.31231</span></span>
+<span><span class="co">#&gt;  SexCode mean(1) - mean(0)      0.49731    0.03017 16.48   &lt;0.001 200.3  0.43816  0.55645</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This is equivalent to:</p>
@@ -1243,26 +1247,26 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>grid_type <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;  Age     +1        -0.00494    0.00119 -4.14   &lt;0.001  14.8 -0.00728 -0.0026</span></span>
-<span><span class="co">#&gt;  PClass  2nd - 1st -0.23312    0.03865 -6.03   &lt;0.001  29.2 -0.30887 -0.1574</span></span>
-<span><span class="co">#&gt;  PClass  3rd - 1st -0.42333    0.04472 -9.47   &lt;0.001  68.2 -0.51098 -0.3357</span></span>
-<span><span class="co">#&gt;  SexCode 1 - 0      0.54331    0.03332 16.30   &lt;0.001 196.1  0.47800  0.6086</span></span>
+<span><span class="co">#&gt;     Term              Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;  Age     mean(+1)              -0.00494    0.00119 -4.14   &lt;0.001  14.8 -0.00728 -0.0026</span></span>
+<span><span class="co">#&gt;  PClass  mean(2nd) - mean(1st) -0.23312    0.03865 -6.03   &lt;0.001  29.2 -0.30887 -0.1574</span></span>
+<span><span class="co">#&gt;  PClass  mean(3rd) - mean(1st) -0.42333    0.04472 -9.47   &lt;0.001  68.2 -0.51098 -0.3357</span></span>
+<span><span class="co">#&gt;  SexCode mean(1) - mean(0)      0.54331    0.03332 16.30   &lt;0.001 196.1  0.47800  0.6086</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that the results are slightly different than when averaging across the empirical, because the number of actual passengers aboard the Titanic was not perfectly balanced across gender and ticket categories:</p>
 <div class="cell">
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;  Age     +1        -0.00598    0.00109 -5.51   &lt;0.001  24.7 -0.00811 -0.00386</span></span>
-<span><span class="co">#&gt;  PClass  2nd - 1st -0.22484    0.04054 -5.55   &lt;0.001  25.0 -0.30429 -0.14539</span></span>
-<span><span class="co">#&gt;  PClass  3rd - 1st -0.39568    0.04253 -9.30   &lt;0.001  66.0 -0.47904 -0.31231</span></span>
-<span><span class="co">#&gt;  SexCode 1 - 0      0.49731    0.03017 16.48   &lt;0.001 200.3  0.43816  0.55645</span></span>
+<span><span class="co">#&gt;     Term              Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %   97.5 %</span></span>
+<span><span class="co">#&gt;  Age     mean(+1)              -0.00598    0.00109 -5.51   &lt;0.001  24.7 -0.00811 -0.00386</span></span>
+<span><span class="co">#&gt;  PClass  mean(2nd) - mean(1st) -0.22484    0.04054 -5.55   &lt;0.001  25.0 -0.30429 -0.14539</span></span>
+<span><span class="co">#&gt;  PClass  mean(3rd) - mean(1st) -0.39568    0.04253 -9.30   &lt;0.001  66.0 -0.47904 -0.31231</span></span>
+<span><span class="co">#&gt;  SexCode mean(1) - mean(0)      0.49731    0.03017 16.48   &lt;0.001 200.3  0.43816  0.55645</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="uncertainty" class="level1"><h1>Uncertainty</h1>
@@ -1274,20 +1278,20 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term Contrast Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  SexCode    1 - 0    0.497     0.0302 16.5   &lt;0.001 200.3 0.438  0.556</span></span>
+<span><span class="co">#&gt;     Term          Contrast Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  SexCode mean(1) - mean(0)    0.497     0.0302 16.5   &lt;0.001 200.3 0.438  0.556</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Heteroskedasticity-robust:</p>
 <div class="cell">
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, vcov <span class="op">=</span> <span class="st">"HC3"</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term Contrast Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  SexCode    1 - 0    0.497     0.0306 16.2   &lt;0.001 194.7 0.437  0.557</span></span>
+<span><span class="co">#&gt;     Term          Contrast Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  SexCode mean(1) - mean(0)    0.497     0.0306 16.2   &lt;0.001 194.7 0.437  0.557</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="bootstrap-and-simulation" class="level2"><h2 class="anchored" data-anchor-id="bootstrap-and-simulation">Bootstrap and simulation</h2>
@@ -1297,9 +1301,9 @@ window.Quarto = {
 <span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="st">"lnor"</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term              Contrast Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.98      0.243 12.3   &lt;0.001 112.8  2.51   3.46</span></span>
+<span><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.19      0.159 13.8   &lt;0.001 141.7  1.88   2.51</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
 <span></span>
 <span><span class="co"># bootstrap</span></span>
@@ -1307,9 +1311,9 @@ window.Quarto = {
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span><span class="st">"rsample"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term              Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.98  2.59   4.23</span></span>
+<span><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.19  1.89    2.5</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="transformation" class="level2"><h2 class="anchored" data-anchor-id="transformation">Transformation</h2>
@@ -1425,13 +1429,13 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"pairwise"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                                       Term Estimate Std. Error      z Pr(&gt;|z|)     S  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  (Age, +1) - (PClass, 2nd - 1st)              0.219     0.0403   5.42   &lt;0.001  24.0  0.140  0.298</span></span>
-<span><span class="co">#&gt;  (Age, +1) - (PClass, 3rd - 1st)              0.390     0.0422   9.24   &lt;0.001  65.1  0.307  0.472</span></span>
-<span><span class="co">#&gt;  (Age, +1) - (SexCode, 1 - 0)                -0.503     0.0298 -16.87   &lt;0.001 209.7 -0.562 -0.445</span></span>
-<span><span class="co">#&gt;  (PClass, 2nd - 1st) - (PClass, 3rd - 1st)    0.171     0.0331   5.16   &lt;0.001  21.9  0.106  0.236</span></span>
-<span><span class="co">#&gt;  (PClass, 2nd - 1st) - (SexCode, 1 - 0)      -0.722     0.0438 -16.51   &lt;0.001 200.9 -0.808 -0.636</span></span>
-<span><span class="co">#&gt;  (PClass, 3rd - 1st) - (SexCode, 1 - 0)      -0.893     0.0388 -23.00   &lt;0.001 386.4 -0.969 -0.817</span></span>
+<span><span class="co">#&gt;                                                               Term Estimate Std. Error      z Pr(&gt;|z|)     S  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  (Age, mean(+1)) - (PClass, mean(2nd) - mean(1st))                    0.219     0.0403   5.42   &lt;0.001  24.0  0.140  0.298</span></span>
+<span><span class="co">#&gt;  (Age, mean(+1)) - (PClass, mean(3rd) - mean(1st))                    0.390     0.0422   9.24   &lt;0.001  65.1  0.307  0.472</span></span>
+<span><span class="co">#&gt;  (Age, mean(+1)) - (SexCode, mean(1) - mean(0))                      -0.503     0.0298 -16.87   &lt;0.001 209.7 -0.562 -0.445</span></span>
+<span><span class="co">#&gt;  (PClass, mean(2nd) - mean(1st)) - (PClass, mean(3rd) - mean(1st))    0.171     0.0331   5.16   &lt;0.001  21.9  0.106  0.236</span></span>
+<span><span class="co">#&gt;  (PClass, mean(2nd) - mean(1st)) - (SexCode, mean(1) - mean(0))      -0.722     0.0438 -16.51   &lt;0.001 200.9 -0.808 -0.636</span></span>
+<span><span class="co">#&gt;  (PClass, mean(3rd) - mean(1st)) - (SexCode, mean(1) - mean(0))      -0.893     0.0388 -23.00   &lt;0.001 386.4 -0.969 -0.817</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1782,10 +1786,10 @@ window.Quarto = {
 <span>  <span class="va">mod_mt</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>new_hp <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;    Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  new_hp      +10     -3.8      0.435 -8.74   &lt;0.001 58.6 -4.65  -2.95</span></span>
+<span><span class="co">#&gt;    Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  new_hp mean(+10)     -3.8      0.435 -8.74   &lt;0.001 58.6 -4.65  -2.95</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can supply arbitrary functions to create custom differences. These functions must accept a vector of values for the predictor of interest, and return a data frame with the same number of rows as the length, and two columns with the values to compare. For example, we can do:</p>
@@ -1801,7 +1805,7 @@ window.Quarto = {
 <span><span class="co">#&gt;    Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;  new_hp   custom     -3.8      0.435 -8.74   &lt;0.001 58.6 -4.65  -2.95</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
@@ -1811,7 +1815,7 @@ window.Quarto = {
 <span><span class="co">#&gt;    Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;  new_hp   custom    -6.51      0.744 -8.74   &lt;0.001 58.6 -7.97  -5.05</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
@@ -1821,7 +1825,7 @@ window.Quarto = {
 <span><span class="co">#&gt;    Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;  new_hp   custom    -4.06      0.464 -8.74   &lt;0.001 58.6 -4.97  -3.15</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Notice that the last “centered” difference gives the same results as the default <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> call.</p>
@@ -1845,11 +1849,11 @@ window.Quarto = {
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="st">"revreference"</span><span class="op">)</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">mt</span>, <span class="va">cyl</span> <span class="op">!=</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate Std. Error     z Pr(&gt;|z|)     S  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   cyl    6 - 4   -0.323     0.2170 -1.49    0.137   2.9 -0.748  0.103</span></span>
-<span><span class="co">#&gt;   cyl    6 - 8    0.561     0.0357 15.69   &lt;0.001 181.9  0.491  0.631</span></span>
+<span><span class="co">#&gt;  Term          Contrast Estimate Std. Error     z Pr(&gt;|z|)     S  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;   cyl mean(6) - mean(4)   -0.323     0.2170 -1.49    0.137   2.9 -0.748  0.103</span></span>
+<span><span class="co">#&gt;   cyl mean(6) - mean(8)    0.561     0.0357 15.69   &lt;0.001 181.9  0.491  0.631</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 

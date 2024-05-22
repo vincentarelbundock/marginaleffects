@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.29">
+<meta name="generator" content="quarto-1.5.37">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – multiple_imputation</title>
 <style>
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -136,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -144,6 +144,10 @@ window.Quarto = {
 <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf"> 
+<span class="menu-text">Article</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/help.html"> 
@@ -165,11 +169,11 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/multiple_imputation.html">Missing Data</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -184,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -225,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -294,12 +298,6 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Help</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Heterogeneity</span></a>
   </div>
@@ -362,14 +360,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -433,9 +437,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -690,725 +694,569 @@ window.Quarto = {
 <span>    <span class="st">"missRanger"</span> <span class="op">=</span> <span class="va">mfx_missRanger</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://modelsummary.com/man/modelsummary.html">modelsummary</a></span><span class="op">(</span><span class="va">models</span>, shape <span class="op">=</span> <span class="va">term</span> <span class="op">:</span> <span class="va">contrast</span> <span class="op">+</span> <span class="va">Species</span> <span class="op">~</span> <span class="va">model</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<div id="edltsovpql" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#edltsovpql table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+ 
 
-#edltsovpql thead, #edltsovpql tbody, #edltsovpql tfoot, #edltsovpql tr, #edltsovpql td, #edltsovpql th {
-  border-style: none;
-}
-
-#edltsovpql p {
-  margin: 0;
-  padding: 0;
-}
-
-#edltsovpql .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#edltsovpql .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#edltsovpql .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#edltsovpql .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#edltsovpql .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#edltsovpql .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#edltsovpql .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#edltsovpql .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#edltsovpql .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#edltsovpql .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#edltsovpql .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#edltsovpql .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#edltsovpql .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#edltsovpql .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#edltsovpql .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#edltsovpql .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#edltsovpql .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#edltsovpql .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#edltsovpql .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#edltsovpql .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#edltsovpql .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#edltsovpql .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#edltsovpql .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#edltsovpql .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#edltsovpql .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#edltsovpql .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#edltsovpql .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#edltsovpql .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#edltsovpql .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#edltsovpql .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#edltsovpql .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#edltsovpql .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#edltsovpql .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#edltsovpql .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#edltsovpql .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#edltsovpql .gt_left {
-  text-align: left;
-}
-
-#edltsovpql .gt_center {
-  text-align: center;
-}
-
-#edltsovpql .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#edltsovpql .gt_font_normal {
-  font-weight: normal;
-}
-
-#edltsovpql .gt_font_bold {
-  font-weight: bold;
-}
-
-#edltsovpql .gt_font_italic {
-  font-style: italic;
-}
-
-#edltsovpql .gt_super {
-  font-size: 65%;
-}
-
-#edltsovpql .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#edltsovpql .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#edltsovpql .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#edltsovpql .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#edltsovpql .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#edltsovpql .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#edltsovpql .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="header gt_col_headings">
-<th id=" " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
-<th id="Species" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Species</th>
-<th id="LWD" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">LWD</th>
-<th id="mice" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">mice</th>
-<th id="Amelia" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Amelia</th>
-<th id="missRanger" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">missRanger</th>
-</tr></thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">Sepal.Length mean(dY/dX)</td>
-<td class="gt_row gt_left" headers="Species">setosa</td>
-<td class="gt_row gt_center" headers="LWD">0.033</td>
-<td class="gt_row gt_center" headers="mice">0.068</td>
-<td class="gt_row gt_center" headers="Amelia">0.388</td>
-<td class="gt_row gt_center" headers="missRanger">0.059</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.061)</td>
-<td class="gt_row gt_center" headers="mice">(0.056)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.091)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.041)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species">versicolor</td>
-<td class="gt_row gt_center" headers="LWD">0.050</td>
-<td class="gt_row gt_center" headers="mice">0.054</td>
-<td class="gt_row gt_center" headers="Amelia">0.323</td>
-<td class="gt_row gt_center" headers="missRanger">0.067</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.061)</td>
-<td class="gt_row gt_center" headers="mice">(0.056)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.080)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.039)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species">virginica</td>
-<td class="gt_row gt_center" headers="LWD">0.043</td>
-<td class="gt_row gt_center" headers="mice">0.058</td>
-<td class="gt_row gt_center" headers="Amelia">0.347</td>
-<td class="gt_row gt_center" headers="missRanger">0.064</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.058)</td>
-<td class="gt_row gt_center" headers="mice">(0.051)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.080)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.037)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">Sepal.Width mean(dY/dX)</td>
-<td class="gt_row gt_left" headers="Species">setosa</td>
-<td class="gt_row gt_center" headers="LWD">0.274</td>
-<td class="gt_row gt_center" headers="mice">0.189</td>
-<td class="gt_row gt_center" headers="Amelia">-0.208</td>
-<td class="gt_row gt_center" headers="missRanger">0.231</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.091)</td>
-<td class="gt_row gt_center" headers="mice">(0.084)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.149)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.069)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species">versicolor</td>
-<td class="gt_row gt_center" headers="LWD">0.255</td>
-<td class="gt_row gt_center" headers="mice">0.209</td>
-<td class="gt_row gt_center" headers="Amelia">-0.116</td>
-<td class="gt_row gt_center" headers="missRanger">0.219</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.074)</td>
-<td class="gt_row gt_center" headers="mice">(0.077)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.117)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.055)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species">virginica</td>
-<td class="gt_row gt_center" headers="LWD">0.234</td>
-<td class="gt_row gt_center" headers="mice">0.224</td>
-<td class="gt_row gt_center" headers="Amelia">-0.045</td>
-<td class="gt_row gt_center" headers="missRanger">0.209</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.083)</td>
-<td class="gt_row gt_center" headers="mice">(0.104)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.127)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.069)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">Species mean(versicolor) - mean(setosa)</td>
-<td class="gt_row gt_left" headers="Species">setosa</td>
-<td class="gt_row gt_center" headers="LWD">1.157</td>
-<td class="gt_row gt_center" headers="mice">1.140</td>
-<td class="gt_row gt_center" headers="Amelia">0.613</td>
-<td class="gt_row gt_center" headers="missRanger">1.159</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.097)</td>
-<td class="gt_row gt_center" headers="mice">(0.098)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.173)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.070)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species">versicolor</td>
-<td class="gt_row gt_center" headers="LWD">1.157</td>
-<td class="gt_row gt_center" headers="mice">1.140</td>
-<td class="gt_row gt_center" headers="Amelia">0.613</td>
-<td class="gt_row gt_center" headers="missRanger">1.159</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.097)</td>
-<td class="gt_row gt_center" headers="mice">(0.098)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.173)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.070)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species">virginica</td>
-<td class="gt_row gt_center" headers="LWD">1.157</td>
-<td class="gt_row gt_center" headers="mice">1.140</td>
-<td class="gt_row gt_center" headers="Amelia">0.613</td>
-<td class="gt_row gt_center" headers="missRanger">1.159</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.097)</td>
-<td class="gt_row gt_center" headers="mice">(0.098)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.173)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.070)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">Species mean(virginica) - mean(setosa)</td>
-<td class="gt_row gt_left" headers="Species">setosa</td>
-<td class="gt_row gt_center" headers="LWD">1.839</td>
-<td class="gt_row gt_center" headers="mice">1.741</td>
-<td class="gt_row gt_center" headers="Amelia">1.036</td>
-<td class="gt_row gt_center" headers="missRanger">1.778</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.123)</td>
-<td class="gt_row gt_center" headers="mice">(0.111)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.200)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.082)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species">versicolor</td>
-<td class="gt_row gt_center" headers="LWD">1.839</td>
-<td class="gt_row gt_center" headers="mice">1.741</td>
-<td class="gt_row gt_center" headers="Amelia">1.036</td>
-<td class="gt_row gt_center" headers="missRanger">1.778</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.123)</td>
-<td class="gt_row gt_center" headers="mice">(0.111)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.200)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.082)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" "></td>
-<td class="gt_row gt_left" headers="Species">virginica</td>
-<td class="gt_row gt_center" headers="LWD">1.839</td>
-<td class="gt_row gt_center" headers="mice">1.741</td>
-<td class="gt_row gt_center" headers="Amelia">1.036</td>
-<td class="gt_row gt_center" headers="missRanger">1.778</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" " style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
-<td class="gt_row gt_left" headers="Species" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
-<td class="gt_row gt_center" headers="LWD" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.123)</td>
-<td class="gt_row gt_center" headers="mice" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.111)</td>
-<td class="gt_row gt_center" headers="Amelia" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.200)</td>
-<td class="gt_row gt_center" headers="missRanger" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.082)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">Num.Obs.</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">60</td>
-<td class="gt_row gt_center" headers="mice">150</td>
-<td class="gt_row gt_center" headers="Amelia">150</td>
-<td class="gt_row gt_center" headers="missRanger">150</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" ">Num.Imp.</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD"></td>
-<td class="gt_row gt_center" headers="mice">20</td>
-<td class="gt_row gt_center" headers="Amelia">20</td>
-<td class="gt_row gt_center" headers="missRanger">20</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">R2</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">0.953</td>
-<td class="gt_row gt_center" headers="mice">0.930</td>
-<td class="gt_row gt_center" headers="Amelia">0.853</td>
-<td class="gt_row gt_center" headers="missRanger">0.947</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" ">R2 Adj.</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">0.949</td>
-<td class="gt_row gt_center" headers="mice">0.928</td>
-<td class="gt_row gt_center" headers="Amelia">0.848</td>
-<td class="gt_row gt_center" headers="missRanger">0.945</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">AIC</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">-34.0</td>
-<td class="gt_row gt_center" headers="mice"></td>
-<td class="gt_row gt_center" headers="Amelia"></td>
-<td class="gt_row gt_center" headers="missRanger"></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" ">BIC</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">-19.3</td>
-<td class="gt_row gt_center" headers="mice"></td>
-<td class="gt_row gt_center" headers="Amelia"></td>
-<td class="gt_row gt_center" headers="missRanger"></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">Log.Lik.</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">23.997</td>
-<td class="gt_row gt_center" headers="mice"></td>
-<td class="gt_row gt_center" headers="Amelia"></td>
-<td class="gt_row gt_center" headers="missRanger"></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=" ">F</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">220.780</td>
-<td class="gt_row gt_center" headers="mice"></td>
-<td class="gt_row gt_center" headers="Amelia"></td>
-<td class="gt_row gt_center" headers="missRanger"></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=" ">RMSE</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">0.16</td>
-<td class="gt_row gt_center" headers="mice"></td>
-<td class="gt_row gt_center" headers="Amelia"></td>
-<td class="gt_row gt_center" headers="missRanger"></td>
-</tr>
+  
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tinytable_avewnrf2h6dwryt74c53</title>
+<style>
+.table td.tinytable_css_fg9iygezcc4jloi1ox6p, .table th.tinytable_css_fg9iygezcc4jloi1ox6p {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_964mlapk00y4jsr3ivj6, .table th.tinytable_css_964mlapk00y4jsr3ivj6 {    text-align: left; }
+.table td.tinytable_css_iapj8ttxil8rfnz2227u, .table th.tinytable_css_iapj8ttxil8rfnz2227u {    text-align: left; }
+.table td.tinytable_css_9pxb2a6ius1dn8lr8q6q, .table th.tinytable_css_9pxb2a6ius1dn8lr8q6q {    text-align: center; }
+.table td.tinytable_css_f2hvdonhyys4jbyzvlew, .table th.tinytable_css_f2hvdonhyys4jbyzvlew {    text-align: center; }
+.table td.tinytable_css_5imiyn4gs4pd90vvianh, .table th.tinytable_css_5imiyn4gs4pd90vvianh {    text-align: center; }
+.table td.tinytable_css_v6hjzb3roj4m62o0ovj3, .table th.tinytable_css_v6hjzb3roj4m62o0ovj3 {    text-align: center; }
+.table td.tinytable_css_0uelj5cb7so52d1n86o9, .table th.tinytable_css_0uelj5cb7so52d1n86o9 {    border-bottom: solid 0.05em black; }
+    </style>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script><div class="container">
+      <table class="table table-borderless" id="tinytable_avewnrf2h6dwryt74c53" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+<thead><tr>
+<th scope="col"> </th>
+                <th scope="col">Species</th>
+                <th scope="col">LWD</th>
+                <th scope="col">mice</th>
+                <th scope="col">Amelia</th>
+                <th scope="col">missRanger</th>
+              </tr></thead>
+<tbody>
+<tr>
+<td>Sepal.Length mean(dY/dX)               </td>
+                  <td>setosa    </td>
+                  <td>0.033  </td>
+                  <td>0.068  </td>
+                  <td>0.388  </td>
+                  <td>0.059  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.061)</td>
+                  <td>(0.056)</td>
+                  <td>(0.091)</td>
+                  <td>(0.041)</td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>versicolor</td>
+                  <td>0.050  </td>
+                  <td>0.054  </td>
+                  <td>0.323  </td>
+                  <td>0.067  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.061)</td>
+                  <td>(0.056)</td>
+                  <td>(0.080)</td>
+                  <td>(0.039)</td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>virginica </td>
+                  <td>0.043  </td>
+                  <td>0.058  </td>
+                  <td>0.347  </td>
+                  <td>0.064  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.058)</td>
+                  <td>(0.051)</td>
+                  <td>(0.080)</td>
+                  <td>(0.037)</td>
+                </tr>
+<tr>
+<td>Sepal.Width mean(dY/dX)                </td>
+                  <td>setosa    </td>
+                  <td>0.274  </td>
+                  <td>0.189  </td>
+                  <td>-0.208 </td>
+                  <td>0.231  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.091)</td>
+                  <td>(0.084)</td>
+                  <td>(0.149)</td>
+                  <td>(0.069)</td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>versicolor</td>
+                  <td>0.255  </td>
+                  <td>0.209  </td>
+                  <td>-0.116 </td>
+                  <td>0.219  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.074)</td>
+                  <td>(0.077)</td>
+                  <td>(0.117)</td>
+                  <td>(0.055)</td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>virginica </td>
+                  <td>0.234  </td>
+                  <td>0.224  </td>
+                  <td>-0.045 </td>
+                  <td>0.209  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.083)</td>
+                  <td>(0.104)</td>
+                  <td>(0.127)</td>
+                  <td>(0.069)</td>
+                </tr>
+<tr>
+<td>Species mean(versicolor) - mean(setosa)</td>
+                  <td>setosa    </td>
+                  <td>1.157  </td>
+                  <td>1.140  </td>
+                  <td>0.613  </td>
+                  <td>1.159  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.097)</td>
+                  <td>(0.098)</td>
+                  <td>(0.173)</td>
+                  <td>(0.070)</td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>versicolor</td>
+                  <td>1.157  </td>
+                  <td>1.140  </td>
+                  <td>0.613  </td>
+                  <td>1.159  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.097)</td>
+                  <td>(0.098)</td>
+                  <td>(0.173)</td>
+                  <td>(0.070)</td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>virginica </td>
+                  <td>1.157  </td>
+                  <td>1.140  </td>
+                  <td>0.613  </td>
+                  <td>1.159  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.097)</td>
+                  <td>(0.098)</td>
+                  <td>(0.173)</td>
+                  <td>(0.070)</td>
+                </tr>
+<tr>
+<td>Species mean(virginica) - mean(setosa) </td>
+                  <td>setosa    </td>
+                  <td>1.839  </td>
+                  <td>1.741  </td>
+                  <td>1.036  </td>
+                  <td>1.778  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.123)</td>
+                  <td>(0.111)</td>
+                  <td>(0.200)</td>
+                  <td>(0.082)</td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>versicolor</td>
+                  <td>1.839  </td>
+                  <td>1.741  </td>
+                  <td>1.036  </td>
+                  <td>1.778  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.123)</td>
+                  <td>(0.111)</td>
+                  <td>(0.200)</td>
+                  <td>(0.082)</td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>virginica </td>
+                  <td>1.839  </td>
+                  <td>1.741  </td>
+                  <td>1.036  </td>
+                  <td>1.778  </td>
+                </tr>
+<tr>
+<td>                                       </td>
+                  <td>          </td>
+                  <td>(0.123)</td>
+                  <td>(0.111)</td>
+                  <td>(0.200)</td>
+                  <td>(0.082)</td>
+                </tr>
+<tr>
+<td>Num.Obs.                               </td>
+                  <td>          </td>
+                  <td>60     </td>
+                  <td>150    </td>
+                  <td>150    </td>
+                  <td>150    </td>
+                </tr>
+<tr>
+<td>Num.Imp.                               </td>
+                  <td>          </td>
+                  <td>       </td>
+                  <td>20     </td>
+                  <td>20     </td>
+                  <td>20     </td>
+                </tr>
+<tr>
+<td>R2                                     </td>
+                  <td>          </td>
+                  <td>0.953  </td>
+                  <td>0.930  </td>
+                  <td>0.853  </td>
+                  <td>0.947  </td>
+                </tr>
+<tr>
+<td>R2 Adj.                                </td>
+                  <td>          </td>
+                  <td>0.949  </td>
+                  <td>0.928  </td>
+                  <td>0.848  </td>
+                  <td>0.945  </td>
+                </tr>
+<tr>
+<td>AIC                                    </td>
+                  <td>          </td>
+                  <td>-34.0  </td>
+                  <td>       </td>
+                  <td>       </td>
+                  <td>       </td>
+                </tr>
+<tr>
+<td>BIC                                    </td>
+                  <td>          </td>
+                  <td>-19.3  </td>
+                  <td>       </td>
+                  <td>       </td>
+                  <td>       </td>
+                </tr>
+<tr>
+<td>Log.Lik.                               </td>
+                  <td>          </td>
+                  <td>23.997 </td>
+                  <td>       </td>
+                  <td>       </td>
+                  <td>       </td>
+                </tr>
+<tr>
+<td>F                                      </td>
+                  <td>          </td>
+                  <td>220.780</td>
+                  <td>       </td>
+                  <td>       </td>
+                  <td>       </td>
+                </tr>
+<tr>
+<td>RMSE                                   </td>
+                  <td>          </td>
+                  <td>0.16   </td>
+                  <td>       </td>
+                  <td>       </td>
+                  <td>       </td>
+                </tr>
 </tbody>
 </table>
 </div>
-</div>
+
+    <script>
+      function styleCell_tinytable_zj2gkurnpb4mlryv2pnw(i, j, css_id) {
+        var table = document.getElementById("tinytable_avewnrf2h6dwryt74c53");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_avewnrf2h6dwryt74c53');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_zj2gkurnpb4mlryv2pnw(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_avewnrf2h6dwryt74c53");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 0, 'tinytable_css_fg9iygezcc4jloi1ox6p') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 1, 'tinytable_css_fg9iygezcc4jloi1ox6p') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 2, 'tinytable_css_fg9iygezcc4jloi1ox6p') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 3, 'tinytable_css_fg9iygezcc4jloi1ox6p') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 4, 'tinytable_css_fg9iygezcc4jloi1ox6p') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 5, 'tinytable_css_fg9iygezcc4jloi1ox6p') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(1, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(2, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(3, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(4, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(5, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(6, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(7, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(8, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(9, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(10, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(11, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(12, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(13, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(14, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(15, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(16, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(17, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(18, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(19, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(20, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(21, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(22, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(23, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(25, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(26, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(27, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(28, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(29, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(30, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(31, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(32, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(33, 0, 'tinytable_css_964mlapk00y4jsr3ivj6') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(1, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(2, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(3, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(4, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(5, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(6, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(7, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(8, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(9, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(10, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(11, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(12, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(13, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(14, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(15, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(16, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(17, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(18, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(19, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(20, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(21, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(22, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(23, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(25, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(26, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(27, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(28, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(29, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(30, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(31, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(32, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(33, 1, 'tinytable_css_iapj8ttxil8rfnz2227u') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(1, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(2, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(3, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(4, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(5, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(6, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(7, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(8, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(9, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(10, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(11, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(12, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(13, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(14, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(15, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(16, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(17, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(18, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(19, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(20, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(21, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(22, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(23, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(25, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(26, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(27, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(28, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(29, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(30, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(31, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(32, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(33, 2, 'tinytable_css_9pxb2a6ius1dn8lr8q6q') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(1, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(2, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(3, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(4, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(5, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(6, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(7, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(8, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(9, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(10, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(11, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(12, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(13, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(14, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(15, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(16, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(17, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(18, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(19, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(20, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(21, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(22, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(23, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(25, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(26, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(27, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(28, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(29, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(30, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(31, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(32, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(33, 3, 'tinytable_css_f2hvdonhyys4jbyzvlew') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(1, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(2, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(3, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(4, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(5, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(6, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(7, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(8, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(9, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(10, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(11, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(12, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(13, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(14, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(15, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(16, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(17, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(18, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(19, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(20, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(21, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(22, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(23, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(25, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(26, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(27, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(28, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(29, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(30, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(31, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(32, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(33, 4, 'tinytable_css_5imiyn4gs4pd90vvianh') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(0, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(1, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(2, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(3, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(4, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(5, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(6, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(7, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(8, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(9, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(10, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(11, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(12, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(13, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(14, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(15, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(16, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(17, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(18, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(19, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(20, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(21, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(22, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(23, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(25, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(26, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(27, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(28, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(29, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(30, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(31, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(32, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(33, 5, 'tinytable_css_v6hjzb3roj4m62o0ovj3') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 0, 'tinytable_css_0uelj5cb7so52d1n86o9') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 1, 'tinytable_css_0uelj5cb7so52d1n86o9') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 2, 'tinytable_css_0uelj5cb7so52d1n86o9') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 3, 'tinytable_css_0uelj5cb7so52d1n86o9') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 4, 'tinytable_css_0uelj5cb7so52d1n86o9') })
+window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlryv2pnw(24, 5, 'tinytable_css_0uelj5cb7so52d1n86o9') })
+    </script>
 </div>
 </div>
 </section><section id="passing-new-data-arguments-newdata-wts-by-etc." class="level2"><h2 class="anchored" data-anchor-id="passing-new-data-arguments-newdata-wts-by-etc.">Passing new data arguments: <code>newdata</code>, <code>wts</code>, <code>by</code>, etc.</h2>
@@ -1443,20 +1291,20 @@ window.Quarto = {
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, newdata <span class="op">=</span> <span class="va">dat</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">mice</span><span class="fu">::</span><span class="fu"><a href="https://amices.org/mice/reference/pool.html">pool</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Class: mipo    m = 5 </span></span>
-<span><span class="co">#&gt;   term m     estimate         ubar            b            t dfcom       df      riv    lambda       fmi</span></span>
-<span><span class="co">#&gt; 1  cyl 5 -0.134280454 7.093304e-04 2.347331e-03 3.526128e-03    29 2.920745 3.971065 0.7988359 0.8667882</span></span>
-<span><span class="co">#&gt; 2   hp 5  0.001649773 5.708603e-07 1.375452e-06 2.221403e-06    29 3.556844 2.891325 0.7430181 0.8214040</span></span>
-<span><span class="co">#&gt; 3  mpg 5  0.006082804 1.080454e-04 2.722234e-04 4.347135e-04    29 3.458294 3.023434 0.7514561 0.8284250</span></span>
+<span><span class="co">#&gt;   term    contrast m     estimate         ubar            b            t dfcom       df      riv    lambda       fmi</span></span>
+<span><span class="co">#&gt; 1  cyl mean(dY/dX) 5 -0.134280454 7.093306e-04 2.347331e-03 3.526128e-03    29 2.920745 3.971064 0.7988358 0.8667881</span></span>
+<span><span class="co">#&gt; 2   hp mean(dY/dX) 5  0.001649773 5.708603e-07 1.375452e-06 2.221403e-06    29 3.556843 2.891325 0.7430181 0.8214040</span></span>
+<span><span class="co">#&gt; 3  mpg mean(dY/dX) 5  0.006082804 1.080454e-04 2.722234e-04 4.347135e-04    29 3.458294 3.023434 0.7514561 0.8284250</span></span>
 <span></span>
 <span><span class="co">## slopes with weights</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span>, \<span class="op">(</span><span class="va">i</span><span class="op">)</span> </span>
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, newdata <span class="op">=</span> <span class="va">dat</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, wts <span class="op">=</span> <span class="st">"gear"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">mice</span><span class="fu">::</span><span class="fu"><a href="https://amices.org/mice/reference/pool.html">pool</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Class: mipo    m = 5 </span></span>
-<span><span class="co">#&gt;   term m     estimate         ubar            b            t dfcom       df      riv    lambda       fmi</span></span>
-<span><span class="co">#&gt; 1  cyl 5 -0.135839444 7.276189e-04 2.481021e-03 0.0037048435    29 2.867574 4.091736 0.8036033 0.8705464</span></span>
-<span><span class="co">#&gt; 2   hp 5  0.001671173 5.697224e-07 1.424648e-06 0.0000022793    29 3.474698 3.000721 0.7500450 0.8272548</span></span>
-<span><span class="co">#&gt; 3  mpg 5  0.006251144 1.055910e-04 2.705239e-04 0.0004302197    29 3.422256 3.074397 0.7545649 0.8309976</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;   term    contrast m     estimate         ubar            b            t dfcom       df      riv    lambda       fmi</span></span>
+<span><span class="co">#&gt; 1  cyl mean(dY/dX) 5 -0.135839444 7.276189e-04 2.481021e-03 0.0037048435    29 2.867574 4.091736 0.8036033 0.8705464</span></span>
+<span><span class="co">#&gt; 2   hp mean(dY/dX) 5  0.001671173 5.697224e-07 1.424648e-06 0.0000022793    29 3.474698 3.000721 0.7500450 0.8272548</span></span>
+<span><span class="co">#&gt; 3  mpg mean(dY/dX) 5  0.006251144 1.055910e-04 2.705239e-04 0.0004302197    29 3.422256 3.074397 0.7545649 0.8309976</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

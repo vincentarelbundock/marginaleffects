@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.29">
+<meta name="generator" content="quarto-1.5.37">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – Conjoint experiments</title>
 <style>
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -156,7 +156,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -164,6 +164,10 @@ window.Quarto = {
 <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf"> 
+<span class="menu-text">Article</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/help.html"> 
@@ -185,11 +189,11 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/conjoint.html">Conjoint experiments</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -204,9 +208,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -245,9 +249,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -314,12 +318,6 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Help</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Heterogeneity</span></a>
   </div>
@@ -382,14 +380,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -453,9 +457,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -608,9 +612,9 @@ window.Quarto = {
   
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tinytable_90q7h6h0yqfzs6k584lx</title>
+<title>tinytable_mlbayt9d9ajw11hvchfi</title>
 <style>
-.table td.tinytable_css_fhkxlgrojgcc1fx2zvq5, .table th.tinytable_css_fhkxlgrojgcc1fx2zvq5 {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_wcmzwksttpyl07ympsw9, .table th.tinytable_css_wcmzwksttpyl07ympsw9 {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
@@ -622,7 +626,7 @@ window.Quarto = {
       }
     };
     </script><div class="container">
-      <table class="table table-borderless" id="tinytable_90q7h6h0yqfzs6k584lx" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_mlbayt9d9ajw11hvchfi" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <caption><p>A single forced-choice task in a conjoint experiment. The survey
 respondent must choose one of the two profiles before seeing a second
 task.</p></caption>
@@ -647,12 +651,12 @@ task.</p></caption>
 </div>
 
     <script>
-      function styleCell_tinytable_bl4frny49mkrwtkm7tqn(i, j, css_id) {
-        var table = document.getElementById("tinytable_90q7h6h0yqfzs6k584lx");
+      function styleCell_tinytable_696cxbmrd9vjxf3knyc6(i, j, css_id) {
+        var table = document.getElementById("tinytable_mlbayt9d9ajw11hvchfi");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_90q7h6h0yqfzs6k584lx');
+        var table = document.getElementById('tinytable_mlbayt9d9ajw11hvchfi');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -660,8 +664,8 @@ task.</p></caption>
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_bl4frny49mkrwtkm7tqn(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_90q7h6h0yqfzs6k584lx");
+      function spanCell_tinytable_696cxbmrd9vjxf3knyc6(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_mlbayt9d9ajw11hvchfi");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -688,9 +692,9 @@ task.</p></caption>
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_bl4frny49mkrwtkm7tqn(0, 0, 'tinytable_css_fhkxlgrojgcc1fx2zvq5') })
-window.addEventListener('load', function () { styleCell_tinytable_bl4frny49mkrwtkm7tqn(0, 1, 'tinytable_css_fhkxlgrojgcc1fx2zvq5') })
-window.addEventListener('load', function () { styleCell_tinytable_bl4frny49mkrwtkm7tqn(0, 2, 'tinytable_css_fhkxlgrojgcc1fx2zvq5') })
+window.addEventListener('load', function () { styleCell_tinytable_696cxbmrd9vjxf3knyc6(0, 0, 'tinytable_css_wcmzwksttpyl07ympsw9') })
+window.addEventListener('load', function () { styleCell_tinytable_696cxbmrd9vjxf3knyc6(0, 1, 'tinytable_css_wcmzwksttpyl07ympsw9') })
+window.addEventListener('load', function () { styleCell_tinytable_696cxbmrd9vjxf3knyc6(0, 2, 'tinytable_css_wcmzwksttpyl07ympsw9') })
     </script>
 </div>
 </div>
@@ -848,12 +852,12 @@ Type:  response </code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"language"</span>, vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-     Term                  Contrast Estimate Std. Error      z Pr(&gt;|z|)     S   2.5 %  97.5 %
- language broken - fluent            -0.0592     0.0120  -4.95   &lt;0.001  20.4 -0.0826 -0.0357
- language tried but unable - fluent  -0.1271     0.0119 -10.66   &lt;0.001  85.7 -0.1504 -0.1037
- language used interpreter - fluent  -0.1608     0.0121 -13.27   &lt;0.001 131.2 -0.1845 -0.1370
+     Term                              Contrast Estimate Std. Error      z Pr(&gt;|z|)     S   2.5 %  97.5 %
+ language mean(broken) - mean(fluent)            -0.0592     0.0120  -4.95   &lt;0.001  20.4 -0.0826 -0.0357
+ language mean(tried but unable) - mean(fluent)  -0.1271     0.0119 -10.66   &lt;0.001  85.7 -0.1504 -0.1037
+ language mean(used interpreter) - mean(fluent)  -0.1608     0.0121 -13.27   &lt;0.001 131.2 -0.1845 -0.1370
 
-Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
 Type:  response </code></pre>
 </div>
 </div>
@@ -882,12 +886,12 @@ Type:  response </code></pre>
 <span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-     Term                  Contrast Estimate Std. Error      z Pr(&gt;|z|)     S  2.5 %  97.5 %
- language broken - fluent            -0.0683     0.0136  -5.03   &lt;0.001  21.0 -0.095 -0.0417
- language tried but unable - fluent  -0.1284     0.0134  -9.56   &lt;0.001  69.5 -0.155 -0.1021
- language used interpreter - fluent  -0.1658     0.0138 -12.00   &lt;0.001 107.7 -0.193 -0.1387
+     Term                              Contrast Estimate Std. Error      z Pr(&gt;|z|)     S  2.5 %  97.5 %
+ language mean(broken) - mean(fluent)            -0.0683     0.0136  -5.03   &lt;0.001  21.0 -0.095 -0.0417
+ language mean(tried but unable) - mean(fluent)  -0.1284     0.0134  -9.56   &lt;0.001  69.5 -0.155 -0.1021
+ language mean(used interpreter) - mean(fluent)  -0.1658     0.0138 -12.00   &lt;0.001 107.7 -0.193 -0.1387
 
-Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
 Type:  response </code></pre>
 </div>
 </div>
@@ -920,9 +924,9 @@ Type:  response </code></pre>
   
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tinytable_44w79vbrz3rk6w9slf8q</title>
+<title>tinytable_grmqyaaue04gt7v63qhe</title>
 <style>
-.table td.tinytable_css_nic1nxt7ta9ctbaijf5a, .table th.tinytable_css_nic1nxt7ta9ctbaijf5a {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_b6woz6onkxjqnk320uuo, .table th.tinytable_css_b6woz6onkxjqnk320uuo {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
@@ -934,7 +938,7 @@ Type:  response </code></pre>
       }
     };
     </script><div class="container">
-      <table class="table table-borderless" id="tinytable_44w79vbrz3rk6w9slf8q" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_grmqyaaue04gt7v63qhe" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead><tr>
 <th scope="col">respondent</th>
                 <th scope="col">task</th>
@@ -965,12 +969,12 @@ Type:  response </code></pre>
 </div>
 
     <script>
-      function styleCell_tinytable_e0jg7c1mjvst0ksju7x6(i, j, css_id) {
-        var table = document.getElementById("tinytable_44w79vbrz3rk6w9slf8q");
+      function styleCell_tinytable_77wjus1gj9pby0viobxo(i, j, css_id) {
+        var table = document.getElementById("tinytable_grmqyaaue04gt7v63qhe");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_44w79vbrz3rk6w9slf8q');
+        var table = document.getElementById('tinytable_grmqyaaue04gt7v63qhe');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -978,8 +982,8 @@ Type:  response </code></pre>
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_e0jg7c1mjvst0ksju7x6(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_44w79vbrz3rk6w9slf8q");
+      function spanCell_tinytable_77wjus1gj9pby0viobxo(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_grmqyaaue04gt7v63qhe");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1006,12 +1010,12 @@ Type:  response </code></pre>
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 0, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
-window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 1, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
-window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 2, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
-window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 3, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
-window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 4, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
-window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0ksju7x6(0, 5, 'tinytable_css_nic1nxt7ta9ctbaijf5a') })
+window.addEventListener('load', function () { styleCell_tinytable_77wjus1gj9pby0viobxo(0, 0, 'tinytable_css_b6woz6onkxjqnk320uuo') })
+window.addEventListener('load', function () { styleCell_tinytable_77wjus1gj9pby0viobxo(0, 1, 'tinytable_css_b6woz6onkxjqnk320uuo') })
+window.addEventListener('load', function () { styleCell_tinytable_77wjus1gj9pby0viobxo(0, 2, 'tinytable_css_b6woz6onkxjqnk320uuo') })
+window.addEventListener('load', function () { styleCell_tinytable_77wjus1gj9pby0viobxo(0, 3, 'tinytable_css_b6woz6onkxjqnk320uuo') })
+window.addEventListener('load', function () { styleCell_tinytable_77wjus1gj9pby0viobxo(0, 4, 'tinytable_css_b6woz6onkxjqnk320uuo') })
+window.addEventListener('load', function () { styleCell_tinytable_77wjus1gj9pby0viobxo(0, 5, 'tinytable_css_b6woz6onkxjqnk320uuo') })
     </script>
 </div>
 </div>
@@ -1033,10 +1037,10 @@ window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0k
   
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tinytable_zpw9egipiwb7du60nxcj</title>
+<title>tinytable_5i7vacz24fcnc5obb4qw</title>
 <style>
-.table td.tinytable_css_i1p1dllfdeo4ewhi585o, .table th.tinytable_css_i1p1dllfdeo4ewhi585o {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_59e6zzsjwshipesr867i, .table th.tinytable_css_59e6zzsjwshipesr867i {    background-color: pink; }
+.table td.tinytable_css_1p1v9j4n754f6nz324o7, .table th.tinytable_css_1p1v9j4n754f6nz324o7 {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_2kqx9qcpmbv8xyz39kjb, .table th.tinytable_css_2kqx9qcpmbv8xyz39kjb {    background-color: pink; }
     </style>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
@@ -1048,7 +1052,7 @@ window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0k
       }
     };
     </script><div class="container">
-      <table class="table table-borderless" id="tinytable_zpw9egipiwb7du60nxcj" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_5i7vacz24fcnc5obb4qw" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead><tr>
 <th scope="col">language</th>
                 <th scope="col">alternative</th>
@@ -1060,6 +1064,12 @@ window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0k
                 <th scope="col">2.5 %</th>
                 <th scope="col">97.5 %</th>
               </tr></thead>
+<tfoot>
+<tr><td colspan="9">Type:  response 
+</td></tr>
+<tr><td colspan="9">Columns: language, alternative, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+</td></tr>
+</tfoot>
 <tbody>
 <tr>
 <td>tried but unable</td>
@@ -1198,12 +1208,12 @@ window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0k
 </div>
 
     <script>
-      function styleCell_tinytable_419hawca3l3c68jkrff7(i, j, css_id) {
-        var table = document.getElementById("tinytable_zpw9egipiwb7du60nxcj");
+      function styleCell_tinytable_i0g7pz82oglu22c1p3m1(i, j, css_id) {
+        var table = document.getElementById("tinytable_5i7vacz24fcnc5obb4qw");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_zpw9egipiwb7du60nxcj');
+        var table = document.getElementById('tinytable_5i7vacz24fcnc5obb4qw');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1211,8 +1221,8 @@ window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0k
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_419hawca3l3c68jkrff7(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_zpw9egipiwb7du60nxcj");
+      function spanCell_tinytable_i0g7pz82oglu22c1p3m1(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_5i7vacz24fcnc5obb4qw");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1239,42 +1249,42 @@ window.addEventListener('load', function () { styleCell_tinytable_e0jg7c1mjvst0k
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 0, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 1, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 2, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 3, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 4, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 5, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 6, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 7, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(0, 8, 'tinytable_css_i1p1dllfdeo4ewhi585o') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 0, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 0, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 0, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 1, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 1, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 1, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 2, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 2, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 2, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 3, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 3, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 3, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 4, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 4, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 4, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 5, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 5, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 5, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 6, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 6, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 6, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 7, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 7, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 7, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(3, 8, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(5, 8, 'tinytable_css_59e6zzsjwshipesr867i') })
-window.addEventListener('load', function () { styleCell_tinytable_419hawca3l3c68jkrff7(12, 8, 'tinytable_css_59e6zzsjwshipesr867i') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(0, 0, 'tinytable_css_1p1v9j4n754f6nz324o7') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(0, 1, 'tinytable_css_1p1v9j4n754f6nz324o7') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(0, 2, 'tinytable_css_1p1v9j4n754f6nz324o7') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(0, 3, 'tinytable_css_1p1v9j4n754f6nz324o7') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(0, 4, 'tinytable_css_1p1v9j4n754f6nz324o7') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(0, 5, 'tinytable_css_1p1v9j4n754f6nz324o7') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(0, 6, 'tinytable_css_1p1v9j4n754f6nz324o7') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(0, 7, 'tinytable_css_1p1v9j4n754f6nz324o7') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(0, 8, 'tinytable_css_1p1v9j4n754f6nz324o7') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(3, 0, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(5, 0, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(12, 0, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(3, 1, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(5, 1, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(12, 1, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(3, 2, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(5, 2, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(12, 2, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(3, 3, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(5, 3, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(12, 3, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(3, 4, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(5, 4, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(12, 4, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(3, 5, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(5, 5, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(12, 5, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(3, 6, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(5, 6, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(12, 6, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(3, 7, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(5, 7, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(12, 7, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(3, 8, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(5, 8, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
+window.addEventListener('load', function () { styleCell_tinytable_i0g7pz82oglu22c1p3m1(12, 8, 'tinytable_css_2kqx9qcpmbv8xyz39kjb') })
     </script>
 </div>
 </div>

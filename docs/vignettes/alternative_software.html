@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.29">
+<meta name="generator" content="quarto-1.5.37">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – alternative_software</title>
 <style>
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -136,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -144,6 +144,10 @@ window.Quarto = {
 <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf"> 
+<span class="menu-text">Article</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/help.html"> 
@@ -165,11 +169,11 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/faq.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../vignettes/alternative_software.html">Alternative Software</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/help.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../vignettes/alternative_software.html">Alternative Software</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -184,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -225,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -294,12 +298,6 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Help</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Heterogeneity</span></a>
   </div>
@@ -362,14 +360,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -433,9 +437,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -603,7 +607,7 @@ window.Quarto = {
 </ul>
 <section id="emmeans" class="level2"><h2 class="anchored" data-anchor-id="emmeans"><code>emmeans</code></h2>
 <p>The <a href="https://cran.r-project.org/web/packages/emmeans/index.html"><code>emmeans</code> package</a> is developed by Russell V. Lenth and colleagues. <code>emmeans</code> is a truly incredible piece of software, and a trailblazer in the <code>R</code> ecosystem. It is an <em>extremely</em> powerful package whose functionality overlaps <code>marginaleffects</code> to a significant degree: marginal means, contrasts, and slopes. Even if the two packages can compute many of the same quantities, <code>emmeans</code> and <code>marginaleffects</code> have pretty different philosophies with respect to user interface and computation.</p>
-<p>An <code>emmeans</code> analysis typically starts by computing <a href="marginalmeans.html">“marginal means”</a> by holding all numeric covariates at their means, and by averaging across a balanced grid of categorical predictors. Then, users can use the <code><a href="https://rdrr.io/pkg/emmeans/man/contrast.html">contrast()</a></code> function to estimate the difference between marginal means.</p>
+<p>An <code>emmeans</code> analysis typically starts by computing <a href="marginalmeans.html">“marginal means”</a> by holding all numeric covariates at their means, and by averaging across a balanced grid of categorical predictors. Then, users can use the <code><a href="https://rvlenth.github.io/emmeans/reference/contrast.html">contrast()</a></code> function to estimate the difference between marginal means.</p>
 <p>The <code>marginaleffects</code> package supplies a <code>predictions</code> function which can replicate most <code>emmeans</code> analyses by computing marginal means. However, the typical analysis is more squarely centered on predicted/fitted values. This is a useful starting point because, in many cases, analysts will find it easy and intuitive to express their scientific queries in terms of changes in predicted values. For example,</p>
 <ul>
 <li>How does the average predicted probability of survival differ between treatment and control group?</li>
@@ -633,22 +637,22 @@ window.Quarto = {
 <li>Common plots are easy with the <code><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions()</a></code>, <code><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons()</a></code>, and <code><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes()</a></code> functions.</li>
 </ul>
 <p>To be fair, many of the <code>marginaleffects</code> advantages listed above come down to subjective preferences over user interface. Readers are thus encouraged to try both packages to see which interface they prefer.</p>
-<p>The main advantages of <code>emmeans</code> over <code>marginaleffects</code> arise when users are specifically interested in marginal means, where <code>emmeans</code> tends to be much faster and to have a lot of functionality to handle backtransformations. <code>emmeans</code> also has better functionality for effect sizes; notably, the <code><a href="https://rdrr.io/pkg/emmeans/man/eff_size.html">eff_size()</a></code> function can return effect size estimates that account for uncertainty in both estimated effects and the population SD.</p>
+<p>The main advantages of <code>emmeans</code> over <code>marginaleffects</code> arise when users are specifically interested in marginal means, where <code>emmeans</code> tends to be much faster and to have a lot of functionality to handle backtransformations. <code>emmeans</code> also has better functionality for effect sizes; notably, the <code><a href="https://rvlenth.github.io/emmeans/reference/eff_size.html">eff_size()</a></code> function can return effect size estimates that account for uncertainty in both estimated effects and the population SD.</p>
 <p>Please let me know if you find other features in <code>emmeans</code> so I can add them to this list.</p>
 <p>The <a href="marginalmeans.html">Marginal Means Vignette</a> includes side-by-side comparisons of <code>emmeans</code> and <code>marginaleffects</code> to compute marginal means. The rest of this section compares the syntax for contrasts and marginaleffects.</p>
 <section id="contrasts" class="level3"><h3 class="anchored" data-anchor-id="contrasts">Contrasts</h3>
 <p>As far as I can tell, <code>emmeans</code> does not provide an easy way to compute unit-level contrasts for every row of the dataset used to fit our model. Therefore, the side-by-side syntax shown below will always include <code>newdata=datagrid()</code> to specify that we want to compute only one contrast: at the mean values of the regressors. In day-to-day practice with <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code>, however, this extra argument would not be necessary.</p>
 <p>Fit a model:</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rvlenth/emmeans">emmeans</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rvlenth.github.io/emmeans/">emmeans</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">vs</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Link scale, pairwise contrasts:</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, specs <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/contrast.html">contrast</a></span><span class="op">(</span><span class="va">emm</span>, method <span class="op">=</span> <span class="st">"revpairwise"</span>, adjust <span class="op">=</span> <span class="st">"none"</span>, df <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rvlenth.github.io/emmeans/reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, specs <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rvlenth.github.io/emmeans/reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">emm</span>, method <span class="op">=</span> <span class="st">"revpairwise"</span>, adjust <span class="op">=</span> <span class="st">"none"</span>, df <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  contrast    estimate      SE  df z.ratio p.value</span></span>
 <span><span class="co">#&gt;  cyl6 - cyl4   -0.905    1.63 Inf  -0.555  0.5789</span></span>
 <span><span class="co">#&gt;  cyl8 - cyl4  -19.542 4367.17 Inf  -0.004  0.9964</span></span>
@@ -672,8 +676,8 @@ window.Quarto = {
 </div>
 <p>Response scale, reference groups:</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, specs <span class="op">=</span> <span class="st">"cyl"</span>, regrid <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/contrast.html">contrast</a></span><span class="op">(</span><span class="va">emm</span>, method <span class="op">=</span> <span class="st">"trt.vs.ctrl1"</span>, adjust <span class="op">=</span> <span class="st">"none"</span>, df <span class="op">=</span> <span class="cn">Inf</span>, ratios <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rvlenth.github.io/emmeans/reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, specs <span class="op">=</span> <span class="st">"cyl"</span>, regrid <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rvlenth.github.io/emmeans/reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">emm</span>, method <span class="op">=</span> <span class="st">"trt.vs.ctrl1"</span>, adjust <span class="op">=</span> <span class="st">"none"</span>, df <span class="op">=</span> <span class="cn">Inf</span>, ratios <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  contrast    estimate    SE  df z.ratio p.value</span></span>
 <span><span class="co">#&gt;  cyl6 - cyl4   -0.222 0.394 Inf  -0.564  0.5727</span></span>
 <span><span class="co">#&gt;  cyl8 - cyl4   -0.595 0.511 Inf  -1.163  0.2447</span></span>
@@ -695,7 +699,7 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lme4/lme4/">lme4</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rvlenth/emmeans">emmeans</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rvlenth.github.io/emmeans/">emmeans</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/lme4/VerbAgg.csv"</span><span class="op">)</span></span>
 <span><span class="va">dat</span><span class="op">$</span><span class="va">woman</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">Gender</span> <span class="op">==</span> <span class="st">"F"</span><span class="op">)</span></span>
@@ -705,12 +709,12 @@ window.Quarto = {
 <span>    family <span class="op">=</span> <span class="va">binomial</span>,</span>
 <span>    data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, specs <span class="op">=</span> <span class="st">"btype"</span>, by <span class="op">=</span> <span class="st">"resp"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/contrast.html">contrast</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"revpairwise"</span>, adjust <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rvlenth.github.io/emmeans/reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, specs <span class="op">=</span> <span class="st">"btype"</span>, by <span class="op">=</span> <span class="st">"resp"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://rvlenth.github.io/emmeans/reference/contrast.html">contrast</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"revpairwise"</span>, adjust <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; resp = no:</span></span>
 <span><span class="co">#&gt;  contrast      estimate     SE  df z.ratio p.value</span></span>
-<span><span class="co">#&gt;  scold - curse  -0.0152 0.1096 Inf  -0.139  0.8898</span></span>
-<span><span class="co">#&gt;  shout - curse  -0.2533 0.1022 Inf  -2.479  0.0132</span></span>
+<span><span class="co">#&gt;  scold - curse  -0.0152 0.1097 Inf  -0.139  0.8898</span></span>
+<span><span class="co">#&gt;  shout - curse  -0.2533 0.1022 Inf  -2.478  0.0132</span></span>
 <span><span class="co">#&gt;  shout - scold  -0.2381 0.0886 Inf  -2.686  0.0072</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; resp = perhaps:</span></span>
@@ -721,7 +725,7 @@ window.Quarto = {
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; resp = yes:</span></span>
 <span><span class="co">#&gt;  contrast      estimate     SE  df z.ratio p.value</span></span>
-<span><span class="co">#&gt;  scold - curse   0.0391 0.1292 Inf   0.302  0.7624</span></span>
+<span><span class="co">#&gt;  scold - curse   0.0391 0.1292 Inf   0.302  0.7623</span></span>
 <span><span class="co">#&gt;  shout - curse   0.5802 0.1784 Inf   3.252  0.0011</span></span>
 <span><span class="co">#&gt;  shout - scold   0.5411 0.1888 Inf   2.866  0.0042</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -775,27 +779,27 @@ window.Quarto = {
 <span>    type <span class="op">=</span> <span class="st">"link"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Term                  Contrast    resp Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;  btype mean(scold) - mean(curse) no       -0.0152     0.1096 -0.139  0.88975 0.2 -0.230  0.19970</span></span>
+<span><span class="co">#&gt;  btype mean(scold) - mean(curse) no       -0.0152     0.1097 -0.139  0.88980 0.2 -0.230  0.19973</span></span>
 <span><span class="co">#&gt;  btype mean(scold) - mean(curse) perhaps  -0.2393     0.1178 -2.031  0.04222 4.6 -0.470 -0.00841</span></span>
-<span><span class="co">#&gt;  btype mean(scold) - mean(curse) yes       0.0391     0.1292  0.302  0.76239 0.4 -0.214  0.29234</span></span>
-<span><span class="co">#&gt;  btype mean(shout) - mean(curse) no       -0.2533     0.1022 -2.479  0.01318 6.2 -0.454 -0.05301</span></span>
-<span><span class="co">#&gt;  btype mean(shout) - mean(curse) perhaps  -0.0834     0.1330 -0.627  0.53091 0.9 -0.344  0.17738</span></span>
+<span><span class="co">#&gt;  btype mean(scold) - mean(curse) yes       0.0391     0.1292  0.302  0.76230 0.4 -0.214  0.29236</span></span>
+<span><span class="co">#&gt;  btype mean(shout) - mean(curse) no       -0.2533     0.1022 -2.478  0.01320 6.2 -0.454 -0.05298</span></span>
+<span><span class="co">#&gt;  btype mean(shout) - mean(curse) perhaps  -0.0834     0.1330 -0.627  0.53094 0.9 -0.344  0.17738</span></span>
 <span><span class="co">#&gt;  btype mean(shout) - mean(curse) yes       0.5802     0.1784  3.252  0.00115 9.8  0.230  0.92988</span></span>
-<span><span class="co">#&gt;  btype mean(shout) - mean(scold) no       -0.2381     0.0886 -2.686  0.00723 7.1 -0.412 -0.06436</span></span>
+<span><span class="co">#&gt;  btype mean(shout) - mean(scold) no       -0.2381     0.0886 -2.686  0.00723 7.1 -0.412 -0.06435</span></span>
 <span><span class="co">#&gt;  btype mean(shout) - mean(scold) perhaps   0.1559     0.1358  1.148  0.25103 2.0 -0.110  0.42215</span></span>
-<span><span class="co">#&gt;  btype mean(shout) - mean(scold) yes       0.5411     0.1888  2.866  0.00416 7.9  0.171  0.91116</span></span>
+<span><span class="co">#&gt;  btype mean(shout) - mean(scold) yes       0.5411     0.1888  2.866  0.00416 7.9  0.171  0.91115</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, resp, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  link</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>These results are identical to those produced by <code>emmeans</code> (except for <span class="math inline">\(t\)</span> vs.&nbsp;<span class="math inline">\(z\)</span>).</p>
 </section><section id="marginal-effects" class="level3"><h3 class="anchored" data-anchor-id="marginal-effects">Marginal Effects</h3>
-<p>As far as I can tell, <code><a href="https://rdrr.io/pkg/emmeans/man/emtrends.html">emmeans::emtrends</a></code> makes it easier to compute marginal effects for a few user-specified values than for large grids or for the full original dataset.</p>
+<p>As far as I can tell, <code><a href="https://rvlenth.github.io/emmeans/reference/emtrends.html">emmeans::emtrends</a></code> makes it easier to compute marginal effects for a few user-specified values than for large grids or for the full original dataset.</p>
 <p>Response scale, user-specified values:</p>
 <div class="cell">
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">vs</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">mod</span>, <span class="op">~</span><span class="va">hp</span>, <span class="st">"hp"</span>, regrid <span class="op">=</span> <span class="st">"response"</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rvlenth.github.io/emmeans/reference/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">mod</span>, <span class="op">~</span><span class="va">hp</span>, <span class="st">"hp"</span>, regrid <span class="op">=</span> <span class="st">"response"</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   hp hp.trend    SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">#&gt;  147 -0.00786 0.011 Inf   -0.0294    0.0137</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -813,7 +817,7 @@ window.Quarto = {
 </div>
 <p>Link scale, user-specified values:</p>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/emmeans/man/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">mod</span>, <span class="op">~</span><span class="va">hp</span>, <span class="st">"hp"</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rvlenth.github.io/emmeans/reference/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">mod</span>, <span class="op">~</span><span class="va">hp</span>, <span class="st">"hp"</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   hp hp.trend     SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">#&gt;  147  -0.0326 0.0339 Inf    -0.099    0.0338</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1070,12 +1074,12 @@ cyl |  -.9416168   .5509164    -1.71   0.098    -2.070118    .1868842
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">wt</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;   cyl   -0.942     0.5510 -1.71   0.0875  3.5 -2.0215  0.13828</span></span>
-<span><span class="co">#&gt;   hp    -0.018     0.0119 -1.52   0.1288  3.0 -0.0413  0.00524</span></span>
-<span><span class="co">#&gt;   wt    -3.167     0.7406 -4.28   &lt;0.001 15.7 -4.6185 -1.71541</span></span>
+<span><span class="co">#&gt;  Term    Contrast Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
+<span><span class="co">#&gt;   cyl mean(dY/dX)   -0.942     0.5510 -1.71   0.0875  3.5 -2.0215  0.13828</span></span>
+<span><span class="co">#&gt;   hp  mean(dY/dX)   -0.018     0.0119 -1.52   0.1288  3.0 -0.0413  0.00524</span></span>
+<span><span class="co">#&gt;   wt  mean(dY/dX)   -3.167     0.7406 -4.28   &lt;0.001 15.7 -4.6185 -1.71541</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that <code>Stata</code> reports t statistics while <code>marginaleffects</code> reports Z. This produces slightly different p-values because this model has low degrees of freedom: <code>mtcars</code> only has 32 rows</p>
@@ -1260,7 +1264,7 @@ Expression   : Linear prediction, predict()
 <span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mc-stan.org/rstantools/reference/posterior_epred.html">posterior_epred</a></span><span class="op">(</span><span class="va">bayes.logistic</span>, newdata <span class="op">=</span> <span class="va">d1</span><span class="op">)</span></span>
 <span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mc-stan.org/rstantools/reference/posterior_epred.html">posterior_epred</a></span><span class="op">(</span><span class="va">bayes.logistic</span>, newdata <span class="op">=</span> <span class="va">d2</span><span class="op">)</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p2</span> <span class="op">-</span> <span class="va">p1</span><span class="op">)</span> <span class="op">/</span> <span class="va">h</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.025</span>, <span class="fl">.975</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums-methods.html">rowMeans</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.025</span>, <span class="fl">.975</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        50%       2.5%      97.5% </span></span>
 <span><span class="co">#&gt; 0.07010427 0.05418413 0.09092451</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1280,11 +1284,11 @@ Expression   : Linear prediction, predict()
 <div class="cell">
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">bayes.logistic</span><span class="op">)</span> </span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate   2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;   am     1 - 0  -0.2665 -0.4242 -0.0703</span></span>
-<span><span class="co">#&gt;   mpg    dY/dX   0.0701  0.0542  0.0909</span></span>
+<span><span class="co">#&gt;  Term          Contrast Estimate   2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;   am  mean(1) - mean(0)  -0.2665 -0.4242 -0.0703</span></span>
+<span><span class="co">#&gt;   mpg mean(dY/dX)         0.0701  0.0542  0.0909</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <code>mpg</code> element of the <code>Effect</code> column from <code>marginaleffects</code> matches the the <code>M</code> column of the output from <code>brmsmargins</code>.</p>
@@ -1300,7 +1304,7 @@ Expression   : Linear prediction, predict()
 <span>    <span class="va">theta.location</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">theta.location</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">theta.location</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span>    <span class="va">theta.location</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">theta.location</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">theta.location</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span>    <span class="va">theta.location</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">theta.location</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">theta.location</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
-<span>    <span class="va">theta.location</span> <span class="op">&lt;-</span> <span class="va">theta.location</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/chol.html">chol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="op">-</span><span class="fl">.25</span>, <span class="op">-</span><span class="fl">.25</span>, <span class="fl">.5</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">theta.location</span> <span class="op">&lt;-</span> <span class="va">theta.location</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/chol-methods.html">chol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="op">-</span><span class="fl">.25</span>, <span class="op">-</span><span class="fl">.25</span>, <span class="fl">.5</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="va">theta.location</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">theta.location</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="fl">2.5</span></span>
 <span>    <span class="va">theta.location</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">theta.location</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span>    <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html">data.table</a></span><span class="op">(</span></span>
@@ -1336,15 +1340,15 @@ Expression   : Linear prediction, predict()
 <span>  CI <span class="op">=</span> <span class="fl">.95</span>,</span>
 <span>  CIType <span class="op">=</span> <span class="st">"ETI"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">bm</span><span class="op">$</span><span class="va">ContrastSummary</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          M       Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
-<span><span class="co">#&gt; 1 0.111492 0.1115944 0.08095807 0.1420166          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
+<span><span class="co">#&gt;           M       Mdn         LL       UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span><span class="co">#&gt; 1 0.1117023 0.1114383 0.08044318 0.144612          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mlogit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     x    1 - 0    0.111 0.0806   0.14</span></span>
+<span><span class="co">#&gt;  Term          Contrast Estimate  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;     x mean(1) - mean(0)    0.111 0.0801  0.143</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="ame-fixed-effects-only-grand-mean" class="level4"><h4 class="anchored" data-anchor-id="ame-fixed-effects-only-grand-mean">AME: Fixed Effects Only (Grand Mean)</h4>
@@ -1357,15 +1361,15 @@ Expression   : Linear prediction, predict()
 <span>  CI <span class="op">=</span> <span class="fl">.95</span>,</span>
 <span>  CIType <span class="op">=</span> <span class="st">"ETI"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">bm</span><span class="op">$</span><span class="va">ContrastSummary</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           M       Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
-<span><span class="co">#&gt; 1 0.1039555 0.1034452 0.06319565 0.1491665          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
+<span><span class="co">#&gt;          M      Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span><span class="co">#&gt; 1 0.104103 0.103845 0.06135493 0.1482218          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mlogit</span>, re_formula <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     x    1 - 0    0.101 0.0623  0.143</span></span>
+<span><span class="co">#&gt;  Term          Contrast Estimate  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;     x mean(1) - mean(0)    0.101 0.0606  0.143</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="marginal-effects-for-location-scale-models" class="level3"><h3 class="anchored" data-anchor-id="marginal-effects-for-location-scale-models">Marginal Effects for Location Scale Models</h3>
@@ -1409,11 +1413,11 @@ Expression   : Linear prediction, predict()
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">ls.fe</span>, re_formula <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   grp    1 - 0     1.02 0.355   1.70</span></span>
-<span><span class="co">#&gt;   x      dY/dX     1.63 0.735   2.47</span></span>
+<span><span class="co">#&gt;  Term          Contrast Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;   grp mean(1) - mean(0)     1.02 0.355   1.70</span></span>
+<span><span class="co">#&gt;   x   mean(dY/dX)           1.63 0.735   2.47</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="discrete-change-and-distributional-parameter-dpar" class="level4"><h4 class="anchored" data-anchor-id="discrete-change-and-distributional-parameter-dpar">Discrete change and distributional parameter (<code>dpar</code>)</h4>
@@ -1436,10 +1440,10 @@ Expression   : Linear prediction, predict()
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>grp <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>  dpar <span class="op">=</span> <span class="st">"sigma"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   grp    1 - 0      4.9  4.42   5.42</span></span>
+<span><span class="co">#&gt;  Term          Contrast Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;   grp mean(1) - mean(0)      4.9  4.42   5.42</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="marginal-effect-continuous-on-sigma" class="level4"><h4 class="anchored" data-anchor-id="marginal-effect-continuous-on-sigma">Marginal effect (continuous) on sigma</h4>
@@ -1456,11 +1460,11 @@ Expression   : Linear prediction, predict()
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">ls.fe</span>, dpar <span class="op">=</span> <span class="st">"sigma"</span>, re_formula <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   grp    1 - 0     4.90  4.42   5.42</span></span>
-<span><span class="co">#&gt;   x      dY/dX     4.46  3.50   5.44</span></span>
+<span><span class="co">#&gt;  Term          Contrast Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;   grp mean(1) - mean(0)     4.90  4.42   5.42</span></span>
+<span><span class="co">#&gt;   x   mean(dY/dX)           4.46  3.50   5.44</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section></section><section id="fmeffects" class="level2"><h2 class="anchored" data-anchor-id="fmeffects"><code>fmeffects</code></h2>
@@ -1481,9 +1485,9 @@ Expression   : Linear prediction, predict()
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate</span></span>
-<span><span class="co">#&gt;  temp       +1     2.45</span></span>
+<span><span class="co">#&gt;  temp mean(+1)     2.31</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This is equivalent to the key quantity reported by the <code>fmeffects</code> package:</p>
@@ -1494,7 +1498,7 @@ Expression   : Linear prediction, predict()
 <span>    target <span class="op">=</span> <span class="st">"count"</span>,</span>
 <span>    feature <span class="op">=</span> <span class="st">"temp"</span>,</span>
 <span>    step.size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">ame</span></span>
-<span><span class="co">#&gt; [1] 2.4464</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 2.313447</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Another interesting feature of <code>fmeffects</code> is the ability treat categorical predictors in an unconventional way: pick a reference level, then compute the average difference between the predicted values for that level, and the predicted values for the observed levels (which may be the same as the reference level).</p>
 <p>In the <code>bikes</code> example, we can answer the question: how does the expected number of bike rentals increases, on average, if all days were misty? With <code>marginaleffects</code>, we can use a function in the <code>variables</code> argument to specify a custom contrast:</p>
@@ -1508,9 +1512,9 @@ Expression   : Linear prediction, predict()
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term Contrast Estimate</span></span>
-<span><span class="co">#&gt;  weather   custom     2.05</span></span>
+<span><span class="co">#&gt;  weather   custom     2.11</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Two more functionalities deserve to be highlight. First, <code>fmeffects</code> includes functions to explore heterogeneity in marginal effects using recursive partitioning trees. The <a href="heterogeneity.html">heterogeneity vignette</a> illustrates how to achieve something similar with <code>marginaleffects</code>.</p>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.29">
+<meta name="generator" content="quarto-1.5.37">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – Slopes</title>
 <style>
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -136,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -144,6 +144,10 @@ window.Quarto = {
 <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf"> 
+<span class="menu-text">Article</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/help.html"> 
@@ -165,11 +169,11 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/predictions.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../vignettes/slopes.html">Slopes</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -184,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -225,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -294,12 +298,6 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Help</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Heterogeneity</span></a>
   </div>
@@ -362,14 +360,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -433,9 +437,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -622,11 +626,11 @@ window.Quarto = {
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span>, <span class="va">truth</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate</span></span>
-<span><span class="co">#&gt;    -7.010</span></span>
-<span><span class="co">#&gt;    -3.006</span></span>
-<span><span class="co">#&gt;     0.998</span></span>
-<span><span class="co">#&gt;     5.003</span></span>
-<span><span class="co">#&gt;     9.007</span></span>
+<span><span class="co">#&gt;     -6.99</span></span>
+<span><span class="co">#&gt;     -2.99</span></span>
+<span><span class="co">#&gt;      1.00</span></span>
+<span><span class="co">#&gt;      5.00</span></span>
+<span><span class="co">#&gt;      8.99</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: estimate, truth</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -662,30 +666,30 @@ window.Quarto = {
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     x   -0.996    0.00389 -256   &lt;0.001 Inf -1.00 -0.988</span></span>
-<span><span class="co">#&gt;     x    9.601    0.01024  937   &lt;0.001 Inf  9.58  9.621</span></span>
-<span><span class="co">#&gt;     x    2.738    0.00373  733   &lt;0.001 Inf  2.73  2.745</span></span>
-<span><span class="co">#&gt;     x   -8.887    0.01162 -765   &lt;0.001 Inf -8.91 -8.864</span></span>
-<span><span class="co">#&gt;     x   -3.400    0.00590 -577   &lt;0.001 Inf -3.41 -3.389</span></span>
-<span><span class="co">#&gt;     x   -7.539    0.01016 -742   &lt;0.001 Inf -7.56 -7.519</span></span>
+<span><span class="co">#&gt;     x    -1.04    0.00392 -264   &lt;0.001 Inf -1.04  -1.03</span></span>
+<span><span class="co">#&gt;     x     1.27    0.00318  397   &lt;0.001 Inf  1.26   1.27</span></span>
+<span><span class="co">#&gt;     x    -2.27    0.00486 -467   &lt;0.001 Inf -2.28  -2.26</span></span>
+<span><span class="co">#&gt;     x    -3.60    0.00607 -593   &lt;0.001 Inf -3.61  -3.59</span></span>
+<span><span class="co">#&gt;     x    -1.73    0.00442 -391   &lt;0.001 Inf -1.74  -1.72</span></span>
+<span><span class="co">#&gt;     x     4.13    0.00472  877   &lt;0.001 Inf  4.13   4.14</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, y, x </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
 <span></span>
 <span><span class="va">mfx</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Estimate Std. Error    z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     x   -0.996    0.00389 -256   &lt;0.001 Inf -1.003 -0.988</span></span>
-<span><span class="co">#&gt;     x    9.601    0.01024  937   &lt;0.001 Inf  9.581  9.621</span></span>
-<span><span class="co">#&gt;     x    2.738    0.00373  733   &lt;0.001 Inf  2.731  2.745</span></span>
-<span><span class="co">#&gt;     x   -8.887    0.01162 -765   &lt;0.001 Inf -8.910 -8.864</span></span>
-<span><span class="co">#&gt;     x   -3.400    0.00590 -577   &lt;0.001 Inf -3.412 -3.389</span></span>
+<span><span class="co">#&gt;  Term Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;     x    -1.04    0.00392 -264   &lt;0.001 Inf -1.04  -1.03</span></span>
+<span><span class="co">#&gt;     x     1.27    0.00318  397   &lt;0.001 Inf  1.26   1.27</span></span>
+<span><span class="co">#&gt;     x    -2.27    0.00486 -467   &lt;0.001 Inf -2.28  -2.26</span></span>
+<span><span class="co">#&gt;     x    -3.60    0.00607 -593   &lt;0.001 Inf -3.61  -3.59</span></span>
+<span><span class="co">#&gt;     x    -1.73    0.00442 -391   &lt;0.001 Inf -1.74  -1.72</span></span>
 <span><span class="co">#&gt; --- 99990 rows omitted. See ?avg_slopes and ?print.marginaleffects --- </span></span>
-<span><span class="co">#&gt;     x   -1.603    0.00432 -371   &lt;0.001 Inf -1.611 -1.594</span></span>
-<span><span class="co">#&gt;     x   -5.543    0.00805 -689   &lt;0.001 Inf -5.559 -5.527</span></span>
-<span><span class="co">#&gt;     x   -0.689    0.00370 -186   &lt;0.001 Inf -0.696 -0.681</span></span>
-<span><span class="co">#&gt;     x    0.850    0.00317  268   &lt;0.001 Inf  0.843  0.856</span></span>
-<span><span class="co">#&gt;     x   -4.672    0.00715 -653   &lt;0.001 Inf -4.686 -4.658</span></span>
+<span><span class="co">#&gt;     x     5.79    0.00621  932   &lt;0.001 Inf  5.78   5.80</span></span>
+<span><span class="co">#&gt;     x     1.07    0.00317  338   &lt;0.001 Inf  1.07   1.08</span></span>
+<span><span class="co">#&gt;     x     2.25    0.00346  650   &lt;0.001 Inf  2.24   2.26</span></span>
+<span><span class="co">#&gt;     x     8.47    0.00892  949   &lt;0.001 Inf  8.45   8.48</span></span>
+<span><span class="co">#&gt;     x     5.43    0.00587  925   &lt;0.001 Inf  5.42   5.44</span></span>
 <span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, y, x </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -724,13 +728,13 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;               Term           Contrast Estimate Std. Error      z Pr(&gt;|z|)    S    2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;  bill_length_mm    dY/dX                0.0279    0.00595  4.685   &lt;0.001 18.4  0.01620  0.0395</span></span>
-<span><span class="co">#&gt;  flipper_length_mm dY/dX                0.0105    0.00237  4.426   &lt;0.001 16.7  0.00585  0.0151</span></span>
-<span><span class="co">#&gt;  species           Chinstrap - Adelie  -0.4128    0.05600 -7.371   &lt;0.001 42.4 -0.52255 -0.3030</span></span>
-<span><span class="co">#&gt;  species           Gentoo - Adelie      0.0609    0.10734  0.568     0.57  0.8 -0.14946  0.2713</span></span>
+<span><span class="co">#&gt;               Term                       Contrast Estimate Std. Error      z Pr(&gt;|z|)    S    2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;  bill_length_mm    mean(dY/dX)                      0.0279    0.00595  4.685   &lt;0.001 18.4  0.01620  0.0395</span></span>
+<span><span class="co">#&gt;  flipper_length_mm mean(dY/dX)                      0.0105    0.00237  4.426   &lt;0.001 16.7  0.00585  0.0151</span></span>
+<span><span class="co">#&gt;  species           mean(Chinstrap) - mean(Adelie)  -0.4128    0.05600 -7.371   &lt;0.001 42.4 -0.52255 -0.3030</span></span>
+<span><span class="co">#&gt;  species           mean(Gentoo) - mean(Adelie)      0.0609    0.10734  0.568     0.57  0.8 -0.14946  0.2713</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that since marginal effects are derivatives, they are only properly defined for continuous numeric variables. When the model also includes categorical regressors, the <code>summary</code> function will try to display relevant (regression-adjusted) contrasts between different categories, as shown above.</p>
@@ -902,10 +906,10 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"hp"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;    hp   -0.112     0.0126 -8.92   &lt;0.001 61.0 -0.137 -0.0874</span></span>
+<span><span class="co">#&gt;  Term    Contrast Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;    hp mean(dY/dX)   -0.112     0.0126 -8.92   &lt;0.001 61.0 -0.137 -0.0874</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, consider the fact that our model includes an interaction between <code>hp</code> and <code>qsec</code>. This means that the slope will actually differ based on the value of the moderator variable <code>qsec</code>:</p>

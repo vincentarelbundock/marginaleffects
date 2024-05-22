@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.29">
+<meta name="generator" content="quarto-1.5.37">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – mrp</title>
 <style>
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -136,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -144,6 +144,10 @@ window.Quarto = {
 <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf"> 
+<span class="menu-text">Article</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/help.html"> 
@@ -165,11 +169,11 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/mrp.html">MrP</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -184,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -225,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -294,12 +298,6 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Help</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Heterogeneity</span></a>
   </div>
@@ -362,14 +360,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -433,9 +437,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -578,495 +582,156 @@ window.Quarto = {
 <span></span>
 <span><span class="fu"><a href="https://modelsummary.com/man/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">survey</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<div id="acgsatvyhw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#acgsatvyhw table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+ 
 
-#acgsatvyhw thead, #acgsatvyhw tbody, #acgsatvyhw tfoot, #acgsatvyhw tr, #acgsatvyhw td, #acgsatvyhw th {
-  border-style: none;
-}
-
-#acgsatvyhw p {
-  margin: 0;
-  padding: 0;
-}
-
-#acgsatvyhw .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#acgsatvyhw .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#acgsatvyhw .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#acgsatvyhw .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#acgsatvyhw .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#acgsatvyhw .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#acgsatvyhw .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#acgsatvyhw .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#acgsatvyhw .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#acgsatvyhw .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#acgsatvyhw .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#acgsatvyhw .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#acgsatvyhw .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#acgsatvyhw .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#acgsatvyhw .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#acgsatvyhw .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#acgsatvyhw .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#acgsatvyhw .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#acgsatvyhw .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#acgsatvyhw .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#acgsatvyhw .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#acgsatvyhw .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#acgsatvyhw .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#acgsatvyhw .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#acgsatvyhw .gt_left {
-  text-align: left;
-}
-
-#acgsatvyhw .gt_center {
-  text-align: center;
-}
-
-#acgsatvyhw .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#acgsatvyhw .gt_font_normal {
-  font-weight: normal;
-}
-
-#acgsatvyhw .gt_font_bold {
-  font-weight: bold;
-}
-
-#acgsatvyhw .gt_font_italic {
-  font-style: italic;
-}
-
-#acgsatvyhw .gt_super {
-  font-size: 65%;
-}
-
-#acgsatvyhw .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#acgsatvyhw .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#acgsatvyhw .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#acgsatvyhw .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#acgsatvyhw .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#acgsatvyhw .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#acgsatvyhw .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="header gt_col_headings">
-<th id="respondent" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">respondent</th>
-<th id="city" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">city</th>
-<th id="age" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">age</th>
-<th id="education" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">education</th>
-<th id="meat_substitute" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">meat_substitute</th>
-</tr></thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="respondent">0001</td>
-<td class="gt_row gt_left" headers="city">Tucson, AZ</td>
-<td class="gt_row gt_left" headers="age">18-54</td>
-<td class="gt_row gt_left" headers="education">High school or less</td>
-<td class="gt_row gt_left" headers="meat_substitute">1.00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="respondent">0002</td>
-<td class="gt_row gt_left" headers="city">Miami, FL</td>
-<td class="gt_row gt_left" headers="age">55+</td>
-<td class="gt_row gt_left" headers="education">High school or less</td>
-<td class="gt_row gt_left" headers="meat_substitute">6.00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="respondent">0003</td>
-<td class="gt_row gt_left" headers="city">Austin, TX</td>
-<td class="gt_row gt_left" headers="age">55+</td>
-<td class="gt_row gt_left" headers="education">Post-secondary</td>
-<td class="gt_row gt_left" headers="meat_substitute">3.00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="respondent">0004</td>
-<td class="gt_row gt_left" headers="city">Atlanta, GA</td>
-<td class="gt_row gt_left" headers="age">18-54</td>
-<td class="gt_row gt_left" headers="education">Post-secondary</td>
-<td class="gt_row gt_left" headers="meat_substitute">5.00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="respondent">0005</td>
-<td class="gt_row gt_left" headers="city">Milwaukee, WI</td>
-<td class="gt_row gt_left" headers="age">18-54</td>
-<td class="gt_row gt_left" headers="education">High school or less</td>
-<td class="gt_row gt_left" headers="meat_substitute">5.00</td>
-</tr>
+  
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tinytable_sfqwayljd356vbazqfxx</title>
+<style>
+.table td.tinytable_css_1v0v4nscufulf117p2s6, .table th.tinytable_css_1v0v4nscufulf117p2s6 {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_fs4rnb9hc1ycb26z4vl6, .table th.tinytable_css_fs4rnb9hc1ycb26z4vl6 {    text-align: left; }
+.table td.tinytable_css_y2uh2fh1oe2ct5fxpscq, .table th.tinytable_css_y2uh2fh1oe2ct5fxpscq {    text-align: left; }
+.table td.tinytable_css_cvj63fzero7mdeqjrp92, .table th.tinytable_css_cvj63fzero7mdeqjrp92 {    text-align: left; }
+.table td.tinytable_css_ujqn3nnrthd9k932oj7q, .table th.tinytable_css_ujqn3nnrthd9k932oj7q {    text-align: left; }
+.table td.tinytable_css_br561mhi5hv9s1h2iif8, .table th.tinytable_css_br561mhi5hv9s1h2iif8 {    text-align: left; }
+    </style>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script><div class="container">
+      <table class="table table-borderless" id="tinytable_sfqwayljd356vbazqfxx" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+<thead><tr>
+<th scope="col">respondent</th>
+                <th scope="col">city</th>
+                <th scope="col">age</th>
+                <th scope="col">education</th>
+                <th scope="col">meat_substitute</th>
+              </tr></thead>
+<tbody>
+<tr>
+<td>0001</td>
+                  <td>Tucson, AZ   </td>
+                  <td>18-54</td>
+                  <td>High school or less</td>
+                  <td>1.00</td>
+                </tr>
+<tr>
+<td>0002</td>
+                  <td>Miami, FL    </td>
+                  <td>55+  </td>
+                  <td>High school or less</td>
+                  <td>6.00</td>
+                </tr>
+<tr>
+<td>0003</td>
+                  <td>Austin, TX   </td>
+                  <td>55+  </td>
+                  <td>Post-secondary     </td>
+                  <td>3.00</td>
+                </tr>
+<tr>
+<td>0004</td>
+                  <td>Atlanta, GA  </td>
+                  <td>18-54</td>
+                  <td>Post-secondary     </td>
+                  <td>5.00</td>
+                </tr>
+<tr>
+<td>0005</td>
+                  <td>Milwaukee, WI</td>
+                  <td>18-54</td>
+                  <td>High school or less</td>
+                  <td>5.00</td>
+                </tr>
 </tbody>
 </table>
 </div>
-</div>
+
+    <script>
+      function styleCell_tinytable_yohk32vr112jydccgkel(i, j, css_id) {
+        var table = document.getElementById("tinytable_sfqwayljd356vbazqfxx");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_sfqwayljd356vbazqfxx');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_yohk32vr112jydccgkel(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_sfqwayljd356vbazqfxx");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(0, 0, 'tinytable_css_1v0v4nscufulf117p2s6') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(0, 1, 'tinytable_css_1v0v4nscufulf117p2s6') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(0, 2, 'tinytable_css_1v0v4nscufulf117p2s6') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(0, 3, 'tinytable_css_1v0v4nscufulf117p2s6') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(0, 4, 'tinytable_css_1v0v4nscufulf117p2s6') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(0, 0, 'tinytable_css_fs4rnb9hc1ycb26z4vl6') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(1, 0, 'tinytable_css_fs4rnb9hc1ycb26z4vl6') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(2, 0, 'tinytable_css_fs4rnb9hc1ycb26z4vl6') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(3, 0, 'tinytable_css_fs4rnb9hc1ycb26z4vl6') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(4, 0, 'tinytable_css_fs4rnb9hc1ycb26z4vl6') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(5, 0, 'tinytable_css_fs4rnb9hc1ycb26z4vl6') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(0, 1, 'tinytable_css_y2uh2fh1oe2ct5fxpscq') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(1, 1, 'tinytable_css_y2uh2fh1oe2ct5fxpscq') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(2, 1, 'tinytable_css_y2uh2fh1oe2ct5fxpscq') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(3, 1, 'tinytable_css_y2uh2fh1oe2ct5fxpscq') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(4, 1, 'tinytable_css_y2uh2fh1oe2ct5fxpscq') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(5, 1, 'tinytable_css_y2uh2fh1oe2ct5fxpscq') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(0, 2, 'tinytable_css_cvj63fzero7mdeqjrp92') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(1, 2, 'tinytable_css_cvj63fzero7mdeqjrp92') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(2, 2, 'tinytable_css_cvj63fzero7mdeqjrp92') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(3, 2, 'tinytable_css_cvj63fzero7mdeqjrp92') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(4, 2, 'tinytable_css_cvj63fzero7mdeqjrp92') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(5, 2, 'tinytable_css_cvj63fzero7mdeqjrp92') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(0, 3, 'tinytable_css_ujqn3nnrthd9k932oj7q') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(1, 3, 'tinytable_css_ujqn3nnrthd9k932oj7q') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(2, 3, 'tinytable_css_ujqn3nnrthd9k932oj7q') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(3, 3, 'tinytable_css_ujqn3nnrthd9k932oj7q') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(4, 3, 'tinytable_css_ujqn3nnrthd9k932oj7q') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(5, 3, 'tinytable_css_ujqn3nnrthd9k932oj7q') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(0, 4, 'tinytable_css_br561mhi5hv9s1h2iif8') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(1, 4, 'tinytable_css_br561mhi5hv9s1h2iif8') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(2, 4, 'tinytable_css_br561mhi5hv9s1h2iif8') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(3, 4, 'tinytable_css_br561mhi5hv9s1h2iif8') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(4, 4, 'tinytable_css_br561mhi5hv9s1h2iif8') })
+window.addEventListener('load', function () { styleCell_tinytable_yohk32vr112jydccgkel(5, 4, 'tinytable_css_br561mhi5hv9s1h2iif8') })
+    </script>
 </div>
 </div>
 <p>This dataset includes 1000 observations: one per survey respondent. Unfortunately, it is not straightforward to compute precise city-by-city estimates, because although the number of respondents is large overall, the number of respondents within each of the 40 cities is relatively small. Moreover, the company’s sampling strategy does not guarantee that subsamples are representative of each city’s population. MrP can help us circumvent these problems in two steps:</p>
@@ -1106,483 +771,132 @@ window.Quarto = {
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tucson</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">stratification</span>, <span class="va">city</span> <span class="op">==</span> <span class="st">"Tucson, AZ"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://modelsummary.com/man/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">tucson</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<div id="tkeanfcnfg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tkeanfcnfg table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+ 
 
-#tkeanfcnfg thead, #tkeanfcnfg tbody, #tkeanfcnfg tfoot, #tkeanfcnfg tr, #tkeanfcnfg td, #tkeanfcnfg th {
-  border-style: none;
-}
-
-#tkeanfcnfg p {
-  margin: 0;
-  padding: 0;
-}
-
-#tkeanfcnfg .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#tkeanfcnfg .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#tkeanfcnfg .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#tkeanfcnfg .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#tkeanfcnfg .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#tkeanfcnfg .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#tkeanfcnfg .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#tkeanfcnfg .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#tkeanfcnfg .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#tkeanfcnfg .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#tkeanfcnfg .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#tkeanfcnfg .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#tkeanfcnfg .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#tkeanfcnfg .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#tkeanfcnfg .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#tkeanfcnfg .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#tkeanfcnfg .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#tkeanfcnfg .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#tkeanfcnfg .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#tkeanfcnfg .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#tkeanfcnfg .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#tkeanfcnfg .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#tkeanfcnfg .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#tkeanfcnfg .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#tkeanfcnfg .gt_left {
-  text-align: left;
-}
-
-#tkeanfcnfg .gt_center {
-  text-align: center;
-}
-
-#tkeanfcnfg .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#tkeanfcnfg .gt_font_normal {
-  font-weight: normal;
-}
-
-#tkeanfcnfg .gt_font_bold {
-  font-weight: bold;
-}
-
-#tkeanfcnfg .gt_font_italic {
-  font-style: italic;
-}
-
-#tkeanfcnfg .gt_super {
-  font-size: 65%;
-}
-
-#tkeanfcnfg .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#tkeanfcnfg .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#tkeanfcnfg .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#tkeanfcnfg .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#tkeanfcnfg .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#tkeanfcnfg .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#tkeanfcnfg .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="header gt_col_headings">
-<th id="city" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">city</th>
-<th id="education" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">education</th>
-<th id="age" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">age</th>
-<th id="population_share" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">population_share</th>
-</tr></thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="city">Tucson, AZ</td>
-<td class="gt_row gt_left" headers="education">High school or less</td>
-<td class="gt_row gt_left" headers="age">18-54</td>
-<td class="gt_row gt_left" headers="population_share">0.16</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="city">Tucson, AZ</td>
-<td class="gt_row gt_left" headers="education">Post-secondary</td>
-<td class="gt_row gt_left" headers="age">18-54</td>
-<td class="gt_row gt_left" headers="population_share">0.38</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="city">Tucson, AZ</td>
-<td class="gt_row gt_left" headers="education">High school or less</td>
-<td class="gt_row gt_left" headers="age">55+</td>
-<td class="gt_row gt_left" headers="population_share">0.20</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="city">Tucson, AZ</td>
-<td class="gt_row gt_left" headers="education">Post-secondary</td>
-<td class="gt_row gt_left" headers="age">55+</td>
-<td class="gt_row gt_left" headers="population_share">0.25</td>
-</tr>
+  
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tinytable_uhihathipnjxm4phm9w3</title>
+<style>
+.table td.tinytable_css_vrx69u3pt8ixui42tv47, .table th.tinytable_css_vrx69u3pt8ixui42tv47 {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_r1m03xuvcsssgctd5h8i, .table th.tinytable_css_r1m03xuvcsssgctd5h8i {    text-align: left; }
+.table td.tinytable_css_p198ev2rulv2xemeifg0, .table th.tinytable_css_p198ev2rulv2xemeifg0 {    text-align: left; }
+.table td.tinytable_css_ekd3i0hx17upxi800cjn, .table th.tinytable_css_ekd3i0hx17upxi800cjn {    text-align: left; }
+.table td.tinytable_css_ziyoon6o98uni4ejfo5r, .table th.tinytable_css_ziyoon6o98uni4ejfo5r {    text-align: left; }
+    </style>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script><div class="container">
+      <table class="table table-borderless" id="tinytable_uhihathipnjxm4phm9w3" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+<thead><tr>
+<th scope="col">city</th>
+                <th scope="col">education</th>
+                <th scope="col">age</th>
+                <th scope="col">population_share</th>
+              </tr></thead>
+<tbody>
+<tr>
+<td>Tucson, AZ</td>
+                  <td>High school or less</td>
+                  <td>18-54</td>
+                  <td>0.16</td>
+                </tr>
+<tr>
+<td>Tucson, AZ</td>
+                  <td>Post-secondary     </td>
+                  <td>18-54</td>
+                  <td>0.38</td>
+                </tr>
+<tr>
+<td>Tucson, AZ</td>
+                  <td>High school or less</td>
+                  <td>55+  </td>
+                  <td>0.20</td>
+                </tr>
+<tr>
+<td>Tucson, AZ</td>
+                  <td>Post-secondary     </td>
+                  <td>55+  </td>
+                  <td>0.25</td>
+                </tr>
 </tbody>
 </table>
 </div>
-</div>
+
+    <script>
+      function styleCell_tinytable_kof1owful5h7xl2tigjh(i, j, css_id) {
+        var table = document.getElementById("tinytable_uhihathipnjxm4phm9w3");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_uhihathipnjxm4phm9w3');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_kof1owful5h7xl2tigjh(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_uhihathipnjxm4phm9w3");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(0, 0, 'tinytable_css_vrx69u3pt8ixui42tv47') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(0, 1, 'tinytable_css_vrx69u3pt8ixui42tv47') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(0, 2, 'tinytable_css_vrx69u3pt8ixui42tv47') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(0, 3, 'tinytable_css_vrx69u3pt8ixui42tv47') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(0, 0, 'tinytable_css_r1m03xuvcsssgctd5h8i') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(1, 0, 'tinytable_css_r1m03xuvcsssgctd5h8i') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(2, 0, 'tinytable_css_r1m03xuvcsssgctd5h8i') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(3, 0, 'tinytable_css_r1m03xuvcsssgctd5h8i') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(4, 0, 'tinytable_css_r1m03xuvcsssgctd5h8i') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(0, 1, 'tinytable_css_p198ev2rulv2xemeifg0') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(1, 1, 'tinytable_css_p198ev2rulv2xemeifg0') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(2, 1, 'tinytable_css_p198ev2rulv2xemeifg0') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(3, 1, 'tinytable_css_p198ev2rulv2xemeifg0') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(4, 1, 'tinytable_css_p198ev2rulv2xemeifg0') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(0, 2, 'tinytable_css_ekd3i0hx17upxi800cjn') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(1, 2, 'tinytable_css_ekd3i0hx17upxi800cjn') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(2, 2, 'tinytable_css_ekd3i0hx17upxi800cjn') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(3, 2, 'tinytable_css_ekd3i0hx17upxi800cjn') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(4, 2, 'tinytable_css_ekd3i0hx17upxi800cjn') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(0, 3, 'tinytable_css_ziyoon6o98uni4ejfo5r') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(1, 3, 'tinytable_css_ziyoon6o98uni4ejfo5r') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(2, 3, 'tinytable_css_ziyoon6o98uni4ejfo5r') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(3, 3, 'tinytable_css_ziyoon6o98uni4ejfo5r') })
+window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl2tigjh(4, 3, 'tinytable_css_ziyoon6o98uni4ejfo5r') })
+    </script>
 </div>
 </div>
 <p>According to these (simulated) data, the share of Tucson residents who are between 18 and 54 year old and have a High School degree or less is about 16%.</p>
@@ -1658,7 +972,6 @@ window.Quarto = {
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/countrycode/">countrycode</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com">gt</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/paul-buerkner/brms">brms</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1024</span><span class="op">)</span></span>
 <span></span>
