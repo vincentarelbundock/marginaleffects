@@ -1132,8 +1132,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>    by <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  x Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  0    0.452 0.334  0.560</span></span>
-<span><span class="co">#&gt;  1    0.551 0.433  0.659</span></span>
+<span><span class="co">#&gt;  0    0.451 0.342  0.563</span></span>
+<span><span class="co">#&gt;  1    0.552 0.437  0.662</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: x, estimate, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1147,7 +1147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>    sample_new_levels <span class="op">=</span> <span class="st">"gaussian"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term          Contrast Estimate  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     x mean(1) - mean(0)   0.0968 0.0483  0.165</span></span>
+<span><span class="co">#&gt;     x mean(1) - mean(0)   0.0971 0.0476  0.163</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1164,8 +1164,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  contrasts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="st">"AME x"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  effects <span class="op">=</span> <span class="st">"integrateoutRE"</span><span class="op">)</span></span>
 <span><span class="va">bm</span><span class="op">$</span><span class="va">ContrastSummary</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            M        Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
-<span><span class="co">#&gt; 1 0.09892206 0.09667342 0.04746123 0.1614054          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;           M        Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span><span class="co">#&gt; 1 0.0993623 0.09714671 0.04792358 0.1670281          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>See the <a href="alternative_software.html">alternative software vignette</a> for more information on <code>brmsmargins</code>.</p>
 </section></section><section id="multinomial-logit" class="level2"><h2 class="anchored" data-anchor-id="multinomial-logit">Multinomial logit</h2>
@@ -1640,7 +1640,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, dpar <span class="op">=</span> <span class="st">"sigma"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     0.329 0.293  0.374</span></span>
+<span><span class="co">#&gt;     0.329 0.294  0.373</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: estimate, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
@@ -1648,8 +1648,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, dpar <span class="op">=</span> <span class="st">"sigma"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;          Term    Contrast Estimate   2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  Petal.Length mean(dY/dX)   0.0446  0.0175 0.0742</span></span>
-<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)  -0.0134 -0.1270 0.1001</span></span>
+<span><span class="co">#&gt;  Petal.Length mean(dY/dX)   0.0453  0.0174 0.0738</span></span>
+<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)  -0.0125 -0.1245 0.1059</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

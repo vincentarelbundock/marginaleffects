@@ -27,8 +27,8 @@ Imagine a causal model like this:
 
 ```{mermaid}
 graph LR;
-    Z --> X;
-    Z --> Y;
+    W --> X;
+    W --> Y;
     X --> Y;
 ```
 

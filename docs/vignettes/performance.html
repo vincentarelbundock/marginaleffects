@@ -624,7 +624,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">tic</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span>, vcov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.294 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 0.293 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>With parallelization:</p>
 <div class="cell">
@@ -633,7 +633,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">tic</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 13.135 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 12.044 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Without parallelization:</p>
 <div class="cell">
@@ -642,7 +642,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">tic</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 25.459 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 24.538 sec elapsed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we make sure the results are equivalent:</p>
 <div class="cell">
