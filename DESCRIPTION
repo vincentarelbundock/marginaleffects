@@ -60,6 +60,7 @@ Suggests:
     causaldata,
     clarify,
     cjoint,
+    cobalt,
     collapse,
     conflicted,
     countrycode,

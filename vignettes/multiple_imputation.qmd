@@ -179,3 +179,23 @@ lapply(seq_along(mod), \(i)
     avg_slopes(mod[[i]], newdata = dat[[i]], wts = "gear")) |>
     mice::pool()
 ```
+
+
+## `newdata` with imputed datasets
+
+In some contexts (ex: Average Treatment effects on the Treated), users want to apply a function like `subset()` to the data in `newdata`. Unfortunately, there is no `subset()` method applicable to `mice`-generated objects. One alternative is to generate estimates for each imputed datasets separately and pool the results after. For example:
+
+
+```{r}
+library(mice)
+library(marginaleffects)
+data("lalonde_mis", package = "cobalt")
+
+imp <- mice(lalonde_mis, m = 5, print = FALSE)
+est <- lapply(1:5, \(i) {
+    data <- complete(imp, i)
+    mod <- lm(re78 ~ treat * (age + educ + re74), data = data)
+    avg_predictions(mod, variables = "treat", newdata = subset(treat == 1))
+})
+mice::pool(est)
+```
