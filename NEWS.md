@@ -5,6 +5,7 @@
 Bugs:
 
 * Fix regression in `mlogit` models due to factor conversion. This raised an error before returning result, so there is no numerical danger.
+* `survey` package models work when `row.names(model)` is not coercible to integers. Thanks to @ngreifer for report #1131.
 
 ## 0.20.1
 
