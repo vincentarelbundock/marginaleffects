@@ -79,7 +79,8 @@ get_predict.svyglm <- function(model,
   if (is.null(rowid)) {
       rowid <- seq_len(estimate)
   } else {
-      rowid <- as.integer(rowid)
+      # rowid might be character, but survey::predict() requires non-negative integers
+      rowid <- seq_along(rowid)
   }
   out <- data.frame(rowid, estimate = as.numeric(estimate))
   row.names(out) <- NULL
