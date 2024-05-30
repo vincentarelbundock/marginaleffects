@@ -29,5 +29,29 @@ expect_equivalent(mfx$estimate, em$nh.trend, tolerance = .001) # CRAN tolerance
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 
+# Issue #1131
+data("lalonde", package = "MatchIt")
+fit <- survey::svyglm(re78 ~ treat, design = survey::svydesign(~1, weights = ~1, data = lalonde))
+p <- marginaleffects::get_predict(fit, newdata = lalonde)
+expect_inherits(p, "data.frame")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 rm(list = ls())
+
+
