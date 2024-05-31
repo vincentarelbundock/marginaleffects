@@ -546,6 +546,7 @@ window.Quarto = {
   <li><a href="#other-imputation-packages-missranger-or-lists-of-imputed-data-frames." id="toc-other-imputation-packages-missranger-or-lists-of-imputed-data-frames." class="nav-link" data-scroll-target="#other-imputation-packages-missranger-or-lists-of-imputed-data-frames.">Other imputation packages: <code>missRanger</code>, or lists of imputed data frames.</a></li>
   <li><a href="#comparing-results-with-different-imputation-software" id="toc-comparing-results-with-different-imputation-software" class="nav-link" data-scroll-target="#comparing-results-with-different-imputation-software">Comparing results with different imputation software</a></li>
   <li><a href="#passing-new-data-arguments-newdata-wts-by-etc." id="toc-passing-new-data-arguments-newdata-wts-by-etc." class="nav-link" data-scroll-target="#passing-new-data-arguments-newdata-wts-by-etc.">Passing new data arguments: <code>newdata</code>, <code>wts</code>, <code>by</code>, etc.</a></li>
+  <li><a href="#newdata-with-imputed-datasets" id="toc-newdata-with-imputed-datasets" class="nav-link" data-scroll-target="#newdata-with-imputed-datasets"><code>newdata</code> with imputed datasets</a></li>
   </ul>
 </li>
   </ul></nav>
@@ -1305,6 +1306,26 @@ window.addEventListener('load', function () { styleCell_tinytable_zj2gkurnpb4mlr
 <span><span class="co">#&gt; 1  cyl mean(dY/dX) 5 -0.135839444 7.276189e-04 2.481021e-03 0.0037048435    29 2.867574 4.091736 0.8036033 0.8705464</span></span>
 <span><span class="co">#&gt; 2   hp mean(dY/dX) 5  0.001671173 5.697224e-07 1.424648e-06 0.0000022793    29 3.474698 3.000721 0.7500450 0.8272548</span></span>
 <span><span class="co">#&gt; 3  mpg mean(dY/dX) 5  0.006251144 1.055910e-04 2.705239e-04 0.0004302197    29 3.422256 3.074397 0.7545649 0.8309976</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="newdata-with-imputed-datasets" class="level2"><h2 class="anchored" data-anchor-id="newdata-with-imputed-datasets">
+<code>newdata</code> with imputed datasets</h2>
+<p>In some contexts (ex: Average Treatment effects on the Treated), users want to apply a function like <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> to the data in <code>newdata</code>. Unfortunately, there is no <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> method applicable to <code>mice</code>-generated objects. One alternative is to generate estimates for each imputed datasets separately and pool the results after. For example:</p>
+<div class="cell">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/amices/mice">mice</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"lalonde_mis"</span>, package <span class="op">=</span> <span class="st">"cobalt"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://amices.org/mice/reference/mice.html">mice</a></span><span class="op">(</span><span class="va">lalonde_mis</span>, m <span class="op">=</span> <span class="fl">5</span>, print <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">est</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, \<span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/complete.html">complete</a></span><span class="op">(</span><span class="va">imp</span>, <span class="va">i</span><span class="op">)</span></span>
+<span>    <span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">*</span> <span class="op">(</span><span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">re74</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"treat"</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">treat</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="fu">mice</span><span class="fu">::</span><span class="fu"><a href="https://amices.org/mice/reference/pool.html">pool</a></span><span class="op">(</span><span class="va">est</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Class: mipo    m = 5 </span></span>
+<span><span class="co">#&gt;   term m estimate     ubar            b        t dfcom           df          riv       lambda         fmi</span></span>
+<span><span class="co">#&gt; 1    0 5 5558.439 142974.4 3.331491e+03 146972.2   Inf 5.406184e+03 2.796156e-02 2.720098e-02 0.027560666</span></span>
+<span><span class="co">#&gt; 2    1 5 6349.144 263028.0 4.965152e-22 263028.0   Inf 4.000000e+08 2.265228e-27 2.265228e-27 0.000000005</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

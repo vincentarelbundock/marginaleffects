@@ -33,7 +33,7 @@ This page explains how to interpret statistical results using the `marginaleffec
 
 ## Installation
 
-Before we begin, let's install the `marginaleffects` package:
+Before we begin, let's install the `marginaleffects` package, available for `R` and `Python`:
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -55,6 +55,11 @@ pip install marginaleffects
 ```
 :::
 
+
+::: {layout-ncol=2}
+![Lion saying "R"](fig/R.png){width=60%}
+![Python with a crystal ball](fig/Crystal.png){width=40%}
+:::
 
 ## Quantity
 

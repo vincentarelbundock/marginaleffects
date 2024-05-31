@@ -549,6 +549,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Bugs:</p>
 <ul>
 <li>Fix regression in <code>mlogit</code> models due to factor conversion. This raised an error before returning result, so there is no numerical danger.</li>
+<li><code>survey</code> package models work when <code>row.names(model)</code> is not coercible to integers. Thanks to <a href="https://github.com/ngreifer"><span class="citation" data-cites="ngreifer">@ngreifer</span></a> for report <a href="https://github.com/vincentarelbundock/marginaleffects/issues/1131">#1131</a>.</li>
 </ul>
 </section>
 <section id="section" class="level2">
