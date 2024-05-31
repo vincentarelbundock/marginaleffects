@@ -20,6 +20,8 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
+![](fig/Domino.png){width=70%}
+
 # Definition and motivation
 
 In this vignette, we introduce "comparisons", defined as:

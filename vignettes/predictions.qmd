@@ -20,6 +20,8 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
+![](fig/Crystal.png){width=30%}
+
 # Definition and motivation
 
 In the context of this package, an "adjusted prediction" is defined as:
