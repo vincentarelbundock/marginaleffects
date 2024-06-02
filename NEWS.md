@@ -2,6 +2,10 @@
 
 ## Development
 
+New:
+
+* Allow reverse binary contrasts: comparisons(mod, variables = list(am = 1:0, vs = 0:1)). Thanks to K. Henry for report #1137.
+
 Bugs:
 
 * Fix regression in `mlogit` models due to factor conversion. This raised an error before returning result, so there is no numerical danger.
