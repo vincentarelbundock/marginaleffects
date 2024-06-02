@@ -14,7 +14,7 @@ mod <- lm(mpg ~ vs * cyl * am, data = dat)
 
 avg_comparisons(mod, 
     variables = "vs",
-    hypothesis = ~ reference | gear,
+    hypothesis = ~ reference | cyl,
     by = c("cyl", "am"))
 
 avg_predictions(mod, 
