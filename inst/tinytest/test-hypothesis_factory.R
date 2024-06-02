@@ -13,7 +13,7 @@ mod <- lm(mpg ~ vs * cyl * am, data = dat)
 mod <- lm(mpg ~ vs * cyl * am, data = dat)
 
 avg_comparisons(mod, 
-    variables = "hp",
+    variables = "vs",
     hypothesis = ~ reference | gear,
     by = c("cyl", "am"))
 
