@@ -79,6 +79,7 @@ Suggests:
     flexsurv,
     fmeffects,
     fontquiver,
+    Formula,
     future,
     future.apply,
     fwb,
