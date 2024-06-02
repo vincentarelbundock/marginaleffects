@@ -57,4 +57,13 @@ expect_equivalent(cmp$estimate, c2)
 
 
 
+# Issue #1137
+fit <- lm(mpg ~ vs + am + vs:am, data=mtcars) # equivalent to ~ vs*am
+cmp <- avg_comparisons(fit, variables = list(am = c(0, 1), vs = c(1, 0)), cross = TRUE)
+expect_equivalent(cmp$estimate, -0.992857142857154)
+expect_error(avg_comparisons(fit, variables = list(am = 0, vs = 1:0), cross = TRUE), "length 2")
+expect_error(avg_comparisons(fit, variables = list(am = 1:3, vs = 1:0), cross = TRUE), "0 or 1")
+
+
+
 rm(list = ls())

@@ -11,7 +11,7 @@ get_contrast_data_factor <- function(model,
         convert_to_factor <- TRUE
 
     } else if (get_variable_class(newdata, variable$name, "binary")) {
-        levs <- 0:1
+        levs <- variable$value
         convert_to_factor <- FALSE
 
     } else {
