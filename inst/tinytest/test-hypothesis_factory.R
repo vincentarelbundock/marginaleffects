@@ -1,5 +1,5 @@
 source("helpers.R")
-requiest("marginaleffects")
+requiet("marginaleffects")
 using("marginaleffects")
 # library("MASS")
 # library("brms")
