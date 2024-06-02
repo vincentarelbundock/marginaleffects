@@ -9,7 +9,6 @@ dat[, cyl := factor(cyl)][
 dat = dat[order(gear, cyl, am)]
 mod <- lm(mpg ~ vs * cyl * am, data = dat)
 
-pkgload::load_all()
 avg_comparisons(mod, 
     variables = "hp",
     hypothesis = ~ reference | gear,
