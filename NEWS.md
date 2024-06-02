@@ -4,6 +4,7 @@
 
 New:
 
+* `hypothesis` accepts formulas like: `ratio ~ sequential | group`
 * Allow reverse binary contrasts: comparisons(mod, variables = list(am = 1:0, vs = 0:1)). Thanks to K. Henry for report #1137.
 
 Bugs:

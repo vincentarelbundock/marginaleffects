@@ -59,15 +59,21 @@ specify_hypothesis <- function(
         # row labels
         if (!"rowid" %in% colnames(x)) x[, "rowid" := seq_len(.N)]
         if (is.null(label_columns)) {
-            label_columns <- c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))
+            # TODO check if we need rowid
+            # label_columns <- c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))
+            label_columns <- c("group", "term", attr(x, "variables_datagrid"), attr(x, "by"))
         }
         label_columns <- setdiff(label_columns, setdiff(by, "rowid"))
         label_columns <- intersect(label_columns, colnames(x))
         if (length(label_columns) == 0) label_columns <- "rowid"
 
         tmp <- x[, ..label_columns]
-        for (col in colnames(tmp)) {
-            tmp[, (col) := sprintf("%s[%s]", col, tmp[[col]])]
+        for (col in label_columns) {
+            if (length(unique(tmp[[col]])) == 1) {
+                tmp[, (col) := NULL]
+            } else {
+                tmp[, (col) := sprintf("%s[%s]", col, tmp[[col]])]
+            }
         }
         tmp <- apply(tmp, 1, paste, collapse = ", ")
         x[, marginaleffects_internal_label := tmp]
