@@ -188,7 +188,10 @@ sanitize_variables <- function(variables,
             }
             # get_contrast_data requires both levels
             if (calling_function == "comparisons") {
-                predictors[[v]] <- 0:1
+                if (length(predictors[[v]]) != 2) {
+                    msg <- sprintf("The `%s` variable is binary. The corresponding entry in the `variables` argument must be a vector of length 2.", v)
+                    insight::format_error(msg)
+                }
             }
 
         } else if (get_variable_class(modeldata, v, "numeric")) {

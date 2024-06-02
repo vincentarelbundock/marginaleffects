@@ -39,8 +39,7 @@ expect_error(comparisons(mod, variables = list(cyl = "iqr")), pattern = "element
 
 # Binary variables
 mod <- glm(am ~ hp + vs, dat = mtcars, family = binomial)
-cmp3 <- comparisons(mod, variables = list(vs = 1))
-expect_inherits(cmp3, "comparisons")
+expect_error(comparisons(mod, variables = list(vs = 1), "length 2"))
 
 # no need to include categorical focal variable when there is only one of them
 mod <- lm(mpg ~ hp + factor(am) + wt, mtcars)
