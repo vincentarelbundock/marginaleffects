@@ -10,18 +10,20 @@ dat[, cyl := factor(cyl)][
 dat = dat[order(gear, cyl, am)]
 mod <- lm(mpg ~ vs * cyl * am, data = dat)
 
+mod <- lm(mpg ~ vs * cyl * am, data = dat)
+
 avg_comparisons(mod, 
     variables = "hp",
     hypothesis = ~ reference | gear,
-    by = c("cyl", "gear"))
+    by = c("cyl", "am"))
 
 avg_predictions(mod, 
     hypothesis = difference ~ sequential | cyl,
-    by = c("cyl", "gear"))
+    by = c("cyl", "am"))
 
 avg_predictions(mod, 
     hypothesis = difference ~ reference | am,
-    by = c("cyl", "vs", "am"))
+    by = c("cyl", "am"))
 
 
 # # Example usage:
