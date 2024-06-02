@@ -3,7 +3,7 @@ using("marginaleffects")
 # library("MASS")
 # library("brms")
 
-dat = data.table(mtcars)
+dat = data.table::data.table(mtcars)
 dat[, cyl := factor(cyl)][
     , gear := factor(gear)]
 dat = dat[order(gear, cyl, am)]

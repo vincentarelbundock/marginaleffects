@@ -8,18 +8,18 @@ sanitize_hypothesis_formula <- function(hypothesis) {
     insight::format_error("The right-hand side of the `hypothesis` formula must have 1 or two parts, separated by |")
   }
   if (length(hypothesis)[1] == 0) {
-    hypothesis <- update(hypothesis, difference ~ .)
+    hypothesis <- stats::update(hypothesis, difference ~ .)
   }
   if (length(hypothesis)[2] == 2) {
-    hypothesis <- update(hypothesis, difference ~ . | .)
+    hypothesis <- stats::update(hypothesis, difference ~ . | .)
   }
   if (length(hypothesis)[2] == 1) {
     by <- NULL
   } else {
-    by <- all.vars(formula(hypothesis, lhs = 0, rhs = 2))
+    by <- all.vars(stats::formula(hypothesis, lhs = 0, rhs = 2))
   }
-  lhs <- all.vars(formula(hypothesis, rhs = 0))
-  rhs <- all.vars(formula(hypothesis, lhs = 0, rhs = 1))
+  lhs <- all.vars(stats::formula(hypothesis, rhs = 0))
+  rhs <- all.vars(stats::formula(hypothesis, lhs = 0, rhs = 1))
 
   checkmate::assert_choice(lhs, c("difference"), .var.name = "left-hand side of `hypothesis` formula")
   checkmate::assert_choice(rhs, c("reference", "sequential"), .var.name = "Right-hand side of `hypothesis` formula")
