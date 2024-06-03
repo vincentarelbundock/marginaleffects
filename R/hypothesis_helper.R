@@ -1,4 +1,14 @@
 #' (EXPERIMENTAL) This experimental function will soon be deprecated. Please supply a formula or function to the `hypothesis` argument to conduct (group-wise) hypothesis tests.
+#' 
+#' @param hypothesis String or Function. Compute a test statistic. 
+#' - String: "reference" or "sequential"
+#' - Function: Accepts a single argument named `estimate` and returns a numeric vector.
+#' @param by Character vector. Variable names which indicate subgroups in which the `hypothesis` function should be applied.
+#' @param label Function. Accepts a vector of row labels and combines them to create hypothesis labels. 
+#' @param label_columns Character vector. Column names to use for hypothesis labels. Default is `c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))`.
+#' @param comparison String. "ratio" or "difference"
+#' @return `specify_hypothesis()` is a "function factory", which means that executing it will return a function suitable for use in the `hypothesis` argument of a `marginaleffects` function.
+#' @export
 specify_hypothesis <- function(
     hypothesis = "reference",
     comparison = "difference",
@@ -102,20 +112,3 @@ specify_hypothesis <- function(
     return(fun)
 }
 
-
-
-
-#' @description
-#' Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other `marginaleffects` functions.
-#'
-#' This function creates aggregation and test functions for use with the `hypothesis` argument in `marginaleffects` functions like `predictions()`, `slopes()`, and `comparisons()`. The benefit of this function is that it handles a lot of the "boilerplate" code such as label creation and transformations by subgroups.
-#'
-#' @param hypothesis String or Function. Compute a test statistic. 
-#' - String: "reference" or "sequential"
-#' - Function: Accepts a single argument named `estimate` and returns a numeric vector.
-#' @param by Character vector. Variable names which indicate subgroups in which the `hypothesis` function should be applied.
-#' @param label Function. Accepts a vector of row labels and combines them to create hypothesis labels. 
-#' @param label_columns Character vector. Column names to use for hypothesis labels. Default is `c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))`.
-#' @param comparison String. "ratio" or "difference"
-#' @return `specify_hypothesis()` is a "function factory", which means that executing it will return a function suitable for use in the `hypothesis` argument of a `marginaleffects` function.
-#' @export

@@ -85,7 +85,7 @@ here.](files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf)
 
 To cite `marginaleffects` in publications please use:
 
-Arel-Bundock V, Greifer N, Heiss A (Forthcoming). “How to Intepret
+Arel-Bundock V, Greifer N, Heiss A (Forthcoming). “How to Interpret
 Statistical Models Using marginaleffects in R and Python.” *Journal of
 Statistical Software*.
 
@@ -93,7 +93,7 @@ A BibTeX entry for LaTeX users is:
 
 ``` {latex}
 @Article{,
-    title = {How to Intepret Statistical Models Using {marginaleffects} in {R} and {Python}},
+    title = {How to Interpret Statistical Models Using {marginaleffects} in {R} and {Python}},
     author = {Vincent Arel-Bundock and Noah Greifer and Andrew Heiss},
     year = {Forthcoming},
     journal = {Journal of Statistical Software},

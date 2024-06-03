@@ -13,6 +13,24 @@ specify_hypothesis(
   internal = FALSE
 )
 }
+\arguments{
+\item{hypothesis}{String or Function. Compute a test statistic.
+\itemize{
+\item String: "reference" or "sequential"
+\item Function: Accepts a single argument named \code{estimate} and returns a numeric vector.
+}}
+
+\item{comparison}{String. "ratio" or "difference"}
+
+\item{label}{Function. Accepts a vector of row labels and combines them to create hypothesis labels.}
+
+\item{label_columns}{Character vector. Column names to use for hypothesis labels. Default is \code{c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))}.}
+
+\item{by}{Character vector. Variable names which indicate subgroups in which the \code{hypothesis} function should be applied.}
+}
+\value{
+\code{specify_hypothesis()} is a "function factory", which means that executing it will return a function suitable for use in the \code{hypothesis} argument of a \code{marginaleffects} function.
+}
 \description{
 (EXPERIMENTAL) This experimental function will soon be deprecated. Please supply a formula or function to the \code{hypothesis} argument to conduct (group-wise) hypothesis tests.
 }

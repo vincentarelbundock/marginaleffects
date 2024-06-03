@@ -1,5 +1,5 @@
  bibentry(bibtype = "Article",
-  title        = "How to Intepret Statistical Models Using {marginaleffects} in {R} and {Python}",
+  title        = "How to Interpret Statistical Models Using {marginaleffects} in {R} and {Python}",
   author       = c(
     person(given = "Vincent",
            family = "Arel-Bundock",

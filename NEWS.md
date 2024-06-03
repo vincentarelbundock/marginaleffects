@@ -7,6 +7,10 @@ New:
 * `hypothesis` accepts formulas like: `ratio ~ sequential | group`
 * Allow reverse binary contrasts: comparisons(mod, variables = list(am = 1:0, vs = 0:1)). Thanks to K. Henry for report #1137.
 
+Misc:
+
+* Deprecation warning for `specify_hypothesis()`. This function was clearly marked as experimental, and has been available only for one release. It was a bad idea. Users should supply a custom function or a formula to the `hypothesis` argument. The new formula interface, in particular, makes it very easy to conduct group-wise hypothesis tests.
+
 Bugs:
 
 * Fix regression in `mlogit` models due to factor conversion. This raised an error before returning result, so there is no numerical danger.
