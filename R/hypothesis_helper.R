@@ -7,6 +7,7 @@
 #' @param label Function. Accepts a vector of row labels and combines them to create hypothesis labels. 
 #' @param label_columns Character vector. Column names to use for hypothesis labels. Default is `c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))`.
 #' @param comparison String. "ratio" or "difference"
+#' @param internal Logical. Raises a deprecation warning when FALSE.
 #' @return `specify_hypothesis()` is a "function factory", which means that executing it will return a function suitable for use in the `hypothesis` argument of a `marginaleffects` function.
 #' @export
 specify_hypothesis <- function(
@@ -33,10 +34,10 @@ specify_hypothesis <- function(
 
     if (identical(hypothesis, "reference")) {
         if (comparison == "difference") {
-            hypothesis <- function(x) x - x[1]
+            hypothesis <- function(x) (x - x[1])[2:length(x)]
             label <- function(x) sprintf("(%s) - (%s)", x, x[1])[2:length(x)]
         } else {
-            hypothesis <- function(x) x / x[1]
+            hypothesis <- function(x) (x / x[1])[2:length(x)]
             label <- function(x) sprintf("(%s) / (%s)", x, x[1])[2:length(x)]
         }
     } else if (identical(hypothesis, "sequential")) {

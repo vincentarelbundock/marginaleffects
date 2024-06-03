@@ -4,33 +4,25 @@ using("marginaleffects")
 # library("MASS")
 # library("brms")
 
-dat = data.table::data.table(mtcars)
-dat[, cyl := factor(cyl)][
-    , gear := factor(gear)]
-dat = dat[order(gear, cyl, am)]
-mod <- lm(mpg ~ vs * cyl * am, data = dat)
+dat = data.table::data.table(iris)
+dat[, big := as.numeric(Sepal.Width > mean(Sepal.Width))]
+dat = dat[order(Species, big)]
+mod <- lm(Sepal.Length ~ big * Species * Petal.Length, data = dat)
 
-mod <- lm(mpg ~ vs * cyl * am, data = dat)
+cmp <- avg_comparisons(mod, 
+    variables = "big",
+    hypothesis = ~ reference | Species,
+    by = c("big", "Species"))
+expect_inherits(cmp, "comparisons")
 
-avg_comparisons(mod, 
-    variables = "vs",
-    hypothesis = ~ reference | cyl,
-    by = c("cyl", "am"))
+cmp <- avg_comparisons(mod, 
+    variables = "Petal.Length",
+    hypothesis = ~ meandev | Species,
+    by = c("big", "Species"))
+expect_inherits(cmp, "comparisons")
 
-avg_predictions(mod, 
-    hypothesis = difference ~ sequential | cyl,
-    by = c("cyl", "am"))
+pre <- avg_predictions(mod, 
+    hypothesis = ratio ~ sequential | big,
+    by = c("big", "Species"))
+expect_inherits(pre, "predictions")
 
-avg_predictions(mod, 
-    hypothesis = difference ~ reference | am,
-    by = c("cyl", "am"))
-
-
-# # Example usage:
-# formula <- ratio ~ pairwise | id + group + blah
-# f <- ratio ~ pairwise | id + group + blah
-# f <- ~ ratio | group
-# length(f)
-# all.vars(formula)
-# sanitize_hypothesis_formula(ratio ~ pairwise | blah + blah)
-# print(result)
