@@ -107,11 +107,11 @@ avg_comparisons(
 ```
 
 
-# String Formula
+# Equations
 
-The `hypotheses()` function emulates the formula-based syntax of the well-established `car::deltaMethod` and `car::linearHypothesis` functions. However, `marginaleffects` supports more models, requires fewer dependencies, and offers some convenience features like the  `vcov` argument for robust standard errors.
+The `hypotheses()` function emulates the equation-based syntax of the well-established `car::deltaMethod` and `car::linearHypothesis` functions. However, `marginaleffects` supports more models, requires fewer dependencies, and offers some convenience features like the  `vcov` argument for robust standard errors.
 
-The syntax we illustrate in this section takes the form a string formula, ex: `"am = 2 * vs"`
+The syntax we illustrate in this section takes the form a string equation, ex: `"am = 2 * vs"`
 
 
 ## Coefficients
@@ -256,7 +256,7 @@ avg_slopes(mod, hypothesis = "10 * hp - qsec = 0")
 
 # Formulas (Group-wise)
 
-Since version 0.20.1.5, The `hypothesis` argument also accepts a formula to specify hypotheses to be tested on every row of the output, or within subsets. Consider this set of average predictions:
+Since version 0.20.1.5 of `marginaleffects`, the `hypothesis` argument also accepts a formula to specify hypotheses to be tested on every row of the output, or within subsets. Consider this set of average predictions:
 
 ```{r}
 dat <- within(mtcars, {
