@@ -1,24 +1,16 @@
-#' (EXPERIMENTAL) Complex aggregation and test functions for the `hypothesis` argument
-#'
-#' @description
-#' Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other `marginaleffects` functions.
-#'
-#' This function creates aggregation and test functions for use with the `hypothesis` argument in `marginaleffects` functions like `predictions()`, `slopes()`, and `comparisons()`. The benefit of this function is that it handles a lot of the "boilerplate" code such as label creation and transformations by subgroups.
-#'
-#' @param hypothesis String or Function. Compute a test statistic. 
-#' - String: "reference" or "sequential"
-#' - Function: Accepts a single argument named `estimate` and returns a numeric vector.
-#' @param by Character vector. Variable names which indicate subgroups in which the `hypothesis` function should be applied.
-#' @param label Function. Accepts a vector of row labels and combines them to create hypothesis labels. 
-#' @param label_columns Character vector. Column names to use for hypothesis labels. Default is `c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))`.
-#' @return `specify_hypothesis()` is a "function factory", which means that executing it will return a function suitable for use in the `hypothesis` argument of a `marginaleffects` function.
-#' @export
+#' (EXPERIMENTAL) This experimental function will soon be deprecated. Please supply a formula or function to the `hypothesis` argument to conduct (group-wise) hypothesis tests.
 specify_hypothesis <- function(
     hypothesis = "reference",
+    comparison = "difference",
     label = NULL,
     label_columns = NULL,
-    by = c("term", "group", "contrast")) {
+    by = c("term", "group", "contrast"),
+    internal = FALSE) {
 
+    if (!isTRUE(internal)) {
+        insight::format_warning("The `specify_hypothesis()` function was marked as experimental and  will be deprecate. Use the formula interface to the `hypothesis` argument to specify group-wise hypothesis tests.")
+    }
+    checkmate::assert_choice(comparison, c("ratio", "difference"))
     checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_function(label, null.ok = TRUE)
     checkmate::assert_character(label_columns, null.ok = TRUE)
@@ -29,12 +21,26 @@ specify_hypothesis <- function(
 
     if (is.null(label)) label <- function(x) "custom"
 
+    if (comparison == "difference") {
+        comparison_label <- "(%s) - (%s)"
+    } else {
+        comparison_label <- "(%s) / (%s)"
+    }
+
     if (identical(hypothesis, "reference")) {
-        hypothesis <- function(x) (x - x[1])[2:length(x)]
-        label <- function(x) sprintf("(%s) - (%s)", x, x[1])[2:length(x)]
+        if (comparison == "difference") {
+            hypothesis <- function(x) x - x[1]
+        } else {
+            hypothesis <- function(x) x / x[1]
+        }
+        label <- function(x) sprintf(comparison_label, x, x[1])[2:length(x)]
     } else if (identical(hypothesis, "sequential")) {
-        hypothesis <- function(x) (x - data.table::shift(x))[2:length(x)]
-        label = function(x) sprintf("(%s) - (%s)", x, data.table::shift(x))[2:length(x)]
+        if (comparison == "difference") {
+            hypothesis <- function(x) (x - data.table::shift(x))[2:length(x)]
+        } else {
+            hypothesis <- function(x) (x / data.table::shift(x))[2:length(x)]
+        }
+        label = function(x) sprintf(comparison_label, x, data.table::shift(x))[2:length(x)]
     }
 
     fun <- function(x) {
@@ -96,3 +102,20 @@ specify_hypothesis <- function(
     return(fun)
 }
 
+
+
+
+#' @description
+#' Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other `marginaleffects` functions.
+#'
+#' This function creates aggregation and test functions for use with the `hypothesis` argument in `marginaleffects` functions like `predictions()`, `slopes()`, and `comparisons()`. The benefit of this function is that it handles a lot of the "boilerplate" code such as label creation and transformations by subgroups.
+#'
+#' @param hypothesis String or Function. Compute a test statistic. 
+#' - String: "reference" or "sequential"
+#' - Function: Accepts a single argument named `estimate` and returns a numeric vector.
+#' @param by Character vector. Variable names which indicate subgroups in which the `hypothesis` function should be applied.
+#' @param label Function. Accepts a vector of row labels and combines them to create hypothesis labels. 
+#' @param label_columns Character vector. Column names to use for hypothesis labels. Default is `c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))`.
+#' @param comparison String. "ratio" or "difference"
+#' @return `specify_hypothesis()` is a "function factory", which means that executing it will return a function suitable for use in the `hypothesis` argument of a `marginaleffects` function.
+#' @export

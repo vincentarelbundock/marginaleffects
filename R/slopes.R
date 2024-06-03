@@ -84,6 +84,15 @@
 #'   - "meandev": difference between an estimate and the mean of all estimates.
 #'   - "meanotherdev": difference between an estimate and the mean of all other estimates, excluding the current one.
 #'   - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
+#' + Formula:
+#'   - `comparison ~ pairs | group`
+#'   - Left-hand side determines the type of comparison to conduct: `difference` or `ratio`. If the left-hand side is empty, `difference` is chosen.
+#'   - Right-hand side determines the pairs of estimates to compare: `reference` or `sequential`
+#'   - Optional: Users can supply grouping variables after a vertical bar to conduct comparisons withing subsets.
+#'   - Examples:
+#'      + `~ reference`
+#'      + `ratio ~ pairwise`
+#'      + `difference ~ pairwise | groupid`
 #' + Function:
 #'   - Accepts an argument `x`: object produced by a `marginaleffects` function or a data frame with column `rowid` and `estimate`
 #'   - Returns a data frame with columns `term` and `estimate` (mandatory) and `rowid` (optional).

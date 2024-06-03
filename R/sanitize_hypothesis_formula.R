@@ -10,9 +10,6 @@ sanitize_hypothesis_formula <- function(hypothesis) {
   if (length(hypothesis)[1] == 0) {
     hypothesis <- stats::update(hypothesis, difference ~ .)
   }
-  if (length(hypothesis)[2] == 2) {
-    hypothesis <- stats::update(hypothesis, difference ~ . | .)
-  }
   if (length(hypothesis)[2] == 1) {
     by <- NULL
   } else {
@@ -21,12 +18,14 @@ sanitize_hypothesis_formula <- function(hypothesis) {
   lhs <- all.vars(stats::formula(hypothesis, rhs = 0))
   rhs <- all.vars(stats::formula(hypothesis, lhs = 0, rhs = 1))
 
-  checkmate::assert_choice(lhs, c("difference"), .var.name = "left-hand side of `hypothesis` formula")
+  checkmate::assert_choice(lhs, c("difference", "ratio"), .var.name = "left-hand side of `hypothesis` formula")
   checkmate::assert_choice(rhs, c("reference", "sequential"), .var.name = "Right-hand side of `hypothesis` formula")
 
   out <- specify_hypothesis(
     hypothesis = rhs,
-    by = by)
+    comparison = lhs,
+    by = by,
+    internal = TRUE)
 
   return(out)
 }

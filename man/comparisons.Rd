@@ -205,6 +205,19 @@ first entry in the error message is used by default.}
 \item "meanotherdev": difference between an estimate and the mean of all other estimates, excluding the current one.
 \item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 }
+\item Formula:
+\itemize{
+\item \code{comparison ~ pairs | group}
+\item Left-hand side determines the type of comparison to conduct: \code{difference} or \code{ratio}. If the left-hand side is empty, \code{difference} is chosen.
+\item Right-hand side determines the pairs of estimates to compare: \code{reference} or \code{sequential}
+\item Optional: Users can supply grouping variables after a vertical bar to conduct comparisons withing subsets.
+\item Examples:
+\itemize{
+\item \code{~ reference}
+\item \code{ratio ~ pairwise}
+\item \code{difference ~ pairwise | groupid}
+}
+}
 \item Function:
 \itemize{
 \item Accepts an argument \code{x}: object produced by a \code{marginaleffects} function or a data frame with column \code{rowid} and \code{estimate}
