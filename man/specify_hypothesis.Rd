@@ -27,6 +27,8 @@ specify_hypothesis(
 \item{label_columns}{Character vector. Column names to use for hypothesis labels. Default is \code{c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))}.}
 
 \item{by}{Character vector. Variable names which indicate subgroups in which the \code{hypothesis} function should be applied.}
+
+\item{internal}{Logical. Raises a deprecation warning when FALSE.}
 }
 \value{
 \code{specify_hypothesis()} is a "function factory", which means that executing it will return a function suitable for use in the \code{hypothesis} argument of a \code{marginaleffects} function.
