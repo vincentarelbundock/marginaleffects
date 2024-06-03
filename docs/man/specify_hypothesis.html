@@ -496,7 +496,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#experimental-complex-aggregation-and-test-functions-for-the-hypothesis-argument" id="toc-experimental-complex-aggregation-and-test-functions-for-the-hypothesis-argument" class="nav-link active" data-scroll-target="#experimental-complex-aggregation-and-test-functions-for-the-hypothesis-argument">(EXPERIMENTAL) Complex aggregation and test functions for the <code>hypothesis</code> argument</a>
+  <li><a href="#experimental-this-experimental-function-will-soon-be-deprecated.-please-supply-a-formula-or-function-to-the-hypothesis-argument-to-conduct-group-wise-hypothesis-tests." id="toc-experimental-this-experimental-function-will-soon-be-deprecated.-please-supply-a-formula-or-function-to-the-hypothesis-argument-to-conduct-group-wise-hypothesis-tests." class="nav-link active" data-scroll-target="#experimental-this-experimental-function-will-soon-be-deprecated.-please-supply-a-formula-or-function-to-the-hypothesis-argument-to-conduct-group-wise-hypothesis-tests.">(EXPERIMENTAL) This experimental function will soon be deprecated. Please supply a formula or function to the <code>hypothesis</code> argument to conduct (group-wise) hypothesis tests.</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
@@ -512,20 +512,21 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="experimental-complex-aggregation-and-test-functions-for-the-hypothesis-argument" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="experimental-complex-aggregation-and-test-functions-for-the-hypothesis-argument">(EXPERIMENTAL) Complex aggregation and test functions for the <code>hypothesis</code> argument</h2>
+<section id="experimental-this-experimental-function-will-soon-be-deprecated.-please-supply-a-formula-or-function-to-the-hypothesis-argument-to-conduct-group-wise-hypothesis-tests." class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="experimental-this-experimental-function-will-soon-be-deprecated.-please-supply-a-formula-or-function-to-the-hypothesis-argument-to-conduct-group-wise-hypothesis-tests.">(EXPERIMENTAL) This experimental function will soon be deprecated. Please supply a formula or function to the <code>hypothesis</code> argument to conduct (group-wise) hypothesis tests.</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other <code>marginaleffects</code> functions.</p>
-<p>This function creates aggregation and test functions for use with the <code>hypothesis</code> argument in <code>marginaleffects</code> functions like <code>predictions()</code>, <code>slopes()</code>, and <code>comparisons()</code>. The benefit of this function is that it handles a lot of the "boilerplate" code such as label creation and transformations by subgroups.</p>
+<p>(EXPERIMENTAL) This experimental function will soon be deprecated. Please supply a formula or function to the <code>hypothesis</code> argument to conduct (group-wise) hypothesis tests.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">specify_hypothesis(
   hypothesis = "reference",
+  comparison = "difference",
   label = NULL,
   label_columns = NULL,
-  by = c("term", "group", "contrast")
+  by = c("term", "group", "contrast"),
+  internal = FALSE
 )
 </code></pre>
 </section>
@@ -550,6 +551,14 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="comparison">comparison</code>
+</td>
+<td>
+String. "ratio" or "difference"
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="label">label</code>
 </td>
 <td>
@@ -570,6 +579,14 @@ Character vector. Column names to use for hypothesis labels. Default is <code>c(
 </td>
 <td>
 Character vector. Variable names which indicate subgroups in which the <code>hypothesis</code> function should be applied.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="internal">internal</code>
+</td>
+<td>
+Logical. Raises a deprecation warning when FALSE.
 </td>
 </tr>
 </tbody></table>

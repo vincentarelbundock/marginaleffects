@@ -935,6 +935,37 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 </ul>
 </li>
 <li>
+<p>Formula:</p>
+<ul>
+<li>
+<p><code>comparison ~ pairs | group</code></p>
+</li>
+<li>
+<p>Left-hand side determines the type of comparison to conduct: <code>difference</code> or <code>ratio</code>. If the left-hand side is empty, <code>difference</code> is chosen.</p>
+</li>
+<li>
+<p>Right-hand side determines the pairs of estimates to compare: <code>reference</code>, <code>sequential</code>, or <code>meandev</code></p>
+</li>
+<li>
+<p>Optional: Users can supply grouping variables after a vertical bar to conduct comparisons withing subsets.</p>
+</li>
+<li>
+<p>Examples:</p>
+<ul>
+<li>
+<p><code>~ reference</code></p>
+</li>
+<li>
+<p><code>ratio ~ pairwise</code></p>
+</li>
+<li>
+<p><code>difference ~ pairwise | groupid</code></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
 <p>Function:</p>
 <ul>
 <li>

@@ -652,27 +652,27 @@ window.Quarto = {
 <span><span class="va">mod</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate    2.5 % 97.5 %  hp   wt gear</span></span>
-<span><span class="co">#&gt;  7.84e-01 2.79e-01  0.974 110 2.62    4</span></span>
-<span><span class="co">#&gt;  7.84e-01 3.53e-01  0.962 110 2.88    4</span></span>
-<span><span class="co">#&gt;  8.98e-01 4.81e-01  0.990  93 2.32    4</span></span>
-<span><span class="co">#&gt;  8.74e-01 1.52e-01  0.995 110 3.21    3</span></span>
-<span><span class="co">#&gt;  1.31e-02 6.45e-05  0.761 175 3.44    3</span></span>
+<span><span class="co">#&gt;  7.84e-01 2.65e-01  0.975 110 2.62    4</span></span>
+<span><span class="co">#&gt;  7.84e-01 3.58e-01  0.961 110 2.88    4</span></span>
+<span><span class="co">#&gt;  8.98e-01 4.46e-01  0.988  93 2.32    4</span></span>
+<span><span class="co">#&gt;  8.74e-01 1.79e-01  0.996 110 3.21    3</span></span>
+<span><span class="co">#&gt;  1.31e-02 9.58e-05  0.796 175 3.44    3</span></span>
 <span><span class="co">#&gt; --- 22 rows omitted. See ?avg_predictions and ?print.marginaleffects --- </span></span>
-<span><span class="co">#&gt;  3.83e-01 1.76e-02  0.954 113 1.51    5</span></span>
-<span><span class="co">#&gt;  1.21e-06 1.79e-12  0.295 264 3.17    5</span></span>
-<span><span class="co">#&gt;  6.89e-03 2.63e-05  0.566 175 2.77    5</span></span>
-<span><span class="co">#&gt;  8.07e-11 2.22e-16  0.721 335 3.57    5</span></span>
-<span><span class="co">#&gt;  7.95e-01 3.55e-01  0.967 109 2.78    4</span></span>
+<span><span class="co">#&gt;  3.83e-01 1.86e-02  0.965 113 1.51    5</span></span>
+<span><span class="co">#&gt;  1.21e-06 2.06e-12  0.694 264 3.17    5</span></span>
+<span><span class="co">#&gt;  6.89e-03 2.83e-05  0.644 175 2.77    5</span></span>
+<span><span class="co">#&gt;  8.07e-11 2.22e-16  0.970 335 3.57    5</span></span>
+<span><span class="co">#&gt;  7.95e-01 3.47e-01  0.963 109 2.78    4</span></span>
 <span><span class="co">#&gt; Columns: rowid, estimate, vs, hp, wt, gear, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  invlink(link)</span></span>
 <span></span>
 <span><span class="va">mod</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span>vcov <span class="op">=</span> <span class="op">~</span><span class="va">gear</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term          Contrast  Estimate   2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;  gear mean(4) - mean(3) -3.92e-02 -0.0923 0.14714</span></span>
-<span><span class="co">#&gt;  gear mean(5) - mean(3) -1.93e-01 -0.4879 0.33099</span></span>
-<span><span class="co">#&gt;  hp   mean(dY/dX)       -5.02e-03 -0.0114 0.00372</span></span>
-<span><span class="co">#&gt;  wt   mean(dY/dX)       -3.98e-05 -0.4901 0.65704</span></span>
+<span><span class="co">#&gt;  gear mean(4) - mean(3) -3.92e-02 -0.0910 0.13491</span></span>
+<span><span class="co">#&gt;  gear mean(5) - mean(3) -1.93e-01 -0.4886 0.33884</span></span>
+<span><span class="co">#&gt;  hp   mean(dY/dX)       -5.02e-03 -0.0116 0.00512</span></span>
+<span><span class="co">#&gt;  wt   mean(dY/dX)       -3.98e-05 -0.6242 0.73179</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

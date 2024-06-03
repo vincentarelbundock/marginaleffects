@@ -546,6 +546,15 @@ ul.task-list li input[type="checkbox"] {
 <h1>News</h1>
 <section id="development" class="level2">
 <h2 class="anchored" data-anchor-id="development">Development</h2>
+<p>New:</p>
+<ul>
+<li><code>hypothesis</code> accepts formulas like: <code>ratio ~ sequential | group</code></li>
+<li>Allow reverse binary contrasts: comparisons(mod, variables = list(am = 1:0, vs = 0:1)). Thanks to K. Henry for report <a href="https://github.com/vincentarelbundock/marginaleffects/issues/1137">#1137</a>.</li>
+</ul>
+<p>Misc:</p>
+<ul>
+<li>Deprecation warning for <code>specify_hypothesis()</code>. This function was clearly marked as experimental, and has been available only for one release. It was a bad idea. Users should supply a custom function or a formula to the <code>hypothesis</code> argument. The new formula interface, in particular, makes it very easy to conduct group-wise hypothesis tests.</li>
+</ul>
 <p>Bugs:</p>
 <ul>
 <li>Fix regression in <code>mlogit</code> models due to factor conversion. This raised an error before returning result, so there is no numerical danger.</li>
