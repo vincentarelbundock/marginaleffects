@@ -26,31 +26,30 @@ specify_hypothesis <- function(
     checkmate::assert_character(label_columns, null.ok = TRUE)
     checkmate::assert(
         checkmate::check_function(hypothesis),
-        checkmate::check_choice(hypothesis, choices = c("reference", "sequential"))
+        checkmate::check_choice(hypothesis, choices = c("reference", "sequential", "meandev"))
     )
 
     if (is.null(label)) label <- function(x) "custom"
 
-    if (comparison == "difference") {
-        comparison_label <- "(%s) - (%s)"
-    } else {
-        comparison_label <- "(%s) / (%s)"
-    }
-
     if (identical(hypothesis, "reference")) {
         if (comparison == "difference") {
             hypothesis <- function(x) x - x[1]
+            label <- function(x) sprintf("(%s) - (%s)", x, x[1])[2:length(x)]
         } else {
             hypothesis <- function(x) x / x[1]
+            label <- function(x) sprintf("(%s) / (%s)", x, x[1])[2:length(x)]
         }
-        label <- function(x) sprintf(comparison_label, x, x[1])[2:length(x)]
     } else if (identical(hypothesis, "sequential")) {
         if (comparison == "difference") {
             hypothesis <- function(x) (x - data.table::shift(x))[2:length(x)]
+            label = function(x) sprintf("(%s) - (%s)", x, data.table::shift(x))[2:length(x)]
         } else {
             hypothesis <- function(x) (x / data.table::shift(x))[2:length(x)]
+            label = function(x) sprintf("(%s) / (%s)", x, data.table::shift(x))[2:length(x)]
         }
-        label = function(x) sprintf(comparison_label, x, data.table::shift(x))[2:length(x)]
+    } else if (identical(hypothesis, "meandev")) {
+        hypothesis <- function(x) x - mean(x)
+        label <- function(x) sprintf("(%s) - Avg", x)
     }
 
     fun <- function(x) {

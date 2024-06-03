@@ -269,7 +269,7 @@ mod <- lm(mpg ~ am * wt * factor(cyl), data = dat)
 avg_predictions(mod, by = "gear")
 ```
 
-We can make "sequential" or "reference" comparisons, either as differences (the default) or ratios:
+We can make "sequential", "reference", or "meandev" comparisons, either as differences (the default) or ratios:
 
 ```{r}
 avg_predictions(mod, 
@@ -277,9 +277,14 @@ avg_predictions(mod,
     by = "gear")
 
 avg_predictions(mod, 
+    hypothesis = ~ meandev,
+    by = "gear")
+
+avg_predictions(mod, 
     hypothesis = ratio ~ sequential,
     by = "gear")
 ```
+
 
 We can also test hypotheses by subgroup. For example, in this case, we want to compare every estimate to the reference category (first estimate) in each subset of `am`:
 

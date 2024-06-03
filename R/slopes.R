@@ -87,7 +87,7 @@
 #' + Formula:
 #'   - `comparison ~ pairs | group`
 #'   - Left-hand side determines the type of comparison to conduct: `difference` or `ratio`. If the left-hand side is empty, `difference` is chosen.
-#'   - Right-hand side determines the pairs of estimates to compare: `reference` or `sequential`
+#'   - Right-hand side determines the pairs of estimates to compare: `reference`, `sequential`, or `meandev`
 #'   - Optional: Users can supply grouping variables after a vertical bar to conduct comparisons withing subsets.
 #'   - Examples:
 #'      + `~ reference`
