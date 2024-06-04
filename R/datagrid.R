@@ -439,7 +439,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
     idx <- vapply(newdata, is.matrix, logical(1L))
     if (any(idx)) {
         if (any(names(newdata)[idx] %in% variables_all)) {
-            insight::format_warning("Matrix columns are not supported as predictors and are therefore omitted. This may prevent computation of the quantities of interest. You can construct your own prediction dataset and supply it explicitly to the `newdata` argument.")
+            insight::format_warning("Matrix columns are not supported as predictors and are therefore omitted. This may prevent computation of the quantities of interest. You can construct your own prediction dataset and supply it explicitly to the `newdata` argument. This issue can happen when using functions like `scale()`, which returns matrices rather than vectors. Convert your column to a vector before fitting you model.")
         }
         newdata <- newdata[, !idx, drop = FALSE]
     }
