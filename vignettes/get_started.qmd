@@ -440,9 +440,9 @@ print(p)
 
 ## Uncertainty
 
-The `marginaleffects` package reports uncertainty estimates for all the quantities it computes: predictions, comparisons, slopes, etc. By default, standard errors are computed using [the delta method](https://en.wikipedia.org/wiki/Delta_method) and classical standard errors. These standard errors are fast to compute, and have appealing properties some some, but not all cases. `marginaleffects` supports several alternatives, including: Huber-White Heteroskedasticity Robust, Cluster-Robust, Bootstrap, and Simulation-based uncertainty estimates.
+The `marginaleffects` package reports uncertainty estimates for all the quantities it computes: predictions, comparisons, slopes, etc. By default, standard errors are computed using [the delta method](https://en.wikipedia.org/wiki/Delta_method) and classical standard errors. These standard errors are fast to compute, and have appealing properties in some, but not all cases. `marginaleffects` supports several alternatives, including: Huber-White Heteroskedasticity Robust, Cluster-Robust, Bootstrap, and Simulation-based uncertainty estimates.
 
-The [Standard Errors vignette](https://marginaleffects.com/vignettes/uncertainty.html) offers more detail. For now, it suffices to show to examples. First, we use the `vcov` argument to report "HC3" (heteroskedasticity-consistent) standard errors. 
+The [Standard Errors vignette](https://marginaleffects.com/vignettes/uncertainty.html) offers more detail. For now, it suffices to show two examples. First, we use the `vcov` argument to report "HC3" (heteroskedasticity-consistent) standard errors. 
 
 ::: {.panel-tabset group="language"}
 ### R
