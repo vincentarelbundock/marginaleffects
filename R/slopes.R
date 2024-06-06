@@ -135,6 +135,7 @@
 #' @template parallel
 #' @template references
 #' @template order_of_operations
+#' @template options
 #'
 #' @return A `data.frame` with one row per observation (per term/group) and several columns:
 #' * `rowid`: row number of the `newdata` data frame

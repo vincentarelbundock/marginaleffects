@@ -410,6 +410,17 @@ To disable parallelism in \code{marginaleffects} altogether, you can set a globa
 }\if{html}{\out{</div>}}
 }
 
+\section{Global options}{
+
+
+The behavior of \code{marginaleffects} functions can be modified by setting global options.
+
+Disable some safety checks:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_safe = FALSE)`
+}\if{html}{\out{</div>}}
+}
+
 \examples{
 \dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{\}) # examplesIf}

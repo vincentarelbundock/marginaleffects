@@ -86,7 +86,8 @@ get_hypothesis <- function(
     # lincom: string shortcuts
     valid <- c("pairwise", "reference", "sequential", "revpairwise", "revreference", "revsequential")
     if (isTRUE(hypothesis %in% valid)) {
-        if (nrow(x) > 25) {
+        safe <- isFALSE(getOption("marginaleffects_safe", default = TRUE))
+        if (nrow(x) > 25 && !safe) {
             msg <- 'The "pairwise", "reference", and "sequential" options of the `hypotheses` argument are not supported for `marginaleffects` commands which generate more than 25 rows of results. Use the `newdata`, `by`, and/or `variables` arguments to compute a smaller set of results on which to conduct hypothesis tests.'
             insight::format_error(msg)
         }

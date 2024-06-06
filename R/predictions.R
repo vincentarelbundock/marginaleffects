@@ -69,6 +69,7 @@
 #' @template order_of_operations
 #' @template parallel
 #' @template references
+#' @template options
 #'
 #' @return A `data.frame` with one row per observation and several columns:
 #' * `rowid`: row number of the `newdata` data frame

@@ -6,6 +6,7 @@ New:
 
 * `hypothesis` accepts formulas like: `ratio ~ sequential | group`
 * Allow reverse binary contrasts: comparisons(mod, variables = list(am = 1:0, vs = 0:1)). Thanks to K. Henry for report #1137.
+* `options(marginaleffects_safe = FALSE)` disables some safety checks and allows unadvisable (but potentially) useful features like *many* pairwise comparisons. Thanks to D.Locke for the feature request.
 
 Misc:
 
