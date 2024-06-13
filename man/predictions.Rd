@@ -52,11 +52,11 @@ avg_predictions(
 \item \code{NULL} (default): Unit-level predictions for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[insight:get_data]{insight::get_data()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 \item string:
 \itemize{
-\item "mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.
-\item "median": Predictions at the Median. Predictions when each predictor is held at its median or mode.
-\item "marginalmeans": Predictions at Marginal Means. See Details section below.
-\item "tukey": Predictions at Tukey's 5 numbers.
-\item "grid": Predictions on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+\item "mean": Predictions evaluated when each predictor is held at its mean or mode.
+\item "median": Predictions evaluated when each predictor is held at its median or mode.
+\item "balanced": Predictions evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
+\item "tukey": Predictions evaluated at Tukey's 5 numbers.
+\item "grid": Predictions evaluated on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{

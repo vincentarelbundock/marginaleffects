@@ -59,11 +59,11 @@ avg_slopes(
 \item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
 \item string:
 \itemize{
-\item "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
-\item "median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.
-\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-\item "tukey": Marginal Effects at Tukey's 5 numbers.
-\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+\item "mean": Slopes evaluated when each predictor is held at its mean or mode.
+\item "median": Slopes evaluated when each predictor is held at its median or mode.
+\item "balanced": Slopes evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
+\item "tukey": Slopes evaluated at Tukey's 5 numbers.
+\item "grid": Slopes evaluated on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
 }}
 
@@ -451,8 +451,9 @@ avg_slopes(mod2, variables = "hp", by = "cyl")
 # original values, and the whole dataset is duplicated once for each
 # combination of the values in `datagrid()`
 mfx <- slopes(mod,
-              newdata = datagrid(hp = c(100, 110),
-              grid_type = "counterfactual"))
+    newdata = datagrid(
+        hp = c(100, 110),
+        grid_type = "counterfactual"))
 head(mfx)
 
 # Heteroskedasticity robust standard errors
@@ -480,9 +481,10 @@ slopes(
     hypothesis = c(1, -1))
 
 # two custom contrasts using a matrix of weights
-lc <- matrix(c(
-    1, -1,
-    2, 3),
+lc <- matrix(
+    c(
+        1, -1,
+        2, 3),
     ncol = 2)
 colnames(lc) <- c("Contrast A", "Contrast B")
 slopes(
