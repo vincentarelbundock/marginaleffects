@@ -33,11 +33,11 @@
 #' + [subset()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = subset(treatment == 1)`
 #' + [dplyr::filter()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = filter(treatment == 1)`
 #' + string:
-#'   - "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
-#'   - "median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.
-#'   - "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-#'   - "tukey": Marginal Effects at Tukey's 5 numbers.
-#'   - "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+#'   - "mean": Slopes evaluated when each predictor is held at its mean or mode.
+#'   - "median": Slopes evaluated when each predictor is held at its median or mode.
+#'   - "balanced": Slopes evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
+#'   - "tukey": Slopes evaluated at Tukey's 5 numbers.
+#'   - "grid": Slopes evaluated on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 #' @param vcov Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 #'  * FALSE: Do not compute standard errors. This can speed up computation considerably.
 #'  * TRUE: Unit-level standard errors using the default `vcov(model)` variance-covariance matrix.
@@ -181,8 +181,9 @@
 #' # original values, and the whole dataset is duplicated once for each
 #' # combination of the values in `datagrid()`
 #' mfx <- slopes(mod,
-#'               newdata = datagrid(hp = c(100, 110),
-#'               grid_type = "counterfactual"))
+#'     newdata = datagrid(
+#'         hp = c(100, 110),
+#'         grid_type = "counterfactual"))
 #' head(mfx)
 #'
 #' # Heteroskedasticity robust standard errors
@@ -210,16 +211,17 @@
 #'     hypothesis = c(1, -1))
 #'
 #' # two custom contrasts using a matrix of weights
-#' lc <- matrix(c(
-#'     1, -1,
-#'     2, 3),
+#' lc <- matrix(
+#'     c(
+#'         1, -1,
+#'         2, 3),
 #'     ncol = 2)
 #' colnames(lc) <- c("Contrast A", "Contrast B")
 #' slopes(
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = lc)
-#' 
+#'
 #' @export
 slopes <- function(model,
                    newdata = NULL,
@@ -237,7 +239,6 @@ slopes <- function(model,
                    eps = NULL,
                    numderiv = "fdforward",
                    ...) {
-
     dots <- list(...)
 
     # very early, before any use of newdata
@@ -246,20 +247,21 @@ slopes <- function(model,
     newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
     # build call: match.call() doesn't work well in *apply()
-    call_attr <- c(list(
-        name = "slopes",
-        model = model,
-        newdata = newdata,
-        variables = variables,
-        type = type,
-        vcov = vcov,
-        by = by,
-        conf_level = conf_level,
-        slope = slope,
-        wts = wts,
-        hypothesis = hypothesis,
-        df = df,
-        eps = eps),
+    call_attr <- c(
+        list(
+            name = "slopes",
+            model = model,
+            newdata = newdata,
+            variables = variables,
+            type = type,
+            vcov = vcov,
+            by = by,
+            conf_level = conf_level,
+            slope = slope,
+            wts = wts,
+            hypothesis = hypothesis,
+            df = df,
+            eps = eps),
         list(...))
     call_attr <- do.call("call", call_attr)
 
@@ -345,7 +347,6 @@ avg_slopes <- function(model,
                        eps = NULL,
                        numderiv = "fdforward",
                        ...) {
-
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)

@@ -37,11 +37,11 @@
 #' + Warning: Please avoid modifying your dataset between fitting the model and calling a `marginaleffects` function. This can sometimes lead to unexpected results.
 #' + `NULL` (default): Unit-level predictions for each observed value in the dataset (empirical distribution). The dataset is retrieved using [insight::get_data()], which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 #' + string:
-#'   - "mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.
-#'   - "median": Predictions at the Median. Predictions when each predictor is held at its median or mode.
-#'   - "marginalmeans": Predictions at Marginal Means. See Details section below.
-#'   - "tukey": Predictions at Tukey's 5 numbers.
-#'   - "grid": Predictions on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+#'   - "mean": Predictions evaluated when each predictor is held at its mean or mode.
+#'   - "median": Predictions evaluated when each predictor is held at its median or mode.
+#'   - "balanced": Predictions evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
+#'   - "tukey": Predictions evaluated at Tukey's 5 numbers.
+#'   - "grid": Predictions evaluated on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.

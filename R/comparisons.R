@@ -58,7 +58,7 @@
 #' + string:
 #'   - "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
 #'   - "median": Contrasts at the Median. Contrasts when each predictor is held at its median or mode.
-#'   - "marginalmeans": Contrasts at Marginal Means.
+#'   - "balanced": Contrasts evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
 #'   - "tukey": Contrasts at Tukey's 5 numbers.
 #'   - "grid": Contrasts on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 #' + [datagrid()] call to specify a custom grid of regressors. For example:

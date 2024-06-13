@@ -392,6 +392,10 @@ When using `datagrid()` inside a `comparisons()` call, we do not need to specify
 comparisons(mod,
     variables = "SexCode",
     newdata = datagrid(grid_type = "balanced"))
+
+comparisons(mod,
+    variables = "SexCode",
+    newdata = "balanced")
 ```
 
 
@@ -434,7 +438,7 @@ avg_comparisons(mod,
 In experimental studies, it can often make sense to estimate contrasts, averaged across a balanced grid of treatment conditions:
 
 ```{r}
-avg_comparisons(mod, newdata = datagrid(grid_type = "balanced"))
+avg_comparisons(mod, newdata = "balanced")
 ```
 
 Note that the results are slightly different than when averaging across the empirical, because the number of actual passengers aboard the Titanic was not perfectly balanced across gender and ticket categories:
@@ -903,7 +907,7 @@ mod <- lm(bill_length_mm ~ species * sex + island + body_mass_g, data = dat)
 
 avg_comparisons(
     mod,
-    newdata = "marginalmeans",
+    newdata = "balanced",
     variables = c("species", "island"))
 ```
 

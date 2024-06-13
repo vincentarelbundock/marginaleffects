@@ -5,17 +5,17 @@ sanitize_newdata_call <- function(scall, newdata = NULL, model, by = NULL) {
                 scall <- rlang::call_modify(scall, model = model)
             }
         } else if (isTRUE(rlang::call_name(scall) == "subset")) {
-          argnames <- rlang::call_args_names(scall)
-          if (!"x" %in% argnames && length(argnames) == 1) {
-            tmp <- get_modeldata(model, additional_variables = by)
-            scall <- rlang::call_modify(scall, x = tmp)
-          }
+            argnames <- rlang::call_args_names(scall)
+            if (!"x" %in% argnames && length(argnames) == 1) {
+                tmp <- get_modeldata(model, additional_variables = by)
+                scall <- rlang::call_modify(scall, x = tmp)
+            }
         } else if (isTRUE(rlang::call_name(scall) == "filter")) {
-          argnames <- rlang::call_args_names(scall)
-          if (!".data" %in% argnames && length(argnames) == 1) {
-            tmp <- get_modeldata(model, additional_variables = by)
-            scall <- rlang::call_modify(scall, .data = tmp)
-          }
+            argnames <- rlang::call_args_names(scall)
+            if (!".data" %in% argnames && length(argnames) == 1) {
+                tmp <- get_modeldata(model, additional_variables = by)
+                scall <- rlang::call_modify(scall, .data = tmp)
+            }
         } else if (rlang::call_name(scall) %in% "visualisation_matrix") {
             if (!"x" %in% rlang::call_args_names(scall)) {
                 scall <- rlang::call_modify(scall, x = get_modeldata)
@@ -47,26 +47,23 @@ build_newdata <- function(model, newdata, by, modeldata) {
         newdata <- modeldata
         newdata_explicit <- FALSE
 
-    # string -> datagrid()
+        # string -> datagrid()
     } else if (identical(newdata, "mean")) {
         newdata <- do.call("datagrid", args)
-
     } else if (identical(newdata, "median")) {
         args[["FUN_numeric"]] <- args[["FUN_integer"]] <- args[["FUN_logical"]] <- function(x) stats::median(x, na.rm = TRUE)
         newdata <- do.call("datagrid", args)
-
     } else if (identical(newdata, "tukey")) {
         args[["FUN_numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
         newdata <- do.call("datagrid", args)
-
     } else if (identical(newdata, "grid")) {
         args[["FUN_numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
         args[["FUN_factor"]] <- args[["FUN_character"]] <- args[["FUN_logical"]] <- unique
         newdata <- do.call("datagrid", args)
 
-    # grid with all unique values of categorical variables, and numerics at their means
-    } else if (identical(newdata, "marginalmeans")) {
-        args[["FUN_factor"]] <- args[["FUN_character"]] <- args[["FUN_logical"]] <- unique
+        # grid with all unique values of categorical variables, and numerics at their means
+    } else if (isTRUE(newdata %in% c("balanced", "marginalmeans"))) {
+        args[["grid_type"]] <- "balanced"
         newdata <- do.call("datagrid", args)
         # Issue #580: outcome should not duplicate grid rows
         dv <- hush(insight::find_response(model))
@@ -128,7 +125,7 @@ add_wts_column <- function(wts, newdata, model) {
             stop(msg, call. = FALSE)
         }
     }
-    
+
     # weights: before sanitize_variables
     if (!isFALSE(wts) && isTRUE(checkmate::check_string(wts))) {
         newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
@@ -194,7 +191,7 @@ clean_newdata <- function(model, newdata) {
     # need to cross our fingers, but this probably works.
     if (inherits(model, "mlogit") && isTRUE(inherits(newdata[["idx"]], "idx"))) {
         idx <- list(newdata[["idx"]][, 1], newdata[["idx"]][, 2])
-        newdata <- newdata[order(newdata[["idx"]][, 1], newdata[["idx"]][, 2]),]
+        newdata <- newdata[order(newdata[["idx"]][, 1], newdata[["idx"]][, 2]), ]
     }
 
     # placeholder response
@@ -212,10 +209,12 @@ clean_newdata <- function(model, newdata) {
 
 
 sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
-    checkmate::assert(
-        checkmate::check_data_frame(newdata, null.ok = TRUE),
-        checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "marginalmeans")),
-        combine = "or")
+    if (!identical(newdata, "marginalmeans")) { # soft deprecation trick
+        checkmate::assert(
+            checkmate::check_data_frame(newdata, null.ok = TRUE),
+            checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "balanced")),
+            combine = "or")
+    }
     tmp <- build_newdata(model = model, newdata = newdata, by = by, modeldata = modeldata)
     newdata <- tmp[["newdata"]]
     modeldata <- tmp[["modeldata"]]
@@ -230,7 +229,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         newdata_explicit = newdata_explicit)
 
     # # sort rows of output when the user explicitly calls `by` or `datagrid()`
-    # # otherwise, we return the same data frame in the same order, but 
+    # # otherwise, we return the same data frame in the same order, but
     # # here it makes sense to sort for a clean output.
     # sortcols <- attr(newdata, "newdata_variables_datagrid")
     # if (isTRUE(checkmate::check_character(by))) {
@@ -247,24 +246,27 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
 
 
 dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cross = FALSE, byfun = NULL) {
-
     # issue #1113: elasticities should skip dedup because it is difficult to align x and y
     elasticities <- c("eyexavg", "eydxavg", "dyexavg")
-    if (isTRUE(checkmate::check_choice(comparison, elasticities))) return(data.table(newdata))
+    if (isTRUE(checkmate::check_choice(comparison, elasticities))) {
+        return(data.table(newdata))
+    }
 
     elasticities <- c("eyex", "eydx", "dyex")
-    if (!isFALSE(by) && isTRUE(checkmate::check_choice(comparison, elasticities)))  return(data.table(newdata))
+    if (!isFALSE(by) && isTRUE(checkmate::check_choice(comparison, elasticities))) {
+        return(data.table(newdata))
+    }
 
     flag <- isTRUE(checkmate::check_string(comparison, pattern = "avg"))
     if (!flag && (
         isFALSE(by) || # weights only make sense when we are marginalizing
-        !isFALSE(wts) ||
-        !is.null(byfun) ||
-        !isFALSE(cross) ||
-        isFALSE(getOption("marginaleffects_dedup", default = TRUE)))) {
+            !isFALSE(wts) ||
+            !is.null(byfun) ||
+            !isFALSE(cross) ||
+            isFALSE(getOption("marginaleffects_dedup", default = TRUE)))) {
         return(newdata)
     }
-    
+
     vclass <- attr(newdata, "marginaleffects_variable_class")
 
     # copy to allow mod by reference later without overwriting newdata
@@ -279,18 +281,18 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
     if ("rowid" %in% colnames(out)) {
         out[, "rowid" := NULL]
     }
-    
+
     categ <- c("factor", "character", "logical", "strata", "cluster", "binary")
     if (!all(vclass %in% categ)) {
         return(newdata)
     }
-    
+
     cols <- colnames(out)
     out <- out[, .("marginaleffects_wts_internal" = .N), by = cols]
     data.table::setDF(out)
-    
+
     out[["rowid_dedup"]] <- seq_len(nrow(out))
     attr(out, "marginaleffects_variable_class") <- vclass
-    
+
     return(out)
 }

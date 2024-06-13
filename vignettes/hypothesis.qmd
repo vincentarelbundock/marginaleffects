@@ -625,11 +625,13 @@ dat <- mtcars
 dat$carb <- factor(dat$carb)
 dat$cyl <- factor(dat$cyl)
 dat$am <- as.logical(dat$am)
+dat <- sort_by(dat, ~carb)
 
 mod <- lm(mpg ~ carb + cyl, dat)
+
 mm <- predictions(mod,
     by = "carb",
-    newdata = datagrid(grid_type = "balanced"))
+    newdata = "balanced")
 mm
 ```
 
@@ -666,7 +668,7 @@ In the `predictions()` function, we can supply a `hypothesis` argument to comput
 lc <- c(1, -1, 0, 0, 0, 0)
 predictions(mod,
     by = "carb",
-    newdata = datagrid(grid_type = "balanced"),
+    newdata = "balanced",
     hypothesis = lc)
 ```
 
@@ -678,7 +680,7 @@ Of course, we can also estimate more complex contrasts:
 lc <- c(0, -2, 1, 1, -1, 1)
 predictions(mod,
     by = "carb",
-    newdata = datagrid(grid_type = "balanced"),
+    newdata = "balanced",
     hypothesis = lc)
 ```
 
@@ -705,7 +707,7 @@ lc
 
 predictions(mod,
     by = "carb",
-    newdata = datagrid(grid_type = "balanced"),
+    newdata = "balanced",
     hypothesis = lc)
 ```
 

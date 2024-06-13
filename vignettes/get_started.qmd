@@ -422,7 +422,7 @@ We can compute marginal means manually using the functions already described:
 ```{r}
 avg_predictions(
   mod_cat,
-  newdata = datagrid(grid_type = "balanced"),
+  newdata = "balanced",
   by = "am")
 ```
 ### Python

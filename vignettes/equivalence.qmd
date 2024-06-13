@@ -231,7 +231,7 @@ emmeans(mod, specs = "source") |>
 ## {marginaleffects}
 predictions(
     mod,
-    newdata = datagrid(grid_type = "balanced"),
+    newdata = "balanced",
     by = "source",
     hypothesis = "pairwise",
     equivalence = c(-log(1.25), log(1.25))
