@@ -1,7 +1,7 @@
-rm(list=ls())
-rm(list=ls(.GlobalEnv), envir = .GlobalEnv)
+rm(list = ls())
+rm(list = ls(.GlobalEnv), envir = .GlobalEnv)
 
-EXPENSIVE <- FALSE
+EXPENSIVE <- TRUE
 
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
@@ -14,10 +14,10 @@ if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {
 # libraries
 requiet <- function(package) {
     void <- capture.output(
-    pkg_available <- tryCatch(suppressPackageStartupMessages(suppressWarnings(suppressMessages(tryCatch(
-        isTRUE(require(package, warn.conflicts = FALSE, character.only = TRUE)),
-        error = function(e) FALSE
-    ))))))
+        pkg_available <- tryCatch(suppressPackageStartupMessages(suppressWarnings(suppressMessages(tryCatch(
+            isTRUE(require(package, warn.conflicts = FALSE, character.only = TRUE)),
+            error = function(e) FALSE
+        ))))))
     return(pkg_available)
 }
 
@@ -36,7 +36,7 @@ suppressWarnings(rm(list = common, envir = .GlobalEnv))
 suppressWarnings(rm(list = common))
 
 # avoids a `timedatectl`` warning
-Sys.setenv(TZ="America/New_York") 
+Sys.setenv(TZ = "America/New_York")
 
 # snapshots
 options(width = 10000)
@@ -45,8 +45,8 @@ options(digits = 5)
 ON_CRAN <- !identical(Sys.getenv("R_NOT_CRAN"), "true")
 ON_GH <- identical(Sys.getenv("R_GH"), "true")
 ON_CI <- isTRUE(ON_CRAN) || isTRUE(ON_GH)
-ON_WINDOWS <- isTRUE(Sys.info()[['sysname']] == "Windows")
-ON_OSX <- isTRUE(Sys.info()[['sysname']] == "Darwin")
+ON_WINDOWS <- isTRUE(Sys.info()[["sysname"]] == "Windows")
+ON_OSX <- isTRUE(Sys.info()[["sysname"]] == "Darwin")
 
 minver <- function(pkg, ver = NULL) {
     ins <- try(utils::packageVersion(pkg), silent = TRUE)

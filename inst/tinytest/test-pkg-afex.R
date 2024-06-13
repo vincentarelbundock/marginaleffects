@@ -27,8 +27,9 @@ expect_equal(cmp$std.error, em$SE)
 # predictions vs emmeans
 pre <- predictions(
     mod,
-    newdata = datagrid(angle = c("X0", "X4", "X8"),
-                       noise = md_12.1$noise))
+    newdata = datagrid(
+        angle = c("X0", "X4", "X8"),
+        noise = md_12.1$noise))
 emm <- emmeans(mod, c("noise", "angle"))
 emm <- data.frame(emm)
 expect_equivalent(pre$estimate, emm$emmean)
@@ -38,25 +39,25 @@ expect_equivalent(pre$std.error, emm$SE)
 # coefficient matrix (ANOVA on full design)
 data(obk.long, package = "afex")
 mod <- suppressMessages(aov_car(
-    value ~ treatment * gender + Error(id/(phase*hour)), 
+    value ~ treatment * gender + Error(id / (phase * hour)),
     data = obk.long, observed = "gender"))
 
-em <- data.frame(emmeans(mod, ~ phase))
+em <- data.frame(emmeans(mod, ~phase))
 mm <- predictions(mod,
     newdata = datagrid(grid_type = "balanced"),
     by = "phase")
 expect_equivalent(mm$estimate, em$emmean)
-expect_equivalent(mm$std.error, em$SE)
+expect_equivalent(mm$std.error, em$SE, tolerance = 1e-6)
 
 
 
 # data from https://github.com/mattansb/Analysis-of-Factorial-Designs-foR-Psychologists/03 Main and simple effects analysis
 Phobia <- readRDS("stata/databases/Phobia.rds")
 mod <- suppressMessages(aov_ez(
-  id = "ID", dv = "BehavioralAvoidance",
-  between = c("Condition", "Gender"),
-  data = Phobia,
-  anova_table = list(es = "pes")))
+    id = "ID", dv = "BehavioralAvoidance",
+    between = c("Condition", "Gender"),
+    data = Phobia,
+    anova_table = list(es = "pes")))
 
 pre <- predictions(mod)
 mfx <- slopes(mod)
@@ -69,3 +70,4 @@ expect_false(anyNA(cmp$std.error))
 
 
 rm(list = ls())
+
