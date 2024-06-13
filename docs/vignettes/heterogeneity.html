@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.37">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – heterogeneity</title>
 <style>
@@ -536,18 +536,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="va">cmp</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
- Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S  2.5 % 97.5 %
- temp       +5     2.96      0.827 3.58  &lt; 0.001 11.5  1.343   4.58
- temp       +5     1.63      0.645 2.53  0.01155  6.4  0.365   2.90
- temp       +5    15.97      2.716 5.88  &lt; 0.001 27.9 10.645  21.29
- temp       +5    22.10      3.546 6.23  &lt; 0.001 31.0 15.145  29.05
- temp       +5    24.98      4.120 6.06  &lt; 0.001 29.5 16.909  33.06
---- 717 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- 
- temp       +5    25.61      4.373 5.86  &lt; 0.001 27.7 17.036  34.18
- temp       +5    20.31      3.463 5.86  &lt; 0.001 27.7 13.522  27.10
- temp       +5     2.47      0.794 3.10  0.00191  9.0  0.909   4.02
- temp       +5     1.80      0.621 2.91  0.00366  8.1  0.587   3.02
- temp       +5    16.31      2.813 5.80  &lt; 0.001 27.1 10.792  21.82
+ Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ temp       +5      423       55.3 7.65   &lt;0.001 45.5   315    531
+ temp       +5      384       51.8 7.40   &lt;0.001 42.7   282    485
+ temp       +5      320       40.1 8.00   &lt;0.001 49.5   242    399
+ temp       +5      360       43.4 8.29   &lt;0.001 52.9   275    445
+ temp       +5      370       45.7 8.10   &lt;0.001 50.7   281    460
+--- 721 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- 
+ temp       +5      418       48.3 8.66   &lt;0.001 57.6   323    513
+ temp       +5      426       50.0 8.51   &lt;0.001 55.7   328    524
+ temp       +5      366       44.0 8.33   &lt;0.001 53.5   280    453
+ temp       +5      304       40.6 7.50   &lt;0.001 43.9   225    384
+ temp       +5      343       40.5 8.47   &lt;0.001 55.2   264    422
 Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, count, season, weekday, weather, temp 
 Type:  response </code></pre>
 </div>
@@ -559,7 +559,7 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
- temp mean(+5)       29       4.22 6.88   &lt;0.001 37.2  20.7   37.3
+ temp mean(+5)      689       64.1 10.7   &lt;0.001 87.1   564    815
 
 Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
 Type:  response </code></pre>
@@ -593,11 +593,11 @@ Type:  response </code></pre>
 <span>    by <span class="op">=</span> <span class="st">"nodeid"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
- Term Contrast nodeid Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
- temp mean(+5)      3     6.42      1.024 6.26   &lt;0.001 31.3  4.41   8.42
- temp mean(+5)      4     2.27      0.536 4.23   &lt;0.001 15.4  1.22   3.32
- temp mean(+5)      6    44.11      6.416 6.87   &lt;0.001 37.2 31.53  56.68
- temp mean(+5)      7    21.43      3.250 6.59   &lt;0.001 34.4 15.06  27.80
+ Term Contrast nodeid Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ temp mean(+5)      3      352       37.2  9.46   &lt;0.001 68.1   279    425
+ temp mean(+5)      4      433       42.9 10.08   &lt;0.001 76.9   348    517
+ temp mean(+5)      6      757       70.4 10.74   &lt;0.001 87.0   619    895
+ temp mean(+5)      7      841       80.9 10.40   &lt;0.001 81.8   683   1000
 
 Columns: term, contrast, nodeid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
 Type:  response </code></pre>
@@ -613,12 +613,12 @@ estimate ~ weekday + season
 
 Fitted party:
 [1] root
-|   [2] weekday in Sun, Sat
-|   |   [3] season in fall, summer, winter: 6.417 (n = 156, err = 341.3)
-|   |   [4] season in spring: 2.267 (n = 54, err = 24.4)
-|   [5] weekday in Mon, Tue, Wed, Thu, Fri
-|   |   [6] season in fall, summer, winter: 44.105 (n = 392, err = 31243.9)
-|   |   [7] season in spring: 21.431 (n = 125, err = 2434.0)
+|   [2] season in winter
+|   |   [3] weekday in Monday, Tuesday, Sunday: 351.902 (n = 80, err = 248952.3)
+|   |   [4] weekday in Wednesday, Thursday, Friday, Saturday: 432.617 (n = 101, err = 461053.1)
+|   [5] season in spring, summer, fall
+|   |   [6] season in spring, fall: 756.522 (n = 362, err = 7548395.3)
+|   |   [7] season in summer: 841.324 (n = 188, err = 2116175.9)
 
 Number of inner nodes:    3
 Number of terminal nodes: 4</code></pre>

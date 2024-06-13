@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.37">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – equivalence</title>
 <style>
@@ -648,7 +648,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mod.params[<span class="st">'gear[T.5]'</span>]</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6.574762842180755</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6.574762842180771</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -718,7 +718,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ str  ┆ str        ┆ f64       ┆ f64       ┆   ┆ ---        ┆ ---        ┆ ---        ┆ ---       │</span></span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │      ┆            ┆           ┆           ┆   ┆ f64        ┆ f64        ┆ f64        ┆ f64       │</span></span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ╞══════╪════════════╪═══════════╪═══════════╪═══╪════════════╪════════════╪════════════╪═══════════╡</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ hp   ┆ mean(dY/dX ┆ -0.066854 ┆ 0.011147  ┆ … ┆ -14.967894 ┆ 0.001473   ┆ 5.9515e-51 ┆ 0.001473  │</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ hp   ┆ mean(dY/dX ┆ -0.066854 ┆ 0.011039  ┆ … ┆ -15.114693 ┆ 0.001339   ┆ 6.4786e-52 ┆ 0.001339  │</span></span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │      ┆ )          ┆           ┆           ┆   ┆            ┆            ┆            ┆           │</span></span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; └──────┴────────────┴───────────┴───────────┴───┴────────────┴────────────┴────────────┴───────────┘</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -863,11 +863,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ str       ┆ f64       ┆ f64       ┆ f64       ┆   ┆ ---       ┆ ---       ┆ ---       ┆ ---      │</span></span>
 <span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │           ┆           ┆           ┆           ┆   ┆ f64       ┆ f64       ┆ f64       ┆ f64      │</span></span>
 <span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ╞═══════════╪═══════════╪═══════════╪═══════════╪═══╪═══════════╪═══════════╪═══════════╪══════════╡</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Row 1 -   ┆ 0.126946  ┆ 0.033574  ┆ 3.781045  ┆ … ┆ 0.802584  ┆ 6.9231e-1 ┆ 0.788892  ┆ 0.788892 │</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Row 1 -   ┆ 0.126946  ┆ 0.033575  ┆ 3.78103   ┆ … ┆ 0.802581  ┆ 6.9245e-1 ┆ 0.788891  ┆ 0.788891 │</span></span>
 <span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Row 2     ┆           ┆           ┆           ┆   ┆           ┆ 2         ┆           ┆          │</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Row 1 -   ┆ 0.006029  ┆ 0.019277  ┆ 0.312762  ┆ … ┆ -4.874858 ┆ 1.8948e-8 ┆ 5.4443e-7 ┆ 5.4443e- │</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Row 1 -   ┆ 0.006029  ┆ 0.019276  ┆ 0.312767  ┆ … ┆ -4.874941 ┆ 1.8938e-8 ┆ 5.4421e-7 ┆ 5.4421e- │</span></span>
 <span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Row 3     ┆           ┆           ┆           ┆   ┆           ┆           ┆           ┆ 7        │</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Row 2 -   ┆ -0.120917 ┆ 0.032785  ┆ -3.688236 ┆ … ┆ -6.738451 ┆ 0.73827   ┆ 8.0042e-1 ┆ 0.73827  │</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Row 2 -   ┆ -0.120917 ┆ 0.032785  ┆ -3.688238 ┆ … ┆ -6.738455 ┆ 0.73827   ┆ 8.0040e-1 ┆ 0.73827  │</span></span>
 <span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; │ Row 3     ┆           ┆           ┆           ┆   ┆           ┆           ┆ 2         ┆          │</span></span>
 <span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; └───────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴──────────┘</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -905,7 +905,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">## {marginaleffects}</span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>grid_type <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span>,</span>
+<span>    newdata <span class="op">=</span> <span class="st">"balanced"</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"source"</span>,</span>
 <span>    hypothesis <span class="op">=</span> <span class="st">"pairwise"</span>,</span>
 <span>    equivalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="fl">1.25</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="fl">1.25</span><span class="op">)</span><span class="op">)</span></span>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.37">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – slopes</title>
 <style>
@@ -554,6 +554,7 @@ window.Quarto = {
   <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types">Prediction types</a></li>
   <li><a href="#parallel-computation" id="toc-parallel-computation" class="nav-link" data-scroll-target="#parallel-computation">Parallel computation</a></li>
   <li><a href="#order-of-operations" id="toc-order-of-operations" class="nav-link" data-scroll-target="#order-of-operations">Order of operations</a></li>
+  <li><a href="#global-options" id="toc-global-options" class="nav-link" data-scroll-target="#global-options">Global options</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul>
@@ -664,19 +665,19 @@ Model object
 <p>string:</p>
 <ul>
 <li>
-<p>"mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.</p>
+<p>"mean": Slopes evaluated when each predictor is held at its mean or mode.</p>
 </li>
 <li>
-<p>"median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.</p>
+<p>"median": Slopes evaluated when each predictor is held at its median or mode.</p>
 </li>
 <li>
-<p>"marginalmeans": Marginal Effects at Marginal Means. See Details section below.</p>
+<p>"balanced": Slopes evaluated on a balanced grid with every combination of categories and numeric variables held at their means.</p>
 </li>
 <li>
-<p>"tukey": Marginal Effects at Tukey’s 5 numbers.</p>
+<p>"tukey": Slopes evaluated at Tukey’s 5 numbers.</p>
 </li>
 <li>
-<p>"grid": Marginal Effects on a grid of representative numbers (Tukey’s 5 numbers and unique values of categorical predictors).</p>
+<p>"grid": Slopes evaluated on a grid of representative numbers (Tukey’s 5 numbers and unique values of categorical predictors).</p>
 </li>
 </ul>
 </li>
@@ -1328,7 +1329,14 @@ slopes(model)
 <li>
 <p><code>transform</code></p>
 </li>
-</ol></section><section id="references" class="level3"><h3 class="anchored" data-anchor-id="references">References</h3>
+</ol></section><section id="global-options" class="level3"><h3 class="anchored" data-anchor-id="global-options">Global options</h3>
+<p>The behavior of <code>marginaleffects</code> functions can be modified by setting global options.</p>
+<p>Disable some safety checks:</p>
+<div class="sourceCode r">
+<pre>options(marginaleffects_safe = FALSE)`
+</pre>
+</div>
+</section><section id="references" class="level3"><h3 class="anchored" data-anchor-id="references">References</h3>
 <ul>
 <li>
 <p>Greenland S. 2019. "Valid P-Values Behave Exactly as They Should: Some Misleading Criticisms of P-Values and Their Resolution With S-Values." The American Statistician. 73(S1): 106–114.</p>
@@ -1370,8 +1378,9 @@ slopes(model)
 <span><span class="co"># original values, and the whole dataset is duplicated once for each</span></span>
 <span><span class="co"># combination of the values in `datagrid()`</span></span>
 <span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
-<span>              newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span>,</span>
-<span>              grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
+<span>        hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span>,</span>
+<span>        grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Heteroskedasticity robust standard errors</span></span>
@@ -1399,9 +1408,10 @@ slopes(model)
 <span>    hypothesis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># two custom contrasts using a matrix of weights</span></span>
-<span><span class="va">lc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
-<span>    <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>,</span>
-<span>    <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span><span class="va">lc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>        <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>,</span>
+<span>        <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span>    ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">lc</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Contrast A"</span>, <span class="st">"Contrast B"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span></span>

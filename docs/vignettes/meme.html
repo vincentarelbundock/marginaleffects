@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.37">
+<meta name="generator" content="quarto-1.5.43">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -527,23 +527,23 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><a href="fig/meme_log_odds_ratios.jpg" class="lightbox" data-gallery="elsewhere" data-glightbox="description: .lightbox-desc-1;"><img src="fig/meme_log_odds_ratios.jpg" class="img-fluid"></a></p>
+<p><a href="fig/meme_log_odds_ratios.jpg" class="lightbox" data-glightbox="description: .lightbox-desc-1;" data-gallery="elsewhere"><img src="fig/meme_log_odds_ratios.jpg" class="img-fluid"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><a href="fig/meme_plot_comparisons.png" class="lightbox" data-gallery="elsewhere" data-glightbox="description: .lightbox-desc-2;"><img src="fig/meme_plot_comparisons.png" class="img-fluid"></a></p>
+<p><a href="fig/meme_plot_comparisons.png" class="lightbox" data-glightbox="description: .lightbox-desc-2;" data-gallery="elsewhere"><img src="fig/meme_plot_comparisons.png" class="img-fluid"></a></p>
 </div>
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><a href="fig/meme_raw_model_output.jpg" class="lightbox" data-gallery="elsewhere" data-glightbox="description: .lightbox-desc-3;"><img src="fig/meme_raw_model_output.jpg" class="img-fluid"></a></p>
+<p><a href="fig/meme_raw_model_output.jpg" class="lightbox" data-glightbox="description: .lightbox-desc-3;" data-gallery="elsewhere"><img src="fig/meme_raw_model_output.jpg" class="img-fluid"></a></p>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><a href="fig/meme_full_bayesian_posterior.jpg" class="lightbox" data-gallery="elsewhere" data-glightbox="description: .lightbox-desc-4;"><img src="fig/meme_full_bayesian_posterior.jpg" class="img-fluid"></a></p>
+<p><a href="fig/meme_full_bayesian_posterior.jpg" class="lightbox" data-glightbox="description: .lightbox-desc-4;" data-gallery="elsewhere"><img src="fig/meme_full_bayesian_posterior.jpg" class="img-fluid"></a></p>
 </div>
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><a href="fig/meme_wrestling.jpg" class="lightbox" data-gallery="elsewhere" data-glightbox="description: .lightbox-desc-5;"><img src="fig/meme_wrestling.jpg" class="img-fluid"></a></p>
+<p><a href="fig/meme_wrestling.jpg" class="lightbox" data-glightbox="description: .lightbox-desc-5;" data-gallery="elsewhere"><img src="fig/meme_wrestling.jpg" class="img-fluid"></a></p>
 </div>
 </div>
 </div>
@@ -1001,30 +1001,37 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox","closeEffect":"zoom"});
-window.onload = () => {
-  lightboxQuarto.on('slide_before_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    const href = trigger.getAttribute('href');
-    if (href !== null) {
-      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-      if (imgEl !== null) {
-        const srcAttr = imgEl.getAttribute("src");
-        if (srcAttr && srcAttr.startsWith("data:")) {
-          slideConfig.href = srcAttr;
-        }
-      }
-    } 
-  });
-
-  lightboxQuarto.on('slide_after_load', (data) => {
-    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-    if (window.Quarto?.typesetMath) {
-      window.Quarto.typesetMath(slideNode);
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":false,"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
     }
-  });
-
-};
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
           </script>
 
 

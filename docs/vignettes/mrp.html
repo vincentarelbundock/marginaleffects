@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.37">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – mrp</title>
 <style>
@@ -905,16 +905,16 @@ window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">tucson</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;      1.81  1.50   2.12</span></span>
-<span><span class="co">#&gt;      3.03  2.71   3.34</span></span>
-<span><span class="co">#&gt;      3.01  2.69   3.33</span></span>
-<span><span class="co">#&gt;      4.23  3.91   4.55</span></span>
+<span><span class="co">#&gt;      1.81  1.49   2.12</span></span>
+<span><span class="co">#&gt;      3.03  2.71   3.33</span></span>
+<span><span class="co">#&gt;      3.01  2.69   3.32</span></span>
+<span><span class="co">#&gt;      4.22  3.90   4.53</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, city, education, age, population_share, meat_substitute </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The MrP estimate for this city is simply the weighted average of predicted values, where weights are the population shares of each category of residents. In this context, we have:</p>
-<p><span class="math display">\[0.16 \times 1.81 + 0.38 \times 3.03 + 0.20 \times 3.01 + 0.25 \times 4.23 = 3.13\]</span></p>
+<p><span class="math display">\[0.16 \times 1.81 + 0.38 \times 3.03 + 0.20 \times 3.01 + 0.25 \times 4.22 = 3.13\]</span></p>
 <p>Instead of computing estimates by hand for each city, we can use the <code>by</code> and <code>wts</code> arguments of the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function to do everything everywhere all at once:</p>
 <div class="cell">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span>              <span class="co"># Compute predictions,</span></span>
@@ -925,16 +925,16 @@ window.addEventListener('load', function () { styleCell_tinytable_kof1owful5h7xl
 <span><span class="va">p</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;               city Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  Washington, DC        4.31  3.98   4.63</span></span>
-<span><span class="co">#&gt;  Tucson, AZ            3.13  2.82   3.44</span></span>
-<span><span class="co">#&gt;  Seattle, WA           5.06  4.73   5.39</span></span>
-<span><span class="co">#&gt;  San Jose, CA          3.92  3.57   4.27</span></span>
-<span><span class="co">#&gt;  San Francisco, CA     5.07  4.72   5.40</span></span>
+<span><span class="co">#&gt;  Washington, DC        4.30  3.97   4.63</span></span>
+<span><span class="co">#&gt;  Tucson, AZ            3.13  2.83   3.43</span></span>
+<span><span class="co">#&gt;  Seattle, WA           5.06  4.74   5.38</span></span>
+<span><span class="co">#&gt;  San Jose, CA          3.92  3.58   4.26</span></span>
+<span><span class="co">#&gt;  San Francisco, CA     5.06  4.72   5.41</span></span>
 <span><span class="co">#&gt; --- 30 rows omitted. See ?print.marginaleffects --- </span></span>
-<span><span class="co">#&gt;  Boston, MA            3.65  3.37   3.92</span></span>
-<span><span class="co">#&gt;  Baltimore, MD         2.94  2.57   3.31</span></span>
-<span><span class="co">#&gt;  Austin, TX            2.88  2.58   3.19</span></span>
-<span><span class="co">#&gt;  Atlanta, GA           4.60  4.28   4.91</span></span>
+<span><span class="co">#&gt;  Boston, MA            3.65  3.37   3.93</span></span>
+<span><span class="co">#&gt;  Baltimore, MD         2.93  2.58   3.30</span></span>
+<span><span class="co">#&gt;  Austin, TX            2.88  2.57   3.19</span></span>
+<span><span class="co">#&gt;  Atlanta, GA           4.60  4.27   4.92</span></span>
 <span><span class="co">#&gt;  Albuquerque, NM       2.67  2.35   2.99</span></span>
 <span><span class="co">#&gt; Columns: city, estimate, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

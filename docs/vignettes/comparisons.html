@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.37">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – Comparisons</title>
 <style>
@@ -1193,6 +1193,21 @@ window.Quarto = {
 <span><span class="co">#&gt;  SexCode    1 - 0    0.335     0.0634  5.29   &lt;0.001  22.9 0.211  0.459    3rd       0 30.4</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, SexCode, Age, Survived </span></span>
+<span><span class="co">#&gt; Type:  response</span></span>
+<span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span>    variables <span class="op">=</span> <span class="st">"SexCode"</span>,</span>
+<span>    newdata <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     Term Contrast Estimate Std. Error     z Pr(&gt;|z|)     S 2.5 % 97.5 % PClass SexCode  Age</span></span>
+<span><span class="co">#&gt;  SexCode    1 - 0    0.483     0.0631  7.65   &lt;0.001  45.5 0.359  0.606    1st       1 30.4</span></span>
+<span><span class="co">#&gt;  SexCode    1 - 0    0.483     0.0631  7.65   &lt;0.001  45.5 0.359  0.606    1st       0 30.4</span></span>
+<span><span class="co">#&gt;  SexCode    1 - 0    0.812     0.0447 18.18   &lt;0.001 243.0 0.725  0.900    2nd       1 30.4</span></span>
+<span><span class="co">#&gt;  SexCode    1 - 0    0.812     0.0447 18.18   &lt;0.001 243.0 0.725  0.900    2nd       0 30.4</span></span>
+<span><span class="co">#&gt;  SexCode    1 - 0    0.335     0.0634  5.29   &lt;0.001  22.9 0.211  0.459    3rd       1 30.4</span></span>
+<span><span class="co">#&gt;  SexCode    1 - 0    0.335     0.0634  5.29   &lt;0.001  22.9 0.211  0.459    3rd       0 30.4</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, SexCode, Age, Survived </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="aggregation" class="level1"><h1>Aggregation</h1>
@@ -1246,7 +1261,7 @@ window.Quarto = {
 </section><section id="marginal-means" class="level2"><h2 class="anchored" data-anchor-id="marginal-means">Marginal means</h2>
 <p>In experimental studies, it can often make sense to estimate contrasts, averaged across a balanced grid of treatment conditions:</p>
 <div class="cell">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>grid_type <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term              Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %  97.5 %</span></span>
 <span><span class="co">#&gt;  Age     mean(+1)              -0.00494    0.00119 -4.14   &lt;0.001  14.8 -0.00728 -0.0026</span></span>
@@ -1312,7 +1327,7 @@ window.Quarto = {
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span><span class="st">"rsample"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term              Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.19  1.88    2.5</span></span>
+<span><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.19  1.92   2.53</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

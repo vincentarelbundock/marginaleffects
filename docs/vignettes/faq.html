@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.37">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – faq</title>
 <style>
@@ -527,7 +527,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content"><section id="faq" class="level1"><h1>FAQ</h1>
 <section id="questions-answers" class="level2"><h2 class="anchored" data-anchor-id="questions-answers">Questions &amp; Answers</h2>
 <ul>
-<li><a href="https://stackoverflow.com/questions/77686706/how-to-pool-average-predictions-from-a-multinomial-regression-per-category-in-r/77688581#77688581">Pooling predictions with multiple imputation</a></li>
+<li><a href="https://stackoverflow.com/questions/78568706/marginaleffects-error-matrix-columns-are-not-supported">Error: Matrix columns are not supported</a></li>
 <li><a href="https://stackoverflow.com/questions/77556969/wiggly-confidence-interval-with-marginaleffectsplot-slopes/77620185#77620185">Wiggly (non-smooth) confidence intervals in plots.</a></li>
 <li><a href="https://stackoverflow.com/questions/72723687/plot-cap-response-curve-for-counterfactual-data"><code>plot_predictions()</code> over a range of unobserved values</a></li>
 <li><a href="https://stackoverflow.com/questions/73126378/marginal-effects-plot-of-plm/73127507#73127507">Plot the marginal effects from a <code>plm</code> package model</a></li>
@@ -535,6 +535,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://stackoverflow.com/questions/77516330/marginaleffects-package-refuses-service-with-nlme/77517278#77517278"><code>nlme::lme</code> problem with character predictors</a></li>
 <li><a href="https://github.com/vincentarelbundock/marginaleffects/issues/1107">Controlling facet rows and columns in <code>plot_*()</code> functions.</a></li>
 <li><a href="https://stackoverflow.com/questions/78479179/diagnostic-of-marginal-effects-from-a-brms-model">Bayesian diagnostics (Rhat, etc.) with <code>brms</code></a></li>
+<li><a href="https://stackoverflow.com/questions/77686706/how-to-pool-average-predictions-from-a-multinomial-regression-per-category-in-r/77688581#77688581">Pooling predictions with multiple imputation</a></li>
 </ul></section><section id="calling-marginaleffects-in-functions-loops-environments-or-after-re-assigning-variables" class="level2"><h2 class="anchored" data-anchor-id="calling-marginaleffects-in-functions-loops-environments-or-after-re-assigning-variables">Calling <code>marginaleffects</code> in functions, loops, environments, or after re-assigning variables</h2>
 <p>Functions from the <code>marginaleffects</code> package can sometimes fail when they are called inside a function, loop, or other environments. To see why, it is important to know that <code>marginaleffects</code> often needs to operate on the original data that was used to fit the model. To extract this original data, we use the <code>get_data()</code> function from the <code>insight</code> package.</p>
 <p>In most cases, <code>get_data()</code> can extract the data which is stored inside the model object created by the modeling package. However, some modeling packages do <em>not</em> save the original data in the model object (in order to save memory). In those cases, <code>get_data()</code> will parse the call to find the name of the data object, and will search for that data object in the global environment. When users fit models in a different environment (e.g., function calls), <code>get_data()</code> may not be able to retrieve the original data.</p>

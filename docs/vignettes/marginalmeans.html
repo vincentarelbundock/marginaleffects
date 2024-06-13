@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.37">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – marginalmeans</title>
 <style>
@@ -548,7 +548,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>For illustration purposes, it is useful to reshape the above results:</p>
 <div class="cell">
 <div class="cell-output-display">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <colgroup>
 <col style="width: 25%">
 <col style="width: 25%">
@@ -613,16 +613,16 @@ am
 <span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Alternatively, we can use the convenient <code>grid_type="balanced"</code> argument:</p>
+<p>Alternatively, we can use the convenient <code>newdata="balanced"</code> argument:</p>
 <div class="cell">
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"cyl"</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>grid_type <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    newdata <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  cyl Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;    4     22.9       1.36 16.9   &lt;0.001 209.7  20.2   25.5</span></span>
 <span><span class="co">#&gt;    6     19.0       1.07 17.7   &lt;0.001 229.7  16.9   21.1</span></span>
+<span><span class="co">#&gt;    4     22.9       1.36 16.9   &lt;0.001 209.7  20.2   25.5</span></span>
 <span><span class="co">#&gt;    8     19.4       1.38 14.1   &lt;0.001 146.6  16.7   22.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
@@ -633,14 +633,14 @@ am
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"cyl"</span><span class="op">)</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>grid_type <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    newdata <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     am cyl Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp</span></span>
-<span><span class="co">#&gt;   TRUE   4     25.0       1.18 21.2   &lt;0.001 329.3  22.7   27.3 147</span></span>
-<span><span class="co">#&gt;  FALSE   4     20.8       1.76 11.8   &lt;0.001 105.1  17.4   24.2 147</span></span>
 <span><span class="co">#&gt;   TRUE   6     21.0       1.21 17.3   &lt;0.001 221.4  18.7   23.4 147</span></span>
-<span><span class="co">#&gt;  FALSE   6     16.9       1.27 13.3   &lt;0.001 130.9  14.4   19.4 147</span></span>
+<span><span class="co">#&gt;   TRUE   4     25.0       1.18 21.2   &lt;0.001 329.3  22.7   27.3 147</span></span>
 <span><span class="co">#&gt;   TRUE   8     21.4       1.83 11.7   &lt;0.001 103.2  17.9   25.0 147</span></span>
+<span><span class="co">#&gt;  FALSE   6     16.9       1.27 13.3   &lt;0.001 130.9  14.4   19.4 147</span></span>
+<span><span class="co">#&gt;  FALSE   4     20.8       1.76 11.8   &lt;0.001 105.1  17.4   24.2 147</span></span>
 <span><span class="co">#&gt;  FALSE   8     17.3       1.12 15.5   &lt;0.001 176.8  15.1   19.5 147</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, am, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, mpg </span></span>

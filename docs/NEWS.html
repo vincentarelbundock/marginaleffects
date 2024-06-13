@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.37">
+<meta name="generator" content="quarto-1.5.43">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -550,6 +550,8 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>hypothesis</code> accepts formulas like: <code>ratio ~ sequential | group</code></li>
 <li>Allow reverse binary contrasts: comparisons(mod, variables = list(am = 1:0, vs = 0:1)). Thanks to K. Henry for report <a href="https://github.com/vincentarelbundock/marginaleffects/issues/1137">#1137</a>.</li>
+<li><code>options(marginaleffects_safe = FALSE)</code> disables some safety checks and allows unadvisable (but potentially) useful features like <em>many</em> pairwise comparisons. Thanks to D.Locke for the feature request.</li>
+<li><code>newdata="balanced"</code> is a shortcut to produce estimates at combinations of all categorical predictors, holding numeric predictors at their means. Equivalent to <code>datagrid(grid_type="balanced")</code></li>
 </ul>
 <p>Misc:</p>
 <ul>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.37">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – comparisons</title>
 <style>
@@ -554,6 +554,7 @@ window.Quarto = {
   <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types">Prediction types</a></li>
   <li><a href="#order-of-operations" id="toc-order-of-operations" class="nav-link" data-scroll-target="#order-of-operations">Order of operations</a></li>
   <li><a href="#parallel-computation" id="toc-parallel-computation" class="nav-link" data-scroll-target="#parallel-computation">Parallel computation</a></li>
+  <li><a href="#global-options" id="toc-global-options" class="nav-link" data-scroll-target="#global-options">Global options</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul>
@@ -660,7 +661,7 @@ Model object
 <p>"median": Contrasts at the Median. Contrasts when each predictor is held at its median or mode.</p>
 </li>
 <li>
-<p>"marginalmeans": Contrasts at Marginal Means.</p>
+<p>"balanced": Contrasts evaluated on a balanced grid with every combination of categories and numeric variables held at their means.</p>
 </li>
 <li>
 <p>"tukey": Contrasts at Tukey’s 5 numbers.</p>
@@ -1632,6 +1633,13 @@ slopes(model)
 <p>To disable parallelism in <code>marginaleffects</code> altogether, you can set a global option:</p>
 <div class="sourceCode r">
 <pre>options(marginaleffects_parallel = FALSE)
+</pre>
+</div>
+</section><section id="global-options" class="level3"><h3 class="anchored" data-anchor-id="global-options">Global options</h3>
+<p>The behavior of <code>marginaleffects</code> functions can be modified by setting global options.</p>
+<p>Disable some safety checks:</p>
+<div class="sourceCode r">
+<pre>options(marginaleffects_safe = FALSE)`
 </pre>
 </div>
 </section><section id="references" class="level3"><h3 class="anchored" data-anchor-id="references">References</h3>

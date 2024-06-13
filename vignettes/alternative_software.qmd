@@ -768,6 +768,8 @@ avg_slopes(ls.fe, dpar = "sigma", re_formula = NA)
 
 ## `fmeffects`
 
+> Warning: The latest version of `fmeffects` appear to have introduced breaking changes without notification, and without a note in the NEWS/CHANGELOG. The `fmeffects`-specific code below is thus not executed.
+
 The [`fmeffects` package](https://cran.r-project.org/package=fmeffects) is described as follows:
 
 > fmeffects: Model-Agnostic Interpretations with Forward Marginal Effects. Create local, regional, and global explanations for any machine learning model with forward marginal effects. You provide a model and data, and 'fmeffects' computes feature effects. The package is based on the theory in: C. A. Scholbeck, G. Casalicchio, C. Molnar, B. Bischl, and C. Heumann (2022)
@@ -791,6 +793,7 @@ avg_comparisons(forest, variables = list(temp = 1), newdata = bikes)
 This is equivalent to the key quantity reported by the `fmeffects` package:
 
 ```{r}
+#| eval: false
 fmeffects::fme(
     model = forest,
     data = bikes,
