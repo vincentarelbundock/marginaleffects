@@ -81,7 +81,7 @@ here!](https://marginaleffects.com/vignettes/get_started.html)
 Our article on `marginaleffects` is provisionally accepted for
 publication by the *Journal of Statistical Software*. You can read [the
 preprint
-here.](files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf)
+here.](https://marginaleffects.com/files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf)
 
 To cite `marginaleffects` in publications please use:
 
