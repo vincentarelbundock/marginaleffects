@@ -2,9 +2,9 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
   checkmate::assert_choice(joint_test, c("f", "chisq"))
 
   if (joint_test == "f") {
-      checkmate::assert_numeric(df, len = 2, null.ok = TRUE)
+    checkmate::assert_numeric(df, len = 2, null.ok = TRUE)
   } else {
-      checkmate::assert_numeric(df, len = 1, null.ok = TRUE)
+    checkmate::assert_numeric(df, len = 1, null.ok = TRUE)
   }
 
   # theta_hat: P x 1 vector of estimated parameters
@@ -15,7 +15,7 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
     }
     theta_hat <- stats::setNames(object$estimate, nam)
   } else {
-    theta_hat <- get_coef(object) 
+    theta_hat <- get_coef(object)
   }
 
   # index
@@ -34,19 +34,14 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
   # V_hat: estimated covariance matrix
   V_hat <- stats::vcov(object)
 
-  # n: sample size
-  n <- tryCatch(stats::nobs(object), error = function(e) NULL)
-  if (is.null(n)) n <- tryCatch(stats::nobs(attr(object, "model")), error = function(e) NULL)
-  if (is.null(n)) insight::format_error("Could not extract sample size from model object.")
-  
   # R: Q x P matrix for testing Q hypotheses on P parameters
   # build R matrix based on joint_index
   R <- matrix(0, nrow = length(joint_index), ncol = length(theta_hat))
   for (i in seq_along(joint_index)) {
     if (is.numeric(joint_index)) {
-        R[i, joint_index[i]] <- 1
+      R[i, joint_index[i]] <- 1
     } else {
-        R[i, which(names(theta_hat) == joint_index[i])] <- 1
+      R[i, which(names(theta_hat) == joint_index[i])] <- 1
     }
   }
 
@@ -61,36 +56,41 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
 
   # Calculate the difference between R*theta_hat and r
   diff <- R %*% theta_hat - r
-  
+
   # Calculate the inverse of R*(V_hat/n)*R'
   inv <- solve(R %*% V_hat %*% t(R))
-  
+
   # Calculate the Wald test statistic
   if (joint_test == "f") {
-    wald_statistic <- t(diff) %*% inv %*% diff / dim(R)[1]  # Q is the number of rows in R
+    wald_statistic <- t(diff) %*% inv %*% diff / dim(R)[1] # Q is the number of rows in R
   } else if (joint_test == "chisq") {
-    wald_statistic <- t(diff) %*% inv %*% diff  # Not normalized for chi-squared joint_test
+    wald_statistic <- t(diff) %*% inv %*% diff # Not normalized for chi-squared joint_test
   }
-  
+
   # Degrees of freedom
   if (is.null(df)) {
+    # n: sample size
+    n <- tryCatch(stats::nobs(object), error = function(e) NULL)
+    if (is.null(n)) n <- tryCatch(stats::nobs(attr(object, "model")), error = function(e) NULL)
+    if (is.null(n)) insight::format_error("Could not extract sample size from model object.")
+
 
     if (inherits(object, "lme")) {
-        msg <- "The `hypotheses()` functions uses simple heuristics to select degrees of freedom for this test. See the relevant section in `?hypotheses`. These rules are likely to yield inappropriate results for models of class `%s`. Please supply degrees of freedom values explicitly via the `df` argument."
-        msg <- sprintf(msg, class(object)[1])
-        insight::format_warning(msg)
+      msg <- "The `hypotheses()` functions uses simple heuristics to select degrees of freedom for this test. See the relevant section in `?hypotheses`. These rules are likely to yield inappropriate results for models of class `%s`. Please supply degrees of freedom values explicitly via the `df` argument."
+      msg <- sprintf(msg, class(object)[1])
+      insight::format_warning(msg)
     }
 
 
-    df1 <- dim(R)[1]  # Q
+    df1 <- dim(R)[1] # Q
     df2 <- tryCatch(insight::get_df(attr(object, "model")), error = function(e) NULL)
     if (is.null(df2)) tryCatch(insight::get_df(object), error = function(e) NULL)
-    if (is.null(df2)) df2 <- n - length(theta_hat)  # n - P
+    if (is.null(df2)) df2 <- n - length(theta_hat) # n - P
   } else {
     df1 <- df[1]
     df2 <- df[2]
   }
-  
+
   # Calculate the p-value
   if (joint_test == "f") {
     p_value <- 1 - stats::pf(wald_statistic, df1, df2)

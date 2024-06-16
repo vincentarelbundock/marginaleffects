@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
+
 ## 0.21.0
 
 New:
