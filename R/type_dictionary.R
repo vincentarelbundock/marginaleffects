@@ -95,6 +95,9 @@ glmmTMB,disp
 glmmPQL,response
 glmmPQL,link
 glmx,response
+glm_weightit,invlink(link)
+glm_weightit,response
+glm_weightit,link
 ivreg,response
 lmerMod,response
 lmerModLmerTest,response
@@ -122,6 +125,8 @@ mhurdle,E
 mhurdle,Ep
 mhurdle,p
 mlogit,response
+mlogit_weightit,response
+mlogit_weightit,mean
 mvgam,response
 mvgam,link
 mvgam,expected
@@ -137,6 +142,8 @@ orm,fitted
 orm,mean
 orm,lp
 polr,probs
+polr_weightit,response
+polr_weightit,mean
 rendo.base,response
 rendo.base,link
 rlm,response
