@@ -6,7 +6,7 @@
 
 Bugs:
 
-* Average lift and average comparisons could be be calculated incorrectely when all predictors were categorical. Thanks to @Dpananos for Issue #1151.
+* Average lift and average comparisons with user-supplied functions could be be calculated incorrectely when all predictors were categorical. Thanks to @Dpananos for Issue #1151.
 
 ## 0.21.0
 
