@@ -40,6 +40,7 @@ comparison_function_dict <- list(
     # others
     "lift" = function(hi, lo) (hi - lo) / lo,
     "liftavg" = function(hi, lo) (mean(hi - lo)) / mean(lo),
+    "liftavgwts" = function(hi, lo, w) (wmean(hi - lo, w)) / wmean(lo, w),
 
     "expdydx" = function(hi, lo, eps) ((exp(hi) - exp(lo)) / exp(eps)) / eps,
     "expdydxavg" = function(hi, lo, eps) mean(((exp(hi) - exp(lo)) / exp(eps)) / eps),
@@ -84,6 +85,7 @@ comparison_label_dict <- list(
 
     "lift" = "lift",
     "liftavg" = "liftavg",
+    "liftavgwts" = "liftavgwts",
 
     "expdydx" = "exp(dY/dX)"
 )

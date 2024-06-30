@@ -4,6 +4,10 @@
 
 * `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
 
+Bugs:
+
+* Average lift and average comparisons could be be calculated incorrectely when all predictors were categorical. Thanks to @Dpananos for Issue #1151.
+
 ## 0.21.0
 
 New:
