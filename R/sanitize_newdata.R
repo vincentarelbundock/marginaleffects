@@ -246,9 +246,10 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
 
 
 dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cross = FALSE, byfun = NULL) {
-    # issue #1113: elasticities should skip dedup because it is difficult to align x and y
+    # issue #1113: elasticities or custom functions should skip dedup because it is difficult to align x and y
     elasticities <- c("eyexavg", "eydxavg", "dyexavg")
-    if (isTRUE(checkmate::check_choice(comparison, elasticities))) {
+    if (isTRUE(checkmate::check_choice(comparison, elasticities)) || 
+        isTRUE(checkmate::check_function(comparison))) {
         return(data.table(newdata))
     }
 

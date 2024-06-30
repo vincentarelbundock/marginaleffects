@@ -65,5 +65,46 @@ expect_error(avg_comparisons(fit, variables = list(am = 0, vs = 1:0), cross = TR
 expect_error(avg_comparisons(fit, variables = list(am = 1:3, vs = 1:0), cross = TRUE), "0 or 1")
 
 
+# Issue #1151: dedup weights with lift and custom comparison
+requiet("tibble")
+requiet("dplyr")
+set.seed(0)
+d <- tibble::tribble(
+    ~device,         ~lang, ~pop_weight, ~exp_weight, ~p_control, ~p_treat,
+    "Desktop",     "English",         0.4,     0.8,        0.1,     0.15,
+    "Desktop", "Non-English",         0.2,     0.1,       0.04,     0.02,
+    "Mobile",     "English",         0.3,    0.05,       0.08,     0.03,
+    "Mobile", "Non-English",         0.1,    0.05,       0.01,     0.01
+)
+experiment_data <- d %>% 
+    sample_n(20000, weight = exp_weight, replace=T) %>% 
+    group_by(device, lang) %>% 
+    mutate(
+        treatment = sample(c('treatment','control'), size = n(), replace=T),
+        p = case_match(treatment, 'treatment' ~ p_treat, .default = p_control),
+        y = rbinom(n(), 1, p)
+    ) %>% 
+    ungroup
+
+model <- glm(y ~ treatment * device * lang, data=experiment_data, family = binomial())
+lift <- function(hi, lo) mean(hi - lo) / mean(lo)
+c1 <- avg_comparisons(
+    model, 
+    variables = 'treatment',
+    comparison = "lift")
+c2 <- avg_comparisons(
+    model, 
+    variables = 'treatment',
+    comparison = lift)
+d_lo <- transform(experiment_data, treatment = "control")
+d_hi <- transform(experiment_data, treatment = "treatment")
+p_lo <- predict(model, newdata = d_lo, type = "response")
+p_hi <- predict(model, newdata = d_hi, type = "response")
+liftavg <- function(hi, lo) (mean(hi - lo)) / mean(lo)
+c3 <- liftavg(p_hi, p_lo)
+
+expect_equivalent(c1$estimate, c2$estimate)
+expect_equivalent(c1$estimate, c3)
+
 
 rm(list = ls())
