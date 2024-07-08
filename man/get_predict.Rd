@@ -9,7 +9,7 @@
 %   R/methods_ordinal.R, R/methods_quantreg.R, R/methods_rms.R,
 %   R/methods_robustlmm.R, R/methods_rstanarm.R, R/methods_stats.R,
 %   R/methods_survey.R, R/methods_survival.R, R/methods_tidymodels.R,
-%   R/methods_tobit1.R
+%   R/methods_tobit1.R, R/methods_topmodels.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -53,6 +53,7 @@
 \alias{get_predict.model_fit}
 \alias{get_predict.workflow}
 \alias{get_predict.tobit1}
+\alias{get_predict.promodel}
 \title{Get predicted values from a model object (internal function)}
 \usage{
 get_predict(model, newdata, type, ...)
@@ -150,6 +151,8 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{workflow}(model, newdata, type = NULL, ...)
 
 \method{get_predict}{tobit1}(model, newdata = insight::get_data(model), type = "response", ...)
+
+\method{get_predict}{promodel}(model, newdata = NULL, type = "mean", ...)
 }
 \arguments{
 \item{model}{Model object}

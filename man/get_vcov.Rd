@@ -3,7 +3,7 @@
 %   R/methods_afex.R, R/methods_aod.R, R/methods_biglm.R, R/methods_brms.R,
 %   R/methods_dbarts.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
 %   R/methods_mhurdle.R, R/methods_mlr3.R, R/methods_rms.R, R/methods_scam.R,
-%   R/methods_tidymodels.R
+%   R/methods_tidymodels.R, R/methods_topmodels.R
 \name{get_vcov}
 \alias{get_vcov}
 \alias{get_vcov.default}
@@ -21,6 +21,7 @@
 \alias{get_vcov.scam}
 \alias{get_vcov.model_fit}
 \alias{get_vcov.workflow}
+\alias{get_vcov.promodel}
 \title{Get a named variance-covariance matrix from a model object (internal function)}
 \usage{
 get_vcov(model, ...)
@@ -54,6 +55,8 @@ get_vcov(model, ...)
 \method{get_vcov}{model_fit}(model, type = NULL, ...)
 
 \method{get_vcov}{workflow}(model, type = NULL, ...)
+
+\method{get_vcov}{promodel}(model, ...)
 }
 \arguments{
 \item{model}{Model object}

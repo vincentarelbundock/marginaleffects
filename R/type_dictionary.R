@@ -134,6 +134,14 @@ orm,fitted
 orm,mean
 orm,lp
 polr,probs
+promodel,mean
+promodel,variance
+promodel,quantile
+promodel,probability
+promodel,density
+promodel,loglikelihood
+promodel,kurtosis
+promodel,skewness
 rendo.base,response
 rendo.base,link
 rlm,response
