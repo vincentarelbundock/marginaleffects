@@ -20,6 +20,7 @@ New:
 Misc:
 
 * Deprecation warning for `specify_hypothesis()`. This function was clearly marked as experimental, and has been available only for one release. It was a bad idea. Users should supply a custom function or a formula to the `hypothesis` argument. The new formula interface, in particular, makes it very easy to conduct group-wise hypothesis tests.
+* Type checks are a bit looser to accomodate custom models.
 
 Bugs:
 

@@ -20,9 +20,9 @@ sanitize_type <- function(model, type, by = FALSE, calling_function = "raw") {
         cl <- class(model)[1]
     }
 
-    if (!cl %in% type_dictionary$class) {
-        cl <- "other"
-    }
+    # if (!cl %in% type_dictionary$class) {
+    #     cl <- "other"
+    # }
 
     dict <- type_dictionary
     # raw is often invoked by `get_predict()`, which is required for {clarify} and others.
@@ -40,10 +40,14 @@ sanitize_type <- function(model, type, by = FALSE, calling_function = "raw") {
     }
 
     dict <- dict[dict$class == cl, , drop = FALSE]
-    checkmate::assert_choice(type, choices = dict$type, null.ok = TRUE)
-    if (is.null(type)) {
-        type <- dict$type[1]
+    if (nrow(dict) > 0) {
+        checkmate::assert_choice(type, choices = dict$type, null.ok = TRUE)
+        if (is.null(type)) {
+            type <- dict$type[1]
+        }
     }
+
+    if (is.null(type)) type <- "response"
 
     return(type)
 }
