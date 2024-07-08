@@ -3,6 +3,7 @@
 ## Development
 
 * `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
+* Support: `topmodels` package.
 
 Bugs:
 
