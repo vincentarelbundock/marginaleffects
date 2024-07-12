@@ -44,8 +44,6 @@ Recommendations:
 1. Supply your dataset explicitly to the `newdata` argument of `slopes` functions.
 2. Avoid assigning a new value to a variable that you use to store a dataset for model fitting.
 
-
-
 ## Equivalence between `avg_comparisons()` and `avg_predictions()`
 
 Say we estimate a simple logit regression and want to compute the average log-odds ratio associated with a change from 0 to 1 on the `vs` variable. We can proceed as follows using the `comparisons()` function:
@@ -102,3 +100,21 @@ p1 <- predictions(mod, newdata = dat1, type = "response")
 
 fun(p1$estimate, p0$estimate)
 ```
+
+## More plot customization
+
+As [described in the Plot vignette,](https://marginaleffects.com/vignette/plots.html) there are currently three ways to customize plots in `marginaleffects`:
+
+1. Using the arguments provided by `plot_*()` functions in the `marginaleffects` package.
+2. Modifying the plot objects using `ggplot2` or an extension package like `ggExtra`.
+3. Setting `draw=FALSE` to extract the plotting data, and then feeding that data to a standalone plotting software like `ggplot2`, `plot`, or `lattice`.
+
+Options 2 and 3 are extremely flexible, and make it trivial to reproduce the default plots or to draw highly customized visualizations.
+
+Of course, some users might still prefer to use function arguments directly available in `marginaleffects::plot_*()`, and the unavailability of some arguments can be frustrating. Nevertheless, a decision was made to keep the number of arguments in `plot_*()` functions quite low. This is because `ggplot2` functions like `geom_*()`, `facet_*()`, and `aes()` each accept a very large number of options, and because users' needs are incredibly varied. This makes it difficult to accomodate all needs and possibilities, without developing unwieldy functions with dozens of arguments.^[Note that we cannot pass visual arguments to `...`, because that mechanism is already used to pass arguments to the `predict()` methods, which is required for some model types.]
+
+Thus, the `marginaleffects` package is designed with limited scope, focusing on *computation* while offering a few *visualization* options for quick exploration. Users who need highly customized or publication-ready figures are encouraged to use the `draw=FALSE` argument with standalone plotting software.
+
+In an ideal world, someone else would build a richer visualization package on top of `marginaleffects`. I think this would be a very cool project, and I would be happy to collaborate, advise, and help if I can. In the meantime, feel free to keep the discussion going by opening an issue on Github. I will be happy to consider counter-arguments, suggestions, or pull requests.
+
+
