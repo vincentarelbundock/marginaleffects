@@ -369,6 +369,8 @@ mod <- polr(factor(gear) ~ mpg + hp, data = mtcars)
 predictions(mod)
 ```
 
+In the resulting data frame, the `group` column identifies levels of the categorical response.
+
 We can plot those estimates in the same way as before, by specifying `group` as one of the conditional variable, or by adding that column to a `facet_wrap()` call:
 
 
