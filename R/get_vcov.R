@@ -108,7 +108,7 @@ get_varcov_args <- function(model, vcov) {
 
     if (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger")) {
         if (!isTRUE(inherits(model, "lmerMod")) && !isTRUE(inherits(model, "lmerModTest"))) {
-            msg <- 'Satterthwaite and Kenward-Roger corrections are only available for linear mixed effects models.'
+            msg <- 'Satterthwaite and Kenward-Roger corrections are only available for linear mixed effects models from the `lme4` package, and objects of class `lmerMod` or `lmerModTest`.'
             stop(msg, call. = FALSE)
         }
         if (isTRUE(vcov == "satterthwaite")) {
