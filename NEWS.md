@@ -3,6 +3,7 @@
 ## Development
 
 * `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
+* Parallel computation with `future` is more efficient by chunking tasks to avoid passing large objects to every worker for every future. Issue #1158.
 
 Bugs:
 
@@ -22,7 +23,6 @@ Misc:
 
 * Deprecation warning for `specify_hypothesis()`. This function was clearly marked as experimental, and has been available only for one release. It was a bad idea. Users should supply a custom function or a formula to the `hypothesis` argument. The new formula interface, in particular, makes it very easy to conduct group-wise hypothesis tests.
 * Type checks are a bit looser to accommodate custom models.
-* Parallel computation with `future` is more efficient by chunking tasks to avoid passing large objects to every worker for every future. Issue #1158.
 
 Bugs:
 
