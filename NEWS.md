@@ -7,6 +7,7 @@
 Bugs:
 
 * Average lift and average comparisons with user-supplied functions could be be calculated incorrectely when all predictors were categorical. Thanks to @Dpananos for Issue #1151.
+* Indexing bug returned `NA` for some commands in `survey` models. Thanks to @weikang9009 for report #1161.
 
 ## 0.21.0
 
