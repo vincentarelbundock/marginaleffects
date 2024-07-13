@@ -6,7 +6,7 @@
 
 Bugs:
 
-* Average lift and average comparisons with user-supplied functions could be be calculated incorrectely when all predictors were categorical. Thanks to @Dpananos for Issue #1151.
+* Average lift and average comparisons with user-supplied functions could be be calculated incorrectly when all predictors were categorical. Thanks to @Dpananos for Issue #1151.
 * Indexing bug returned `NA` for some commands in `survey` models. Thanks to @weikang9009 for report #1161.
 
 ## 0.21.0
@@ -21,7 +21,8 @@ New:
 Misc:
 
 * Deprecation warning for `specify_hypothesis()`. This function was clearly marked as experimental, and has been available only for one release. It was a bad idea. Users should supply a custom function or a formula to the `hypothesis` argument. The new formula interface, in particular, makes it very easy to conduct group-wise hypothesis tests.
-* Type checks are a bit looser to accomodate custom models.
+* Type checks are a bit looser to accommodate custom models.
+* Parallel computation with `future` is more efficient by chunking tasks to avoid passing large objects to every worker for every future. Issue #1158.
 
 Bugs:
 
