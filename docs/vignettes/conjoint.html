@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.43">
+<meta name="generator" content="quarto-1.4.555">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo – Conjoint experiments</title>
+<title>Marginal Effects Zoo - Conjoint experiments</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -117,7 +117,7 @@ div.csl-indent {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -156,7 +156,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -185,15 +185,15 @@ window.Quarto = {
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
+          <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/conjoint.html">Conjoint experiments</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -208,9 +208,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -249,9 +249,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -380,9 +380,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -457,9 +457,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -612,9 +612,9 @@ window.Quarto = {
   
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tinytable_pwjs3f1b93difkkoqyv2</title>
+<title>tinytable_jwal0r8ncxqt939r26r4</title>
 <style>
-.table td.tinytable_css_42vnqy1c8gjsn1wxuqt6, .table th.tinytable_css_42vnqy1c8gjsn1wxuqt6 {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_fxp43myps0moqx7fmuq0, .table th.tinytable_css_fxp43myps0moqx7fmuq0 {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
@@ -626,7 +626,7 @@ window.Quarto = {
       }
     };
     </script><div class="container">
-      <table class="table table-borderless" id="tinytable_pwjs3f1b93difkkoqyv2" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_jwal0r8ncxqt939r26r4" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <caption><p>A single forced-choice task in a conjoint experiment. The survey
 respondent must choose one of the two profiles before seeing a second
 task.</p></caption>
@@ -651,12 +651,12 @@ task.</p></caption>
 </div>
 
     <script>
-      function styleCell_tinytable_1sczwgoj7z3tz8dzo5sl(i, j, css_id) {
-        var table = document.getElementById("tinytable_pwjs3f1b93difkkoqyv2");
+      function styleCell_tinytable_sjvic5xchvlcjqd65xxv(i, j, css_id) {
+        var table = document.getElementById("tinytable_jwal0r8ncxqt939r26r4");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_pwjs3f1b93difkkoqyv2');
+        var table = document.getElementById('tinytable_jwal0r8ncxqt939r26r4');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -664,8 +664,8 @@ task.</p></caption>
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_1sczwgoj7z3tz8dzo5sl(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_pwjs3f1b93difkkoqyv2");
+      function spanCell_tinytable_sjvic5xchvlcjqd65xxv(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_jwal0r8ncxqt939r26r4");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -692,9 +692,9 @@ task.</p></caption>
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_1sczwgoj7z3tz8dzo5sl(0, 0, 'tinytable_css_42vnqy1c8gjsn1wxuqt6') })
-window.addEventListener('load', function () { styleCell_tinytable_1sczwgoj7z3tz8dzo5sl(0, 1, 'tinytable_css_42vnqy1c8gjsn1wxuqt6') })
-window.addEventListener('load', function () { styleCell_tinytable_1sczwgoj7z3tz8dzo5sl(0, 2, 'tinytable_css_42vnqy1c8gjsn1wxuqt6') })
+window.addEventListener('load', function () { styleCell_tinytable_sjvic5xchvlcjqd65xxv(0, 0, 'tinytable_css_fxp43myps0moqx7fmuq0') })
+window.addEventListener('load', function () { styleCell_tinytable_sjvic5xchvlcjqd65xxv(0, 1, 'tinytable_css_fxp43myps0moqx7fmuq0') })
+window.addEventListener('load', function () { styleCell_tinytable_sjvic5xchvlcjqd65xxv(0, 2, 'tinytable_css_fxp43myps0moqx7fmuq0') })
     </script>
 </div>
 </div>
@@ -831,7 +831,7 @@ Type:  response </code></pre>
  used interpreter doctor      0.602     0.0427 14.1   &lt;0.001 147.5 0.518  0.685
  tried but unable gardener    0.416     0.0237 17.5   &lt;0.001 226.5 0.370  0.463
  used interpreter gardener    0.387     0.0244 15.8   &lt;0.001 185.1 0.339  0.435
- broken           gardener    0.509     0.0245 20.8   &lt;0.001 317.0 0.461  0.557
+ broken           gardener    0.509     0.0245 20.8   &lt;0.001 316.9 0.461  0.557
  tried but unable doctor      0.570     0.0443 12.9   &lt;0.001 123.5 0.483  0.657
  broken           doctor      0.712     0.0394 18.1   &lt;0.001 239.6 0.635  0.789
 
@@ -924,9 +924,9 @@ Type:  response </code></pre>
   
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tinytable_w4988smt25fiq167j9b9</title>
+<title>tinytable_qdsexx5njum0qz8x51ov</title>
 <style>
-.table td.tinytable_css_wpt2s8901fnrnklewngx, .table th.tinytable_css_wpt2s8901fnrnklewngx {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_70e2i14q9w5eiapgoq1x, .table th.tinytable_css_70e2i14q9w5eiapgoq1x {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
@@ -938,7 +938,7 @@ Type:  response </code></pre>
       }
     };
     </script><div class="container">
-      <table class="table table-borderless" id="tinytable_w4988smt25fiq167j9b9" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_qdsexx5njum0qz8x51ov" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead><tr>
 <th scope="col">respondent</th>
                 <th scope="col">task</th>
@@ -969,12 +969,12 @@ Type:  response </code></pre>
 </div>
 
     <script>
-      function styleCell_tinytable_qn6nsx8d3ag7j9r6c3z0(i, j, css_id) {
-        var table = document.getElementById("tinytable_w4988smt25fiq167j9b9");
+      function styleCell_tinytable_07ct23de9qo29d65h1qa(i, j, css_id) {
+        var table = document.getElementById("tinytable_qdsexx5njum0qz8x51ov");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_w4988smt25fiq167j9b9');
+        var table = document.getElementById('tinytable_qdsexx5njum0qz8x51ov');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -982,8 +982,8 @@ Type:  response </code></pre>
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_qn6nsx8d3ag7j9r6c3z0(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_w4988smt25fiq167j9b9");
+      function spanCell_tinytable_07ct23de9qo29d65h1qa(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_qdsexx5njum0qz8x51ov");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1010,12 +1010,12 @@ Type:  response </code></pre>
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_qn6nsx8d3ag7j9r6c3z0(0, 0, 'tinytable_css_wpt2s8901fnrnklewngx') })
-window.addEventListener('load', function () { styleCell_tinytable_qn6nsx8d3ag7j9r6c3z0(0, 1, 'tinytable_css_wpt2s8901fnrnklewngx') })
-window.addEventListener('load', function () { styleCell_tinytable_qn6nsx8d3ag7j9r6c3z0(0, 2, 'tinytable_css_wpt2s8901fnrnklewngx') })
-window.addEventListener('load', function () { styleCell_tinytable_qn6nsx8d3ag7j9r6c3z0(0, 3, 'tinytable_css_wpt2s8901fnrnklewngx') })
-window.addEventListener('load', function () { styleCell_tinytable_qn6nsx8d3ag7j9r6c3z0(0, 4, 'tinytable_css_wpt2s8901fnrnklewngx') })
-window.addEventListener('load', function () { styleCell_tinytable_qn6nsx8d3ag7j9r6c3z0(0, 5, 'tinytable_css_wpt2s8901fnrnklewngx') })
+window.addEventListener('load', function () { styleCell_tinytable_07ct23de9qo29d65h1qa(0, 0, 'tinytable_css_70e2i14q9w5eiapgoq1x') })
+window.addEventListener('load', function () { styleCell_tinytable_07ct23de9qo29d65h1qa(0, 1, 'tinytable_css_70e2i14q9w5eiapgoq1x') })
+window.addEventListener('load', function () { styleCell_tinytable_07ct23de9qo29d65h1qa(0, 2, 'tinytable_css_70e2i14q9w5eiapgoq1x') })
+window.addEventListener('load', function () { styleCell_tinytable_07ct23de9qo29d65h1qa(0, 3, 'tinytable_css_70e2i14q9w5eiapgoq1x') })
+window.addEventListener('load', function () { styleCell_tinytable_07ct23de9qo29d65h1qa(0, 4, 'tinytable_css_70e2i14q9w5eiapgoq1x') })
+window.addEventListener('load', function () { styleCell_tinytable_07ct23de9qo29d65h1qa(0, 5, 'tinytable_css_70e2i14q9w5eiapgoq1x') })
     </script>
 </div>
 </div>
@@ -1037,10 +1037,10 @@ window.addEventListener('load', function () { styleCell_tinytable_qn6nsx8d3ag7j9
   
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tinytable_y7qlwm904h4fzlt28pkg</title>
+<title>tinytable_5d83k3dk4yxkclooyiyr</title>
 <style>
-.table td.tinytable_css_zbf1fiznvaui7q2q5xjh, .table th.tinytable_css_zbf1fiznvaui7q2q5xjh {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_g4wlqcq7ncyqf3o7utws, .table th.tinytable_css_g4wlqcq7ncyqf3o7utws {    background-color: pink; }
+.table td.tinytable_css_8rpa0ss95767wf5d5g3c, .table th.tinytable_css_8rpa0ss95767wf5d5g3c {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_nt14b9yia9w6kf9j01nd, .table th.tinytable_css_nt14b9yia9w6kf9j01nd {    background-color: pink; }
     </style>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
     MathJax = {
@@ -1052,7 +1052,7 @@ window.addEventListener('load', function () { styleCell_tinytable_qn6nsx8d3ag7j9
       }
     };
     </script><div class="container">
-      <table class="table table-borderless" id="tinytable_y7qlwm904h4fzlt28pkg" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_5d83k3dk4yxkclooyiyr" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead><tr>
 <th scope="col">language</th>
                 <th scope="col">alternative</th>
@@ -1208,12 +1208,12 @@ window.addEventListener('load', function () { styleCell_tinytable_qn6nsx8d3ag7j9
 </div>
 
     <script>
-      function styleCell_tinytable_m3u8ju4tqx5reisrs0a4(i, j, css_id) {
-        var table = document.getElementById("tinytable_y7qlwm904h4fzlt28pkg");
+      function styleCell_tinytable_mufvh6ix4z1cu5idlsqd(i, j, css_id) {
+        var table = document.getElementById("tinytable_5d83k3dk4yxkclooyiyr");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_y7qlwm904h4fzlt28pkg');
+        var table = document.getElementById('tinytable_5d83k3dk4yxkclooyiyr');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1221,8 +1221,8 @@ window.addEventListener('load', function () { styleCell_tinytable_qn6nsx8d3ag7j9
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_m3u8ju4tqx5reisrs0a4(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_y7qlwm904h4fzlt28pkg");
+      function spanCell_tinytable_mufvh6ix4z1cu5idlsqd(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_5d83k3dk4yxkclooyiyr");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1249,42 +1249,42 @@ window.addEventListener('load', function () { styleCell_tinytable_qn6nsx8d3ag7j9
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(0, 0, 'tinytable_css_zbf1fiznvaui7q2q5xjh') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(0, 1, 'tinytable_css_zbf1fiznvaui7q2q5xjh') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(0, 2, 'tinytable_css_zbf1fiznvaui7q2q5xjh') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(0, 3, 'tinytable_css_zbf1fiznvaui7q2q5xjh') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(0, 4, 'tinytable_css_zbf1fiznvaui7q2q5xjh') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(0, 5, 'tinytable_css_zbf1fiznvaui7q2q5xjh') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(0, 6, 'tinytable_css_zbf1fiznvaui7q2q5xjh') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(0, 7, 'tinytable_css_zbf1fiznvaui7q2q5xjh') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(0, 8, 'tinytable_css_zbf1fiznvaui7q2q5xjh') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(3, 0, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(5, 0, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(12, 0, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(3, 1, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(5, 1, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(12, 1, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(3, 2, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(5, 2, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(12, 2, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(3, 3, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(5, 3, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(12, 3, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(3, 4, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(5, 4, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(12, 4, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(3, 5, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(5, 5, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(12, 5, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(3, 6, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(5, 6, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(12, 6, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(3, 7, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(5, 7, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(12, 7, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(3, 8, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(5, 8, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
-window.addEventListener('load', function () { styleCell_tinytable_m3u8ju4tqx5reisrs0a4(12, 8, 'tinytable_css_g4wlqcq7ncyqf3o7utws') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(0, 0, 'tinytable_css_8rpa0ss95767wf5d5g3c') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(0, 1, 'tinytable_css_8rpa0ss95767wf5d5g3c') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(0, 2, 'tinytable_css_8rpa0ss95767wf5d5g3c') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(0, 3, 'tinytable_css_8rpa0ss95767wf5d5g3c') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(0, 4, 'tinytable_css_8rpa0ss95767wf5d5g3c') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(0, 5, 'tinytable_css_8rpa0ss95767wf5d5g3c') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(0, 6, 'tinytable_css_8rpa0ss95767wf5d5g3c') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(0, 7, 'tinytable_css_8rpa0ss95767wf5d5g3c') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(0, 8, 'tinytable_css_8rpa0ss95767wf5d5g3c') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(3, 0, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(5, 0, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(12, 0, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(3, 1, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(5, 1, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(12, 1, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(3, 2, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(5, 2, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(12, 2, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(3, 3, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(5, 3, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(12, 3, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(3, 4, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(5, 4, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(12, 4, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(3, 5, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(5, 5, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(12, 5, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(3, 6, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(5, 6, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(12, 6, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(3, 7, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(5, 7, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(12, 7, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(3, 8, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(5, 8, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
+window.addEventListener('load', function () { styleCell_tinytable_mufvh6ix4z1cu5idlsqd(12, 8, 'tinytable_css_nt14b9yia9w6kf9j01nd') })
     </script>
 </div>
 </div>
@@ -1395,7 +1395,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1427,29 +1438,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1457,7 +1446,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

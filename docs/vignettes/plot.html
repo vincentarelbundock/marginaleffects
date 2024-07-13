@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.43">
+<meta name="generator" content="quarto-1.4.555">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo – plot</title>
+<title>Marginal Effects Zoo</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -111,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -140,15 +140,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
+          <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/predictions.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../vignettes/plot.html">Plots</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -163,9 +163,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -204,9 +204,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -335,9 +335,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -412,9 +412,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -702,13 +702,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>"Chinstrap"</td>
 <td>0</td>
 <td>3145.853248</td>
-<td>233.843835</td>
-<td>13.452795</td>
+<td>233.843751</td>
+<td>13.4528</td>
 <td>0.0</td>
 <td>inf</td>
-<td>2687.527753</td>
-<td>3604.178742</td>
-<td>116</td>
+<td>2687.527917</td>
+<td>3604.178578</td>
+<td>325</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -721,13 +721,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>"Gentoo"</td>
 <td>1</td>
 <td>2544.81111</td>
-<td>368.939151</td>
-<td>6.897645</td>
+<td>368.939052</td>
+<td>6.897646</td>
 <td>5.2871e-12</td>
 <td>37.460659</td>
-<td>1821.703662</td>
-<td>3267.918559</td>
-<td>116</td>
+<td>1821.703856</td>
+<td>3267.918365</td>
+<td>325</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -740,13 +740,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>"Adelie"</td>
 <td>2</td>
 <td>3859.49144</td>
-<td>203.924857</td>
-<td>18.926047</td>
+<td>203.924972</td>
+<td>18.926036</td>
 <td>0.0</td>
 <td>inf</td>
-<td>3459.806065</td>
-<td>4259.176816</td>
-<td>116</td>
+<td>3459.80584</td>
+<td>4259.17704</td>
+<td>325</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -759,13 +759,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>"Chinstrap"</td>
 <td>3</td>
 <td>4085.954268</td>
-<td>469.429937</td>
-<td>8.704077</td>
+<td>469.42987</td>
+<td>8.704078</td>
 <td>0.0</td>
 <td>inf</td>
-<td>3165.888497</td>
-<td>5006.020038</td>
-<td>116</td>
+<td>3165.888628</td>
+<td>5006.019907</td>
+<td>325</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -778,13 +778,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>"Gentoo"</td>
 <td>4</td>
 <td>5596.718663</td>
-<td>155.418883</td>
-<td>36.010545</td>
+<td>155.418892</td>
+<td>36.010543</td>
 <td>0.0</td>
 <td>inf</td>
-<td>5292.103251</td>
-<td>5901.334076</td>
-<td>116</td>
+<td>5292.103233</td>
+<td>5901.334094</td>
+<td>325</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -797,13 +797,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>"Adelie"</td>
 <td>5</td>
 <td>4763.826651</td>
-<td>362.09348</td>
-<td>13.156345</td>
+<td>362.093444</td>
+<td>13.156346</td>
 <td>0.0</td>
 <td>inf</td>
-<td>4054.136472</td>
-<td>5473.51683</td>
-<td>116</td>
+<td>4054.136542</td>
+<td>5473.51676</td>
+<td>325</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -884,14 +884,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"bill_length_mm"</span>: <span class="st">"threenum"</span>,</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"species"</span>: dat[<span class="st">"species"</span>].unique(),</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;Figure Size: (640 x 480)&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="plot_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -958,7 +951,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  flipper_length_mm       +1               172 Chinstrap     15.9      11.37 1.40   0.1609  2.6 -6.34   38.2           43.9 Biscoe</span></span>
 <span><span class="co">#&gt;  flipper_length_mm       +1               231 Adelie        15.3       9.25 1.66   0.0976  3.4 -2.81   33.5           43.9 Biscoe</span></span>
 <span><span class="co">#&gt;  flipper_length_mm       +1               231 Gentoo        51.7       8.70 5.95   &lt;0.001 28.5 34.68   68.8           43.9 Biscoe</span></span>
-<span><span class="co">#&gt;  flipper_length_mm       +1               231 Chinstrap     15.9      11.37 1.40   0.1609  2.6 -6.34   38.2           43.9 Biscoe</span></span>
+<span><span class="co">#&gt;  flipper_length_mm       +1               231 Chinstrap     15.9      11.37 1.40   0.1610  2.6 -6.34   38.2           43.9 Biscoe</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, flipper_length_mm, species, predicted_lo, predicted_hi, predicted, bill_length_mm, island, body_mass_g </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
@@ -1151,9 +1144,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Age"</span>, <span class="st">"PClass"</span><span class="op">)</span>, draw <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   rowid  estimate    p.value  s.value  conf.low conf.high SexCode     Age PClass Survived</span></span>
-<span><span class="co">#&gt; 1     1 0.8169481 0.01398979 6.159481 0.5751384 0.9363604       0 0.17000    1st        1</span></span>
+<span><span class="co">#&gt; 1     1 0.8169481 0.01398980 6.159481 0.5751384 0.9363604       0 0.17000    1st        1</span></span>
 <span><span class="co">#&gt; 2     2 0.8460749 0.01719013 5.862276 0.5750040 0.9571390       0 0.17000    2nd        1</span></span>
-<span><span class="co">#&gt; 3     3 0.3743476 0.30356431 1.719926 0.1836114 0.6141637       0 0.17000    3rd        1</span></span>
+<span><span class="co">#&gt; 3     3 0.3743476 0.30356429 1.719926 0.1836114 0.6141637       0 0.17000    3rd        1</span></span>
 <span><span class="co">#&gt; 4     4 0.8049295 0.01596447 5.968992 0.5657542 0.9289214       0 1.61551    1st        1</span></span>
 <span><span class="co">#&gt; 5     5 0.8170027 0.02633314 5.246977 0.5438874 0.9435524       0 1.61551    2nd        1</span></span>
 <span><span class="co">#&gt; 6     6 0.3573635 0.21423192 2.222755 0.1805140 0.5840004       0 1.61551    3rd        1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1216,6 +1209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; Columns: rowid, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, gear, mpg, hp </span></span>
 <span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>In the resulting data frame, the <code>group</code> column identifies levels of the categorical response.</p>
 <p>We can plot those estimates in the same way as before, by specifying <code>group</code> as one of the conditional variable, or by adding that column to a <code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap()</a></code> call:</p>
 <div class="cell">
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"mpg"</span>, <span class="st">"group"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"probs"</span>, vcov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1331,7 +1325,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1363,29 +1368,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1393,7 +1376,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

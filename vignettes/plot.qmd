@@ -129,6 +129,7 @@ plot_predictions(
 ```
 ### Python
 ```{python}
+#| eval: false
 plot_predictions(
     mod,
     condition = {
