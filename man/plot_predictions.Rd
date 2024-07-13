@@ -80,7 +80,7 @@ first entry in the error message is used by default.}
 
 \item{transform}{A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
-\item{points}{Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points.}
+\item{points}{Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points. Warning: The points displayed are raw data, so the resulting plot is not a "partial residual plot."}
 
 \item{rug}{TRUE displays tick marks on the axes to mark the distribution of raw data.}
 

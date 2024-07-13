@@ -588,7 +588,12 @@ window.Quarto = {
   </ul>
 </li>
   <li><a href="#hypothesis" id="toc-hypothesis" class="nav-link" data-scroll-target="#hypothesis">Hypothesis</a></li>
-  <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot">Plot</a></li>
+  <li>
+<a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">Visualization</a>
+  <ul class="collapse">
+<li><a href="#customization" id="toc-customization" class="nav-link" data-scroll-target="#customization">Customization</a></li>
+  </ul>
+</li>
   <li><a href="#visual-guide" id="toc-visual-guide" class="nav-link" data-scroll-target="#visual-guide">Visual guide</a></li>
   <li>
 <a href="#more" id="toc-more" class="nav-link" data-scroll-target="#more">More</a>
@@ -1327,7 +1332,7 @@ window.Quarto = {
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span><span class="st">"rsample"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term              Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.19  1.91   2.49</span></span>
+<span><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.19   1.9   2.53</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1456,7 +1461,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="plot" class="level1"><h1>Plot</h1>
+</section><section id="visualization" class="level1"><h1>Visualization</h1>
 <p>The <code><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons()</a></code> function can plot comparisons, differences, risk ratios, etc. The <a href="https://marginaleffects.com/vignettes/plot.html">plotting vignette gives detailed insight into the use of this function.</a> Here, it will be sufficient to illustrate its use by a few examples, and to note that most of the arguments of <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> are supported by <code><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons()</a></code>.</p>
 <p>Here, we plot Adjusted Risk Ratio and Adjusted Risk Difference in a model with a quadratic term:</p>
 <div class="cell">
@@ -1489,7 +1494,12 @@ window.Quarto = {
 </div>
 </div>
 </div>
-</section><section id="visual-guide" class="level1"><h1>Visual guide</h1>
+<section id="customization" class="level2"><h2 class="anchored" data-anchor-id="customization">Customization</h2>
+<p>The <a href="https://marginaleffects.com/vignettes/plot.html#customization">plot customization section of the Plots vignette</a> illustrates two more ways to customize plots. In addition to using the <code>plot_*()</code> function arguments, users can:</p>
+<ol type="1">
+<li>Modify the plot objects using <code>ggplot2</code> functions or add-on packages.</li>
+<li>Extract the underlying plotting data with the <code>draw=FALSE</code> argument, and feed that data to their preferred plotting software.</li>
+</ol></section></section><section id="visual-guide" class="level1"><h1>Visual guide</h1>
 <p>This section illustrates some of the concepts in this vignette visually.</p>
 <p>Consider a model with an interaction term. What happens to the dependent variable when the <code>hp</code> variable increases by 10 units?</p>
 <div class="cell">

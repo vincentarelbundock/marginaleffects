@@ -576,7 +576,7 @@ avg_comparisons(mod, hypothesis = "pairwise")
 ```
 
 
-# Plot
+# Visualization
 
 The `plot_comparisons()` function can plot comparisons, differences, risk ratios, etc. The [plotting vignette gives detailed insight into the use of this function.](https://marginaleffects.com/vignettes/plot.html) Here, it will be sufficient to illustrate its use by a few examples, and to note that most of the arguments of `comparisons()` are supported by `plot_comparisons()`.
 
@@ -606,6 +606,13 @@ p2 <- plot_comparisons(
 
 p1 + p2
 ```
+
+## Customization
+
+The [plot customization section of the Plots vignette](https://marginaleffects.com/vignettes/plot.html#customization) illustrates two more ways to customize plots. In addition to using the `plot_*()` function arguments, users can:
+
+1. Modify the plot objects using `ggplot2` functions or add-on packages.
+2. Extract the underlying plotting data with the `draw=FALSE` argument, and feed that data to their preferred plotting software.
 
 
 
