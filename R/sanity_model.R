@@ -115,7 +115,7 @@ sanity_model_supported_class <- function(model) {
         "zeroinfl"))
     flag <- FALSE
     for (sup in supported) {
-        if (!is.null(sup) && isTRUE(all(inherits(model, sup)))) {
+        if (!is.null(sup) && isTRUE(all(sup %in% class(model)))) {
             flag <- TRUE
         }
     }
