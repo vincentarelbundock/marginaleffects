@@ -12,7 +12,7 @@ get_predict.glimML <- function(model,
                         type = type,
                         ...)
     out <- data.frame(
-        rowid = 1:nrow(newdata),
+        rowid = seq_len(nrow(newdata)),
         estimate = out)
 
     return(out)

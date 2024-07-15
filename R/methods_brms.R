@@ -64,7 +64,7 @@ get_predict.brmsfit <- function(model,
     } else if ("rowid" %in% colnames(newdata)) {
         idx <- newdata[["rowid"]]
     } else {
-        idx <- 1:nrow(newdata)
+        idx <- seq_len(nrow(newdata))
     }
 
     # resp_subset sometimes causes dimension mismatch 

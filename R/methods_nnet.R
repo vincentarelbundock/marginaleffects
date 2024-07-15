@@ -83,7 +83,7 @@ get_predict.multinom <- function(model,
     if (is_latent && is_mclogit) {
         missing_level <- as.character(unique(insight::get_response(model)))
         missing_level <- setdiff(missing_level, colnames(pred))
-        if (length(missing_level == 1)) {
+        if (length(missing_level) == 1) {
             pred <- cbind(0, pred)
             colnames(pred)[1] <- missing_level
             pred <- pred - rowMeans(pred)

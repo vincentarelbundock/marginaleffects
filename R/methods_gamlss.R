@@ -115,7 +115,7 @@ set_coef.gamlss <- function(model, coefs, ...){
               len[is.null(len)] <- 1
               data <- rbind(...)
           } else {
-              len <- sapply(tmp, length)
+              len <- lengths(tmp)
               data <- unlist(tmp)
           }
           namelist <- factor(rep(names, len), levels = names)

@@ -64,7 +64,7 @@ get_se_delta <- function(model,
 
     # delta method does not work for these models
     bad <- c("brmsfit", "stanreg", "bart")
-    if (any(bad %in% class(model))) {
+    if (any(inherits(model, bad))) {
         return(NULL)
     }
 
