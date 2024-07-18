@@ -204,7 +204,7 @@ datagrid <- function(
     return(out)
 }
 
-        
+
 datagrid_engine <- function(
     ...,
     model = NULL,
@@ -351,7 +351,7 @@ datagridcf_internal <- function(
     if (length(variables_automatic) > 0) {
         idx <- intersect(variables_automatic, colnames(dat))
         dat_automatic <- dat[, ..idx, drop = FALSE]
-        dat_automatic[, rowidcf := rowid$rowidcf]
+        dat_automatic$rowidcf <- rowid$rowidcf
         setcolorder(dat_automatic, c("rowidcf", setdiff(names(dat_automatic), "rowidcf")))
         # cross-join 2 data.tables, faster than merging two dataframes
         out <- cjdt(list(dat_automatic, at))
@@ -393,16 +393,17 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
         insight::format_error(msg)
     }
 
-    if (!is.null(model)) {
+    # newdata before model: if user supplies newdata explicitly, they might want 
+    # all columns for something like `hypothesis = function()`
+    if (!is.null(newdata)) {
+        variables_list <- NULL
+        variables_all <- colnames(newdata)
+        newdata <- set_variable_class(modeldata = newdata, model = model)
+    } else if (!is.null(model)) {
         variables_list <- insight::find_variables(model)
         variables_all <- unlist(variables_list, recursive = TRUE)
         # weights are not extracted by default
         variables_all <- c(variables_all, insight::find_weights(model))
-
-    } else if (!is.null(newdata)) {
-        variables_list <- NULL
-        variables_all <- colnames(newdata)
-        newdata <- set_variable_class(modeldata = newdata, model = model)
     }
 
     variables_manual <- names(at)
@@ -412,11 +413,11 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
     if (is.null(newdata)) {
         newdata <- get_modeldata(model, additional_variables = FALSE)
     }
-    
+
     attr_variable_classes <- attr(newdata, "marginaleffects_variable_class")
 
-    # subset columns, otherwise it can be ultra expensive to compute summaries for every variable
-    if (!is.null(model)) {
+    # subset columns, otherwise it can be ultra expensive to compute summaries for every variable. But do the expensive thing anyway if `newdata` is supplied explicitly by the user, or in counterfactual grids.
+    if (!is.null(model) && is.null(newdata)) {
         variables_sub <- c(
             hush(insight::find_variables(model, flatten = TRUE)),
             hush(unlist(insight::find_weights(model), use.names = FALSE))) # glmmTMB needs weights column for predictions
