@@ -31,7 +31,7 @@ get_contrast_data_character <- function(model,
     } else if (isTRUE(checkmate::check_atomic_vector(variable$value, len = 2))) {
         if (is.character(variable$value)) {
             tmp <- modeldata[[variable$name]]
-            if (any(!variable$value %in% as.character(tmp))) {
+            if (!all(variable$value %in% as.character(tmp))) {
                 msg <- "Some of the values supplied to the `variables` argument were not found in the dataset."
                 insight::format_error(msg)
             }

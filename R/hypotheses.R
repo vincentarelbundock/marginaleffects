@@ -265,7 +265,7 @@ hypotheses <- function(
         }
     }
 
-    numderiv = sanitize_numderiv(numderiv)
+    numderiv <- sanitize_numderiv(numderiv)
 
     # after re-evaluation
     tmp <- sanitize_hypothesis(hypothesis, ...)
@@ -286,7 +286,7 @@ hypotheses <- function(
 
         } else if (inherits(model, "data.frame")) {
             out <- model
-            if (any(!c("term", "estimate") %in% colnames(out))) {
+            if (!all(c("term", "estimate") %in% colnames(out))) {
                 msg <- "`hypothesis` function must return a data.frame with two columns named `term` and `estimate`."
                 insight::format_error(msg)
             }

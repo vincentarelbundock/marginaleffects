@@ -99,12 +99,12 @@ plot_build <- function(
             p <- p + ggplot2::geom_pointrange(
                 data = dat,
                 mapping = aes_obj,
-                position = ggplot2::position_dodge(.15))
+                position = ggplot2::position_dodge(0.15))
         } else {
             p <- p + ggplot2::geom_point(
                 data = dat,
                 mapping = aes_obj,
-                position = ggplot2::position_dodge(.15))
+                position = ggplot2::position_dodge(0.15))
         }
 
     # continuous x-axis
@@ -122,7 +122,7 @@ plot_build <- function(
         aes_args$ymin <- aes_args$ymax <- NULL
         aes_obj <- do.call(ggplot2::aes, aes_args)
         if ("conf.low" %in% colnames(dat)) {
-            p <- p + ggplot2::geom_ribbon(data = dat, aes_obj_ribbon, alpha = .1)
+            p <- p + ggplot2::geom_ribbon(data = dat, aes_obj_ribbon, alpha = 0.1)
             p <- p + ggplot2::geom_line(data = dat, aes_obj)
         }
         p <- p + ggplot2::geom_line(data = dat, aes_obj)

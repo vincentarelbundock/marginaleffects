@@ -211,7 +211,7 @@ sanitize_variables <- function(variables,
             } else if (calling_function == "predictions") {
                 # string shortcuts
                 if (identical(predictors[[v]], "iqr")) {
-                    predictors[[v]] <- stats::quantile(modeldata[[v]], probs = c(.25, .75), na.rm = TRUE)
+                    predictors[[v]] <- stats::quantile(modeldata[[v]], probs = c(0.25, 0.75), na.rm = TRUE)
                 } else if (identical(predictors[[v]], "minmax")) {
                     predictors[[v]] <- c(min(modeldata[[v]], na.rm = TRUE), max(modeldata[[v]], na.rm = TRUE))
                 } else if (identical(predictors[[v]], "sd")) {
