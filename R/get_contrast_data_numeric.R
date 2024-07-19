@@ -108,8 +108,8 @@ get_contrast_data_numeric <- function(model,
         lab <- make_label(variable$label, lab)
 
     } else if (identical(variable$value, "iqr")) {
-        low <- stats::quantile(xmd, probs = .25, na.rm = TRUE)
-        high <- stats::quantile(xmd, probs = .75, na.rm = TRUE)
+        low <- stats::quantile(xmd, probs = 0.25, na.rm = TRUE)
+        high <- stats::quantile(xmd, probs = 0.75, na.rm = TRUE)
         lab <- make_label(variable$label, c("Q3", "Q1"))
 
     } else if (identical(variable$value, "minmax")) {

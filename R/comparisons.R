@@ -540,7 +540,7 @@ comparisons <- function(model,
     mfx <- backtransform(mfx, transform)
 
     # save as attribute and not column
-    if (any(!is.na(mfx[["marginaleffects_wts_internal"]]))) {
+    if (!all(is.na(mfx[["marginaleffects_wts_internal"]]))) {
         marginaleffects_wts_internal <- mfx[["marginaleffects_wts_internal"]]
     } else {
         marginaleffects_wts_internal <- NULL

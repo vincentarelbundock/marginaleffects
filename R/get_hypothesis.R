@@ -1,4 +1,3 @@
-
 get_hypothesis <- function(
     x,
     hypothesis,
@@ -42,7 +41,7 @@ get_hypothesis <- function(
 
         argnames <- names(formals(hypothesis))
         if (!"x" %in% argnames) insight::format_error("The `hypothesis` function must accept an `x` argument.")
-        if (any(!argnames %in% c("x", "draws"))) {
+        if (!all(argnames %in% c("x", "draws"))) {
             msg <- "The allowable arguments for the `hypothesis` function are: `x` and `draws`"
             insight::format_error(msg)
         }
@@ -355,9 +354,9 @@ eval_string_hypothesis <- function(x, hypothesis, lab) {
     }
 
     if (!is.null(attr(lab, "names"))) {
-        lab = attr(lab, "names")
+        lab <- attr(lab, "names")
     } else {
-        lab = gsub("\\s+", "", lab)
+        lab <- gsub("\\s+", "", lab)
     }
 
     draws <- attr(x, "posterior_draws")

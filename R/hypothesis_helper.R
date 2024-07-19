@@ -43,10 +43,10 @@ specify_hypothesis <- function(
     } else if (identical(hypothesis, "sequential")) {
         if (comparison == "difference") {
             hypothesis <- function(x) (x - data.table::shift(x))[2:length(x)]
-            label = function(x) sprintf("(%s) - (%s)", x, data.table::shift(x))[2:length(x)]
+            label <- function(x) sprintf("(%s) - (%s)", x, data.table::shift(x))[2:length(x)]
         } else {
             hypothesis <- function(x) (x / data.table::shift(x))[2:length(x)]
-            label = function(x) sprintf("(%s) / (%s)", x, data.table::shift(x))[2:length(x)]
+            label <- function(x) sprintf("(%s) / (%s)", x, data.table::shift(x))[2:length(x)]
         }
     } else if (identical(hypothesis, "meandev")) {
         hypothesis <- function(x) x - mean(x)

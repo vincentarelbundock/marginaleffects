@@ -404,7 +404,7 @@ get_contrasts <- function(model,
         # if comparison returns a single value, then we padded with NA. That
         # also means we don't want `rowid` otherwise we will merge and have
         # useless duplicates.
-        if (any(!idx)) {
+        if (!all(idx)) {
             if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
                 out[, "rowid" := NULL]
             }

@@ -77,7 +77,7 @@ predictions(mod,
         insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
     }
 
-    numderiv = sanitize_numderiv(numderiv)
+    numderiv <- sanitize_numderiv(numderiv)
 
     # build call: match.call() doesn't work well in *apply()
     call_attr <- c(list(
