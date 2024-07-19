@@ -300,7 +300,7 @@ hypotheses <- function(
 
         } else if (hypothesis_is_formula) {
             beta <- get_coef(model)
-            out <- data.table::data.table(estimate = beta, coefname = names(beta))
+            out <- data.table::data.table(estimate = beta, term = names(beta))
 
         # unknown model but user-supplied hypothesis function
         } else {
@@ -312,6 +312,8 @@ hypotheses <- function(
 
         if (!is.null(attr(tmp, "label"))) {
             attr(out, "label") <- attr(tmp, "label")
+        } else if ("hypothesis" %in% colnames(tmp)) {
+            attr(out, "label") <- tmp$hypothesis
         } else {
             attr(out, "label") <- tmp$term
         }
