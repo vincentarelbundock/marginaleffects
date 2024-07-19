@@ -5,6 +5,7 @@
 * `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
 * Parallel computation with `future` is more efficient by chunking tasks to avoid passing large objects to every worker for every future. Issue #1158.
 * All columns of `newdata` are passed to the `hypothesis` function when `newdata` is supplied explicitly. Thanks to @gravesti for report #1175.
+* `hypotheses()` supports formulas in the `hypothesis` argument: `hypotheses(model, hypothesis = ratio ~ reference)`
 
 Bugs:
 

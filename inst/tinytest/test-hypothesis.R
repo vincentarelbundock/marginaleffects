@@ -10,6 +10,11 @@ mod <- lm(mpg ~ carb + cyl, dat)
 
 
 
+# hyothesis formula for model coefficients
+mod <- lm(mpg ~ factor(cyl) + 0, data = mtcars)
+h <- hypotheses(mod, hypothesis = ~ reference)
+expect_inherits(h, "hypotheses")
+
 
 # informative errors and warnings
 tmp <- lm(mpg ~ drat + wt, data = mtcars)

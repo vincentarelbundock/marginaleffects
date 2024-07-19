@@ -148,6 +148,7 @@ hypotheses <- function(
     numderiv = "fdforward",
     ...) {
 
+    hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
 
     if (isTRUE(attr(model, "hypotheses_call"))) {
         msg <- "The `hypotheses()` function cannot be called twice on the same object."
@@ -296,6 +297,10 @@ hypotheses <- function(
             out <- insight::get_parameters(model, ...)
             idx <- intersect(colnames(model), c("term", "group", "estimate"))
             colnames(out)[1:2] <- c("term", "estimate")
+
+        } else if (hypothesis_is_formula) {
+            beta <- get_coef(model)
+            out <- data.table::data.table(estimate = beta, coefname = names(beta))
 
         # unknown model but user-supplied hypothesis function
         } else {
