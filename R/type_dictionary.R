@@ -140,7 +140,6 @@ rlm,response
 selection,response
 selection,link
 selection,unconditional
-selection,conditional
 speedlm,response
 speedglm,response
 speedglm,link
