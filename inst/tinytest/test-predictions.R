@@ -228,11 +228,11 @@ expect_equivalent(nrow(pre), 2)
 
 # Issue #994: averaging linkinv(link)
 mod <- glm(vs ~ mpg + cyl, data = mtcars, family = binomial)
-p1 <- avg_predictions(mod)$estimate
+p1 <- avg_predictions(mod, type = "invlink(link)")$estimate
 p2 <- mod$family$linkinv(mean(predict(mod, type = "link")))
 expect_equivalent(p1, p2)
 
-p1 <- avg_predictions(mod, by = "cyl")
+p1 <- avg_predictions(mod, by = "cyl", type = "invlink(link)")
 p1 <- p1[order(p1$cyl), "estimate"]
 p2 <- tapply(predict(mod, type = "link"), mtcars$cyl, mean)
 p2 <- mod$family$linkinv(as.vector(p2))
