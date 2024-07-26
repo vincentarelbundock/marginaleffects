@@ -3,13 +3,14 @@
 ## Development
 
 * `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
+* Added support for `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
 
 ## 0.21.0
 
 New:
 
 * `hypothesis` accepts formulas like: `ratio ~ sequential | group`
-* Allow reverse binary contrasts: comparisons(mod, variables = list(am = 1:0, vs = 0:1)). Thanks to K. Henry for report #1137.
+* Allow reverse binary contrasts: `comparisons(mod, variables = list(am = 1:0, vs = 0:1))`. Thanks to K. Henry for report #1137.
 * `options(marginaleffects_safe = FALSE)` disables some safety checks and allows unadvisable (but potentially) useful features like *many* pairwise comparisons. Thanks to D.Locke for the feature request.
 * `newdata="balanced"` is a shortcut to produce estimates at combinations of all categorical predictors, holding numeric predictors at their means. Equivalent to `datagrid(grid_type="balanced")`
 
