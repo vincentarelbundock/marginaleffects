@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.43">
+<meta name="generator" content="quarto-1.4.555">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo – alternative_software</title>
+<title>Marginal Effects Zoo</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -97,7 +97,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -136,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -165,15 +165,15 @@ window.Quarto = {
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
+          <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/help.html">Miscellaneous</a></li><li class="breadcrumb-item"><a href="../vignettes/alternative_software.html">Alternative Software</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -188,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -229,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -360,9 +360,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -437,9 +437,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -714,7 +714,7 @@ window.Quarto = {
 <span><span class="co">#&gt; resp = no:</span></span>
 <span><span class="co">#&gt;  contrast      estimate     SE  df z.ratio p.value</span></span>
 <span><span class="co">#&gt;  scold - curse  -0.0152 0.1097 Inf  -0.139  0.8898</span></span>
-<span><span class="co">#&gt;  shout - curse  -0.2533 0.1022 Inf  -2.479  0.0132</span></span>
+<span><span class="co">#&gt;  shout - curse  -0.2533 0.1022 Inf  -2.478  0.0132</span></span>
 <span><span class="co">#&gt;  shout - scold  -0.2381 0.0886 Inf  -2.686  0.0072</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; resp = perhaps:</span></span>
@@ -725,7 +725,7 @@ window.Quarto = {
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; resp = yes:</span></span>
 <span><span class="co">#&gt;  contrast      estimate     SE  df z.ratio p.value</span></span>
-<span><span class="co">#&gt;  scold - curse   0.0391 0.1292 Inf   0.302  0.7624</span></span>
+<span><span class="co">#&gt;  scold - curse   0.0391 0.1292 Inf   0.302  0.7623</span></span>
 <span><span class="co">#&gt;  shout - curse   0.5802 0.1784 Inf   3.252  0.0011</span></span>
 <span><span class="co">#&gt;  shout - scold   0.5411 0.1888 Inf   2.866  0.0042</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -779,15 +779,15 @@ window.Quarto = {
 <span>    type <span class="op">=</span> <span class="st">"link"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Term                  Contrast    resp Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;  btype mean(scold) - mean(curse) no       -0.0152     0.1097 -0.139  0.88976 0.2 -0.230  0.19971</span></span>
-<span><span class="co">#&gt;  btype mean(scold) - mean(curse) perhaps  -0.2393     0.1178 -2.031  0.04221 4.6 -0.470 -0.00842</span></span>
-<span><span class="co">#&gt;  btype mean(scold) - mean(curse) yes       0.0391     0.1292  0.302  0.76239 0.4 -0.214  0.29234</span></span>
-<span><span class="co">#&gt;  btype mean(shout) - mean(curse) no       -0.2533     0.1022 -2.479  0.01319 6.2 -0.454 -0.05301</span></span>
-<span><span class="co">#&gt;  btype mean(shout) - mean(curse) perhaps  -0.0834     0.1330 -0.627  0.53091 0.9 -0.344  0.17738</span></span>
-<span><span class="co">#&gt;  btype mean(shout) - mean(curse) yes       0.5802     0.1784  3.252  0.00115 9.8  0.230  0.92987</span></span>
-<span><span class="co">#&gt;  btype mean(shout) - mean(scold) no       -0.2381     0.0886 -2.686  0.00723 7.1 -0.412 -0.06436</span></span>
+<span><span class="co">#&gt;  btype mean(scold) - mean(curse) no       -0.0152     0.1097 -0.139  0.88980 0.2 -0.230  0.19973</span></span>
+<span><span class="co">#&gt;  btype mean(scold) - mean(curse) perhaps  -0.2393     0.1178 -2.031  0.04222 4.6 -0.470 -0.00841</span></span>
+<span><span class="co">#&gt;  btype mean(scold) - mean(curse) yes       0.0391     0.1292  0.302  0.76230 0.4 -0.214  0.29236</span></span>
+<span><span class="co">#&gt;  btype mean(shout) - mean(curse) no       -0.2533     0.1022 -2.478  0.01320 6.2 -0.454 -0.05298</span></span>
+<span><span class="co">#&gt;  btype mean(shout) - mean(curse) perhaps  -0.0834     0.1330 -0.627  0.53094 0.9 -0.344  0.17738</span></span>
+<span><span class="co">#&gt;  btype mean(shout) - mean(curse) yes       0.5802     0.1784  3.252  0.00115 9.8  0.230  0.92988</span></span>
+<span><span class="co">#&gt;  btype mean(shout) - mean(scold) no       -0.2381     0.0886 -2.686  0.00723 7.1 -0.412 -0.06435</span></span>
 <span><span class="co">#&gt;  btype mean(shout) - mean(scold) perhaps   0.1559     0.1358  1.148  0.25103 2.0 -0.110  0.42215</span></span>
-<span><span class="co">#&gt;  btype mean(shout) - mean(scold) yes       0.5411     0.1888  2.866  0.00416 7.9  0.171  0.91116</span></span>
+<span><span class="co">#&gt;  btype mean(shout) - mean(scold) yes       0.5411     0.1888  2.866  0.00416 7.9  0.171  0.91115</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, resp, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  link</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -828,7 +828,7 @@ window.Quarto = {
 <span><span class="co">#&gt;  Term Contrast cyl Estimate Std. Error        z Pr(&gt;|z|)   S     2.5 %   97.5 %</span></span>
 <span><span class="co">#&gt;   cyl    6 - 4   4  -0.9049   1.63e+00 -0.55506    0.579 0.8    -4.100 2.29e+00</span></span>
 <span><span class="co">#&gt;   cyl    8 - 4   4 -19.5418   4.37e+03 -0.00447    0.996 0.0 -8579.030 8.54e+03</span></span>
-<span><span class="co">#&gt;   hp     dY/dX   4  -0.0326   3.39e-02 -0.96144    0.336 1.6    -0.099 3.38e-02</span></span>
+<span><span class="co">#&gt;   hp     dY/dX   4  -0.0326   3.39e-02 -0.96147    0.336 1.6    -0.099 3.38e-02</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, cyl, predicted_lo, predicted_hi, predicted, hp, vs </span></span>
 <span><span class="co">#&gt; Type:  link</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -941,22 +941,22 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">mar</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    mpg cyl disp  hp drat    wt  qsec vs am gear carb   fitted se.fitted   dydx_cyl    dydx_hp   dydx_wt Var_dydx_cyl  Var_dydx_hp Var_dydx_wt X_weights X_at_number</span></span>
-<span><span class="co">#&gt; 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 22.82043 0.6876212 -0.9416168 -0.0180381 -3.166973    0.3035123 0.0001410453   0.5484513        NA           1</span></span>
-<span><span class="co">#&gt; 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 22.01285 0.6056817 -0.9416168 -0.0180381 -3.166973    0.3035123 0.0001410453   0.5484513        NA           1</span></span>
-<span><span class="co">#&gt; 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 25.96040 0.7349593 -0.9416168 -0.0180381 -3.166973    0.3035123 0.0001410453   0.5484513        NA           1</span></span>
-<span><span class="co">#&gt; 4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 20.93608 0.5800910 -0.9416168 -0.0180381 -3.166973    0.3035123 0.0001410453   0.5484513        NA           1</span></span>
-<span><span class="co">#&gt; 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 17.16780 0.8322986 -0.9416168 -0.0180381 -3.166973    0.3035123 0.0001410453   0.5484513        NA           1</span></span>
-<span><span class="co">#&gt; 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 20.25036 0.6638322 -0.9416168 -0.0180381 -3.166973    0.3035123 0.0001410453   0.5484513        NA           1</span></span>
+<span><span class="co">#&gt; 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 22.82043 0.6876212 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span><span class="co">#&gt; 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 22.01285 0.6056817 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span><span class="co">#&gt; 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 25.96040 0.7349593 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span><span class="co">#&gt; 4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 20.93608 0.5800910 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span><span class="co">#&gt; 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 17.16780 0.8322986 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span><span class="co">#&gt; 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 20.25036 0.6638322 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   cyl   -0.942      0.552 -1.71   0.0879 3.5 -2.02  0.140</span></span>
-<span><span class="co">#&gt;   cyl   -0.942      0.552 -1.71   0.0879 3.5 -2.02  0.140</span></span>
-<span><span class="co">#&gt;   cyl   -0.942      0.552 -1.71   0.0879 3.5 -2.02  0.140</span></span>
-<span><span class="co">#&gt;   cyl   -0.942      0.552 -1.71   0.0879 3.5 -2.02  0.140</span></span>
-<span><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0873 3.5 -2.02  0.138</span></span>
-<span><span class="co">#&gt;   cyl   -0.942      0.552 -1.71   0.0879 3.5 -2.02  0.140</span></span>
+<span><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
+<span><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
+<span><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
+<span><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
+<span><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
+<span><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, cyl, hp, wt </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
@@ -967,7 +967,7 @@ window.Quarto = {
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/margins/man/margins.html">margins</a></span><span class="op">(</span><span class="va">mod</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu">prediction</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/prediction/man/mean_or_mode.html">mean_or_mode</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>, unit_ses <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">mar</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        mpg    cyl     disp       hp     drat      wt     qsec     vs      am   gear   carb   fitted se.fitted   dydx_cyl    dydx_hp   dydx_wt Var_dydx_cyl  Var_dydx_hp Var_dydx_wt SE_dydx_cyl SE_dydx_hp SE_dydx_wt X_weights X_at_number</span></span>
-<span><span class="co">#&gt; 1 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875 0.4375 0.40625 3.6875 2.8125 20.09062 0.4439832 -0.9416168 -0.0180381 -3.166973    0.3035082 0.0001410453   0.5484409   0.5509157 0.01187625  0.7405679        NA           1</span></span>
+<span><span class="co">#&gt; 1 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875 0.4375 0.40625 3.6875 2.8125 20.09062 0.4439832 -0.9416168 -0.0180381 -3.166973    0.3035013 0.0001410453     0.54846   0.5509096 0.01187625  0.7405808        NA           1</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -989,7 +989,7 @@ window.Quarto = {
 <span><span class="va">mar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/margins/man/margins.html">margins</a></span><span class="op">(</span><span class="va">mod</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mar</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  factor    cyl     AME     SE       z      p   lower   upper</span></span>
-<span><span class="co">#&gt;     cyl 4.0000  0.0381 0.5999  0.0636 0.9493 -1.1376  1.2139</span></span>
+<span><span class="co">#&gt;     cyl 4.0000  0.0381 0.6000  0.0636 0.9493 -1.1378  1.2141</span></span>
 <span><span class="co">#&gt;     cyl 6.0000  0.0381 0.5999  0.0636 0.9493 -1.1376  1.2139</span></span>
 <span><span class="co">#&gt;     cyl 8.0000  0.0381 0.5999  0.0636 0.9493 -1.1376  1.2139</span></span>
 <span><span class="co">#&gt;      hp 4.0000 -0.0878 0.0267 -3.2937 0.0010 -0.1400 -0.0355</span></span>
@@ -1005,15 +1005,15 @@ window.Quarto = {
 <span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>, grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term    Contrast cyl Estimate Std. Error       z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;   cyl mean(dY/dX)   4   0.0381     0.5998  0.0636  0.94931  0.1 -1.1375  1.21381</span></span>
-<span><span class="co">#&gt;   cyl mean(dY/dX)   6   0.0381     0.5999  0.0636  0.94931  0.1 -1.1376  1.21390</span></span>
-<span><span class="co">#&gt;   cyl mean(dY/dX)   8   0.0381     0.6000  0.0636  0.94932  0.1 -1.1378  1.21412</span></span>
-<span><span class="co">#&gt;   hp  mean(dY/dX)   4  -0.0878     0.0267 -3.2935  &lt; 0.001 10.0 -0.1400 -0.03554</span></span>
+<span><span class="co">#&gt;   cyl mean(dY/dX)   4   0.0381     0.5999  0.0636  0.94931  0.1 -1.1376  1.21390</span></span>
+<span><span class="co">#&gt;   cyl mean(dY/dX)   6   0.0381     0.5998  0.0636  0.94930  0.1 -1.1375  1.21377</span></span>
+<span><span class="co">#&gt;   cyl mean(dY/dX)   8   0.0381     0.5998  0.0636  0.94930  0.1 -1.1375  1.21377</span></span>
+<span><span class="co">#&gt;   hp  mean(dY/dX)   4  -0.0878     0.0267 -3.2938  &lt; 0.001 10.0 -0.1400 -0.03555</span></span>
 <span><span class="co">#&gt;   hp  mean(dY/dX)   6  -0.0499     0.0154 -3.2401  0.00119  9.7 -0.0800 -0.01970</span></span>
 <span><span class="co">#&gt;   hp  mean(dY/dX)   8  -0.0120     0.0108 -1.1065  0.26851  1.9 -0.0332  0.00923</span></span>
-<span><span class="co">#&gt;   wt  mean(dY/dX)   4  -3.1198     0.6614 -4.7173  &lt; 0.001 18.7 -4.4161 -1.82358</span></span>
-<span><span class="co">#&gt;   wt  mean(dY/dX)   6  -3.1198     0.6612 -4.7182  &lt; 0.001 18.7 -4.4158 -1.82384</span></span>
-<span><span class="co">#&gt;   wt  mean(dY/dX)   8  -3.1198     0.6614 -4.7173  &lt; 0.001 18.7 -4.4161 -1.82358</span></span>
+<span><span class="co">#&gt;   wt  mean(dY/dX)   4  -3.1198     0.6612 -4.7182  &lt; 0.001 18.7 -4.4158 -1.82383</span></span>
+<span><span class="co">#&gt;   wt  mean(dY/dX)   6  -3.1198     0.6612 -4.7182  &lt; 0.001 18.7 -4.4158 -1.82383</span></span>
+<span><span class="co">#&gt;   wt  mean(dY/dX)   8  -3.1198     0.6612 -4.7182  &lt; 0.001 18.7 -4.4158 -1.82383</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1075,9 +1075,9 @@ cyl |  -.9416168   .5509164    -1.71   0.098    -2.070118    .1868842
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term    Contrast Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;   cyl mean(dY/dX)   -0.942     0.5512 -1.71   0.0876  3.5 -2.0220  0.13879</span></span>
+<span><span class="co">#&gt;   cyl mean(dY/dX)   -0.942     0.5510 -1.71   0.0875  3.5 -2.0215  0.13828</span></span>
 <span><span class="co">#&gt;   hp  mean(dY/dX)   -0.018     0.0119 -1.52   0.1288  3.0 -0.0413  0.00524</span></span>
-<span><span class="co">#&gt;   wt  mean(dY/dX)   -3.167     0.7406 -4.28   &lt;0.001 15.7 -4.6184 -1.71552</span></span>
+<span><span class="co">#&gt;   wt  mean(dY/dX)   -3.167     0.7406 -4.28   &lt;0.001 15.7 -4.6185 -1.71541</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1131,8 +1131,8 @@ hp           |
 <span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>, grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term    Contrast cyl Estimate Std. Error      z Pr(&gt;|z|)   S   2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;    hp mean(dY/dX)   4  -0.0995     0.0349 -2.853  0.00433 7.9 -0.1678 -0.0311</span></span>
-<span><span class="co">#&gt;    hp mean(dY/dX)   6  -0.0214     0.0388 -0.551  0.58189 0.8 -0.0975  0.0547</span></span>
+<span><span class="co">#&gt;    hp mean(dY/dX)   4  -0.0995     0.0349 -2.853  0.00433 7.8 -0.1678 -0.0311</span></span>
+<span><span class="co">#&gt;    hp mean(dY/dX)   6  -0.0214     0.0388 -0.551  0.58190 0.8 -0.0975  0.0547</span></span>
 <span><span class="co">#&gt;    hp mean(dY/dX)   8  -0.0134     0.0125 -1.074  0.28278 1.8 -0.0380  0.0111</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
@@ -1157,7 +1157,7 @@ hp           |
 <span><span class="va">J_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">J</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span>
 <span><span class="va">J_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">J_mean</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">J_mean</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">J_mean</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html">vcov</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">J_mean</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.03486634 0.03882234 0.01251371</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 0.03486675 0.03882338 0.01251377</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="average-counterfactual-adjusted-predictions" class="level3"><h3 class="anchored" data-anchor-id="average-counterfactual-adjusted-predictions">Average Counterfactual Adjusted Predictions</h3>
 <section id="stata-3" class="level4"><h4 class="anchored" data-anchor-id="stata-3">Stata</h4>
@@ -1266,7 +1266,7 @@ Expression   : Linear prediction, predict()
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p2</span> <span class="op">-</span> <span class="va">p1</span><span class="op">)</span> <span class="op">/</span> <span class="va">h</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums-methods.html">rowMeans</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.025</span>, <span class="fl">.975</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        50%       2.5%      97.5% </span></span>
-<span><span class="co">#&gt; 0.06981152 0.05372040 0.09159040</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 0.07010427 0.05418413 0.09092451</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compute AMEs with <code>brmsmargins</code>:</p>
 <div class="cell">
@@ -1277,16 +1277,16 @@ Expression   : Linear prediction, predict()
 <span>  CI <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  CIType <span class="op">=</span> <span class="st">"ETI"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">bm</span><span class="op">$</span><span class="va">ContrastSummary</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            M        Mdn        LL        UL PercentROPE PercentMID   CI CIType ROPE  MID   Label</span></span>
-<span><span class="co">#&gt; 1 0.07098514 0.06981152 0.0537204 0.0915904          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME MPG</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;            M        Mdn         LL         UL PercentROPE PercentMID   CI CIType ROPE  MID   Label</span></span>
+<span><span class="co">#&gt; 1 0.07105468 0.07010427 0.05418413 0.09092451          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME MPG</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compute AMEs using <code>marginaleffects</code>:</p>
 <div class="cell">
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">bayes.logistic</span><span class="op">)</span> </span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term          Contrast Estimate   2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;   am  mean(1) - mean(0)  -0.2672 -0.4219 -0.0682</span></span>
-<span><span class="co">#&gt;   mpg mean(dY/dX)         0.0698  0.0537  0.0916</span></span>
+<span><span class="co">#&gt;   am  mean(1) - mean(0)  -0.2665 -0.4242 -0.0703</span></span>
+<span><span class="co">#&gt;   mpg mean(dY/dX)         0.0701  0.0542  0.0909</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1340,13 +1340,13 @@ Expression   : Linear prediction, predict()
 <span>  CI <span class="op">=</span> <span class="fl">.95</span>,</span>
 <span>  CIType <span class="op">=</span> <span class="st">"ETI"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">bm</span><span class="op">$</span><span class="va">ContrastSummary</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           M       Mdn        LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
-<span><span class="co">#&gt; 1 0.1118135 0.1120303 0.0814249 0.1425242          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
+<span><span class="co">#&gt;           M       Mdn         LL       UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span><span class="co">#&gt; 1 0.1117023 0.1114383 0.08044318 0.144612          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mlogit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term          Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     x mean(1) - mean(0)    0.111 0.081  0.141</span></span>
+<span><span class="co">#&gt;  Term          Contrast Estimate  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;     x mean(1) - mean(0)    0.111 0.0801  0.143</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1361,13 +1361,13 @@ Expression   : Linear prediction, predict()
 <span>  CI <span class="op">=</span> <span class="fl">.95</span>,</span>
 <span>  CIType <span class="op">=</span> <span class="st">"ETI"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">bm</span><span class="op">$</span><span class="va">ContrastSummary</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           M       Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
-<span><span class="co">#&gt; 1 0.1040304 0.1037629 0.06163523 0.1480365          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
+<span><span class="co">#&gt;          M      Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span><span class="co">#&gt; 1 0.104103 0.103845 0.06135493 0.1482218          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mlogit</span>, re_formula <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term          Contrast Estimate  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     x mean(1) - mean(0)    0.101 0.0607  0.142</span></span>
+<span><span class="co">#&gt;     x mean(1) - mean(0)    0.101 0.0606  0.143</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1408,14 +1408,14 @@ Expression   : Linear prediction, predict()
 <span>  CI <span class="op">=</span> <span class="fl">0.95</span>, CIType <span class="op">=</span> <span class="st">"ETI"</span>,</span>
 <span>  effects <span class="op">=</span> <span class="st">"fixedonly"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">bm</span><span class="op">$</span><span class="va">ContrastSummary</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          M     Mdn       LL       UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
-<span><span class="co">#&gt; 1 1.622142 1.61919 0.765971 2.504324          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
+<span><span class="co">#&gt;          M     Mdn        LL      UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span><span class="co">#&gt; 1 1.626186 1.63215 0.7349262 2.46998          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">ls.fe</span>, re_formula <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term          Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   grp mean(1) - mean(0)     1.01 0.366   1.68</span></span>
-<span><span class="co">#&gt;   x   mean(dY/dX)           1.62 0.766   2.50</span></span>
+<span><span class="co">#&gt;   grp mean(1) - mean(0)     1.02 0.355   1.70</span></span>
+<span><span class="co">#&gt;   x   mean(dY/dX)           1.63 0.735   2.47</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1430,8 +1430,8 @@ Expression   : Linear prediction, predict()
 <span>  CI <span class="op">=</span> <span class="fl">0.95</span>, CIType <span class="op">=</span> <span class="st">"ETI"</span>, dpar <span class="op">=</span> <span class="st">"sigma"</span>,</span>
 <span>  effects <span class="op">=</span> <span class="st">"fixedonly"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">bm</span><span class="op">$</span><span class="va">ContrastSummary</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          M      Mdn       LL       UL PercentROPE PercentMID   CI CIType ROPE  MID   Label</span></span>
-<span><span class="co">#&gt; 1 4.907779 4.903996 4.374426 5.449402          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME grp</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;          M     Mdn       LL       UL PercentROPE PercentMID   CI CIType ROPE  MID   Label</span></span>
+<span><span class="co">#&gt; 1 4.899239 4.89621 4.423663 5.422412          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME grp</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In <code>marginaleffects</code> we use the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function and the <code>variables</code> argument:</p>
 <div class="cell">
@@ -1441,7 +1441,7 @@ Expression   : Linear prediction, predict()
 <span>  dpar <span class="op">=</span> <span class="st">"sigma"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term          Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   grp mean(1) - mean(0)      4.9  4.37   5.45</span></span>
+<span><span class="co">#&gt;   grp mean(1) - mean(0)      4.9  4.42   5.42</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1455,14 +1455,14 @@ Expression   : Linear prediction, predict()
 <span>  CI <span class="op">=</span> <span class="fl">0.95</span>, CIType <span class="op">=</span> <span class="st">"ETI"</span>, dpar <span class="op">=</span> <span class="st">"sigma"</span>,</span>
 <span>  effects <span class="op">=</span> <span class="st">"fixedonly"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">bm</span><span class="op">$</span><span class="va">ContrastSummary</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          M      Mdn      LL       UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
-<span><span class="co">#&gt; 1 4.474551 4.464982 3.52317 5.484218          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
+<span><span class="co">#&gt;          M     Mdn       LL       UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span><span class="co">#&gt; 1 4.458758 4.46162 3.498163 5.443716          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">ls.fe</span>, dpar <span class="op">=</span> <span class="st">"sigma"</span>, re_formula <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term          Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   grp mean(1) - mean(0)     4.90  4.37   5.45</span></span>
-<span><span class="co">#&gt;   x   mean(dY/dX)           4.46  3.52   5.48</span></span>
+<span><span class="co">#&gt;   grp mean(1) - mean(0)     4.90  4.42   5.42</span></span>
+<span><span class="co">#&gt;   x   mean(dY/dX)           4.46  3.50   5.44</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1488,7 +1488,7 @@ Expression   : Linear prediction, predict()
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate</span></span>
-<span><span class="co">#&gt;  temp mean(+1)     55.9</span></span>
+<span><span class="co">#&gt;  temp mean(+1)     54.8</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1514,7 +1514,7 @@ Expression   : Linear prediction, predict()
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term Contrast Estimate</span></span>
-<span><span class="co">#&gt;  weather   custom     -145</span></span>
+<span><span class="co">#&gt;  weather   custom     -164</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1590,7 +1590,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1622,29 +1633,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1652,7 +1641,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

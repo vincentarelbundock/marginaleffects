@@ -5,9 +5,6 @@
 type_dictionary_build <- function() {
 text <-
 'class,type
-other,response
-other,class
-other,link
 bam,response
 bam,link
 bart,ev

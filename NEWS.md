@@ -2,8 +2,22 @@
 
 ## Development
 
+Breaking change:
+
+* `type="invlink(link)"` is no longer default in `predictions()` with `by`. The backtransform strategy is still available by setting `type="invlink(link)"` explicitly.
+
+New:
+
 * `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
 * Added support for `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
+* Parallel computation with `future` is more efficient by chunking tasks to avoid passing large objects to every worker for every future. Issue #1158.
+* All columns of `newdata` are passed to the `hypothesis` function when `newdata` is supplied explicitly. Thanks to @gravesti for report #1175.
+* `hypotheses()` supports formulas in the `hypothesis` argument: `hypotheses(model, hypothesis = ratio ~ reference)`
+
+Bugs:
+
+* Average lift and average comparisons with user-supplied functions could be be calculated incorrectly when all predictors were categorical. Thanks to @Dpananos for Issue #1151.
+* Indexing bug returned `NA` for some commands in `survey` models. Thanks to @weikang9009 for report #1161.
 
 ## 0.21.0
 
@@ -17,6 +31,7 @@ New:
 Misc:
 
 * Deprecation warning for `specify_hypothesis()`. This function was clearly marked as experimental, and has been available only for one release. It was a bad idea. Users should supply a custom function or a formula to the `hypothesis` argument. The new formula interface, in particular, makes it very easy to conduct group-wise hypothesis tests.
+* Type checks are a bit looser to accommodate custom models.
 
 Bugs:
 

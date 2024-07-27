@@ -449,6 +449,13 @@ plot_predictions(mod, condition = "hp") +
     theme_classic()
 ```
 
+## Customization
+
+The [plot customization section of the Plots vignette](https://marginaleffects.com/vignettes/plot.html#customization) illustrates two more ways to customize plots. In addition to using the `plot_*()` function arguments, users can:
+
+1. Modify the plot objects using `ggplot2` functions or add-on packages.
+2. Extract the underlying plotting data with the `draw=FALSE` argument, and feed that data to their preferred plotting software.
+
 
 # Categorical outcomes
 

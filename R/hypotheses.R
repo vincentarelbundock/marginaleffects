@@ -148,6 +148,7 @@ hypotheses <- function(
     numderiv = "fdforward",
     ...) {
 
+    hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
 
     if (isTRUE(attr(model, "hypotheses_call"))) {
         msg <- "The `hypotheses()` function cannot be called twice on the same object."
@@ -265,7 +266,7 @@ hypotheses <- function(
         }
     }
 
-    numderiv = sanitize_numderiv(numderiv)
+    numderiv <- sanitize_numderiv(numderiv)
 
     # after re-evaluation
     tmp <- sanitize_hypothesis(hypothesis, ...)
@@ -286,7 +287,7 @@ hypotheses <- function(
 
         } else if (inherits(model, "data.frame")) {
             out <- model
-            if (any(!c("term", "estimate") %in% colnames(out))) {
+            if (!all(c("term", "estimate") %in% colnames(out))) {
                 msg <- "`hypothesis` function must return a data.frame with two columns named `term` and `estimate`."
                 insight::format_error(msg)
             }
@@ -296,6 +297,10 @@ hypotheses <- function(
             out <- insight::get_parameters(model, ...)
             idx <- intersect(colnames(model), c("term", "group", "estimate"))
             colnames(out)[1:2] <- c("term", "estimate")
+
+        } else if (hypothesis_is_formula) {
+            beta <- get_coef(model)
+            out <- data.table::data.table(estimate = beta, term = names(beta))
 
         # unknown model but user-supplied hypothesis function
         } else {
@@ -307,6 +312,8 @@ hypotheses <- function(
 
         if (!is.null(attr(tmp, "label"))) {
             attr(out, "label") <- attr(tmp, "label")
+        } else if ("hypothesis" %in% colnames(tmp)) {
+            attr(out, "label") <- tmp$hypothesis
         } else {
             attr(out, "label") <- tmp$term
         }

@@ -36,7 +36,7 @@ get_predict.clm <- function(model,
     if ("rowid" %in% colnames(newdata)) {
         out$rowid <- rep(newdata$rowid, times = ncol(pred))
     } else {
-        out$rowid <- rep(1:nrow(pred), times = ncol(pred))
+        out$rowid <- rep(seq_len(nrow(pred)), times = ncol(pred))
     }
 
     return(out)

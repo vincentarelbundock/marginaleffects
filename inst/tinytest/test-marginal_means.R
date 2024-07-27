@@ -9,14 +9,14 @@ requiet("insight")
 # Issue #438: backtransforms allows us to match `emmeans` exactly
 mod <- glm(vs ~ mpg + factor(cyl), data = mtcars, family = binomial)
 em <- emmeans(mod, ~cyl, type = "response")
-mm <- predictions(mod, by = "cyl", newdata = datagrid(grid_type = "balanced")) |> dplyr::arrange(cyl)
+mm <- predictions(mod, by = "cyl", newdata = datagrid(grid_type = "balanced"), type = "invlink(link)") |> dplyr::arrange(cyl)
 expect_equal(data.frame(em)$prob, mm$estimate)
 expect_equal(data.frame(em)$asymp.LCL, mm$conf.low, tolerance = 1e-5)
 expect_equal(data.frame(em)$asymp.UCL, mm$conf.high)
 
 mod <- glm(breaks ~ wool * tension, family = Gamma, data = warpbreaks)
 em <- suppressMessages(emmeans(mod, ~wool, type = "response", df = Inf))
-mm <- predictions(mod, newdata=datagrid(grid_type="balanced"), by="wool")
+mm <- predictions(mod, newdata=datagrid(grid_type="balanced"), by="wool", type = "invlink(link)")
 expect_equal(data.frame(em)$response, mm$estimate)
 # TODO: 1/eta link function inverts order of CI. Should we clean this up?
 expect_equal(data.frame(em)$asymp.LCL, mm$conf.high)
@@ -44,7 +44,7 @@ em <- tidy(emmeans(mod, specs = "cyl"))
 expect_equivalent(mm$estimate, em$estimate, tolerance = 1e-5)
 expect_equivalent(mm$estimate, em$estimate, tolerance = 1e-5)
 # response
-mm <- predictions(mod, newdata=datagrid(grid_type="balanced"), by="cyl") |>
+mm <- predictions(mod, newdata=datagrid(grid_type="balanced"), by="cyl", type = "invlink(link)") |>
   dplyr::arrange(cyl)
 em <- tidy(emmeans(mod, specs = "cyl", type = "response"))
 expect_equivalent(mm$estimate, em$rate)

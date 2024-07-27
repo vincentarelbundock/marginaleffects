@@ -31,6 +31,7 @@ utils::globalVariables(c(
 "marginaleffects_internal_label",
 ".",
 "tmp_idx",
+"chunk",
 "comparison",
 "condition_variable",
 "conf_int",

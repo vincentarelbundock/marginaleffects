@@ -10,7 +10,7 @@ condition_shortcuts <- function(x, tr, shortcuts) {
             min(x, na.rm = TRUE),
             max(x, na.rm = TRUE))
     } else if (identical(tr, "quartile")) {
-        out <- stats::quantile(x, probs = c(.25, .5, .75), na.rm = TRUE)
+        out <- stats::quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
     }
     return(out)
 }

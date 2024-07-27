@@ -76,7 +76,15 @@ get_predict.svyglm <- function(model,
 
   estimate <- stats::predict(model, newdata = newdata, type = type, se.fit = se.fit)
   rowid <- attr(estimate, "names")
-  if (is.null(rowid)) {
+
+  # useless integer index creates problems: Issue #1161
+  if (identical(suppressWarnings(as.integer(rowid)), seq_len(nrow(newdata)))) {
+    rowid <- NULL
+  }
+
+  if (is.null(rowid) && "rowid" %in% colnames(newdata)) {
+      rowid <- newdata[["rowid"]]
+  } else if (is.null(rowid)) {
       rowid <- seq_len(estimate)
   } else {
       # rowid might be character, but survey::predict() requires non-negative integers

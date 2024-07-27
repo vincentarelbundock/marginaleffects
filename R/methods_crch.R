@@ -33,7 +33,7 @@ get_predict.crch <- function(model,
     sanity_predict_vector(pred = pred, model = model, newdata = newdata, type = type)
     sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
     out <- data.frame(
-        rowid = 1:nrow(newdata),
+        rowid = seq_len(nrow(newdata)),
         estimate = pred)
     return(out)
 }

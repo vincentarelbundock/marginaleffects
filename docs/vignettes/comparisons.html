@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.43">
+<meta name="generator" content="quarto-1.4.555">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo – Comparisons</title>
+<title>Marginal Effects Zoo - Comparisons</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -97,7 +97,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -136,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -165,15 +165,15 @@ window.Quarto = {
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
+          <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/predictions.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../vignettes/comparisons.html">Comparisons</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -188,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -229,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -360,9 +360,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -437,9 +437,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -588,7 +588,12 @@ window.Quarto = {
   </ul>
 </li>
   <li><a href="#hypothesis" id="toc-hypothesis" class="nav-link" data-scroll-target="#hypothesis">Hypothesis</a></li>
-  <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot">Plot</a></li>
+  <li>
+<a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">Visualization</a>
+  <ul class="collapse">
+<li><a href="#customization" id="toc-customization" class="nav-link" data-scroll-target="#customization">Customization</a></li>
+  </ul>
+</li>
   <li><a href="#visual-guide" id="toc-visual-guide" class="nav-link" data-scroll-target="#visual-guide">Visual guide</a></li>
   <li>
 <a href="#more" id="toc-more" class="nav-link" data-scroll-target="#more">More</a>
@@ -823,11 +828,11 @@ window.Quarto = {
 <span>    comparison <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="va">hi</span> <span class="op">/</span> <span class="va">lo</span>, </span>
 <span>    newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 % PClass Age SexCode</span></span>
-<span><span class="co">#&gt;  Age     +1          0.959     0.0157 61.20   &lt;0.001  Inf 0.928  0.990    3rd  20       0</span></span>
-<span><span class="co">#&gt;  PClass  2nd, 1st    0.399     0.1035  3.85   &lt;0.001 13.1 0.196  0.602    3rd  20       0</span></span>
-<span><span class="co">#&gt;  PClass  3rd, 1st    0.298     0.0640  4.65   &lt;0.001 18.2 0.172  0.423    3rd  20       0</span></span>
-<span><span class="co">#&gt;  SexCode 1, 0        2.511     0.5048  4.97   &lt;0.001 20.5 1.522  3.501    3rd  20       0</span></span>
+<span><span class="co">#&gt;     Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  Age     +1          0.959     0.0157 61.20   &lt;0.001  Inf 0.928  0.990</span></span>
+<span><span class="co">#&gt;  PClass  2nd, 1st    0.399     0.1035  3.85   &lt;0.001 13.1 0.196  0.602</span></span>
+<span><span class="co">#&gt;  PClass  3rd, 1st    0.298     0.0640  4.65   &lt;0.001 18.2 0.172  0.423</span></span>
+<span><span class="co">#&gt;  SexCode 1, 0        2.511     0.5048  4.97   &lt;0.001 20.5 1.522  3.501</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
@@ -836,11 +841,11 @@ window.Quarto = {
 <span>    comparison <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="va">hi</span> <span class="op">/</span> <span class="va">lo</span>, </span>
 <span>    newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 % PClass Age SexCode</span></span>
-<span><span class="co">#&gt;  Age     +1          0.959     0.0157 61.20   &lt;0.001  Inf 0.928  0.990    3rd  20       0</span></span>
-<span><span class="co">#&gt;  PClass  2nd, 1st    0.399     0.1035  3.85   &lt;0.001 13.1 0.196  0.602    3rd  20       0</span></span>
-<span><span class="co">#&gt;  PClass  3rd, 1st    0.298     0.0640  4.65   &lt;0.001 18.2 0.172  0.423    3rd  20       0</span></span>
-<span><span class="co">#&gt;  SexCode 1, 0        2.511     0.5048  4.97   &lt;0.001 20.5 1.522  3.501    3rd  20       0</span></span>
+<span><span class="co">#&gt;     Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  Age     +1          0.959     0.0157 61.20   &lt;0.001  Inf 0.928  0.990</span></span>
+<span><span class="co">#&gt;  PClass  2nd, 1st    0.399     0.1035  3.85   &lt;0.001 13.1 0.196  0.602</span></span>
+<span><span class="co">#&gt;  PClass  3rd, 1st    0.298     0.0640  4.65   &lt;0.001 18.2 0.172  0.423</span></span>
+<span><span class="co">#&gt;  SexCode 1, 0        2.511     0.5048  4.97   &lt;0.001 20.5 1.522  3.501</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -851,11 +856,11 @@ window.Quarto = {
 <span>    comparison <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">hi</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">lo</span> <span class="op">+</span> <span class="fl">10</span><span class="op">)</span>, </span>
 <span>    newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term Contrast Estimate Std. Error     z Pr(&gt;|z|)     S 2.5 % 97.5 % PClass Age SexCode</span></span>
-<span><span class="co">#&gt;  Age     +1          0.179     0.0145 12.36   &lt;0.001 114.2 0.151  0.207    3rd  20       0</span></span>
-<span><span class="co">#&gt;  PClass  2nd, 1st    0.208     0.0230  9.04   &lt;0.001  62.4 0.163  0.253    3rd  20       0</span></span>
-<span><span class="co">#&gt;  PClass  3rd, 1st    0.180     0.0150 11.97   &lt;0.001 107.3 0.150  0.209    3rd  20       0</span></span>
-<span><span class="co">#&gt;  SexCode 1, 0        0.290     0.0162 17.85   &lt;0.001 234.4 0.258  0.321    3rd  20       0</span></span>
+<span><span class="co">#&gt;     Term Contrast Estimate Std. Error     z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  Age     +1          0.179     0.0145 12.36   &lt;0.001 114.2 0.151  0.207</span></span>
+<span><span class="co">#&gt;  PClass  2nd, 1st    0.208     0.0230  9.04   &lt;0.001  62.4 0.163  0.253</span></span>
+<span><span class="co">#&gt;  PClass  3rd, 1st    0.180     0.0150 11.97   &lt;0.001 107.3 0.150  0.209</span></span>
+<span><span class="co">#&gt;  SexCode 1, 0        0.290     0.0162 17.85   &lt;0.001 234.4 0.258  0.321</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1327,7 +1332,7 @@ window.Quarto = {
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span><span class="st">"rsample"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term              Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.19  1.92   2.53</span></span>
+<span><span class="co">#&gt;  SexCode ln(odds(1) / odds(0))     2.19   1.9   2.53</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1456,7 +1461,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="plot" class="level1"><h1>Plot</h1>
+</section><section id="visualization" class="level1"><h1>Visualization</h1>
 <p>The <code><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons()</a></code> function can plot comparisons, differences, risk ratios, etc. The <a href="https://marginaleffects.com/vignettes/plot.html">plotting vignette gives detailed insight into the use of this function.</a> Here, it will be sufficient to illustrate its use by a few examples, and to note that most of the arguments of <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> are supported by <code><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons()</a></code>.</p>
 <p>Here, we plot Adjusted Risk Ratio and Adjusted Risk Difference in a model with a quadratic term:</p>
 <div class="cell">
@@ -1489,7 +1494,12 @@ window.Quarto = {
 </div>
 </div>
 </div>
-</section><section id="visual-guide" class="level1"><h1>Visual guide</h1>
+<section id="customization" class="level2"><h2 class="anchored" data-anchor-id="customization">Customization</h2>
+<p>The <a href="https://marginaleffects.com/vignettes/plot.html#customization">plot customization section of the Plots vignette</a> illustrates two more ways to customize plots. In addition to using the <code>plot_*()</code> function arguments, users can:</p>
+<ol type="1">
+<li>Modify the plot objects using <code>ggplot2</code> functions or add-on packages.</li>
+<li>Extract the underlying plotting data with the <code>draw=FALSE</code> argument, and feed that data to their preferred plotting software.</li>
+</ol></section></section><section id="visual-guide" class="level1"><h1>Visual guide</h1>
 <p>This section illustrates some of the concepts in this vignette visually.</p>
 <p>Consider a model with an interaction term. What happens to the dependent variable when the <code>hp</code> variable increases by 10 units?</p>
 <div class="cell">
@@ -1909,7 +1919,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1941,29 +1962,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1971,7 +1970,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

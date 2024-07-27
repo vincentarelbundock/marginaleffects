@@ -43,10 +43,10 @@ specify_hypothesis <- function(
     } else if (identical(hypothesis, "sequential")) {
         if (comparison == "difference") {
             hypothesis <- function(x) (x - data.table::shift(x))[2:length(x)]
-            label = function(x) sprintf("(%s) - (%s)", x, data.table::shift(x))[2:length(x)]
+            label <- function(x) sprintf("(%s) - (%s)", x, data.table::shift(x))[2:length(x)]
         } else {
             hypothesis <- function(x) (x / data.table::shift(x))[2:length(x)]
-            label = function(x) sprintf("(%s) / (%s)", x, data.table::shift(x))[2:length(x)]
+            label <- function(x) sprintf("(%s) / (%s)", x, data.table::shift(x))[2:length(x)]
         }
     } else if (identical(hypothesis, "meandev")) {
         hypothesis <- function(x) x - mean(x)
@@ -59,10 +59,7 @@ specify_hypothesis <- function(
         estimate <- x$estimate
 
         # automatic by argument
-        if (is.null(by)) {
-            by <- grep("^term$|^contrast|^group$", colnames(x), value = TRUE)
-            if (length(by) == 0) by <- NULL
-        } else {
+        if (!is.null(by)) {
             bad <- setdiff(by, c(colnames(x), "term", "group", "contrast", "rowid"))
             if (length(bad) > 0) {
                 msg <- sprintf("Missing column(s): %s", paste(bad, collapse = ", "))
@@ -84,11 +81,18 @@ specify_hypothesis <- function(
         if (length(label_columns) == 0) label_columns <- "rowid"
 
         tmp <- x[, ..label_columns]
+
+        label_columns <- Filter(function(n) length(unique(tmp[[n]])) > 1, names(tmp))
         for (col in label_columns) {
             if (length(unique(tmp[[col]])) == 1) {
                 tmp[, (col) := NULL]
             } else {
-                tmp[, (col) := sprintf("%s[%s]", col, tmp[[col]])]
+                # drop unambiguous single label
+                if (length(label_columns) > 1) {
+                    tmp[, (col) := sprintf("%s[%s]", col, tmp[[col]])]
+                } else {
+                    tmp[, (col) := sprintf("%s", tmp[[col]])]
+                }
             }
         }
         tmp <- apply(tmp, 1, paste, collapse = ", ")

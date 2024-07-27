@@ -15,7 +15,7 @@ get_predict.rq <- function(model,
                 out <- data.frame(rowid = newdata$rowid, estimate = out)
                 return(out)
             } else {
-                out = data.frame(rowid = seq_len(length(out)), estimate = out)
+                out <- data.frame(rowid = seq_len(length(out)), estimate = out)
             }
         }
     }
@@ -23,7 +23,7 @@ get_predict.rq <- function(model,
     if (isTRUE(checkmate::check_numeric(out, len = nrow(newdata)))) {
         out <- data.frame(rowid = newdata$rowid, estimate = out)
     } else {
-        out = data.frame(rowid = seq_len(length(out)), estimate = out)
+        out <- data.frame(rowid = seq_len(length(out)), estimate = out)
     }
     return(out)
 }

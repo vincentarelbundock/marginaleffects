@@ -24,3 +24,5 @@ _quarto
 _quarto/
 !_quarto/_freeze/
 vignettes/*html
+src/*.so
+src/*.o

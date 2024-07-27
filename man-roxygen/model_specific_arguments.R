@@ -20,4 +20,5 @@
 #' | `robustlmm` | `rlmerMod` | `re.form`          |[robustlmm::predict.rlmerMod]|
 #' |             |            | `allow.new.levels` |[robustlmm::predict.rlmerMod]|
 #' | `MCMCglmm`  | `MCMCglmm` | `ndraws`           ||
+#' | `sampleSelection`  | `selection` | `part`           |[sampleSelection::predict.selection]|
 #'

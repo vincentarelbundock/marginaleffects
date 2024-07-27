@@ -21,4 +21,15 @@ mfx <- slopes(model, type = "prob")
 expect_true(all(as.character(0:19) %in% mfx$group))
 
 
+# Issue #1123: invlink(link) not default for avg_predictions()
+mod <- glm(am ~ hp, data = mtcars, family = binomial)
+p1 <- avg_predictions(mod)
+p2 <- avg_predictions(mod, type = "response")
+p3 <- avg_predictions(mod, type = "invlink(link)")
+expect_equivalent(p1$estimate, p2$estimate)
+expect_false(isTRUE(all.equal(p1$estimate, p3$estimate)))
+
+
+
+
 rm(list = ls())
