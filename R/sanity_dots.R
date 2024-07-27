@@ -43,6 +43,9 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     # flexsurv
     valid[["flexsurvreg"]] <- c("times", "p", "start")
 
+    # WeightIt models
+    valid[["ordinal_weightit"]] <- valid[["multinom_weightit"]] <- "values"
+
     white_list <- c(
         "conf.int", "modeldata", "internal_call", "df",
         "transform", "comparison", "side", "delta", "null", "equivalence", "draw",
