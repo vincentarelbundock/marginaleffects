@@ -338,6 +338,7 @@ https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
     \tab  \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
     \tab  \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
+    \tab \code{gam} \tab \code{exclude} \tab \link[mgcv:predict.gam]{mgcv::predict.gam} \cr
    \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
     \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
    \code{MCMCglmm} \tab \code{MCMCglmm} \tab \code{ndraws} \tab  \cr
@@ -500,6 +501,11 @@ The behavior of \code{marginaleffects} functions can be modified by setting glob
 Disable some safety checks:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_safe = FALSE)`
+}\if{html}{\out{</div>}}
+
+Omit some columns from the printed output:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_print_omit = c("p.value", "s.value"))`
 }\if{html}{\out{</div>}}
 }
 

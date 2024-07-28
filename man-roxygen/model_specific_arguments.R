@@ -17,6 +17,7 @@
 #' |             |            | `allow.new.levels` |[glmmTMB::predict.glmmTMB]|
 #' |             |            | `zitype`           |[glmmTMB::predict.glmmTMB]|
 #' | `mgcv`      | `bam`      | `exclude`          |[mgcv::predict.bam]|
+#' |             | `gam`      | `exclude`          |[mgcv::predict.gam]|
 #' | `robustlmm` | `rlmerMod` | `re.form`          |[robustlmm::predict.rlmerMod]|
 #' |             |            | `allow.new.levels` |[robustlmm::predict.rlmerMod]|
 #' | `MCMCglmm`  | `MCMCglmm` | `ndraws`           ||

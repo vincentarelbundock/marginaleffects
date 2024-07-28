@@ -158,6 +158,8 @@ print.marginaleffects <- function(x,
         "df2" = "Df 2"
         )
 
+    print_omit <- getOption("marginaleffects_print_omit", default = NULL)
+    dict <- dict[!names(dict) %in% print_omit]
 
     if (inherits(x, "marginalmeans")) {
         dict["estimate"] <- "Mean"
