@@ -100,7 +100,8 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
     if (length(condition) > 1) {
         if (is.null(condition[[2]])) {
             if (is.numeric(dat[[condition2]])) {
-                at_list[[condition2]] <- stats::fivenum(dat[[condition2]])
+                at_list[[condition2]] <- "fivenum"
+                condition[[2]] <- "fivenum"
             } else {
                 at_list[[condition2]] <- unique(dat[[condition2]])
             }
