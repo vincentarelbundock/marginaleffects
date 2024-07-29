@@ -7,7 +7,10 @@ plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet_1 = NULL, v_facet_
         if (identical(condition$condition[[v]], "threenum")) {
             dat[[v]] <- fun(dat[[v]], c("-SD", "Mean", "+SD"))
         } else if (identical(condition$condition[[v]], "fivenum")) {
-            dat[[v]] <- format(dat[[v]], digits = 2)
+            labs <- stats::setNames(
+                sort(unique(dat[[v]])),
+                format(sort(unique(dat[[v]])), digits = 2))
+            dat[[v]] <- fun(dat[[v]], names(labs))
         } else if (identical(condition$condition[[v]], "minmax")) {
             dat[[v]] <- fun(dat[[v]], c("Min", "Max"))
         } else if (identical(condition$condition[[v]], "quartile")) {
