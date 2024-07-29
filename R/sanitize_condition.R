@@ -104,12 +104,11 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
             } else {
                 at_list[[condition2]] <- unique(dat[[condition2]])
             }
+        }
+        if (isTRUE(checkmate::check_choice(condition[[2]], shortcuts))) {
+            at_list[[condition2]] <- condition_shortcuts(dat[[condition2]], condition[[2]], shortcuts)
         } else {
-            if (isTRUE(checkmate::check_choice(condition[[2]], shortcuts))) {
-                at_list[[condition2]] <- condition_shortcuts(dat[[condition2]], condition[[2]], shortcuts)
-            } else {
-                at_list[[condition2]] <- condition[[2]]
-            }
+            at_list[[condition2]] <- condition[[2]]
         }
     }
 
