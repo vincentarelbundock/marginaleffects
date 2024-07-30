@@ -98,16 +98,16 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
 
     # condition 2: color
     if (length(condition) > 1) {
-        if (is.null(condition[[2]])) {
-            if (is.numeric(dat[[condition2]])) {
-                at_list[[condition2]] <- "fivenum"
-                condition[[2]] <- "fivenum"
-            } else {
-                at_list[[condition2]] <- unique(dat[[condition2]])
-            }
-        }
-        if (isTRUE(checkmate::check_choice(condition[[2]], shortcuts))) {
+        # numeric default = Tukey's 5 numbers
+        if (is.null(condition[[2]]) && is.numeric(dat[[condition2]])) {
+            condition[[2]] <- "fivenum"
+        # other default = unique values
+        } else if (is.null(condition[[2]])) {
+            at_list[[condition2]] <- unique(dat[[condition2]])
+        # known string shortcuts
+        } else if (isTRUE(checkmate::check_choice(condition[[2]], shortcuts))) {
             at_list[[condition2]] <- condition_shortcuts(dat[[condition2]], condition[[2]], shortcuts)
+        # user-supplied
         } else {
             at_list[[condition2]] <- condition[[2]]
         }

@@ -223,6 +223,11 @@ p <- plot_predictions(mod, condition = list("mpg"=1:5, "am"=0:1, "gear"=1:3, "ca
 expect_inherits(p, "gg")
 
 
+# Issue #1184
+mod <- lm(Sepal.Width ~ Sepal.Length * Species, data = iris)
+p <- plot_predictions(mod, condition = c("Sepal.Length", "Species"), draw = FALSE)
+expect_equal(length(unique(p$Species)), 3)
+
 
 
 suppressWarnings(rm("threenum", .GlobalEnv))
