@@ -217,7 +217,7 @@ print.marginaleffects <- function(x,
     te <- unique(out[["term"]])
     if (length(te) == 1) {
         print_omit <- c(print_omit, te)
-        print_term_text <- sprintf("Variable: %s\n", out[["term"]][1])
+        print_term_text <- sprintf("Term: %s\n", out[["term"]][1])
         print_omit <- c(print_omit, "term")
     }
 
