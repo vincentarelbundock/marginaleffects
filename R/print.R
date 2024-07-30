@@ -200,10 +200,10 @@ print.marginaleffects <- function(x,
     # selection style
     data.table::setDT(out)
 
-
     if ("term" %in% colnames(out) && all(out$term == "cross")) {
         out[["term"]] <- NULL
         colnames(out) <- gsub("^contrast_", "C: ", colnames(out))
+        idx <- c(grep("C: .*", colnames(out), value = TRUE), idx)
     }
 
     print_columns_text <- print_type_text <- print_term_text <- print_contrast_text <- NULL
@@ -232,6 +232,7 @@ print.marginaleffects <- function(x,
     idx <- setdiff(unique(idx), c(useless, print_omit))
     idx <- intersect(idx, colnames(out))
     out <- out[, ..idx, drop = FALSE]
+
 
     for (i in seq_along(dict)) {
         colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
