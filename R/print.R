@@ -211,14 +211,12 @@ print.marginaleffects <- function(x,
 
     # contrast and term can have long labels. Drop if not unique. 
     if (length(unique(out[["contrast"]])) == 1) {
-        te <- unique(out)[["term"]]
-        if (length(te) == 1 && te %in% colnames(out)) {
-            print_omit <- c(print_omit, te)
-        }
         print_contrast_text <- sprintf("Comparison: %s\n", out[["contrast"]][1])
         print_omit <- c(print_omit, "contrast")
     }
-    if (length(unique(out[["term"]])) == 1) {
+    te <- unique(out[["term"]])
+    if (length(te) == 1) {
+        print_omit <- c(print_omit, te)
         print_term_text <- sprintf("Variable: %s\n", out[["term"]][1])
         print_omit <- c(print_omit, "term")
     }
