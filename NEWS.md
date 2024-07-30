@@ -4,7 +4,7 @@
 
 Breaking change:
 
-* `type="invlink(link)"` is no longer default in `predictions()` with `by`. The backtransform strategy is still available by setting `type="invlink(link)"` explicitly.
+* `type="invlink(link)"` is no longer default in `avg_predictions()` or when calling `predictions()` with the `by` argument. It is still default in `predictions()` without the `by` argument. The backtransform strategy is still available with by setting `type="invlink(link)"` explicitly.
 
 New:
 
