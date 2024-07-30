@@ -37,7 +37,6 @@ data(Mroz87)
 m <- selection(lfp ~ educ + age + kids5 + kids618 + nwifeinc,
                wage >= 5 ~ educ + exper, data = Mroz87)
 
-pkgload::load_all()
 avg_slopes(m, part = "selection", type = "response")
 avg_slopes(m, part = "outcome", type = "unconditional")
 
