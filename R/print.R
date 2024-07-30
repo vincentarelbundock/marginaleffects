@@ -212,9 +212,17 @@ print.marginaleffects <- function(x,
         colnames(out) <- gsub("^contrast_", "C: ", colnames(out))
     }
 
+    print_columns_text <- print_type_text <- print_contrast_text <- NULL
+
     # contrast and term can have long labels. Drop if not unique. 
-    if (length(unique(out[["term"]])) == 1) out[["term"]] <- NULL
-    if (length(unique(out[["contrast"]])) == 1) out[["contrast"]] <- NULL
+    if (length(unique(out[["term"]])) == 1) {
+        print_term_text <- sprintf("Variable: %s\n", out[["term"]][1])
+        out[["term"]] <- NULL
+    }
+    if (length(unique(out[["contrast"]])) == 1) {
+        print_contrast_text <- sprintf("Comparison: %s\n", out[["contrast"]][1])
+        out[["contrast"]] <- NULL
+    }
 
     for (i in seq_along(dict)) {
         colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
@@ -235,7 +243,6 @@ print.marginaleffects <- function(x,
         }
     }
 
-    print_columns_text <- print_type_text <- NULL
     if (ncol(x) <= ncols && isTRUE(column_names)) {
         print_columns_text <- paste("Columns:", paste(colnames(x), collapse = ", "), "\n")
     }
@@ -306,6 +313,8 @@ print.marginaleffects <- function(x,
 
     cat(print_columns_text)
     cat(print_type_text)
+    cat(print_term_text)
+    cat(print_contrast_text)
     cat("\n")
 
     ## This is tricky to extract nicely when transform_* are passed from avg_comparisons to comparisons. I could certainly figure it out, but at the same time, I don't think the print method should return information that is immediately visible from the call. This is different from `type`, where users often rely on the default value, which can change from model to model, so printing it is often
