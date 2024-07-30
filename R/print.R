@@ -212,6 +212,10 @@ print.marginaleffects <- function(x,
         colnames(out) <- gsub("^contrast_", "C: ", colnames(out))
     }
 
+    # contrast and term can have long labels. Drop if not unique. 
+    if (length(unique(out[["term"]])) == 1) out[["term"]] <- NULL
+    if (length(unique(out[["contrast"]])) == 1) out[["contrast"]] <- NULL
+
     for (i in seq_along(dict)) {
         colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
     }

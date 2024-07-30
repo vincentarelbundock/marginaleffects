@@ -15,6 +15,7 @@ New:
 * `hypotheses()` supports formulas in the `hypothesis` argument: `hypotheses(model, hypothesis = ratio ~ reference)`
 * Global option: `options("marginaleffects_print_omit" = "s.value")`
 * Round significant digits for labels in `plot_predictions(mod, condition = list(x = "fivenum"))`
+* `print()` no longer prints `contrast` and `term` columns when values are unique. The labels were often very long, and the content is already explicit in the call itself, so there's no ambiguity.
 
 Bugs:
 
