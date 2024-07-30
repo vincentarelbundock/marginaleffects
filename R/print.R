@@ -212,7 +212,7 @@ print.marginaleffects <- function(x,
         colnames(out) <- gsub("^contrast_", "C: ", colnames(out))
     }
 
-    print_columns_text <- print_type_text <- print_contrast_text <- NULL
+    print_columns_text <- print_type_text <- print_term_text <- print_contrast_text <- NULL
 
     # contrast and term can have long labels. Drop if not unique. 
     if (length(unique(out[["term"]])) == 1) {
