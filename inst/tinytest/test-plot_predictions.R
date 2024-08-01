@@ -228,6 +228,17 @@ mod <- lm(Sepal.Width ~ Sepal.Length * Species, data = iris)
 p <- plot_predictions(mod, condition = c("Sepal.Length", "Species"), draw = FALSE)
 expect_equal(length(unique(p$Species)), 3)
 
+mod <- lm(mpg ~ hp * am, data = mtcars)
+p <- plot_predictions(mod, condition = c("hp", "am"), draw = FALSE)
+expect_equal(length(unique(p$am)), 2)
+expect_equal(length(unique(p$hp)), 50)
+expect_equal(nrow(p), 100)
+
+mod <- lm(mpg ~ hp * wt, data = mtcars)
+p <- plot_predictions(mod, condition = c("hp", "wt"), draw = FALSE)
+expect_equal(length(unique(p$am)), 2)
+expect_equal(length(unique(p$hp)), 50)
+expect_equal(nrow(p), 100)
 
 
 suppressWarnings(rm("threenum", .GlobalEnv))
