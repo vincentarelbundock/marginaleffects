@@ -42,12 +42,15 @@ jobs:
       - name: Get Script
         run: curl -OLs https://eddelbuettel.github.io/r-ci/run.sh && chmod 0755 run.sh
 
+      - name: unignore tests
+        run: sed -i '/^inst\/tinytest$/d' .Rbuildignore
+
       - name: Bootstrap
         run: ./run.sh bootstrap
-          
+
       - name: png (for svglite)
         run: sudo apt update -qq && sudo apt install --yes --no-install-recommends libpng-dev
-        
+
       - name: svglite from source
         run: Rscript -e "bspm::disable();install.packages('svglite', from = 'source');bspm::enable()"
 
