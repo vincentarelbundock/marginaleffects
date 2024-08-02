@@ -49,6 +49,7 @@ website:
           - vignettes/gam.qmd
           - vignettes/gcomputation.qmd
           - vignettes/heterogeneity.qmd
+          - vignettes/interactions.qmd
           - vignettes/ipw.qmd
           - vignettes/logit.qmd
           - vignettes/lme4.qmd

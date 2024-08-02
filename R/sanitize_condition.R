@@ -17,8 +17,6 @@ condition_shortcuts <- function(x, tr, shortcuts) {
 
 
 sanitize_condition <- function(model, condition, variables = NULL, modeldata = NULL) {
-
-
     # allow multiple conditions and/or effects
     checkmate::assert(
         checkmate::check_character(condition, min.len = 1, max.len = 4),
@@ -107,7 +105,7 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
             } else if (is.numeric(dat[[condition2]])) {
               condition[[2]] <- "fivenum"
             # other default = unique values
-            } else {
+            } else if (condition2 %in% colnames(dat)) {
               condition[[2]] <- unique(dat[[condition2]])
             }
         }
