@@ -51,7 +51,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
@@ -581,7 +601,7 @@ window.Quarto = {
 <p>We will focus on three strategies to account for heterogeneity and increase the flexibility of our models: multiplicative interactions, polynomials, and splines.</p>
 <section id="multiplicative-interactions" class="level2"><h2 class="anchored" data-anchor-id="multiplicative-interactions">Multiplicative interactions</h2>
 <p>We say that there is heterogeneity when the strength of the association between an explanator <span class="math inline">\(X\)</span> and an outcome <span class="math inline">\(Y\)</span> varies based on the value of a moderator <span class="math inline">\(M\)</span>. Typically, <span class="math inline">\(M\)</span> is a variable which measures contextual elements, or characteristics of the individuals, groups, or units under observation. The key characteristic of a moderator is that it modifies the nature of the relationship between two other variables. <span class="math inline">\(M\)</span> can strengthen, weaken, or even reverse the association between an independent variable <span class="math inline">\(X\)</span> and the dependent variable <span class="math inline">\(Y\)</span>.</p>
-<p>One common strategy to study moderation is to fit a statistical model with multiplicative interactions <span class="citation" data-cites="BraClaGol2006 KamFra2009 ClaGol2023">[@BraClaGol2006; @KamFra2009; @ClaGol2023]</span>. This involves creating a new composite variable by multiplying the explanator (<span class="math inline">\(X\)</span>) to the moderator (<span class="math inline">\(M\)</span>). When this composite variable is included in the model specification, its associated coefficient will capture <span class="math inline">\(M\)</span>’s role in effect modification. A popular specification for moderation analysis is this linear model:<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>One common strategy to study moderation is to fit a statistical model with multiplicative interactions <span class="citation" data-cites="BraClaGol2006 KamFra2009 ClaGol2023">(<a href="#ref-BraClaGol2006" role="doc-biblioref">Brambor, Clark, and Golder 2006</a>; <a href="#ref-KamFra2009" role="doc-biblioref">Kam and Jr. 2009</a>; <a href="#ref-ClaGol2023" role="doc-biblioref">Clark and Golder 2023</a>)</span>. This involves creating a new composite variable by multiplying the explanator (<span class="math inline">\(X\)</span>) to the moderator (<span class="math inline">\(M\)</span>). When this composite variable is included in the model specification, its associated coefficient will capture <span class="math inline">\(M\)</span>’s role in effect modification. A popular specification for moderation analysis is this linear model:<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 <p><span class="math display">\[Y = \beta_1 + \beta_2 \cdot M + \beta_3 \cdot X + \beta_4 \cdot X \cdot  M + \varepsilon,\]</span></p>
 <p>where <span class="math inline">\(Y\)</span> is the outcome, <span class="math inline">\(X\)</span> is the cause of interest, and <span class="math inline">\(M\)</span> is a contextual variable which moderates the relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. In that model, <span class="math inline">\(\beta_2\)</span> characterizes the association between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> when <span class="math inline">\(M=0\)</span>. If the moderator <span class="math inline">\(M\)</span> is non-zero, the strength of association between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> is represented by more than the simple <span class="math inline">\(\beta_2\)</span> coefficient. We see this by inspecting the partial derivative:</p>
 <p><span class="math display">\[\frac{\partial Y}{\partial X} = \beta_3 + \beta_4 \cdot M\]</span></p>
@@ -1090,7 +1110,7 @@ Figure&nbsp;5: Average predicted outcomes for different combinations of <code>X<
 <p>This can be treated as a linear regression problem by constructing new variables <span class="math inline">\(Z_1=X\)</span>, <span class="math inline">\(Z_2=X^2\)</span>, etc. The model then becomes <span class="math inline">\(Y=\beta_0+\beta_1\cdot Z_1+\beta_2\cdot Z_2+\varepsilon\)</span>, which can be estimated using standard methods like ordinary least squares.</p>
 <p>Polynomial regression offers several key advantages, particularly in its flexibility and ability to fit a wide range of curves, simply by adjusting the degree of the polynomial. As a result, polynomial regression can reveal underlying patterns in the data that are not immediately apparent with simpler models.</p>
 <p>This approach also has notable disadvantages. One significant issue is its potential for overfitting, especially when the <span class="math inline">\(n\)</span> order is high. Moreover, polynomial regression can suffer from unreliable extrapolation, where predictions made outside the range of the training data can become erratic and unrealistic. Consequently, while polynomial regression can be powerful, careful consideration must be given to the degree of the polynomial to balance fit and generalization effectively.</p>
-<p>Polynomial regression can be viewed simply as a model specification with several variables interacted with themselves. As such, it can be interpreted using exactly the same tools discussed in the earlier part of this chapter. To illustrate, we consider two simple data generating processes adapted from <span class="citation" data-cites="HaiMumXu2019">@HaiMumXu2019</span>. The first is:</p>
+<p>Polynomial regression can be viewed simply as a model specification with several variables interacted with themselves. As such, it can be interpreted using exactly the same tools discussed in the earlier part of this chapter. To illustrate, we consider two simple data generating processes adapted from <span class="citation" data-cites="HaiMumXu2019">Hainmueller, Mummolo, and Xu (<a href="#ref-HaiMumXu2019" role="doc-biblioref">2019</a>)</span>. The first is:</p>
 <p><span class="math display">\[\begin{align*}
 Y = 2.5 - X^2 + \nu, &amp;&amp; \text{where }\nu\sim N(0,1),X\sim U(-3,3)
 \end{align*}\]</span></p>
@@ -1284,16 +1304,30 @@ Y = 2.5 - X^2 - 5 \cdot M + 2 \cdot M \cdot X^2 + \nu &amp;&amp;  \text{where }\
 </div>
 
 
-</section><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+</section><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-BraClaGol2006" class="csl-entry" role="listitem">
+Brambor, Thomas, William Roberts Clark, and Matt Golder. 2006. <span>“Understanding Interaction Models: Improving Empirical Analyses.”</span> <em>Political Analysis</em> 14 (1): 63–82.
+</div>
+<div id="ref-ClaGol2023" class="csl-entry" role="listitem">
+Clark, William Roberts, and Matt Golder. 2023. <em>Interaction Models: Specification and Interpretation</em>. Methodological Tools in the Social Sciences. Cambridge University Press.
+</div>
+<div id="ref-HaiMumXu2019" class="csl-entry" role="listitem">
+Hainmueller, Jens, Jonathan Mummolo, and Yiqing Xu. 2019. <span>“How Much Should We Trust Estimates from Multiplicative Interaction Models? Simple Tools to Improve Empirical Practice.”</span> <em>Political Analysis</em> 27 (2): 163–92.
+</div>
+<div id="ref-KamFra2009" class="csl-entry" role="listitem">
+Kam, Cindy D., and Robert J. Franzese Jr. 2009. <em>Modeling and Interpreting Interactive Hypotheses in Regression Analysis</em>. University of Michigan Press. <a href="https://doi.org/10.3998/mpub.206871">https://doi.org/10.3998/mpub.206871</a>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 <ol>
 <li id="fn1"><p>One downside of estimating more flexible models is that they may overfit the data. See TODO.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>In most cases, it is important to include all constitutive terms in addition to interactions. For example, if a model includes a multiplication between three variables <span class="math inline">\(X\cdot W \cdot Z\)</span>, one would typically want to also include <span class="math inline">\(X\cdot W, X\cdot Z, W\cdot Z, X, W,\)</span> and <span class="math inline">\(Z\)</span>. See <span class="citation" data-cites="ClaGol2023">@ClaGol2023</span> for details.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>In most cases, it is important to include all constitutive terms in addition to interactions. For example, if a model includes a multiplication between three variables <span class="math inline">\(X\cdot W \cdot Z\)</span>, one would typically want to also include <span class="math inline">\(X\cdot W, X\cdot Z, W\cdot Z, X, W,\)</span> and <span class="math inline">\(Z\)</span>. See <span class="citation" data-cites="ClaGol2023">Clark and Golder (<a href="#ref-ClaGol2023" role="doc-biblioref">2023</a>)</span> for details.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Note that when we insert an expression like <code>X*M</code> in the formula syntax, we instruct <code>R</code> to create binary variables for every level of the <code>M</code> predictor, and also to interact each of those levels with the <code>X</code> variable. Under the hood, <code>R</code> will multiply treatment and moderator to create the appropriate composite variables (<code>X</code><span class="math inline">\(\times\)</span><code>Mb</code> and <code>X</code><span class="math inline">\(\times\)</span><code>Mc</code>), and it will automatically omit one reference category to avoid perfect collinearity.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>An alternative would be to compute predictions on a different grid (ex: “balanced”) before aggregating. This could be achieved by calling: <code>avg_predictions(mod, newdata="balanced", by=c("X","M"))</code><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5"><p>These five numbers correspond to elements of a standard boxplot: minimum, lower-hinge, median, upper-hinge, and maximum.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>Recall, from <strong>?@sec-slopes</strong>, that this interpretation is valid for small changes in the neighborhoods where slopes are evaluated.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn7"><p>For <code>marginaleffects</code> to work properly in this context, it is important to specify the polynomials in the model-fitting formula. Users should not hard-code the values by creating new variables in the dataset before fitting the model.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn8"><p>This data generating process is adapted from <span class="citation" data-cites="HaiMumXu2019">@HaiMumXu2019</span>.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>This data generating process is adapted from <span class="citation" data-cites="HaiMumXu2019">Hainmueller, Mummolo, and Xu (<a href="#ref-HaiMumXu2019" role="doc-biblioref">2019</a>)</span>.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

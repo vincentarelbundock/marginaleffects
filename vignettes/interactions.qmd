@@ -1,5 +1,6 @@
 ---
 title:  Interactions, polynomials, and splines
+bibliography: interactions.bib
 ---
 
 ```{r, include = FALSE}
