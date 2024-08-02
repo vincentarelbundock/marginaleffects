@@ -42,14 +42,11 @@ jobs:
       - name: Get Script
         run: curl -OLs https://eddelbuettel.github.io/r-ci/run.sh && chmod 0755 run.sh
 
-      - name: pwd
-        run: pwd
+      - name: unignore tests
+        run: awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
 
       - name: cat Rbuildignore
         run: cat .Rbuildignore
-
-      - name: unignore tests
-        run: awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
 
       - name: Bootstrap
         run: ./run.sh bootstrap
