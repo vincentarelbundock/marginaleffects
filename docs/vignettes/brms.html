@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo</title>
+<title>Marginal Effects Zoo – brms</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -111,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -140,15 +140,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/brms.html">Bayes</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -163,9 +163,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -204,9 +204,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -279,6 +279,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactions, polynomials, and splines</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inverse Probability Weighting</span></a>
   </div>
@@ -335,9 +341,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -412,9 +418,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -615,8 +621,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;    0.1043 0.0801 0.1337</span></span>
 <span><span class="co">#&gt;    0.1017 0.0779 0.1307</span></span>
 <span><span class="co">#&gt;    0.0916 0.0691 0.1189</span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, survived, woman, age, passengerClass </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, survived, woman, age, passengerClass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To visualize the relationship between the outcome and one of the regressors, we can plot conditional adjusted predictions with the <code>plot_predictions</code> function:</p>
 <div class="cell">
@@ -643,8 +649,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;      1            2nd   0.7783 0.7090  0.835</span></span>
 <span><span class="co">#&gt;      1            3rd   0.5701 0.4938  0.644</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, age, woman, passengerClass, survived </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, age, woman, passengerClass, survived</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <code>posterior_draws</code> function samples from the posterior distribution of the model, and produces a data frame with <code>drawid</code> and <code>draw</code> columns.</p>
 <div class="cell">
@@ -689,8 +695,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  woman    1 - 0  0.468892  0.401425  0.536243</span></span>
 <span><span class="co">#&gt;  woman    1 - 0  0.471069  0.403598  0.538028</span></span>
 <span><span class="co">#&gt;  woman    1 - 0  0.478699  0.410060  0.547549</span></span>
-<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx, survived, woman, age, passengerClass </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx, survived, woman, age, passengerClass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compute marginal effects with some regressors fixed at user-specified values, and other regressors held at their means:</p>
 <div class="cell">
@@ -706,8 +712,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  passengerClass 3rd - 1st     1            1st -0.365376 -0.43832 -0.294769</span></span>
 <span><span class="co">#&gt;  woman          1 - 0         1            1st  0.420368  0.34697  0.490373</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, conf.low, conf.high, woman, passengerClass, predicted_lo, predicted_hi, predicted, tmp_idx, age, survived </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, conf.low, conf.high, woman, passengerClass, predicted_lo, predicted_hi, predicted, tmp_idx, age, survived</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compute and plot conditional marginal effects:</p>
 <div class="cell">
@@ -821,12 +827,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>                                          region <span class="op">=</span> <span class="st">"Middle East and North Africa"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mfx</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;             Term     Contrast civil_liberties                       region Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  civil_liberties dY/dX                    0.5 Middle East and North Africa    0.816 0.621  1.007</span></span>
-<span><span class="co">#&gt;  party_autonomy  TRUE - FALSE             0.5 Middle East and North Africa    0.252 0.166  0.336</span></span>
+<span><span class="co">#&gt;      Contrast civil_liberties                       region Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  dY/dX                    0.5 Middle East and North Africa    0.816 0.621  1.007</span></span>
+<span><span class="co">#&gt;  TRUE - FALSE             0.5 Middle East and North Africa    0.252 0.166  0.336</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, conf.low, conf.high, civil_liberties, region, predicted_lo, predicted_hi, predicted, tmp_idx, party_autonomy, media_index </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: civil_liberties</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, conf.low, conf.high, civil_liberties, region, predicted_lo, predicted_hi, predicted, tmp_idx, party_autonomy, media_index</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Use the <code><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws()</a></code> to extract draws from the posterior distribution of marginal effects, and plot them:</p>
 <div class="cell">
@@ -890,8 +897,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  civil_liberties             0.5          FALSE Middle East and North Africa    0.807 0.612  0.993</span></span>
 <span><span class="co">#&gt;  civil_liberties             0.8          FALSE Middle East and North Africa    0.807 0.675  0.934</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, estimate, conf.low, conf.high, civil_liberties, party_autonomy, region, predicted_lo, predicted_hi, predicted, tmp_idx, media_index </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, term, estimate, conf.low, conf.high, civil_liberties, party_autonomy, region, predicted_lo, predicted_hi, predicted, tmp_idx, media_index</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And plotted:</p>
 <div class="cell">
@@ -1100,8 +1107,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  0    5  1.0e+00 9.09e-01 1.0000</span></span>
 <span><span class="co">#&gt;  0    6  4.9e-08 8.42e-21 0.0019</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, x, firm, y </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, x, firm, y</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can average/marginalize/integrate across random effects with the <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code> function or the <code>by</code> argument:</p>
 <div class="cell">
@@ -1110,8 +1117,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;     0.454  0.44  0.468</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: estimate, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: estimate, conf.low, conf.high</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, firm <span class="op">=</span> <span class="va">unique</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1119,8 +1126,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  0    0.454 0.440  0.468</span></span>
 <span><span class="co">#&gt;  1    0.557 0.546  0.570</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: x, estimate, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: x, estimate, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can also draw from the (assumed gaussian) population distribution of random effects, by asking <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> to make predictions for new “levels” of the random effects. If we then take an average of predictions using <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code> or the <code>by</code> argument, we will have <a href="https://cran.r-project.org/web/packages/brmsmargins/index.html">“integrated out the random effects”, as described in the <code>brmsmargins</code> package vignette.</a> In the code below, we make predictions for 100 firm identifiers which were not in the original dataset. We also ask <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> to push forward the <code>allow_new_levels</code> and <code>sample_new_levels</code> arguments to the <code><a href="https://mc-stan.org/rstantools/reference/posterior_epred.html">brms::posterior_epred</a></code> function:</p>
 <div class="cell">
@@ -1132,11 +1139,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>    by <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  x Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  0    0.451 0.338  0.570</span></span>
-<span><span class="co">#&gt;  1    0.552 0.439  0.667</span></span>
+<span><span class="co">#&gt;  0    0.452 0.337  0.567</span></span>
+<span><span class="co">#&gt;  1    0.551 0.434  0.663</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: x, estimate, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: x, estimate, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can “integrate out” random effects in the other <code>slopes</code> functions too. For instance,</p>
 <div class="cell">
@@ -1146,11 +1153,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>    allow_new_levels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    sample_new_levels <span class="op">=</span> <span class="st">"gaussian"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term          Contrast Estimate  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     x mean(1) - mean(0)   0.0963 0.0471  0.162</span></span>
+<span><span class="co">#&gt;  Estimate  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;    0.0963 0.0484  0.162</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: x</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(1) - mean(0)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This is nearly equivalent the <code>brmsmargins</code> command output (with slight variations due to different random seeds):</p>
 <div class="cell">
@@ -1165,7 +1174,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  effects <span class="op">=</span> <span class="st">"integrateoutRE"</span><span class="op">)</span></span>
 <span><span class="va">bm</span><span class="op">$</span><span class="va">ContrastSummary</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            M        Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
-<span><span class="co">#&gt; 1 0.09887582 0.09650011 0.04866224 0.1640939          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 1 0.09869753 0.09641203 0.04981513 0.1614751          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>See the <a href="alternative_software.html">alternative software vignette</a> for more information on <code>brmsmargins</code>.</p>
 </section></section><section id="multinomial-logit" class="level2"><h2 class="anchored" data-anchor-id="multinomial-logit">Multinomial logit</h2>
@@ -1192,8 +1201,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;     ec   0.0745 0.0574 0.0947</span></span>
 <span><span class="co">#&gt;     ec   0.0709 0.0455 0.1036</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, group, estimate, conf.low, conf.high, depvar, ic.gc, oc.gc </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, group, estimate, conf.low, conf.high, depvar, ic.gc, oc.gc</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Extract posterior draws and plot them:</p>
 <div class="cell">
@@ -1227,20 +1236,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Group  Term    Contrast  Estimate     2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;     ec ic.gc mean(dY/dX) -1.77e-04 -3.96e-04 2.37e-05</span></span>
-<span><span class="co">#&gt;     ec oc.gc mean(dY/dX)  4.88e-04 -4.04e-04 1.45e-03</span></span>
-<span><span class="co">#&gt;     er ic.gc mean(dY/dX)  1.65e-05 -2.26e-04 2.51e-04</span></span>
-<span><span class="co">#&gt;     er oc.gc mean(dY/dX) -1.02e-03 -2.07e-03 2.98e-05</span></span>
-<span><span class="co">#&gt;     gc ic.gc mean(dY/dX)  1.38e-05 -3.72e-04 4.00e-04</span></span>
-<span><span class="co">#&gt;     gc oc.gc mean(dY/dX)  1.04e-03 -7.39e-04 2.78e-03</span></span>
-<span><span class="co">#&gt;     gr ic.gc mean(dY/dX)  4.24e-05 -2.37e-04 3.29e-04</span></span>
-<span><span class="co">#&gt;     gr oc.gc mean(dY/dX)  9.46e-05 -1.19e-03 1.34e-03</span></span>
-<span><span class="co">#&gt;     hp ic.gc mean(dY/dX)  1.07e-04 -7.73e-05 2.97e-04</span></span>
-<span><span class="co">#&gt;     hp oc.gc mean(dY/dX) -5.85e-04 -1.45e-03 2.30e-04</span></span>
+<span><span class="co">#&gt;  Group  Term  Estimate     2.5 %   97.5 %</span></span>
+<span><span class="co">#&gt;     ec ic.gc -1.77e-04 -3.96e-04 2.37e-05</span></span>
+<span><span class="co">#&gt;     ec oc.gc  4.88e-04 -4.04e-04 1.45e-03</span></span>
+<span><span class="co">#&gt;     er ic.gc  1.65e-05 -2.26e-04 2.51e-04</span></span>
+<span><span class="co">#&gt;     er oc.gc -1.02e-03 -2.07e-03 2.98e-05</span></span>
+<span><span class="co">#&gt;     gc ic.gc  1.38e-05 -3.72e-04 4.00e-04</span></span>
+<span><span class="co">#&gt;     gc oc.gc  1.04e-03 -7.39e-04 2.78e-03</span></span>
+<span><span class="co">#&gt;     gr ic.gc  4.24e-05 -2.37e-04 3.29e-04</span></span>
+<span><span class="co">#&gt;     gr oc.gc  9.46e-05 -1.19e-03 1.34e-03</span></span>
+<span><span class="co">#&gt;     hp ic.gc  1.07e-04 -7.73e-05 2.97e-04</span></span>
+<span><span class="co">#&gt;     hp oc.gc -5.85e-04 -1.45e-03 2.30e-04</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, group, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: term, group, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="hurdle-models" class="level2"><h2 class="anchored" data-anchor-id="hurdle-models">Hurdle models</h2>
 <p>This section replicates some analyses from <a href="https://www.andrewheiss.com/blog/2022/05/09/hurdle-lognormal-gaussian-brms/#emmeans-with-hurdle-models">yet another amazing blog post by Andrew Heiss.</a></p>
@@ -1296,8 +1306,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;       312   250    454</span></span>
 <span><span class="co">#&gt;       398   325    567</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, gdpPercap, lifeExp, year, continent </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, gdpPercap, lifeExp, year, continent</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Adjusted predictions for the <code>hu</code> parameter:</p>
 <div class="cell">
@@ -1311,8 +1321,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;     0.396 0.325  0.454</span></span>
 <span><span class="co">#&gt;     0.341 0.282  0.391</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, gdpPercap, lifeExp, year, continent </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, gdpPercap, lifeExp, year, continent</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Predictions on a different scale:</p>
 <div class="cell">
@@ -1326,8 +1336,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;   -0.4234 -0.730 -0.1857</span></span>
 <span><span class="co">#&gt;   -0.6573 -0.933 -0.4443</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, gdpPercap, lifeExp, year, continent </span></span>
-<span><span class="co">#&gt; Type:  link</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  link </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, gdpPercap, lifeExp, year, continent</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plot adjusted predictions as a function of <code>lifeExp</code>:</p>
 <div class="cell">
@@ -1387,22 +1397,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  lifeExp mean(+1)    759.7 535.8  862.8</span></span>
-<span><span class="co">#&gt;  year    mean(+1)    -63.5 -83.9  -40.9</span></span>
+<span><span class="co">#&gt;     Term Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  lifeExp    759.7 535.8  862.8</span></span>
+<span><span class="co">#&gt;  year       -63.5 -83.9  -40.9</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(+1)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>What happens to <code>gdpPercap</code> when <code>lifeExp</code> increases by one standard deviation?</p>
 <div class="cell">
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>lifeExp <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term                        Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  lifeExp mean(x + sd/2) - mean(x - sd/2)     4050  3718   4741</span></span>
+<span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;      4050  3718   4741</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: lifeExp</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(x + sd/2) - mean(x - sd/2)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>What happens to <code>gdpPercap</code> when <code>lifeExp</code> increases from 50 to 60 and <code>year</code> simultaneously increases its min to its max?</p>
 <div class="cell">
@@ -1411,11 +1424,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>lifeExp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">60</span><span class="op">)</span>, year <span class="op">=</span> <span class="st">"minmax"</span><span class="op">)</span>,</span>
 <span>    cross <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Estimate 2.5 % 97.5 %          C: lifeExp               C: year</span></span>
-<span><span class="co">#&gt;       835   523   1404 mean(60) - mean(50) mean(Max) - mean(Min)</span></span>
+<span><span class="co">#&gt;           C: lifeExp               C: year Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  mean(60) - mean(50) mean(Max) - mean(Min)      835   523   1404</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast_lifeExp, contrast_year, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: term, contrast_lifeExp, contrast_year, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plot draws from the posterior distribution of average contrasts (<em>not</em> the same thing as draws from the posterior distribution of contrasts):</p>
 <div class="cell">
@@ -1436,39 +1449,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term    Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  lifeExp mean(dY/dX)    718.5 515.4  811.4</span></span>
-<span><span class="co">#&gt;  year    mean(dY/dX)    -63.8 -84.4  -41.1</span></span>
+<span><span class="co">#&gt;     Term Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  lifeExp    718.5 515.4  811.4</span></span>
+<span><span class="co">#&gt;  year       -63.8 -84.4  -41.1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"link"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term    Contrast Estimate   2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;  lifeExp mean(dY/dX)  0.08249  0.0742  0.08856</span></span>
-<span><span class="co">#&gt;  year    mean(dY/dX) -0.00937 -0.0120 -0.00632</span></span>
+<span><span class="co">#&gt;     Term Estimate   2.5 %   97.5 %</span></span>
+<span><span class="co">#&gt;  lifeExp  0.08249  0.0742  0.08856</span></span>
+<span><span class="co">#&gt;  year    -0.00937 -0.0120 -0.00632</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  link</span></span>
+<span><span class="co">#&gt; Type:  link </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, dpar <span class="op">=</span> <span class="st">"hu"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term    Contrast Estimate    2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;  lifeExp mean(dY/dX) -0.00817 -0.00937 -0.00669</span></span>
-<span><span class="co">#&gt;  year    mean(dY/dX)  0.00000  0.00000  0.00000</span></span>
+<span><span class="co">#&gt;     Term Estimate    2.5 %   97.5 %</span></span>
+<span><span class="co">#&gt;  lifeExp -0.00817 -0.00937 -0.00669</span></span>
+<span><span class="co">#&gt;  year     0.00000  0.00000  0.00000</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, dpar <span class="op">=</span> <span class="st">"hu"</span>, type <span class="op">=</span> <span class="st">"link"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term    Contrast Estimate  2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;  lifeExp mean(dY/dX)  -0.0993 -0.113 -0.0838</span></span>
-<span><span class="co">#&gt;  year    mean(dY/dX)   0.0000  0.000  0.0000</span></span>
+<span><span class="co">#&gt;     Term Estimate  2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;  lifeExp  -0.0993 -0.113 -0.0838</span></span>
+<span><span class="co">#&gt;  year      0.0000  0.000  0.0000</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  link</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  link </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plot Conditional Marginal Effects</p>
 <div class="cell">
@@ -1523,23 +1540,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>marginaleffects_posterior_center <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   cyl mean(+1)    -1.50 -2.38 -0.677</span></span>
-<span><span class="co">#&gt;   wt  mean(+1)    -3.21 -4.70 -1.570</span></span>
+<span><span class="co">#&gt;  Term Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;   cyl    -1.50 -2.38 -0.677</span></span>
+<span><span class="co">#&gt;   wt     -3.21 -4.70 -1.570</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(+1)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>marginaleffects_posterior_interval <span class="op">=</span> <span class="st">"eti"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>marginaleffects_posterior_center <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   cyl mean(+1)    -1.49 -2.36 -0.636</span></span>
-<span><span class="co">#&gt;   wt  mean(+1)    -3.20 -4.79 -1.645</span></span>
+<span><span class="co">#&gt;  Term Estimate 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;   cyl    -1.49 -2.36 -0.636</span></span>
+<span><span class="co">#&gt;   wt     -3.20 -4.79 -1.645</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(+1)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="random-variables-posterior-and-ggdist" class="level2"><h2 class="anchored" data-anchor-id="random-variables-posterior-and-ggdist">Random variables: <code>posterior</code> and <code>ggdist</code>
 </h2>
@@ -1573,21 +1592,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode" id="cb61"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate   2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;   hp  mean(+1)  0.00601 0.00289 0.00895</span></span>
-<span><span class="co">#&gt;   mpg mean(+1)  0.13942 0.08464 0.18139</span></span>
+<span><span class="co">#&gt;  Term Estimate   2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;   hp   0.00601 0.00289 0.00895</span></span>
+<span><span class="co">#&gt;   mpg  0.13942 0.08464 0.18139</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(+1)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="st">"differenceavg"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate   2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;   hp  mean(+1)  0.00601 0.00289 0.00895</span></span>
-<span><span class="co">#&gt;   mpg mean(+1)  0.13942 0.08464 0.18139</span></span>
+<span><span class="co">#&gt;  Term Estimate   2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;   hp   0.00601 0.00289 0.00895</span></span>
+<span><span class="co">#&gt;   mpg  0.13942 0.08464 0.18139</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(+1)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we use the <code>hypothesis</code> argument to compare the first to the second rows of the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> output:</p>
 <div class="cell">
@@ -1596,11 +1617,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>    comparison <span class="op">=</span> <span class="st">"differenceavg"</span>,</span>
 <span>    hypothesis <span class="op">=</span> <span class="st">"b2 - b1 = 0.2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       Term Estimate  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  b2-b1=0.2  -0.0665 -0.119 -0.027</span></span>
+<span><span class="co">#&gt;  Estimate  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;   -0.0665 -0.119 -0.027</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, estimate, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: b2-b1=0.2</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: term, estimate, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <code><a href="https://paul-buerkner.github.io/brms/reference/hypothesis.brmsfit.html">hypothesis()</a></code> function of the <code>brms</code> package can also perform non-linear hypothesis testing, and it generates some convenient statistics and summaries. This function accepts a D-by-P matrix of draws from the posterior distribution, where D is the number of draws and N is the number of parameters. We can obtain such a matrix using the <code>posterior_draws(x, shape = "DxP")</code>, and we can simply add a couple calls to our chain of operations:</p>
 <div class="cell">
@@ -1634,25 +1656,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;      5.84  5.78   5.89</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: estimate, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: estimate, conf.low, conf.high</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, dpar <span class="op">=</span> <span class="st">"sigma"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     0.329 0.293  0.374</span></span>
+<span><span class="co">#&gt;     0.329 0.295  0.372</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: estimate, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: estimate, conf.low, conf.high</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, dpar <span class="op">=</span> <span class="st">"sigma"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;          Term    Contrast Estimate   2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  Petal.Length mean(dY/dX)   0.0450  0.0175 0.0758</span></span>
-<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)  -0.0121 -0.1281 0.0983</span></span>
+<span><span class="co">#&gt;          Term Estimate   2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  Petal.Length   0.0451  0.0174 0.0765</span></span>
+<span><span class="co">#&gt;  Sepal.Width   -0.0136 -0.1220 0.1044</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
@@ -1691,18 +1714,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1734,7 +1746,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1742,7 +1776,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo</title>
+<title>Marginal Effects Zoo – experiments</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -97,7 +97,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -136,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -165,15 +165,15 @@ window.Quarto = {
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/experiments.html">Experiments</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -188,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -229,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -304,6 +304,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactions, polynomials, and splines</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inverse Probability Weighting</span></a>
   </div>
@@ -360,9 +366,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -437,9 +443,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -647,29 +653,81 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/man/modelsummary.html">modelsummary</a></span><span class="op">(</span><span class="va">fit</span>, gof_map <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"r.squared"</span>, <span class="st">"nobs"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
- 
+<!-- preamble start -->
 
-  
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tinytable_h7ku4k826494nwhyjef4</title>
-<style>
-.table td.tinytable_css_n8iac8gqae8se3ewkki6, .table th.tinytable_css_n8iac8gqae8se3ewkki6 {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_pnnz183uxhdfha8gi63t, .table th.tinytable_css_pnnz183uxhdfha8gi63t {    text-align: left; }
-.table td.tinytable_css_6wgs0nqq3z98njimcaqx, .table th.tinytable_css_6wgs0nqq3z98njimcaqx {    text-align: center; }
-.table td.tinytable_css_hvia9kaimj0my2ba26jd, .table th.tinytable_css_hvia9kaimj0my2ba26jd {    border-bottom: solid 0.05em black; }
-    </style>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
-    MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']]
-      },
-      svg: {
-        fontCache: 'global'
+    <script>
+      function styleCell_yro7jx42hfkyuh219kow(i, j, css_id) {
+        var table = document.getElementById("tinytable_yro7jx42hfkyuh219kow");
+        table.rows[i].cells[j].classList.add(css_id);
       }
-    };
-    </script><div class="container">
-      <table class="table table-borderless" id="tinytable_h7ku4k826494nwhyjef4" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_yro7jx42hfkyuh219kow');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_yro7jx42hfkyuh219kow(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_yro7jx42hfkyuh219kow");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(0, 0, 'tinytable_css_idbz4ax1ereqs5z77z3zmn') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(0, 1, 'tinytable_css_idbvp79g1amfu1ic62rp3a') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(1, 0, 'tinytable_css_id17nfn7rck3hu5d9dygrv') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(1, 1, 'tinytable_css_idcfnsqne07uhnx3a4fanq') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(2, 0, 'tinytable_css_id17nfn7rck3hu5d9dygrv') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(2, 1, 'tinytable_css_idcfnsqne07uhnx3a4fanq') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(3, 0, 'tinytable_css_id17nfn7rck3hu5d9dygrv') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(3, 1, 'tinytable_css_idcfnsqne07uhnx3a4fanq') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(4, 0, 'tinytable_css_id17nfn7rck3hu5d9dygrv') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(4, 1, 'tinytable_css_idcfnsqne07uhnx3a4fanq') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(5, 0, 'tinytable_css_id17nfn7rck3hu5d9dygrv') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(5, 1, 'tinytable_css_idcfnsqne07uhnx3a4fanq') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(6, 0, 'tinytable_css_id17nfn7rck3hu5d9dygrv') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(6, 1, 'tinytable_css_idcfnsqne07uhnx3a4fanq') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(7, 0, 'tinytable_css_id17nfn7rck3hu5d9dygrv') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(7, 1, 'tinytable_css_idcfnsqne07uhnx3a4fanq') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(8, 0, 'tinytable_css_idarxv73nrs22os6chl388') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(8, 1, 'tinytable_css_idnsl78fc4r6phr8hu57gn') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(9, 0, 'tinytable_css_id17nfn7rck3hu5d9dygrv') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(9, 1, 'tinytable_css_idcfnsqne07uhnx3a4fanq') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(10, 0, 'tinytable_css_id17nfn7rck3hu5d9dygrv') })
+window.addEventListener('load', function () { styleCell_yro7jx42hfkyuh219kow(10, 1, 'tinytable_css_idcfnsqne07uhnx3a4fanq') })
+    </script><style>
+    .table td.tinytable_css_idbz4ax1ereqs5z77z3zmn, .table th.tinytable_css_idbz4ax1ereqs5z77z3zmn {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idbvp79g1amfu1ic62rp3a, .table th.tinytable_css_idbvp79g1amfu1ic62rp3a {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_id17nfn7rck3hu5d9dygrv, .table th.tinytable_css_id17nfn7rck3hu5d9dygrv {  text-align: left; }
+    .table td.tinytable_css_idcfnsqne07uhnx3a4fanq, .table th.tinytable_css_idcfnsqne07uhnx3a4fanq {  text-align: center; }
+    .table td.tinytable_css_idarxv73nrs22os6chl388, .table th.tinytable_css_idarxv73nrs22os6chl388 {  border-bottom: solid 0.05em black;  text-align: left; }
+    .table td.tinytable_css_idnsl78fc4r6phr8hu57gn, .table th.tinytable_css_idnsl78fc4r6phr8hu57gn {  border-bottom: solid 0.05em black;  text-align: center; }
+    </style>
+<div class="container">
+      <table class="table table-borderless" id="tinytable_yro7jx42hfkyuh219kow" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead><tr>
 <th scope="col"> </th>
                 <th scope="col">(1)</th>
@@ -718,76 +776,7 @@ window.Quarto = {
 </tbody>
 </table>
 </div>
-
-    <script>
-      function styleCell_tinytable_tzmilcknzsd42vxjmbfc(i, j, css_id) {
-        var table = document.getElementById("tinytable_h7ku4k826494nwhyjef4");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_h7ku4k826494nwhyjef4');
-        var newRow = table.insertRow(i);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_tinytable_tzmilcknzsd42vxjmbfc(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_h7ku4k826494nwhyjef4");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
-        for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
-            }
-          }
-        }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
-      }
-
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(0, 0, 'tinytable_css_n8iac8gqae8se3ewkki6') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(0, 1, 'tinytable_css_n8iac8gqae8se3ewkki6') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(0, 0, 'tinytable_css_pnnz183uxhdfha8gi63t') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(1, 0, 'tinytable_css_pnnz183uxhdfha8gi63t') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(2, 0, 'tinytable_css_pnnz183uxhdfha8gi63t') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(3, 0, 'tinytable_css_pnnz183uxhdfha8gi63t') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(4, 0, 'tinytable_css_pnnz183uxhdfha8gi63t') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(5, 0, 'tinytable_css_pnnz183uxhdfha8gi63t') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(6, 0, 'tinytable_css_pnnz183uxhdfha8gi63t') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(7, 0, 'tinytable_css_pnnz183uxhdfha8gi63t') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(8, 0, 'tinytable_css_pnnz183uxhdfha8gi63t') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(9, 0, 'tinytable_css_pnnz183uxhdfha8gi63t') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(10, 0, 'tinytable_css_pnnz183uxhdfha8gi63t') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(0, 1, 'tinytable_css_6wgs0nqq3z98njimcaqx') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(1, 1, 'tinytable_css_6wgs0nqq3z98njimcaqx') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(2, 1, 'tinytable_css_6wgs0nqq3z98njimcaqx') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(3, 1, 'tinytable_css_6wgs0nqq3z98njimcaqx') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(4, 1, 'tinytable_css_6wgs0nqq3z98njimcaqx') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(5, 1, 'tinytable_css_6wgs0nqq3z98njimcaqx') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(6, 1, 'tinytable_css_6wgs0nqq3z98njimcaqx') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(7, 1, 'tinytable_css_6wgs0nqq3z98njimcaqx') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(8, 1, 'tinytable_css_6wgs0nqq3z98njimcaqx') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(9, 1, 'tinytable_css_6wgs0nqq3z98njimcaqx') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(10, 1, 'tinytable_css_6wgs0nqq3z98njimcaqx') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(8, 0, 'tinytable_css_hvia9kaimj0my2ba26jd') })
-window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42vxjmbfc(8, 1, 'tinytable_css_hvia9kaimj0my2ba26jd') })
-    </script>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 </div>
@@ -799,8 +788,8 @@ window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42v
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dep. Variable:                    mpg   R-squared:                       0.700</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:                            OLS   Adj. R-squared:                  0.668</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Method:                 Least Squares   F-statistic:                     21.81</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Fri, 12 Jul 2024   Prob (F-statistic):           1.73e-07</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        20:04:50   Log-Likelihood:                -83.098</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Thu, 01 Aug 2024   Prob (F-statistic):           1.73e-07</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        21:52:27   Log-Likelihood:                -83.098</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; No. Observations:                  32   AIC:                             174.2</span></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Residuals:                      28   BIC:                             180.1</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Model:                           3                                         </span></span>
@@ -859,11 +848,13 @@ window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42v
 <span>  variables <span class="op">=</span> <span class="st">"vs"</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term          Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;    vs mean(1) - mean(0)     5.69       1.65 3.45   &lt;0.001 10.8  2.46   8.93</span></span>
+<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;      5.69       1.65 3.45   &lt;0.001 10.8  2.46   8.93</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: vs</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(1) - mean(0)</span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As expected, the results produced by <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
 <div class="cell">
@@ -916,11 +907,13 @@ window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42v
 <span>  variables <span class="op">=</span> <span class="st">"am"</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>vs <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term          Contrast Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;    am mean(1) - mean(0)      4.7       1.74 2.71  0.00678 7.2   1.3    8.1</span></span>
+<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;       4.7       1.74 2.71  0.00678 7.2   1.3    8.1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: am</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(1) - mean(0)</span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -971,11 +964,13 @@ window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42v
 <span>  variables <span class="op">=</span> <span class="st">"am"</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>vs <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term          Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;    am mean(1) - mean(0)     7.63       1.86 4.11   &lt;0.001 14.6  3.99   11.3</span></span>
+<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;      7.63       1.86 4.11   &lt;0.001 14.6  3.99   11.3</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: am</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(1) - mean(0)</span></span>
+<span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -1026,11 +1021,11 @@ window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42v
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"vs"</span><span class="op">)</span>,</span>
 <span>  cross <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %             C: am             C: vs</span></span>
-<span><span class="co">#&gt;      13.3       1.65 8.07   &lt;0.001 50.3  10.1   16.6 mean(1) - mean(0) mean(1) - mean(0)</span></span>
+<span><span class="co">#&gt;              C: am             C: vs Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  mean(1) - mean(0) mean(1) - mean(0)     13.3       1.65 8.07   &lt;0.001 50.3  10.1   16.6</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast_am, contrast_vs, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: term, contrast_am, contrast_vs, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -1127,8 +1122,8 @@ window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42v
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dep. Variable:                   re78   R-squared:                       0.057</span></span>
 <span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:                            OLS   Adj. R-squared:                  0.043</span></span>
 <span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Method:                 Least Squares   F-statistic:                     4.238</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Fri, 12 Jul 2024   Prob (F-statistic):           2.42e-05</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        20:04:52   Log-Likelihood:                -6328.8</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Date:                Thu, 01 Aug 2024   Prob (F-statistic):           2.42e-05</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Time:                        21:52:29   Log-Likelihood:                -6328.8</span></span>
 <span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; No. Observations:                 614   AIC:                         1.268e+04</span></span>
 <span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Residuals:                     604   BIC:                         1.272e+04</span></span>
 <span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Df Model:                           9                                         </span></span>
@@ -1174,11 +1169,13 @@ window.addEventListener('load', function () { styleCell_tinytable_tzmilcknzsd42v
 <span>    variables <span class="op">=</span> <span class="st">"treat"</span>,</span>
 <span>    vcov <span class="op">=</span> <span class="st">"HC3"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Term          Contrast Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  treat mean(1) - mean(0)      490        879 0.557    0.577 0.8 -1232   2212</span></span>
+<span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;       490        879 0.557    0.577 0.8 -1232   2212</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: treat</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(1) - mean(0)</span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
@@ -1245,18 +1242,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1288,7 +1274,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1296,7 +1304,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

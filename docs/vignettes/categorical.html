@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo</title>
+<title>Marginal Effects Zoo – categorical</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -97,7 +97,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -136,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -165,15 +165,15 @@ window.Quarto = {
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/categorical.html">Categorical outcomes</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -188,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -229,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -304,6 +304,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactions, polynomials, and splines</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inverse Probability Weighting</span></a>
   </div>
@@ -360,9 +366,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -437,9 +443,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -572,8 +578,8 @@ window.Quarto = {
 <span><span class="co">#&gt;      4  25 110    0.578     0.1229 4.70   &lt;0.001 18.6 0.3373  0.819</span></span>
 <span><span class="co">#&gt;      5  25 110    0.218     0.1007 2.17   0.0302  5.1 0.0209  0.416</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, gear </span></span>
-<span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  probs </span></span>
+<span><span class="co">#&gt; Columns: rowid, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, gear</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Since the <code>gear</code> is categorical, we make one prediction for each level of the outcome.</p>
 <p>Now consider the marginal effects (aka slopes or partial derivatives) for the same car:</p>
@@ -581,12 +587,12 @@ window.Quarto = {
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"mpg"</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fl">25</span>, hp <span class="op">=</span> <span class="fl">110</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Term mpg  hp Estimate Std. Error       z Pr(&gt;|z|)    S    2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;      3  mpg  25 110 -0.06042     0.0169 -3.5812   &lt;0.001 11.5 -0.09349 -0.0274</span></span>
-<span><span class="co">#&gt;      4  mpg  25 110 -0.00318     0.0335 -0.0949   0.9244  0.1 -0.06891  0.0625</span></span>
-<span><span class="co">#&gt;      5  mpg  25 110  0.06361     0.0301  2.1135   0.0346  4.9  0.00462  0.1226</span></span>
+<span><span class="co">#&gt;      3  mpg  25 110 -0.06042     0.0169 -3.5810   &lt;0.001 11.5 -0.09349 -0.0274</span></span>
+<span><span class="co">#&gt;      4  mpg  25 110 -0.00318     0.0335 -0.0949   0.9244  0.1 -0.06892  0.0625</span></span>
+<span><span class="co">#&gt;      5  mpg  25 110  0.06361     0.0301  2.1130   0.0346  4.9  0.00461  0.1226</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, predicted_lo, predicted_hi, predicted, gear </span></span>
-<span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  probs </span></span>
+<span><span class="co">#&gt; Columns: rowid, term, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, predicted_lo, predicted_hi, predicted, gear</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Again, <code>marginaleffects</code> produces one estimate of the slope for each outcome level. For a small step size <span class="math inline">\(\varepsilon\)</span>, the printed quantities are estimated as:</p>
 <p><span class="math display">\[\frac{P(gear=3|mpg=25+\varepsilon, hp=110)-P(gear=3|mpg=25-\varepsilon, hp=110)}{2 \cdot \varepsilon}\]</span> <span class="math display">\[\frac{P(gear=4|mpg=25+\varepsilon, hp=110)-P(gear=4|mpg=25-\varepsilon, hp=110)}{2 \cdot \varepsilon}\]</span> <span class="math display">\[\frac{P(gear=5|mpg=25+\varepsilon, hp=110)-P(gear=5|mpg=25-\varepsilon, hp=110)}{2 \cdot \varepsilon}\]</span></p>
@@ -594,23 +600,17 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Group Term    Contrast Estimate Std. Error     z Pr(&gt;|z|)    S     2.5 %</span></span>
-<span><span class="co">#&gt;      3  hp  mean(dY/dX) -0.00377   0.001514 -2.49  0.01285  6.3 -0.006735</span></span>
-<span><span class="co">#&gt;      3  mpg mean(dY/dX) -0.07014   0.015483 -4.53  &lt; 0.001 17.4 -0.100485</span></span>
-<span><span class="co">#&gt;      4  hp  mean(dY/dX)  0.00201   0.000958  2.10  0.03554  4.8  0.000136</span></span>
-<span><span class="co">#&gt;      4  mpg mean(dY/dX)  0.03748   0.013860  2.70  0.00685  7.2  0.010311</span></span>
-<span><span class="co">#&gt;      5  hp  mean(dY/dX)  0.00175   0.000833  2.11  0.03518  4.8  0.000122</span></span>
-<span><span class="co">#&gt;      5  mpg mean(dY/dX)  0.03266   0.009570  3.41  &lt; 0.001 10.6  0.013905</span></span>
-<span><span class="co">#&gt;    97.5 %</span></span>
-<span><span class="co">#&gt;  -0.00080</span></span>
-<span><span class="co">#&gt;  -0.03979</span></span>
-<span><span class="co">#&gt;   0.00389</span></span>
-<span><span class="co">#&gt;   0.06464</span></span>
-<span><span class="co">#&gt;   0.00339</span></span>
-<span><span class="co">#&gt;   0.05142</span></span>
+<span><span class="co">#&gt;  Group Term Estimate Std. Error     z Pr(&gt;|z|)    S     2.5 %   97.5 %</span></span>
+<span><span class="co">#&gt;      3  hp  -0.00377   0.001514 -2.49  0.01284  6.3 -0.006735 -0.00080</span></span>
+<span><span class="co">#&gt;      3  mpg -0.07014   0.015484 -4.53  &lt; 0.001 17.4 -0.100487 -0.03979</span></span>
+<span><span class="co">#&gt;      4  hp   0.00201   0.000958  2.10  0.03553  4.8  0.000136  0.00389</span></span>
+<span><span class="co">#&gt;      4  mpg  0.03748   0.013860  2.70  0.00685  7.2  0.010311  0.06464</span></span>
+<span><span class="co">#&gt;      5  hp   0.00175   0.000833  2.11  0.03517  4.8  0.000122  0.00339</span></span>
+<span><span class="co">#&gt;      5  mpg  0.03266   0.009570  3.41  &lt; 0.001 10.6  0.013905  0.05142</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  probs </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="nnet-package" class="level2"><h2 class="anchored" data-anchor-id="nnet-package">
 <code>nnet</code> package</h2>
@@ -631,23 +631,17 @@ window.Quarto = {
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"probs"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Group Term    Contrast  Estimate Std. Error       z Pr(&gt;|z|)    S    2.5 %</span></span>
-<span><span class="co">#&gt;      3  hp  mean(dY/dX) -3.36e-05    0.00225 -0.0149  0.98809  0.0 -0.00444</span></span>
-<span><span class="co">#&gt;      3  mpg mean(dY/dX) -7.13e-02    0.02646 -2.6951  0.00704  7.2 -0.12315</span></span>
-<span><span class="co">#&gt;      4  hp  mean(dY/dX) -4.67e-03    0.00221 -2.1126  0.03463  4.9 -0.00900</span></span>
-<span><span class="co">#&gt;      4  mpg mean(dY/dX)  1.59e-02    0.02010  0.7917  0.42851  1.2 -0.02348</span></span>
-<span><span class="co">#&gt;      5  hp  mean(dY/dX)  4.70e-03    0.00130  3.6170  &lt; 0.001 11.7  0.00215</span></span>
-<span><span class="co">#&gt;      5  mpg mean(dY/dX)  5.54e-02    0.01642  3.3732  &lt; 0.001 10.4  0.02320</span></span>
-<span><span class="co">#&gt;     97.5 %</span></span>
-<span><span class="co">#&gt;   0.004372</span></span>
-<span><span class="co">#&gt;  -0.019448</span></span>
-<span><span class="co">#&gt;  -0.000337</span></span>
-<span><span class="co">#&gt;   0.055316</span></span>
-<span><span class="co">#&gt;   0.007247</span></span>
-<span><span class="co">#&gt;   0.087563</span></span>
+<span><span class="co">#&gt;  Group Term  Estimate Std. Error       z Pr(&gt;|z|)    S    2.5 %    97.5 %</span></span>
+<span><span class="co">#&gt;      3  hp  -3.36e-05    0.00225 -0.0149  0.98809  0.0 -0.00444  0.004372</span></span>
+<span><span class="co">#&gt;      3  mpg -7.13e-02    0.02646 -2.6951  0.00704  7.2 -0.12315 -0.019448</span></span>
+<span><span class="co">#&gt;      4  hp  -4.67e-03    0.00221 -2.1126  0.03463  4.9 -0.00900 -0.000337</span></span>
+<span><span class="co">#&gt;      4  mpg  1.59e-02    0.02010  0.7917  0.42851  1.2 -0.02348  0.055316</span></span>
+<span><span class="co">#&gt;      5  hp   4.70e-03    0.00130  3.6170  &lt; 0.001 11.7  0.00215  0.007247</span></span>
+<span><span class="co">#&gt;      5  mpg  5.54e-02    0.01642  3.3732  &lt; 0.001 10.4  0.02320  0.087563</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  probs </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Notice that in such models, we get one marginal effect for each term, for each level of the response variable. For this reason, we should use <code>"group"</code> in the <code>condition</code> argument (or <code>facet_*()</code> function) when calling one of the plotting functions:</p>
 <div class="cell">
@@ -703,27 +697,19 @@ window.Quarto = {
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Group   Term    Contrast  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %</span></span>
-<span><span class="co">#&gt;  air   income mean(dY/dX)  0.002786    0.00122  2.289  0.02209  5.5  0.000400</span></span>
-<span><span class="co">#&gt;  air   size   mean(dY/dX) -0.126477    0.02892 -4.373  &lt; 0.001 16.3 -0.183162</span></span>
-<span><span class="co">#&gt;  bus   income mean(dY/dX) -0.000372    0.00110 -0.338  0.73557  0.4 -0.002531</span></span>
-<span><span class="co">#&gt;  bus   size   mean(dY/dX)  0.011349    0.02587  0.439  0.66084  0.6 -0.039347</span></span>
-<span><span class="co">#&gt;  car   income mean(dY/dX)  0.003373    0.00137  2.455  0.01407  6.2  0.000681</span></span>
-<span><span class="co">#&gt;  car   size   mean(dY/dX)  0.045887    0.02476  1.853  0.06381  4.0 -0.002636</span></span>
-<span><span class="co">#&gt;  train income mean(dY/dX) -0.005787    0.00132 -4.390  &lt; 0.001 16.4 -0.008371</span></span>
-<span><span class="co">#&gt;  train size   mean(dY/dX)  0.069241    0.02478  2.794  0.00521  7.6  0.020666</span></span>
-<span><span class="co">#&gt;    97.5 %</span></span>
-<span><span class="co">#&gt;   0.00517</span></span>
-<span><span class="co">#&gt;  -0.06979</span></span>
-<span><span class="co">#&gt;   0.00179</span></span>
-<span><span class="co">#&gt;   0.06204</span></span>
-<span><span class="co">#&gt;   0.00607</span></span>
-<span><span class="co">#&gt;   0.09441</span></span>
-<span><span class="co">#&gt;  -0.00320</span></span>
-<span><span class="co">#&gt;   0.11782</span></span>
+<span><span class="co">#&gt;  Group   Term  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %   97.5 %</span></span>
+<span><span class="co">#&gt;  air   income  0.002786    0.00122  2.289  0.02208  5.5  0.000400  0.00517</span></span>
+<span><span class="co">#&gt;  air   size   -0.126477    0.02892 -4.373  &lt; 0.001 16.3 -0.183160 -0.06979</span></span>
+<span><span class="co">#&gt;  bus   income -0.000372    0.00110 -0.338  0.73557  0.4 -0.002531  0.00179</span></span>
+<span><span class="co">#&gt;  bus   size    0.011349    0.02586  0.439  0.66083  0.6 -0.039345  0.06204</span></span>
+<span><span class="co">#&gt;  car   income  0.003373    0.00137  2.456  0.01405  6.2  0.000681  0.00607</span></span>
+<span><span class="co">#&gt;  car   size    0.045887    0.02476  1.854  0.06381  4.0 -0.002635  0.09441</span></span>
+<span><span class="co">#&gt;  train income -0.005787    0.00132 -4.389  &lt; 0.001 16.4 -0.008371 -0.00320</span></span>
+<span><span class="co">#&gt;  train size    0.069241    0.02478  2.794  0.00521  7.6  0.020667  0.11782</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that the <code>slopes</code> function will always return estimates of zero for regressors before the vertical bar in the formula. This is because <code>marginaleffects</code> increments all rows of the prediction dataset in the same way to compute slopes and contrast. Because <code>mlogit</code> data are in “long” format, this means that alternatives are incremented in the same way, which does not produce alternative-specific changes in the predictors.</p>
 <p>One strategy to circumvent this problem is to supply a data frame of numeric values to compare, with alternative specific changes. In this example, we test what happens to the probability of selecting each mode of transportation if we only increase the wait time of air travel:</p>
@@ -735,14 +721,16 @@ window.Quarto = {
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>wait <span class="op">=</span> <span class="va">altspec</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Group Term Contrast Estimate Std. Error      z Pr(&gt;|z|)     S   2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;  air   wait   manual  -0.1321    0.01070 -12.35   &lt;0.001 114.0 -0.1531 -0.1111</span></span>
-<span><span class="co">#&gt;  bus   wait   manual   0.0251    0.00460   5.45   &lt;0.001  24.2  0.0160  0.0341</span></span>
-<span><span class="co">#&gt;  car   wait   manual   0.0701    0.00834   8.41   &lt;0.001  54.5  0.0538  0.0865</span></span>
-<span><span class="co">#&gt;  train wait   manual   0.0369    0.00528   6.99   &lt;0.001  38.4  0.0266  0.0473</span></span>
+<span><span class="co">#&gt;  Group Estimate Std. Error      z Pr(&gt;|z|)     S   2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;  air    -0.1321    0.01070 -12.35   &lt;0.001 114.0 -0.1531 -0.1111</span></span>
+<span><span class="co">#&gt;  bus     0.0251    0.00460   5.45   &lt;0.001  24.2  0.0160  0.0341</span></span>
+<span><span class="co">#&gt;  car     0.0701    0.00834   8.41   &lt;0.001  54.5  0.0538  0.0865</span></span>
+<span><span class="co">#&gt;  train   0.0369    0.00528   6.99   &lt;0.001  38.4  0.0266  0.0473</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: wait</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: manual</span></span>
+<span><span class="co">#&gt; Columns: term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can compute yet more kinds of marginal effects, we can construct customized data frames and feed them to the <code>newdata</code> argument of the <code>slopes</code> function.</p>
 <p>If we want to compute the slope of the response function (marginal effects) when each of the predictors is fixed to its global mean, we can do:</p>
@@ -759,27 +747,19 @@ window.Quarto = {
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Group   Term    Contrast  Estimate Std. Error     z Pr(&gt;|z|)   S     2.5 %</span></span>
-<span><span class="co">#&gt;  air   income mean(dY/dX)  6.66e-03   2.42e-03  2.75  0.00599 7.4  1.91e-03</span></span>
-<span><span class="co">#&gt;  air   size   mean(dY/dX) -1.69e-01   5.87e-02 -2.88  0.00393 8.0 -2.85e-01</span></span>
-<span><span class="co">#&gt;  bus   income mean(dY/dX) -1.14e-03   9.43e-04 -1.21  0.22630 2.1 -2.99e-03</span></span>
-<span><span class="co">#&gt;  bus   size   mean(dY/dX)  4.67e-02   2.72e-02  1.72  0.08622 3.5 -6.65e-03</span></span>
-<span><span class="co">#&gt;  car   income mean(dY/dX)  6.48e-06   2.02e-05  0.32  0.74885 0.4 -3.32e-05</span></span>
-<span><span class="co">#&gt;  car   size   mean(dY/dX)  1.36e-03   8.81e-04  1.54  0.12304 3.0 -3.68e-04</span></span>
-<span><span class="co">#&gt;  train income mean(dY/dX) -5.52e-03   1.91e-03 -2.89  0.00384 8.0 -9.27e-03</span></span>
-<span><span class="co">#&gt;  train size   mean(dY/dX)  1.21e-01   4.44e-02  2.73  0.00634 7.3  3.42e-02</span></span>
-<span><span class="co">#&gt;     97.5 %</span></span>
-<span><span class="co">#&gt;   1.14e-02</span></span>
-<span><span class="co">#&gt;  -5.43e-02</span></span>
-<span><span class="co">#&gt;   7.07e-04</span></span>
-<span><span class="co">#&gt;   1.00e-01</span></span>
-<span><span class="co">#&gt;   4.62e-05</span></span>
-<span><span class="co">#&gt;   3.08e-03</span></span>
-<span><span class="co">#&gt;  -1.78e-03</span></span>
-<span><span class="co">#&gt;   2.08e-01</span></span>
+<span><span class="co">#&gt;  Group   Term  Estimate Std. Error     z Pr(&gt;|z|)   S     2.5 %    97.5 %</span></span>
+<span><span class="co">#&gt;  air   income  6.66e-03   2.42e-03  2.75  0.00600 7.4  1.91e-03  1.14e-02</span></span>
+<span><span class="co">#&gt;  air   size   -1.69e-01   5.88e-02 -2.88  0.00394 8.0 -2.85e-01 -5.42e-02</span></span>
+<span><span class="co">#&gt;  bus   income -1.14e-03   9.44e-04 -1.21  0.22655 2.1 -2.99e-03  7.08e-04</span></span>
+<span><span class="co">#&gt;  bus   size    4.67e-02   2.72e-02  1.72  0.08622 3.5 -6.65e-03  1.00e-01</span></span>
+<span><span class="co">#&gt;  car   income  6.48e-06   2.02e-05  0.32  0.74885 0.4 -3.32e-05  4.62e-05</span></span>
+<span><span class="co">#&gt;  car   size    1.36e-03   8.81e-04  1.54  0.12305 3.0 -3.68e-04  3.08e-03</span></span>
+<span><span class="co">#&gt;  train income -5.52e-03   1.91e-03 -2.89  0.00384 8.0 -9.26e-03 -1.78e-03</span></span>
+<span><span class="co">#&gt;  train size    1.21e-01   4.44e-02  2.73  0.00634 7.3  3.42e-02  2.08e-01</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: rowid, term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If we want to compute marginal effects with the <code>gcost</code> and <code>wait</code> fixed at their mean value, <em>conditional</em> on the choice of transportation mode:</p>
 <div class="cell">
@@ -797,27 +777,19 @@ window.Quarto = {
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Group   Term    Contrast  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %</span></span>
-<span><span class="co">#&gt;  air   income mean(dY/dX)  0.006015    0.00233  2.587  0.00968  6.7  0.001458</span></span>
-<span><span class="co">#&gt;  air   size   mean(dY/dX) -0.232955    0.05661 -4.115  &lt; 0.001 14.7 -0.343900</span></span>
-<span><span class="co">#&gt;  bus   income mean(dY/dX) -0.000713    0.00146 -0.489  0.62478  0.7 -0.003568</span></span>
-<span><span class="co">#&gt;  bus   size   mean(dY/dX)  0.020447    0.03436  0.595  0.55185  0.9 -0.046906</span></span>
-<span><span class="co">#&gt;  car   income mean(dY/dX)  0.005445    0.00229  2.382  0.01724  5.9  0.000964</span></span>
-<span><span class="co">#&gt;  car   size   mean(dY/dX)  0.067839    0.04123  1.645  0.09991  3.3 -0.012974</span></span>
-<span><span class="co">#&gt;  train income mean(dY/dX) -0.010748    0.00256 -4.201  &lt; 0.001 15.2 -0.015762</span></span>
-<span><span class="co">#&gt;  train size   mean(dY/dX)  0.144669    0.04773  3.031  0.00244  8.7  0.051127</span></span>
-<span><span class="co">#&gt;    97.5 %</span></span>
-<span><span class="co">#&gt;   0.01057</span></span>
-<span><span class="co">#&gt;  -0.12201</span></span>
-<span><span class="co">#&gt;   0.00214</span></span>
-<span><span class="co">#&gt;   0.08780</span></span>
-<span><span class="co">#&gt;   0.00993</span></span>
-<span><span class="co">#&gt;   0.14865</span></span>
-<span><span class="co">#&gt;  -0.00573</span></span>
-<span><span class="co">#&gt;   0.23821</span></span>
+<span><span class="co">#&gt;  Group   Term  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %   97.5 %</span></span>
+<span><span class="co">#&gt;  air   income  0.006015    0.00233  2.585  0.00973  6.7  0.001455  0.01058</span></span>
+<span><span class="co">#&gt;  air   size   -0.232955    0.05660 -4.116  &lt; 0.001 14.7 -0.343893 -0.12202</span></span>
+<span><span class="co">#&gt;  bus   income -0.000713    0.00146 -0.489  0.62500  0.7 -0.003570  0.00214</span></span>
+<span><span class="co">#&gt;  bus   size    0.020447    0.03436  0.595  0.55184  0.9 -0.046906  0.08780</span></span>
+<span><span class="co">#&gt;  car   income  0.005445    0.00229  2.382  0.01721  5.9  0.000965  0.00993</span></span>
+<span><span class="co">#&gt;  car   size    0.067839    0.04122  1.646  0.09984  3.3 -0.012957  0.14864</span></span>
+<span><span class="co">#&gt;  train income -0.010748    0.00256 -4.201  &lt; 0.001 15.2 -0.015762 -0.00573</span></span>
+<span><span class="co">#&gt;  train size    0.144669    0.04773  3.031  0.00244  8.7  0.051126  0.23821</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: rowid, term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can also explore more complex alternatives. Here, for example, only one alternative is affected by cost reduction:</p>
 <div class="cell">
@@ -845,27 +817,19 @@ window.Quarto = {
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Group   Term    Contrast  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %</span></span>
-<span><span class="co">#&gt;  air   income mean(dY/dX)  8.24e-03   2.46e-03  3.352   &lt;0.001 10.3  3.42e-03</span></span>
-<span><span class="co">#&gt;  air   size   mean(dY/dX) -2.12e-01   6.02e-02 -3.526   &lt;0.001 11.2 -3.30e-01</span></span>
-<span><span class="co">#&gt;  bus   income mean(dY/dX) -1.33e-03   1.30e-03 -1.020    0.308  1.7 -3.88e-03</span></span>
-<span><span class="co">#&gt;  bus   size   mean(dY/dX)  6.06e-02   3.79e-02  1.600    0.110  3.2 -1.36e-02</span></span>
-<span><span class="co">#&gt;  car   income mean(dY/dX)  2.66e-05   4.31e-05  0.617    0.537  0.9 -5.78e-05</span></span>
-<span><span class="co">#&gt;  car   size   mean(dY/dX)  2.38e-03   1.57e-03  1.512    0.131  2.9 -7.04e-04</span></span>
-<span><span class="co">#&gt;  train income mean(dY/dX) -6.94e-03   1.86e-03 -3.735   &lt;0.001 12.4 -1.06e-02</span></span>
-<span><span class="co">#&gt;  train size   mean(dY/dX)  1.49e-01   4.28e-02  3.488   &lt;0.001 11.0  6.55e-02</span></span>
-<span><span class="co">#&gt;     97.5 %</span></span>
-<span><span class="co">#&gt;   0.013058</span></span>
-<span><span class="co">#&gt;  -0.094353</span></span>
-<span><span class="co">#&gt;   0.001223</span></span>
-<span><span class="co">#&gt;   0.134895</span></span>
-<span><span class="co">#&gt;   0.000111</span></span>
-<span><span class="co">#&gt;   0.005459</span></span>
-<span><span class="co">#&gt;  -0.003298</span></span>
-<span><span class="co">#&gt;   0.233374</span></span>
+<span><span class="co">#&gt;  Group   Term  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %    97.5 %</span></span>
+<span><span class="co">#&gt;  air   income  8.24e-03   2.46e-03  3.352   &lt;0.001 10.3  3.42e-03  0.013058</span></span>
+<span><span class="co">#&gt;  air   size   -2.12e-01   6.02e-02 -3.526   &lt;0.001 11.2 -3.30e-01 -0.094353</span></span>
+<span><span class="co">#&gt;  bus   income -1.33e-03   1.30e-03 -1.020    0.308  1.7 -3.88e-03  0.001223</span></span>
+<span><span class="co">#&gt;  bus   size    6.06e-02   3.79e-02  1.600    0.110  3.2 -1.37e-02  0.134900</span></span>
+<span><span class="co">#&gt;  car   income  2.66e-05   4.31e-05  0.617    0.537  0.9 -5.78e-05  0.000111</span></span>
+<span><span class="co">#&gt;  car   size    2.38e-03   1.57e-03  1.512    0.131  2.9 -7.05e-04  0.005459</span></span>
+<span><span class="co">#&gt;  train income -6.94e-03   1.86e-03 -3.734   &lt;0.001 12.4 -1.06e-02 -0.003297</span></span>
+<span><span class="co">#&gt;  train size    1.49e-01   4.28e-02  3.489   &lt;0.001 11.0  6.55e-02  0.233367</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
+<span><span class="co">#&gt; Columns: term, group, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Important:</strong> The <code>newdata</code> argument for <code>mlogit</code> models must be a “balanced” data frame, that is, it must have a number of rows that is a multiple of the number of choices.</p>
 
@@ -905,18 +869,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -948,7 +901,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -956,7 +931,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

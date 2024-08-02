@@ -376,6 +376,7 @@ We can plot those estimates in the same way as before, by specifying `group` as 
 
 
 ```{r, message = FALSE}
+pkgload::load_all()
 plot_predictions(mod, condition = c("mpg", "group"), type = "probs", vcov = FALSE)
 
 plot_predictions(mod, condition = "mpg", type = "probs", vcov = FALSE) +

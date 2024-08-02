@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo - Predictions</title>
+<title>Marginal Effects Zoo – Predictions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -111,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -140,15 +140,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/predictions.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../vignettes/predictions.html">Predictions</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -163,9 +163,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -204,9 +204,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -279,6 +279,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactions, polynomials, and splines</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inverse Probability Weighting</span></a>
   </div>
@@ -335,9 +341,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -412,9 +418,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -622,8 +628,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;      15.9      0.992 16.0   &lt;0.001 190.0  14.0   17.9</span></span>
 <span><span class="co">#&gt;      20.2      1.219 16.5   &lt;0.001 201.8  17.8   22.5</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In many cases, this is too limiting. The function <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> allows to specify a grid of ‘typical’ values over which to compute adjusted predictions. For more details, proceed to the Grid section.</p>
 <section id="prediction-type-scale" class="level2"><h2 class="anchored" data-anchor-id="prediction-type-scale">Prediction type (scale)</h2>
@@ -643,8 +649,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;     0.297     0.1005 2.95  0.00314  8.3 0.0999  0.494</span></span>
 <span><span class="co">#&gt;     0.260     0.0978 2.66  0.00788  7.0 0.0682  0.452</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, mpg </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, mpg</span></span>
 <span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">glm_mod</span>, type <span class="op">=</span> <span class="st">"link"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></span>
@@ -657,8 +663,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;   -0.8621      0.482 -1.7903   0.0734 3.8 -1.806  0.0817</span></span>
 <span><span class="co">#&gt;   -1.0463      0.509 -2.0575   0.0396 4.7 -2.043 -0.0496</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, mpg </span></span>
-<span><span class="co">#&gt; Type:  link</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  link </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, mpg</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The default value of the <code>type</code> argument for most models is <code>"response"</code>, which means that the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function will compute predicted probabilities (binomial family), Poisson means (poisson family), etc. Users should refer to the documentation of the <code>predict</code> of the package they used to fit the model to know what values are allowable.</p>
 </section></section><section id="grid" class="level1"><h1>Grid</h1>
@@ -681,8 +687,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;      18.5      1.440 12.83   &lt;0.001 122.7 15.65   21.3</span></span>
 <span><span class="co">#&gt;      12.1      2.113  5.72   &lt;0.001  26.5  7.94   16.2</span></span>
 <span><span class="co">#&gt;      26.0      1.032 25.22   &lt;0.001 464.0 24.01   28.1</span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, cyl</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="user-specified-values" class="level3"><h3 class="anchored" data-anchor-id="user-specified-values">User-specified values</h3>
 <p>There are two main ways to select the reference grid over which we want to compute adjusted predictions. The first is using the <code>newdata</code> argument and the <a href="slopes.html"><code>datagrid()</code> function</a>. The second is with the <code>variables</code> argument.</p>
@@ -702,8 +708,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  Estimate Std. Error  z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp cyl</span></span>
 <span><span class="co">#&gt;      16.6       1.28 13   &lt;0.001 125.6  14.1   19.1 147   8</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">lm_mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -712,8 +718,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;    6     19.2       1.25 15.4   &lt;0.001 174.5  16.7   21.6 147</span></span>
 <span><span class="co">#&gt;    8     16.6       1.28 13.0   &lt;0.001 125.6  14.1   19.1 147</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Users can change the summary function used to summarize each type of variables using the <code>FUN_numeric</code>, <code>FUN_factor</code>, and related arguments. For example:</p>
 <div class="cell">
@@ -723,8 +729,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %  hp drat cyl am</span></span>
 <span><span class="co">#&gt;      18.9       1.73 10.9   &lt;0.001 89.0  15.5   22.3 123  3.7   8  0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, drat, cyl, am, mpg </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, drat, cyl, am, mpg</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <code>data.frame</code> produced by <code>predictions</code> is “tidy”, which makes it easy to manipulate with other <code>R</code> packages and functions:</p>
 <div class="cell">
@@ -739,28 +745,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/tt.html">tt</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"A table of Adjusted Predictions"</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://vincentarelbundock.github.io/tinytable/man/group_tt.html">group_tt</a></span><span class="op">(</span>j <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"cyl"</span> <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
- 
+<!-- preamble start -->
 
-  
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tinytable_4zicq2ndv5aeox4lf0j3</title>
-<style>
-.table td.tinytable_css_ehgh1bg9oox3l798ybhf, .table th.tinytable_css_ehgh1bg9oox3l798ybhf {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_mv0wost6as7gmc7b0brg, .table th.tinytable_css_mv0wost6as7gmc7b0brg {    text-align: center; }
-.table td.tinytable_css_38sv4e04pq2lrkcmvpw1, .table th.tinytable_css_38sv4e04pq2lrkcmvpw1 {    border-bottom: solid 0.05em #d3d8dc; }
-    </style>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>
-    MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']]
-      },
-      svg: {
-        fontCache: 'global'
+    <script>
+      function styleCell_kysqszuuputnlzitfahj(i, j, css_id) {
+        var table = document.getElementById("tinytable_kysqszuuputnlzitfahj");
+        table.rows[i].cells[j].classList.add(css_id);
       }
-    };
-    </script><div class="container">
-      <table class="table table-borderless" id="tinytable_4zicq2ndv5aeox4lf0j3" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_kysqszuuputnlzitfahj');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_kysqszuuputnlzitfahj(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_kysqszuuputnlzitfahj");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+window.addEventListener('load', function () { styleCell_kysqszuuputnlzitfahj(0, 0, 'tinytable_css_id5587olarnephy8v266pm') })
+window.addEventListener('load', function () { styleCell_kysqszuuputnlzitfahj(0, 1, 'tinytable_css_id5587olarnephy8v266pm') })
+window.addEventListener('load', function () { styleCell_kysqszuuputnlzitfahj(0, 2, 'tinytable_css_idt9cmkcl9qvju9h8zmng9') })
+window.addEventListener('load', function () { styleCell_kysqszuuputnlzitfahj(0, 3, 'tinytable_css_id5587olarnephy8v266pm') })
+window.addEventListener('load', function () { styleCell_kysqszuuputnlzitfahj(1, 0, 'tinytable_css_idbdkhj7x16u3b5owz8h0y') })
+window.addEventListener('load', function () { styleCell_kysqszuuputnlzitfahj(1, 1, 'tinytable_css_idbdkhj7x16u3b5owz8h0y') })
+window.addEventListener('load', function () { styleCell_kysqszuuputnlzitfahj(1, 2, 'tinytable_css_idbdkhj7x16u3b5owz8h0y') })
+window.addEventListener('load', function () { styleCell_kysqszuuputnlzitfahj(1, 3, 'tinytable_css_idbdkhj7x16u3b5owz8h0y') })
+    </script><style>
+    .table td.tinytable_css_id5587olarnephy8v266pm, .table th.tinytable_css_id5587olarnephy8v266pm {  text-align: center; }
+    .table td.tinytable_css_idt9cmkcl9qvju9h8zmng9, .table th.tinytable_css_idt9cmkcl9qvju9h8zmng9 {  border-bottom: solid 0.05em #d3d8dc;  text-align: center; }
+    .table td.tinytable_css_idbdkhj7x16u3b5owz8h0y, .table th.tinytable_css_idbdkhj7x16u3b5owz8h0y {  border-bottom: solid 0.1em #d3d8dc; }
+    </style>
+<div class="container">
+      <table class="table table-borderless" id="tinytable_kysqszuuputnlzitfahj" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead>
 <tr>
 <th scope="col" align="center" colspan="1"> </th>
@@ -792,59 +834,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
-
-    <script>
-      function styleCell_tinytable_xlyx96iat775pqdf17z8(i, j, css_id) {
-        var table = document.getElementById("tinytable_4zicq2ndv5aeox4lf0j3");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_4zicq2ndv5aeox4lf0j3');
-        var newRow = table.insertRow(i);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_tinytable_xlyx96iat775pqdf17z8(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_4zicq2ndv5aeox4lf0j3");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
-        for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
-            }
-          }
-        }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
-      }
-
-window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pqdf17z8(1, 0, 'tinytable_css_ehgh1bg9oox3l798ybhf') })
-window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pqdf17z8(1, 1, 'tinytable_css_ehgh1bg9oox3l798ybhf') })
-window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pqdf17z8(1, 2, 'tinytable_css_ehgh1bg9oox3l798ybhf') })
-window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pqdf17z8(1, 3, 'tinytable_css_ehgh1bg9oox3l798ybhf') })
-window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pqdf17z8(0, 0, 'tinytable_css_mv0wost6as7gmc7b0brg') })
-window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pqdf17z8(0, 1, 'tinytable_css_mv0wost6as7gmc7b0brg') })
-window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pqdf17z8(0, 2, 'tinytable_css_mv0wost6as7gmc7b0brg') })
-window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pqdf17z8(0, 3, 'tinytable_css_mv0wost6as7gmc7b0brg') })
-window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pqdf17z8(0, 2, 'tinytable_css_38sv4e04pq2lrkcmvpw1') })
-    </script>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 </section><section id="representative-values" class="level3"><h3 class="anchored" data-anchor-id="representative-values">Representative values</h3>
@@ -855,8 +845,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;  Estimate Std. Error  z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp cyl</span></span>
 <span><span class="co">#&gt;      16.6       1.28 13   &lt;0.001 125.6  14.1   19.1 147   8</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!-- À VÉRIFIER SI C'EST LE BON MODÈLE QUI EST UTILISÉ ICI -->
 <p>This is equivalent to calling:</p>
@@ -866,8 +856,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;  Estimate Std. Error  z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp cyl</span></span>
 <span><span class="co">#&gt;      16.6       1.28 13   &lt;0.001 125.6  14.1   19.1 147   8</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, cyl, mpg</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="counterfactual-predictions" class="level3"><h3 class="anchored" data-anchor-id="counterfactual-predictions">Counterfactual predictions</h3>
 <p>An alternative approach to construct grids of predictors is to use <code>grid_type = "counterfactual"</code> argument value. This will duplicate the <em>whole</em> dataset, with the different values specified by the user.</p>
@@ -914,8 +904,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;    8 100     17.7      1.881  9.42   &lt;0.001  67.6  14.0   21.4</span></span>
 <span><span class="co">#&gt;    6 100     20.3      1.238 16.38   &lt;0.001 198.0  17.9   22.7</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, rowidcf, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, cyl, hp </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, rowidcf, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, cyl, hp</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 64</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -935,8 +925,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;      20.1      0.556 36.1   &lt;0.001 946.7    19   21.2</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This is equivalent to:</p>
 <div class="cell">
@@ -949,7 +939,7 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">glm_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">vs</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">am</span>, data <span class="op">=</span> <span class="va">mtcars</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">glm_mod</span><span class="op">)</span><span class="op">$</span><span class="va">estimate</span></span>
-<span><span class="co">#&gt; [1] 0.06308965</span></span>
+<span><span class="co">#&gt; [1] 0.4375</span></span>
 <span></span>
 <span><span class="co">## Step 1: predict on the link scale</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">glm_mod</span>, type <span class="op">=</span> <span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="va">estimate</span></span>
@@ -966,20 +956,20 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;     0.437     0.0429 10.2   &lt;0.001 78.8 0.353  0.522</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="average-adjusted-predictions-by-group" class="level2"><h2 class="anchored" data-anchor-id="average-adjusted-predictions-by-group">Average Adjusted Predictions by Group</h2>
 <p>We can compute average adjusted predictions for different subsets of the data with the <code>by</code> argument.</p>
 <div class="cell">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">glm_mod</span>, by <span class="op">=</span> <span class="st">"am"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  am Estimate Pr(&gt;|z|)   S   2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   1   0.0694   0.0755 3.7 0.00424  0.566</span></span>
-<span><span class="co">#&gt;   0   0.0591   0.1163 3.1 0.00198  0.665</span></span>
+<span><span class="co">#&gt;  am Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;   1    0.538     0.0848 6.35   &lt;0.001 32.1 0.372  0.705</span></span>
+<span><span class="co">#&gt;   0    0.368     0.0430 8.56   &lt;0.001 56.3 0.284  0.453</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: am, estimate, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  invlink(link)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In the next example, we create a “counterfactual” data grid where each observation of the dataset is repeated twice, with different values of the <code>am</code> variable, and all other variables held at the observed values. We also show the equivalent results using <code>dplyr</code>:</p>
 <div class="cell">
@@ -993,8 +983,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;   0    0.526     0.0330 15.93   &lt;0.001 187.3 0.461  0.591</span></span>
 <span><span class="co">#&gt;   1    0.330     0.0646  5.11   &lt;0.001  21.6 0.204  0.457</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
 <span>    <span class="va">glm_mod</span>,</span>
@@ -1015,12 +1005,12 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span>    by <span class="op">=</span> <span class="st">"am"</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  am Estimate Pr(&gt;|z|)   S    2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   0  0.24043   0.3922 1.4 2.22e-02  0.815</span></span>
-<span><span class="co">#&gt;   1  0.00696   0.0359 4.8 6.81e-05  0.419</span></span>
+<span><span class="co">#&gt;  am Estimate Std. Error     z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;   0    0.526     0.0330 15.93   &lt;0.001 187.3 0.461  0.591</span></span>
+<span><span class="co">#&gt;   1    0.330     0.0646  5.11   &lt;0.001  21.6 0.204  0.457</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: am, estimate, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  invlink(link)</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
 <span>    <span class="va">glm_mod</span>,</span>
@@ -1045,8 +1035,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;   1     22.9      0.923 24.8   &lt;0.001 449.1  21.4   24.4</span></span>
 <span><span class="co">#&gt;   0     18.2      0.524 34.6   &lt;0.001 871.2  17.3   19.0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Notice that the test statistics are slightly different than with classical IID errors:</p>
 <div class="cell">
@@ -1058,8 +1048,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;   1     22.9      0.700 32.7   &lt;0.001 777.4  21.8   24.1</span></span>
 <span><span class="co">#&gt;   0     18.2      0.628 28.9   &lt;0.001 608.7  17.1   19.2</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="test" class="level1"><h1>Test</h1>
 <p>The <a href="https://marginaleffects.com/vignettes/hypothesis.html">Hypothesis Tests vignette</a> offers a detailed tutorial on hypothesis and equivalence testing in <code>marginaleffects</code>. Here, we only demonstrate a simple case: testing the difference between the average predictions in two groups.</p>
@@ -1072,8 +1062,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;   1     22.9      0.700 32.7   &lt;0.001 777.4  21.5   24.3</span></span>
 <span><span class="co">#&gt;   0     18.2      0.628 28.9   &lt;0.001 608.7  16.9   19.4</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we run a test of equality, where the null hypothesis is that the average predictions in the two groups are equal to one another. We use the <code>hypothesis</code> argument, either with a string formula or with the “pairwise” shortcut:</p>
 <div class="cell">
@@ -1081,21 +1071,23 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span>    by <span class="op">=</span> <span class="st">"am"</span>,</span>
 <span>    hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  b1=b2     4.75      0.717 6.63   &lt;0.001 34.8  3.35   6.16</span></span>
+<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;      4.75      0.717 6.63   &lt;0.001 34.8  3.35   6.16</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span>
+<span><span class="co">#&gt; Term: b1=b2</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span>
 <span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">lm_mod</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"am"</span>,</span>
 <span>    hypothesis <span class="op">=</span> <span class="st">"pairwise"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  1 - 0     4.75      0.717 6.63   &lt;0.001 34.8  3.35   6.16</span></span>
+<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;      4.75      0.717 6.63   &lt;0.001 34.8  3.35   6.16</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: 1 - 0</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Finally, we conduct an equivalence test to see if we can reject the hypothesis that the difference in average predictions is outside the [-10,10] interval:</p>
 <div class="cell">
@@ -1104,11 +1096,12 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span>    hypothesis <span class="op">=</span> <span class="st">"pairwise"</span>,</span>
 <span>    equivalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % p (NonSup) p (NonInf) p (Equiv)</span></span>
-<span><span class="co">#&gt;  1 - 0     4.75      0.717 6.63   &lt;0.001 34.8  3.35   6.16     &lt;0.001     &lt;0.001    &lt;0.001</span></span>
+<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % p (NonSup) p (NonInf) p (Equiv)</span></span>
+<span><span class="co">#&gt;      4.75      0.717 6.63   &lt;0.001 34.8  3.35   6.16     &lt;0.001     &lt;0.001    &lt;0.001</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: 1 - 0</span></span>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="visualization" class="level1"><h1>Visualization</h1>
 <p>It is very easy to plot average predictions using the parallel syntax of the <code><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions()</a></code> function. This section introduce to some of its core arguments.</p>
@@ -1255,8 +1248,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;      3 1.00e+00   1.25e-03 802.4784   &lt;0.001 Inf  9.98e-01 1.00e+00</span></span>
 <span><span class="co">#&gt;      3 5.18e-01   2.90e-01   1.7884   0.0737 3.8 -4.97e-02 1.09e+00</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, gear, mpg, am, vs </span></span>
-<span><span class="co">#&gt; Type:  probs</span></span>
+<span><span class="co">#&gt; Type:  probs </span></span>
+<span><span class="co">#&gt; Columns: rowid, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, gear, mpg, am, vs</span></span>
 <span></span>
 <span><span class="co">## average predictions</span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">nom</span>, type <span class="op">=</span> <span class="st">"probs"</span>, by <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span>
@@ -1266,8 +1259,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;      4    0.375     0.0614  6.11   &lt;0.001  29.9 0.2546  0.495</span></span>
 <span><span class="co">#&gt;      5    0.156     0.0462  3.38   &lt;0.001  10.4 0.0656  0.247</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  probs </span></span>
+<span><span class="co">#&gt; Columns: group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="custom-aggregation" class="level2"><h2 class="anchored" data-anchor-id="custom-aggregation">Custom aggregation</h2>
 <p>We can use custom aggregations by supplying a data frame to the <code>by</code> argument. All columns of this data frame must be present in the output of <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code>, and the data frame must also include a <code>by</code> column of labels. In this example, we “collapse” response groups:</p>
@@ -1282,18 +1275,19 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;  3,4    0.422     0.0231 18.25   &lt;0.001 244.7 0.3766  0.467</span></span>
 <span><span class="co">#&gt;  5      0.156     0.0462  3.38   &lt;0.001  10.4 0.0656  0.247</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, by </span></span>
-<span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  probs </span></span>
+<span><span class="co">#&gt; Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, by</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This can be very useful in combination with the <code>hypothesis</code> argument. For example, here we compute the difference between average adjusted predictions for the 3 and 4 response levels, compared to the 5 response level:</p>
 <div class="cell">
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">nom</span>, type <span class="op">=</span> <span class="st">"probs"</span>, by <span class="op">=</span> <span class="va">by</span>, hypothesis <span class="op">=</span> <span class="st">"sequential"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  5 - 3,4   -0.266     0.0694 -3.83   &lt;0.001 12.9 -0.402  -0.13</span></span>
+<span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;    -0.266     0.0694 -3.83   &lt;0.001 12.9 -0.402  -0.13</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Term: 5 - 3,4</span></span>
+<span><span class="co">#&gt; Type:  probs </span></span>
+<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can also use more complicated aggregations. Here, we compute the predicted probability of outcome levels for each value of <code>cyl</code>, by collapsing the “3” and “4” outcome levels:</p>
 <div class="cell">
@@ -1319,8 +1313,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;  5 Gears &amp; 4 Cylinders      0.182     0.1159 1.57    0.117  3.1 -0.0457  0.409</span></span>
 <span><span class="co">#&gt;  5 Gears &amp; 8 Cylinders      0.143     0.0917 1.56    0.119  3.1 -0.0368  0.323</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, by </span></span>
-<span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  probs </span></span>
+<span><span class="co">#&gt; Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, by</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And we can then compare the different groups using the <code>hypothesis</code> argument:</p>
 <div class="cell">
@@ -1343,8 +1337,8 @@ window.addEventListener('load', function () { styleCell_tinytable_xlyx96iat775pq
 <span><span class="co">#&gt;  5 Gears &amp; 6 Cylinders - 5 Gears &amp; 8 Cylinders     -5.68e-05     0.1608 -0.000353   0.9997 0.0 -0.31526  0.315</span></span>
 <span><span class="co">#&gt;  5 Gears &amp; 4 Cylinders - 5 Gears &amp; 8 Cylinders      3.86e-02     0.1478  0.261054   0.7941 0.3 -0.25112  0.328</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Type:  probs </span></span>
+<span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="themes-and-styles-1" class="level2"><h2 class="anchored" data-anchor-id="themes-and-styles-1">Themes and styles</h2>
 <p>We can also use <code><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions()</a></code> in models with multinomial outcomes or grouped coefficients. For example, notice that when we call <code>draw=FALSE</code>, the result includes a <code>group</code> column:</p>
@@ -1420,18 +1414,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1463,7 +1446,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1471,7 +1476,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
