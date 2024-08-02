@@ -173,7 +173,7 @@ print.marginaleffects <- function(x,
     if (is.null(nd)) {
         nd <- attr(x, "newdata_newdata")
     }
-    tmp <- c("by",
+    explicit <- tmp <- c("by",
         attr(x, "hypothesis_by"),
         attr(nd, "variables_datagrid"),
         attr(nd, "newdata_variables_datagrid"),
@@ -215,6 +215,7 @@ print.marginaleffects <- function(x,
         print_omit <- c(print_omit, "contrast")
     }
     te <- unique(out[["term"]])
+    te <- setdiff(te, explicit) # ex: polynomials where both `variables="x"` and datagrid(x)
     if (length(te) == 1) {
         print_omit <- c(print_omit, te)
         print_term_text <- sprintf("Term: %s\n", out[["term"]][1])
