@@ -8,7 +8,9 @@ help:  ## Display this help screen
 
 testall: ## tinytest::build_install_test()
 	# Rscript -e "pkgload::load_all();cl <- parallel::makeCluster(5);tinytest::run_test_dir(cluster = cl)"
+	awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
 	Rscript -e "pkgload::load_all();tinytest::run_test_dir()"
+	git restore .Rbuildignore
 
 testone: install ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
 	Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
@@ -17,7 +19,9 @@ document: ## altdoc::render_docs()
 	Rscript -e "devtools::document()"
 
 check: document ## devtools::check()
+	awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
 	Rscript -e "devtools::check()"
+	git restore .Rbuildignore
 
 install: document ## devtools::install(dependencies = FALSE)
 	Rscript -e "devtools::install(dependencies = FALSE)"

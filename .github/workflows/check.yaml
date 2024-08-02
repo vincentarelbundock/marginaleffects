@@ -43,7 +43,7 @@ jobs:
         run: curl -OLs https://eddelbuettel.github.io/r-ci/run.sh && chmod 0755 run.sh
 
       - name: unignore tests
-        run: sed -i '/^inst\/tinytest$/d' .Rbuildignore
+        run: awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
 
       - name: Bootstrap
         run: ./run.sh bootstrap
