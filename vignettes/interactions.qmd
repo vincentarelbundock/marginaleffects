@@ -37,7 +37,7 @@ One common strategy to study moderation is to fit a statistical model with multi
 
 $$Y = \beta_1 + \beta_2 \cdot M + \beta_3 \cdot X + \beta_4 \cdot X \cdot  M + \varepsilon,$$
 
-where $Y$ is the outcome, $X$ is the cause of interest, and $M$ is a contextual variable which moderates the relationship between $X$ and $Y$. In that model, $\beta_2$ characterizes the association between $X$ and $Y$ when $M=0$. If the moderator $M$ is non-zero, the strength of association between $X$ and $Y$ is represented by more than the simple $\beta_2$ coefficient. We see this by inspecting the partial derivative:
+where $Y$ is the outcome, $X$ is the cause of interest, and $M$ is a contextual variable which moderates the relationship between $X$ and $Y$. In that model, $\beta_3$ characterizes the association between $X$ and $Y$ when $M=0$. If the moderator $M$ is non-zero, the strength of association between $X$ and $Y$ is represented by more than the simple $\beta_3$ coefficient. We see this by inspecting the partial derivative:
 
 $$\frac{\partial Y}{\partial X} = \beta_3 + \beta_4 \cdot M$$
 
