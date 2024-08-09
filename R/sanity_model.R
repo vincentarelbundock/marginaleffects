@@ -101,6 +101,7 @@ sanity_model_supported_class <- function(model) {
         "phyloglm",
         c("plm", "panelmodel"),
         "polr",
+        "stpm2","gsm","pstpm2","aft",
         "Rchoice",
         "rendo.base",
         "rlmerMod",

@@ -2,8 +2,8 @@
 % Please edit documentation in R/get_vcov.R, R/methods_MCMCglmm.R,
 %   R/methods_afex.R, R/methods_aod.R, R/methods_biglm.R, R/methods_brms.R,
 %   R/methods_dbarts.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
-%   R/methods_mhurdle.R, R/methods_mlr3.R, R/methods_rms.R, R/methods_scam.R,
-%   R/methods_tidymodels.R
+%   R/methods_mhurdle.R, R/methods_mlr3.R, R/methods_rms.R, R/methods_rstpm2.R,
+%   R/methods_scam.R, R/methods_tidymodels.R
 \name{get_vcov}
 \alias{get_vcov}
 \alias{get_vcov.default}
@@ -18,6 +18,10 @@
 \alias{get_vcov.mhurdle}
 \alias{get_vcov.Learner}
 \alias{get_vcov.orm}
+\alias{get_vcov.stpm2}
+\alias{get_vcov.pstpm2}
+\alias{get_vcov.gsm}
+\alias{get_vcov.aft}
 \alias{get_vcov.scam}
 \alias{get_vcov.model_fit}
 \alias{get_vcov.workflow}
@@ -48,6 +52,14 @@ get_vcov(model, ...)
 \method{get_vcov}{Learner}(model, ...)
 
 \method{get_vcov}{orm}(model, vcov = NULL, ...)
+
+\method{get_vcov}{stpm2}(model, ...)
+
+\method{get_vcov}{pstpm2}(model, ...)
+
+\method{get_vcov}{gsm}(model, ...)
+
+\method{get_vcov}{aft}(model, ...)
 
 \method{get_vcov}{scam}(model, vcov = NULL, ...)
 

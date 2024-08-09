@@ -146,6 +146,7 @@ Suggests:
     rsample,
     rstanarm,
     rstantools,
+    rstpm2,
     rsvg,
     sampleSelection,
     sandwich,
@@ -252,6 +253,7 @@ Collate:
     'methods_rms.R'
     'methods_robustlmm.R'
     'methods_rstanarm.R'
+    'methods_rstpm2.R'
     'methods_sampleSelection.R'
     'methods_scam.R'
     'methods_stats.R'
