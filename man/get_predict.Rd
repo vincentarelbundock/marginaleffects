@@ -7,9 +7,9 @@
 %   R/methods_glmmTMB.R, R/methods_lme4.R, R/methods_mclogit.R,
 %   R/methods_mhurdle.R, R/methods_mlogit.R, R/methods_mlr3.R,
 %   R/methods_ordinal.R, R/methods_quantreg.R, R/methods_rms.R,
-%   R/methods_robustlmm.R, R/methods_rstanarm.R, R/methods_stats.R,
-%   R/methods_survey.R, R/methods_survival.R, R/methods_tidymodels.R,
-%   R/methods_tobit1.R
+%   R/methods_robustlmm.R, R/methods_rstanarm.R, R/methods_rstpm2.R,
+%   R/methods_stats.R, R/methods_survey.R, R/methods_survival.R,
+%   R/methods_tidymodels.R, R/methods_tobit1.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -45,6 +45,10 @@
 \alias{get_predict.ols}
 \alias{get_predict.rlmerMod}
 \alias{get_predict.stanreg}
+\alias{get_predict.stpm2}
+\alias{get_predict.pstpm2}
+\alias{get_predict.gsm}
+\alias{get_predict.aft}
 \alias{get_predict.lm}
 \alias{get_predict.glm}
 \alias{get_predict.svyolr}
@@ -128,6 +132,14 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{rlmerMod}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{stanreg}(model, newdata = insight::get_data(model), type = "response", ...)
+
+\method{get_predict}{stpm2}(model, newdata = NULL, ...)
+
+\method{get_predict}{pstpm2}(model, newdata = NULL, ...)
+
+\method{get_predict}{gsm}(model, newdata = NULL, ...)
+
+\method{get_predict}{aft}(model, newdata = NULL, ...)
 
 \method{get_predict}{lm}(model, newdata = insight::get_data(model), type = "response", ...)
 
