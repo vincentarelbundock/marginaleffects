@@ -4,7 +4,7 @@
 \alias{knit_print.marginaleffects}
 \title{Print a marginaleffects object in knitr}
 \usage{
-knit_print.marginaleffects(x, ...)
+\method{knit_print}{marginaleffects}(x, ...)
 }
 \value{
 A string with class \code{knit_asis} to be printed in Rmarkdown or Quarto documents.
