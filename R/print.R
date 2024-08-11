@@ -270,11 +270,7 @@ print.marginaleffects <- function(x,
         notes <- c(print_type_text, print_columns_text)
         if (!is.null(notes)) args$notes <- notes
         tab <- do.call(tinytable::tt, args)
-        tab <- tinytable::format_tt(tab, escape = TRUE)
-        theme <- getOption("tinytable_tt_theme", default = NULL)
-        if (is.function(theme)) {
-            tab <- theme(tab)
-        }
+        tab <- tinytable::format_tt(i = 0, tab, escape = TRUE)
 
         if (isTRUE(splitprint)) {
           msg <- "%s rows omitted"
