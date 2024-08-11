@@ -58,7 +58,7 @@
 #' + string:
 #'   - "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
 #'   - "median": Contrasts at the Median. Contrasts when each predictor is held at its median or mode.
-#'   - "marginalmeans": Contrasts at Marginal Means.
+#'   - "balanced": Contrasts evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
 #'   - "tukey": Contrasts at Tukey's 5 numbers.
 #'   - "grid": Contrasts on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
@@ -94,6 +94,7 @@
 #' @template order_of_operations
 #' @template parallel
 #' @template references
+#' @template options
 #'
 #' @return A `data.frame` with one row per observation (per term/group) and several columns:
 #' * `rowid`: row number of the `newdata` data frame
@@ -320,6 +321,7 @@ comparisons <- function(model,
         newdata = newdata,
         wts = wts,
         vcov = vcov,
+        by = by,
         calling_function = "comparisons",
         ...)
     cross <- sanitize_cross(cross, variables, model)
@@ -538,7 +540,7 @@ comparisons <- function(model,
     mfx <- backtransform(mfx, transform)
 
     # save as attribute and not column
-    if (any(!is.na(mfx[["marginaleffects_wts_internal"]]))) {
+    if (!all(is.na(mfx[["marginaleffects_wts_internal"]]))) {
         marginaleffects_wts_internal <- mfx[["marginaleffects_wts_internal"]]
     } else {
         marginaleffects_wts_internal <- NULL

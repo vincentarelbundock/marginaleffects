@@ -146,3 +146,12 @@ sub_named_vector <- function(x, y) {
 
   return(x)
 }
+
+
+group_to_factor <- function(group, model) {
+    dv <- try(insight::get_response(model), silent = TRUE)
+    if (inherits(dv, "factor")) {
+        group <- factor(group, levels(dv))
+    }
+    return(group)
+}

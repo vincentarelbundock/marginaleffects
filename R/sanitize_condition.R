@@ -10,15 +10,13 @@ condition_shortcuts <- function(x, tr, shortcuts) {
             min(x, na.rm = TRUE),
             max(x, na.rm = TRUE))
     } else if (identical(tr, "quartile")) {
-        out <- stats::quantile(x, probs = c(.25, .5, .75), na.rm = TRUE)
+        out <- stats::quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
     }
     return(out)
 }
 
 
 sanitize_condition <- function(model, condition, variables = NULL, modeldata = NULL) {
-
-
     # allow multiple conditions and/or effects
     checkmate::assert(
         checkmate::check_character(condition, min.len = 1, max.len = 4),
@@ -98,18 +96,27 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
 
     # condition 2: color
     if (length(condition) > 1) {
+        # defaults
         if (is.null(condition[[2]])) {
-            if (is.numeric(dat[[condition2]])) {
-                at_list[[condition2]] <- stats::fivenum(dat[[condition2]])
-            } else {
-                at_list[[condition2]] <- unique(dat[[condition2]])
+            #binary
+            if (get_variable_class(dat, condition2, "binary")) {
+              at_list[[condition2]] <- condition[[2]] <- 0:1
+            # numeric default = Tukey's 5 numbers
+            } else if (is.numeric(dat[[condition2]])) {
+              condition[[2]] <- "fivenum"
+            # other default = unique values
+            } else if (condition2 %in% colnames(dat)) {
+              condition[[2]] <- unique(dat[[condition2]])
             }
+        }
+        # known string shortcuts
+        if (isTRUE(checkmate::check_choice(condition[[2]], shortcuts))) {
+            at_list[[condition2]] <- condition_shortcuts(
+                dat[[condition2]], condition[[2]], shortcuts
+            )
+        # user-supplied
         } else {
-            if (isTRUE(checkmate::check_choice(condition[[2]], shortcuts))) {
-                at_list[[condition2]] <- condition_shortcuts(dat[[condition2]], condition[[2]], shortcuts)
-            } else {
-                at_list[[condition2]] <- condition[[2]]
-            }
+            at_list[[condition2]] <- condition[[2]]
         }
     }
 

@@ -199,6 +199,11 @@ get_contrasts <- function(model,
         out[by, by := by, on = tmp]
         by <- "by"
 
+    } else if (isTRUE(by)) {
+        regex <- "^term$|^contrast_?|^group$"
+        by <- grep(regex, colnames(out), value = TRUE)
+        by <- unique(by)
+
     } else if (isTRUE(checkmate::check_character(by))) {
         regex <- "^term$|^contrast_?|^group$"
         by <- c(by, grep(regex, colnames(out), value = TRUE))
@@ -399,7 +404,7 @@ get_contrasts <- function(model,
         # if comparison returns a single value, then we padded with NA. That
         # also means we don't want `rowid` otherwise we will merge and have
         # useless duplicates.
-        if (any(!idx)) {
+        if (!all(idx)) {
             if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
                 out[, "rowid" := NULL]
             }

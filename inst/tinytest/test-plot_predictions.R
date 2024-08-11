@@ -19,7 +19,7 @@ p2 <- predictions(
     mod,
     newdata = datagrid(mpg = range, am_fct = 0:1))
 p2$am_fct <- as.numeric(as.character(p2$am_fct))
-data.table::setorder(p2, am_fct, mpg)
+data.table::setorder(p2, -am_fct, mpg)
 expect_equivalent(p1$estimate, p2$estimate)
 
 p1$condition1 <- as.character(p1$am_fct)
@@ -43,7 +43,7 @@ p2 <- predictions(
     mod,
     newdata = datagrid(mpg = threenum, am_fct = 0:1))
 p2$am_fct <- as.numeric(as.character(p2$am_fct))
-data.table::setorder(p2, am_fct, mpg)
+data.table::setorder(p2, -am_fct, mpg)
 expect_equivalent(p1$estimate, p2$estimate)
 
 
@@ -223,6 +223,22 @@ p <- plot_predictions(mod, condition = list("mpg"=1:5, "am"=0:1, "gear"=1:3, "ca
 expect_inherits(p, "gg")
 
 
+# Issue #1184
+mod <- lm(Sepal.Width ~ Sepal.Length * Species, data = iris)
+p <- plot_predictions(mod, condition = c("Sepal.Length", "Species"), draw = FALSE)
+expect_equal(length(unique(p$Species)), 3)
+
+mod <- lm(mpg ~ hp * am, data = mtcars)
+p <- plot_predictions(mod, condition = c("hp", "am"), draw = FALSE)
+expect_equal(length(unique(p$am)), 2)
+expect_equal(length(unique(p$hp)), 50)
+expect_equal(nrow(p), 100)
+
+mod <- lm(mpg ~ hp * wt, data = mtcars)
+p <- plot_predictions(mod, condition = c("hp", "wt"), draw = FALSE)
+expect_equal(length(unique(p$am)), 2)
+expect_equal(length(unique(p$hp)), 50)
+expect_equal(nrow(p), 100)
 
 
 suppressWarnings(rm("threenum", .GlobalEnv))

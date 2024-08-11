@@ -11,7 +11,7 @@ get_contrast_data_factor <- function(model,
         convert_to_factor <- TRUE
 
     } else if (get_variable_class(newdata, variable$name, "binary")) {
-        levs <- 0:1
+        levs <- variable$value
         convert_to_factor <- FALSE
 
     } else {
@@ -41,7 +41,7 @@ get_contrast_data_factor <- function(model,
     } else if (isTRUE(checkmate::check_atomic_vector(variable$value, len = 2))) {
         if (is.character(variable$value)) {
             tmp <- modeldata[[variable$name]]
-            if (any(!variable$value %in% as.character(tmp))) {
+            if (!all(variable$value %in% as.character(tmp))) {
                 msg <- "Some of the values supplied to the `variables` argument were not found in the dataset."
                 insight::format_error(msg)
             }

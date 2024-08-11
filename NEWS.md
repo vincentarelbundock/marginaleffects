@@ -2,13 +2,72 @@
 
 ## Development
 
-New function:
+Breaking change:
 
-* `specify_hypothesis()` returns functions to be used in the `hypothesis` argument of `predictions()`, `comparisons()`, and `slopes()`. This convenience function can be used to specify complex aggregations and estimands for hypothesis tests (ex: by subgroups or with custom functions).
+* `type="invlink(link)"` is no longer default in `avg_predictions()` or when calling `predictions()` with the `by` argument. It is still default in `predictions()` without the `by` argument. The backtransform strategy is still available with by setting `type="invlink(link)"` explicitly.
+
+New:
+
+* `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
+* Added support for `stpm2`, `pstpm2`, `gsm`, and `aft` models from `rstpm2`. Thanks to @aghaynes and @mclements.
+* Added support for `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
+* Parallel computation with `future` is more efficient by chunking tasks to avoid passing large objects to every worker for every future. Issue #1158.
+* All columns of `newdata` are passed to the `hypothesis` function when `newdata` is supplied explicitly. Thanks to @gravesti for report #1175.
+* `hypotheses()` supports formulas in the `hypothesis` argument: `hypotheses(model, hypothesis = ratio ~ reference)`
+* Global option: `options("marginaleffects_print_omit" = "s.value")`
+* Round significant digits for labels in `plot_predictions(mod, condition = list(x = "fivenum"))`
+* `print()` no longer prints `contrast` and `term` columns when values are unique. The labels were often very long, and the content is already explicit in the call itself, so there's no ambiguity.
+
+Bugs:
+
+* Average lift and average comparisons with user-supplied functions could be be calculated incorrectly when all predictors were categorical. Thanks to @Dpananos for Issue #1151.
+* Indexing bug returned `NA` for some commands in `survey` models. Thanks to @weikang9009 for report #1161.
+* Respect default `tinytable` theme.
+
+## 0.21.0
+
+New:
+
+* `hypothesis` accepts formulas like: `ratio ~ sequential | group`
+* Allow reverse binary contrasts: `comparisons(mod, variables = list(am = 1:0, vs = 0:1))`. Thanks to K. Henry for report #1137.
+* `options(marginaleffects_safe = FALSE)` disables some safety checks and allows unadvisable (but potentially) useful features like *many* pairwise comparisons. Thanks to D.Locke for the feature request.
+* `newdata="balanced"` is a shortcut to produce estimates at combinations of all categorical predictors, holding numeric predictors at their means. Equivalent to `datagrid(grid_type="balanced")`
+
+Misc:
+
+* Deprecation warning for `specify_hypothesis()`. This function was clearly marked as experimental, and has been available only for one release. It was a bad idea. Users should supply a custom function or a formula to the `hypothesis` argument. The new formula interface, in particular, makes it very easy to conduct group-wise hypothesis tests.
+* Type checks are a bit looser to accommodate custom models.
+
+Bugs:
+
+* Fix regression in `mlogit` models due to factor conversion. This raised an error before returning result, so there is no numerical danger.
+* `survey` package models work when `row.names(model)` is not coercible to integers. Thanks to @ngreifer for report #1131.
+
+## 0.20.1
+
+* The `comparison` argument of the `comparisons()` function is automatically switched to the `avg` version of the function shortcuts when calling `avg_comparisons()` or setting `by=TRUE`. For example, `comparison="ratio"` becomes `comparison="ratioavg"` when calling `avg_comparisons()`. Note that `comparison="ratioavg"` is equivalent to: `comparison = \(hi,lo) mean(hi)/mean(lo)`
+* Fixed a bug ("non-conformable arguments") when using `survreg` objects from `survival::survreg()`.
+* Fixed bug in `inferences()` for GLM models and `type="invlink"`, where the wrong scale would be reported for confidence intervals.
+
+## 0.20.0
+
+Breaking changes:
+
+* The order of the `group` column is preserved when the original variable is a factor. This may change the order of output, which could have an effect on hypothesis tests using the `hypothesis="b1=b3"` syntax.
+
+New:
+
+* New *experimental* function: `specify_hypothesis()` returns functions to be used in the `hypothesis` argument of `predictions()`, `comparisons()`, and `slopes()`. This convenience function can be used to specify complex aggregations and estimands for hypothesis tests (ex: by subgroups or with custom functions).
+* `hypothesis` argument accepts "meandev" and "meanotherdev" to compute deviations from the mean estimate.
+* Do not raise extraneous warning for `survey` package models when the `by` argument is not used.
+* Informative error when `hypotheses()` is called twice on the same object.
+* `print("tinytable")` adds footnotes to the table with columns and type information.
 
 Bugs:
 
 * `mlogit` `predict()` method does not play well with `data.table`. Thanks to @andrewheiss for report #1086.
+* Avoid merging `newdata` in `predictions()` when `hypothesis` can change the meaning of rows. Avoid Issue #1105 reported by @strengejacke.
+* `inferences()` did not work with the `transform` argument. Thanks to Demetri Pananos for report #1115.
 
 
 ## 0.19.0

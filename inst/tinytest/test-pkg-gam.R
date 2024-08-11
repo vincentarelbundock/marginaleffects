@@ -42,6 +42,7 @@ mm1 <- predictions(model, by = "categ", newdata = datagrid(grid_type = "balanced
 em1 <- data.frame(emmeans(model, specs = "categ", type = "response", at = atlist))
 
 mm1 <- predictions(model,
+    type = "invlink(link)",
     newdata = datagrid(
         grid_type = "balanced",
         Age = round(mean(tmp$Age)),

@@ -1,6 +1,6 @@
 get_term_labels <- function(x, idx = NULL) {
   if (is.data.frame(x)) {
-    if ("term" %in% names(x) && length(unique(x$term)) == nrow(x)) {
+    if ("term" %in% names(x) && anyDuplicated(x$term) == 0L) {
       return(unique(x$term))
     } else if (any(grepl("^contrast", names(x)))) {
       tmp <- grep("^term$|^contrast", names(x))

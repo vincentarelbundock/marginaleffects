@@ -32,5 +32,16 @@ mfx <- slopes(mod, part = "outcome", type = "unconditional")
 expect_inherits(mfx, "marginaleffects")
 
 
+# New types
+data(Mroz87)
+m <- selection(lfp ~ educ + age + kids5 + kids618 + nwifeinc,
+               wage >= 5 ~ educ + exper, data = Mroz87)
+
+avg_slopes(m, part = "selection", type = "response")
+avg_slopes(m, part = "outcome", type = "unconditional")
+
+
+
+
 source("helpers.R")
 rm(list = ls())

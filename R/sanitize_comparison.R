@@ -40,6 +40,7 @@ comparison_function_dict <- list(
     # others
     "lift" = function(hi, lo) (hi - lo) / lo,
     "liftavg" = function(hi, lo) (mean(hi - lo)) / mean(lo),
+    "liftavgwts" = function(hi, lo, w) (wmean(hi - lo, w)) / wmean(lo, w),
 
     "expdydx" = function(hi, lo, eps) ((exp(hi) - exp(lo)) / exp(eps)) / eps,
     "expdydxavg" = function(hi, lo, eps) mean(((exp(hi) - exp(lo)) / exp(eps)) / eps),
@@ -84,6 +85,7 @@ comparison_label_dict <- list(
 
     "lift" = "lift",
     "liftavg" = "liftavg",
+    "liftavgwts" = "liftavgwts",
 
     "expdydx" = "exp(dY/dX)"
 )
@@ -100,12 +102,20 @@ sanity_comparison <- function(comparison) {
 
 sanitize_transform <- function(x) {
     good <- c("exp", "ln")
-    checkmate::assert(
-        checkmate::check_choice(x, choices = good, null.ok = TRUE),
-        checkmate::check_function(x))
+    # issue #1115: sanitize_transform() wraps `transform` into a named list, so the assertion may fail when using `inferences()`
+    if (isTRUE(checkmate::check_list(x, names = "named"))) {
+        checkmate::assert(
+            checkmate::check_choice(x[[1]], choices = good, null.ok = TRUE),
+            checkmate::check_function(x[[1]]))
+        x <- x[[1]]
+    } else {
+        checkmate::assert(
+            checkmate::check_choice(x, choices = good, null.ok = TRUE),
+            checkmate::check_function(x))
+    }
 
     if (is.null(x)) {
-        return(x) 
+        return(x)
     } else if (is.function(x)) {
         out <- list(x)
         names(out) <- deparse(substitute(x))
@@ -116,6 +126,5 @@ sanitize_transform <- function(x) {
     }
 
     return(out)
-
 }
 

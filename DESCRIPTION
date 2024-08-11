@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.19.0.2
+Version: 0.21.0.16
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -24,7 +24,7 @@ Encoding: UTF-8
 URL: https://marginaleffects.com/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Depends: 
     R (>= 3.6.0)
 Imports: 
@@ -60,6 +60,7 @@ Suggests:
     causaldata,
     clarify,
     cjoint,
+    cobalt,
     collapse,
     conflicted,
     countrycode,
@@ -78,6 +79,7 @@ Suggests:
     flexsurv,
     fmeffects,
     fontquiver,
+    Formula,
     future,
     future.apply,
     fwb,
@@ -116,6 +118,7 @@ Suggests:
     nlme,
     nnet,
     numDeriv,
+    nycflights13,
     optmatch,
     ordinal,
     parameters,
@@ -135,6 +138,7 @@ Suggests:
     REndo,
     rcmdcheck,
     remotes,
+    reticulate,
     rmarkdown,
     rms,
     robust,
@@ -143,6 +147,7 @@ Suggests:
     rsample,
     rstanarm,
     rstantools,
+    rstpm2,
     rsvg,
     sampleSelection,
     sandwich,
@@ -213,6 +218,7 @@ Collate:
     'mean_or_mode.R'
     'methods.R'
     'set_coef.R'
+    'methods_AER.R'
     'methods_MASS.R'
     'methods_MCMCglmm.R'
     'methods_Rchoice.R'
@@ -249,6 +255,7 @@ Collate:
     'methods_rms.R'
     'methods_robustlmm.R'
     'methods_rstanarm.R'
+    'methods_rstpm2.R'
     'methods_sampleSelection.R'
     'methods_scam.R'
     'methods_stats.R'
@@ -272,6 +279,7 @@ Collate:
     'sanitize_condition.R'
     'sanitize_conf_level.R'
     'sanitize_hypothesis.R'
+    'sanitize_hypothesis_formula.R'
     'sanitize_interaction.R'
     'sanitize_newdata.R'
     'sanitize_numderiv.R'

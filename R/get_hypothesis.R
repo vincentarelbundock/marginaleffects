@@ -1,4 +1,3 @@
-
 get_hypothesis <- function(
     x,
     hypothesis,
@@ -7,6 +6,24 @@ get_hypothesis <- function(
     draws = NULL) {
 
     if (is.null(hypothesis)) return(x)
+
+    if (isTRUE(checkmate::check_choice(hypothesis, "meandev"))) {
+        hypothesis <- function(x) {
+            out <- x
+            out$estimate <- out$estimate - mean(out$estimate)
+            out$hypothesis <- "Mean deviation"
+            return(out)
+        }
+    } else if (isTRUE(checkmate::check_choice(hypothesis, "meanotherdev"))) {
+        hypothesis <- function(x) {
+            out <- x
+            s <- sum(out$estimate)
+            m_other <- (s - out$estimate) / (nrow(x) - 1)
+            out$estimate <- out$estimate - m_other
+            out$hypothesis <- "Mean deviation (other)"
+            return(out)
+        }
+    }
 
     if (is.function(hypothesis)) {
         if (!is.null(draws)) {
@@ -24,7 +41,7 @@ get_hypothesis <- function(
 
         argnames <- names(formals(hypothesis))
         if (!"x" %in% argnames) insight::format_error("The `hypothesis` function must accept an `x` argument.")
-        if (any(!argnames %in% c("x", "draws"))) {
+        if (!all(argnames %in% c("x", "draws"))) {
             msg <- "The allowable arguments for the `hypothesis` function are: `x` and `draws`"
             insight::format_error(msg)
         }
@@ -68,7 +85,8 @@ get_hypothesis <- function(
     # lincom: string shortcuts
     valid <- c("pairwise", "reference", "sequential", "revpairwise", "revreference", "revsequential")
     if (isTRUE(hypothesis %in% valid)) {
-        if (nrow(x) > 25) {
+        safe <- isFALSE(getOption("marginaleffects_safe", default = TRUE))
+        if (nrow(x) > 25 && !safe) {
             msg <- 'The "pairwise", "reference", and "sequential" options of the `hypotheses` argument are not supported for `marginaleffects` commands which generate more than 25 rows of results. Use the `newdata`, `by`, and/or `variables` arguments to compute a smaller set of results on which to conduct hypothesis tests.'
             insight::format_error(msg)
         }
@@ -336,9 +354,9 @@ eval_string_hypothesis <- function(x, hypothesis, lab) {
     }
 
     if (!is.null(attr(lab, "names"))) {
-        lab = attr(lab, "names")
+        lab <- attr(lab, "names")
     } else {
-        lab = gsub("\\s+", "", lab)
+        lab <- gsub("\\s+", "", lab)
     }
 
     draws <- attr(x, "posterior_draws")

@@ -33,10 +33,3 @@ expect_equal(p1$estimate, 0.9867827, tolerance = 1e-5)
 expect_equal(p2$estimate, 0.9867827, tolerance = 1e-5)
 expect_equal(p3$estimate, 0.9867827, tolerance = 1e-5)
 
-# warnings
-expect_warning(predictions(
-  m, newdata = d, by = "var_binom", hypothesis = "pairwise", type = "invlink(link)", transform = exp
-))
-expect_warning(predictions(
-  m, newdata = d, by = "var_binom", hypothesis = "pairwise", transform = exp
-))

@@ -42,6 +42,7 @@ sanity_model_supported_class <- function(model) {
         "clm",
         c("clmm2", "clm2"),
         "coxph",
+        "coxph_weightit",
         "crch",
         "flexsurvreg", # package: flexsurv
         "fixest",
@@ -60,6 +61,7 @@ sanity_model_supported_class <- function(model) {
         c("glmmPQL", "lme"),
         "glimML",
         "glmx",
+        "glm_weightit",
         "hetprob",
         "hurdle",
         "hxlr",
@@ -88,16 +90,19 @@ sanity_model_supported_class <- function(model) {
         "mmrm",
         "model_fit",
         c("multinom", "nnet"),
+        "multinom_weightit",
         "mvgam",
         c("negbin", "glm", "lm"),
         "nls",
         c("ols", "rms", "lm"),
+        "ordinal_weightit",
         c("orm", "rms"),
         c("oohbchoice", "dbchoice"),
         "phylolm",
         "phyloglm",
         c("plm", "panelmodel"),
         "polr",
+        "stpm2","gsm","pstpm2","aft",
         "Rchoice",
         "rendo.base",
         "rlmerMod",
@@ -137,9 +142,10 @@ sanity_model_supported_class <- function(model) {
 sanitize_model <- function(model,
                            newdata = NULL,
                            vcov = NULL,
+                           by = FALSE,
                            ...) {
 
-    model <- sanitize_model_specific(model, vcov = vcov, newdata = newdata, ...)
+    model <- sanitize_model_specific(model, vcov = vcov, newdata = newdata, by = by, ...)
     sanity_model_supported_class(model)
     return(model)
 }

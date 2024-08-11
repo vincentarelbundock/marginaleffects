@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.30">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – mrp</title>
 <style>
@@ -53,15 +52,26 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../vignettes/multiple_imputation.html" rel="next">
 <link href="../vignettes/matching.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -126,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -134,6 +144,10 @@ window.Quarto = {
 <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf"> 
+<span class="menu-text">Article</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/help.html"> 
@@ -155,13 +169,11 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li>
-<li class="breadcrumb-item"><a href="../vignettes/mrp.html">MrP</a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/mrp.html">MrP</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -176,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -217,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -286,14 +298,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Help</span></a>
+  <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Heterogeneity</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Heterogeneity</span></a>
+  <a href="../vignettes/interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactions, polynomials, and splines</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -354,14 +366,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -425,9 +443,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -536,7 +554,7 @@ window.Quarto = {
   </ul>
 </li>
   </ul></nav>
-</div>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><section id="mrp" class="level1"><h1>MrP</h1>
 <p>Data analysts often want to learn about a population using samples that are not representative of that population. Consider a few examples:</p>
@@ -557,10 +575,9 @@ window.Quarto = {
 <section id="mrp-for-surveys-and-market-research" class="level2"><h2 class="anchored" data-anchor-id="mrp-for-surveys-and-market-research">MrP for surveys and market research</h2>
 <p>Imagine that a national supermarket chain plans to introduce a line of meat substitutes in some of its stores. To guide marketing and distribution efforts, the company would like to know the share of the population in each city that is interested in tasting meat substitutes.</p>
 <p>The company conducts a telephone survey of 1000 randomly selected adults from 40 large American cities. For each survey respondent, we record the city of residence, age, level of education, and whether they are interested in tasting meat substitutes. The variable we focus on is “interest in meat substitutes,” measured on a scale of 1 to 7 where 7 means “very interested” and 1 means “not at all interested”. Our ultimate goal is to estimate the average of this 7 point scale for each city.</p>
-<p>The (simulated) data that we will use is stored in a <code>R</code> data frame called <code>survey</code>. We can use the <code><a href="https://rdrr.io/r/base/nrow.html">nrow()</a></code> function to confirm the sample size, and the <code><a href="https://modelsummary.com/reference/datasummary_df.html">datasummary_df()</a></code> function from the <code>modelsummary</code> package to display the first few rows of data:</p>
+<p>The (simulated) data that we will use is stored in a <code>R</code> data frame called <code>survey</code>. We can use the <code><a href="https://rdrr.io/r/base/nrow.html">nrow()</a></code> function to confirm the sample size, and the <code><a href="https://modelsummary.com/man/datasummary_df.html">datasummary_df()</a></code> function from the <code>modelsummary</code> package to display the first few rows of data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/ggridges/">ggridges</a></span><span class="op">)</span></span>
@@ -569,497 +586,134 @@ window.Quarto = {
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">survey</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1000</span></span>
 <span></span>
-<span><span class="fu"><a href="https://modelsummary.com/reference/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">survey</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://modelsummary.com/man/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">survey</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<div id="acgsatvyhw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#acgsatvyhw table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+<!-- preamble start -->
 
-#acgsatvyhw thead, #acgsatvyhw tbody, #acgsatvyhw tfoot, #acgsatvyhw tr, #acgsatvyhw td, #acgsatvyhw th {
-  border-style: none;
-}
-
-#acgsatvyhw p {
-  margin: 0;
-  padding: 0;
-}
-
-#acgsatvyhw .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#acgsatvyhw .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#acgsatvyhw .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#acgsatvyhw .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#acgsatvyhw .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#acgsatvyhw .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#acgsatvyhw .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#acgsatvyhw .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#acgsatvyhw .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#acgsatvyhw .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#acgsatvyhw .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#acgsatvyhw .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#acgsatvyhw .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#acgsatvyhw .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#acgsatvyhw .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#acgsatvyhw .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#acgsatvyhw .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#acgsatvyhw .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#acgsatvyhw .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#acgsatvyhw .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#acgsatvyhw .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#acgsatvyhw .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#acgsatvyhw .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#acgsatvyhw .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#acgsatvyhw .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#acgsatvyhw .gt_left {
-  text-align: left;
-}
-
-#acgsatvyhw .gt_center {
-  text-align: center;
-}
-
-#acgsatvyhw .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#acgsatvyhw .gt_font_normal {
-  font-weight: normal;
-}
-
-#acgsatvyhw .gt_font_bold {
-  font-weight: bold;
-}
-
-#acgsatvyhw .gt_font_italic {
-  font-style: italic;
-}
-
-#acgsatvyhw .gt_super {
-  font-size: 65%;
-}
-
-#acgsatvyhw .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#acgsatvyhw .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#acgsatvyhw .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#acgsatvyhw .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#acgsatvyhw .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#acgsatvyhw .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#acgsatvyhw .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="header gt_col_headings">
-<th id="respondent" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">respondent</th>
-<th id="city" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">city</th>
-<th id="age" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">age</th>
-<th id="education" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">education</th>
-<th id="meat_substitute" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">meat_substitute</th>
-</tr></thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="respondent">0001</td>
-<td class="gt_row gt_left" headers="city">Tucson, AZ</td>
-<td class="gt_row gt_left" headers="age">18-54</td>
-<td class="gt_row gt_left" headers="education">High school or less</td>
-<td class="gt_row gt_left" headers="meat_substitute">1.00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="respondent">0002</td>
-<td class="gt_row gt_left" headers="city">Miami, FL</td>
-<td class="gt_row gt_left" headers="age">55+</td>
-<td class="gt_row gt_left" headers="education">High school or less</td>
-<td class="gt_row gt_left" headers="meat_substitute">6.00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="respondent">0003</td>
-<td class="gt_row gt_left" headers="city">Austin, TX</td>
-<td class="gt_row gt_left" headers="age">55+</td>
-<td class="gt_row gt_left" headers="education">Post-secondary</td>
-<td class="gt_row gt_left" headers="meat_substitute">3.00</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="respondent">0004</td>
-<td class="gt_row gt_left" headers="city">Atlanta, GA</td>
-<td class="gt_row gt_left" headers="age">18-54</td>
-<td class="gt_row gt_left" headers="education">Post-secondary</td>
-<td class="gt_row gt_left" headers="meat_substitute">5.00</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="respondent">0005</td>
-<td class="gt_row gt_left" headers="city">Milwaukee, WI</td>
-<td class="gt_row gt_left" headers="age">18-54</td>
-<td class="gt_row gt_left" headers="education">High school or less</td>
-<td class="gt_row gt_left" headers="meat_substitute">5.00</td>
-</tr>
+    <script>
+      function styleCell_736ywsm07yy0xc2nx3dj(i, j, css_id) {
+        var table = document.getElementById("tinytable_736ywsm07yy0xc2nx3dj");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_736ywsm07yy0xc2nx3dj');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_736ywsm07yy0xc2nx3dj(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_736ywsm07yy0xc2nx3dj");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(0, 0, 'tinytable_css_idtyhpad9m7427rmep2bq1') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(0, 1, 'tinytable_css_idtyhpad9m7427rmep2bq1') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(0, 2, 'tinytable_css_idtyhpad9m7427rmep2bq1') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(0, 3, 'tinytable_css_idtyhpad9m7427rmep2bq1') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(0, 4, 'tinytable_css_idtyhpad9m7427rmep2bq1') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(1, 0, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(1, 1, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(1, 2, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(1, 3, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(1, 4, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(2, 0, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(2, 1, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(2, 2, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(2, 3, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(2, 4, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(3, 0, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(3, 1, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(3, 2, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(3, 3, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(3, 4, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(4, 0, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(4, 1, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(4, 2, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(4, 3, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(4, 4, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(5, 0, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(5, 1, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(5, 2, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(5, 3, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+window.addEventListener('load', function () { styleCell_736ywsm07yy0xc2nx3dj(5, 4, 'tinytable_css_idvafjpwwk9n6omv9dpgbv') })
+    </script><style>
+    .table td.tinytable_css_idtyhpad9m7427rmep2bq1, .table th.tinytable_css_idtyhpad9m7427rmep2bq1 {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idvafjpwwk9n6omv9dpgbv, .table th.tinytable_css_idvafjpwwk9n6omv9dpgbv {  text-align: left; }
+    </style>
+<div class="container">
+      <table class="table table-borderless" id="tinytable_736ywsm07yy0xc2nx3dj" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+<thead><tr>
+<th scope="col">respondent</th>
+                <th scope="col">city</th>
+                <th scope="col">age</th>
+                <th scope="col">education</th>
+                <th scope="col">meat_substitute</th>
+              </tr></thead>
+<tbody>
+<tr>
+<td>0001</td>
+                  <td>Tucson, AZ   </td>
+                  <td>18-54</td>
+                  <td>High school or less</td>
+                  <td>1.00</td>
+                </tr>
+<tr>
+<td>0002</td>
+                  <td>Miami, FL    </td>
+                  <td>55+  </td>
+                  <td>High school or less</td>
+                  <td>6.00</td>
+                </tr>
+<tr>
+<td>0003</td>
+                  <td>Austin, TX   </td>
+                  <td>55+  </td>
+                  <td>Post-secondary     </td>
+                  <td>3.00</td>
+                </tr>
+<tr>
+<td>0004</td>
+                  <td>Atlanta, GA  </td>
+                  <td>18-54</td>
+                  <td>Post-secondary     </td>
+                  <td>5.00</td>
+                </tr>
+<tr>
+<td>0005</td>
+                  <td>Milwaukee, WI</td>
+                  <td>18-54</td>
+                  <td>High school or less</td>
+                  <td>5.00</td>
+                </tr>
 </tbody>
 </table>
 </div>
-</div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 <p>This dataset includes 1000 observations: one per survey respondent. Unfortunately, it is not straightforward to compute precise city-by-city estimates, because although the number of respondents is large overall, the number of respondents within each of the 40 cities is relatively small. Moreover, the company’s sampling strategy does not guarantee that subsamples are representative of each city’s population. MrP can help us circumvent these problems in two steps:</p>
@@ -1074,13 +728,11 @@ window.Quarto = {
 <p>The first step of MrP is to use individual-level data to estimate a model that predicts the value of the variable of interest. One of the great benefits of using <code>marginaleffects</code> for MrP, is that this package is agnostic to the type of model used to make predictions. Analysts can use almost any model they like, and the workflow described below would remain the same.</p>
 <p>One popular choice for MrP is to estimate a multilevel regression model with random intercepts for each of the geographic regions of interest. To do so, analysts could use many different <code>R</code> packages, including <a href="https://cran.r-project.org/package=lme4"><code>lme4</code></a>, <a href="https://cran.r-project.org/package=glmmTMB"><code>glmmTMB</code></a>, or <a href="https://cran.r-project.org/package=brms"><code>brms</code></a>. In this notebook, we use the <code><a href="https://paul-buerkner.github.io/brms/reference/brm.html">brms::brm()</a></code> function to estimate a bayesian multilevel model, with the <code>age</code> and <code>education</code> variables as fixed components, and random intercepts at the city level:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://paul-buerkner.github.io/brms/reference/brm.html">brm</a></span><span class="op">(</span><span class="va">meat_substitute</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">education</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">city</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">survey</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://paul-buerkner.github.io/brms/reference/brm.html">brm</a></span><span class="op">(</span><span class="va">meat_substitute</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">education</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">city</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">survey</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We can visualize the model estimates using the <code><a href="https://modelsummary.com/reference/modelplot.html">modelplot()</a></code> function from the <code>modelsummary</code> package:</p>
+<p>We can visualize the model estimates using the <code><a href="https://modelsummary.com/man/modelplot.html">modelplot()</a></code> function from the <code>modelsummary</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/reference/modelplot.html">modelplot</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/man/modelplot.html">modelplot</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="mrp_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -1093,516 +745,139 @@ window.Quarto = {
 <p>In the second MrP step, we use data from the US Census (or a similar source) to create a “poststratification table.” This table includes one row for each combination of the predictor values in our model. In our model, the <code>age</code> variable has 2 categories (“18-54” and “54+”); the <code>education</code> variables has 2 categories (“High school or less” and “Post-secondary”); and the <code>city</code> variable has 40 unique entries. Therefore, the poststratification table must have <span class="math inline">\(2 \times 2 \times 40 = 160\)</span> entries.</p>
 <p>Crucially, the poststratification dataset must also include a column with the population share of each combination of predictor values. Consider the table used by our hypothetical supermarket chain. This table includes 160 rows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">stratification</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 160</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">stratification</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 160</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And here are the entries for the city of Tucson, AZ:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tucson</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">stratification</span>, <span class="va">city</span> <span class="op">==</span> <span class="st">"Tucson, AZ"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://modelsummary.com/reference/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">tucson</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tucson</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">stratification</span>, <span class="va">city</span> <span class="op">==</span> <span class="st">"Tucson, AZ"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://modelsummary.com/man/datasummary_df.html">datasummary_df</a></span><span class="op">(</span><span class="va">tucson</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<div id="tkeanfcnfg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tkeanfcnfg table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+<!-- preamble start -->
 
-#tkeanfcnfg thead, #tkeanfcnfg tbody, #tkeanfcnfg tfoot, #tkeanfcnfg tr, #tkeanfcnfg td, #tkeanfcnfg th {
-  border-style: none;
-}
-
-#tkeanfcnfg p {
-  margin: 0;
-  padding: 0;
-}
-
-#tkeanfcnfg .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#tkeanfcnfg .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#tkeanfcnfg .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#tkeanfcnfg .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#tkeanfcnfg .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#tkeanfcnfg .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#tkeanfcnfg .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#tkeanfcnfg .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#tkeanfcnfg .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#tkeanfcnfg .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#tkeanfcnfg .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#tkeanfcnfg .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#tkeanfcnfg .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#tkeanfcnfg .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#tkeanfcnfg .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#tkeanfcnfg .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#tkeanfcnfg .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#tkeanfcnfg .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#tkeanfcnfg .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#tkeanfcnfg .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#tkeanfcnfg .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#tkeanfcnfg .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#tkeanfcnfg .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#tkeanfcnfg .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#tkeanfcnfg .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#tkeanfcnfg .gt_left {
-  text-align: left;
-}
-
-#tkeanfcnfg .gt_center {
-  text-align: center;
-}
-
-#tkeanfcnfg .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#tkeanfcnfg .gt_font_normal {
-  font-weight: normal;
-}
-
-#tkeanfcnfg .gt_font_bold {
-  font-weight: bold;
-}
-
-#tkeanfcnfg .gt_font_italic {
-  font-style: italic;
-}
-
-#tkeanfcnfg .gt_super {
-  font-size: 65%;
-}
-
-#tkeanfcnfg .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#tkeanfcnfg .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#tkeanfcnfg .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#tkeanfcnfg .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#tkeanfcnfg .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#tkeanfcnfg .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#tkeanfcnfg .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead><tr class="header gt_col_headings">
-<th id="city" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">city</th>
-<th id="education" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">education</th>
-<th id="age" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">age</th>
-<th id="population_share" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">population_share</th>
-</tr></thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="city">Tucson, AZ</td>
-<td class="gt_row gt_left" headers="education">High school or less</td>
-<td class="gt_row gt_left" headers="age">18-54</td>
-<td class="gt_row gt_left" headers="population_share">0.16</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="city">Tucson, AZ</td>
-<td class="gt_row gt_left" headers="education">Post-secondary</td>
-<td class="gt_row gt_left" headers="age">18-54</td>
-<td class="gt_row gt_left" headers="population_share">0.38</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="city">Tucson, AZ</td>
-<td class="gt_row gt_left" headers="education">High school or less</td>
-<td class="gt_row gt_left" headers="age">55+</td>
-<td class="gt_row gt_left" headers="population_share">0.20</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="city">Tucson, AZ</td>
-<td class="gt_row gt_left" headers="education">Post-secondary</td>
-<td class="gt_row gt_left" headers="age">55+</td>
-<td class="gt_row gt_left" headers="population_share">0.25</td>
-</tr>
+    <script>
+      function styleCell_0p3q1a0g51uybciv7bvv(i, j, css_id) {
+        var table = document.getElementById("tinytable_0p3q1a0g51uybciv7bvv");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_0p3q1a0g51uybciv7bvv');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_0p3q1a0g51uybciv7bvv(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_0p3q1a0g51uybciv7bvv");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(0, 0, 'tinytable_css_id9kuq6reuk359duwzbqal') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(0, 1, 'tinytable_css_id9kuq6reuk359duwzbqal') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(0, 2, 'tinytable_css_id9kuq6reuk359duwzbqal') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(0, 3, 'tinytable_css_id9kuq6reuk359duwzbqal') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(1, 0, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(1, 1, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(1, 2, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(1, 3, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(2, 0, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(2, 1, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(2, 2, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(2, 3, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(3, 0, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(3, 1, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(3, 2, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(3, 3, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(4, 0, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(4, 1, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(4, 2, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+window.addEventListener('load', function () { styleCell_0p3q1a0g51uybciv7bvv(4, 3, 'tinytable_css_idlikvjevocld0erd7pqh5') })
+    </script><style>
+    .table td.tinytable_css_id9kuq6reuk359duwzbqal, .table th.tinytable_css_id9kuq6reuk359duwzbqal {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idlikvjevocld0erd7pqh5, .table th.tinytable_css_idlikvjevocld0erd7pqh5 {  text-align: left; }
+    </style>
+<div class="container">
+      <table class="table table-borderless" id="tinytable_0p3q1a0g51uybciv7bvv" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+<thead><tr>
+<th scope="col">city</th>
+                <th scope="col">education</th>
+                <th scope="col">age</th>
+                <th scope="col">population_share</th>
+              </tr></thead>
+<tbody>
+<tr>
+<td>Tucson, AZ</td>
+                  <td>High school or less</td>
+                  <td>18-54</td>
+                  <td>0.16</td>
+                </tr>
+<tr>
+<td>Tucson, AZ</td>
+                  <td>Post-secondary     </td>
+                  <td>18-54</td>
+                  <td>0.38</td>
+                </tr>
+<tr>
+<td>Tucson, AZ</td>
+                  <td>High school or less</td>
+                  <td>55+  </td>
+                  <td>0.20</td>
+                </tr>
+<tr>
+<td>Tucson, AZ</td>
+                  <td>Post-secondary     </td>
+                  <td>55+  </td>
+                  <td>0.25</td>
+                </tr>
 </tbody>
 </table>
 </div>
-</div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 <p>According to these (simulated) data, the share of Tucson residents who are between 18 and 54 year old and have a High School degree or less is about 16%.</p>
 <p>We can use the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function from the <code>marginaleffects</code> package to predict the value of the <code>meat_substitute</code> variable for each of the four categories of residents in Tucson:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">tucson</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">tucson</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;      1.81  1.50   2.12</span></span>
-<span><span class="co">#&gt;      3.03  2.71   3.34</span></span>
-<span><span class="co">#&gt;      3.01  2.69   3.33</span></span>
-<span><span class="co">#&gt;      4.23  3.91   4.55</span></span>
+<span><span class="co">#&gt;      1.81  1.49   2.12</span></span>
+<span><span class="co">#&gt;      3.03  2.71   3.33</span></span>
+<span><span class="co">#&gt;      3.01  2.69   3.32</span></span>
+<span><span class="co">#&gt;      4.22  3.90   4.53</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, city, education, age, population_share, meat_substitute </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: rowid, estimate, conf.low, conf.high, city, education, age, population_share, meat_substitute</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The MrP estimate for this city is simply the weighted average of predicted values, where weights are the population shares of each category of residents. In this context, we have:</p>
-<p><span class="math display">\[0.16 \times 1.81 + 0.38 \times 3.03 + 0.20 \times 3.01 + 0.25 \times 4.23 = 3.13\]</span></p>
+<p><span class="math display">\[0.16 \times 1.81 + 0.38 \times 3.03 + 0.20 \times 3.01 + 0.25 \times 4.22 = 3.13\]</span></p>
 <p>Instead of computing estimates by hand for each city, we can use the <code>by</code> and <code>wts</code> arguments of the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function to do everything everywhere all at once:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span>              <span class="co"># Compute predictions,</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span>              <span class="co"># Compute predictions,</span></span>
 <span>    model <span class="op">=</span> <span class="va">mod</span>,               <span class="co"># using the multilevel regression model `mod`, </span></span>
 <span>    newdata <span class="op">=</span> <span class="va">stratification</span>,  <span class="co"># for each row of the `stratification` table.</span></span>
 <span>    by <span class="op">=</span> <span class="st">"city"</span>,               <span class="co"># Then, take the weighted average of predictions by city,</span></span>
@@ -1610,24 +885,23 @@ window.Quarto = {
 <span><span class="va">p</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;               city Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  Washington, DC        4.31  3.98   4.63</span></span>
-<span><span class="co">#&gt;  Tucson, AZ            3.13  2.82   3.44</span></span>
-<span><span class="co">#&gt;  Seattle, WA           5.06  4.73   5.39</span></span>
-<span><span class="co">#&gt;  San Jose, CA          3.92  3.57   4.27</span></span>
-<span><span class="co">#&gt;  San Francisco, CA     5.07  4.72   5.40</span></span>
+<span><span class="co">#&gt;  Washington, DC        4.30  3.97   4.63</span></span>
+<span><span class="co">#&gt;  Tucson, AZ            3.13  2.83   3.43</span></span>
+<span><span class="co">#&gt;  Seattle, WA           5.06  4.74   5.38</span></span>
+<span><span class="co">#&gt;  San Jose, CA          3.92  3.58   4.26</span></span>
+<span><span class="co">#&gt;  San Francisco, CA     5.06  4.72   5.41</span></span>
 <span><span class="co">#&gt; --- 30 rows omitted. See ?print.marginaleffects --- </span></span>
-<span><span class="co">#&gt;  Boston, MA            3.65  3.37   3.92</span></span>
-<span><span class="co">#&gt;  Baltimore, MD         2.94  2.57   3.31</span></span>
-<span><span class="co">#&gt;  Austin, TX            2.88  2.58   3.19</span></span>
-<span><span class="co">#&gt;  Atlanta, GA           4.60  4.28   4.91</span></span>
+<span><span class="co">#&gt;  Boston, MA            3.65  3.37   3.93</span></span>
+<span><span class="co">#&gt;  Baltimore, MD         2.93  2.58   3.30</span></span>
+<span><span class="co">#&gt;  Austin, TX            2.88  2.57   3.19</span></span>
+<span><span class="co">#&gt;  Atlanta, GA           4.60  4.27   4.92</span></span>
 <span><span class="co">#&gt;  Albuquerque, NM       2.67  2.35   2.99</span></span>
-<span><span class="co">#&gt; Columns: city, estimate, conf.low, conf.high </span></span>
-<span><span class="co">#&gt; Type:  response</span></span></code></pre></div>
+<span><span class="co">#&gt; Type:  response </span></span>
+<span><span class="co">#&gt; Columns: city, estimate, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Since we estimated a bayesian model in the “Mr” step, we can now use the <code><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws()</a></code> function to extract draws from the posterior distribution of the MrP estimates. This allows us to compute credible intervals for each city, and draw many fancy plots like this one:</p>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="co"># extract draws from the posterior distribution</span></span>
 <span>    <span class="fu"><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="co"># sort cities by interest in meat substitutes</span></span>
@@ -1643,7 +917,7 @@ window.Quarto = {
 <span>        y <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>        title <span class="op">=</span> <span class="st">"Estimated interest in meat substitutes by city"</span>,</span>
 <span>        subtitle <span class="op">=</span> <span class="st">"Multilevel Regression and Poststratification"</span>,</span>
-<span>        caption <span class="op">=</span> <span class="st">"Source: Simulated data"</span><span class="op">)</span></span></code></pre></div>
+<span>        caption <span class="op">=</span> <span class="st">"Source: Simulated data"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="mrp_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -1654,12 +928,10 @@ window.Quarto = {
 </section><section id="data-simulation" class="level2"><h2 class="anchored" data-anchor-id="data-simulation">Data simulation</h2>
 <p>All the data used on this page were simulated using this code:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://vincentarelbundock.github.io/countrycode/">countrycode</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com">gt</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/paul-buerkner/brms">brms</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1024</span><span class="op">)</span></span>
 <span></span>
@@ -1687,12 +959,11 @@ window.Quarto = {
 <span>    <span class="va">survey</span><span class="op">)</span></span>
 <span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="op">~</span><span class="va">.</span>, <span class="va">survey</span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">M</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">survey</span><span class="op">$</span><span class="va">meat_substitute</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">M</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">b</span>, breaks <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">survey</span><span class="op">$</span><span class="va">meat_substitute</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">M</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">b</span>, breaks <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
 </section></section><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
 <ol>
 <li id="fn1"><p>See the bottom of this page for the simulation code.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
@@ -2129,6 +1400,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-
-</body>
-</html>
+</body></html>

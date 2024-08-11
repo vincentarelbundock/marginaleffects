@@ -58,9 +58,9 @@ sanitize_model_specific(model, ...)
 
 \method{sanitize_model_specific}{rqs}(model, ...)
 
-\method{sanitize_model_specific}{svyolr}(model, wts = FALSE, ...)
+\method{sanitize_model_specific}{svyolr}(model, wts = FALSE, by = FALSE, ...)
 
-\method{sanitize_model_specific}{svyglm}(model, wts = FALSE, ...)
+\method{sanitize_model_specific}{svyglm}(model, wts = FALSE, by = FALSE, ...)
 }
 \arguments{
 \item{model}{Model object}
@@ -103,11 +103,11 @@ arguments.}
 \item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
 \item string:
 \itemize{
-\item "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
-\item "median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.
-\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-\item "tukey": Marginal Effects at Tukey's 5 numbers.
-\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+\item "mean": Slopes evaluated when each predictor is held at its mean or mode.
+\item "median": Slopes evaluated when each predictor is held at its median or mode.
+\item "balanced": Slopes evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
+\item "tukey": Slopes evaluated at Tukey's 5 numbers.
+\item "grid": Slopes evaluated on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
 }}
 
@@ -117,6 +117,16 @@ arguments.}
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
 \item FALSE: Equal weights.
 \item TRUE: Extract weights from the fitted object with \code{insight::find_weights()} and use them when taking weighted averages of estimates. Warning: \code{newdata=datagrid()} returns a single average weight, which is equivalent to using \code{wts=FALSE}
+}}
+
+\item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
+\itemize{
+\item \code{FALSE}: return the original unit-level estimates.
+\item \code{TRUE}: aggregate estimates for each term.
+\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
+\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
+\item See examples below.
+\item For more complex aggregations, you can use the \code{FUN} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
 }}
 }
 \value{

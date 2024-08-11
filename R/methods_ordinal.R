@@ -30,12 +30,13 @@ get_predict.clm <- function(model,
     out <- data.frame(
         group = rep(colnames(pred), each = nrow(pred)),
         estimate = c(pred))
+    out$group <- group_to_factor(out$group, model)
 
     # often an internal call
     if ("rowid" %in% colnames(newdata)) {
         out$rowid <- rep(newdata$rowid, times = ncol(pred))
     } else {
-        out$rowid <- rep(1:nrow(pred), times = ncol(pred))
+        out$rowid <- rep(seq_len(nrow(pred)), times = ncol(pred))
     }
 
     return(out)

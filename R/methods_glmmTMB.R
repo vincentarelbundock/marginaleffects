@@ -21,7 +21,7 @@ get_predict.glmmTMB <- function(model,
 
     np <- model$fit$par
     if (!is.null(newparams)) {
-        np[1:length(newparams)] <- newparams
+        np[seq_along(newparams)] <- newparams
     }
 
     out <- get_predict.default(

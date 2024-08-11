@@ -65,11 +65,42 @@ get_predict.svyolr <- function(model,
 }
 
 
+#' @include get_predict.R
+#' @rdname get_predict
+#' @export
+get_predict.svyglm <- function(model,
+                               newdata = insight::get_data(model),
+                               type = "response",
+                               se.fit = FALSE,
+                               ...) {
+
+  estimate <- stats::predict(model, newdata = newdata, type = type, se.fit = se.fit)
+  rowid <- attr(estimate, "names")
+
+  # useless integer index creates problems: Issue #1161
+  if (identical(suppressWarnings(as.integer(rowid)), seq_len(nrow(newdata)))) {
+    rowid <- NULL
+  }
+
+  if (is.null(rowid) && "rowid" %in% colnames(newdata)) {
+      rowid <- newdata[["rowid"]]
+  } else if (is.null(rowid)) {
+      rowid <- seq_len(estimate)
+  } else {
+      # rowid might be character, but survey::predict() requires non-negative integers
+      rowid <- seq_along(rowid)
+  }
+  out <- data.frame(rowid, estimate = as.numeric(estimate))
+  row.names(out) <- NULL
+  return(out)
+}
+
+
 #' @include sanity_model.R
 #' @rdname sanitize_model_specific
 #' @export
-sanitize_model_specific.svyolr <- function(model, wts = FALSE, ...) {
-  if (isFALSE(wts)) {
+sanitize_model_specific.svyolr <- function(model, wts = FALSE, by = FALSE, ...) {
+  if (isFALSE(wts) && !isFALSE(by)) {
     warning("With models of this class, it is normally good practice to specify weights using the `wts` argument. Otherwise, weights will be ignored in the computation of quantities of interest.", call. = FALSE)
   }
   return(model)

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.30">
+<meta name="generator" content="quarto-1.5.43">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Marginal Effects Zoo – predictions</title>
 <style>
@@ -53,15 +52,26 @@ div.sourceCode
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script><script src="../site_libs/quarto-nav/headroom.min.js"></script><script src="../site_libs/clipboard/clipboard.min.js"></script><script src="../site_libs/quarto-search/autocomplete.umd.js"></script><script src="../site_libs/quarto-search/fuse.min.js"></script><script src="../site_libs/quarto-search/quarto-search.js"></script><meta name="quarto:offset" content="../">
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
 <link href="../man/comparisons.html" rel="next">
 <link href="../vignettes/uncertainty.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script><script src="../site_libs/quarto-html/popper.min.js"></script><script src="../site_libs/quarto-html/tippy.umd.min.js"></script><script src="../site_libs/quarto-html/anchor.min.js"></script><link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script><link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -126,7 +136,7 @@ window.Quarto = {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -134,6 +144,10 @@ window.Quarto = {
 <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf"> 
+<span class="menu-text">Article</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/help.html"> 
@@ -155,13 +169,11 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="../man/predictions.html">Functions</a></li>
-<li class="breadcrumb-item"><a href="../man/predictions.html"><code>predictions</code></a></li>
-</ol></nav><a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/predictions.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/predictions.html"><code>predictions</code></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -176,9 +188,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -217,9 +229,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -286,14 +298,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Help</span></a>
+  <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Heterogeneity</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Heterogeneity</span></a>
+  <a href="../vignettes/interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactions, polynomials, and splines</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -354,14 +366,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
@@ -425,9 +443,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -541,12 +559,13 @@ window.Quarto = {
   <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types">Prediction types</a></li>
   <li><a href="#order-of-operations" id="toc-order-of-operations" class="nav-link" data-scroll-target="#order-of-operations">Order of operations</a></li>
   <li><a href="#parallel-computation" id="toc-parallel-computation" class="nav-link" data-scroll-target="#parallel-computation">Parallel computation</a></li>
+  <li><a href="#global-options" id="toc-global-options" class="nav-link" data-scroll-target="#global-options">Global options</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul>
 </li>
   </ul></nav>
-</div>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><section id="predictions" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="predictions">Predictions</h2>
 <section id="description" class="level3"><h3 class="anchored" data-anchor-id="description">Description</h3>
@@ -608,10 +627,10 @@ avg_predictions(
 )
 </code></pre>
 </section><section id="arguments" class="level3"><h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
-<table><tbody>
-<tr>
+<table>
+<tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_model">model</code>
+<code id="model">model</code>
 </td>
 <td>
 Model object
@@ -619,7 +638,7 @@ Model object
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_newdata">newdata</code>
+<code id="newdata">newdata</code>
 </td>
 <td>
 <p>Grid of predictor values at which we evaluate predictions.</p>
@@ -634,19 +653,19 @@ Model object
 <p>string:</p>
 <ul>
 <li>
-<p>"mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.</p>
+<p>"mean": Predictions evaluated when each predictor is held at its mean or mode.</p>
 </li>
 <li>
-<p>"median": Predictions at the Median. Predictions when each predictor is held at its median or mode.</p>
+<p>"median": Predictions evaluated when each predictor is held at its median or mode.</p>
 </li>
 <li>
-<p>"marginalmeans": Predictions at Marginal Means. See Details section below.</p>
+<p>"balanced": Predictions evaluated on a balanced grid with every combination of categories and numeric variables held at their means.</p>
 </li>
 <li>
-<p>"tukey": Predictions at Tukey’s 5 numbers.</p>
+<p>"tukey": Predictions evaluated at Tukey’s 5 numbers.</p>
 </li>
 <li>
-<p>"grid": Predictions on a grid of representative numbers (Tukey’s 5 numbers and unique values of categorical predictors).</p>
+<p>"grid": Predictions evaluated on a grid of representative numbers (Tukey’s 5 numbers and unique values of categorical predictors).</p>
 </li>
 </ul>
 </li>
@@ -672,7 +691,7 @@ Model object
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_variables">variables</code>
+<code id="variables">variables</code>
 </td>
 <td>
 <p>Counterfactual variables.</p>
@@ -739,7 +758,7 @@ Model object
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_vcov">vcov</code>
+<code id="vcov">vcov</code>
 </td>
 <td>
 <p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:</p>
@@ -781,7 +800,7 @@ Model object
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_conf_level">conf_level</code>
+<code id="conf_level">conf_level</code>
 </td>
 <td>
 numeric value between 0 and 1. Confidence level to use to build a confidence interval.
@@ -789,7 +808,7 @@ numeric value between 0 and 1. Confidence level to use to build a confidence int
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_type">type</code>
+<code id="type">type</code>
 </td>
 <td>
 string indicates the type (scale) of the predictions used to compute contrasts or slopes. This can differ based on the model type, but will typically be a string such as: "response", "link", "probs", or "zero". When an unsupported string is entered, the model-specific list of acceptable values is returned in an error message. When <code>type</code> is <code>NULL</code>, the first entry in the error message is used by default.
@@ -797,7 +816,7 @@ string indicates the type (scale) of the predictions used to compute contrasts o
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_by">by</code>
+<code id="by">by</code>
 </td>
 <td>
 <p>Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:</p>
@@ -825,7 +844,7 @@ string indicates the type (scale) of the predictions used to compute contrasts o
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_byfun">byfun</code>
+<code id="byfun">byfun</code>
 </td>
 <td>
 A function such as <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code> or <code><a href="https://rdrr.io/r/base/sum.html">sum()</a></code> used to aggregate estimates within the subgroups defined by the <code>by</code> argument. <code>NULL</code> uses the <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code> function. Must accept a numeric vector and return a single numeric value. This is sometimes used to take the sum or mean of predicted probabilities across outcome or predictor levels. See examples section.
@@ -833,7 +852,7 @@ A function such as <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_wts">wts</code>
+<code id="wts">wts</code>
 </td>
 <td>
 <p>logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in <code style="white-space: pre;">avg_*()</code> or with the <code>by</code> argument, and not unit-level estimates. See <code><a href="https://rdrr.io/r/stats/weighted.mean.html">?weighted.mean</a></code></p>
@@ -855,7 +874,7 @@ A function such as <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_transform">transform</code>
+<code id="transform">transform</code>
 </td>
 <td>
 A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
@@ -863,10 +882,10 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_hypothesis">hypothesis</code>
+<code id="hypothesis">hypothesis</code>
 </td>
 <td>
-<p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, a string formula, or a function.</p>
+<p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix; a string equation; string; a formula, or a function.</p>
 <ul>
 <li>
 <p>Numeric:</p>
@@ -883,7 +902,7 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 </ul>
 </li>
 <li>
-<p>String formula to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. The <code style="white-space: pre;">b*</code> wildcard can be used to test hypotheses on all estimates. If a named vector is used, the names are used as labels in the output. Examples:</p>
+<p>String equation to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. The <code style="white-space: pre;">b*</code> wildcard can be used to test hypotheses on all estimates. If a named vector is used, the names are used as labels in the output. Examples:</p>
 <ul>
 <li>
 <p><code>hp = drat</code></p>
@@ -912,7 +931,44 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 <p>"sequential": difference between an estimate and the estimate in the next row.</p>
 </li>
 <li>
+<p>"meandev": difference between an estimate and the mean of all estimates.</p>
+</li>
+<li>
+<p>"meanotherdev": difference between an estimate and the mean of all other estimates, excluding the current one.</p>
+</li>
+<li>
 <p>"revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Formula:</p>
+<ul>
+<li>
+<p><code>comparison ~ pairs | group</code></p>
+</li>
+<li>
+<p>Left-hand side determines the type of comparison to conduct: <code>difference</code> or <code>ratio</code>. If the left-hand side is empty, <code>difference</code> is chosen.</p>
+</li>
+<li>
+<p>Right-hand side determines the pairs of estimates to compare: <code>reference</code>, <code>sequential</code>, or <code>meandev</code></p>
+</li>
+<li>
+<p>Optional: Users can supply grouping variables after a vertical bar to conduct comparisons withing subsets.</p>
+</li>
+<li>
+<p>Examples:</p>
+<ul>
+<li>
+<p><code>~ reference</code></p>
+</li>
+<li>
+<p><code>ratio ~ pairwise</code></p>
+</li>
+<li>
+<p><code>difference ~ pairwise | groupid</code></p>
+</li>
+</ul>
 </li>
 </ul>
 </li>
@@ -926,7 +982,7 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 <p>Returns a data frame with columns <code>term</code> and <code>estimate</code> (mandatory) and <code>rowid</code> (optional).</p>
 </li>
 <li>
-<p>The function can also accept and operation on optional input arguments: <code>newdata</code>, <code>by</code>, <code>draws</code>.</p>
+<p>The function can also accept optional input arguments: <code>newdata</code>, <code>by</code>, <code>draws</code>.</p>
 </li>
 <li>
 <p>This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use <code><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws()</a></code> to extract and manipulate the draws directly.</p>
@@ -941,7 +997,7 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_equivalence">equivalence</code>
+<code id="equivalence">equivalence</code>
 </td>
 <td>
 Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.
@@ -949,7 +1005,7 @@ Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equ
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_p_adjust">p_adjust</code>
+<code id="p_adjust">p_adjust</code>
 </td>
 <td>
 Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See stats::p.adjust
@@ -957,7 +1013,7 @@ Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferr
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_df">df</code>
+<code id="df">df</code>
 </td>
 <td>
 Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and <code>Inf</code>. When <code>df</code> is <code>Inf</code>, the normal distribution is used. When <code>df</code> is finite, the <code>t</code> distribution is used. See insight::get_df for a convenient function to extract degrees of freedom. Ex: <code>slopes(model, df = insight::get_df(model))</code>
@@ -965,7 +1021,7 @@ Degrees of freedom used to compute p values and confidence intervals. A single n
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_numderiv">numderiv</code>
+<code id="numderiv">numderiv</code>
 </td>
 <td>
 <p>string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.</p>
@@ -987,7 +1043,7 @@ Degrees of freedom used to compute p values and confidence intervals. A single n
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="predictions_:_...">…</code>
+<code id="...">…</code>
 </td>
 <td>
 Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method supplied by the modeling package.These arguments are particularly useful for mixed-effects or bayesian models (see the online vignettes on the <code>marginaleffects</code> website). Available arguments can vary from model to model, depending on the range of supported arguments by each modeling package. See the "Model-Specific Arguments" section of the <code><a href="https://marginaleffects.com/man/slopes.html">?slopes</a></code> documentation for a non-exhaustive list of available arguments.
@@ -1015,7 +1071,7 @@ Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/pr
 <p><code>p.value</code>: p value associated to the <code>estimate</code> column. The null is determined by the <code>hypothesis</code> argument (0 by default), and p values are computed before applying the <code>transform</code> argument. For models of class <code>feglm</code>, <code>Gam</code>, <code>glm</code> and <code>negbin</code>, p values are computed on the link scale by default unless the <code>type</code> argument is specified explicitly.</p>
 </li>
 <li>
-<p><code>s.value</code>: Shannon information transforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "surprise") against the null hypothesis that the coin is fair? The purpose of S is to calibrate the analyst’s intuition about the strength of evidence encoded in p against a well-known physical phenomenon. See Greenland (2019) and Cole et al. (2020).</p>
+<p><code>s.value</code>: Shannon information transforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "surprise") against the null hypothesis that the coin is fair? The purpose of S is to calibrate the analyst’s intuition about the strength of evidence encoded in p against a well-known physical phenomenon. See Greenland (2019) and Cole et al.&nbsp;(2020).</p>
 </li>
 <li>
 <p><code>conf.low</code>: lower bound of the confidence interval (or equal-tailed interval for bayesian models)</p>
@@ -1051,8 +1107,8 @@ Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/pr
 </section><section id="model-specific-arguments" class="level3"><h3 class="anchored" data-anchor-id="model-specific-arguments">Model-Specific Arguments</h3>
 <p>Some model types allow model-specific arguments to modify the nature of marginal effects, predictions, marginal means, and contrasts. Please report other package-specific <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> arguments on Github so we can add them to the table below.</p>
 <p>https://github.com/vincentarelbundock/marginaleffects/issues</p>
-<table><tbody>
-<tr>
+<table>
+<tbody><tr>
 <td style="text-align: left;">
 Package
 </td>
@@ -1172,6 +1228,19 @@ mgcv::predict.bam
 </tr>
 <tr>
 <td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+<code>gam</code>
+</td>
+<td style="text-align: left;">
+<code>exclude</code>
+</td>
+<td style="text-align: left;">
+mgcv::predict.gam
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
 <code>robustlmm</code>
 </td>
 <td style="text-align: left;">
@@ -1211,6 +1280,20 @@ robustlmm::predict.rlmerMod
 </tr>
 <tr>
 <td style="text-align: left;">
+<code>sampleSelection</code>
+</td>
+<td style="text-align: left;">
+<code>selection</code>
+</td>
+<td style="text-align: left;">
+<code>part</code>
+</td>
+<td style="text-align: left;">
+sampleSelection::predict.selection
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
 </td>
 </tr>
 </tbody></table></section><section id="bayesian-posterior-summaries" class="level3"><h3 class="anchored" data-anchor-id="bayesian-posterior-summaries">Bayesian posterior summaries</h3>
@@ -1220,7 +1303,7 @@ robustlmm::predict.rlmerMod
 <p>By default, the center of the posterior distribution in bayesian models is identified by the median. Users can use a different summary function by setting a global option:</p>
 <p><code>options(“marginaleffects_posterior_center” = “mean”)</code></p>
 <p><code>options(“marginaleffects_posterior_center” = “median”)</code></p>
-<p>When estimates are averaged using the <code>by</code> argument, the <code><a href="https://generics.r-lib.org/reference/tidy.html">tidy()</a></code> function, or the <code><a href="https://rdrr.io/pkg/PairedData/man/summary.html">summary()</a></code> function, the posterior distribution is marginalized twice over. First, we take the average <em>across</em> units but <em>within</em> each iteration of the MCMC chain, according to what the user requested in <code>by</code> argument or <code>tidy()/summary()</code> functions. Then, we identify the center of the resulting posterior using the function supplied to the <code>“marginaleffects_posterior_center”</code> option (the median by default).</p>
+<p>When estimates are averaged using the <code>by</code> argument, the <code><a href="https://generics.r-lib.org/reference/tidy.html">tidy()</a></code> function, or the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function, the posterior distribution is marginalized twice over. First, we take the average <em>across</em> units but <em>within</em> each iteration of the MCMC chain, according to what the user requested in <code>by</code> argument or <code>tidy()/summary()</code> functions. Then, we identify the center of the resulting posterior using the function supplied to the <code>“marginaleffects_posterior_center”</code> option (the median by default).</p>
 </section><section id="equivalence-inferiority-superiority" class="level3"><h3 class="anchored" data-anchor-id="equivalence-inferiority-superiority">Equivalence, Inferiority, Superiority</h3>
 <p><span class="math inline">\(\theta\)</span> is an estimate, <span class="math inline">\(\sigma_\theta\)</span> its estimated standard error, and <span class="math inline">\([a, b]\)</span> are the bounds of the interval supplied to the <code>equivalence</code> argument.</p>
 <p>Non-inferiority:</p>
@@ -1262,7 +1345,7 @@ robustlmm::predict.rlmerMod
 <p>Thanks to Russell V. Lenth for the excellent <code>emmeans</code> package and documentation which inspired this feature.</p>
 </section><section id="prediction-types" class="level3"><h3 class="anchored" data-anchor-id="prediction-types">Prediction types</h3>
 <p>The <code>type</code> argument determines the scale of the predictions used to compute quantities of interest with functions from the <code>marginaleffects</code> package. Admissible values for <code>type</code> depend on the model object. When users specify an incorrect value for <code>type</code>, <code>marginaleffects</code> will raise an informative error with a list of valid <code>type</code> values for the specific model object. The first entry in the list in that error message is the default type.</p>
-<p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models and functions. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type=“invlink(link)”</code> will not always be equivalent to the average of estimates with <code>type=“response”</code>.</p>
+<p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models, and only for the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type=“invlink(link)”</code> will not always be equivalent to the average of estimates with <code>type=“response”</code>. This type is default when calling <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code>. It is available—but not default—when calling <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code> or <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> with the <code>by</code> argument.</p>
 <p>Some of the most common <code>type</code> values are:</p>
 <p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumhaz, cumprob, density, detection, disp, ev, expected, expvalue, fitted, hazard, invlink(link), latent, latent_N, linear, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, rmst, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob</p>
 </section><section id="order-of-operations" class="level3"><h3 class="anchored" data-anchor-id="order-of-operations">Order of operations</h3>
@@ -1292,7 +1375,7 @@ robustlmm::predict.rlmerMod
 </ol></section><section id="parallel-computation" class="level3"><h3 class="anchored" data-anchor-id="parallel-computation">Parallel computation</h3>
 <p>The <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> and <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> functions can use parallelism to speed up computation. Operations are parallelized for the computation of standard errors, at the model coefficient level. There is always considerable overhead when using parallel computation, mainly involved in passing the whole dataset to the different processes. Thus, parallel computation is most likely to be useful when the model includes many parameters and the dataset is relatively small.</p>
 <p>Warning: In many cases, parallel processing will not be useful at all.</p>
-<p>To activate parallel computation, users must load the <code>future.apply</code> package, call <code><a href="https://future.futureverse.org/reference/plan.html">plan()</a></code> function, and set a global option. For example:</p>
+<p>To activate parallel computation, users must load the <code>future.apply</code> package, call <code>plan()</code> function, and set a global option. For example:</p>
 <div class="sourceCode r">
 <pre>library(future.apply)
 plan("multicore", workers = 4)
@@ -1306,6 +1389,18 @@ slopes(model)
 <pre>options(marginaleffects_parallel = FALSE)
 </pre>
 </div>
+</section><section id="global-options" class="level3"><h3 class="anchored" data-anchor-id="global-options">Global options</h3>
+<p>The behavior of <code>marginaleffects</code> functions can be modified by setting global options.</p>
+<p>Disable some safety checks:</p>
+<div class="sourceCode r">
+<pre>options(marginaleffects_safe = FALSE)`
+</pre>
+</div>
+<p>Omit some columns from the printed output:</p>
+<div class="sourceCode r">
+<pre>options(marginaleffects_print_omit = c("p.value", "s.value"))`
+</pre>
+</div>
 </section><section id="references" class="level3"><h3 class="anchored" data-anchor-id="references">References</h3>
 <ul>
 <li>
@@ -1316,8 +1411,7 @@ slopes(model)
 </li>
 </ul></section><section id="examples" class="level3"><h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -1415,7 +1509,7 @@ slopes(model)
 <span><span class="va">by</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
 <span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"4,6"</span>, <span class="st">"4,6"</span>, <span class="st">"8"</span><span class="op">)</span>,</span>
 <span>    group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span>, byfun <span class="op">=</span> <span class="va">sum</span>, by <span class="op">=</span> <span class="va">by</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span>, byfun <span class="op">=</span> <span class="va">sum</span>, by <span class="op">=</span> <span class="va">by</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
@@ -1853,6 +1947,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-
-</body>
-</html>
+</body></html>

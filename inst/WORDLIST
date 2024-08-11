@@ -1,7 +1,5 @@
 AAP
-mislabelled
-cumhaz
-rmst
+liftavgwts
 AAPs
 AFAICT
 AME
@@ -28,6 +26,7 @@ Carlisle
 Codecov
 Customizable
 Demetri
+Diniz
 Dowd
 DxP
 EMMs
@@ -127,8 +126,10 @@ bugfix
 cdot
 chisq
 cme
+coercible
 confounders
 cran
+cumhaz
 cumprob
 customclass
 customizable
@@ -218,8 +219,11 @@ lnratioavgwts
 lp
 marginalmeans
 mbox
+meandev
+meanotherdev
 methodologists
 minmax
+mislabelled
 modelbased
 nd
 newdata
@@ -231,6 +235,7 @@ plasminogen
 poisson
 ppd
 pre
+preprint
 probs
 programmatically
 quartile
@@ -243,6 +248,7 @@ revpairwise
 revreference
 revsequential
 richardson
+rmst
 rowid
 rsample
 rvar
@@ -261,6 +267,7 @@ timpipeseek
 tinytable
 tukey
 typst
+unadvisable
 underspecified
 unintuitive
 untransformed

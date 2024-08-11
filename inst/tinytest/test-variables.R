@@ -23,7 +23,7 @@ cmp2 <- avg_comparisons(
     dplyr::arrange(term, contrast)
 # known <- c("4 - 3", "5 - 4", "+10", "6 - 4", "8 - 4", "8 - 6")
 # aggregate refactor gave us new labels
-known <- c("+10", "4 - 3", "5 - 4", "6 - 4", "8 - 4", "8 - 6")
+known <- c("mean(+10)", "mean(4) - mean(3)", "mean(5) - mean(4)", "mean(6) - mean(4)", "mean(8) - mean(4)", "mean(8) - mean(6)")
 expect_true(all(known %in% cmp1$contrast))
 expect_equivalent(cmp1$estimate[6], cmp2$estimate[6] * 10)
 
@@ -39,8 +39,7 @@ expect_error(comparisons(mod, variables = list(cyl = "iqr")), pattern = "element
 
 # Binary variables
 mod <- glm(am ~ hp + vs, dat = mtcars, family = binomial)
-cmp3 <- comparisons(mod, variables = list(vs = 1))
-expect_inherits(cmp3, "comparisons")
+expect_error(comparisons(mod, variables = list(vs = 1), "length 2"))
 
 # no need to include categorical focal variable when there is only one of them
 mod <- lm(mpg ~ hp + factor(am) + wt, mtcars)

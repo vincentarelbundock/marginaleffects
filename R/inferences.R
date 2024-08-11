@@ -155,9 +155,6 @@ inferences <- function(x,
         insight::check_if_installed("MASS")
         attr(model, "inferences_method") <- "simulation"
         attr(model, "inferences_R") <- R
-        # do not use simulation mean as point estimate
-        # https://doi.org/10.1017/psrm.2023.8
-        b <- get_coef(x)
     }
 
     if (isTRUE(grepl("conformal", method))) {
@@ -168,30 +165,35 @@ inferences <- function(x,
             test = conformal_test,
             calibration = conformal_calibration,
             score = conformal_score)
+
     } else {
         mfx_call[["model"]] <- model
         out <- recall(mfx_call)
     }
 
-    # do not use simulation mean as point estimate
-    # https://doi.org/10.1017/psrm.2023.8
-    if (method == "simulation") {
-        out$estimate <- x$estimate
-    }
 
     return(out)
 }
 
 
 inferences_dispatch <- function(model, INF_FUN, ...) {
+    args <- list(
+        model = model,
+        INF_FUN = INF_FUN
+    )
+    args <- c(args, list(...))
+    if ("rowid" %in% names(args$newdata)) {
+        args$newdata <- subset(args$newdata, rowid > 0)
+    }
+
     if (isTRUE(attr(model, "inferences_method") == "rsample")) {
-        bootstrap_rsample(model = model, INF_FUN = INF_FUN, ...)
+        do.call(bootstrap_rsample, args)
     } else if (isTRUE(attr(model, "inferences_method") == "boot")) {
-        bootstrap_boot(model = model, INF_FUN = INF_FUN, ...)
+        do.call(bootstrap_boot, args)
     } else if (isTRUE(attr(model, "inferences_method") == "fwb")) {
-        bootstrap_fwb(model = model, INF_FUN = INF_FUN, ...)
+        do.call(bootstrap_fwb, args)
     } else if (isTRUE(attr(model, "inferences_method") == "simulation")) {
-        bootstrap_simulation(model = model, INF_FUN = INF_FUN, ...)
+        do.call(bootstrap_simulation, args)
     } else {
         return(NULL)
     }

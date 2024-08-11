@@ -2,13 +2,15 @@
 % Please edit documentation in R/hypothesis_helper.R
 \name{specify_hypothesis}
 \alias{specify_hypothesis}
-\title{(EXPERIMENTAL) Complex aggregation and test functions for the \code{hypothesis} argument}
+\title{(EXPERIMENTAL) This experimental function will soon be deprecated. Please supply a formula or function to the \code{hypothesis} argument to conduct (group-wise) hypothesis tests.}
 \usage{
 specify_hypothesis(
   hypothesis = "reference",
+  comparison = "difference",
   label = NULL,
   label_columns = NULL,
-  by = c("term", "group", "contrast")
+  by = c("term", "group", "contrast"),
+  internal = FALSE
 )
 }
 \arguments{
@@ -18,17 +20,19 @@ specify_hypothesis(
 \item Function: Accepts a single argument named \code{estimate} and returns a numeric vector.
 }}
 
+\item{comparison}{String. "ratio" or "difference"}
+
 \item{label}{Function. Accepts a vector of row labels and combines them to create hypothesis labels.}
 
 \item{label_columns}{Character vector. Column names to use for hypothesis labels. Default is \code{c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))}.}
 
 \item{by}{Character vector. Variable names which indicate subgroups in which the \code{hypothesis} function should be applied.}
+
+\item{internal}{Logical. Raises a deprecation warning when FALSE.}
 }
 \value{
 \code{specify_hypothesis()} is a "function factory", which means that executing it will return a function suitable for use in the \code{hypothesis} argument of a \code{marginaleffects} function.
 }
 \description{
-Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other \code{marginaleffects} functions.
-
-This function creates aggregation and test functions for use with the \code{hypothesis} argument in \code{marginaleffects} functions like \code{predictions()}, \code{slopes()}, and \code{comparisons()}. The benefit of this function is that it handles a lot of the "boilerplate" code such as label creation and transformations by subgroups.
+(EXPERIMENTAL) This experimental function will soon be deprecated. Please supply a formula or function to the \code{hypothesis} argument to conduct (group-wise) hypothesis tests.
 }

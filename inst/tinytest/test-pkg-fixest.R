@@ -269,7 +269,7 @@ expect_inherits(mfx2, "slopes")
 
 # Issue #727: backtransform predictions
 mod = fixest::feglm(am ~ hp, data = mtcars, family = binomial)
-p1 <- avg_predictions(mod)
+p1 <- avg_predictions(mod, type = "invlink(link)")
 p2 <- avg_predictions(mod, type = "link", transform = mod$family$linkinv)
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$conf.low, p2$conf.low)

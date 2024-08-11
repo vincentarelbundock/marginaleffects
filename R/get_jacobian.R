@@ -27,53 +27,80 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
     # old version. probably not optimal. Keep for posterity.
     # h <- max(1e-8, 1e-4 * min(abs(x), na.rm = TRUE))
     baseline <- func(x)
-    inner_loop <- function(i, ...) {
-        if (is.null(eps)) {
-            h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
-        } else {
-            h <- eps
+
+    # we pre-chunk because future does not cache datasets in nodes, which means we 
+    # must pass every worker the full data and model for every future.
+    inner_loop <- function(chunk, ...) {
+        out <- list()
+        for (i in chunk) {
+            if (is.null(eps)) {
+                h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
+            } else {
+                h <- eps
+            }
+            dx <- x
+            dx[i] <- dx[i] + h
+            out <- c(out, list((func(dx) - baseline) / h))
         }
-        dx <- x
-        dx[i] <- dx[i] + h
-        out <- (func(dx) - baseline) / h
+        out <- do.call(cbind, out)
         return(out)
     }
+
     if (isTRUE(getOption("marginaleffects_parallel", default = FALSE))) {
         insight::check_if_installed("future.apply")
-        df <- future.apply::future_lapply(seq_along(x), inner_loop, future.seed = TRUE)
+        insight::check_if_installed("future")
+        insight::check_if_installed("parallel")
+        chunks <- parallel::splitIndices(length(x), future::nbrOfWorkers())
+        df <- future.apply::future_lapply(
+            chunks,
+            inner_loop, 
+            future.seed = TRUE)
         df <- do.call("cbind", df)
     } else {
-        df <- matrix(NA_real_, length(baseline), length(x))
-        for (i in seq_along(x)) {
-            df[, i] <- inner_loop(i)
-        }
+        chunks <- seq_along(x)
+        df <- lapply(chunks, inner_loop)
+        df <- do.call("cbind", df)
     }
+
     return(df)
 }
-    
+
 
 get_jacobian_fdcenter <- function(func, x, eps = NULL) {
     baseline <- func(x)
-    inner_loop <- function(i, ...) {
-        if (is.null(eps)) {
-            h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
-        } else {
-            h <- eps
+    # we pre-chunk because future does not cache datasets in nodes, which means we 
+    # must pass every worker the full data and model for every future.
+    inner_loop <- function(chunk, ...) {
+        out <- list()
+        for (i in chunk) {
+            if (is.null(eps)) {
+                h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
+            } else {
+                h <- eps
+            }
+            dx_hi <- dx_lo <- x
+            dx_hi[i] <- dx_hi[i] + h / 2
+            dx_lo[i] <- dx_lo[i] - h / 2
+            out <- c(out, list((func(dx_hi) - func(dx_lo)) / h))
         }
-        dx_hi <- dx_lo <- x
-        dx_hi[i] <- dx_hi[i] + h / 2
-        dx_lo[i] <- dx_lo[i] - h / 2
-        out <- (func(dx_hi) - func(dx_lo)) / h
+        out <- do.call(cbind, out)
+        return(out)
     }
+
     if (isTRUE(getOption("marginaleffects_parallel", default = FALSE))) {
         insight::check_if_installed("future.apply")
-        df <- future.apply::future_lapply(seq_along(x), inner_loop, future.seed = TRUE)
+        insight::check_if_installed("future")
+        insight::check_if_installed("parallel")
+        chunks <- parallel::splitIndices(length(x), future::nbrOfWorkers())
+        df <- future.apply::future_lapply(
+            chunks,
+            inner_loop, 
+            future.seed = TRUE)
         df <- do.call("cbind", df)
     } else {
-        df <- matrix(NA_real_, length(baseline), length(x))
-        for (i in seq_along(x)) {
-            df[, i] <- inner_loop(i)
-        }
+        chunks <- seq_along(x)
+        df <- lapply(chunks, inner_loop)
+        df <- do.call("cbind", df)
     }
     return(df)
 }

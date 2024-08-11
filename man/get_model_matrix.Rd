@@ -25,11 +25,11 @@ get_model_matrix(model, newdata)
 \item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
 \item string:
 \itemize{
-\item "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
-\item "median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.
-\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-\item "tukey": Marginal Effects at Tukey's 5 numbers.
-\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+\item "mean": Slopes evaluated when each predictor is held at its mean or mode.
+\item "median": Slopes evaluated when each predictor is held at its median or mode.
+\item "balanced": Slopes evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
+\item "tukey": Slopes evaluated at Tukey's 5 numbers.
+\item "grid": Slopes evaluated on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
 }}
 }

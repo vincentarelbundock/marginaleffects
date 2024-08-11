@@ -1,19 +1,8 @@
 
 # Machine Learning
 
-```{r}
-#| include: false
-options(modelsummary_factory_default = "gt")
-```
-
 
 `marginaleffects` offers several "model-agnostic" functions to interpret statistical and machine learning models. This vignette highlights how the package can be used to extract meaningful insights from models trained using the `mlr3` and `tidymodels` frameworks.
-
-```{r, eval = FALSE}
-remotes::install_github("vincentarelbundock/marginaleffects")
-```
-
-Make sure to restart `R` after installation. Then, load a few libraries:
 
 ```{r}
 #| message: false

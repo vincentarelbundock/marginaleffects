@@ -4,7 +4,6 @@
 
 ```{r, include = FALSE}
 options(width = 1000)
-options(modelsummary_factory_default = "gt")
 ## this vignette is in .Rbuildignore because lme4 is not available on old CRAN
 ## test machines.
 
@@ -26,7 +25,6 @@ We can summarize the results of the `comparisons()` or `slopes()` functions usin
 ```{r}
 library(modelsummary)
 library(marginaleffects)
-options(modelsummary_factory_default = "gt")
 
 mod <- glm(am ~ wt + drat, family = binomial, data = mtcars)
 mfx <- avg_slopes(mod)

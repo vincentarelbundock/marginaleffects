@@ -72,13 +72,13 @@ predictions(
     newdata = datagrid(am = unique, cyl = unique))
 ```
 
-Alternatively, we can use the convenient `grid_type="balanced"` argument:
+Alternatively, we can use the convenient `newdata="balanced"` argument:
 
 ```{r}
 predictions(
     mod,
     by = "cyl",
-    newdata = datagrid(grid_type = "balanced"))
+    newdata = "balanced")
 ```
 
 We can of course marginalize over the interaction between more variables, by changing the `by` argument:
@@ -87,7 +87,7 @@ We can of course marginalize over the interaction between more variables, by cha
 predictions(
     mod,
     by = c("am", "cyl"),
-    newdata = datagrid(grid_type = "balanced"))
+    newdata = "balanced")
 ```
 
 The same results can be achieved using the [powerful `emmeans` package](https://cran.r-project.org/package=emmeans):

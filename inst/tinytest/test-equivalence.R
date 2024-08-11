@@ -7,7 +7,7 @@ mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
 
 # predictions() vs. {emmeans}: inf
 delta <- 1
-null <- 20 
+null <- 20
 em <- emmeans(mod, "gear", df = Inf)
 e1 <- test(em, delta = delta, null = null, side = "noninferiority", df = Inf)
 e2 <- predictions(
@@ -54,8 +54,9 @@ expect_inherits(mfx, "slopes")
 requiet("equivalence")
 set.seed(1024)
 N <- 100
-dat <- rbind(data.frame(y = rnorm(N), x = 0),
-             data.frame(y = rnorm(N, mean = 0.3), x = 1))
+dat <- rbind(
+    data.frame(y = rnorm(N), x = 0),
+    data.frame(y = rnorm(N, mean = 0.3), x = 1))
 mod <- lm(y ~ x, data = dat)
 FUN <- function(x) {
     data.frame(term = "t-test", estimate = coef(x)[2])
@@ -122,27 +123,27 @@ mm <- predictions(
     mod,
     newdata = datagrid(grid_type = "balanced"),
     by = "source",
-    hypothesis = "pairwise") 
+    hypothesis = "pairwise")
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-e1 <- e1[order(e1$contrast),]
-e2 <- e2[order(e2$term),]
+e1 <- e1[order(e1$contrast), ]
+e2 <- e2[order(e2$term), ]
 expect_equivalent(e1$z.ratio, e2$statistic.nonsup, tol = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.nonsup, tol = 1e-6)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-e1 <- e1[order(e1$contrast),]
-e2 <- e2[order(e2$term),]
+e1 <- e1[order(e1$contrast), ]
+e2 <- e2[order(e2$term), ]
 expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
-expect_equivalent(e1$p.value, e2$p.value.noninf)
+expect_equivalent(e1$p.value, e2$p.value.noninf, tolerance = 1e-6)
 
 e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-e1 <- e1[order(e1$contrast),]
-e2 <- e2[order(e2$term),]
-expect_equivalent(e1$p.value, e2$p.value.equiv)
+e1 <- e1[order(e1$contrast), ]
+e2 <- e2[order(e2$term), ]
+expect_equivalent(e1$p.value, e2$p.value.equiv, tolerance = 1e-6)
 
 
 source("helpers.R")

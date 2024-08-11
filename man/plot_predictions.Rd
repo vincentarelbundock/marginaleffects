@@ -80,7 +80,7 @@ first entry in the error message is used by default.}
 
 \item{transform}{A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
-\item{points}{Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points.}
+\item{points}{Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points. Warning: The points displayed are raw data, so the resulting plot is not a "partial residual plot."}
 
 \item{rug}{TRUE displays tick marks on the axes to mark the distribution of raw data.}
 
@@ -131,9 +131,11 @@ https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
     \tab  \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
     \tab  \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
+    \tab \code{gam} \tab \code{exclude} \tab \link[mgcv:predict.gam]{mgcv::predict.gam} \cr
    \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
     \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
    \code{MCMCglmm} \tab \code{MCMCglmm} \tab \code{ndraws} \tab  \cr
+   \code{sampleSelection} \tab \code{selection} \tab \code{part} \tab \link[sampleSelection:predict.selection]{sampleSelection::predict.selection} \cr
 }
 }
 
@@ -142,7 +144,7 @@ https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
 
 The \code{type} argument determines the scale of the predictions used to compute quantities of interest with functions from the \code{marginaleffects} package. Admissible values for \code{type} depend on the model object. When users specify an incorrect value for \code{type}, \code{marginaleffects} will raise an informative error with a list of valid \code{type} values for the specific model object. The first entry in the list in that error message is the default type.
 
-The \code{invlink(link)} is a special type defined by \code{marginaleffects}. It is available for some (but not all) models and functions. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with \code{type="invlink(link)"} will not always be equivalent to the average of estimates with \code{type="response"}.
+The \code{invlink(link)} is a special type defined by \code{marginaleffects}. It is available for some (but not all) models, and only for the \code{predictions()} function. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with \code{type="invlink(link)"} will not always be equivalent to the average of estimates with \code{type="response"}. This type is default when calling \code{predictions()}. It is available---but not default---when calling \code{avg_predictions()} or \code{predictions()} with the \code{by} argument.
 
 Some of the most common \code{type} values are:
 

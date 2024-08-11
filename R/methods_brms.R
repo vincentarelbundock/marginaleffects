@@ -64,7 +64,7 @@ get_predict.brmsfit <- function(model,
     } else if ("rowid" %in% colnames(newdata)) {
         idx <- newdata[["rowid"]]
     } else {
-        idx <- 1:nrow(newdata)
+        idx <- seq_len(nrow(newdata))
     }
 
     # resp_subset sometimes causes dimension mismatch 
@@ -96,6 +96,7 @@ get_predict.brmsfit <- function(model,
             rowid = rep(idx, times = ncol(out)),
             group = rep(colnames(out), each = nrow(out)),
             estimate = c(out))
+        out$group <- group_to_factor(out$group, model)
     } else {
         stop("marginaleffects cannot extract posterior draws from this model. Please report this problem to the Bug tracker with a reporducible example: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
     }

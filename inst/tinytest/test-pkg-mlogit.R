@@ -49,6 +49,8 @@ m2 <- nnet::multinom(mode ~ income, data = Fishing, trace = FALSE)
 # predictions() vs. nnet::multinom()
 p1 <- predictions(m1)
 p2 <- predictions(m2, type = "probs")
+p1$group <- as.character(p1$group)
+p2$group <- as.character(p2$group)
 setDT(p1, key = c("rowid", "group"))
 setDT(p2, key = c("rowid", "group"))
 expect_equivalent(p1$estimate, p2$estimate, tolerance = 1e-5)
@@ -57,6 +59,8 @@ expect_true(cor(p1$estimate, p2$estimate) > .98)
 # comparisons() vs. nnet::multinom()
 c1 <- comparisons(m1)
 c2 <- comparisons(m2, type = "probs")
+c1$group <- as.character(c1$group)
+c2$group <- as.character(c2$group)
 setDT(c1, key = c("rowid", "term", "group"))
 setDT(c2, key = c("rowid", "term", "group"))
 expect_equivalent(c1$estimate, c2$estimate, tolerance = 1e-5)
@@ -65,6 +69,8 @@ expect_true(cor(c1$estimate, c2$estimate) > .98)
 # slopes() vs. nnet::multinom()
 mfx1 <- slopes(m1)
 mfx2 <- slopes(m2, type = "probs")
+mfx1$group <- as.character(mfx1$group)
+mfx2$group <- as.character(mfx2$group)
 setDT(mfx1, key = c("rowid", "term", "group"))
 setDT(mfx2, key = c("rowid", "term", "group"))
 expect_equivalent(mfx1$estimate, mfx2$estimate, tolerance = 1e-5)
@@ -114,4 +120,16 @@ expect_equivalent(p$std.error, c(0.0316227771712602, 0.0316227779679258), tolera
 
 
 
+# Issue #1125: regression due to factor conversion
+requiet("AER")
+requiet("mlogit")
+data("TravelMode", package = "AER")
+mod <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
+s <- avg_slopes(mod, variables = c("income", "size"))
+expect_true(all(c("air", "bus", "car", "train") %in% s$group))
+
+
+
 rm(list = ls())
+
+

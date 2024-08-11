@@ -37,11 +37,11 @@
 #' + Warning: Please avoid modifying your dataset between fitting the model and calling a `marginaleffects` function. This can sometimes lead to unexpected results.
 #' + `NULL` (default): Unit-level predictions for each observed value in the dataset (empirical distribution). The dataset is retrieved using [insight::get_data()], which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 #' + string:
-#'   - "mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.
-#'   - "median": Predictions at the Median. Predictions when each predictor is held at its median or mode.
-#'   - "marginalmeans": Predictions at Marginal Means. See Details section below.
-#'   - "tukey": Predictions at Tukey's 5 numbers.
-#'   - "grid": Predictions on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+#'   - "mean": Predictions evaluated when each predictor is held at its mean or mode.
+#'   - "median": Predictions evaluated when each predictor is held at its median or mode.
+#'   - "balanced": Predictions evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
+#'   - "tukey": Predictions evaluated at Tukey's 5 numbers.
+#'   - "grid": Predictions evaluated on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.
@@ -69,6 +69,7 @@
 #' @template order_of_operations
 #' @template parallel
 #' @template references
+#' @template options
 #'
 #' @return A `data.frame` with one row per observation and several columns:
 #' * `rowid`: row number of the `newdata` data frame
@@ -263,6 +264,7 @@ predictions <- function(model,
         newdata = newdata,
         wts = wts,
         vcov = vcov,
+        by = by,
         calling_function = "predictions",
         ...)
     tmp <- sanitize_hypothesis(hypothesis, ...)
@@ -276,7 +278,11 @@ predictions <- function(model,
     }
 
     # if type is NULL, we backtransform if relevant
-    type_string <- sanitize_type(model = model, type = type, calling_function = "predictions")
+    type_string <- sanitize_type(
+        model = model,
+        type = type,
+        by = by,
+        calling_function = "predictions")
     if (identical(type_string, "invlink(link)")) {
         if (is.null(hypothesis)) {
             type_call <- "link"
@@ -380,7 +386,7 @@ predictions <- function(model,
     # Bootstrap
     out <- inferences_dispatch(
         INF_FUN = predictions,
-        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type_call, by = by,
+        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type_string, by = by,
         conf_level = conf_level,
         byfun = byfun, wts = wts, transform = transform_original, hypothesis = hypothesis, ...)
     if (!is.null(out)) {
@@ -422,7 +428,8 @@ predictions <- function(model,
         }
     }
 
-    if (!"rowid" %in% colnames(tmp) && nrow(tmp) == nrow(newdata)) {
+    # issue #1105: hypothesis may change the meaning of rows, so we don't want to force-merge `newdata`
+    if (!"rowid" %in% colnames(tmp) && nrow(tmp) == nrow(newdata) && is.null(hypothesis)) {
         tmp$rowid <- newdata$rowid
     }
 
@@ -439,11 +446,6 @@ predictions <- function(model,
 
     # bayesian posterior draws
     draws <- attr(tmp, "posterior_draws")
-
-    # bayesian: unpad draws (done in get_predictions for frequentist)
-    if (!is.null(draws) && "rowid" %in% colnames(tmp)) {
-        draws <- draws[tmp$rowid > 0, , drop = FALSE]
-    }
 
     V <- NULL
     J <- NULL
@@ -621,14 +623,15 @@ get_predictions <- function(model,
     # unpad factors before averaging
     # trust `newdata` rowid more than `out` because sometimes `get_predict()` will add a positive index even on padded data
     # HACK: the padding indexing rowid code is still a mess
-    if ("rowid" %in% colnames(newdata) && nrow(newdata) == nrow(out)) {
+    # Do not merge `newdata` with `hypothesis`, because it may have the same
+    # number of rows but represent different quantities
+    if ("rowid" %in% colnames(newdata) && nrow(newdata) == nrow(out) && is.null(hypothesis)) {
         out$rowid <- newdata$rowid
     }
-    if ("rowid" %in% colnames(out)) {
-        idx <- out$rowid > 0
-        out <- out[idx, drop = FALSE]
-        draws <- draws[idx, , drop = FALSE]
-    }
+    # unpad
+    if ("rowid" %in% colnames(out)) draws <- subset(draws, out$rowid > 0)
+    if ("rowid" %in% colnames(out)) out <- subset(out, rowid > 0)
+    if ("rowid" %in% colnames(newdata)) newdata <- subset(newdata, rowid > 0)
 
     # expensive: only do this inside the jacobian if necessary
     if (!isFALSE(wts) ||
@@ -662,6 +665,7 @@ get_predictions <- function(model,
     # otherwise, users cannot know for sure what is going to be the first and
     # second rows, etc.
     out <- sort_columns(out, newdata, by)
+
 
     return(out)
 }

@@ -1,6 +1,5 @@
 ---
 title: Conjoint experiments
-format: html
 bibliography: conjoint.bib
 ---
 

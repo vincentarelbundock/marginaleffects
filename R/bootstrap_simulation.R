@@ -12,7 +12,8 @@ bootstrap_simulation <- function(model, INF_FUN, vcov, ...) {
     args <- dots
     args[["vcov"]] <- FALSE
     attr(model, "inferences_method") <- NULL
-    out <- do.call(INF_FUN, c(list(model), args))
+
+    delta <- do.call(INF_FUN, c(list(model), args))
 
     inner_fun <- function(i = NULL) {
         args <- dots
@@ -26,7 +27,11 @@ bootstrap_simulation <- function(model, INF_FUN, vcov, ...) {
     draws <- lapply(seq_len(nrow(coefmat)), inner_fun)
     draws <- do.call("cbind", draws)
 
-    out <- get_ci(out, draws = draws, conf_level = args$conf_level)
+    out <- get_ci(delta, draws = draws, conf_level = args$conf_level)
+
+    # do not use simulation mean as point estimate
+    # https://doi.org/10.1017/psrm.2023.8
+    out$estimate <- delta$estimate
 
     attr(out, "posterior_draws") <- draws
 

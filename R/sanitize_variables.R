@@ -188,7 +188,10 @@ sanitize_variables <- function(variables,
             }
             # get_contrast_data requires both levels
             if (calling_function == "comparisons") {
-                predictors[[v]] <- 0:1
+                if (length(predictors[[v]]) != 2) {
+                    msg <- sprintf("The `%s` variable is binary. The corresponding entry in the `variables` argument must be a vector of length 2.", v)
+                    insight::format_error(msg)
+                }
             }
 
         } else if (get_variable_class(modeldata, v, "numeric")) {
@@ -208,7 +211,7 @@ sanitize_variables <- function(variables,
             } else if (calling_function == "predictions") {
                 # string shortcuts
                 if (identical(predictors[[v]], "iqr")) {
-                    predictors[[v]] <- stats::quantile(modeldata[[v]], probs = c(.25, .75), na.rm = TRUE)
+                    predictors[[v]] <- stats::quantile(modeldata[[v]], probs = c(0.25, 0.75), na.rm = TRUE)
                 } else if (identical(predictors[[v]], "minmax")) {
                     predictors[[v]] <- c(min(modeldata[[v]], na.rm = TRUE), max(modeldata[[v]], na.rm = TRUE))
                 } else if (identical(predictors[[v]], "sd")) {
@@ -290,7 +293,7 @@ sanitize_variables <- function(variables,
 
     } else if (is.character(comparison)) {
         # switch to the avg version when there is a `by` function
-        if (isTRUE(checkmate::check_character(by)) && !isTRUE(grepl("avg$", comparison))) {
+        if ((isTRUE(checkmate::check_character(by)) || isTRUE(by)) && !isTRUE(grepl("avg$", comparison))) {
             comparison <- paste0(comparison, "avg")
         }
 

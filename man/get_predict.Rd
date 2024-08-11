@@ -7,9 +7,9 @@
 %   R/methods_glmmTMB.R, R/methods_lme4.R, R/methods_mclogit.R,
 %   R/methods_mhurdle.R, R/methods_mlogit.R, R/methods_mlr3.R, R/methods_mmrm.R,
 %   R/methods_ordinal.R, R/methods_quantreg.R, R/methods_rms.R,
-%   R/methods_robustlmm.R, R/methods_rstanarm.R, R/methods_stats.R,
-%   R/methods_survey.R, R/methods_survival.R, R/methods_tidymodels.R,
-%   R/methods_tobit1.R
+%   R/methods_robustlmm.R, R/methods_rstanarm.R, R/methods_rstpm2.R,
+%   R/methods_stats.R, R/methods_survey.R, R/methods_survival.R,
+%   R/methods_tidymodels.R, R/methods_tobit1.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -46,9 +46,14 @@
 \alias{get_predict.ols}
 \alias{get_predict.rlmerMod}
 \alias{get_predict.stanreg}
+\alias{get_predict.stpm2}
+\alias{get_predict.pstpm2}
+\alias{get_predict.gsm}
+\alias{get_predict.aft}
 \alias{get_predict.lm}
 \alias{get_predict.glm}
 \alias{get_predict.svyolr}
+\alias{get_predict.svyglm}
 \alias{get_predict.coxph}
 \alias{get_predict.model_fit}
 \alias{get_predict.workflow}
@@ -131,11 +136,27 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{stanreg}(model, newdata = insight::get_data(model), type = "response", ...)
 
+\method{get_predict}{stpm2}(model, newdata = NULL, ...)
+
+\method{get_predict}{pstpm2}(model, newdata = NULL, ...)
+
+\method{get_predict}{gsm}(model, newdata = NULL, ...)
+
+\method{get_predict}{aft}(model, newdata = NULL, ...)
+
 \method{get_predict}{lm}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{glm}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{svyolr}(model, newdata = insight::get_data(model), type = "probs", ...)
+
+\method{get_predict}{svyglm}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  se.fit = FALSE,
+  ...
+)
 
 \method{get_predict}{coxph}(model, newdata = insight::get_data(model), type = "lp", ...)
 
@@ -161,11 +182,11 @@ get_predict(model, newdata, type, ...)
 \item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
 \item string:
 \itemize{
-\item "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
-\item "median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.
-\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-\item "tukey": Marginal Effects at Tukey's 5 numbers.
-\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+\item "mean": Slopes evaluated when each predictor is held at its mean or mode.
+\item "median": Slopes evaluated when each predictor is held at its median or mode.
+\item "balanced": Slopes evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
+\item "tukey": Slopes evaluated at Tukey's 5 numbers.
+\item "grid": Slopes evaluated on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
 }}
 

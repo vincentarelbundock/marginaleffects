@@ -76,6 +76,7 @@ get_predict.default <- function(model,
             } else {
                 out <- list(rowid = seq_len(length(pred)), estimate = pred)
             }
+
         }
         
 
@@ -96,6 +97,7 @@ get_predict.default <- function(model,
                 group = rep(colnames(pred), each = nrow(pred)),
                 estimate = c(pred))
         }
+        out$group <- group_to_factor(out$group, model)
     } else {
         stop(sprintf("Unable to extract predictions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]), call. = FALSE)
     }

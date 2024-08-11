@@ -10,6 +10,11 @@ mod <- lm(mpg ~ carb + cyl, dat)
 
 
 
+# hyothesis formula for model coefficients
+mod <- lm(mpg ~ factor(cyl) + 0, data = mtcars)
+h <- hypotheses(mod, hypothesis = ~ reference)
+expect_inherits(h, "hypotheses")
+
 
 # informative errors and warnings
 tmp <- lm(mpg ~ drat + wt, data = mtcars)
@@ -215,6 +220,16 @@ dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6
 m <- lm(Sepal.Width ~ Sepal.Length * Species + dummy, data = dat)
 mfx <- slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = "pairwise")
 expect_true("setosa, 0 - setosa, 1" %in% mfx$term)
+
+
+# Issue #1092: hypothesis = "mean", "meanother"
+mod <- lm(mpg ~ hp + drat + factor(cyl), data = mtcars)
+p1 <- avg_predictions(mod, by = "cyl")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "meandev")
+expect_equivalent(p2$estimate, p1$estimate - mean(p1$estimate))
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "meanotherdev")
+expect_equivalent(p2$estimate, p1$estimate - (sum(p1$estimate) - p1$estimate) / (nrow(p1) - 1))
+
 
 
 rm(list = ls())

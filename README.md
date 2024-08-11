@@ -1,8 +1,15 @@
 
 
 <center>
-<a href = "https://marginaleffects.com" target = "_blank"><img src="man/figures/marginaleffects_logo_word.svg" width = "100%"></a>
-<br> <br>
+<!-- <a href = "https://marginaleffects.com" target = "_blank"><img src="man/figures/marginaleffects_logo_word.svg" width = "100%"></a> -->
+<a href = "https://marginaleffects.com" target = "_blank"><img src="man/figures/zoo_header.png" width = "100%"></a>
+<br>
+<center>
+<h3>
+How to interpret statistical models in R and Python
+</h3>
+</center>
+<br>
 <a href = "https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
 <a href = "https://marginaleffects.com" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>
 <a href = "https://marginaleffects.com" target = "_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a>
@@ -26,7 +33,7 @@ estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects,
 and other model types. This can lead to wasted effort, confusion, and
 mistakes, and it can hinder the implementation of best practices.
 
-## Free Book
+## Book
 
 [This free online book](https://marginaleffects.com/) introduces a
 conceptual framework to clearly define statistical quantities of
@@ -69,7 +76,31 @@ package can facilitate the analysis of:
 [Get started by clicking
 here!](https://marginaleffects.com/vignettes/get_started.html)
 
-## Free Software
+## Article
+
+Our article on `marginaleffects` is provisionally accepted for
+publication by the *Journal of Statistical Software*. You can read [the
+preprint
+here.](https://marginaleffects.com/files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf)
+
+To cite `marginaleffects` in publications please use:
+
+Arel-Bundock V, Greifer N, Heiss A (Forthcoming). “How to Interpret
+Statistical Models Using marginaleffects in R and Python.” *Journal of
+Statistical Software*.
+
+A BibTeX entry for LaTeX users is:
+
+``` {latex}
+@Article{,
+    title = {How to Interpret Statistical Models Using {marginaleffects} in {R} and {Python}},
+    author = {Vincent Arel-Bundock and Noah Greifer and Andrew Heiss},
+    year = {Forthcoming},
+    journal = {Journal of Statistical Software},
+}
+```
+
+## Software
 
 The `marginaleffects` package for `R` and `Python` offers a single point
 of entry to easily interpret the results of [over 100 classes of

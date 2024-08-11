@@ -6,6 +6,11 @@ plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet_1 = NULL, v_facet_
         }
         if (identical(condition$condition[[v]], "threenum")) {
             dat[[v]] <- fun(dat[[v]], c("-SD", "Mean", "+SD"))
+        } else if (identical(condition$condition[[v]], "fivenum")) {
+            labs <- stats::setNames(
+                sort(unique(dat[[v]])),
+                format(sort(unique(dat[[v]])), digits = 2))
+            dat[[v]] <- fun(dat[[v]], names(labs))
         } else if (identical(condition$condition[[v]], "minmax")) {
             dat[[v]] <- fun(dat[[v]], c("Min", "Max"))
         } else if (identical(condition$condition[[v]], "quartile")) {
@@ -99,12 +104,12 @@ plot_build <- function(
             p <- p + ggplot2::geom_pointrange(
                 data = dat,
                 mapping = aes_obj,
-                position = ggplot2::position_dodge(.15))
+                position = ggplot2::position_dodge(0.15))
         } else {
             p <- p + ggplot2::geom_point(
                 data = dat,
                 mapping = aes_obj,
-                position = ggplot2::position_dodge(.15))
+                position = ggplot2::position_dodge(0.15))
         }
 
     # continuous x-axis
@@ -122,7 +127,7 @@ plot_build <- function(
         aes_args$ymin <- aes_args$ymax <- NULL
         aes_obj <- do.call(ggplot2::aes, aes_args)
         if ("conf.low" %in% colnames(dat)) {
-            p <- p + ggplot2::geom_ribbon(data = dat, aes_obj_ribbon, alpha = .1)
+            p <- p + ggplot2::geom_ribbon(data = dat, aes_obj_ribbon, alpha = 0.1)
             p <- p + ggplot2::geom_line(data = dat, aes_obj)
         }
         p <- p + ggplot2::geom_line(data = dat, aes_obj)

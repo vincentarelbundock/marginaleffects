@@ -21,7 +21,7 @@ get_ci <- function(
     }
 
     required <- c("estimate", "std.error")
-    if (!inherits(x, "data.frame") || any(!required %in% colnames(x))) {
+    if (!inherits(x, "data.frame") || !all(required %in% colnames(x))) {
         return(x)
     }
 
@@ -116,7 +116,7 @@ get_ci_draws <- function(x, conf_level, draws, model = NULL) {
         insight::check_if_installed("collapse", minimum_version = "1.9.0")
         # Issue #1017
         if (nrow(draws) > 0) {
-            CIs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fquantile, probs = c(critical, .5, 1 - critical))
+            CIs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fquantile, probs = c(critical, 0.5, 1 - critical))
             x$estimate <- CIs[, 2]
             x$conf.low <- CIs[, 1]
             x$conf.high <- CIs[, 3]
