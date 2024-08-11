@@ -6,10 +6,14 @@ Breaking change:
 
 * `type="invlink(link)"` is no longer default in `avg_predictions()` or when calling `predictions()` with the `by` argument. It is still default in `predictions()` without the `by` argument. The backtransform strategy is still available with by setting `type="invlink(link)"` explicitly.
 
+New models supported:
+
+* `mmrm` package for mixed effects modelling. Thanks to @kkmann for contribution #1000, as well as @clarkliming and @lang-benjamin for useful comments.
+* `rstpm2` package: support for `stpm2`, `pstpm2`, `gsm`, and `aft` models. Thanks to @mclements for contribution #1188 and @aghayes for useful comments.
+
 New:
 
 * `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
-* Added support for `stpm2`, `pstpm2`, `gsm`, and `aft` models from `rstpm2`. Thanks to @aghaynes and @mclements.
 * Added support for `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
 * Parallel computation with `future` is more efficient by chunking tasks to avoid passing large objects to every worker for every future. Issue #1158.
 * All columns of `newdata` are passed to the `hypothesis` function when `newdata` is supplied explicitly. Thanks to @gravesti for report #1175.
@@ -119,7 +123,6 @@ Breaking changes:
 New:
 
 * `datagrid(grid_type = "balanced")` creates a balanced grid with all unique values of categorical predictors. This can be used with `predictions()` to compute marginal means as in the `emmeans` package.
-* added support for the `mmrm` package for mixed effects modelling
 * `mvgam` package support (multivariate generalized additive models)
 
 Deprecation warnings:
