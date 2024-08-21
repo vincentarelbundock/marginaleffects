@@ -32,8 +32,8 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["brmsfit_multiple"]] <- valid[["brmsfit"]]
     valid[["selection"]] <- c("part") # sampleSelection
     valid[["glmmTMB"]] <- c("re.form", "allow.new.levels", "zitype") # glmmTMB
-    valid[["bam"]] <- c("exclude") # mgcv
-    valid[["gam"]] <- c("exclude") # mgcv
+    valid[["bam"]] <- c("exclude", "discrete") # mgcv
+    valid[["gam"]] <- c("exclude", "discrete") # mgcv
     valid[["rlmerMod"]] <- c("re.form", "allow.new.levels")
     valid[["gamlss"]] <- c("what", "safe") # gamlss
     valid[["lme"]] <- c("level") # nlme::lme
