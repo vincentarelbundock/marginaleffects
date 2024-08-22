@@ -9,6 +9,12 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
     # some pre-processing, and we want to rely on the workflow to do that.
     # workflows are triggered on `stats::predict()`
     if (inherits(model, c("model_fit", "workflow"))) {
+        if ("fit" %in% names(model)) {
+            tmp <- try(get_modeldata(model$fit), silent = TRUE)
+            if (inherits(tmp, "data.frame")) {
+                return(tmp)
+            }
+        }
         return(NULL)
     }
 
