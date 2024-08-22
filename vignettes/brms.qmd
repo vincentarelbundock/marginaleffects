@@ -885,3 +885,45 @@ avg_slopes(mod, dpar = "sigma")
 ```
 
 
+
+# Manual computation: Counterfactual comparisons
+
+Here is an example which replicates `comparisons()` output manually. Hopefully this will help some readers understand what is going on under the hood:
+
+```{r, eval = FALSE}
+library(marginaleffects)
+data("ChickWeight")
+
+mod = brm(data = ChickWeight,
+          weight ~ Time * Diet + (Time|Chick),
+          seed = 123,
+          backend = "cmdstanr")
+
+# NA
+comparisons(mod,
+    variables = "Time",
+    by = "Diet",
+    re_formula = NA)
+
+d0 <- ChickWeight
+d1 <- transform(d0, Time = Time + 1)
+p0 <- posterior_epred(mod, newdata = d0, re_formula = NA)
+p1 <- posterior_epred(mod, newdata = d1, re_formula = NA)
+p <- p1 - p0
+cmp <- apply(p, 1, function(x) tapply(x, ChickWeight$Diet, mean))
+apply(cmp, 1, quantile, prob = .025)
+
+# NULL
+comparisons(mod,
+    variables = "Time",
+    by = "Diet",
+    re_formula = NULL)
+
+d0 <- ChickWeight
+d1 <- transform(d0, Time = Time + 1)
+p0 <- posterior_epred(mod, newdata = d0, re_formula = NULL)
+p1 <- posterior_epred(mod, newdata = d1, re_formula = NULL)
+p <- p1 - p0
+cmp <- apply(p, 1, function(x) tapply(x, ChickWeight$Diet, mean))
+apply(cmp, 1, quantile, prob = .025)
+```
