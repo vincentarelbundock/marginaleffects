@@ -29,6 +29,7 @@ Bugs:
 * Average lift and average comparisons with user-supplied functions could be be calculated incorrectly when all predictors were categorical. Thanks to @Dpananos for Issue #1151.
 * Indexing bug returned `NA` for some commands in `survey` models. Thanks to @weikang9009 for report #1161.
 * Respect default `tinytable` theme.
+* Inverted confidence interval bounds with some inverse link functions. Thanks to @strengejacke for report #1204.
 
 ## 0.21.0
 

@@ -19,8 +19,8 @@ em <- suppressMessages(emmeans(mod, ~wool, type = "response", df = Inf))
 mm <- predictions(mod, newdata=datagrid(grid_type="balanced"), by="wool", type = "invlink(link)")
 expect_equal(data.frame(em)$response, mm$estimate)
 # TODO: 1/eta link function inverts order of CI. Should we clean this up?
-expect_equal(data.frame(em)$asymp.LCL, mm$conf.high)
-expect_equal(data.frame(em)$asymp.UCL, mm$conf.low)
+expect_equal(data.frame(em)$asymp.UCL, mm$conf.high)
+expect_equal(data.frame(em)$asymp.LCL, mm$conf.low)
 
 
 # old tests used to require pre-conversion
