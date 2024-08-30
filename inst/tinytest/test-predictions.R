@@ -3,6 +3,7 @@ using("marginaleffects")
 
 requiet("pscl")
 
+
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
@@ -237,6 +238,28 @@ p1 <- p1[order(p1$cyl), "estimate"]
 p2 <- tapply(predict(mod, type = "link"), mtcars$cyl, mean)
 p2 <- mod$family$linkinv(as.vector(p2))
 expect_equivalent(p1, p2)
+
+
+# Issue #1204: Swapped intervals for models with inverse-link
+requiet("emmeans")
+data(warpbreaks)
+
+mod <- glm(breaks ~ wool * tension, family = Gamma(), data = warpbreaks)
+p <- predictions(
+    mod, 
+    newdata = datagrid(grid_type = "balanced"), 
+    by = c("wool", "tension"), 
+    type = "invlink(link)")
+expect_true(all(p$conf.low <= p$conf.high))
+
+mod <- glm(breaks ~ wool * tension, family = Gamma("log"), data = warpbreaks)
+p <- predictions(mod,
+    newdata = datagrid(grid_type = "balanced"),
+    by = c("wool", "tension"),
+    type = "invlink(link)")
+expect_true(all(p$conf.low <= p$conf.high))
+
+
 
 
 

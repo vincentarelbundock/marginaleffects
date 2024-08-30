@@ -28,6 +28,16 @@ backtransform <- function(x, transform) {
         x[[col]] <- transform(x[[col]])
     }
 
+    # Issue #1204: Some inverse link functions swap the order of low and high
+    if (all(c("conf.low", "conf.high") %in% colnames(x))) {
+        if (all(x$conf.high < x$conf.low)) {
+            lo <- x[["conf.low"]]
+            hi <- x[["conf.high"]]
+            x[["conf.low"]] <- hi
+            x[["conf.high"]] <- lo
+        }
+    }
+
     for (col in c("std.error", "statistic")) {
         x[[col]] <- NULL
     }
