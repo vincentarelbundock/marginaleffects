@@ -2,9 +2,10 @@
 
 ## Development
 
-Breaking change:
+Breaking changes:
 
 * `type="invlink(link)"` is no longer default in `avg_predictions()` or when calling `predictions()` with the `by` argument. It is still default in `predictions()` without the `by` argument. The backtransform strategy is still available with by setting `type="invlink(link)"` explicitly.
+* The `type` argument in `plot_comparisons()` now defaults to `NULL`, which is now consistent with `comparisons()` and `avg_comparisons()`. Before, the default was `type="response"`. Thanks to @giakhang1906 for report #1202.
 
 New:
 

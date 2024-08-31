@@ -58,6 +58,26 @@ expect_inherits(m, "slopes")
 expect_false("std.error" %in% colnames(m))
 
 
+# Issue #1202
+fit <- linear_reg() |>
+  set_engine("lm") |>
+  fit(hp ~ am * vs, data = mtcars)
+p <- plot_predictions(fit, condition = "am", draw = FALSE)
+expect_inherits(p, "data.frame")
+
+p <- plot_comparisons(fit,
+  variables = "am",
+  condition = "vs",
+  draw = FALSE)
+expect_inherits(p, "data.frame")
+
+p <- plot_comparisons(fit,
+  variables = "am",
+  condition = "vs",
+  draw = FALSE)
+expect_inherits(p, "data.frame")
+
+
 
 
 rm(list = ls())
