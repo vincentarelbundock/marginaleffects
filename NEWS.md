@@ -9,16 +9,12 @@ Breaking changes:
 
 New models supported:
 
-* `mmrm` package for mixed effects modelling. Thanks to @kkmann for contribution #1000, as well as @clarkliming and @lang-benjamin for useful comments.
 * `rstpm2` package: support for `stpm2`, `pstpm2`, `gsm`, and `aft` models. Thanks to @mclements for contribution #1188 and @aghayes for useful comments.
-
-New models supported:
-
-* `stpm2`, `pstpm2`, `gsm`, and `aft` models from `rstpm2`. Thanks to @aghaynes and @mclements.
 * `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
 * `glmmgee` from the `glmtoolbox` package. Thanks to @adrianolszewski for the request and @lhvanegasp for help with implementation.
+* `mmrm` package for mixed effects modelling. Thanks to @kkmann for contribution #1000, as well as @clarkliming and @lang-benjamin for useful comments.
 
-New feautres:
+New features:
 
 * Parallel computation with `future` is more efficient by chunking tasks to avoid passing large objects to every worker for every future. Issue #1158.
 * All columns of `newdata` are passed to the `hypothesis` function when `newdata` is supplied explicitly. Thanks to @gravesti for report #1175.
