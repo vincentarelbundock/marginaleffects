@@ -10,7 +10,7 @@ plot_slopes(
   condition = NULL,
   by = NULL,
   newdata = NULL,
-  type = "response",
+  type = NULL,
   vcov = NULL,
   conf_level = 0.95,
   wts = FALSE,
