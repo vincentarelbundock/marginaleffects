@@ -3,7 +3,7 @@
 #' @export
 get_coef.glmgee <- function(model, ...) {
     b <- model$coefficients
-    b <- setNames(as.vector(b), row.names(b))
+    b <- stats::setNames(as.vector(b), row.names(b))
     return(b)
 }
 
@@ -21,7 +21,7 @@ set_coef.glmgee <- function(model, coefs, ...) {
 #' @rdname get_predict
 #' @export
 get_predict.glmgee <- function(model, newdata, ...) {
-    Yhat <- predict(model, newdata = newdata, type = "response")
+    Yhat <- stats::predict(model, newdata = newdata, type = "response")
     out <- data.frame(
         rowid = seq_len(nrow(Yhat)),
         estimate = as.vector(Yhat))
