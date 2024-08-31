@@ -3,7 +3,9 @@ using("marginaleffects")
 requiet("glmtoolbox")
 
 data(spruces)
-fit <- glmgee(mod1, id=tree, family=Gamma(log), corstr="AR-M-dependent(1)", data=spruces)
+mod <- size ~ poly(days,4) + treat
+fit <- glmgee(mod, id=tree, family=Gamma(log), corstr="AR-M-dependent(1)", data=spruces)
+
 s <- avg_slopes(fit, newdata = spruces)
 expect_inherits(s, "slopes")
 p <- avg_predictions(fit, newdata = spruces, by = "treat")
