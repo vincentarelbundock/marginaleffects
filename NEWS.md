@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.22.0
 
 Breaking changes:
 
@@ -13,7 +13,7 @@ New models supported:
 * `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
 * `glmmgee` from the `glmtoolbox` package. Thanks to @adrianolszewski for the request and @lhvanegasp for help with implementation.
 
-New feautres:
+New features:
 
 * Parallel computation with `future` is more efficient by chunking tasks to avoid passing large objects to every worker for every future. Issue #1158.
 * All columns of `newdata` are passed to the `hypothesis` function when `newdata` is supplied explicitly. Thanks to @gravesti for report #1175.
