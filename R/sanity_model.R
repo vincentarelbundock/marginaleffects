@@ -58,6 +58,7 @@ sanity_model_supported_class <- function(model) {
         "glmerMod",
         "glmrob",
         "glmmTMB",
+        "glmgee",
         c("glmmPQL", "lme"),
         "glimML",
         "glmx",

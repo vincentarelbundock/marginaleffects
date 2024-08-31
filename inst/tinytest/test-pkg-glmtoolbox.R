@@ -1,0 +1,12 @@
+source("helpers.R")
+using("marginaleffects")
+requiet("glmtoolbox")
+
+data(spruces)
+fit <- glmgee(mod1, id=tree, family=Gamma(log), corstr="AR-M-dependent(1)", data=spruces)
+s <- avg_slopes(fit, newdata = spruces)
+expect_inherits(s, "slopes")
+p <- avg_predictions(fit, newdata = spruces, by = "treat")
+expect_inherits(p, "predictions")
+k <- avg_comparisons(fit, newdata = spruces)
+expect_inherits(k, "comparisons")
