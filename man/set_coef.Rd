@@ -11,6 +11,11 @@
 %   R/methods_pscl.R, R/methods_robustlmm.R, R/methods_rstpm2.R,
 %   R/methods_sampleSelection.R, R/methods_scam.R, R/methods_stats.R,
 %   R/methods_survey.R, R/methods_survival.R, R/methods_tidymodels.R
+%   R/methods_glmtoolbox.R, R/methods_glmx.R, R/methods_lme4.R,
+%   R/methods_mlm.R, R/methods_nlme.R, R/methods_pscl.R, R/methods_robustlmm.R,
+%   R/methods_rstpm2.R, R/methods_sampleSelection.R, R/methods_scam.R,
+%   R/methods_stats.R, R/methods_survey.R, R/methods_survival.R,
+%   R/methods_tidymodels.R
 \name{set_coef}
 \alias{set_coef}
 \alias{set_coef.default}
@@ -29,6 +34,7 @@
 \alias{set_coef.flexsurvreg}
 \alias{set_coef.gamlss}
 \alias{set_coef.glmmTMB}
+\alias{set_coef.glmgee}
 \alias{set_coef.glmx}
 \alias{set_coef.merMod}
 \alias{set_coef.lmerModLmerTest}
@@ -87,6 +93,8 @@ set_coef(model, coefs, ...)
 \method{set_coef}{gamlss}(model, coefs, ...)
 
 \method{set_coef}{glmmTMB}(model, coefs, ...)
+
+\method{set_coef}{glmgee}(model, coefs, ...)
 
 \method{set_coef}{glmx}(model, coefs, ...)
 

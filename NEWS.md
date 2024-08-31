@@ -12,12 +12,17 @@ New models supported:
 * `mmrm` package for mixed effects modelling. Thanks to @kkmann for contribution #1000, as well as @clarkliming and @lang-benjamin for useful comments.
 * `rstpm2` package: support for `stpm2`, `pstpm2`, `gsm`, and `aft` models. Thanks to @mclements for contribution #1188 and @aghayes for useful comments.
 
-New:
+New models supported:
 
-* `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
-* Added support for `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
+* `stpm2`, `pstpm2`, `gsm`, and `aft` models from `rstpm2`. Thanks to @aghaynes and @mclements.
+* `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
+* `glmmgee` from the `glmtoolbox` package. Thanks to @adrianolszewski for the request and @lhvanegasp for help with implementation.
+
+New feautres:
+
 * Parallel computation with `future` is more efficient by chunking tasks to avoid passing large objects to every worker for every future. Issue #1158.
 * All columns of `newdata` are passed to the `hypothesis` function when `newdata` is supplied explicitly. Thanks to @gravesti for report #1175.
+* `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
 * `hypotheses()` supports formulas in the `hypothesis` argument: `hypotheses(model, hypothesis = ratio ~ reference)`
 * Global option: `options("marginaleffects_print_omit" = "s.value")`
 * Round significant digits for labels in `plot_predictions(mod, condition = list(x = "fivenum"))`
