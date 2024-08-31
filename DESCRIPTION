@@ -31,10 +31,9 @@ Imports:
     checkmate,
     data.table,
     generics,
-    insight (>= 0.19.7),
+    insight (>= 0.20.3),
     methods,
     rlang,
-    utils,
     Rcpp (>= 1.0.0)
 Enhances:
     knitr
@@ -164,7 +163,7 @@ Suggests:
     tidyr,
     tidyverse,
     tinysnapshot,
-    tinytable (>= 0.2.0),
+    tinytable (>= 0.4.0),
     tinytest,
     titanic,
     truncreg,
