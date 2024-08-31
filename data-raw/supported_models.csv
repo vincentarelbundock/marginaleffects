@@ -42,6 +42,7 @@ gam,gam,TRUE,TRUE,,,U,U,TRUE,TRUE
 gamlss,gamlss,TRUE,TRUE,,,U,U,TRUE,TRUE
 geepack,geeglm,TRUE,TRUE,,,U,U,TRUE,TRUE
 glmmTMB,glmmTMB,TRUE,FALSE,,,U,U,TRUE,TRUE
+glmtoolbox,glmgee,TRUE,TRUE,,, ,,,
 glmx,glmx,TRUE,TRUE,,,TRUE,U,U,U
 ivreg,ivreg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
 lme4,glmer,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
