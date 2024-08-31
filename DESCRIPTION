@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.21.0.21
+Version: 0.21.0.22
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -92,6 +92,7 @@ Suggests:
     ggplot2,
     ggrepel,
     glmmTMB,
+    glmtoolbox,
     glmx,
     haven,
     here,
@@ -237,6 +238,7 @@ Collate:
     'methods_flexsurv.R'
     'methods_gamlss.R'
     'methods_glmmTMB.R'
+    'methods_glmtoolbox.R'
     'methods_glmx.R'
     'methods_lme4.R'
     'methods_mclogit.R'

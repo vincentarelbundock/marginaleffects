@@ -2,9 +2,10 @@
 % Please edit documentation in R/get_coef.R, R/methods_MASS.R, R/methods_afex.R,
 %   R/methods_betareg.R, R/methods_nnet.R, R/methods_brglm2.R, R/methods_brms.R,
 %   R/methods_dataframe.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
-%   R/methods_lme4.R, R/methods_mclogit.R, R/methods_mgcv.R, R/methods_mlm.R,
-%   R/methods_sampleSelection.R, R/methods_scam.R, R/methods_stats.R,
-%   R/methods_survey.R, R/methods_tidymodels.R
+%   R/methods_glmtoolbox.R, R/methods_lme4.R, R/methods_mclogit.R,
+%   R/methods_mgcv.R, R/methods_mlm.R, R/methods_sampleSelection.R,
+%   R/methods_scam.R, R/methods_stats.R, R/methods_survey.R,
+%   R/methods_tidymodels.R
 \name{get_coef}
 \alias{get_coef}
 \alias{get_coef.default}
@@ -18,6 +19,7 @@
 \alias{get_coef.data.frame}
 \alias{get_coef.gamlss}
 \alias{get_coef.glmmTMB}
+\alias{get_coef.glmgee}
 \alias{get_coef.merMod}
 \alias{get_coef.lmerModLmerTest}
 \alias{get_coef.lmerMod}
@@ -54,6 +56,8 @@ get_coef(model, ...)
 \method{get_coef}{gamlss}(model, ...)
 
 \method{get_coef}{glmmTMB}(model, ...)
+
+\method{get_coef}{glmgee}(model, ...)
 
 \method{get_coef}{merMod}(model, ...)
 

@@ -7,13 +7,17 @@ Breaking changes:
 * `type="invlink(link)"` is no longer default in `avg_predictions()` or when calling `predictions()` with the `by` argument. It is still default in `predictions()` without the `by` argument. The backtransform strategy is still available with by setting `type="invlink(link)"` explicitly.
 * The `type` argument in `plot_comparisons()` now defaults to `NULL`, which is now consistent with `comparisons()` and `avg_comparisons()`. Before, the default was `type="response"`. Thanks to @giakhang1906 for report #1202.
 
-New:
+New models supported:
 
-* `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
-* Added support for `stpm2`, `pstpm2`, `gsm`, and `aft` models from `rstpm2`. Thanks to @aghaynes and @mclements.
-* Added support for `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
+* `stpm2`, `pstpm2`, `gsm`, and `aft` models from `rstpm2`. Thanks to @aghaynes and @mclements.
+* `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
+* `glmmgee` from the `glmtoolbox` package. Thanks to @adrianolszewski for the request and @lhvanegasp for help with implementation.
+
+New feautres:
+
 * Parallel computation with `future` is more efficient by chunking tasks to avoid passing large objects to every worker for every future. Issue #1158.
 * All columns of `newdata` are passed to the `hypothesis` function when `newdata` is supplied explicitly. Thanks to @gravesti for report #1175.
+* `hypotheses(joint=TRUE)`: do not call `stats::nobs()` unless necessary.
 * `hypotheses()` supports formulas in the `hypothesis` argument: `hypotheses(model, hypothesis = ratio ~ reference)`
 * Global option: `options("marginaleffects_print_omit" = "s.value")`
 * Round significant digits for labels in `plot_predictions(mod, condition = list(x = "fivenum"))`
