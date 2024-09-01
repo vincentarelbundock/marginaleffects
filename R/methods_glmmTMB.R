@@ -51,7 +51,7 @@ get_vcov.glmmTMB <- function(model, ...) {
 #' @export
 get_coef.glmmTMB <- function(model, component = "cond", ...) {
     out <- unlist(glmmTMB::fixef(model))
-    names(out) <- gsub("^zi\\.", "zi~", names(out))
+    names(out) <- gsub("^(cond|zi|disp)\\.", "\\1~", names(out))
     return(out)
 }
 
