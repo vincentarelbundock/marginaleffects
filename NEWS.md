@@ -1,5 +1,11 @@
 # News
 
+## Development
+
+Bugs:
+
+* Standard errors are produced in `glmmTMB` models with `type="zprob"`. Thanks to @jgeller112 for issue #1189.
+
 ## 0.22.0
 
 Breaking changes:

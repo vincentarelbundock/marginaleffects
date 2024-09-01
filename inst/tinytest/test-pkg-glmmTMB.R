@@ -240,6 +240,25 @@ expect_equivalent(p1$estimate, p2$fit)
 expect_equivalent(p1$std.error, p2$se.fit)
 
 
+# Issue #1189
+dat <- transform(Owls,
+  Nest = reorder(Nest, NegPerChick),
+  NCalls = SiblingNegotiation,
+  FT = FoodTreatment)
+
+mod <- glmmTMB(
+  NCalls ~ (FT + ArrivalTime) * SexParent + offset(log(BroodSize)) + (1 | Nest),
+  data = dat,
+  ziformula = ~ SexParent,
+  family = poisson)
+
+p <- avg_predictions(mod, type = "zprob", re.form = NA)
+s <- avg_slopes(mod, variables = "SexParent", type = "zprob", re.form = NA)
+expect_false(anyNA(p$std.error))
+expect_false(anyNA(s$std.error))
+
+
+
 source("helpers.R")
 rm(list = ls())
 
