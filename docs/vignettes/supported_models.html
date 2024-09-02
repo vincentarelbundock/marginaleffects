@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.43">
+<meta name="generator" content="quarto-1.6.4">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Marginal Effects Zoo – supported_models</title>
+<title>supported_models – Marginal Effects Zoo</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -490,7 +490,7 @@ ul.task-list li input[type="checkbox"] {
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><section id="supported-models" class="level1"><h1>Supported Models</h1>
-<p><code>marginaleffects</code> effects supports 97 model types directly, and dozens more via the <code>tidymodels</code> and <code>mlr3</code> frameworks. This table shows the list of directly supported model types. There are three main alternative software packages to compute such slopes (1) <code>Stata</code>’s <code>margins</code> command, (2) <code>R</code>’s <code><a href="https://rdrr.io/pkg/margins/man/margins.html">margins::margins()</a></code> function, and (3) <code>R</code>’s <code><a href="https://rvlenth.github.io/emmeans/reference/emtrends.html">emmeans::emtrends()</a></code> function. The <a href="https://github.com/vincentarelbundock/marginaleffects/tree/main/inst/tinytest">test suite hosted on Github</a> compares the numerical equivalence of results produced by <code><a href="https://marginaleffects.com/man/slopes.html">marginaleffects::slopes()</a></code> to those produced by all 3 alternative software packages:</p>
+<p><code>marginaleffects</code> effects supports 102 model types directly, and dozens more via the <code>tidymodels</code> and <code>mlr3</code> frameworks. This table shows the list of directly supported model types. There are three main alternative software packages to compute such slopes (1) <code>Stata</code>’s <code>margins</code> command, (2) <code>R</code>’s <code><a href="https://rdrr.io/pkg/margins/man/margins.html">margins::margins()</a></code> function, and (3) <code>R</code>’s <code><a href="https://rvlenth.github.io/emmeans/reference/emtrends.html">emmeans::emtrends()</a></code> function. The <a href="https://github.com/vincentarelbundock/marginaleffects/tree/main/inst/tinytest">test suite hosted on Github</a> compares the numerical equivalence of results produced by <code><a href="https://marginaleffects.com/man/slopes.html">marginaleffects::slopes()</a></code> to those produced by all 3 alternative software packages:</p>
 <ul>
 <li>✓: a green check means that the results of at least one model are equal to a reasonable tolerance.</li>
 <li>✖: a red cross means that the results are <em>not</em> identical; extra caution is warranted.</li>
@@ -545,46 +545,6 @@ emtrends
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">stats</td>
-<td style="text-align: left;">lm</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">glm</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">nls</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">loess</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">AER</td>
 <td style="text-align: left;">ivreg</td>
 <td style="text-align: center; color: green !important;">✓</td>
@@ -605,6 +565,136 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">DCchoice</td>
+<td style="text-align: left;">oohbchoice</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MASS</td>
+<td style="text-align: left;">glm.nb</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">glmmPQL</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">polr</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: red !important;">✖</td>
+<td style="text-align: center; color: red !important;">✖</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">rlm</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MCMCglmm</td>
+<td style="text-align: left;">MCMCglmm</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">REndo</td>
+<td style="text-align: left;">copulaCorrection</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hetErrorsIV</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">higherMomentsIV</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">latentIV</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">multilevelIV</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rchoice</td>
+<td style="text-align: left;">hetprob</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ivpml</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">afex</td>
 <td style="text-align: left;">afex_aov</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -614,7 +704,7 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">aod</td>
 <td style="text-align: left;">betabin</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -624,7 +714,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">betareg</td>
 <td style="text-align: left;">betareg</td>
 <td style="text-align: center; color: green !important;">✓</td>
@@ -634,19 +724,9 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">bife</td>
-<td style="text-align: left;">bife</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-</tr>
 <tr class="odd">
-<td style="text-align: left;">biglm</td>
-<td style="text-align: left;">biglm</td>
+<td style="text-align: left;">bife</td>
+<td style="text-align: left;">bife</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;">U</td>
@@ -655,7 +735,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"></td>
+<td style="text-align: left;">biglm</td>
 <td style="text-align: left;">bigglm</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -665,17 +745,17 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">blme</td>
-<td style="text-align: left;">blmer</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">biglm</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"></td>
+<td style="text-align: left;">blme</td>
 <td style="text-align: left;">bglmer</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -685,6 +765,16 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">blmer</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">brglm2</td>
 <td style="text-align: left;">bracl</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -694,7 +784,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">brglmFit</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -703,16 +793,6 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">brnb</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
@@ -725,6 +805,16 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">brnb</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">brms</td>
 <td style="text-align: left;">brm</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -734,7 +824,7 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">crch</td>
 <td style="text-align: left;">crch</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -744,7 +834,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">hxlr</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -754,18 +844,18 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">DCchoice</td>
-<td style="text-align: left;">oohbchoice</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-</tr>
 <tr class="odd">
 <td style="text-align: left;">estimatr</td>
+<td style="text-align: left;">iv_robust</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
 <td style="text-align: left;">lm_lin</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -774,7 +864,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">lm_robust</td>
 <td style="text-align: center; color: green !important;">✓</td>
@@ -784,9 +874,39 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
+<tr class="even">
+<td style="text-align: left;">fixest</td>
+<td style="text-align: left;">feglm</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+</tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">iv_robust</td>
+<td style="text-align: left;">fenegbin</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">feols</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">fepois</td>
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: gray !important;">U</td>
@@ -813,46 +933,6 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">fixest</td>
-<td style="text-align: left;">feols</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">feglm</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">fenegbin</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">fepois</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">gam</td>
@@ -895,47 +975,37 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">glmx</td>
-<td style="text-align: left;">glmx</td>
+<td style="text-align: left;">glmtoolbox</td>
+<td style="text-align: left;">glmgee</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">ivreg</td>
-<td style="text-align: left;">ivreg</td>
+<td style="text-align: left;">glmx</td>
+<td style="text-align: left;">glmx</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">mlr3</td>
-<td style="text-align: left;">Learner</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: left;">ivreg</td>
+<td style="text-align: left;">ivreg</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">lme4</td>
-<td style="text-align: left;">lmer</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
 <td style="text-align: left;">glmer</td>
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
@@ -944,11 +1014,21 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">glmer.nb</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">lmer</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
@@ -966,7 +1046,7 @@ emtrends
 </tr>
 <tr class="odd">
 <td style="text-align: left;">logistf</td>
-<td style="text-align: left;">logistf</td>
+<td style="text-align: left;">flac</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -986,53 +1066,13 @@ emtrends
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">flac</td>
+<td style="text-align: left;">logistf</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">MASS</td>
-<td style="text-align: left;">glmmPQL</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">glm.nb</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">polr</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: red !important;">✖</td>
-<td style="text-align: center; color: red !important;">✖</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">rlm</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">mclogit</td>
@@ -1055,27 +1095,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">MCMCglmm</td>
-<td style="text-align: left;">MCMCglmm</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">mgcv</td>
-<td style="text-align: left;">gam</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
 <td style="text-align: left;">bam</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1085,6 +1105,16 @@ emtrends
 <td style="text-align: center; color: red !important;">✖</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">gam</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">mhurdle</td>
 <td style="text-align: left;">mhurdle</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1094,15 +1124,25 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
+<tr class="odd">
+<td style="text-align: left;">mlogit</td>
+<td style="text-align: left;">mlogit</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+</tr>
 <tr class="even">
-<td style="text-align: left;">mlogit</td>
-<td style="text-align: left;">mlogit</td>
+<td style="text-align: left;">mlr3</td>
+<td style="text-align: left;">Learner</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mvgam</td>
@@ -1165,17 +1205,17 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">plm</td>
-<td style="text-align: left;">plm</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: green !important;">✓</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: left;">phylolm</td>
+<td style="text-align: left;">phyloglm</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">phylolm</td>
+<td style="text-align: left;"></td>
 <td style="text-align: left;">phylolm</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1185,14 +1225,14 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">phyloglm</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: left;">plm</td>
+<td style="text-align: left;">plm</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">pscl</td>
@@ -1235,78 +1275,8 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Rchoice</td>
-<td style="text-align: left;">hetprob</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">ivpml</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">REndo</td>
-<td style="text-align: left;">latentIV</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">copulaCorrection</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">higherMomentsIV</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">hetErrorsIV</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">multilevelIV</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">rms</td>
-<td style="text-align: left;">ols</td>
+<td style="text-align: left;">Gls</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1314,9 +1284,19 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">lrm</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">ols</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1335,16 +1315,6 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Gls</td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;"></td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">robust</td>
 <td style="text-align: left;">lmRob</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1354,7 +1324,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">robustbase</td>
 <td style="text-align: left;">glmrob</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1364,7 +1334,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">lmrob</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1374,7 +1344,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">robustlmm</td>
 <td style="text-align: left;">rlmer</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1384,7 +1354,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">rstanarm</td>
 <td style="text-align: left;">stan_glm</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1394,18 +1364,48 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
+<tr class="odd">
+<td style="text-align: left;">rstpm2</td>
+<td style="text-align: left;">aft</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
 <tr class="even">
-<td style="text-align: left;">sampleSelection</td>
-<td style="text-align: left;">selection</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">gsm</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
-<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
+<td style="text-align: left;">pstpm2</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">stpm2</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sampleSelection</td>
 <td style="text-align: left;">heckit</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1415,8 +1415,8 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">scam</td>
-<td style="text-align: left;">scam</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">selection</td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;">U</td>
@@ -1425,6 +1425,16 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">scam</td>
+<td style="text-align: left;">scam</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">speedglm</td>
 <td style="text-align: left;">speedglm</td>
 <td style="text-align: center; color: green !important;">✓</td>
@@ -1434,7 +1444,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">speedlm</td>
 <td style="text-align: center; color: green !important;">✓</td>
@@ -1444,7 +1454,47 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
+<tr class="even">
+<td style="text-align: left;">stats</td>
+<td style="text-align: left;">glm</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+</tr>
 <tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">lm</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: green !important;">✓</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">loess</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: green !important;">✓</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;">U</td>
+<td style="text-align: center; color: gray !important;">U</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">nls</td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+<td style="text-align: center; color: gray !important;"></td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">survey</td>
 <td style="text-align: left;">svyglm</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1454,7 +1504,7 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">svyolr</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1464,7 +1514,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">survival</td>
 <td style="text-align: left;">clogit</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1474,7 +1524,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">coxph</td>
 <td style="text-align: center; color: green !important;">✓</td>
@@ -1484,7 +1534,7 @@ emtrends
 <td style="text-align: center; color: green !important;">✓</td>
 <td style="text-align: center; color: green !important;">✓</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">survreg</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1494,7 +1544,7 @@ emtrends
 <td style="text-align: center; color: gray !important;"></td>
 <td style="text-align: center; color: gray !important;"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">tobit1</td>
 <td style="text-align: left;">tobit1</td>
 <td style="text-align: center; color: gray !important;"></td>
@@ -1504,7 +1554,7 @@ emtrends
 <td style="text-align: center; color: gray !important;">U</td>
 <td style="text-align: center; color: gray !important;">U</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">truncreg</td>
 <td style="text-align: left;">truncreg</td>
 <td style="text-align: center; color: green !important;">✓</td>
