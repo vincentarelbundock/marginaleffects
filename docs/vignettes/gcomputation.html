@@ -656,7 +656,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Steps 2 and 3 require us to replicate the full dataset by setting the <code>qsmk</code> treatment to counterfactual values. We can do this automatically by calling <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>.</p>
+<p>Steps 2 and 3 require us to replicate the full dataset by setting the <code>qsmk</code> treatment to counterfactual values. We can do this automatically by calling <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>.</p>
 <section id="tldr" class="level3"><h3 class="anchored" data-anchor-id="tldr">TLDR</h3>
 <p>These simple commands do everything we need to apply the parametric g-formula:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
@@ -667,7 +667,7 @@ window.Quarto = {
 <div class="tab-content" data-group="language">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>qsmk <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>qsmk <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
@@ -712,13 +712,13 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## average predicted outcome in the original data</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">estimate</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.6383</code></pre>
 </div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## average predicted outcome in the two counterfactual datasets</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">fit</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>qsmk <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">fit</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>qsmk <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">estimate</span> <span class="op">~</span> <span class="va">qsmk</span>, data <span class="op">=</span> <span class="va">p</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  qsmk estimate
@@ -857,7 +857,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 </div>
 </div>
 </div>
-<p>It may be useful to note that the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> function provided by <code>marginaleffects</code> can create counterfactual datasets automatically. This is equivalent to the <code>onesample</code> dataset:</p>
+<p>It may be useful to note that the <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> function provided by <code>marginaleffects</code> can create counterfactual datasets automatically. This is equivalent to the <code>onesample</code> dataset:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">R</a></li>
@@ -866,7 +866,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <div class="tab-content" data-group="language">
 <div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
 <span>    model <span class="op">=</span> <span class="va">fit</span>,</span>
 <span>    qsmk <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>    grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -883,11 +883,11 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 </div>
 </div>
 </section><section id="contrast" class="level3"><h3 class="anchored" data-anchor-id="contrast">Contrast</h3>
-<p>Now we want to compute the treatment effect with the parametric g-formula, which is the difference in average predicted outcomes in the two counterfactual datasets. This is equivalent to taking the average contrast with the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function. There are three important things to note in the command that follows:</p>
+<p>Now we want to compute the treatment effect with the parametric g-formula, which is the difference in average predicted outcomes in the two counterfactual datasets. This is equivalent to taking the average contrast with the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function. There are three important things to note in the command that follows:</p>
 <ul>
 <li>The <code>variables</code> argument is used to indicate that we want to estimate a “contrast” between adjusted predictions when <code>qsmk</code> is equal to 1 or 0.</li>
 <li>
-<code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> automatically produces estimates of uncertainty.</li>
+<code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> automatically produces estimates of uncertainty.</li>
 </ul>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
@@ -897,7 +897,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <div class="tab-content" data-group="language">
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">std</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>qsmk <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">std</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>qsmk <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
@@ -930,7 +930,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 </div>
 </div>
 </div>
-<p>Under the hood, <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> did exactly what we described in the g-formula steps above:</p>
+<p>Under the hood, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> did exactly what we described in the g-formula steps above:</p>
 <p>We can obtain the same result by manually computing the quantities, using the replication code from Hernán and Robins:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
@@ -958,7 +958,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 </div>
 </div>
 </div>
-<p>Although manual computation is simple, it does not provide uncertainty estimates. In contrast, <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> has already computed the standard error and confidence interval using the delta method.</p>
+<p>Although manual computation is simple, it does not provide uncertainty estimates. In contrast, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> has already computed the standard error and confidence interval using the delta method.</p>
 <p>Instead of the delta method, most analysts will rely on bootstrapping. For example, the replication code from Hernán and Robins does this:</p>
 <div class="cell">
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## function to calculate difference in means</span></span>
@@ -1011,7 +1011,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 1 Treatment - No Treatment 3.517374 0.4766104 2.583235  4.451513</code></pre>
 </div>
 </div>
-<p>The results are close to those that we obtained with <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.</p>
+<p>The results are close to those that we obtained with <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">R</a></li>
@@ -1020,7 +1020,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <div class="tab-content" data-group="language">
 <div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>qsmk <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>qsmk <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %

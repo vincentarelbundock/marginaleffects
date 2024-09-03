@@ -592,19 +592,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The <code>marginaleffects</code> package allows <code>R</code> users to compute and plot three principal quantities of interest: (1) predictions, (2) comparisons, and (3) slopes. In addition, the package includes a convenience function to compute a fourth quantity of interest, “marginal means”, which is a special case of averaged predictions. <code>marginaleffects</code> can also average (or “marginalize”) unit-level (or “conditional”) estimates of all those quantities, and conduct hypothesis tests on them.</p>
 <p><a href="predictions.html"><em>Predictions</em>:</a></p>
 <blockquote class="blockquote">
-<p>The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels. a.k.a. Fitted values, adjusted predictions. <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code>, <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code>, <code><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions()</a></code>.</p>
+<p>The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels. a.k.a. Fitted values, adjusted predictions. <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions()</a></code>.</p>
 </blockquote>
 <p><a href="comparisons.html"><em>Comparisons</em>:</a></p>
 <blockquote class="blockquote">
-<p>Compare the predictions made by a model for different regressor values (e.g., college graduates vs.&nbsp;others): contrasts, differences, risk ratios, odds, etc. <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>, <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code>, <code><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons()</a></code>.</p>
+<p>Compare the predictions made by a model for different regressor values (e.g., college graduates vs.&nbsp;others): contrasts, differences, risk ratios, odds, etc. <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons()</a></code>.</p>
 </blockquote>
 <p><a href="slopes.html"><em>Slopes</em>:</a></p>
 <blockquote class="blockquote">
-<p>Partial derivative of the regression equation with respect to a regressor of interest. a.k.a. Marginal effects, trends. <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code>, <code><a href="https://marginaleffects.com/man/slopes.html">avg_slopes()</a></code>, <code><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes()</a></code>.</p>
+<p>Partial derivative of the regression equation with respect to a regressor of interest. a.k.a. Marginal effects, trends. <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes()</a></code>.</p>
 </blockquote>
 <p><a href="marginalmeans.html"><em>Marginal Means</em>:</a></p>
 <blockquote class="blockquote">
-<p>Predictions of a model, averaged across a “reference grid” of categorical predictors. <code><a href="https://marginaleffects.com/man/marginalmeans.html">marginalmeans()</a></code>.</p>
+<p>Predictions of a model, averaged across a “reference grid” of categorical predictors. <code><a href="https://rdrr.io/pkg/marginaleffects/man/marginalmeans.html">marginalmeans()</a></code>.</p>
 </blockquote>
 <p><a href="hypothesis.html">Hypothesis and Equivalence Tests:</a></p>
 <blockquote class="blockquote">
@@ -646,7 +646,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Then, we call the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function. As noted above, predictions are unit-level estimates, so there is one specific prediction per observation. By default, the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function makes one prediction per observation in the dataset that was used to fit the original model. Since <code>mtcars</code> has 32 rows, the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> outcome also has 32 rows:</p>
+<p>Then, we call the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> function. As noted above, predictions are unit-level estimates, so there is one specific prediction per observation. By default, the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> function makes one prediction per observation in the dataset that was used to fit the original model. Since <code>mtcars</code> has 32 rows, the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> outcome also has 32 rows:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">R</a></li>
@@ -655,7 +655,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content" data-group="language">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pre</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pre</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -919,7 +919,7 @@ Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf
 </div>
 </div>
 </div>
-<p>Now, we use the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function to compute the difference in predicted outcome when each of the predictors is incremented by 1 unit (one predictor at a time, holding all others constant). Once again, comparisons are unit-level quantities. And since there are 3 predictors in the model and our data has 32 rows, we obtain 96 comparisons:</p>
+<p>Now, we use the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function to compute the difference in predicted outcome when each of the predictors is incremented by 1 unit (one predictor at a time, holding all others constant). Once again, comparisons are unit-level quantities. And since there are 3 predictors in the model and our data has 32 rows, we obtain 96 comparisons:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">R</a></li>
@@ -928,7 +928,7 @@ Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf
 <div class="tab-content" data-group="language">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">cmp</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1206,7 +1206,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 </div>
 </div>
 </div>
-<p>The <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function allows customized queries. For example, what happens to the predicted outcome when the <code>hp</code> variable increases from 100 to 120?</p>
+<p>The <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function allows customized queries. For example, what happens to the predicted outcome when the <code>hp</code> variable increases from 100 to 120?</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">R</a></li>
@@ -1215,7 +1215,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 <div class="tab-content" data-group="language">
 <div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">120</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">120</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -1459,7 +1459,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 <div class="tab-content" data-group="language">
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -1694,7 +1694,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 </div>
 </div>
 </div>
-<p>The <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function also allows users to specify arbitrary functions of predictions, with the <code>comparison</code> argument. For example, what is the average ratio between predicted Miles per Gallon after an increase of 50 units in Horsepower?</p>
+<p>The <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function also allows users to specify arbitrary functions of predictions, with the <code>comparison</code> argument. For example, what is the average ratio between predicted Miles per Gallon after an increase of 50 units in Horsepower?</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">R</a></li>
@@ -1703,7 +1703,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 <div class="tab-content" data-group="language">
 <div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>,</span>
 <span>  comparison <span class="op">=</span> <span class="st">"ratioavg"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1826,7 +1826,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 </div>
 </div>
 <p>See the <a href="comparisons.html">Comparisons vignette for detailed explanations and more options.</a></p>
-<p>The <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> function allows us to compute the partial derivative of the outcome equation with respect to each of the predictors. Once again, we obtain a data frame with 96 rows:</p>
+<p>The <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code> function allows us to compute the partial derivative of the outcome equation with respect to each of the predictors. Once again, we obtain a data frame with 96 rows:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">R</a></li>
@@ -1835,7 +1835,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <div class="tab-content" data-group="language">
 <div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -2115,7 +2115,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 </div>
 </section><section id="grid" class="level2"><h2 class="anchored" data-anchor-id="grid">Grid</h2>
 <p>Predictions, comparisons, and slopes are typically “conditional” quantities which depend on the values of all the predictors in the model. By default, <code>marginaleffects</code> functions estimate quantities of interest for the empirical distribution of the data (i.e., for each row of the original dataset). However, users can specify the exact values of the predictors they want to investigate by using the <code>newdata</code> argument.</p>
-<p><code>newdata</code> accepts data frames, shortcut strings, or a call to the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> function. For example, to compute the predicted outcome for a hypothetical car with all predictors equal to the sample mean or median, we can do:</p>
+<p><code>newdata</code> accepts data frames, shortcut strings, or a call to the <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> function. For example, to compute the predicted outcome for a hypothetical car with all predictors equal to the sample mean or median, we can do:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true">R</a></li>
@@ -2124,7 +2124,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 <div class="tab-content" data-group="language">
 <div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -2230,7 +2230,7 @@ window.addEventListener('load', function () { styleCell_9kyjcfxcsn3vtc3dju6h(2, 
 </div>
 <!-- hack to avoid NA insertion in last line -->
 </div>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"median"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"median"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -2372,7 +2372,7 @@ Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf
 </div>
 </div>
 </div>
-<p>The <a href="https://marginaleffects.com/man/datagrid.html"><code>datagrid</code> function gives us a powerful way to define a grid of predictors.</a> All the variables not mentioned explicitly in <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> are fixed to their mean or mode:</p>
+<p>The <a href="https://marginaleffects.com/man/datagrid.html"><code>datagrid</code> function gives us a powerful way to define a grid of predictors.</a> All the variables not mentioned explicitly in <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> are fixed to their mean or mode:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-10-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-1" role="tab" aria-controls="tabset-10-1" aria-selected="true">R</a></li>
@@ -2381,9 +2381,9 @@ Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf
 <div class="tab-content" data-group="language">
 <div id="tabset-10-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-10-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
 <span>    am <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>    wt <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -2560,7 +2560,7 @@ Columns: am, wt, rowid, estimate, std_error, statistic, p_value, s_value, conf_l
 </div>
 </div>
 </div>
-<p>The same mechanism is available in <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> and <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code>. To estimate the partial derivative of <code>mpg</code> with respect to <code>wt</code>, when <code>am</code> is equal to 0 and 1, while other predictors are held at their means:</p>
+<p>The same mechanism is available in <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> and <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code>. To estimate the partial derivative of <code>mpg</code> with respect to <code>wt</code>, when <code>am</code> is equal to 0 and 1, while other predictors are held at their means:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-11-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-1" role="tab" aria-controls="tabset-11-1" aria-selected="true">R</a></li>
@@ -2569,10 +2569,10 @@ Columns: am, wt, rowid, estimate, std_error, statistic, p_value, s_value, conf_l
 <div class="tab-content" data-group="language">
 <div id="tabset-11-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-11-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"wt"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -2725,7 +2725,7 @@ Columns: am, rowid, term, contrast, estimate, std_error, statistic, p_value, s_v
 <div class="tab-content" data-group="language">
 <div id="tabset-12-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-12-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"wt"</span> <span class="op">=</span> <span class="st">"threenum"</span>, <span class="st">"am"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"wt"</span> <span class="op">=</span> <span class="st">"threenum"</span>, <span class="st">"am"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="get_started_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
@@ -2767,7 +2767,7 @@ Columns: am, rowid, term, contrast, estimate, std_error, statistic, p_value, s_v
 <div class="tab-content" data-group="language">
 <div id="tabset-13-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-13-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"am"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"wt"</span> <span class="op">=</span> <span class="st">"minmax"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"am"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"wt"</span> <span class="op">=</span> <span class="st">"minmax"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="get_started_files/figure-html/unnamed-chunk-27-3.png" class="img-fluid figure-img" width="672"></p>
@@ -2800,7 +2800,7 @@ Columns: am, rowid, term, contrast, estimate, std_error, statistic, p_value, s_v
 </section><section id="aggregation" class="level2"><h2 class="anchored" data-anchor-id="aggregation">Aggregation</h2>
 <p>Since predictions, comparisons, and slopes are conditional quantities, they can be a bit unwieldy. Often, it can be useful to report a one-number summary instead of one estimate per observation. Instead of presenting “conditional” estimates, some methodologists recommend reporting “marginal” estimates, that is, an average of unit-level estimates.</p>
 <p>(This use of the word “marginal” as “averaging” should not be confused with the term “marginal effect” which, in the econometrics tradition, corresponds to a partial derivative, or the effect of a “small/marginal” change.)</p>
-<p>To marginalize (average over) our unit-level estimates, we can use the <code>by</code> argument or the one of the convenience functions: <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code>, <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code>, or <code><a href="https://marginaleffects.com/man/slopes.html">avg_slopes()</a></code>. For example, both of these commands give us the same result: the average predicted outcome in the <code>mtcars</code> dataset:</p>
+<p>To marginalize (average over) our unit-level estimates, we can use the <code>by</code> argument or the one of the convenience functions: <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons()</a></code>, or <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes()</a></code>. For example, both of these commands give us the same result: the average predicted outcome in the <code>mtcars</code> dataset:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-14-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-1" role="tab" aria-controls="tabset-14-1" aria-selected="true">R</a></li>
@@ -2809,7 +2809,7 @@ Columns: am, rowid, term, contrast, estimate, std_error, statistic, p_value, s_v
 <div class="tab-content" data-group="language">
 <div id="tabset-14-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-14-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -2959,7 +2959,7 @@ Columns: estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</
 <div class="tab-content" data-group="language">
 <div id="tabset-16-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-16-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"am"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"am"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -3187,7 +3187,7 @@ Columns: am, term, contrast, estimate, std_error, statistic, p_value, s_value, c
 <div class="tab-content" data-group="language">
 <div id="tabset-18-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-18-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod_cat</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="st">"balanced"</span>,</span>
 <span>  by <span class="op">=</span> <span class="st">"am"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3326,7 +3326,7 @@ window.addEventListener('load', function () { styleCell_wchh6m0k1ys00bu6mwmr(3, 
 <div class="tab-content" data-group="language">
 <div id="tabset-19-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-19-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"am"</span>, vcov <span class="op">=</span> <span class="st">"HC3"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"am"</span>, vcov <span class="op">=</span> <span class="st">"HC3"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -3444,7 +3444,7 @@ window.addEventListener('load', function () { styleCell_i2w3440sigjx6alauff1(3, 
 </div>
 </div>
 </div>
-<p>Second, we use the <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> function to compute bootstrap intervals using 500 resamples:</p>
+<p>Second, we use the <code><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences()</a></code> function to compute bootstrap intervals using 500 resamples:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-20-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-1" role="tab" aria-controls="tabset-20-1" aria-selected="true">R</a></li>
@@ -3453,8 +3453,8 @@ window.addEventListener('load', function () { styleCell_i2w3440sigjx6alauff1(3, 
 <div class="tab-content" data-group="language">
 <div id="tabset-20-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-20-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"am"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"boot"</span>, R <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"am"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"boot"</span>, R <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -3556,7 +3556,7 @@ window.addEventListener('load', function () { styleCell_9gwc4tnj4fpdmvis80dg(3, 
 </div>
 </div>
 </section><section id="tests" class="level2"><h2 class="anchored" data-anchor-id="tests">Tests</h2>
-<p>The <code><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses()</a></code> function and the <code>hypothesis</code> argument can be used to conduct linear and non-linear hypothesis tests on model coefficients, or on any of the quantities computed by the functions introduced above.</p>
+<p>The <code><a href="https://rdrr.io/pkg/marginaleffects/man/hypotheses.html">hypotheses()</a></code> function and the <code>hypothesis</code> argument can be used to conduct linear and non-linear hypothesis tests on model coefficients, or on any of the quantities computed by the functions introduced above.</p>
 <p>Consider this model:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
@@ -3591,7 +3591,7 @@ dtype: float64</code></pre>
 </div>
 <p>Can we reject the null hypothesis that the <code>drat</code> coefficient is 2 times the size of the <code>qsec</code> coefficient?</p>
 <div class="cell">
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, <span class="st">"drat = 2 * qsec"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, <span class="st">"drat = 2 * qsec"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -3690,7 +3690,7 @@ window.addEventListener('load', function () { styleCell_nz9l0i03fdihqqyl193q(2, 
 <div class="tab-content" data-group="language">
 <div id="tabset-22-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-22-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, <span class="st">"b3 = 2 * b2"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/hypotheses.html">hypotheses</a></span><span class="op">(</span><span class="va">mod</span>, <span class="st">"b3 = 2 * b2"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -3810,10 +3810,10 @@ Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_
 <div class="tab-content" data-group="language">
 <div id="tabset-23-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-23-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"drat"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>qsec <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>qsec <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -3957,11 +3957,11 @@ Columns: qsec, rowid, term, contrast, estimate, std_error, statistic, p_value, s
 <div class="tab-content" data-group="language">
 <div id="tabset-24-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-24-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"drat"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>qsec <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>qsec <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -4089,7 +4089,7 @@ Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_
 <div class="tab-content" data-group="language">
 <div id="tabset-25-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-25-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -4199,7 +4199,7 @@ window.addEventListener('load', function () { styleCell_7sgxw3jagf9p4myq4yor(3, 
 </div>
 <!-- hack to avoid NA insertion in last line -->
 </div>
-<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"drat = qsec"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"drat = qsec"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -4339,7 +4339,7 @@ Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_
 <div class="tab-content" data-group="language">
 <div id="tabset-26-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-26-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, equivalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, equivalence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 

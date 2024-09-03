@@ -571,7 +571,7 @@ window.Quarto = {
 </div>
 <p>Now, consider a car with 25 miles per gallon and 110 horsepower. The expected predicted probability for each outcome level (gear) for this car is:</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fl">25</span>, hp <span class="op">=</span> <span class="fl">110</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fl">25</span>, hp <span class="op">=</span> <span class="fl">110</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group mpg  hp Estimate Std. Error    z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;      3  25 110    0.203     0.0959 2.12   0.0339  4.9 0.0155  0.391</span></span>
@@ -584,7 +584,7 @@ window.Quarto = {
 <p>Since the <code>gear</code> is categorical, we make one prediction for each level of the outcome.</p>
 <p>Now consider the marginal effects (aka slopes or partial derivatives) for the same car:</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"mpg"</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fl">25</span>, hp <span class="op">=</span> <span class="fl">110</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"mpg"</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fl">25</span>, hp <span class="op">=</span> <span class="fl">110</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Term mpg  hp Estimate Std. Error       z Pr(&gt;|z|)    S    2.5 %  97.5 %</span></span>
 <span><span class="co">#&gt;      3  mpg  25 110 -0.06042     0.0169 -3.5810   &lt;0.001 11.5 -0.09349 -0.0274</span></span>
@@ -596,9 +596,9 @@ window.Quarto = {
 </div>
 <p>Again, <code>marginaleffects</code> produces one estimate of the slope for each outcome level. For a small step size <span class="math inline">\(\varepsilon\)</span>, the printed quantities are estimated as:</p>
 <p><span class="math display">\[\frac{P(gear=3|mpg=25+\varepsilon, hp=110)-P(gear=3|mpg=25-\varepsilon, hp=110)}{2 \cdot \varepsilon}\]</span> <span class="math display">\[\frac{P(gear=4|mpg=25+\varepsilon, hp=110)-P(gear=4|mpg=25-\varepsilon, hp=110)}{2 \cdot \varepsilon}\]</span> <span class="math display">\[\frac{P(gear=5|mpg=25+\varepsilon, hp=110)-P(gear=5|mpg=25-\varepsilon, hp=110)}{2 \cdot \varepsilon}\]</span></p>
-<p>When we call <code><a href="https://marginaleffects.com/man/slopes.html">avg_slopes()</a></code>, <code>marginaleffects</code> will repeat the same computation for every row of the original dataset, and then report the average slope for each level of the outcome:</p>
+<p>When we call <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes()</a></code>, <code>marginaleffects</code> will repeat the same computation for every row of the original dataset, and then report the average slope for each level of the outcome:</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Term Estimate Std. Error     z Pr(&gt;|z|)    S     2.5 %   97.5 %</span></span>
 <span><span class="co">#&gt;      3  hp  -0.00377   0.001514 -2.49  0.01284  6.3 -0.006735 -0.00080</span></span>
@@ -629,7 +629,7 @@ window.Quarto = {
 <span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nnet/man/multinom.html">multinom</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">mpg</span>, data <span class="op">=</span> <span class="va">mtcars</span>, trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"probs"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"probs"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Term  Estimate Std. Error       z Pr(&gt;|z|)    S    2.5 %    97.5 %</span></span>
 <span><span class="co">#&gt;      3  hp  -3.36e-05    0.00225 -0.0149  0.98809  0.0 -0.00444  0.004372</span></span>
@@ -647,7 +647,7 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"mpg"</span>, <span class="st">"group"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"probs"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"mpg"</span>, <span class="st">"group"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"probs"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="categorical_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -655,7 +655,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="st">"mpg"</span>, type <span class="op">=</span> <span class="st">"probs"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">group</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="st">"mpg"</span>, type <span class="op">=</span> <span class="st">"probs"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">group</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="categorical_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -663,7 +663,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">15</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    condition <span class="op">=</span> <span class="st">"group"</span>,</span>
@@ -695,7 +695,7 @@ window.Quarto = {
 <span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mlogit/man/mlogit.html">mlogit</a></span><span class="op">(</span><span class="va">choice</span> <span class="op">~</span> <span class="va">wait</span> <span class="op">+</span> <span class="va">gcost</span> <span class="op">|</span> <span class="va">income</span> <span class="op">+</span> <span class="va">size</span>, <span class="va">TravelMode</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group   Term  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %   97.5 %</span></span>
 <span><span class="co">#&gt;  air   income  0.002786    0.00122  2.289  0.02208  5.5  0.000400  0.00517</span></span>
@@ -719,7 +719,7 @@ window.Quarto = {
 <span>  high <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">TravelMode</span><span class="op">$</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"air"</span>, <span class="va">TravelMode</span><span class="op">$</span><span class="va">wait</span> <span class="op">+</span> <span class="fl">15</span>, <span class="va">TravelMode</span><span class="op">$</span><span class="va">wait</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>wait <span class="op">=</span> <span class="va">altspec</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>wait <span class="op">=</span> <span class="va">altspec</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Estimate Std. Error      z Pr(&gt;|z|)     S   2.5 %  97.5 %</span></span>
 <span><span class="co">#&gt;  air    -0.1321    0.01070 -12.35   &lt;0.001 114.0 -0.1531 -0.1111</span></span>
@@ -745,7 +745,7 @@ window.Quarto = {
 <span><span class="co">#&gt; 3 34.58929 110.8798 34.54762 1.742857</span></span>
 <span><span class="co">#&gt; 4 34.58929 110.8798 34.54762 1.742857</span></span>
 <span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group   Term  Estimate Std. Error     z Pr(&gt;|z|)   S     2.5 %    97.5 %</span></span>
 <span><span class="co">#&gt;  air   income  6.66e-03   2.42e-03  2.75  0.00600 7.4  1.91e-03  1.14e-02</span></span>
@@ -775,7 +775,7 @@ window.Quarto = {
 <span><span class="co">#&gt; 3 bus    41.7 115.    34.5  1.74</span></span>
 <span><span class="co">#&gt; 4 car     0    95.4   34.5  1.74</span></span>
 <span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group   Term  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %   97.5 %</span></span>
 <span><span class="co">#&gt;  air   income  0.006015    0.00233  2.585  0.00973  6.7  0.001455  0.01058</span></span>
@@ -793,7 +793,7 @@ window.Quarto = {
 </div>
 <p>We can also explore more complex alternatives. Here, for example, only one alternative is affected by cost reduction:</p>
 <div class="cell">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>mode <span class="op">=</span> <span class="va">TravelMode</span><span class="op">$</span><span class="va">mode</span>, newdata <span class="op">=</span> <span class="va">TravelMode</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>mode <span class="op">=</span> <span class="va">TravelMode</span><span class="op">$</span><span class="va">mode</span>, newdata <span class="op">=</span> <span class="va">TravelMode</span><span class="op">)</span></span>
 <span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">nd</span>, gcost <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span> <span class="op">==</span> <span class="va">i</span>, <span class="fl">30</span>, <span class="va">gcost</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html">bind_rows</a></span><span class="op">(</span><span class="va">nd</span><span class="op">)</span></span>
 <span><span class="va">nd</span></span>
@@ -815,7 +815,7 @@ window.Quarto = {
 <span><span class="co">#&gt; 15          1     no   35    48    486   111     35    2   bus     3</span></span>
 <span><span class="co">#&gt; 16          1     no   35    48    486    30     35    2   car     4</span></span>
 <span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">nd</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"income"</span>, <span class="st">"size"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group   Term  Estimate Std. Error      z Pr(&gt;|z|)    S     2.5 %    97.5 %</span></span>
 <span><span class="co">#&gt;  air   income  8.24e-03   2.46e-03  3.352   &lt;0.001 10.3  3.42e-03  0.013058</span></span>

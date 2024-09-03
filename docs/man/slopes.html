@@ -573,13 +573,13 @@ window.Quarto = {
 <p>Partial derivative of the regression equation with respect to a regressor of interest.</p>
 <ul>
 <li>
-<p><code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code>: unit-level (conditional) estimates.</p>
+<p><code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code>: unit-level (conditional) estimates.</p>
 </li>
 <li>
-<p><code><a href="https://marginaleffects.com/man/slopes.html">avg_slopes()</a></code>: average (marginal) estimates.</p>
+<p><code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes()</a></code>: average (marginal) estimates.</p>
 </li>
 </ul>
-<p>The <code>newdata</code> argument and the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> function can be used to control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.</p>
+<p>The <code>newdata</code> argument and the <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> function can be used to control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.</p>
 <p>See the slopes vignette and package website for worked examples and case studies:</p>
 <ul>
 <li>
@@ -651,13 +651,13 @@ Model object
 <p><code>NULL</code> (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using <code><a href="https://easystats.github.io/insight/reference/get_data.html">insight::get_data()</a></code>, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.</p>
 </li>
 <li>
-<p><code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> call to specify a custom grid of regressors. For example:</p>
+<p><code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> call to specify a custom grid of regressors. For example:</p>
 <ul>
 <li>
 <p><code>newdata = datagrid(cyl = c(4, 6))</code>: <code>cyl</code> variable equal to 4 and 6 and other regressors fixed at their means or modes.</p>
 </li>
 <li>
-<p>See the Examples section and the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> documentation.</p>
+<p>See the Examples section and the <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> documentation.</p>
 </li>
 </ul>
 </li>
@@ -737,7 +737,7 @@ string indicates the type (scale) of the predictions used to compute contrasts o
 <p>See examples below.</p>
 </li>
 <li>
-<p>For more complex aggregations, you can use the <code>FUN</code> argument of the <code><a href="https://marginaleffects.com/man/hypotheses.html">hypotheses()</a></code> function. See that function’s documentation and the Hypothesis Test vignettes on the <code>marginaleffects</code> website.</p>
+<p>For more complex aggregations, you can use the <code>FUN</code> argument of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/hypotheses.html">hypotheses()</a></code> function. See that function’s documentation and the Hypothesis Test vignettes on the <code>marginaleffects</code> website.</p>
 </li>
 </ul>
 </td>
@@ -944,7 +944,7 @@ numeric value between 0 and 1. Confidence level to use to build a confidence int
 <p>The function can also accept optional input arguments: <code>newdata</code>, <code>by</code>, <code>draws</code>.</p>
 </li>
 <li>
-<p>This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use <code><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws()</a></code> to extract and manipulate the draws directly.</p>
+<p>This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use <code><a href="https://rdrr.io/pkg/marginaleffects/man/posterior_draws.html">posterior_draws()</a></code> to extract and manipulate the draws directly.</p>
 </li>
 </ul>
 </li>
@@ -1013,7 +1013,7 @@ NULL or numeric value which determines the step size to use when calculating num
 <code id="...">…</code>
 </td>
 <td>
-Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method supplied by the modeling package.These arguments are particularly useful for mixed-effects or bayesian models (see the online vignettes on the <code>marginaleffects</code> website). Available arguments can vary from model to model, depending on the range of supported arguments by each modeling package. See the "Model-Specific Arguments" section of the <code><a href="https://marginaleffects.com/man/slopes.html">?slopes</a></code> documentation for a non-exhaustive list of available arguments.
+Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method supplied by the modeling package.These arguments are particularly useful for mixed-effects or bayesian models (see the online vignettes on the <code>marginaleffects</code> website). Available arguments can vary from model to model, depending on the range of supported arguments by each modeling package. See the "Model-Specific Arguments" section of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">?slopes</a></code> documentation for a non-exhaustive list of available arguments.
 </td>
 </tr>
 </tbody></table></section><section id="details" class="level3"><h3 class="anchored" data-anchor-id="details">Details</h3>
@@ -1053,11 +1053,11 @@ Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/pr
 <p><code>conf.high</code>: upper bound of the confidence interval (or equal-tailed interval for bayesian models)</p>
 </li>
 </ul>
-<p>See <code><a href="https://marginaleffects.com/man/print.marginaleffects.html">?print.marginaleffects</a></code> for printing options.</p>
+<p>See <code><a href="https://rdrr.io/pkg/marginaleffects/man/print.marginaleffects.html">?print.marginaleffects</a></code> for printing options.</p>
 </section><section id="functions" class="level3"><h3 class="anchored" data-anchor-id="functions">Functions</h3>
 <ul>
 <li>
-<p><code><a href="https://marginaleffects.com/man/slopes.html">avg_slopes()</a></code>: Average slopes</p>
+<p><code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes()</a></code>: Average slopes</p>
 </li>
 </ul></section><section id="standard-errors-using-the-delta-method" class="level3"><h3 class="anchored" data-anchor-id="standard-errors-using-the-delta-method">Standard errors using the delta method</h3>
 <p>Standard errors for all quantities estimated by <code>marginaleffects</code> can be obtained via the delta method. This requires differentiating a function with respect to the coefficients in the model using a finite difference approach. In some models, the delta method standard errors can be sensitive to various aspects of the numeric differentiation strategy, including the step size. By default, the step size is set to <code>1e-8</code>, or to <code>1e-4</code> times the smallest absolute model coefficient, whichever is largest.</p>
@@ -1075,7 +1075,7 @@ Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/pr
 </ul>
 <p>See the "Standard Errors and Confidence Intervals" vignette on the <code>marginaleffects</code> website for more details on the computation of standard errors:</p>
 <p>https://marginaleffects.com/vignettes/uncertainty.html</p>
-<p>Note that the <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:</p>
+<p>Note that the <code><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences()</a></code> function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:</p>
 <p>https://marginaleffects.com/vignettes/bootstrap.html</p>
 </section><section id="model-specific-arguments" class="level3"><h3 class="anchored" data-anchor-id="model-specific-arguments">Model-Specific Arguments</h3>
 <p>Some model types allow model-specific arguments to modify the nature of marginal effects, predictions, marginal means, and contrasts. Please report other package-specific <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> arguments on Github so we can add them to the table below.</p>
@@ -1318,11 +1318,11 @@ sampleSelection::predict.selection
 <p>Thanks to Russell V. Lenth for the excellent <code>emmeans</code> package and documentation which inspired this feature.</p>
 </section><section id="prediction-types" class="level3"><h3 class="anchored" data-anchor-id="prediction-types">Prediction types</h3>
 <p>The <code>type</code> argument determines the scale of the predictions used to compute quantities of interest with functions from the <code>marginaleffects</code> package. Admissible values for <code>type</code> depend on the model object. When users specify an incorrect value for <code>type</code>, <code>marginaleffects</code> will raise an informative error with a list of valid <code>type</code> values for the specific model object. The first entry in the list in that error message is the default type.</p>
-<p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models, and only for the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type=“invlink(link)”</code> will not always be equivalent to the average of estimates with <code>type=“response”</code>. This type is default when calling <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code>. It is available—but not default—when calling <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code> or <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> with the <code>by</code> argument.</p>
+<p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models, and only for the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> function. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type=“invlink(link)”</code> will not always be equivalent to the average of estimates with <code>type=“response”</code>. This type is default when calling <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code>. It is available—but not default—when calling <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions()</a></code> or <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> with the <code>by</code> argument.</p>
 <p>Some of the most common <code>type</code> values are:</p>
 <p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumhaz, cumprob, density, detection, disp, ev, expected, expvalue, fitted, hazard, invlink(link), latent, latent_N, linear, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, rmst, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob</p>
 </section><section id="parallel-computation" class="level3"><h3 class="anchored" data-anchor-id="parallel-computation">Parallel computation</h3>
-<p>The <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> and <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> functions can use parallelism to speed up computation. Operations are parallelized for the computation of standard errors, at the model coefficient level. There is always considerable overhead when using parallel computation, mainly involved in passing the whole dataset to the different processes. Thus, parallel computation is most likely to be useful when the model includes many parameters and the dataset is relatively small.</p>
+<p>The <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code> and <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> functions can use parallelism to speed up computation. Operations are parallelized for the computation of standard errors, at the model coefficient level. There is always considerable overhead when using parallel computation, mainly involved in passing the whole dataset to the different processes. Thus, parallel computation is most likely to be useful when the model includes many parameters and the dataset is relatively small.</p>
 <p>Warning: In many cases, parallel processing will not be useful at all.</p>
 <p>To activate parallel computation, users must load the <code>future.apply</code> package, call <code>plan()</code> function, and set a global option. For example:</p>
 <div class="sourceCode r">
@@ -1390,57 +1390,57 @@ slopes(model)
 <span></span>
 <span><span class="co"># Unit-level (conditional) Marginal Effects</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">wt</span>, data <span class="op">=</span> <span class="va">mtcars</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
-<span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Average Marginal Effect (AME)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co"># Marginal Effect at the Mean (MEM)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Marginal Effect at User-Specified Values</span></span>
 <span><span class="co"># Variables not explicitly included in `datagrid()` are held at their means</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Group-Average Marginal Effects (G-AME)</span></span>
 <span><span class="co"># Calculate marginal effects for each observation, and then take the average</span></span>
 <span><span class="co"># marginal effect within each subset of observations with different observed</span></span>
 <span><span class="co"># values for the `cyl` variable:</span></span>
 <span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">cyl</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod2</span>, variables <span class="op">=</span> <span class="st">"hp"</span>, by <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod2</span>, variables <span class="op">=</span> <span class="st">"hp"</span>, by <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Marginal Effects at User-Specified Values (counterfactual)</span></span>
 <span><span class="co"># Variables not explicitly included in `datagrid()` are held at their</span></span>
 <span><span class="co"># original values, and the whole dataset is duplicated once for each</span></span>
 <span><span class="co"># combination of the values in `datagrid()`</span></span>
-<span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
+<span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
 <span>        hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span>,</span>
 <span>        grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Heteroskedasticity robust standard errors</span></span>
-<span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, vcov <span class="op">=</span> <span class="fu">sandwich</span><span class="fu">::</span><span class="fu"><a href="https://sandwich.R-Forge.R-project.org/reference/vcovHC.html">vcovHC</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, vcov <span class="op">=</span> <span class="fu">sandwich</span><span class="fu">::</span><span class="fu"><a href="https://sandwich.R-Forge.R-project.org/reference/vcovHC.html">vcovHC</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># hypothesis test: is the `hp` marginal effect at the mean equal to the `drat` marginal effect</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">wt</span> <span class="op">+</span> <span class="va">drat</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="st">"mean"</span>,</span>
 <span>    hypothesis <span class="op">=</span> <span class="st">"wt = drat"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># same hypothesis test using row indices</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="st">"mean"</span>,</span>
 <span>    hypothesis <span class="op">=</span> <span class="st">"b1 - b2 = 0"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># same hypothesis test using numeric vector of weights</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="st">"mean"</span>,</span>
 <span>    hypothesis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
@@ -1452,7 +1452,7 @@ slopes(model)
 <span>        <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span>    ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">lc</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Contrast A"</span>, <span class="st">"Contrast B"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="st">"mean"</span>,</span>
 <span>    hypothesis <span class="op">=</span> <span class="va">lc</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

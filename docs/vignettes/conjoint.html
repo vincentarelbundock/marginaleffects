@@ -760,9 +760,9 @@ task.</p></caption>
 <div class="cell">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">choice</span> <span class="op">~</span> <span class="va">job</span> <span class="op">*</span> <span class="va">language</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Then, we use the <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code> function to compute and marginalize predicted values. Note that we use the <code>vcov</code> argument to report clustered standard errors at the respondent-level.</p>
+<p>Then, we use the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions()</a></code> function to compute and marginalize predicted values. Note that we use the <code>vcov</code> argument to report clustered standard errors at the respondent-level.</p>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"language"</span>, vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"language"</span>, vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
          language Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %
@@ -779,7 +779,7 @@ Columns: language, estimate, std.error, statistic, p.value, s.value, conf.low, c
 <section id="hypothesis-tests" class="level2"><h2 class="anchored" data-anchor-id="hypothesis-tests">Hypothesis tests</h2>
 <p>Using the <code>hypothesis</code> argument, we can easily conduct various null hypothesis tests on the estimated marginal means. For example, is the probability of choosing a “fluent” profile equal to the probability of choosing a “tried but unable” profile?</p>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"b1 = b3"</span>,</span>
 <span>  by <span class="op">=</span> <span class="st">"language"</span>, </span>
 <span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -795,7 +795,7 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 </div>
 <p>Is the difference in probabiliy between “fluent” and “broken” equal to the difference in probability between “tried but unable” and “used interpreter”?</p>
 <div class="cell">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"b1 - b2 = b3 - b4"</span>,</span>
 <span>  by <span class="op">=</span> <span class="st">"language"</span>, </span>
 <span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -812,7 +812,7 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 </section><section id="subgroups" class="level2"><h2 class="anchored" data-anchor-id="subgroups">Subgroups</h2>
 <p>Modifying the <code>by</code> allows analysts to report marginal means for different subgroups of their data, and <code>newdata</code> can be used to exclude uninteresting profiles:</p>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"job"</span><span class="op">)</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">job</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"doctor"</span>, <span class="st">"gardener"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -840,9 +840,9 @@ Columns: language, job, estimate, std.error, statistic, p.value, s.value, conf.l
 <li>Compute predicted (fitted) values for every row in datasets A and B.</li>
 <li>Compute the average difference between predicted values in the two datasets.</li>
 </ol>
-<p>This can be achieved easily using the <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> function from the <code>marginaleffects</code> package:</p>
+<p>This can be achieved easily using the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons()</a></code> function from the <code>marginaleffects</code> package:</p>
 <div class="cell">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"language"</span>, vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"language"</span>, vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
                               Contrast Estimate Std. Error      z Pr(&gt;|z|)     S   2.5 %  97.5 %
@@ -856,8 +856,8 @@ Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.
 </div>
 </div>
 <section id="empirical-vs.-balanced-grid" class="level2"><h2 class="anchored" data-anchor-id="empirical-vs.-balanced-grid">Empirical vs.&nbsp;balanced grid</h2>
-<p>In the example above, <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code> marginalized across the realized distribution of attributes observed in the actual dataset. An alternative would be to marginalzed over a perfectly balanced (“uniform”) grid of treatment conditions. Of course, empirical and uniform grids will yield nearly identical results if the sample is large and randomization successful.</p>
-<p>The uniform approach is the default in the <code><a href="https://rdrr.io/pkg/cjoint/man/amce.html">amce()</a></code> function from the <code>cjoint</code> package, and the behavior can be replicated using the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> function and the <code>newdata</code> argument in <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code>:</p>
+<p>In the example above, <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions()</a></code> marginalized across the realized distribution of attributes observed in the actual dataset. An alternative would be to marginalzed over a perfectly balanced (“uniform”) grid of treatment conditions. Of course, empirical and uniform grids will yield nearly identical results if the sample is large and randomization successful.</p>
+<p>The uniform approach is the default in the <code><a href="https://rdrr.io/pkg/cjoint/man/amce.html">amce()</a></code> function from the <code>cjoint</code> package, and the behavior can be replicated using the <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> function and the <code>newdata</code> argument in <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons()</a></code>:</p>
 <div class="cell">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">cjoint</span><span class="op">)</span></span>
 <span></span>
@@ -874,8 +874,8 @@ Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.
 12  language tried but unable -0.12843978 0.01343677  -9.558832 1.190935e-21 ***
 13  language used interpreter -0.16584337 0.01382564 -11.995352 3.758141e-33 ***</code></pre>
 </div>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>FUN_factor <span class="op">=</span> <span class="va">unique</span>, FUN_character <span class="op">=</span> <span class="va">unique</span><span class="op">)</span>,</span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>FUN_factor <span class="op">=</span> <span class="va">unique</span>, FUN_character <span class="op">=</span> <span class="va">unique</span><span class="op">)</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"language"</span>,</span>
 <span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1001,7 +1001,7 @@ window.addEventListener('load', function () { styleCell_0u230it9oz6z8pc47td7(0, 
 </div>
 <p>Now we compute the AFCP by averaging fitted values by unique pairs of attributes for language (the combination of <code>language</code> and <code>alternative</code>). Since we are not interested comparison pairs where both profiles have the same language skills, we use the <code>subset</code> to supply an appropriate grid.</p>
 <div class="cell">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"alternative"</span><span class="op">)</span>, </span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">language</span> <span class="op">!=</span> <span class="va">alternative</span><span class="op">)</span>,</span>
 <span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1297,7 +1297,7 @@ window.addEventListener('load', function () { styleCell_ol143nti7ht90eok1icw(13,
 <section id="hypothesis-tests-1" class="level2"><h2 class="anchored" data-anchor-id="hypothesis-tests-1">Hypothesis tests</h2>
 <p>A powerful feature of <code>marginaleffects</code> is that all its functions include a <code>hypothesis</code> argument which can be used to conduct hypothesis tests on arbitrary functions of estimates. For example, let’s compute the AFCP for a subset of profile comparisons:</p>
 <div class="cell">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"alternative"</span><span class="op">)</span>, </span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">language</span> <span class="op">!=</span> <span class="va">alternative</span> <span class="op">&amp;</span> <span class="va">alternative</span> <span class="op">==</span> <span class="st">"fluent"</span><span class="op">)</span>,</span>
 <span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">respondent</span><span class="op">)</span></span>
@@ -1315,7 +1315,7 @@ Columns: language, alternative, estimate, std.error, statistic, p.value, s.value
 </div>
 <p>Now, let’s say we would like to test if any of the pairwise comparisons between AFCP is different from zero. All we need to do is use add a <code>hypothesis="pairwise"</code> argument:</p>
 <div class="cell">
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"pairwise"</span>,</span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"language"</span>, <span class="st">"alternative"</span><span class="op">)</span>, </span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">language</span> <span class="op">!=</span> <span class="va">alternative</span> <span class="op">&amp;</span> <span class="va">alternative</span> <span class="op">==</span> <span class="st">"fluent"</span><span class="op">)</span>,</span>

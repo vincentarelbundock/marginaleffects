@@ -618,7 +618,7 @@ window.Quarto = {
 <div class="tab-content" data-group="language">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">fit</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"vs"</span>, <span class="st">"am"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">fit</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"vs"</span>, <span class="st">"am"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="experiments_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -824,7 +824,7 @@ window.addEventListener('load', function () { styleCell_7qwb3wlpfsgxuok9qto9(10,
 <li>8.621 mpg between <code>vs=1</code> and <code>vs=0</code>, when <code>am=1</code>.</li>
 <li>13.322 mpg between a car with <code>am=1</code> and <code>vs=1</code>, and a car with <code>am=0</code> and <code>vs=0</code>.</li>
 </ul>
-<p>Reading off these differences from the model summary is relatively straightforward in very simple cases like this one. However, it becomes more difficult as more variables are added to the model, not to mention obtaining estimated standard errors becomes nightmarish. To make the process easier, we can leverage the <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> function from the <code>marginaleffects</code> package to compute the appropriate quantities and standard errors.</p>
+<p>Reading off these differences from the model summary is relatively straightforward in very simple cases like this one. However, it becomes more difficult as more variables are added to the model, not to mention obtaining estimated standard errors becomes nightmarish. To make the process easier, we can leverage the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons()</a></code> function from the <code>marginaleffects</code> package to compute the appropriate quantities and standard errors.</p>
 </section><section id="using-avg_comparisons-to-estimate-all-differences" class="level3"><h3 class="anchored" data-anchor-id="using-avg_comparisons-to-estimate-all-differences">Using <code>avg_comparisons</code> To Estimate All Differences</h3>
 <p>The grey rectangle in the graph below is the estimated fuel efficiency when <code>vs=0</code> and <code>am=0</code>, that is, for an automatic transmission car with V-shaped engine.</p>
 <div class="cell">
@@ -844,9 +844,9 @@ window.addEventListener('load', function () { styleCell_7qwb3wlpfsgxuok9qto9(10,
 <div class="tab-content" data-group="language">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"vs"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;      5.69       1.65 3.45   &lt;0.001 10.8  2.46   8.93</span></span>
@@ -856,7 +856,7 @@ window.addEventListener('load', function () { styleCell_7qwb3wlpfsgxuok9qto9(10,
 <span><span class="co">#&gt; Comparison: mean(1) - mean(0)</span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>As expected, the results produced by <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
+<p>As expected, the results produced by <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons()</a></code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -882,7 +882,7 @@ window.addEventListener('load', function () { styleCell_7qwb3wlpfsgxuok9qto9(10,
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>As expected, the results produced by <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
+<p>As expected, the results produced by <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons()</a></code> are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -903,9 +903,9 @@ window.addEventListener('load', function () { styleCell_7qwb3wlpfsgxuok9qto9(10,
 <div class="tab-content" data-group="language">
 <div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"am"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>vs <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>vs <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;       4.7       1.74 2.71  0.00678 7.2   1.3    8.1</span></span>
@@ -960,9 +960,9 @@ window.addEventListener('load', function () { styleCell_7qwb3wlpfsgxuok9qto9(10,
 <div class="tab-content" data-group="language">
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"am"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>vs <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>vs <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;      7.63       1.86 4.11   &lt;0.001 14.6  3.99   11.3</span></span>
@@ -1017,7 +1017,7 @@ window.addEventListener('load', function () { styleCell_7qwb3wlpfsgxuok9qto9(10,
 <div class="tab-content" data-group="language">
 <div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"vs"</span><span class="op">)</span>,</span>
 <span>  cross <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1154,7 +1154,7 @@ window.addEventListener('load', function () { styleCell_7qwb3wlpfsgxuok9qto9(10,
 </div>
 </div>
 </div>
-<p>We can obtain the same results by fitting a model with the standard <code>lm</code> function and using the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function:</p>
+<p>We can obtain the same results by fitting a model with the standard <code>lm</code> function and using the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true">R</a></li>
@@ -1164,7 +1164,7 @@ window.addEventListener('load', function () { styleCell_7qwb3wlpfsgxuok9qto9(10,
 <div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
 <div class="cell">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">*</span> <span class="op">(</span><span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">race</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">lalonde</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    variables <span class="op">=</span> <span class="st">"treat"</span>,</span>
 <span>    vcov <span class="op">=</span> <span class="st">"HC3"</span><span class="op">)</span></span>
@@ -1199,7 +1199,7 @@ window.addEventListener('load', function () { styleCell_7qwb3wlpfsgxuok9qto9(10,
 </div>
 </div>
 </div>
-<p>Notice that the <code>treat</code> coefficient and associate standard error in the <code>lm_lin</code> regression are exactly the same as the estimates produced by the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function.</p>
+<p>Notice that the <code>treat</code> coefficient and associate standard error in the <code>lm_lin</code> regression are exactly the same as the estimates produced by the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function.</p>
 <section id="references" class="level3"><h3 class="anchored" data-anchor-id="references">References</h3>
 <ul>
 <li>Freedman, David A. “On Regression Adjustments to Experimental Data.” Advances in Applied Mathematics 40, no. 2 (February 2008): 180–93.</li>

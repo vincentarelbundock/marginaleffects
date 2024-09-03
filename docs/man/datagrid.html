@@ -535,7 +535,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content"><section id="data-grids" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="data-grids">Data grids</h2>
 <section id="description" class="level3"><h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Generate a data grid of user-specified values for use in the <code>newdata</code> argument of the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code>, <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>, and <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> functions. This is useful to define where in the predictor space we want to evaluate the quantities of interest. Ex: the predicted outcome or slope for a 37 year old college graduate.</p>
+<p>Generate a data grid of user-specified values for use in the <code>newdata</code> argument of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>, and <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code> functions. This is useful to define where in the predictor space we want to evaluate the quantities of interest. Ex: the predicted outcome or slope for a 37 year old college graduate.</p>
 </section><section id="usage" class="level3"><h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">datagrid(
   ...,
@@ -609,7 +609,7 @@ character vector with grouping variables within which <code style="white-space: 
 <p>"balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use <code>grid_type=“mean_or_mode”</code> and to specify the unique levels of a subset of named variables explicitly.</p>
 </li>
 <li>
-<p>"counterfactual": the entire dataset is duplicated for each combination of the variable values specified in <code>…</code>. Variables not explicitly supplied to <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> are set to their observed values in the original dataset.</p>
+<p>"counterfactual": the entire dataset is duplicated for each combination of the variable values specified in <code>…</code>. Variables not explicitly supplied to <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> are set to their observed values in the original dataset.</p>
 </li>
 </ul>
 </td>
@@ -679,7 +679,7 @@ the function to be applied to other variable types.
 </td>
 </tr>
 </tbody></table></section><section id="details" class="level3"><h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>If <code>datagrid</code> is used in a <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code>, <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>, or <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> call as the <code>newdata</code> argument, the model is automatically inserted in the <code>model</code> argument of <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> call, and users do not need to specify either the <code>model</code> or <code>newdata</code> arguments. The same behavior will occur when the value supplied to <code style="white-space: pre;">newdata=</code> is a function call which starts with "datagrid". This is intended to allow users to create convenience shortcuts like:</p>
+<p>If <code>datagrid</code> is used in a <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>, or <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code> call as the <code>newdata</code> argument, the model is automatically inserted in the <code>model</code> argument of <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> call, and users do not need to specify either the <code>model</code> or <code>newdata</code> arguments. The same behavior will occur when the value supplied to <code style="white-space: pre;">newdata=</code> is a function call which starts with "datagrid". This is intended to allow users to create convenience shortcuts like:</p>
 <pre>library(marginaleffects)
 mod &lt;- lm(mpg ~ am + vs + factor(cyl) + hp, mtcars)
 datagrid_bal &lt;- function(...) datagrid(..., grid_type = "balanced")
@@ -694,7 +694,7 @@ predictions(model, newdata = datagrid_bal(cyl = 4))
 <span></span>
 <span><span class="co"># The output only has 2 rows, and all the variables except `hp` are at their</span></span>
 <span><span class="co"># mean or mode.</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>newdata <span class="op">=</span> <span class="va">mtcars</span>, hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>newdata <span class="op">=</span> <span class="va">mtcars</span>, hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       mpg    cyl     disp     drat      wt     qsec vs am   gear   carb  hp
 1 20.09062 6.1875 230.7219 3.596563 3.21725 17.84875  0  0 3.6875 2.8125 100
@@ -705,7 +705,7 @@ predictions(model, newdata = datagrid_bal(cyl = 4))
 </div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># We get the same result by feeding a model instead of a data.frame</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span>, <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">mod</span>, hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">mod</span>, hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   hp rowid
 1 100     1
@@ -714,7 +714,7 @@ predictions(model, newdata = datagrid_bal(cyl = 4))
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Use in `marginaleffects` to compute "Typical Marginal Effects". When used</span></span>
 <span><span class="co"># in `slopes()` or `predictions()` we do not need to specify the</span></span>
 <span><span class="co">#`model` or `newdata` arguments.</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term  hp Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %  97.5 %
@@ -725,7 +725,7 @@ Type:  response
 Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, predicted_lo, predicted_hi, predicted, mpg </code></pre>
 </div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># datagrid accepts functions</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="va">range</span>, cyl <span class="op">=</span> <span class="va">unique</span>, newdata <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="va">range</span>, cyl <span class="op">=</span> <span class="va">unique</span>, newdata <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       mpg     disp     drat      wt     qsec vs am   gear   carb  hp cyl rowid
 1 20.09062 230.7219 3.596563 3.21725 17.84875  0  0 3.6875 2.8125  52   6     1
@@ -735,7 +735,7 @@ Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low
 5 20.09062 230.7219 3.596563 3.21725 17.84875  0  0 3.6875 2.8125 335   4     5
 6 20.09062 230.7219 3.596563 3.21725 17.84875  0  0 3.6875 2.8125 335   8     6</code></pre>
 </div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="va">fivenum</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="va">fivenum</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term  hp Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %  97.5 %
@@ -752,14 +752,14 @@ Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># The full dataset is duplicated with each observation given counterfactual</span></span>
 <span><span class="co"># values of 100 and 110 for the `hp` variable. The original `mtcars` includes</span></span>
 <span><span class="co"># 32 rows, so the resulting dataset includes 64 rows.</span></span>
-<span><span class="va">dg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>newdata <span class="op">=</span> <span class="va">mtcars</span>, hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span>, grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span></span>
+<span><span class="va">dg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>newdata <span class="op">=</span> <span class="va">mtcars</span>, hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span>, grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">dg</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 64</code></pre>
 </div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># We get the same result by feeding a model instead of a data.frame</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span>, <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="va">dg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">mod</span>, hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span>, grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span></span>
+<span><span class="va">dg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">mod</span>, hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">110</span><span class="op">)</span>, grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">dg</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 64</code></pre>

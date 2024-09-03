@@ -587,7 +587,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </h2>
 <p>Compute adjusted predictions for each observed combination of regressor in the dataset used to fit the model. This gives us a dataset with the same number of rows as the original data, but new columns with predicted values and uncertainty estimates:</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 75600    12</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span></span>
@@ -603,9 +603,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, Y, Group, Time, Subject</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We can easily plot adjusted predictions for different values of a regressor using the <code><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions()</a></code> function:</p>
+<p>We can easily plot adjusted predictions for different values of a regressor using the <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions()</a></code> function:</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">model</span>, condition <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">model</span>, condition <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="gam_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -615,9 +615,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section><section id="marginal-effects-slopes-and-plot_slopes" class="level2"><h2 class="anchored" data-anchor-id="marginal-effects-slopes-and-plot_slopes">Marginal Effects: <code>slopes()</code> and <code>plot_slopes()</code>
 </h2>
-<p>Marginal effects are slopes of the prediction equation. They are an observation-level quantity. The <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> function produces a dataset with the same number of rows as the original data, but with new columns for the slop and uncertainty estimates:</p>
+<p>Marginal effects are slopes of the prediction equation. They are an observation-level quantity. The <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code> function produces a dataset with the same number of rows as the original data, but with new columns for the slop and uncertainty estimates:</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">model</span>, variables <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mfx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">model</span>, variables <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)     S  2.5 % 97.5 %</span></span>
@@ -632,9 +632,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, Y, Group, Time, Subject</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We can plot marginal effects for different values of a regressor using the <code><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes()</a></code> function. This next plot shows the slope of the prediction equation, that is, the slope of the previous plot, at every value of the <code>Time</code> variable.</p>
+<p>We can plot marginal effects for different values of a regressor using the <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes()</a></code> function. This next plot shows the slope of the prediction equation, that is, the slope of the previous plot, at every value of the <code>Time</code> variable.</p>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">model</span>, variables <span class="op">=</span> <span class="st">"Time"</span>, condition <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">model</span>, variables <span class="op">=</span> <span class="st">"Time"</span>, condition <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="gam_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -646,7 +646,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section><section id="excluding-terms" class="level2"><h2 class="anchored" data-anchor-id="excluding-terms">Excluding terms</h2>
 <p>The <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method of the <code>mgcv</code> package allows users to “exclude” some smoothing terms, using the <code>exclude</code> argument. You can pass the same argument to any function in the <code>marginaleffects</code> package:</p>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span>, newdata <span class="op">=</span> <span class="st">"mean"</span>, exclude <span class="op">=</span> <span class="st">"s(Subject)"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span>, newdata <span class="op">=</span> <span class="st">"mean"</span>, exclude <span class="op">=</span> <span class="st">"s(Subject)"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %  Group Time Subject</span></span>
 <span><span class="co">#&gt;      11.7      0.695 16.9   &lt;0.001 210.8  10.4   13.1 Adults 1000     a01</span></span>

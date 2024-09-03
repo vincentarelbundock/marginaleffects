@@ -547,9 +547,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Using the <code>predictions</code> function, we set the <code>hp</code> variable at its mean and compute predictions for all combinations for <code>am</code> and <code>cyl</code>:</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="va">unique</span>, cyl <span class="op">=</span> <span class="va">unique</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="va">unique</span>, cyl <span class="op">=</span> <span class="va">unique</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>For illustration purposes, it is useful to reshape the above results:</p>
 <div class="cell">
@@ -605,12 +605,12 @@ am
 </table>
 </div>
 </div>
-<p>The marginal means by <code>am</code> and <code>cyl</code> are obtained by taking the mean of the adjusted predictions across cells. We can achieve the same results with the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function, with <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> to specify a balanced grid, and the <code>by</code> argument to define the marginalization dimension:</p>
+<p>The marginal means by <code>am</code> and <code>cyl</code> are obtained by taking the mean of the adjusted predictions across cells. We can achieve the same results with the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> function, with <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> to specify a balanced grid, and the <code>by</code> argument to define the marginalization dimension:</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"am"</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="va">unique</span>, cyl <span class="op">=</span> <span class="va">unique</span><span class="op">)</span><span class="op">)</span></span>
+<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>am <span class="op">=</span> <span class="va">unique</span>, cyl <span class="op">=</span> <span class="va">unique</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     am Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;   TRUE     22.5      0.834 26.9   &lt;0.001 528.6  20.8   24.1</span></span>
@@ -621,7 +621,7 @@ am
 </div>
 <p>Alternatively, we can use the convenient <code>newdata="balanced"</code> argument:</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"cyl"</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span></span>
@@ -636,7 +636,7 @@ am
 </div>
 <p>We can of course marginalize over the interaction between more variables, by changing the <code>by</code> argument:</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"cyl"</span><span class="op">)</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span></span>
@@ -688,10 +688,10 @@ am
 <li>
 <code>plot_slopes</code>: Conditional marginal effects – how does the slope change as a function of regressors?</li>
 </ul>
-<p>There is no analogous function for marginal means. However, it is very easy to achieve a similar effect using the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function, its <code>by</code> argument, and standard plotting functions. In the example below, we take these steps:</p>
+<p>There is no analogous function for marginal means. However, it is very easy to achieve a similar effect using the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> function, its <code>by</code> argument, and standard plotting functions. In the example below, we take these steps:</p>
 <ol type="1">
 <li>Estimate a model with one continuous (<code>hp</code>) and one categorical regressor (<code>cyl</code>).</li>
-<li>Create a perfectly “balanced” data grid for each combination of <code>hp</code> and <code>cyl</code>. This is specified by the user in the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> call.</li>
+<li>Create a perfectly “balanced” data grid for each combination of <code>hp</code> and <code>cyl</code>. This is specified by the user in the <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> call.</li>
 <li>Compute fitted values (aka “adjusted predictions”) for each cell of the grid.</li>
 <li>Use the <code>by</code> argument to take the average of predicted values for each value of <code>hp</code>, across margins of <code>cyl</code>.</li>
 <li>Compute standard errors around the averaged predicted values (i.e., marginal means).</li>
@@ -703,9 +703,9 @@ am
 <span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"hp"</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
+<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
 <span>        model <span class="op">=</span> <span class="va">mod</span>,</span>
 <span>        hp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">120</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
 <span>        cyl <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span>

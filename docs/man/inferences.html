@@ -645,13 +645,13 @@ Data frame of calibration data for split conformal prediction (<code style="whit
 <code id="conformal_score">conformal_score</code>
 </td>
 <td>
-<p>String. Warning: The <code>type</code> argument in <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> must generate predictions which are on the same scale as the outcome variable. Typically, this means that <code>type</code> must be "response" or "probs".</p>
+<p>String. Warning: The <code>type</code> argument in <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> must generate predictions which are on the same scale as the outcome variable. Typically, this means that <code>type</code> must be "response" or "probs".</p>
 <ul>
 <li>
 <p>"residual_abs" or "residual_sq" for regression tasks (numeric outcome)</p>
 </li>
 <li>
-<p>"softmax" for classification tasks (when <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> returns a <code>group</code> columns, such as multinomial or ordinal logit models.</p>
+<p>"softmax" for classification tasks (when <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> returns a <code>group</code> columns, such as multinomial or ordinal logit models.</p>
 </li>
 </ul>
 </td>
@@ -690,7 +690,7 @@ Data frame of calibration data for split conformal prediction (<code style="whit
 <p>Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.</p>
 </li>
 </ol>
-<p>When <code>method=“fwb”</code>, drawn weights are supplied to the model fitting function’s <code>weights</code> argument; if the model doesn’t accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by <code><a href="https://rdrr.io/r/stats/weights.html">weights()</a></code> and multiplied by the drawn weights. These weights are supplied to the <code>wts</code> argument of the estimation function (e.g., <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>).</p>
+<p>When <code>method=“fwb”</code>, drawn weights are supplied to the model fitting function’s <code>weights</code> argument; if the model doesn’t accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by <code><a href="https://rdrr.io/r/stats/weights.html">weights()</a></code> and multiplied by the drawn weights. These weights are supplied to the <code>wts</code> argument of the estimation function (e.g., <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>).</p>
 </section><section id="value" class="level3"><h3 class="anchored" data-anchor-id="value">Value</h3>
 <p>A <code>marginaleffects</code> object with simulation or bootstrap resamples and objects attached.</p>
 </section><section id="references" class="level3"><h3 class="anchored" data-anchor-id="references">References</h3>
@@ -709,21 +709,21 @@ Data frame of calibration data for split conformal prediction (<code style="whit
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span> <span class="op">*</span> <span class="va">Species</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># bootstrap</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"boot"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"boot"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"rsample"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"rsample"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Fractional (bayesian) bootstrap</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"fwb"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="st">"rvar"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"fwb"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="st">"rvar"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Simulation-based inference</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
