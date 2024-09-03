@@ -705,46 +705,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td>172</td>
-<td>"Adelie"</td>
-<td>0</td>
-<td>3859.49144</td>
-<td>203.924857</td>
-<td>18.926047</td>
-<td>0.0</td>
-<td>inf</td>
-<td>3459.806065</td>
-<td>4259.176816</td>
-<td>334</td>
-<td>"Biscoe"</td>
-<td>43.92193</td>
-<td>17.15117</td>
-<td>4201.754386</td>
-<td>"male"</td>
-<td>2009</td>
-</tr>
-<tr class="even">
-<td>172</td>
-<td>"Gentoo"</td>
-<td>1</td>
-<td>2544.81111</td>
-<td>368.939151</td>
-<td>6.897645</td>
-<td>5.2871e-12</td>
-<td>37.460659</td>
-<td>1821.703662</td>
-<td>3267.918559</td>
-<td>334</td>
-<td>"Biscoe"</td>
-<td>43.92193</td>
-<td>17.15117</td>
-<td>4201.754386</td>
-<td>"male"</td>
-<td>2009</td>
-</tr>
-<tr class="odd">
-<td>172</td>
 <td>"Chinstrap"</td>
-<td>2</td>
+<td>0</td>
 <td>3145.853248</td>
 <td>233.843835</td>
 <td>13.452795</td>
@@ -752,7 +714,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>inf</td>
 <td>2687.527753</td>
 <td>3604.178742</td>
-<td>334</td>
+<td>328</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -761,17 +723,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>2009</td>
 </tr>
 <tr class="even">
-<td>231</td>
+<td>172</td>
 <td>"Adelie"</td>
-<td>3</td>
-<td>4763.826651</td>
-<td>362.09348</td>
-<td>13.156345</td>
+<td>1</td>
+<td>3859.49144</td>
+<td>203.924857</td>
+<td>18.926047</td>
 <td>0.0</td>
 <td>inf</td>
-<td>4054.136472</td>
-<td>5473.51683</td>
-<td>334</td>
+<td>3459.806065</td>
+<td>4259.176816</td>
+<td>328</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -780,17 +742,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>2009</td>
 </tr>
 <tr class="odd">
-<td>231</td>
+<td>172</td>
 <td>"Gentoo"</td>
-<td>4</td>
-<td>5596.718663</td>
-<td>155.418883</td>
-<td>36.010545</td>
-<td>0.0</td>
-<td>inf</td>
-<td>5292.103251</td>
-<td>5901.334076</td>
-<td>334</td>
+<td>2</td>
+<td>2544.81111</td>
+<td>368.939151</td>
+<td>6.897645</td>
+<td>5.2871e-12</td>
+<td>37.460659</td>
+<td>1821.703662</td>
+<td>3267.918559</td>
+<td>328</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -801,7 +763,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>231</td>
 <td>"Chinstrap"</td>
-<td>5</td>
+<td>3</td>
 <td>4085.954268</td>
 <td>469.429937</td>
 <td>8.704077</td>
@@ -809,7 +771,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>inf</td>
 <td>3165.888497</td>
 <td>5006.020038</td>
-<td>334</td>
+<td>328</td>
+<td>"Biscoe"</td>
+<td>43.92193</td>
+<td>17.15117</td>
+<td>4201.754386</td>
+<td>"male"</td>
+<td>2009</td>
+</tr>
+<tr class="odd">
+<td>231</td>
+<td>"Adelie"</td>
+<td>4</td>
+<td>4763.826651</td>
+<td>362.09348</td>
+<td>13.156345</td>
+<td>0.0</td>
+<td>inf</td>
+<td>4054.136472</td>
+<td>5473.51683</td>
+<td>328</td>
+<td>"Biscoe"</td>
+<td>43.92193</td>
+<td>17.15117</td>
+<td>4201.754386</td>
+<td>"male"</td>
+<td>2009</td>
+</tr>
+<tr class="even">
+<td>231</td>
+<td>"Gentoo"</td>
+<td>5</td>
+<td>5596.718663</td>
+<td>155.418883</td>
+<td>36.010545</td>
+<td>0.0</td>
+<td>inf</td>
+<td>5292.103251</td>
+<td>5901.334076</td>
+<td>328</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -1220,6 +1220,91 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We can plot those estimates in the same way as before, by specifying <code>group</code> as one of the conditional variable, or by adding that column to a <code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap()</a></code> call:</p>
 <div class="cell">
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">pkgload</span><span class="fu">::</span><span class="fu"><a href="https://pkgload.r-lib.org/reference/load_all.html">load_all</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Exports from /Users/vincent/repos/marginaleffects/src/eigen.cpp:</span></span>
+<span><span class="co">#&gt;    SEXP eigenMatMult(const Eigen::Map&lt;Eigen::MatrixXd&gt; A, Eigen::Map&lt;Eigen::VectorXd&gt; B)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; /Users/vincent/repos/marginaleffects/src/RcppExports.cpp updated.</span></span>
+<span><span class="co">#&gt; /Users/vincent/repos/marginaleffects/R/RcppExports.R updated.</span></span>
+<span><span class="co">#&gt; ── R CMD INSTALL ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; * installing *source* package ‘marginaleffects’ ...</span></span>
+<span><span class="co">#&gt; ** using staged installation</span></span>
+<span><span class="co">#&gt; ** libs</span></span>
+<span><span class="co">#&gt; using C++ compiler: ‘Apple clang version 15.0.0 (clang-1500.3.9.4)’</span></span>
+<span><span class="co">#&gt; using SDK: ‘MacOSX14.4.sdk’</span></span>
+<span><span class="co">#&gt; clang++ -arch arm64 -std=gnu++17 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I'/Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/Rcpp/include' -I'/Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include' -I/opt/R/arm64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -UNDEBUG -Wall -pedantic -g -O0  -c RcppExports.cpp -o RcppExports.o</span></span>
+<span><span class="co">#&gt; In file included from RcppExports.cpp:4:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigen.h:25:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigenForward.h:29:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/Sparse:26:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/SparseCore:61:</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/src/SparseCore/TriangularSolver.h:273:13: warning: variable 'count' set but not used [-Wunused-but-set-variable]</span></span>
+<span><span class="co">#&gt;       Index count = 0;</span></span>
+<span><span class="co">#&gt;             ^</span></span>
+<span><span class="co">#&gt; In file included from RcppExports.cpp:4:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigen.h:25:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigenForward.h:29:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/Sparse:29:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/SparseLU:35:</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/src/SparseLU/SparseLU_heap_relax_snode.h:78:9: warning: variable 'nsuper_et_post' set but not used [-Wunused-but-set-variable]</span></span>
+<span><span class="co">#&gt;   Index nsuper_et_post = 0; // Number of relaxed snodes in postordered etree </span></span>
+<span><span class="co">#&gt;         ^</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/src/SparseLU/SparseLU_heap_relax_snode.h:79:9: warning: variable 'nsuper_et' set but not used [-Wunused-but-set-variable]</span></span>
+<span><span class="co">#&gt;   Index nsuper_et = 0; // Number of relaxed snodes in the original etree </span></span>
+<span><span class="co">#&gt;         ^</span></span>
+<span><span class="co">#&gt; In file included from RcppExports.cpp:4:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigen.h:25:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigenForward.h:31:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/unsupported/Eigen/IterativeSolvers:46:</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/unsupported/Eigen/src/IterativeSolvers/IDRS.h:72:10: warning: variable 'replacements' set but not used [-Wunused-but-set-variable]</span></span>
+<span><span class="co">#&gt;                         Index replacements = 0;</span></span>
+<span><span class="co">#&gt;                               ^</span></span>
+<span><span class="co">#&gt; In file included from RcppExports.cpp:4:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigen.h:25:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigenForward.h:37:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/unsupported/Eigen/SparseExtra:45:</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/unsupported/Eigen/src/SparseExtra/MarketIO.h:246:7: warning: variable 'count' set but not used [-Wunused-but-set-variable]</span></span>
+<span><span class="co">#&gt;   int count = 0;</span></span>
+<span><span class="co">#&gt;       ^</span></span>
+<span><span class="co">#&gt; 5 warnings generated.</span></span>
+<span><span class="co">#&gt; clang++ -arch arm64 -std=gnu++17 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I'/Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/Rcpp/include' -I'/Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include' -I/opt/R/arm64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -UNDEBUG -Wall -pedantic -g -O0  -c eigen.cpp -o eigen.o</span></span>
+<span><span class="co">#&gt; In file included from eigen.cpp:2:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigen.h:25:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigenForward.h:29:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/Sparse:26:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/SparseCore:61:</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/src/SparseCore/TriangularSolver.h:273:13: warning: variable 'count' set but not used [-Wunused-but-set-variable]</span></span>
+<span><span class="co">#&gt;       Index count = 0;</span></span>
+<span><span class="co">#&gt;             ^</span></span>
+<span><span class="co">#&gt; In file included from eigen.cpp:2:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigen.h:25:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigenForward.h:29:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/Sparse:29:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/SparseLU:35:</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/src/SparseLU/SparseLU_heap_relax_snode.h:78:9: warning: variable 'nsuper_et_post' set but not used [-Wunused-but-set-variable]</span></span>
+<span><span class="co">#&gt;   Index nsuper_et_post = 0; // Number of relaxed snodes in postordered etree </span></span>
+<span><span class="co">#&gt;         ^</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/Eigen/src/SparseLU/SparseLU_heap_relax_snode.h:79:9: warning: variable 'nsuper_et' set but not used [-Wunused-but-set-variable]</span></span>
+<span><span class="co">#&gt;   Index nsuper_et = 0; // Number of relaxed snodes in the original etree </span></span>
+<span><span class="co">#&gt;         ^</span></span>
+<span><span class="co">#&gt; In file included from eigen.cpp:2:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigen.h:25:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigenForward.h:31:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/unsupported/Eigen/IterativeSolvers:46:</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/unsupported/Eigen/src/IterativeSolvers/IDRS.h:72:10: warning: variable 'replacements' set but not used [-Wunused-but-set-variable]</span></span>
+<span><span class="co">#&gt;                         Index replacements = 0;</span></span>
+<span><span class="co">#&gt;                               ^</span></span>
+<span><span class="co">#&gt; In file included from eigen.cpp:2:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigen.h:25:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/RcppEigenForward.h:37:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/unsupported/Eigen/SparseExtra:45:</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/RcppEigen/include/unsupported/Eigen/src/SparseExtra/MarketIO.h:246:7: warning: variable 'count' set but not used [-Wunused-but-set-variable]</span></span>
+<span><span class="co">#&gt;   int count = 0;</span></span>
+<span><span class="co">#&gt;       ^</span></span>
+<span><span class="co">#&gt; 5 warnings generated.</span></span>
+<span><span class="co">#&gt; clang++ -arch arm64 -std=gnu++17 -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -L/Library/Frameworks/R.framework/Resources/lib -L/opt/R/arm64/lib -o marginaleffects.so RcppExports.o eigen.o -F/Library/Frameworks/R.framework/.. -framework R -Wl,-framework -Wl,CoreFoundation</span></span>
+<span><span class="co">#&gt; installing to /private/var/folders/zg/4qrpyy2n3k9f_2b5dgkc_wl40000gn/T/RtmpemvpFX/devtools_install_4836699339fb/00LOCK-marginaleffects/00new/marginaleffects/libs</span></span>
+<span><span class="co">#&gt; ** checking absolute paths in shared objects and dynamic libraries</span></span>
+<span><span class="co">#&gt; * DONE (marginaleffects)</span></span>
 <span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"mpg"</span>, <span class="st">"group"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"probs"</span>, vcov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>

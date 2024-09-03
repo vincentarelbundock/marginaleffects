@@ -746,8 +746,8 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 │ ---  ┆ ---      │
 │ i64  ┆ f64      │
 ╞══════╪══════════╡
-│ 1    ┆ 5.273587 │
 │ 0    ┆ 1.756213 │
+│ 1    ┆ 5.273587 │
 └──────┴──────────┘</code></pre>
 </div>
 </div>
@@ -1008,7 +1008,7 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <span><span class="va">bootstrap</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                           estimate std.error conf.low conf.high
-1 Treatment - No Treatment 3.517374 0.4735009  2.58933  4.445419</code></pre>
+1 Treatment - No Treatment 3.517374 0.4614023 2.613042  4.421706</code></pre>
 </div>
 </div>
 <p>The results are close to those that we obtained with <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.</p>

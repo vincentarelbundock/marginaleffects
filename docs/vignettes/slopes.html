@@ -632,11 +632,11 @@ window.Quarto = {
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span>, <span class="va">truth</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate</span></span>
-<span><span class="co">#&gt;     -6.99</span></span>
-<span><span class="co">#&gt;     -3.00</span></span>
-<span><span class="co">#&gt;      1.00</span></span>
-<span><span class="co">#&gt;      5.00</span></span>
-<span><span class="co">#&gt;      9.00</span></span>
+<span><span class="co">#&gt;    -6.997</span></span>
+<span><span class="co">#&gt;    -3.002</span></span>
+<span><span class="co">#&gt;     0.994</span></span>
+<span><span class="co">#&gt;     4.990</span></span>
+<span><span class="co">#&gt;     8.985</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: estimate, truth</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -672,12 +672,12 @@ window.Quarto = {
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;     2.854    0.00382  748   &lt;0.001 Inf  2.847  2.862</span></span>
-<span><span class="co">#&gt;     1.460    0.00322  454   &lt;0.001 Inf  1.454  1.467</span></span>
-<span><span class="co">#&gt;    -1.768    0.00442 -400   &lt;0.001 Inf -1.777 -1.760</span></span>
-<span><span class="co">#&gt;    -0.983    0.00386 -255   &lt;0.001 Inf -0.991 -0.976</span></span>
-<span><span class="co">#&gt;    -3.663    0.00610 -600   &lt;0.001 Inf -3.675 -3.651</span></span>
-<span><span class="co">#&gt;    -3.750    0.00619 -606   &lt;0.001 Inf -3.762 -3.738</span></span>
+<span><span class="co">#&gt;     4.800    0.00532  902   &lt;0.001 Inf  4.790  4.810</span></span>
+<span><span class="co">#&gt;    -5.838    0.00830 -703   &lt;0.001 Inf -5.854 -5.821</span></span>
+<span><span class="co">#&gt;     0.745    0.00318  234   &lt;0.001 Inf  0.738  0.751</span></span>
+<span><span class="co">#&gt;     0.848    0.00318  267   &lt;0.001 Inf  0.842  0.854</span></span>
+<span><span class="co">#&gt;    -0.189    0.00344  -55   &lt;0.001 Inf -0.196 -0.182</span></span>
+<span><span class="co">#&gt;     1.766    0.00329  537   &lt;0.001 Inf  1.759  1.772</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Term: x</span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
@@ -685,18 +685,18 @@ window.Quarto = {
 <span></span>
 <span><span class="va">mfx</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;    2.8544    0.00382  747.5   &lt;0.001 Inf  2.847  2.8619</span></span>
-<span><span class="co">#&gt;    1.4605    0.00322  453.6   &lt;0.001 Inf  1.454  1.4668</span></span>
-<span><span class="co">#&gt;   -1.7683    0.00442 -400.0   &lt;0.001 Inf -1.777 -1.7596</span></span>
-<span><span class="co">#&gt;   -0.9833    0.00386 -254.9   &lt;0.001 Inf -0.991 -0.9757</span></span>
-<span><span class="co">#&gt;   -3.6630    0.00610 -600.2   &lt;0.001 Inf -3.675 -3.6510</span></span>
+<span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;     4.800    0.00532  902   &lt;0.001 Inf  4.790  4.810</span></span>
+<span><span class="co">#&gt;    -5.838    0.00830 -703   &lt;0.001 Inf -5.854 -5.821</span></span>
+<span><span class="co">#&gt;     0.745    0.00318  234   &lt;0.001 Inf  0.738  0.751</span></span>
+<span><span class="co">#&gt;     0.848    0.00318  267   &lt;0.001 Inf  0.842  0.854</span></span>
+<span><span class="co">#&gt;    -0.189    0.00344  -55   &lt;0.001 Inf -0.196 -0.182</span></span>
 <span><span class="co">#&gt; --- 99990 rows omitted. See ?avg_slopes and ?print.marginaleffects --- </span></span>
-<span><span class="co">#&gt;    0.7578    0.00318  238.3   &lt;0.001   Inf  0.752  0.7640</span></span>
-<span><span class="co">#&gt;    0.0395    0.00334   11.8   &lt;0.001 104.9  0.033  0.0461</span></span>
-<span><span class="co">#&gt;   -7.6770    0.01024 -749.8   &lt;0.001   Inf -7.697 -7.6569</span></span>
-<span><span class="co">#&gt;    1.6701    0.00327  510.9   &lt;0.001   Inf  1.664  1.6765</span></span>
-<span><span class="co">#&gt;    5.2971    0.00582  910.4   &lt;0.001   Inf  5.286  5.3085</span></span>
+<span><span class="co">#&gt;    -2.037    0.00465 -438   &lt;0.001 Inf -2.046 -2.028</span></span>
+<span><span class="co">#&gt;    -6.621    0.00912 -726   &lt;0.001 Inf -6.639 -6.603</span></span>
+<span><span class="co">#&gt;     7.071    0.00753  940   &lt;0.001 Inf  7.057  7.086</span></span>
+<span><span class="co">#&gt;     0.669    0.00319  210   &lt;0.001 Inf  0.663  0.675</span></span>
+<span><span class="co">#&gt;     3.508    0.00425  826   &lt;0.001 Inf  3.500  3.517</span></span>
 <span><span class="co">#&gt; Term: x</span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, y, x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
