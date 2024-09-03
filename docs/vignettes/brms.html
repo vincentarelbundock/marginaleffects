@@ -1140,8 +1140,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>    by <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  x Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  0    0.454 0.339  0.569</span></span>
-<span><span class="co">#&gt;  1    0.554 0.435  0.666</span></span>
+<span><span class="co">#&gt;  0    0.452 0.341  0.567</span></span>
+<span><span class="co">#&gt;  1    0.550 0.441  0.665</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: x, estimate, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1155,7 +1155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>    sample_new_levels <span class="op">=</span> <span class="st">"gaussian"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;    0.0964 0.0491  0.163</span></span>
+<span><span class="co">#&gt;    0.0968 0.0471  0.165</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Term: x</span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
@@ -1174,8 +1174,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  contrasts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="st">"AME x"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  effects <span class="op">=</span> <span class="st">"integrateoutRE"</span><span class="op">)</span></span>
 <span><span class="va">bm</span><span class="op">$</span><span class="va">ContrastSummary</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            M        Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
-<span><span class="co">#&gt; 1 0.09824064 0.09585231 0.04597102 0.1609918          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;            M        Mdn        LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span><span class="co">#&gt; 1 0.09830853 0.09614776 0.0478117 0.1604905          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>See the <a href="alternative_software.html">alternative software vignette</a> for more information on <code>brmsmargins</code>.</p>
 </section></section><section id="multinomial-logit" class="level2"><h2 class="anchored" data-anchor-id="multinomial-logit">Multinomial logit</h2>
@@ -1655,7 +1655,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb65"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;      5.84  5.79   5.89</span></span>
+<span><span class="co">#&gt;      5.84  5.78   5.89</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: estimate, conf.low, conf.high</span></span>
@@ -1663,7 +1663,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, dpar <span class="op">=</span> <span class="st">"sigma"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;      0.33 0.295  0.374</span></span>
+<span><span class="co">#&gt;      0.33 0.294  0.375</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: estimate, conf.low, conf.high</span></span>
@@ -1671,8 +1671,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, dpar <span class="op">=</span> <span class="st">"sigma"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;          Term Estimate   2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  Petal.Length   0.0456  0.0168 0.0763</span></span>
-<span><span class="co">#&gt;  Sepal.Width   -0.0125 -0.1324 0.1035</span></span>
+<span><span class="co">#&gt;  Petal.Length   0.0454  0.0175 0.0763</span></span>
+<span><span class="co">#&gt;  Sepal.Width   -0.0113 -0.1318 0.1043</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
