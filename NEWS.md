@@ -5,6 +5,8 @@
 Bugs:
 
 * Standard errors are produced in `glmmTMB` models with `type="zprob"`. Thanks to @jgeller112 for issue #1189.
+* `multinom_weightit` models with `insight` version 0.20.4 and greater would produce an error. Thanks to Noah Greifer.
+* `hypotheses(joint = TRUE)` would throw an error if sample sizes could not be computed, even if they were not needed. Thanks to Noah Greifer.
 
 ## 0.22.0
 
