@@ -32,6 +32,7 @@
 \alias{set_coef.lmerModLmerTest}
 \alias{set_coef.lmerMod}
 \alias{set_coef.mlm}
+\alias{set_coef.mmrm}
 \alias{set_coef.lme}
 \alias{set_coef.hurdle}
 \alias{set_coef.zeroinfl}
@@ -96,6 +97,8 @@ set_coef(model, coefs, ...)
 \method{set_coef}{lmerMod}(model, coefs, ...)
 
 \method{set_coef}{mlm}(model, coefs, ...)
+
+\method{set_coef}{mmrm}(model, coefs, ...)
 
 \method{set_coef}{lme}(model, coefs, ...)
 

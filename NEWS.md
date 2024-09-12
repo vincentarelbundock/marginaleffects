@@ -17,9 +17,10 @@ Breaking changes:
 
 New models supported:
 
-* `stpm2`, `pstpm2`, `gsm`, and `aft` models from `rstpm2`. Thanks to @aghaynes and @mclements.
+* `rstpm2` package: support for `stpm2`, `pstpm2`, `gsm`, and `aft` models. Thanks to @mclements for contribution #1188 and @aghayes for useful comments.
 * `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
 * `glmmgee` from the `glmtoolbox` package. Thanks to @adrianolszewski for the request and @lhvanegasp for help with implementation.
+* `mmrm` package for mixed effects modelling. Thanks to @kkmann for contribution #1000, as well as @clarkliming and @lang-benjamin for useful comments.
 
 New features:
 

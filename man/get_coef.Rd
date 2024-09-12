@@ -28,6 +28,7 @@
 \alias{get_coef.mblogit}
 \alias{get_coef.gam}
 \alias{get_coef.mlm}
+\alias{get_coef.mmrm}
 \alias{get_coef.selection}
 \alias{get_coef.scam}
 \alias{get_coef.nls}
@@ -74,6 +75,8 @@ get_coef(model, ...)
 \method{get_coef}{gam}(model, ...)
 
 \method{get_coef}{mlm}(model, ...)
+
+\method{get_coef}{mmrm}(model, ...)
 
 \method{get_coef}{selection}(model, ...)
 
