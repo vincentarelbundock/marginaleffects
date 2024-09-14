@@ -1,4 +1,4 @@
-joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = "f", df = NULL) {
+joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = "f", df = NULL, vcov = TRUE) {
   checkmate::assert_choice(joint_test, c("f", "chisq"))
 
   if (joint_test == "f") {
@@ -32,7 +32,7 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
   }
 
   # V_hat: estimated covariance matrix
-  V_hat <- stats::vcov(object)
+  V_hat <- get_vcov(object, vcov = vcov)
 
   # R: Q x P matrix for testing Q hypotheses on P parameters
   # build R matrix based on joint_index
