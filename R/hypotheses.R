@@ -213,7 +213,7 @@ hypotheses <- function(
     ## Done with Bootstrap
     
     if (!isFALSE(joint)) {
-        out <- joint_test(object = model, joint_index = joint, joint_test = joint_test, hypothesis = hypothesis, df = df)
+        out <- joint_test(object = model, joint_index = joint, joint_test = joint_test, hypothesis = hypothesis, df = df, vcov = vcov)
         return(out)
     }
 
