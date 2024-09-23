@@ -5,7 +5,7 @@
 #' Disable some safety checks:
 #' 
 #' ```r
-#' options(marginaleffects_safe = FALSE)`
+#' options(marginaleffects_safe = FALSE)
 #' ```
 #'
 #' Omit some columns from the printed output:
