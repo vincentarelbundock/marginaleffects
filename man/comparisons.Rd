@@ -500,7 +500,7 @@ The behavior of \code{marginaleffects} functions can be modified by setting glob
 
 Disable some safety checks:
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_safe = FALSE)`
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_safe = FALSE)
 }\if{html}{\out{</div>}}
 
 Omit some columns from the printed output:

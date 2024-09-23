@@ -28,7 +28,7 @@ theme_clean <- function() {
 ggplot2::theme_set(theme_clean())
 ```
 
-Several packages in the `R` ecosystem allow users to estimate models for ordered or discrete choice, such as ordered probit or multinomial logit. This case study illustrates the use of `marginaleffects` with the `MASS`,  `nnet`, and `mlogit` packages.
+Several packages in the `R` ecosystem allow users to estimate models for ordered or discrete choice, such as ordered probit or multinomial logit. This case study illustrates the use of `marginaleffects` with the `MASS`  and `nnet` packages.
 
 We begin by loading two libraries:
 
@@ -103,69 +103,4 @@ plot_comparisons(
     type = "probs")
 ```
 
-## `mlogit` package
 
-The `mlogit` package uses `data` in a slightly different structure, with one row per observation-choice combination. For example, this data on choice of travel mode includes 4 rows per individual, one for each mode of transportation:
-
-```{r, message = FALSE}
-library("AER")
-library("mlogit")
-library("tidyverse")
-data("TravelMode", package = "AER")
-
-head(TravelMode)
-
-mod <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
-
-avg_slopes(mod, variables = c("income", "size"))
-```
-
-Note that the `slopes` function will always return estimates of zero for regressors before the vertical bar in the formula. This is because `marginaleffects` increments all rows of the prediction dataset in the same way to compute slopes and contrast. Because `mlogit` data are in "long" format, this means that alternatives are incremented in the same way, which does not produce alternative-specific changes in the predictors.
-
-One strategy to circumvent this problem is to supply a data frame of numeric values to compare, with alternative specific changes. In this example, we test what happens to the probability of selecting each mode of transportation if we only increase the wait time of air travel:
-
-```{r}
-altspec <- data.frame(
-  low = TravelMode$wait,
-  high = ifelse(TravelMode$mode == "air", TravelMode$wait + 15, TravelMode$wait)
-)
-
-avg_comparisons(mod, variables = list(wait = altspec))
-```
-
-We can compute yet more kinds of marginal effects, we can construct customized data frames and feed them to the `newdata` argument of the `slopes` function. 
-
-If we want to compute the slope of the response function (marginal effects) when each of the predictors is fixed to its global mean, we can do:
-
-```{r}
-nd <- TravelMode |>
-    summarize(across(c("wait", "gcost", "income", "size"),
-              function(x) rep(mean(x), 4)))
-nd
-
-avg_slopes(mod, newdata = nd, variables = c("income", "size"))
-```
-
-If we want to compute marginal effects with the `gcost` and `wait` fixed at their mean value, *conditional* on the choice of transportation mode:
-
-```{r}
-nd <- TravelMode |>
-    group_by(mode) |>
-    summarize(across(c("wait", "gcost", "income", "size"), mean))
-nd
-
-avg_slopes(mod, newdata = nd, variables = c("income", "size"))
-```
-
-We can also explore more complex alternatives. Here, for example, only one alternative is affected by cost reduction:
-
-```{r}
-nd <- datagrid(mode = TravelMode$mode, newdata = TravelMode)
-nd <- lapply(1:4, function(i) mutate(nd, gcost = ifelse(1:4 == i, 30, gcost)))
-nd <- bind_rows(nd)
-nd
-
-avg_slopes(mod, newdata = nd, variables = c("income", "size"))
-```
-
-**Important:** The `newdata` argument for `mlogit` models must be a "balanced" data frame, that is, it must have a number of rows that is a multiple of the number of choices.

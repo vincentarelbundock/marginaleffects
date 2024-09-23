@@ -9,6 +9,10 @@ Bugs:
 * `hypotheses(joint = TRUE)` would throw an error if sample sizes could not be computed, even if they were not needed. Thanks to Noah Greifer.
 * `hypotheses(joint = TRUE)` respects the `vcov` argument. Thanks to @kennchua for report #1214.
 
+Breaking change:
+
+* Support for `mlogit` is deprecated. The reason is that the data structure for these models is one observation-choice per row. Every other model-fitting package supported by `marginaleffects` treats rows as individual observations. The observation-choice structure made it harder to track indices and match individual predictions to rows in the original data. This added a lot of complexity to `marginaleffects`, and the results were not always reliable or safe.
+
 ## 0.22.0
 
 Breaking changes:
