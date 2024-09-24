@@ -16,5 +16,7 @@ lightbox: auto
 ![](fig/meme_full_bayesian_posterior.jpg){group="elsewhere" description="meme d"}
 
 ![](fig/meme_wrestling.jpg){group="elsewhere" description="meme e"}
+
+![](fig/meme_pipe.jpg){group="elsewhere" description="Source: @dan_p_simpson"}
 :::
 
