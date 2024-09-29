@@ -259,6 +259,18 @@ expect_false(anyNA(s$std.error))
 
 
 
+# Issue 1221
+ord_fit <- glmmTMB(formula=therm/100 ~ F_EDUCCAT2_FINAL + F_INCOME_FINAL + (1|F_INCOME_FINAL),
+    data=pew,
+    family = ordbeta)
+p <- avg_predictions(ord_fit, re.form = NA)
+expect_false(anyNA(p$estimate))
+expect_false(anyNA(p$std.error))
+
+
+
+
+
 source("helpers.R")
 rm(list = ls())
 
