@@ -41,7 +41,35 @@ get_predict.glmmTMB <- function(model,
 #' @rdname get_vcov
 #' @export
 get_vcov.glmmTMB <- function(model, ...) {
+    # Extract the full covariance matrix
     out <- stats::vcov(model, full = TRUE)
+
+    # Extract the fixed-effect coefficient names from get_coef
+    coef_names <- names(get_coef.glmmTMB(model))
+
+    # Handle dispersion and conditional terms
+    cleaned_coef_names <- gsub("^cond~", "", coef_names)  # Remove cond~ for conditional terms
+    cleaned_coef_names <- gsub("^disp~", "d~", cleaned_coef_names)  # Map disp~ to d~ for dispersion terms
+
+    # The 'upper cutoff' and 'lower cutoff' will remain in both, so no removal
+
+    # Get the current row and column names from the covariance matrix
+    current_names <- rownames(out)
+
+    # Match cleaned coef_names with current names in the covariance matrix
+    matched_indices <- match(current_names, cleaned_coef_names)
+
+    # Replace row/column names only where there is a valid match
+    valid_indices <- which(!is.na(matched_indices))
+    
+    if (length(valid_indices) > 0) {
+        # Apply the correct names from coef_names to matched rows/columns in the covariance matrix
+        rownames(out)[valid_indices] <- coef_names[matched_indices[valid_indices]]
+        colnames(out)[valid_indices] <- coef_names[matched_indices[valid_indices]]
+    } else {
+        warning("No matching terms found between the covariance matrix and fixed-effect coefficients.")
+    }
+
     return(out)
 }
 
@@ -50,8 +78,13 @@ get_vcov.glmmTMB <- function(model, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.glmmTMB <- function(model, ...) {
+    # Extract the fixed-effect coefficients
     out <- unlist(glmmTMB::fixef(model))
+
+    # Apply the gsub logic to rename terms (cond~, disp~, etc.)
     names(out) <- gsub("^(cond|zi|disp)\\.", "\\1~", names(out))
+
+    # No removal of "lower cutoff" and "upper cutoff" - they remain in place
     return(out)
 }
 

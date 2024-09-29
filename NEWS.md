@@ -8,6 +8,7 @@ Bugs:
 * `multinom_weightit` models with `insight` version 0.20.4 and greater would produce an error. Thanks to Noah Greifer.
 * `hypotheses(joint = TRUE)` would throw an error if sample sizes could not be computed, even if they were not needed. Thanks to Noah Greifer.
 * `hypotheses(joint = TRUE)` respects the `vcov` argument. Thanks to @kennchua for report #1214.
+* `ordbetareg` models in `glmmTMB` are now supported. Thanks to @jgeller112 for code contribution #1221.
 
 Breaking change:
 
