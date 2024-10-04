@@ -277,7 +277,7 @@ hypotheses <- function(
     vcov <- get_vcov(model = model, vcov = vcov)
     vcov.type <- get_vcov_label(vcov = vcov)
 
-    FUNouter <- function(model, hypothesis) {
+    FUNouter <- function(model, hypothesis, ...) {
 
         if (inherits(model, c("predictions", "slopes", "comparisons"))) {
             out <- model
