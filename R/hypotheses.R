@@ -279,7 +279,6 @@ hypotheses <- function(
 
     FUNouter <- function(model, hypothesis, newparams = NULL, ...) {
 
-        browser()
         if (inherits(model, c("predictions", "slopes", "comparisons"))) {
             out <- model
 
