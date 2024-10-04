@@ -1,5 +1,4 @@
 source("helpers.R")
-# if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
 if (ON_CI) exit_file("on ci") # install and test fails on Github
@@ -267,6 +266,12 @@ p <- avg_predictions(ord_fit, re.form = NA)
 expect_false(anyNA(p$estimate))
 expect_false(anyNA(p$std.error))
 
+
+# Issue 1224
+mod <- glmmTMB(Sepal.Length ~ Petal.Width + (1 | Species), data = iris)
+h <- hypotheses(mod, hypothesis = "b1 - b2 = 0")
+expect_false(anyNA(h$estimate))
+expect_false(anyNA(h$std.error))
 
 
 

@@ -2,17 +2,19 @@
 
 ## Development
 
+Breaking change:
+
+* Support for `mlogit` is deprecated. The reason is that the data structure for these models is one observation-choice per row. Every other model-fitting package supported by `marginaleffects` treats rows as individual observations. The observation-choice structure made it harder to track indices and match individual predictions to rows in the original data. This added a lot of complexity to `marginaleffects`, and the results were not always reliable or safe.
+
 Bugs:
 
-* Standard errors are produced in `glmmTMB` models with `type="zprob"`. Thanks to @jgeller112 for issue #1189.
+* Improved `glmmTMB` support
+    - Standard errors are produced in models with `type="zprob"`. Thanks to @jgeller112 for issue #1189.
+    - `hypotheses()` bug resolved. Thanks to @reikookamoto for the code submission.
 * `multinom_weightit` models with `insight` version 0.20.4 and greater would produce an error. Thanks to Noah Greifer.
 * `hypotheses(joint = TRUE)` would throw an error if sample sizes could not be computed, even if they were not needed. Thanks to Noah Greifer.
 * `hypotheses(joint = TRUE)` respects the `vcov` argument. Thanks to @kennchua for report #1214.
 * `ordbetareg` models in `glmmTMB` are now supported. Thanks to @jgeller112 for code contribution #1221.
-
-Breaking change:
-
-* Support for `mlogit` is deprecated. The reason is that the data structure for these models is one observation-choice per row. Every other model-fitting package supported by `marginaleffects` treats rows as individual observations. The observation-choice structure made it harder to track indices and match individual predictions to rows in the original data. This added a lot of complexity to `marginaleffects`, and the results were not always reliable or safe.
 
 ## 0.22.0
 
