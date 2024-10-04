@@ -277,8 +277,9 @@ hypotheses <- function(
     vcov <- get_vcov(model = model, vcov = vcov)
     vcov.type <- get_vcov_label(vcov = vcov)
 
-    FUNouter <- function(model, hypothesis, ...) {
+    FUNouter <- function(model, hypothesis, newparams = NULL, ...) {
 
+        browser()
         if (inherits(model, c("predictions", "slopes", "comparisons"))) {
             out <- model
 
@@ -297,6 +298,11 @@ hypotheses <- function(
             out <- insight::get_parameters(model, ...)
             idx <- intersect(colnames(model), c("term", "group", "estimate"))
             colnames(out)[1:2] <- c("term", "estimate")
+
+            # glmmTMB
+            if (!is.null(newparams)) {
+                out$estimate <- newparams
+            }
 
         } else if (hypothesis_is_formula) {
             beta <- get_coef(model)
@@ -325,7 +331,7 @@ hypotheses <- function(
         return(out)
     }
 
-    b <- FUNouter(model = model, hypothesis = hypothesis)
+    b <- FUNouter(model = model, hypothesis = hypothesis, ...)
     
     # bayesian posterior
     if (!is.null(attr(b, "posterior_draws"))) {
