@@ -91,7 +91,7 @@ Statistical Software*.
 
 A BibTeX entry for LaTeX users is:
 
-``` {latex}
+``` latex
 @Article{,
     title = {How to Interpret Statistical Models Using {marginaleffects} in {R} and {Python}},
     author = {Vincent Arel-Bundock and Noah Greifer and Andrew Heiss},
