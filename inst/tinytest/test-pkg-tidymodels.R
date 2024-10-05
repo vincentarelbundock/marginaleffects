@@ -78,6 +78,24 @@ p <- plot_comparisons(fit,
 expect_inherits(p, "data.frame")
 
 
+# Issue 1209
+nobs <- 50
+my_data <- tibble(
+  x = runif(nobs, 0, 10),
+  y = -(x - 11)^2 + 100 + rnorm(nobs, 0, 25)
+)
+lr_spec <- linear_reg()
+lr_rec <- recipe(y ~ x, data = my_data) |>
+  step_poly(x, degree = 2)
+lr_wf <- workflow() |>
+  add_model(lr_spec) |>
+  add_recipe(lr_rec)
+lr_fit <- lr_wf |>
+  fit(my_data)
+mfx <- slopes(lr_fit, newdata = my_data, variable = "x")
+expect_equivalent(mfx$x, my_data$x)
+expect_equivalent(mfx$y, my_data$y)
+
 
 
 rm(list = ls())
