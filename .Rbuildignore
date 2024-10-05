@@ -33,3 +33,6 @@ requirements\.lock
 requirements-dev\.lock
 .venv
 ^inst/tinytest$
+.python-version
+pyproject.toml
+uv.lock

@@ -536,7 +536,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><section id="logit" class="level1"><h1>Logit</h1>
-<p>This vignette replicates some of the analyses in this excellent blog post by Frank Harrell: <a href="https://www.fharrell.com/post/rdist/">Avoiding One-Number Summaries of Treatment Effects for RCTs with Binary Outcomes</a>. Here, we show how one-number summaries and the entire distribution unit-level contrasts can be easily computed with <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>.</p>
+<p>This vignette replicates some of the analyses in this excellent blog post by Frank Harrell: <a href="https://www.fharrell.com/post/rdist/">Avoiding One-Number Summaries of Treatment Effects for RCTs with Binary Outcomes</a>. Here, we show how one-number summaries and the entire distribution unit-level contrasts can be easily computed with <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>.</p>
 <p>Dr.&nbsp;Harrell discusses summaries from logistic regression models in the blog post above. He focuses on a context in which one is interested in comparing two groups, such as in randomized controlled trials. He highlights potential pitfalls of presenting “one-number summaries”, e.g., odds ratio and mean proportion difference. Finally, he recommends focusing on the entire distribution of proportion difference between groups.</p>
 <p>For clarification, we use the following terms interchangeably in the context of logistic regression where the covariate of interest is categorical:</p>
 <ul>
@@ -574,12 +574,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- preamble start -->
 
     <script>
-      function styleCell_nplduofosph8ra0vmsw3(i, j, css_id) {
-        var table = document.getElementById("tinytable_nplduofosph8ra0vmsw3");
+      function styleCell_kj8ue456ul69pie6ipcs(i, j, css_id) {
+        var table = document.getElementById("tinytable_kj8ue456ul69pie6ipcs");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_nplduofosph8ra0vmsw3');
+        var table = document.getElementById('tinytable_kj8ue456ul69pie6ipcs');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -587,8 +587,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_nplduofosph8ra0vmsw3(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_nplduofosph8ra0vmsw3");
+      function spanCell_kj8ue456ul69pie6ipcs(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_kj8ue456ul69pie6ipcs");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -614,34 +614,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(0, 0, 'tinytable_css_idw3ykmcufqtbrl739b4hs') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(0, 1, 'tinytable_css_idlf20bq7iiopvx47zf245') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(1, 0, 'tinytable_css_idwyi6vni1oy81bbk0qjwb') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(1, 1, 'tinytable_css_idjj5hwsj6ly4t6bbc9php') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(2, 0, 'tinytable_css_ids1ey00ot8pc8if49cqlt') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(2, 1, 'tinytable_css_idlqpj4is76269dnypcljy') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(3, 0, 'tinytable_css_idwyi6vni1oy81bbk0qjwb') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(3, 1, 'tinytable_css_idjj5hwsj6ly4t6bbc9php') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(4, 0, 'tinytable_css_idwyi6vni1oy81bbk0qjwb') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(4, 1, 'tinytable_css_idjj5hwsj6ly4t6bbc9php') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(5, 0, 'tinytable_css_idwyi6vni1oy81bbk0qjwb') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(5, 1, 'tinytable_css_idjj5hwsj6ly4t6bbc9php') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(6, 0, 'tinytable_css_idwyi6vni1oy81bbk0qjwb') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(6, 1, 'tinytable_css_idjj5hwsj6ly4t6bbc9php') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(7, 0, 'tinytable_css_idwyi6vni1oy81bbk0qjwb') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(7, 1, 'tinytable_css_idjj5hwsj6ly4t6bbc9php') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(8, 0, 'tinytable_css_idwyi6vni1oy81bbk0qjwb') })
-window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(8, 1, 'tinytable_css_idjj5hwsj6ly4t6bbc9php') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(0, 0, 'tinytable_css_idhvwxpnltjlwy1q23pbff') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(0, 1, 'tinytable_css_idl4mkylzhaf5stwk6y59p') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(1, 0, 'tinytable_css_idq74bousjx9mehns5fop9') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(1, 1, 'tinytable_css_idmb59vnpsvnw3con7gaxr') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(2, 0, 'tinytable_css_idravmtne1px8ukd8wc91q') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(2, 1, 'tinytable_css_idq3cu1qfnza625zhy03q9') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(3, 0, 'tinytable_css_idq74bousjx9mehns5fop9') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(3, 1, 'tinytable_css_idmb59vnpsvnw3con7gaxr') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(4, 0, 'tinytable_css_idq74bousjx9mehns5fop9') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(4, 1, 'tinytable_css_idmb59vnpsvnw3con7gaxr') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(5, 0, 'tinytable_css_idq74bousjx9mehns5fop9') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(5, 1, 'tinytable_css_idmb59vnpsvnw3con7gaxr') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(6, 0, 'tinytable_css_idq74bousjx9mehns5fop9') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(6, 1, 'tinytable_css_idmb59vnpsvnw3con7gaxr') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(7, 0, 'tinytable_css_idq74bousjx9mehns5fop9') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(7, 1, 'tinytable_css_idmb59vnpsvnw3con7gaxr') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(8, 0, 'tinytable_css_idq74bousjx9mehns5fop9') })
+window.addEventListener('load', function () { styleCell_kj8ue456ul69pie6ipcs(8, 1, 'tinytable_css_idmb59vnpsvnw3con7gaxr') })
     </script><style>
-    .table td.tinytable_css_idw3ykmcufqtbrl739b4hs, .table th.tinytable_css_idw3ykmcufqtbrl739b4hs {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_idlf20bq7iiopvx47zf245, .table th.tinytable_css_idlf20bq7iiopvx47zf245 {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_idwyi6vni1oy81bbk0qjwb, .table th.tinytable_css_idwyi6vni1oy81bbk0qjwb {  text-align: left; }
-    .table td.tinytable_css_idjj5hwsj6ly4t6bbc9php, .table th.tinytable_css_idjj5hwsj6ly4t6bbc9php {  text-align: center; }
-    .table td.tinytable_css_ids1ey00ot8pc8if49cqlt, .table th.tinytable_css_ids1ey00ot8pc8if49cqlt {  border-bottom: solid 0.05em black;  text-align: left; }
-    .table td.tinytable_css_idlqpj4is76269dnypcljy, .table th.tinytable_css_idlqpj4is76269dnypcljy {  border-bottom: solid 0.05em black;  text-align: center; }
+    .table td.tinytable_css_idhvwxpnltjlwy1q23pbff, .table th.tinytable_css_idhvwxpnltjlwy1q23pbff {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idl4mkylzhaf5stwk6y59p, .table th.tinytable_css_idl4mkylzhaf5stwk6y59p {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idq74bousjx9mehns5fop9, .table th.tinytable_css_idq74bousjx9mehns5fop9 {  text-align: left; }
+    .table td.tinytable_css_idmb59vnpsvnw3con7gaxr, .table th.tinytable_css_idmb59vnpsvnw3con7gaxr {  text-align: center; }
+    .table td.tinytable_css_idravmtne1px8ukd8wc91q, .table th.tinytable_css_idravmtne1px8ukd8wc91q {  border-bottom: solid 0.05em black;  text-align: left; }
+    .table td.tinytable_css_idq3cu1qfnza625zhy03q9, .table th.tinytable_css_idq3cu1qfnza625zhy03q9 {  border-bottom: solid 0.05em black;  text-align: center; }
     </style>
 <div class="container">
-      <table class="table table-borderless" id="tinytable_nplduofosph8ra0vmsw3" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_kj8ue456ul69pie6ipcs" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead><tr>
 <th scope="col"> </th>
                 <th scope="col">(1)</th>
@@ -685,9 +685,9 @@ window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(8, 
 <!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
-<p>Unlike ORs, adjusted risk differences vary from individual to individual based on the values of the control variables. The <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function can compute adjusted risk differences for every individual. Here, we display only the first 6 of them:</p>
+<p>Unlike ORs, adjusted risk differences vary from individual to individual based on the values of the control variables. The <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function can compute adjusted risk differences for every individual. Here, we display only the first 6 of them:</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    variables <span class="op">=</span> <span class="st">"tx"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -710,7 +710,7 @@ window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(8, 
 </div>
 <p>Population-averaged (aka “marginal”) adjusted risk difference (<a href="gcomputation.html">see this vignette</a>) can be obtained using the <code>avg_*()</code> functions or using the <code>by</code> argument:</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"tx"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"tx"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S   2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;    0.0111    0.00277 4.01   &lt;0.001 14.0 0.00566 0.0165</span></span>
@@ -720,10 +720,10 @@ window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(8, 
 <span><span class="co">#&gt; Comparison: mean(SK) - mean(tPA)</span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function above computed the predicted probability of mortality (<code>day30==1</code>) for each observed row of the data in two counterfactual cases: when <code>tx</code> is “SK”, and when <code>tx</code> is “tPA”. Then, it computed the differences between these two sets of predictions. Finally, it computed the population-average of risk differences.</p>
+<p>The <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function above computed the predicted probability of mortality (<code>day30==1</code>) for each observed row of the data in two counterfactual cases: when <code>tx</code> is “SK”, and when <code>tx</code> is “tPA”. Then, it computed the differences between these two sets of predictions. Finally, it computed the population-average of risk differences.</p>
 <p>Instead of risk <em>differences</em>, we could compute population-averaged (marginal) adjusted risk <em>ratios</em>:</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    variables <span class="op">=</span> <span class="st">"tx"</span>,</span>
 <span>    comparison <span class="op">=</span> <span class="st">"lnratioavg"</span>,</span>
@@ -739,7 +739,7 @@ window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(8, 
 </div>
 <p>Population-averaged (marginal) odds ratios:</p>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    variables <span class="op">=</span> <span class="st">"tx"</span>,</span>
 <span>    comparison <span class="op">=</span> <span class="st">"lnoravg"</span>,</span>
@@ -754,9 +754,9 @@ window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(8, 
 <span><span class="co">#&gt; Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="unit-level-summaries" class="level3"><h3 class="anchored" data-anchor-id="unit-level-summaries">Unit-level Summaries</h3>
-<p>Instead of estimating one-number summaries, we can focus on unit-level proportion differences using <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>. This function applies the fitted logistic regression model to predict outcome probabilities for each patient, i.e., unit-level.</p>
+<p>Instead of estimating one-number summaries, we can focus on unit-level proportion differences using <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>. This function applies the fitted logistic regression model to predict outcome probabilities for each patient, i.e., unit-level.</p>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"tx"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"tx"</span><span class="op">)</span></span>
 <span><span class="va">cmp</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)   S    2.5 %  97.5 %</span></span>
@@ -815,7 +815,7 @@ window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(8, 
 </div>
 </div>
 </section><section id="appendix" class="level3"><h3 class="anchored" data-anchor-id="appendix">Appendix</h3>
-<p><code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> performed the following calculations under the hood:</p>
+<p><code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> performed the following calculations under the hood:</p>
 <div class="cell">
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span>  <span class="op">&lt;-</span> <span class="va">gusto</span></span>
 <span></span>
@@ -827,7 +827,7 @@ window.addEventListener('load', function () { styleCell_nplduofosph8ra0vmsw3(8, 
 <span></span>
 <span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="va">predicted_hi</span> <span class="op">-</span> <span class="va">predicted_lo</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The original dataset contains 30510 patients, thus <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> generates an output with same amount of rows.</p>
+<p>The original dataset contains 30510 patients, thus <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> generates an output with same amount of rows.</p>
 <div class="cell">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">gusto</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 30510</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

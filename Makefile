@@ -58,4 +58,5 @@ setvar: ## Set the environment variable
 	export R_BUILD_DOC=true
 
 website: setvar ## altdoc::render_docs(verbose = TRUE)
-	Rscript -e "reticulate::use_virtualenv(here::here('.venv'));altdoc::render_docs(verbose = TRUE, freeze = TRUE)"
+	# Rscript -e "altdoc::render_docs(verbose = TRUE, freeze = TRUE)"
+	Rscript -e "reticulate::use_virtualenv('~/.virtualenvs/r-reticulate');altdoc::render_docs(verbose = TRUE, freeze = TRUE)"

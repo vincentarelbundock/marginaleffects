@@ -635,7 +635,7 @@ window.Quarto = {
 <blockquote class="blockquote">
 <p>Comparisons are functions of two or more predictions. Example of comparisons include contrasts, differences, risks ratios, odds, etc.</p>
 </blockquote>
-<p>A very large number of quantities of interest can be built as a function of two (or more) predictions. Indeed, with the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function, we can answer questions like these:</p>
+<p>A very large number of quantities of interest can be built as a function of two (or more) predictions. Indeed, with the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function, we can answer questions like these:</p>
 <ul>
 <li>
 <em>Medical Treatment Efficacy</em>: How does probability of survival differ for patients who receive a new medication relative to a placebo?</li>
@@ -650,12 +650,12 @@ window.Quarto = {
 <li>
 <em>Cultural Studies</em>: What is the difference in cultural engagement levels between communities with access to public libraries and those without?</li>
 </ul>
-<p>Using the <code>hypothesis</code> argument of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function, we will also be able to compare contrasts to one another, answering questions such as:</p>
+<p>Using the <code>hypothesis</code> argument of the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function, we will also be able to compare contrasts to one another, answering questions such as:</p>
 <ul>
 <li>Is the effect of an educational intervention on mathematical competency stronger for older or younger students?</li>
 <li>Does a work training program in a carceral setting have a greater effect on the probability of recidivism for first or second time offenders?</li>
 </ul>
-<p>The <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function is <em>extremely</em> flexible, and it allows users to estimate a vast array of quantities of interest. To describe those quantities, the vignette breaks the problem down into into 5 steps:</p>
+<p>The <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function is <em>extremely</em> flexible, and it allows users to estimate a vast array of quantities of interest. To describe those quantities, the vignette breaks the problem down into into 5 steps:</p>
 <ol type="1">
 <li>Quantity</li>
 <li>Grid</li>
@@ -688,7 +688,7 @@ window.Quarto = {
 </ul>
 </li>
 </ul>
-<p>By default, the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function will estimate the “effect” of different changes for different types of predictors:</p>
+<p>By default, the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function will estimate the “effect” of different changes for different types of predictors:</p>
 <ul>
 <li>Numeric: Increase of 1 unit.</li>
 <li>Logical: Change from <code>FALSE</code> to <code>TRUE</code>.</li>
@@ -739,9 +739,9 @@ window.Quarto = {
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Number of Fisher Scoring iterations: 6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>These coefficient estimates are interesting, but difficult to interpret. In many applications, analysts will want to call the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> or <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons()</a></code> functions to report more meaningful quantities of interest. The rest of explains in detail how to interpret and customize calls like this one:</p>
+<p>These coefficient estimates are interesting, but difficult to interpret. In many applications, analysts will want to call the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> or <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> functions to report more meaningful quantities of interest. The rest of explains in detail how to interpret and customize calls like this one:</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term              Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %   97.5 %</span></span>
 <span><span class="co">#&gt;  Age     mean(+1)              -0.00598    0.00109 -5.51   &lt;0.001  24.7 -0.00811 -0.00386</span></span>
@@ -753,9 +753,9 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="comparison-type" class="level2"><h2 class="anchored" data-anchor-id="comparison-type">Comparison type</h2>
-<p>The default comparison type in <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> is the “difference”, which means that the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function will typically produce quantities which are often interpreted as a measure of “effect” in applications: risk differences, average treatment effects, G-computation estimates, etc. But <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> is not limited to differences, Indeed, it allows analysts to call on many built-in functions for comparison, and also to supply their own.</p>
+<p>The default comparison type in <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> is the “difference”, which means that the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function will typically produce quantities which are often interpreted as a measure of “effect” in applications: risk differences, average treatment effects, G-computation estimates, etc. But <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> is not limited to differences, Indeed, it allows analysts to call on many built-in functions for comparison, and also to supply their own.</p>
 <section id="differences" class="level3"><h3 class="anchored" data-anchor-id="differences">Differences</h3>
-<p>By default, the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function will compare the predicted values by differencing (subtraction). For example, consider a hypothetical Titanic passenger with these characteristics:</p>
+<p>By default, the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function will compare the predicted values by differencing (subtraction). For example, consider a hypothetical Titanic passenger with these characteristics:</p>
 <div class="cell">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">passenger</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
 <span>    PClass <span class="op">=</span> <span class="st">"3rd"</span>,</span>
@@ -776,9 +776,9 @@ window.Quarto = {
 <span><span class="co">#&gt; 0.2716978</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The result above shows that modifying the <code>SexCode</code> variable of this hypothetical passenger from 0 to 1 increases the predicted probability of survival by about 27 percentage points.</p>
-<p>Instead of computing this estimate by hand, we could call <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> to get analogous results for all predictors in the model at once:</p>
+<p>Instead of computing this estimate by hand, we could call <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> to get analogous results for all predictors in the model at once:</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %    97.5 % PClass Age SexCode</span></span>
 <span><span class="co">#&gt;  Age     +1        -0.00735     0.0033 -2.23   0.0258  5.3 -0.0138 -0.000887    3rd  20       0</span></span>
@@ -799,7 +799,7 @@ window.Quarto = {
 <p>This shows that the predicted probability of survival would be about 2.5% larger if our hypothetical passenger were a woman than a man.</p>
 <p>The same result can be obtained by setting the <code>comparison</code> argument:</p>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="st">"ratio"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="st">"ratio"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 % PClass Age SexCode</span></span>
 <span><span class="co">#&gt;  Age     +1           0.959     0.0157 61.20   &lt;0.001  Inf 0.928  0.990    3rd  20       0</span></span>
@@ -811,10 +811,10 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="built-in-functions" class="level3"><h3 class="anchored" data-anchor-id="built-in-functions">Built-in functions</h3>
-<p>Beyond differences and ratios, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> supports many other built-in functions to compare predictions, such as log odds ratios, lift, etc. See <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">?comparisons</a></code> for a complete list.</p>
+<p>Beyond differences and ratios, <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> supports many other built-in functions to compare predictions, such as log odds ratios, lift, etc. See <code><a href="https://marginaleffects.com/man/comparisons.html">?comparisons</a></code> for a complete list.</p>
 <p>These built-in functions allow us convenient access to complex transformations. For example, this code computes the log odds ratio associated with a change in predictors:</p>
 <div class="cell">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>    comparison <span class="op">=</span> <span class="st">"lnor"</span>, </span>
 <span>    newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -830,7 +830,7 @@ window.Quarto = {
 </section><section id="custom-functions" class="level3"><h3 class="anchored" data-anchor-id="custom-functions">Custom functions</h3>
 <p>Analysts who need more flexibility can define their own comparison functions. For example, these two calls are equivalent:</p>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>    comparison <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="va">hi</span> <span class="op">/</span> <span class="va">lo</span>, </span>
 <span>    newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -843,7 +843,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>    comparison <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="va">hi</span> <span class="op">/</span> <span class="va">lo</span>, </span>
 <span>    newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -858,7 +858,7 @@ window.Quarto = {
 </div>
 <p>This mechanism is powerful, because it lets users create fully customized contrasts. Here is a non-sensical example:</p>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>    comparison <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">hi</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">lo</span> <span class="op">+</span> <span class="fl">10</span><span class="op">)</span>, </span>
 <span>    newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -876,7 +876,7 @@ window.Quarto = {
 <section id="numeric" class="level3"><h3 class="anchored" data-anchor-id="numeric">Numeric</h3>
 <p>We can also compute contrasts for differences in numeric variables. For example, we can see what happens to the adjusted predictions when we increment the <code>Age</code> variable by 1 unit (default) or by 5 units:</p>
 <div class="cell">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"Age"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"Age"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)   S   2.5 %    97.5 % PClass SexCode</span></span>
 <span><span class="co">#&gt;  -0.00735     0.0033 -2.23   0.0258 5.3 -0.0138 -0.000887    3rd       0</span></span>
@@ -886,7 +886,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: +1</span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)   S   2.5 %   97.5 % PClass SexCode</span></span>
 <span><span class="co">#&gt;   -0.0344     0.0146 -2.35   0.0188 5.7 -0.0631 -0.00569    3rd       0</span></span>
@@ -898,7 +898,7 @@ window.Quarto = {
 </div>
 <p>Compare adjusted predictions for a change in the regressor between two arbitrary values:</p>
 <div class="cell">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)   S  2.5 %  97.5 % PClass SexCode</span></span>
 <span><span class="co">#&gt;    -0.291      0.106 -2.75  0.00595 7.4 -0.498 -0.0836    3rd       0</span></span>
@@ -910,7 +910,7 @@ window.Quarto = {
 </div>
 <p>Compare adjusted predictions when the regressor changes across the interquartile range, across one or two standard deviations about its mean, or from across its full range:</p>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="st">"iqr"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="st">"iqr"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)   S  2.5 %  97.5 % PClass SexCode</span></span>
 <span><span class="co">#&gt;   -0.0952     0.0319 -2.98  0.00284 8.5 -0.158 -0.0327    3rd       0</span></span>
@@ -920,7 +920,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: Q3 - Q1</span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)   S  2.5 %  97.5 % PClass SexCode</span></span>
 <span><span class="co">#&gt;   -0.0739     0.0241 -3.07  0.00217 8.8 -0.121 -0.0267    3rd       0</span></span>
@@ -930,7 +930,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: (x + sd/2) - (x - sd/2)</span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="st">"2sd"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="st">"2sd"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)   S  2.5 %  97.5 % PClass SexCode</span></span>
 <span><span class="co">#&gt;    -0.151     0.0519 -2.92  0.00355 8.1 -0.253 -0.0496    3rd       0</span></span>
@@ -940,7 +940,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: (x + sd) - (x - sd)</span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="st">"minmax"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="st">"minmax"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)   S  2.5 % 97.5 % PClass SexCode</span></span>
 <span><span class="co">#&gt;    -0.358       0.13 -2.75  0.00601 7.4 -0.614 -0.103    3rd       0</span></span>
@@ -956,7 +956,7 @@ window.Quarto = {
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dat2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">dat</span>, SexCode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/logical.html">as.logical</a></span><span class="op">(</span><span class="va">SexCode</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">Survived</span> <span class="op">~</span> <span class="va">PClass</span> <span class="op">*</span> <span class="va">SexCode</span> <span class="op">*</span> <span class="va">Age</span>, data <span class="op">=</span> <span class="va">dat2</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % PClass Age</span></span>
 <span><span class="co">#&gt;     0.272     0.0588 4.62   &lt;0.001 18.0 0.156  0.387    3rd  20</span></span>
@@ -966,7 +966,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: 1 - 0</span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod2</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod2</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % PClass Age</span></span>
 <span><span class="co">#&gt;     0.272     0.0588 4.62   &lt;0.001 18.0 0.156  0.387    3rd  20</span></span>
@@ -977,9 +977,9 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="factor-or-character" class="level3"><h3 class="anchored" data-anchor-id="factor-or-character">Factor or Character</h3>
-<p>The <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function automatically computes contrasts for each level of a categorical variable (factor or character), relative to the baseline category, while holding all other values at their observed values. We can obtain different contrasts by using the <code>variables</code> argument:</p>
+<p>The <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function automatically computes contrasts for each level of a categorical variable (factor or character), relative to the baseline category, while holding all other values at their observed values. We can obtain different contrasts by using the <code>variables</code> argument:</p>
 <div class="cell">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="st">"sequential"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="st">"sequential"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Contrast Estimate Std. Error      z Pr(&gt;|z|)    S  2.5 %  97.5 % Age SexCode</span></span>
 <span><span class="co">#&gt;  2nd - 1st  -0.3628     0.0976 -3.718   &lt;0.001 12.3 -0.554 -0.1716  20       0</span></span>
@@ -989,7 +989,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="st">"pairwise"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="st">"pairwise"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Contrast Estimate Std. Error      z Pr(&gt;|z|)    S  2.5 %  97.5 % Age SexCode</span></span>
 <span><span class="co">#&gt;  2nd - 1st  -0.3628     0.0976 -3.718   &lt;0.001 12.3 -0.554 -0.1716  20       0</span></span>
@@ -1000,7 +1000,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="st">"reference"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="st">"reference"</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Contrast Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 % Age SexCode</span></span>
 <span><span class="co">#&gt;  2nd - 1st   -0.363     0.0976 -3.72   &lt;0.001 12.3 -0.554 -0.172  20       0</span></span>
@@ -1012,7 +1012,7 @@ window.Quarto = {
 </div>
 <p>We can also specify a particular contrast of interest in <code>variables</code>:</p>
 <div class="cell">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"3rd"</span>, <span class="st">"1st"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1027,7 +1027,7 @@ window.Quarto = {
 </section><section id="cross-contrasts" class="level3"><h3 class="anchored" data-anchor-id="cross-contrasts">Cross-contrasts</h3>
 <p>In other contexts, we are interested in a “cross-contrast” or “cross-comparisons”, that is, we would like to know what happens when two (or more) predictors change at the same time. To assess this, we can specify the regressors of interest in the <code>variables</code> argument, and set the <code>cross=TRUE</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>SexCode <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, Age <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
 <span>    cross <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
@@ -1043,7 +1043,7 @@ window.Quarto = {
 </section></section><section id="outcome-type" class="level2"><h2 class="anchored" data-anchor-id="outcome-type">Outcome type</h2>
 <p>We can compute contrasts on different response scales. In GLM model, for example, we tend to estimate contrasts and comparisons on the “response” scale, becasue the results are expressed on the natural unit of measurement of the dependent variable. However, we an also compute the quantity on the “link” scale, by changing the <code>type</code> argument:</p>
 <div class="cell">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"response"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"response"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %    97.5 % PClass Age SexCode</span></span>
 <span><span class="co">#&gt;  Age     +1        -0.00735     0.0033 -2.23   0.0258  5.3 -0.0138 -0.000887    3rd  20       0</span></span>
@@ -1054,7 +1054,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, Age, SexCode, Survived</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"link"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"link"</span>, newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %  97.5 % PClass Age SexCode</span></span>
 <span><span class="co">#&gt;  Age     +1         -0.0507     0.0202 -2.51   0.0121  6.4 -0.0902 -0.0111    3rd  20       0</span></span>
@@ -1067,7 +1067,7 @@ window.Quarto = {
 </div>
 <p>The support <code>type</code> values depend on the kind of fitted model at hand. Supported types for a specific model are printed to screen when a bad type is entered:</p>
 <div class="cell">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"bad type name"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"bad type name"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in sanitize_type(model = model, type = type, calling_function = "comparisons"): Assertion on 'type' failed: Must be element of set {'response','link'}, but is 'bad type name'.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="grid" class="level1"><h1>Grid</h1>
@@ -1081,9 +1081,9 @@ window.Quarto = {
 <li>Representative values</li>
 </ul>
 <section id="empirical-distribution" class="level2"><h2 class="anchored" data-anchor-id="empirical-distribution">Empirical distribution</h2>
-<p>By default, the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function returns estimates for every single row of the original data frame which was used to fit the model. The Titanic dataset includes 756 complete observations (after dropping missing data), so this command will yield 756 estimates:</p>
+<p>By default, the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function returns estimates for every single row of the original data frame which was used to fit the model. The Titanic dataset includes 756 complete observations (after dropping missing data), so this command will yield 756 estimates:</p>
 <div class="cell">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"Age"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"Age"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Estimate Std. Error      z Pr(&gt;|z|)    S    2.5 %   97.5 %</span></span>
 <span><span class="co">#&gt;   0.000618    0.00169  0.365  0.71479  0.5 -0.00270  0.00393</span></span>
@@ -1102,9 +1102,9 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: +1</span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, Survived, PClass, SexCode, Age</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>If we do not specify the <code>variables</code> argument, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> computes 4 distinct contrasts for all the variables, so we get <span class="math inline">\(4\\times 756=3024\)</span> rows:</p>
+<p>If we do not specify the <code>variables</code> argument, <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> computes 4 distinct contrasts for all the variables, so we get <span class="math inline">\(4\\times 756=3024\)</span> rows:</p>
 <div class="cell">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term Contrast  Estimate Std. Error      z Pr(&gt;|z|)    S    2.5 %   97.5 %</span></span>
 <span><span class="co">#&gt;  Age        +1     0.000618    0.00169  0.365    0.715  0.5 -0.00270  0.00393</span></span>
@@ -1125,7 +1125,7 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">.</span> <span class="op">~</span> <span class="va">term</span> <span class="op">+</span> <span class="va">contrast</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1143,7 +1143,7 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">unit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">Name</span> <span class="op">==</span> <span class="st">"Anderson, Mr Harry"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">unit</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">unit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)     S  2.5 %   97.5 % rownames               Name PClass Age  Sex SexCode</span></span>
 <span><span class="co">#&gt;  Age     +1         -0.0103    0.00239 -4.31   &lt;0.001  15.9 -0.015 -0.00562        6 Anderson, Mr Harry    1st  47 male       0</span></span>
@@ -1154,15 +1154,15 @@ window.Quarto = {
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, rownames, Name, PClass, Age, Sex, Survived, SexCode</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>A very convenient way to create grids of units with specific predictor values is to the <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> function from the <code>marginaleffects</code> package. With this function, we can specify exactly where we want to evaluate the comparison in the predictor space. Say we are interested in:</p>
+<p>A very convenient way to create grids of units with specific predictor values is to the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> function from the <code>marginaleffects</code> package. With this function, we can specify exactly where we want to evaluate the comparison in the predictor space. Say we are interested in:</p>
 <blockquote class="blockquote">
 <p>The effect of changing passenger class on the predicted probability of survival for a 50 year old man and a 50 year old woman.</p>
 </blockquote>
 <p>We can type:</p>
 <div class="cell">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"PClass"</span>, </span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Contrast Age SexCode Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 %  97.5 %</span></span>
 <span><span class="co">#&gt;  2nd - 1st  50       0   -0.226     0.0473 -4.78   &lt;0.001 19.1 -0.319 -0.1333</span></span>
@@ -1175,11 +1175,11 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, Age, SexCode, predicted_lo, predicted_hi, predicted, PClass, Survived</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Notice that the contrasts are different for the man and the woman. It appears that changing class has a larger effect on the expected probability of survival for men than for women.</p>
-<p>Note that when using <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> in this manner, variables that are not specified explicitly by the user are held at their mean or mode.</p>
+<p>Note that when using <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> in this manner, variables that are not specified explicitly by the user are held at their mean or mode.</p>
 </section><section id="representative-values" class="level2"><h2 class="anchored" data-anchor-id="representative-values">Representative values</h2>
 <p>An alternative which used to be very common but has now fallen into a bit of disfavor is to compute “Contrasts at the mean.” The idea is to create a “representative” or “synthetic” individual (row of the dataset) whose characteristics are completely average (or modal). Then, we compute and report the contrast for this specific hypothetical individual. For example:</p>
 <div class="cell">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)    S    2.5 %   97.5 % PClass SexCode  Age</span></span>
 <span><span class="co">#&gt;  Age     +1        -0.00504    0.00158 -3.20  0.00139  9.5 -0.00813 -0.00195    3rd       0 30.4</span></span>
@@ -1190,7 +1190,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, SexCode, Age, Survived</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term  Contrast Estimate Std. Error     z Pr(&gt;|z|)    S    2.5 %   97.5 % PClass SexCode  Age</span></span>
 <span><span class="co">#&gt;  Age     +1        -0.00504    0.00158 -3.20  0.00139  9.5 -0.00813 -0.00195    3rd       0 30.4</span></span>
@@ -1206,7 +1206,7 @@ window.Quarto = {
 </section><section id="balanced-grids" class="level2"><h2 class="anchored" data-anchor-id="balanced-grids">Balanced grids</h2>
 <p>One type of grid which may be particularly useful in experimental setting is the “balanced grid”, which includes all unique combinations of categorical variables, while holding numeric variables a their means. For example, in the Titanic dataset there are two categorical variables, <code>SexCode</code> and <code>PClass</code>, with 2 and 3 categories respectively. A balanced grid, will thus have rows. We can create this grid with:</p>
 <div class="cell">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">mod</span>, grid_type <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">mod</span>, grid_type <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   PClass SexCode      Age rowid</span></span>
 <span><span class="co">#&gt; 1    1st       1 30.39799     1</span></span>
 <span><span class="co">#&gt; 2    1st       0 30.39799     2</span></span>
@@ -1215,11 +1215,11 @@ window.Quarto = {
 <span><span class="co">#&gt; 5    3rd       1 30.39799     5</span></span>
 <span><span class="co">#&gt; 6    3rd       0 30.39799     6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>When using <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> inside a <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> call, we do not need to specify the <code>model</code> argument manually:</p>
+<p>When using <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> inside a <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> call, we do not need to specify the <code>model</code> argument manually:</p>
 <div class="cell">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>    variables <span class="op">=</span> <span class="st">"SexCode"</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>grid_type <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>grid_type <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)     S 2.5 % 97.5 % PClass  Age</span></span>
 <span><span class="co">#&gt;     0.483     0.0631  7.65   &lt;0.001  45.5 0.359  0.606    1st 30.4</span></span>
@@ -1234,7 +1234,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: 1 - 0</span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, SexCode, Age, Survived</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>    variables <span class="op">=</span> <span class="st">"SexCode"</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1252,14 +1252,14 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, PClass, SexCode, Age, Survived</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="aggregation" class="level1"><h1>Aggregation</h1>
-<p>As discussed above, the default behavior of <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> is to estimate quantities of interest for all the actually observed units in our dataset. Sometimes, it is convenient to marginalize those conditional estimates, in order to obtain an “average contrast”. The procedure is as follows:</p>
+<p>As discussed above, the default behavior of <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> is to estimate quantities of interest for all the actually observed units in our dataset. Sometimes, it is convenient to marginalize those conditional estimates, in order to obtain an “average contrast”. The procedure is as follows:</p>
 <ol type="1">
 <li>Compute estimates for each row of the original dataset.</li>
 <li>Average the estimates across the whole dataset, or within subgroups.</li>
 </ol>
 <p>To average estimates, we call the same function as before, with the previx <code>avg_</code>, and possibly with the <code>by</code> argument:</p>
 <div class="cell">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term              Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %   97.5 %</span></span>
 <span><span class="co">#&gt;  Age     mean(+1)              -0.00598    0.00109 -5.51   &lt;0.001  24.7 -0.00811 -0.00386</span></span>
@@ -1272,7 +1272,7 @@ window.Quarto = {
 </div>
 <p>This is equivalent to:</p>
 <div class="cell">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">cmp</span><span class="op">$</span><span class="va">estimate</span><span class="op">[</span><span class="va">cmp</span><span class="op">$</span><span class="va">term</span> <span class="op">==</span> <span class="st">"Age"</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] -0.00598373</span></span>
@@ -1287,7 +1287,7 @@ window.Quarto = {
 <section id="subgroups" class="level2"><h2 class="anchored" data-anchor-id="subgroups">Subgroups</h2>
 <p>Using the <code>by</code> argument we can compute the “average effect” (i.e., “contrast” or “risk difference”) of an increase of 10 years of <code>Age</code> in each of the passenger classes:</p>
 <div class="cell">
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"PClass"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1304,7 +1304,7 @@ window.Quarto = {
 </section><section id="marginal-means" class="level2"><h2 class="anchored" data-anchor-id="marginal-means">Marginal means</h2>
 <p>In experimental studies, it can often make sense to estimate contrasts, averaged across a balanced grid of treatment conditions:</p>
 <div class="cell">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"balanced"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term              Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %  97.5 %</span></span>
 <span><span class="co">#&gt;  Age     mean(+1)              -0.00494    0.00119 -4.14   &lt;0.001  14.8 -0.00728 -0.0026</span></span>
@@ -1317,7 +1317,7 @@ window.Quarto = {
 </div>
 <p>Note that the results are slightly different than when averaging across the empirical, because the number of actual passengers aboard the Titanic was not perfectly balanced across gender and ticket categories:</p>
 <div class="cell">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term              Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %   97.5 %</span></span>
 <span><span class="co">#&gt;  Age     mean(+1)              -0.00598    0.00109 -5.51   &lt;0.001  24.7 -0.00811 -0.00386</span></span>
@@ -1335,7 +1335,7 @@ window.Quarto = {
 <p>The standard errors reported by default for most models are “classical” (or “iid”). For models supported by the <code>sandwich</code> or <code>clubSandwich</code> packages, we can call on the <code>vcov</code> argument to report robust standard errors (and confidence intervales, p values, etc.):</p>
 <p>Classical:</p>
 <div class="cell">
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;     0.497     0.0302 16.5   &lt;0.001 200.3 0.438  0.556</span></span>
@@ -1347,7 +1347,7 @@ window.Quarto = {
 </div>
 <p>Heteroskedasticity-robust:</p>
 <div class="cell">
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, vcov <span class="op">=</span> <span class="st">"HC3"</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, vcov <span class="op">=</span> <span class="st">"HC3"</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;     0.497     0.0306 16.2   &lt;0.001 194.7 0.437  0.557</span></span>
@@ -1358,10 +1358,10 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="bootstrap-and-simulation" class="level2"><h2 class="anchored" data-anchor-id="bootstrap-and-simulation">Bootstrap and simulation</h2>
-<p>We can use bootstrapping or simulations to compute uncertainty estimates, via the <code><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences()</a></code> function. Notice that, for some quantities, the classical intervals are very different (here: symmetric) than boostrap intervals (here: asymmetric):</p>
+<p>We can use bootstrapping or simulations to compute uncertainty estimates, via the <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> function. Notice that, for some quantities, the classical intervals are very different (here: symmetric) than boostrap intervals (here: asymmetric):</p>
 <div class="cell">
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># classical</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="st">"lnor"</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="st">"lnor"</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;      2.19      0.159 13.8   &lt;0.001 141.7  1.88   2.51</span></span>
@@ -1372,11 +1372,11 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span>
 <span></span>
 <span><span class="co"># bootstrap</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="st">"lnor"</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span><span class="st">"rsample"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="st">"lnor"</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span><span class="st">"rsample"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;      2.19  1.89   2.52</span></span>
+<span><span class="co">#&gt;      2.19  1.91   2.54</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Term: SexCode</span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
@@ -1391,7 +1391,7 @@ window.Quarto = {
 </ol>
 <p>Step 1 is easy to achieve with the <code>comparison</code> argument described above. Step 2 can be achieved with the <code>transform</code> argument:</p>
 <div class="cell">
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    comparison <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">hi</span> <span class="op">/</span> <span class="va">lo</span><span class="op">)</span>,</span>
 <span>    transform <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span>
@@ -1410,12 +1410,12 @@ window.Quarto = {
 <ol type="1">
 <li>Compute the custom unit-level log ratios</li>
 <li>Exponentiate them</li>
-<li>Take the average using the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons()</a></code>
+<li>Take the average using the <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code>
 </li>
 </ol>
 <p>There is a very subtle difference between the procedure above and this code:</p>
 <div class="cell">
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    comparison <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">hi</span> <span class="op">/</span> <span class="va">lo</span><span class="op">)</span>,</span>
 <span>    transform <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span>
@@ -1429,9 +1429,9 @@ window.Quarto = {
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Since the <code>exp</code> function is now passed to the <code>transform</code> argument of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function, the exponentiation is now done only <em>after</em> unit-level contrasts have been averaged. This is what <code>Stata</code> appears to do under the hood, and the results are slightly different.</p>
+<p>Since the <code>exp</code> function is now passed to the <code>transform</code> argument of the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function, the exponentiation is now done only <em>after</em> unit-level contrasts have been averaged. This is what <code>Stata</code> appears to do under the hood, and the results are slightly different.</p>
 <div class="cell">
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    comparison <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">hi</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">lo</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    transform <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span>
@@ -1447,7 +1447,7 @@ window.Quarto = {
 </div>
 <p>Note that equivalent results can be obtained using shortcut strings in the <code>comparison</code> argument: “ratio”, “lnratio”, “lnratioavg”.</p>
 <div class="cell">
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    comparison <span class="op">=</span> <span class="st">"lnratioavg"</span>,</span>
 <span>    transform <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span>
@@ -1467,18 +1467,18 @@ window.Quarto = {
 <blockquote class="blockquote">
 <p>Does moving from 1st to 3rd class have a bigger effect on the probability of survival for 50 year old men, or for 50 year old women?</p>
 </blockquote>
-<p>To answer this, we can start by using the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> and the <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> functions:</p>
+<p>To answer this, we can start by using the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> and the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> functions:</p>
 <div class="cell">
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>At first glane, it looks like the estimated contrast is more negative for women (-0.511) than for men (-0.184). But is the difference between then statistical significant? To answer this question, we express the test of equality as a string formula, where <code>b1</code> identifies the estimate in the first row and <code>b2</code> the second row:</p>
 <div class="cell">
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;     0.327      0.135 2.42   0.0156 6.0 0.0618  0.592</span></span>
@@ -1495,7 +1495,7 @@ window.Quarto = {
 </div>
 <p>We can also compare all the average contrasts in a call, by specifying <code>hypothesis="pairwise"</code>:</p>
 <div class="cell">
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"pairwise"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, hypothesis <span class="op">=</span> <span class="st">"pairwise"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                                                               Term Estimate Std. Error      z Pr(&gt;|z|)     S  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;  (Age, mean(+1)) - (PClass, mean(2nd) - mean(1st))                    0.219     0.0403   5.42   &lt;0.001  24.0  0.140  0.298</span></span>
@@ -1509,7 +1509,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="visualization" class="level1"><h1>Visualization</h1>
-<p>The <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons()</a></code> function can plot comparisons, differences, risk ratios, etc. The <a href="https://marginaleffects.com/vignettes/plot.html">plotting vignette gives detailed insight into the use of this function.</a> Here, it will be sufficient to illustrate its use by a few examples, and to note that most of the arguments of <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> are supported by <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons()</a></code>.</p>
+<p>The <code><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons()</a></code> function can plot comparisons, differences, risk ratios, etc. The <a href="https://marginaleffects.com/vignettes/plot.html">plotting vignette gives detailed insight into the use of this function.</a> Here, it will be sufficient to illustrate its use by a few examples, and to note that most of the arguments of <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> are supported by <code><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons()</a></code>.</p>
 <p>Here, we plot Adjusted Risk Ratio and Adjusted Risk Difference in a model with a quadratic term:</p>
 <div class="cell">
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
@@ -1520,14 +1520,14 @@ window.Quarto = {
 <span>    family <span class="op">=</span> <span class="va">binomial</span>,</span>
 <span>    data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod_titanic</span>,</span>
 <span>    variables <span class="op">=</span> <span class="st">"Age"</span>,</span>
 <span>    condition <span class="op">=</span> <span class="st">"Age"</span>,</span>
 <span>    comparison <span class="op">=</span> <span class="st">"ratio"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Adjusted Risk Ratio\nP(Survival | Age + 1) / P(Survival | Age)"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod_titanic</span>,</span>
 <span>    variables <span class="op">=</span> <span class="st">"Age"</span>,</span>
 <span>    condition <span class="op">=</span> <span class="st">"Age"</span>,<span class="op">)</span> <span class="op">+</span></span>
@@ -1554,7 +1554,7 @@ window.Quarto = {
 <span></span>
 <span><span class="va">mt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">wt</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">mt</span>,</span>
 <span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>hp <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
 <span>    condition <span class="op">=</span> <span class="st">"wt"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1583,7 +1583,7 @@ window.Quarto = {
 <span></span>
 <span><span class="va">model1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">cond</span> <span class="op">*</span> <span class="va">episode</span>, data <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model1</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>cond <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, episode <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model1</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>cond <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, episode <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">cond</span>, y <span class="op">=</span> <span class="va">estimate</span>, shape <span class="op">=</span> <span class="va">episode</span>, color <span class="op">=</span> <span class="va">episode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1605,9 +1605,9 @@ window.Quarto = {
 </div>
 </div>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model1</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model1</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>episode <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="co"># comparison of interest</span></span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>cond <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>    <span class="co"># grid</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>cond <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>    <span class="co"># grid</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  cond Estimate Std. Error     z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;     0    0.241      0.396 0.609    0.542 0.9 -0.535   1.02</span></span>
@@ -1629,9 +1629,9 @@ window.Quarto = {
 </div>
 </div>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model1</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model1</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"cond"</span>,              <span class="co"># comparison of interest</span></span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>episode <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="co"># grid</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>episode <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="co"># grid</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  episode Estimate Std. Error    z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;        1    0.546      0.347 1.57    0.115 3.1 -0.134   1.23</span></span>
@@ -1655,9 +1655,9 @@ window.Quarto = {
 </div>
 </div>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model1</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model1</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>episode <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="co"># comparison of interest</span></span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>cond <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span>,  <span class="co"># grid</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>cond <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span>,  <span class="co"># grid</span></span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span><span class="op">)</span>          <span class="co"># hypothesis</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
@@ -1683,7 +1683,7 @@ window.Quarto = {
 <span><span class="va">yhat_50_0_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">grid_50_0_1</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## prediction on a grid</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">1</span>, PClass <span class="op">=</span> <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">1</span>, PClass <span class="op">=</span> <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Age SexCode PClass Estimate Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;   50       1    3rd    0.446    0.661 0.6 0.235  0.679</span></span>
@@ -1695,9 +1695,9 @@ window.Quarto = {
 <span><span class="co">#&gt; 0.4463379</span></span>
 <span></span>
 <span><span class="co">## contrast on a grid</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Age SexCode Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 %  97.5 %</span></span>
 <span><span class="co">#&gt;   50       0   -0.184     0.0535 -3.45   &lt;0.001 10.8 -0.289 -0.0796</span></span>
@@ -1716,9 +1716,9 @@ window.Quarto = {
 <span><span class="co">#&gt; -0.5113098</span></span>
 <span></span>
 <span><span class="co">## difference-in-differences </span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>Age <span class="op">=</span> <span class="fl">50</span>, SexCode <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
@@ -1733,7 +1733,7 @@ window.Quarto = {
 <span><span class="co">#&gt; 0.3268809</span></span>
 <span></span>
 <span><span class="co">## average of the empirical distribution of contrasts</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"SexCode"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  SexCode Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;        0   -0.334     0.0570 -5.86   &lt;0.001 27.7 -0.446 -0.222</span></span>
@@ -1777,14 +1777,14 @@ window.Quarto = {
 <li>
 <code>transform</code>: Transform the average contrast or return them as-is.</li>
 </ol>
-<p>The <code>comparison</code> argument of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function determines how adjusted predictions are combined to create a contrast. By default, we take a simple difference between predictions with <code>hi</code> value of <span class="math inline">\(x\)</span>, and predictions with a <code>lo</code> value of <span class="math inline">\(x\)</span>: <code>function(hi, lo) hi-lo</code>.</p>
-<p>The <code>transform</code> argument of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function applies a custom transformation to the unit-level contrasts.</p>
+<p>The <code>comparison</code> argument of the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function determines how adjusted predictions are combined to create a contrast. By default, we take a simple difference between predictions with <code>hi</code> value of <span class="math inline">\(x\)</span>, and predictions with a <code>lo</code> value of <span class="math inline">\(x\)</span>: <code>function(hi, lo) hi-lo</code>.</p>
+<p>The <code>transform</code> argument of the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function applies a custom transformation to the unit-level contrasts.</p>
 <p>The <code>transform</code> argument applies a custom transformation to the final quantity, as would be returned if we evaluated the same call without <code>transform</code>.</p>
 <p>This call adds the <code>transform</code> argument to exponentiate the log-odds ratios at the very end of calculations:</p>
 <div class="cell">
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">Survived</span> <span class="op">~</span> <span class="va">PClass</span> <span class="op">*</span> <span class="va">SexCode</span> <span class="op">*</span> <span class="va">Age</span>, data <span class="op">=</span> <span class="va">dat</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, </span>
 <span>    comparison <span class="op">=</span> <span class="st">"lnor"</span>, </span>
 <span>    transform <span class="op">=</span> <span class="va">exp</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="va">passenger</span><span class="op">)</span></span>
@@ -1801,10 +1801,10 @@ window.Quarto = {
 </section><section id="difference-in-differences" class="level2"><h2 class="anchored" data-anchor-id="difference-in-differences">Difference-in-Differences</h2>
 <p>One thing we can notice in the Titanic example, is that the gap in predicted probabilities of survival between men and women is larger in 1st class than in 3rd class.</p>
 <div class="cell">
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"SexCode"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  PClass Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %  Age</span></span>
 <span><span class="co">#&gt;     1st    0.483     0.0631 7.65   &lt;0.001 45.5 0.359  0.606 30.4</span></span>
@@ -1818,11 +1818,11 @@ window.Quarto = {
 <p>Indeed, being a woman matters more for your chances of survival if you travel in first class. Is the difference between those contrasts (diff-in-diff) statistically significant?</p>
 <p>To answer this question, we can compute a difference-in-difference using the <code>hypothesis</code> argument (<a href="hypothesis.html">see the Hypothesis vignette for details</a>). For example, using <code>b1</code> and <code>b2</code> to refer to the contrasts in the first and second rows of the output above, we can test if the difference between the two quantities is different from 0:</p>
 <div class="cell">
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"b1 - b2 = 0"</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"SexCode"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)   S   2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;     0.148     0.0894 1.65   0.0987 3.3 -0.0276  0.323</span></span>
@@ -1833,10 +1833,10 @@ window.Quarto = {
 </div>
 <p>Now, let’s say we consider more types of individuals:</p>
 <div class="cell">
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"SexCode"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span>, Age <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span>, Age <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  PClass   Age Estimate Std. Error      z Pr(&gt;|z|)     S   2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;     1st  0.17   0.1081      0.122  0.883   0.3774   1.4 -0.1319  0.348</span></span>
@@ -1851,11 +1851,11 @@ window.Quarto = {
 </div>
 <p>With these results, we could compute a triple difference:</p>
 <div class="cell">
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod</span>,</span>
 <span>  hypothesis <span class="op">=</span> <span class="st">"(b1 - b3) - (b2 - b4) = 0"</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"SexCode"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span>, Age <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>PClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1st"</span>, <span class="st">"3rd"</span><span class="op">)</span>, Age <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;    -0.425      0.359 -1.19    0.236 2.1 -1.13  0.278</span></span>
@@ -1865,13 +1865,13 @@ window.Quarto = {
 <span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="forward-backward-centered" class="level2"><h2 class="anchored" data-anchor-id="forward-backward-centered">Forward, Backward, Centered</h2>
-<p>By default, the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function computes a “forward” difference. For example, if we ask <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> to estimate the effect of a 10-unit change in predictor <code>x</code> on outcome <code>y</code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> will compare the predicted values with <code>x</code> and <code>x+10</code>.</p>
+<p>By default, the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function computes a “forward” difference. For example, if we ask <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> to estimate the effect of a 10-unit change in predictor <code>x</code> on outcome <code>y</code>, <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> will compare the predicted values with <code>x</code> and <code>x+10</code>.</p>
 <div class="cell">
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mt</span> <span class="op">&lt;-</span> <span class="va">mtcars</span></span>
 <span><span class="va">mt</span><span class="op">$</span><span class="va">new_hp</span> <span class="op">&lt;-</span> <span class="fl">49</span> <span class="op">*</span> <span class="op">(</span><span class="va">mt</span><span class="op">$</span><span class="va">hp</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">mt</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">mt</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">mt</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="va">mod_mt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">new_hp</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mt</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod_mt</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>new_hp <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1889,7 +1889,7 @@ window.Quarto = {
 <span><span class="va">backward_diff</span> <span class="op">&lt;-</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="fl">10</span>, <span class="va">x</span><span class="op">)</span></span>
 <span><span class="va">center_diff</span> <span class="op">&lt;-</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="fl">5</span>, <span class="va">x</span> <span class="op">+</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod_mt</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>new_hp <span class="op">=</span> <span class="va">forward_diff</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1901,7 +1901,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: custom</span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod_mt</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>new_hp <span class="op">=</span> <span class="va">backward_diff</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1913,7 +1913,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: custom</span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod_mt</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>new_hp <span class="op">=</span> <span class="va">center_diff</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1925,7 +1925,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: custom</span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Notice that the last “centered” difference gives the same results as the default <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> call.</p>
+<p>Notice that the last “centered” difference gives the same results as the default <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> call.</p>
 </section><section id="observation-wise-categorical-marginal-effect" class="level2"><h2 class="anchored" data-anchor-id="observation-wise-categorical-marginal-effect">Observation-Wise Categorical Marginal Effect</h2>
 <p>For categorical predictors, <a href="https://arxiv.org/pdf/2201.08837.pdf">Scholbeck et al.&nbsp;2023</a> recommend that analysts report what they call the “observation-wise categorical marginal effects.” They describe the procedure as follows:</p>
 <blockquote class="blockquote">
@@ -1935,14 +1935,14 @@ window.Quarto = {
 <ol type="1">
 <li>Use the <code><a href="https://rdrr.io/r/base/factor.html">factor()</a></code> function to set the reference level of the categorical variable.</li>
 <li>Use the <code>newdata</code> argument to take the subset of data where the observed <span class="math inline">\(x_j\)</span> is different from the reference level we picked in 1.</li>
-<li>Apply the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons()</a></code> with the <code>"revreference"</code> option.</li>
+<li>Apply the <code><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons()</a></code> with the <code>"revreference"</code> option.</li>
 </ol>
 <div class="cell">
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">mtcars</span>, cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">4</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mod_mt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">vs</span> <span class="op">~</span> <span class="va">mpg</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mt</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod_mt</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod_mt</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="st">"revreference"</span><span class="op">)</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">mt</span>, <span class="va">cyl</span> <span class="op">!=</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>

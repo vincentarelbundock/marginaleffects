@@ -604,7 +604,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Then, we define 4 methods:</p>
 <ol type="1">
 <li>
-<code><a href="https://rdrr.io/pkg/marginaleffects/man/get_coef.html">get_coef()</a></code>
+<code><a href="https://marginaleffects.com/man/get_coef.html">get_coef()</a></code>
 <ul>
 <li>Mandatory arguments: <code>model</code>, <code>...</code>
 </li>
@@ -612,7 +612,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </li>
 <li>
-<code><a href="https://rdrr.io/pkg/marginaleffects/man/set_coef.html">set_coef()</a></code>
+<code><a href="https://marginaleffects.com/man/set_coef.html">set_coef()</a></code>
 <ul>
 <li>Mandatory arguments: <code>model</code>, <code>coefs</code> (named vector of coefficients), <code>...</code>
 </li>
@@ -621,7 +621,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </li>
 <li>
-<code><a href="https://rdrr.io/pkg/marginaleffects/man/get_vcov.html">get_vcov()</a></code>
+<code><a href="https://marginaleffects.com/man/get_vcov.html">get_vcov()</a></code>
 <ul>
 <li>Mandatory arguments: <code>model</code>, <code>...</code>.</li>
 <li>Optional arguments: <code>vcov</code>
@@ -630,7 +630,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </li>
 <li>
-<code><a href="https://rdrr.io/pkg/marginaleffects/man/get_predict.html">get_predict()</a></code>
+<code><a href="https://marginaleffects.com/man/get_predict.html">get_predict()</a></code>
 <ul>
 <li>Mandatory arguments: <code>model</code>, <code>newdata</code> (data frame), <code>...</code>
 </li>
@@ -668,17 +668,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The methods we just defined work as expected:</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/get_coef.html">get_coef</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/get_coef.html">get_coef</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; (Intercept)          hp        drat </span></span>
 <span><span class="co">#&gt; 10.78986122 -0.05178665  4.69815776</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/get_vcov.html">get_vcov</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/get_vcov.html">get_vcov</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             (Intercept)            hp         drat</span></span>
 <span><span class="co">#&gt; (Intercept) 25.78356135 -3.054007e-02 -5.836030687</span></span>
 <span><span class="co">#&gt; hp          -0.03054007  8.635615e-05  0.004969385</span></span>
 <span><span class="co">#&gt; drat        -5.83603069  4.969385e-03  1.419990359</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/get_predict.html">get_predict</a></span><span class="op">(</span><span class="va">model</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/get_predict.html">get_predict</a></span><span class="op">(</span><span class="va">model</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   rowid estimate</span></span>
 <span><span class="co">#&gt; 1     1 23.41614</span></span>
 <span><span class="co">#&gt; 2     2 23.41614</span></span>
@@ -689,7 +689,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Now we can use the <code>avg_slopes</code> function:</p>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">model</span>, newdata <span class="op">=</span> <span class="va">mtcars</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"drat"</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">model</span>, newdata <span class="op">=</span> <span class="va">mtcars</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"drat"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 %  97.5 %</span></span>
 <span><span class="co">#&gt;  drat   4.6982    1.19162  3.94   &lt;0.001 13.6  2.36  7.0337</span></span>
@@ -699,7 +699,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span>, newdata <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span>, newdata <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %  mpg cyl disp  hp drat   wt qsec vs am gear carb</span></span>
 <span><span class="co">#&gt;      23.4      0.671 34.9   &lt;0.001 883.6  22.1   24.7 21.0   6  160 110 3.90 2.62 16.5  0  1    4    4</span></span>
@@ -763,7 +763,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Finally, we can call any <code>slopes</code> function and obtain results. Notice that our object of class <code>customclass</code> now produces different results than the default <code>mblogit</code> object:</p>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;      3    0.469     0.0444 10.56  &lt; 0.001 84.2 0.382  0.556</span></span>
@@ -773,7 +773,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">model_custom</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">model_custom</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Estimate Std. Error         z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;      3    -1.42       2525 -0.000561    1.000 0.0 -4950   4947</span></span>

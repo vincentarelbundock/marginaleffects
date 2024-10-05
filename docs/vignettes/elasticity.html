@@ -568,7 +568,7 @@ window.Quarto = {
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">wt</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %  97.5 %</span></span>
 <span><span class="co">#&gt;    hp  -0.0318    0.00903 -3.52   &lt;0.001 11.2 -0.0495 -0.0141</span></span>
@@ -578,7 +578,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: mean(dY/dX)</span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, slope <span class="op">=</span> <span class="st">"eyex"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, slope <span class="op">=</span> <span class="st">"eyex"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;    hp   -0.285     0.0855 -3.34   &lt;0.001 10.2 -0.453 -0.118</span></span>
@@ -588,7 +588,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: mean(eY/eX)</span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, slope <span class="op">=</span> <span class="st">"eydx"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, slope <span class="op">=</span> <span class="st">"eydx"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S    2.5 %    97.5 %</span></span>
 <span><span class="co">#&gt;    hp -0.00173   0.000502 -3.46   &lt;0.001 10.8 -0.00272 -0.000751</span></span>
@@ -598,7 +598,7 @@ window.Quarto = {
 <span><span class="co">#&gt; Comparison: mean(eY/dX)</span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, slope <span class="op">=</span> <span class="st">"dyex"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, slope <span class="op">=</span> <span class="st">"dyex"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;    hp    -4.66       1.32 -3.52   &lt;0.001 11.2  -7.26  -2.06</span></span>

@@ -539,19 +539,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><section id="bootstrap-simulation" class="level1"><h1>Bootstrap &amp; Simulation</h1>
-<p><code>marginaleffects</code> offers an <code><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences()</a></code> function to compute uncertainty estimates using the bootstrap and simulation-based inference.</p>
-<p>WARNING: The <code><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences()</a></code> function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other <code>marginaleffects</code> functions.</p>
+<p><code>marginaleffects</code> offers an <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> function to compute uncertainty estimates using the bootstrap and simulation-based inference.</p>
+<p>WARNING: The <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other <code>marginaleffects</code> functions.</p>
 <p>Consider a simple model:</p>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Petal.Width</span> <span class="op">*</span> <span class="va">Petal.Length</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We will compute uncertainty estimates around the output of <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>, but note that the same approach works with the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> and <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code> functions as well.</p>
+<p>We will compute uncertainty estimates around the output of <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>, but note that the same approach works with the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> and <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> functions as well.</p>
 <section id="delta-method" class="level2"><h2 class="anchored" data-anchor-id="delta-method">Delta method</h2>
 <p>The default strategy to compute standard errors and confidence intervals is the delta method. This is what we obtain by calling:</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Species Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;  setosa      -0.1103      0.285 -0.387    0.699 0.5 -0.669  0.449</span></span>
@@ -563,10 +563,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; Comparison: mean(+1)</span></span>
 <span><span class="co">#&gt; Columns: term, contrast, Species, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Since this is the default method, we obtain the same results if we add the <code><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences()</a></code> call in the chain:</p>
+<p>Since this is the default method, we obtain the same results if we add the <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> call in the chain:</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"delta"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"delta"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Species Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;  setosa      -0.1103      0.285 -0.387    0.699 0.5 -0.669  0.449</span></span>
@@ -582,29 +582,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>marginaleffects</code> supports three bootstrap frameworks in <code>R</code>: the well-established <code>boot</code> package, the newer <code>rsample</code> package, and the so-called “bayesian bootstrap” in <code>fwb</code>.</p>
 <section id="boot" class="level3"><h3 class="anchored" data-anchor-id="boot"><code>boot</code></h3>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"boot"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"boot"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Species Estimate Std. Error  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  setosa      -0.1103      0.278 -0.627  0.459</span></span>
-<span><span class="co">#&gt;  versicolor  -0.0201      0.165 -0.325  0.325</span></span>
-<span><span class="co">#&gt;  virginica    0.0216      0.181 -0.333  0.371</span></span>
+<span><span class="co">#&gt;  setosa      -0.1103      0.272 -0.658  0.421</span></span>
+<span><span class="co">#&gt;  versicolor  -0.0201      0.160 -0.320  0.296</span></span>
+<span><span class="co">#&gt;  virginica    0.0216      0.178 -0.330  0.375</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Term: Petal.Width</span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Comparison: mean(+1)</span></span>
 <span><span class="co">#&gt; Columns: term, contrast, Species, estimate, predicted_lo, predicted_hi, predicted, std.error, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>All unknown arguments that we feed to <code><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences()</a></code> are pushed forward to <code><a href="https://rdrr.io/pkg/boot/man/boot.html">boot::boot()</a></code>:</p>
+<p>All unknown arguments that we feed to <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> are pushed forward to <code><a href="https://rdrr.io/pkg/boot/man/boot.html">boot::boot()</a></code>:</p>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">est</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"boot"</span>, sim <span class="op">=</span> <span class="st">"balanced"</span>, R <span class="op">=</span> <span class="fl">500</span>, conf_type <span class="op">=</span> <span class="st">"bca"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">est</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"boot"</span>, sim <span class="op">=</span> <span class="st">"balanced"</span>, R <span class="op">=</span> <span class="fl">500</span>, conf_type <span class="op">=</span> <span class="st">"bca"</span><span class="op">)</span></span>
 <span><span class="va">est</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Species Estimate Std. Error  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  setosa      -0.1103      0.268 -0.644  0.424</span></span>
-<span><span class="co">#&gt;  versicolor  -0.0201      0.159 -0.274  0.328</span></span>
-<span><span class="co">#&gt;  virginica    0.0216      0.176 -0.324  0.359</span></span>
+<span><span class="co">#&gt;  setosa      -0.1103      0.271 -0.631  0.399</span></span>
+<span><span class="co">#&gt;  versicolor  -0.0201      0.165 -0.333  0.311</span></span>
+<span><span class="co">#&gt;  virginica    0.0216      0.179 -0.329  0.361</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Term: Petal.Width</span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
@@ -1362,36 +1362,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Bootstrap Statistics :</span></span>
-<span><span class="co">#&gt;        original      bias    std. error</span></span>
-<span><span class="co">#&gt; t1* -0.11025325 0.005693267   0.2679048</span></span>
-<span><span class="co">#&gt; t2* -0.02006005 0.004876980   0.1594589</span></span>
-<span><span class="co">#&gt; t3*  0.02158742 0.004500052   0.1758441</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;        original        bias    std. error</span></span>
+<span><span class="co">#&gt; t1* -0.11025325  0.0063568353   0.2711136</span></span>
+<span><span class="co">#&gt; t2* -0.02006005  0.0001447093   0.1652994</span></span>
+<span><span class="co">#&gt; t3*  0.02158742 -0.0027237921   0.1790582</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Or we can extract the individual draws with the <code><a href="https://rdrr.io/pkg/marginaleffects/man/posterior_draws.html">posterior_draws()</a></code> function:</p>
+<p>Or we can extract the individual draws with the <code><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws()</a></code> function:</p>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="va">est</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   drawid      draw        term contrast    Species    estimate predicted_lo predicted_hi predicted std.error   conf.low conf.high</span></span>
-<span><span class="co">#&gt; 1      1 0.0960675 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 0.2679048 -0.6438246 0.4240154</span></span>
-<span><span class="co">#&gt; 2      1 0.2997158 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 0.1594589 -0.2738601 0.3281200</span></span>
-<span><span class="co">#&gt; 3      1 0.3937521 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 0.1758441 -0.3243762 0.3586825</span></span>
-<span><span class="co">#&gt; 4      2 0.2623797 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 0.2679048 -0.6438246 0.4240154</span></span>
-<span><span class="co">#&gt; 5      2 0.2158107 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 0.1594589 -0.2738601 0.3281200</span></span>
-<span><span class="co">#&gt; 6      2 0.1943071 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 0.1758441 -0.3243762 0.3586825</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="va">est</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   drawid        draw        term contrast    Species    estimate predicted_lo predicted_hi predicted std.error   conf.low conf.high</span></span>
+<span><span class="co">#&gt; 1      1  0.11362599 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 0.2711136 -0.6310381 0.3986419</span></span>
+<span><span class="co">#&gt; 2      1 -0.12395691 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 0.1652994 -0.3328792 0.3105397</span></span>
+<span><span class="co">#&gt; 3      1 -0.23366281 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 0.1790582 -0.3287161 0.3611130</span></span>
+<span><span class="co">#&gt; 4      2  0.08080091 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 0.2711136 -0.6310381 0.3986419</span></span>
+<span><span class="co">#&gt; 5      2  0.12156024 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 0.1652994 -0.3328792 0.3105397</span></span>
+<span><span class="co">#&gt; 6      2  0.14038120 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 0.1790582 -0.3287161 0.3611130</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="va">est</span>, shape <span class="op">=</span> <span class="st">"DxP"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="va">est</span>, shape <span class="op">=</span> <span class="st">"DxP"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 500   3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="rsample" class="level3"><h3 class="anchored" data-anchor-id="rsample"><code>rsample</code></h3>
-<p>As before, we can pass arguments to <code><a href="https://rsample.tidymodels.org/reference/bootstraps.html">rsample::bootstraps()</a></code> through <code><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences()</a></code>. For example, for stratified resampling:</p>
+<p>As before, we can pass arguments to <code><a href="https://rsample.tidymodels.org/reference/bootstraps.html">rsample::bootstraps()</a></code> through <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code>. For example, for stratified resampling:</p>
 <div class="cell">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">est</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"rsample"</span>, R <span class="op">=</span> <span class="fl">100</span>, strata <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">est</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"rsample"</span>, R <span class="op">=</span> <span class="fl">100</span>, strata <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span>
 <span><span class="va">est</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Species Estimate  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  setosa      -0.1103 -0.609  0.416</span></span>
-<span><span class="co">#&gt;  versicolor  -0.0201 -0.351  0.264</span></span>
-<span><span class="co">#&gt;  virginica    0.0216 -0.326  0.312</span></span>
+<span><span class="co">#&gt;  setosa      -0.1103 -0.620  0.327</span></span>
+<span><span class="co">#&gt;  versicolor  -0.0201 -0.343  0.243</span></span>
+<span><span class="co">#&gt;  virginica    0.0216 -0.325  0.294</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Term: Petal.Width</span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
@@ -1403,30 +1403,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; # A tibble: 101 × 3</span></span>
 <span><span class="co">#&gt;    splits           id           estimates       </span></span>
 <span><span class="co">#&gt;    &lt;list&gt;           &lt;chr&gt;        &lt;list&gt;          </span></span>
-<span><span class="co">#&gt;  1 &lt;split [150/60]&gt; Bootstrap001 &lt;tibble [3 × 7]&gt;</span></span>
-<span><span class="co">#&gt;  2 &lt;split [150/58]&gt; Bootstrap002 &lt;tibble [3 × 7]&gt;</span></span>
-<span><span class="co">#&gt;  3 &lt;split [150/57]&gt; Bootstrap003 &lt;tibble [3 × 7]&gt;</span></span>
-<span><span class="co">#&gt;  4 &lt;split [150/62]&gt; Bootstrap004 &lt;tibble [3 × 7]&gt;</span></span>
-<span><span class="co">#&gt;  5 &lt;split [150/51]&gt; Bootstrap005 &lt;tibble [3 × 7]&gt;</span></span>
-<span><span class="co">#&gt;  6 &lt;split [150/56]&gt; Bootstrap006 &lt;tibble [3 × 7]&gt;</span></span>
-<span><span class="co">#&gt;  7 &lt;split [150/45]&gt; Bootstrap007 &lt;tibble [3 × 7]&gt;</span></span>
-<span><span class="co">#&gt;  8 &lt;split [150/48]&gt; Bootstrap008 &lt;tibble [3 × 7]&gt;</span></span>
-<span><span class="co">#&gt;  9 &lt;split [150/57]&gt; Bootstrap009 &lt;tibble [3 × 7]&gt;</span></span>
-<span><span class="co">#&gt; 10 &lt;split [150/55]&gt; Bootstrap010 &lt;tibble [3 × 7]&gt;</span></span>
+<span><span class="co">#&gt;  1 &lt;split [150/56]&gt; Bootstrap001 &lt;tibble [3 × 7]&gt;</span></span>
+<span><span class="co">#&gt;  2 &lt;split [150/60]&gt; Bootstrap002 &lt;tibble [3 × 7]&gt;</span></span>
+<span><span class="co">#&gt;  3 &lt;split [150/52]&gt; Bootstrap003 &lt;tibble [3 × 7]&gt;</span></span>
+<span><span class="co">#&gt;  4 &lt;split [150/51]&gt; Bootstrap004 &lt;tibble [3 × 7]&gt;</span></span>
+<span><span class="co">#&gt;  5 &lt;split [150/49]&gt; Bootstrap005 &lt;tibble [3 × 7]&gt;</span></span>
+<span><span class="co">#&gt;  6 &lt;split [150/53]&gt; Bootstrap006 &lt;tibble [3 × 7]&gt;</span></span>
+<span><span class="co">#&gt;  7 &lt;split [150/61]&gt; Bootstrap007 &lt;tibble [3 × 7]&gt;</span></span>
+<span><span class="co">#&gt;  8 &lt;split [150/55]&gt; Bootstrap008 &lt;tibble [3 × 7]&gt;</span></span>
+<span><span class="co">#&gt;  9 &lt;split [150/52]&gt; Bootstrap009 &lt;tibble [3 × 7]&gt;</span></span>
+<span><span class="co">#&gt; 10 &lt;split [150/54]&gt; Bootstrap010 &lt;tibble [3 × 7]&gt;</span></span>
 <span><span class="co">#&gt; # ℹ 91 more rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Or we can extract the individual draws with the <code><a href="https://rdrr.io/pkg/marginaleffects/man/posterior_draws.html">posterior_draws()</a></code> function:</p>
+<p>Or we can extract the individual draws with the <code><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws()</a></code> function:</p>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="va">est</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="va">est</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   drawid        draw        term contrast    Species    estimate predicted_lo predicted_hi predicted   conf.low conf.high</span></span>
-<span><span class="co">#&gt; 1      1 -0.13030823 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 -0.6085966 0.4159146</span></span>
-<span><span class="co">#&gt; 2      1  0.12473442 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 -0.3511440 0.2640134</span></span>
-<span><span class="co">#&gt; 3      1  0.24250250 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 -0.3259187 0.3117414</span></span>
-<span><span class="co">#&gt; 4      2 -0.54977492 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 -0.6085966 0.4159146</span></span>
-<span><span class="co">#&gt; 5      2 -0.09508806 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 -0.3511440 0.2640134</span></span>
-<span><span class="co">#&gt; 6      2  0.11486742 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 -0.3259187 0.3117414</span></span>
+<span><span class="co">#&gt; 1      1 -0.06769214 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 -0.6201346 0.3269805</span></span>
+<span><span class="co">#&gt; 2      1 -0.17818187 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 -0.3430038 0.2426725</span></span>
+<span><span class="co">#&gt; 3      1 -0.22920144 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 -0.3245811 0.2939608</span></span>
+<span><span class="co">#&gt; 4      2 -0.25794006 Petal.Width mean(+1)     setosa -0.11025325     4.957514     4.845263  4.957514 -0.6201346 0.3269805</span></span>
+<span><span class="co">#&gt; 5      2 -0.29047224 Petal.Width mean(+1) versicolor -0.02006005     6.327949     6.322072  6.327949 -0.3430038 0.2426725</span></span>
+<span><span class="co">#&gt; 6      2 -0.30549425 Petal.Width mean(+1)  virginica  0.02158742     7.015513     7.051542  7.015513 -0.3245811 0.2939608</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="va">est</span>, shape <span class="op">=</span> <span class="st">"PxD"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="va">est</span>, shape <span class="op">=</span> <span class="st">"PxD"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1]   3 100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="fractional-weighted-bootstrap-aka-bayesian-bootstrap" class="level3"><h3 class="anchored" data-anchor-id="fractional-weighted-bootstrap-aka-bayesian-bootstrap">Fractional Weighted Bootstrap (aka Bayesian Bootstrap)</h3>
@@ -1434,15 +1434,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p>“fwb implements the fractional weighted bootstrap (FWB), also known as the Bayesian bootstrap, following the treatment by Xu et al.&nbsp;(2020). The FWB involves generating sets of weights from a uniform Dirichlet distribution to be used in estimating statistics of interest, which yields a posterior distribution that can be interpreted in the same way the traditional (resampling-based) bootstrap distribution can be.” -Noah Greifer</p>
 </blockquote>
-<p>The <code><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences()</a></code> function makes it easy to apply this inference strategy to <code>marginaleffects</code> objects:</p>
+<p>The <code><a href="https://marginaleffects.com/man/inferences.html">inferences()</a></code> function makes it easy to apply this inference strategy to <code>marginaleffects</code> objects:</p>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"fwb"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"fwb"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;          Term                        Contrast Estimate Std. Error  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  Petal.Length mean(+1)                          0.8929     0.0757  0.741  1.038</span></span>
-<span><span class="co">#&gt;  Petal.Width  mean(+1)                         -0.0362     0.1535 -0.339  0.274</span></span>
-<span><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa)  -1.4629     0.3120 -2.092 -0.832</span></span>
-<span><span class="co">#&gt;  Species      mean(virginica) - mean(setosa)   -1.9842     0.3720 -2.745 -1.246</span></span>
+<span><span class="co">#&gt;  Petal.Length mean(+1)                          0.8929     0.0816  0.731  1.053</span></span>
+<span><span class="co">#&gt;  Petal.Width  mean(+1)                         -0.0362     0.1648 -0.357  0.279</span></span>
+<span><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa)  -1.4629     0.3282 -2.131 -0.848</span></span>
+<span><span class="co">#&gt;  Species      mean(virginica) - mean(setosa)   -1.9842     0.3868 -2.762 -1.258</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted, std.error, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1459,24 +1459,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mjskay.github.io/ggdist/">ggdist</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Species Estimate  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  setosa      -0.1103 -0.655  0.472</span></span>
-<span><span class="co">#&gt;  versicolor  -0.0201 -0.330  0.301</span></span>
-<span><span class="co">#&gt;  virginica    0.0216 -0.308  0.377</span></span>
+<span><span class="co">#&gt;  setosa      -0.1103 -0.617  0.456</span></span>
+<span><span class="co">#&gt;  versicolor  -0.0201 -0.318  0.296</span></span>
+<span><span class="co">#&gt;  virginica    0.0216 -0.291  0.367</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Term: Petal.Width</span></span>
 <span><span class="co">#&gt; Type:  response </span></span>
 <span><span class="co">#&gt; Comparison: mean(+1)</span></span>
 <span><span class="co">#&gt; Columns: term, contrast, Species, estimate, predicted_lo, predicted_hi, predicted, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Since simulation based inference generates <code>R</code> estimates of the quantities of interest, we can treat them similarly to draws from the posterior distribution in bayesian models. For example, we can extract draws using the <code><a href="https://rdrr.io/pkg/marginaleffects/man/posterior_draws.html">posterior_draws()</a></code> function, and plot their distributions using packages like<code>ggplot2</code> and <code>ggdist</code>:</p>
+<p>Since simulation based inference generates <code>R</code> estimates of the quantities of interest, we can treat them similarly to draws from the posterior distribution in bayesian models. For example, we can extract draws using the <code><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws()</a></code> function, and plot their distributions using packages like<code>ggplot2</code> and <code>ggdist</code>:</p>
 <div class="cell">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="st">"rvar"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span>, variables <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://marginaleffects.com/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="st">"rvar"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">Species</span>, xdist <span class="op">=</span> <span class="va">rvar</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="http://mjskay.github.io/ggdist/reference/stat_slabinterval.html">stat_slabinterval</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">

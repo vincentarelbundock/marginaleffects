@@ -559,7 +559,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>    <span class="fu">set_engine</span><span class="op">(</span><span class="st">"lm"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">fit</span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"numeric"</span>, newdata <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"numeric"</span>, newdata <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Term                       Contrast Estimate Std. Error     z Pr(&gt;|z|)     S  2.5 % 97.5 %
@@ -572,7 +572,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 Type:  numeric 
 Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </code></pre>
 </div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"numeric"</span>, newdata <span class="op">=</span> <span class="va">penguins</span>, by <span class="op">=</span> <span class="st">"island"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"numeric"</span>, newdata <span class="op">=</span> <span class="va">penguins</span>, by <span class="op">=</span> <span class="st">"island"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     island Estimate Std. Error   z Pr(&gt;|z|)   S 2.5 % 97.5 %
@@ -621,12 +621,12 @@ Columns: island, estimate, std.error, statistic, p.value, s.value, conf.low, con
 <!-- preamble start -->
 
     <script>
-      function styleCell_gi1hjjgcwcqnyec8qw4f(i, j, css_id) {
-        var table = document.getElementById("tinytable_gi1hjjgcwcqnyec8qw4f");
+      function styleCell_l5qoyfoa5qmjy8i2icpi(i, j, css_id) {
+        var table = document.getElementById("tinytable_l5qoyfoa5qmjy8i2icpi");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_gi1hjjgcwcqnyec8qw4f');
+        var table = document.getElementById('tinytable_l5qoyfoa5qmjy8i2icpi');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -634,8 +634,8 @@ Columns: island, estimate, std.error, statistic, p.value, s.value, conf.low, con
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_gi1hjjgcwcqnyec8qw4f(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_gi1hjjgcwcqnyec8qw4f");
+      function spanCell_l5qoyfoa5qmjy8i2icpi(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_l5qoyfoa5qmjy8i2icpi");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -661,166 +661,166 @@ Columns: island, estimate, std.error, statistic, p.value, s.value, conf.low, con
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(0, 0, 'tinytable_css_idenyhgurlx19fub9b3x8l') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(0, 1, 'tinytable_css_idenyhgurlx19fub9b3x8l') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(0, 2, 'tinytable_css_idenyhgurlx19fub9b3x8l') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(0, 3, 'tinytable_css_idq7b8aceoio6103n462nv') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(0, 4, 'tinytable_css_idq7b8aceoio6103n462nv') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(0, 5, 'tinytable_css_idq7b8aceoio6103n462nv') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(1, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(1, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(1, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(1, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(1, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(1, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(2, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(2, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(2, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(2, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(2, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(2, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(3, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(3, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(3, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(3, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(3, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(3, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(4, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(4, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(4, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(4, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(4, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(4, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(5, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(5, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(5, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(5, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(5, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(5, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(6, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(6, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(6, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(6, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(6, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(6, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(7, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(7, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(7, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(7, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(7, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(7, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(8, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(8, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(8, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(8, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(8, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(8, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(9, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(9, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(9, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(9, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(9, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(9, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(10, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(10, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(10, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(10, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(10, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(10, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(11, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(11, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(11, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(11, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(11, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(11, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(12, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(12, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(12, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(12, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(12, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(12, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(13, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(13, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(13, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(13, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(13, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(13, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(14, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(14, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(14, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(14, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(14, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(14, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(15, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(15, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(15, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(15, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(15, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(15, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(16, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(16, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(16, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(16, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(16, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(16, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(17, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(17, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(17, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(17, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(17, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(17, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(18, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(18, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(18, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(18, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(18, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(18, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(19, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(19, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(19, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(19, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(19, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(19, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(20, 0, 'tinytable_css_idcuynovtmw8pzlypfmgoz') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(20, 1, 'tinytable_css_idcuynovtmw8pzlypfmgoz') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(20, 2, 'tinytable_css_idcuynovtmw8pzlypfmgoz') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(20, 3, 'tinytable_css_idd4omour5kwelfcmdlubh') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(20, 4, 'tinytable_css_idd4omour5kwelfcmdlubh') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(20, 5, 'tinytable_css_idd4omour5kwelfcmdlubh') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(21, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(21, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(21, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(21, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(21, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(21, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(22, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(22, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(22, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(22, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(22, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(22, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(23, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(23, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(23, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(23, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(23, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(23, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24, 0, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24, 1, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24, 2, 'tinytable_css_ida8n7lti0vnkxwceoyje7') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24, 3, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24, 4, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
-window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24, 5, 'tinytable_css_id8ehmzwf39bogt1m6cv8n') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(0, 0, 'tinytable_css_idui92itlh1772ih60kzgb') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(0, 1, 'tinytable_css_idui92itlh1772ih60kzgb') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(0, 2, 'tinytable_css_idui92itlh1772ih60kzgb') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(0, 3, 'tinytable_css_idll9kn9rey4aep50rki2t') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(0, 4, 'tinytable_css_idll9kn9rey4aep50rki2t') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(0, 5, 'tinytable_css_idll9kn9rey4aep50rki2t') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(1, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(1, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(1, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(1, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(1, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(1, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(2, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(2, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(2, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(2, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(2, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(2, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(3, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(3, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(3, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(3, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(3, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(3, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(4, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(4, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(4, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(4, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(4, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(4, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(5, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(5, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(5, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(5, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(5, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(5, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(6, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(6, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(6, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(6, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(6, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(6, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(7, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(7, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(7, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(7, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(7, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(7, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(8, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(8, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(8, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(8, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(8, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(8, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(9, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(9, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(9, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(9, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(9, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(9, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(10, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(10, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(10, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(10, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(10, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(10, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(11, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(11, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(11, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(11, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(11, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(11, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(12, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(12, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(12, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(12, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(12, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(12, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(13, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(13, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(13, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(13, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(13, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(13, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(14, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(14, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(14, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(14, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(14, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(14, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(15, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(15, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(15, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(15, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(15, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(15, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(16, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(16, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(16, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(16, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(16, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(16, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(17, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(17, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(17, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(17, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(17, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(17, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(18, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(18, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(18, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(18, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(18, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(18, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(19, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(19, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(19, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(19, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(19, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(19, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(20, 0, 'tinytable_css_id116t9xdzwnhn04sncv50') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(20, 1, 'tinytable_css_id116t9xdzwnhn04sncv50') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(20, 2, 'tinytable_css_id116t9xdzwnhn04sncv50') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(20, 3, 'tinytable_css_idih19p8elxg74vdz3730k') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(20, 4, 'tinytable_css_idih19p8elxg74vdz3730k') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(20, 5, 'tinytable_css_idih19p8elxg74vdz3730k') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(21, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(21, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(21, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(21, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(21, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(21, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(22, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(22, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(22, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(22, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(22, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(22, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(23, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(23, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(23, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(23, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(23, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(23, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(24, 0, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(24, 1, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(24, 2, 'tinytable_css_idqzhjgo70hnnnv8hotlwn') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(24, 3, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(24, 4, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
+window.addEventListener('load', function () { styleCell_l5qoyfoa5qmjy8i2icpi(24, 5, 'tinytable_css_idqwgbdj4ae41ad086hew6') })
     </script><style>
-    .table td.tinytable_css_idenyhgurlx19fub9b3x8l, .table th.tinytable_css_idenyhgurlx19fub9b3x8l {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_idq7b8aceoio6103n462nv, .table th.tinytable_css_idq7b8aceoio6103n462nv {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_ida8n7lti0vnkxwceoyje7, .table th.tinytable_css_ida8n7lti0vnkxwceoyje7 {  text-align: left; }
-    .table td.tinytable_css_id8ehmzwf39bogt1m6cv8n, .table th.tinytable_css_id8ehmzwf39bogt1m6cv8n {  text-align: center; }
-    .table td.tinytable_css_idcuynovtmw8pzlypfmgoz, .table th.tinytable_css_idcuynovtmw8pzlypfmgoz {  border-bottom: solid 0.05em black;  text-align: left; }
-    .table td.tinytable_css_idd4omour5kwelfcmdlubh, .table th.tinytable_css_idd4omour5kwelfcmdlubh {  border-bottom: solid 0.05em black;  text-align: center; }
+    .table td.tinytable_css_idui92itlh1772ih60kzgb, .table th.tinytable_css_idui92itlh1772ih60kzgb {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idll9kn9rey4aep50rki2t, .table th.tinytable_css_idll9kn9rey4aep50rki2t {  text-align: center;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idqzhjgo70hnnnv8hotlwn, .table th.tinytable_css_idqzhjgo70hnnnv8hotlwn {  text-align: left; }
+    .table td.tinytable_css_idqwgbdj4ae41ad086hew6, .table th.tinytable_css_idqwgbdj4ae41ad086hew6 {  text-align: center; }
+    .table td.tinytable_css_id116t9xdzwnhn04sncv50, .table th.tinytable_css_id116t9xdzwnhn04sncv50 {  border-bottom: solid 0.05em black;  text-align: left; }
+    .table td.tinytable_css_idih19p8elxg74vdz3730k, .table th.tinytable_css_idih19p8elxg74vdz3730k {  border-bottom: solid 0.05em black;  text-align: center; }
     </style>
 <div class="container">
-      <table class="table table-borderless" id="tinytable_gi1hjjgcwcqnyec8qw4f" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_l5qoyfoa5qmjy8i2icpi" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead><tr>
 <th scope="col"> </th>
                 <th scope="col">  </th>
@@ -867,7 +867,7 @@ window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24,
                   <td>mean(Dream) - mean(Biscoe)    </td>
                   <td>female</td>
                   <td>-0.044  </td>
-                  <td>0.010 </td>
+                  <td>0.002 </td>
                   <td>-0.004</td>
                 </tr>
 <tr>
@@ -883,7 +883,7 @@ window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24,
                   <td>                              </td>
                   <td>male  </td>
                   <td>0.044   </td>
-                  <td>-0.010</td>
+                  <td>-0.002</td>
                   <td>0.004 </td>
                 </tr>
 <tr>
@@ -899,7 +899,7 @@ window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24,
                   <td>mean(Torgersen) - mean(Biscoe)</td>
                   <td>female</td>
                   <td>0.015   </td>
-                  <td>-0.057</td>
+                  <td>-0.059</td>
                   <td>0.008 </td>
                 </tr>
 <tr>
@@ -915,7 +915,7 @@ window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24,
                   <td>                              </td>
                   <td>male  </td>
                   <td>-0.015  </td>
-                  <td>0.057 </td>
+                  <td>0.059 </td>
                   <td>-0.008</td>
                 </tr>
 <tr>
@@ -931,7 +931,7 @@ window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24,
                   <td>mean(Chinstrap) - mean(Adelie)</td>
                   <td>female</td>
                   <td>0.562   </td>
-                  <td>0.157 </td>
+                  <td>0.174 </td>
                   <td>0.441 </td>
                 </tr>
 <tr>
@@ -947,7 +947,7 @@ window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24,
                   <td>                              </td>
                   <td>male  </td>
                   <td>-0.562  </td>
-                  <td>-0.157</td>
+                  <td>-0.174</td>
                   <td>-0.441</td>
                 </tr>
 <tr>
@@ -963,7 +963,7 @@ window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24,
                   <td>mean(Gentoo) - mean(Adelie)   </td>
                   <td>female</td>
                   <td>0.453   </td>
-                  <td>0.117 </td>
+                  <td>0.134 </td>
                   <td>0.361 </td>
                 </tr>
 <tr>
@@ -979,7 +979,7 @@ window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24,
                   <td>                              </td>
                   <td>male  </td>
                   <td>-0.453  </td>
-                  <td>-0.117</td>
+                  <td>-0.134</td>
                   <td>-0.361</td>
                 </tr>
 <tr>
@@ -1040,47 +1040,47 @@ window.addEventListener('load', function () { styleCell_gi1hjjgcwcqnyec8qw4f(24,
 </div>
 <p>As described in other vignettes, we can use the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> function to compute the average change in predicted outcome that is associated with a change in each feature:</p>
 <div class="cell">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
        Term                       Contrast Estimate
  count      mean(+1)                            0.0
- holiday    mean(no) - mean(yes)              138.2
- humidity   mean(+1)                         -880.0
- season     mean(fall) - mean(winter)        1090.7
- season     mean(spring) - mean(winter)       784.4
- season     mean(summer) - mean(winter)       910.5
- temp       mean(+1)                           56.7
- weather    mean(misty) - mean(clear)        -303.9
- weather    mean(rain) - mean(clear)         -866.3
- weekday    mean(Friday) - mean(Monday)       179.2
- weekday    mean(Saturday) - mean(Monday)     225.1
- weekday    mean(Sunday) - mean(Monday)       270.5
- weekday    mean(Thursday) - mean(Monday)     144.6
- weekday    mean(Tuesday) - mean(Monday)       33.5
- weekday    mean(Wednesday) - mean(Monday)     94.9
- windspeed  mean(+1)                          -24.4
- workingday mean(no) - mean(yes)              -38.1
- year       mean(1) - mean(0)                1841.5
+ holiday    mean(no) - mean(yes)              127.9
+ humidity   mean(+1)                         -819.6
+ season     mean(fall) - mean(winter)        1127.2
+ season     mean(spring) - mean(winter)       838.8
+ season     mean(summer) - mean(winter)       957.3
+ temp       mean(+1)                           57.5
+ weather    mean(misty) - mean(clear)        -312.5
+ weather    mean(rain) - mean(clear)         -976.2
+ weekday    mean(Friday) - mean(Monday)       188.5
+ weekday    mean(Saturday) - mean(Monday)     227.8
+ weekday    mean(Sunday) - mean(Monday)       270.6
+ weekday    mean(Thursday) - mean(Monday)     149.9
+ weekday    mean(Tuesday) - mean(Monday)       37.1
+ weekday    mean(Wednesday) - mean(Monday)     98.5
+ windspeed  mean(+1)                          -25.8
+ workingday mean(no) - mean(yes)              -51.3
+ year       mean(1) - mean(0)                1843.7
 
 Type:  response 
 Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted </code></pre>
 </div>
 </div>
-<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 56.715 bikes rented per hour.</p>
+<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 57.540 bikes rented per hour.</p>
 <p>We could obtain the same result manually as follows:</p>
 <div class="cell">
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">hi</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">lo</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 69.28052</code></pre>
+<pre><code>[1] 67.42894</code></pre>
 </div>
 </div>
 </section><section id="simultaneous-changes" class="level2"><h2 class="anchored" data-anchor-id="simultaneous-changes">Simultaneous changes</h2>
-<p>With <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">marginaleffects::avg_comparisons()</a></code>, we can also compute the average effect of a simultaneous change in multiple predictors, using the <code>variables</code> and <code>cross</code> arguments. In this example, we see what happens (on average) to the predicted outcome when the <code>temp</code>, <code>season</code>, and <code>weather</code> predictors all change together:</p>
+<p>With <code><a href="https://marginaleffects.com/man/comparisons.html">marginaleffects::avg_comparisons()</a></code>, we can also compute the average effect of a simultaneous change in multiple predictors, using the <code>variables</code> and <code>cross</code> arguments. In this example, we see what happens (on average) to the predicted outcome when the <code>temp</code>, <code>season</code>, and <code>weather</code> predictors all change together:</p>
 <div class="cell">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">forest</span>,</span>
 <span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"temp"</span>, <span class="st">"season"</span>, <span class="st">"weather"</span><span class="op">)</span>,</span>
 <span>    cross <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -1088,12 +1088,12 @@ Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted </code>
 <div class="cell-output cell-output-stdout">
 <pre><code>
                    C: season  C: temp                C: weather Estimate
- mean(fall) - mean(winter)   mean(+1) mean(misty) - mean(clear)   902.57
- mean(fall) - mean(winter)   mean(+1) mean(rain) - mean(clear)    242.68
- mean(spring) - mean(winter) mean(+1) mean(misty) - mean(clear)   573.75
- mean(spring) - mean(winter) mean(+1) mean(rain) - mean(clear)     -3.17
- mean(summer) - mean(winter) mean(+1) mean(misty) - mean(clear)   700.83
- mean(summer) - mean(winter) mean(+1) mean(rain) - mean(clear)     95.46
+ mean(fall) - mean(winter)   mean(+1) mean(misty) - mean(clear)    945.5
+ mean(fall) - mean(winter)   mean(+1) mean(rain) - mean(clear)     150.1
+ mean(spring) - mean(winter) mean(+1) mean(misty) - mean(clear)    621.7
+ mean(spring) - mean(winter) mean(+1) mean(rain) - mean(clear)     -41.4
+ mean(summer) - mean(winter) mean(+1) mean(misty) - mean(clear)    757.1
+ mean(summer) - mean(winter) mean(+1) mean(rain) - mean(clear)      39.3
 
 Type:  response 
 Columns: term, contrast_season, contrast_temp, contrast_weather, estimate </code></pre>
@@ -1124,12 +1124,12 @@ Columns: term, contrast_season, contrast_temp, contrast_weather, estimate </code
 <span><span class="co"># Use a counterfactual grid to replicate the full dataset 101 times. Each time, we</span></span>
 <span><span class="co"># replace the value of `Gr_Liv_Area` by one of the percentiles, but keep the</span></span>
 <span><span class="co"># other profile features as observed.</span></span>
-<span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
+<span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span></span>
 <span>  Gr_Liv_Area <span class="op">=</span> <span class="va">pctiles</span>, newdata <span class="op">=</span> <span class="va">profiles</span>,</span>
 <span>  grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Partial dependence plot</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">m</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">m</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="va">nd</span>,</span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Gr_Liv_Area"</span>, <span class="st">"Bldg_Type"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Living Area"</span>, y <span class="op">=</span> <span class="st">"Predicted log10(Sale Price)"</span>, color <span class="op">=</span> <span class="st">"Building Type"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1170,7 +1170,7 @@ Columns: term, contrast_season, contrast_temp, contrast_weather, estimate </code
 <span><span class="va">task</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/as_task_regr.html">as_task_regr</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bikes</span>, id <span class="op">=</span> <span class="st">"bikes"</span>, target <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span>
 <span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span><span class="op">)</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="va">task</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, condition <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, condition <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="machine_learning_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
@@ -1178,15 +1178,15 @@ Columns: term, contrast_season, contrast_temp, contrast_weather, estimate </code
 </div>
 </div>
 </div>
-<p>As documented in <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">?plot_predictions</a></code>, using <code>condition="temp"</code> is equivalent to creating an equally-spaced grid of <code>temp</code> values, and holding all other predictors at their means or modes. In other words, it is equivalent to:</p>
+<p>As documented in <code><a href="https://marginaleffects.com/man/plot_predictions.html">?plot_predictions</a></code>, using <code>condition="temp"</code> is equivalent to creating an equally-spaced grid of <code>temp</code> values, and holding all other predictors at their means or modes. In other words, it is equivalent to:</p>
 <div class="cell">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">p</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Alternatively, we could plot “marginal” predictions, where replicate the full dataset once for every value of <code>temp</code>, and then average the predicted values over each value of the x-axis:</p>
 <div class="cell">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="machine_learning_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
@@ -1196,7 +1196,7 @@ Columns: term, contrast_season, contrast_temp, contrast_weather, estimate </code
 </div>
 <p>Of course, we can customize the plot using all the standard <code>ggplot2</code> functions:</p>
 <div class="cell">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">bikes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">bikes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, color <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Temperature (Celsius)"</span>, y <span class="op">=</span> <span class="st">"Predicted number of bikes rented per hour"</span>,</span>

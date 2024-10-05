@@ -550,22 +550,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content"><section id="plots" class="level1"><h1>Plots</h1>
 <p>The <code>marginaleffects</code> package includes three flexible functions to plot estimates and display interactions.</p>
 <ul>
-<li><code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions()</a></code></li>
-<li><code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons()</a></code></li>
-<li><code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes()</a></code></li>
+<li><code><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions()</a></code></li>
+<li><code><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons()</a></code></li>
+<li><code><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes()</a></code></li>
 </ul>
 <p>Those functions can be used to plot two kinds of quantities:</p>
 <ul>
 <li>Conditional estimates:
 <ul>
 <li>Estimates computed on a substantively meaningful grid of predictor values.</li>
-<li>This is analogous to using the <code>newdata</code> argument with the <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> function in a <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>, or <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code> call.</li>
+<li>This is analogous to using the <code>newdata</code> argument with the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> function in a <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code>, <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>, or <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> call.</li>
 </ul>
 </li>
 <li>Marginal estimates:
 <ul>
 <li>Estimates computed on the original data, but averaged by subgroup.</li>
-<li>This is analogous to using the <code>newdata</code> argument with the <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> function in a <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>, or <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code> call.</li>
+<li>This is analogous to using the <code>newdata</code> argument with the <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> function in a <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code>, <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code>, or <code><a href="https://marginaleffects.com/man/slopes.html">slopes()</a></code> call.</li>
 </ul>
 </li>
 </ul>
@@ -626,7 +626,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content" data-group="language">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pre</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>flipper_length_mm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">172</span>, <span class="fl">231</span><span class="op">)</span>, species <span class="op">=</span> <span class="va">unique</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pre</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>flipper_length_mm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">172</span>, <span class="fl">231</span><span class="op">)</span>, species <span class="op">=</span> <span class="va">unique</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">pre</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  flipper_length_mm   species Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
@@ -705,27 +705,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td>172</td>
-<td>"Gentoo"</td>
-<td>0</td>
-<td>2544.81111</td>
-<td>368.939151</td>
-<td>6.897645</td>
-<td>5.2871e-12</td>
-<td>37.460659</td>
-<td>1821.703662</td>
-<td>3267.918559</td>
-<td>251</td>
-<td>"Biscoe"</td>
-<td>43.92193</td>
-<td>17.15117</td>
-<td>4201.754386</td>
-<td>"male"</td>
-<td>2009</td>
-</tr>
-<tr class="even">
-<td>172</td>
 <td>"Chinstrap"</td>
-<td>1</td>
+<td>0</td>
 <td>3145.853248</td>
 <td>233.843835</td>
 <td>13.452795</td>
@@ -733,7 +714,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>inf</td>
 <td>2687.527753</td>
 <td>3604.178742</td>
-<td>251</td>
+<td>58</td>
+<td>"Biscoe"</td>
+<td>43.92193</td>
+<td>17.15117</td>
+<td>4201.754386</td>
+<td>"male"</td>
+<td>2009</td>
+</tr>
+<tr class="even">
+<td>172</td>
+<td>"Adelie"</td>
+<td>1</td>
+<td>3859.49144</td>
+<td>203.924857</td>
+<td>18.926047</td>
+<td>0.0</td>
+<td>inf</td>
+<td>3459.806065</td>
+<td>4259.176816</td>
+<td>58</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -743,16 +743,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td>172</td>
-<td>"Adelie"</td>
+<td>"Gentoo"</td>
 <td>2</td>
-<td>3859.49144</td>
-<td>203.924857</td>
-<td>18.926047</td>
+<td>2544.81111</td>
+<td>368.939151</td>
+<td>6.897645</td>
+<td>5.2871e-12</td>
+<td>37.460659</td>
+<td>1821.703662</td>
+<td>3267.918559</td>
+<td>58</td>
+<td>"Biscoe"</td>
+<td>43.92193</td>
+<td>17.15117</td>
+<td>4201.754386</td>
+<td>"male"</td>
+<td>2009</td>
+</tr>
+<tr class="even">
+<td>231</td>
+<td>"Chinstrap"</td>
+<td>3</td>
+<td>4085.954268</td>
+<td>469.429937</td>
+<td>8.704077</td>
 <td>0.0</td>
 <td>inf</td>
-<td>3459.806065</td>
-<td>4259.176816</td>
-<td>251</td>
+<td>3165.888497</td>
+<td>5006.020038</td>
+<td>58</td>
+<td>"Biscoe"</td>
+<td>43.92193</td>
+<td>17.15117</td>
+<td>4201.754386</td>
+<td>"male"</td>
+<td>2009</td>
+</tr>
+<tr class="odd">
+<td>231</td>
+<td>"Adelie"</td>
+<td>4</td>
+<td>4763.826651</td>
+<td>362.09348</td>
+<td>13.156345</td>
+<td>0.0</td>
+<td>inf</td>
+<td>4054.136472</td>
+<td>5473.51683</td>
+<td>58</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -763,7 +801,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td>231</td>
 <td>"Gentoo"</td>
-<td>3</td>
+<td>5</td>
 <td>5596.718663</td>
 <td>155.418883</td>
 <td>36.010545</td>
@@ -771,45 +809,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>inf</td>
 <td>5292.103251</td>
 <td>5901.334076</td>
-<td>251</td>
-<td>"Biscoe"</td>
-<td>43.92193</td>
-<td>17.15117</td>
-<td>4201.754386</td>
-<td>"male"</td>
-<td>2009</td>
-</tr>
-<tr class="odd">
-<td>231</td>
-<td>"Chinstrap"</td>
-<td>4</td>
-<td>4085.954268</td>
-<td>469.429937</td>
-<td>8.704077</td>
-<td>0.0</td>
-<td>inf</td>
-<td>3165.888497</td>
-<td>5006.020038</td>
-<td>251</td>
-<td>"Biscoe"</td>
-<td>43.92193</td>
-<td>17.15117</td>
-<td>4201.754386</td>
-<td>"male"</td>
-<td>2009</td>
-</tr>
-<tr class="even">
-<td>231</td>
-<td>"Adelie"</td>
-<td>5</td>
-<td>4763.826651</td>
-<td>362.09348</td>
-<td>13.156345</td>
-<td>0.0</td>
-<td>inf</td>
-<td>4054.136472</td>
-<td>5473.51683</td>
-<td>251</td>
+<td>58</td>
 <td>"Biscoe"</td>
 <td>43.92193</td>
 <td>17.15117</td>
@@ -825,7 +825,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The <code>condition</code> argument of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions()</a></code> function can be used to build meaningful grids of predictor values somewhat more easily:</p>
+<p>The <code>condition</code> argument of the <code><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions()</a></code> function can be used to build meaningful grids of predictor values somewhat more easily:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">R</a></li>
@@ -834,7 +834,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content" data-group="language">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"flipper_length_mm"</span>, <span class="st">"species"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"flipper_length_mm"</span>, <span class="st">"species"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="plot_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -867,7 +867,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content" data-group="language">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span>,</span>
 <span>    condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
 <span>        <span class="st">"flipper_length_mm"</span> <span class="op">=</span> <span class="fl">180</span><span class="op">:</span><span class="fl">220</span>,</span>
@@ -895,11 +895,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>See <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">?plot_predictions</a></code> for more information.</p>
+<p>See <code><a href="https://marginaleffects.com/man/plot_predictions.html">?plot_predictions</a></code> for more information.</p>
 </section><section id="marginal-predictions" class="level3"><h3 class="anchored" data-anchor-id="marginal-predictions">Marginal predictions</h3>
 <p>We call a prediction “marginal” when it is the result of a two step process: (1) make predictions for each observed unit in the original dataset, and (2) average predictions across one or more categorical predictors. For example:</p>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"species"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"species"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;    species Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;  Adelie        3701       27.2 136.1   &lt;0.001 Inf  3647   3754</span></span>
@@ -911,7 +911,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We can plot those predictions by using the analogous command:</p>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"species"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"species"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="plot_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -921,7 +921,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We can also make predictions at the intersections of different variables:</p>
 <div class="cell">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"island"</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"island"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;    species    island Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;  Adelie    Torgersen     3706       46.8  79.2   &lt;0.001 Inf  3615   3798</span></span>
@@ -935,7 +935,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Note that certain species only live on certain islands. Visually:</p>
 <div class="cell">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"island"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"island"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="plot_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -947,9 +947,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="conditional-comparisons" class="level3"><h3 class="anchored" data-anchor-id="conditional-comparisons">Conditional comparisons</h3>
 <p>The syntax for conditional comparisons is the same as the syntax for conditional predictions, except that we now need to specify the variable(s) of interest using an additional argument:</p>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"flipper_length_mm"</span>,</span>
-<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>flipper_length_mm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">172</span>, <span class="fl">231</span><span class="op">)</span>, species <span class="op">=</span> <span class="va">unique</span><span class="op">)</span><span class="op">)</span></span>
+<span>  newdata <span class="op">=</span> <span class="fu"><a href="https://marginaleffects.com/man/datagrid.html">datagrid</a></span><span class="op">(</span>flipper_length_mm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">172</span>, <span class="fl">231</span><span class="op">)</span>, species <span class="op">=</span> <span class="va">unique</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;               Term flipper_length_mm   species Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % bill_length_mm island</span></span>
 <span><span class="co">#&gt;  flipper_length_mm               172 Adelie        15.3       9.25 1.66   0.0976  3.4 -2.81   33.5           43.9 Biscoe</span></span>
@@ -963,7 +963,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co">#&gt; Comparison: +1</span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, flipper_length_mm, species, predicted_lo, predicted_hi, predicted, bill_length_mm, island, body_mass_g</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"flipper_length_mm"</span>,</span>
 <span>  condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"bill_length_mm"</span>, <span class="st">"species"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -973,13 +973,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We can specify custom comparisons, as we would using the <code>variables</code> argument of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function. For example, see what happens to the predicted outcome when <code>flipper_length_mm</code> increases by 1 standard deviation or by 10mm:</p>
+<p>We can specify custom comparisons, as we would using the <code>variables</code> argument of the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function. For example, see what happens to the predicted outcome when <code>flipper_length_mm</code> increases by 1 standard deviation or by 10mm:</p>
 <div class="cell">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"flipper_length_mm"</span> <span class="op">=</span> <span class="st">"sd"</span><span class="op">)</span>,</span>
 <span>  condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"bill_length_mm"</span>, <span class="st">"species"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"flipper_length_mm"</span> <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
 <span>  condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"bill_length_mm"</span>, <span class="st">"species"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -990,9 +990,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Notice that the vertical scale is different in the plots above, reflecting the fact that we are plotting the effect of a change of 1 standard deviation on the left vs 10 units on the right.</p>
-<p>Like the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code> function, <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons()</a></code> is a very powerful tool because it allows us to compute and display custom comparisons such as differences, ratios, odds, lift, and arbitrary functions of predicted outcomes. For example, if we want to plot the ratio of predicted body mass for different species of penguins, we could do:</p>
+<p>Like the <code><a href="https://marginaleffects.com/man/comparisons.html">comparisons()</a></code> function, <code><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons()</a></code> is a very powerful tool because it allows us to compute and display custom comparisons such as differences, ratios, odds, lift, and arbitrary functions of predicted outcomes. For example, if we want to plot the ratio of predicted body mass for different species of penguins, we could do:</p>
 <div class="cell">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"species"</span>,</span>
 <span>  condition <span class="op">=</span> <span class="st">"bill_length_mm"</span>,</span>
 <span>  comparison <span class="op">=</span> <span class="st">"ratio"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1007,11 +1007,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section><section id="marginal-comparisons" class="level3"><h3 class="anchored" data-anchor-id="marginal-comparisons">Marginal comparisons</h3>
 <p>As above, we can also display marginal comparisons, by subgroups:</p>
 <div class="cell">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"flipper_length_mm"</span>,</span>
 <span>  by <span class="op">=</span> <span class="st">"species"</span><span class="op">)</span> <span class="op">+</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"flipper_length_mm"</span>,</span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"island"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1023,7 +1023,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Multiple contrasts at once:</p>
 <div class="cell">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"flipper_length_mm"</span>, <span class="st">"bill_length_mm"</span><span class="op">)</span>,</span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"island"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1034,10 +1034,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section></section><section id="slopes" class="level2"><h2 class="anchored" data-anchor-id="slopes">Slopes</h2>
-<p>If you have read the sections above, the behavior of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes()</a></code> function should not surprise. Here we give two examples in which we compute display the elasticity of body mass with respect to bill length:</p>
+<p>If you have read the sections above, the behavior of the <code><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes()</a></code> function should not surprise. Here we give two examples in which we compute display the elasticity of body mass with respect to bill length:</p>
 <div class="cell">
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## conditional</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"bill_length_mm"</span>,</span>
 <span>  slope <span class="op">=</span> <span class="st">"eyex"</span>,</span>
 <span>  condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"island"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1049,7 +1049,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span></span>
 <span><span class="co">## marginal</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"bill_length_mm"</span>,</span>
 <span>  slope <span class="op">=</span> <span class="st">"eyex"</span>,</span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"species"</span>, <span class="st">"island"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1064,7 +1064,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">wt</span> <span class="op">*</span> <span class="va">qsec</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod2</span>, variables <span class="op">=</span> <span class="st">"qsec"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"wt"</span>, <span class="st">"gear"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod2</span>, variables <span class="op">=</span> <span class="st">"qsec"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"wt"</span>, <span class="st">"gear"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="plot_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -1075,18 +1075,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section><section id="uncertainty-estimates" class="level2"><h2 class="anchored" data-anchor-id="uncertainty-estimates">Uncertainty estimates</h2>
 <p>As with all the other functions in the package, the <code>plot_*()</code> functions have a <code>conf_level</code> argument and a <code>vcov</code> argument which can be used to control the size of confidence intervals and the types of standard errors used:</p>
 <div class="cell">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"bill_length_mm"</span>, condition <span class="op">=</span> <span class="st">"flipper_length_mm"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">150</span>, <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span></span>
 <span><span class="co">## clustered standard errors</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  vcov <span class="op">=</span> <span class="op">~</span><span class="va">island</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"bill_length_mm"</span>, condition <span class="op">=</span> <span class="st">"flipper_length_mm"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">150</span>, <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span></span>
 <span><span class="co">## alpha level</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>  conf_level <span class="op">=</span> <span class="fl">.8</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"bill_length_mm"</span>, condition <span class="op">=</span> <span class="st">"flipper_length_mm"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">150</span>, <span class="fl">200</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1107,7 +1107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mt</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"cyl"</span><span class="op">)</span>, points <span class="op">=</span> <span class="fl">.5</span>, rug <span class="op">=</span> <span class="cn">TRUE</span>, vcov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"cyl"</span><span class="op">)</span>, points <span class="op">=</span> <span class="fl">.5</span>, rug <span class="op">=</span> <span class="cn">TRUE</span>, vcov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggrepel.slowkow.com/reference/geom_text_repel.html">geom_text_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hp</span>, y <span class="op">=</span> <span class="va">mpg</span>, label <span class="op">=</span> <span class="va">label</span><span class="op">)</span>,</span>
 <span>                    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">mt</span>, <span class="va">hp</span> <span class="op">&gt;</span> <span class="fl">250</span><span class="op">)</span>,</span>
 <span>                    nudge_y <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1129,7 +1129,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">Survived</span> <span class="op">~</span> <span class="va">Age</span> <span class="op">*</span> <span class="va">SexCode</span> <span class="op">*</span> <span class="va">PClass</span>, data <span class="op">=</span> <span class="va">dat</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Age"</span>, <span class="st">"PClass"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Age"</span>, <span class="st">"PClass"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="http://mjskay.github.io/ggdist/reference/geom_dots.html">geom_dots</a></span><span class="op">(</span></span>
 <span>        alpha <span class="op">=</span> <span class="fl">.8</span>,</span>
 <span>        scale <span class="op">=</span> <span class="fl">.3</span>,</span>
@@ -1148,7 +1148,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Thanks to <a href="https://bayesf22-notebook.classes.andrewheiss.com/bayes-rules/13-chapter.html">Andrew Heiss</a> who inspired this plot.</p>
 <p>Designing effective data visualizations requires a lot of customization to the specific context and data. The plotting functions in <code>marginaleffects</code> offer a powerful way to iterate quickly between plots and models, but they obviously cannot support all the features that users may want. Thankfully, it is very easy to use the <code>slopes</code> functions to generate datasets that can then be used in <code>ggplot2</code> or any other data visualization tool. Just use the <code>draw</code> argument:</p>
 <div class="cell">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Age"</span>, <span class="st">"PClass"</span><span class="op">)</span>, draw <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Age"</span>, <span class="st">"PClass"</span><span class="op">)</span>, draw <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   rowid  estimate    p.value  s.value  conf.low conf.high SexCode     Age PClass Survived</span></span>
 <span><span class="co">#&gt; 1     1 0.8169481 0.01398979 6.159481 0.5751384 0.9363604       0 0.17000    1st        1</span></span>
@@ -1162,7 +1162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mjskay.github.io/ggdist/">ggdist</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pkg.mitchelloharawild.com/distributional/">distributional</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Age"</span>, <span class="st">"PClass"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"link"</span>, draw <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"SexCode"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Age"</span>, <span class="st">"PClass"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"link"</span>, draw <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="http://mjskay.github.io/ggdist/reference/stat_lineribbon.html">stat_lineribbon</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span></span>
 <span>    x <span class="op">=</span> <span class="va">Age</span>,</span>
@@ -1183,7 +1183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">Survived</span> <span class="op">~</span> <span class="va">Age</span> <span class="op">*</span> <span class="va">PClass</span>, data <span class="op">=</span> <span class="va">dat</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Age"</span>, <span class="st">"PClass"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Age"</span>, <span class="st">"PClass"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">Age</span>, <span class="va">Survived</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">Age</span>, <span class="va">Survived</span><span class="op">)</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -1199,7 +1199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/">MASS</a></span><span class="op">)</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MASS/man/polr.html">polr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span> <span class="op">~</span> <span class="va">mpg</span> <span class="op">+</span> <span class="va">hp</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Estimate Std. Error    z Pr(&gt;|z|)    S   2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;      3   0.5316     0.1127 4.72   &lt;0.001 18.7  0.3107  0.753</span></span>
@@ -1220,7 +1220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We can plot those estimates in the same way as before, by specifying <code>group</code> as one of the conditional variable, or by adding that column to a <code><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap()</a></code> call:</p>
 <div class="cell">
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">pkgload</span><span class="fu">::</span><span class="fu"><a href="https://pkgload.r-lib.org/reference/load_all.html">load_all</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"mpg"</span>, <span class="st">"group"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"probs"</span>, vcov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"mpg"</span>, <span class="st">"group"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"probs"</span>, vcov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="plot_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -1228,7 +1228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="st">"mpg"</span>, type <span class="op">=</span> <span class="st">"probs"</span>, vcov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="st">"mpg"</span>, type <span class="op">=</span> <span class="st">"probs"</span>, vcov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">group</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -1242,14 +1242,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Some users may feel inclined to call <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> on a object produced by <code>marginaleffects</code> object. Doing so will generate an informative error like this one:</p>
 <div class="cell">
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">wt</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error: Please use the `plot_predictions()` function.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The reason for this error is that the user query is underspecified. <code>marginaleffects</code> allows users to compute so many quantities of interest that it is not clear what the user wants when they simply call <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code>. Adding several new arguments would compete with the main plotting functions, and risk sowing confusion. The <code>marginaleffects</code> developers thus decided to support one main path to plotting: <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_comparisons.html">plot_comparisons()</a></code>, and <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes()</a></code>.</p>
+<p>The reason for this error is that the user query is underspecified. <code>marginaleffects</code> allows users to compute so many quantities of interest that it is not clear what the user wants when they simply call <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code>. Adding several new arguments would compete with the main plotting functions, and risk sowing confusion. The <code>marginaleffects</code> developers thus decided to support one main path to plotting: <code><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions()</a></code>, <code><a href="https://marginaleffects.com/man/plot_comparisons.html">plot_comparisons()</a></code>, and <code><a href="https://marginaleffects.com/man/plot_slopes.html">plot_slopes()</a></code>.</p>
 <p>That said, it may be useful to remind users that all <code>marginaleffects</code> output are standard “tidy” data frames. Although they get pretty-printed to the console, all the listed columns are accessible via standard <code>R</code> operators. For example:</p>
 <div class="cell">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://marginaleffects.com/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span>
 <span><span class="va">p</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  cyl Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
@@ -1271,7 +1271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>This allows us to plot all results very easily with standard plotting functions:</p>
 <div class="cell">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="plot_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
