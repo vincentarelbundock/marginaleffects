@@ -41,10 +41,10 @@ get_predict.model_fit <- function(model, newdata, type = NULL, ...) {
 
     if (type == "numeric") {
         v <- intersect(c(".pred", ".pred_res"), colnames(out))[1]
-        out <- data.frame(rowid = seq_along(out), estimate = out[[v]])
+        out <- data.frame(rowid = seq_len(nrow(out)), estimate = out[[v]])
 
     } else if (type == "class") {
-        out <- data.frame(rowid = seq_along(out), estimate = out[[".pred_class"]])
+        out <- data.frame(rowid = seq_len(nrow(out)), estimate = out[[".pred_class"]])
 
     } else if (type == "prob") {
         colnames(out) <- substr(colnames(out), 7, nchar(colnames(out)))
