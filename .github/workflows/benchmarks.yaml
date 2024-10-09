@@ -10,6 +10,10 @@ on:
       - opened
       - reopened
       - synchronize
+    paths:
+      - 'R/**'
+      - 'src/**'
+      - '.ci/atime/**'
 
 jobs:
   comment:
