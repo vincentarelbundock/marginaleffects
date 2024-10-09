@@ -10,7 +10,6 @@ on:
       - opened
       - reopened
       - synchronize
-  push:
 
 jobs:
   comment:
