@@ -1,0 +1,608 @@
+---
+bibliography: library.bib
+---
+```{r}
+#| cache: false
+#| echo: false
+source(here::here("chapters/code/load.R"))
+options(tinytable_tt_digits = 4)
+```
+
+# Conceptual framework {#sec-framework}
+
+```{=latex}
+\epigraph{\emph{A parameter is just a resting stone on the road to prediction.}}{Philip Dawid}
+\blfootnote{Philip Dawid is Emeritus Professor of Statistics at Cambridge University. The quote in epigraph was relayed by Stephen Senn on the \emph{Causal Bandits} podcast. 2024-03-18. 50m00s. \url{https://causalbanditspodcast.com/} Parts of this chapter were adapted from Arel-Bundock, Greifer and Heiss (Forthcoming), published under a Creative Commons License.}
+```
+
+This chapter introduces a conceptual framework to interpret results from a wide variety of statistical and machine learning models. The framework is model-agnostic and based on a simple idea: analysts should transform parameter estimates or predictions from fitted models into quantities that are more readily interpretable, and that make intuitive sense to stakeholders and domain experts. By applying a simple and consistent post-estimation workflow, researchers can easily go from model to meaning.
+
+To define our estimands we will ask three critical questions:
+
+1. *Quantity:* What is the quantity of interest?
+2. *Predictors:* What predictor values are we interested in?
+3. *Aggregation:* Do we report unit-level or aggregated estimates?
+
+With a clear description of the empirical estimand in hand, we will then ask two further questions:
+
+4. *Uncertainty:* How do we quantify uncertainty about our estimates?
+5. *Test:* Which hypothesis or equivalence tests are relevant?
+
+These five questions give us a structured way to think about the quantities and tests that matter. They lead us to clear definitions of those quantities, dispell terminological ambiguity, and point to the software tools we need to run appropriate calculations. The rest of this chapter surveys each of the five questions.
+
+
+## Quantity
+
+The parameter estimates obtained by fitting a statistical model can often be difficult to interpret. In many contexts, it helps to transform them into quantities with a more natural and domain-relevant meaning.
+
+For example, an analyst who fits a logistic regression model obtains coefficient estimates expressed as log odds ratios. For most people, this is a very difficult scale to reason about. Instead of working with these coefficients directly, we can convert them into more intuitive quantities, like predicted probabilities or risk differences.
+
+This section discusses the statistical justification for this kind of post-estimation transformation, and introduces three classes of transformed quantities of interest: predictions, counterfactual comparisons, and slopes.
+
+### Post-estimation transformations are justified
+
+\index{Plug-in principle|(}
+\index{Invariance property of MLE|(}
+
+Statistical theory offers two major justifications for post-estimation transformations: the plug-in principle and the invariance property of maximum likelihood estimators (MLE).
+
+The intuition behind the plug-in principle is simple: to infer a feature of a population, we can study the same feature in a sample, and "plug-in" our sample estimate in lieu of the population value. This gives us a straightforward strategy to devise estimators for a wide array of quantities of interest. As long as the estimand can be expressed as a function of our model's parameters, we can infer it by applying the same function to coefficient estimates obtained in-sample.
+
+To formalize this idea a bit, consider a sample $Y_1, \ldots, Y_n \sim F$ where $F$ is a distribution function. This distribution function fully characterizes the features of a population. Now, imagine we are interested in a statistical functional $\psi$ of this distribution function.^[A statistical functional is a map from distribution $F$ to a real number or vector.] Obviously, we cannot observe the "true" $F$, nor can we observe $\psi(F)$ directly. Thankfully, we can observe the empirical distribution function $\hat{F}_n$ in a sample.^[$\hat{F}_n(x) = \frac{1}{n} \sum_{i=1}^n I(X_i \leq x), \quad \forall x \in \mathbb{R}.$] The plug-in principle states that if $\theta = \psi(F)$ is a statistical functional of the probability distribution $F$, and if some mild regularity conditions are satisfied,^[See @AroMil2019 [sec. 3.3.1] for an informal discussion of those conditions and @Was2006 for more details.] we can estimate $\theta$ using the sample analogue $\hat{\theta}_n = \psi(\hat{F}_n)$.
+
+As @AroMil2019 note, the implications for statistical practice are profound. When the number of observations increases, the empirical distribution function will tend to approximate the population distribution function, and our estimate $\hat{\theta}$ will tend to approach $\theta$.
+
+In a regression model, the parameters characterize the distribution of the response variable. As we shall see below, many important statistical quantities can be expressed as functions of this characterization. The plug-in principle thus justifies the proposed post-estimation workflow: transform parameter estimates into more intuitive and meaningful quantities, and treat the results as sample analogues to population characteristics.
+
+\index{Plug-in principle|)}
+
+A second way to motivate the transformation of parameter estimates is to draw on the invariance property of MLE. This is a fundamental concept in statistical theory, which highlights the efficiency and flexibility of MLEs. The invariance property can be stated as follows: if $\hat{\beta}$ is the MLE estimate of $\beta$, then for any function $\lambda(\beta)$, the MLE of $\lambda(\beta)$ is $\lambda(\hat{\beta})$ [@CasBer2024, p.259].
+
+This property is important because it tells us that the desirable properties of MLEs---consistency, efficiency, and asymptotic normality---are preserved under transformation. This is useful for practice because it simplifies the estimation of functions of distribution parameters: we can obtain estimates of those quantities with good properties simply by transforming the parameter estimates of our model.
+
+In sum, it is often useful to apply post-estimation transformations to the parameter estimates obtained by fitting a statistical model, in order to obtain more meaningful and interpretable quantities. This approach is well-grounded in statistical theory, via the plug-in principle and the invariance property of MLE.
+
+\index{Invariance property of MLE|)}
+
+### Predictions, counterfactual comparisons, and slopes
+
+To interpret the results of statistical and machine learning models, we will compute and report three broad classes of quantities of interest. This section offers a brief survey of these quantities. A full chapter is dedicated to each of them in Part II of this book (chapters [-@sec-predictions], [-@sec-comparisons], and [-@sec-slopes]).
+
+#### Predictions {.unnumbered}
+
+The first class of transformations to consider is the prediction:
+
+> *A prediction is the expected outcome of a fitted model for a given combination of predictor values.*
+
+Imagine that we fit a statistical model by minimizing some loss function $\mathcal{L}$ (e.g., by ordinary least squares):
+
+$$
+\hat{\beta} = \text{argmin}_{\beta} \; \mathcal{L}(Y, X, \mathbf{Z}; \beta),
+$$
+
+where $\beta$ is a vector of coefficients; $Y$ is the outcome variable; $X$ is a focal predictor which holds particular scientific interest; and $\mathbf{Z}$ is a vector of control variables. We can use the parameter estimates $\hat{\beta}$ to compute predictions for particular values of the focal predictor $X$ and control variables $\mathbf{Z}$:
+
+$$
+\hat{Y} = \Phi(X=x, \mathbf{Z}=\mathbf{z}; \hat{\beta}),
+$$
+
+where $\Phi$ is a function that transforms parameters and predictors into expected outcomes (see @sec-predictions for a worked example in the context of logistic regression). 
+
+A "profile" is a set of values at which we fix the predictors of a model:  $\{X=x, \mathbf{Z}=\mathbf{z}\}$. When a given profile is actually observed in the sample, we call the resulting $\hat{Y}$ a "fitted value." Alternatively, the analyst can fix the focal predictor and/or control variables to other domain-relevant values, even if the constructed profile was not actually observed in the sample. We then call the resulting $\hat{Y}$ a "synthetic" or "counterfactual" prediction.
+
+Predictions are a fundamental building block of the framework and workflow developed in this book. Indeed, the epigraph of this chapter could easily be extended to say: "parameters are a resting stone on the road to prediction, and predictions are a resting stone on the way to counterfactual comparisons." 
+
+#### Counterfactual comparisons {.unnumbered}
+
+The second class of transformations to consider is the counterfactual comparison:
+
+> *A counterfactual comparison is a function of two predictions made with different predictor values.*
+
+````{comment}
+A useful way to think about this question is to reframe it as a counterfactual query, which involves two predictions made with different predictor values. 
+````
+
+Imagine that we are interested in the effect of a change from 0 to 1 in the focal predictor $X$, on the predicted outcome $\hat{Y}$, holding control variables $\mathbf{Z}$ constant to some fixed value $\mathbf{z}$. First, we compute two counterfactual predictions:
+
+\begin{align*}
+\hat{Y}_{X=1,\mathbf{Z}} = \Phi(X=1, \mathbf{Z}=\mathbf{z}; \hat{\beta}) && \mbox{Treatment}\\
+\hat{Y}_{X=0,\mathbf{Z}} = \Phi(X=0, \mathbf{Z}=\mathbf{z}; \hat{\beta}) && \mbox{Control} 
+\end{align*}
+
+Then, we choose a function to compare the relative size of these two predictions. In the simplest case, the comparison function could be a simple difference:
+
+\begin{align*}
+\hat{Y}_{X=1,\mathbf{Z}=\mathbf{z}} - \hat{Y}_{X=0,\mathbf{Z}=\mathbf{z}}
+\end{align*}
+
+@sec-comparisons shows that this is a versatile strategy, which can be extended in at least three directions. First, depending on the model type, the outcome $Y$ could be expressed on a variety of scales. In a linear regression, $Y$ is a real number. In logistic or poisson regression models, the outcome would typically be a predicted probability or count.^[In generalized linear models, we can also make predictions on the link or response scale. The `marginaleffects` package allows both.]
+
+Second, the analyst can select different counterfactual values of the focal predictor $X$. In the example above, $X$ was fixed to 0 or 1. In @sec-comparisons, we will use different counterfactual values to quantify the effect of increasing $X$ by 1 or more units, of moving from one category to another, or of manipulating $X$ to take on two specific values.
+
+Third, a counterfactual comparison can be expressed as any function of two predictions. It can be a difference $Y_{X=1,\mathbf{Z}}-Y_{X=0,\mathbf{Z}}$, a ratio $\frac{Y_{X=1,\mathbf{Z}}}{Y_{X=0,\mathbf{Z}}}$, the lift $\frac{Y_{X=1,\mathbf{Z}}-Y_{X=0,\mathbf{Z}}}{Y_{X=0,\mathbf{Z}}}$, or even more complex (and unintelligible) functions like odds ratios.
+
+Importantly, a counterfactual comparison need not be causal. The analyst can give it a purely descriptive or associational interpretation if they wish: the association between changes in $X$ and $Y$, that is, the association between the model's inputs and outputs. However, when the conditions for causal 
+identification are satisfied, a counterfactual comparison can be interpreted as a measure of the "effect" of $X$ on $Y$ (@sec-challenge_causality).
+
+To sum up, the idea of a counterfactual comparison covers a broad class of quantities of interest, which include many of the most common ways to quantify the "effect" of $X$ on $Y$: contrasts, differences, risk ratios, lift, etc.
+
+#### Slopes {.unnumbered}
+
+The third class of transformations to consider is the slope:
+
+> *A slope is the partial derivative of the regression equation with respect to a focal predictor.*
+
+The slope is the rate at which a model's predictions change when we modify a focal predictor by a small amount. When causal identification conditions are satisfied, the slope will often be interpreted as the "effect" of a focal predictor $X$ on outcome $Y$. Slopes are closely related to counterfactual comparisons. They can be viewed as a normalized comparison between two predictions made with slightly different focal predictor values.
+
+Slopes are only defined for continuous numeric predictors. They can be obtained analytically using the rules of calculus, but this process can be difficult and tedious. `marginaleffects` computes derivatives numerically, which allows it to support complex models with arbitrary transformations.
+
+In some disciplines like economics and political science, slopes are known as "marginal effects," where "marginal" refers to the small change in the predictor value (see @sec-goals_estimand for an attempt to disambiguate).
+
+## Predictors {#sec-framework_grid}
+
+Predictions, counterfactual comparisons, and slopes are *conditional* quantities, which means that their values typically depend on all the predictors in a model.^[In this book, the words "predictor", "treatment," "regressor," and "explanator" are used as synonyms to refer generically to variables on the right-hand side of a regression equation.] Whenever an analyst reports one of these statistics, they must imperatively disclose where it was evaluated in the predictor space. They must answer questions like:
+
+> *Is the prediction, comparison or slope computed for a 20 year old student in the treatment group, or for a 50 year literary critic in the control group?*
+
+The answers to questions like this one can be expressed in terms of "profiles" and "grids."
+
+A profile is a combination of predictor values: $\{X,\mathbf{Z}\}$.^[As in the previous section, $X$ represents a "focal" predictor of interest, and $\mathbf{Z}$ a vector of control variables.] Profiles can be observed, partially synthetic, or purely synthetic. For example, we might consider the predicted outcome for a single actual person in our dataset (observed). Alternatively, we could compute a prediction for two actual participants in our study, with all their characteristics held at observed values, except for the `treatment` variable which we artificially fix to 1 (partially synthetic). Finally, we could make predictions for a purely hypothetical individual, with all predictors held at sample medians (purely synthetic).
+
+A grid is a collection of one or more profiles. It holds the distribution of predictor values for which we evaluate the quantities of interest. By defining a grid, the analyst gives an explicit answer to this question: what units do my estimates apply to?
+
+In this section, we use the `datagrid()` function from the `marginaleffects` package to construct and discuss a variety of grids. We will build these grids by reference to a simulated dataset with 10 observations on three variables: numeric, binary and categorical.
+
+```{r}
+library(marginaleffects)
+library(tinytable)
+
+set.seed(1024)
+N <- 10
+dat <- data.frame(
+  Num = rnorm(N),
+  Bin = rbinom(N, size = 1, prob = 0.5),
+  Cat = sample(c("A", "B", "C"), size = N, replace = TRUE)
+)
+```
+
+The code examples below rely on the "pipe" operator `|>` to send the output of `datagrid()` to the `tt()` function from the `tinytable` package. This allows us to display nicely formatted table for each grid.
+
+### Empirical grid {#sec-framework_grid_empirical}
+\index{Grid!empirical}
+
+The first type of grid to consider is the simplest: the empirical distribution is simply the observed dataset. It is a grid composed of all the actually observed profiles in our sample.
+
+```{r}
+dat |> tt()
+```
+
+Computing predictions on the empirical distribution is common practice in data analysis, as it yields one "fitted value" for each observation in the sample. Estimating counterfactual comparisons or slopes on the empirical distribution allows us to study how manipulating a focal predictor affects the predicted outcome, for observed units with different characteristics.
+
+Using the empirical distribution as a grid makes most sense when the observed sample is representative of the population that the analyst targets for inference. When working with convenience samples with very different characteristics from the population, it may make sense to use one of the grids described below or apply weights as described in @sec-weights and @sec-mrp.
+
+### Interesting grid {#sec-framework_grid_interesting}
+\index{Grid!interesting}
+
+If the analyst is interested in units with specific profiles, they can use the `datagrid()` function to create fully customized grids of "interesting" predictor values. This is useful, for example, when one wants to compute a prediction or slope for an individual with a very specific characteristics, e.g., a 50-year-old engineer from Belgium.
+
+By default, `datagrid()` creates a grid with all combinations of values for variables which are explicitly defined by the user, and fixes all unspecified variables to their mean or mode:
+
+```{r}
+datagrid(Bin = c(0, 1), newdata = dat) |> tt()
+```
+
+Note that the continuous `Num` variable was fixed to its mean value, and the categorical `Cat` variable to its modal value, because neither variable was specified explicitly by the user.
+
+`datagrid()` also accepts functions that are applied to the variables in the original dataset:
+
+```{r}
+datagrid(Num = range, Bin = mean, Cat = unique, newdata = dat) |> tt()
+```
+
+### Representative grid {#sec-framework_grid_representative}
+\index{Grid!representative}
+
+Analysts often want to use representative grids, where predictors are fixed at representative values such as their mean or mode. This is useful when the analyst wants to compute predictions, comparisons, or slopes for a "typical" or "average" unit in the sample.
+
+```{r}
+datagrid(grid_type = "mean_or_mode", newdata = dat) |> tt()
+```
+
+In Part II of the book, we will see how representative grids allow us to compute useful quantities such as "fitted value at the mean" or "marginal effect at the mean." In both cases, the quantities of interest are evaluated at a "central" or "representative" point in the predictor space.
+
+### Balanced grid {#sec-framework_grid_balanced}
+\index{Grid!balanced}
+
+A "balanced grid" is a grid built from all unique combinations of categorical variables, and where all numeric variables are held at their means.
+
+To create a balanced grid, we fix numeric variables at their means, and then take the cartesian product of the sets of unique values for all categorical variables. In this next table, `Num` is held at its mean, and the grid includes all combinations of unique values for `Bin` and `Cat`:
+
+```{r}
+datagrid(grid_type = "balanced", newdata = dat) |> tt()
+```
+
+Balanced grids are often used to analyze the results of factorial experiments in convenience samples, where the empirical distribution of predictor values is not representative of the target population. In that context, the analyst may wish to report estimates for each combination of treatments, that is, for each cell in a balanced grid. We will see balanced grids in action in @sec-predictions_aggregation, when computing marginal means.^[Balanced grids are used by default in some post-estimation software, such as `emmeans` [@emmeans].]
+
+### Counterfactual grid
+
+The last type of grid to consider is the counterfactual. Here, we duplicate the entire dataset, and create one copy for every combination of values that the analyst supplies.
+
+In this example, we specify that `Bin` must take on values of 0 or 1. Therefore, create two new copies of the full dataset. In the first copy, `Bin` is fixed to 0; in the second copy, `Bin` is fixed to 1. All other variables are held at their observed values. Since the original data had 10 rows, the counterfactual datasets will have 20:
+
+```{r}
+g <- datagrid(Bin = c(0, 1), grid_type = "counterfactual", newdata = dat)
+nrow(g)
+```
+
+We can inspect the first three row of each of both counterfactual versions of the data by filtering on the `rowidcf` column, which holds row indices:
+
+```{r}
+subset(g, rowidcf %in% 1:3) |> tt()
+```
+
+Notice that the both instances of each row is identical, except for the `Bin` variable, which was manipulated to generate counterfactuals. This kind of duplication is useful for the counterfactual analyses we will conduct in the *Counterfactual comparisons* and *Causality and G-computation* sections (Chapters [-@sec-comparisons] and [-@sec-gcomputation]).
+
+## Aggregation
+
+As noted above, predictions, counterfactual comparisons, and slopes are *conditional* quantities, in the sense that they typically depend on the values of all predictors in a model. When we compute these quantities over a grid of predictor values, we obtain a collection of point estimates: one for each row of the grid.
+
+If a grid has many rows, the many estimates that we generate can become unwieldy, making it more difficult to extract clear and meaningful insights from our models. To simplify the presentation of results, analysts might want to aggregate unit-level estimates to report more macro level summaries. We can think about several aggregation strategies:
+
+* No aggregation: Report all unit-level estimates.
+* Overall average: Report the average of all unit-level estimates.
+* Subgroup averages: Report the average of unit-level estimates within subgroups.
+* Weighted averages: Report the average of unit-level estimates, weighted by sampling probability or inverse probability weights.
+
+Aggregated estimates are useful and common in most scientific fields. In @sec-predictions, we will compute average predictions, or "marginal means." In @sec-comparisons, we will compute average counterfactual comparisons which, under the right conditions, can be interpreted as average treatment effects. In @sec-gcomputation, we will see that aggregating comparisons over different grids can also us to compute quantities such as the Average Treatment effect on the Treated (ATT) or the Average Treatment effect on the Untreated (ATU). In @sec-slopes, we will compute average slopes, or "average marginal effects."
+
+These kinds of aggregated estimates tend to be easier to interpret, and they can often be estimated with greater precision than unit-level quantities. However, they also come with important downsides.  Indeed, aggregated estimates is that they can mask interesting variation across the sample. For example, imagine that the effect of a treatment is strongly negative for some individuals, but strongly positive for others. In that case, an estimate of the average treatment effect could be close to 0 because positive and negative estimates cancel out. This aggregated quantity would not adequately capture the nature of the data generating process, and it could lead to misleading conclusions.
+
+## Uncertainty
+
+Whenever we report quantities of interest derived from a statistical model, it is essential to provide estimates of our uncertainty. Without standard errors and confidence intervals, readers cannot confidently assess if the reported values or relationships are genuine, or if they could merely be the product of chance.
+
+This section introduces three approaches to quantify uncertainty: the delta method, the bootstrap, and simulation-based inference.^[A fourth approach, conformal prediction, is discussed in @sec-conformal.] We discuss the intuition behind each of these strategies, and reinforce that intuition by implementing simple versions of each strategy "by hand." These examples are presented for pedagogical purposes; more robust and convenient implementations are supplied by the `marginaleffects` package, which we will use extensively in subsequent chapters.
+
+### Delta method {#sec-uncertainty_delta_method}
+\index{Delta method|(}
+
+The delta method is a statistical technique used to approximate the variance of a function of random variables. For example, data analysts often want to compare regression coefficients or predicted probabilities by subtracting them from one another. Such comparisons can be expressed as functions of a model's parameters, but the exact asymptotic distributions of those functions can be difficult to derive analytically. The delta method offers a convenient way to approximate those distributions. It allows us to compute standard errors for many of the quantities of interest that we will discuss in this book.
+
+Roughly speaking, the delta method states that if the distribution of a parameter is asymptotically normal, then the limiting distribution of a smooth function of this parameter is also normal [@Was2004]. This is a powerful result, which is especially useful in the context of maximum likelihood estimation, where parameters are expected to be asymptotically normal.
+
+The delta method is a useful way to quantify uncertainty. It is versatile and fast. Yet, the technique also has important limitations: it relies on a coarse linear approximation, its desirable properties depend on the asymptotic normality of the estimator, and it is only valid when a function is continuously differentiable in a neighborhood of its parameters. When analysts do not believe that these conditions hold, they can turn to the bootstrap or toward simulation-based inference instead (Sections [-@sec-framework_uncertainty_bootstrap] and [-@sec-framework_uncertainty_simulation]).
+
+The theoretical properties of the delta method are proved in many statistical textbooks [@Was2004;@Han2022a;@CasBer2024]. Instead of demonstrating them anew, the rest of this section provides a hands-on tutorial, with a focus on computation. The goal is to reinforce intuitions by illustrating how to compute standard errors in two cases: univariate and multivariate. Readers who are not interested in the manual computation of standard errors, and those who have forgotten too much calculus, may want to skip ahead to @sec-framework_test.
+
+#### Univariate delta method
+
+To start, we will use the delta method to compute the standard error of a function with one parameter: the natural logarithm of a single regression coefficient. Consider a setting with three measured variables: $Y$, $X$, and $Z$. With these variables in hand, the analyst estimates a linear regression model of this form:
+
+$$
+Y = \beta_1 + \beta_2 X + \beta_3 Z + \varepsilon
+$$ {#eq-delta_lin_mod}
+
+Let $\hat{\beta}_2$ be an estimator of the true parameter $\beta_2$. Assume $\hat{\beta}_2$ is unbiased, such that $E[\hat{\beta}_2] = \beta_2$. We know that the variance of $\hat{\beta}_2$ is $\text{Var}(\hat{\beta}_2)$, but our ultimate goal is to compute the variance of a specific function of the estimator: $\text{Var}\left [\log(\hat{\beta}_2) \right ]$.
+
+We start by applying a Taylor series expansion. This mathematical tool allows us to rewrite smooth functions as infinite sums of derivatives and polynomials. This is a useful way to simplify and approximate complex functions. Generically, the Taylor series of a function $g(x)$ about a point $a$ is given by:
+
+$$
+g(x) = g(a) + g'(a)(x - a) + \frac{g''(a)}{2!}(x - a)^2 + \cdots + \frac{g^{(n)}(a)}{n!}(x - a)^n + \cdots,
+$$ {#eq-taylor}
+
+where $g^{(n)}(a)$ denotes the $n$th derivative of $g(x)$ evaluated at $x = a$.
+
+@eq-taylor is an infinite series, so it is not practical (or possible) to compute all its terms. In real-world applications, we thus truncate the series by dropping higher order terms. For instance, we can construct a first-order Taylor series by keeping only the first two terms on the right-hand side of @eq-taylor.
+
+We leverage this idea by approximating $\log(\hat{\beta}_2)$ using a first-order Taylor series about the mean ($\beta_2$), and by inserting this approximation in the variance operator:^[Recall that the derivative of $\log(\beta_2)$ is $1/\beta_2$.]
+
+$$
+\text{Var}\left [\log(\hat{\beta}_2)\right ] \approx \text{Var} \left [\log(\beta_2) + \frac{1}{\beta_2}(\hat{\beta}_2 - \beta_2)\right ]
+$$ {#eq-taylor_log}
+
+The linearized approximation in @eq-taylor_log is useful because it allows further simplification. First, we know that constants like $\beta_2$ contribute nothing to a variance, which implies that some of the terms drop out. Second, we can apply the scaling property of variances^[Scaling property of variance: Let $a$ be a constant and $\lambda$ be a random variable, then $\text{Var}[a\lambda]=a^2\text{Var}[\lambda]$.] to rewrite the expression as:
+
+$$
+\text{Var}\left [\log(\hat{\beta}_2)\right ] \approx \frac{1}{\hat{\beta}_2^2}\text{Var} \left [\hat{\beta}_2\right ] 
+$$ {#eq-taylor_log_var}
+
+@eq-taylor_log_var gives us a formula to approximate the variance of $\log(\hat{\beta}_2)$. This formula is expressed in terms of two quantities that are easy to compute: the regression coefficient estimate and the square of its standard error. 
+
+To see how this formula can be applied, let's simulate data that conform to @eq-delta_lin_mod, and use it to fit a linear regression model:
+
+```{r}
+X <- rnorm(100)
+Z <- rnorm(100)
+Y <- 1 * X + 0.5 * Z + rnorm(100)
+dat <- data.frame(Y, X, Z)
+mod <- lm(Y ~ X + Z, data = dat)
+summary(mod)
+```
+
+The true mean $\beta_2$ is 1, but the estimated mean $\hat{\beta}_2$ is:
+
+```{r}
+#| eval: false
+b <- coef(mod)[2]
+b
+```
+```{r}
+#| echo: false
+b <- coef(mod)[2]
+b <- unname(b)
+b
+```
+
+The estimated variance is:
+
+```{r}
+v <- vcov(mod)[2, 2]
+v
+```
+
+The natural logarithm of our estimate, $\log(\hat{\beta}_2)$, is:
+
+```{r}
+log(b)
+```
+
+Using @eq-taylor_log_var, we compute the delta method estimate of $\text{Var}\left [\log(\hat{\beta}_2)\right ]$. Then, we take the square root to obtain the standard error of $\log(\hat{\beta}_2)$:
+
+```{r}
+#| eval: false
+sqrt(v / b^2)
+```
+```{r}
+#| echo: false
+unname(sqrt(v / b^2))
+```
+
+To verify that this result is correct, we can use the `hypotheses()` function from the `marginaleffects` package. @sec-hypothesis will offer a detailed tutorial on the use of that function. For now, it suffices to note that `hypotheses()` allows us to compute arbitrary functions of model parameters, along with associated standard errors.
+
+```{r}
+library(marginaleffects)
+hypotheses(mod, "log(b2) = 0")
+```
+
+Reassuringly, the standard error that we computed "manually" for $\log(\hat{\beta}_2)$ is the same as the one obtained "automatically" by calling `hypotheses()`.
+
+
+#### Multivariate delta method
+
+The univariate version of the delta method can be generalized to the multivariate case. Let $\mathcal{B}=\{\beta_1,\beta_2,\ldots,\beta_k\}$ be a vector of input parameters, and $\Theta=\{\theta_1,\theta_2,\ldots,\theta_n\}$ represent the vector-valued output of an $h$ transformation. For example, the $\mathcal{B}$ input could a vector of regression coefficients. $\Theta$ could be a single summary statistic, or it could be a vector of length $n$ with one fitted value per observation in the dataset (see @sec-predictions). 
+
+Our goal is to compute standard errors for each element of $\Theta$. To do this, we express the multivariate delta method in matrix notation:
+
+$$
+\operatorname{Var}\left(h(\mathcal{B})\right) = J^T \cdot \operatorname{Var}\left (\mathcal{B}\right ) \cdot J,
+$$ {#eq-delta_multivar}
+
+where $h(\mathcal{B})$ is a function of the parameter vector $\mathcal{B}$ and $\text{Var}(h(\mathcal{B}))$ is the variance of that function. 
+
+$J$ is the Jacobian of $h$. The number of rows in that matrix is equal to the number of parameters in the input vector $\mathcal{B}$. The number of columns in $J$ is equal to the number of elements in the output vector $\Theta$, that is, equal to the number of transformed quantities of interest that $h$ produces. The element in the $i$^th^ row and $j$^th^ column of $J$ is a derivative which characterizes the effect of a small change in $\beta_i$ on the value of $\theta_j$.
+
+$$
+\begingroup
+\renewcommand*{\arraystretch}{1.5}
+J = \begin{bmatrix}
+\frac{\partial \theta_1}{\partial \beta_1} & \frac{\partial \theta_2}{\partial \beta_1} & \cdots & \frac{\partial \theta_n}{\partial \beta_1} \\
+\frac{\partial \theta_1}{\partial \beta_2} & \frac{\partial \theta_2}{\partial \beta_2} & \cdots & \frac{\partial \theta_n}{\partial \beta_2} \\
+\vdots & \vdots & \ddots & \vdots \\
+\frac{\partial \theta_1}{\partial \beta_k} & \frac{\partial \theta_2}{\partial \beta_k} & \cdots & \frac{\partial \theta_n}{\partial \beta_k}
+\end{bmatrix}
+\endgroup
+$$
+
+Now, let's go back to the linear model defined by @eq-delta_lin_mod, with coefficients $\beta_1$, $\beta_2$, and $\beta_3$. Imagine that we want to estimate the difference between the 2nd and 3rd coefficients of this model. This difference can be expressed as the single output $\theta$ from a function $h$ of three coefficients:
+
+$$
+\theta = h(\beta_1,\beta_2,\beta_3) = \beta_2 - \beta_3,
+$$ {#eq-delta_lin_diff}
+
+or
+
+```{r}
+#| eval: false
+b <- coef(mod)
+b[2] - b[3]
+```
+```{r}
+#| echo: false
+b <- coef(mod)
+unname(b[2] - b[3])
+```
+
+To quantify the uncertainty around $\theta$, we use the multivariate delta method formula. In @eq-delta_multivar, $\text{Var}(\mathcal{B})$ refers to the variance-covariance matrix of the regression coefficients, which we can extract using the `vcov()` function:
+
+```{r}
+V <- vcov(mod)
+V
+```
+
+The $J$ matrix is defined by reference to the $h$ function. In @eq-delta_lin_diff, $h$ accepts three parameters as inputs and returns a single value. Therefore, the corresponding $J$ matrix must have 3 rows and 1 column. We populate this matrix by taking partial derivatives of @eq-delta_lin_diff with respect to each of the input parameters:
+
+$$
+\begingroup
+\renewcommand*{\arraystretch}{1.5}
+J =
+\left [
+\begin{matrix}
+\frac{\partial \theta}{\beta_1} \\
+\frac{\partial \theta}{\beta_2} \\
+\frac{\partial \theta}{\beta_3}
+\end{matrix} 
+\right ] 
+=
+\left [
+\begin{matrix}
+0 \\
+1 \\
+-1
+\end{matrix}
+\right ]
+\endgroup
+$$
+
+Having extracted $\text{Var}(\mathcal{B})$ and defined an appropriate $J$ for the quantity of interest $\theta$, we now use @eq-delta_multivar to compute the standard error:
+
+```{r}
+#| eval: false
+J <- matrix(c(0, 1, -1), ncol = 1)
+variance <- t(J) %*% V %*% J
+sqrt(variance)
+```
+```{r}
+#| echo: false
+J <- matrix(c(0, 1, -1), ncol = 1)
+V <- vcov(mod)
+se <- drop(sqrt(t(J) %*% V %*% J))
+se
+```
+
+We have thus estimated that the difference between $\beta_2$ and $\beta_3$ is `{r} format(b[2] - b[3], digits = 3)`, and that the standard error associated with this difference is `{r} format(se, digits = 3)`. Again, we can check this "manual" result against the output of the `hypotheses()` function:
+
+```{r}
+hypotheses(mod, hypothesis = "b2 - b3 = 0")
+```
+
+Reassuringly, the results are identical.
+
+#### Robust or clustered standard errors
+
+The calculations above rely on a "classical" estimate of the variance-covariance matrix, which assumes that the variance of the errors have constant variance ("homoskedastic"). In some cases, users may want alternative variance estimators to report standard errors that are "robust" to heteroskedasticity and autocorrelation, or that take into account the "clustered" nature of a dataset. 
+
+To achieve this, all we have to do is substitute the $\text{Var}(\mathcal{B})$ matrix by a suitable alternative. For example, using the heteroskedasticity-robust variance-covariance matrix produced by the `sandwich` package for `R` [@sandwich1], we get a slightly different standard error:
+
+```{r} 
+#| eval: false
+library(sandwich)
+V_robust <- vcovHC(mod)
+sqrt(t(J) %*% V_robust %*% J)
+```
+```{r} 
+#| echo: false
+library(sandwich)
+V_robust <- vcovHC(mod)
+drop(sqrt(t(J) %*% V_robust %*% J))
+```
+
+All estimation functions in the `marginaleffects` package have a `vcov` argument which allows us to report robust or clustered standard errors automatically:
+
+```{r}
+hypotheses(mod, hypothesis = "b2 - b3 = 0", vcov = "HC3")
+```
+
+In sum, the delta method is a simple, fast, and flexible approach to obtain standard errors for a vast array of quantities of interest. It is the default approach implemented by all the functions in the `marginaleffects` package. In the next sections, we consider two alternatives: the bootstrap and simulation-based inference.
+\index{Delta method|)}
+
+### Bootstrap {#sec-framework_uncertainty_bootstrap}
+\index{Bootstrap}
+
+The Bootstrap is a method pioneered by Bradley Efron and colleagues in the 1970s and 1980s [@EfrTib1994]. It is a powerful strategy to quantify uncertainty about statistics of interest.^[The notation and ideas in this section follow @Han2022b.]
+
+Consider $T_n$, a statistic we wish to compute. $T_n$ is a function of an outcome $y_n$, some regressors $\mathbf{x}$, and the unknown population distribution function $F$: 
+
+$$T_n = T_n ((y_1,\mathbf{x}_1),\dots,(y_n,\mathbf{x}_n),F)$$
+
+In our running example, $y_n$ is `bill_length_mm`, $\mathbf{x}_n$ is a vector of binary variables representing different values of `island`, and $T_n$ is the statistic obtained by regressing $y_n$ on $\mathbf{x}_n$, and by taking a linear combination of the resulting coefficient estimates.
+
+The statistic of interest $T_n$ is characterized by its own distribution function $G$, itself a function of $F$. If we knew $F$, then $G$ would immediately follow. The key idea of the bootstrap is to use simulations to approximate $F$, and then to use that approximation when quantifying uncertainty around the statistic of interest.
+
+How do we approximate $F$ in practice? Since the 1980s, many different variations on bootstrap simulations have been proposed. A survey of this rich literature lies outside the scope of this book, but it is instructive to illustrate one of the simplest approaches: the nonparametric bootstrap algorithm. The idea is to build several simulated datasets by drawing observations with replacement from the observed sample.^[We draw with replacement, otherwise each bootstrap sample would exactly replicate the original data.] Then, with those datasets in hand, we can estimate the statistic of interest in all of those samples.
+
+To illustrate, here is a minimalist implementation of the bootstrap algorithm in `R`. First, we define a `statistic` function which extracts coefficient estimates from a model object and takes a linear combination of them: $\beta_2-\beta_3$.^[We use the `drop()` function to convert the default output---a one-cell matrix---to a scalar.]
+
+```{r}
+#| cache: true
+# statistic of interest: linear combination of model coefficients
+statistic <- \(model) drop(c(0, 1, -1) %*% coef(model))
+```
+
+Then, we implement the bootstrap algorithm with 10,000 replicates:
+
+```{r}
+# 10000 bootstrap replicates
+theta <- vector(length = 10000)
+for (i in seq_along(theta)) {
+  # draw bootstrap sample
+  idx <- sample(1:nrow(dat), nrow(dat), replace = TRUE)
+  boot_dat <- dat[idx,]
+  # estimate statistic
+  boot_mod <- lm(Y ~ X + Z, data = boot_dat)
+  theta[i] <- statistic(boot_mod)
+}
+```
+
+Finally, we take quantiles of the bootstrap distribution of the statistic to create confidence interval:
+
+```{r}
+sprintf("%.3f [%.3f, %.3f]", 
+    statistic(mod),
+    quantile(theta, .025),
+    quantile(theta, .975)
+)
+```
+
+
+Bootstrapping, particularly in its nonparametric form, is a versatile technique that estimates the sampling distribution of a statistic by resampling the data. It is widely applicable, especially when the underlying distribution is unknown or complex, making it a powerful tool for deriving standard errors and confidence intervals. However, bootstrapping can be computationally intensive, particularly for large datasets or complex models. In addition, selecting an adequate resampling scheme can be challenging when the data-generating process is complex, as improper choices can lead to biased or invalid results.
+
+### Simulation {#sec-framework_uncertainty_simulation}
+\index{Simulation-based inference}
+
+Yet another strategy to compute uncertainty estimates for quantities of inference is simulation-based inference. This method is an alternative to traditional analytical approaches, leveraging power of computational simulations to estimate the variability of a given parameter. One of the earliest applications of this approach can be found in @KriRob1986, who use simulations to quantify the sampling uncertainty around estimates of elasiticities in a regression modelling context. @KinTomWit2000 subsequentily popularized the strategy and its implementation in the `CLARIFY` software.
+
+The foundation of this approach assumes that the regression-based estimator follows a normal distribution. This assumption allows us to use the properties of the multivariate normal distribution to simulate numerous potential outcomes. The steps involved in this process are as follows:
+
+1. *Simulate parameters*: Begin by drawing many sets of parameters from a multivariate normal distribution. The mean of this distribution is the estimated vector of coefficients obtained from the regression analysis, and the variance corresponds to the estimates covariance matrix of these coefficients.
+2. *Transform parameters*: Next, each simulated set of coefficients is transformed to generate multiple versions of the quantity of interest.
+3. *Summarize draws*: Finally, construct a confidence interval for the quantity of interest by taking quantiles of the simulated quantities.
+
+Intuitively, this process of drawing simulated quantities can be thought of as an "informal" Bayesian posterior simulation, as suggested by @Rai2024. While it does not strictly follow Bayesian methods, it shares a similar philosophy of using the distribution of simulated parameters to infer the uncertainty around the estimated quantity. By repeatedly sampling from the parameter space, we can gain a clearer picture of the possible variability and thereby construct more reliable confidence intervals.
+
+Implementing this form of simulation-based inference is relatively easy:
+
+```{r}
+#| cache: true
+# Step 1: Simulate alternative parameters
+library(mvtnorm)
+draws <- rmvnorm(10000, coef(mod), vcov(mod))
+
+# Step 2: Transform the parameters
+theta <- draws %*% c(0, 1, -1)
+
+# Step 3: Summarize draws
+sprintf("%.3f [%.3f, %.3f]", 
+    statistic(mod),
+    quantile(theta, .025),
+    quantile(theta, .975)
+)
+```
+
+Note that the simulation-based confidence interval is slightly different than those obtained via bootstrap or delta method, but generally of the same magnitude.
+
+Simulation-based inference is easy to implement, convenient, and it applies to a broad range of models. It trades the analytic approximation of the delta method, which relies on Taylor-series expansions, for a numerical approximation through simulation. Although simulation-based inference tends to be more computationally expensive than the delta method, it is usually faster than bootstrapping, which requires refitting the model multiple times.
+
+## Test {#sec-framework_test}
+
+@sec-hypothesis introduces two essential statistical testing procedures: null hypothesis and equivalence tests. These procedures are widely used in data analysis, providing powerful tools for making informed decisions based on model outputs.
+
+Null hypothesis tests allow us to determine if there is sufficient evidence to reject a presumed statement about a quantity of interest. An analyst could check if there is enough evidence to *reject* statements such as:
+
+* *Parameter estimates:* The first regression coefficient in a model equals 1.
+* *Predictions:* The predicted number of goals in a game is two.
+* *Counterfactual comparison:* The effect of a new medication on blood pressure is null.
+* *Slope:* The association between education and income is zero.
+
+Equivalence tests, on the other hand, are used to demonstrate that the difference between an estimate and some reference set is "negligible" or "unimportant." For instance, we could use an equivalence test to *support* statements such as:
+
+* *Parameter estimates*: The first regression coefficient in a model is practically equal to 1.
+* *Predictions*: The predicted probability scoring a goal not meaningfully different from 2.
+* *Counterfactual comparisons*: The effect of a new medication on blood pressure is essentially the same as the effect of an older medication.
+* *Slope*: 
+
+The `marginaleffects` package allows us to compute null hypothesis and equivalence tests on raw parameter estimates, as well as for all the quantities estimated by the package: predictions, counterfactual predictions, and slopes. Crucially, `marginaleffects` can conduct both types of tests on arbitrary (non-)linear functions of multiple estimates. This is an extremely powerful feature which, among other things, allows us to answer complementary questions like:
+
+* *Null hypothesis test*: Can I reject the hypothesis that two treatments have the same effect?
+* *Equivalence test*: Can I show that two treatments have practically equivalent effects?
+
+In Part II of this book, we dive deeper into each of the components of the framework, and show how to use the `marginaleffects` package to operationalize them.
