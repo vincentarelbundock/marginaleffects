@@ -36,7 +36,8 @@ get_by <- function(
                 by[[v]] <- as.numeric(by[[v]])
             }
         }
-        estimates[by, by := by, on = idx]
+        estimates = merge(estimates, by, by = idx)
+        # estimates[by, by := by, on = idx]
         bycols <- "by"
     }
 
@@ -82,3 +83,4 @@ get_by <- function(
 
     return(estimates)
 }
+
