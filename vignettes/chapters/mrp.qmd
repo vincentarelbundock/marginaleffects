@@ -1,0 +1,369 @@
+```{r}
+#| cache: false
+#| echo: false
+#| warning: false
+#| message: false
+source("code/load.R")
+options(tinytable_tt_digits = 4)
+library(brms)
+library(ggplot2)
+library(ggdist)
+```
+
+# Mixed effects regression and post stratification {#sec-mrp}
+
+In this case study, we use *mixed effects regression with post-stratification* (MRP) to estimate the level of support, in each American State, for budget cuts to police forces.^[This case study only includes code for `R`. The features illustrated here are on the roadmap for `Python`, but they are not supported yet.] This analysis, based on @Orn2023, has three main objectives.
+
+First, this chapter shows how to use the `marginaleffects` package to interpret estimates obtained by fitting mixed effects regression models (aka, multilevel, hierarchical, or random effects models). Second, it demonstrates that a consistent post-estimation workflow can be applied to interpret the results of both frequentist and bayesian models. In the Bayesian case, `marginaleffects` is particularly useful, because it allows us to conduct prior and posterior predictive checks directly on the scale of the actual quantities of the interest. Finally, this case study illustrates how to implement post-stratification with `marginaleffects`, to account for unrepresentative sampling. 
+
+The data we consider was originally collected by the 2020 Cooperative Election Study (CES), and distributed by @Orn2023. The primary outcome, `defund`, is a binary variable which measures whether respondents support cuts to police budgets.^[The survey firm asked respondents if they supported or opposed this policy: "Decrease the number of police on the street by 10 percent, and increase funding for other public services."] Predictors include individual-level covariates: `gender`, `race`, `age`, and `education`. The dataset also records if each survey respondent has been a member of the `military`, and which `state` they live in. 
+
+The `survey` data frame includes 3000 observations, randomly drawn from the full CES data.
+
+```{r}
+#| message: false
+#| warning: false
+survey <- readRDS("data/ces_survey.rds")
+str(survey)
+```
+
+## Mixed effects models
+
+Mixed effects models are a popular strategy to study data that can be characterized as having a "hierarchical", "nested", or "multi-level" structure. Examples of nested data include survey respondents in different states; repeated measures made on the same subjects or on clustered observations; or students nested in classrooms, schools, districts, and states. A thorough introduction to mixed effects modeling lies outside the scope of this chapter, but interested readers can refer to many great texts on the subject [@GelHil2006; @FinHolBolKel2019; @Bur2024].
+
+The parameters of a mixed effects model can be divided into two types: "fixed effects" and "random effects." Fixed effects are parameters that are assumed to be constant across all groups in the population. Random effects, on the other hand, are parameters that are allowed to vary across groups. A major benefit of mixed effects models is thus that they allow variation in parameters between subsets of the data. For example, by specifying a "random intercept," the analyst can let the baseline level of support for `defund` vary across US states. By including a "random slope" for the `gender` variable, they can allow the strength of association between `gender` and `defund` to vary from state to state.
+
+Importantly, the random parameters of a mixed effects model are not completely free to vary from group to group. Instead, the model typically imposes constraints on the shape of the distribution of parameters. In effect, this "regularizes" the parameters, allowing estimates for groups with small sample sizes to be informed by estimates for groups with larger sample sizes. This can reduce the risk of overfitting and stabilize estimates for smaller groups.
+
+## Frequentist
+
+Several software packages in `R` allow us to fit mixed effects models from a frequentist perspective, such as `lme4` [@lme4] and `glmmTMB` [@glmmTMB]. When using one of these packages, we define our models using the familiar formula syntax. The fixed components of our model are specified as we would any other predictor when fitting a linear or generalized linear model. Random effects components are specified using a special syntax with parentheses and a pipe `|` character.
+
+```r
+y = x + (1 + z | group)
+```
+
+The formula above indicates that `y` is the outcome variable; the association between `x` and `y` is captured by a fixed effect parameter; `1` is a random intercept which allows the baseline level of `y` to vary across groups; `z` is a random slope, allowing the strength of association between `z` and `y` to vary across groups; and `group` is the grouping variable.
+
+To model the probability of supporting cuts to police budgets, we use the `glmmTMB` package and fit a logistic regression model which includes a random intercept and random `gender` slope by state.
+
+```{r}
+#| warning: false
+library(glmmTMB)
+library(marginaleffects)
+
+mod <- glmmTMB(
+    defund ~ age + education + military + (1 + gender | state),
+    family = binomial,
+    data = survey)
+
+summary(mod)
+```
+
+The signs of these estimated coefficients are interesting, but their magnitudes are somewhat difficult to interpret. As in previous chapters, we can use the `marginaleffects` package to make sense of those estimates.
+
+To start, we use the `predictions()` function to compute the predicted probability of supporting cuts to police budgets for two hypothetical individuals: one from California, and one from Alabama.^[Note that the uncertainty estimates reported by `marginaleffects` for frequentist mixed effects models only take into account the variability in fixed effects parameters, and not in random effects parameters. As we will see below, bayesian modeling allows for more options in the quantification of uncertainy.]
+
+```{r}
+#| warning: false
+p <- predictions(mod, newdata = datagrid(
+    state = c("CA", "AL"),
+    gender = "Man",
+    military = 0,
+    education = "4 year",
+    age = "50-59"
+))
+p
+```
+
+Our model predicts that a survey respondent with these demographic characteristics has a `{r} sprintf("%.1f%%", p$estimate[1] * 100)` chance of supporting funding cuts if they live in California, but a `{r} sprintf("%.1f%%", p$estimate[2] * 100)` chance if they live in Alabama.
+
+To assess the strength of association between `age` and `defund`, we can use the `avg_comparisons()` function:
+
+```{r}
+#| warning: false
+avg_comparisons(mod, variables = "age")
+```
+```{r}
+#| warning: false
+#| echo: false
+cmp <- avg_comparisons(mod, variables = "age")$estimate
+cmp <- sprintf("%.0f", abs(cmp * 100))
+```
+
+The `age` of survey respondents is strongly related to their propensity to answer "yes" on the `defund` question. On average, our model predicts that moving from the younger age bracket (18-29) to the older one (70+) is associated with a reduction of `{r} cmp[5]` percentage points in the probability of supporting cuts to police staff.
+
+This brief example shows that we can apply the same workflow described in earlier chapters to interpet the results of mixed effects models. In the next section, we analyze a similar model from a Bayesian perspective.
+
+## Bayesian
+
+Bayesian regression analysis has a long history in statistics. Recent developments in computing, algorithm design, and software development have dramatically lowered the barriers to entry; they have made it much easier for analysts to estimate bayesian mixed effects models.^[A comprehensive treatment of bayesian modeling would obviously require more space than this short chapter affords. Interested readers can refer to many recent texts, such as @Gel2013, @McE2020 or @Bur2024.]
+
+A typical bayesian analysis involves several (often iterative) steps, including model formulation, prior specification, model refinement, estimation, and interpretation. Together, these steps form a "bayesian workflow" that allows analysts to go from data to insight [@Gel2020].
+
+This section illustrates how to use the `brms` package for `R` to fit bayesian mixed effects models, and how the `marginaleffects` package facilitates two important steps of the bayesian workflow: prior predictive checks and posterior summaries.
+
+The model that we consider here has the same basic structure as the frequentist model from the previous section. Expressed in terms of an `R` formula, it takes this form:
+
+```r
+defund ~ age + education + military + (1 + gender | state),
+```
+
+The `age`, `education`, and `military` variables are associated to fixed effect parameters, while the `gender` and intercept parameters are allowed to vary from state to state.
+
+### Prior predictive checks
+
+One important difference between bayesian and frequentist analysts, is that the former must explicitly specify priors over the parameters of their model. These priors can encode prior knowledge, beliefs, or information about the parameters in question. Some priors can have an important impact on the results of the analysis, so it is crucial to choose them carefully.
+
+Using the `priors` function from the `brms` package for `R`, we can easily specify different priors. For example, if there is a lot of uncertainty about the value of the parameters in our model, we can set "vague" or "diffuse" priors, say from a normal distribution with a large variance:
+
+```{r}
+library(brms)
+library(ggdist)
+
+priors_vague = c(
+  prior(normal(0, 1e6), class = "b"),
+  prior(normal(0, 1e6), class = "Intercept")
+)
+```
+
+In contrast, if the analyst is confident that the parameters should be closer to zero, they can choose a more informative (narrow) prior:
+
+```{r}
+priors_informative = c(
+  prior(normal(0, 0.2), class = "b"),
+  prior(normal(0, 0.2), class = "Intercept")
+)
+```
+
+For many analysts, choosing priors is a difficult exercise. Part of this difficulty is linked to the fact that we are often required to specify priors for parameters that are expressed on an unintuitive scale (@sec-framework). What do the coefficients of a mixed-effect logit model mean, and does it make sense to think that they are distributed normally with a variance of 0.1?
+
+To help answer this question, we can conduct prior predictive checks, that is, we can simulate quantities of interest from the pure model and priors, without considering any data at all. This allows us to check if different priors make sense, by looking at simulated quantities of interest that may have more intuitive interpretations than raw coefficients. On the basis of those results, we can refine the model purely based on our prior knowledge, before we let our views be influenced by the observed data.
+
+To conduct a prior predictive check in `R`, we begin by using the `brm()` function and its formula syntax to specify the model structure, with fixed and random parameters. Then, we set `family=bernoulli` to estimate a logistic regression model. We use the `prior` argument to specify the priors we want to use. In this case study, we will consider "vague" and "informative" priors in turn. Finally, we set `sample_prior="only"` to tell `brms` to ignore the dataset altogether, and to draw simulations only from priors.
+
+```{r}
+#| echo: true
+#| eval: false
+model_vague <- brm(
+    defund ~ age + education + military + (1 + gender | state),
+    family = bernoulli,
+    prior = priors_vague,
+    sample_prior = "only",
+    data = survey)
+
+model_informative <- brm(
+    defund ~ age + education + military + (1 + gender | state),
+    family = bernoulli,
+    prior = priors_informative,
+    sample_prior = "only",
+    data = survey)
+```
+```{r}
+#| echo: false
+#| eval: true
+model_vague <- brm(
+    defund ~ age + education + military + (1 + gender | state),
+    family = bernoulli,
+    prior = priors_vague,
+    sample_prior = "only",
+    data = survey,
+    refresh = 0, silent = 2)
+
+model_informative <- brm(
+    defund ~ age + education + military + (1 + gender | state),
+    family = bernoulli,
+    prior = priors_informative,
+    sample_prior = "only",
+    data = survey,
+    refresh = 0, silent = 2)
+```
+
+The `sample_prior` option is powerful. It allows to draw simulated coefficients from the model and priors, without looking at the data. But one problem remains: the results of this prior predictive check are still expressed on the same unintuitive scale as the model parameters:
+
+```{r}
+fixef(model_vague)
+```
+
+How can we know if these priors and the simulated results? One simple approach is to post-process prior-only `brms` model using `marginaleffects`. Using this strategy, we can compute any of the quantities of interest introduced earlier in this book, using only the information encoded by the model structure and prior distributions.
+
+For example, when we adopt vague priors, the average predicted value of `defund` for each `gender` is:
+
+```{r}
+avg_predictions(model_vague, by = "gender")
+```
+
+When using vague normal priors, the average predicted probability of supporting cuts to police budgets is centered at zero, with credible intervals that cover nearly the full $[0,1]$ interval. Unsurprisingly, the intervals are narrower when we use informative priors:
+
+```{r}
+avg_predictions(model_informative, by = "gender")
+```
+
+If the ultimate goal of our analysis is to compute an average treatment effect via G-Computation (Chapters [-@sec-comparisons] and [-@sec-gcomputation]), we can conduct a prior predictive check directly on that quantity. Once again, the intervals are much wider when using vague priors:
+
+```{r} 
+avg_comparisons(model_vague, variables = "military")
+
+avg_comparisons(model_informative, variables = "military")
+```
+
+### Posterior summaries
+
+Instead of specifying our own priors, we now fit the model to data using the default priors set up by the `brms` package for this kind of model:
+
+```{r}
+#| echo: true
+#| eval: false
+#| warning: false
+model <- brm(
+    defund ~ age + education + military + (1 + gender | state),
+    family = bernoulli,
+    data = survey)
+```
+```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+model <- brm(
+    defund ~ age + education + military + (1 + gender | state),
+    family = bernoulli,
+    silent = 2, refresh = 0,
+    data = survey)
+```
+
+Using this model, we consider the average predicted probability of respondent `defund=1` for respondents of either gender. By default, `marginaleffects` functions report the mean of posterior draws, along with compute the mean of the posterior distribution of draws, along with equal-tailed intervals:
+
+```{r}
+p <- avg_predictions(model, by = "military")
+p
+```
+
+On average, people who are not part of the military have a `{r} sprintf("%.1f%%", p$estimate[1] * 100)` chance of supporting cuts to police budgets. In contrast, survey respondents with military backgrounds have, on average, an estimated probability of `{r} sprintf("%.1f%%", p$estimate[2] * 100)` chance.
+
+As in @sec-comparisons, we can use the `avg_comparisons()` function to assess the strength of association between `age` and `defund`:
+
+```{r}
+#| eval: false
+avg_comparisons(model, variables = list(age = c("18-29", "70+")))
+```
+```{r}
+#| eval: true
+#| echo: false
+cmp <- avg_comparisons(model, variables = list(age = c("18-29", "70+")))
+cmp <- sprintf("%.1f", abs(cmp$estimate * 100))
+```
+
+On average, holding all other variables constant at their observed values, moving from the 18-29 to the 70+ age categories would be associated with a decrease of `{r} cmp` percentage points in the probability of supporting funding cuts.
+
+Recall that, in our model specification, we allowed the parameter associated to `gender` to vary from state to state. This means that our model could let the association between `gender` and `defund` to vary from state to state. Let's see if this is the case. 
+
+First, we call the `comparisons()` function with the `newdata` argument to compute risk differences for one individual per state, whose characteristics are set to the average or mode of the predictors:
+
+```{r}
+cmp <- comparisons(model,
+    variables = "gender", 
+    newdata = datagrid(state = unique))
+```
+
+Then, we sort the data, convert the `state` variable to a factor to preserve that order, and call `ggplot` to display the results:
+
+```{r}
+#| out-width: 100%
+#| fig-width: 10
+#| fig-asp: .3
+#| label: fig-bayes_gender_state
+#| fig-cap: "Average risk difference for a hypothetical individual with typical characteristics living in different states."
+cmp <- sort_by(cmp, ~estimate) |>
+    transform(state = factor(state, levels = state))
+
+ggplot(cmp, aes(y = estimate, ymin = conf.low, ymax = conf.high, x = state )) +
+    geom_hline(yintercept = 0, linetype = 3) +
+    geom_pointrange() + 
+    labs(x = "", y = "Average risk difference") +
+    theme(axis.text.x = element_text(angle = 90, vjust = .5))
+```
+
+The results in @fig-bayes_gender_state suggest that when we consider a hypothetical individual with mean or modal characteristics, risk difference in `defund` for different values of `gender` is very stable across states: it hovers around zero.
+
+When post-processing bayesian results, it is often useful to directly manipulate draws from the posterior distribution. To extract these draws, we can use the `posterior_draws()` function. This function can return several different types of objects, including data frames in "wide" or "long" formats, matrices, or as a `rvar` distribution object compatible with the `posterior` package. For instance, we can print the first 5 draws from the posterior distribution of average predictions with:
+
+```{r}
+draws <- avg_predictions(model) |> posterior_draws(shape = "long")
+draws[1:5, 1:2]
+```
+
+This allows us to compute various posterior summaries using standard `R` functions. For example, we can see that about `{r} sprintf("%.0f%%", 100 * mean(draws$draw > .4))` of the posterior density of the average prediction lies above 0.4:
+
+```{r}
+mean(draws$draw > .4)
+```
+
+## Post-stratification {#sec-mrp_poststratification}
+
+The sample that we used so far is relatively large: 3000 observations. But even if those observations were drawn randomly from the national population, they may still be insufficient to estimate state-level opinion. Indeed, some states are much more populous than others, and our dataset includes very few observations from certain areas of the country:
+
+```{r}
+sort(tapply(survey$state, survey$state, length))
+```
+
+This kind of disparity occurs in many contexts, such as when one estimates quantities like:
+
+- Presidential voting intentions in swing states, based on a national survey.
+- Psychological well-being of a population, using a web-based survey that oversamples young and highly-educated people.
+- Effect of a user interface change on website sales, based on an unbalanced sample of laptop or smartphone users.
+- Vaccination rates using data from healthcare providers who are overrepresented in affluent neighborhoods.
+
+To draw state-level inferences about `defund`, we will use the MRP approach, or mixed effects regression with poststratification. MRP is implemented in four steps:
+
+1. Model Fitting: A model is developed to predict the outcome of interest (e.g., support for police reform) based on individual-level characteristics from the survey (e.g., gender, education, race, age). This model incorporates the hierarchical data structure, using techniques like mixed effects modeling to estimate varying intercepts for different states.
+2. Constructing the Post-stratification Frame: A poststratification frame is created to represent the joint frequency distribution of predictor variables within each group of interest (e.g., proportions of men and women, age groups, education levels, and racial groups within each state). This information is typically sourced from the Census or other reliable data sets.
+3. Predict and Poststratify: Using the fitted model, predicted probabilities for the outcome are generated for each cell in the poststratification frame (e.g., the predicted probability that a white, middle-aged woman in California supports police reform). 
+4. Weighted average: Compute a weighted average of these predicted probabilities is calculated using population weights from the poststratification frame to produce the final MRP estimates.
+
+First, we estimate a mixed-effects model with random intercept by state. As @Orn2023 notes, the accuracy of MRP estimates depends on the predictive performance of this first-stage model, and may be affected by standard problems such as overfitting. Since we have already estimated such a model for previous examples, we simply use the same `brms` model object as before: `model`.
+
+Second, we construct the post-stratification frame, that is, a dataset that contains information about the prevalence of each possible predictor profile. In our case, the `demographics` post-stratification frame records the prevalence of socio-demographic characteristics for each state:^[Ideally, the `demographics` data frame would be "complete", in the sense that it would record the prevalence of every possible type of individual, in every state. Unfortunately, this is not always possible, when demographic information is not available for certain subsets of the population, for example in narrow groups, in less populous states.]
+
+```{r}
+demographics <- readRDS("data/ces_demographics.rds")
+head(demographics)
+```
+
+This table shows, for example, that about `{r} sprintf("%.3f%%", demographics$percent[1])` of the Alabama population are women between the ages of 18 and 29, with no high school degree, and no military experience. 
+
+The third step in MRP is to make predictions for each row of the poststratification frame. In other words, we use the `demographics` data frame as a grid instead of the empirical grid:
+
+```{r}
+p <- predictions(model, newdata = demographics)
+```
+
+Finally, we take a weighted average of these predictions by state, where weights are defined as the proportion of each demographic group in the state's population. To do this with marginaleffects, we modify the call above, specifying weights with the `wts` argument, and the aggregation unit with the `by` argument:
+
+```{r}
+p <- avg_predictions(model, 
+  newdata = demographics,
+  wts = "percent",
+  by = "state")
+head(p)
+```
+
+This command gives us one estimate per state. After adjusting for the demographic composition of the state of Alabama, our model estimates that the average probability of supporting cuts to police budgets is `{r} sprintf("%.1f%%", p$estimate[1] * 100)`, with a 95% credible interval of `{r} sprintf("[%.1f, %.1f]", p$conf.low[1] * 100, p$conf.high[1] * 100)`.
+
+To visualize the results, we can extract draws from the posterior distribution using the `posterior_draws()` function, and use the `ggdist` package to plot densities. @fig-mrp_ridge shows that the support for cuts to police budgets varies across states, with highest estimates in California and lowers in Wyoming.
+
+```{r}
+#| fig-cap: Estimated average probability of supporting cuts to police budgets, for each US state. Estimates obtained via Bayesian multi-level regression and post-stratification.
+#| fig.asp: 1.7
+#| label: fig-mrp_ridge
+library(ggdist)
+library(ggplot2)
+
+p <- p |>
+  posterior_draws(shape = "rvar") |>
+  sort_by(~ estimate) |>
+  transform(state = factor(state, levels = state))
+
+ggplot(p, aes(y = state, xdist = rvar)) + 
+  stat_slab(height = 2, color = "white") +
+  labs(x = "Posterior density", y = NULL)
+```

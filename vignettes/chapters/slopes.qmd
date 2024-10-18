@@ -1,0 +1,362 @@
+---
+bibliography: library.bib
+---
+
+# Slopes {#sec-slopes}
+
+```{r}
+#| cache: false
+#| echo: false
+source("code/load.R")
+```
+```{r}
+#| eval: false
+#| echo: false
+X <- seq(-5, 5, length.out = 1000)
+Y <- rbinom(N,  1, plogis(X))
+mod <- glm(Y ~ .3 * X, family = binomial)
+s <- slopes(mod)[c(250, 500, 750), ]
+s$intercept <- s$predicted - s$estimate * s$X
+s$x <- s$X - 1
+s$xend <- s$X + 1
+s$y <- s$predicted - 1 * s$estimate
+s$yend <- s$predicted + 1 * s$estimate
+plot_predictions(mod, condition = "X", vcov = FALSE) +
+    geom_segment(data = s, 
+      aes(x = x, xend = xend, y = y, yend = yend),
+      color = "orange", linetype = "dotted")
+```
+
+A slope measures the association between a change in a predictor $X$, and a change in the response $Y$, estimated at specific values of the covariates. Slopes are often the main quantity of interest in an empirical analysis, when the analyst is interested in an effect or in the association between two variables.
+
+Slopes belong to the same toolbox as the counterfactual comparison (@sec-comparisons). Both quantities are designed to answer a counterfactual query: What would happen to an outcome if one of the predictors were slightly different? Slopes allow us to model the "effect" of a change in a predictor $X$ on an outcome $Y$, holding all other predictors constant.
+
+## Quantity
+
+The terminology that researchers use when discussing slopes is woefully inconsistent. In some fields, like economics or political science, they are called "marginal effects." In that context, the word "marginal" refers to the effect of an infinitesimal change in one of the predictors on the outcome. In other disciplines, slopes may be called "trends," "velocity," or "partial effects."
+
+In this chapter, we use the terms "slopes" and "marginal effects" interchangeably to mean:
+
+> *Partial derivatives of the regression equation with respect to a predictor of interest.*
+
+Consider a simple linear model with outcome $Y$ and predictor $X$: 
+
+$$
+Y = \beta_0 + \beta_1 X +\varepsilon \\
+$$
+
+To find the slope of $Y$ with respect to $X$, we take the partial derivative:
+$$
+\frac{\partial Y}{\partial X} = \beta_1
+$$
+
+In this simple model, the slope is equivalent to the coefficient $\beta_1$. This identity explains why some analysts refer to regression coefficients as slopes. The identity also gives us a first clue about how to interpret slopes: in simple linear models, a one-unit increase in $X$ is associated with a $\frac{\partial Y}{\partial X}$ change $Y$, holding all other modeled covariates constant. This interpretation in terms of a unit change is a useful first cut, but it comes with major caveats.
+
+First, since we defined slopes as derivatives, in terms of an infinitesimal change in $X$, they can only be constructed for continuous numeric predictors. Analysts who are interested in the effect of a change in a categorical predictor should turn to counterfactual comparisons (@sec-comparisons).^[When the analyst calls the `slopes()` function, the `marginaleffects` package will automatically return counterfactual comparisons rather than slopes for categorical predictors.]
+
+Second, the partial derivative measures the slope of $Y$'s tangent at a very specific point in the predictor space. Thus, the interpretation of the slope as the effect of a one-unit change in $X$ on $Y$ must be seen as an approximation, valid in a small neighborhood of the predictors, for a small change in $X$. This approximation may not be good, especially when the regression function is non-linear, or when the scale of $X$ is small. Moreover, this implies that slopes are *conditional* quantities, in the sense that the slope of $Y$ with respect to a single predictor $X$ will often depend on the value of $X$, but also on the values of all the other predictors in the model.
+
+### Slope of a quadratic function
+
+To illustrate these ideas, let's consider a slightly more complex linear model, with predictor $X$ and its square:
+
+$$
+Y = \beta_0 + \beta_1 X + \beta_2 X^2 + \varepsilon
+$$ {#eq-slopes_simple_quadratic}
+
+The slope of $Y$ with respect to $X$ is:
+
+$$
+\frac{\partial Y}{\partial X} = \beta_1 + 2 \beta_2 X
+$$
+
+In this model, the effect of a small change in $X$ on $Y$ is not constant. It changes depending on the baseline value of $X$. Imagine that we fit @eq-slopes_simple_quadratic to a dataset using ordinary least squares, and that we obtain estimates $\hat{\beta}_0=\hat{\beta}_1 = 0$ and $\hat{\beta}_2 = -1$. We can plot the values $\hat{Y}$ predicted by this model with:
+
+```{r}
+#| label: fig-slopes_quadratic
+#| fig-cap: $Y=0 + 0 \cdot X - X^2$
+#| warning: false
+#| fig-asp: .4
+b0 <- b1 <- 0
+b2 <- -1
+ggplot() + 
+  geom_function(fun = function(x) b0 + b1 * x + b2 * x^2) +
+  geom_abline(slope = c(4, 0, -4), intercept = c(4, 0, 4), linetype = 3) +
+  annotate("point", x = c(-2, 0, 2), y = c(-4, 0, -4)) +
+  lims(x = c(-4, 4), y = c(-7, 0.5))
+```
+
+@fig-slopes_quadratic shows that when $X$ increases, $Y$ starts to increase. As $X$ rises further, however, $Y$ creeps back down into negative territory.
+
+Now, recall that the slope of the tangent measures the strength of association between $X$ and $Y$ at a specific point in the predictor space. All the tangents share the same equation, $\frac{\partial Y}{\partial X}=-2X$, but the numerical values of their slopes will depend on the neighborhood of $X$ that we are interested in. To see this, consider the three tangents drawn as dotted lines in @fig-slopes_quadratic. Looking at their respective slopes tells us three things:
+
+1. When $X<0$, the $-2X$ slope of the tangent is positive: a small increase in $X$ is associated with an increase in $Y$.
+2. When $X=0$, the $-2X$ slope of the tangent is null: a small change in $X$ is associated with essentially no change in $Y$.
+3. When $X>0$, the $-2X$ slope of the tangent is negative: a small increase in $X$ is associated with a decrease in $Y$.
+
+In sum, the slopes tell us about the local behavior of the response curve. They tell us, for set values of the predictors, if the relationship between $X$ and $Y$ is positive, null, or negative. The magnitude of slopes also carry information the strength of that relationship.
+
+
+### Slope of a logistic function
+
+To reinforce these ideas, we now consider another example: a logistic regression model. The left-hand side of our equation is the probability that $Y$ equals one:
+
+$$
+Pr(Y=1) = \Phi \left (\beta_1 + \beta_2 X + \beta_3 Z \right),
+$$ {#eq-slopes_logit_equation}
+
+where $\Phi$ is the logistic function, $X$ is a numeric predictor, and $Z$ is a binary predictor. Imagine that the true coefficients are $\beta_1=0, \beta_2=1, \beta_3=2$. We can simulate a dataset that follows this data generating process as follows:
+
+```{r}
+library(marginaleffects)
+set.seed(48103)
+N <- 1e6
+X <- rnorm(N, sd = 2)
+Z <- rbinom(N, 1, .5)
+p <- plogis(0 + 1 * X + 2 * Z)
+Y <- rbinom(N, 1, p)
+dat <- data.frame(Y, X, Z)
+head(dat)
+```
+
+Now, we fit a logistic regression model using the `glm()` function, print the coefficient estimates, and call the `plot_predictions()` function to visualize the response function at different values of $X$ and $Z$:
+
+```{r}
+#| label: fig-slopes_logit
+#| fig-cap: The logistic model's response function depends on both the values of $X$ and $Z$.
+mod <- glm(Y ~ X + Z, data = dat, family = binomial)
+b <- coef(mod)
+print(b)
+
+plot_predictions(mod, condition = c("X", "Z"))
+```
+
+```{r}
+#| echo: false
+bs <- sprintf("%.3f", b)
+```
+
+The key insight from @fig-slopes_logit is that the slope of the logistic function is far from constant. Increasing $X$---moving from left to right on the graph---has a different effect on the estimated probability that $Y=1$, depending on the initial value of $X$ itself. At low baseline values of $X$, an increase in $X$ results in a small change in $Pr(Y=1)$; the curve is flat. At intermediate baseline values of $X$, a change in $X$ results in a larger shift in $Y$; the curve is steep in the middle of the graph. At high baseline values of $X$, a change in $X$ does not change $Pr(Y=1)$ much; the curve is flat again on the right side of the graph.
+
+Moreover, @fig-slopes_logit shows that the slope of $Pr(Y=1)$ with respect to $X$ depends on the values of the other predictors in the model. Indeed, the slope is steeper when $X=0 \land Z=0$, and flatter when $X=0 \land Z=1$. In other words, the positive effect of $X$ on $Pr(Y=1)$ is stronger when $X=0 \land Z=0$ than when $X=0 \land Z=1$.
+
+To show this more formally, we can compute the partial derivative with respect to $X$ using the chain rule:
+
+$$
+\frac{\partial Pr(Y=1)}{\partial X} = \beta_2 \cdot \phi(\beta_1 + \beta_2 X + \beta_3 Z),
+$$ {#eq-slopes_logit}
+
+where $\phi$ is the logistic density function, implemented as `dlogis()` in `R`. Now, plug-in the coefficient estimates into the equation above:
+
+$$
+\frac{\partial Pr(Y=1)}{\partial X} = 1 \cdot \phi(0 + 1 \cdot X + 2 \cdot Z),
+$$
+
+Finally, we can evaluate this expression to obtain the slope of $Pr(Y=1)$ with respect to $X$ at specific values of $X$ and $Z$. When, $X=0 \land Z=0$, the effect of a small change in $X$ on $Pr(Y=1)$ is:
+
+```{r}
+X <- Z <- 0
+1 * dlogis(0 + 1 * X + 2 * Z)
+```
+
+When $X=0 \land Z=1$, the effect of a small change in $X$ on $Pr(Y=1)$ is: 
+
+```{r}
+Z <- 1
+1 * dlogis(0 + 1 * X + 2 * Z)
+```
+
+The results above confirm the intuition from @fig-slopes_logit. However, steps we had to take in order to reach this conclusion were cumbersome. Instead of computing slopes manually, we can use the `slopes()` function from the `marginaleffects` package. 
+
+The syntax of this function is very similar to that of the `comparisons()` function introduced in @sec-comparisons. The `variables` argument specifies the predictor of interest, and the `newdata` argument specifies the values of the other predictors at which we want to evaluate the slope. For example, we can replicate the previous results with:
+
+```{r}
+slopes(mod,
+    variables = "X",
+    newdata = datagrid(X = 0, Z = c(0, 1)))
+```
+
+Again, these results confirm that, starting from a baseline value of $X=0$, increasing the value of $X$ will have a stronger effect on $Pr(Y=1)$ if $Z=0$.
+
+
+<!--
+### Slope of a complex model
+
+The `slopes()` function of the `marginaleffects` package can easily estimate the slope of this function for any value of $X$, based on a regression model fit to noisy data. Consider this simulation, where we estimate the slope of the response with respect to $X$, at values of $X$ between -1 and 1:
+
+```{r}
+#| eval: false
+library(marginaleffects)
+
+x <- rnorm(1e5)
+y <- - x^2 + rnorm(1e5)
+dat <- data.frame(y, x)
+mod <- lm(y ~ x + I(x^2), dat)
+
+# truth: y = -2 * x
+-2 * c(-1, 0, 1)
+
+# estimate
+slopes(mod,
+  # slope of y with respect to x
+  variables = "x",
+  # evaluated where x in {-1, 0, 1}
+  newdata = datagrid(x = c(-1, 0, 1)))$estimate
+```
+
+This result suggests that the effect of a change in $x$ on $y$ depends on the level of $x$. When $x$ is large and positive, an increase in $x$ is associated to a large decrease in $y$. When $x$ is small and positive, an increase in $x$ is associated to a small decrease in $y$. When $x$ is a large negative value, an increase in $x$ is associated with an increase in $y$.
+
+
+```{r}
+library(marginaleffects)
+library(patchwork)
+library(ggplot2)
+N <- 1e5
+X <- runif(N, -5, 5)
+Y <- cos(X) + rnorm(N)
+
+dat <- data.frame(X, Y)
+
+mod <- lm(Y ~ I(cos(X)), data = dat)
+
+p1 <- plot_predictions(mod, condition = "X") +
+    geom_vline(xintercept = c(-pi, 0, pi), linetype = "dotted")
+
+p2 <- plot_slopes(mod, variables = "X", condition = "X") +
+    geom_hline(yintercept = 0, linetype = "dotted") +
+    geom_vline(xintercept = c(-pi, 0, pi), linetype = "dotted")
+
+p1 / p2
+```
+-->
+
+## The marginal effects zoo
+
+Slopes are conditional quantities, in the sense that they typically vary based on the values of all the predictors in model. Every row of a dataset has its own slope. In that respect, slopes are no different than the predictions and counterfactual comparisons that we studied in chapters [-@sec-predictions] and [-@sec-comparisons]. As such, we could proceed with the exposition by following the same steps as before:
+
+1. Quantity
+2. Grid
+3. Aggregation
+4. Uncertainty
+5. Tests
+
+To avoid belaboring the point, this section will instead focus on the most common types of slopes that analysts encounter in practice. Unfortunately, the terminology used to describe these quantities is a quagmire, full of inconsistencies and outright contradictions (see @sec-goals_estimand). Thankfully, the conceptual framework introduced in @sec-framework gives us the tools necessary to make sense of common terms.
+
+Throughout, we will focus on a variation on the model used in previous chapters, a logistic regression model in which the `incentive` predictor is interacted with both `distance` and its square:
+
+```{r}
+library(marginaleffects)
+library(modelsummary)
+library(patchwork)
+library(ggplot2)
+
+dat <- readRDS("data/hiv.rds")
+mod <- glm(outcome ~ incentive * (distance + I(distance^2)),
+    data = dat, family = binomial)
+summary(mod)
+```
+
+### Partial effect (aka marginal effect)
+
+Slopes are conditional measures of association between changes in a regressor and changes in the response, in the sense that their value can depend on the value of all the predictors in a model. Except in the simplest linear models, the value of a slope will be different from individual to individual, depending on their characteristics.
+
+A "partial effect" is the partial derivative of the outcome equation, with respect to one predictor of interest, evaluated for fixed values of the other predictors in the model. 
+
+Confusingly, in disciplines like economics, political science, and sociology, a slope is often called a "marginal effect." In that context, the word "marginal" refers to the effect of a small change in predictor $X$ on the outcome $Y$, in the spirit of $\partial Y/\partial X$ calculus. This should not be confused with the use of "marginal" in the sense of "marginalizing" or "averaging," a process we we will explore later.
+
+Slopes can help us answer questions such as:
+
+> *How does the predicted outcome $\hat{Y}$ change when $X$ increases by a small amount, and control variables $Z_1, Z_2, \ldots, Z_n$ are held at specific values?*
+
+By default, the `slopes()` function estimates the slope with respect to the predictor of interest, for every observation in the original sample. Thus, we obtain a data frame with the same number of rows as in the @Tho2008 dataset:
+
+```{r}
+slopes(mod, variables = "distance")
+```
+
+All of the estimates displayed above are "partial effects," because they characterize the slope of `outcome` with respect to `distance`, for various combinations of control variables.
+
+Sometimes, we are not interested in all the unit-specific slopes, but would rather look at the estimated partial effects for certain interesting individuals. For example, the partial effect of `distance` when `distance=2` and `incentive=1` is:
+
+```{r}
+slopes(mod, variables = "distance",
+  newdata = datagrid(distance = 2, incentive = 1))
+```
+
+### Marginal effect at the mean
+
+The "marginal effect at the mean" is a special case of partial effect, calculated for a hypothetical observation where each regressor is set at its mean or mode. To calculate the marginal effect at the mean, we can set the `newdata` argument, which determines the grid on which to compute slopes:
+
+```{r}
+slopes(mod, variables = "distance", newdata = "mean")
+```
+
+### Average marginal effect
+
+A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `avg_slopes()` function is convenient:
+
+```{r}
+avg_slopes(mod, variables = "distance")
+```
+
+Note that since marginal effects are derivatives, they are only properly defined for continuous numeric variables. When the model also includes categorical regressors, the `summary` function will try to display relevant (regression-adjusted) contrasts between different categories, as shown above.
+
+### Group-average marginal effect
+
+We can also use the `by` argument comoputing the average marginal effects *within different subgroups* of the observed data, based on values of the regressors. For example, to compute the average marginal effects of `distance` for each `incentive` level, we do:
+
+```{r}
+slo <- avg_slopes(mod,
+  variables = "distance",
+  by = "incentive")
+slo
+```
+
+This is equivalent to manually taking the mean of the observation-level marginal effect for each species sub-group:
+
+```{r}
+aggregate(estimate ~ incentive, FUN = mean, data = slo)
+```
+
+## Visualization
+
+One of the first steps in interpreting the results obtained by fitting a statistical model is often to plot a best fit line, as shown in @sec-predictions_visualization. Such plots can give an impressionistic sense of how the predicted outcome changes as a function of predictors.
+
+Plotting the slopes allow us to visualize another dimension of the relationship: how does the *strenght* of association between $X$ and $Y$ vary as a function of other predictors.
+
+The slope of this line is calculated using the same technique we all learned in grade school: dividing rise over run.
+
+Instead of computing this slope manually, we can just call:
+
+Now, consider the fact that our model includes an interaction between `hp` and `qsec`. This means that the slope will actually differ based on the value of the moderator variable `qsec`:
+
+We can estimate the slopes of these three fit lines easily:
+
+As we see in the graph, all three slopes are negative, but the Q3 slope is steepest.
+
+We could then push this one step further, and measure the slope of `mpg` with respect to `hp`, *for all observed values* of `qsec`. This is achieved with the `plot_slopes()` function:
+
+This plot shows that the marginal effect of `hp` on `mpg` is always negative (the slope is always below zero), and that this effect becomes even more negative as `qsec` increases.
+
+```{r}
+#| fig-cap: Model-based predictions vs. estimated slopes.
+#| label: fig-slopes_vs_predictions
+#| fig-asp: 1
+# Slopes evaluated at every point in the sample
+s <- slopes(mod)
+
+# Minimum: Value of `distance` where the slope is closest to zero
+minimum <- s$distance[which.min(abs(s$estimate))]
+
+# Predictions
+p1 <- plot_predictions(mod, condition = "distance") +
+    geom_vline(xintercept = minimum, linetype = "dotted")
+
+# Slopes
+p2 <- plot_slopes(mod, variables = "distance", condition = "distance") +
+    geom_hline(yintercept = 0, linetype = "dotted") +
+    geom_vline(xintercept = minimum, linetype = "dotted")
+
+p1 / p2
+```
+

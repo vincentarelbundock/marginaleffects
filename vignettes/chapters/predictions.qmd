@@ -1,0 +1,633 @@
+---
+bibliography: library.bib
+---
+
+# Predictions {#sec-predictions}
+
+```{r}
+#| cache: false
+#| echo: false
+source("code/load.R")
+```
+
+\index{Prediction|(}
+
+The parameter estimates obtained by fitting a statistical model are rarely the main object of interest in a data analysis. Instead of focusing on those raw estimates, a good starting point is often to compute model-based predictions for different combinations of predictor values. This allows an analyst to report results on a scale that makes intuitive sense to their readers, colleagues, and stakeholders.
+
+What is a model-based prediction? In this book, we consider that
+
+> *A prediction is the outcome expected by a fitted model for a given combination of predictor values.*
+
+This definition is in line with the familiar concept of "fitted value,"^[A "fitted value" typically refers to the prediction made for one of the rows in the dataset used to fit the model.] but it differs from a "forecast" or "out-of-sample prediction" \index{forecast} [@HynAth2018]. For our purposes, the word "prediction" need not imply that we hope to forecast the future, or that we are trying to extrapolate to unseen data.
+
+Model-based predictions are often the main quantity of interest in a data analysis. They allow us to answer a wide variety of questions, such as:
+
+* What is the expected probability that a 50-year-old smoker develops heart disease, adjusting for diet, exercise, and family history?
+* What is the expected probability that a football team wins a game, considering the team's recent performance, injuries, and opponent strength?
+* What is the expected turnout in municipal elections, accounting for national trends and local demographic characteristics?
+* What is the expected price of a three-bedroom house in a suburban area, controlling for floor area and market conditions?
+
+All of these descriptive questions can be answered using model-based predictions. This highlights the fact that predictions are an intrinsically interesting quantity. In chapters [-@sec-comparisons] and [-@sec-slopes], we will see that they are also a fundamental building block to analyze the effects of interventions. 
+
+````{comment}
+By leveraging the hypothesis testing strategies introduced in @sec-hypothesis, we can make formal comparisons between counterfactual predictions made for different individuals or units. 
+
+For example, we will be able to answer questions like:
+
+* Is the expected probability of developing a heart disease higher for a 40 year-old man or a 55 year-old woman?
+* Is the expected grade point average of students in a 20-person class higher than in a 30-person class?
+````
+
+The current chapter illustrates how to compute and report predictions for models estimated with the @Tho2008 data. We proceed in order, through each component of the conceptual framework laid out in @sec-framework: (1) quantity, (2) predictors, (3) aggregation, (4) uncertainty, and (5) tests. Then, we conclude by showing different ways to visualize predictions.
+
+## Quantity {#sec-predictions_quantity}
+
+To begin, it is useful to consider how predictions are built in one particular case. Let's consider a logistic regression model estimated using the @Tho2008 HIV dataset:
+
+$$
+Pr(\text{Outcome}=1) = \Phi \left (\beta_1 + \beta_2 \cdot \text{Incentive} + \beta_3 \cdot \text{Age}_{18-35} + \beta_4 \cdot \text{Age}_{>35} \right ),
+$$ {#eq-predictions-logit_model}
+
+where *Outcome* is a binary variable equal to 1 if the study participant travelled to the test center to learn their HIV status; *Incentive* is a binary variable equal to 1 if the participant received a monetary incentive; and the other two predictors are indicators for the age category to which a participant belongs, with omitted category Age$_{<18}$. The letter $\Phi$ represents the standard logisitic function $\Phi(x) = \frac{1}{1 + e^{-x}}$, which ensures that the linear component inside the parentheses of @eq-predictions-logit_model gets scaled to the $[0,1]$ interval. This allows the model to respect the natural scale of the binary outcome variable.
+
+We load the `marginaleffects` package, read the data, and estimate a logistic regression model using the `glm()` function:
+
+```{r} 
+library(marginaleffects)
+dat <- readRDS("data/hiv.rds")
+mod <- glm(outcome ~ incentive + agecat, data = dat, family = binomial)
+```
+
+The estimated coefficients are:
+
+```{r}
+b <- coef(mod)
+b
+```
+```{r}
+#| echo: false
+bs <- sprintf("%.3f", coef(mod))
+```
+
+For clarity of presentation, we substitute these estimates into the model equation:
+
+$$
+Pr(\text{Outcome}=1) = \Phi \left (`r bs[1]` + `r bs[2]` \cdot \text{Incentive} + `r bs[3]` \cdot \text{Age}_{18-35} + `r bs[4]` \cdot \text{Age}_{>35} \right )
+$$
+
+To make a prediction for a particular individual, we simply plug-in the characteristics of a person into this equation. For example, the predicted probability that *Outcome* equals 1 for an 18 to 35 year-old in the treatment group is:
+
+\begin{align*}
+Pr(\text{Outcome}=1) = \Phi \left (`r bs[1]` + `r bs[2]` \cdot 1 + `r bs[3]` \cdot 1 + `r bs[4]` \cdot 0 \right )\\
+\end{align*}
+
+The predicted probability that *Outcome* equals 1 for someone above 35 years-old in the control group is:
+
+\begin{align*}
+Pr(\text{Outcome}=1) = \Phi \left (`r bs[1]` + `r bs[2]` \cdot 0 + `r bs[3]` \cdot 0 + `r bs[4]` \cdot 1 \right )
+\end{align*}
+
+These expressions can be evaluated using any calculator. First, we compute the part in parentheses. This is the "linear" or "link scale" prediction:
+
+```{r}
+#| eval: false
+linpred_treatment_younger <- b[1] + b[2] * 1 + b[3] * 1 + b[4] * 0
+linpred_treatment_younger
+```
+```{r}
+#| echo: false
+linpred_treatment_younger <- b[1] + b[2] * 1 + b[3] * 1 + b[4] * 0
+unname(linpred_treatment_younger)
+```
+```{r}
+#| eval: false
+linpred_control_older <- b[1] + b[2] * 0 + b[3] * 0 + b[4] * 1
+linpred_control_older
+```
+```{r}
+#| echo: false
+linpred_control_older <- b[1] + b[2] * 0 + b[3] * 0 + b[4] * 1
+unname(linpred_control_older)
+```
+
+Link scale predictions from a logit model are expressed on the log odds scale. In this example, they include a negative value and a value greater than one. To many, this will feel incongruous, because the outcome variable is a binary variable, with a probability bounded by 0 and 1. To ensure that our predictions respect the natural scale of the data, we transform the linear component of @eq-predictions-logit_model using the logistic function:
+
+```{r}
+#| eval: false
+logistic <- \(x) 1 / (1 + exp(-x))
+logistic(linpred_treatment_younger)
+```
+```{r}
+#| echo: false
+logistic <- \(x) unname(1 / (1 + exp(-x)))
+logistic(linpred_treatment_younger)
+```
+```{r}
+#| eval: false
+logistic(linpred_control_older)
+```
+```{r}
+#| echo: false
+logistic(linpred_control_older)
+```
+
+```{r}
+#| echo: false
+a <- sprintf("%.0f%%", logistic(linpred_treatment_younger) * 100)
+b <- sprintf("%.0f%%", logistic(linpred_control_older) * 100)
+```
+
+Our model expects that the probability of seeking information about one's HIV status is `r a` for a young adult who receives a monetary incentive, and `r b` for an older participant who does not receive an incentive.
+
+Computing predictions manually is useful for pedagogical purposes, but it is a labour-intensive and error-prone process. The commands above are also limiting, because they only apply to one very specific model.
+
+Instead of manual computation, we can use the `predictions()` function from the `marginaleffects` package. This function can be applied in consistent fashion across more than 100 different classes of statistical models.
+
+First, we build a data frame of predictor values---a grid---where each row represents a different individual:
+
+```{r}
+grid <- data.frame(agecat = c("18-35", ">35"), incentive = c(1, 0))
+grid
+```
+
+Then, we call the `predictions()` function, using the `newdata` argument to specify the predictor values, and the `type` argument to set the scale (link or response):
+
+```{r}
+predictions(mod, newdata = grid, type = "link")
+```
+
+These results are exactly identical to the link scale predictions that we computed manually above. This is reassuring. However, in a logit model, link scale predictions are hard to interpret.
+
+To communicate our results clearly, it is usually best to make predictions on the same scale as the outcome variable. The resulting estimates are easier to interpret, since they can be compared to observed values of the outcome variable in our dataset. For this reason, the default behavior of `predictions()` is to return predictions on the response scale:
+
+```{r}
+predictions(mod, newdata = grid)
+```
+
+In the rest of this chapter, we show that the `marginaleffects` package makes it easy to compute various types of predictions, aggregate, and conduct statistical tests on them.
+
+## Predictors {#sec-predictions-grid}
+
+Predictions are "conditional" quantities, in the sense that they depend on the values of all the predictor variables in a model. To compute a prediction, the analyst must fix all the variables on the right-hand side of the model equation; they must choose a grid (see @sec-framework_grid).
+
+The choice of grid depends on the researcher's goals. The profiles it holds could correspond to actual observations in the original data, or they could represent unseen, hypothetical, or representative units. To illustrate, let's consider a slight modification of the model estimated in @sec-predictions_quantity. In addition to the `incentive` and `agecat` predictors, we now include a numeric predictor to account for the `distance` between a study participant's home and the test center where they can learn their HIV status:
+
+```{r} 
+mod <- glm(outcome ~ incentive + agecat + distance, data = dat, family = binomial)
+```
+
+With this model, we can make predictions on various grids: empirical, interesting, representative, balanced, or counterfactual.
+
+### Empirical grid
+\index{Fitted values}
+\index{Grid!empirical}
+
+By default, the `predictions()` function uses the full original dataset as a grid, that is, it uses the empirical distribution of predictors (@sec-**framework_grid_empirical**). This means that `predictions()` will compute fitted values for each of the individuals observed in the dataset used to fit the model:
+
+```{r}
+p <- predictions(mod)
+p
+```
+
+The `p` object created by `predictions()` includes the fitted values for each observation in the dataset, along with test statistics like p values and confidence intervals. `p` is a standard data frame, which means that we can manipulate it using standard `R` functions.
+
+For example, we can check that the data frame includes `{r} nrow(p)` and `{r} ncol(p)` columns:
+
+```{r}
+dim(p)
+```
+
+We can list the available column names:
+
+```{r}
+colnames(p)
+```
+
+And we can extract individual columns and cells using the standard `$` or `[]` syntaxes, or using data manipulation packages like `dplyr` or `data.table`:
+
+```{r}
+p[1:4, "estimate"]
+```
+
+Users should be mindful of the fact that, by default, the p values held in this data frame correspond to a hypothesis test against a null of zero. In @sec-predictions_test, we will see that it is easy to change this default null using the `hypothesis` argument.
+
+### Interesting grid
+\index{Grid!interesting}
+
+In many cases, analysts are not interested in model-based predictions for each observation in their sample. Instead, they may prefer to construct a customized grid of predictors which includes specific values of scientific or commercial interest (@sec-framework_grid_interesting).
+
+In `marginaleffects`, the main strategy to define custom grids is to use the `newdata` argument and the `datagrid()` function. This function creates a "typical" dataset with all variables at their means or modes, except those we explicitly define:
+
+```{r}
+datagrid(agecat = "18-35", incentive = c(0, 1), model = mod)
+```
+
+We can feed this `datagrid()` function to the `newdata` argument of `predictions()`:^[When `datagrid()` is called as an argument to a `marginaleffects` function, we can omit the `model` argument.]
+
+```{r}
+predictions(mod,
+  newdata = datagrid(agecat = "18-35", incentive = c(0, 1))
+)
+```
+```{r}
+#| echo: false
+p <- predictions(mod,
+  newdata = datagrid(agecat = "18-35", incentive = c(0, 1))
+)
+```
+
+This shows that the estimated probability of seeking one's HIV status is about `r sprintf("%.0f%%", p$estimate[1] * 100)` for a participant who is between 18 and 35 years old, did not receive a monetary incentive, and lives the average distance from the center.
+
+We can also make predictions on a custom grid by supplying functions to `datagrid()`. These functions will be applied to the named variables, and the output used to construct the grid.
+
+```{r}
+predictions(mod, 
+  newdata = datagrid(distance = 2, agecat = unique, incentive = max)
+)
+```
+
+### Representative grid
+\index{Grid!representative}
+
+Sometimes, analysts do not want fine-grained control over the values of each predictor, but would rather compute predictions for some "representative" individual (@sec-framework_grid_representative). For example, we can compute a "Prediction at the Mean," that is, a prediction for a hypothetical representative individual whose personal caracteristics are exactly average (numeric) or modal (categorical).
+\index{Prediction!at the mean}
+
+To achieve this, we can either set the values of the grid manually in `datagrid()`, or we can use the `"mean"` shortcut:
+
+```{r}
+predictions(mod, newdata = "mean")
+```
+
+Representative grids can be useful in some contexts, but they are not always the best choice. Sometimes there is simply noone in our sample who is exactly average on all relevant dimensions. When this "average individual" is fictional, predictions made for this profile may not be scientifically interesting or practically relevant.
+
+### Balanced grid
+\index{Grid!balanced}
+
+A common strategy in the analysis of experiments is to compute estimates on a "balanced grid" (@sec-framework_grid_balanced). This type of grid includes one row for each combination of unique values for the categorical (or binary) predictors, holding numeric variables at their means. To achieve this, we can either call `datagrid()` or use the `"balanced"` shortcut. These two calls are equivalent:
+
+```{r}
+#| eval: false
+predictions(mod,
+  newdata = datagrid(agecat = unique, incentive = unique, distance = mean)
+)
+predictions(mod, newdata = "balanced")
+```
+```{r}
+#| echo: false
+predictions(mod, newdata = "balanced")
+```
+
+A balanced grid is often used with randomized experiments, when the analyst wishes to give equal weights to each combination of treatment conditions in the calculation of marginal means (@sec-predictions_aggregation).
+
+### Counterfactual grid
+\index{Grid!counterfactual}
+
+Yet another set of predictor profiles to consider is the "counterfactual grid." The predictions made on such a grid allow us to answer questions such as:
+
+> *What would the predicted outcomes be in our observed sample if everyone had received the treatment, or if everyone had received the control?*
+
+To create a counterfactual grid, we duplicate the full dataset, once for every value of the focal variable. For instance, if our dataset includes `{r} nrow(dat)` rows, and we want to compute predictions for each combination of the `incentive` variable (0 and 1), the counterfactual grid will include `{r} nrow(dat)*2`.
+
+To make predictions on a counterfactual grid, we can call the `datagrid()` function, or we can use the `variables` argument:
+
+```{r}
+p <- predictions(mod, variables = list(incentive = 0:1))
+dim(p)
+```
+
+These predictions are interesting, because they give us a first look at the kinds of counterfactual (potentially causal) queries that we will explore in @sec-comparisons. We can ask:
+
+> *For each individual in the Thornton (2008) sample, what is the predicted probability of seeking information about HIV status in the counterfactual worlds where they receive a monetary incentive, and where they do not?*
+
+To answer this question, we rearrange the data and plot it:
+
+```{r}
+#| label: fig-logit_counterfactual
+#| fig-cap: Predicted probabilities for counterfactual values of incentive. 
+#| out-width: 50%
+#| fig-width: 6
+library(ggplot2)
+
+p <- data.frame(
+  Control = p[p$incentive == 0, "estimate"],
+  Treatment = p[p$incentive == 1, "estimate"])
+
+ggplot(p, aes(Control, Treatment)) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+  geom_point() +
+  labs(x = "Pr(outcome=1) when incentive = 0", 
+       y = "Pr(outcome=1) when incentive = 1") +
+  xlim(0, 1) + ylim(0, 1) + coord_equal()
+```
+
+On this graph, each point represents a single study participant.^[Since the points are tightly clustered, they look like a curve at low resolution.] The x-axis shows the predicted probability that *Outcome* equals 1 for an individual with the same socio-demographic characteristics, in the control group. The y-axis shows the predicted probability that *Outcome* equals 1 for an individual with the same socio-demographic characteristics, in the treatment group. 
+
+Every point is well above the 45 degree line. This means that, for every observed combination of predictor values, for every participant in the study, our model says that changing the `incentive` variable from 0 to 1 increases the predicted probability that the person will seek to learn their HIV status.
+
+## Aggregation {#sec-predictions_aggregation}
+\index{Aggregation}
+
+Computing predictions for a large grid or for every observation in a dataset is useful, but the results can feel unwieldy. This section makes two principal points. First, it often makes sense to compute aggregated statistics, such as the average predicted outcome across the whole dataset, or by subgroups of the data. Second, the grid across which we aggregate can make a big difference to the results.
+
+\index{Prediction!average}
+
+An "average prediction" is the outcome of a simple two step process. First, we compute predictions (fitted values) for each row in the original dataset. Then, we take the average of those predictions. This can be done manually by calling the `predictions()` function and taking the mean of estimates:
+
+```{r}
+p <- predictions(mod)
+mean(p$estimate)
+```
+
+Alternatively, we can use the `avg_predictions()` function, which is a wrapper around `predictions()` that computes the average prediction directly:
+
+```{r}
+avg_predictions(mod)
+```
+
+This shows that the average predicted probability of seeking information about HIV status, across all the study participants in the Thornton (2008) sample, is about `r sprintf("%.0f%%", mean(p$estimate) * 100)`.
+
+Now, imagine we want to check if the predicted probability of the *Outcome* variable differs across age categories. To see this, we can make the same function call, but add the `by` argument:
+\index{Prediction!by group}
+
+```{r}
+avg_predictions(mod, by = "agecat")
+```
+```{r}
+#| echo: false
+p <- avg_predictions(mod, by = "agecat")
+```
+
+The average predicted probability of seeking one's test result is about `r sprintf("%.0f%%", p$estimate[1] * 100)` for minors, and `r sprintf("%.0f%%", p$estimate[3] * 100)` for those above 35 years old. In @sec-predictions_test we will formally test if the difference between those two average predictions is statistically significant.
+
+So far, we have taken averages over the empirical distribution of covariates, but analysts are not limited to that grid. One common alternative is to compute "marginal means" by averaging predictions across a balanced grid of predictors.^[This is the default approach taken by software packages like `emmeans` [@emmeans].] This is useful in experimental settings, when the observed sample is not representative of the population, and when we want to marginalize while giving equal weight to each treatment conditions.
+\index{Marginal means}
+
+To compute marginal means, we call the same function, using the `newdata` and `by` arguments:
+
+```{r}
+avg_predictions(mod, newdata = "balanced", by = "agecat")
+```
+```{r}
+#| echo: false
+p <- avg_predictions(mod, newdata = "balanced", by = "agecat")
+```
+
+Notice that the results are considerably different from the average predictions computed on the empirical grid. Now, the average predicted probability of seeking one's test result is estimated at `r sprintf("%.0f%%", p$estimate[1] * 100)` for minors, and `r sprintf("%.0f%%", p$estimate[3] * 100)` for those above 35 years old.
+
+What explains this difference is that the balanced grid gives equal weight to each combination of categorical variables, while the empirical grid gives more weight to the combinations that are more frequent in the data. In the @Tho2008 dataset, more participants belonged to the treatment than to the control group:
+
+```{r}
+table(dat$incentive)
+```
+
+Therefore, when we compute an average prediction on the empirical distribution, predicted outcomes in the `incentive=1` group are given more weight. This matters, because the average predicted probability that *Outcome* equals 1 is much higher in the treatment group than in the control group:
+
+```{r}
+avg_predictions(mod, by = "incentive")
+```
+
+Thus, the group-wise averages for each age categories are smaller when computed over a balanced grid than when they are computed over the empirical distribution.
+
+We have already shown that the probably of seekingIn the Thornton (2008) dataset, the number of participants in each age category is not equal, and the marginal means computed on the empirical grid are biased towards the more frequent categories.
+
+```{r}
+table(dat$incentive)
+```
+
+In the next example, we create a "counterfactual" data grid where each observation of the dataset is repeated twice, with different values of the `incentive` variable, and all other variables held at the observed values. We also show the equivalent results using standard `R` commands:
+
+```{r}
+avg_predictions(
+    mod,
+    by = "incentive",
+    newdata = datagrid(incentive = c(0, 1), grid_type = "counterfactual"))
+
+p <- predictions(
+    mod,
+    type = "response",
+    newdata = datagrid(incentive = 0:1, grid_type = "counterfactual"))
+aggregate(estimate ~ incentive, FUN = mean, data = p)
+```
+
+
+## Uncertainty
+
+As in the rest of the `marginaleffects` package, the `predictions()` family of functions accept a `vcov` argument which can be used to specify the type of standard errors to compute and report. We can also control the size of confidence intervals with `conf_level`. For instance, to compute heteroskedasticity-consistent standard errors (Type 3) with 90% confidence intervals, we simply call:
+
+```{r}
+avg_predictions(mod,
+  by = "incentive",
+  vcov = "HC3",
+  conf_level = .9)
+```
+
+We can also report clustered standard errors by `village`, or use the `inferences()` function to compute bootstrap intervals:
+
+```{r}
+avg_predictions(mod,
+  by = "incentive",
+  vcov = ~ village,
+  conf_level = .9)
+
+avg_predictions(mod,
+  by = "incentive",
+  conf_level = .9) |>
+  inferences(method = "boot", R = 1000)
+```
+
+Notice that the intervals are all slightly different, but still remain in the same ballpark.
+
+## Test {#sec-predictions_test}
+
+Above, we computed average predictions by age subgroups, and noted that there appeared to be differences in the likelihood that younger and older people would seek their HIV test results. That observation was only based on the point estimates of the average predictions, and did not rely on a statistical test. Now, let's consider how analysts can compare predictions more formally.
+
+### Null hypothesis tests
+
+To begin, we compute the average predicted outcome for each age subgroup:
+
+```{r}
+p <- avg_predictions(mod, by = "agecat")
+p
+```
+
+The average predicted outcome is `{r} sprintf("%.0f%%", p$estimate[2] * 100)` for young adults and `{r} sprintf("%.0f%%", p$estimate[3] * 100)` for participants above 35 years old. The difference between these two averages is:
+
+```{r}
+p$estimate[3] - p$estimate[2]
+```
+
+To see if this risk difference is statistically significant, we can use the `hypothesis` argument, as we did in @sec-hypothesis. 
+
+```{r}
+p <- avg_predictions(mod, by = "agecat", hypothesis = "b3 - b2 = 0")
+p
+```
+
+The estimated difference between the 3rd and 2nd groups is about `{r} sprintf("%.0f", p$estimate * 100)` percentage points, and the p value associated with this estimate is `{r} sprintf("%.3f", p$p.value)`. This crosses the conventional (but arbitrary) statistical significance threshold of $\alpha=0.05$. Accordingly, many analysts would reject the null hypothesis that the average predicted probability of seeking one's HIV test results is the same in the 18-35 and >35 groups.
+
+A more convenient way to conduct the same test is to use the formula interface. On the left-hand side, we set the comparison function (difference, ratio, etc.). On the right hand side, we specify which estimates to compare to one another (sequential, reference, etc.). Here, we choose sequential comparisons: 2nd level vs. 1st level, 3rd level vs. 2nd level, and so on.
+
+```{r}
+p <- avg_predictions(mod, by = "agecat", hypothesis = difference ~ sequential)
+p
+```
+```{r}
+p <- avg_predictions(mod, by = "agecat", hypothesis = difference ~ sequential)
+p
+```
+
+
+The `hypothesis` argument also allows us to specify hypothesis groups by subgroups. For example, consider this command, which computes average predicted outcomes for each observed combination of `incentive` and `agecat`:
+
+```{r}
+avg_predictions(mod,
+    by = c("incentive", "agecat"))
+```
+
+We can use the `hypothesis` argument in similar fashion as before, but add a vertical bar to specify that we want to compute sequential risk differences within subgroups:
+
+```{r}
+p <- avg_predictions(mod,
+    by = c("incentive", "agecat"),
+    hypothesis = difference ~ sequential | incentive)
+p
+```
+
+This shows that, in the control group (`incentive=0`), the difference between the average predicted outcome for participants over 35 and for those between 18 and 35 is about `{r} round(p$estimate[2] * 100, 0)` percentage points. However, in the treatment group (`incentive=1`), this difference is about `{r} round(p$estimate[4] * 100, 0)` percentage points. Both of these differences are associated with relatively large $z$ statistics, and are thus statistically distinguishable from zero.
+
+### Equivalence tests
+
+Flipping the logic around, the analyst could run an equivalence test to determine if the difference between average predicted outcomes in the two subgroups is small enough to be considered negligible (@sec-hypothesis_equivalence). \index{Equivalence test} Imagine that, for domain-specific reasons, a risk difference smaller than 10 percentage points is considered "uninteresting," "negligible," or "equivalent to zero". All we need to do is call the same function with the `equivalence` argument and the $[-0.1,0.1]$ interval of practical equivalence:
+
+```{r}
+avg_predictions(mod,
+    by = "agecat",
+    hypothesis = "b3 - b1 = 0",
+    equivalence = c(-0.1, 0.1))
+```
+
+The p value associated with our test of equivalence is small. This suggests that we can reject the null hypothesis that the difference lies outside the interval of practical equivalence. The difference is thus likely to be small enough to be ignored.
+
+## Visualization {#sec-predictions_visualization}
+
+In many cases, data analysts will want to visualize (potentially aggregated) predictions rather than report raw numeric values. This is easy to do with the `plot_predictions()` function, which a similar syntax that closely parallels that of the other functions in the `marginaleffects` package.
+
+### Unit predictions
+
+As discussed in @sec-framework, the quantities derived from statistical models---predictions, counterfactual comparisons, and slopes---are typically *conditional*, in the sense that they depend on the values of all covariates in the model. This implies that each unit in our sample will be associated with its own prediction (fitted value) or effect estimate. In *Avoiding One-Number Summaries*, @Har2021 argues that data analysts should avoid the temptation to summarize these individual-level estimates. Rather, Harrell argues, they should display the full distribution of estimates to convey a sense of the heterogeneity of our quantity of interest across different combinations of predictor values. 
+
+Histograms and Empirical Cumulative Distribution Function (ECDF) plots are two common ways to visualize such a distribution. Since the output generated by the `predictions()` function is a standard data frame, it is easy to feed that object to any plotting function in `R` or `Python`, in order to craft good-looking visualizations.
+
+```{r}
+#| label: fig-plot_predictions_unit
+#| fig-cap: Distribution of unit-level predictions (fitted values), by treatment group.
+#| warning: false
+#| out-width: 100%
+#| fig-width: 8.571429
+#| fig-asp: .3
+library(patchwork)
+p <- predictions(mod)
+
+# Histogram
+p1 <- ggplot(p) +
+  geom_histogram(aes(estimate, fill = factor(incentive))) +
+  labs(x = "Pr(outcome = 1)", y = "Count", fill = "Incentive")
+
+# Empirical Cumulative Distribution Function
+p2 <- ggplot(p) +
+  stat_ecdf(aes(estimate, colour = factor(incentive))) +
+  labs(x = "Pr(outcome = 1)", y = "Cumulative Probability", colour = "Incentive")
+
+p1 + p2
+```
+
+The left side of @fig-plot_predictions_unit presents a histogram showing the distribution of predicted probabilities that individual study participants choose to travel to the test center in order to learn their HIV status. As usual, the x-axis represents the range of predicted outcomes, while the y-axis shows the number of study participants each bin. By assigning different colors to the bins based on the treatment arm (`incentive` equal 0 or 1), we highlight one of the key features of the distribution: predicted outcomes for people in the treatment group tend to be much higher than predicted outcomes for people in the control group. Indeed, the distribution of `outcome` probabilities without an incentive (orange) is concentrated between 0.2 and 0.4, indicating a low probability of travelling to the test center. In contrast, the distribution of predicted `outcome` for participants who received a monetary incentive (blue) is concentrated between 0.6 and 0.8. This suggests that those who received an incentive are considerably more likely to seek their test results.
+
+The right side of @fig-plot_predictions_unit presents an ECDF plot. Again, the x-axis represents the range of predicted outcomes. This time, however, the y-axis indicates the cumulative probability, which is the proportion of data points that are less than or equal to a specific value. For any given value on the x-axis, the height of the curve indicates the proportion of data points that are less than or equal to that value. For example, at 0.3 on the x-axis, we see that the `incentive=0` line is close to 0.25. This suggests that about 25% of the participants in our sample have predicted `outcome` smaller than 30%. When the ECDF curve is steep, we know that a lot of the our data is concentrated in that part of the distribution. With this in mind, we see clearly that many of our predicted `outcome` values are clustered near 0.3 in the control group, and near 0.8 in the treatment group.
+
+### Marginal predictions
+
+The first approach to display  "marginal" predictions using the `by` argument. The underlying process is to (1) compute predictions for each observation in the actually observed dataset, and then (2) average these predictions across some variable(s). This is equivalent to plotting the results of calling `avg-predictions()` using the `by` argument.
+
+For example, if we want to compute the average predicted probability that `outcome` equals 1, by subgroup, we call:
+
+```{r}
+avg_predictions(mod, by = "incentive")
+```
+
+We plot the same results using the `plot_predictions()` function:
+
+```{r}
+#| label: fig-plot_predictions_marginal
+#| fig-cap: Marginal predicted probabilities that outcome equals 1.
+#| out-width: 100%
+#| fig-width: 8.571429
+#| fig-asp: .4
+p1 <- plot_predictions(mod, by = "incentive")
+p2 <- plot_predictions(mod, by = c("incentive", "agecat"))
+p1 + p2
+```
+
+Note that that the `plot_predictions()` function also accepts a `newdata` argument. This means that we can, for example, plot marginal means constructed by marginalizing across a balanced grid of predictors:^[The plot is omitted because, in this particular case, it looks very similar to the one in @fig-plot_predictions_marginal]
+
+```{r}
+#| eval: false
+plot_predictions(mod, by = "incentive", newdata = "balanced", draw = FALSE)
+```
+
+### Conditional predictions
+
+In some contexts, plotting marginal predictions may not be appropriate. For instance, when one of the predictors of interest is continuous, there are many predictors, or much heterogeneity, the commands presented in the previous section may generate jagged plots which are difficult to read. In such cases, it can be useful to plot "conditional" predictions instead. In this context, the word "conditional" means that we are computing predictions, conditional on the values of the predictors in a constructed grid of "representative" values. However, unlike in the previous section, we do not average over several predictions before displaying the estimates. We fix the grid and display the predictions made for that grid immediately.
+
+The `condition` argument of the `plot_predictions()` function does just that: Build a grid of representative predictor values, compute predictions for each combination of predictor values, and plot the results. In the following examples, we fix one or more predictor to its unique values (categorical) or to an equally spaced grid from minimum to maximum (continuous). The other predictors in the model are held to their mean or model.
+
+```{r}
+#| eval: false
+p1 <- plot_predictions(mod, condition = "distance")
+p2 <- plot_predictions(mod, condition = c("distance", "incentive"))
+p3 <- plot_predictions(mod, condition = c("distance", "incentive", "agecat"))
+(p1 + p2) / p3
+```
+```{r}
+#| label: fig-plot_predictions_conditional
+#| fig-cap: Predicted probability that outcome equals 1, conditional on incentive, age categories, and distance. Other variables are held at their means or modes. 
+#| echo: false
+#| out-width: 100%
+#| fig-width: 8.571429
+library(patchwork)
+p1 <- plot_predictions(mod, condition = "distance")
+p2 <- plot_predictions(mod, condition = c("distance", "incentive"))
+p3 <- plot_predictions(mod, condition = c("distance", "incentive", "agecat"))
+p1 <- p1 + ggtitle("p1")
+p2 <- p2 + ggtitle("p2")
+p3 <- p3 + ggtitle("p3")
+(p1 + p2) / p3
+```
+
+We can also set the value of some variables explicitly by setting `condition` to a named list. For example, to plot the predicted `outcome` for an individual above 35 years old, who did not receive a monetary incentive, for different values of distance:
+
+```{r}
+plot_predictions(mod, condition = list(
+    "distance", "agecat" = ">35", "incentive" = 0
+))
+```
+
+### Customization
+
+Since the output of `plot_predictions()` is a `ggplot2` object, it is very easy to customize. For example, we can add points for the actual observations of our dataset like so:
+
+```{r}
+#| warning: false
+plot_predictions(mod, condition = "distance", rug = TRUE) +
+    theme_grey() +
+    ylim(c(.65, .81)) + xlim(c(2, 4.5))
+```
+
+A more powerful but less convenient way to customize plots is to call the `draw=FALSE` argument. This will return a data frame with the raw values used to create plots. You can then use these data to create your own plots with `base` `R` graphics, `ggplot2`, or any other plotting functions you like:
+
+```{r}
+plot_predictions(mod, by = "incentive", draw = FALSE)
+```
+
+
+\index{Prediction|)}

@@ -1,0 +1,253 @@
+---
+bibliography: library.bib
+---
+
+# Hypothesis and equivalence tests {#sec-hypothesis}
+
+```{r}
+#| cache: false
+#| echo: false
+source("code/load.R")
+```
+
+
+This chapter introduces two classes of statistical testing procedures: null hypothesis tests and equivalence tests. As we will see, these tests serve different purposes, and they are are versatile technologies which can be applied to parameter estimates, but also to any of the quantities explored in Chapters [-@sec-predictions] (predictions), [-@sec-comparisons] (counterfactual comparisons), and [-@sec-slopes] (slopes).
+
+The first strategy to consider is the null hypothesis test. This approach is designed to assess if there is enough evidence to reject the possibility that a population parameter (or function of parameters) takes on a specific value, such as zero. These tests are common in all fields of data analysis; they can help us answer questions such:
+
+1. Is the effect of a new drug different from the effect of an existing treatment?
+2. Does cognitive-behavioral therapy have a non-zero effect in alleviating depression?
+3. Is there a statistically significant difference in test scores between students who attend public or private schools?
+
+Equivalence tests flip the logic around. Instead of establishing a difference, they are concerned with demonstrating similarity. For instance, in a null hypothesis test the analyst may be interested in showing that a new drug is effective, that its treatment effect is different from zero. In contrast, an equivalence test could show that the drug's estimated effect is "equivalent" to zero, or to the effect of another drug. Put differently, equivalence testing is used when the researcher aims to show that an observed difference between groups or parameter values is small enough to be negligible in practical terms. This approach is useful to answer questions such as:
+
+1. Is the effect of a generic drug equivalent to that of the branded version?
+2. Is the effect of a marketing campaign on consumption so small that we can consider it ineffective?
+3. Are the levels of social trust in two different communities equivalent?
+
+This chapter explains how to compute and interpret both hypothesis and equivalence tests using the `marginaleffects` package.^[Wald-style null hypothesis tests are described in most statistical textbooks. Readers who want to learn more about equivalence testing can refer to the book length treatment by @Wel2010, or to articles by @Rai2014 and @Lak2018.] 
+
+\begin{shortbox}
+\Boxhead{Statistical vs. practical significance}
+We say that a result is ``statistically significant" if it would have been unlikely to occur by pure chance in a hypothetical world where the null hypothesis holds true. We say that a result has ``practical significance" when it has important implications for the real world. Many results are statistically significant without having much practical significance. Often, the magnitude of a treatment effect is distinguishable from zero, but it is too small to be of use to practitioners. In those cases, data analysts will typically report small $p$ values for \emph{both} the null hypothesis and the equivalence tests.
+\end{shortbox}
+
+To illustrate, we will look at data from a study conducted by @Tho2008: *The demand for, and impact of, learning HIV status.* One goal of this randomized controlled trial was to find out if we could encourage people to seek information about their HIV status. The researchers administered HIV tests at home to many study participants in rural Malawi. Then, they randomly assigned some people to receive a small monetary incentive if they were willing to travel to a voluntary counseling and testing center and learn their HIV status.
+
+The outcome of interest is a binary variable, `outcome`, equal to 1 if a study participant chose to travel to the center, and 0 otherwise. The treatment is a binary variable, `incentive`, equal is 1 if the participant was part of the treatment arm and received an incentive. In addition, the researchers collected information about people's `distance` from the test center, and a numeric identifier for the `village` in which they live. Finally, they also collected an `age` variable, which we have aggregated into three groups under the `agecat` column.
+
+We use the `readRDS()` function to read the dataset into memory, the `head()` function to extract the first few rows, and the `tt()` function from the `tinytable` package to display results in a good-looking table:
+
+```{r} 
+#| warning: false
+library(marginaleffects)
+library(tinytable)
+dat <- readRDS("data/hiv.rds")
+tt(head(dat), caption = "First rows of the Thornton (2008) dataset.")
+```
+
+After analyzing these data, @Tho2008 concluded 34% of participants in the control group sought to learn their HIV status. In contrast, a small monetary incentive doubled this proportion. Simply put, the intervention proved to be highly successful and cost effective.
+
+Over the next few chapters, we will use the `marginaleffects` package to analyze various aspects of Thornton's data. Here, we begin by focusing on this research question: Do minors, young adults, and older adults have different propensities to seek information about their HIV status?
+
+To answer this question, let us consider a linear probability model with the binary `outcome` as dependent variable and each level of the `agecat` variable as predictors:
+
+$$
+\text{Outcome} = \beta_1 \cdot \text{Age}_{<18} + \beta_2 \cdot \text{Age}_{18-35} + \beta_3 \cdot \text{Age}_{>35} + \varepsilon
+$$ {#eq-linear_agecat}
+
+We use the `lm()` function to estimate the model via ordinary least squares, adding `-1` to the model formula to suppress the usual intercept. We then call `coef()` to extract the vector of coefficient estimates:
+
+```{r}
+mod <- lm(outcome ~ agecat - 1, data = dat)
+coef(mod)
+```
+
+Because there is no other predictor in the model, and since we intentionally dropped the intercept, the coefficients associated with `agecat` levels measure the average `outcome` in each age category. Indeed, the estimated coefficients printed above are exactly identical to subgroup means calculated in-sample using the `aggregate()` function:
+
+```{r}
+aggregate(outcome ~ agecat, FUN = mean, data = dat)
+```
+
+At first glance, it looks like the probability that a young adult (18-35) will seek information about their HIV status is smaller than the probability for older adults (>35): `{r} sprintf("%.1f%%", coef(mod)[2] * 100)` vs. `{r} sprintf("%.1f%%", coef(mod)[3] * 100)`. In the rest of this chapter, we will conduct hypothesis and equivalence tests on these coefficient estimates.
+
+Before moving on, it is important to note that the concepts and techniques surveyed in this chapter apply to all the quantities that we study in this book: parameter estimates, predictions, counterfactual comparisons, slopes, and more. When you are done reading Part II of the book, you will not only be able to compute these quantities, but also to conduct a wide variety of meaningful statistical tests on them.
+
+
+## Null hypothesis
+
+\index{Null hypothesis test}
+The null hypothesis test is a fundamental statistical method used to determine if there is sufficient evidence to reject a presumed statement about a population parameter. The null hypothesis $H_0$ represents a default or initial claim, usually suggesting no effect or no difference in the parameter of interest. For example, $H_0$ might state that the mean of a population is equal to a specific value, or that there is no association between two variables. 
+
+After choosing $H_0$, the analyst calculates a test statistic from the sample data, and compares it to a critical value derived from the sampling distribution of that test statistic under $H_0$. If the test statistic falls in a critical region, typically in the tails of its distribution, we conclude that there is enough evidence to reject $H_0$. 
+
+Most statistics textbooks discuss the theory of null hypothesis testing.^[See for example @CamTri2005 [Section 7.2], @AroMil2019 [Section 3.4], @Han2022a, @Han2022b, and @Was2004.] The present chapter is more practical: it illustrates how to use the `marginaleffects` to conduct linear or non-linear tests on model parameters or on functions of those parameters. We use the standard Wald approach and construct $z$ statistics of this form: 
+
+$$
+z=\frac{h(\hat{\theta})-H_0}{\sqrt{\hat{V}[h(\hat{\theta})]}},
+$$ {#eq-z_statistic}
+
+where $\hat{\theta}$ is a vector of parameter estimates, and $h(\hat{\theta})$ is a function of those estimates, such as a prediction, counterfactual comparison, or slope. $H_0$ is our null hypothesis and $\hat{V}[h(\hat{\theta})]$ is the estimated variance of the quantity of interest.^[As described in @sec-uncertainty_delta_method, the default strategy for null hypothesis tests in `marginaleffects` is to compute standard errors using the delta method. That section also explains how to use bootstrap or simulations instead.] 
+
+\index{z statistic}
+When $|z|$ is large, we can reject the null hypothesis that $h(\hat{\theta})=H_0$. The intuition is straightforward. First, the numerator of @eq-z_statistic measures the distance between our estimated parameters and the null hypothesis. When that distance is large, the observed data is far from the null hypothesis, which makes it seem more unlikely. Second, the denominator quantifies the uncertainty in our estimate. When that uncertainty is small, our estimate is precise, and thus more likely to allow us to discriminate against the null hypothesis. In other words, when the numerator is large and/or the denominator is small, the $z$ statistic will be large (in absolute value), and we can reject the null hypothesis $H_0$.
+
+When we estimated the model in @eq-linear_agecat, we obtained these results:
+
+```{r}
+summary(mod)
+```
+
+By default, the summary functions in `R` and `Python` report null hypothesis tests against a very specific null hypothesis: that a coefficient is equal to zero. For example, in the results printed above, `R` reported the estimate and standard error for the first coefficient ($\hat{\beta_1}$), along with a test statistic^[By default, `R` reports $t$, which is equivalent to $z$ in large samples.] associated to the null hypothesis that this coefficient is equal to zero ($H_0: \beta_1=0$):
+
+```{r}
+#| echo: false
+b <- coef(mod)[1]
+se <- summary(mod)$coefficients[1, 2]
+t1 <- b / se
+bstr <- sprintf("%.5f", b)
+sestr <- sprintf("%.5f", se)
+t1str <- sprintf("%.2f", t1)
+```
+
+$$
+z = \frac{\hat{\beta_1}-H_0}{\sqrt{\hat{V}[\beta_1]}} = \frac{`r bstr` - 0}{`r sestr`} = `r t1str`
+$$ {#eq-linear_agecat_z}
+
+@eq-linear_agecat_z shows how to compute the test statistic reported by our software package. But does the corresponding test make sense from a substantive perspective? Is it interesting? Do we really need a formal test to reject the null hypothesis that 0% of people below the age 18 are willing to retrieve their HIV test result from the clinic? If the answer to any of those questions is "no", we can easily construct alternative test statistics with the `marginaleffects` package.
+
+### Choice of null hypothesis
+
+In many cases, including ours, a null hypothesis of zero hardly makes sense. Instead, analysts may want to specify a different value of $H_0$ to test against a more meaningful benchmark. For example, we could ask: Can we reject the null hypothesis that the probability of retrieving one's HIV test result is different from a coin flip? 
+
+To answer this question, we use the `hypotheses()` function and its `hypothesis` argument:
+
+```{r}
+hypotheses(mod, hypothesis = 0.5)
+```
+
+The results show that all three $z$ statistics are large (in absolute terms). Therefore, we can reject the null hypotheses that these coefficients are equal to 0.5.^[TODO: See below for a discussion of joint hypothesis tests. `marginaleffects` also allows for multiple comparisons adjustment via the `p_adjust` argument.] If the true chances of seeking information about HIV status were 50/50, we would be very unlikely to observe data like these.
+
+This conclusion is consonant with Wald-style $p$ values, which we compute by estimating the area under the tails of the test statistic's distribution. In `R`, the `pnorm(x)` function measures the area under the normal distribution to the left of `x`. The two-tailed $p$ value associated to the first coefficient can thus be computed as:
+
+```{r}
+b <- coef(mod)[1]
+se <- sqrt(diag(vcov(mod)))[1]
+z <- (b - .5) / se
+pnorm(-abs(z)) * 2
+```
+
+$p$ is extremely small, which means that we can reject the null hypothesis of $H_0: \beta_1=0.5$.
+
+### Linear and non-linear hypothesis tests
+
+In many contexts, analysts are not solely interested in testing against a simple numeric null hypothesis like 0 or 0.5. Instead, they might be interested in comparing different estimated quantities. For instance, we may want to test if the coefficient associated to the first age category is equal to the coefficient associated to the third age category, $H_0:\beta_1=\beta_3$.
+
+To conduct this test, all we need to do is supply an equation-style string to the `hypothesis` argument. The terms of this equation start with `b`, followed by the position (or index) of the estimate. If we are interested in comparing the first and third coefficients, the equation must include `b1` and `b3`:
+
+```{r}
+#| include: false
+h <- hypotheses(mod, hypothesis = "b3 - b1 = 0")
+b <- sprintf("%.3f", h$estimate)
+p <- sprintf("%.3f", h$p.value)
+```
+```{r} 
+hypotheses(mod, hypothesis = "b3 - b1 = 0")
+```
+
+This is equivalent to computing the difference between the third and first estimated coefficients: 
+
+$$
+`{r} coef(mod)[3]` - `{r} coef(mod)[1]` = `{r} coef(mod)[3] - coef(mod)[1]`
+$$
+
+The $p$ value for this test is `{r} p`, which is close to one conventional threshold of statistical significance: 0.05. Researchers who are especially sensitive to Type 1 errors^[A Type 1 error, or false positive, occurs when we reject the null hypothesis where it is actually true.] may select a more stringent statistical significance threshold and conclude that they cannot reject the null. They would conclude we cannot reject possibility that the probability of seeking one's HIV result is the same in the <18 and >35 groups.
+ 
+Instead of a difference, we could also conduct a test against the null hypothesis that the ratio of $\beta_3$ to $\beta_1$ is equal to 0:
+
+```{r} 
+hypotheses(mod, hypothesis = "b3 / b1 = 0")
+```
+```{r} 
+#| echo: false
+h <- hypotheses(mod, hypothesis = "b3 / b1 = 0")
+```
+
+The estimated ratio is $\hat{\beta}_3 / \hat{\beta}_1 =`{r} round(h$estimate, 2)`$. The $z$ statistic is large, which gives us license to reject the null hypothesis that the ratio is equal to 0. Of course, this null hypothesis is not particularly meaningful in the ratio case.
+
+A more relevant null hypothesis would be: $\hat{\beta}_3 / \hat{\beta}_1 = 1$. If the left-hand side ratio is different from 1 (our null hypothesis), then we can reject the null hypothesis that the two coefficients are the same. We can test this by modifying the `hypothesis` argument slightly:
+
+```{r} 
+hypotheses(mod, hypothesis = "b3 / b1 = 1")
+```
+
+The equations supported by the `hypothesis` argument are not limited to simple tests of equality, differences, or ratios. Indeed, the user can write equations with more than two estimates, or with various (potentially non-linear) transformations. For example:
+
+```{r}
+#| eval: false
+hypotheses(mod, hypothesis = "b2^2 * exp(b1) = 0")
+hypotheses(mod, hypothesis = "b1 - (b2 * b3) = 2")
+```
+
+`marginaleffects` also offers a formula-based interface which acts as a shortcut to some of the more common hypothesis tests. For example, if we want to compute the difference between every coefficient and the "reference" quantity (i.e., the first estimate), we supply a formula with the word "reference" on the right side of the tilde symbol (`~`):
+
+```{r}
+hypotheses(mod, hypothesis = ~ reference)
+```
+
+Now, let's say we want to compare each coefficient to the one that immediately precedes: the young adults to the minors, and the older adults to the young adults. Futher suppose we want to compute ratio of coefficients, instead of differences. We can achieve this by setting `ratio` on the left-hand side, and `sequential` on the right-hand side of the formula.
+
+```{r}
+hypotheses(mod, hypothesis = ratio ~ sequential)
+```
+
+## Equivalence {#sec-hypothesis_equivalence}
+
+In many contexts, analysts are less interested in rejecting a null hypothesis, and more interested in testing whether an estimate is "inferior", "superior", or "equivalent" to a given threshold or interval. For example, medical researchers may wish to determine if the estimated effect of a new treatment is similar to the effect of prior treatments, or if it can be considered "negligible" in terms of "clinical significance." To answer such questions, we can use non-inferiority, non-superiority, or equivalence tests like the two-one-sided test, or TOST [@Wel2010; @Rai2014; @Lak2018].
+
+The TOST equivalence test is a statistical method used to determine if an estimate is "practically equivalent" to a null hypothesis within a specified margin of equivalence. Unlike traditional null hypothesis significance testing, which aims to detect a significant difference between groups, the TOST procedure tests two complementary hypotheses: that the true difference between treatments is either greater than a positive equivalence margin or less than a negative equivalence margin. If both one-sided tests reject these null hypotheses, it provides evidence that the true difference falls within the predefined equivalence bounds, thereby concluding practical equivalence.
+
+To conduct a TOST, one proceeds in five steps:
+
+1. *Quantity of interest*: Estimate a quantity of interest $\theta$, which can be a coefficient, function of coefficients, prediction, counterfactual comparison, slope, etc.
+2. *Interval:* Use subject matter knowledge to define an interval of equivalence $[a,b]$. If the quantity of interest $\theta$ falls between $a$ and $b$, it is considered clinically or practically irrelevant.
+3. *Non-inferiority*: Compute the $p$ value associated with a one-tailed null hypothesis test to determine if we can reject the null hypothesis that $\theta < a$.
+4. *Non-superiority*: Compute a $p$ value associated with a one-tailed null hypothesis test to determine if we can reject the null hypothesis that $\theta > b$.
+5. *Equivalence*: Check if the maximum of the non-inferiority and non-superiority $p$ values is lower than the chosen level of statistical significance (e.g., $\alpha=0.05$).
+
+To illustrate, let's revisit the model we fitted above and compare the probability that people in the $18-35$ and $>35$ age brackets will travel to learn their HIV status:
+
+```{r}
+coef(mod)
+hypotheses(mod, hypothesis = "b3 - b2 = 0")
+```
+
+The results above show that the estimated difference in coefficients for the two groups is equal to `{r} sprintf("%.4f", coef(mod)[3]-coef(mod)[2])`, and that this difference is statistically significant (i.e., likely different from zero). This difference may be "statistically significant", but is it "meaningful," "clinically relevant," or "practically important"? 
+
+The first step to answer this question is to define exactly what we mean by "meaningful" or "important". Specifically, the researcher must define an "interval of equivalence," in which estimates are considered unimportant. There is no purely statistical criterion to construct this interval; the decision depends entirely on domain expertise and subject matter knowledge.
+
+In our running example, the researcher could decide that if the difference in $Pr(\text{outcome}=1)$ between the young and older adults is between -5 and 5 percentage points, we can ignore it. If the difference falls in the $[-0.05,0.05]$ interval, it is "clinically irrelevant" or "equivalent to zero."
+
+To conduct a TOST on this equivalence range, we simply add the `equivalence` argument to the previous call:
+
+```{r}
+#| eval: false
+hypotheses(mod, 
+  hypothesis = "b3 - b2 = 0", 
+  equivalence = c(-0.05, 0.05))
+```
+```{r}
+#| echo: false
+h <- hypotheses(mod, 
+  hypothesis = "b3 - b2 = 0", 
+  equivalence = c(-0.05, 0.05))
+h[, c("term", "estimate", "std.error", "p.value.nonsup", "p.value.noninf", "p.value.equiv")]
+```
+
+These results allow us to reach three main conclusions:
+
+1. *Non-inferiority*: The $p$ value associated to this test is very small ($p<0.001$). We can reject the null hypothesis that the difference between coefficients is lower than $-0.05$.
+2. *Non-superiority*: The $p$ value associated to this test is large (`{r} format.pval(h$p.value.nonsup, digits = 3)`). We cannot reject the null hypothesis that the difference between coefficients is larger than $0.05$.
+3. *Equivalence*: The $p$ value associated to the TOST of equivalence corresponds to the maximum of the non-superiority and non-superiority values: `{r} format.pval(h$p.value.equiv, digits = 3)`. Again, we cannot reject the null hypothesis that the two coefficients are practically equivalent to each other.
+
+In the next chapters, we will show how null hypothesis and equivalence tests can be applied beyond simple coefficient estimates, to quantities like predictions, counterfactual comparisons, and slopes.
