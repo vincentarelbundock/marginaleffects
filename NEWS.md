@@ -1,5 +1,11 @@
 # News
 
+## Development
+
+Bugs:
+
+* `systemfit` models returned no standard errors when the same variables entered in different parts of the model. Thanks to @mronkko for report #1233.
+
 ## 0.23.0
 
 Breaking change:
