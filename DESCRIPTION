@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.23.0
+Version: 0.23.0.1
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -157,6 +157,7 @@ Suggests:
     survey,
     survival,
     svglite,
+    systemfit,
     systemfonts,
     tibble,
     tictoc,
@@ -262,6 +263,7 @@ Collate:
     'methods_stats.R'
     'methods_survey.R'
     'methods_survival.R'
+    'methods_systemfit.R'
     'methods_tidymodels.R'
     'methods_tobit1.R'
     'modelarchive.R'
