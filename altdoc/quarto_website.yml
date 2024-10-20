@@ -62,16 +62,9 @@ website:
             file: man/print.marginaleffects.qmd
       - text: News
         file: $ALTDOC_NEWS
-      - text: Changelog
-        file: $ALTDOC_CHANGELOG
       - text: License
         file: $ALTDOC_LICENSE
-      - text: Licence
-        file: $ALTDOC_LICENCE
-      - text: Code of conduct
-        file: $ALTDOC_CODE_OF_CONDUCT
-      - text: Citation
-        file: $ALTDOC_CITATION
+      - vignettes/citation.qmd
 
 format:
   html:
