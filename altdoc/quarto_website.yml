@@ -4,6 +4,7 @@ project:
 
 website:
   favicon: assets/favicon.ico
+  site-url: https://marginaleffects.com
   navbar:
     background: "#eeeeee"
     search: true
@@ -22,9 +23,9 @@ website:
       - text: Documentation
         menu:
           - text: R
-            href: r/index.html
+            href: https://marginaleffects.com/r/index.html
           - text: Python
-            href: https://pypi.org/project/marginaleffects/
+            href: https://marginaleffects.com/bonus/python.html
       - icon: github
         aria-label: marginaleffects GitHub
         menu:
