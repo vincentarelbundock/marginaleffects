@@ -10,6 +10,7 @@
 #' @param internal Logical. Raises a deprecation warning when FALSE.
 #' @return `specify_hypothesis()` is a "function factory", which means that executing it will return a function suitable for use in the `hypothesis` argument of a `marginaleffects` function.
 #' @export
+#' @noRd
 specify_hypothesis <- function(
     hypothesis = "reference",
     comparison = "difference",

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.6.4">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>plot_predictions – Marginal Effects Zoo</title>
+<title>plot_predictions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,9 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../man/plot_comparisons.html" rel="next">
-<link href="../man/slopes.html" rel="prev">
-<link href="../images/favicon.png" rel="icon" type="image/png">
+<link href="../assets/favicon.ico" rel="icon">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -105,36 +103,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
-    <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Marginal Effects Zoo</span>
-    </a>
+    <img src="../assets/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo"></a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
-<span class="menu-text">Get started</span></a>
+    <a class="nav-link" href="https://marginaleffects.com"> 
+<span class="menu-text">Model to Meaning</span></a>
+  </li>  
+</ul>
+<ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="https::/marginaleffects.com/bonus/get_started.html"> 
+<span class="menu-text">Quick start</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf"> 
+    <a class="nav-link" href="../assets/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf"> 
 <span class="menu-text">Article</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../vignettes/help.html"> 
+    <a class="nav-link" href="../bonus/help.html"> 
 <span class="menu-text">Help</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-bi-github" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
+</i> 
+ <span class="menu-text"></span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-bi-github">
+<li>
+    <a class="dropdown-item" href="https://github.com/vincentarelbundock/marginaleffects">
+ <span class="dropdown-text">R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/vincentarelbundock/pymarginaleffects">
+ <span class="dropdown-text">Python</span></a>
+  </li>  
+    </ul>
+</li>
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
+    <a class="nav-link" href="https://twitter.com/vincentab"> <i class="bi bi-twitter" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/vincentab"> <i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://fosstodon.org/@vincentab"> <i class="bi bi-mastodon" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -157,274 +175,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Get started</span></a>
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
- <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Predictions</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/comparisons.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Comparisons</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/slopes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Slopes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/hypothesis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Hypothesis Tests</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/plot.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Plots</span></a>
-  </div>
-</li>
-      </ul>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
- <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Bayes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/bootstrap.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Bootstrap &amp; Simulation</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/categorical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Categorical outcomes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/conformal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Conformal prediction</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/conjoint.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Conjoint experiments</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Elasticity</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/equivalence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Equivalence Tests</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/experiments.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Experiments</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/gam.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">GAM</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">G-Computation</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Heterogeneity</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/interactions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Interactions, polynomials, and splines</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Inverse Probability Weighting</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/logit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Logit</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/lme4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Mixed Effects</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Machine Learning</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/marginalmeans.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Marginal Means</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Matching</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/mrp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">MrP</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Missing Data</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/svalues.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">S Values</span></a>
-  </div>
-</li>
-      </ul>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
- <span class="menu-text">Miscellaneous</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/help.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Help</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">FAQ</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/meme.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Meme gallery</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/alternative_software.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Alternative Software</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/extensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Extensions</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/links.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Links</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/performance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Performance</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/numpyro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">NumPyro</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/supported_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Supported Models</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tables</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/uncertainty.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Standard Errors</span></a>
-  </div>
-</li>
-      </ul>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
@@ -537,8 +300,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content"><section id="plot-conditional-or-marginal-predictions" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="plot-conditional-or-marginal-predictions">Plot Conditional or Marginal Predictions</h2>
 <section id="description" class="level3"><h3 class="anchored" data-anchor-id="description">Description</h3>
 <p>Plot predictions on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).</p>
-<p>The <code>by</code> argument is used to plot marginal predictions, that is, predictions made on the original data, but averaged by subgroups. This is analogous to using the <code>by</code> argument in the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function.</p>
-<p>The <code>condition</code> argument is used to plot conditional predictions, that is, predictions made on a user-specified grid. This is analogous to using the <code>newdata</code> argument and <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code> function in a <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> call. All variables whose values are not specified explicitly are treated as usual by <code><a href="https://marginaleffects.com/man/datagrid.html">datagrid()</a></code>, that is, they are held at their mean or mode (or rounded mean for integers). This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the <code>condition</code> argument, or supply model-specific arguments to compute population-level estimates. See details below.</p>
+<p>The <code>by</code> argument is used to plot marginal predictions, that is, predictions made on the original data, but averaged by subgroups. This is analogous to using the <code>by</code> argument in the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> function.</p>
+<p>The <code>condition</code> argument is used to plot conditional predictions, that is, predictions made on a user-specified grid. This is analogous to using the <code>newdata</code> argument and <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code> function in a <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> call. All variables whose values are not specified explicitly are treated as usual by <code><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid()</a></code>, that is, they are held at their mean or mode (or rounded mean for integers). This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the <code>condition</code> argument, or supply model-specific arguments to compute population-level estimates. See details below.</p>
 <p>See the "Plots" vignette and website for tutorials and information on how to customize plots:</p>
 <ul>
 <li>
@@ -629,7 +392,7 @@ Model object
 <code id="newdata">newdata</code>
 </td>
 <td>
-When <code>newdata</code> is <code>NULL</code>, the grid is determined by the <code>condition</code> argument. When <code>newdata</code> is not <code>NULL</code>, the argument behaves in the same way as in the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function.
+When <code>newdata</code> is <code>NULL</code>, the grid is determined by the <code>condition</code> argument. When <code>newdata</code> is not <code>NULL</code>, the argument behaves in the same way as in the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> function.
 </td>
 </tr>
 <tr>
@@ -757,7 +520,7 @@ FALSE grayscale or color plot
 <code id="...">…</code>
 </td>
 <td>
-Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method supplied by the modeling package.These arguments are particularly useful for mixed-effects or bayesian models (see the online vignettes on the <code>marginaleffects</code> website). Available arguments can vary from model to model, depending on the range of supported arguments by each modeling package. See the "Model-Specific Arguments" section of the <code><a href="https://marginaleffects.com/man/slopes.html">?slopes</a></code> documentation for a non-exhaustive list of available arguments.
+Additional arguments are passed to the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method supplied by the modeling package.These arguments are particularly useful for mixed-effects or bayesian models (see the online vignettes on the <code>marginaleffects</code> website). Available arguments can vary from model to model, depending on the range of supported arguments by each modeling package. See the "Model-Specific Arguments" section of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">?slopes</a></code> documentation for a non-exhaustive list of available arguments.
 </td>
 </tr>
 </tbody></table></section><section id="value" class="level3"><h3 class="anchored" data-anchor-id="value">Value</h3>
@@ -956,7 +719,7 @@ sampleSelection::predict.selection
 </tr>
 </tbody></table></section><section id="prediction-types" class="level3"><h3 class="anchored" data-anchor-id="prediction-types">Prediction types</h3>
 <p>The <code>type</code> argument determines the scale of the predictions used to compute quantities of interest with functions from the <code>marginaleffects</code> package. Admissible values for <code>type</code> depend on the model object. When users specify an incorrect value for <code>type</code>, <code>marginaleffects</code> will raise an informative error with a list of valid <code>type</code> values for the specific model object. The first entry in the list in that error message is the default type.</p>
-<p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models, and only for the <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> function. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type=“invlink(link)”</code> will not always be equivalent to the average of estimates with <code>type=“response”</code>. This type is default when calling <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code>. It is available—but not default—when calling <code><a href="https://marginaleffects.com/man/predictions.html">avg_predictions()</a></code> or <code><a href="https://marginaleffects.com/man/predictions.html">predictions()</a></code> with the <code>by</code> argument.</p>
+<p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models, and only for the <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> function. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type=“invlink(link)”</code> will not always be equivalent to the average of estimates with <code>type=“response”</code>. This type is default when calling <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code>. It is available—but not default—when calling <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions()</a></code> or <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> with the <code>by</code> argument.</p>
 <p>Some of the most common <code>type</code> values are:</p>
 <p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumhaz, cumprob, density, detection, disp, ev, expected, expvalue, fitted, hazard, invlink(link), latent, latent_N, linear, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, rmst, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob</p>
 </section><section id="examples" class="level3"><h3 class="anchored" data-anchor-id="examples">Examples</h3>
@@ -964,7 +727,7 @@ sampleSelection::predict.selection
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://marginaleffects.com/">"marginaleffects"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">wt</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="st">"wt"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="st">"wt"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="plot_predictions_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
@@ -972,21 +735,21 @@ sampleSelection::predict.selection
 </div>
 </div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">wt</span> <span class="op">*</span> <span class="va">am</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"wt"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hp"</span>, <span class="st">"wt"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="plot_predictions_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"hp"</span>, wt <span class="op">=</span> <span class="st">"threenum"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"hp"</span>, wt <span class="op">=</span> <span class="st">"threenum"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="plot_predictions_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://marginaleffects.com/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"hp"</span>, wt <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">mod</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"hp"</span>, wt <span class="op">=</span> <span class="va">range</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="plot_predictions_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
@@ -1415,17 +1178,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../man/slopes.html" class="pagination-link" aria-label="`slopes`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>slopes</code></span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../man/plot_comparisons.html" class="pagination-link" aria-label="`plot_comparisons`">
-        <span class="nav-page-text"><code>plot_comparisons</code></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
+</script>
 </div> <!-- /content -->
 
 

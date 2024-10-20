@@ -3,75 +3,39 @@ project:
   output-dir: ../docs/
 
 website:
-  title: "Marginal Effects Zoo"
-  favicon: "images/favicon.png"
-  page-navigation: true
-
+  favicon: assets/favicon.ico
   navbar:
     background: "#eeeeee"
     search: true
-    logo: images/marginaleffects_icon.png
+    logo: assets/marginaleffects_icon.png
     logo-alt: "marginaleffects logo"
+    left:
+      - text: Model to Meaning
+        href: https://marginaleffects.com
     right:
-      - text: Get started
-        href: vignettes/get_started.qmd
+      - text: Quick start
+        href: https::/marginaleffects.com/bonus/get_started.html
       - text: Article
-        href: files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf
+        href: assets/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf
       - text: Help
-        href: vignettes/help.qmd
+        href: bonus/help.html
       - icon: github
-        href: $ALTDOC_PACKAGE_URL_GITHUB
-        aria-label: $ALTDOC_PACKAGE_NAME GitHub
+        aria-label: marginaleffects GitHub
+        menu:
+          - text: R
+            href:  https://github.com/vincentarelbundock/marginaleffects
+          - text: Python
+            href:  https://github.com/vincentarelbundock/pymarginaleffects
       - icon: twitter
         href: https://twitter.com/vincentab
+      - icon: mastodon
+        href: https://fosstodon.org/@vincentab
 
   sidebar:
     collapse-level: 1
     contents:
-      - vignettes/get_started.qmd
-      - section: Tutorials
-        contents:
-          - vignettes/predictions.qmd
-          - vignettes/comparisons.qmd
-          - vignettes/slopes.qmd
-          - vignettes/hypothesis.qmd
-          - vignettes/plot.qmd
-      - section: Case studies
-        contents:
-          - vignettes/brms.qmd
-          - vignettes/bootstrap.qmd
-          - vignettes/categorical.qmd
-          - vignettes/conformal.qmd
-          - vignettes/conjoint.qmd
-          - vignettes/elasticity.qmd
-          - vignettes/equivalence.qmd
-          - vignettes/experiments.qmd
-          - vignettes/gam.qmd
-          - vignettes/gcomputation.qmd
-          - vignettes/heterogeneity.qmd
-          - vignettes/interactions.qmd
-          - vignettes/ipw.qmd
-          - vignettes/logit.qmd
-          - vignettes/lme4.qmd
-          - vignettes/machine_learning.qmd
-          - vignettes/marginalmeans.qmd
-          - vignettes/matching.qmd
-          - vignettes/mrp.qmd
-          - vignettes/multiple_imputation.qmd
-          - vignettes/svalues.qmd
-      - section: Miscellaneous
-        contents:
-          - vignettes/help.qmd
-          - vignettes/faq.qmd
-          - vignettes/meme.qmd
-          - vignettes/alternative_software.qmd
-          - vignettes/extensions.qmd
-          - vignettes/links.qmd
-          - vignettes/performance.qmd
-          - vignettes/numpyro.qmd
-          - vignettes/supported_models.qmd
-          - vignettes/tables.qmd
-          - vignettes/uncertainty.qmd
+      - text: Home
+        file: index.md
       - section: Functions
         contents:
           - text: "`predictions`"
@@ -96,18 +60,28 @@ website:
             file: man/datagrid.qmd
           - text: "`print.marginaleffects`"
             file: man/print.marginaleffects.qmd
-      - text: Article
-        href: files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf
-      - $ALTDOC_NEWS
-      - $ALTDOC_LICENSE
-      - $ALTDOC_CITATION
+      - text: News
+        file: $ALTDOC_NEWS
+      - text: Changelog
+        file: $ALTDOC_CHANGELOG
+      - text: License
+        file: $ALTDOC_LICENSE
+      - text: Licence
+        file: $ALTDOC_LICENCE
+      - text: Code of conduct
+        file: $ALTDOC_CODE_OF_CONDUCT
+      - text: Citation
+        file: $ALTDOC_CITATION
 
 format:
   html:
-    toc: true
+    reader-mode: true
     theme:
       - flatly
       - custom.scss
+    top-level-division: chapter
+    citeproc: true
+    toc: true
     highlight-style: atom-one
     code-copy: true
     code-link: true
