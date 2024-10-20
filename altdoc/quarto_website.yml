@@ -35,7 +35,7 @@ website:
     collapse-level: 1
     contents:
       - text: Home
-        file: index.md
+        href: https://marginaleffects.com
       - section: Functions
         contents:
           - text: "`predictions`"
