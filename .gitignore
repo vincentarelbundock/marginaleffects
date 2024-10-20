@@ -26,3 +26,4 @@ _quarto/
 vignettes/*html
 src/*.so
 src/*.o
+_quarto/*
