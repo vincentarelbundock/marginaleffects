@@ -15,6 +15,10 @@ on:
       - 'src/**'
       - '.ci/atime/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   comment:
     runs-on: ubuntu-latest
