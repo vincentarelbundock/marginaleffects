@@ -70,6 +70,8 @@ jobs:
         run: |
           cp /github/home/.Rprofile .
           # echo "options(repos = c(CRAN = 'https://cloud.r-project.org'))" >> .Rprofile
+          Rscript -e 'install.packages("remotes")'
+          Rscript -e 'remotes::install_version("git2r", "0.33.0")'
           Rscript -e 'install.packages(c("atime", "ggplot2", "directlabels"))'
           echo "END_SETUP_START_TESTS_TIME=$(date +%s)" >> $GITHUB_ENV
           Rscript -e 'atime::atime_pkg(Sys.getenv("GITHUB_WORKSPACE"), tests.dir = ".ci");'
