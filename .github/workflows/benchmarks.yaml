@@ -47,7 +47,7 @@ jobs:
         run: |
           install.packages(c("remotes", "bench"))
           remotes::install_github("DavisVaughan/cross")
-        shell: Rscript{0}
+        shell: Rscript {0}
 
       - name: Run benchmark script
         run: |
