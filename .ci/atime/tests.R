@@ -1,5 +1,4 @@
 library(atime)
-library(marginaleffects)
 
 test.list <- atime::atime_test_list(
   N = c(10, 100, 1000),

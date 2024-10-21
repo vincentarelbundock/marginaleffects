@@ -22,6 +22,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       repo_token: ${{ secrets.GITHUB_TOKEN }}
+      USE_SYSTEM_LIBGIT2: true
     steps:
       # All steps below are copied from https://github.com/Anirban166/Autocomment-atime-results/blob/main/action.yml
       # The only difference is that I replaced 
@@ -63,7 +64,6 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y libgit2-dev
-          sudo apt-get install -y pkg-config
         shell: bash  
 
       - name: Install required dependencies and initiate atime magic
