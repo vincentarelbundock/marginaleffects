@@ -48,6 +48,7 @@ jobs:
       - name: Run benchmark script
         run: |
           "Rscript .ci/atime/testsbis.R"
+        shell : bash
 
       - name: Upload results
         id: artifact-upload-step
