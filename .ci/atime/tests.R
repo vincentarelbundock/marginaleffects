@@ -12,13 +12,23 @@ test.list <- atime::atime_test_list(
     expr = marginaleffects::slopes(mod, vcov = FALSE, newdata = "mean")
   ),
   # marginal effects at the mean
-  test2 = atime::atime_test(slopes(mod, newdata = "mean")),
+  test2 = atime::atime_test(
+    expr = marginaleffects::slopes(mod, newdata = "mean")
+  ),
   # 1 variable; no standard error
-  test3 = atime::atime_test(slopes(mod, vcov = FALSE, variables = "X3")),
+  test3 = atime::atime_test(
+    expr = marginaleffects::slopes(mod, vcov = FALSE, variables = "X3")
+  ),
   # 1 variable
-  test4 = atime::atime_test(slopes(mod, variables = "X3")),
+  test4 = atime::atime_test(
+    expr = marginaleffects::slopes(mod, variables = "X3")
+  ),
   # 26 variables; no standard error
-  test5 = atime::atime_test(slopes(mod, vcov = FALSE)),
+  test5 = atime::atime_test(
+    expr = marginaleffects::slopes(mod, vcov = FALSE)
+  ),
   # 26 variables
-  test6 = atime::atime_test(slopes(mod))
+  test6 = atime::atime_test(
+    expr = marginaleffects::slopes(mod)
+  )
 )
