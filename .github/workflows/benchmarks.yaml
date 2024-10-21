@@ -66,5 +66,5 @@ jobs:
         with:
           message: |
             [![Comparison Plot](./.ci/atime/benchmark_result.png)](./.ci/atime/benchmark_result.png)\nGenerated via commit ${{ github.event.pull_request.head.sha }}\nDownload link for the artifact containing the test results: [↓ benchmark-results.zip](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.artifact-upload-step.outputs.artifact-id }})
-          comment_tag: execution  
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          comment-tag: execution  
+          github-token: ${{ secrets.GITHUB_TOKEN }}
