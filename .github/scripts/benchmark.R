@@ -65,7 +65,7 @@ run_benchmark <- function(pr_number) {
 
   ggsave(
     plot = plot_result,
-    ".ci/atime/benchmark_result.png"
+    ".github/scripts/benchmark_result.png"
   )
 }
 
