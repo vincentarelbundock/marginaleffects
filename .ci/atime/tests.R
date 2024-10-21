@@ -9,7 +9,7 @@ test.list <- atime::atime_test_list(
   },
   tests = atime::atime_test(
     # marginal effects at the mean; no standard error
-    slopes_no_vcov_mean = slopes(mod, vcov = FALSE, newdata = "mean")
+    expr = slopes(mod, vcov = FALSE, newdata = "mean")
     # # marginal effects at the mean
     # slopes_vcov_mean = slopes(mod, newdata = "mean"),
     # # 1 variable; no standard error
@@ -21,5 +21,5 @@ test.list <- atime::atime_test_list(
     # # 26 variables
     # slopes_all_vcov = slopes(mod)
   ),
-  NULL
+  foobar = "9d2e106be70bb73857bb43f3b5c797e487c40518"
 )
