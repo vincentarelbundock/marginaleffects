@@ -62,7 +62,7 @@ jobs:
       - name: Set up the required system dependency libgit2
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y libgit2-dev
+          sudo apt-get install -y libgit2-dev pkg-config
         shell: bash  
 
       - name: Install required dependencies and initiate atime magic
