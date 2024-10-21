@@ -109,9 +109,9 @@ get_contrast_data <- function(model,
 
     # single contrast
     if (!isTRUE(cross)) {
-        lo <- rbindlist(lo, fill = TRUE)
-        hi <- rbindlist(hi, fill = TRUE)
-        original <- rbindlist(original, fill = TRUE)
+        lo <- rbindlist(lo, fill = TRUE, ignore.attr = TRUE)
+        hi <- rbindlist(hi, fill = TRUE, ignore.attr = TRUE)
+        original <- rbindlist(original, fill = TRUE, ignore.attr = TRUE)
         # long names to avoid user-supplied colname conflict
         marginaleffects_ter <- unlist(ter, use.names = FALSE)
         marginaleffects_lab <- unlist(lab, use.names = FALSE)

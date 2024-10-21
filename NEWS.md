@@ -6,6 +6,10 @@ Bugs:
 
 * `systemfit` models returned no standard errors when the same variables entered in different parts of the model. Thanks to @mronkko for report #1233.
 
+Misc:
+
+* Be less strict about combining columns of different types. This allows us to handle types like `haven_labelled`. Thanks to @mwindzio for report #1238.
+
 ## 0.23.0
 
 Breaking change:
