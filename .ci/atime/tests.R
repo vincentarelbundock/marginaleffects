@@ -20,5 +20,6 @@ test.list <- atime::atime_test_list(
     slopes_all_no_vcov = slopes(mod, vcov = FALSE),
     # 26 variables
     slopes_all_vcov = slopes(mod)
-  )
+  ),
+  versions = ""
 )
