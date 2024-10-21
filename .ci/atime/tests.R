@@ -21,5 +21,5 @@ test.list <- atime::atime_test_list(
     # 26 variables
     slopes_all_vcov = slopes(mod)
   ),
-  versions = ""
+  CRAN = ""
 )
