@@ -22,8 +22,16 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       repo_token: ${{ secrets.GITHUB_TOKEN }}
-      R_KEEP_PKG_SOURCE: yes
     steps:
+      # All steps below are copied from https://github.com/Anirban166/Autocomment-atime-results/blob/main/action.yml
+      # The only difference is that I replaced 
+      #    git switch "${GITHUB_HEAD_REF}"
+      # by
+      #    git fetch origin "pull/${{ github.event.pull_request.number }}/head:pr-branch"
+      #    git switch pr-branch
+      # 
+      # due to https://github.com/Anirban166/Autocomment-atime-results/issues/38
+
       - name: Start timer
         run: echo "START_SETUP_TIME=$(date +%s)" >> $GITHUB_ENV
         shell: bash
