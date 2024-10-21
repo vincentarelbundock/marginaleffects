@@ -7,19 +7,18 @@ test.list <- atime::atime_test_list(
     dat <- data.frame(matrix(rnorm(N * 26), ncol = 26))
     mod <- lm(X1 ~ ., dat)
   },
-  tests = atime::atime_test(
-    # marginal effects at the mean; no standard error
-    expr = slopes(mod, vcov = FALSE, newdata = "mean")
-    # # marginal effects at the mean
-    # slopes_vcov_mean = slopes(mod, newdata = "mean"),
-    # # 1 variable; no standard error
-    # slopes_no_vcov_one_var = slopes(mod, vcov = FALSE, variables = "X3"),
-    # # 1 variable
-    # slopes_vcov_one_var = slopes(mod, variables = "X3"),
-    # # 26 variables; no standard error
-    # slopes_all_no_vcov = slopes(mod, vcov = FALSE),
-    # # 26 variables
-    # slopes_all_vcov = slopes(mod)
+  # marginal effects at the mean; no standard error
+  test1 = atime::atime_test(
+    expr = marginaleffects::slopes(mod, vcov = FALSE, newdata = "mean")
   ),
-  foobar = "9d2e106be70bb73857bb43f3b5c797e487c40518"
+  # marginal effects at the mean
+  test2 = atime::atime_test(slopes(mod, newdata = "mean")),
+  # 1 variable; no standard error
+  test3 = atime::atime_test(slopes(mod, vcov = FALSE, variables = "X3")),
+  # 1 variable
+  test4 = atime::atime_test(slopes(mod, variables = "X3")),
+  # 26 variables; no standard error
+  test5 = atime::atime_test(slopes(mod, vcov = FALSE)),
+  # 26 variables
+  test6 = atime::atime_test(slopes(mod))
 )
