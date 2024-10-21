@@ -8,15 +8,16 @@ pr_number <- Sys.getenv("PR_NUMBER")
 run_benchmark <- function(pr_number) {
   out <- cross::run(
     pkgs = c(
-      "main" = "vincentarelbundock/marginaleffects",
-      "PR" = paste0("vincentarelbundock/marginaleffects#", pr_number)
+      "marginaleffects",
+      "vincentarelbundock/marginaleffects",
+      paste0("vincentarelbundock/marginaleffects#", pr_number)
     ),
     ~ {
       library(marginaleffects)
       library(data.table)
 
       bench::press(
-        N = c(10, 100),
+        N = c(10),
         {
           dat <- data.frame(matrix(rnorm(N * 26), ncol = 26))
           mod <- lm(X1 ~ ., dat)
@@ -45,6 +46,7 @@ run_benchmark <- function(pr_number) {
     mutate(
       pkg = case_match(
         pkg,
+        "marginaleffects" ~ "CRAN",
         "vincentarelbundock/marginaleffects" ~ "main",
         paste0("vincentarelbundock/marginaleffects#", pr_number) ~ "PR"
       )
