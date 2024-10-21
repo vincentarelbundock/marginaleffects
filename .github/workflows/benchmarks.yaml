@@ -22,21 +22,8 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       repo_token: ${{ secrets.GITHUB_TOKEN }}
-      USE_SYSTEM_LIBGIT2: true
+      PR_NUMBER: ${{ github.event.number }}
     steps:
-      # All steps below are copied from https://github.com/Anirban166/Autocomment-atime-results/blob/main/action.yml
-      # The only difference is that I replaced 
-      #    git switch "${GITHUB_HEAD_REF}"
-      # by
-      #    git fetch origin "pull/${{ github.event.pull_request.number }}/head:pr-branch"
-      #    git switch pr-branch
-      # 
-      # due to https://github.com/Anirban166/Autocomment-atime-results/issues/38
-
-      - name: Start timer
-        run: echo "START_SETUP_TIME=$(date +%s)" >> $GITHUB_ENV
-        shell: bash
-        
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -47,36 +34,20 @@ jobs:
           git config --global --add safe.directory '*'
         shell: bash
 
-      # To ensure local branch references exist and can be found when using git2r::revparse_single: (for more information, please check https://github.com/Anirban166/Autocomment-atime-results/issues/33#issuecomment-2038431272 and the comments below that)
-      - name: Retrieve branch references
-        run: |
-          git switch "${GITHUB_BASE_REF}"
-          git fetch origin "pull/${{ github.event.pull_request.number }}/head:pr-branch"
-          git switch pr-branch
-        shell: bash
-
       - name: R Setup
         uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
 
-      - name: Set up the required system dependency libgit2
+      - name: Install required dependencies for benchmark
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y libgit2-dev
-        shell: bash  
+          install.packages(c("remotes", "bench"))
+          remotes::install_github("DavisVaughan/cross")
+        shell: Rscript{0}
 
-      - name: Install required dependencies and initiate atime magic
+      - name: Run benchmark script
         run: |
-          cp /github/home/.Rprofile .
-          # echo "options(repos = c(CRAN = 'https://cloud.r-project.org'))" >> .Rprofile
-          Rscript -e 'install.packages("remotes")'
-          Rscript -e 'remotes::install_version("git2r", "0.33.0")'
-          Rscript -e 'install.packages(c("atime", "ggplot2", "directlabels", "checkmate", "generics", "insight", "Rcpp", "RcppEigen"))'
-          echo "END_SETUP_START_TESTS_TIME=$(date +%s)" >> $GITHUB_ENV
-          Rscript -e 'atime::atime_pkg(Sys.getenv("GITHUB_WORKSPACE"), tests.dir = ".ci");'
-          echo "END_TESTS_TIME=$(date +%s)" >> $GITHUB_ENV
-        shell: bash
+          "Rscript .ci/atime/testsbis.R"
 
       - name: Upload results
         id: artifact-upload-step
@@ -86,34 +57,10 @@ jobs:
           path: .ci/atime/
 
       - name: Push generated plot along with relevant information on the PR thread as a GH-bot comment
-        run: |
-          R_SETUP_DURATION=$((END_SETUP_START_TESTS_TIME - START_SETUP_TIME))
-          VERSION_SETUP_DURATION=$(cut -d '.' -f 1 ./.ci/atime/install_seconds.txt)
-          ATIME_TESTS_DURATION=$((END_TESTS_TIME - END_SETUP_START_TESTS_TIME - VERSION_SETUP_DURATION))
-
-          formatTime() {
-              local totalSeconds=$1
-              if [ $totalSeconds -lt 0 ]; then
-                  echo "Time calculation error: negative duration"
-                  return
-              fi
-              if [ $totalSeconds -lt 60 ]; then
-                  echo "${totalSeconds} seconds"
-              else
-                  local minutes=$((totalSeconds / 60))
-                  local seconds=$((totalSeconds % 60))
-                  echo "${minutes} minutes and ${seconds} seconds"
-              fi
-          }
-          
+        run: |          
           # Comment contents:
-          echo "[![Comparison Plot](./.ci/atime/tests_preview_facet.png)](./.ci/atime/tests_all_facet.png)" >> report.md
+          echo "[![Comparison Plot](./.ci/atime/benchmark_result.png)](./.ci/atime/benchmark_result.png)" >> report.md
           echo -e "\nGenerated via commit ${{ github.event.pull_request.head.sha }}" >> report.md
           echo -e "\nDownload link for the artifact containing the test results: [↓ atime-results.zip](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.artifact-upload-step.outputs.artifact-id }})" >> report.md
-          echo -e "\n| Task | Duration |" >> report.md
-          echo -e "|---|---|" >> report.md
-          echo -e "| R setup and installing dependencies   | $(formatTime $R_SETUP_DURATION)       |" >> report.md
-          echo -e "| Installing different package versions | $(formatTime $VERSION_SETUP_DURATION) |" >> report.md
-          echo -e "| Running and plotting the test cases   | $(formatTime $ATIME_TESTS_DURATION)   |" >> report.md
           cml comment update report.md
         shell: bash
