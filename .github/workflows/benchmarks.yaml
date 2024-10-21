@@ -42,7 +42,8 @@ jobs:
       - name: Retrieve branch references
         run: |
           git switch "${GITHUB_BASE_REF}"
-          git switch "${GITHUB_REF_NAME}"
+          git fetch origin "pull/${{ github.event.pull_request.number }}/head:pr-branch"
+          git switch pr-branch
         shell: bash
 
       - name: R Setup
