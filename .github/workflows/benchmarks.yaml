@@ -47,7 +47,7 @@ jobs:
 
       - name: Run benchmark script
         run: |
-          source(".github/scripts/testsbis.R", echo = TRUE)
+          source(".github/scripts/benchmark.R", echo = TRUE)
         shell: Rscript {0}
 
       - name: Upload results
