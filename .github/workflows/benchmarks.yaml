@@ -47,7 +47,7 @@ jobs:
 
       - name: Run benchmark script
         run: |
-          source(".github/scripts/benchmark.R", echo = TRUE)
+          source(".github/scripts/benchmarks.R", echo = TRUE)
         shell: Rscript {0}
 
       - name: Upload results
@@ -62,6 +62,6 @@ jobs:
           # Comment contents:
           echo "[![Comparison Plot](./.github/scripts/benchmark_result.png)](./.github/scripts/benchmark_result.png)" >> report.md
           echo -e "\nGenerated via commit ${{ github.event.pull_request.head.sha }}" >> report.md
-          echo -e "\nDownload link for the artifact containing the test results: [↓ atime-results.zip](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.artifact-upload-step.outputs.artifact-id }})" >> report.md
+          echo -e "\nDownload link for the artifact containing the test results: [↓ benchmark-results.zip](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.artifact-upload-step.outputs.artifact-id }})" >> report.md
           cml comment update report.md
         shell: bash
