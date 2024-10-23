@@ -241,6 +241,8 @@ slopes <- function(model,
                    ...) {
     dots <- list(...)
 
+Sys.sleep(2)
+
     # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
