@@ -47,7 +47,7 @@ jobs:
 
       - name: Run benchmark script
         run: |
-          source(".github/scripts/testsbis.R", echo = TRUE)
+          source(".github/scripts/benchmark.R", echo = TRUE)
         shell: Rscript {0}
 
       - name: Upload results
@@ -57,11 +57,11 @@ jobs:
           name: benchmark-results
           path: .github/scripts/
 
-      - name: Add comment containing benchmark results 
-        uses: thollander/actions-comment-pull-request@v3
-        with:
-          message: |
-            hi there
-# [![Comparison Plot](./.github/scripts/benchmark_result.png)](./.github/scripts/benchmark_result.png)\nGenerated via commit ${{ github.event.pull_request.head.sha }}\nDownload link for the artifact containing the test results: [↓ benchmark-results.zip](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.artifact-upload-step.outputs.artifact-id }})
-          comment-include: "Download link"  
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push generated plot as a GH-bot comment
+        run: |
+          # Comment contents:
+          echo "[![Comparison Plot](./.github/scripts/benchmark_result.png)](./.github/scripts/benchmark_result.png)" >> report.md
+          echo -e "\nGenerated via commit ${{ github.event.pull_request.head.sha }}" >> report.md
+          echo -e "\nDownload link for the artifact containing the test results: [↓ atime-results.zip](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.artifact-upload-step.outputs.artifact-id }})" >> report.md
+          cml comment update report.md
+        shell: bash

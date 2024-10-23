@@ -16,7 +16,7 @@ out <- cross::run(
     library(data.table)
 
     bench::press(
-      N = c(10),
+      N = c(10, 50),
       {
         dat <- data.frame(matrix(rnorm(N * 26), ncol = 26))
         mod <- lm(X1 ~ ., dat)
