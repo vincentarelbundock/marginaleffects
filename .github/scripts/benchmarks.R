@@ -16,7 +16,7 @@ out <- cross::run(
     library(data.table)
 
     bench::press(
-      N = c(10, 50),
+      N = c(100, 500, 1000, 10000, 50000),
       {
         dat <- data.frame(matrix(rnorm(N * 26), ncol = 26))
         mod <- lm(X1 ~ ., dat)
@@ -32,7 +32,7 @@ out <- cross::run(
           # 26 variables; no standard error
           slopes(mod, vcov = FALSE),
           # 26 variables
-          marginaleffects::slopes(mod),
+          slopes(mod),
           check = FALSE,
           iterations = 5
         )
@@ -53,12 +53,26 @@ unnested <- out |>
   unnest(result) |>
   mutate(expression = as.character(expression))
 
-plot_result <- ggplot(unnested, aes(N, median, color = pkg)) +
-  geom_line(aes(linetype = pkg)) +
+plot_result <- ggplot(unnested, aes(N, median, color = pkg, linetype = pkg)) +
+  geom_line() +
   geom_point() +
-  facet_wrap(~expression) +
+  facet_wrap(
+    ~expression,
+    labeller = labeller(expression = label_wrap_gen(width = 25)),
+    scales = "free_y"
+  ) +
+  labs(
+    y = "Median time (s)",
+    color = "Package version",
+    linetype = "Package version"
+  ) +
   theme_light() +
   theme(
+    strip.text = element_text(color = "white", size = 10),
+    strip.background = element_rect(
+      fill = "#24478f", linetype = "solid",
+      color = "black", linewidth = 1
+    ),
     legend.position = "bottom"
   )
 
