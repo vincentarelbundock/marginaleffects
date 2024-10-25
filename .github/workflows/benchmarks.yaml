@@ -39,12 +39,15 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Pandoc setup
+        uses: r-lib/actions/setup-pandoc@v2
+
       - name: Install required dependencies for benchmark
         run: |
-          install.packages(c("remotes", "bench", "dplyr", "tidyr", "ggplot2"))
+          install.packages(c("remotes", "bench", "dplyr", "Formula", "pandoc", "tidyr", "tinytable"))
           remotes::install_github("DavisVaughan/cross")
         shell: Rscript {0}
-
+  
       - name: Run benchmark script
         run: |
           source(".github/scripts/benchmarks.R", echo = TRUE)
@@ -60,7 +63,6 @@ jobs:
       - name: Push generated plot as a GH-bot comment
         run: |
           # Comment contents:
-          echo "[![Comparison Plot](./.github/scripts/benchmark_result.png)](./.github/scripts/benchmark_result.png)" >> report.md
           echo -e "\nGenerated via commit ${{ github.event.pull_request.head.sha }}" >> report.md
           echo -e "\nDownload link for the artifact containing the test results: [↓ benchmark-results.zip](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.artifact-upload-step.outputs.artifact-id }})" >> report.md
           cml comment update report.md
