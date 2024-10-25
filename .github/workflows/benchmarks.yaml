@@ -39,12 +39,15 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Pandoc setup
+        uses: r-lib/actions/setup-pandoc@v2
+
       - name: Install required dependencies for benchmark
         run: |
-          install.packages(c("remotes", "bench", "dplyr", "tidyr", "tinytable"))
+          install.packages(c("remotes", "bench", "dplyr", "Formula", "pandoc", "tidyr", "tinytable"))
           remotes::install_github("DavisVaughan/cross")
         shell: Rscript {0}
-
+  
       - name: Run benchmark script
         run: |
           source(".github/scripts/benchmarks.R", echo = TRUE)
