@@ -387,3 +387,4 @@ avg_slopes <- function(model,
 
     return(out)
 }
+
