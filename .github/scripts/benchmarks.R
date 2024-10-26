@@ -1,5 +1,4 @@
-library(dplyr)
-library(tidyr)
+library(cross)
 library(tinytable)
 
 # Stored in the Github actions workflow
@@ -17,6 +16,7 @@ out <- cross::run(
 
     bench::press(
       N = 75000,
+      N = 20,
       {
         dat <- data.frame(matrix(rnorm(N * 26), ncol = 26))
         mod <- lm(X1 ~ ., dat)
@@ -67,63 +67,60 @@ out <- cross::run(
   }
 )
 
-unnested <- out |>
-  mutate(
-    pkg = case_match(
-      pkg,
-      "marginaleffects" ~ "CRAN",
-      "vincentarelbundock/marginaleffects" ~ "main",
-      paste0("vincentarelbundock/marginaleffects#", pr_number) ~ "PR"
-    )
-  ) |>
-  unnest(result) |>
-  mutate(
-    expression = as.character(expression),
-    # Get duration in seconds
-    median = round(as.numeric(median), 3),
-    # Get memory in MB
-    mem_alloc = round(as.numeric(mem_alloc) / 1000000, 3)
-  ) |>
-  select(pkg, expression, median, mem_alloc)
+
+unnested <- do.call(rbind, lapply(seq_len(nrow(out)), \(i) {
+  x <- data.frame(
+    pkg = out$pkg[i],
+    expression = as.character(out$result[[i]]$expression),
+    median = as.numeric(out$result[[i]]$median),
+    mem_alloc = as.numeric(out$result[[i]]$mem_alloc) / 1e6
+  )
+  dict <- c(
+    "CRAN" = "marginaleffects",
+    "main" = "vincentarelbundock/marginaleffects",
+    "PR" = paste0("vincentarelbundock/marginaleffects#", pr_number)
+  )
+  x$pkg <- names(dict)[match(x$pkg, dict)]
+  return(x)
+}))
+
 
 final <- unnested |>
-  pivot_wider(
-    id_cols = expression,
-    names_from = pkg,
-    values_from = c(median, mem_alloc)
-  ) |>
-  mutate(
+  reshape(
+    direction = "wide",
+    idvar = "expression",
+    timevar = "pkg") |>
+  transform(
     # Compute change in time and memory between PR/main branch and PR/CRAN
-    median_diff_main_pr = round((median_PR - median_main) / median_main * 100, 2),
-    median_diff_CRAN_pr = round((median_PR - median_CRAN) / median_CRAN * 100, 2),
+    median_diff.main.pr = round((median.PR - median.main) / median.main * 100, 2),
+    median_diff.CRAN.pr = round((median.PR - median.CRAN) / median.CRAN * 100, 2),
 
     # Compute change in time and memory between PR and CRAN
-    mem_alloc_diff_main_pr = round((mem_alloc_PR - mem_alloc_main) / mem_alloc_main * 100, 2),
-    mem_alloc_diff_CRAN_pr = round((mem_alloc_PR - mem_alloc_CRAN) / mem_alloc_CRAN * 100, 2),
-    across(
-      .cols = c(
-        median_diff_main_pr, median_diff_CRAN_pr,
-        mem_alloc_diff_main_pr, mem_alloc_diff_CRAN_pr
-      ),
-      function(x) {
-        case_when(
-          x >= 5 ~ paste0(":collision: ", x, "%"),
-          x < 5 & x > -5 ~ paste0(x, "%"),
-          x <= -5 ~ paste0(":zap: ", x, "%"),
-          .default = NA
-        )
-      }
-    ),
-  ) |>
-  select(
-    Expression = expression,
-    `PR time (median, seconds)` = median_PR,
-    "% change with `main`" = median_diff_main_pr,
-    "% change with CRAN" = median_diff_CRAN_pr,
-    `PR memory (MB)` = mem_alloc_PR,
-    "Mem. % change with `main`" = mem_alloc_diff_main_pr,
-    "Mem. % change with CRAN" = mem_alloc_diff_CRAN_pr,
+    mem_alloc_diff.main.pr = round((mem_alloc.PR - mem_alloc.main) / mem_alloc.main * 100, 2),
+    mem_alloc_diff.CRAN.pr = round((mem_alloc.PR - mem_alloc.CRAN) / mem_alloc.CRAN * 100, 2)
   )
+
+cols <- c("median_diff.main.pr", "median_diff.CRAN.pr", "mem_alloc_diff.main.pr", "mem_alloc_diff.CRAN.pr")
+for (col in cols) {
+    old <- final[[col]]
+    new <- rep(NA_character_, nrow(final))
+    new <- ifelse(old >= 5, paste0(":collision: ", old, "%"), new)
+    new <- ifelse(old < 5 & old > -5, paste0(old, "%"), new)
+    new <- ifelse(old <= -5, paste0(":zap: ", old, "%"), new)
+    final[[col]] <- new
+}
+
+cols <- c(
+    'Expression' = 'expression',
+    'PR time (median, seconds)' = 'median.PR',
+    '% change with "main"' = 'median_diff.main.pr',
+    '% change with CRAN' = 'median_diff.CRAN.pr',
+    'PR memory (MB)' = 'mem_alloc.PR',
+    'Mem. % change with "main"' = 'mem_alloc_diff.main.pr',
+    'Mem. % change with CRAN' = 'mem_alloc_diff.CRAN.pr'
+)
+
+final <- setNames(final[, cols], names(cols))
 
 raw_table <- tt(final) |>
   save_tt("gfm")
