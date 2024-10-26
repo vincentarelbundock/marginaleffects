@@ -16,7 +16,6 @@ out <- cross::run(
 
     bench::press(
       N = 75000,
-      N = 20,
       {
         dat <- data.frame(matrix(rnorm(N * 26), ncol = 26))
         mod <- lm(X1 ~ ., dat)
