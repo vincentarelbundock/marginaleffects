@@ -40,7 +40,7 @@ uses the R packages [`cross`](https://github.com/davisVaughan/cross) and
 
 * `bench` computes the time and memory used for each expression;
 * `cross` allows one to run the same code on several packages, including those
-  corresponding to specific commits of branches. The following lines specify
+  corresponding to specific commits or branches. The following lines specify
   that we want to run the benchmarks on the CRAN version, the `main` branch of
   the development version, and the current PR in which this workflow runs:
   ```r
@@ -56,15 +56,15 @@ them on all the versions mentioned above. It creates a nested data.frame
 with the timings, memory used, and more information for all expressions and
 all versions.
 
-The rest of the code cleans this data, computes comparisons between the PR and 
-main and between the PR and the CRAN version. Finally, it creates the Markdown
-table and the rest of the content that will go in the comment that is 
+The rest of the code cleans this data and computes comparisons between the PR 
+and main and between the PR and the CRAN version. Finally, it creates the 
+Markdown table and the rest of the content that will go in the comment that is 
 automatically posted in the pull request.
 
 # Adding benchmarks
 
 Adding benchmarks can be done in the `bench::mark()` call in 
 `.github/scripts/benchmarks.R`, but the more benchmarks there are, the longest
-the workflow will take. Generally speaking the time spent by the workflow 
+the workflow will take. Generally speaking, the time spent by the workflow 
 depends on the number of benchmarks, the number of observations, and the 
 number of iterations, so there is a tradeoff.
