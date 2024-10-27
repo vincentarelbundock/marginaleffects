@@ -44,7 +44,7 @@ jobs:
 
       - name: Install required dependencies for benchmark
         run: |
-          install.packages(c("remotes", "bench", "dplyr", "Formula", "pandoc", "tidyr", "tinytable"))
+          install.packages(c("remotes", "bench", "Formula", "pandoc", "tinytable"))
           remotes::install_github("DavisVaughan/cross")
         shell: Rscript {0}
   
