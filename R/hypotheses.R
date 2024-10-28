@@ -295,6 +295,9 @@ hypotheses <- function(
         # unknown model
         } else if (!is.function(hypothesis)) {
             out <- insight::get_parameters(model, ...)
+            if ("Component" %in% colnames(out) && !anyNA(out$Component)) {
+                out$Parameter <- sprintf("%s_%s", out$Component, out$Parameter)
+            }
             idx <- intersect(colnames(model), c("term", "group", "estimate"))
             colnames(out)[1:2] <- c("term", "estimate")
 
