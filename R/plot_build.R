@@ -53,7 +53,7 @@ plot_build <- function(
     dat$marginaleffects_term_index <- get_unique_index(dat, term_only = TRUE)
     multi_variables <- isTRUE(length(unique(dat$marginaleffects_term_index)) > 1)
 
-    p <- ggplot2::ggplot()
+    p <- ggplot2::ggplot(data = dat)
 
     if (points > 0 &&
         !get_variable_class(modeldata, v_x, "categorical") &&
@@ -102,12 +102,10 @@ plot_build <- function(
         aes_obj <- do.call(ggplot2::aes, aes_args)
         if ("conf.low" %in% colnames(dat)) {
             p <- p + ggplot2::geom_pointrange(
-                data = dat,
                 mapping = aes_obj,
                 position = ggplot2::position_dodge(0.15))
         } else {
             p <- p + ggplot2::geom_point(
-                data = dat,
                 mapping = aes_obj,
                 position = ggplot2::position_dodge(0.15))
         }
@@ -127,10 +125,10 @@ plot_build <- function(
         aes_args$ymin <- aes_args$ymax <- NULL
         aes_obj <- do.call(ggplot2::aes, aes_args)
         if ("conf.low" %in% colnames(dat)) {
-            p <- p + ggplot2::geom_ribbon(data = dat, aes_obj_ribbon, alpha = 0.1)
-            p <- p + ggplot2::geom_line(data = dat, aes_obj)
+            p <- p + ggplot2::geom_ribbon(aes_obj_ribbon, alpha = 0.1)
+            p <- p + ggplot2::geom_line(aes_obj)
         }
-        p <- p + ggplot2::geom_line(data = dat, aes_obj)
+        p <- p + ggplot2::geom_line(aes_obj)
     }
 
     # facets: 3rd and 4th variable and/or multiple effects
