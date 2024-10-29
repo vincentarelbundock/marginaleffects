@@ -8,6 +8,7 @@ Bugs:
 
 Misc:
 
+* The `ggplot2` object returned by `plot_*()` functions now includes the estimates as a default object. This allows things like: `plot_predictions(model, condition="x")+geom_line()`. Thanks to @mattansb for code contribution #1259.
 * Be less strict about combining columns of different types. This allows us to handle types like `haven_labelled`. Thanks to @mwindzio for report #1238.
 
 ## 0.23.0
