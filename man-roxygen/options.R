@@ -13,3 +13,8 @@
 #' ```r
 #' options(marginaleffects_print_omit = c("p.value", "s.value"))`
 #' ```
+#'
+#'
+#' Other options:
+#'
+#' * `marginaleffects_plot_gray`: logical. If `TRUE`, the default color of the plot is gray. Default is `FALSE`.

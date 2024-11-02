@@ -16,7 +16,7 @@ plot_predictions(
   transform = NULL,
   points = 0,
   rug = FALSE,
-  gray = FALSE,
+  gray = getOption("marginaleffects_plot_gray", default = FALSE),
   draw = TRUE,
   ...
 )

@@ -54,7 +54,7 @@ plot_slopes <- function(model,
                         wts = FALSE,
                         slope = "dydx",
                         rug = FALSE,
-                        gray = FALSE,
+                        gray = getOption("marginaleffects_plot_gray", default = FALSE),
                         draw = TRUE,
                         ...) {
 
