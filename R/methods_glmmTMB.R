@@ -98,14 +98,15 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
 }
 
 #' @rdname sanitize_model_specific
-sanitize_model_specific.glmmTMB <- function(model, vcov = TRUE, re.form = NULL, ...) {
+sanitize_model_specific.glmmTMB <- function(model, vcov = TRUE, re.form, ...) {
     # re.form=NA
     if (!isTRUE(checkmate::check_flag(vcov))) {
         msg <- "For this model type, `vcov` must be `TRUE` or `FALSE`."
         insight::format_error(msg)
     }
-    if (!isTRUE(is.na(re.form))) {
-        msg <- "For this model type, `marginaleffects` only takes into account the uncertainty in fixed-effect parameters. You can use the `re.form=NA` argument to acknowledge this explicitly and silence this warning."
+
+    if (missing(re.form) || (!isTRUE(is.na(re.form)) && !is.null(re.form))) {
+        msg <- "For this model type, `marginaleffects` only takes into account the uncertainty in fixed-effect parameters. You can use the `re.form=NA` or `re.form=NULL` arguments to acknowledge this explicitly and silence this warning."
         insight::format_warning(msg)
     }
     return(model)
