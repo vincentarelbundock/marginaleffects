@@ -315,6 +315,30 @@ lincom_multiply <- function(x, lincom) {
 eval_string_hypothesis <- function(x, hypothesis, lab) {
     # row indices: `hypotheses` includes them, but `term` does not
     if (isTRUE(grepl("\\bb\\d+\\b", hypothesis)) && !any(grepl("\\bb\\d+\\b", x[["term"]]))) {
+
+        msg <- "
+It is essential to check the order of estimates when specifying hypothesis tests using positional indices like b1, b2, etc. The indices of estimates can change depending on the order of rows in the original dataset, user-supplied arguments, model-fitting package, and version of `marginaleffects`. 
+
+It is also good practice to use assertions that ensure the order of estimates is consistent across different runs of the same code. Example:
+
+```r
+mod <- lm(mpg ~ am * carb, data = mtcars)
+
+# assertion for safety
+p <- avg_predictions(mod, by = 'carb')
+stopifnot(p$carb[1] != 1 || p$carb[2] != 2)
+
+# hypothesis test
+avg_predictions(mod, by = 'carb', hypothesis = 'b1 - b2 = 0')
+```
+
+Disable this warning with: `options(marginaleffects_safe = FALSE)`
+"
+        if (isFALSE(getOption("marginaleffects_safe", default = TRUE))) {
+            warn_once(msg, "hypothesis_positional_indices_are_dangerous")
+        }
+
+
         bmax <- regmatches(lab, gregexpr("\\bb\\d+\\b", lab))[[1]]
         bmax <- tryCatch(max(as.numeric(gsub("b", "", bmax))), error = function(e) 0)
         if (bmax > nrow(x)) {

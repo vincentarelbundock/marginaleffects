@@ -63,7 +63,7 @@ get_by <- function(
         if (!is.null(byfun)) {
             estimates <- estimates[,
                 .(estimate = byfun(estimate)),
-                by = bycols]
+                keyby = bycols]
 
         } else if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
             estimates <- estimates[,
@@ -71,12 +71,12 @@ get_by <- function(
                     estimate,
                     marginaleffects_wts_internal,
                     na.rm = TRUE)),
-                by = bycols]
+                keyby = bycols]
 
         } else {
             estimates <- estimates[,
                 .(estimate = mean(estimate, na.rm = TRUE)),
-                by = bycols]
+                keyby = bycols]
         }
     }
 
