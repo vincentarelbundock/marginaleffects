@@ -39,9 +39,9 @@ sanitize_model_specific(model, ...)
 
 \method{sanitize_model_specific}{bart}(model, ...)
 
-\method{sanitize_model_specific}{glmmTMB}(model, vcov = TRUE, re.form = NULL, ...)
+\method{sanitize_model_specific}{glmmTMB}(model, vcov = TRUE, re.form, ...)
 
-\method{sanitize_model_specific}{merMod}(model, re.form = NULL, ...)
+\method{sanitize_model_specific}{merMod}(model, re.form, ...)
 
 \method{sanitize_model_specific}{mblogit}(model, calling_function = "marginaleffects", ...)
 
