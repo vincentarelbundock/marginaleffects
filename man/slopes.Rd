@@ -425,6 +425,11 @@ Omit some columns from the printed output:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_print_omit = c("p.value", "s.value"))`
 }\if{html}{\out{</div>}}
+
+Other options:
+\itemize{
+\item \code{marginaleffects_plot_gray}: logical. If \code{TRUE}, the default color of the plot is gray. Default is \code{FALSE}.
+}
 }
 
 \examples{

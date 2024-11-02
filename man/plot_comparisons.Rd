@@ -17,7 +17,7 @@ plot_comparisons(
   comparison = "difference",
   transform = NULL,
   rug = FALSE,
-  gray = FALSE,
+  gray = getOption("marginaleffects_plot_gray", default = FALSE),
   draw = TRUE,
   ...
 )
