@@ -2,7 +2,7 @@
 #' 
 #' The behavior of `marginaleffects` functions can be modified by setting global options.
 #' 
-#' Disable some safety checks:
+#' Disable some safety checks and warnings:
 #' 
 #' ```r
 #' options(marginaleffects_safe = FALSE)
