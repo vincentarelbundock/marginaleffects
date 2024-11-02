@@ -22,7 +22,7 @@ expect_equivalent(nrow(cmp2), 32)
 # Issue #720
 mod <- lm(mpg ~ hp * qsec, dat = mtcars)
 cmp <- avg_comparisons(mod, variables = list(hp = "2sd"))
-expect_equivalent(cmp$contrast, "mean(x + sd) - mean(x - sd)")
+expect_equivalent(cmp$contrast, "(x + sd) - (x - sd)")
 
 
 

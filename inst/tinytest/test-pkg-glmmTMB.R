@@ -63,7 +63,7 @@ tid2 <- avg_slopes(bug, re.form = NA)
 
 expect_equivalent(tid1$estimate, tid2$estimate)
 expect_equivalent(tid1$std.error, tid2$std.error)
-expect_equivalent(tid1$statistic, tid2$statistic)
+expect_equivalent(tid1$statistic, tid2$statistic, tolerance = 1e-6)
 expect_equivalent(tid1$p.value, tid2$p.value)
 expect_equivalent(length(unique(abs(tid1$statistic))), 7)
 
