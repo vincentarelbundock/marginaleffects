@@ -67,7 +67,7 @@ get_predict.lmerMod <- get_predict.merMod
 #' @rdname sanitize_model_specific
 #' @export
 sanitize_model_specific.merMod <- function(model, re.form, ...) {
-    if (missing(re.form) && (!isTRUE(is.na(re.form)) && !is.null(re.form))) {
+    if (missing(re.form) || (!isTRUE(is.na(re.form)) && !is.null(re.form))) {
         msg <- "For this model type, `marginaleffects` only takes into account the uncertainty in fixed-effect parameters. You can use the `re.form=NA` or `re.form=NULL` arguments to acknowledge this explicitly and silence this warning."
         insight::format_warning(msg)
     }
