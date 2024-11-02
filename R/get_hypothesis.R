@@ -317,7 +317,7 @@ eval_string_hypothesis <- function(x, hypothesis, lab) {
     if (isTRUE(grepl("\\bb\\d+\\b", hypothesis)) && !any(grepl("\\bb\\d+\\b", x[["term"]]))) {
 
         msg <- "
-It is essential to check the order of estimates when specifying hypothesis tests using positional indices like b1, b2, etc. The indices of estimates can change depending on the order of rows in the original dataset, on the model-fitting package, and on the version of `marginaleffects`. 
+It is essential to check the order of estimates when specifying hypothesis tests using positional indices like b1, b2, etc. The indices of estimates can change depending on the order of rows in the original dataset, user-supplied arguments, model-fitting package, and version of `marginaleffects`. 
 
 It is also good practice to use assertions that ensure the order of estimates is consistent across different runs of the same code. Example:
 
