@@ -561,6 +561,7 @@ comparisons <- function(model,
     # Only add (potentially large) attributes if lean is FALSE 
     if (isTRUE(lean)) {
         for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) attr(out, a) = NULL
+        attr(out, "lean") <- TRUE
     } else {
         # other attributes
         attr(out, "newdata") <- newdata

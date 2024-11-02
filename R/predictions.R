@@ -547,6 +547,7 @@ predictions <- function(model,
     # Only add (potentially large) attributes if lean isn't TRUE 
     if (isTRUE(lean)) {
         for (a in setdiff(aa, c("names", "row.names", "class"))) attr(mfx, a) = NULL 
+        attr(out, "lean") <- TRUE
     } else {
         # other attributes
         attr(out, "model") <- model
