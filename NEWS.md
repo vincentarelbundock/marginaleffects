@@ -10,6 +10,10 @@ Bugs:
 
 * `systemfit` models returned no standard errors when the same variables entered in different parts of the model. Thanks to @mronkko for report #1233.
 
+New features:
+
+* Users can reduce the size of `marginaleffects` objects by setting the new global option `options(marginaleffects_lean = TRUE)`. This will strip the return objects of all information about the original model and data, as well ancillary attributes. The benefit of dramatically smaller return objects comes at the cost of not being able to run some post-processing inference functions like `hypotheses()` on these lean objects. Thanks to @grantmcdermott for the suggestion and code contribution #1267. 
+
 Misc:
 
 * Using positional indices with `hypothesis="b1=b2"` can be dangerous if row order is modified. A warning is now issued once per session with detailed advice. This warning can be disabled with `options(marginaleffects_safe=FALSE)`.

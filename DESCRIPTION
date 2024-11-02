@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.23.0.4
+Version: 0.23.0.5
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -15,7 +15,11 @@ Authors@R:
       person("Etienne", "Bacher",
              email = "etienne.bacher@protonmail.com",
              role = "ctb",
-             comment = c(ORCID = "0000-0002-9271-5075")))
+             comment = c(ORCID = "0000-0002-9271-5075")),
+      person(given = "Grant",
+             family = "McDermott",
+             role = c("ctb"),
+             comment = c(ORCID = "0000-0001-7883-8573")))
 Description: Compute and plot predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, odds, etc.) for over 100 classes of statistical and machine learning models in R. Conduct linear and non-linear hypothesis tests, or equivalence tests. Calculate uncertainty estimates using the delta method, bootstrapping, or simulation-based inference.
 License: GPL (>= 3)
 Copyright: inst/COPYRIGHTS
