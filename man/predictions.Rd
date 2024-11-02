@@ -417,7 +417,7 @@ To disable parallelism in \code{marginaleffects} altogether, you can set a globa
 
 The behavior of \code{marginaleffects} functions can be modified by setting global options.
 
-Disable some safety checks:
+Disable some safety checks and warnings:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_safe = FALSE)
 }\if{html}{\out{</div>}}
