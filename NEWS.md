@@ -2,12 +2,17 @@
 
 ## Development
 
+Breaking change:
+
+* Rows are now sorted when using the `by` argument. This may change the order of estimates, which can affect hypothesis tests using positional indices like `b1-b2=0`. 
+
 Bugs:
 
 * `systemfit` models returned no standard errors when the same variables entered in different parts of the model. Thanks to @mronkko for report #1233.
 
 Misc:
 
+* Using positional indices with `hypothesis="b1=b2"` can be dangerous if row order is modified. A warning is now issued once per session with detailed advice. This warning can be disabled with `options(marginaleffects_safe=FALSE)`.
 * The `ggplot2` object returned by `plot_*()` functions now includes the estimates as a default object. This allows things like: `plot_predictions(model, condition="x")+geom_line()`. Thanks to @mattansb for code contribution #1259.
 * Be less strict about combining columns of different types. This allows us to handle types like `haven_labelled`. Thanks to @mwindzio for report #1238.
 
