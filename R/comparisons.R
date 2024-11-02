@@ -555,28 +555,36 @@ comparisons <- function(model,
         out,
         get_marginaleffects_attributes(newdata, include_regex = "^newdata.*class|explicit|matrix|levels"))
 
-    # other attributes
-    attr(out, "newdata") <- newdata
-    attr(out, "call") <- call_attr
-    attr(out, "type") <- type
-    attr(out, "model_type") <- class(model)[1]
-    attr(out, "model") <- model
-    attr(out, "variables") <- predictors
-    attr(out, "jacobian") <- J
-    attr(out, "vcov") <- vcov
-    attr(out, "vcov.type") <- vcov.type
-    attr(out, "weights") <- marginaleffects_wts_internal
-    attr(out, "comparison") <- comparison
-    attr(out, "transform") <- transform[[1]]
-    attr(out, "comparison_label") <- comparison_label
-    attr(out, "hypothesis_by") <- hyp_by
-    attr(out, "transform_label") <- transform_label
-    attr(out, "conf_level") <- conf_level
-    attr(out, "by") <- by
-
-    if (inherits(model, "brmsfit")) {
-        insight::check_if_installed("brms")
-        attr(out, "nchains") <- brms::nchains(model)
+    # Global option for lean return object
+    lean = getOption("marginaleffects_lean", default = FALSE)
+    
+    # Only add (potentially large) attributes if lean is FALSE 
+    if (isTRUE(lean)) {
+        for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) attr(out, a) = NULL
+    } else {
+        # other attributes
+        attr(out, "newdata") <- newdata
+        attr(out, "call") <- call_attr
+        attr(out, "type") <- type
+        attr(out, "model_type") <- class(model)[1]
+        attr(out, "model") <- model
+        attr(out, "variables") <- predictors
+        attr(out, "jacobian") <- J
+        attr(out, "vcov") <- vcov
+        attr(out, "vcov.type") <- vcov.type
+        attr(out, "weights") <- marginaleffects_wts_internal
+        attr(out, "comparison") <- comparison
+        attr(out, "transform") <- transform[[1]]
+        attr(out, "comparison_label") <- comparison_label
+        attr(out, "hypothesis_by") <- hyp_by
+        attr(out, "transform_label") <- transform_label
+        attr(out, "conf_level") <- conf_level
+        attr(out, "by") <- by
+        
+        if (inherits(model, "brmsfit")) {
+            insight::check_if_installed("brms")
+            attr(out, "nchains") <- brms::nchains(model)
+        }
     }
 
     class(out) <- c("comparisons", class(out))

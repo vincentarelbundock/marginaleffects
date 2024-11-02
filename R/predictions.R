@@ -540,28 +540,38 @@ predictions <- function(model,
     data.table::setDF(out)
     class(out) <- c("predictions", class(out))
     out <- set_marginaleffects_attributes(out, attr_cache = newdata_attr_cache)
-    attr(out, "model") <- model
-    attr(out, "type") <- type_string
-    attr(out, "model_type") <- class(model)[1]
-    attr(out, "vcov.type") <- get_vcov_label(vcov)
-    attr(out, "jacobian") <- J
-    attr(out, "vcov") <- V
-    attr(out, "newdata") <- newdata
-    attr(out, "weights") <- marginaleffects_wts_internal
-    attr(out, "conf_level") <- conf_level
-    attr(out, "by") <- by
-    attr(out, "call") <- call_attr
-    attr(out, "hypothesis_by") <- hyp_by
-    attr(out, "transform_label") <- names(transform)[1]
-    attr(out, "transform") <- transform[[1]]
-    # save newdata for use in recall()
-    attr(out, "newdata") <- newdata
-
-    if (inherits(model, "brmsfit")) {
-        insight::check_if_installed("brms")
-        attr(out, "nchains") <- brms::nchains(model)
+    
+    # Global option for lean return object
+    lean = getOption("marginaleffects_lean", default = FALSE)
+    
+    # Only add (potentially large) attributes if lean isn't TRUE 
+    if (isTRUE(lean)) {
+        for (a in setdiff(aa, c("names", "row.names", "class"))) attr(mfx, a) = NULL 
+    } else {
+        # other attributes
+        attr(out, "model") <- model
+        attr(out, "type") <- type_string
+        attr(out, "model_type") <- class(model)[1]
+        attr(out, "vcov.type") <- get_vcov_label(vcov)
+        attr(out, "jacobian") <- J
+        attr(out, "vcov") <- V
+        attr(out, "newdata") <- newdata
+        attr(out, "weights") <- marginaleffects_wts_internal
+        attr(out, "conf_level") <- conf_level
+        attr(out, "by") <- by
+        attr(out, "call") <- call_attr
+        attr(out, "hypothesis_by") <- hyp_by
+        attr(out, "transform_label") <- names(transform)[1]
+        attr(out, "transform") <- transform[[1]]
+        # save newdata for use in recall()
+        attr(out, "newdata") <- newdata
+        
+        if (inherits(model, "brmsfit")) {
+            insight::check_if_installed("brms")
+            attr(out, "nchains") <- brms::nchains(model)
+        }
     }
-
+    
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
     }
