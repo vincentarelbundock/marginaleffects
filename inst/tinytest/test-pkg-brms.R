@@ -318,7 +318,7 @@ expect_inherits(mfx2, "marginaleffects")
 # comparisons
 expect_error(comparisons(brms_monotonic_factor), pattern = "cannot be used")
 contr1 <- avg_comparisons(brms_monotonic)
-known <- c(sprintf("mean(%s) - mean(1)", c(2:4, 6, 8)), "mean(+1)")
+known <- c(sprintf("%s - 1", c(2:4, 6, 8)), "+1")
 expect_equivalent(contr1$contrast, known)
 
 
