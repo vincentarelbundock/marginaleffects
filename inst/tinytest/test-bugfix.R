@@ -85,7 +85,7 @@ dta <- data.frame(
 mod <- lm(lab ~ age_group, dta)
 mfx <- avg_slopes(mod)
 expect_equivalent(nrow(mfx), 1)
-expect_true("mean(young) - mean(old)" %in% mfx$contrast)
+expect_true("young - old" %in% mfx$contrast)
 
 
 # Issue #697
