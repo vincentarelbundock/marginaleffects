@@ -313,10 +313,13 @@ slopes <- function(model,
 
     data.table::setDT(out)
 
-    attr(out, "vcov.type") <- get_vcov_label(vcov)
-    attr(out, "newdata") <- newdata # recall
-    attr(out, "call") <- call_attr
-
+    lean = getOption("marginaleffects_lean", default = FALSE)
+    if (!isTRUE(lean)) {
+        attr(out, "vcov.type") <- get_vcov_label(vcov)
+        attr(out, "newdata") <- newdata # recall
+        attr(out, "call") <- call_attr
+    }
+        
     # class
     data.table::setDF(out)
     class(out) <- setdiff(class(out), "comparisons")

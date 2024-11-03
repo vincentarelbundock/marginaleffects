@@ -14,6 +14,13 @@
 #' options(marginaleffects_print_omit = c("p.value", "s.value"))`
 #' ```
 #'
+#' Enforce lean return objects, sans information about the original model and
+#' data, and other ancillary attributes. Note that this will disable some
+#' advanced post-processing features and functions like [hypotheses].
+#'
+#' ```r
+#' options(marginaleffects_lean = TRUE)`
+#' ```
 #'
 #' Other options:
 #'
