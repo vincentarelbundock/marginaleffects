@@ -94,7 +94,7 @@ hypotheses(
 \item FALSE: Hypotheses are not tested jointly.
 \item TRUE: All parameters are tested jointly.
 \item String: A regular expression to match parameters to be tested jointly. \code{grep(joint, perl = TRUE)}
-\item Character vector of parameter names to be tested. Characters refer to the names of the vector returned by \code{coef(object)}.
+\item Character vector of parameter names to be tested. Characters refer to the names of the vector returned by \code{marginaleffects::get_coef(object)}.
 \item Integer vector of indices. Which parameters positions to test jointly.
 }}
 

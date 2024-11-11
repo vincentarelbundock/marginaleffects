@@ -21,7 +21,7 @@
 #' - FALSE: Hypotheses are not tested jointly.
 #' - TRUE: All parameters are tested jointly.
 #' - String: A regular expression to match parameters to be tested jointly. `grep(joint, perl = TRUE)`
-#' - Character vector of parameter names to be tested. Characters refer to the names of the vector returned by `coef(object)`.
+#' - Character vector of parameter names to be tested. Characters refer to the names of the vector returned by `marginaleffects::get_coef(object)`.
 #' - Integer vector of indices. Which parameters positions to test jointly.
 #' @param joint_test A character string specifying the type of test, either "f" or "chisq". The null hypothesis is set by the `hypothesis` argument, with default null equal to 0 for all parameters.
 #' @param df Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and `Inf`. When using `joint_test="f"`, the `df` argument should be a numeric vector of length 2.
