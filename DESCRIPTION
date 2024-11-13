@@ -19,7 +19,12 @@ Authors@R:
       person(given = "Grant",
              family = "McDermott",
              role = c("ctb"),
-             comment = c(ORCID = "0000-0001-7883-8573")))
+             comment = c(ORCID = "0000-0001-7883-8573")),
+      person(given = "Andrew",
+             family = "Heiss",
+             role = c("ctb"),
+             comment = c(ORCID = "0000-0002-3948-3914"))
+             )
 Description: Compute and plot predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, odds, etc.) for over 100 classes of statistical and machine learning models in R. Conduct linear and non-linear hypothesis tests, or equivalence tests. Calculate uncertainty estimates using the delta method, bootstrapping, or simulation-based inference.
 License: GPL (>= 3)
 Copyright: inst/COPYRIGHTS
