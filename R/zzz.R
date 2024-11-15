@@ -1,6 +1,7 @@
 .onAttach <- function(lib, pkg) {
   msg <- c(
     "Please cite the software developers who make your work possible.",
+    "",
     'One package:             citation("package_name")',
     "All project packages:    softbib::softbib()",
     "",
