@@ -499,14 +499,20 @@ To disable parallelism in \code{marginaleffects} altogether, you can set a globa
 The behavior of \code{marginaleffects} functions can be modified by setting global options.
 
 Disable some safety checks and warnings:
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_safe = FALSE)
-}\if{html}{\out{</div>}}
-
-Omit some columns from the printed output:
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_print_omit = c("p.value", "s.value"))`
-}\if{html}{\out{</div>}}
+\itemize{
+\item \code{options(marginaleffects_startup_message = FALSE)}
+\itemize{
+\item Disable the startup message printed on \code{library(marginaleffects)}.
+}
+\item \code{options(marginaleffects_safe = FALSE)}
+\itemize{
+\item Disable safety checks and warnings.
+}
+\item \code{options(marginaleffects_print_omit = c("p.value", "s.value"))}
+\itemize{
+\item Omit some columns from the printed output.
+}
+}
 
 Enforce lean return objects, sans information about the original model and
 data, and other ancillary attributes. Note that this will disable some
