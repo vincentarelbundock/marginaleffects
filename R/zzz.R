@@ -12,8 +12,8 @@
   msg <- paste(msg, collapse = "\n")
 
   # once every 24 hours
-  last_time <- settings_get("startup_message_time")
-  if (inherits(last_time, "Date")) {
+  last_time <- config_get("startup_message_time")
+  if (inherits(last_time, "POSIXct")) {
     flag_time <- abs(as.numeric(Sys.time() - last_time)) >= 24 * 60 * 60
   } else {
     flag_time <- TRUE
@@ -23,7 +23,7 @@
 
   if (interactive() && flag_time && flag_option) {
     packageStartupMessage(msg)
-    settings_set("startup_message_time", Sys.time())
+    config_set("startup_message_time", Sys.time())
   }
 
   invisible()

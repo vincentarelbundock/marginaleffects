@@ -197,6 +197,7 @@ Collate:
     'ci.R'
     'comparisons.R'
     'complete_levels.R'
+    'config.R'
     'conformal.R'
     'datagrid.R'
     'deprecated.R'
