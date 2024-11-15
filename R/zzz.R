@@ -10,8 +10,21 @@
     ""
   )
   msg <- paste(msg, collapse = "\n")
-  if (interactive() && isTRUE(getOption("marginaleffects_startup_message", TRUE))) {
-    packageStartupMessage(msg)
+
+  # once every 24 hours
+  last_time <- settings_get("startup_message_time")
+  if (inherits(last_time, "Date")) {
+    flag_time <- abs(as.numeric(Sys.time() - last_time)) >= 24 * 60 * 60
+  } else {
+    flag_time <- TRUE
   }
+
+  flag_option <- isTRUE(getOption("marginaleffects_startup_message", TRUE))
+
+  if (interactive() && flag_time && flag_option) {
+    packageStartupMessage(msg)
+    settings_set("startup_message_time", Sys.time())
+  }
+
   invisible()
 }
