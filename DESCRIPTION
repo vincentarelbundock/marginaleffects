@@ -308,5 +308,6 @@ Collate:
     'type_dictionary.R'
     'unpack_matrix_cols.R'
     'utils.R'
+    'zzz.R'
 Language: en-US
 Config/testthat/edition: 3
