@@ -19,7 +19,8 @@ Misc:
 * Using positional indices with `hypothesis="b1=b2"` can be dangerous if row order is modified. A warning is now issued once per session with detailed advice. This warning can be disabled with `options(marginaleffects_safe=FALSE)`.
 * The `ggplot2` object returned by `plot_*()` functions now includes the estimates as a default object. This allows things like: `plot_predictions(model, condition="x")+geom_line()`. Thanks to @mattansb for code contribution #1259.
 * Be less strict about combining columns of different types. This allows us to handle types like `haven_labelled`. Thanks to @mwindzio for report #1238.
-* In `lme4` and `glmmTMB` models, warnings are now silenced when the user specifically passes `re.form=NULL`.
+* In `lme4` and `glmmTMB` models, warnings are now silenced when the user specifically passes `re.form=NULL`. Thanks to @mattansb for the feature request.
+* New startup message appears once per 24hr period and can be suppressed using `options(marginaleffects_startup_message = FALSE)`.
 
 ## 0.23.0
 
