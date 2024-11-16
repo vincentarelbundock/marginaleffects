@@ -9,7 +9,7 @@
   # once every 24 hours
   last_time <- config_get("startup_message_time")
   if (inherits(last_time, "POSIXct")) {
-    flag_time <- abs(as.numeric(Sys.time() - last_time)) >= 24 * 60 * 60
+    flag_time <- difftime(Sys.time(), last_time, units = "sec") >= 24 * 60 * 60
   } else {
     flag_time <- TRUE
   }
