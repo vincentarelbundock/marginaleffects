@@ -13,6 +13,7 @@ Bugs:
 New features:
 
 * Users can reduce the size of `marginaleffects` objects by setting the new global option `options(marginaleffects_lean = TRUE)`. This will strip the return objects of all information about the original model and data, as well ancillary attributes. The benefit of dramatically smaller return objects comes at the cost of not being able to run some post-processing inference functions like `hypotheses()` on these lean objects. Thanks to @grantmcdermott for the suggestion and code contribution #1267. 
+* `avg_predictions(by=)` gets a `term` column, which is useful to specify hypothesis tests using strings in the `hypothesis` argument. Feature request from: https://stackoverflow.com/questions/79194131/how-to-use-parameter-term-names-in-avg-predictions-or-hypotheses-functions
 
 Misc:
 

@@ -492,31 +492,32 @@ nrow(p)
 mod <- lm(mpg ~ wt + drat, data = mtcars)
 
 predictions(
-    mod,
-    newdata = datagrid(wt = 2:3),
-    hypothesis = "b1 = b2")
+  mod,
+  newdata = datagrid(wt = 2:3),
+  hypothesis = "b1 = b2")
 
 # same hypothesis test using row indices
 predictions(
-    mod,
-    newdata = datagrid(wt = 2:3),
-    hypothesis = "b1 - b2 = 0")
+  mod,
+  newdata = datagrid(wt = 2:3),
+  hypothesis = "b1 - b2 = 0")
 
 # same hypothesis test using numeric vector of weights
 predictions(
-    mod,
-    newdata = datagrid(wt = 2:3),
-    hypothesis = c(1, -1))
+  mod,
+  newdata = datagrid(wt = 2:3),
+  hypothesis = c(1, -1))
 
 # two custom contrasts using a matrix of weights
-lc <- matrix(c(
+lc <- matrix(
+  c(
     1, -1,
     2, 3),
-    ncol = 2)
+  ncol = 2)
 predictions(
-    mod,
-    newdata = datagrid(wt = 2:3),
-    hypothesis = lc)
+  mod,
+  newdata = datagrid(wt = 2:3),
+  hypothesis = lc)
 
 
 # `by` argument
@@ -533,16 +534,16 @@ predictions(nom, type = "probs") |> head()
 avg_predictions(nom, type = "probs", by = "group")
 
 by <- data.frame(
-    group = c("3", "4", "5"),
-    by = c("3,4", "3,4", "5"))
+  group = c("3", "4", "5"),
+  by = c("3,4", "3,4", "5"))
 
 predictions(nom, type = "probs", by = by)
 
 # sum of predicted probabilities for combined response levels
 mod <- multinom(factor(cyl) ~ mpg + am, data = mtcars, trace = FALSE)
 by <- data.frame(
-    by = c("4,6", "4,6", "8"),
-    group = as.character(c(4, 6, 8)))
+  by = c("4,6", "4,6", "8"),
+  group = as.character(c(4, 6, 8)))
 predictions(mod, newdata = "mean", byfun = sum, by = by)
 
 }
