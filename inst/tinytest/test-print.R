@@ -35,4 +35,10 @@ expect_snapshot_print(
   "print-predictions_newdata")
 
 
+# Issue #1270
+mod <- lm(hp ~ mpg * factor(am), mtcars)
+cmp <- avg_comparisons(mod, variables = "am", by = "am")
+expect_snapshot_print(cmp, "print-comparisons_by_and_variables")
+
+
 rm(list = ls())
