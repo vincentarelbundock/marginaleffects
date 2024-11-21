@@ -279,7 +279,8 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
         vclass <- vclass[names(vclass) != dv]
     }
 
-    if ("rowid" %in% colnames(out)) {
+    # rowid is useless, except for intercept-only models, where we want to retain all rows
+    if ("rowid" %in% colnames(out) && ncol(out) > 1) {
         out[, "rowid" := NULL]
     }
 

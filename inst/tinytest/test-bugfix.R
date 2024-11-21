@@ -150,6 +150,15 @@ expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$std.error, p2$std.error)
 
 
+# Issue #1230
+mod <- lm(mpg ~ 1, mtcars)
+p <- avg_predictions(mod)
+expect_false(is.na(p$estimate))
+expect_error(avg_slopes(mod), "No valid predictor")
+expect_error(avg_comparisons(mod), "No valid predictor")
+
+
+
 
 source("helpers.R")
 rm(list = ls())

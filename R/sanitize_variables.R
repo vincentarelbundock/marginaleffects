@@ -371,6 +371,12 @@ sanitize_variables <- function(variables,
     predictors <- predictors[sort(names(predictors))]
     others <- others[sort(names(others))]
 
+    # internal variables are not predictors
+    predictors <- predictors[!names(predictions) %in% c("marginaleffects_wts_internal", "rowid_dedup")] 
+    if (length(predictors) == 0 && calling_function == "comparisons") {
+      insight::format_error("No valid predictor variable.")
+    }
+
     # output
     out <- list(conditional = predictors, others = others)
 
