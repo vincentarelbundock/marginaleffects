@@ -8,6 +8,7 @@ Breaking change:
 
 Bugs:
 
+* Intercept only model now works with `avg_predictions()`. Thanks to @vbrazao for report #1230.
 * `systemfit` models returned no standard errors when the same variables entered in different parts of the model. Thanks to @mronkko for report #1233.
 
 New features:
