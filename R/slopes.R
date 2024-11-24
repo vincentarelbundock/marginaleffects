@@ -127,13 +127,13 @@
 #' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon/2) - f(X-\varepsilon/2)) / \varepsilon}{dY/dX = (f(X + e/2) - f(X-e/2)) / e},
 #' where f is the `predict()` method associated with the model class, and
 #' \eqn{\varepsilon}{e} is determined by the `eps` argument.
+#' @template references
 #' @template deltamethod
 #' @template model_specific_arguments
 #' @template bayesian
 #' @template equivalence
 #' @template type
 #' @template parallel
-#' @template references
 #' @template order_of_operations
 #' @template options
 #'

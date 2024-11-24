@@ -85,6 +85,7 @@
 #' @param cross
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 #' * `TRUE`: Contrasts represent the changes in adjusted predictions when all the predictors specified in the `variables` argument are manipulated simultaneously (a "cross-contrast").
+#' @template references
 #' @template deltamethod
 #' @template model_specific_arguments
 #' @template comparison_functions
@@ -93,7 +94,6 @@
 #' @template type
 #' @template order_of_operations
 #' @template parallel
-#' @template references
 #' @template options
 #'
 #' @return A `data.frame` with one row per observation (per term/group) and several columns:
