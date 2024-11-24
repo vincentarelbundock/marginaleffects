@@ -34,7 +34,7 @@
 \alias{get_coef.svyolr}
 \alias{get_coef.systemfit}
 \alias{get_coef.workflow}
-\title{Get a named vector of coefficients from a model object (internal function)}
+\title{Get a named vector of coefficients from a model object}
 \usage{
 get_coef(model, ...)
 
@@ -104,6 +104,6 @@ arguments.}
 A named vector of coefficients. The names must match those of the variance matrix.
 }
 \description{
-Get a named vector of coefficients from a model object (internal function)
+Get a named vector of coefficients from a model object
 }
 \keyword{internal}

@@ -106,7 +106,7 @@ avg_predictions(mod, by = "Species") \%>\%
 # Fractional (bayesian) bootstrap
 avg_slopes(mod, by = "Species") \%>\%
   inferences(method = "fwb") \%>\%
-  posterior_draws("rvar") \%>\%
+  get_draws("rvar") \%>\%
   data.frame()
 
 # Simulation-based inference

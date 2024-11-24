@@ -187,7 +187,10 @@ print.marginaleffects <- function(x,
     attr(x, "newdata_variables_datagrid")
   )
   if (isTRUE(checkmate::check_character(attr(x, "by")))) {
+    bycols <- attr(x, "by")
     tmp <- c(tmp, attr(x, "by"))
+  } else {
+    bycols <- NULL
   }
   idx <- c(idx[1:grep("by", idx)], tmp, idx[(grep("by", idx) + 1):length(idx)])
   if (isTRUE(attr(nd, "newdata_newdata_explicit")) || isTRUE(attr(nd, "newdata_explicit"))) {
@@ -222,7 +225,7 @@ print.marginaleffects <- function(x,
   }
   te <- unique(out[["term"]])
   te <- setdiff(te, explicit) # ex: polynomials where both `variables="x"` and datagrid(x)
-  if (length(te) == 1) {
+  if (length(te) == 1 && length(bycols) == 0) {
     print_omit <- c(print_omit, te)
     print_term_text <- sprintf("Term: %s\n", out[["term"]][1])
     print_omit <- c(print_omit, "term")
@@ -276,10 +279,7 @@ print.marginaleffects <- function(x,
     notes <- c(print_type_text, print_columns_text)
     if (!is.null(notes)) args$notes <- notes
     tab <- do.call(tinytable::tt, args)
-    tab <- tinytable::format_tt(i = 0, tab, escape = TRUE)
-    if ("p.value" %in% colnames(tab)) {
-      tab <- tinytable::format_tt(tab, j = "p.value", escape = TRUE)
-    }
+    tab <- tinytable::format_tt(tab, escape = TRUE)
 
     if (isTRUE(splitprint)) {
       msg <- "%s rows omitted"

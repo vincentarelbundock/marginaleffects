@@ -9,15 +9,15 @@
 
 #' See the "Plots" vignette and website for tutorials and information on how to customize plots:
 #'
-#' * https://marginaleffects.com/vignettes/plot.html
+#' * https://marginaleffects.com/bonus/plot.html
 #' * https://marginaleffects.com
-#' 
+#'
 #' @param variables Name of the variable whose marginal effect (slope) we want to plot on the y-axis.
 #' @param condition Conditional slopes
 #' + Character vector (max length 4): Names of the predictors to display.
 #' + Named list (max length 4): List names correspond to predictors. List elements can be:
 #'   - Numeric vector
-#'   - Function which returns a numeric vector or a set of unique categorical values 
+#'   - Function which returns a numeric vector or a set of unique categorical values
 #'   - Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 #' + 1: x-axis. 2: color/shape. 3: facet (wrap if no fourth variable, otherwise cols of grid). 4: facet (rows of grid).
 #' + Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers `?stats::fivenum`.
@@ -32,17 +32,17 @@
 #' @examples
 #' library(marginaleffects)
 #' mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
-#' 
+#'
 #' plot_slopes(mod, variables = "hp", condition = "drat")
 #'
 #' plot_slopes(mod, variables = "hp", condition = c("drat", "am"))
-#' 
+#'
 #' plot_slopes(mod, variables = "hp", condition = list("am", "drat" = 3:5))
-#' 
+#'
 #' plot_slopes(mod, variables = "am", condition = list("hp", "drat" = range))
 #'
 #' plot_slopes(mod, variables = "am", condition = list("hp", "drat" = "threenum"))
-#' 
+#'
 plot_slopes <- function(model,
                         variables = NULL,
                         condition = NULL,
@@ -57,50 +57,48 @@ plot_slopes <- function(model,
                         gray = getOption("marginaleffects_plot_gray", default = FALSE),
                         draw = TRUE,
                         ...) {
-
-    dots <- list(...)
-    if ("effect" %in% names(dots)) {
-        if (is.null(variables)) {
-            variables <- dots[["effect"]]
-        } else {
-            insight::format_error("The `effect` argument has been renamed to `variables`.")
-        }
+  dots <- list(...)
+  if ("effect" %in% names(dots)) {
+    if (is.null(variables)) {
+      variables <- dots[["effect"]]
+    } else {
+      insight::format_error("The `effect` argument has been renamed to `variables`.")
     }
+  }
 
-    if (inherits(model, "mira") && is.null(newdata)) {
-        msg <- "Please supply a data frame to the `newdata` argument explicitly."
-        insight::format_error(msg)
-    }
+  if (inherits(model, "mira") && is.null(newdata)) {
+    msg <- "Please supply a data frame to the `newdata` argument explicitly."
+    insight::format_error(msg)
+  }
 
-    # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
-    scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+  # order of the first few paragraphs is important
+  # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+  # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
+  scall <- rlang::enquo(newdata)
+  newdata <- sanitize_newdata_call(scall, newdata, model)
 
-    valid <- c("dydx", "eyex", "eydx", "dyex")
-    checkmate::assert_choice(slope, choices = valid)
+  valid <- c("dydx", "eyex", "eydx", "dyex")
+  checkmate::assert_choice(slope, choices = valid)
 
-    out <- plot_comparisons(
-        model,
-        variables = variables,
-        condition = condition,
-        by = by,
-        newdata = newdata,
-        type = type,
-        vcov = vcov,
-        conf_level = conf_level,
-        wts = wts,
-        draw = draw,
-        rug = rug,
-        gray = gray,
-        comparison = slope,
-        ...)
+  out <- plot_comparisons(
+    model,
+    variables = variables,
+    condition = condition,
+    by = by,
+    newdata = newdata,
+    type = type,
+    vcov = vcov,
+    conf_level = conf_level,
+    wts = wts,
+    draw = draw,
+    rug = rug,
+    gray = gray,
+    comparison = slope,
+    ...)
 
-    if (inherits(out, "ggplot")) {
-        out <- out + ggplot2::labs(x = condition[1], y = "Slope")
-    }
+  if (inherits(out, "ggplot")) {
+    out <- out + ggplot2::labs(x = condition[1], y = "Slope")
+  }
 
-    return(out)
+  return(out)
 }
-

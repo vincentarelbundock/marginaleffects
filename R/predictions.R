@@ -10,7 +10,7 @@
 #'
 #' See the predictions vignette and package website for worked examples and case studies:
 
-#' * <https://marginaleffects.com/vignettes/predictions.html>
+#' * <https://marginaleffects.com/chapters/predictions.html>
 #' * <https://marginaleffects.com/>
 #'
 #' @rdname predictions

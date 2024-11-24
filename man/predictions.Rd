@@ -188,9 +188,9 @@ levels. See examples section.}
 \item Accepts an argument \code{x}: object produced by a \code{marginaleffects} function or a data frame with column \code{rowid} and \code{estimate}
 \item Returns a data frame with columns \code{term} and \code{estimate} (mandatory) and \code{rowid} (optional).
 \item The function can also accept optional input arguments: \code{newdata}, \code{by}, \code{draws}.
-\item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{posterior_draws()} to extract and manipulate the draws directly.
+\item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{get_draws()} to extract and manipulate the draws directly.
 }
-\item See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
+\item See the Examples section below and the vignette: https://marginaleffects.com/chapters/hypothesis.html
 }}
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
@@ -243,7 +243,7 @@ The \code{newdata} argument and the \code{datagrid()} function can be used to co
 
 See the predictions vignette and package website for worked examples and case studies:
 \itemize{
-\item \url{https://marginaleffects.com/vignettes/predictions.html}
+\item \url{https://marginaleffects.com/chapters/predictions.html}
 \item \url{https://marginaleffects.com/}
 }
 }
