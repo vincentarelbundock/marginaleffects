@@ -2,8 +2,8 @@
 
 The `marginaleffects` package for `R` and `Python` offers a single point
 of entry to easily interpret the results of [over 100 classes of
-models,](https://marginaleffects.com/vignettes/supported_models.html)
-using a simple and consistent user interface.
+models,](https://marginaleffects.com/bonus/supported_models.html) using
+a simple and consistent user interface.
 
 This package comes with a free full-length online book, with extensive
 tutorials: <https://marginaleffects.com>
