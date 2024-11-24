@@ -1,5 +1,4 @@
 AAP
-liftavgwts
 AAPs
 AFAICT
 AME
@@ -11,13 +10,15 @@ Adelies
 Anastasios
 Angelopoulos
 Arel
+Arel
 Augusto
 Avina
 BH
 Beaumais
 Boca
 BorgeJorge
-Brilleman
+Brillemaf
+Bundock
 Bundock
 CMD
 CRC
@@ -42,9 +43,11 @@ GLMMs
 Gam
 Gentoos
 Greifer
+Greifer
 HC
 HDI
 Hedeker
+Heiss
 Heiss
 Hernán
 Heteroskedasticity
@@ -205,6 +208,7 @@ knitr
 kwaa
 lift
 liftavg
+liftavgwts
 linpred
 listwise
 lm
