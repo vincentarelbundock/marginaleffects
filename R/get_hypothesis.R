@@ -27,7 +27,7 @@ get_hypothesis <- function(
 
     if (is.function(hypothesis)) {
         if (!is.null(draws)) {
-            msg <- "The `hypothesis` argument does not support function for models with draws. You can use `posterior_draws()` to extract draws and manipulate them directly instead."
+            msg <- "The `hypothesis` argument does not support function for models with draws. You can use `get_draws()` to extract draws and manipulate them directly instead."
             insight::format_error(msg)
         }
         if ("rowid" %in% colnames(x) && "rowid" %in% colnames(newdata)) {

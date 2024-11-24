@@ -50,7 +50,7 @@ x <- mod |>
 expect_equivalent(nrow(x), 2)
 x <- mod|> avg_comparisons() |> inferences(method = "simulation", R = R)
 expect_equivalent(nrow(x), 2)
-x <- x |> posterior_draws()
+x <- x |> get_draws()
 expect_equivalent(nrow(x), 2 * R)
 
 
@@ -72,7 +72,7 @@ expect_equivalent(nrow(x), 2)
 x <- mod |>
      avg_comparisons() |>
      inferences(method = "rsample", R = R) |>
-     posterior_draws()
+     get_draws()
 expect_equivalent(nrow(x), 2 * R)
 
 # fwb no validity check

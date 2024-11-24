@@ -22,6 +22,8 @@ Misc:
 * Be less strict about combining columns of different types. This allows us to handle types like `haven_labelled`. Thanks to @mwindzio for report #1238.
 * In `lme4` and `glmmTMB` models, warnings are now silenced when the user specifically passes `re.form=NULL`. Thanks to @mattansb for the feature request.
 * New startup message appears once per 24hr period and can be suppressed using `options(marginaleffects_startup_message = FALSE)`.
+* `posterior_draws()` is renamed `get_draws()` because it also applies to bootstrap and simulation-based inference draws.
+* `get_coef()` and `get_vcov()` are now documented on the main website, as they are useful helper functions.
 
 ## 0.23.0
 
