@@ -64,7 +64,7 @@ bm <- brmsmargins(
   CI = 0.95, CIType = "ETI")
 bm <- data.frame(bm$ContrastSummary)
 mfx <- avg_slopes(brms_numeric)
-expect_equivalent(mean(posterior_draws(mfx)$draw), bm$M, tolerance = tol)
+expect_equivalent(mean(get_draws(mfx)$draw), bm$M, tolerance = tol)
 expect_equivalent(mfx$conf.low, bm$LL, tolerance = tol)
 expect_equivalent(mfx$conf.high, bm$UL, tolerance = tol)
 
@@ -113,7 +113,7 @@ set.seed(1024)
 p3 <- predictions(brms_mixed_3, newdata = nd, allow_new_levels = TRUE, sample_new_levels = "uncertainty")
 expect_false(any(p1$estimate == p2$estimate))
 expect_equivalent(p1, p3)
-expect_inherits(posterior_draws(p3), "data.frame")
+expect_inherits(get_draws(p3), "data.frame")
 
 
 # predictions w/ random effects
@@ -303,7 +303,7 @@ expect_error(predictions(brms_factor_formula),
 
 # bugs stay dead: factor indexing for posterior draws
 tmp <- predictions(brms_factor, newdata = datagrid(cyl_fac = 4, mpg = c(10, 20)))
-expect_inherits(posterior_draws(tmp), "data.frame")
+expect_inherits(get_draws(tmp), "data.frame")
 
 
 
@@ -336,7 +336,7 @@ expect_inherits(pred, "predictions")
 comp <- comparisons(brms_mv_1)
 expect_inherits(comp, "comparisons")
 
-draws <- posterior_draws(mfx)
+draws <- get_draws(mfx)
 expect_inherits(draws, "data.frame")
 expect_true(all(c("drawid", "draw", "rowid") %in% colnames(draws)))
 
@@ -350,7 +350,7 @@ expect_inherits(pred, "predictions")
 comp <- comparisons(brms_categorical_1)
 expect_inherits(comp, "comparisons")
 
-draws <- posterior_draws(mfx)
+draws <- get_draws(mfx)
 expect_inherits(draws, "data.frame")
 expect_true(all(c("drawid", "draw", "rowid") %in% colnames(draws)))
 
@@ -450,8 +450,8 @@ expect_true(all(cmp$estimate != cmp$conf.low))
 expect_true(all(cmp$estimate != cmp$conf.high))
 expect_true(all(cmp$conf.high != cmp$conf.low))
 
-# Issue #432: posterior_draws() and tidy() error with `comparison="avg"`
-pd <- posterior_draws(cmp)
+# Issue #432: get_draws() and tidy() error with `comparison="avg"`
+pd <- get_draws(cmp)
 expect_inherits(pd, "data.frame")
 expect_equivalent(nrow(pd), 4000)
 ti <- tidy(cmp)
@@ -608,16 +608,16 @@ expect_equivalent(cmp$conf.high, bm$UL, tolerance = .05)
 
 
 
-# posterior_draws(shape = )
+# get_draws(shape = )
 tid <- avg_comparisons(brms_numeric2)
-pd <- posterior_draws(tid, shape = "DxP")
+pd <- get_draws(tid, shape = "DxP")
 hyp <- brms::hypothesis(pd, "b1 - b2 > 0")
 expect_inherits(hyp, "brmshypothesis")
 
 
 # posterior::rvar
 tid <- avg_comparisons(brms_numeric2)
-rv <- posterior_draws(tid, "rvar")
+rv <- get_draws(tid, "rvar")
 expect_equivalent(nrow(rv), 2)
 expect_inherits(rv$rvar[[1]], "rvar")
 
@@ -662,12 +662,12 @@ cmp = comparisons(brms_logit_re, newdata = datagrid(firm = -10:8), allow_new_lev
 expect_inherits(cmp, "comparisons")
 
 
-# Issue #888: posterior_draws() fails for quantile transformation
+# Issue #888: get_draws() fails for quantile transformation
 expect_error(predictions(
     brms_factor,
     by = "cyl_fac",
     transform = \(x) ecdf(mtcars$mpg)(x)) |>
-    posterior_draws(),
+    get_draws(),
     pattern = "matrix input must return")
 
 

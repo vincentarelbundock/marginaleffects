@@ -26,7 +26,7 @@
 \alias{get_vcov.systemfit}
 \alias{get_vcov.model_fit}
 \alias{get_vcov.workflow}
-\title{Get a named variance-covariance matrix from a model object (internal function)}
+\title{Get a named variance-covariance matrix from a model object}
 \usage{
 get_vcov(model, ...)
 
@@ -109,6 +109,6 @@ first entry in the error message is used by default.}
 A named square matrix of variance and covariances. The names must match the coefficient names.
 }
 \description{
-Get a named variance-covariance matrix from a model object (internal function)
+Get a named variance-covariance matrix from a model object
 }
 \keyword{internal}
