@@ -10,7 +10,7 @@
 #'
 #' See the slopes vignette and package website for worked examples and case studies:
 #'
-#' * <https://marginaleffects.com/vignettes/slopes.html>
+#' * <https://marginaleffects.com/chapters/slopes.html>
 #' * <https://marginaleffects.com/>
 #'
 #' @details
@@ -98,7 +98,7 @@
 #'   - Returns a data frame with columns `term` and `estimate` (mandatory) and `rowid` (optional).
 #'   - The function can also accept optional input arguments: `newdata`, `by`, `draws`.
 #'   - This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use `posterior_draws()` to extract and manipulate the draws directly.
-#' + See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
+#' + See the Examples section below and the vignette: https://marginaleffects.com/chapters/hypothesis.html
 #' @param p_adjust Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See [stats::p.adjust]
 #' @param df Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and `Inf`. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. See [insight::get_df] for a convenient function to extract degrees of freedom. Ex: `slopes(model, df = insight::get_df(model))`
 #' @param eps NULL or numeric value which determines the step size to use when
@@ -181,9 +181,9 @@
 #' # original values, and the whole dataset is duplicated once for each
 #' # combination of the values in `datagrid()`
 #' mfx <- slopes(mod,
-#'     newdata = datagrid(
-#'         hp = c(100, 110),
-#'         grid_type = "counterfactual"))
+#'   newdata = datagrid(
+#'     hp = c(100, 110),
+#'     grid_type = "counterfactual"))
 #' head(mfx)
 #'
 #' # Heteroskedasticity robust standard errors
@@ -194,33 +194,33 @@
 #' mod <- lm(mpg ~ wt + drat, data = mtcars)
 #'
 #' slopes(
-#'     mod,
-#'     newdata = "mean",
-#'     hypothesis = "wt = drat")
+#'   mod,
+#'   newdata = "mean",
+#'   hypothesis = "wt = drat")
 #'
 #' # same hypothesis test using row indices
 #' slopes(
-#'     mod,
-#'     newdata = "mean",
-#'     hypothesis = "b1 - b2 = 0")
+#'   mod,
+#'   newdata = "mean",
+#'   hypothesis = "b1 - b2 = 0")
 #'
 #' # same hypothesis test using numeric vector of weights
 #' slopes(
-#'     mod,
-#'     newdata = "mean",
-#'     hypothesis = c(1, -1))
+#'   mod,
+#'   newdata = "mean",
+#'   hypothesis = c(1, -1))
 #'
 #' # two custom contrasts using a matrix of weights
 #' lc <- matrix(
-#'     c(
-#'         1, -1,
-#'         2, 3),
-#'     ncol = 2)
+#'   c(
+#'     1, -1,
+#'     2, 3),
+#'   ncol = 2)
 #' colnames(lc) <- c("Contrast A", "Contrast B")
 #' slopes(
-#'     mod,
-#'     newdata = "mean",
-#'     hypothesis = lc)
+#'   mod,
+#'   newdata = "mean",
+#'   hypothesis = lc)
 #'
 #' @export
 slopes <- function(model,
@@ -239,92 +239,92 @@ slopes <- function(model,
                    eps = NULL,
                    numderiv = "fdforward",
                    ...) {
-    dots <- list(...)
+  dots <- list(...)
 
-    # very early, before any use of newdata
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+  # very early, before any use of newdata
+  # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+  scall <- rlang::enquo(newdata)
+  newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
-    # build call: match.call() doesn't work well in *apply()
-    call_attr <- c(
-        list(
-            name = "slopes",
-            model = model,
-            newdata = newdata,
-            variables = variables,
-            type = type,
-            vcov = vcov,
-            by = by,
-            conf_level = conf_level,
-            slope = slope,
-            wts = wts,
-            hypothesis = hypothesis,
-            df = df,
-            eps = eps),
-        list(...))
-    call_attr <- do.call("call", call_attr)
+  # build call: match.call() doesn't work well in *apply()
+  call_attr <- c(
+    list(
+      name = "slopes",
+      model = model,
+      newdata = newdata,
+      variables = variables,
+      type = type,
+      vcov = vcov,
+      by = by,
+      conf_level = conf_level,
+      slope = slope,
+      wts = wts,
+      hypothesis = hypothesis,
+      df = df,
+      eps = eps),
+    list(...))
+  call_attr <- do.call("call", call_attr)
 
-    # slopes() does not support a named list of variables like comparisons()
-    checkmate::assert_character(variables, null.ok = TRUE)
+  # slopes() does not support a named list of variables like comparisons()
+  checkmate::assert_character(variables, null.ok = TRUE)
 
-    # slope
-    valid <- c("dydx", "eyex", "eydx", "dyex", "dydxavg", "eyexavg", "eydxavg", "dyexavg")
-    checkmate::assert_choice(slope, choices = valid)
+  # slope
+  valid <- c("dydx", "eyex", "eydx", "dyex", "dydxavg", "eyexavg", "eydxavg", "dyexavg")
+  checkmate::assert_choice(slope, choices = valid)
 
-    # sanity checks and pre-processing
-    model <- sanitize_model(model = model, newdata = newdata, wts = wts, vcov = vcov, by = by, calling_function = "marginaleffects", ...)
-    sanity_dots(model = model, calling_function = "marginaleffects", ...)
-    type <- sanitize_type(model = model, type = type, calling_function = "slopes")
+  # sanity checks and pre-processing
+  model <- sanitize_model(model = model, newdata = newdata, wts = wts, vcov = vcov, by = by, calling_function = "marginaleffects", ...)
+  sanity_dots(model = model, calling_function = "marginaleffects", ...)
+  type <- sanitize_type(model = model, type = type, calling_function = "slopes")
 
-    ############### sanity checks are over
+  ############### sanity checks are over
 
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = slopes,
-        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
-        conf_level = conf_level,
-        by = by,
-        wts = wts, slope = slope, hypothesis = hypothesis, ...)
-    if (!is.null(out)) {
-        return(out)
-    }
-
-    out <- comparisons(
-        model,
-        newdata = newdata,
-        variables = variables,
-        vcov = vcov,
-        conf_level = conf_level,
-        type = type,
-        wts = wts,
-        hypothesis = hypothesis,
-        equivalence = equivalence,
-        df = df,
-        p_adjust = p_adjust,
-        by = by,
-        eps = eps,
-        numderiv = numderiv,
-        comparison = slope,
-        cross = FALSE,
-        # secret arguments
-        internal_call = TRUE,
-        ...)
-
-    data.table::setDT(out)
-
-    lean = getOption("marginaleffects_lean", default = FALSE)
-    if (!isTRUE(lean)) {
-        attr(out, "vcov.type") <- get_vcov_label(vcov)
-        attr(out, "newdata") <- newdata # recall
-        attr(out, "call") <- call_attr
-    }
-        
-    # class
-    data.table::setDF(out)
-    class(out) <- setdiff(class(out), "comparisons")
-    class(out) <- c("slopes", "marginaleffects", class(out))
+  # Bootstrap
+  out <- inferences_dispatch(
+    INF_FUN = slopes,
+    model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
+    conf_level = conf_level,
+    by = by,
+    wts = wts, slope = slope, hypothesis = hypothesis, ...)
+  if (!is.null(out)) {
     return(out)
+  }
+
+  out <- comparisons(
+    model,
+    newdata = newdata,
+    variables = variables,
+    vcov = vcov,
+    conf_level = conf_level,
+    type = type,
+    wts = wts,
+    hypothesis = hypothesis,
+    equivalence = equivalence,
+    df = df,
+    p_adjust = p_adjust,
+    by = by,
+    eps = eps,
+    numderiv = numderiv,
+    comparison = slope,
+    cross = FALSE,
+    # secret arguments
+    internal_call = TRUE,
+    ...)
+
+  data.table::setDT(out)
+
+  lean = getOption("marginaleffects_lean", default = FALSE)
+  if (!isTRUE(lean)) {
+    attr(out, "vcov.type") <- get_vcov_label(vcov)
+    attr(out, "newdata") <- newdata # recall
+    attr(out, "call") <- call_attr
+  }
+
+  # class
+  data.table::setDF(out)
+  class(out) <- setdiff(class(out), "comparisons")
+  class(out) <- c("slopes", "marginaleffects", class(out))
+  return(out)
 }
 
 
@@ -350,41 +350,41 @@ avg_slopes <- function(model,
                        eps = NULL,
                        numderiv = "fdforward",
                        ...) {
-    # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
-    scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+  # order of the first few paragraphs is important
+  # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+  # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
+  scall <- rlang::enquo(newdata)
+  newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
 
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = avg_slopes,
-        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
-        conf_level = conf_level, by = by,
-        wts = wts, slope = slope, hypothesis = hypothesis, ...)
-    if (!is.null(out)) {
-        return(out)
-    }
-
-
-    out <- slopes(
-        model = model,
-        newdata = newdata,
-        variables = variables,
-        type = type,
-        vcov = vcov,
-        conf_level = conf_level,
-        by = by,
-        slope = slope,
-        wts = wts,
-        hypothesis = hypothesis,
-        equivalence = equivalence,
-        p_adjust = p_adjust,
-        df = df,
-        eps = eps,
-        numderiv = numderiv,
-        ...)
-
+  # Bootstrap
+  out <- inferences_dispatch(
+    INF_FUN = avg_slopes,
+    model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
+    conf_level = conf_level, by = by,
+    wts = wts, slope = slope, hypothesis = hypothesis, ...)
+  if (!is.null(out)) {
     return(out)
+  }
+
+
+  out <- slopes(
+    model = model,
+    newdata = newdata,
+    variables = variables,
+    type = type,
+    vcov = vcov,
+    conf_level = conf_level,
+    by = by,
+    slope = slope,
+    wts = wts,
+    hypothesis = hypothesis,
+    equivalence = equivalence,
+    p_adjust = p_adjust,
+    df = df,
+    eps = eps,
+    numderiv = numderiv,
+    ...)
+
+  return(out)
 }

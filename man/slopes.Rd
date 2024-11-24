@@ -169,7 +169,7 @@ first entry in the error message is used by default.}
 \item The function can also accept optional input arguments: \code{newdata}, \code{by}, \code{draws}.
 \item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{posterior_draws()} to extract and manipulate the draws directly.
 }
-\item See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
+\item See the Examples section below and the vignette: https://marginaleffects.com/chapters/hypothesis.html
 }}
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
@@ -230,7 +230,7 @@ The \code{newdata} argument and the \code{datagrid()} function can be used to co
 
 See the slopes vignette and package website for worked examples and case studies:
 \itemize{
-\item \url{https://marginaleffects.com/vignettes/slopes.html}
+\item \url{https://marginaleffects.com/chapters/slopes.html}
 \item \url{https://marginaleffects.com/}
 }
 }
@@ -476,9 +476,9 @@ avg_slopes(mod2, variables = "hp", by = "cyl")
 # original values, and the whole dataset is duplicated once for each
 # combination of the values in `datagrid()`
 mfx <- slopes(mod,
-    newdata = datagrid(
-        hp = c(100, 110),
-        grid_type = "counterfactual"))
+  newdata = datagrid(
+    hp = c(100, 110),
+    grid_type = "counterfactual"))
 head(mfx)
 
 # Heteroskedasticity robust standard errors
@@ -489,33 +489,33 @@ head(mfx)
 mod <- lm(mpg ~ wt + drat, data = mtcars)
 
 slopes(
-    mod,
-    newdata = "mean",
-    hypothesis = "wt = drat")
+  mod,
+  newdata = "mean",
+  hypothesis = "wt = drat")
 
 # same hypothesis test using row indices
 slopes(
-    mod,
-    newdata = "mean",
-    hypothesis = "b1 - b2 = 0")
+  mod,
+  newdata = "mean",
+  hypothesis = "b1 - b2 = 0")
 
 # same hypothesis test using numeric vector of weights
 slopes(
-    mod,
-    newdata = "mean",
-    hypothesis = c(1, -1))
+  mod,
+  newdata = "mean",
+  hypothesis = c(1, -1))
 
 # two custom contrasts using a matrix of weights
 lc <- matrix(
-    c(
-        1, -1,
-        2, 3),
-    ncol = 2)
+  c(
+    1, -1,
+    2, 3),
+  ncol = 2)
 colnames(lc) <- c("Contrast A", "Contrast B")
 slopes(
-    mod,
-    newdata = "mean",
-    hypothesis = lc)
+  mod,
+  newdata = "mean",
+  hypothesis = lc)
 
 }
 \references{

@@ -109,7 +109,7 @@ The \code{condition} argument is used to plot conditional predictions, that is, 
 
 See the "Plots" vignette and website for tutorials and information on how to customize plots:
 \itemize{
-\item https://marginaleffects.com/vignettes/plot.html
+\item https://marginaleffects.com/bonus/plot.html
 \item https://marginaleffects.com
 }
 }

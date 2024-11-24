@@ -64,7 +64,7 @@ hypotheses(
 \item The function can also accept optional input arguments: \code{newdata}, \code{by}, \code{draws}.
 \item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{posterior_draws()} to extract and manipulate the draws directly.
 }
-\item See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
+\item See the Examples section below and the vignette: https://marginaleffects.com/chapters/hypothesis.html
 }}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
@@ -123,7 +123,7 @@ Uncertainty estimates are calculated as first-order approximate standard errors 
 To learn more, read the hypothesis tests vignette, visit the
 package website, or scroll down this page for a full list of vignettes:
 \itemize{
-\item \url{https://marginaleffects.com/vignettes/hypothesis.html}
+\item \url{https://marginaleffects.com/chapters/hypothesis.html}
 \item \url{https://marginaleffects.com/}
 }
 
@@ -234,11 +234,11 @@ dat <- transform(mtcars, gear = factor(gear))
 mod <- polr(gear ~ factor(cyl) + hp, dat)
 
 aggregation_fun <- function(x) {
-    predictions(x, vcov = FALSE) |>
-        mutate(group = ifelse(group \%in\% c("3", "4"), "3 & 4", "5")) |>
-        summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) |>
-        summarize(estimate = mean(estimate), .by = c("cyl", "group")) |>
-        rename(term = cyl)
+  predictions(x, vcov = FALSE) |>
+    mutate(group = ifelse(group \%in\% c("3", "4"), "3 & 4", "5")) |>
+    summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) |>
+    summarize(estimate = mean(estimate), .by = c("cyl", "group")) |>
+    rename(term = cyl)
 }
 
 hypotheses(mod, hypothesis = aggregation_fun)
