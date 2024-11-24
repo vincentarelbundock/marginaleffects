@@ -126,12 +126,9 @@ average_draws <- function(data, index, draws, byfun = NULL) {
 
 
 
-#' `posteriordraws()` is an alias to `get_draws()`
-#'
-#' This alias is kept for backward compatibility and because some users may prefer that name.
+#' alias to `get_draws()` for backward compatibility with JJSS
 #'
 #' @inherit posterior_draws
 #' @keywords internal
 #' @export
 posterior_draws <- get_draws
-

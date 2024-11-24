@@ -2,11 +2,11 @@
 % Please edit documentation in R/get_draws.R
 \name{posterior_draws}
 \alias{posterior_draws}
-\title{\code{posteriordraws()} is an alias to \code{get_draws()}}
+\title{alias to \code{get_draws()} for backward compatibility with JJSS}
 \usage{
 posterior_draws(x, shape = "long")
 }
 \description{
-This alias is kept for backward compatibility and because some users may prefer that name.
+alias to \code{get_draws()} for backward compatibility with JJSS
 }
 \keyword{internal}
