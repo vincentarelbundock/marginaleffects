@@ -334,7 +334,7 @@ avg_predictions(mod, by = 'carb', hypothesis = 'b1 - b2 = 0')
 
 Disable this warning with: `options(marginaleffects_safe = FALSE)`
 "
-        if (isFALSE(getOption("marginaleffects_safe", default = TRUE))) {
+        if (isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
             warn_once(msg, "hypothesis_positional_indices_are_dangerous")
         }
 
