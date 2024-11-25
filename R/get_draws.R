@@ -126,7 +126,7 @@ average_draws <- function(data, index, draws, byfun = NULL) {
 
 
 
-#' alias to `get_draws()` for backward compatibility with JJSS
+#' alias to `get_draws()` for backward compatibility with JSS
 #'
 #' @inherit posterior_draws
 #' @keywords internal
