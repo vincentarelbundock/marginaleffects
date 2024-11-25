@@ -1,5 +1,10 @@
 # News
 
+
+## Development
+
+* The default `type` is now "survival" for these model objects: `clogit`, `coxph`, `coxph_weightit`, `flexsurv`.
+
 ## 0.24.0
 
 Breaking change:
