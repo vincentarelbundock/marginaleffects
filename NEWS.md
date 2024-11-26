@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* Version 0.24.0 accidentally removed the "contrast" column from the output object in calls with only one focal predictor. This column is reinstated.
+
 ## 0.24.0
 
 Breaking change:

@@ -24,13 +24,5 @@ sort_columns <- function(x, newdata = data.frame(), by = NULL) {
     if ("group" %in% names(x) && all(x$group == "main_marginaleffect")) {
         x$group <- NULL
     }
-    # return contrast column only when relevant
-    if ("contrast" %in% colnames(x)) {
-        x[is.na(contrast), "contrast" := ""]
-        x[contrast == "dydx", "contrast" := "dY/dX"]
-        if (all(x$contrast == "dY/dX")) {
-            x[, "contrast" := NULL]
-        }
-    }
     return(x)
 }
