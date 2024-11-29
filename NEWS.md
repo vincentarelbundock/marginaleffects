@@ -3,6 +3,7 @@
 ## Development
 
 * Version 0.24.0 accidentally removed the "contrast" column from the output object in calls with only one focal predictor. This column is reinstated.
+* More informative warning for `lme4` and `glmmTMB` models with `re.form=NULL`
 
 ## 0.24.0
 
