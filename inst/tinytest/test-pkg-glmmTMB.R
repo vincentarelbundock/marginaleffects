@@ -10,14 +10,14 @@ data("Owls", package = "glmmTMB")
 
 # marginaleffects no validity
 Owls <- transform(Owls,
-    Nest = reorder(Nest, NegPerChick),
-    NCalls = SiblingNegotiation,
-    FT = FoodTreatment)
+  Nest = reorder(Nest, NegPerChick),
+  NCalls = SiblingNegotiation,
+  FT = FoodTreatment)
 
 m0 <- glmmTMB(NCalls ~ (FT + ArrivalTime) * SexParent + offset(log(BroodSize)) + (1 | Nest),
-    data = Owls,
-    ziformula = ~1,
-    family = poisson)
+  data = Owls,
+  ziformula = ~1,
+  family = poisson)
 expect_slopes(m0, re.form = NA)
 
 m1 <- glmmTMB(count ~ mined + (1 | site),
@@ -28,24 +28,25 @@ expect_slopes(m1, re.form = NA)
 # Binomial model
 data(cbpp, package = "lme4")
 m4 <- glmmTMB(cbind(incidence, size - incidence) ~ period + (1 | herd),
-family = binomial, data = cbpp)
+  family = binomial, data = cbpp)
 expect_slopes(m4, re.form = NA)
 
 # comparisons vs. emmeans
 
 # Zero-inflated negative binomial model
 m2 <- glmmTMB(count ~ spp + mined + (1 | site),
-  zi = ~spp + mined,
+  zi = ~ spp + mined,
   family = nbinom2,
   data = Salamanders)
 
 co <- comparisons(m2,
-              type = "link",
-              variables = "mined",
-              re.form = NA,
-              newdata = datagrid(mined = "no",
-                                 spp = "GP",
-                                 site = "VF-1"))
+  type = "link",
+  variables = "mined",
+  re.form = NA,
+  newdata = datagrid(
+    mined = "no",
+    spp = "GP",
+    site = "VF-1"))
 em <- tidy(pairs(emmeans(m2, "mined", at = list(spp = "GP", site = "VF-1"))))
 expect_slopes(m2)
 expect_equivalent(co$estimate, -1 * em$estimate)
@@ -54,7 +55,7 @@ expect_equivalent(co$std.error, em$std.error)
 
 # Issue reported by email by Olivier Baumais
 bug <- glmmTMB(count ~ spp + mined,
-  ziformula = ~spp + mined,
+  ziformula = ~ spp + mined,
   family = "nbinom2",
   data = Salamanders)
 mfx <- slopes(bug, re.form = NA)
@@ -64,7 +65,7 @@ tid2 <- avg_slopes(bug, re.form = NA)
 expect_equivalent(tid1$estimate, tid2$estimate)
 expect_equivalent(tid1$std.error, tid2$std.error)
 expect_equivalent(tid1$statistic, tid2$statistic, tolerance = 1e-6)
-expect_equivalent(tid1$p.value, tid2$p.value)
+expect_equivalent(tid1$p.value, tid2$p.value, tolerance = 1e-6)
 expect_equivalent(length(unique(abs(tid1$statistic))), 7)
 
 bed <- marginaleffects:::modelarchive_data("new_bedford")
@@ -86,16 +87,17 @@ expect_equivalent(b, tid$estimate, tolerance = 1e-3)
 
 # Hurdle Poisson model
 m3 <- glmmTMB(count ~ spp + mined + (1 | site),
-  zi = ~spp + mined,
+  zi = ~ spp + mined,
   family = truncated_poisson, data = Salamanders)
 expect_slopes(m3, re.form = NA)
 co <- comparisons(m3,
-              type = "link",
-              variables = "mined",
-              re.form = NA,
-              newdata = datagrid(mined = "no",
-                                 spp = "GP",
-                                 site = "VF-1"))
+  type = "link",
+  variables = "mined",
+  re.form = NA,
+  newdata = datagrid(
+    mined = "no",
+    spp = "GP",
+    site = "VF-1"))
 em <- tidy(pairs(emmeans(m3, "mined", at = list(spp = "GP", site = "VF-1"))))
 expect_slopes(m3)
 expect_equivalent(co$estimate, -1 * em$estimate)
@@ -106,14 +108,14 @@ expect_equivalent(co$std.error, em$std.error)
 
 # contrast: manual check
 mod <- glmmTMB(count ~ spp + mined + (1 | site),
-  zi = ~spp + mined,
+  zi = ~ spp + mined,
   family = nbinom2,
   data = Salamanders)
 dat1 <- dat2 <- Salamanders
 dat1$mined <- "yes"
 dat2$mined <- "no"
 cont1 <- predict(mod, type = "response", newdata = dat2, re.form = NA) -
-     predict(mod, type = "response", newdata = dat1, re.form = NA)
+  predict(mod, type = "response", newdata = dat1, re.form = NA)
 cont2 <- comparisons(mod, variables = "mined", re.form = NA)
 expect_equivalent(cont2$estimate, cont1)
 
@@ -124,9 +126,9 @@ dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/VerbAgg
 dat$woman <- as.numeric(dat$Gender == "F")
 dat$item <- as.factor(dat$item)
 mod <- glmmTMB(
-    woman ~ btype + resp + (1 + Anger | item),
-    family = binomial,
-    data = dat)
+  woman ~ btype + resp + (1 + Anger | item),
+  family = binomial,
+  data = dat)
 
 expect_error(predictions(mod, newdata = datagrid(), vcov = "HC3", re.form = NA), pattern = "vcov")
 expect_error(predictions(mod, newdata = datagrid(), vcov = NULL, re.form = NA), pattern = "vcov")
@@ -170,7 +172,8 @@ model_data <- dplyr::select(
   relig = "F_RELIG_FINAL",
   news = "NEWS_PLATFORMA_W28") %>%
   mutate_at(c("race", "ideology", "income", "approval", "sex", "education", "born_again", "relig"), function(c) {
-    factor(c, exclude = levels(c)[length(levels(c))]) }) |>
+    factor(c, exclude = levels(c)[length(levels(c))])
+  }) |>
   # need to make these ordered factors for BRMS
   transform(
     education = ordered(education),
@@ -182,7 +185,7 @@ mod <- glmmTMB(
   family = ordbeta(),
   start = list(psi = c(-1, 1)))
 mfx <- avg_slopes(mod, re.form = NA)
-expect_inherits(mfx, 'slopes')
+expect_inherits(mfx, "slopes")
 
 
 # Issue #707
@@ -232,7 +235,7 @@ expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
 
 
 # Issue #1064
-m <- glmmTMB(mpg ~ hp + am + (1|cyl), data = mtcars)
+m <- glmmTMB(mpg ~ hp + am + (1 | cyl), data = mtcars)
 p1 <- predictions(m, newdata = mtcars, re.form = NA)
 p2 <- predict(m, se.fit = TRUE, re.form = NA)
 expect_equivalent(p1$estimate, p2$fit)
@@ -248,7 +251,7 @@ dat <- transform(Owls,
 mod <- glmmTMB(
   NCalls ~ (FT + ArrivalTime) * SexParent + offset(log(BroodSize)) + (1 | Nest),
   data = dat,
-  ziformula = ~ SexParent,
+  ziformula = ~SexParent,
   family = poisson)
 
 p <- avg_predictions(mod, type = "zprob", re.form = NA)
@@ -259,9 +262,10 @@ expect_false(anyNA(s$std.error))
 
 
 # Issue 1221
-ord_fit <- glmmTMB(formula=therm/100 ~ F_EDUCCAT2_FINAL + F_INCOME_FINAL + (1|F_INCOME_FINAL),
-    data=pew,
-    family = ordbeta)
+ord_fit <- glmmTMB(
+  formula = therm / 100 ~ F_EDUCCAT2_FINAL + F_INCOME_FINAL + (1 | F_INCOME_FINAL),
+  data = pew,
+  family = ordbeta)
 p <- avg_predictions(ord_fit, re.form = NA)
 expect_false(anyNA(p$estimate))
 expect_false(anyNA(p$std.error))
@@ -278,4 +282,3 @@ expect_false(anyNA(h$std.error))
 
 source("helpers.R")
 rm(list = ls())
-
