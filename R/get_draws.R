@@ -84,6 +84,7 @@ average_draws <- function(data, index, draws, byfun = NULL) {
   }
 
   if (length(index) > 0) {
+    Encoding(data[["term"]]) <- "UTF-8"
     g <- collapse::GRP(data, by = index)
 
     if (is.null(byfun)) {
