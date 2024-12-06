@@ -543,30 +543,35 @@ predictions <- function(model,
   out <- set_marginaleffects_attributes(out, attr_cache = newdata_attr_cache)
 
   # Global option for lean return object
-  lean = getOption("marginaleffects_lean", default = FALSE)
+  lean <- getOption("marginaleffects_lean", default = FALSE)
 
-  # Only add (potentially large) attributes if lean isn't TRUE
+  # Only add (potentially large) attributes if lean is FALSE
+  # extra attributes needed for print method, even with lean return object
+  attr(out, "conf_level") <- conf_level
+  attr(out, "by") <- by
+  attr(out, "lean") <- lean
+  attr(out, "vcov.type") <- vcov.type
   if (isTRUE(lean)) {
-    for (a in setdiff(aa, c("names", "row.names", "class"))) attr(mfx, a) = NULL
-    attr(out, "lean") <- TRUE
+    for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) {
+      attr(out, a) <- NULL
+    }
   } else {
     # other attributes
-    attr(out, "model") <- model
-    attr(out, "type") <- type_string
-    attr(out, "model_type") <- class(model)[1]
-    attr(out, "vcov.type") <- get_vcov_label(vcov)
-    attr(out, "jacobian") <- J
-    attr(out, "vcov") <- V
     attr(out, "newdata") <- newdata
-    attr(out, "weights") <- marginaleffects_wts_internal
-    attr(out, "conf_level") <- conf_level
-    attr(out, "by") <- by
     attr(out, "call") <- call_attr
-    attr(out, "hypothesis_by") <- hyp_by
-    attr(out, "transform_label") <- names(transform)[1]
+    attr(out, "type") <- type
+    attr(out, "model_type") <- class(model)[1]
+    attr(out, "model") <- model
+    attr(out, "variables") <- predictors
+    attr(out, "jacobian") <- J
+    attr(out, "vcov") <- vcov
+    attr(out, "vcov.type") <- vcov.type
+    attr(out, "weights") <- marginaleffects_wts_internal
+    attr(out, "comparison") <- comparison
     attr(out, "transform") <- transform[[1]]
-    # save newdata for use in recall()
-    attr(out, "newdata") <- newdata
+    attr(out, "comparison_label") <- comparison_label
+    attr(out, "hypothesis_by") <- hyp_by
+    attr(out, "transform_label") <- transform_label
 
     if (inherits(model, "brmsfit")) {
       insight::check_if_installed("brms")

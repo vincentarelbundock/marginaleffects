@@ -547,15 +547,16 @@ comparisons <- function(model,
     get_marginaleffects_attributes(newdata, include_regex = "^newdata.*class|explicit|matrix|levels"))
 
   # Global option for lean return object
-  lean = getOption("marginaleffects_lean", default = FALSE)
+  lean <- getOption("marginaleffects_lean", default = FALSE)
 
   # Only add (potentially large) attributes if lean is FALSE
+  # extra attributes needed for print method, even with lean return object
+  attr(out, "conf_level") <- conf_level
+  attr(out, "by") <- by
+  attr(out, "lean") <- lean
+  attr(out, "vcov.type") <- vcov.type
   if (isTRUE(lean)) {
-    for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) attr(out, a) = NULL
-    ## extra attributes needed for print method, even with lean return object
-    attr(out, "conf_level") <- conf_level
-    attr(out, "by") <- by
-    attr(out, "lean") <- TRUE
+    for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) attr(out, a) <- NULL
   } else {
     # other attributes
     attr(out, "newdata") <- newdata
@@ -573,8 +574,6 @@ comparisons <- function(model,
     attr(out, "comparison_label") <- comparison_label
     attr(out, "hypothesis_by") <- hyp_by
     attr(out, "transform_label") <- transform_label
-    attr(out, "conf_level") <- conf_level
-    attr(out, "by") <- by
 
     if (inherits(model, "brmsfit")) {
       insight::check_if_installed("brms")
