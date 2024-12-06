@@ -3,11 +3,13 @@
 ## Development
 
 * Version 0.24.0 accidentally removed the "contrast" column from the output object in calls with only one focal predictor. This column is reinstated.
+* Reinstate some attributes lost with `marginaleffects_lean` but necessary for printing.
 * More informative warning for `lme4` and `glmmTMB` models with `re.form=NULL`
 
 Bugs:
 
 * Encoding issue in bayesian models with `by`. Thanks to @Koalha for report #1290.
+* Retain necessary attribute information to ensure that "lean" return objects still print correctly #1295. 
 
 ## 0.24.0
 
