@@ -550,6 +550,7 @@ predictions <- function(model,
   attr(out, "conf_level") <- conf_level
   attr(out, "by") <- by
   attr(out, "lean") <- lean
+  attr(out, "type") <- type_string
   if (isTRUE(lean)) {
     for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) {
       attr(out, a) <- NULL
@@ -558,7 +559,6 @@ predictions <- function(model,
     # other attributes
     attr(out, "newdata") <- newdata
     attr(out, "call") <- call_attr
-    attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "model") <- model
     attr(out, "jacobian") <- J
