@@ -8,6 +8,7 @@
 Bugs:
 
 * Encoding issue in bayesian models with `by`. Thanks to @Koalha for report #1290.
+* Retain necessary attribute information to ensure that "lean" return objects still print correctly #1295. 
 
 ## 0.24.0
 
