@@ -550,7 +550,6 @@ predictions <- function(model,
   attr(out, "conf_level") <- conf_level
   attr(out, "by") <- by
   attr(out, "lean") <- lean
-  attr(out, "vcov.type") <- vcov.type
   if (isTRUE(lean)) {
     for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) {
       attr(out, a) <- NULL
@@ -562,16 +561,11 @@ predictions <- function(model,
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "model") <- model
-    attr(out, "variables") <- predictors
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- vcov
-    attr(out, "vcov.type") <- vcov.type
     attr(out, "weights") <- marginaleffects_wts_internal
-    attr(out, "comparison") <- comparison
     attr(out, "transform") <- transform[[1]]
-    attr(out, "comparison_label") <- comparison_label
     attr(out, "hypothesis_by") <- hyp_by
-    attr(out, "transform_label") <- transform_label
 
     if (inherits(model, "brmsfit")) {
       insight::check_if_installed("brms")
