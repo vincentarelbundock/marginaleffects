@@ -313,7 +313,7 @@ slopes <- function(model,
 
   data.table::setDT(out)
 
-  lean = getOption("marginaleffects_lean", default = FALSE)
+  lean <- getOption("marginaleffects_lean", default = FALSE)
   if (!isTRUE(lean)) {
     attr(out, "vcov.type") <- get_vcov_label(vcov)
     attr(out, "newdata") <- newdata # recall
