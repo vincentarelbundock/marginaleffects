@@ -1,7 +1,7 @@
 #' @noRd
 #' @export
 vcov.comparisons <- function(object, ...) {
-    attr(object, "jacobian") %*% attr(object, "vcov") %*% t(attr(object, "jacobian"))
+  attr(object, "jacobian") %*% attr(object, "vcov") %*% t(attr(object, "jacobian"))
 }
 
 
@@ -61,3 +61,21 @@ coef.predictions <- coef.comparisons
 #' @export
 #' @noRd
 coef.hypotheses <- coef.comparisons
+
+
+#' @export
+#' @noRd
+df.residual.comparisons <- function(x, ...) {
+  out <- tryCatch(stats::df.residual(attr(x, "model")), error = function(e) NULL)
+  return(out)
+}
+
+
+#' @export
+#' @noRd
+df.residual.predictions <- df.residual.comparisons
+
+
+#' @export
+#' @noRd
+df.residual.slopes <- df.residual.comparisons
