@@ -22,7 +22,6 @@ expect_true(any(pre1$p.value < pre2$p.value))
 expect_true(all(pre1$p.value <= pre2$p.value))
 
 mod <- lm(y ~ x * z)
-pkgload::load_all()
 hyp1 <- hypotheses(mod)
 hyp2 <- hypotheses(mod, multcomp = "single-step")
 expect_true(any(hyp1$p.value < hyp2$p.value))
