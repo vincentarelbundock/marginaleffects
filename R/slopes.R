@@ -99,7 +99,6 @@
 #'   - The function can also accept optional input arguments: `newdata`, `by`, `draws`.
 #'   - This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use `get_draws()` to extract and manipulate the draws directly.
 #' + See the Examples section below and the vignette: https://marginaleffects.com/chapters/hypothesis.html
-#' @param p_adjust Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See [stats::p.adjust]
 #' @param df Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and `Inf`. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. See [insight::get_df] for a convenient function to extract degrees of freedom. Ex: `slopes(model, df = insight::get_df(model))`
 #' @param eps NULL or numeric value which determines the step size to use when
 #' calculating numerical derivatives: (f(x+eps)-f(x))/eps. When `eps` is
@@ -234,7 +233,6 @@ slopes <- function(model,
                    wts = FALSE,
                    hypothesis = NULL,
                    equivalence = NULL,
-                   p_adjust = NULL,
                    df = Inf,
                    eps = NULL,
                    numderiv = "fdforward",
@@ -301,7 +299,6 @@ slopes <- function(model,
     hypothesis = hypothesis,
     equivalence = equivalence,
     df = df,
-    p_adjust = p_adjust,
     by = by,
     eps = eps,
     numderiv = numderiv,
@@ -345,7 +342,6 @@ avg_slopes <- function(model,
                        wts = FALSE,
                        hypothesis = NULL,
                        equivalence = NULL,
-                       p_adjust = NULL,
                        df = Inf,
                        eps = NULL,
                        numderiv = "fdforward",
@@ -380,7 +376,6 @@ avg_slopes <- function(model,
     wts = wts,
     hypothesis = hypothesis,
     equivalence = equivalence,
-    p_adjust = p_adjust,
     df = df,
     eps = eps,
     numderiv = numderiv,
