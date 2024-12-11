@@ -9,7 +9,7 @@ get_predict.MCMCglmm <- function(
 
     ndraws_mod <- nrow(model$VCV)
     if (ndraws < ndraws_mod) {
-        idx <- sample(seq_len(ndraws_mod), ndraws)
+        idx <- sample.int(ndraws_mod, ndraws)
     } else {
         idx <- seq_len(ndraws_mod)
     }
