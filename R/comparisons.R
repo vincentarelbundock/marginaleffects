@@ -243,7 +243,6 @@ comparisons <- function(model,
                         wts = FALSE,
                         hypothesis = NULL,
                         equivalence = NULL,
-                        p_adjust = NULL,
                         df = Inf,
                         eps = NULL,
                         numderiv = "fdforward",
@@ -287,7 +286,6 @@ comparisons <- function(model,
       wts = wts,
       hypothesis = hypothesis,
       equivalence = equivalence,
-      p_adjust = p_adjust,
       df = df),
     dots)
   if ("modeldata" %in% names(dots)) {
@@ -305,7 +303,6 @@ comparisons <- function(model,
   conf_level <- sanitize_conf_level(conf_level, ...)
   checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
   numderiv <- sanitize_numderiv(numderiv)
-  sanity_equivalence_p_adjust(equivalence, p_adjust)
   model <- sanitize_model(
     model = model,
     newdata = newdata,
@@ -511,7 +508,6 @@ comparisons <- function(model,
     draws = draws,
     estimate = "estimate",
     null_hypothesis = hypothesis_null,
-    p_adjust = p_adjust,
     model = model)
 
   # clean rows and columns
@@ -603,7 +599,6 @@ avg_comparisons <- function(model,
                             wts = FALSE,
                             hypothesis = NULL,
                             equivalence = NULL,
-                            p_adjust = NULL,
                             df = Inf,
                             eps = NULL,
                             numderiv = "fdforward",
@@ -638,7 +633,6 @@ avg_comparisons <- function(model,
     wts = wts,
     hypothesis = hypothesis,
     equivalence = equivalence,
-    p_adjust = p_adjust,
     df = df,
     eps = eps,
     ...)

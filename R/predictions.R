@@ -198,7 +198,6 @@ predictions <- function(model,
                         transform = NULL,
                         hypothesis = NULL,
                         equivalence = NULL,
-                        p_adjust = NULL,
                         df = Inf,
                         numderiv = "fdforward",
                         ...) {
@@ -259,7 +258,6 @@ predictions <- function(model,
   sanity_dots(model = model, ...)
   numderiv <- sanitize_numderiv(numderiv)
   sanity_df(df, newdata)
-  sanity_equivalence_p_adjust(equivalence, p_adjust)
   model <- sanitize_model(
     model = model,
     newdata = newdata,
@@ -490,7 +488,6 @@ predictions <- function(model,
       null_hypothesis = hypothesis_null,
       df = df,
       model = model,
-      p_adjust = p_adjust,
       ...)
   }
 
@@ -562,7 +559,7 @@ predictions <- function(model,
     attr(out, "model_type") <- class(model)[1]
     attr(out, "model") <- model
     attr(out, "jacobian") <- J
-    attr(out, "vcov") <- vcov
+    attr(out, "vcov") <- V
     attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "transform") <- transform[[1]]
     attr(out, "hypothesis_by") <- hyp_by
@@ -694,7 +691,6 @@ avg_predictions <- function(model,
                             transform = NULL,
                             hypothesis = NULL,
                             equivalence = NULL,
-                            p_adjust = NULL,
                             df = Inf,
                             numderiv = "fdforward",
                             ...) {
@@ -735,7 +731,6 @@ avg_predictions <- function(model,
     transform = transform,
     hypothesis = hypothesis,
     equivalence = equivalence,
-    p_adjust = p_adjust,
     df = df,
     ...)
 

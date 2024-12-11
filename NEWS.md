@@ -2,13 +2,22 @@
 
 ## Development
 
-* Version 0.24.0 accidentally removed the "contrast" column from the output object in calls with only one focal predictor. This column is reinstated.
-* Reinstate some attributes lost with `marginaleffects_lean` but necessary for printing.
+Breaking changes:
+
+* `p_adjust` argument deprecated because of name-matching conflict with `p` argument in quantile regression and others. The recommended workflow is now to pass the object to the `hypotheses()` function and use its `multcomp` argument.
+* Removed long deprecated functions from the code base. These functions were already raising errors: `marginaleffects`, `meffects`, `marginal_means`, `deltamethod`, `datagridcf`. 
+
+New:
+
+* New `multcomp` argument for the `hypotheses()` function.
+* `hypotheses()` inherits the `conf_level` from `marginaleffects` objects when available. Otherwise, the default remains 0.95.
 * More informative warning for `lme4` and `glmmTMB` models with `re.form=NULL`
 * `df.residual()` methods tries to call `stats::df.residual()` on the "model" attribute. If that fails or returns `NULL`, we return `Inf`.
 
 Bugs:
 
+* Version 0.24.0 accidentally removed the "contrast" column from the output object in calls with only one focal predictor. This column is reinstated.
+* Reinstate some attributes lost with `marginaleffects_lean` but necessary for printing.
 * Encoding issue in bayesian models with `by`. Thanks to @Koalha for report #1290.
 * Retain necessary attribute information to ensure that "lean" return objects still print correctly #1295.
 

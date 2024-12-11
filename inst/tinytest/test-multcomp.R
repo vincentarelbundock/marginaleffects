@@ -1,0 +1,22 @@
+source("helpers.R")
+mod <- lm(mpg ~ qsec + hp * factor(cyl), data = mtcars)
+
+cmp1 <- avg_comparisons(mod, variables = list(cyl = "pairwise"))
+cmp2 <- hypotheses(cmp1, multcomp = "hochberg")
+expect_true(any(cmp1$p.value < cmp2$p.value))
+expect_true(all(cmp1$p.value <= cmp2$p.value))
+
+mfx1 <- avg_slopes(mod)
+mfx2 <- hypotheses(mfx1, multcomp = "hochberg")
+expect_true(any(mfx1$p.value < mfx2$p.value))
+expect_true(all(mfx1$p.value <= mfx2$p.value))
+
+set.seed(48103)
+x <- rnorm(10)
+y <- rnorm(10)
+z <- sample(c("a", "b", "c"), 10, replace = TRUE)
+mod <- lm(y ~ x * z)
+pre1 <- avg_predictions(mod, by = "z")
+pre2 <- hypotheses(pre1, multcomp = "single-step")
+expect_true(any(pre1$p.value < pre2$p.value))
+expect_true(all(pre1$p.value <= pre2$p.value))
