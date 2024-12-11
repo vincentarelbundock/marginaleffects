@@ -48,7 +48,7 @@ get_predict.stpm2 <- function(model, newdata = NULL, ...) {
     sanity_predict_vector(pred = pred, model = model, newdata = newdata)
     sanity_predict_numeric(pred = pred, model = model, newdata = newdata)
     out <- data.frame(
-        rowid = 1:nrow(newdata),
+        rowid = seq_len(nrow(newdata)),
         estimate = pred)
     return(out)
 }
