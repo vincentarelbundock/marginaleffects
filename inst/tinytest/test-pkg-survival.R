@@ -133,6 +133,11 @@ expect_equivalent(e0$estimate, e3$estimate)
 
 
 
+# Issue #1272
+fit <- survreg(Surv(time, status) ~ ph.ecog + age + sex, lung,dist="weibull")
+p1 <- avg_predictions(fit, variables = "sex", type = "quantile", p = 0.5)
+p2 <- avg_predictions(fit, variables = "sex", type = "quantile", p = 0.1)
+expect_true(all(p1$estimate > p2$estimate))
 
 
 
