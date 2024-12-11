@@ -5,7 +5,6 @@ get_ci <- function(
     draws = NULL,
     vcov = TRUE,
     null_hypothesis = 0,
-    p_adjust = NULL,
     model = NULL,
     ...) {
 
@@ -61,8 +60,7 @@ get_ci <- function(
                    p_overwrite
 
     ci_overwrite <- !"conf.low" %in% colnames(x) &&
-                    "std.error" %in% colnames(x) &&
-                    is.null(p_adjust)
+                    "std.error" %in% colnames(x)
 
     if (z_overwrite) {
         x[["statistic"]] <- (x[["estimate"]] - null_hypothesis) / x[["std.error"]]
@@ -82,10 +80,6 @@ get_ci <- function(
         }
         x[["conf.low"]] <- x[["estimate"]] - critical * x[["std.error"]]
         x[["conf.high"]] <- x[["estimate"]] + critical * x[["std.error"]]
-    }
-    
-    if (!is.null(p_adjust) && "p.value" %in% colnames(x)) {
-        x$p.value <- stats::p.adjust(x$p.value, method = p_adjust)
     }
 
     # s-value

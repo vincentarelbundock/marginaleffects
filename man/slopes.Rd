@@ -17,7 +17,6 @@ slopes(
   wts = FALSE,
   hypothesis = NULL,
   equivalence = NULL,
-  p_adjust = NULL,
   df = Inf,
   eps = NULL,
   numderiv = "fdforward",
@@ -36,7 +35,6 @@ avg_slopes(
   wts = FALSE,
   hypothesis = NULL,
   equivalence = NULL,
-  p_adjust = NULL,
   df = Inf,
   eps = NULL,
   numderiv = "fdforward",
@@ -173,8 +171,6 @@ first entry in the error message is used by default.}
 }}
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
-
-\item{p_adjust}{Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See \link[stats:p.adjust]{stats::p.adjust}}
 
 \item{df}{Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When \code{df} is \code{Inf}, the normal distribution is used. When \code{df} is finite, the \code{t} distribution is used. See \link[insight:get_df]{insight::get_df} for a convenient function to extract degrees of freedom. Ex: \code{slopes(model, df = insight::get_df(model))}}
 

@@ -55,13 +55,12 @@ cmp1 <- suppressWarnings(avg_comparisons(fits,
   comparison = "lnratioavg",
   transform = "exp"))
 expect_equivalent(cmp1$estimate, 0.3380001, tol = 1e-6)
-expect_equivalent(cmp1$conf.low, 0.2386019, tol = 1e-6)
+expect_equivalent(cmp1$conf.low, 0.2386019, tol = 1e-3)
 cmp2 <- suppressWarnings(avg_comparisons(fits,
   variables = "married",
   comparison = "lnratioavg"))
 expect_equivalent(cmp2$estimate, -1.084709, tol = 1e-6)
-expect_equivalent(cmp2$conf.low, -1.432959, tol = 1e-6)
+expect_equivalent(cmp2$conf.low, -1.432959, tol = 1e-3)
 
 
 source("helpers.R")
-

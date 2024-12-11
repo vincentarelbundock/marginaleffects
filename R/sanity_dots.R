@@ -43,6 +43,9 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     # flexsurv
     valid[["flexsurvreg"]] <- c("times", "p", "start")
 
+    # survival
+    valid[["survreg"]] <- c("p")
+
     # WeightIt models
     valid[["ordinal_weightit"]] <- valid[["multinom_weightit"]] <- "values"
 

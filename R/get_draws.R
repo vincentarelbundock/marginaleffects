@@ -72,7 +72,7 @@ get_draws <- function(x, shape = "long") {
 
 
 average_draws <- function(data, index, draws, byfun = NULL) {
-  insight::check_if_installed("collapse", minimum_version = "1.9.0")
+  insight::check_if_installed("collapse", minimum_version = "2.0.18")
 
   w <- data[["marginaleffects_wts_internal"]]
   if (all(is.na(w))) {

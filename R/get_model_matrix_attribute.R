@@ -17,7 +17,7 @@ get_model_matrix_attribute <- function(model, newdata = NULL) {
     }
 
     # subset variables for listwise deletion
-    vars <- unlist(insight::find_predictors(model), use.names = FALSE)
+    vars <- unlist(insight::find_predictors(model, verbose = FALSE), use.names = FALSE)
     vars <- c(vars, unlist(insight::find_response(model), use.names = FALSE))
     vars <- intersect(vars, colnames(newdata))
 
