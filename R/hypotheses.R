@@ -443,9 +443,6 @@ hypotheses <- function(
 
   out <- sort_columns(out)
 
-  out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level)
-
-
   class(out) <- c("hypotheses", "deltamethod", class(out))
   attr(out, "posterior_draws") <- draws
   attr(out, "model") <- model
@@ -455,6 +452,9 @@ hypotheses <- function(
   attr(out, "vcov") <- vcov
   attr(out, "vcov.type") <- vcov.type
   attr(out, "conf_level") <- conf_level
+
+  # must be after attributes for vcov
+  out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level)
 
   # Issue #1102: hypotheses() should not be called twice on the same object
   attr(out, "hypotheses_call") <- TRUE
