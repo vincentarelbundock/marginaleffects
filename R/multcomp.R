@@ -17,6 +17,7 @@ multcomp_test <- function(object, multcomp = FALSE, conf_level = 0.95) {
     object$p.value <- s$test$pvalues
     object$conf.low <- s$confint[, 2, drop = TRUE]
     object$conf.high <- s$confint[, 3, drop = TRUE]
+    object$s.value <- -log2(object$p.value)
 
     return(object)
 }
