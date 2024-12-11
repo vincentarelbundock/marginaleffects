@@ -27,7 +27,7 @@ sanitize_variables <- function(variables,
   if (is.null(variables)) {
     # mhurdle names the variables weirdly
     if (inherits(model, "mhurdle")) {
-      predictors <- insight::find_predictors(model, flatten = TRUE)
+      predictors <- insight::find_predictors(model, flatten = TRUE, verbose = FALSE)
       predictors <- list(conditional = predictors)
     } else {
       predictors <- insight::find_variables(model)
