@@ -1,7 +1,7 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.24.0.4
-Authors@R: 
+Version: 0.24.0.5
+Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
              role = c("aut", "cre", "cph"),
@@ -34,9 +34,9 @@ URL: https://marginaleffects.com/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Depends: 
+Depends:
     R (>= 3.6.0)
-Imports: 
+Imports:
     checkmate,
     data.table (>= 1.16.2),
     generics,
@@ -47,7 +47,7 @@ Imports:
 Enhances:
     knitr
 LinkingTo: Rcpp, RcppEigen
-Suggests: 
+Suggests:
     AER,
     Amelia,
     afex,
@@ -185,7 +185,7 @@ Suggests:
     xgboost,
     testthat (>= 3.0.0),
     altdoc
-Collate: 
+Collate:
     'RcppExports.R'
     'backtransform.R'
     'bootstrap_boot.R'

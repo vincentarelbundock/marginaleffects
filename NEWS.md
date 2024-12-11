@@ -5,17 +5,18 @@
 * Version 0.24.0 accidentally removed the "contrast" column from the output object in calls with only one focal predictor. This column is reinstated.
 * Reinstate some attributes lost with `marginaleffects_lean` but necessary for printing.
 * More informative warning for `lme4` and `glmmTMB` models with `re.form=NULL`
+* `df.residual()` methods tries to call `stats::df.residual()` on the "model" attribute. If that fails or returns `NULL`, we return `Inf`.
 
 Bugs:
 
 * Encoding issue in bayesian models with `by`. Thanks to @Koalha for report #1290.
-* Retain necessary attribute information to ensure that "lean" return objects still print correctly #1295. 
+* Retain necessary attribute information to ensure that "lean" return objects still print correctly #1295.
 
 ## 0.24.0
 
 Breaking change:
 
-* Rows are now sorted when using the `by` argument. This may change the order of estimates, which can affect hypothesis tests using positional indices like `b1-b2=0`. 
+* Rows are now sorted when using the `by` argument. This may change the order of estimates, which can affect hypothesis tests using positional indices like `b1-b2=0`.
 
 Bugs:
 
@@ -24,7 +25,7 @@ Bugs:
 
 New features:
 
-* Users can reduce the size of `marginaleffects` objects by setting the new global option `options(marginaleffects_lean = TRUE)`. This will strip the return objects of all information about the original model and data, as well ancillary attributes. The benefit of dramatically smaller return objects comes at the cost of not being able to run some post-processing inference functions like `hypotheses()` on these lean objects. Thanks to @grantmcdermott for the suggestion and code contribution #1267. 
+* Users can reduce the size of `marginaleffects` objects by setting the new global option `options(marginaleffects_lean = TRUE)`. This will strip the return objects of all information about the original model and data, as well ancillary attributes. The benefit of dramatically smaller return objects comes at the cost of not being able to run some post-processing inference functions like `hypotheses()` on these lean objects. Thanks to @grantmcdermott for the suggestion and code contribution #1267.
 
 Misc:
 
@@ -146,7 +147,7 @@ New modeling packages supported:
 
 New:
 
-* `wts=TRUE` tries to retrieves weights used in a weighted fit such as `lm()` with the `weights` argument or a model fitted using the `survey` package. Thanks to @ngreifer for feature request 
+* `wts=TRUE` tries to retrieves weights used in a weighted fit such as `lm()` with the `weights` argument or a model fitted using the `survey` package. Thanks to @ngreifer for feature request
 * `print.marginaleffects()` supports `style="tinytable"`, which returns a `tinytable` object. Call `print(avg_slopes(model))` to get a nice printed table in Quarto or Rmarkdown documents, via Typst, LaTeX or HTML. Default print format can be set using: `options(marginaleffects_print_style="tinytable")`
 * `hypothesis` argument accepts a function which takes a `marginaleffects` data frame and returns a transformed data frame with `term` and `estimate` columns.
 * `datagrid()` gets a `response` argument (default is `FALSE`) to control if the response variable is included or excluded from the grid-building process.
@@ -197,7 +198,7 @@ Minor:
 
 Bug fixes:
 
-* Error on `hypotheses(joint = "string")` for `comparisons()` objects (no result was returned). Thanks to @BorgeJorge for report #981. 
+* Error on `hypotheses(joint = "string")` for `comparisons()` objects (no result was returned). Thanks to @BorgeJorge for report #981.
 * Enhanced support for multi-equation Bayesian models with `brms` models. Thanks to @winterstat for report #1006.
 * Parameter names with spaces could break standard errors. Thanks to @Lefty2021 for report #1005.
 
@@ -239,7 +240,7 @@ Machine learning support:
 Misc:
 
 * New vignettes:
-  - Inverse Probability Weighting 
+  - Inverse Probability Weighting
   - Machine Learning
   - Matching
 * Add support for `hypotheses()` to `inferences()`. Thanks to @Tristan-Siegfried for code contribution #908.
@@ -421,14 +422,14 @@ Renamed arguments (backward compatibility is preserved):
 
 New:
 
-* `p_adjust` argument: Adjust p-values for multiple comparisons. 
+* `p_adjust` argument: Adjust p-values for multiple comparisons.
 * `equivalence` argument available everywhere.
 
 Performance:
 
 * Much faster results in `avg_*()` functions for models with only categorical predictors and many rows of data, using deduplication and weights instead of unit-level estimates.
 * Faster predictions in `lm()` and `glm()` models using `RcppEigen`.
-* Bayesian models with many rows. Thanks to Etienne Bacher. #694 
+* Bayesian models with many rows. Thanks to Etienne Bacher. #694
 * Faster predictions, especially with standard errors and large datasets.
 
 Bugs:
@@ -524,9 +525,9 @@ New features:
 
 Renamed functions (backward-compatibility is maintained by keeping the old function names as aliases):
 
-* `marginaleffects()` -> `slopes()` 
-* `posteriordraws()` -> `posterior_draws()` 
-* `marginalmeans()` -> `marginal_means()` 
+* `marginaleffects()` -> `slopes()`
+* `posteriordraws()` -> `posterior_draws()`
+* `marginalmeans()` -> `marginal_means()`
 * `plot_cap()` -> `plot_predictions()`
 * `plot_cme()` -> `plot_slopes()`
 * `plot_cco()` -> `plot_comparisons()`
@@ -597,7 +598,7 @@ Bug fixes and minor improvements:
 
 * New supported model class: `gamlss`. Thanks to Marcio Augusto Diniz.
 * `marginalmeans()` accepts a `wts` argument with values: "equal", "proportional", "cells".
-* `by` argument 
+* `by` argument
   - accepts data frames for complex groupings.
   - in `marginalmeans` only accepts data frames.
   - accepts "group" to group by response level.
@@ -609,7 +610,7 @@ Bug fixes and minor improvements:
   - new shortcuts "revpairwise", "revsequential", "revreference"
 * `wts` argument is respected in `by` argument and with `*avg` shortcuts in the `transform_pre` argument.
 * `tidy.predictions()` and `tidy.marginalmeans()` get a new `transform_avg` argument.
-* New vignettes: 
+* New vignettes:
   - Unit-level contrasts in logistic regressions. Thanks to @arthur-albuquerque.
   - Python Numpy models in `marginaleffects`. Thanks to timpipeseek.
   - Bootstrap example in standard errors vignette.
@@ -623,7 +624,7 @@ Breaking changes:
 
 Critical bug fix:
 
-* Contrasts with interactions were incorrect in version 0.6.0. The error should have been obvious to most analysts in most cases (weird-looking alignment). Thanks to @vmikk. 
+* Contrasts with interactions were incorrect in version 0.6.0. The error should have been obvious to most analysts in most cases (weird-looking alignment). Thanks to @vmikk.
 
 New supported packages and models:
 
@@ -693,7 +694,7 @@ Breaking changes:
 * `type` no longer accepts a character vector. Must be a single string.
 * `conf.int` argument deprecated. Use `vcov = FALSE` instead.
 
-New supported packages and models: 
+New supported packages and models:
 
 * `mlogit`
 * `mhurdle`
@@ -735,14 +736,14 @@ New pages on the `marginaleffects` website: https://marginaleffects.com/
 Argument name changes (backward compatibility is preserved:
 
 * Everywhere:
-    - `conf.level` -> `conf_level` 
+    - `conf.level` -> `conf_level`
 * `datagrid()`:
     - `FUN.factor` -> `FUN_factor` (same for related arguments)
     - `grid.type` -> `grid_type`
 
 ## 0.4.1
 
-New supported packages and models: 
+New supported packages and models:
 
 * `stats::loess`
 * `sampleSelection::selection`
@@ -750,8 +751,8 @@ New supported packages and models:
 
 Misc:
 
-* `mgcv::bam` models allow `exclude` argument. 
-* Gam models allow `include_smooth` argument. 
+* `mgcv::bam` models allow `exclude` argument.
+* Gam models allow `include_smooth` argument.
 * New tests
 * Bug fixes
 
@@ -783,7 +784,7 @@ New supported models:
 
 Misc:
 
-* Support `modelbased::visualisation_matrix` in `newdata` without having to specify `x` explicitly. 
+* Support `modelbased::visualisation_matrix` in `newdata` without having to specify `x` explicitly.
 * `tidy.predictions()` and `summary.predictions()` methods.
 * Documentation improvements.
 * CRAN test fixes
