@@ -1,18 +1,3 @@
-get_se_delta_marginalmeans <- function(model,
-                                       variables,
-                                       newdata,
-                                       type,
-                                       cross = FALSE,
-                                       ...) {
-    get_marginalmeans(
-        model = model,
-        variables = variables,
-        newdata = newdata,
-        type = type,
-        cross = cross,
-        ...
-    )$estimate
-}
 
 
 get_se_delta_contrasts <- function(model,
