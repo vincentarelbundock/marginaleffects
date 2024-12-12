@@ -109,6 +109,6 @@ first entry in the error message is used by default.}
 A named square matrix of variance and covariances. The names must match the coefficient names.
 }
 \description{
-Get a named variance-covariance matrix from a model object
+Mostly for internal use, but can be useful because the output is consistent across model classes.
 }
 \keyword{internal}

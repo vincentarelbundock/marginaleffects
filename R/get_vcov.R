@@ -1,9 +1,9 @@
 #' Get a named variance-covariance matrix from a model object
 #'
+#' Mostly for internal use, but can be useful because the output is consistent across model classes.
 #' @inheritParams slopes
 #' @return A named square matrix of variance and covariances. The names must match the coefficient names.
 #' @rdname get_vcov
-#' @keywords internal
 #' @export
 get_vcov <- function(model, ...) {
   UseMethod("get_vcov", model)
