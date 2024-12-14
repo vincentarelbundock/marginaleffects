@@ -2,7 +2,7 @@
 #'
 #' @keywords internal
 #' @return A string with class `knit_asis` to be printed in Rmarkdown or Quarto documents.
-#' @exportS3Method knitr::knit_print
+#' @rawNamespace S3method(knitr::knit_print, marginaleffects)
 knit_print.marginaleffects <- function(x, ...) {
   if (isTRUE(getOption("marginaleffects_print_style") == "tinytable")) {
     insight::check_if_installed("tinytable")
