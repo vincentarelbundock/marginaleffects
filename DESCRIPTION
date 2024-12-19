@@ -44,8 +44,6 @@ Imports:
     methods,
     rlang,
     Rcpp (>= 1.0.0)
-Enhances:
-    knitr
 LinkingTo: Rcpp, RcppEigen
 Suggests:
     AER,
@@ -185,7 +183,9 @@ Suggests:
     yaml,
     xgboost,
     testthat (>= 3.0.0),
-    altdoc
+    altdoc,
+    knitr,
+    quarto
 Collate:
     'RcppExports.R'
     'backtransform.R'
@@ -313,3 +313,4 @@ Collate:
     'zzz.R'
 Language: en-US
 Config/testthat/edition: 3
+VignetteBuilder: knitr, quarto
