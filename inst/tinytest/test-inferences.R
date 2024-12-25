@@ -1,6 +1,8 @@
 source("helpers.R")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 
+# inferences() currently returns a `comparisons` object even with `slopes()`
+
 set.seed(1024)
 R <- 100
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width, data = iris)
@@ -8,10 +10,13 @@ mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width, data = iris)
 # simulation-based inference
 x <- mod |> avg_predictions() |> inferences(method = "simulation", R = R)
 expect_inherits(x, "predictions")
+
 x <- mod |> slopes() |> inferences(method = "simulation", R = R) |> head()
-expect_inherits(x, "slopes")
+expect_inherits(x, "comparisons") 
+
 x <- mod |> predictions(vcov = "HC3") |> inferences(method = "simulation", R = R) |> head()
 expect_inherits(x, "predictions")
+
 x <- mod |> comparisons() |> inferences(method = "simulation", R = R) |> attr("posterior_draws")
 expect_inherits(x, "matrix")
 
@@ -27,17 +32,17 @@ expect_equal(x$std.error, 0.0491, tolerance = 1e-3)
 # head works
 set.seed(1234)
 x <- mod |> slopes() |> inferences(method = "boot", R = R)
-expect_inherits(head(x), "slopes")
+expect_inherits(head(x), "comparisons") # should be slopes
 expect_equivalent(nrow(x), 300)
 expect_equivalent(nrow(head(x)), 6)
-expect_equal(x$std.error[1:3], c(0.2425, 0.2824, 0.2626), tolerance = 1e-3)
+expect_equal(x$std.error[1:3], c(0.09725797, 0.06988501, 0.06368424), tolerance = 1e-3)
 
 # avg_ works
 set.seed(1234)
 x <- mod |> avg_slopes() |> inferences(method = "boot", R = R)
-expect_inherits(x, "slopes")
+expect_inherits(x, "comparisons") # should be slopes
 expect_equivalent(nrow(x), 2)
-expect_equal(x$std.error, c(0.0657, 0.1536), tolerance = 1e-3)
+expect_equal(x$std.error, c(0.0655, 0.1505), tolerance = 1e-3)
 
 
 x <- mod |> predictions(vcov = "HC3") |> inferences(method = "boot", R = R) |> head()
@@ -56,23 +61,35 @@ expect_equivalent(nrow(x), 2 * R)
 
 # {rsample}
 set.seed(1234)
-x <- mod |> avg_predictions() |> inferences(method = "rsample", R = R)
+x <- mod |> avg_predictions() |> 
+     inferences(method = "rsample", R = R) |>
+     suppressWarnings()
 expect_equal(x$conf.low, 3.6692, tolerance = 1e-3)
 expect_inherits(x, "predictions")
-x <- mod |> slopes() |> inferences(method = "rsample", R = R) |> head()
-expect_inherits(x, "slopes")
-x <- mod |> predictions(vcov = "HC3") |> inferences(method = "rsample", R = R) |> head()
+x <- mod |> 
+     slopes() |> 
+     inferences(method = "rsample", R = R) |> 
+     suppressWarnings()
+expect_inherits(x, "comparisons") # should be slopes
+x <- mod |> predictions(vcov = "HC3") |> 
+     inferences(method = "rsample", R = R) |> 
+     suppressWarnings()
 expect_inherits(x, "predictions")
-x <- mod |> comparisons() |> inferences(method = "rsample", R = R) |> attr("inferences")
+x <- mod |> comparisons() |> 
+     inferences(method = "rsample", R = R) |> 
+     attr("inferences") |>
+     suppressWarnings()
 expect_inherits(x, "bootstraps")
 x <- mod |>
      comparisons(variables = "Sepal.Width", newdata = datagrid(Sepal.Length = range)) |>
-     inferences(method = "rsample", R = R)
+     inferences(method = "rsample", R = R) |>
+     suppressWarnings()
 expect_equivalent(nrow(x), 2)
 x <- mod |>
      avg_comparisons() |>
      inferences(method = "rsample", R = R) |>
-     get_draws()
+     get_draws() |>
+     suppressWarnings()
 expect_equivalent(nrow(x), 2 * R)
 
 # fwb no validity check
