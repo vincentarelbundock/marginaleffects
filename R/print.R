@@ -56,7 +56,7 @@ print.marginaleffects <- function(x,
                                   nrows = getOption("marginaleffects_print_nrows", default = 30),
                                   ncols = getOption("marginaleffects_print_ncols", default = 30),
                                   type = getOption("marginaleffects_print_type", default = TRUE),
-                                  column_names = getOption("marginaleffects_print_column_names", default = TRUE),
+                                  column_names = getOption("marginaleffects_print_column_names", default = FALSE),
                                   ...) {
   checkmate::assert_number(digits)
   checkmate::assert_number(topn)

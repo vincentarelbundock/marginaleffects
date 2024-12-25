@@ -5,6 +5,4 @@
 
 Type:  response 
 Comparison: 1 - 0
-Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, hp, predicted_lo, predicted_hi, predicted, mpg 
-
 

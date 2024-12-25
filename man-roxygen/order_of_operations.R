@@ -4,7 +4,7 @@
 #'
 #' 1. `newdata`
 #' 2. `variables`
-#' 3. `comparison` and `slopes`
+#' 3. `comparison` and `slope`
 #' 4. `by`
 #' 5. `vcov`
 #' 6. `hypothesis`

@@ -2,11 +2,11 @@
 % Please edit documentation in R/get_draws.R
 \name{posterior_draws}
 \alias{posterior_draws}
-\title{alias to \code{get_draws()} for backward compatibility with JSS}
+\title{alias to \code{get_draws()} keep forever for backward compatibility with JSS}
 \usage{
 posterior_draws(x, shape = "long")
 }
 \description{
-alias to \code{get_draws()} for backward compatibility with JSS
+alias to \code{get_draws()} keep forever for backward compatibility with JSS
 }
 \keyword{internal}

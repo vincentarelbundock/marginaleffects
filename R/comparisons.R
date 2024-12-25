@@ -95,20 +95,7 @@
 #' @template order_of_operations
 #' @template parallel
 #' @template options
-#'
-#' @return A `data.frame` with one row per observation (per term/group) and several columns:
-#' * `rowid`: row number of the `newdata` data frame
-#' * `type`: prediction type, as defined by the `type` argument
-#' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
-#' * `term`: the variable whose marginal effect is computed
-#' * `dydx`: slope of the outcome with respect to the term, for a given combination of predictor values
-#' * `std.error`: standard errors computed by via the delta method.
-#' * `p.value`: p value associated to the `estimate` column. The null is determined by the `hypothesis` argument (0 by default), and p values are computed before applying the `transform` argument.
-#' * `s.value`: Shannon information transforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "surprise") against the null hypothesis that the coin is fair? The purpose of S is to calibrate the analyst's intuition about the strength of evidence encoded in p against a well-known physical phenomenon. See Greenland (2019) and Cole et al. (2020).
-#' * `conf.low`: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
-#' * `conf.high`: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
-#'
-#' See `?print.marginaleffects` for printing options.
+#' @template return
 #'
 #' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' @examples

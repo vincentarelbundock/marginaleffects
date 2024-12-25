@@ -5,6 +5,4 @@
 
 Type:  response 
 Comparison: 1 - 0
-Columns: term, contrast, am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
-
 

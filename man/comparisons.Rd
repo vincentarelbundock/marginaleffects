@@ -255,18 +255,19 @@ package. See the "Model-Specific Arguments" section of the
 arguments.}
 }
 \value{
-A \code{data.frame} with one row per observation (per term/group) and several columns:
+A \code{data.frame} with one row per estimate. This data frame is pretty-printed by default, but users can interact with it as a regular data frame, with functions like \code{nrow()}, \code{head()}, \code{colnames()}, etc. Values can be extracted using standard \verb{[,]} or \code{$} operators.
+
+Columns may include:
 \itemize{
 \item \code{rowid}: row number of the \code{newdata} data frame
-\item \code{type}: prediction type, as defined by the \code{type} argument
 \item \code{group}: (optional) value of the grouped outcome (e.g., categorical outcome models)
-\item \code{term}: the variable whose marginal effect is computed
-\item \code{dydx}: slope of the outcome with respect to the term, for a given combination of predictor values
-\item \code{std.error}: standard errors computed by via the delta method.
-\item \code{p.value}: p value associated to the \code{estimate} column. The null is determined by the \code{hypothesis} argument (0 by default), and p values are computed before applying the \code{transform} argument.
-\item \code{s.value}: Shannon information transforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "surprise") against the null hypothesis that the coin is fair? The purpose of S is to calibrate the analyst's intuition about the strength of evidence encoded in p against a well-known physical phenomenon. See Greenland (2019) and Cole et al. (2020).
-\item \code{conf.low}: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
-\item \code{conf.high}: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
+\item \code{term}: the focal variable.
+\item \code{estimate}: an estimate of the prediction, counterfactual comparison, or slope.
+\item \code{std.error}: standard errors computed via the delta method.
+\item \code{p.value}: p value associated to the \code{estimate} column. The null is determined by the \code{hypothesis} argument (0 by default).
+\item \code{s.value}: Shannon information transforms of p values. See the S values vignette at \href{marginaleffects.com}{https://marginaleffects.com} the marginaleffects website.
+\item \code{conf.low}: lower bound of the confidence (or credible) interval defined by the \code{conf_level} argument.
+\item \code{conf.high}: upper bound of the confidence (or credible) interval defined by the \code{conf_level} argument.
 }
 
 See \code{?print.marginaleffects} for printing options.
@@ -452,7 +453,7 @@ Behind the scenes, the arguments of \code{marginaleffects} functions are evaluat
 \enumerate{
 \item \code{newdata}
 \item \code{variables}
-\item \code{comparison} and \code{slopes}
+\item \code{comparison} and \code{slope}
 \item \code{by}
 \item \code{vcov}
 \item \code{hypothesis}
