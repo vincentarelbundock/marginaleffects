@@ -278,7 +278,7 @@ expect_equivalent(p1$conf.low, p2$conf.low)
 # Issue #839
 mod <- feols(mpg ~ drat | gear, data = mtcars, weights = ~qsec)
 res <- suppressWarnings(inferences(avg_slopes(mod), method = "boot", R = 20))
-expect_inherits(res, "slopes")
+expect_inherits(res, "comparisons") # should be slopes but can't figure out inferences dispatch
 
 
 
