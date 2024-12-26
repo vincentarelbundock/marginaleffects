@@ -264,35 +264,7 @@ hypotheses <- function(
   if (is.symbol(xcall)) {
     model <- eval(xcall, envir = parent.frame())
   } else if (is.call(xcall)) {
-    internal <- c("predictions", "avg_predictions", "comparisons", "avg_comparisons", "slopes", "avg_slopes")
-
-    # mfx object
-    if (as.character(xcall)[[1]] %in% internal) {
-      args[["x"]] <- model
-      out <- do.call(recall, args)
-      if (!is.null(out)) {
-        class(out) <- c("hypotheses", class(out))
-      }
-
-      out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level)
-      return(out)
-
-    # non-mfx object
-    } else {
-      model <- eval(xcall, envir = parent.frame())
-    }
-  }
-
-  # marginaleffects objects: recall()
-  if (inherits(model, c("predictions", "comparisons", "slopes"))) {
-    args[["x"]] <- attr(model, "call")
-    out <- do.call(recall, args)
-    if (!is.null(out)) {
-      class(out) <- c("hypotheses", class(out))
-    }
-
-    out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level)
-    return(out)
+    model <- eval(xcall, envir = parent.frame())
   }
 
   numderiv <- sanitize_numderiv(numderiv)
