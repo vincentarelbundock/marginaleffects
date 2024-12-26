@@ -136,7 +136,7 @@
 #' # joint hypotheses: marginaleffects object
 #' cmp <- avg_comparisons(model)
 #' hypotheses(cmp, joint = "cyl")
-#' 
+#'
 #' # Multiple comparison adjustment
 #' # p values and family-wise confidence intervals
 #' cmp <- avg_comparisons(model)
@@ -264,35 +264,7 @@ hypotheses <- function(
   if (is.symbol(xcall)) {
     model <- eval(xcall, envir = parent.frame())
   } else if (is.call(xcall)) {
-    internal <- c("predictions", "avg_predictions", "comparisons", "avg_comparisons", "slopes", "avg_slopes")
-
-    # mfx object
-    if (as.character(xcall)[[1]] %in% internal) {
-      args[["x"]] <- model
-      out <- do.call(recall, args)
-      if (!is.null(out)) {
-        class(out) <- c("hypotheses", class(out))
-      }
-
-      out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level)
-      return(out)
-
-    # non-mfx object
-    } else {
-      model <- eval(xcall, envir = parent.frame())
-    }
-  }
-
-  # marginaleffects objects: recall()
-  if (inherits(model, c("predictions", "comparisons", "slopes"))) {
-    args[["x"]] <- attr(model, "call")
-    out <- do.call(recall, args)
-    if (!is.null(out)) {
-      class(out) <- c("hypotheses", class(out))
-    }
-
-    out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level)
-    return(out)
+    model <- eval(xcall, envir = parent.frame())
   }
 
   numderiv <- sanitize_numderiv(numderiv)
@@ -307,12 +279,21 @@ hypotheses <- function(
   vcov.type <- get_vcov_label(vcov = vcov)
 
   FUNouter <- function(model, hypothesis, newparams = NULL, ...) {
-    if (inherits(model, c("predictions", "slopes", "comparisons"))) {
-      out <- model
-    } else if (isTRUE(checkmate::check_numeric(model))) {
+    if (isTRUE(checkmate::check_numeric(model))) {
       out <- data.frame(term = seq_along(out), estimate = out)
     } else if (inherits(model, "data.frame")) {
       out <- model
+      if (!"estimate" %in% colnames(out)) {
+        msg <- "`hypothesis` function must return a data.frame with a column named `estimate`."
+        insight::format_error(msg)
+      }
+      if (!"term" %in% colnames(out)) {
+        n <- tryCatch(names(stats::coef(model)), error = function(e) NULL)
+        if (is.null(n)) {
+          n <- paste0("b", seq_len(nrow(out)))
+        }
+        out$term <- n
+      }
       if (!all(c("term", "estimate") %in% colnames(out))) {
         msg <- "`hypothesis` function must return a data.frame with two columns named `term` and `estimate`."
         insight::format_error(msg)

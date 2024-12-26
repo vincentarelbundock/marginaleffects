@@ -48,14 +48,14 @@ expect_true(all(p$std.error > 0))
 
 # equality between predictions: 1 and 2 equal, 2 and 3 different
 fun <- function(x) {
-    p <- predict(x, type = "link", newdata = mtcars)
-    data.frame(term = "b1 = b2", estimate = p[1] - p[2])
+  p <- predict(x, type = "link", newdata = mtcars)
+  data.frame(term = "b1 = b2", estimate = p[1] - p[2])
 }
 dmm <- hypotheses(mod, hypothesis = fun)
 expect_equivalent(dmm$estimate, 0)
 fun <- function(x) {
-    p <- predict(x, type = "link", newdata = mtcars)
-    data.frame(term = "b3 = b2", estimate = p[3] - p[2])
+  p <- predict(x, type = "link", newdata = mtcars)
+  data.frame(term = "b3 = b2", estimate = p[3] - p[2])
 }
 dmm <- hypotheses(mod, hypothesis = fun)
 expect_equivalent(dmm$estimate, 1.33154848763268)
@@ -63,9 +63,9 @@ expect_equivalent(dmm$estimate, 1.33154848763268)
 # named matrix
 mod <- lm(mpg ~ factor(cyl), data = mtcars)
 hyp <- matrix(
-    c(0, -1, 1, 1/3, 1/3, 1/3),
-    ncol = 2,
-    dimnames = list(NULL, c("H1", "H2")))
+  c(0, -1, 1, 1 / 3, 1 / 3, 1 / 3),
+  ncol = 2,
+  dimnames = list(NULL, c("H1", "H2")))
 del <- hypotheses(mod, hypothesis = hyp)
 expect_equivalent(del$term, c("H1", "H2"))
 
@@ -120,11 +120,15 @@ tmp <- purrr::map(pre, hypotheses, hypothesis = "b1 = b2")
 expect_inherits(tmp, "list")
 expect_inherits(tmp[[1]], "hypotheses")
 expect_inherits(tmp[[2]], "hypotheses")
-tmp <- purrr::map(reg_list , ~hypotheses(.) |> tidy()) # error in Github version; works in CRAN version
+tmp <- purrr::map(reg_list, ~ hypotheses(.) |> tidy()) # error in Github version; works in CRAN version
 expect_inherits(tmp, "list")
 expect_inherits(tmp[[1]], "tbl_df")
 expect_inherits(tmp[[2]], "tbl_df")
-tmp <- purrr::map(reg_list, function(reg) reg |>  hypotheses("wt = 0") |>  broom::tidy())
+tmp <- purrr::map(reg_list, function(reg) {
+  reg |>
+    hypotheses("wt = 0") |>
+    broom::tidy()
+})
 expect_inherits(tmp, "list")
 expect_inherits(tmp[[1]], "tbl_df")
 expect_inherits(tmp[[2]], "tbl_df")
@@ -145,7 +149,7 @@ cmp = avg_comparisons(
   type = "link",
   variables = list("tx" = "pairwise"),
   by = "sex"
-) 
+)
 x <- hypotheses(cmp, hypothesis = "b4 - b3 = 0")
 y <- cmp$estimate[4] - cmp$estimate[3]
 z <- avg_comparisons(
@@ -154,9 +158,9 @@ z <- avg_comparisons(
   variables = list("tx" = "pairwise"),
   by = "sex",
   hypothesis = "b4 - b3 = 0"
-) 
-expect_equal(x$estimate, y)
-expect_equal(z$estimate, y)
+)
+expect_equivalent(x$estimate, y)
+expect_equivalent(z$estimate, y)
 
 
 # labels
@@ -198,13 +202,13 @@ expect_equivalent(hyp$term, sprintf("b%s = 0", 1:5))
 requiet("nlme")
 fm1 <- lme(distance ~ age + Sex, data = Orthodont)
 expect_warning(hypotheses(fm1,
-                          hypothesis = c(0,0),
-                          joint = c("SexFemale", "age")))
+  hypothesis = c(0, 0),
+  joint = c("SexFemale", "age")))
 # no warning generated
 h <- hypotheses(fm1,
-                 hypothesis = c(0,0),
-                 df = c(1, 3),
-                 joint = c("SexFemale", "age"))
+  hypothesis = c(0, 0),
+  df = c(1, 3),
+  joint = c("SexFemale", "age"))
 
 
 # Issue #1102: hypotheses() should not be called twice on the same object
