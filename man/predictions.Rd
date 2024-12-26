@@ -213,7 +213,7 @@ package. See the "Model-Specific Arguments" section of the
 arguments.}
 }
 \value{
-A \code{data.frame} with one row per estimate. This data frame is pretty-printed by default, but users can interact with it as a regular data frame, with functions like \code{nrow()}, \code{head()}, \code{colnames()}, etc. Values can be extracted using standard \verb{[,]} or \code{$} operators.
+A \code{data.frame} with one row per estimate. This data frame is pretty-printed by default, but users can interact with it as a regular data frame, with functions like \code{nrow()}, \code{head()}, \code{colnames()}, etc. Values can be extracted using standard \verb{[,]} or \code{$} operators, and manipulated using external packages like \code{dplyr} or \code{data.table}.
 
 Columns may include:
 \itemize{

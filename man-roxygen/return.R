@@ -1,7 +1,7 @@
-#' @return A `data.frame` with one row per estimate. This data frame is pretty-printed by default, but users can interact with it as a regular data frame, with functions like `nrow()`, `head()`, `colnames()`, etc. Values can be extracted using standard `[,]` or `$` operators.
-#' 
+#' @return A `data.frame` with one row per estimate. This data frame is pretty-printed by default, but users can interact with it as a regular data frame, with functions like `nrow()`, `head()`, `colnames()`, etc. Values can be extracted using standard `[,]` or `$` operators, and manipulated using external packages like `dplyr` or `data.table`.
+#'
 #' Columns may include:
-#' 
+#'
 #' * `rowid`: row number of the `newdata` data frame
 #' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
 #' * `term`: the focal variable.
