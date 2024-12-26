@@ -9,6 +9,16 @@ get_term_labels <- function(x, idx = NULL) {
         out[["term"]] <- NULL
       }
       out <- do.call(paste, c(out, sep = " "))
+    } else if (inherits(x, "predictions")) {
+      by <- attr(x, "by")
+      if (isTRUE(checkmate::check_character(by)) && all(by %in% names(x))) {
+        out <- apply(x[, by, drop = FALSE], 1, paste, collapse = " ")
+        if (anyDuplicated(out) > 0) {
+          out <- paste0("b", seq_len(nrow(x)))
+        }
+      } else {
+        out <- paste0("b", seq_len(nrow(x)))
+      }
     } else {
       out <- paste0("b", seq_len(nrow(x)))
     }
