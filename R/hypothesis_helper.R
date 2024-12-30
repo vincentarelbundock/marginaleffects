@@ -69,6 +69,10 @@ specify_hypothesis <- function(
             if (length(by) == 0) by <- NULL
         }
 
+        if (!inherits(x, "data.table")) {
+          data.table::setDT(x)
+        }
+
         # row labels
         if (!"rowid" %in% colnames(x)) x[, "rowid" := seq_len(.N)]
         if (is.null(label_columns)) {
