@@ -15,6 +15,7 @@ New:
 * More informative warning for `lme4` and `glmmTMB` models with `re.form=NULL`
 * `df.residual()` methods tries to call `stats::df.residual()` on the "model" attribute. If that fails or returns `NULL`, we return `Inf`.
 * Column names are no longer printed by default.
+* Allow multiple sequential `hypotheses()` calls. Issue #1316.
 
 Bugs:
 
