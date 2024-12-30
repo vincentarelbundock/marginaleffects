@@ -374,7 +374,7 @@ get_contrasts <- function(model,
         draws <- draws[idx_na, , drop = FALSE]
 
         if (isTRUE(checkmate::check_character(by, min.len = 1))) {
-            by_idx <- subset(out, select = intersect(by, colnames(out)))
+            by_idx <- out[, ..by]
             by_idx <- do.call(paste, c(by_idx, sep = "|"))
         } else {
             by_idx <- out$term
