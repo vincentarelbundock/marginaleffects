@@ -686,6 +686,50 @@ cmp <- avg_comparisons(brms_issue1006, variables = list(chl = 1, age = 1))
 expect_inherits(cmp, "comparisons")
 
 
+# Issue #1313: data.table indexing in avg_comparisons()
+set.seed(48103)
+Cndtn <- factor(c("PC", "QR", "TK", "NG"))
+TstTm <- c(0, 1)
+data <- expand.grid(Cndtn = Cndtn, TstTm = TstTm)
+data <- do.call(rbind, replicate(50, data, simplify = FALSE))
+Age <- rnorm(200, 0, 2)
+data$Age <- Age[rep(seq_len(200), each = 2)]
+data$Y <- rnorm(400, 0, 0.5) + 0.3 * (rnorm(400, 0, 0.2) + as.numeric(data$TstTm) - 1) + 0.4 * (rnorm(400, 0, 0.2) + data$Age) + 0.2 * ((rnorm(400, 0, 0.2) + as.numeric(data$TstTm) - 1)) * (rnorm(400, 0, 0.2) + as.numeric(data$Cndtn) / 10)
+mdl <- brm(Y ~ TstTm + (TstTm:Cndtn) * Age, data = data)
+
+by <- data.frame(
+  Cndtn = c("PC", "PC", "QR", "QR", "TK", "TK", "NG", "NG"),
+  TstTm = c("0", "1", "0", "1", "0", "1", "0", "1"),
+  by = c("PC0", "PC1", "QR0", "QR1", "LG0", "LG1", "LG0", "LG1")
+)
+cmp1 <- avg_comparisons(
+  mdl,
+  datagrid(Cndtn = c("PC", "QR", "TK", "NG"), grid_type = "counterfactual"),
+  variables = "Age",
+  by = by
+)
+cmp2 <- avg_comparisons(
+  mdl,
+  datagrid(Cndtn = c("PC", "QR", "TK", "NG"), grid_type = "counterfactual"),
+  variables = "Age",
+  by = c("Cndtn", "TstTm")
+)
+expect_equivalent(
+  subset(cmp1, by == "PC1")$estimate,
+  subset(cmp2, Cndtn == "PC" & TstTm == 1)$estimate
+)
+expect_equivalent(
+  subset(cmp1, by == "PC0")$estimate,
+  subset(cmp2, Cndtn == "PC" & TstTm == 0)$estimate
+)
+expect_equivalent(
+  subset(cmp1, by == "LG0")$estimate,
+  subset(cmp2, Cndtn == "NG" & TstTm == 0)$estimate
+)
+
+
+
+
 
 source("helpers.R")
 rm(list = ls())
