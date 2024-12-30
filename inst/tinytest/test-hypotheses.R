@@ -211,9 +211,10 @@ h <- hypotheses(fm1,
   joint = c("SexFemale", "age"))
 
 
-# Issue #1102: hypotheses() should not be called twice on the same object
-mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
-mod <- hypotheses(mod)
-expect_error(hypotheses(mod), pattern = "twice on the same object")
+# # We allow this again by removing `recall()` from `hypotheses()`
+# # Issue #1102: hypotheses() should not be called twice on the same object
+# mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
+# mod <- hypotheses(mod)
+# expect_error(hypotheses(mod), pattern = "twice on the same object")
 
 rm(list = ls())

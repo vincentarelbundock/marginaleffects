@@ -166,16 +166,6 @@ hypotheses <- function(
     }
   }
 
-  if (inherits(model, c("slopes", "comparisons", "predictions")) && isTRUE(attr(model, "lean"))) {
-    msg <- "The `hypotheses()` function cannot be called on a lean object. Please set `options(marginaleffects_lean = FALSE)`, re-run your model, and try again."
-    insight::format_error(msg)
-  }
-
-  if (isTRUE(attr(model, "hypotheses_call"))) {
-    msg <- "The `hypotheses()` function cannot be called twice on the same object."
-    insight::format_error(msg)
-  }
-
   if (!isFALSE(multcomp) && !isFALSE(joint)) {
     msg <- "The `multcomp` argument cannot be used with the `joint` argument."
     insight::format_error(msg)
