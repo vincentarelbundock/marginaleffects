@@ -33,6 +33,14 @@
 #' plot_comparisons(mod, variables = "am", condition = list("hp", "drat" = range))
 #'
 #' plot_comparisons(mod, variables = "am", condition = list("hp", "drat" = "threenum"))
+#'
+#' # marginal comparisons
+#' plot_predictions(mod, variables = "hp", by = "am") 
+#'
+#' # marginal comparisons on a counterfactual grid
+#' plot_predictions(mod, by = "am",
+#'    newdata = datagrid(am = 0:1, grid_type = "counterfactual")) 
+#'
 plot_comparisons <- function(model,
                              variables = NULL,
                              condition = NULL,
