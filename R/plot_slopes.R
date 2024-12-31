@@ -47,7 +47,9 @@
 #' plot_slopes(mod, variables = "hp", by = "am") 
 #'
 #' # marginal slopes on a counterfactual grid
-#' plot_slopes(mod, by = "am",
+#' plot_slopes(mod, 
+#'    variables = "hp",
+#'    by = "am",
 #'    newdata = datagrid(am = 0:1, grid_type = "counterfactual")) 
 #'
 plot_slopes <- function(model,
