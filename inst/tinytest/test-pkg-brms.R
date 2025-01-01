@@ -614,7 +614,7 @@ expect_equivalent(cmp$conf.high, bm$UL, tolerance = .05)
 # get_draws(shape = )
 tid <- avg_comparisons(brms_numeric2)
 pd <- get_draws(tid, shape = "DxP")
-hyp <- brms::hypothesis(pd, "b1 - b2 > 0")
+hyp <- brms::hypothesis(pd, "hp - mpg > 0")
 expect_inherits(hyp, "brmshypothesis")
 
 
