@@ -326,6 +326,10 @@ sanitize_variables <- function(variables,
       predictors[[v]][["eps"]] <- eps
     } else if (is.numeric(modeldata[[v]])) {
       predictors[[v]][["eps"]] <- 1e-4 * diff(range(modeldata[[v]], na.rm = TRUE, finite = TRUE))
+      # 1-row grid has 0 range
+      if (predictors[[v]][["eps"]] == 0) {
+        predictors[[v]][["eps"]] <- 1e-4
+      }
     } else {
       predictors[[v]]["eps"] <- list(NULL)
     }

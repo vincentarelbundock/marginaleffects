@@ -154,7 +154,8 @@ print.marginaleffects <- function(x,
     "p.value.equiv" = "p (Equiv)",
     "df" = "Df",
     "df1" = "Df 1",
-    "df2" = "Df 2"
+    "df2" = "Df 2",
+    "rvar" = "rvar"
   )
 
 

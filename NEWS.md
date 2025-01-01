@@ -16,6 +16,8 @@ New:
 * `df.residual()` methods tries to call `stats::df.residual()` on the "model" attribute. If that fails or returns `NULL`, we return `Inf`.
 * Column names are no longer printed by default.
 * Allow multiple sequential `hypotheses()` calls. Issue #1316.
+* Better parameter name labels in `get_draws()`. Thanks to @andymilne for feature request #1318.
+* `rvar` column from `get_draws()` is now printed by default.
 
 Bugs:
 
