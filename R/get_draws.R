@@ -7,6 +7,8 @@
 #' * "PxD": Matrix with draws as rows and parameters as columns
 #' * "rvar": Random variable datatype (see `posterior` package documentation).
 #' @return A data.frame with `drawid` and `draw` columns.
+#' @details
+#' If DxP and PxD and the names returned by `coef(x)` are unique, `marginaleffects` sets parameter names to those names. Otherwise, it sets them to `b1`, `b2`, etc.
 #' @export
 get_draws <- function(x, shape = "long") {
   checkmate::assert_choice(shape, choices = c("long", "DxP", "PxD", "rvar"))
@@ -28,7 +30,11 @@ get_draws <- function(x, shape = "long") {
   }
 
   if (shape %in% c("PxD", "DxP")) {
-    row.names(draws) <- paste0("b", seq_len(nrow(draws)))
+    parnames <- names(stats::coef(x))
+    if (length(parnames) != nrow(draws) || anyDuplicated(parnames) > 0) {
+      parnames <- paste0("b", seq_len(nrow(draws)))
+    }
+    row.names(draws) <- parnames
     colnames(draws) <- paste0("draw", seq_len(ncol(draws)))
   }
 

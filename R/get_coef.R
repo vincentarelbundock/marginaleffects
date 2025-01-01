@@ -21,3 +21,15 @@ get_coef.default <- function(model, ...) {
   out <- stats::setNames(out$Estimate, out$Parameter)
   return(out)
 }
+
+
+#' @export
+get_coef.predictions <- function(model, ...) {
+  stats::coef(model)
+}
+
+#' @export
+get_coef.comparisons <- get_coef.predictions
+
+#' @export
+get_coef.slopes <- get_coef.predictions

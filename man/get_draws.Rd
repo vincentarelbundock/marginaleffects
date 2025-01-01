@@ -23,3 +23,6 @@ A data.frame with \code{drawid} and \code{draw} columns.
 \description{
 Extract Posterior Draws or Bootstrap Resamples from \code{marginaleffects} Objects
 }
+\details{
+If DxP and PxD and the names returned by \code{coef(x)} are unique, \code{marginaleffects} sets parameter names to those names. Otherwise, it sets them to \code{b1}, \code{b2}, etc.
+}
