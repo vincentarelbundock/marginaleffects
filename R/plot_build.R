@@ -59,9 +59,15 @@ plot_build <- function(
         !get_variable_class(modeldata, v_x, "categorical") &&
         !get_variable_class(modeldata, dv, "categorical")) {
         if (!is.null(v_color) && get_variable_class(modeldata, v_color, "categorical")) {
-            p <- p + ggplot2::geom_point(
-                data = modeldata, alpha = points,
-                ggplot2::aes(x = .data[[v_x]], y = .data[[dv]], color = factor(.data[[v_color]])))
+            if (isTRUE(gray)) {
+              p <- p + ggplot2::geom_point(
+                  data = modeldata, alpha = points,
+                  ggplot2::aes(x = .data[[v_x]], y = .data[[dv]], shape = factor(.data[[v_color]])))
+            } else {
+              p <- p + ggplot2::geom_point(
+                  data = modeldata, alpha = points,
+                  ggplot2::aes(x = .data[[v_x]], y = .data[[dv]], color = factor(.data[[v_color]])))
+            }
         } else {
             p <- p + ggplot2::geom_point(
                 data = modeldata, alpha = points,
