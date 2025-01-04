@@ -107,11 +107,6 @@ print.marginaleffects <- function(x,
     alpha <- 100 * (1 - attr(x, "conf_level"))
   }
 
-  # contrast is sometimes useless
-  if ("contrast" %in% colnames(out) && all(out$contrast == "")) {
-    out$contrast <- NULL
-  }
-
   statistic_label <- attr(x, "statistic_label")
   if (is.null(statistic_label)) {
     if (any(out[["df"]] < Inf)) {
@@ -157,11 +152,6 @@ print.marginaleffects <- function(x,
     "df2" = "Df 2",
     "rvar" = "rvar"
   )
-
-
-  if (inherits(x, "marginalmeans")) {
-    dict["estimate"] <- "Mean"
-  }
 
   # explicitly given by user in `datagrid()` or `by` or `newdata`
   explicit <- get_explicit(x)
@@ -351,25 +341,17 @@ knit_print.slopes <- knit_print.marginaleffects
 
 
 get_explicit <- function(x) {
-  browser()
-  if (isTRUE(checkmate::check_character(attr(x, "by")))) {
-    bycols <- c(attr(x, "by"), "by")
-  } else {
-    bycols <- "by"
+  bycols <- "by"
+
+  by <- attr(x, "by")
+  if (isTRUE(checkmate::check_character(by))) {
+    bycols <- c(by, bycols)
   }
 
-  nd <- attr(x, "newdata")
-  if (is.null(nd)) {
-    nd <- attr(x, "newdata_newdata")
-  }
-
-  explicit <- tmp <- c(
+  explicit <- c(
     bycols,
     attr(x, "hypothesis_by"),
-    attr(nd, "variables_datagrid"),
-    attr(nd, "newdata_variables_datagrid"),
-    attr(x, "variables_datagrid"),
-    attr(x, "newdata_variables_datagrid")
+    attr(attr(x, "newdata"), "explicit")
   )
 
   return(explicit)

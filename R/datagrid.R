@@ -105,6 +105,8 @@ datagrid <- function(
     checkmate::assert_data_frame(newdata, null.ok = TRUE)
     checkmate::assert_flag(response)
 
+    explicit <- c(names(dots), by)
+
     if (grid_type == "mean_or_mode") {
         if (is.null(FUN_character)) FUN_character <- get_mode
         if (is.null(FUN_logical)) FUN_logical <- get_mode
@@ -168,19 +170,10 @@ datagrid <- function(
             newdata_list[[i]] <- do.call(datagrid_engine, args)
         }
 
-        # Issue 1058: missing attributes with `by`
-        at <- attributes(newdata_list[[1]])
-
         out <- data.table::rbindlist(newdata_list)
         data.table::setDF(out)
 
-        # Issue 1058: missing attributes with `by`
-        # overwriting everything corrupts the data frame
-        for (n in names(at)) {
-            if (!n %in% names(attributes(out))) {
-                attr(out, n) <- at[[n]]
-            }
-        }
+        attr(out, "explicit") <- explicit
 
         return(out)
     }
@@ -201,6 +194,7 @@ datagrid <- function(
         out$rowid <- seq_len(nrow(out))
     }
 
+    attr(out, "explicit") <- explicit
     return(out)
 }
 
@@ -306,16 +300,8 @@ datagrid_engine <- function(
     args <- c(out, list(sorted = FALSE))
     out <- do.call("fun", args)
 
-    # na.omit destroys attributes, and we need the "factor" attribute
-    # created by insight::get_data
-    for (n in names(out)) {
-        attr(out, "marginaleffects_variable_class") <- attr(dat, "marginaleffects_variable_class")
-    }
-
     # better to assume "standard" class as output
     data.table::setDF(out)
-
-    attr(out, "variables_datagrid") <- names(dots)
 
     return(out)
 }
