@@ -5,6 +5,7 @@ EXPENSIVE <- TRUE
 
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
+options("tinysnapshot_ignore_white_space" = TRUE)
 options(marginaleffects_numDeriv = NULL)
 
 if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {

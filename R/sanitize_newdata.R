@@ -218,7 +218,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
     tmp <- build_newdata(model = model, newdata = newdata, by = by, modeldata = modeldata)
     newdata <- tmp[["newdata"]]
     modeldata <- tmp[["modeldata"]]
-    newdata_explicit <- tmp[["newdata_explicit"]]
+    newdata_explicit <- attr(newdata, "explicit")
     newdata <- clean_newdata(model, newdata)
     if (is.null(wts)) wts <- FALSE
     newdata <- add_wts_column(newdata = newdata, wts = wts, model = model)
