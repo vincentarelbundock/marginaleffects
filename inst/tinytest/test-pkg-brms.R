@@ -127,8 +127,8 @@ tmp$cat <- as.factor(sample(1:5, size = 180, replace = TRUE))
 tmp$Reaction_d <-
   ifelse(tmp$Reaction < median(tmp$Reaction), 0, 1)
 tmp <- tmp |>
-  poorman::group_by(grp) |>
-  poorman::mutate(subgrp = sample(1:15, size = poorman::n(), replace = TRUE))
+  dplyr::group_by(grp) |>
+  dplyr::mutate(subgrp = sample(1:15, size = dplyr::n(), replace = TRUE))
 w <- apply(posterior_linpred(brms_mixed_3), 2, stats::median)
 x <- get_predict(brms_mixed_3, newdata = tmp, type = "link")
 y <- predictions(brms_mixed_3, type = "link")

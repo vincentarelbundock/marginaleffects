@@ -546,7 +546,7 @@ avg_comparisons(mod, type = "link")
 comparisons(mod, newdata = "mean")
 
 # Contrasts between marginal means
-comparisons(mod, newdata = "marginalmeans")
+comparisons(mod, newdata = "balanced")
 
 # Contrasts at user-specified values
 comparisons(mod, newdata = datagrid(am = 0, gear = tmp$gear))

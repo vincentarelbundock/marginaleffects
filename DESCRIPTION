@@ -139,7 +139,6 @@ Suggests:
     phylolm,
     plm,
     polspline,
-    poorman,
     posterior,
     pscl,
     purrr,

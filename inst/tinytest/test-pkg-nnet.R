@@ -109,7 +109,7 @@ expect_error(slopes(m1, type = "class"), pattern = "type")
 
 # small predictions
 pred1 <- predictions(m1, type = "probs")
-pred2 <- predictions(m1, type = "probs", newdata = "marginalmeans")
+pred2 <- predictions(m1, type = "probs", newdata = "balanced")
 expect_predictions(pred1, n_row = nrow(dat) * 3)
 expect_predictions(pred2, n_row = 9)
 

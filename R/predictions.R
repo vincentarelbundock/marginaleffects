@@ -205,7 +205,6 @@ predictions <- function(model,
   }
 
   # extracting modeldata repeatedly is slow.
-  # checking dots allows marginalmeans to pass modeldata to predictions.
   if (isTRUE(by)) {
     modeldata <- get_modeldata(model,
       additional_variables = FALSE,
@@ -342,9 +341,6 @@ predictions <- function(model,
   if (inherits(model, "mlogit") && inherits(newdata[["idx"]], "idx")) {
     newdata[["idx"]] <- NULL
   }
-
-  # padding destroys `newdata` attributes, so we save them
-  newdata_attr_cache <- get_marginaleffects_attributes(newdata, include_regex = "^newdata")
 
   # mlogit uses an internal index that is very hard to track, so we don't
   # support `newdata` and assume no padding the `idx` column is necessary for
@@ -524,7 +520,6 @@ predictions <- function(model,
 
   data.table::setDF(out)
   class(out) <- c("predictions", class(out))
-  out <- set_marginaleffects_attributes(out, attr_cache = newdata_attr_cache)
 
   # Global option for lean return object
   lean <- getOption("marginaleffects_lean", default = FALSE)

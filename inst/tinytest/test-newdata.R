@@ -39,7 +39,7 @@ dat$gear <- factor(dat$gear)
 dat$cyl <- factor(dat$cyl)
 dat$am <- factor(dat$am)
 mod <- lm(mpg ~ gear + cyl + am, data = dat)
-cmp <- comparisons(mod, newdata = "marginalmeans", variables = "gear")
+cmp <- comparisons(mod, newdata = "balanced", variables = "gear")
 cmp <- tidy(cmp)
 
 emm <- emmeans(mod, specs = "gear")
@@ -55,28 +55,6 @@ dat <- transform(mtcars, group = cyl)
 mod <- lm(mpg ~ hp, data = dat)
 expect_error(slopes(mod, newdata = dat, by = "group"), pattern = "forbidden")
 expect_inherits(slopes(mod, newdata = dat, by = "cyl"), "slopes")
-
-
-
-# the results are numerically correct, but it's a pain to get the exact same
-# rows as emmeans
-
-# # cross contrast: newdata = 'marginalmeans'
-# dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
-# mod <- lm(bill_length_mm ~ species * sex + island + body_mass_g, data = dat)
-
-# cmp <- comparisons(
-#     mod,
-#     cross = TRUE,
-#     newdata = "marginalmeans",
-#     variables = list(species = "pairwise", island = "pairwise"))
-
-# emm <- emmeans(mod, specs = c("species", "island"))
-# emm <- data.frame(emmeans::contrast(emm, method = "trt.vs.ctrl1"))
-
-# # hack: not sure if they are well aligned
-# expect_equivalent(sort(cmp$estimate), sort(emm$estimate))
-# expect_equivalent(sort(cmp$std.error), sort(emm$SE))
 
 
 # Issue #814

@@ -62,7 +62,7 @@ build_newdata <- function(model, newdata, by, modeldata) {
         newdata <- do.call("datagrid", args)
 
         # grid with all unique values of categorical variables, and numerics at their means
-    } else if (isTRUE(newdata %in% c("balanced", "marginalmeans"))) {
+    } else if (identical(newdata, "balanced")) {
         args[["grid_type"]] <- "balanced"
         newdata <- do.call("datagrid", args)
         # Issue #580: outcome should not duplicate grid rows
@@ -92,7 +92,7 @@ build_newdata <- function(model, newdata, by, modeldata) {
 
     out <- list(
         "newdata" = newdata,
-        "newdata_explicit" = newdata_explicit,
+        "explicit" = newdata_explicit,
         "modeldata" = modeldata
     )
     return(out)
@@ -137,8 +137,8 @@ add_wts_column <- function(wts, newdata, model) {
 }
 
 
-set_newdata_attributes <- function(model, modeldata, newdata, newdata_explicit) {
-    attr(newdata, "newdata_explicit") <- newdata_explicit
+set_newdata_attributes <- function(model, modeldata, newdata, explicit) {
+    attr(newdata, "explicit") <- explicit
 
     # column classes
     mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
@@ -149,12 +149,12 @@ set_newdata_attributes <- function(model, modeldata, newdata, newdata_explicit) 
         "matrix_columns" = mc,
         "character_levels" = cl,
         "variable_class" = vc)
-    newdata <- set_marginaleffects_attributes(newdata, column_attributes, prefix = "newdata_")
+    newdata <- set_marginaleffects_attributes(newdata, column_attributes)
 
     # {modelbased} sometimes attaches useful attributes
     exclude <- c("class", "row.names", "names", "data", "reference")
     modelbased_attributes <- get_marginaleffects_attributes(newdata, exclude = exclude)
-    newdata <- set_marginaleffects_attributes(newdata, modelbased_attributes, prefix = "newdata_")
+    newdata <- set_marginaleffects_attributes(newdata, modelbased_attributes)
 
     # original data
     attr(newdata, "newdata_modeldata") <- modeldata
@@ -209,12 +209,10 @@ clean_newdata <- function(model, newdata) {
 
 
 sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
-    if (!identical(newdata, "marginalmeans")) { # soft deprecation trick
-        checkmate::assert(
-            checkmate::check_data_frame(newdata, null.ok = TRUE),
-            checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "balanced")),
-            combine = "or")
-    }
+    checkmate::assert(
+        checkmate::check_data_frame(newdata, null.ok = TRUE),
+        checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "balanced")),
+        combine = "or")
     tmp <- build_newdata(model = model, newdata = newdata, by = by, modeldata = modeldata)
     newdata <- tmp[["newdata"]]
     modeldata <- tmp[["modeldata"]]
@@ -226,7 +224,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         model = model,
         modeldata = modeldata,
         newdata = newdata,
-        newdata_explicit = newdata_explicit)
+        explicit = newdata_explicit)
 
     # # sort rows of output when the user explicitly calls `by` or `datagrid()`
     # # otherwise, we return the same data frame in the same order, but
@@ -248,7 +246,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
 dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cross = FALSE, byfun = NULL) {
     # issue #1113: elasticities or custom functions should skip dedup because it is difficult to align x and y
     elasticities <- c("eyexavg", "eydxavg", "dyexavg")
-    if (isTRUE(checkmate::check_choice(comparison, elasticities)) || 
+    if (isTRUE(checkmate::check_choice(comparison, elasticities)) ||
         isTRUE(checkmate::check_function(comparison))) {
         return(data.table(newdata))
     }

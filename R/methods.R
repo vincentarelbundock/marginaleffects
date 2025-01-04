@@ -20,11 +20,6 @@ vcov.hypotheses <- vcov.comparisons
 vcov.slopes <- vcov.comparisons
 
 
-#' @noRd
-#' @export
-vcov.marginalmeans <- vcov.comparisons
-
-
 #' @export
 #' @noRd
 coef.comparisons <- function(object, ...) {
@@ -47,10 +42,6 @@ coef.comparisons <- function(object, ...) {
 #' @noRd
 coef.slopes <- coef.comparisons
 
-
-#' @export
-#' @noRd
-coef.marginalmeans <- coef.comparisons
 
 
 #' @export

@@ -16,7 +16,7 @@ dat <- transform(
     gear = factor(gear),
     am = factor(am))
 mod <- glm(vs ~ gear + am, data = dat, family = binomial)
-p <- predictions(mod, newdata = "marginalmeans")
+p <- predictions(mod, newdata = "balanced")
 expect_equal(nrow(p), 6)
 
 

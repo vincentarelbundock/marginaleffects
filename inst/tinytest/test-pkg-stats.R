@@ -4,7 +4,7 @@ using("marginaleffects")
 if (!requiet("margins")) exit_file("margins")
 requiet("broom")
 requiet("emmeans")
-requiet("poorman")
+requiet("dplyr")
 
 
 options(marginaleffects_numDeriv = list(method = "simple", method.args = list(eps = 1e-7)))

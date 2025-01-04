@@ -8,7 +8,7 @@ get_unique_index <- function(x, term_only = FALSE) {
         } else {
             idx <- c(idx, by)
         }
-        explicit <- attr(x, "newdata_explicit")
+        explicit <- attr(attr(x, "newdata"), "explicit")
         if (isTRUE(checkmate::check_character(explicit))) {
             idx <- explicit
         }

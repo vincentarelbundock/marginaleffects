@@ -17,7 +17,7 @@ expect_inherits(cmp, "comparisons")
 # contrasts vs emmeans
 cmp <- comparisons(mod,
     variables = "angle",
-    newdata = "marginalmeans")
+    newdata = "balanced")
 em <- emmeans(mod, ~angle)
 em <- emmeans::contrast(em, method = "trt.vs.ctrl1")
 em <- data.frame(em)

@@ -156,7 +156,7 @@ print.marginaleffects <- function(x,
   )
 
   # explicitly given by user in `datagrid()` or `by` or `newdata`
-  explicit <- get_explicit(x)
+  explicit <- attr(attr(x, "newdata"), "explicit")
 
   # useless columns should not be printed
   useless <- c(
