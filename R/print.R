@@ -163,36 +163,14 @@ print.marginaleffects <- function(x,
     dict["estimate"] <- "Mean"
   }
 
+  # explicitly given by user in `datagrid()` or `by` or `newdata`
+  explicit <- get_explicit(x)
+
   # Subset columns
   idx <- c(
+    explicit,
     names(dict),
     grep("^contrast_", colnames(x), value = TRUE))
-
-  # explicitly given by user in `datagrid()` or `by` or `newdata`
-  if (isTRUE(checkmate::check_character(attr(x, "by")))) {
-    bycols <- c(attr(x, "by"), "by")
-  } else {
-    bycols <- "by"
-  }
-
-  nd <- attr(x, "newdata")
-  if (is.null(nd)) {
-    nd <- attr(x, "newdata_newdata")
-  }
-
-  explicit <- tmp <- c(
-    bycols,
-    attr(x, "hypothesis_by"),
-    attr(nd, "variables_datagrid"),
-    attr(nd, "newdata_variables_datagrid"),
-    attr(x, "variables_datagrid"),
-    attr(x, "newdata_variables_datagrid")
-  )
-
-  idx <- c(idx[1:grep("by", idx)], tmp, idx[(grep("by", idx) + 1):length(idx)])
-  if (isTRUE(attr(nd, "newdata_newdata_explicit")) || isTRUE(attr(nd, "newdata_explicit"))) {
-    idx <- c(idx, colnames(nd))
-  }
 
   # drop useless columns: rowid
   useless <- c("rowid", "rowidcf")
@@ -222,7 +200,7 @@ print.marginaleffects <- function(x,
   }
   te <- unique(out[["term"]])
   te <- setdiff(te, explicit) # ex: polynomials where both `variables="x"` and datagrid(x)
-  if (length(te) == 1 && length(bycols) == 0) {
+  if (length(te) == 1) {
     print_omit <- c(print_omit, te)
     print_term_text <- sprintf("Term: %s\n", out[["term"]][1])
     print_omit <- c(print_omit, "term")
@@ -370,3 +348,29 @@ knit_print.comparisons <- knit_print.marginaleffects
 #' @noRd
 #' @exportS3Method knitr::knit_print
 knit_print.slopes <- knit_print.marginaleffects
+
+
+get_explicit <- function(x) {
+  browser()
+  if (isTRUE(checkmate::check_character(attr(x, "by")))) {
+    bycols <- c(attr(x, "by"), "by")
+  } else {
+    bycols <- "by"
+  }
+
+  nd <- attr(x, "newdata")
+  if (is.null(nd)) {
+    nd <- attr(x, "newdata_newdata")
+  }
+
+  explicit <- tmp <- c(
+    bycols,
+    attr(x, "hypothesis_by"),
+    attr(nd, "variables_datagrid"),
+    attr(nd, "newdata_variables_datagrid"),
+    attr(x, "variables_datagrid"),
+    attr(x, "newdata_variables_datagrid")
+  )
+
+  return(explicit)
+}
