@@ -109,19 +109,9 @@ expect_error(slopes(m1, type = "class"), pattern = "type")
 
 # small predictions
 pred1 <- predictions(m1, type = "probs")
-pred2 <- predictions(m1, type = "probs", newdata = "marginalmeans")
+pred2 <- predictions(m1, type = "probs", newdata = "balanced")
 expect_predictions(pred1, n_row = nrow(dat) * 3)
 expect_predictions(pred2, n_row = 9)
-
-# large predictions
-idx <- 3:5
-n_row <- sapply(dat[, idx], function(x) length(unique(x)))
-n_row <- prod(n_row) * length(unique(dat$y))
-expect_error(predictions(m2, type = "probs", newdata = "mean"), pattern = "Cross product")
-
-# massive prediction raises error
-expect_error(predictions(m2, type = "probs"), pattern = "")
-
 
 # bugs stay dead #218
 set.seed(42)

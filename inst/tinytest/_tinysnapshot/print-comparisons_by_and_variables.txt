@@ -1,9 +1,9 @@
 
- Term am Estimate Std. Error    z Pr(>|z|)   S 2.5 % 97.5 %
-   am  0     45.7       20.2 2.26   0.0236 5.4  6.13   85.2
-   am  1     51.3       23.4 2.20   0.0281 5.2  5.51   97.1
+ am Estimate Std. Error    z Pr(>|z|)   S 2.5 % 97.5 %
+  0     45.7       20.2 2.26   0.0236 5.4  6.13   85.2
+  1     51.3       23.4 2.20   0.0281 5.2  5.51   97.1
 
+Term: am
 Type:  response 
 Comparison: 1 - 0
-
 

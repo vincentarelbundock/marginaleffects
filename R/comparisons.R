@@ -118,7 +118,7 @@
 #' comparisons(mod, newdata = "mean")
 #'
 #' # Contrasts between marginal means
-#' comparisons(mod, newdata = "marginalmeans")
+#' comparisons(mod, newdata = "balanced")
 #'
 #' # Contrasts at user-specified values
 #' comparisons(mod, newdata = datagrid(am = 0, gear = tmp$gear))
@@ -242,7 +242,6 @@ comparisons <- function(model,
   newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
   # extracting modeldata repeatedly is slow.
-  # checking dots allows marginalmeans to pass modeldata to predictions.
   if (isTRUE(by)) {
     modeldata <- get_modeldata(model,
       additional_variables = FALSE,
@@ -321,8 +320,6 @@ comparisons <- function(model,
     transform <- sanitize_transform(transform)
     transform_label <- names(transform)
   }
-
-  marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans"))
 
 
   newdata <- sanitize_newdata(
@@ -408,7 +405,6 @@ comparisons <- function(model,
     newdata = newdata,
     variables = predictors,
     cross = cross,
-    marginalmeans = marginalmeans,
     modeldata = modeldata)
   dots[["modeldata"]] <- NULL # dont' pass twice
   args <- c(args, dots)
@@ -423,7 +419,6 @@ comparisons <- function(model,
     lo = contrast_data[["lo"]],
     wts = contrast_data[["original"]][["marginaleffects_wts_internal"]],
     by = by,
-    marginalmeans = marginalmeans,
     cross = cross,
     hypothesis = hypothesis,
     modeldata = modeldata)
@@ -448,7 +443,6 @@ comparisons <- function(model,
       newdata = newdata,
       index = idx,
       variables = predictors,
-      marginalmeans = marginalmeans,
       hypothesis = hypothesis,
       hi = contrast_data$hi,
       lo = contrast_data$lo,

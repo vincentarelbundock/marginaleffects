@@ -2,7 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 if (!requiet("margins")) exit_file("margins")
-requiet("poorman")
+requiet("dplyr")
 requiet("ivreg")
 
 # marginaleffects: vs. margins
@@ -25,10 +25,10 @@ dat <- read.csv(testing_path("stata/databases/ivreg_ivreg_01.csv"))
 stata <- readRDS(testing_path("stata/stata.rds"))[["ivreg_ivreg_01"]]
 mod <- ivreg::ivreg(Q ~ P + D | D + F + A, data = dat)
 ame <- slopes(mod) |>
-   poorman::group_by(term) |>
-   poorman::summarize(estimate = mean(estimate),
+   dplyr::group_by(term) |>
+   dplyr::summarize(estimate = mean(estimate),
              std.error = mean(std.error)) |>
-   poorman::inner_join(stata, by = "term")
+   dplyr::inner_join(stata, by = "term")
 expect_equivalent(ame$estimate, ame$dydxstata, tolerance = 0.0001)
 
 

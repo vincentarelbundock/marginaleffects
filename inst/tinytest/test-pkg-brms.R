@@ -127,8 +127,8 @@ tmp$cat <- as.factor(sample(1:5, size = 180, replace = TRUE))
 tmp$Reaction_d <-
   ifelse(tmp$Reaction < median(tmp$Reaction), 0, 1)
 tmp <- tmp |>
-  poorman::group_by(grp) |>
-  poorman::mutate(subgrp = sample(1:15, size = poorman::n(), replace = TRUE))
+  dplyr::group_by(grp) |>
+  dplyr::mutate(subgrp = sample(1:15, size = dplyr::n(), replace = TRUE))
 w <- apply(posterior_linpred(brms_mixed_3), 2, stats::median)
 x <- get_predict(brms_mixed_3, newdata = tmp, type = "link")
 y <- predictions(brms_mixed_3, type = "link")
@@ -695,7 +695,9 @@ data <- do.call(rbind, replicate(50, data, simplify = FALSE))
 Age <- rnorm(200, 0, 2)
 data$Age <- Age[rep(seq_len(200), each = 2)]
 data$Y <- rnorm(400, 0, 0.5) + 0.3 * (rnorm(400, 0, 0.2) + as.numeric(data$TstTm) - 1) + 0.4 * (rnorm(400, 0, 0.2) + data$Age) + 0.2 * ((rnorm(400, 0, 0.2) + as.numeric(data$TstTm) - 1)) * (rnorm(400, 0, 0.2) + as.numeric(data$Cndtn) / 10)
-mdl <- brm(Y ~ TstTm + (TstTm:Cndtn) * Age, data = data)
+void <- capture.output(
+  mdl <- brm(Y ~ TstTm + (TstTm:Cndtn) * Age, data = data, silent = 2)
+)
 
 by <- data.frame(
   Cndtn = c("PC", "PC", "QR", "QR", "TK", "TK", "NG", "NG"),

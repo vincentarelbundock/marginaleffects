@@ -88,14 +88,14 @@ z <- runif(n)
 f <- test1(x, z)
 y <- f + rnorm(n) * 0.2
 df <- tibble::tibble(y, x, z)
-df <- poorman::mutate(
+df <- dplyr::mutate(
     df,
-    x_lags = tsModel::Lag(x, 0:10),
+    x_lags = drop(tsModel::Lag(x, 0:10)),
     L = matrix(0:10, nrow = 1))
 b <- mgcv::gam(y ~ s(z) + te(x_lags, L), data = df)
-mfx <- suppressWarnings(slopes(b))
-cmp <- suppressWarnings(comparisons(b))
-pre <- predictions(b)
+mfx <- slopes(b) |> suppressWarnings()
+cmp <- comparisons(b) |> suppressWarnings()
+pre <- predictions(b) |> suppressWarnings()
 expect_inherits(pre, "predictions")
 expect_inherits(mfx, "marginaleffects")
 expect_inherits(cmp, "comparisons")

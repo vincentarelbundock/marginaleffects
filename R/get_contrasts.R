@@ -6,7 +6,6 @@ get_contrasts <- function(model,
                           lo,
                           hi,
                           wts = FALSE,
-                          marginalmeans,
                           by = NULL,
                           hypothesis = NULL,
                           cross = FALSE,
@@ -304,15 +303,6 @@ get_contrasts <- function(model,
 
     # we feed these columns to safefun(), even if they are useless for categoricals
     if (!"marginaleffects_wts_internal" %in% colnames(out))  out[, "marginaleffects_wts_internal" := NA]
-
-    if (isTRUE(marginalmeans)) {
-        out <- out[, .(
-            predicted_lo = mean(predicted_lo),
-            predicted_hi = mean(predicted_hi),
-            predicted = mean(predicted),
-            marginaleffects_wts_internal = mean(marginaleffects_wts_internal)),
-        keyby = idx]
-    }
 
     # safe version of comparison
     # unknown arguments
