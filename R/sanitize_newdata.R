@@ -1,9 +1,12 @@
 sanitize_newdata_call <- function(scall, newdata = NULL, model, by = NULL) {
     if (rlang::quo_is_call(scall)) {
+        df <- FALSE
         if (grepl("^datagrid", rlang::call_name(scall))) {
             if (!"model" %in% rlang::call_args_names(scall)) {
                 scall <- rlang::call_modify(scall, model = model)
             }
+        } else if (isTRUE(rlang::call_name(scall) == "data.frame")) {
+            df <- TRUE
         } else if (isTRUE(rlang::call_name(scall) == "subset")) {
             argnames <- rlang::call_args_names(scall)
             if (!"x" %in% argnames && length(argnames) == 1) {
@@ -22,6 +25,10 @@ sanitize_newdata_call <- function(scall, newdata = NULL, model, by = NULL) {
             }
         }
         out <- rlang::eval_tidy(scall)
+        # newdata=data.frame() all columns must be printed as explicit in print.R
+        if (isTRUE(df)) {
+            attr(out, "implicit") <- unique(c(attr(out, "implicit"), colnames(out)))
+        }
     } else {
         out <- newdata
     }

@@ -156,7 +156,7 @@ print.marginaleffects <- function(x,
   )
 
   # explicitly given by user in `datagrid()` or `by` or `newdata`
-  explicit <- attr(attr(x, "newdata"), "explicit")
+  explicit <- get_explicit(x)
 
   # useless columns should not be printed
   useless <- c(
@@ -181,6 +181,7 @@ print.marginaleffects <- function(x,
   }
 
   # Subset columns
+  implicit <- attr(attr(x, "newdata"), "implicit")
   idx <- c(
     explicit,
     names(dict),
@@ -188,6 +189,7 @@ print.marginaleffects <- function(x,
   start <- grep("term|^contrast|group", c(names(dict), colnames(x)), value = TRUE)
   middle <- explicit
   end <- setdiff(intersect(names(dict), colnames(x)), c(start, middle))
+  end <- c(end, implicit)
   idx <- c(start, middle, end)
   idx <- intersect(idx, colnames(out))
   idx <- setdiff(idx, useless)
@@ -332,9 +334,11 @@ get_explicit <- function(x) {
 
   explicit <- c(
     bycols,
+    attr(attr(x, "newdata"), "explicit"),
     attr(x, "hypothesis_by"),
     attr(x, "newdata_explicit")
   )
 
   return(explicit)
 }
+
