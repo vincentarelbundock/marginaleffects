@@ -15,9 +15,11 @@ cmp <- comparisons(mod)
 expect_inherits(cmp, "comparisons")
 
 # contrasts vs emmeans
-cmp <- comparisons(mod,
+cmp <- avg_comparisons(mod,
     variables = "angle",
-    newdata = "balanced")
+    newdata = "balanced",
+    by = "angle") |>
+    subset(angle == "X0")
 em <- emmeans(mod, ~angle)
 em <- emmeans::contrast(em, method = "trt.vs.ctrl1")
 em <- data.frame(em)
@@ -70,4 +72,3 @@ expect_false(anyNA(cmp$std.error))
 
 
 rm(list = ls())
-

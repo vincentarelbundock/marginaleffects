@@ -695,7 +695,9 @@ data <- do.call(rbind, replicate(50, data, simplify = FALSE))
 Age <- rnorm(200, 0, 2)
 data$Age <- Age[rep(seq_len(200), each = 2)]
 data$Y <- rnorm(400, 0, 0.5) + 0.3 * (rnorm(400, 0, 0.2) + as.numeric(data$TstTm) - 1) + 0.4 * (rnorm(400, 0, 0.2) + data$Age) + 0.2 * ((rnorm(400, 0, 0.2) + as.numeric(data$TstTm) - 1)) * (rnorm(400, 0, 0.2) + as.numeric(data$Cndtn) / 10)
-mdl <- brm(Y ~ TstTm + (TstTm:Cndtn) * Age, data = data)
+void <- capture.output(
+  mdl <- brm(Y ~ TstTm + (TstTm:Cndtn) * Age, data = data, silent = 2)
+)
 
 by <- data.frame(
   Cndtn = c("PC", "PC", "QR", "QR", "TK", "TK", "NG", "NG"),
