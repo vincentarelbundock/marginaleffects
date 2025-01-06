@@ -39,8 +39,8 @@ dat$gear <- factor(dat$gear)
 dat$cyl <- factor(dat$cyl)
 dat$am <- factor(dat$am)
 mod <- lm(mpg ~ gear + cyl + am, data = dat)
-cmp <- comparisons(mod, newdata = "balanced", variables = "gear")
-cmp <- tidy(cmp)
+cmp <- avg_comparisons(mod, newdata = "balanced", variables = "gear", by = "gear") |>
+    subset(gear == 3)
 
 emm <- emmeans(mod, specs = "gear")
 emm <- data.frame(emmeans::contrast(emm, method = "trt.vs.ctrl1"))
@@ -59,7 +59,7 @@ expect_inherits(slopes(mod, newdata = dat, by = "cyl"), "slopes")
 
 # Issue #814
 data(lalonde, package = "MatchIt")
-if(exists("mdata")) rm(mdata)
+if (exists("mdata")) rm(mdata)
 test <- function() {
     mdata <- lalonde
     m0 <- lm(re78 ~ nodegree, data = mdata)
@@ -92,4 +92,3 @@ expect_equal(k, w)
 
 
 rm(list = ls())
-
