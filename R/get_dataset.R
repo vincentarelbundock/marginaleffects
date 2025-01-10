@@ -4,7 +4,6 @@
 #' @param dataset A string, either "military" or "thornton".
 #' @param docs A logical, if TRUE returns a link to the documentation.
 #' @return A data frame containing the dataset.
-#' @import nanoparquet
 #' @export
 get_dataset <- function(dataset, docs = FALSE) {
     insight::check_if_installed("nanoparquet")
