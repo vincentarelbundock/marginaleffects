@@ -8,16 +8,20 @@
 #' @export
 get_dataset <- function(dataset, docs = FALSE) {
     insight::check_if_installed("nanoparquet")
-    checkmate::assert_choice(dataset, c("military", "thornton"))
+    checkmate::assert_choice(dataset, c("airbnb", "immigration", "military", "thornton"))
 
     if (docs) {
         return(switch(dataset,
             "military" = "https://marginaleffects.com/data/military.html",
+            "airbnb" = "https://marginaleffects.com/data/airbnb.html",
+            "immigration" = "https://marginaleffects.com/data/immigration.html",
             "thornton" = "https://marginaleffects.com/data/thornton.html"
         ))
     }
 
     url <- switch(dataset,
+        "airbnb" = "https://marginaleffects.com/data/airbnb.parquet",
+        "immigration" = "https://marginaleffects.com/data/immigration.parquet",
         "military" = "https://marginaleffects.com/data/military.parquet",
         "thornton" = "https://marginaleffects.com/data/thornton.parquet"
     )
