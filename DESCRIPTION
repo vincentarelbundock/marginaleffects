@@ -124,6 +124,7 @@ Suggests:
     modelbased,
     modelsummary,
     multcomp,
+    nanoparquet,
     nlme,
     nnet,
     numDeriv,
@@ -210,6 +211,7 @@ Collate:
     'get_contrast_data_logical.R'
     'get_contrast_data_numeric.R'
     'get_contrasts.R'
+    'get_dataset.R'
     'get_draws.R'
     'get_group_names.R'
     'get_hypothesis.R'

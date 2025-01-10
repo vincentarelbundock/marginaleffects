@@ -10,6 +10,7 @@ Breaking changes:
 
 New:
 
+* New function `get_dataset()` to download example data frames from the marginaleffects.com website.
 * New `multcomp` argument for the `hypotheses()` function.
 * `hypotheses()` inherits the `conf_level` from `marginaleffects` objects when available. Otherwise, the default remains 0.95.
 * More informative warning for `lme4` and `glmmTMB` models with `re.form=NULL`
