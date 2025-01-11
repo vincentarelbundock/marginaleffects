@@ -2,7 +2,7 @@
 
 ## Development
 
-Breaking changes:
+Breaking changes in preparation for 1.0.0 release:
 
 * The default `type` is now "survival" for models of class `coxph`, `flexsurvreg`, and `coxph_weightit`.
 * `p_adjust` argument deprecated because of name-matching conflict with `p` argument in quantile regression and others. The recommended workflow is now to pass the object to the `hypotheses()` function and use its `multcomp` argument.
@@ -32,7 +32,7 @@ Bugs:
 
 ## 0.24.0
 
-Breaking change:
+Breaking changes in preparation for 1.0.0 release:
 
 * Rows are now sorted when using the `by` argument. This may change the order of estimates, which can affect hypothesis tests using positional indices like `b1-b2=0`.
 
