@@ -2,6 +2,11 @@
 sanity_dots <- function(model, calling_function = NULL, ...) {
     dots <- list(...)
 
+    if ("p_adjust" %in% names(dots)) {
+        msg <- "The `p_adjust` argument is deprecated. Please use the `multcomp` argument of the `hypotheses()` function instead."
+        stop(msg, call. = FALSE)
+    }
+
     if (isTRUE(calling_function == "marginaleffects")) {
         # comparison: this would break `dydx` normalization
         # interaction: cross countrast+slope do not make sense
@@ -27,8 +32,9 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     # mixed effects
     valid[["merMod"]] <- valid[["lmerMod"]] <- valid[["glmerMod"]] <- valid[["lmerModLmerTest"]] <-
         c("include_random", "re.form", "allow.new.levels", "random.only")
-    valid[["brmsfit"]] <- c("draw_ids", "nlpar", "ndraws", "re_formula", "allow_new_levels",
-                            "sample_new_levels", "dpar", "resp")
+    valid[["brmsfit"]] <- c(
+        "draw_ids", "nlpar", "ndraws", "re_formula", "allow_new_levels",
+        "sample_new_levels", "dpar", "resp")
     valid[["brmsfit_multiple"]] <- valid[["brmsfit"]]
     valid[["selection"]] <- c("part") # sampleSelection
     valid[["glmmTMB"]] <- c("re.form", "allow.new.levels", "zitype") # glmmTMB
@@ -38,10 +44,10 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["gamlss"]] <- c("what", "safe") # gamlss
     valid[["lme"]] <- c("level") # nlme::lme
     valid[["bife"]] <- c("alpha_new", "corrected") # nlme::lme
-    valid[["process_error"]] <-  # mvgam::mvgam
+    valid[["process_error"]] <- # mvgam::mvgam
 
-    # flexsurv
-    valid[["flexsurvreg"]] <- c("times", "p", "start")
+        # flexsurv
+        valid[["flexsurvreg"]] <- c("times", "p", "start")
 
     # survival
     valid[["survreg"]] <- c("p")
@@ -56,7 +62,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         "transform_pre", "transform_post", # backward compatibility everywhere
         "variables_grid", # backward compatibility in marginal_means()
         "at" # topmodels procast
-        )
+    )
 
     model_class <- class(model)[1]
 
@@ -71,13 +77,14 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     bad <- setdiff(names(dots), c(good, white_list))
     if (length(bad) > 0) {
         if (model_class %in% names(valid)) {
-            msg <- sprintf("These arguments are not known to be supported for models of class `%s`: %s. These arguments are known to be valid: %s. All arguments are still passed to the model-specific prediction function, but users are encouraged to check if the argument is indeed supported by their modeling package. Please file a request on Github if you believe that an unknown argument should be added to the `marginaleffects` white list of known arguments, in order to avoid raising this warning: https://github.com/vincentarelbundock/marginaleffects/issues",
-                           model_class, paste(bad, collapse = ", "), paste(valid[[model_class]], collapse = ", "))
+            msg <- sprintf(
+                "These arguments are not known to be supported for models of class `%s`: %s. These arguments are known to be valid: %s. All arguments are still passed to the model-specific prediction function, but users are encouraged to check if the argument is indeed supported by their modeling package. Please file a request on Github if you believe that an unknown argument should be added to the `marginaleffects` white list of known arguments, in order to avoid raising this warning: https://github.com/vincentarelbundock/marginaleffects/issues",
+                model_class, paste(bad, collapse = ", "), paste(valid[[model_class]], collapse = ", "))
         } else {
-            msg <- sprintf("These arguments are not known to be supported for models of class `%s`: %s. All arguments are still passed to the model-specific prediction function, but users are encouraged to check if the argument is indeed supported by their modeling package. Please file a request on Github if you believe that an unknown argument should be added to the `marginaleffects` white list of known arguments, in order to avoid raising this warning: https://github.com/vincentarelbundock/marginaleffects/issues",
-                       model_class, paste(bad, collapse = ", "))
+            msg <- sprintf(
+                "These arguments are not known to be supported for models of class `%s`: %s. All arguments are still passed to the model-specific prediction function, but users are encouraged to check if the argument is indeed supported by their modeling package. Please file a request on Github if you believe that an unknown argument should be added to the `marginaleffects` white list of known arguments, in order to avoid raising this warning: https://github.com/vincentarelbundock/marginaleffects/issues",
+                model_class, paste(bad, collapse = ", "))
         }
         warning(msg, call. = FALSE)
     }
 }
-
