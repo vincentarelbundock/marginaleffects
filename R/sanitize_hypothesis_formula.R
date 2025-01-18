@@ -19,7 +19,7 @@ sanitize_hypothesis_formula <- function(hypothesis) {
   rhs <- all.vars(stats::formula(hypothesis, lhs = 0, rhs = 1))
 
   checkmate::assert_choice(lhs, c("difference", "ratio"), .var.name = "left-hand side of `hypothesis` formula")
-  checkmate::assert_choice(rhs, c("reference", "sequential", "meandev"), .var.name = "Right-hand side of `hypothesis` formula")
+  checkmate::assert_choice(rhs, c("reference", "sequential", "meandev", "poly"), .var.name = "Right-hand side of `hypothesis` formula")
 
   out <- specify_hypothesis(
     hypothesis = rhs,
@@ -29,6 +29,3 @@ sanitize_hypothesis_formula <- function(hypothesis) {
 
   return(out)
 }
-
-
-

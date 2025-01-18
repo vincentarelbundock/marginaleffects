@@ -1,10 +1,10 @@
 #' (EXPERIMENTAL) This experimental function will soon be deprecated. Please supply a formula or function to the `hypothesis` argument to conduct (group-wise) hypothesis tests.
-#' 
-#' @param hypothesis String or Function. Compute a test statistic. 
+#'
+#' @param hypothesis String or Function. Compute a test statistic.
 #' - String: "reference" or "sequential"
 #' - Function: Accepts a single argument named `estimate` and returns a numeric vector.
 #' @param by Character vector. Variable names which indicate subgroups in which the `hypothesis` function should be applied.
-#' @param label Function. Accepts a vector of row labels and combines them to create hypothesis labels. 
+#' @param label Function. Accepts a vector of row labels and combines them to create hypothesis labels.
 #' @param label_columns Character vector. Column names to use for hypothesis labels. Default is `c("group", "term", "rowid", attr(x, "variables_datagrid"), attr(x, "by"))`.
 #' @param comparison String. "ratio" or "difference"
 #' @param internal Logical. Raises a deprecation warning when FALSE.
@@ -17,7 +17,6 @@ specify_hypothesis <- function(
     label_columns = NULL,
     by = c("term", "group", "contrast"),
     internal = FALSE) {
-
     if (!isTRUE(internal)) {
         insight::format_warning("The `specify_hypothesis()` function was marked as experimental and  will be deprecate. Use the formula interface to the `hypothesis` argument to specify group-wise hypothesis tests.")
     }
@@ -27,7 +26,7 @@ specify_hypothesis <- function(
     checkmate::assert_character(label_columns, null.ok = TRUE)
     checkmate::assert(
         checkmate::check_function(hypothesis),
-        checkmate::check_choice(hypothesis, choices = c("reference", "sequential", "meandev"))
+        checkmate::check_choice(hypothesis, choices = c("reference", "sequential", "meandev", "poly"))
     )
 
     if (is.null(label)) label <- function(x) "custom"
@@ -51,10 +50,15 @@ specify_hypothesis <- function(
     } else if (identical(hypothesis, "meandev")) {
         hypothesis <- function(x) x - mean(x)
         label <- function(x) sprintf("(%s) - Avg", x)
+    } else if (identical(hypothesis, "poly")) {
+        hypothesis <- function(x) {
+            w <- stats::contr.poly(length(x))[, 1:3]
+            drop(crossprod(w, matrix(x)))
+        }
+        label <- function(x) c("linear", "quadratic", "cubic")
     }
 
     fun <- function(x) {
-
         x <- data.table::copy(x)
         estimate <- x$estimate
 
@@ -70,7 +74,7 @@ specify_hypothesis <- function(
         }
 
         if (!inherits(x, "data.table")) {
-          data.table::setDT(x)
+            data.table::setDT(x)
         }
 
         # row labels
@@ -119,4 +123,3 @@ specify_hypothesis <- function(
 
     return(fun)
 }
-

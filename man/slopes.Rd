@@ -151,7 +151,7 @@ first entry in the error message is used by default.}
 \itemize{
 \item \code{comparison ~ pairs | group}
 \item Left-hand side determines the type of comparison to conduct: \code{difference} or \code{ratio}. If the left-hand side is empty, \code{difference} is chosen.
-\item Right-hand side determines the pairs of estimates to compare: \code{reference}, \code{sequential}, or \code{meandev}
+\item Right-hand side determines the pairs of estimates to compare: \code{reference}, \code{sequential}, \code{meandev}, or \code{poly}.
 \item Optional: Users can supply grouping variables after a vertical bar to conduct comparisons withing subsets.
 \item Examples:
 \itemize{
