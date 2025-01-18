@@ -40,7 +40,7 @@ Depends:
     R (>= 3.6.0)
 Imports:
     checkmate,
-    data.table (>= 1.16.2),
+    data.table (>= 1.16.4),
     generics,
     insight (>= 0.20.3),
     methods,
