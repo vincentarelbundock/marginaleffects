@@ -1,13 +1,13 @@
-hypothesis_apply <- function(estimates, labels, draws, by, comparison_fun, label_fun, index_fun) {
-    args <- list(FUN = comparison_fun)
-    if (is.null(by)) {
-        applyfun <- collapse::dapply
+hypothesis_apply <- function(x, labels, hypothesis_by = NULL, comparison_fun, label_fun, index_fun) {
+    draws <- attr(x, "posterior_draws")
+    args <- list(matrix(x$estimate))
+    if (is.null(hypothesis_by)) {
+        applyfun <- function(x, ...) collapse::dapply(x, ...)
     } else {
-        applyfun <- collapse::BY
-        args[["g"]] <- by
+        applyfun <- function(x, ...) collapse::dapply(x, ...)
+        args[["g"]] <- hypothesis_by
     }
 
-    args[["x"]] <- matrix(estimates)
     args[["FUN"]] <- index_fun
     index <- drop(do.call(applyfun, args))
 
@@ -16,16 +16,23 @@ hypothesis_apply <- function(estimates, labels, draws, by, comparison_fun, label
     estimates <- estimates[index, , drop = FALSE]
 
     if (!is.null(draws)) {
-        args[["x"]] <- draws
+        args[[1]] <- draws
         draws <- do.call(applyfun, args)
         draws <- draws[index, , drop = FALSE]
     }
 
-    args[["FUN"]] <- label_fun
-    args[["x"]] <- matrix(labels)
-    labels <- do.call(applyfun, args)
-    labels <- labels[index, , drop = FALSE]
+    if (!is.null(labels)) {
+        args[[1]] <- matrix(labels)
+        args[["FUN"]] <- label_fun
+        labels <- do.call(applyfun, args)
+        labels <- labels[index, , drop = FALSE]
+    }
 
-    out <- list("estimates" = drop(estimates), "labels" = drop(labels), "draws" = draws)
+    out <- data.frame(
+        hypothesis = drop(labels),
+        estimate = drop(estimates)
+    )
+    attr(out, "posterior_draws") <- draws
+
     return(out)
 }

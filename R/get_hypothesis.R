@@ -7,6 +7,18 @@ get_hypothesis <- function(
 
     if (is.null(hypothesis)) return(x)
 
+    labels <- get_hypothesis_row_labels(x, by = by)
+
+    if (hypothesis %in% c("reference", "revreference")) {
+        flag <- if (hypothesis == "reference") FALSE else TRUE
+        out <- hypothesis_reference(x,
+            labels = labels,
+            hypothesis_by = NULL,
+            comparison = "difference",
+            reverse = flag)
+        return(out)
+    }
+
     if (isTRUE(checkmate::check_choice(hypothesis, "meandev"))) {
         hypothesis <- function(x) {
             out <- x
