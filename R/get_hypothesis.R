@@ -9,13 +9,22 @@ get_hypothesis <- function(
 
     labels <- get_hypothesis_row_labels(x, by = by)
 
+    if (isTRUE(checkmate::check_formula(hypothesis))) {
+        tmp <- sanitize_hypothesis_formula(hypothesis)
+        list2env(tmp, environment())
+    } else {
+        comparison <- "difference"
+        hypothesis_by <- NULL
+    }
+
     if (hypothesis %in% c("reference", "revreference")) {
         flag <- if (hypothesis == "reference") FALSE else TRUE
         out <- hypothesis_reference(x,
             labels = labels,
-            hypothesis_by = NULL,
+            hypothesis_by = hypothesis_by,
             comparison = "difference",
-            reverse = flag)
+            reverse = flag,
+            newdata = newdata)
         return(out)
     }
 

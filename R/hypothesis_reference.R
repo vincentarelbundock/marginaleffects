@@ -2,12 +2,15 @@ hypothesis_reference <- function(estimates,
                                  labels,
                                  hypothesis_by = NULL,
                                  comparison = "difference",
-                                 reverse = FALSE) {
+                                 reverse = FALSE,
+                                 newdata = newdata) {
     insight::check_if_installed("collapse")
 
     # reverse=FALSE: x - reference
     # reverse=TRUE: reference - x
     index_fun <- function(x) c(FALSE, rep(TRUE, length(x) - 1))
+
+    by_fun <- function(x) x
 
     if (isTRUE(reverse)) {
         if (comparison == "difference") {
@@ -32,7 +35,9 @@ hypothesis_reference <- function(estimates,
         hypothesis_by = hypothesis_by,
         comparison_fun = comparison_fun,
         label_fun = label_fun,
-        index_fun = index_fun)
+        index_fun = index_fun,
+        by_fun = by_fun,
+        newdata = newdata)
 
     return(out)
 }
