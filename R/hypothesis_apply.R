@@ -1,14 +1,14 @@
 hypothesis_apply <- function(x,
                              labels,
                              hypothesis_by = NULL,
-                             comparison_fun,
-                             label_fun,
-                             index_fun,
-                             by_fun,
+                             fun_comparison,
+                             fun_label,
+                             fun_index,
+                             fun_by,
                              newdata) {
     insight::check_if_installed("collapse")
     draws <- attr(x, "posterior_draws")
-    args <- list(matrix(x$estimate), FUN = index_fun, sort = FALSE)
+    args <- list(matrix(x$estimate), FUN = fun_index, sort = FALSE)
 
     if (is.null(hypothesis_by)) {
         applyfun <- collapse::dapply
@@ -27,28 +27,28 @@ hypothesis_apply <- function(x,
 
     index <- drop(do.call(applyfun, args))
 
-    args[["FUN"]] <- comparison_fun
+    args[["FUN"]] <- fun_comparison
     estimates <- do.call(applyfun, args)
-    # estimates <- estimates[index, , drop = FALSE]
+    estimates <- estimates[index, , drop = FALSE]
 
     if (!is.null(draws)) {
         args[[1]] <- draws
         draws <- do.call(applyfun, args)
-        # draws <- draws[index, , drop = FALSE]
+        draws <- draws[index, , drop = FALSE]
     }
 
     if (!is.null(labels)) {
-        args[["FUN"]] <- label_fun
+        args[["FUN"]] <- fun_label
         args[[1]] <- matrix(labels)
         labels <- do.call(applyfun, args)
-        # labels <- labels[index, , drop = FALSE]
+        labels <- labels[index, , drop = FALSE]
     }
 
     if (!is.null(hypothesis_by)) {
-        args[["FUN"]] <- by_fun
+        args[["FUN"]] <- fun_by
         args[[1]] <- byval
         byval <- do.call(applyfun, args)
-        # byval <- byval[index]
+        byval <- byval[index]
     }
 
     out <- data.frame(

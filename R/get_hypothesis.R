@@ -18,12 +18,14 @@ get_hypothesis <- function(
     }
 
     if (hypothesis %in% c("reference", "revreference")) {
-        flag <- if (hypothesis == "reference") FALSE else TRUE
-        out <- hypothesis_reference(x,
+        tmp <- hypothesis_functions[[hypothesis]][[comparison]]
+        out <- hypothesis_apply(x,
             labels = labels,
             hypothesis_by = hypothesis_by,
-            comparison = "difference",
-            reverse = flag,
+            fun_comparison = tmp$comparison,
+            fun_label = tmp$label,
+            fun_index = tmp$index,
+            fun_by = tmp$by,
             newdata = newdata)
         return(out)
     }
