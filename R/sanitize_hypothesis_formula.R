@@ -24,7 +24,7 @@ sanitize_hypothesis_formula <- function(hypothesis) {
     asis <- grep("^I\\(", asis, value = TRUE)
     if (length(asis) == 1) {
       if (length(lhs) != 0) {
-        stop("The left-hand side of `hypothesis` must be empty for custom functions.", call. = FALSE)
+        stop("The left-hand side of `hypothesis` must be empty when using custom functions.", call. = FALSE)
       }
       asis <- sub("^I\\((.*)\\)$", "\\1", asis)
       out <- list(

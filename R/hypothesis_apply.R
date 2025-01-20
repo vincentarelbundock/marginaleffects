@@ -105,7 +105,8 @@ hypothesis_apply <- function(x,
                              hypothesis_by = NULL,
                              fun_comparison,
                              fun_label,
-                             newdata) {
+                             newdata,
+                             arbitrary = FALSE) {
     insight::check_if_installed("collapse")
     draws <- attr(x, "posterior_draws")
     args <- list(matrix(x$estimate), FUN = fun_comparison)
@@ -128,16 +129,30 @@ hypothesis_apply <- function(x,
 
     args[["FUN"]] <- fun_comparison
     estimates <- do.call(applyfun, args)
+    estimates <- as.vector(estimates)
 
     if (!is.null(draws)) {
         args[[1]] <- draws
         draws <- do.call(applyfun, args)
     }
 
-    if (!is.null(labels)) {
-        args[["FUN"]] <- fun_label
-        args[[1]] <- matrix(labels)
-        labels <- do.call(applyfun, args)
+    if (arbitrary) {
+        fun_label_names <- function(x) names(fun_comparison(x))
+        args[["FUN"]] <- fun_label_names
+        args[[1]] <- matrix(x$estimate)
+        labels <- suppressWarnings(tryCatch(do.call(applyfun, args), error = function(e) NULL))
+        if (is.null(labels)) {
+            labels <- rep("Custom", length(estimates))
+        } else {
+            labels <- as.vector(labels)
+        }
+
+    } else {
+        if (!is.null(labels)) {
+            args[["FUN"]] <- fun_label
+            args[[1]] <- matrix(labels)
+            labels <- do.call(applyfun, args)
+        }
     }
 
     if (!is.null(hypothesis_by)) {
@@ -146,10 +161,12 @@ hypothesis_apply <- function(x,
         byval <- do.call(applyfun, args)
     }
 
+    browser()
     out <- data.frame(
-        hypothesis = as.vector(labels),
-        estimate = as.vector(estimates)
+        estimate = estimates,
+        hypothesis = labels
     )
+
 
     if (!is.null(hypothesis_by) && !is.null(byval)) {
         out[[hypothesis_by]] <- byval
