@@ -21,11 +21,12 @@ get_hypothesis <- function(
     if (isTRUE(checkmate::check_choice(hypothesis, choices = valid))) {
         # TODO: validate that this exists
         if (hypothesis == "arbitrary_function") {
+            fun_cmp <- sprintf("function(x) %s", comparison)
             out <- hypothesis_apply(x,
                 labels = labels,
                 hypothesis_by = hypothesis_by,
-                fun_comparison = eval(parse(text = comparison)),
-                fun_label = function (x) "Custom",
+                fun_comparison = eval(parse(text = fun_cmp)),
+                fun_label = function(x) "Custom",
                 newdata = newdata)
         } else {
             tmp <- hypothesis_functions[[hypothesis]][[comparison]]

@@ -27,7 +27,6 @@ sanitize_hypothesis_formula <- function(hypothesis) {
         stop("The left-hand side of `hypothesis` must be empty for custom functions.", call. = FALSE)
       }
       asis <- sub("^I\\((.*)\\)$", "\\1", asis)
-      asis <- paste("function(x)", asis)
       out <- list(
         hypothesis = "arbitrary_function",
         comparison = asis,
