@@ -17,7 +17,7 @@ get_hypothesis <- function(
         hypothesis_by <- NULL
     }
 
-    valid <- c("reference", "sequential", "pairwise", "meandev", "meandevother", "poly", "trt_vs_ctrl", "arbitrary_function")
+    valid <- c("reference", "sequential", "pairwise", "meandev", "meanotherdev", "poly", "trt_vs_ctrl", "arbitrary_function")
     if (isTRUE(checkmate::check_choice(hypothesis, choices = valid))) {
         if (hypothesis == "arbitrary_function") {
             fun_cmp <- sprintf("function(x) %s", comparison)

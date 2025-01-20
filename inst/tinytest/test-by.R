@@ -102,8 +102,8 @@ by <- data.frame(
   by = c("(3,4)", "(3,4)", "(5)"))
 p1 <- predictions(mod, type = "probs")
 p2 <- predictions(mod, type = "probs", by = by)
-p3 <- predictions(mod, type = "probs", by = by, hypothesis = "sequential")
-p4 <- predictions(mod, type = "probs", by = by, hypothesis = "reference")
+p3 <- predictions(mod, type = "probs", by = by, hypothesis = ~sequential)
+p4 <- predictions(mod, type = "probs", by = by, hypothesis = ~reference)
 p5 <- predictions(mod, type = "probs", by = c("am", "vs", "group"))
 expect_equivalent(mean(subset(p1, group == "5")$estimate), p2$estimate[2])
 expect_equivalent(p3$estimate, diff(p2$estimate))
@@ -124,7 +124,7 @@ cmp <- comparisons(
   mod,
   variables = "am",
   by = by,
-  hypothesis = "sequential",
+  hypothesis = ~sequential,
   type = "probs")
 expect_equivalent(nrow(cmp), 1)
 

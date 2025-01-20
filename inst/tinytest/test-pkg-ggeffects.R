@@ -19,13 +19,13 @@ d <- structure(list(var_binom = structure(1:2, levels = c("0", "1"
 -2L))
 
 p1 <- predictions(
-  m, newdata = d, by = "var_binom", hypothesis = "pairwise", type = "response", transform = exp
+  m, newdata = d, by = "var_binom", hypothesis = ~pairwise, type = "response", transform = exp
 )
 p2 <- predictions(
-  m, newdata = d, by = "var_binom", hypothesis = "pairwise", type = "invlink(link)", transform = exp
+  m, newdata = d, by = "var_binom", hypothesis = ~pairwise, type = "invlink(link)", transform = exp
 ) |> suppressWarnings()
 p3 <- predictions(
-  m, newdata = d, by = "var_binom", hypothesis = "pairwise", type = NULL, transform = exp
+  m, newdata = d, by = "var_binom", hypothesis = ~pairwise, type = NULL, transform = exp
 ) |> suppressWarnings()
 
 # values

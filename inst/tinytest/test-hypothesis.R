@@ -22,8 +22,8 @@ expect_error(slopes(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 expect_error(comparisons(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 
 expect_error(
-    slopes(mod, newdata = dat, hypothesis = "pairwise"),
-    pattern = "smaller")
+    slopes(mod, newdata = dat, hypothesis = ~pairwise),
+    pattern = "safe")
 
 expect_warning(
     slopes(mod, lincom = "pairwise"),
@@ -47,10 +47,6 @@ expect_error(
     hypothesis = "gear = 0"),
     pattern = "indices")
 
-expect_error(
-    slopes(mod, newdata = dat, hypothesis = "reference"),
-    pattern = "smaller")
-
 expect_error(slopes(
     mod,
     newdata = "mean",
@@ -71,9 +67,9 @@ mfx <- slopes(
     mod,
     newdata = "mean",
     variables = "cyl",
-    hypothesis = "pairwise")
+    hypothesis = ~pairwise)
 expect_inherits(mfx, "marginaleffects")
-expect_equivalent(nrow(mfx), 1)
+expect_equivalent(nrow(mfx), 2)
 
 
 # contrasts: hypothesis
@@ -85,8 +81,8 @@ cmp2 <- comparisons(
     mod,
     variables = "cyl",
     newdata = "mean",
-    hypothesis = "revpairwise")
-expect_equivalent(diff(cmp1$estimate), cmp2$estimate)
+    hypothesis = ~pairwise)
+expect_equivalent(diff(cmp1$estimate), cmp2$estimate[1])
 
 
 # marginaleffects: hypothesis
@@ -94,9 +90,9 @@ mfx <- slopes(
     mod,
     newdata = "mean",
     variables = "cyl",
-    hypothesis = "pairwise")
+    hypothesis = ~pairwise)
 expect_inherits(mfx, "marginaleffects")
-expect_equivalent(nrow(mfx), 1)
+expect_equivalent(nrow(mfx), 2)
 
 
 # predictions: hypothesis
@@ -130,7 +126,7 @@ expect_inherits(p3, "predictions")
 expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
 
 # wildcard
-mm1 <- predictions(mod, by = "cyl", hypothesis = "b* = b1")
+mm1 <- suppressWarnings(predictions(mod, by = "cyl", hypothesis = "b* = b1"))
 expect_equal(mm1$term, paste0("b", 1:3, "=b1"))
 expect_equal(mm1$estimate[1], 0)
 
@@ -185,15 +181,15 @@ cmp <- comparisons(
     mod,
     variables = "am",
     by = "cyl",
-    hypothesis = "pairwise")
+    hypothesis = ~pairwise)
 expect_inherits(cmp, "comparisons")
-expect_equivalent(nrow(cmp), 3)
+expect_equivalent(nrow(cmp), 6)
 
 cmp <- comparisons(
     mod,
     variables = "am",
     by = "cyl",
-    hypothesis = "reference")
+    hypothesis = ~reference)
 expect_inherits(cmp, "comparisons")
 expect_equivalent(nrow(cmp), 2)
 
@@ -218,16 +214,16 @@ using("tinysnapshot")
 set.seed(123)
 dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6))))
 m <- lm(Sepal.Width ~ Sepal.Length * Species + dummy, data = dat)
-mfx <- slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = "pairwise")
-expect_true("setosa, 0 - setosa, 1" %in% mfx$term)
+mfx <- slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = ~pairwise)
+expect_true("setosa, 0 - setosa, 1" %in% mfx$hypothesis)
 
 
 # Issue #1092: hypothesis = "mean", "meanother"
 mod <- lm(mpg ~ hp + drat + factor(cyl), data = mtcars)
 p1 <- avg_predictions(mod, by = "cyl")
-p2 <- avg_predictions(mod, by = "cyl", hypothesis = "meandev")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = ~meandev)
 expect_equivalent(p2$estimate, p1$estimate - mean(p1$estimate))
-p2 <- avg_predictions(mod, by = "cyl", hypothesis = "meanotherdev")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = ~meanotherdev)
 expect_equivalent(p2$estimate, p1$estimate - (sum(p1$estimate) - p1$estimate) / (nrow(p1) - 1))
 
 

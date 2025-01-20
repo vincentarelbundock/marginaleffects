@@ -38,7 +38,7 @@ sanitize_hypothesis_formula <- function(hypothesis) {
     }
   }
 
-  valid <- c("reference", "sequential", "pairwise", "meandev", "meandevother", "poly", "trt_vs_ctrl")
+  valid <- c("reference", "sequential", "pairwise", "meandev", "meanotherdev", "poly", "trt_vs_ctrl")
   checkmate::assert_choice(rhs, valid, .var.name = "Right-hand side of `hypothesis` formula")
 
   # dot product weights

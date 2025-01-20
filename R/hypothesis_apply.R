@@ -23,6 +23,10 @@ hypothesis_functions <- list(
         ratio = list(
             comparison = function(x) {
                 out <- outer(x, x, "/")
+                if (ncol(out) > 25 && isFALSE(getOption("marginaleffects_safe", default = TRUE))) {
+                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
+                    stop(msg, call. = FALSE)
+                }
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
@@ -36,6 +40,10 @@ hypothesis_functions <- list(
         difference = list(
             comparison = function(x) {
                 out <- outer(x, x, "-")
+                if (ncol(out) > 25 && isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
+                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
+                    stop(msg, call. = FALSE)
+                }
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
@@ -67,7 +75,7 @@ hypothesis_functions <- list(
             label = function(x) sprintf("%s - %s", x, "Mean")
         )
     ),
-    meandevother = list(
+    meanotherdev = list(
         ratio = list(
             comparison = function(x) {
                 s <- sum(x)
@@ -111,6 +119,10 @@ hypothesis_apply <- function(x,
     draws <- attr(x, "posterior_draws")
     args <- list(matrix(x$estimate), FUN = fun_comparison)
 
+    if (is.null(labels)) {
+        labels <- paste("Row", seq_len(nrow(x)))
+    }
+
     if (is.null(hypothesis_by)) {
         applyfun <- collapse::dapply
         byval <- NULL
@@ -136,15 +148,15 @@ hypothesis_apply <- function(x,
         draws <- do.call(applyfun, args)
     }
 
-    if (!is.null(labels) && isFALSE(arbitrary)) {
+    if (arbitrary) {
+        labels <- suppressWarnings(tryCatch(fun_label(x$estimate), error = function(e) e))
+        if (is.null(labels)) {
+            labels <- paste0("b", seq_along(estimates))
+        }
+    } else {
         args[["FUN"]] <- fun_label
         args[[1]] <- matrix(labels)
         labels <- do.call(applyfun, args)
-    }
-
-    if (arbitrary) {
-        labels <- suppressWarnings(tryCatch(fun_label(x$estimate), error = function(e) e))
-        if (is.null(labels)) labels <- paste0("b", seq_along(estimates))
     }
 
     if (!is.null(hypothesis_by)) {
