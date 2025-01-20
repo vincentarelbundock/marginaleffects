@@ -5,6 +5,12 @@ get_hypothesis <- function(
     newdata = NULL,
     draws = NULL) {
 
+    deprecated <- c("pairwise", "revpairwise", "sequential", "revsequential", "reference", "meandev", "meanotherdev", "revreference")
+    if (isTRUE(checkmate::check_choice(hypothesis, deprecated))) {
+        msg <- "This string is deprecated for use in the `hypothesis` argument. Use the formula interface instead. Ex: `hypothesis=~reference`"
+        stop(msg, call. = FALSE)
+    }
+
     if (is.null(hypothesis)) return(x)
 
     labels <- get_hypothesis_row_labels(x, by = by)
