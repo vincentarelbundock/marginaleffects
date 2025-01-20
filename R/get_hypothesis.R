@@ -17,16 +17,25 @@ get_hypothesis <- function(
         hypothesis_by <- NULL
     }
 
-    valid <- c("reference", "sequential", "pairwise", "meandev", "meandevother", "poly", "trt_vs_ctrl")
+    valid <- c("reference", "sequential", "pairwise", "meandev", "meandevother", "poly", "trt_vs_ctrl", "arbitrary_function")
     if (isTRUE(checkmate::check_choice(hypothesis, choices = valid))) {
         # TODO: validate that this exists
-        tmp <- hypothesis_functions[[hypothesis]][[comparison]]
-        out <- hypothesis_apply(x,
-            labels = labels,
-            hypothesis_by = hypothesis_by,
-            fun_comparison = tmp$comparison,
-            fun_label = tmp$label,
-            newdata = newdata)
+        if (hypothesis == "arbitrary_function") {
+            out <- hypothesis_apply(x,
+                labels = labels,
+                hypothesis_by = hypothesis_by,
+                fun_comparison = eval(parse(text = comparison)),
+                fun_label = function (x) "Custom",
+                newdata = newdata)
+        } else {
+            tmp <- hypothesis_functions[[hypothesis]][[comparison]]
+            out <- hypothesis_apply(x,
+                labels = labels,
+                hypothesis_by = hypothesis_by,
+                fun_comparison = tmp$comparison,
+                fun_label = tmp$label,
+                newdata = newdata)
+        }
         return(out)
     }
 

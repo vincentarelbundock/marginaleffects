@@ -1,7 +1,6 @@
 sanitize_hypothesis <- function(hypothesis, ...) {
     checkmate::assert(
         checkmate::check_character(hypothesis, pattern = "="),
-        checkmate::check_choice(hypothesis, choices = c("pairwise", "reference", "sequential", "meandev", "meanotherdev", "revpairwise", "revreference", "revsequential")),
         checkmate::check_numeric(hypothesis),
         checkmate::check_formula(hypothesis),
         checkmate::check_matrix(hypothesis),

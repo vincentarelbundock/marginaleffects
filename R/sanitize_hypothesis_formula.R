@@ -18,6 +18,22 @@ sanitize_hypothesis_formula <- function(hypothesis) {
   lhs <- all.vars(stats::formula(hypothesis, rhs = 0))
   rhs <- all.vars(stats::formula(hypothesis, lhs = 0, rhs = 1))
 
+  # Custom functions
+  if (identical(rhs, "x")) {
+    asis <- attr(terms(hypothesis), "term.labels")
+    asis <- grep("^I\\(", asis, value = TRUE)
+    if (length(asis) == 1) {
+      asis <- sub("^I\\((.*)\\)$", "\\1", asis)
+      asis <- paste("function(x)", asis)
+      out <- list(
+        hypothesis = "arbitrary_function",
+        comparison = asis,
+        hypothesis_by = by
+      )
+      return(out)
+    }
+  }
+
   valid <- c("reference", "sequential", "pairwise", "meandev", "meandevother", "poly", "trt_vs_ctrl")
   checkmate::assert_choice(rhs, valid, .var.name = "Right-hand side of `hypothesis` formula")
 
