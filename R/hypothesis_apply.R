@@ -1,17 +1,96 @@
+hypothesis_functions <- list(
+    reference = list(
+        ratio = list(
+            comparison = function(x) (x / x[1])[2:length(x)],
+            label = function(x) sprintf("%s / %s", x, x[1])[2:length(x)]
+        ),
+        difference = list(
+            comparison = function(x) (x - x[1])[2:length(x)],
+            label = function(x) sprintf("%s - %s", x, x[1])[2:length(x)]
+        )
+    ),
+    sequential = list(
+        ratio = list(
+            comparison = function(x) (x / data.table::shift(x))[2:length(x)],
+            label = function(x) sprintf("%s / %s", x, data.table::shift(x))[2:length(x)]
+        ),
+        difference = list(
+            comparison = function(x) (x - data.table::shift(x))[2:length(x)],
+            label = function(x) sprintf("%s - %s", x, data.table::shift(x))[2:length(x)]
+        )
+    ),
+    pairwise = list(
+        ratio = list(
+            comparison = function(x) {
+                out <- outer(x, x, "/")
+                diag(out) <- NA
+                out <- as.vector(out)
+                out[!is.na(out)]
+            },
+            label = function(x) {
+                out <- outer(x, x, paste, sep = " / ")
+                diag(out) <- NA
+                out <- as.vector(out)
+                out[!is.na(out)]
+            }),
+        difference = list(
+            comparison = function(x) {
+                out <- outer(x, x, "-")
+                diag(out) <- NA
+                out <- as.vector(out)
+                out[!is.na(out)]
+            },
+            label = function(x) {
+                out <- outer(x, x, paste, sep = " - ")
+                diag(out) <- NA
+                out <- as.vector(out)
+                out[!is.na(out)]
+            })
+    ),
+    meandev = list(
+        ratio = list(
+            comparison = function(x) x / mean(x),
+            label = function(x) sprintf("%s / %s", x, "Mean")
+        ),
+        difference = list(
+            comparison = function(x) x - mean(x),
+            label = function(x) sprintf("%s - %s", x, "Mean")
+        )
+    ),
+    meandevother = list(
+        ratio = list(
+            comparison = function(x) {
+                s <- sum(x)
+                m_other <- (s - x) / (length(x) - 1)
+                x / m_other
+            },
+            label = function(x) sprintf("%s / %s", x, "Mean (other)")
+        ),
+        difference = list(
+            comparison = function(x) {
+                s <- sum(x)
+                m_other <- (s - x) / (length(x) - 1)
+                x - m_other
+            },
+            label = function(x) sprintf("%s - %s", x, "Mean (other)")
+        )
+    )
+)
+
+
 hypothesis_apply <- function(x,
                              labels,
                              hypothesis_by = NULL,
                              fun_comparison,
                              fun_label,
-                             fun_index,
-                             fun_by,
                              newdata) {
     insight::check_if_installed("collapse")
     draws <- attr(x, "posterior_draws")
-    args <- list(matrix(x$estimate), FUN = fun_index, sort = FALSE)
+    args <- list(matrix(x$estimate), FUN = fun_comparison)
 
     if (is.null(hypothesis_by)) {
         applyfun <- collapse::dapply
+        byval <- NULL
     } else {
         if (hypothesis_by %in% colnames(x)) {
             byval <- x[[hypothesis_by]]
@@ -25,37 +104,34 @@ hypothesis_apply <- function(x,
         args[["g"]] <- byval
     }
 
-    index <- drop(do.call(applyfun, args))
-
     args[["FUN"]] <- fun_comparison
     estimates <- do.call(applyfun, args)
-    estimates <- estimates[index, , drop = FALSE]
 
     if (!is.null(draws)) {
         args[[1]] <- draws
         draws <- do.call(applyfun, args)
-        draws <- draws[index, , drop = FALSE]
     }
 
     if (!is.null(labels)) {
         args[["FUN"]] <- fun_label
         args[[1]] <- matrix(labels)
         labels <- do.call(applyfun, args)
-        labels <- labels[index, , drop = FALSE]
     }
 
     if (!is.null(hypothesis_by)) {
-        args[["FUN"]] <- fun_by
+        args[["FUN"]] <- function(x) x[1]
         args[[1]] <- byval
         byval <- do.call(applyfun, args)
-        byval <- byval[index]
     }
 
     out <- data.frame(
-        hypothesis = drop(labels),
-        estimate = drop(estimates)
+        hypothesis = as.vector(labels),
+        estimate = as.vector(estimates)
     )
-    out[[hypothesis_by]] <- byval
+
+    if (!is.null(hypothesis_by) && !is.null(byval)) {
+        out[[hypothesis_by]] <- byval
+    }
 
     attr(out, "posterior_draws") <- draws
 
