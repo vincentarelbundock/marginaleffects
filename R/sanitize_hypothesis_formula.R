@@ -23,6 +23,9 @@ sanitize_hypothesis_formula <- function(hypothesis) {
     asis <- attr(terms(hypothesis), "term.labels")
     asis <- grep("^I\\(", asis, value = TRUE)
     if (length(asis) == 1) {
+      if (length(lhs) != 0) {
+        stop("The left-hand side of `hypothesis` must be empty for custom functions.", call. = FALSE)
+      }
       asis <- sub("^I\\((.*)\\)$", "\\1", asis)
       asis <- paste("function(x)", asis)
       out <- list(
@@ -31,6 +34,8 @@ sanitize_hypothesis_formula <- function(hypothesis) {
         hypothesis_by = by
       )
       return(out)
+    } else if (length(asis) > 1) {
+      stop("Only one custom function is supported at a time on the right-hand side of the `hypothesis` formula.", call. = FALSE)
     }
   }
 
