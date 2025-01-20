@@ -136,23 +136,15 @@ hypothesis_apply <- function(x,
         draws <- do.call(applyfun, args)
     }
 
-    if (arbitrary) {
-        fun_label_names <- function(x) names(fun_comparison(x))
-        args[["FUN"]] <- fun_label_names
-        args[[1]] <- matrix(x$estimate)
-        labels <- suppressWarnings(tryCatch(do.call(applyfun, args), error = function(e) NULL))
-        if (is.null(labels)) {
-            labels <- rep("Custom", length(estimates))
-        } else {
-            labels <- as.vector(labels)
-        }
+    if (!is.null(labels) && isFALSE(arbitrary)) {
+        args[["FUN"]] <- fun_label
+        args[[1]] <- matrix(labels)
+        labels <- do.call(applyfun, args)
+    }
 
-    } else {
-        if (!is.null(labels)) {
-            args[["FUN"]] <- fun_label
-            args[[1]] <- matrix(labels)
-            labels <- do.call(applyfun, args)
-        }
+    if (arbitrary) {
+        labels <- suppressWarnings(tryCatch(fun_label(x$estimate), error = function(e) e))
+        if (is.null(labels)) labels <- paste0("b", seq_along(estimates))
     }
 
     if (!is.null(hypothesis_by)) {
@@ -161,18 +153,17 @@ hypothesis_apply <- function(x,
         byval <- do.call(applyfun, args)
     }
 
-    browser()
     out <- data.frame(
-        estimate = estimates,
-        hypothesis = labels
+        estimate = as.vector(estimates),
+        hypothesis = as.vector(labels)
     )
-
 
     if (!is.null(hypothesis_by) && !is.null(byval)) {
         out[[hypothesis_by]] <- byval
     }
 
     attr(out, "posterior_draws") <- draws
+
 
     return(out)
 }
