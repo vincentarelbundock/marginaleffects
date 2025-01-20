@@ -74,6 +74,18 @@ hypothesis_functions <- list(
             },
             label = function(x) sprintf("%s - %s", x, "Mean (other)")
         )
+    ),
+    poly = list(
+        dotproduct = list(
+            comparison = function(x) {
+                nx <- length(x)
+                w <- stats::contr.poly(nx)
+                w <- w[, 1:min(5, ncol(w))]
+                as.vector(crossprod(w, matrix(x)))
+            },
+            label = function(x) {
+                c("Linear", "Quadratic", "Cubic", "Quartic", "Quintic")[1:min(5, (length(x) - 1))]
+            })
     )
 )
 
