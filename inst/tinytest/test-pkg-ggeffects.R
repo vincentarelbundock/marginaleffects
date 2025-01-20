@@ -29,7 +29,7 @@ p3 <- predictions(
 ) |> suppressWarnings()
 
 # values
-expect_equal(p1$estimate, 0.9867827, tolerance = 1e-5)
-expect_equal(p2$estimate, 0.9867827, tolerance = 1e-5)
-expect_equal(p3$estimate, 0.9867827, tolerance = 1e-5)
+expect_equal(p1$estimate[2], 0.9867827, tolerance = 1e-5)
+expect_equal(p2$estimate[2], 0.9867827, tolerance = 1e-5)
+expect_equal(p3$estimate[2], 0.9867827, tolerance = 1e-5)
 

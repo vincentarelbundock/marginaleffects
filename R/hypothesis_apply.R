@@ -125,6 +125,7 @@ hypothesis_apply <- function(x,
 
     if (is.null(hypothesis_by)) {
         applyfun <- collapse::dapply
+        args[["drop"]] <- FALSE
         byval <- NULL
     } else {
         if (hypothesis_by %in% colnames(x)) {
@@ -175,7 +176,6 @@ hypothesis_apply <- function(x,
     }
 
     attr(out, "posterior_draws") <- draws
-
 
     return(out)
 }
