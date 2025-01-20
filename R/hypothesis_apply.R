@@ -47,6 +47,16 @@ hypothesis_functions <- list(
                 out[!is.na(out)]
             })
     ),
+    trt_vs_ctrl = list(
+        ratio = list(
+            comparison = function(x) mean(x[2:length(x)] / x[1]),
+            label = function(x) "Mean(Trt) / Ctrl"
+        ),
+        difference = list(
+            comparison = function(x) mean(x[2:length(x)] - x[1]),
+            label = function(x) "Mean(Trt) - Ctrl"
+        )
+    ),
     meandev = list(
         ratio = list(
             comparison = function(x) x / mean(x),

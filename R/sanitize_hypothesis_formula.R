@@ -18,7 +18,7 @@ sanitize_hypothesis_formula <- function(hypothesis) {
   lhs <- all.vars(stats::formula(hypothesis, rhs = 0))
   rhs <- all.vars(stats::formula(hypothesis, lhs = 0, rhs = 1))
 
-  valid <- c("reference", "sequential", "pairwise", "meandev", "meandevother", "poly")
+  valid <- c("reference", "sequential", "pairwise", "meandev", "meandevother", "poly", "trt_vs_ctrl")
   checkmate::assert_choice(rhs, valid, .var.name = "Right-hand side of `hypothesis` formula")
 
   # dot product weights
@@ -33,7 +33,7 @@ sanitize_hypothesis_formula <- function(hypothesis) {
   } else {
     if (length(lhs) == 1 && !lhs %in% c("difference", "ratio")) {
       stop("The left-hand size of the `hypothesis` formula must be empty, `difference`, or `ratio`.", call. = FALSE)
-    } else {
+    } else if (length(lhs) == 0) {
       lhs <- "difference"
     }
   }

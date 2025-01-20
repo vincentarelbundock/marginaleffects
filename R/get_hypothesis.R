@@ -17,7 +17,7 @@ get_hypothesis <- function(
         hypothesis_by <- NULL
     }
 
-    valid <- c("reference", "sequential", "pairwise", "meandev", "meandevother", "poly")
+    valid <- c("reference", "sequential", "pairwise", "meandev", "meandevother", "poly", "trt_vs_ctrl")
     if (isTRUE(checkmate::check_choice(hypothesis, choices = valid))) {
         # TODO: validate that this exists
         tmp <- hypothesis_functions[[hypothesis]][[comparison]]
