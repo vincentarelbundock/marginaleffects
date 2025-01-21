@@ -57,6 +57,7 @@ get_dataset <- function(
         if (!is.function(viewer)) stop(msg, call. = FALSE)
 
         viewer(documentation)
+        return(invisible(NULL))
     } else {
         return(data)
     }
