@@ -4,12 +4,12 @@
 \alias{get_dataset}
 \title{Download and Read Dataset}
 \usage{
-get_dataset(dataset, docs = FALSE)
+get_dataset(dataset = "thornton", package = "marginaleffects", docs = FALSE)
 }
 \arguments{
 \item{dataset}{A string, either "military" or "thornton".}
 
-\item{docs}{A logical, if TRUE returns a link to the documentation.}
+\item{docs}{A logical, if TRUE open the documentation using \code{getOption("viewer")}}
 }
 \value{
 A data frame containing the dataset.
