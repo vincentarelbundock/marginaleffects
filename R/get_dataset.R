@@ -53,8 +53,6 @@ get_dataset <- function(
         msg <- "Please choose a default browser with a command like: `options(browser = 'firefox')`"
         if (identical(getOption("browser"), "")) stop(msg, call. = FALSE)
 
-    temp_file <- tempfile(fileext = ".parquet")
-    utils::download.file(url, temp_file, mode = "wb", quiet = TRUE)
         viewer <- getOption("viewer", utils::browseURL)
         if (!is.function(viewer)) stop(msg, call. = FALSE)
 
