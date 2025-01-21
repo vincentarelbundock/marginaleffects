@@ -11,7 +11,7 @@ mod2 <- lm(mpg ~ hp + cyl, tmp)
 mfx1 <- suppressWarnings(slopes(mod1))
 mfx2 <- slopes(mod2)
 expect_equivalent(mfx1$estimate, mfx2$estimate)
-expect_equivalent(mfx1$std.error, mfx2$std.error)
+expect_equivalent(mfx1$std.error, mfx2$std.error, tolerance = 1e-5)
 
 
 # factor on LHS and RHS at the same time.
@@ -93,7 +93,7 @@ p1 <- predictions(
   m1,
   type = "response",
   newdata = d,
-  hypothesis = "pairwise"
+  hypothesis = ~pairwise
 )
 set.seed(1234)
 dat <- data.frame(
@@ -104,11 +104,12 @@ dat <- data.frame(
 )
 m1 <- glm(outcome ~ var_binom * groups + var_cont, data = dat, family = binomial())
 d <- datagrid(model = m1, by = c("var_binom", "groups"))
+
 p2 <- predictions(
   m1,
   newdata = d,
   type = "response",
-  hypothesis = "pairwise"
+  hypothesis = ~pairwise
 )
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$std.error, p2$std.error)

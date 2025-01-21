@@ -517,7 +517,7 @@ expect_equivalent(nrow(p), 2)
 p <- predictions(
   brms_cumulative_random,
   by = by,
-  hypothesis = "reference")
+  hypothesis = ~reference)
 expect_equivalent(nrow(p), 1)
 
 

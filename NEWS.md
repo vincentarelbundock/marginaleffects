@@ -4,12 +4,19 @@
 
 Breaking changes in preparation for 1.0.0 release:
 
+* The `hypothesis` argument no longer accepts strings like "reference" or "pairwise". Use the formula interface instead: `hypothesis= ~reference`
 * The default `type` is now "survival" for models of class `coxph`, `flexsurvreg`, and `coxph_weightit`.
 * `p_adjust` argument deprecated because of name-matching conflict with `p` argument in quantile regression and others. The recommended workflow is now to pass the object to the `hypotheses()` function and use its `multcomp` argument.
 * Removed long deprecated functions from the code base. These functions were already raising errors: `marginaleffects`, `meffects`, `marginal_means`, `deltamethod`, `datagridcf`. 
 
 New:
 
+* The `hypothesis` argument is more flexible:
+  - `hypothesis = ratio ~ meandev | groupid`
+  - `hypothesis = ~ poly | groupid`
+  - `hypothesis = ~ trt_vs_ctrl | groupid`
+  - `hypothesis = ~ I(foo(x)) | groupid`
+  - `hypothesis = ~ I(\(x) c(a = x[1], b = mean(x[2:length(x))))`
 * New function `get_dataset()` to download example data frames from the marginaleffects.com website.
 * New `multcomp` argument for the `hypotheses()` function.
 * `hypotheses()` inherits the `conf_level` from `marginaleffects` objects when available. Otherwise, the default remains 0.95.

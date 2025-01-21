@@ -5,24 +5,46 @@ get_hypothesis <- function(
     newdata = NULL,
     draws = NULL) {
 
+    deprecated <- c("pairwise", "revpairwise", "sequential", "revsequential", "reference", "meandev", "meanotherdev", "revreference")
+    if (isTRUE(checkmate::check_choice(hypothesis, deprecated))) {
+        msg <- "This string is deprecated for use in the `hypothesis` argument. Use the formula interface instead. Ex: `hypothesis=~reference`"
+        stop(msg, call. = FALSE)
+    }
+
     if (is.null(hypothesis)) return(x)
 
-    if (isTRUE(checkmate::check_choice(hypothesis, "meandev"))) {
-        hypothesis <- function(x) {
-            out <- x
-            out$estimate <- out$estimate - mean(out$estimate)
-            out$hypothesis <- "Mean deviation"
-            return(out)
+    labels <- get_hypothesis_row_labels(x, by = by)
+
+    if (isTRUE(checkmate::check_formula(hypothesis))) {
+        tmp <- sanitize_hypothesis_formula(hypothesis)
+        list2env(tmp, environment())
+    } else {
+        comparison <- "difference"
+        hypothesis_by <- NULL
+    }
+
+    valid <- c("reference", "sequential", "pairwise", "meandev", "meanotherdev", "poly", "trt_vs_ctrl", "arbitrary_function")
+    if (isTRUE(checkmate::check_choice(hypothesis, choices = valid))) {
+        if (hypothesis == "arbitrary_function") {
+            fun_cmp <- sprintf("function(x) %s", comparison)
+            fun_lab <- sprintf("function(x) names(%s)", comparison)
+            out <- hypothesis_apply(x,
+                labels = labels,
+                hypothesis_by = hypothesis_by,
+                fun_comparison = eval(parse(text = fun_cmp)),
+                fun_label = eval(parse(text = fun_lab)),
+                newdata = newdata,
+                arbitrary = TRUE)
+        } else {
+            tmp <- hypothesis_functions[[hypothesis]][[comparison]]
+            out <- hypothesis_apply(x,
+                labels = labels,
+                hypothesis_by = hypothesis_by,
+                fun_comparison = tmp$comparison,
+                fun_label = tmp$label,
+                newdata = newdata)
         }
-    } else if (isTRUE(checkmate::check_choice(hypothesis, "meanotherdev"))) {
-        hypothesis <- function(x) {
-            out <- x
-            s <- sum(out$estimate)
-            m_other <- (s - out$estimate) / (nrow(x) - 1)
-            out$estimate <- out$estimate - m_other
-            out$hypothesis <- "Mean deviation (other)"
-            return(out)
-        }
+        return(out)
     }
 
     if (is.function(hypothesis)) {
@@ -82,28 +104,6 @@ get_hypothesis <- function(
      }
     }
 
-    # lincom: string shortcuts
-    valid <- c("pairwise", "reference", "sequential", "revpairwise", "revreference", "revsequential")
-    if (isTRUE(hypothesis %in% valid)) {
-        safe <- isFALSE(getOption("marginaleffects_safe", default = TRUE))
-        if (nrow(x) > 25 && !safe) {
-            msg <- 'The "pairwise", "reference", and "sequential" options of the `hypotheses` argument are not supported for `marginaleffects` commands which generate more than 25 rows of results. Use the `newdata`, `by`, and/or `variables` arguments to compute a smaller set of results on which to conduct hypothesis tests.'
-            insight::format_error(msg)
-        }
-    }
-    if (isTRUE(hypothesis == "reference")) {
-        lincom <- lincom_reference(x, by)
-    } else if (isTRUE(hypothesis == "revreference")) {
-        lincom <- lincom_revreference(x, by)
-    } else if (isTRUE(hypothesis == "sequential")) {
-        lincom <- lincom_sequential(x, by)
-    } else if (isTRUE(hypothesis == "revsequential")) {
-        lincom <- lincom_revsequential(x, by)
-    } else if (isTRUE(hypothesis == "pairwise")) {
-        lincom <- lincom_pairwise(x, by)
-    } else if (isTRUE(hypothesis == "revpairwise")) {
-        lincom <- lincom_revpairwise(x, by)
-    }
     lincom <- sanitize_lincom(lincom, x)
 
     # matrix hypothesis
@@ -173,119 +173,6 @@ sanitize_lincom <- function(lincom, x) {
     return(lincom)
 }
 
-
-lincom_revreference <- function(x, by) {
-    lincom <- -1 * diag(nrow(x))
-    lincom[1, ] <- 1
-    lab <- get_hypothesis_row_labels(x, by = by)
-    if (length(lab) == 0 || anyDuplicated(lab) > 0) {
-        lab <- sprintf("Row 1 - Row %s", seq_len(ncol(lincom)))
-    } else {
-        lab <- sprintf("%s - %s", lab[1], lab)
-    }
-    colnames(lincom) <- lab
-    lincom <- lincom[, 2:ncol(lincom), drop = FALSE]
-    return(lincom)
-}
-
-
-lincom_reference <- function(x, by) {
-    lincom <- diag(nrow(x))
-    lincom[1, ] <- -1
-    lab <- get_hypothesis_row_labels(x, by = by)
-    if (length(lab) == 0 || anyDuplicated(lab) > 0) {
-        lab <- sprintf("Row %s - Row 1", seq_len(ncol(lincom)))
-    } else {
-        lab <- sprintf("%s - %s", lab, lab[1])
-    }
-    colnames(lincom) <- lab
-    lincom <- lincom[, 2:ncol(lincom), drop = FALSE]
-    return(lincom)
-}
-
-
-lincom_revsequential <- function(x, by) {
-    lincom <- matrix(0, nrow = nrow(x), ncol = nrow(x) - 1)
-    lab <- get_hypothesis_row_labels(x, by = by)
-    if (length(lab) == 0 || anyDuplicated(lab) > 0) {
-        lab <- sprintf("Row %s - Row %s", seq_len(ncol(lincom)), seq_len(ncol(lincom)) + 1)
-    } else {
-        lab <- sprintf("%s - %s", lab[seq_len(ncol(lincom))], lab[seq_len(ncol(lincom)) + 1])
-    }
-    for (i in seq_len(ncol(lincom))) {
-        lincom[i:(i + 1), i] <- c(1, -1)
-    }
-    colnames(lincom) <- lab
-    return(lincom)
-}
-
-
-lincom_sequential <- function(x, by) {
-    lincom <- matrix(0, nrow = nrow(x), ncol = nrow(x) - 1)
-    lab <- get_hypothesis_row_labels(x, by = by)
-    if (length(lab) == 0 || anyDuplicated(lab) > 0) {
-        lab <- sprintf("Row %s - Row %s", seq_len(ncol(lincom)) + 1, seq_len(ncol(lincom)))
-    } else {
-        lab <- sprintf("%s - %s", lab[seq_len(ncol(lincom)) + 1], lab[seq_len(ncol(lincom))])
-    }
-    for (i in seq_len(ncol(lincom))) {
-        lincom[i:(i + 1), i] <- c(-1, 1)
-    }
-    colnames(lincom) <- lab
-    return(lincom)
-}
-
-
-lincom_revpairwise <- function(x, by) {
-    lab_row <- get_hypothesis_row_labels(x, by = by)
-    lab_col <- NULL
-    flag <- length(lab_row) == 0 || anyDuplicated(lab_row) > 0
-    mat <- list()
-    for (i in seq_len(nrow(x))) {
-        for (j in 2:nrow(x)) {
-            if (i < j) {
-                tmp <- matrix(0, nrow = nrow(x), ncol = 1)
-                tmp[i, ] <- -1
-                tmp[j, ] <- 1
-                mat <- c(mat, list(tmp))
-                if (isTRUE(flag)) {
-                    lab_col <- c(lab_col, sprintf("Row %s - Row %s", j, i))
-                } else {
-                    lab_col <- c(lab_col, sprintf("%s - %s", lab_row[j], lab_row[i]))
-                }
-            }
-        }
-    }
-    lincom <- do.call("cbind", mat)
-    colnames(lincom) <- lab_col
-    return(lincom)
-}
-
-
-lincom_pairwise <- function(x, by) {
-    lab_row <- get_hypothesis_row_labels(x, by = by)
-    lab_col <- NULL
-    flag <- length(lab_row) == 0 || anyDuplicated(lab_row) > 0
-    mat <- list()
-    for (i in seq_len(nrow(x))) {
-        for (j in 2:nrow(x)) {
-            if (i < j) {
-                tmp <- matrix(0, nrow = nrow(x), ncol = 1)
-                tmp[j, ] <- -1
-                tmp[i, ] <- 1
-                mat <- c(mat, list(tmp))
-                if (isTRUE(flag)) {
-                    lab_col <- c(lab_col, sprintf("Row %s - Row %s", i, j))
-                } else {
-                    lab_col <- c(lab_col, sprintf("%s - %s", lab_row[i], lab_row[j]))
-                }
-            }
-        }
-    }
-    lincom <- do.call("cbind", mat)
-    colnames(lincom) <- lab_col
-    return(lincom)
-}
 
 
 lincom_multiply <- function(x, lincom) {
@@ -361,7 +248,7 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
                 "mod <- lm(mpg ~ am * vs + cyl, data = mtcars)",
                 'comparisons(mod, newdata = "mean", hypothesis = "b1 = b2")',
                 'comparisons(mod, newdata = "mean", hypothesis = "am = vs")',
-                'comparisons(mod, variables = "am", by = "cyl", hypothesis = "pairwise")')
+                'comparisons(mod, variables = "am", by = "cyl", hypothesis = ~pairwise)')
             insight::format_error(msg)
         }
         rowlabels <- x$term

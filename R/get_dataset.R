@@ -28,7 +28,7 @@ get_dataset <- function(dataset, docs = FALSE) {
     )
 
     temp_file <- tempfile(fileext = ".parquet")
-    download.file(url, temp_file, mode = "wb", quiet = TRUE)
+    utils::download.file(url, temp_file, mode = "wb", quiet = TRUE)
 
     data <- nanoparquet::read_parquet(temp_file)
     return(data)

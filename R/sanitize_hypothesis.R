@@ -1,13 +1,8 @@
 sanitize_hypothesis <- function(hypothesis, ...) {
-
-    if (isTRUE(checkmate::check_formula(hypothesis))) {
-        hypothesis <- sanitize_hypothesis_formula(hypothesis)
-    }
-
     checkmate::assert(
         checkmate::check_character(hypothesis, pattern = "="),
-        checkmate::check_choice(hypothesis, choices = c("pairwise", "reference", "sequential", "meandev", "meanotherdev", "revpairwise", "revreference", "revsequential")),
         checkmate::check_numeric(hypothesis),
+        checkmate::check_formula(hypothesis),
         checkmate::check_matrix(hypothesis),
         checkmate::check_function(hypothesis),
         checkmate::check_null(hypothesis))
@@ -18,11 +13,9 @@ sanitize_hypothesis <- function(hypothesis, ...) {
         out <- paste(gsub("=", "-(", hypothesis), ")")
         attr(out, "label") <- hypothesis
         hypothesis <- out
-
     } else if (isTRUE(checkmate::check_matrix(hypothesis))) {
         attr(hypothesis, "label") <- colnames(hypothesis)
-
-    }  else if (isTRUE(checkmate::check_numeric(hypothesis, len = 1))) {
+    } else if (isTRUE(checkmate::check_numeric(hypothesis, len = 1))) {
         hnull <- hypothesis
         hypothesis <- NULL
     }
@@ -33,5 +26,4 @@ sanitize_hypothesis <- function(hypothesis, ...) {
     )
 
     return(out)
-
 }

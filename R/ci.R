@@ -93,6 +93,7 @@ get_ci <- function(
 
 get_ci_draws <- function(x, conf_level, draws, model = NULL) {
     
+
     checkmate::check_number(conf_level, lower = 1e-10, upper = 1 - 1e-10)
     critical <- (1 - conf_level) / 2
 
@@ -154,6 +155,9 @@ get_ci_draws <- function(x, conf_level, draws, model = NULL) {
     } else if (identical(FUN_CENTER, "median")) {
         FUN_CENTER <- stats::median
     }
+
+    # necessary for `hypothesis_apply()` when attributes are added by collapse::BY or collapse::dapply
+    colnames(draws) <- row.names(draws) <- NULL
 
     CIs <- t(apply(draws, 1, FUN_INTERVAL, credMass = conf_level))
     Bs <- apply(draws, 1, FUN_CENTER)

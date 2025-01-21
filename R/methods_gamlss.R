@@ -158,7 +158,7 @@ set_coef.gamlss <- function(model, coefs, ...){
       if (length(parform) == 3) {
           parform[2] <- NULL
       }
-      Terms <- terms(parform)
+      Terms <- stats::terms(parform)
       offsetVar <- if (!is.null(off.num <- attr(Terms, "offset"))) {
           eval(attr(Terms, "variables")[[off.num + 1]], data)
       }
