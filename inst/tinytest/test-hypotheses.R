@@ -211,6 +211,23 @@ h <- hypotheses(fm1,
   joint = c("SexFemale", "age"))
 
 
+# Issue #1345
+pkgload::load_all()
+dat <- transform(mtcars, carb = factor(carb))
+mod <- glm(am ~ carb + mpg, family = binomial("logit"), data = dat)
+custom_contrast <- function(x) {
+  w <- contr.poly(6)[,1:2] # weights
+  setNames(
+    as.vector(x %*% w),
+    nm = c("linear", "quadratic")
+  )
+}
+predictions(mod, variables = list("carb" = levels, "mpg" = "sd"),
+            type = "response",
+            hypothesis = ~ I(custom_contrast(x)) | rowidcf + mpg)
+
+
+
 # # We allow this again by removing `recall()` from `hypotheses()`
 # # Issue #1102: hypotheses() should not be called twice on the same object
 # mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)

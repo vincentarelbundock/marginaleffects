@@ -128,13 +128,15 @@ hypothesis_apply <- function(x,
         args[["drop"]] <- FALSE
         byval <- NULL
     } else {
-        if (hypothesis_by %in% colnames(x)) {
-            byval <- x[[hypothesis_by]]
-        } else if (hypothesis_by %in% colnames(newdata)) {
-            byval <- newdata[[hypothesis_by]]
-        } else {
-            msg <- sprintf("`%s` is not available in `newdata`.", hypothesis_by)
+        if (any(!hypothesis_by %in% c(colnames(x), colnames(newdata)))) {
+            msg <- "Some `~ | groupid` variables were not found in `newdata`."
             stop(msg, call. = FALSE)
+        } else {
+            byval <- list(
+                x[, intersect(hypothesis_by, colnames(x)), drop = FALSE],
+                newdata[, intersect(hypothesis_by, colnames(newdata)), drop = FALSE]
+            )
+            byval <- do.call(cbind, Filter(is.data.frame, byval))
         }
         applyfun <- collapse::BY
         args[["g"]] <- byval
