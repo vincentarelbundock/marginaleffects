@@ -142,7 +142,6 @@ hypothesis_apply <- function(x,
 
     args[["FUN"]] <- fun_comparison
     estimates <- do.call(applyfun, args)
-    estimates <- as.vector(estimates)
 
     if (!is.null(draws)) {
         args[[1]] <- draws
@@ -150,7 +149,7 @@ hypothesis_apply <- function(x,
     }
 
     if (arbitrary) {
-        labels <- suppressWarnings(tryCatch(fun_label(x$estimate), error = function(e) e))
+        labels <- sub("^[^\\.]*\\.", "", row.names(estimates))
         if (is.null(labels)) {
             labels <- paste0("b", seq_along(estimates))
         }
