@@ -1,5 +1,6 @@
 library(cross)
 library(tinytable)
+library(collapse)
 
 # Stored in the Github actions workflow
 pr_number <- Sys.getenv("PR_NUMBER")
@@ -60,10 +61,8 @@ out <- cross::run(
           comparisons(mod2, comparison = "eydxavg"),
           comparisons(mod2, comparison = "ratioavg")
         )
-      }
-    )
-  }
-)
+    })
+  })
 
 
 unnested <- do.call(rbind, lapply(seq_len(nrow(out)), \(i) {
