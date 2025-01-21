@@ -44,7 +44,7 @@ sanitize_model_specific.rqs <- function(model, ...) {
 # #' @keywords internal
 # #' @export
 # get_model_matrix.rq <- function(object, newdata) {
-#         tt <- terms(object)
+#         tt <- stats::terms(object)
 #         Terms <- delete.response(tt)
 #         m <- model.frame(Terms, newdata, na.action = na.pass, xlev = object$xlevels)
 #         if (!is.null(cl <- attr(Terms, "dataClasses")))

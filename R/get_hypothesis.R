@@ -248,7 +248,7 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
                 "mod <- lm(mpg ~ am * vs + cyl, data = mtcars)",
                 'comparisons(mod, newdata = "mean", hypothesis = "b1 = b2")',
                 'comparisons(mod, newdata = "mean", hypothesis = "am = vs")',
-                'comparisons(mod, variables = "am", by = "cyl", hypothesis = "pairwise")')
+                'comparisons(mod, variables = "am", by = "cyl", hypothesis = ~pairwise)')
             insight::format_error(msg)
         }
         rowlabels <- x$term

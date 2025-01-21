@@ -116,7 +116,7 @@
 #' mfx <- avg_slopes(mod, variables = "hp")
 #' hypotheses(mfx, equivalence = c(-.1, .1))
 #'
-#' cmp <- avg_comparisons(mod, variables = "gear", hypothesis = "pairwise")
+#' cmp <- avg_comparisons(mod, variables = "gear", hypothesis = ~pairwise)
 #' hypotheses(cmp, equivalence = c(0, 10))
 #'
 #' # joint hypotheses: character vector

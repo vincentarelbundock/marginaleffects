@@ -163,7 +163,7 @@ get_predict.tobitC <- function (object,
                                 type = c("response", "link"),
                                 ...)
 {
-  tt <- terms(object)
+  tt <- stats::terms(object)
   if (missing(newdata) || is.null(newdata)) {
     mm <- X <- model.matrix(object)
   }

@@ -20,7 +20,7 @@ sanitize_hypothesis_formula <- function(hypothesis) {
 
   # Custom functions
   if (identical(rhs, "x")) {
-    asis <- attr(terms(hypothesis), "term.labels")
+    asis <- attr(stats::terms(hypothesis), "term.labels")
     asis <- grep("^I\\(", asis, value = TRUE)
     if (length(asis) == 1) {
       if (length(lhs) != 0) {
