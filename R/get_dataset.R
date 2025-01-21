@@ -2,7 +2,7 @@
 #'
 #' @description Downloads a dataset and reads it into a data frame.
 #' @param dataset A string, either "military" or "thornton".
-#' @param docs A logical, if TRUE returns a link to the documentation.
+#' @param docs A logical, if TRUE open the documentation using `getOption("viewer")`
 #' @return A data frame containing the dataset.
 #' @export
 get_dataset <- function(
@@ -27,7 +27,7 @@ get_dataset <- function(
             "military" = "https://marginaleffects.com/data/military.parquet",
             "thornton" = "https://marginaleffects.com/data/thornton.parquet")
         temp_file <- tempfile(fileext = ".parquet")
-        download.file(url, temp_file, mode = "wb", quiet = TRUE)
+        download.file(data, temp_file, mode = "wb", quiet = TRUE)
         data <- nanoparquet::read_parquet(temp_file)
 
         documentation <- switch(dataset,
@@ -57,7 +57,7 @@ get_dataset <- function(
         if (!is.function(viewer)) stop(msg, call. = FALSE)
 
         viewer(documentation)
+    } else {
+        return(data)
     }
-
-    return(data)
 }
