@@ -536,7 +536,6 @@ Other options:
 
 \examples{
 \dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-\dontshow{\}) # examplesIf}
 library(marginaleffects)
 
 # Linear model
@@ -653,7 +652,7 @@ by <- data.frame(
   group = c("3", "4", "5"),
   by = c("3,4", "3,4", "5"))
 comparisons(mod, type = "probs", by = by)
-
+\dontshow{\}) # examplesIf}
 }
 \references{
 \itemize{

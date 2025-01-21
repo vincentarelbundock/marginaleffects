@@ -98,7 +98,6 @@
 #' @template return
 #'
 #' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
-#' @examples
 #' library(marginaleffects)
 #'
 #' # Linear model
