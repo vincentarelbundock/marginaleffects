@@ -131,49 +131,31 @@ hypothesis_apply <- function(x,
         if (any(!hypothesis_by %in% c(colnames(x), colnames(newdata)))) {
             msg <- "Some `~ | groupid` variables were not found in `newdata`."
             stop(msg, call. = FALSE)
-        } else {
-            byval <- list(
-                x[, intersect(hypothesis_by, colnames(x)), drop = FALSE],
-                newdata[, intersect(hypothesis_by, colnames(newdata)), drop = FALSE]
-            )
-            byval <- do.call(cbind, Filter(is.data.frame, byval))
         }
-        applyfun <- collapse::BY
-        args[["g"]] <- byval
+        byval <- list(
+            x[, intersect(hypothesis_by, colnames(x)), drop = FALSE],
+            newdata[, intersect(hypothesis_by, colnames(newdata)), drop = FALSE]
+        )
+        byval <- do.call(cbind, Filter(is.data.frame, byval))
     }
 
-    args[["FUN"]] <- fun_comparison
-    estimates <- do.call(applyfun, args)
+    estimates <- cbind(x[, "estimate"], byval)
+    lab <- function(x) names(fun_comparison(x))
+    labels <- tryCatch(estimates[, lapply(.SD, lab), by = byval], error = function(e) NULL)
+    estimates <- estimates[, lapply(.SD, fun_comparison), by = byval]
+    if (!is.null(labels)) {
+        data.table::setnames(labels, old = "estimate", "hypothesis")
+        out <- merge(labels, estimates)
+    } else {
+        out <- estimates
+    }
 
     if (!is.null(draws)) {
-        args[[1]] <- draws
-        draws <- do.call(applyfun, args)
-    }
-
-    if (arbitrary) {
-        labels <- sub("^[^\\.]*\\.", "", row.names(estimates))
-        if (is.null(labels)) {
-            labels <- paste0("b", seq_along(estimates))
-        }
-    } else {
-        args[["FUN"]] <- fun_label
-        args[[1]] <- matrix(labels)
-        labels <- do.call(applyfun, args)
-    }
-
-    if (!is.null(hypothesis_by)) {
-        args[["FUN"]] <- function(x) x[1]
-        args[[1]] <- byval
-        byval <- do.call(applyfun, args)
-    }
-
-    out <- data.frame(
-        estimate = as.vector(estimates),
-        hypothesis = as.vector(labels)
-    )
-
-    if (!is.null(hypothesis_by) && !is.null(byval)) {
-        out[[hypothesis_by]] <- byval
+        draws <- data.table::data.table(draws)
+        draws <- cbind(byval, draws)
+        draws <- draws[, lapply(.SD, fun_comparison), by = byval]
+        draws <- draws[, colnames(draws) %in% colnames(byval)]
+        draws <- as.matrix(draws)
     }
 
     attr(out, "posterior_draws") <- draws

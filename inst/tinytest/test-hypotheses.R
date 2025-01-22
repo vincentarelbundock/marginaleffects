@@ -211,20 +211,46 @@ h <- hypotheses(fm1,
   joint = c("SexFemale", "age"))
 
 
-# Issue #1345
-pkgload::load_all()
+# Issue #1345: no names
 dat <- transform(mtcars, carb = factor(carb))
 mod <- glm(am ~ carb + mpg, family = binomial("logit"), data = dat)
 custom_contrast <- function(x) {
-  w <- contr.poly(6)[,1:2] # weights
-  setNames(
+  w <- contr.poly(6)[, 1:2] # weights
+  out <- setNames(
     as.vector(x %*% w),
     nm = c("linear", "quadratic")
   )
+  names(out) <- NULL
+  out
 }
-predictions(mod, variables = list("carb" = levels, "mpg" = "sd"),
-            type = "response",
-            hypothesis = ~ I(custom_contrast(x)) | rowidcf + mpg)
+p <- predictions(mod,
+  variables = list("carb" = levels, "mpg" = "sd"),
+  hypothesis = ~ I(custom_contrast(x)) | rowidcf + mpg,
+  type = "response")
+expect_inherits(p, "predictions")
+expect_false("hypothesis" %in% colnames(p))
+
+
+# Issue #1345: names
+dat <- transform(mtcars, carb = factor(carb))
+mod <- glm(am ~ carb + mpg, family = binomial("logit"), data = dat)
+custom_contrast <- function(x) {
+  w <- contr.poly(6)[, 1:2] # weights
+  out <- setNames(
+    as.vector(x %*% w),
+    nm = c("linear", "quadratic")
+  )
+  out
+}
+p <- predictions(mod,
+  variables = list("carb" = levels, "mpg" = "sd"),
+  hypothesis = ~ I(custom_contrast(x)) | rowidcf + mpg,
+  type = "response")
+expect_inherits(p, "predictions")
+expect_true("hypothesis" %in% colnames(p))
+
+
+
 
 
 
