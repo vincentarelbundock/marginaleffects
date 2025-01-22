@@ -108,7 +108,10 @@ hypothesis_formula_list <- list(
 )
 
 
+#' Internal function
+#'
 #' @export
+#' @noRd
 #' @keywords internal
 hypothesis_formula <- function(x, hypothesis, newdata, by) {
     insight::check_if_installed("collapse")

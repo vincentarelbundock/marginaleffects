@@ -231,6 +231,7 @@ Collate:
     'hypothesis_formula.R'
     'hypothesis_function.R'
     'hypothesis_matrix.R'
+    'hypothesis_string.R'
     'imputation.R'
     'inferences.R'
     'matrix_apply.R'

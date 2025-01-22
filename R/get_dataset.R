@@ -25,7 +25,7 @@ get_dataset <- function(
         idx <- settings_get("get_dataset_index")
         if (is.null(idx)) {
             url <- "https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/datasets.csv"
-            idx <- read.csv(url)
+            idx <- utils::read.csv(url)
         }
         idx <- idx[grepl(search, idx$Item) | grepl(search, idx$Package) | grepl(search, idx$Title), ,
             drop = FALSE]
@@ -50,7 +50,7 @@ get_dataset <- function(
             "thornton" = "https://marginaleffects.com/data/thornton.parquet"
         )
         temp_file <- tempfile(fileext = ".parquet")
-        download.file(data, temp_file, mode = "wb", quiet = TRUE)
+        utils::download.file(data, temp_file, mode = "wb", quiet = TRUE)
         data <- nanoparquet::read_parquet(temp_file)
 
         documentation <- switch(dataset,
@@ -75,7 +75,7 @@ get_dataset <- function(
 
     if (docs) {
         temp_doc <- tempfile(fileext = ".html")
-        download.file(documentation, temp_doc, mode = "w", quiet = TRUE)
+        utils::download.file(documentation, temp_doc, mode = "w", quiet = TRUE)
 
         if (requireNamespace("rstudioapi")) {
             if (isTRUE(rstudioapi::isAvailable())) {
