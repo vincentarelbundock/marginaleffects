@@ -1,7 +1,7 @@
 #' Download and Read Datasets from `marginaleffects` or Rdatasets
 #'
 #' @description
-#' Downloads a dataset from the `marginaleffects` or the Rdatasets archive and return it as a data frame.
+#' Downloads a dataset from the `marginaleffects` or the Rdatasets archives, and return it as a data frame. Opens the documentation as an HTML page. Search available datasets.
 #'
 #' [https://vincentarelbundock.github.io/Rdatasets/](https://vincentarelbundock.github.io/Rdatasets/)
 #'

@@ -24,7 +24,7 @@ get_dataset(
 A data frame containing the dataset.
 }
 \description{
-Downloads a dataset from the \code{marginaleffects} or the Rdatasets archive and return it as a data frame.
+Downloads a dataset from the \code{marginaleffects} or the Rdatasets archives, and return it as a data frame. Opens the documentation as an HTML page. Search available datasets.
 
 \url{https://vincentarelbundock.github.io/Rdatasets/}
 }
