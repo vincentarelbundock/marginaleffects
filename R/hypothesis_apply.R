@@ -139,8 +139,15 @@ hypothesis_apply <- function(x,
         byval <- do.call(cbind, Filter(is.data.frame, byval))
     }
 
-    combined <- cbind(x[, "estimate"], byval)
-    estimates <- combined[, lapply(.SD, fun_comparison), by = byval]
+    combined <- list(x[, "estimate", drop = FALSE], byval)
+    combined <- Filter(function(x) inherits(x, "data.frame"), combined)
+    combined <- do.call(cbind, combined)
+    data.table::setDT(combined)
+    if (is.null(byval)) {
+        estimates <- combined[, lapply(.SD, fun_comparison)]
+    } else {
+        estimates <- combined[, lapply(.SD, fun_comparison), by = byval]
+    }
 
     lab <- function(x) names(fun_comparison(x))
     lab <- tryCatch(combined[, lapply(.SD, lab), by = byval], error = function(e) NULL)
@@ -152,22 +159,18 @@ hypothesis_apply <- function(x,
 
     if (!is.null(labels) && !inherits(lab, "data.frame") || nrow(lab) == 0) {
         combined[, estimate := labels]
-        labels <- combined[, lapply(.SD, fun_label), by = byval]
-        data.table::setnames(labels, old = "estimate", "hypothesis")
-        estimates <- cbind(labels, estimates)
+        labels <- tryCatch(combined[, lapply(.SD, fun_label), by = byval],
+            error = function(e) NULL)
+        if (inherits(labels, "data.frame") && nrow(labels) == nrow(estimates)) {
+            data.table::setnames(labels, old = "estimate", "hypothesis")
+            estimates <- cbind(labels, estimates)
+        }
     }
 
     out <- estimates
 
     if (!is.null(draws)) {
-        draws <- data.table::data.table(draws)
-        draws <- cbind(byval, draws)
-        data.table::setDT(draws)
-        draws <- draws[, lapply(.SD, fun_comparison), by = byval]
-        cols <- setdiff(colnames(draws), colnames(byval))
-        draws <- draws[, ..cols]
-        draws <- as.matrix(draws)
-        dimnames(draws) <- NULL
+        draws <- matrix_apply_column(draws, FUN = fun_comparison, by = byval)
         if ("hypothesis" %in% colnames(out)) {
             row.names(draws) <- out$hypothesis
         }

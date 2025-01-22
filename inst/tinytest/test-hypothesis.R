@@ -232,7 +232,7 @@ expect_equivalent(p2$estimate, p1$estimate - (sum(p1$estimate) - p1$estimate) / 
 # Issue #1345: no names
 dat <- transform(mtcars, carb = factor(carb))
 mod <- glm(am ~ carb + mpg, family = binomial("logit"), data = dat)
-custom_contrast <- function(x) {
+custom_contrast <<- function(x) {
     w <- contr.poly(6)[, 1:2] # weights
     out <- setNames(
         as.vector(x %*% w),
@@ -254,7 +254,7 @@ expect_true("rowidcf" %in% colnames(p))
 # Issue #1345: names
 dat <- transform(mtcars, carb = factor(carb))
 mod <- glm(am ~ carb + mpg, family = binomial("logit"), data = dat)
-custom_contrast <- function(x) {
+custom_contrast <<- function(x) {
     w <- contr.poly(6)[, 1:2] # weights
     out <- setNames(
         as.vector(x %*% w),
@@ -289,6 +289,12 @@ expect_inherits(p, "predictions")
 expect_true("hypothesis" %in% colnames(p))
 expect_true(all(c("a", "b") %in% p$hypothesis))
 expect_true(all(c("a", "b") %in% d$hypothesis))
+
+p <- predictions(brms_factor,
+    hypothesis = ~ I(mean(x)) | cyl_fac)
+expect_inherits(p, "predictions")
+expect_false("hypothesis" %in% colnames(p))
+expect_true("cyl_fac" %in% colnames(p))
 
 
 
