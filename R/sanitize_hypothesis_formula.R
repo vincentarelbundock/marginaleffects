@@ -38,11 +38,11 @@ sanitize_hypothesis_formula <- function(hypothesis) {
     }
   }
 
-  valid <- c("reference", "sequential", "pairwise", "meandev", "meanotherdev", "poly", "trt_vs_ctrl")
+  valid <- c("reference", "sequential", "pairwise", "meandev", "meanotherdev", "poly", "helmert", "trt_vs_ctrl")
   checkmate::assert_choice(rhs, valid, .var.name = "Right-hand side of `hypothesis` formula")
 
   # dot product weights
-  if (rhs == "poly") {
+  if (rhs %in% c("poly", "helmert")) {
     if (length(lhs) == 1 && lhs != "dotproduct") {
       stop("The left-hand size of the `hypothesis` formula must be empty or `dotproduct`.", call. = FALSE)
     } else {

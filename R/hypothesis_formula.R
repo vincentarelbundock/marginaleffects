@@ -104,6 +104,18 @@ hypothesis_formula_list <- list(
             label = function(x) {
                 c("Linear", "Quadratic", "Cubic", "Quartic", "Quintic")[1:min(5, (length(x) - 1))]
             })
+    ),
+    helmert = list(
+        dotproduct = list(
+            comparison = function(x) {
+                nx <- length(x)
+                w <- stats::contr.helmert(nx)
+                out <- as.vector(x %*% w)
+                names(out) <- paste("Helmert", seq_along(out))
+                return(out)
+            },
+            label = function(x) x
+        )
     )
 )
 

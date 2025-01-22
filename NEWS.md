@@ -14,6 +14,7 @@ New:
 * The `hypothesis` argument is more flexible:
   - `hypothesis = ratio ~ meandev | groupid`
   - `hypothesis = ~ poly | groupid`
+  - `hypothesis = ~ helmert | groupid`
   - `hypothesis = ~ trt_vs_ctrl | groupid`
   - `hypothesis = ~ I(foo(x)) | groupid`
   - `hypothesis = ~ I(\(x) c(a = x[1], b = mean(x[2:length(x))))`

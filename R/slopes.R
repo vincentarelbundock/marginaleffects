@@ -86,6 +86,7 @@
 #'     - `meandev`: difference between an estimate and the mean of all estimates.
 #'     - `meanotherdev: difference between an estimate and the mean of all other estimates, excluding the current one.
 #'     - `poly`: polynomial contrasts, as computed by the `stats::contr.poly()` function.
+#'     - `helmert`: Helmert contrasts, as computed by the `stats::contr.helmert()` function. Contrast 2nd level to the first, 3rd to the average of the first two, and so on.
 #'     - `trt_vs_ctrl`: difference between the mean of estimates (except the first) and the first estimate.
 #'     - `I(fun(x))`: custom function to manipulate the vector of estimates `x`. The function `fun()` can return multiple (potentially named) estimates.
 #'   + `group` (optional)
