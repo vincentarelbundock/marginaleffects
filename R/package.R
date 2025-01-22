@@ -11,6 +11,8 @@ utils::globalVariables(c(
   "..by",
   "..to_keep",
   "..cols",
+  "..col_x",
+  "..col_newdata",
   "..idx_by",
   "..idx_hi",
   "..cl",

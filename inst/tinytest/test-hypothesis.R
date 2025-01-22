@@ -297,5 +297,13 @@ expect_false("hypothesis" %in% colnames(p))
 expect_true("cyl_fac" %in% colnames(p))
 
 
+# Issue #1349
+names_diff <<- \(x) setNames(diff(x), paste0("diff-", 2:length(x)))
+mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
+p <- predictions(mod)
+h <- hypotheses(p, hypothesis = ~ I(names_diff(x)) | am)
+h <- hypotheses(h, hypothesis = ~ I(mean(x)) | term) |> suppressWarnings()
+expect_false(anyNA(h$estimate))
+
 
 rm(list = ls())

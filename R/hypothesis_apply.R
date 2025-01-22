@@ -119,6 +119,10 @@ hypothesis_apply <- function(x,
     draws <- attr(x, "posterior_draws")
     args <- list(matrix(x$estimate), FUN = fun_comparison)
 
+    data.table::setDT(x)
+    data.table::setDT(newdata)
+
+
     if (is.null(labels)) {
         labels <- paste("Row", seq_len(nrow(x)))
     }
@@ -132,9 +136,11 @@ hypothesis_apply <- function(x,
             msg <- "Some `~ | groupid` variables were not found in `newdata`."
             stop(msg, call. = FALSE)
         }
+        col_x <- intersect(hypothesis_by, colnames(x))
+        col_newdata <- intersect(hypothesis_by, colnames(newdata))
         byval <- list(
-            x[, intersect(hypothesis_by, colnames(x)), drop = FALSE],
-            newdata[, intersect(hypothesis_by, colnames(newdata)), drop = FALSE]
+            x[, ..col_x, drop = FALSE],
+            newdata[, ..col_newdata, drop = FALSE]
         )
         byval <- do.call(cbind, Filter(is.data.frame, byval))
     }
@@ -146,11 +152,11 @@ hypothesis_apply <- function(x,
     if (is.null(byval)) {
         estimates <- combined[, lapply(.SD, fun_comparison)]
     } else {
-        estimates <- combined[, lapply(.SD, fun_comparison), by = byval]
+        estimates <- combined[, lapply(.SD, fun_comparison), keyby = byval]
     }
 
     lab <- function(x) suppressWarnings(names(fun_comparison(x)))
-    lab <- tryCatch(combined[, lapply(.SD, lab), by = byval], error = function(e) NULL)
+    lab <- tryCatch(combined[, lapply(.SD, lab), keyby = byval], error = function(e) NULL)
     if (inherits(lab, "data.frame") && nrow(lab) == nrow(estimates)) {
         data.table::setnames(lab, old = "estimate", "hypothesis")
         cols <- setdiff(colnames(lab), colnames(estimates))
@@ -159,7 +165,7 @@ hypothesis_apply <- function(x,
 
     if (!is.null(labels) && !inherits(lab, "data.frame") || nrow(lab) == 0) {
         combined[, estimate := labels]
-        labels <- tryCatch(combined[, lapply(.SD, fun_label), by = byval],
+        labels <- tryCatch(combined[, lapply(.SD, fun_label), keyby = byval],
             error = function(e) NULL)
         if (inherits(labels, "data.frame") && nrow(labels) == nrow(estimates)) {
             data.table::setnames(labels, old = "estimate", "hypothesis")
