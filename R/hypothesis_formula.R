@@ -110,7 +110,6 @@ hypothesis_formula_list <- list(
 
 #' Internal function
 #'
-#' @export
 #' @noRd
 #' @keywords internal
 hypothesis_formula <- function(x, hypothesis, newdata, by) {
