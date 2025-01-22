@@ -158,6 +158,7 @@ Suggests:
     rstanarm,
     rstantools,
     rstpm2,
+    rstudioapi,
     rsvg,
     sampleSelection,
     sandwich,
