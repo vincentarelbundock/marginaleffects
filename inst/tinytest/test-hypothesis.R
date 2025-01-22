@@ -12,7 +12,7 @@ mod <- lm(mpg ~ carb + cyl, dat)
 
 # hyothesis formula for model coefficients
 mod <- lm(mpg ~ factor(cyl) + 0, data = mtcars)
-h <- hypotheses(mod, hypothesis = ~ reference)
+h <- hypotheses(mod, hypothesis = ~reference)
 expect_inherits(h, "hypotheses")
 
 
@@ -30,10 +30,11 @@ expect_warning(
     pattern = "lincom")
 
 tmp <- lm(mpg ~ wt + drat, data = mtcars)
-expect_error(predictions(
-    tmp,
-    hypothesis = "wt = drat",
-    newdata = datagrid(wt = 2:3)),
+expect_error(
+    predictions(
+        tmp,
+        hypothesis = "wt = drat",
+        newdata = datagrid(wt = 2:3)),
     pattern = "unique row")
 
 
@@ -41,25 +42,27 @@ tmp <- mtcars
 tmp$gear <- factor(tmp$gear)
 expect_error(
     comparisons(
-    lm(mpg ~ gear, tmp),
-    newdata = "mean",
-    variables = list(gear = "all"),
-    hypothesis = "gear = 0"),
+        lm(mpg ~ gear, tmp),
+        newdata = "mean",
+        variables = list(gear = "all"),
+        hypothesis = "gear = 0"),
     pattern = "indices")
 
-expect_error(slopes(
-    mod,
-    newdata = "mean",
-    hypothesis = c(1, 1, 1),
-    variables = "cyl"),
+expect_error(
+    slopes(
+        mod,
+        newdata = "mean",
+        hypothesis = c(1, 1, 1),
+        variables = "cyl"),
     pattern = "but has length")
 
 # errors
-expect_error(slopes(
-    mod,
-    newdata = "mean",
-    hypothesis = matrix(rep(1, 6), ncol = 2),
-    variables = "cyl"),
+expect_error(
+    slopes(
+        mod,
+        newdata = "mean",
+        hypothesis = matrix(rep(1, 6), ncol = 2),
+        variables = "cyl"),
     pattern = "2 rows")
 
 # marginaleffects: hypothesis
@@ -108,7 +111,7 @@ expect_equivalent(p1$estimate, diff(p2$estimate))
 lc <- matrix(c(
     -1, 1,
     -1, 0
-    ), ncol = 2)
+), ncol = 2)
 p3 <- predictions(
     mod,
     datagrid(cyl = c(4, 6)),
@@ -196,7 +199,7 @@ expect_equivalent(nrow(cmp), 2)
 
 # Issue #559
 mod <- lm(mpg ~ hp + drat, data = mtcars)
-H <- matrix(c(0, 1, -1, 1/3, 1/3, 1/3), ncol = 2)
+H <- matrix(c(0, 1, -1, 1 / 3, 1 / 3, 1 / 3), ncol = 2)
 colnames(H) <- c("H1", "H2")
 dm <- hypotheses(mod, hypothesis = H)
 expect_equivalent(dm$term, c("H1", "H2"))
@@ -225,6 +228,67 @@ p2 <- avg_predictions(mod, by = "cyl", hypothesis = ~meandev)
 expect_equivalent(p2$estimate, p1$estimate - mean(p1$estimate))
 p2 <- avg_predictions(mod, by = "cyl", hypothesis = ~meanotherdev)
 expect_equivalent(p2$estimate, p1$estimate - (sum(p1$estimate) - p1$estimate) / (nrow(p1) - 1))
+
+# Issue #1345: no names
+dat <- transform(mtcars, carb = factor(carb))
+mod <- glm(am ~ carb + mpg, family = binomial("logit"), data = dat)
+custom_contrast <- function(x) {
+    w <- contr.poly(6)[, 1:2] # weights
+    out <- setNames(
+        as.vector(x %*% w),
+        nm = c("linear", "quadratic")
+    )
+    names(out) <- NULL
+    out
+}
+p <- predictions(mod,
+    variables = list("carb" = levels, "mpg" = "sd"),
+    hypothesis = ~ I(custom_contrast(x)) | rowidcf + mpg,
+    type = "response")
+expect_inherits(p, "predictions")
+expect_false("hypothesis" %in% colnames(p))
+expect_true("mpg" %in% colnames(p))
+expect_true("rowidcf" %in% colnames(p))
+
+
+# Issue #1345: names
+dat <- transform(mtcars, carb = factor(carb))
+mod <- glm(am ~ carb + mpg, family = binomial("logit"), data = dat)
+custom_contrast <- function(x) {
+    w <- contr.poly(6)[, 1:2] # weights
+    out <- setNames(
+        as.vector(x %*% w),
+        nm = c("linear", "quadratic")
+    )
+    out
+}
+p <- predictions(mod,
+    variables = list("carb" = levels, "mpg" = "sd"),
+    hypothesis = ~ I(custom_contrast(x)) | rowidcf + mpg,
+    type = "response")
+expect_inherits(p, "predictions")
+expect_true("hypothesis" %in% colnames(p))
+expect_true("mpg" %in% colnames(p))
+expect_true("rowidcf" %in% colnames(p))
+
+
+# Issue #1345: bayesian
+requiet("brms")
+requiet("rstan")
+brms_factor <- readRDS("modelarchive/data/brms_factor.rds")
+p <- avg_predictions(brms_factor, by = "cyl_fac", hypothesis = ~reference)
+d <- get_draws(p)
+expect_inherits(p, "predictions")
+expect_true("hypothesis" %in% colnames(p))
+expect_true(all(c("6 - 4", "8 - 4") %in% d$hypothesis))
+
+p <- predictions(brms_factor,
+    hypothesis = ~ I(c(a = x[1], b = mean(x[1:2]))) | cyl_fac)
+d <- get_draws(p)
+expect_inherits(p, "predictions")
+expect_true("hypothesis" %in% colnames(p))
+expect_true(all(c("a", "b") %in% p$hypothesis))
+expect_true(all(c("a", "b") %in% d$hypothesis))
 
 
 

@@ -139,23 +139,38 @@ hypothesis_apply <- function(x,
         byval <- do.call(cbind, Filter(is.data.frame, byval))
     }
 
-    estimates <- cbind(x[, "estimate"], byval)
+    combined <- cbind(x[, "estimate"], byval)
+    estimates <- combined[, lapply(.SD, fun_comparison), by = byval]
+
     lab <- function(x) names(fun_comparison(x))
-    labels <- tryCatch(estimates[, lapply(.SD, lab), by = byval], error = function(e) NULL)
-    estimates <- estimates[, lapply(.SD, fun_comparison), by = byval]
-    if (!is.null(labels)) {
-        data.table::setnames(labels, old = "estimate", "hypothesis")
-        out <- merge(labels, estimates)
-    } else {
-        out <- estimates
+    lab <- tryCatch(combined[, lapply(.SD, lab), by = byval], error = function(e) NULL)
+    if (inherits(lab, "data.frame") && nrow(lab) == nrow(estimates)) {
+        data.table::setnames(lab, old = "estimate", "hypothesis")
+        cols <- setdiff(colnames(lab), colnames(estimates))
+        estimates <- cbind(lab[, ..cols], estimates)
     }
+
+    if (!is.null(labels) && !inherits(lab, "data.frame") || nrow(lab) == 0) {
+        combined[, estimate := labels]
+        labels <- combined[, lapply(.SD, fun_label), by = byval]
+        data.table::setnames(labels, old = "estimate", "hypothesis")
+        estimates <- cbind(labels, estimates)
+    }
+
+    out <- estimates
 
     if (!is.null(draws)) {
         draws <- data.table::data.table(draws)
         draws <- cbind(byval, draws)
+        data.table::setDT(draws)
         draws <- draws[, lapply(.SD, fun_comparison), by = byval]
-        draws <- draws[, colnames(draws) %in% colnames(byval)]
+        cols <- setdiff(colnames(draws), colnames(byval))
+        draws <- draws[, ..cols]
         draws <- as.matrix(draws)
+        dimnames(draws) <- NULL
+        if ("hypothesis" %in% colnames(out)) {
+            row.names(draws) <- out$hypothesis
+        }
     }
 
     attr(out, "posterior_draws") <- draws
