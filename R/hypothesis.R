@@ -4,7 +4,6 @@ get_hypothesis <- function(
     by = NULL,
     newdata = NULL,
     draws = NULL) {
-
     deprecated <- c("pairwise", "revpairwise", "sequential", "revsequential", "reference", "meandev", "meanotherdev", "revreference")
     if (isTRUE(checkmate::check_choice(hypothesis, deprecated))) {
         msg <- "This string is deprecated for use in the `hypothesis` argument. Use the formula interface instead. Ex: `hypothesis=~reference`"
@@ -13,67 +12,25 @@ get_hypothesis <- function(
 
     if (is.null(hypothesis)) {
         return(x)
-
     } else if (isTRUE(checkmate::check_formula(hypothesis))) {
         out <- hypothesis_formula(x, newdata = newdata, hypothesis = hypothesis, by = by)
         return(out)
-    }
-
-    if (is.function(hypothesis)) {
-        if (!is.null(draws)) {
-            msg <- "The `hypothesis` argument does not support function for models with draws. You can use `get_draws()` to extract draws and manipulate them directly instead."
-            insight::format_error(msg)
-        }
-        if ("rowid" %in% colnames(x) && "rowid" %in% colnames(newdata)) {
-            x <- merge(x, newdata, all.x = TRUE, by = intersect(colnames(x), colnames(newdata)))
-        } else if (isTRUE(nrow(x) == nrow(newdata))) {
-            x <- cbind(x, newdata)
-        }
-
-        attr(x, "variables_datagrid") <- attr(newdata, "variables_datagrid")
-        attr(x, "by") <- if (is.character(by)) by else names(by)
-
-        argnames <- names(formals(hypothesis))
-        if (!"x" %in% argnames) insight::format_error("The `hypothesis` function must accept an `x` argument.")
-        if (!all(argnames %in% c("x", "draws"))) {
-            msg <- "The allowable arguments for the `hypothesis` function are: `x` and `draws`"
-            insight::format_error(msg)
-        }
-        args <- list(x = x, newdata = newdata, by = by, draws = draws)
-        args <- args[names(args) %in% argnames]
-        out <- do.call(hypothesis, args)
-        at <- attr(out, "hypothesis_function_by")
-
-        # sanity
-        msg <- "The `hypothesis` argument function must return a data frame with `term` (or `hypothesis`) and `estimate` columns."
-        if (inherits(out, "data.frame")) {
-            if (!all(c("term", "estimate") %in% colnames(out)) && !all(c("hypothesis", "estimate") %in% colnames(out))) {
-                insight::format_error(msg)
-            }
-        } else if (isTRUE(checkmate::check_numeric(out))) {
-            if (isTRUE(checkmate::check_data_frame(x, nrows = length(out))) && "term" %in% colnames(out)) {
-                out <- data.frame(term = out$term, estimate = out)
-            } else {
-                out <- data.frame(term = seq_along(out), estimate = out)
-            }
-        } else {
-            insight::format_error(msg)
-        }
-
-        attr(out, "hypothesis_function_by") <- at
+    } else if (isTRUE(checkmate::check_function(hypothesis))) {
+        out <- hypothesis_function(x, newdata = newdata, hypothesis = hypothesis, by = by)
         return(out)
     }
+
 
     lincom <- NULL
 
     # lincom: numeric vector or matrix
     if (isTRUE(checkmate::check_numeric(hypothesis))) {
-     if (isTRUE(checkmate::check_atomic_vector(hypothesis))) {
-        checkmate::assert_numeric(hypothesis, len = nrow(x))
-        lincom <- as.matrix(hypothesis)
-     } else if (isTRUE(checkmate::check_matrix(hypothesis))) {
-        lincom <- hypothesis
-     }
+        if (isTRUE(checkmate::check_atomic_vector(hypothesis))) {
+            checkmate::assert_numeric(hypothesis, len = nrow(x))
+            lincom <- as.matrix(hypothesis)
+        } else if (isTRUE(checkmate::check_matrix(hypothesis))) {
+            lincom <- hypothesis
+        }
     }
 
     lincom <- sanitize_lincom(lincom, x)
@@ -83,7 +40,7 @@ get_hypothesis <- function(
         out <- lincom_multiply(x, lincom)
         return(out)
 
-    # string hypothesis
+        # string hypothesis
     } else if (is.character(hypothesis)) {
         out_list <- draws_list <- list()
         lab <- attr(hypothesis, "label")
@@ -174,9 +131,8 @@ lincom_multiply <- function(x, lincom) {
 eval_string_hypothesis <- function(x, hypothesis, lab) {
     # row indices: `hypotheses` includes them, but `term` does not
     if (isTRUE(grepl("\\bb\\d+\\b", hypothesis)) && !any(grepl("\\bb\\d+\\b", x[["term"]]))) {
-
         msg <- "
-It is essential to check the order of estimates when specifying hypothesis tests using positional indices like b1, b2, etc. The indices of estimates can change depending on the order of rows in the original dataset, user-supplied arguments, model-fitting package, and version of `marginaleffects`. 
+It is essential to check the order of estimates when specifying hypothesis tests using positional indices like b1, b2, etc. The indices of estimates can change depending on the order of rows in the original dataset, user-supplied arguments, model-fitting package, and version of `marginaleffects`.
 
 It is also good practice to use assertions that ensure the order of estimates is consistent across different runs of the same code. Example:
 
@@ -211,7 +167,7 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
         }
         rowlabels <- paste0("marginaleffects__", seq_len(nrow(x)))
 
-    # term names
+        # term names
     } else {
         if (!"term" %in% colnames(x) || anyDuplicated(x$term) > 0) {
             msg <- c(
@@ -272,21 +228,23 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
 
 
 expand_wildcard <- function(hyp, bmax, lab) {
-  # Find all occurrences of b*
-  bstar_indices <- gregexpr("b\\*", hyp)[[1]]
-  if (bstar_indices[1] == -1) return(list(hyp, lab))
-  bstar_count <- length(bstar_indices)
-  if (bstar_count > 1) {
-    insight::format_error("Error: More than one 'b*' substring found.")
-  }
-  
-  # Replace b* with b1, b2, b3, ..., bmax
-  labs <- character(bmax)
-  result <- character(bmax)
-  for (i in 1:bmax) {
-    result[i] <- sub("b\\*", paste0("b", i), hyp)
-    labs[i] <- sub("b\\*", paste0("b", i), lab)
-  }
-  
-  return(list(result, labs))
+    # Find all occurrences of b*
+    bstar_indices <- gregexpr("b\\*", hyp)[[1]]
+    if (bstar_indices[1] == -1) {
+        return(list(hyp, lab))
+    }
+    bstar_count <- length(bstar_indices)
+    if (bstar_count > 1) {
+        insight::format_error("Error: More than one 'b*' substring found.")
+    }
+
+    # Replace b* with b1, b2, b3, ..., bmax
+    labs <- character(bmax)
+    result <- character(bmax)
+    for (i in 1:bmax) {
+        result[i] <- sub("b\\*", paste0("b", i), hyp)
+        labs[i] <- sub("b\\*", paste0("b", i), lab)
+    }
+
+    return(list(result, labs))
 }
