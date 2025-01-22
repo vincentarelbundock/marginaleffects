@@ -11,39 +11,11 @@ get_hypothesis <- function(
         stop(msg, call. = FALSE)
     }
 
-    if (is.null(hypothesis)) return(x)
+    if (is.null(hypothesis)) {
+        return(x)
 
-    labels <- get_hypothesis_row_labels(x, by = by)
-
-    if (isTRUE(checkmate::check_formula(hypothesis))) {
-        tmp <- sanitize_hypothesis_formula(hypothesis)
-        list2env(tmp, environment())
-    } else {
-        comparison <- "difference"
-        hypothesis_by <- NULL
-    }
-
-    valid <- c("reference", "sequential", "pairwise", "meandev", "meanotherdev", "poly", "trt_vs_ctrl", "arbitrary_function")
-    if (isTRUE(checkmate::check_choice(hypothesis, choices = valid))) {
-        if (hypothesis == "arbitrary_function") {
-            fun_cmp <- sprintf("function(x) %s", comparison)
-            fun_lab <- sprintf("function(x) suppressWarnings(names(%s))", comparison)
-            out <- hypothesis_apply(x,
-                labels = labels,
-                hypothesis_by = hypothesis_by,
-                fun_comparison = eval(parse(text = fun_cmp)),
-                fun_label = eval(parse(text = fun_lab)),
-                newdata = newdata,
-                arbitrary = TRUE)
-        } else {
-            tmp <- hypothesis_functions[[hypothesis]][[comparison]]
-            out <- hypothesis_apply(x,
-                labels = labels,
-                hypothesis_by = hypothesis_by,
-                fun_comparison = tmp$comparison,
-                fun_label = tmp$label,
-                newdata = newdata)
-        }
+    } else if (isTRUE(checkmate::check_formula(hypothesis))) {
+        out <- hypothesis_formula(x, newdata = newdata, hypothesis = hypothesis, by = by)
         return(out)
     }
 

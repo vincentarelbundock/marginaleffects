@@ -28,9 +28,9 @@ sanitize_hypothesis_formula <- function(hypothesis) {
       }
       asis <- sub("^I\\((.*)\\)$", "\\1", asis)
       out <- list(
-        hypothesis = "arbitrary_function",
-        comparison = asis,
-        hypothesis_by = by
+        lhs = "arbitrary_function",
+        rhs = asis,
+        group = by
       )
       return(out)
     } else if (length(asis) > 1) {
@@ -59,9 +59,9 @@ sanitize_hypothesis_formula <- function(hypothesis) {
   }
 
   out <- list(
-    hypothesis = rhs,
-    comparison = lhs,
-    hypothesis_by = by
+    rhs = rhs,
+    lhs = lhs,
+    group = by
   )
 
   return(out)

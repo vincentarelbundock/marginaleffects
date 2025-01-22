@@ -1,4 +1,4 @@
-hypothesis_functions <- list(
+hypothesis_formula_list <- list(
     reference = list(
         ratio = list(
             comparison = function(x) (x / x[1])[2:length(x)],
@@ -108,55 +108,77 @@ hypothesis_functions <- list(
 )
 
 
-hypothesis_apply <- function(x,
-                             labels,
-                             hypothesis_by = NULL,
-                             fun_comparison,
-                             fun_label,
-                             newdata,
-                             arbitrary = FALSE) {
+#' @export
+#' @keywords internal
+hypothesis_formula <- function(x, hypothesis, newdata, by) {
     insight::check_if_installed("collapse")
+    # default values
     draws <- attr(x, "posterior_draws")
+
+    if (inherits(x, "data.frame")) {
+        data.table::setDT(x)
+    }
+    if (inherits(newdata, "data.frame")) {
+        data.table::setDT(newdata)
+        if (nrow(newdata) != nrow(x)) {
+            newdata <- NULL
+        }
+    }
+
+    labels <- get_hypothesis_row_labels(x, by = by)
+
+    form <- sanitize_hypothesis_formula(hypothesis)
+
+    group <- form$group
+
+    if (isTRUE(form$lhs == "arbitrary_function")) {
+        fun_comparison <- sprintf("function(x) %s", form$rhs)
+        fun_label <- sprintf("function(x) suppressWarnings(names(%s))", form$rhs)
+        fun_comparison <- eval(parse(text = fun_comparison))
+        fun_label <- eval(parse(text = fun_label))
+    } else {
+        fun_label <- hypothesis_formula_list[[form$rhs]][[form$lhs]]$label
+        fun_comparison <- hypothesis_formula_list[[form$rhs]][[form$lhs]]$comparison
+    }
+
     args <- list(matrix(x$estimate), FUN = fun_comparison)
-
-    data.table::setDT(x)
-    data.table::setDT(newdata)
-
 
     if (is.null(labels)) {
         labels <- paste("Row", seq_len(nrow(x)))
     }
 
-    if (is.null(hypothesis_by)) {
-        applyfun <- collapse::dapply
-        args[["drop"]] <- FALSE
-        byval <- NULL
-    } else {
-        if (any(!hypothesis_by %in% c(colnames(x), colnames(newdata)))) {
+    if (!is.null(group)) {
+        if (any(!group %in% c(colnames(x), colnames(newdata)))) {
             msg <- "Some `~ | groupid` variables were not found in `newdata`."
             stop(msg, call. = FALSE)
         }
-        col_x <- intersect(hypothesis_by, colnames(x))
-        col_newdata <- intersect(hypothesis_by, colnames(newdata))
-        byval <- list(
-            x[, ..col_x, drop = FALSE],
-            newdata[, ..col_newdata, drop = FALSE]
-        )
-        byval <- do.call(cbind, Filter(is.data.frame, byval))
+        col_x <- intersect(group, colnames(x))
+        col_newdata <- intersect(group, colnames(newdata))
+        groupval <- list()
+        if (length(col_x) > 0) {
+            groupval <- c(groupval, list(x[, ..col_x, drop = FALSE]))
+        }
+        if (length(col_newdata) > 0) {
+            groupval <- c(groupval, list(newdata[, ..col_newdata, drop = FALSE]))
+        }
+        groupval <- do.call(cbind, Filter(is.data.frame, groupval))
+    } else {
+        groupval <- NULL
     }
 
-    combined <- list(x[, "estimate", drop = FALSE], byval)
+    combined <- list(x[, "estimate", drop = FALSE], groupval)
     combined <- Filter(function(x) inherits(x, "data.frame"), combined)
     combined <- do.call(cbind, combined)
     data.table::setDT(combined)
-    if (is.null(byval)) {
+
+    if (is.null(groupval)) {
         estimates <- combined[, lapply(.SD, fun_comparison)]
     } else {
-        estimates <- combined[, lapply(.SD, fun_comparison), keyby = byval]
+        estimates <- combined[, lapply(.SD, fun_comparison), keyby = groupval]
     }
 
     lab <- function(x) suppressWarnings(names(fun_comparison(x)))
-    lab <- tryCatch(combined[, lapply(.SD, lab), keyby = byval], error = function(e) NULL)
+    lab <- tryCatch(combined[, lapply(.SD, lab), keyby = groupval], error = function(e) NULL)
     if (inherits(lab, "data.frame") && nrow(lab) == nrow(estimates)) {
         data.table::setnames(lab, old = "estimate", "hypothesis")
         cols <- setdiff(colnames(lab), colnames(estimates))
@@ -165,7 +187,7 @@ hypothesis_apply <- function(x,
 
     if (!is.null(labels) && !inherits(lab, "data.frame") || nrow(lab) == 0) {
         combined[, estimate := labels]
-        labels <- tryCatch(combined[, lapply(.SD, fun_label), keyby = byval],
+        labels <- tryCatch(combined[, lapply(.SD, fun_label), keyby = groupval],
             error = function(e) NULL)
         if (inherits(labels, "data.frame") && nrow(labels) == nrow(estimates)) {
             data.table::setnames(labels, old = "estimate", "hypothesis")
@@ -176,14 +198,14 @@ hypothesis_apply <- function(x,
     out <- estimates
 
     if (!is.null(draws)) {
-        draws <- matrix_apply_column(draws, FUN = fun_comparison, by = byval)
+        draws <- matrix_apply_column(draws, FUN = fun_comparison, by = groupval)
         if ("hypothesis" %in% colnames(out)) {
             row.names(draws) <- out$hypothesis
         }
     }
 
     attr(out, "posterior_draws") <- draws
-    attr(out, "hypothesis_function_by") <- hypothesis_by
+    attr(out, "hypothesis_function_by") <- form$group
 
     return(out)
 }

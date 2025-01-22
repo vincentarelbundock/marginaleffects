@@ -10,7 +10,7 @@ mod <- lm(mpg ~ carb + cyl, dat)
 
 
 
-# hyothesis formula for model coefficients
+# hypothesis formula for model coefficients
 mod <- lm(mpg ~ factor(cyl) + 0, data = mtcars)
 h <- hypotheses(mod, hypothesis = ~reference)
 expect_inherits(h, "hypotheses")
@@ -304,6 +304,30 @@ p <- predictions(mod)
 h <- hypotheses(p, hypothesis = ~ I(names_diff(x)) | am)
 h <- hypotheses(h, hypothesis = ~ I(mean(x)) | term) |> suppressWarnings()
 expect_false(anyNA(h$estimate))
+
+
+dat = data.table::data.table(iris)
+dat[, big := as.numeric(Sepal.Width > mean(Sepal.Width))]
+dat = dat[order(Species, big)]
+mod <- lm(Sepal.Length ~ big * Species * Petal.Length, data = dat)
+
+cmp <- avg_comparisons(mod,
+    variables = "big",
+    hypothesis = ~ reference | Species,
+    by = c("big", "Species"))
+expect_inherits(cmp, "comparisons")
+
+cmp <- avg_comparisons(mod,
+    variables = "Petal.Length",
+    hypothesis = ~ meandev | Species,
+    by = c("big", "Species"))
+expect_inherits(cmp, "comparisons")
+
+pre <- avg_predictions(mod,
+    hypothesis = ratio ~ sequential | big,
+    by = c("big", "Species"))
+expect_inherits(pre, "predictions")
+
 
 
 rm(list = ls())
