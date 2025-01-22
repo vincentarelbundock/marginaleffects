@@ -10,6 +10,10 @@ get_hypothesis <- function(
         stop(msg, call. = FALSE)
     }
 
+    vec <- isTRUE(checkmate::check_atomic_vector(hypothesis)) &&
+        isTRUE(checkmate::check_numeric(hypothesis))
+    mat <- isTRUE(checkmate::check_matrix(hypothesis))
+
     if (is.null(hypothesis)) {
         return(x)
     } else if (isTRUE(checkmate::check_formula(hypothesis))) {
@@ -18,30 +22,13 @@ get_hypothesis <- function(
     } else if (isTRUE(checkmate::check_function(hypothesis))) {
         out <- hypothesis_function(x, newdata = newdata, hypothesis = hypothesis, by = by)
         return(out)
-    }
-
-
-    lincom <- NULL
-
-    # lincom: numeric vector or matrix
-    if (isTRUE(checkmate::check_numeric(hypothesis))) {
-        if (isTRUE(checkmate::check_atomic_vector(hypothesis))) {
-            checkmate::assert_numeric(hypothesis, len = nrow(x))
-            lincom <- as.matrix(hypothesis)
-        } else if (isTRUE(checkmate::check_matrix(hypothesis))) {
-            lincom <- hypothesis
-        }
-    }
-
-    lincom <- sanitize_lincom(lincom, x)
-
-    # matrix hypothesis
-    if (isTRUE(checkmate::check_matrix(lincom))) {
-        out <- lincom_multiply(x, lincom)
+    } else if (vec || mat) {
+        out <- hypothesis_matrix(x, hypothesis = hypothesis)
         return(out)
+    }
 
-        # string hypothesis
-    } else if (is.character(hypothesis)) {
+    # string equation
+    if (is.character(hypothesis)) {
         out_list <- draws_list <- list()
         lab <- attr(hypothesis, "label")
         tmp <- expand_wildcard(hypothesis, nrow(x), lab)
@@ -92,40 +79,7 @@ get_hypothesis_row_labels <- function(x, by = NULL) {
 }
 
 
-sanitize_lincom <- function(lincom, x) {
-    if (isTRUE(checkmate::check_matrix(lincom))) {
-        checkmate::assert_matrix(lincom, nrows = nrow(x))
-        if (is.null(colnames(lincom))) {
-            colnames(lincom) <- rep("custom", ncol(lincom))
-        }
-    }
-    return(lincom)
-}
 
-
-
-lincom_multiply <- function(x, lincom) {
-    # bayesian
-    draws <- attr(x, "posterior_draws")
-    if (!is.null(draws)) {
-        draws <- t(as.matrix(lincom)) %*% draws
-        out <- data.table(
-            term = colnames(lincom),
-            tmp = apply(draws, 1, stats::median))
-        setnames(out, old = "tmp", new = "estimate")
-        attr(out, "posterior_draws") <- draws
-
-        # frequentist
-    } else {
-        out <- data.table(
-            term = colnames(lincom),
-            tmp = as.vector(x[["estimate"]] %*% lincom))
-        setnames(out, old = "tmp", new = "estimate")
-    }
-
-    out <- out[out$term != "1 - 1", , drop = FALSE]
-    return(out)
-}
 
 
 eval_string_hypothesis <- function(x, hypothesis, lab) {

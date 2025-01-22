@@ -229,6 +229,8 @@ Collate:
     'hypotheses_joint.R'
     'hypothesis.R'
     'hypothesis_formula.R'
+    'hypothesis_function.R'
+    'hypothesis_matrix.R'
     'imputation.R'
     'inferences.R'
     'matrix_apply.R'

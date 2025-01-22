@@ -54,7 +54,7 @@ expect_error(
         newdata = "mean",
         hypothesis = c(1, 1, 1),
         variables = "cyl"),
-    pattern = "but has length")
+    pattern = "3 rows")
 
 # errors
 expect_error(
