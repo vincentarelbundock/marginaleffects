@@ -149,7 +149,7 @@ hypothesis_apply <- function(x,
         estimates <- combined[, lapply(.SD, fun_comparison), by = byval]
     }
 
-    lab <- function(x) names(fun_comparison(x))
+    lab <- function(x) suppressWarnings(names(fun_comparison(x)))
     lab <- tryCatch(combined[, lapply(.SD, lab), by = byval], error = function(e) NULL)
     if (inherits(lab, "data.frame") && nrow(lab) == nrow(estimates)) {
         data.table::setnames(lab, old = "estimate", "hypothesis")
@@ -177,6 +177,7 @@ hypothesis_apply <- function(x,
     }
 
     attr(out, "posterior_draws") <- draws
+    attr(out, "hypothesis_function_by") <- hypothesis_by
 
     return(out)
 }
