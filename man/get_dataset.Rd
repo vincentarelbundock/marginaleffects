@@ -2,18 +2,29 @@
 % Please edit documentation in R/get_dataset.R
 \name{get_dataset}
 \alias{get_dataset}
-\title{Download and Read Dataset}
+\title{Download and Read Datasets from \code{marginaleffects} or Rdatasets}
 \usage{
-get_dataset(dataset = "thornton", package = "marginaleffects", docs = FALSE)
+get_dataset(
+  dataset = "thornton",
+  package = "marginaleffects",
+  docs = FALSE,
+  search = NULL
+)
 }
 \arguments{
-\item{dataset}{A string, either "military" or "thornton".}
+\item{dataset}{String. Name of the dataset to download.}
 
-\item{docs}{A logical, if TRUE open the documentation using \code{getOption("viewer")}}
+\item{package}{String. Package name that originally published the data.}
+
+\item{docs}{Logical. If TRUE open the documentation using \code{getOption("viewer")} or the Rstudio viewer.}
+
+\item{search}{Regular expression. Download the dataset index from Rdatasets; search the "Package", "Item", and "Title" columns; and return the matching rows.}
 }
 \value{
 A data frame containing the dataset.
 }
 \description{
-Downloads a dataset and reads it into a data frame.
+Downloads a dataset from the \code{marginaleffects} or the Rdatasets archive and return it as a data frame.
+
+\url{https://vincentarelbundock.github.io/Rdatasets/}
 }
