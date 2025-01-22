@@ -336,7 +336,8 @@ get_explicit <- function(x) {
     bycols,
     attr(attr(x, "newdata"), "explicit"),
     attr(x, "hypothesis_by"),
-    attr(x, "newdata_explicit")
+    attr(x, "newdata_explicit"),
+    attr(x, "hypothesis_function_by")
   )
 
   return(explicit)

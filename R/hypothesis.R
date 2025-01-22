@@ -15,6 +15,7 @@ get_hypothesis <- function(
     mat <- isTRUE(checkmate::check_matrix(hypothesis))
 
     if (is.null(hypothesis)) {
+        data.table::setDT(x)
         return(x)
     } else if (isTRUE(checkmate::check_formula(hypothesis))) {
         out <- hypothesis_formula(x, newdata = newdata, hypothesis = hypothesis, by = by)

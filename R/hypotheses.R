@@ -313,19 +313,21 @@ hypotheses <- function(
 
     tmp <- get_hypothesis(out, hypothesis = hypothesis)
     out <- tmp$estimate
+    hypothesis_function_by <- attr(tmp, "hypothesis_function_by")
 
-    if (!is.null(attr(tmp, "label"))) {
-      attr(out, "label") <- attr(tmp, "label")
-    } else if ("hypothesis" %in% colnames(tmp)) {
-      attr(out, "label") <- tmp$hypothesis
-    } else {
-      attr(out, "label") <- tmp$term
+    # labels
+    lab <- c("hypothesis", "term", hypothesis_function_by)
+    lab <- intersect(lab, colnames(tmp))
+    if (length(lab) > 0) {
+      lab <- tmp[, ..lab]
+      attr(out, "label") <- lab
     }
 
     if ("group" %in% colnames(tmp)) {
       attr(out, "grouplab") <- tmp[["group"]]
     }
 
+    attr(out, "hypothesis_function_by") <- hypothesis_function_by
     return(out)
   }
 
@@ -363,10 +365,9 @@ hypotheses <- function(
       hyplab <- attr(hypothesis, "label")
     }
     if (!is.null(hyplab)) {
-      out <- data.frame(
-        term = hyplab,
+      out <- cbind(hyplab, data.frame(
         estimate = b,
-        std.error = se)
+        std.error = se))
     } else {
       out <- data.frame(
         term = "custom",
@@ -374,11 +375,10 @@ hypotheses <- function(
         std.error = se)
     }
   } else {
-    if (!is.null(hyplab) && length(hyplab) == length(b)) {
-      out <- data.frame(
-        term = hyplab,
+    if (!is.null(hyplab) && nrow(hyplab) == length(b)) {
+      out <- cbind(hyplab, data.frame(
         estimate = b,
-        std.error = se)
+        std.error = se))
     } else {
       out <- data.frame(
         term = paste0("b", seq_along(b)),
@@ -414,7 +414,9 @@ hypotheses <- function(
 
   out <- sort_columns(out)
 
-  class(out) <- c("hypotheses", "deltamethod", class(out))
+  data.table::setDF(out)
+  class(out) <- c("hypotheses", class(out))
+
   attr(out, "posterior_draws") <- draws
   attr(out, "model") <- model
   attr(out, "model_type") <- class(model)[1]
@@ -423,6 +425,7 @@ hypotheses <- function(
   attr(out, "vcov") <- vcov
   attr(out, "vcov.type") <- vcov.type
   attr(out, "conf_level") <- conf_level
+  attr(out, "hypothesis_function_by") <- attr(b, "hypothesis_function_by")
 
   # must be after attributes for vcov
   out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level)

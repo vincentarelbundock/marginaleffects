@@ -41,6 +41,7 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
         insight::format_error(msg)
     }
 
+    data.table::setDT(out)
     attr(out, "hypothesis_function_by") <- at
     return(out)
 }

@@ -167,16 +167,16 @@ expect_equivalent(z$estimate, y)
 dat <- mtcars
 mod <- lm(mpg ~ hp + wt + factor(cyl), data = dat)
 hyp <- hypotheses(mod, hypothesis = "b* = b2")
-known <- c("b1 = b2", "b2 = b2", "b3 = b2", "b4 = b2", "b5 = b2")
-expect_true(all(hyp$term %in% known))
+known <- c("b1=b2", "b2=b2", "b3=b2", "b4=b2", "b5=b2")
+expect_true(all(hyp$hypothesis %in% known))
 
 # Custom labels
 hyp <- hypotheses(mod, hypothesis = c("equal" = "b1 = b2", "sums to zero" = "wt + hp = 0"))
-expect_equivalent(hyp$term, c("equal", "sums to zero"))
+expect_equivalent(hyp$hypothesis, c("equal", "sums to zero"))
 
 # Does not mess up *
-hyp <- hypotheses(mod, hypothesis = c("equal" = "b* = 0"))
-expect_equivalent(hyp$term, sprintf("b%s = 0", 1:5))
+hyp <- hypotheses(mod, hypothesis = c("equal" = "b*=0"))
+expect_equivalent(hyp$hypothesis, sprintf("b%s=0", 1:5))
 
 # hypotheses() applied to {marginaleffects} package objects
 # commented out because doesn't work in environments because of match.call()
@@ -211,12 +211,21 @@ h <- hypotheses(fm1,
   joint = c("SexFemale", "age"))
 
 
+# Issue #1344
+mod <- lm(mpg ~ cyl * am * hp, mtcars)
+helmert <<- function(x) {
+  w <- contr.helmert(length(x))
+  setNames(
+    as.vector(x %*% w),
+    nm = paste0("h-", seq_len(ncol(w)))
+  )
+}
+h <- avg_slopes(mod, variables = c("hp"), by = c("cyl", "am"),
+  newdata = "balanced")
+h <- hypotheses(h, hypothesis = ~ I(helmert(x)) | am)
+expect_true("am" %in% colnames(h))
+expect_inherits(h, "hypotheses")
 
 
-# # We allow this again by removing `recall()` from `hypotheses()`
-# # Issue #1102: hypotheses() should not be called twice on the same object
-# mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
-# mod <- hypotheses(mod)
-# expect_error(hypotheses(mod), pattern = "twice on the same object")
 
 rm(list = ls())

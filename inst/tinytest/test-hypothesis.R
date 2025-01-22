@@ -130,7 +130,7 @@ expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
 
 # wildcard
 mm1 <- suppressWarnings(predictions(mod, by = "cyl", hypothesis = "b* = b1"))
-expect_equal(mm1$term, paste0("b", 1:3, "=b1"))
+expect_equal(mm1$hypothesis, paste0("b", 1:3, "=b1"))
 expect_equal(mm1$estimate[1], 0)
 
 
