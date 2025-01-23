@@ -22,9 +22,19 @@ get_dataset(
 }
 \value{
 A data frame containing the dataset.
+library(marginaleffects)
 }
 \description{
 Downloads a dataset from the \code{marginaleffects} or the Rdatasets archives, and return it as a data frame. Opens the documentation as an HTML page. Search available datasets.
 
 \url{https://vincentarelbundock.github.io/Rdatasets/}
+}
+\examples{
+dat <- get_dataset("Titanic", "Stat2Data")
+head(dat)
+
+get_dataset(search = "(?i)titanic")
+
+# View documentation in the browser
+# get_dataset("Titanic", "Stat2Data", docs = TRUE)
 }
