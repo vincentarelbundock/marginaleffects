@@ -1,5 +1,4 @@
 bootstrap_boot <- function(model, INF_FUN, ...) {
-
     # attached by `inferences()`
     conf_type <- attr(model, "inferences_conf_type")
     checkmate::assert_choice(conf_type, choices = c("perc", "norm", "basic", "bca"))
@@ -39,23 +38,18 @@ bootstrap_boot <- function(model, INF_FUN, ...) {
     B <- do.call(boot::boot, args)
 
     # print.boot prints an ugly nested call
-    B$call <- match.call()
-
-    # HACK: boot::boot() output is non-standard. There must be a better way!
-    # NG: just compute them manually as the SD of the bootstrap distribution
-    pr <- utils::capture.output(print(B))
-    pr <- pr[(grep("^Bootstrap Statistics :", pr) + 1):length(pr)]
-    pr <- gsub("std. error", "std.error", pr)
-    pr <- paste(pr, collapse = "\n")
-    pr <- utils::read.table(text = pr, header = TRUE)
-    out$std.error <- pr$std.error
+    t <- matrix(B$t, nrow = nrow(B$t))
+    op <- cbind(
+        apply(t, 2L, mean, na.rm = TRUE),
+        sqrt(apply(t, 2L, function(t.st) var(t.st[!is.na(t.st)]))))
+    out$std.error <- op[, 2]
 
     # extract from weird boot.ci() list (inspired from `broom::tidy.broom` under MIT)
     ci_list <- lapply(seq_along(B$t0),
-                      boot::boot.ci,
-                      boot.out = B,
-                      conf = conf_level,
-                      type = conf_type)
+        boot::boot.ci,
+        boot.out = B,
+        conf = conf_level,
+        type = conf_type)
     pos <- pmatch(conf_type, names(ci_list[[1]]))
     if (conf_type == "norm") {
         cols <- 2:3
