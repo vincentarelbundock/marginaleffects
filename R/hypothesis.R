@@ -10,6 +10,9 @@ get_hypothesis <- function(
         stop(msg, call. = FALSE)
     }
 
+    # otherwise setDT strips out the marginaleffects-specific classes
+    x <- data.table::copy(x)
+
     vec <- isTRUE(checkmate::check_atomic_vector(hypothesis)) &&
         isTRUE(checkmate::check_numeric(hypothesis))
     mat <- isTRUE(checkmate::check_matrix(hypothesis))
