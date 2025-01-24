@@ -25,6 +25,16 @@ unpack_matrix_cols <- function(x) {
 }
 
 
+unpack_matrix_1col <- function(x) {
+    for (i in seq_along(x)) {
+        if (inherits(x[[i]], "matrix") && ncol(x[[i]]) == 1) {
+            x[[i]] <- drop(x[[i]])
+        }
+    }
+    return(x)
+}
+
+
 # The content of this file was adapted from the `gratia` package
 # https://github.com/gavinsimpson/gratia
 

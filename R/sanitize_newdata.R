@@ -148,11 +148,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
     modeldata <- tmp[["modeldata"]]
 
     # Issue #1327: matrix columns with single column breaks rbindlist(). See `scale()`
-    for (i in seq_along(newdata)) {
-        if (inherits(newdata[[i]], "matrix") && ncol(newdata[[i]]) == 1) {
-            newdata[[i]] <- drop(newdata[[i]])
-        }
-    }
+    newdata <- unpack_matrix_1col(newdata)
 
     # Issue #363
     # unpacking matrix columns works with {mgcv} but breaks {mclogit}

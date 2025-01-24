@@ -26,7 +26,7 @@ dmm <- hypotheses(mod, "hp = wt", vcov = "HC3")
 expect_inherits(dmm, "data.frame")
 
 # b1, b2, ... shortcuts can be used to identify rows in the output of FUN
-dmm <- hypotheses(mod, "b2 = b3")
+dmm <- hypotheses(mod, "b2 = b3") |> suppressWarnings() # first time calling issues a warning
 expect_inherits(dmm, "data.frame")
 
 # term names with special characters have to be enclosed in backticks
@@ -220,7 +220,8 @@ helmert <<- function(x) {
     nm = paste0("h-", seq_len(ncol(w)))
   )
 }
-h <- avg_slopes(mod, variables = c("hp"), by = c("cyl", "am"),
+h <- avg_slopes(mod,
+  variables = c("hp"), by = c("cyl", "am"),
   newdata = "balanced")
 h <- hypotheses(h, hypothesis = ~ I(helmert(x)) | am)
 expect_true("am" %in% colnames(h))

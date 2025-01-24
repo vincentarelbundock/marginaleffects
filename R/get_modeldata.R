@@ -12,8 +12,9 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         if ("fit" %in% names(model)) {
             tmp <- try(get_modeldata(model$fit), silent = TRUE)
             if (inherits(tmp, "data.frame")) {
-                data.table::setDT(tmp)
-                return(tmp)
+                out <- unpack_matrix_1col(tmp)
+                data.table::setDT(out)
+                return(out)
             }
         }
         return(NULL)
@@ -22,13 +23,13 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
     # otherwise, insight::get_data can sometimes return only the the outcome variable
     if (inherits(model, "bart")) {
         modeldata <- insight::get_data(model, additional_variables = TRUE)
+        modeldata <- unpack_matrix_1col(modeldata)
         data.table::setDT(modeldata)
         return(modeldata)
     }
 
     if (!is.null(modeldata)) {
         modeldata <- set_variable_class(modeldata, model = model)
-        data.table::setDT(modeldata)
         return(modeldata)
     }
 
@@ -53,7 +54,6 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         out <- hush(insight::get_data(
             model, additional_variables = additional_variables, verbose = FALSE)
         )
-        data.table::setDT(out)
         out <- set_variable_class(out, model = model)
         return(out)
     }
@@ -100,7 +100,8 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         out <- evalup(attr(model, "call")$data)
     }
 
-    out <- data.table::data.table(out)
+    out <- unpack_matrix_1col(out)
+    data.table::setDT(out)
     out <- set_variable_class(out, model = model)
     return(out)
 }
@@ -115,7 +116,7 @@ set_variable_class <- function(modeldata, model = NULL) {
     variables <- NULL
     if (is.null(model)) {
         variables <- tryCatch(
-            unlist(insight::find_variables(model, flatten = TRUE, verbose = FALSE), use.names = FALSE),
+            unlist(insight::find_variables(model, flatten = TRUE), use.names = FALSE),
             error = function(e) NULL)
     }
     if (is.null(variables)) variables <- colnames(modeldata)
