@@ -197,11 +197,6 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         newdata <- set_marginaleffects_attributes(newdata, column_attributes)
     }
 
-    # attributes: {modelbased}
-    exclude <- c("class", "row.names", "names", "data", "reference")
-    modelbased_attributes <- get_marginaleffects_attributes(newdata, exclude = exclude)
-    newdata <- set_marginaleffects_attributes(newdata, modelbased_attributes)
-
     return(newdata)
 }
 
