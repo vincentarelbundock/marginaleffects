@@ -10,7 +10,7 @@ dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.factor(dat$am)
 mod <- lm(mpg ~ cyl, data = dat)
 
-em <- emmeans(mod, ~ cyl)
+em <- emmeans(mod, ~cyl)
 em <- confint(pairs(em), adjust = "none") |>
     dplyr::arrange(contrast)
 
@@ -45,7 +45,6 @@ if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
 using("tinysnapshot")
 
 
-exit_file("i hate white space in snapshots")
 mod <- lm(mpg ~ hp, mtcars)
 expect_snapshot_print(avg_comparisons(mod), "df-z")
 expect_snapshot_print(avg_comparisons(mod, df = 30), "df-t")
