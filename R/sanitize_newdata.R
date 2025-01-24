@@ -86,11 +86,6 @@ build_newdata <- function(model, newdata, by, modeldata) {
         insight::format_error(msg)
     }
 
-    # otherwise we get a warning in setDT()
-    if (inherits(model, "mlogit") && isTRUE(inherits(modeldata[["idx"]], "idx"))) {
-        modeldata$idx <- NULL
-    }
-
     out <- list(
         "newdata" = newdata,
         "explicit" = newdata_explicit,
@@ -138,69 +133,31 @@ add_wts_column <- function(wts, newdata, model) {
 }
 
 
-set_newdata_attributes <- function(model, modeldata, newdata, explicit) {
-    attr(newdata, "explicit") <- explicit
+sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
+    checkmate::assert(
+        checkmate::check_data_frame(newdata, null.ok = TRUE),
+        checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "balanced")),
+        combine = "or")
 
-    # column classes
-    mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
-    cl <- Filter(function(x) is.character(modeldata[[x]]), colnames(modeldata))
-    cl <- lapply(modeldata[, ..cl], unique)
-    vc <- attributes(modeldata)$marginaleffects_variable_class
-    column_attributes <- list(
-        "matrix_columns" = mc,
-        "character_levels" = cl,
-        "variable_class" = vc)
-    newdata <- set_marginaleffects_attributes(newdata, column_attributes)
+    tmp <- build_newdata(
+        model = model,
+        newdata = newdata,
+        by = by,
+        modeldata = modeldata)
+    newdata <- tmp[["newdata"]]
+    modeldata <- tmp[["modeldata"]]
 
-    # {modelbased} sometimes attaches useful attributes
-    exclude <- c("class", "row.names", "names", "data", "reference")
-    modelbased_attributes <- get_marginaleffects_attributes(newdata, exclude = exclude)
-    newdata <- set_marginaleffects_attributes(newdata, modelbased_attributes)
-
-    # original data
-    attr(newdata, "newdata_modeldata") <- modeldata
-
-    if (is.null(attr(newdata, "marginaleffects_variable_class"))) {
-        newdata <- set_variable_class(newdata, model = model)
-    }
-
-    return(newdata)
-}
-
-
-clean_newdata <- function(model, newdata) {
-    # rbindlist breaks on matrix columns
-    # scale() creates 1-column matrices
+    # Issue #1327: matrix columns with single column breaks rbindlist(). See `scale()`
     for (i in seq_along(newdata)) {
         if (inherits(newdata[[i]], "matrix") && ncol(newdata[[i]]) == 1) {
             newdata[[i]] <- drop(newdata[[i]])
         }
     }
 
-    # (more) rbindlist breaks on matrix columns
-    idx <- sapply(newdata, function(x) class(x)[1] == "matrix")
-    if (any(idx)) {
-        # Issue #363
-        # unpacking matrix columns works with {mgcv} but breaks {mclogit}
-        if (inherits(model, "gam")) {
-            newdata <- unpack_matrix_cols(newdata)
-        } else {
-            newdata <- newdata[, !idx, drop = FALSE]
-        }
-    }
-
-    # we will need this to merge the original data back in, and it is better to
-    # do it in a centralized upfront way.
-    if (!"rowid" %in% colnames(newdata)) {
-        newdata$rowid <- seq_len(nrow(newdata))
-    }
-
-    # mlogit: each row is an individual-choice, but the index is not easily
-    # trackable, so we pre-sort it here, and the sort in `get_predict()`. We
-    # need to cross our fingers, but this probably works.
-    if (inherits(model, "mlogit") && isTRUE(inherits(newdata[["idx"]], "idx"))) {
-        idx <- list(newdata[["idx"]][, 1], newdata[["idx"]][, 2])
-        newdata <- newdata[order(newdata[["idx"]][, 1], newdata[["idx"]][, 2]), ]
+    # Issue #363
+    # unpacking matrix columns works with {mgcv} but breaks {mclogit}
+    if (inherits(model, "gam")) {
+        newdata <- unpack_matrix_cols(newdata)
     }
 
     # placeholder response
@@ -213,44 +170,43 @@ clean_newdata <- function(model, newdata) {
             newdata[[resp]] <- y[1]
         }
     }
-    return(newdata)
-}
 
+    # we will need this to merge the original data back in, and it is better to
+    # do it in a centralized upfront way.
+    if (!"rowid" %in% colnames(newdata)) {
+        newdata$rowid <- seq_len(nrow(newdata))
+    }
 
-sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
-    checkmate::assert(
-        checkmate::check_data_frame(newdata, null.ok = TRUE),
-        checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "balanced")),
-        combine = "or")
-    tmp <- build_newdata(
-        model = model,
-        newdata = newdata,
-        by = by,
-        modeldata = modeldata)
-    newdata <- tmp[["newdata"]]
-    modeldata <- tmp[["modeldata"]]
-
-    newdata <- clean_newdata(model, newdata)
-    modeldata <- clean_newdata(model, modeldata)
-    newdata_explicit <- attr(newdata, "explicit")
-
-    # required by some model-fitting functions
-    data.table::setDT(modeldata)
-
-    # required for the type of column indexing to follow
-    data.table::setDT(newdata)
-
+    # add weights column if available
     if (is.null(wts)) wts <- FALSE
     newdata <- add_wts_column(newdata = newdata, wts = wts, model = model)
-    newdata <- set_newdata_attributes(
-        model = model,
-        modeldata = modeldata,
-        newdata = newdata,
-        explicit = newdata_explicit)
 
-    out <- data.table::copy(newdata)
+    data.table::setDT(newdata)
 
-    return(out)
+    # attributes: misc
+    attr(newdata, "explicit") <- attr(tmp$newdata, "explicit")
+    attr(newdata, "newdata_modeldata") <- modeldata
+
+    # attributes: column classes
+    if (!is.null(modeldata)) {
+        mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
+        cl <- Filter(function(x) is.character(modeldata[[x]]), colnames(modeldata))
+        modeldata <- subset(modeldata, select = cl)
+        cl <- lapply(modeldata, unique)
+        vc <- attributes(modeldata)$marginaleffects_variable_class
+        column_attributes <- list(
+            "matrix_columns" = mc,
+            "character_levels" = cl,
+            "variable_class" = vc)
+        newdata <- set_marginaleffects_attributes(newdata, column_attributes)
+    }
+
+    # attributes: {modelbased}
+    exclude <- c("class", "row.names", "names", "data", "reference")
+    modelbased_attributes <- get_marginaleffects_attributes(newdata, exclude = exclude)
+    newdata <- set_marginaleffects_attributes(newdata, modelbased_attributes)
+
+    return(newdata)
 }
 
 
@@ -259,7 +215,7 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
     elasticities <- c("eyexavg", "eydxavg", "dyexavg")
     if (isTRUE(checkmate::check_choice(comparison, elasticities)) ||
         isTRUE(checkmate::check_function(comparison))) {
-        return(data.table(newdata))
+        return(newdata)
     }
 
     elasticities <- c("eyex", "eydx", "dyex")
@@ -300,7 +256,6 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
 
     cols <- colnames(out)
     out <- out[, .("marginaleffects_wts_internal" = .N), by = cols]
-    data.table::setDF(out)
 
     out[["rowid_dedup"]] <- seq_len(nrow(out))
     attr(out, "marginaleffects_variable_class") <- vclass

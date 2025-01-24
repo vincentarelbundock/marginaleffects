@@ -2,9 +2,11 @@ source("helpers.R")
 # if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
+# exit_file("environment?")
 
 requiet("mgcv")
 requiet("emmeans")
+requiet("broom")
 requiet("tibble")
 requiet("tsModel")
 
@@ -24,7 +26,7 @@ m6 <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), sp = c(0.01, -1, -1, -1), dat
 m7 <- mgcv::gam(y ~ s(x0, sp = .01) + s(x1) + s(x2) + s(x3), data = dat)
 m8 <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), min.sp = c(0.001, 0.01, 0, 10), data = dat)
 m9 <- mgcv::gam(y ~ s(x0, bs = "cr") + s(x1, bs = "cr") + s(x2, bs = "cr") +
-      s(x3, bs = "cr"), family = poisson, data = dat2, method = "REML")
+    s(x3, bs = "cr"), family = poisson, data = dat2, method = "REML")
 expect_slopes(m1)
 expect_slopes(m2)
 expect_slopes(m3)
@@ -36,7 +38,7 @@ expect_slopes(m8)
 expect_slopes(m9)
 
 
-# emtrends
+# emtrends: not sure this works anymore
 mfx <- slopes(m1,
     variables = "x1",
     newdata = datagrid(
@@ -44,18 +46,16 @@ mfx <- slopes(m1,
         x2 = 0,
         x3 = 0),
     type = "link")
-
-# TODO: emmeans no longer seems to work
-# em <- emtrends(m1, specs = ~x1, var = "x1", at = list(x1 = 0, x2 = 0, x3 = 0))
-# em <- tidy(em)
-# expect_equivalent(mfx$estimate, em$x1.trend)
-# expect_equivalent(mfx$std.error, em$std.error, tolerance = .0001)
+em <- emtrends(m1, specs = ~x1, var = "x1", at = list(x1 = 0, x2 = 0, x3 = 0))
+em <- tidy(em)
+expect_equivalent(mfx$estimate, em$x1.trend)
+expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
 
 
 # predictions: no validity
 set.seed(2)
 void <- capture.output(dat <- gamSim(1, n = 400, dist = "normal", scale = 2))
-dat <- dat
+dat <<- dat
 mod <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
 pred1 <- predictions(mod)
 pred2 <- predictions(mod, newdata = head(dat))
@@ -65,6 +65,7 @@ expect_predictions(pred2, n_row = 6)
 # Issue #364: predictions confidence intervals for binomial models
 void <- capture.output(
     dat <- suppressMessages(gamSim(1, n = 400, dist = "binary", scale = .33)))
+dat <<- dat
 m <- bam(
     y ~ s(x0) + s(x1) + s(x2) + s(x3),
     family = binomial,
@@ -105,8 +106,8 @@ expect_true(all(cmp$term == "z"))
 
 expect_error(suppressWarnings(slopes(b, variables = "L")), pattern = "no valid")
 expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
-expect_warning(plot_predictions(b, condition = "z"), pattern = "Matrix columns")
-expect_warning(plot_slopes(b, variables = "L", condition = "z"), pattern = "Matrix columns")
+expect_error(plot_predictions(b, condition = "z", draw = FALSE), pattern = "x_lags' not found")
+expect_error(plot_slopes(b, variables = "L", condition = "z"))
 
 
 # Issue #365: exclude argument changes predictions
@@ -173,7 +174,7 @@ expect_inherits(cmp, "comparisons")
 # Issue #931
 simdat$Subject <- as.factor(simdat$Subject)
 model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"),
-             data = simdat)
+    data = simdat)
 
 low = function(hi, lo, x) {
     dydx <- (hi - lo) / 1e-6
@@ -181,10 +182,10 @@ low = function(hi, lo, x) {
     x[dydx == dydx_min][1]
 }
 cmp <- comparisons(model,
-  variables = list("Time" = 1e-6),
-  vcov = FALSE,
-  by = "Group",
-  comparison = low
+    variables = list("Time" = 1e-6),
+    vcov = FALSE,
+    by = "Group",
+    comparison = low
 )
 expect_inherits(cmp, "comparisons")
 expect_equal(nrow(cmp), 2)

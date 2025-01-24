@@ -12,6 +12,7 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         if ("fit" %in% names(model)) {
             tmp <- try(get_modeldata(model$fit), silent = TRUE)
             if (inherits(tmp, "data.frame")) {
+                data.table::setDT(tmp)
                 return(tmp)
             }
         }
@@ -21,11 +22,13 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
     # otherwise, insight::get_data can sometimes return only the the outcome variable
     if (inherits(model, "bart")) {
         modeldata <- insight::get_data(model, additional_variables = TRUE)
+        data.table::setDT(modeldata)
         return(modeldata)
     }
 
     if (!is.null(modeldata)) {
         modeldata <- set_variable_class(modeldata, model = model)
+        data.table::setDT(modeldata)
         return(modeldata)
     }
 
@@ -50,6 +53,7 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         out <- hush(insight::get_data(
             model, additional_variables = additional_variables, verbose = FALSE)
         )
+        data.table::setDT(out)
         out <- set_variable_class(out, model = model)
         return(out)
     }
@@ -96,7 +100,7 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         out <- evalup(attr(model, "call")$data)
     }
 
-    out <- as.data.frame(out)
+    out <- data.table::data.table(out)
     out <- set_variable_class(out, model = model)
     return(out)
 }

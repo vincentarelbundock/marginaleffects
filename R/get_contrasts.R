@@ -178,9 +178,11 @@ get_contrasts <- function(model,
 
         if (length(tmp) == 0) {
             if (all(colnames(by) %in% c("by", colnames(newdata)))) {
-                nd <- c("rowid", setdiff(colnames(by), "by"))
+                nd <- c("rowid", "rowid_dedup", setdiff(colnames(by), "by"))
+                nd <- intersect(nd, colnames(newdata))
                 nd <- newdata[, ..nd, drop = FALSE]
-                out <- merge(out, nd, by = "rowid", sort = FALSE)
+                bycol <- intersect(c("rowid", "rowid_dedup"), colnames(nd))
+                out <- merge(out, nd, by = bycol, sort = FALSE)
                 tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
             } else {
                 insight::format_error("The column in `by` must be present in `newdata`.")

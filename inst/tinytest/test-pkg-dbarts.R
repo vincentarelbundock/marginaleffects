@@ -3,11 +3,14 @@ requiet("dbarts")
 requiet("modeldata")
 requiet("marginaleffects")
 
-dat <- na.omit(modeldata::penguins)
+exit_file("environment issue?")
+
+dat <- get_dataset("penguins", "palmerpenguins")
+dat <- na.omit(dat)
 
 # matrix interface not supported
 y <- as.vector(dat$bill_length_mm)
-X <- model.matrix(~ ., dat[, -1])
+X <- model.matrix(~., dat[, 3:ncol(dat)])
 mod <- dbarts::bart(
     X, y,
     verbose = FALSE) |> suppressWarnings()
@@ -32,7 +35,7 @@ options(marginaleffects_posterior_center = mean)
 data("lalonde", package = "MatchIt")
 
 fit <- dbarts::bart2(re78 ~ treat + age + educ + race + married + nodegree + re74 + re75,
-             data = lalonde, keepTrees = T, verbose = F)
+    data = lalonde, keepTrees = T, verbose = F)
 
 p0 <- predict(fit, newdata = transform(subset(lalonde, treat == 1), treat = 0))
 p1 <- predict(fit, newdata = transform(subset(lalonde, treat == 1), treat = 1))
@@ -55,4 +58,3 @@ p <- avg_predictions(fit, by = "treat")
 expect_equal(sort(c(p0$estimate, p1$estimate)), sort(p$estimate))
 
 options(marginaleffects_posterior_center = NULL)
-

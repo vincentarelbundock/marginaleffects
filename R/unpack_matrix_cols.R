@@ -1,4 +1,6 @@
 unpack_matrix_cols <- function(x) {
+    data.table::setDF(x)
+
     # what data types are we working with
     dcs <- sapply(x, function(x) class(x)[1])
 
@@ -16,6 +18,8 @@ unpack_matrix_cols <- function(x) {
     } else {
         return(x)
     }
+
+    data.table::setDT(out)
 
     out
 }

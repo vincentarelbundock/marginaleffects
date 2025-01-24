@@ -4,6 +4,7 @@ requiet("mlr3verse")
 requiet("fmeffects")
 requiet("tidymodels")
 data("bikes", package = "fmeffects")
+bikes <<- bikes
 
 # fit model
 task <- as_task_regr(x = bikes, id = "bikes", target = "count")
