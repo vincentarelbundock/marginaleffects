@@ -56,18 +56,6 @@ jobs:
       - name: svglite from source
         run: Rscript -e "bspm::disable();install.packages('svglite', from = 'source');bspm::enable()"
 
-      - name: TMB
-        run: ./run.sh install_source TMB
-
-      - name: glmmTMB source
-        run: ./run.sh install_source glmmTMB
-
-      - name: tinysnapshot dev
-        run: ./run.sh install_github vincentarelbundock/tinysnapshot
-
-      - name: Matrix source
-        run: ./run.sh install_source Matrix
-
       - name: Dependencies
         run: ./run.sh install_all
 
