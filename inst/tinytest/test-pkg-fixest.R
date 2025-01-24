@@ -25,7 +25,7 @@ mod2 <- suppressMessages(feglm(am ~ mpg | gear, family = binomial(link = "logit"
 mod3 <- suppressMessages(feglm(am ~ mpg + mpg^2 | gear, family = binomial(link = "logit"), data = mtcars, warn = FALSE))
 mod4 <- suppressMessages(feglm(am ~ mpg | gear, family = binomial(link = "logit"), data = mtcars, warn = FALSE))
 
-#skip_if_not_installed("fixest", minimum_version = "0.10.2")
+# skip_if_not_installed("fixest", minimum_version = "0.10.2")
 expect_inherits(insight::get_data(mod1), "data.frame")
 expect_inherits(insight::get_data(mod2), "data.frame")
 expect_inherits(insight::get_data(mod3), "data.frame")
@@ -66,9 +66,10 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
 # fixest::feols: predictions
 data(trade, package = "fixest")
-model <- feols(Euros ~ dist_km | Destination + Origin, data = trade)
+dat <- trade
+model <- feols(Euros ~ dist_km | Destination + Origin, data = dat)
 pred1 <- predictions(model)
-pred2 <- predictions(model, newdata = head(trade))
+pred2 <- predictions(model, newdata = head(dat))
 expect_predictions(pred1)
 expect_predictions(pred2, n_row = 6)
 
@@ -138,8 +139,8 @@ expect_predictions(pred5, se = FALSE)
 
 # bug stay dead: insight::get_data doesn't get all columns
 reg <- feols(
-Sepal.Width ~ Petal.Length | Species | Sepal.Length ~ Petal.Width, 
-data = iris)
+    Sepal.Width ~ Petal.Length | Species | Sepal.Length ~ Petal.Width,
+    data = iris)
 mfx1 <- slopes(reg, newdata = iris)
 mfx2 <- slopes(reg)
 expect_inherits(mfx1, "marginaleffects")
@@ -163,11 +164,11 @@ expect_inherits(mfx3, "marginaleffects")
 dat <- data.table(mtcars)
 m <- feols(mpg ~ cyl * disp, dat)
 m1 <- slopes(m)
-m2 <- slopes(m, newdata = datagrid(disp = 0))  
+m2 <- slopes(m, newdata = datagrid(disp = 0))
 expect_inherits(m1, "marginaleffects")
 expect_inherits(m2, "marginaleffects")
 m1 <- comparisons(m)
-m2 <- comparisons(m, newdata = datagrid(disp = 0))  
+m2 <- comparisons(m, newdata = datagrid(disp = 0))
 expect_inherits(m1, "comparisons")
 expect_inherits(m2, "comparisons")
 
@@ -258,11 +259,11 @@ expect_false(anyNA(p$std.error))
 
 # Issue #705
 data(trade, package = "fixest")
-mod1 <- fepois(data = trade, Euros ~ 1 | Origin, offset = ~ log(dist_km))
-mod2 <- fepois(data = trade, Euros ~ 1 | Origin)
-
-mfx1 <- avg_slopes(mod1)
-mfx2 <- avg_slopes(mod2)
+dat <- trade
+mod1 <- fepois(data = dat, Euros ~ 1 | Origin, offset = ~ log(dist_km))
+mod2 <- fepois(data = dat, Euros ~ 1 | Origin)
+mfx1 <- avg_slopes(mod1, vcov = FALSE)
+mfx2 <- avg_slopes(mod2, vcov = FALSE)
 expect_inherits(mfx1, "slopes")
 expect_inherits(mfx2, "slopes")
 
@@ -311,6 +312,3 @@ expect_inherits(res, "comparisons") # should be slopes but can't figure out infe
 
 
 rm(list = ls())
-
-
-

@@ -49,6 +49,11 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         additional_variables <- c(additional_variables, fwts)
     }
 
+    # always need weights in this model class
+    if (any(c("svylm", "svyglm") %in% class(model))) {
+        wts <- TRUE
+    }
+
     # after by
     if (isTRUE(checkmate::check_flag(additional_variables))) {
         out <- hush(insight::get_data(

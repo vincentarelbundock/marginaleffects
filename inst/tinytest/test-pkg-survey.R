@@ -17,7 +17,7 @@ svyd <- survey::svydesign(
     data = fpc,
     nest = TRUE)
 mod <- survey::svyglm(x ~ nh, design = svyd)
-res <- slopes(mod)
+res <- slopes(mod, wts = "(weights)")
 mar <- suppressMessages(data.frame(margins(mod, unit_ses = TRUE)))
 expect_equivalent(res$estimate, as.numeric(mar$dydx_nh))
 expect_equivalent(res$std.error, as.numeric(mar$SE_dydx_nh), tolerance = 0.001)
@@ -39,15 +39,15 @@ expect_inherits(p, "data.frame")
 # Issue #1161
 dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/AER/SmokeBan.csv"
 dat <- read.csv(dat, na.strings = c("*", ""))
-dat$weights <- runif(n=nrow(dat), min=1, max=100)
+dat$weights <- runif(n = nrow(dat), min = 1, max = 100)
 dat$smoker <- factor(dat$smoker)
-design1=svydesign(ids=~1, weights=~weights, data=dat)
-m <- suppressWarnings(svyglm(smoker ~ ban*education*gender+age, design=design1, family=binomial(), data = dat))
+design1 = svydesign(ids = ~1, weights = ~weights, data = dat)
+m <- suppressWarnings(svyglm(smoker ~ ban * education * gender + age, design = design1, family = binomial(), data = dat))
 cmp <- avg_comparisons(m,
-	variables = "education",
-	by = c("ban","gender"), 
-	wts = "weights",
-	hypothesis = ~reference) 
+    variables = "education",
+    by = c("ban", "gender"),
+    wts = "weights",
+    hypothesis = ~reference)
 expect_false(anyNA(cmp$estimate))
 
 
@@ -65,5 +65,3 @@ expect_false(anyNA(cmp$estimate))
 
 
 rm(list = ls())
-
-

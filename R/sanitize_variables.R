@@ -31,6 +31,7 @@ sanitize_variables <- function(variables,
       predictors <- list(conditional = predictors)
     } else {
       predictors <- insight::find_variables(model, verbose = FALSE)
+      predictors <- predictors[!names(predictors) %in% "response"]
     }
 
     # unsupported models like pytorch
