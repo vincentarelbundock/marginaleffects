@@ -1,6 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 requiet("survey")
+requiet("rstan")
 
 # mtcars logit
 tmp <- get_dataset("mtcars", "datasets")
@@ -43,7 +44,7 @@ set.seed(100)
 k <- get_dataset("lalonde", "MatchIt")
 k$w <- rchisq(614, 2)
 fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
-          data = k, weights = w)
+    data = k, weights = w)
 cmp1 <- comparisons(fit, variables = "treat", wts = "w")
 cmp2 <- comparisons(fit, variables = "treat", wts = "w", comparison = "differenceavg")
 expect_equivalent(cmp2$estimate, weighted.mean(cmp1$estimate, k$w))
@@ -86,19 +87,19 @@ expect_equivalent(mfx$std.error, stata[2], tolerance = 0.002)
 # Issue #737
 requiet("tidyverse")
 md <- tibble::tribble(
-  ~g,   ~device,    ~y,      ~N,                 ~p,
-  "Control", "desktop", 12403, 103341L,  0.120020127538925,
-  "Control",  "mobile",  1015,  16192L, 0.0626852766798419,
-  "Control",  "tablet",    38,    401L, 0.0947630922693267,
-  "X", "desktop", 12474, 103063L,  0.121032766366203,
-  "X",  "mobile",  1030,  16493L, 0.0624507366761656,
-  "X",  "tablet",    47,    438L,  0.107305936073059,
-  "Z", "desktop", 12968, 102867L,  0.126065696481865,
-  "Z",  "mobile",   973,  16145L, 0.0602663363270362,
-  "Z",  "tablet",    34,    438L, 0.0776255707762557,
-  "W", "desktop", 12407, 103381L,  0.120012381385361,
-  "W",  "mobile",  1007,  16589L,  0.060702875399361,
-  "W",  "tablet",    30,    435L, 0.0689655172413793
+    ~g, ~device, ~y, ~N, ~p,
+    "Control", "desktop", 12403, 103341L, 0.120020127538925,
+    "Control", "mobile", 1015, 16192L, 0.0626852766798419,
+    "Control", "tablet", 38, 401L, 0.0947630922693267,
+    "X", "desktop", 12474, 103063L, 0.121032766366203,
+    "X", "mobile", 1030, 16493L, 0.0624507366761656,
+    "X", "tablet", 47, 438L, 0.107305936073059,
+    "Z", "desktop", 12968, 102867L, 0.126065696481865,
+    "Z", "mobile", 973, 16145L, 0.0602663363270362,
+    "Z", "tablet", 34, 438L, 0.0776255707762557,
+    "W", "desktop", 12407, 103381L, 0.120012381385361,
+    "W", "mobile", 1007, 16589L, 0.060702875399361,
+    "W", "tablet", 30, 435L, 0.0689655172413793
 )
 tmp <<- as.data.frame(md)
 tmp <- as.data.frame(md)
@@ -109,7 +110,7 @@ cmp1 <- avg_comparisons(fit,
     newdata = tmp,
     comparison = "lnratioavg",
     transform = exp)
-cmp2 <- predictions(fit, variables = list(g = c("Control", "Z"))) |> 
+cmp2 <- predictions(fit, variables = list(g = c("Control", "Z"))) |>
     dplyr::group_by(g) |>
     dplyr::summarise(estimate = weighted.mean(estimate, N)) |>
     as.data.frame()
@@ -156,37 +157,42 @@ expect_equivalent(cmp1, cmp2)
 
 # Issue #865
 d = data.frame(
-  outcome = c(0,0,1,0,0,1,1,1,0,0,0,1,0,1,0,
-              0,0,0,0,1,0,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,
-              0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0,1,0,1,
-              1,1,0,0,0,0,0,0,0,1,0,1,0,1,1,1,1,0,1,1,1,
-              0,0,0,0,1,1,0,0,1,0,1,0,1,0,1,0,1,0,0,1,1,0),
-  foo = c(1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,
-          1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,
-          1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,
-          1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,
-          1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1),
-  bar = c(1,1,1,0,0,0,1,1,0,0,1,0,1,0,1,
-          1,1,1,0,1,1,1,1,0,1,0,0,1,0,0,1,1,1,1,0,0,
-          1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,0,0,0,0,0,1,
-          1,0,0,0,0,1,0,1,1,0,0,1,1,1,1,1,1,1,1,0,1,
-          0,1,1,0,1,0,1,1,1,0,1,0,1,1,0,0,1,1,0,1,1,1)
+    outcome = c(
+        0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0,
+        0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+        0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1,
+        1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1,
+        0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0),
+    foo = c(
+        1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,
+        1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
+        1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    bar = c(
+        1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1,
+        1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0,
+        1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1,
+        1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
+        0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1)
 )
 mod = glm(
-  outcome ~ foo + bar,
-  family = "binomial",
-  data = d
+    outcome ~ foo + bar,
+    family = "binomial",
+    data = d
 )
-cmp1 <- avg_comparisons(mod, variables = list(foo = 0:1),
-                type = "response", comparison = "difference")
-cmp2 <- comparisons(mod, variables = list(foo = 0:1),
-            type = "response", comparison = "differenceavg")
+cmp1 <- avg_comparisons(mod,
+    variables = list(foo = 0:1),
+    type = "response", comparison = "difference")
+cmp2 <- comparisons(mod,
+    variables = list(foo = 0:1),
+    type = "response", comparison = "differenceavg")
 expect_equivalent(cmp1$estimate, cmp2$estimate)
 
 
 # Issue #870
 Guerry <- get_dataset("Guerry", "HistData")
-Guerry <- na.omit(Guerry)
+Guerry <- Guerry[which(Guerry$Region != ""), ]
 mod <- lm(Literacy ~ Pop1831 * Desertion, data = Guerry)
 p1 <- predictions(mod, by = "Region", wts = "Donations")
 p2 <- predictions(mod, by = "Region")
@@ -204,11 +210,11 @@ expect_true(all(cmp1$estimate != cmp2$estimate))
 
 # . logit am mpg [pw=weights]
 #
-# Iteration 0:   log pseudolikelihood = -365.96656  
-# Iteration 1:   log pseudolikelihood = -255.02961  
-# Iteration 2:   log pseudolikelihood = -253.55843  
-# Iteration 3:   log pseudolikelihood = -253.55251  
-# Iteration 4:   log pseudolikelihood = -253.55251  
+# Iteration 0:   log pseudolikelihood = -365.96656
+# Iteration 1:   log pseudolikelihood = -255.02961
+# Iteration 2:   log pseudolikelihood = -253.55843
+# Iteration 3:   log pseudolikelihood = -253.55251
+# Iteration 4:   log pseudolikelihood = -253.55251
 #
 # Logistic regression                                     Number of obs =     32
 #                                                         Wald chi2(1)  =   8.75
