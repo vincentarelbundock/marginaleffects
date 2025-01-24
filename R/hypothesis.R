@@ -36,30 +36,3 @@ get_hypothesis <- function(
 
     stop("`hypothesis` is broken. Please report this bug with a reproducible example: https://github.com/vincentarelbundock/marginaleffects/issues.", call. = FALSE)
 }
-
-
-get_hypothesis_row_labels <- function(x, by = NULL) {
-    lab <- grep("^term$|^by$|^group$|^value$|^contrast$|^contrast_", colnames(x), value = TRUE)
-    lab <- Filter(function(z) length(unique(x[[z]])) > 1, lab)
-    if (isTRUE(checkmate::check_character(by))) {
-        lab <- unique(c(lab, by))
-    }
-    if (length(lab) == 0) {
-        lab <- NULL
-    } else {
-        lab_df <- data.frame(x)[, lab, drop = FALSE]
-        idx <- vapply(lab_df, FUN = function(x) length(unique(x)) > 1, FUN.VALUE = logical(1))
-        if (sum(idx) > 0) {
-            lab <- apply(lab_df[, idx, drop = FALSE], 1, paste, collapse = ", ")
-        } else {
-            lab <- apply(lab_df, 1, paste, collapse = ", ")
-        }
-    }
-
-    # wrap in parentheses to avoid a-b-c-d != (a-b)-(c-d)
-    if (any(grepl("-", lab))) {
-        lab <- sprintf("(%s)", lab)
-    }
-
-    return(lab)
-}

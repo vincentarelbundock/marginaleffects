@@ -2,37 +2,42 @@ hypothesis_formula_list <- list(
     reference = list(
         ratio = list(
             comparison = function(x) (x / x[1])[2:length(x)],
-            label = function(x) sprintf("%s / %s", x, x[1])[2:length(x)]
+            label = function(x) sprintf("(%s) / (%s)", x, x[1])[2:length(x)]
         ),
         difference = list(
             comparison = function(x) (x - x[1])[2:length(x)],
-            label = function(x) sprintf("%s - %s", x, x[1])[2:length(x)]
+            label = function(x) sprintf("(%s) - (%s)", x, x[1])[2:length(x)]
         )
     ),
     sequential = list(
         ratio = list(
             comparison = function(x) (x / data.table::shift(x))[2:length(x)],
-            label = function(x) sprintf("%s / %s", x, data.table::shift(x))[2:length(x)]
+            label = function(x) sprintf("(%s) / (%s)", x, data.table::shift(x))[2:length(x)]
         ),
         difference = list(
             comparison = function(x) (x - data.table::shift(x))[2:length(x)],
-            label = function(x) sprintf("%s - %s", x, data.table::shift(x))[2:length(x)]
+            label = function(x) sprintf("(%s) - (%s)", x, data.table::shift(x))[2:length(x)]
         )
     ),
     pairwise = list(
         ratio = list(
             comparison = function(x) {
                 out <- outer(x, x, "/")
-                if (ncol(out) > 25 && isFALSE(getOption("marginaleffects_safe", default = TRUE))) {
+                diag(out) <- NA
+                out[upper.tri(out)] <- NA # Set lower triangle to NA
+                out <- as.vector(out)
+                out <- out[!is.na(out)] # Keep only non-NA values
+                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
+                if (length(out) > 25 && isTRUE(safe_mode)) {
                     msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
                     stop(msg, call. = FALSE)
                 }
-                diag(out) <- NA
-                out <- as.vector(out)
-                out[!is.na(out)]
+                out
             },
             label = function(x) {
+                x <- sprintf("(%s)", x)
                 out <- outer(x, x, paste, sep = " / ")
+                out[upper.tri(out)] <- NA # Set lower triangle to NA
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
@@ -40,16 +45,21 @@ hypothesis_formula_list <- list(
         difference = list(
             comparison = function(x) {
                 out <- outer(x, x, "-")
-                if (ncol(out) > 25 && isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
+                diag(out) <- NA
+                out[upper.tri(out)] <- NA # Set lower triangle to NA
+                out <- as.vector(out)
+                out <- out[!is.na(out)] # Keep only non-NA values
+                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
+                if (length(out) > 25 && isTRUE(safe_mode)) {
                     msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
                     stop(msg, call. = FALSE)
                 }
-                diag(out) <- NA
-                out <- as.vector(out)
-                out[!is.na(out)]
+                out
             },
             label = function(x) {
+                x <- sprintf("(%s)", x)
                 out <- outer(x, x, paste, sep = " - ")
+                out[upper.tri(out)] <- NA # Set lower triangle to NA
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
@@ -68,11 +78,11 @@ hypothesis_formula_list <- list(
     meandev = list(
         ratio = list(
             comparison = function(x) x / mean(x),
-            label = function(x) sprintf("%s / %s", x, "Mean")
+            label = function(x) sprintf("(%s) / %s", x, "Mean")
         ),
         difference = list(
             comparison = function(x) x - mean(x),
-            label = function(x) sprintf("%s - %s", x, "Mean")
+            label = function(x) sprintf("(%s) - %s", x, "Mean")
         )
     ),
     meanotherdev = list(
@@ -82,7 +92,7 @@ hypothesis_formula_list <- list(
                 m_other <- (s - x) / (length(x) - 1)
                 x / m_other
             },
-            label = function(x) sprintf("%s / %s", x, "Mean (other)")
+            label = function(x) sprintf("(%s) / %s", x, "Mean (other)")
         ),
         difference = list(
             comparison = function(x) {
@@ -90,7 +100,7 @@ hypothesis_formula_list <- list(
                 m_other <- (s - x) / (length(x) - 1)
                 x - m_other
             },
-            label = function(x) sprintf("%s - %s", x, "Mean (other)")
+            label = function(x) sprintf("(%s) - %s", x, "Mean (other)")
         )
     ),
     poly = list(
@@ -139,7 +149,7 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
         }
     }
 
-    labels <- get_hypothesis_row_labels(x, by = by)
+    labels <- get_labels(x, by = by)
 
     form <- sanitize_hypothesis_formula(hypothesis)
 
