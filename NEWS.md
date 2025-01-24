@@ -11,14 +11,14 @@ Breaking changes in preparation for 1.0.0 release:
 
 New:
 
-* The `hypothesis` argument is more flexible:
+* The `hypothesis` argument is more flexible. Thanks to @mattansb for requests, testing, and documentation.
   - `hypothesis = ratio ~ meandev | groupid`
   - `hypothesis = ~ poly | groupid`
   - `hypothesis = ~ helmert | groupid`
   - `hypothesis = ~ trt_vs_ctrl | groupid`
   - `hypothesis = ~ I(foo(x)) | groupid`
   - `hypothesis = ~ I(\(x) c(a = x[1], b = mean(x[2:length(x))))`
-* New function `get_dataset()` to download example data frames from the marginaleffects.com website.
+* New function `get_dataset()` to download example data frames from the marginaleffects.com website. Thanks to @bshor for the feature request.
 * New `multcomp` argument for the `hypotheses()` function.
 * `hypotheses()` inherits the `conf_level` from `marginaleffects` objects when available. Otherwise, the default remains 0.95.
 * More informative warning for `lme4` and `glmmTMB` models with `re.form=NULL`
@@ -28,6 +28,7 @@ New:
 * Better parameter name labels in `get_draws()`. Thanks to @andymilne for feature request #1318.
 * `rvar` column from `get_draws()` is now printed by default.
 * Matrix columns with 1 column are supported. Fixes errors when a variable was transformed by `scale()`, for example. Thanks to @barryrowlingson for the report.
+* Much faster inference with `inferences(method="boot")`. Thanks to @nremenyi for issue #1352.
 
 Bugs:
 
