@@ -228,5 +228,19 @@ expect_true("am" %in% colnames(h))
 expect_inherits(h, "hypotheses")
 
 
+# Sequential calls
+mod <- lm(mpg ~ factor(cyl), mtcars)
+p1 <- predictions(mod, by = "cyl", hypothesis = c("(b3 - b2) - (b2 - b1) = 0"))
+p2 <- predictions(mod, by = "cyl", hypothesis = c("b2 - b1 = 0", "b3 - b2 = 0"))
+p2 <- hypotheses(p2, "b2 - b1 = 0")
+p3 <- predictions(mod, by = "cyl")
+p3 <- hypotheses(p3, hypothesis = c("b2 - b1 = 0", "b3 - b2 = 0"))
+p3 <- hypotheses(p3, "b2 - b1 = 0")
+expect_equivalent(p1$estimate, p2$estimate)
+expect_equivalent(p1$estimate, p3$estimate)
+expect_equivalent(p1$std.error, p2$std.error)
+expect_equivalent(p1$std.error, p3$std.error)
+
+
 
 rm(list = ls())
