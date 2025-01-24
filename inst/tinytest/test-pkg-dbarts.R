@@ -3,8 +3,6 @@ requiet("dbarts")
 requiet("modeldata")
 requiet("marginaleffects")
 
-exit_file("environment issue?")
-
 dat <- get_dataset("penguins", "palmerpenguins")
 dat <- na.omit(dat)
 
@@ -32,29 +30,29 @@ expect_inherits(p, "comparisons")
 
 # Issue 940: Indexing hell
 options(marginaleffects_posterior_center = mean)
-data("lalonde", package = "MatchIt")
+dat <- get_dataset("lalonde", "MatchIt")
 
 fit <- dbarts::bart2(re78 ~ treat + age + educ + race + married + nodegree + re74 + re75,
-    data = lalonde, keepTrees = T, verbose = F)
+    data = dat, keepTrees = T, verbose = F)
 
-p0 <- predict(fit, newdata = transform(subset(lalonde, treat == 1), treat = 0))
-p1 <- predict(fit, newdata = transform(subset(lalonde, treat == 1), treat = 1))
-p <- avg_comparisons(fit, variables = "treat", newdata = subset(lalonde, treat == 1))
+p0 <- predict(fit, newdata = transform(subset(dat, treat == 1), treat = 0))
+p1 <- predict(fit, newdata = transform(subset(dat, treat == 1), treat = 1))
+p <- avg_comparisons(fit, variables = "treat", newdata = subset(dat, treat == 1))
 expect_equal(p$estimate, mean(p1 - p0))
 
-p0 <- predict(fit, newdata = transform(subset(lalonde, treat == 0), treat = 0))
-p1 <- predict(fit, newdata = transform(subset(lalonde, treat == 0), treat = 1))
-p <- avg_comparisons(fit, variables = "treat", newdata = subset(lalonde, treat == 0))
+p0 <- predict(fit, newdata = transform(subset(dat, treat == 0), treat = 0))
+p1 <- predict(fit, newdata = transform(subset(dat, treat == 0), treat = 1))
+p <- avg_comparisons(fit, variables = "treat", newdata = subset(dat, treat == 0))
 expect_equal(p$estimate, mean(p1 - p0))
 
-p0 <- avg_comparisons(fit, variables = "treat", newdata = subset(lalonde, treat == 0))
-p1 <- avg_comparisons(fit, variables = "treat", newdata = subset(lalonde, treat == 1))
-p <- avg_comparisons(fit, variables = "treat", by = "treat")
+p0 <- avg_comparisons(fit, variables = "treat", newdata = subset(dat, treat == 0))
+p1 <- avg_comparisons(fit, variables = "treat", newdata = subset(dat, treat == 1))
+p <- avg_comparisons(fit, variables = "treat", by = "treat", newdata = dat)
 expect_equal(sort(c(p0$estimate, p1$estimate)), sort(p$estimate))
 
-p0 <- avg_predictions(fit, newdata = subset(lalonde, treat == 0))
-p1 <- avg_predictions(fit, newdata = subset(lalonde, treat == 1))
-p <- avg_predictions(fit, by = "treat")
+p0 <- avg_predictions(fit, newdata = subset(dat, treat == 0))
+p1 <- avg_predictions(fit, newdata = subset(dat, treat == 1))
+p <- avg_predictions(fit, by = "treat", newdata = dat)
 expect_equal(sort(c(p0$estimate, p1$estimate)), sort(p$estimate))
 
 options(marginaleffects_posterior_center = NULL)
