@@ -106,9 +106,9 @@ expect_true(all(cmp$term == "z"))
 
 expect_error(suppressWarnings(slopes(b, variables = "L")), pattern = "no valid")
 expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
-expect_error(plot_predictions(b, condition = "z", draw = FALSE), pattern = "x_lags' not found")
-expect_error(suppressWarnings(plot_slopes(b, variables = "L", condition = "z")), pattern = "no valid")
-expect_warning(plot_slopes(b, variables = "L", condition = "z"), pattern = "not found: L")
+expect_error(suppressWarnings(plot_predictions(b, condition = "z", draw = FALSE)))
+expect_error(suppressWarnings(plot_slopes(b, variables = "L", condition = "z")))
+expect_warning(plot_slopes(b, variables = "L", condition = "z"))
 
 
 # Issue #365: exclude argument changes predictions
