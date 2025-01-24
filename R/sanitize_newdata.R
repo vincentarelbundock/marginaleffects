@@ -91,12 +91,6 @@ build_newdata <- function(model, newdata, by, modeldata) {
         modeldata$idx <- NULL
     }
 
-    # required by some model-fitting functions
-    data.table::setDT(modeldata)
-
-    # required for the type of column indexing to follow
-    data.table::setDF(newdata)
-
     out <- list(
         "newdata" = newdata,
         "explicit" = newdata_explicit,
@@ -176,6 +170,14 @@ set_newdata_attributes <- function(model, modeldata, newdata, explicit) {
 
 clean_newdata <- function(model, newdata) {
     # rbindlist breaks on matrix columns
+    # scale() creates 1-column matrices
+    for (i in seq_along(newdata)) {
+        if (inherits(newdata[[i]], "matrix") && ncol(newdata[[i]]) == 1) {
+            newdata[[i]] <- drop(newdata[[i]])
+        }
+    }
+
+    # (more) rbindlist breaks on matrix columns
     idx <- sapply(newdata, function(x) class(x)[1] == "matrix")
     if (any(idx)) {
         # Issue #363
@@ -220,11 +222,24 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         checkmate::check_data_frame(newdata, null.ok = TRUE),
         checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "balanced")),
         combine = "or")
-    tmp <- build_newdata(model = model, newdata = newdata, by = by, modeldata = modeldata)
+    tmp <- build_newdata(
+        model = model,
+        newdata = newdata,
+        by = by,
+        modeldata = modeldata)
     newdata <- tmp[["newdata"]]
     modeldata <- tmp[["modeldata"]]
-    newdata_explicit <- attr(newdata, "explicit")
+
     newdata <- clean_newdata(model, newdata)
+    modeldata <- clean_newdata(model, modeldata)
+    newdata_explicit <- attr(newdata, "explicit")
+
+    # required by some model-fitting functions
+    data.table::setDT(modeldata)
+
+    # required for the type of column indexing to follow
+    data.table::setDT(newdata)
+
     if (is.null(wts)) wts <- FALSE
     newdata <- add_wts_column(newdata = newdata, wts = wts, model = model)
     newdata <- set_newdata_attributes(
@@ -233,19 +248,8 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         newdata = newdata,
         explicit = newdata_explicit)
 
-    # # sort rows of output when the user explicitly calls `by` or `datagrid()`
-    # # otherwise, we return the same data frame in the same order, but
-    # # here it makes sense to sort for a clean output.
-    # sortcols <- attr(newdata, "newdata_variables_datagrid")
-    # if (isTRUE(checkmate::check_character(by))) {
-    #     sortcols <- c(by, sortcols)
-    # }
-    # sortcols <- intersect(sortcols, colnames(newdata))
     out <- data.table::copy(newdata)
-    # if (length(sortcols) > 0) {
-    #     data.table::setorderv(out, cols = sortcols)
-    # }
-    #
+
     return(out)
 }
 

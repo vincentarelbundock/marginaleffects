@@ -18,3 +18,12 @@ expect_equal(nrow(s), 2)
 s <- avg_slopes(mod, variables = "Miles per gallon")
 expect_inherits(s, "slopes")
 expect_equal(nrow(s), 1)
+
+
+# scale() returns a 1-column matrix
+dat <- transform(mtcars, hp = scale(hp))
+mod <- lm(mpg ~ hp, data = dat)
+p <- predictions(mod)
+expect_inherits(p, "predictions")
+expect_false(anyNA(p$estimate))
+expect_false(anyNA(p$std.error))

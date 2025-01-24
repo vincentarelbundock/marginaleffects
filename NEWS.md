@@ -27,6 +27,7 @@ New:
 * Allow multiple sequential `hypotheses()` calls. Issue #1316.
 * Better parameter name labels in `get_draws()`. Thanks to @andymilne for feature request #1318.
 * `rvar` column from `get_draws()` is now printed by default.
+* Matrix columns with 1 column are supported. Fixes errors when a variable was transformed by `scale()`, for example. Thanks to @barryrowlingson for the report.
 
 Bugs:
 

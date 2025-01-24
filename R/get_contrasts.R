@@ -179,7 +179,7 @@ get_contrasts <- function(model,
         if (length(tmp) == 0) {
             if (all(colnames(by) %in% c("by", colnames(newdata)))) {
                 nd <- c("rowid", setdiff(colnames(by), "by"))
-                nd <- newdata[, nd, drop = FALSE]
+                nd <- newdata[, ..nd, drop = FALSE]
                 out <- merge(out, nd, by = "rowid", sort = FALSE)
                 tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
             } else {
