@@ -386,7 +386,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
         variables_all <- colnames(newdata)
         newdata <- set_variable_class(modeldata = newdata, model = model)
     } else if (!is.null(model)) {
-        variables_list <- insight::find_variables(model)
+        variables_list <- insight::find_variables(model, verbose = FALSE)
         variables_all <- unlist(variables_list, recursive = TRUE)
         # weights are not extracted by default
         variables_all <- c(variables_all, insight::find_weights(model))
@@ -405,7 +405,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
     # subset columns, otherwise it can be ultra expensive to compute summaries for every variable. But do the expensive thing anyway if `newdata` is supplied explicitly by the user, or in counterfactual grids.
     if (!is.null(model) && is.null(newdata)) {
         variables_sub <- c(
-            hush(insight::find_variables(model, flatten = TRUE)),
+            hush(insight::find_variables(model, flatten = TRUE, verbose = FALSE)),
             hush(unlist(insight::find_weights(model), use.names = FALSE))) # glmmTMB needs weights column for predictions
         variables_sub <- c(variables_sub, variables_manual)
         variables_sub <- c(variables_sub, c("marginaleffects_wts_internal", "rowid_dedup"))
@@ -465,7 +465,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
     
     # cluster identifiers will eventually be treated as factors
     if (!is.null(model)) {
-        v <- insight::find_variables(model)
+        v <- insight::find_variables(model, verbose = FALSE)
         v <- unlist(v[names(v) %in% c("cluster", "strata")], recursive = TRUE)
         variables_cluster <- c(v, insight::find_random(model, flatten = TRUE))
     } else {

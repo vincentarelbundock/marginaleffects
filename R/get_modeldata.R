@@ -115,7 +115,7 @@ set_variable_class <- function(modeldata, model = NULL) {
     variables <- NULL
     if (is.null(model)) {
         variables <- tryCatch(
-            unlist(insight::find_variables(model, flatten = TRUE), use.names = FALSE),
+            unlist(insight::find_variables(model, flatten = TRUE, verbose = FALSE), use.names = FALSE),
             error = function(e) NULL)
     }
     if (is.null(variables)) variables <- colnames(modeldata)
