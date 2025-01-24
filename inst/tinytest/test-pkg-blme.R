@@ -2,7 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 requiet("blme")
 
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/sleepstudy.csv")
+dat <- get_dataset("sleepstudy", "lme4")
 penaltyFn <- function(sigma) dcauchy(sigma, 0, 10, log = TRUE)
 fm5 <- blmer(
     Reaction ~ Days + (0 + Days | Subject), data = dat,

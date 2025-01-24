@@ -3,7 +3,7 @@ using("marginaleffects")
 requiet("survey")
 
 # mtcars logit
-tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv")
+tmp <- get_dataset("mtcars", "datasets")
 tmp$weights <- tmp$w <- 1:32
 dat <- tmp
 mod <- suppressWarnings(svyglm(
@@ -40,7 +40,7 @@ expect_inherits(c1, "data.frame")
 
 # wts + comparison="avg"
 set.seed(100)
-k <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv")
+k <- get_dataset("lalonde", "MatchIt")
 k$w <- rchisq(614, 2)
 fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
           data = k, weights = w)
@@ -185,7 +185,7 @@ expect_equivalent(cmp1$estimate, cmp2$estimate)
 
 
 # Issue #870
-Guerry <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv", na.strings = "")
+Guerry <- get_dataset("Guerry", "HistData")
 Guerry <- na.omit(Guerry)
 mod <- lm(Literacy ~ Pop1831 * Desertion, data = Guerry)
 p1 <- predictions(mod, by = "Region", wts = "Donations")

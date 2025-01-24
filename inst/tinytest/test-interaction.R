@@ -49,7 +49,7 @@ expect_equivalent(nrow(dm), 1)
 #           Gentoo  |   .0609265   .1073649     0.57   0.570    -.1495048    .2713578
 # -----------------------------------------------------------------------------------
 # Note: dy/dx for factor levels is the discrete change from the base level.
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+dat <- get_dataset("penguins", "palmerpenguins")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
 mod <- glm(large_penguin ~ bill_length_mm * flipper_length_mm + species,
            data = dat, family = binomial)

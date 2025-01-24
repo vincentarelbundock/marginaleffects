@@ -5,7 +5,7 @@ requiet("nlme")
 requiet("emmeans")
 requiet("broom")
 
-dat <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/nlme/Ovary.csv")
+dat <<- get_dataset("Ovary", "nlme")
 
 
 # nlme::gls: marginaleffects vs. emtrends

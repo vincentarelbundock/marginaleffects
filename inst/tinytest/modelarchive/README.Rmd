@@ -114,7 +114,7 @@ brms_categorical_1 <- insight::download_model("brms_categorical_1")
 
 
 # logit with random effects
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/EmplUK.csv")
+dat <- get_dataset("EmplUK", "plm")
 dat$x <- as.numeric(dat$output > median(dat$output))
 dat$y <- as.numeric(dat$emp > median(dat$emp))
 brms_logit_re <- brm(y ~ x + (1 | firm), data = dat, backend = "cmdstanr", family = "bernoulli")
@@ -123,7 +123,7 @@ saveRDS(brms_logit_re, "data/brms_logit_re.rds")
 
 ```{r}
 set.seed(123)
-tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/sleepstudy.csv")
+tmp <- get_dataset("sleepstudy", "lme4")
 tmp$grp <- sample(1:5, size = 180, replace = TRUE)
 tmp$cat <- as.factor(sample(1:5, size = 180, replace = TRUE))
 tmp$Reaction_d <-
@@ -138,7 +138,7 @@ void <- capture.output(suppressMessages(
 
 ```{r}
 # Issue #782: by reorders factors incorrectly in brms models
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
+dat <- get_dataset("TitanicSurvival", "carData")
 dat$survived <- ifelse(dat$survived == "yes", 1, 0)
 dat$woman <- ifelse(dat$sex == "female", 1, 0)
 dat$passengerClass <- factor(dat$passengerClass, levels = c("3rd", "2nd", "1st"))

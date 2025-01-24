@@ -168,7 +168,7 @@ expect_error(predictions(mod, variables = list(vs = "pairwise")), pattern = "pai
 #########################################################################
 
 # Issue 514
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv")
+dat <- get_dataset("lalonde", "MatchIt")
 
 fit <- lm(re78 ~ married + race + age, data = dat)
 
@@ -205,7 +205,7 @@ expect_equivalent(nrow(p), 64)
 
 
 # hurdle predictions
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/pscl/bioChemists.csv")
+dat <- get_dataset("bioChemists", "pscl")
 mod <- hurdle(art ~ phd + fem | ment, data = dat, dist = "negbin")
 pred <- predictions(mod, newdata = dat)
 expect_inherits(pred, "data.frame")

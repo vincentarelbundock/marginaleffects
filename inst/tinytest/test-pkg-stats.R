@@ -9,7 +9,7 @@ requiet("dplyr")
 
 options(marginaleffects_numDeriv = list(method = "simple", method.args = list(eps = 1e-7)))
 
-guerry <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")
+guerry <- get_dataset("Guerry", "HistData")
 
 # glm: marginaleffects
 set.seed(1024)

@@ -76,7 +76,7 @@ expect_equivalent(mfx$std.error, mar$SE, tolerance = 1e6)
 
 
 # issue #434 by with character precitors
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/Affairs.csv")
+dat <- get_dataset("Affairs", "AER")
 mod <- glm(
   affairs ~ children + gender + yearsmarried,
   family = poisson,

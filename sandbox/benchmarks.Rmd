@@ -93,7 +93,7 @@ results[["tiny"]]
 ## Many observations
 
 ```{r}
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+dat <- get_dataset("penguins", "palmerpenguins")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
 tmp <- list()
 for (i in 1:300) tmp[[i]] <- dat

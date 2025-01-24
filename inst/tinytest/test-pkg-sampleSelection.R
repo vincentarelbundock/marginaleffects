@@ -3,7 +3,7 @@ using("marginaleffects")
 
 requiet("sampleSelection")
 
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/sampleSelection/Mroz87.csv")
+dat <- get_dataset("Mroz87", "sampleSelection")
 dat$kids <- dat$kids5 + dat$kids618 > 0
 dat <<- dat
 

@@ -41,7 +41,7 @@ expect_error(comparisons(mod, comparison = function(hi, lo) head(hi - lo)),
 arr_s <- c(arr.est = 0.94026450, arr.std_err = 0.09584693, arr.ci_l = 0.76998425, arr.ci_h = 1.14820184)
 ard_s <- c(ard.est = -0.00996557, ard.std_err = 0.01647135, ard.ci_l = -0.04224882, ard.ci_h = 0.02231767)
 
-acs12 <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/acs12.csv")
+acs12 <- get_dataset("acs12", "openintro")
 acs12$disability <- as.numeric(acs12$disability == "yes")
 mod <- glm(disability ~ gender, data = acs12, family = binomial)
 
@@ -62,7 +62,7 @@ expect_equivalent(ard_r[1:2], ard_s[1:2], tolerance = tol)
 arr_s <- c(arr.est = 0.80285689, arr.std_err = 0.07496766, arr.ci_l = 0.66858441, arr.ci_h = 0.96409545)
 ard_s <- c(ard.est = -0.03544519, ard.std_err = 0.01499735, ard.ci_l = -0.06483945, ard.ci_h = -0.00605093)
 
-acs12 <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/acs12.csv")
+acs12 <- get_dataset("acs12", "openintro")
 acs12$disability <- as.numeric(acs12$disability == "yes")
 mod <- glm(disability ~ gender + race + married + age, data = acs12, family = binomial)
 
@@ -84,7 +84,7 @@ expect_equivalent(arr_r[1:2], arr_s[1:2], tolerance = tol)
 arr_s <- c(arr.est = 1.04786879, arr.std_err = 0.00976999, arr.ci_l = 1.02889386, arr.ci_h = 1.06719366)
 ard_s <- c(ard.est = 0.04277614, ard.std_err = 0.00837836, ard.ci_l = 0.02635485, ard.ci_h = 0.05919742)
 
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/HealthInsurance.csv")
+dat <- get_dataset("HealthInsurance", "AER")
 dat$health <- as.factor(dat$health)
 mod <- glm(health ~ insurance + gender + ethnicity + married + age,
            data = dat, family = binomial)
@@ -119,7 +119,7 @@ expect_equivalent(arr_r, arr_s[c(1, 3, 4)], tolerance = tol)
 
 # bugfix: multiple terms w/ n=1 transform
 # the function must be applied to each group if it takes a mean or something similar
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
+dat <- get_dataset("TitanicSurvival", "carData")
 dat$survived <- as.factor(dat$survived)
 mod <- glm(survived ~ passengerClass + sex, data = dat, family = binomial)
 cmp <- avg_comparisons(mod, comparison = function(hi, lo) mean(hi - lo))

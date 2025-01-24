@@ -4,7 +4,7 @@ using("marginaleffects")
 requiet("crch")
 requiet("ordinal")
 
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/crch/RainIbk.csv")
+dat <- get_dataset("RainIbk", "crch")
 q <- unique(stats::quantile(dat$rain, seq(0.1, 0.9, 0.1)))
 dat$rain_sqrt <- sqrt(dat$rain)
 dat$sqrtensmean <- apply(sqrt(dat[,grep('^rainfc',names(dat))]), 1, mean)

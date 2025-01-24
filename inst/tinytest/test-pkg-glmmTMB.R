@@ -122,7 +122,7 @@ expect_equivalent(cont2$estimate, cont1)
 
 
 # informative errors
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/VerbAgg.csv")
+dat <- get_dataset("VerbAgg", "lme4")
 dat$woman <- as.numeric(dat$Gender == "F")
 dat$item <- as.factor(dat$item)
 mod <- glmmTMB(

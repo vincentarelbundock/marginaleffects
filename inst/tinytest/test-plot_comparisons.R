@@ -37,7 +37,7 @@ expect_inherits(p, "gg")
 
 # Issue #545: blank graph
 library(ggplot2)
-dat_titanic <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv")
+dat_titanic <- get_dataset("Titanic", "Stat2Data")
 mod2 <- glm(Survived  ~ Age, data = dat_titanic, family = binomial)
 p <- plot_comparisons(
     mod2,

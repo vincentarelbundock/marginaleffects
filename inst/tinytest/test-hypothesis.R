@@ -329,5 +329,11 @@ pre <- avg_predictions(mod,
 expect_inherits(pre, "predictions")
 
 
+# pairwise hypothesis: no duplicates
+mod <- lm(mpg ~ factor(carb), mtcars)
+n <- length(unique(mtcars$carb))
+h <- avg_predictions(mod, by = "carb", hypothesis = ~pairwise)
+expect_equal(nrow(h), (n * (n - 1)) / 2)
+
 
 rm(list = ls())

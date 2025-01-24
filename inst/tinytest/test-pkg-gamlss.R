@@ -8,7 +8,7 @@ requiet("gamlss")
 requiet("titanic")
 
 # Beta regression
-tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/betareg/GasolineYield.csv")
+tmp <- get_dataset("GasolineYield", "betareg")
 tmp$batch <- factor(tmp$batch)
 dat <<- tmp
 mod <- gamlss::gamlss(yield ~ batch + temp,
@@ -108,7 +108,7 @@ expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 
 
 # Issue #933
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv", na.strings = "")
+dat <- get_dataset("penguins", "palmerpenguins")
 dat <- dat |>
     transform(prop = rBE(nrow(dat), mu = 0.5, sigma = 0.2)) |> 
     na.omit()

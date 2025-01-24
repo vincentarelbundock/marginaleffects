@@ -56,7 +56,7 @@ expect_inherits(p, "slopes")
 
 
 # marginaleffects: clm: no validity
-tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ordinal/soup.csv")
+tmp <- get_dataset("soup", "ordinal")
 tab26 <- with(tmp, table("Product" = PROD, "Response" = SURENESS))
 dimnames(tab26)[[2]] <- c("Sure", "Not Sure", "Guess", "Guess", "Not Sure", "Sure")
 dat26 <- expand.grid(sureness = as.factor(1:6), prod = c("Ref", "Test"))

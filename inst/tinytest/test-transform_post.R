@@ -2,7 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 # exponentiate
-acs12 <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/acs12.csv")
+acs12 <- get_dataset("acs12", "openintro")
 acs12$disability <- as.numeric(acs12$disability == "yes")
 mod <- glm(disability ~ gender + race + married + age, data = acs12, family = binomial)
 

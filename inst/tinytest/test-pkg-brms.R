@@ -121,7 +121,7 @@ expect_equivalent(nrow(mfx), nrow(attr(mfx, "posterior_draws")))
 
 # predictions w/ random effects
 set.seed(123)
-tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/sleepstudy.csv")
+tmp <- get_dataset("sleepstudy", "lme4")
 tmp$grp <- sample(1:5, size = 180, replace = TRUE)
 tmp$cat <- as.factor(sample(1:5, size = 180, replace = TRUE))
 tmp$Reaction_d <-

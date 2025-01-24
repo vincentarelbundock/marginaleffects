@@ -5,7 +5,7 @@ if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 using("tinysnapshot")
 
 # character predictors
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+dat <- get_dataset("penguins", "palmerpenguins")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
 mod <- glm(
     large_penguin ~ bill_length_mm * flipper_length_mm + species,

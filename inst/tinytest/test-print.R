@@ -13,7 +13,7 @@ expect_snapshot_print(comparisons(mod, by = "gear"), "print-comparisons_by")
 
 
 # Issue #638: keep datagrid() explicit variables in print
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv")
+dat <- get_dataset("Titanic", "Stat2Data")
 m <- glm(Survived ~ Age * PClass * SexCode, data = dat, family = binomial)
 p <- predictions(m, newdata = datagrid(PClass = unique, SexCode = 0:1))
 expect_snapshot_print(p, "print-predictions_datagrid")

@@ -20,7 +20,7 @@ expect_predictions(pred)
 
 
 # mblogit: error on character regressors
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MASS/housing.csv")
+dat <- get_dataset("housing", "MASS")
 dat$x <- rnorm(nrow(dat))
 dat$Sat <- factor(dat$Sat)
 dat <- dat
@@ -31,7 +31,7 @@ expect_predictions(predictions(mod))
 expect_error(suppressWarnings(slopes(mod, type = "link")), pattern = "character")
 
 # mblogit: works on factor regressors
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MASS/housing.csv")
+dat <- get_dataset("housing", "MASS")
 dat$x <- rnorm(nrow(dat))
 dat$Sat <- factor(dat$Sat)
 dat$Infl <- factor(dat$Infl)

@@ -2,7 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 # padding with interactions
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv")
+dat <- get_dataset("movies", "ggplot2movies")
 dat$style <- ifelse(dat$Action == 1, "Action", "Other")
 dat$style <- ifelse(dat$Comedy == 1, "Comedy", dat$style)
 dat$style <- ifelse(dat$Drama == 1, "Drama", dat$style)

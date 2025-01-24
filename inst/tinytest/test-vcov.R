@@ -4,7 +4,7 @@ using("marginaleffects")
 requiet("sandwich")
 
 
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv")
+dat <- get_dataset("mtcars", "datasets")
 
 # working but no validity check
 mod <- lm(mpg ~ hp + drat, data = dat)
