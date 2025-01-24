@@ -19,7 +19,7 @@ requiet <- function(package) {
       isTRUE(require(package, warn.conflicts = FALSE, character.only = TRUE)),
       error = function(e) FALSE
     ))))))
-  return(invisibile(pkg_available))
+  return(invisible(pkg_available))
 }
 
 requiet("tinytest")

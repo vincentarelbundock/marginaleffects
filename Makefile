@@ -9,7 +9,7 @@ help:  ## Display this help screen
 testall: ## tinytest::build_install_test()
 	# Rscript -e "pkgload::load_all();cl <- parallel::makeCluster(5);tinytest::run_test_dir(cluster = cl)"
 	awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
-	Rscript -e "pkgload::load_all();tinytest::run_test_dir()"
+	Rscript -e "pkgload::load_all();tinytest::run_test_dir(cluster = parallel::makeCluster(8))"
 	git restore .Rbuildignore
 
 testone: install ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
