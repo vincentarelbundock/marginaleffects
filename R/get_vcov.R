@@ -156,3 +156,30 @@ get_vcov_label <- function(vcov) {
   )
   return(out)
 }
+
+
+#' internal get_vcov
+#'
+#' @export
+#' @noRd
+get_vcov.comparisons <- function(x, ...) {
+  stats::vcov(x)
+}
+
+#' internal get_vcov
+#'
+#' @export
+#' @noRd
+get_vcov.slopes <- get_vcov.comparisons
+
+#' internal get_vcov
+#'
+#' @export
+#' @noRd
+get_vcov.hypotheses <- get_vcov.comparisons
+
+#' internal get_vcov
+#'
+#' @export
+#' @noRd
+get_vcov.predictions <- get_vcov.comparisons

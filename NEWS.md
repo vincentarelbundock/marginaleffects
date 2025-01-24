@@ -39,6 +39,7 @@ Bugs:
 * Indexing problem with `avg_comparisons(by=data.frame())` and `avg_slopes(by=data.frame())`. Thanks to @andymilne for report #1313.
 * `hypotheses(p, hypothesis=~reference)` did not work for some `p` objects. Issue #1310.
 * `gray` is respected for the `points` argument in `plot_*()`
+* `hypotheses(x, joint=1:2)` did not work when `x` was a `marginaleffects` object. Thanks to @mattansb for report #1340
 
 ## 0.24.0
 

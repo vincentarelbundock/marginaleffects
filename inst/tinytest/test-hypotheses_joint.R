@@ -78,8 +78,14 @@ model_lm <- lm(mpg ~ wt + vs + am, data = mtcars)
 h1 <- hypotheses(model_lm, joint = c("wt", "vs", "am"))
 h2 <- hypotheses(model_lm, joint = c("wt", "vs", "am"), vcov = "HC1")
 h3 <- hypotheses(
-    model_lm, joint = c("wt", "vs", "am"),
+    model_lm,
+    joint = c("wt", "vs", "am"),
     vcov = sandwich::vcovHC(model_lm, type = "HC1"))
 expect_false(h1$statistic == h2$statistic)
 expect_true(h2$statistic == h3$statistic)
 
+
+# Issue #1340
+mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
+mfx <- slopes(mod, variables = "wt", newdata = datagrid(hp = fivenum))
+h <- hypotheses(mfx, joint = 1:2)

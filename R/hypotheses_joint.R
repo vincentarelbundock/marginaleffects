@@ -69,7 +69,6 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
 
   # Degrees of freedom
   if (is.null(df)) {
-
     df1 <- dim(R)[1] # Q
 
     if (joint_test == "f") {
