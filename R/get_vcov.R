@@ -162,8 +162,8 @@ get_vcov_label <- function(vcov) {
 #'
 #' @export
 #' @noRd
-get_vcov.comparisons <- function(x, ...) {
-  stats::vcov(x)
+get_vcov.comparisons <- function(model, ...) {
+  stats::vcov(model)
 }
 
 #' internal get_vcov
