@@ -72,7 +72,8 @@ mfx <- slopes(
     variables = "cyl",
     hypothesis = ~pairwise)
 expect_inherits(mfx, "marginaleffects")
-expect_equivalent(nrow(mfx), 2)
+expect_equivalent(nrow(mfx), 1)
+expect_true("(8 - 4) - (6 - 4)" %in% mfx$hypothesis)
 
 
 # contrasts: hypothesis
@@ -95,7 +96,7 @@ mfx <- slopes(
     variables = "cyl",
     hypothesis = ~pairwise)
 expect_inherits(mfx, "marginaleffects")
-expect_equivalent(nrow(mfx), 2)
+expect_equivalent(nrow(mfx), 1)
 
 
 # predictions: hypothesis
@@ -186,7 +187,7 @@ cmp <- comparisons(
     by = "cyl",
     hypothesis = ~pairwise)
 expect_inherits(cmp, "comparisons")
-expect_equivalent(nrow(cmp), 6)
+expect_equivalent(nrow(cmp), 3)
 
 cmp <- comparisons(
     mod,
@@ -218,7 +219,7 @@ set.seed(123)
 dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6))))
 m <- lm(Sepal.Width ~ Sepal.Length * Species + dummy, data = dat)
 mfx <- slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = ~pairwise)
-expect_true("setosa, 0 - setosa, 1" %in% mfx$hypothesis)
+expect_true("(setosa_1) - (setosa_0)" %in% mfx$hypothesis)
 
 
 # Issue #1092: hypothesis = "mean", "meanother"
@@ -280,7 +281,7 @@ p <- avg_predictions(brms_factor, by = "cyl_fac", hypothesis = ~reference)
 d <- get_draws(p)
 expect_inherits(p, "predictions")
 expect_true("hypothesis" %in% colnames(p))
-expect_true(all(c("6 - 4", "8 - 4") %in% d$hypothesis))
+expect_true(all(c("(6) - (4)", "(8) - (4)") %in% d$hypothesis))
 
 p <- predictions(brms_factor,
     hypothesis = ~ I(c(a = x[1], b = mean(x[1:2]))) | cyl_fac)

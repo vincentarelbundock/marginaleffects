@@ -95,7 +95,6 @@ pre <- avg_predictions(tmp) |> hypotheses(equivalence = c(-.2, 0))
 expect_inherits(cmp, "hypotheses")
 expect_inherits(mfx, "hypotheses")
 expect_inherits(pre, "hypotheses")
-
 if (!requiet("tinysnapshot")) {
     exit_file("tinysnapshot")
 }
@@ -123,29 +122,21 @@ mm <- predictions(
     mod,
     newdata = datagrid(grid_type = "balanced"),
     by = "source",
-    hypothesis = ~pairwise)
+    hypothesis = ~pairwise,
+    transform = \(x) -x)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-e1 <- e1[order(e1$contrast), ]
-e2 <- e2[order(e2$hypothesis), ]
-e2 <- e2[e2$hypothesis %in% e1$contrast,]
 expect_equivalent(e1$z.ratio, e2$statistic.nonsup, tol = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.nonsup, tol = 1e-6)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-e1 <- e1[order(e1$contrast), ]
-e2 <- e2[order(e2$hypothesis), ]
-e2 <- e2[e2$hypothesis %in% e1$contrast,]
 expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.noninf, tolerance = 1e-6)
 
 e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-e1 <- e1[order(e1$contrast), ]
-e2 <- e2[order(e2$hypothesis), ]
-e2 <- e2[e2$hypothesis %in% e1$contrast,]
 expect_equivalent(e1$p.value, e2$p.value.equiv, tolerance = 1e-6)
 
 

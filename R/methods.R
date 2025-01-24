@@ -26,7 +26,7 @@ coef.comparisons <- function(object, ...) {
   if (!is.null(object$estimate)) {
     out <- object$estimate
     if (is.null(names(out))) {
-      lab <- tryCatch(get_term_labels(object), error = function(e) NULL)
+      lab <- tryCatch(get_labels(object), error = function(e) NULL)
       if (length(lab) == length(out)) {
         out <- stats::setNames(out, lab)
       }

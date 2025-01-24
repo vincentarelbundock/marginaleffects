@@ -38,7 +38,7 @@ get_hypothesis <- function(
 }
 
 
-get_hypothesis_row_labels <- function(x, by = NULL) {
+get_labels <- function(x, by = NULL) {
     lab <- grep("^term$|^by$|^group$|^value$|^contrast$|^contrast_", colnames(x), value = TRUE)
     lab <- Filter(function(z) length(unique(x[[z]])) > 1, lab)
     if (isTRUE(checkmate::check_character(by))) {
