@@ -34,8 +34,6 @@ URL: https://marginaleffects.com/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Remotes: 
-    vincentarelbundock/tinysnapshot
 Depends:
     R (>= 3.6.0)
 Imports:
@@ -175,7 +173,7 @@ Suggests:
     tidymodels,
     tidyr,
     tidyverse,
-    tinysnapshot,
+    tinysnapshot (>= 0.0.7),
     tinytable (>= 0.6.1),
     tinytest,
     titanic,
