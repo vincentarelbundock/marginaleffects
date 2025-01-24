@@ -1,11 +1,9 @@
 get_term_labels <- function(x, idx = NULL) {
-
   if (is.data.frame(x)) {
     if ("term" %in% names(x) && anyDuplicated(x$term) == 0L) {
       return(unique(x$term))
-
-    } else if (any(grepl("^contrast", names(x)))) {
-      tmp <- grep("^term$|^contrast", names(x), value = TRUE)
+    } else if (any(grepl("^contrast|^group$", names(x)))) {
+      tmp <- grep("^term$|^contrast|^group$", names(x), value = TRUE)
 
       by <- attr(x, "by")
       if (isTRUE(checkmate::check_character(by))) {
@@ -25,7 +23,6 @@ get_term_labels <- function(x, idx = NULL) {
         }
       }
       out <- trimws(out)
-
     } else if (inherits(x, "predictions")) {
       by <- attr(x, "by")
       if (isTRUE(checkmate::check_character(by)) && all(by %in% names(x))) {
@@ -36,18 +33,15 @@ get_term_labels <- function(x, idx = NULL) {
       } else {
         out <- paste0("b", seq_len(nrow(x)))
       }
-
     } else {
       out <- paste0("b", seq_len(nrow(x)))
     }
-
   } else if (is.vector(x)) {
     if (!is.null(names(x))) {
       out <- names(x)
     } else {
       out <- paste0("b", seq_along(x))
     }
-
   } else {
     return(NULL)
   }
