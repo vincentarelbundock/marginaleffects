@@ -337,4 +337,14 @@ h <- avg_predictions(mod, by = "carb", hypothesis = ~pairwise)
 expect_equal(nrow(h), (n * (n - 1)) / 2)
 
 
+# Issue #1365
+mod <- lm(mpg ~ factor(cyl) + factor(gear), data = mtcars)
+cmp <- avg_comparisons(mod, hypothesis = ~ pairwise | term)
+expect_inherits(cmp, "comparisons")
+expect_equal(nrow(cmp), 2)
+expect_true("(cyl 8 - 4) - (cyl 6 - 4)" %in% cmp$hypothesis)
+
+
+
+
 rm(list = ls())

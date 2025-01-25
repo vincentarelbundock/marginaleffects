@@ -221,12 +221,21 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
 
     out <- estimates
 
+    # Sometimes we get duplicated `term` columns
+    idx <- grep("term", colnames(out), value = TRUE)
+    if (length(idx) > 1) {
+        idx <- idx[2:length(idx)]
+        # drop all instances after the first
+        out <- out[, -..idx]
+    }
+
     if (!is.null(draws)) {
         draws <- matrix_apply_column(draws, FUN = fun_comparison, by = groupval)
         if ("hypothesis" %in% colnames(out)) {
             row.names(draws) <- out$hypothesis
         }
     }
+
 
     attr(out, "posterior_draws") <- draws
     attr(out, "hypothesis_function_by") <- form$group
