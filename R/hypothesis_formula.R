@@ -204,7 +204,7 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
     lab <- function(x) suppressWarnings(names(fun_comparison(x)))
     lab <- tryCatch(combined[, lapply(.SD, lab), keyby = groupval], error = function(e) NULL)
     if (inherits(lab, "data.frame") && nrow(lab) == nrow(estimates)) {
-        data.table::setnames(lab, old = "estimate", "hypothesis")
+        data.table::setnames(lab, old = "estimate", "term")
         cols <- setdiff(colnames(lab), colnames(estimates))
         estimates <- cbind(lab[, ..cols], estimates)
     }
@@ -214,7 +214,7 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
         labels <- tryCatch(combined[, lapply(.SD, fun_label), keyby = groupval],
             error = function(e) NULL)
         if (inherits(labels, "data.frame") && nrow(labels) == nrow(estimates)) {
-            data.table::setnames(labels, old = "estimate", "hypothesis")
+            data.table::setnames(labels, old = "estimate", "term")
             estimates <- cbind(labels, estimates)
         }
     }
@@ -223,8 +223,8 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
 
     if (!is.null(draws)) {
         draws <- matrix_apply_column(draws, FUN = fun_comparison, by = groupval)
-        if ("hypothesis" %in% colnames(out)) {
-            row.names(draws) <- out$hypothesis
+        if ("term" %in% colnames(out)) {
+            row.names(draws) <- out$term
         }
     }
 

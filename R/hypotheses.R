@@ -316,7 +316,7 @@ hypotheses <- function(
     hypothesis_function_by <- attr(tmp, "hypothesis_function_by")
 
     # labels
-    lab <- c("hypothesis", "term", hypothesis_function_by)
+    lab <- c("term", hypothesis_function_by)
     lab <- intersect(lab, colnames(tmp))
     if (length(lab) > 0) {
       lab <- tmp[, ..lab]

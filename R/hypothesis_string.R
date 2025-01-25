@@ -85,6 +85,8 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
 
     if (!is.null(attr(lab, "names"))) {
         lab <- attr(lab, "names")
+    } else if (!is.null(names(lab))) {
+        lab <- names(lab)
     } else {
         lab <- gsub("\\s+", "", lab)
     }
@@ -100,7 +102,7 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
             rowlabels = rowlabels)
         draws <- matrix(tmp, ncol = ncol(draws))
         out <- data.table(
-            hypothesis = lab,
+            term = lab,
             tmp = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian))
     } else {
         out <- eval_string_function(
@@ -108,7 +110,7 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
             hypothesis = hypothesis,
             rowlabels = rowlabels)
         out <- data.table(
-            hypothesis = lab,
+            term = lab,
             tmp = out)
     }
 

@@ -11,7 +11,7 @@ sort_columns <- function(x, newdata = data.frame(), by = NULL) {
         bycols <- NULL
     }
     stubcols <- c(
-        "rowid", "rowidcf", "term", "group", "hypothesis", "by",
+        "rowid", "rowidcf", "term", "group", "by",
         grep("^contrast", colnames(x), value = TRUE),
         bycols,
         "estimate", "std.error", "statistic", "p.value", "s.value", "conf.low", "conf.high",

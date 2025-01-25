@@ -172,7 +172,7 @@ expect_true(all(hyp$hypothesis %in% known))
 
 # Custom labels
 hyp <- hypotheses(mod, hypothesis = c("equal" = "b1 = b2", "sums to zero" = "wt + hp = 0"))
-expect_equivalent(hyp$hypothesis, c("equal", "sums to zero"))
+expect_equivalent(hyp$term, c("equal", "sums to zero"))
 
 # Does not mess up *
 hyp <- hypotheses(mod, hypothesis = c("equal" = "b*=0"))

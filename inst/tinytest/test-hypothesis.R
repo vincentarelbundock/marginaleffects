@@ -73,7 +73,7 @@ mfx <- slopes(
     hypothesis = ~pairwise)
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 1)
-expect_true("(8 - 4) - (6 - 4)" %in% mfx$hypothesis)
+expect_true("(8 - 4) - (6 - 4)" %in% mfx$term)
 
 
 # contrasts: hypothesis
@@ -131,7 +131,7 @@ expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
 
 # wildcard
 mm1 <- suppressWarnings(predictions(mod, by = "cyl", hypothesis = "b* = b1"))
-expect_equal(mm1$hypothesis, paste0("b", 1:3, "=b1"))
+expect_equal(mm1$term, paste0("b", 1:3, "=b1"))
 expect_equal(mm1$estimate[1], 0)
 
 
@@ -219,7 +219,7 @@ set.seed(123)
 dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6))))
 m <- lm(Sepal.Width ~ Sepal.Length * Species + dummy, data = dat)
 mfx <- slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = ~pairwise)
-expect_true("(setosa_1) - (setosa_0)" %in% mfx$hypothesis)
+expect_true("(setosa_1) - (setosa_0)" %in% mfx$term)
 
 
 # Issue #1092: hypothesis = "mean", "meanother"
@@ -247,7 +247,7 @@ p <- predictions(mod,
     hypothesis = ~ I(custom_contrast(x)) | rowidcf + mpg,
     type = "response")
 expect_inherits(p, "predictions")
-expect_false("hypothesis" %in% colnames(p))
+expect_false("term" %in% colnames(p))
 expect_true("mpg" %in% colnames(p))
 expect_true("rowidcf" %in% colnames(p))
 
@@ -268,7 +268,7 @@ p <- predictions(mod,
     hypothesis = ~ I(custom_contrast(x)) | rowidcf + mpg,
     type = "response")
 expect_inherits(p, "predictions")
-expect_true("hypothesis" %in% colnames(p))
+expect_true("term" %in% colnames(p))
 expect_true("mpg" %in% colnames(p))
 expect_true("rowidcf" %in% colnames(p))
 
@@ -280,21 +280,21 @@ brms_factor <- readRDS("modelarchive/data/brms_factor.rds")
 p <- avg_predictions(brms_factor, by = "cyl_fac", hypothesis = ~reference)
 d <- get_draws(p)
 expect_inherits(p, "predictions")
-expect_true("hypothesis" %in% colnames(p))
-expect_true(all(c("(6) - (4)", "(8) - (4)") %in% d$hypothesis))
+expect_true("term" %in% colnames(p))
+expect_true(all(c("(6) - (4)", "(8) - (4)") %in% d$term))
 
 p <- predictions(brms_factor,
     hypothesis = ~ I(c(a = x[1], b = mean(x[1:2]))) | cyl_fac)
 d <- get_draws(p)
 expect_inherits(p, "predictions")
-expect_true("hypothesis" %in% colnames(p))
-expect_true(all(c("a", "b") %in% p$hypothesis))
-expect_true(all(c("a", "b") %in% d$hypothesis))
+expect_true("term" %in% colnames(p))
+expect_true(all(c("a", "b") %in% p$term))
+expect_true(all(c("a", "b") %in% d$term))
 
 p <- predictions(brms_factor,
     hypothesis = ~ I(mean(x)) | cyl_fac)
 expect_inherits(p, "predictions")
-expect_false("hypothesis" %in% colnames(p))
+expect_false("term" %in% colnames(p))
 expect_true("cyl_fac" %in% colnames(p))
 
 
