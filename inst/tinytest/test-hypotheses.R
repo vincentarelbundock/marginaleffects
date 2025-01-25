@@ -176,7 +176,7 @@ expect_equivalent(hyp$term, c("equal", "sums to zero"))
 
 # Does not mess up *
 hyp <- hypotheses(mod, hypothesis = c("equal" = "b*=0"))
-expect_equivalent(hyp$hypothesis, sprintf("b%s=0", 1:5))
+expect_equivalent(hyp$term, sprintf("b%s=0", 1:5))
 
 # hypotheses() applied to {marginaleffects} package objects
 # commented out because doesn't work in environments because of match.call()
