@@ -19,7 +19,7 @@ get_labels <- function(x, idx = NULL, by = NULL, wrap_parens = FALSE) {
         } else {
             # Create labels by pasting unique combinations of selected columns
             lab_df <- data.frame(x)[, lab_cols, drop = FALSE]
-            labels <- apply(lab_df, 1, paste, collapse = "_")
+            labels <- apply(lab_df, 1, paste, collapse = " ")
 
             # Handle duplicate labels
             if (anyDuplicated(labels) > 0) {

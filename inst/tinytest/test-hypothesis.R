@@ -219,7 +219,7 @@ set.seed(123)
 dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6))))
 m <- lm(Sepal.Width ~ Sepal.Length * Species + dummy, data = dat)
 mfx <- slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = ~pairwise)
-expect_true("(setosa_1) - (setosa_0)" %in% mfx$hypothesis)
+expect_true("(setosa 1) - (setosa 0)" %in% mfx$hypothesis)
 
 
 # Issue #1092: hypothesis = "mean", "meanother"
@@ -335,6 +335,16 @@ mod <- lm(mpg ~ factor(carb), mtcars)
 n <- length(unique(mtcars$carb))
 h <- avg_predictions(mod, by = "carb", hypothesis = ~pairwise)
 expect_equal(nrow(h), (n * (n - 1)) / 2)
+
+
+# Issue #1365
+mod <- lm(mpg ~ factor(cyl) + factor(gear), data = mtcars)
+cmp <- avg_comparisons(mod, hypothesis = ~ pairwise | term)
+expect_inherits(cmp, "comparisons")
+expect_equal(nrow(cmp), 2)
+expect_true("(cyl 8 - 4) - (cyl 6 - 4)" %in% cmp$hypothesis)
+
+
 
 
 rm(list = ls())
