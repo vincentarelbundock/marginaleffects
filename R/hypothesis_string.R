@@ -18,11 +18,7 @@ hypothesis_string <- function(x, hypothesis) {
     return(out)
 }
 
-
-eval_string_hypothesis <- function(x, hypothesis, lab) {
-    # row indices: `hypotheses` includes them, but `term` does not
-    if (isTRUE(grepl("\\bb\\d+\\b", hypothesis)) && !any(grepl("\\bb\\d+\\b", x[["term"]]))) {
-        msg <- "
+warning_b_order <- "
 It is essential to check the order of estimates when specifying hypothesis tests using positional indices like b1, b2, etc. The indices of estimates can change depending on the order of rows in the original dataset, user-supplied arguments, model-fitting package, and version of `marginaleffects`.
 
 It is also good practice to use assertions that ensure the order of estimates is consistent across different runs of the same code. Example:
@@ -40,11 +36,15 @@ avg_predictions(mod, by = 'carb', hypothesis = 'b1 - b2 = 0')
 
 Disable this warning with: `options(marginaleffects_safe = FALSE)`
 "
-        if (isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
-            warn_once(msg, "hypothesis_positional_indices_are_dangerous")
-        }
 
+eval_string_hypothesis <- function(x, hypothesis, lab) {
+    flag_safe <- isTRUE(getOption("marginaleffects_safe", default = TRUE))
+    flag_b_hypothesis <- isTRUE(grepl("\\bb\\d+\\b", hypothesis))
+    if (flag_safe && flag_b_hypothesis) {
+        warn_once(warning_b_order, "hypothesis_positional_indices_are_dangerous")
+    }
 
+    if (flag_b_hypothesis) {
         bmax <- regmatches(lab, gregexpr("\\bb\\d+\\b", lab))[[1]]
         bmax <- tryCatch(max(as.numeric(gsub("b", "", bmax))), error = function(e) 0)
         if (bmax > nrow(x)) {
@@ -58,7 +58,7 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
         }
         rowlabels <- paste0("marginaleffects__", seq_len(nrow(x)))
 
-        # term names
+    # term names
     } else {
         if (!"term" %in% colnames(x) || anyDuplicated(x$term) > 0) {
             msg <- c(
@@ -73,6 +73,7 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
         rowlabels <- x$term
     }
 
+    # probably should be defined here for scoping
     eval_string_function <- function(vec, hypothesis, rowlabels) {
         envir <- parent.frame()
         void <- sapply(
