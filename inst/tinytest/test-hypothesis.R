@@ -219,7 +219,7 @@ set.seed(123)
 dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6))))
 m <- lm(Sepal.Width ~ Sepal.Length * Species + dummy, data = dat)
 mfx <- slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = ~pairwise)
-expect_true("(setosa_1) - (setosa_0)" %in% mfx$hypothesis)
+expect_true("(setosa 1) - (setosa 0)" %in% mfx$hypothesis)
 
 
 # Issue #1092: hypothesis = "mean", "meanother"
