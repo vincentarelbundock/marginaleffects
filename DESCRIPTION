@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.24.0.20
+Version: 0.25.0
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",

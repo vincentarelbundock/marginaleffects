@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.25.0
 
 Breaking changes in preparation for 1.0.0 release:
 
