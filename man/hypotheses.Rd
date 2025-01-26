@@ -74,7 +74,7 @@ hypotheses(
 \item The function can also accept optional input arguments: \code{newdata}, \code{by}, \code{draws}.
 \item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{get_draws()} to extract and manipulate the draws directly.
 }
-\item See the Examples section below and the vignette: https://marginaleffects.com/chapters/hypothesis.html
+\item See the Examples section below and the vignette: \url{https://marginaleffects.com/chapters/hypothesis.html}
 }}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:

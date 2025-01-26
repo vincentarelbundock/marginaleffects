@@ -197,7 +197,7 @@ levels. See examples section.}
 \item The function can also accept optional input arguments: \code{newdata}, \code{by}, \code{draws}.
 \item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{get_draws()} to extract and manipulate the draws directly.
 }
-\item See the Examples section below and the vignette: https://marginaleffects.com/chapters/hypothesis.html
+\item See the Examples section below and the vignette: \url{https://marginaleffects.com/chapters/hypothesis.html}
 }}
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
