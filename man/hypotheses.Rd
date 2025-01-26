@@ -41,7 +41,7 @@ hypotheses(
 }
 \item \code{rhs}
 \itemize{
-\item \code{pairwise}: pairwise differences between estimates in each row.
+\item \code{pairwise} and \code{revpairwise}: pairwise differences between estimates in each row.
 \item \code{reference}: differences between the estimates in each row and the estimate in the first row.
 \item \code{sequential}: difference between an estimate and the estimate in the next row.
 \item \code{meandev}: difference between an estimate and the mean of all estimates.

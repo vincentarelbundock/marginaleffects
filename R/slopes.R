@@ -80,7 +80,7 @@
 #'     - `difference`
 #'     - Leave empty for default value
 #'   + `rhs`
-#'     - `pairwise`: pairwise differences between estimates in each row.
+#'     - `pairwise` and `revpairwise`: pairwise differences between estimates in each row.
 #'     - `reference`: differences between the estimates in each row and the estimate in the first row.
 #'     - `sequential`: difference between an estimate and the estimate in the next row.
 #'     - `meandev`: difference between an estimate and the mean of all estimates.
