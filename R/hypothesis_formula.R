@@ -65,6 +65,52 @@ hypothesis_formula_list <- list(
                 out[!is.na(out)]
             })
     ),
+    revpairwise = list(
+        ratio = list(
+            comparison = function(x) {
+                out <- outer(x, x, "/")
+                diag(out) <- NA
+                out[lower.tri(out)] <- NA # Set lower triangle to NA
+                out <- as.vector(out)
+                out <- out[!is.na(out)] # Keep only non-NA values
+                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
+                if (length(out) > 25 && isTRUE(safe_mode)) {
+                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
+                    stop(msg, call. = FALSE)
+                }
+                out
+            },
+            label = function(x) {
+                x <- sprintf("(%s)", x)
+                out <- outer(x, x, paste, sep = " / ")
+                out[lower.tri(out)] <- NA # Set lower triangle to NA
+                diag(out) <- NA
+                out <- as.vector(out)
+                out[!is.na(out)]
+            }),
+        difference = list(
+            comparison = function(x) {
+                out <- outer(x, x, "-")
+                diag(out) <- NA
+                out[lower.tri(out)] <- NA # Set lower triangle to NA
+                out <- as.vector(out)
+                out <- out[!is.na(out)] # Keep only non-NA values
+                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
+                if (length(out) > 25 && isTRUE(safe_mode)) {
+                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
+                    stop(msg, call. = FALSE)
+                }
+                out
+            },
+            label = function(x) {
+                x <- sprintf("(%s)", x)
+                out <- outer(x, x, paste, sep = " - ")
+                out[lower.tri(out)] <- NA # Set lower triangle to NA
+                diag(out) <- NA
+                out <- as.vector(out)
+                out[!is.na(out)]
+            })
+    ),
     trt_vs_ctrl = list(
         ratio = list(
             comparison = function(x) mean(x[2:length(x)] / x[1]),
