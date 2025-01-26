@@ -41,7 +41,7 @@ bootstrap_boot <- function(model, INF_FUN, ...) {
     t <- matrix(B$t, nrow = nrow(B$t))
     op <- cbind(
         apply(t, 2L, mean, na.rm = TRUE),
-        sqrt(apply(t, 2L, function(t.st) var(t.st[!is.na(t.st)]))))
+        sqrt(apply(t, 2L, function(t.st) stats::var(t.st[!is.na(t.st)]))))
     out$std.error <- op[, 2]
 
     # extract from weird boot.ci() list (inspired from `broom::tidy.broom` under MIT)
