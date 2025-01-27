@@ -29,6 +29,7 @@ New:
 * `rvar` column from `get_draws()` is now printed by default.
 * Matrix columns with 1 column are supported. Fixes errors when a variable was transformed by `scale()`, for example. Thanks to @barryrowlingson for the report.
 * Much faster inference with `inferences(method="boot")`. Thanks to @nremenyi for issue #1352.
+* `hypothesis=~pairwise` only errors when there are more than 300 comparisons. `options(marginaleffects_safe=FALSE)` to disable this check.
 
 Bugs:
 
