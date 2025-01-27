@@ -8,6 +8,7 @@ Breaking changes in preparation for 1.0.0 release:
 * The default `type` is now "survival" for models of class `coxph`, `flexsurvreg`, and `coxph_weightit`.
 * `p_adjust` argument deprecated because of name-matching conflict with `p` argument in quantile regression and others. The recommended workflow is now to pass the object to the `hypotheses()` function and use its `multcomp` argument.
 * Removed long deprecated functions from the code base. These functions were already raising errors: `marginaleffects`, `meffects`, `marginal_means`, `deltamethod`, `datagridcf`. 
+* `newdata="marginalmeans"` was changed to `newdata="balanced"` several releases ago, but backward compatibility was maintained. This shortcut is no longer available at all.
 
 New:
 
