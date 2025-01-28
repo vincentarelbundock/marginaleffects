@@ -22,16 +22,16 @@ hypothesis_formula_list <- list(
     pairwise = list(
         ratio = list(
             comparison = function(x) {
+                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
+                if (length(x) > 25 && isTRUE(safe_mode)) {
+                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
+                    stop(msg, call. = FALSE)
+                }
                 out <- outer(x, x, "/")
                 diag(out) <- NA
                 out[upper.tri(out)] <- NA # Set lower triangle to NA
                 out <- as.vector(out)
                 out <- out[!is.na(out)] # Keep only non-NA values
-                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
-                if (length(out) > 25 && isTRUE(safe_mode)) {
-                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
-                    stop(msg, call. = FALSE)
-                }
                 out
             },
             label = function(x) {
@@ -44,16 +44,16 @@ hypothesis_formula_list <- list(
             }),
         difference = list(
             comparison = function(x) {
+                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
+                if (length(x) > 25 && isTRUE(safe_mode)) {
+                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
+                    stop(msg, call. = FALSE)
+                }
                 out <- outer(x, x, "-")
                 diag(out) <- NA
                 out[upper.tri(out)] <- NA # Set lower triangle to NA
                 out <- as.vector(out)
                 out <- out[!is.na(out)] # Keep only non-NA values
-                safe_mode <- getOption("marginaleffects_safe", default = TRUE)
-                if (length(out) > 25 && isTRUE(safe_mode)) {
-                    msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
-                    stop(msg, call. = FALSE)
-                }
                 out
             },
             label = function(x) {
