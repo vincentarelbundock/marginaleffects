@@ -6,6 +6,8 @@
 #' [https://vincentarelbundock.github.io/Rdatasets/](https://vincentarelbundock.github.io/Rdatasets/)
 #'
 #' @param dataset String. Name of the dataset to download.
+#'   - `marginaleffects` archive: `affairs`, `airbnb`, `immigration`, `lottery`, `military`, `thornton`
+#'   - Rdatasets archive: The name of a dataset listed on the Rdatasets index. See the website or the `search` argument.
 #' @param package String. Package name that originally published the data.
 #' @param docs Logical. If TRUE open the documentation using `getOption("viewer")` or the Rstudio viewer.
 #' @param search Regular expression. Download the dataset index from Rdatasets; search the "Package", "Item", and "Title" columns; and return the matching rows.
@@ -49,12 +51,13 @@ get_dataset <- function(
     if (identical(package, "marginaleffects")) {
         insight::check_if_installed("nanoparquet")
 
-        checkmate::assert_choice(dataset, c("affairs", "airbnb", "immigration", "military", "thornton"))
+        checkmate::assert_choice(dataset, c("affairs", "airbnb", "immigration", "lottery", "military", "thornton"))
 
         data <- switch(dataset,
             "affairs" = "https://marginaleffects.com/data/affairs.parquet",
             "airbnb" = "https://marginaleffects.com/data/airbnb.parquet",
             "immigration" = "https://marginaleffects.com/data/immigration.parquet",
+            "lottery" = "https://marginaleffects.com/data/lottery.parquet",
             "military" = "https://marginaleffects.com/data/military.parquet",
             "thornton" = "https://marginaleffects.com/data/thornton.parquet"
         )
@@ -66,6 +69,7 @@ get_dataset <- function(
             "affairs" = "https://marginaleffects.com/data/affairs.html",
             "airbnb" = "https://marginaleffects.com/data/airbnb.html",
             "immigration" = "https://marginaleffects.com/data/immigration.html",
+            "lottery" = "https://marginaleffects.com/data/lottery.html",
             "military" = "https://marginaleffects.com/data/military.html",
             "thornton" = "https://marginaleffects.com/data/thornton.html"
         )
