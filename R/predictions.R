@@ -192,7 +192,7 @@ predictions <- function(model,
     insight::format_error("The `cross` argument is not available in this function.")
   }
 
-  call_attr <- construct_call("predictions")
+  call_attr <- construct_call(model, "predictions")
 
   if ("transform_post" %in% ...names()) {
     transform <- ...elt(match("transform_post", ...names())[1L])
@@ -685,7 +685,7 @@ avg_predictions <- function(model,
   }
 
   #Construct predictions() call
-  call_attr <- construct_call("predictions")
+  call_attr <- construct_call(model, "predictions")
   call_attr[["by"]] <- by
 
   out <- eval.parent(call_attr)

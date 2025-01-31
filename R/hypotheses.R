@@ -171,7 +171,7 @@ hypotheses <- function(
     insight::format_error(msg)
   }
 
-  call_attr <- construct_call("hypotheses")
+  call_attr <- construct_call(model, "hypotheses")
 
   if ("modeldata" %in% ...names()) {
     call_attr[["modeldata"]] <- ...elt(match("modeldata", ...names())[1L])

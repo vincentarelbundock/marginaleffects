@@ -230,7 +230,7 @@ slopes <- function(model,
                    numderiv = "fdforward",
                    ...) {
 
-    call_attr <- construct_call("slopes")
+    call_attr <- construct_call(model, "slopes")
 
     # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
@@ -363,7 +363,7 @@ avg_slopes <- function(model,
     }
 
     #Construct comparisons() call
-    call_attr <- construct_call("slopes")
+    call_attr <- construct_call(model, "slopes")
 
     out <- eval.parent(call_attr)
 

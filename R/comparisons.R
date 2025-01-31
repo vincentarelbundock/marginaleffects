@@ -234,7 +234,7 @@ comparisons <- function(model,
                         numderiv = "fdforward",
                         ...) {
 
-  call_attr <- construct_call("comparisons")
+  call_attr <- construct_call(model, "comparisons")
 
   # multiple imputation
   if (inherits(model, c("mira", "amest"))) {
@@ -582,7 +582,7 @@ avg_comparisons <- function(model,
   }
 
   #Construct comparisons() call
-  call_attr <- construct_call("comparisons")
+  call_attr <- construct_call(model, "comparisons")
 
   out <- eval.parent(call_attr)
 
