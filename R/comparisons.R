@@ -233,12 +233,16 @@ comparisons <- function(model,
                         eps = NULL,
                         numderiv = "fdforward",
                         ...) {
-  dots <- list(...)
 
-  # very early, before any use of newdata
-  # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-  scall <- rlang::enquo(newdata)
-  newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+  call_attr <- construct_call("comparisons")
+
+  # multiple imputation
+  if (inherits(model, c("mira", "amest"))) {
+      out <- process_imputation(model, call_attr)
+      return(out)
+  }
+
+  dots <- list(...)
 
   # extracting modeldata repeatedly is slow.
   if (isTRUE(by)) {
@@ -252,32 +256,14 @@ comparisons <- function(model,
       modeldata = dots[["modeldata"]],
       wts = wts)
   }
-
-  # build call: match.call() doesn't work well in *apply()
-  # after sanitize_newdata_call
-  call_attr <- c(
-    list(
-      name = "comparisons",
-      model = model,
-      newdata = newdata,
-      variables = variables,
-      type = type,
-      vcov = vcov,
-      by = by,
-      conf_level = conf_level,
-      comparison = comparison,
-      transform = transform,
-      cross = cross,
-      wts = wts,
-      hypothesis = hypothesis,
-      equivalence = equivalence,
-      df = df),
-    dots)
-  if ("modeldata" %in% names(dots)) {
-    call_attr[["modeldata"]] <- modeldata
+  if ("modeldata" %in% ...names()) {
+      call_attr[["modeldata"]] <- modeldata
   }
-  call_attr <- do.call("call", call_attr)
 
+  # very early, before any use of newdata
+  # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+  scall <- rlang::enquo(newdata)
+  newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
   # required by stubcols later, but might be overwritten
   bycols <- NULL
@@ -300,11 +286,7 @@ comparisons <- function(model,
   type <- sanitize_type(model = model, type = type, calling_function = "comparisons")
   sanity_comparison(comparison)
 
-  # multiple imputation
-  if (inherits(model, c("mira", "amest"))) {
-    out <- process_imputation(model, call_attr)
-    return(out)
-  }
+
 
   # transforms
   comparison_label <- transform_label <- NULL
@@ -406,7 +388,7 @@ comparisons <- function(model,
     cross = cross,
     modeldata = modeldata)
   dots[["modeldata"]] <- NULL # dont' pass twice
-  args <- c(args, dots)
+  args <- utils::modifyList(args, dots)
   contrast_data <- do.call("get_contrast_data", args)
 
   args <- list(model,
@@ -421,7 +403,7 @@ comparisons <- function(model,
     cross = cross,
     hypothesis = hypothesis,
     modeldata = modeldata)
-  args <- c(args, dots)
+  args <- utils::modifyList(args, dots)
   mfx <- do.call("get_contrasts", args)
 
   hyp_by <- attr(mfx, "hypothesis_function_by")
@@ -450,7 +432,7 @@ comparisons <- function(model,
       eps = eps,
       cross = cross,
       numderiv = numderiv)
-    args <- c(args, dots)
+    args <- utils::modifyList(args, dots)
     se <- do.call("get_se_delta", args)
     J <- attr(se, "jacobian")
     attr(se, "jacobian") <- NULL
@@ -585,8 +567,8 @@ avg_comparisons <- function(model,
                             ...) {
   # order of the first few paragraphs is important
   # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-  scall <- rlang::enquo(newdata)
-  newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+  # scall <- rlang::enquo(newdata)
+  # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
   # Bootstrap
   out <- inferences_dispatch(
@@ -599,23 +581,28 @@ avg_comparisons <- function(model,
     return(out)
   }
 
-  out <- comparisons(
-    model = model,
-    newdata = newdata,
-    variables = variables,
-    type = type,
-    vcov = vcov,
-    by = by,
-    conf_level = conf_level,
-    comparison = comparison,
-    transform = transform,
-    cross = cross,
-    wts = wts,
-    hypothesis = hypothesis,
-    equivalence = equivalence,
-    df = df,
-    eps = eps,
-    ...)
+  #Construct comparisons() call
+  call_attr <- construct_call("comparisons")
+
+  out <- eval.parent(call_attr)
+
+  # out <- comparisons(
+  #   model = model,
+  #   newdata = newdata,
+  #   variables = variables,
+  #   type = type,
+  #   vcov = vcov,
+  #   by = by,
+  #   conf_level = conf_level,
+  #   comparison = comparison,
+  #   transform = transform,
+  #   cross = cross,
+  #   wts = wts,
+  #   hypothesis = hypothesis,
+  #   equivalence = equivalence,
+  #   df = df,
+  #   eps = eps,
+  #   ...)
 
   return(out)
 }

@@ -1,0 +1,21 @@
+#Similar to match.call() but works better in lapply, etc. Maybe be slow due to multiple calls to eval().
+construct_call <- function(calling_function, env = parent.frame(1L)) {
+  call_attr <- list(name = calling_function)
+
+  all_arg_names <- names(formals(get(calling_function), asNamespace(utils::packageName())))
+
+  arg_names <- setdiff(all_arg_names, "...")
+
+  call_attr <- c(call_attr,
+                 setNames(
+                   lapply(arg_names, function(i) {
+                     eval(str2lang(sprintf("substitute(%s)", i)), envir = env)
+                   }),
+                   arg_names))
+
+  if ("..." %in% all_arg_names) {
+    call_attr <- c(call_attr, as.list(substitute(alist(...), env))[-1L])
+  }
+
+  do.call("call", call_attr, quote = TRUE)
+}

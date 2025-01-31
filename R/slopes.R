@@ -229,82 +229,98 @@ slopes <- function(model,
                    eps = NULL,
                    numderiv = "fdforward",
                    ...) {
-  dots <- list(...)
 
-  # very early, before any use of newdata
-  # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-  scall <- rlang::enquo(newdata)
-  newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+    call_attr <- construct_call("slopes")
 
-  # build call: match.call() doesn't work well in *apply()
-  call_attr <- c(
-    list(
-      name = "slopes",
-      model = model,
-      newdata = newdata,
-      variables = variables,
-      type = type,
-      vcov = vcov,
-      by = by,
-      conf_level = conf_level,
-      slope = slope,
-      wts = wts,
-      hypothesis = hypothesis,
-      df = df,
-      eps = eps),
-    list(...))
-  call_attr <- do.call("call", call_attr)
+    # very early, before any use of newdata
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    # scall <- rlang::enquo(newdata)
+    # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
-  # slopes() does not support a named list of variables like comparisons()
-  checkmate::assert_character(variables, null.ok = TRUE)
+    # build call: match.call() doesn't work well in *apply()
+    # call_attr <- c(
+    #     list(
+    #         name = "slopes",
+    #         model = model,
+    #         newdata = newdata,
+    #         variables = variables,
+    #         type = type,
+    #         vcov = vcov,
+    #         by = by,
+    #         conf_level = conf_level,
+    #         slope = slope,
+    #         wts = wts,
+    #         hypothesis = hypothesis,
+    #         df = df,
+    #         eps = eps),
+    #     list(...))
+    # call_attr <- do.call("call", call_attr)
 
-  # slope
-  valid <- c("dydx", "eyex", "eydx", "dyex", "dydxavg", "eyexavg", "eydxavg", "dyexavg")
-  checkmate::assert_choice(slope, choices = valid)
+    # slopes() does not support a named list of variables like comparisons()
+    checkmate::assert_character(variables, null.ok = TRUE)
 
-  # sanity checks and pre-processing
-  model <- sanitize_model(model = model, newdata = newdata, wts = wts, vcov = vcov, by = by, calling_function = "marginaleffects", ...)
-  sanity_dots(model = model, calling_function = "marginaleffects", ...)
-  type <- sanitize_type(model = model, type = type, calling_function = "slopes")
+    # slope
+    valid <- c("dydx", "eyex", "eydx", "dyex", "dydxavg", "eyexavg", "eydxavg", "dyexavg")
+    checkmate::assert_choice(slope, choices = valid)
 
-  ############### sanity checks are over
+    # sanity checks and pre-processing
+    model <- sanitize_model(model = model, wts = wts, vcov = vcov, by = by, calling_function = "marginaleffects", ...)
+    sanity_dots(model = model, calling_function = "marginaleffects", ...)
+    type <- sanitize_type(model = model, type = type, calling_function = "slopes")
 
-  # Bootstrap
-  out <- inferences_dispatch(
-    INF_FUN = slopes,
-    model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
-    conf_level = conf_level,
-    by = by,
-    wts = wts, slope = slope, hypothesis = hypothesis, ...)
-  if (!is.null(out)) {
+    ############### sanity checks are over
+
+    # Bootstrap
+    out <- inferences_dispatch(
+        INF_FUN = slopes,
+        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
+        conf_level = conf_level,
+        by = by,
+        wts = wts, slope = slope, hypothesis = hypothesis, ...)
+    if (!is.null(out)) {
+        return(out)
+    }
+
+    call_attr_c <- call_attr
+    call_attr_c[[1L]] <- quote(marginaleffects::comparisons)
+    call_attr_c[["model"]] <- model
+    call_attr_c[["type"]] <- type
+    call_attr_c[["comparison"]] <- slope
+    call_attr_c[["cross"]] <- FALSE
+    call_attr_c[["internal_call"]] <- TRUE
+    call_attr_c[["slope"]] <- NULL
+
+    # out <- comparisons(
+    #     model,
+    #     newdata = newdata,
+    #     variables = variables,
+    #     vcov = vcov,
+    #     conf_level = conf_level,
+    #     type = type,
+    #     wts = wts,
+    #     hypothesis = hypothesis,
+    #     equivalence = equivalence,
+    #     df = df,
+    #     by = by,
+    #     eps = eps,
+    #     numderiv = numderiv,
+    #     comparison = slope,
+    #     cross = FALSE,
+    #     # secret arguments
+    #     internal_call = TRUE,
+    #     ...)
+
+    out <- eval.parent(call_attr_c)
+
+    if (!is.null(attr(out, "call"))) {
+        attr(out, "call") <- call_attr
+    }
+
+    # class
+    data.table::setDF(out)
+    class(out) <- setdiff(class(out), "comparisons")
+    class(out) <- c("slopes", "marginaleffects", class(out))
     return(out)
-  }
-
-  out <- comparisons(
-    model,
-    newdata = newdata,
-    variables = variables,
-    vcov = vcov,
-    conf_level = conf_level,
-    type = type,
-    wts = wts,
-    hypothesis = hypothesis,
-    equivalence = equivalence,
-    df = df,
-    by = by,
-    eps = eps,
-    numderiv = numderiv,
-    comparison = slope,
-    cross = FALSE,
-    # secret arguments
-    internal_call = TRUE,
-    ...)
-
-  # class
-  data.table::setDF(out)
-  class(out) <- setdiff(class(out), "comparisons")
-  class(out) <- c("slopes", "marginaleffects", class(out))
-  return(out)
 }
 
 
@@ -329,40 +345,44 @@ avg_slopes <- function(model,
                        eps = NULL,
                        numderiv = "fdforward",
                        ...) {
-  # order of the first few paragraphs is important
-  # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-  # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
-  scall <- rlang::enquo(newdata)
-  newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+    # order of the first few paragraphs is important
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
+    # scall <- rlang::enquo(newdata)
+    # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
 
-  # Bootstrap
-  out <- inferences_dispatch(
-    INF_FUN = avg_slopes,
-    model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
-    conf_level = conf_level, by = by,
-    wts = wts, slope = slope, hypothesis = hypothesis, ...)
-  if (!is.null(out)) {
+    # Bootstrap
+    out <- inferences_dispatch(
+        INF_FUN = avg_slopes,
+        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
+        conf_level = conf_level, by = by,
+        wts = wts, slope = slope, hypothesis = hypothesis, ...)
+    if (!is.null(out)) {
+        return(out)
+    }
+
+    #Construct comparisons() call
+    call_attr <- construct_call("slopes")
+
+    out <- eval.parent(call_attr)
+
+    # out <- slopes(
+    #     model = model,
+    #     newdata = newdata,
+    #     variables = variables,
+    #     type = type,
+    #     vcov = vcov,
+    #     conf_level = conf_level,
+    #     by = by,
+    #     slope = slope,
+    #     wts = wts,
+    #     hypothesis = hypothesis,
+    #     equivalence = equivalence,
+    #     df = df,
+    #     eps = eps,
+    #     numderiv = numderiv,
+    #     ...)
+
     return(out)
-  }
-
-
-  out <- slopes(
-    model = model,
-    newdata = newdata,
-    variables = variables,
-    type = type,
-    vcov = vcov,
-    conf_level = conf_level,
-    by = by,
-    slope = slope,
-    wts = wts,
-    hypothesis = hypothesis,
-    equivalence = equivalence,
-    df = df,
-    eps = eps,
-    numderiv = numderiv,
-    ...)
-
-  return(out)
 }
