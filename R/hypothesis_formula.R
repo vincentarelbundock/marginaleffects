@@ -149,11 +149,17 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
         }
     }
 
-    labels <- get_labels(x, by = by)
 
     form <- sanitize_hypothesis_formula(hypothesis)
 
     group <- form$group
+
+    if (isTRUE(checkmate::check_character(by))) {
+        bycols <- setdiff(by, group)
+    } else {
+        bycols <- by
+    }
+    labels <- get_labels(x, by = bycols, hypothesis_by = group)
 
     if (isTRUE(form$lhs == "arbitrary_function")) {
         fun_comparison <- sprintf("function(x) %s", form$rhs)
@@ -181,8 +187,7 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
         groupval <- list()
         if (length(col_x) > 0) {
             groupval <- c(groupval, list(x[, ..col_x, drop = FALSE]))
-        }
-        if (length(col_newdata) > 0) {
+        } else if (length(col_newdata) > 0) {
             groupval <- c(groupval, list(newdata[, ..col_newdata, drop = FALSE]))
         }
         groupval <- do.call(cbind, Filter(is.data.frame, groupval))
@@ -203,6 +208,7 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
 
     lab <- function(x) suppressWarnings(names(fun_comparison(x)))
     lab <- tryCatch(combined[, lapply(.SD, lab), keyby = groupval], error = function(e) NULL)
+
     if (inherits(lab, "data.frame") && nrow(lab) == nrow(estimates)) {
         data.table::setnames(lab, old = "estimate", "hypothesis")
         cols <- setdiff(colnames(lab), colnames(estimates))
@@ -222,10 +228,10 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
     out <- estimates
 
     # Sometimes we get duplicated `term` columns
-    idx <- grep("term", colnames(out), value = TRUE)
+    # drop all instances after the first
+    idx <- grep("^term$", colnames(out))
     if (length(idx) > 1) {
         idx <- idx[2:length(idx)]
-        # drop all instances after the first
         out <- out[, -..idx]
     }
 
