@@ -65,7 +65,6 @@ In addition to full book chapters, [marginaleffects.com](https://marginaleffects
    - [S Values](https://marginaleffects.com/bonus/svalues.html)
    - [Tables](https://marginaleffects.com/bonus/tables.html)
 1. Back Matter
-   - [Python](https://marginaleffects.com/chapters/python.html)
    - [Bibliography](https://marginaleffects.com/chapters/bibliography.html)
 1. [Citation and License](https://marginaleffects.com/bonus/citation.html)
 

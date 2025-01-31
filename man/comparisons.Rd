@@ -199,7 +199,7 @@ first entry in the error message is used by default.}
 }
 \item \code{rhs}
 \itemize{
-\item \code{pairwise}: pairwise differences between estimates in each row.
+\item \code{pairwise} and \code{revpairwise}: pairwise differences between estimates in each row.
 \item \code{reference}: differences between the estimates in each row and the estimate in the first row.
 \item \code{sequential}: difference between an estimate and the estimate in the next row.
 \item \code{meandev}: difference between an estimate and the mean of all estimates.
@@ -232,7 +232,7 @@ first entry in the error message is used by default.}
 \item The function can also accept optional input arguments: \code{newdata}, \code{by}, \code{draws}.
 \item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{get_draws()} to extract and manipulate the draws directly.
 }
-\item See the Examples section below and the vignette: https://marginaleffects.com/chapters/hypothesis.html
+\item See the Examples section below and the vignette: \url{https://marginaleffects.com/chapters/hypothesis.html}
 }}
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}

@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.25.0
 
 Breaking changes in preparation for 1.0.0 release:
 
@@ -19,7 +19,7 @@ New:
   - `hypothesis = ~ trt_vs_ctrl | groupid`
   - `hypothesis = ~ I(foo(x)) | groupid`
   - `hypothesis = ~ I(\(x) c(a = x[1], b = mean(x[2:length(x))))`
-* New function `get_dataset()` to download example data frames from the marginaleffects.com website. Thanks to @bshor for the feature request.
+* New function `get_dataset()` to download example data frames from the https://marginaleffects.com website. Thanks to @bshor for the feature request.
 * New `multcomp` argument for the `hypotheses()` function.
 * `hypotheses()` inherits the `conf_level` from `marginaleffects` objects when available. Otherwise, the default remains 0.95.
 * More informative warning for `lme4` and `glmmTMB` models with `re.form=NULL`
