@@ -35,13 +35,13 @@
 #' plot_comparisons(mod, variables = "am", condition = list("hp", "drat" = "threenum"))
 #'
 #' # marginal comparisons
-#' plot_comparisons(mod, variables = "hp", by = "am") 
+#' plot_comparisons(mod, variables = "hp", by = "am")
 #'
 #' # marginal comparisons on a counterfactual grid
-#' plot_comparisons(mod, 
+#' plot_comparisons(mod,
 #'    variables = "hp",
 #'    by = "am",
-#'    newdata = datagrid(am = 0:1, grid_type = "counterfactual")) 
+#'    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 #'
 plot_comparisons <- function(model,
                              variables = NULL,
@@ -58,16 +58,16 @@ plot_comparisons <- function(model,
                              gray = getOption("marginaleffects_plot_gray", default = FALSE),
                              draw = TRUE,
                              ...) {
-  dots <- list(...)
-  if ("effect" %in% names(dots)) {
+
+  if ("effect" %in% ...names()) {
     if (is.null(variables)) {
-      variables <- dots[["effect"]]
+        variables <- ...elt(match("effect", ...names())[1L])
     } else {
       insight::format_error("The `effect` argument has been renamed to `variables`.")
     }
   }
-  if ("transform_post" %in% names(dots)) { # backward compatibility
-    transform <- dots[["transform_post"]]
+  if ("transform_post" %in% ...names()) { # backward compatibility
+      transform <- ...elt(match("transform_post", ...names())[1L])
   }
 
   if (inherits(model, "mira") && is.null(newdata)) {

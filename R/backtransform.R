@@ -4,11 +4,10 @@ backtransform <- function(x, transform) {
     if (!is.function(transform)) {
         if (is.null(transform[[1]])) {
             return(x)
-        } else {
-            transform <- transform[[1]]
         }
+
+        transform <- transform[[1]]
     }
-   
 
     checkmate::assert_data_frame(x)
     checkmate::assert_function(transform)

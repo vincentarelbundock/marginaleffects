@@ -164,12 +164,12 @@ plot_slopes(mod, variables = "am", condition = list("hp", "drat" = range))
 plot_slopes(mod, variables = "am", condition = list("hp", "drat" = "threenum"))
 
 # marginal slopes
-plot_slopes(mod, variables = "hp", by = "am") 
+plot_slopes(mod, variables = "hp", by = "am")
 
 # marginal slopes on a counterfactual grid
-plot_slopes(mod, 
+plot_slopes(mod,
    variables = "hp",
    by = "am",
-   newdata = datagrid(am = 0:1, grid_type = "counterfactual")) 
+   newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 
 }

@@ -116,7 +116,9 @@ sanitize_transform <- function(x) {
 
     if (is.null(x)) {
         return(x)
-    } else if (is.function(x)) {
+    }
+
+    if (is.function(x)) {
         out <- list(x)
         names(out) <- deparse(substitute(x))
     } else if (x == "exp") {

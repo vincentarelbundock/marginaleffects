@@ -26,14 +26,14 @@
 #' If `datagrid` is used in a `predictions()`, `comparisons()`, or `slopes()` call as the
 #' `newdata` argument, the model is automatically inserted in the `model` argument of `datagrid()`
 #' call, and users do not need to specify either the `model` or `newdata` arguments. The same behavior will occur when the value supplied to `newdata=` is a function call which starts with "datagrid". This is intended to allow users to create convenience shortcuts like:
-#' 
+#'
 #' \preformatted{
 #' library(marginaleffects)
 #' mod <- lm(mpg ~ am + vs + factor(cyl) + hp, mtcars)
 #' datagrid_bal <- function(...) datagrid(..., grid_type = "balanced")
 #' predictions(model, newdata = datagrid_bal(cyl = 4))
 #' }
-#' 
+#'
 #'
 #' If users supply a model, the data used to fit that model is retrieved using
 #' the `insight::get_data` function.
@@ -85,8 +85,6 @@ datagrid <- function(
     FUN_binary = NULL,
     FUN_other = NULL) {
 
-    dots <- list(...)
-
     # backward compatibility: 20231220
     if (identical(grid_type, "typical")) {
         grid_type <- "mean_or_mode"
@@ -105,7 +103,7 @@ datagrid <- function(
     checkmate::assert_data_frame(newdata, null.ok = TRUE)
     checkmate::assert_flag(response)
 
-    explicit <- c(names(dots), by)
+    explicit <- c(...names(), by)
 
     if (grid_type == "mean_or_mode") {
         if (is.null(FUN_character)) FUN_character <- get_mode
@@ -133,7 +131,7 @@ datagrid <- function(
         args <- list(
             model = model,
             newdata = newdata)
-        args <- c(dots, args)
+        args <- c(list(...), args)
         out <- do.call("datagridcf_internal", args)
         return(out)
     }
@@ -177,7 +175,7 @@ datagrid <- function(
 
         return(out)
     }
-    
+
     out <- datagrid_engine(...,
                 model = model,
                 newdata = newdata,
@@ -214,8 +212,6 @@ datagrid_engine <- function(
     FUN_other = function(x) mean(x, na.rm = TRUE),
     by = NULL) {
 
-    dots <- list(...)
-   
     tmp <- prep_datagrid(..., model = model, newdata = newdata, by = by)
 
     at <- tmp$at
@@ -224,7 +220,7 @@ datagrid_engine <- function(
     variables_manual <- names(at)
     variables_automatic <- tmp$automatic
 
-    # usually we don't want the response in the grid, but 
+    # usually we don't want the response in the grid, but
     # sometimes there are two responses and we need one of them:
     # brms::brm(y | trials(n) ~ x + w + z)
     if (!is.null(model) && isFALSE(response)) {
@@ -313,9 +309,7 @@ datagridcf_internal <- function(
     model = NULL,
     newdata = NULL) {
 
-    dots <- list(...)
-
-    if (length(dots) == 0) {
+    if (...length() == 0) {
         insight::format_error("Users must specify variable values when `grid_type='counterfactual'")
     }
 
@@ -359,7 +353,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
     checkmate::assert_data_frame(newdata, null.ok = TRUE)
 
     at <- list(...)
-    
+
     # e.g., mlogit vignette we plot by group, but group is of length 0 because
     # we don't know how many groups there are until we make the first
     # prediction.
@@ -379,7 +373,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
         insight::format_error(msg)
     }
 
-    # newdata before model: if user supplies newdata explicitly, they might want 
+    # newdata before model: if user supplies newdata explicitly, they might want
     # all columns for something like `hypothesis = function()`
     if (!is.null(newdata)) {
         variables_list <- NULL
@@ -462,7 +456,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
             }
         }
     }
-    
+
     # cluster identifiers will eventually be treated as factors
     if (!is.null(model)) {
         v <- insight::find_variables(model, verbose = FALSE)
@@ -473,7 +467,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
     }
 
     data.table::setDT(newdata)
-    
+
     out <- list("newdata" = newdata,
                 "at" = at,
                 "all" = variables_all,

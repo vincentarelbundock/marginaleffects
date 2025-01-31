@@ -1,8 +1,7 @@
 # This function is very strict.
 sanity_dots <- function(model, calling_function = NULL, ...) {
-    dots <- list(...)
 
-    if ("p_adjust" %in% names(dots)) {
+    if ("p_adjust" %in% ...names()) {
         msg <- "The `p_adjust` argument is deprecated. Please use the `multcomp` argument of the `hypotheses()` function instead."
         stop(msg, call. = FALSE)
     }
@@ -12,7 +11,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         # interaction: cross countrast+slope do not make sense
         # transform: should we really be back-transforming slopes?
         unsupported <- c("comparison", "transform", "cross", "transform_pre", "transform_post")
-        unsupported <- intersect(names(dots), unsupported)
+        unsupported <- intersect(...names(), unsupported)
         if (length(unsupported) > 0) {
             msg <- sprintf(
                 "These arguments are supported by the `comparisons()` function but not by the `slopes()` function: %s",
@@ -22,7 +21,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     }
 
     # deprecated
-    if ("interaction" %in% names(dots)) {
+    if ("interaction" %in% ...names()) {
         msg <- "The `interaction` argument has been deprecated. Please use `cross` instead."
         insight::format_warning(msg)
     }
@@ -74,7 +73,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     backward_compatibility <- c("conf.level")
     good <- c(good, backward_compatibility)
 
-    bad <- setdiff(names(dots), c(good, white_list))
+    bad <- setdiff(...names(), c(good, white_list))
     if (length(bad) > 0) {
         if (model_class %in% names(valid)) {
             msg <- sprintf(

@@ -27,7 +27,7 @@
 #' @include sanity_model.R
 #' @rdname sanitize_model_specific
 #' @keywords internal
-sanitize_model_specific.mlogit <- function(model, newdata, ...) {
+sanitize_model_specific.mlogit <- function(model, ...) {
     msg <- "Support for `mlogit` models was deprecated in version 0.23.0. The reason is that the data structure for these models is one observation-choice per row. Every other model-fitting package supported by `marginaleffects` treats rows as individual observations. The observation-choice structure made it harder to track indices and match individual predictions to rows in the original data. This added a lot of complexity to `marginaleffects`, and the results were not always reliable or safe."
     insight::format_error(msg)
     # if (!is.null(newdata)) {

@@ -164,10 +164,10 @@ plot_predictions(mod, condition = list("hp", wt = range))
 
 # marginal predictions
 mod <- lm(mpg ~ hp * am, data = mtcars)
-plot_predictions(mod, by = "am") 
+plot_predictions(mod, by = "am")
 
 # marginal predictions on a counterfactual grid
 plot_predictions(mod, by = "am",
-   newdata = datagrid(am = 0:1, grid_type = "counterfactual")) 
+   newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 
 }

@@ -1,9 +1,14 @@
 process_imputation <- function(x, call_attr, marginal_means = FALSE) {
   insight::check_if_installed("mice")
 
-  # issue #1269: transforms must be apply after pooling
-  tr <- call_attr[["transform"]]
-  call_attr[["transform"]] <- NULL
+  # issue #1269: transforms must be applied after pooling
+  if ("transform" %in% names(call_attr)) {
+    tr <- evalup(call_attr[["transform"]])
+    call_attr[["transform"]] <- NULL
+  }
+  else {
+    tr <- NULL
+  }
 
   if (inherits(x, "mira")) {
     x <- x$analyses
@@ -26,6 +31,10 @@ process_imputation <- function(x, call_attr, marginal_means = FALSE) {
       out <- mfx_list[[1]]
     }
     mfx_list[[i]]$term <- seq_len(nrow(mfx_list[[i]]))
+
+    #Needed for mice::pool() to get dfcom, even when lean = TRUE
+    attr(mfx_list[[i]], "model") <- x[[i]]
+
     class(mfx_list[[i]]) <- c("marginaleffects_mids", class(mfx_list[[i]]))
   }
   mipool <- mice::pool(mfx_list)
@@ -40,19 +49,25 @@ process_imputation <- function(x, call_attr, marginal_means = FALSE) {
     out$df <- mipool$pooled$df
   }
   out$std.error <- sqrt(mipool$pooled$t)
+
   out <- get_ci(
     out,
-    vcov = call_attr[["vcov"]],
+    vcov = NULL,
     conf_level = call_attr[["conf_level"]],
     df = mipool$pooled$df)
 
   out <- backtransform(out, sanitize_transform(tr))
 
-  attr(out, "inferences") <- mipool
-  attr(out, "model") <- mice::pool(lapply(mfx_list, attr, "model"))
+  # Global option for lean return object
+  lean <- getOption("marginaleffects_lean", default = FALSE)
+
+  if (!lean) {
+    attr(out, "inferences") <- mipool
+    attr(out, "model") <- mice::pool(lapply(mfx_list, attr, "model"))
+  }
+
   return(out)
 }
-
 
 #' tidy helper
 #'

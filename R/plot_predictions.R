@@ -45,11 +45,11 @@
 #'
 #' # marginal predictions
 #' mod <- lm(mpg ~ hp * am, data = mtcars)
-#' plot_predictions(mod, by = "am") 
+#' plot_predictions(mod, by = "am")
 #'
 #' # marginal predictions on a counterfactual grid
 #' plot_predictions(mod, by = "am",
-#'    newdata = datagrid(am = 0:1, grid_type = "counterfactual")) 
+#'    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 #'
 plot_predictions <- function(model,
                              condition = NULL,
@@ -65,18 +65,17 @@ plot_predictions <- function(model,
                              gray = getOption("marginaleffects_plot_gray", default = FALSE),
                              draw = TRUE,
                              ...) {
-  dots <- list(...)
 
   checkmate::assert_number(points, lower = 0, upper = 1)
 
-  if ("variables" %in% names(dots)) {
+  if ("variables" %in% ...names()) {
     insight::format_error("The `variables` argument is not supported by this function.")
   }
-  if ("effect" %in% names(dots)) {
+  if ("effect" %in% ...names()) {
     insight::format_error("The `effect` argument is not supported by this function.")
   }
-  if ("transform_post" %in% names(dots)) { # backward compatibility
-    transform <- dots[["transform_post"]]
+  if ("transform_post" %in% ...names()) { # backward compatibility
+      transform <- ...elt(match("transform_post", ...names())[1L])
   }
 
   if (inherits(model, "mira") && is.null(newdata)) {
