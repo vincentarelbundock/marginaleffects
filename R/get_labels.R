@@ -1,16 +1,20 @@
-get_labels <- function(x, idx = NULL, by = NULL, wrap_parens = FALSE) {
+get_labels <- function(x, idx = NULL, by = NULL, wrap_parens = FALSE, hypothesis_by = NULL) {
     if (!is.data.frame(x) && !is.vector(x)) {
         return(NULL)
     }
 
     if (is.data.frame(x)) {
+        x <- data.table::data.table(x)
+
         # Identify relevant columns
         lab_cols <- grep("^term$|^group$|^contrast$|^contrast_|^value$|^by$", names(x), value = TRUE)
         if (isTRUE(checkmate::check_character(by))) {
             lab_cols <- unique(c(lab_cols, by))
         }
 
-        # Filter columns with more than one unique value
+        lab_cols <- setdiff(lab_cols, hypothesis_by)
+
+        # Filter out columns with more than one unique value, within `hypothesis_by`
         lab_cols <- Filter(function(col) length(unique(x[[col]])) > 1, lab_cols)
 
         if (length(lab_cols) == 0) {
@@ -18,11 +22,23 @@ get_labels <- function(x, idx = NULL, by = NULL, wrap_parens = FALSE) {
             labels <- paste0("b", seq_len(nrow(x)))
         } else {
             # Create labels by pasting unique combinations of selected columns
-            lab_df <- data.frame(x)[, lab_cols, drop = FALSE]
+            lab_df <- x[, ..lab_cols]
             labels <- apply(lab_df, 1, paste, collapse = " ")
 
-            # Handle duplicate labels
-            if (anyDuplicated(labels) > 0) {
+            # duplicated labels (within groups) revert to b1, b2, ...
+            uniq <- TRUE
+            if (isTRUE(checkmate::check_character(hypothesis_by, min.len = 1))) {
+                uniq <- x[, ..hypothesis_by]
+                uniq[, marginaleffects_unique_labels := labels]
+                uniq <- uniq[,
+                    .(marginaleffects_uniq_labels = anyDuplicated(marginaleffects_unique_labels) > 0),
+                    by = hypothesis_by]
+                uniq <- !any(uniq$V1)
+            } else if (anyDuplicated(labels) > 0) {
+                uniq <- FALSE
+            }
+
+            if (!isTRUE(uniq)) {
                 labels <- paste0("b", seq_len(nrow(x)))
             }
         }

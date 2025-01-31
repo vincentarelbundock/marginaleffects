@@ -342,8 +342,29 @@ mod <- lm(mpg ~ factor(cyl) + factor(gear), data = mtcars)
 cmp <- avg_comparisons(mod, hypothesis = ~ pairwise | term)
 expect_inherits(cmp, "comparisons")
 expect_equal(nrow(cmp), 2)
-expect_true("(cyl 8 - 4) - (cyl 6 - 4)" %in% cmp$hypothesis)
+expect_true("(8 - 4) - (6 - 4)" %in% cmp$hypothesis)
+expect_true("(5 - 3) - (4 - 3)" %in% cmp$hypothesis)
+expect_equal(cmp$term, c("cyl", "gear"))
 
+
+# Issue #1373
+dat <- get_dataset("thornton")
+dat$incentive <- as.factor(dat$incentive)
+dat$hiv2004 <- as.factor(dat$hiv2004)
+mod <- glm(
+    outcome ~ incentive * agecat,
+    data = dat,
+    family = binomial
+)
+p <- avg_predictions(
+    mod,
+    by = c("incentive", "agecat"),
+    newdata = datagrid(by = c("incentive", "agecat")),
+    hypothesis = ~ pairwise | agecat
+)
+expect_inherits(p, "predictions")
+expect_equal(nrow(p), 3)
+expect_false(any(grepl("18", p$hypothesis))) # no duplicate label
 
 
 

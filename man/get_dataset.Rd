@@ -12,7 +12,11 @@ get_dataset(
 )
 }
 \arguments{
-\item{dataset}{String. Name of the dataset to download.}
+\item{dataset}{String. Name of the dataset to download.
+\itemize{
+\item \code{marginaleffects} archive: \code{affairs}, \code{airbnb}, \code{immigration}, \code{lottery}, \code{military}, \code{thornton}
+\item Rdatasets archive: The name of a dataset listed on the Rdatasets index. See the website or the \code{search} argument.
+}}
 
 \item{package}{String. Package name that originally published the data.}
 
