@@ -150,6 +150,7 @@ https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
 }
 
 \examples{
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(marginaleffects)
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 
@@ -168,8 +169,9 @@ plot_slopes(mod, variables = "hp", by = "am")
 
 # marginal slopes on a counterfactual grid
 plot_slopes(mod,
-   variables = "hp",
-   by = "am",
-   newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
-
+  variables = "hp",
+  by = "am",
+  newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+)
+\dontshow{\}) # examplesIf}
 }

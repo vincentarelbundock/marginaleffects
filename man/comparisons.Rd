@@ -199,7 +199,7 @@ first entry in the error message is used by default.}
 }
 \item \code{rhs}
 \itemize{
-\item \code{pairwise}: pairwise differences between estimates in each row.
+\item \code{pairwise} and \code{revpairwise}: pairwise differences between estimates in each row.
 \item \code{reference}: differences between the estimates in each row and the estimate in the first row.
 \item \code{sequential}: difference between an estimate and the estimate in the next row.
 \item \code{meandev}: difference between an estimate and the mean of all estimates.
@@ -232,7 +232,7 @@ first entry in the error message is used by default.}
 \item The function can also accept optional input arguments: \code{newdata}, \code{by}, \code{draws}.
 \item This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use \code{get_draws()} to extract and manipulate the draws directly.
 }
-\item See the Examples section below and the vignette: https://marginaleffects.com/chapters/hypothesis.html
+\item See the Examples section below and the vignette: \url{https://marginaleffects.com/chapters/hypothesis.html}
 }}
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
@@ -274,7 +274,7 @@ Columns may include:
 \item \code{estimate}: an estimate of the prediction, counterfactual comparison, or slope.
 \item \code{std.error}: standard errors computed via the delta method.
 \item \code{p.value}: p value associated to the \code{estimate} column. The null is determined by the \code{hypothesis} argument (0 by default).
-\item \code{s.value}: Shannon information transforms of p values. See the S values vignette at \href{marginaleffects.com}{https://marginaleffects.com} the marginaleffects website.
+\item \code{s.value}: Shannon information transforms of p values. See the S values vignette at \url{https://marginaleffects.com} the marginaleffects website.
 \item \code{conf.low}: lower bound of the confidence (or credible) interval defined by the \code{conf_level} argument.
 \item \code{conf.high}: upper bound of the confidence (or credible) interval defined by the \code{conf_level} argument.
 \item \code{predicted_lo}: predicted outcome for the "low" value of the focal predictor in a counterfactual comparison.

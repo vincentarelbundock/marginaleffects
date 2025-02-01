@@ -152,6 +152,7 @@ response, link, E, Ep, average, class, conditional, count, cum.prob, cumhaz, cum
 }
 
 \examples{
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 mod <- lm(mpg ~ hp + wt, data = mtcars)
 plot_predictions(mod, condition = "wt")
 
@@ -167,7 +168,9 @@ mod <- lm(mpg ~ hp * am, data = mtcars)
 plot_predictions(mod, by = "am")
 
 # marginal predictions on a counterfactual grid
-plot_predictions(mod, by = "am",
-   newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
-
+plot_predictions(mod,
+  by = "am",
+  newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+)
+\dontshow{\}) # examplesIf}
 }

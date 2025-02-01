@@ -158,6 +158,7 @@ https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
 }
 
 \examples{
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 
 plot_comparisons(mod, variables = "hp", condition = "drat")
@@ -175,8 +176,9 @@ plot_comparisons(mod, variables = "hp", by = "am")
 
 # marginal comparisons on a counterfactual grid
 plot_comparisons(mod,
-   variables = "hp",
-   by = "am",
-   newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
-
+  variables = "hp",
+  by = "am",
+  newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+)
+\dontshow{\}) # examplesIf}
 }

@@ -56,8 +56,8 @@ coef.hypotheses <- coef.comparisons
 
 #' @export
 #' @noRd
-df.residual.comparisons <- function(x, ...) {
-  out <- tryCatch(stats::df.residual(attr(x, "model")), error = function(e) NULL)
+df.residual.comparisons <- function(object, ...) {
+  out <- tryCatch(stats::df.residual(attr(object, "model")), error = function(e) NULL)
   if (is.null(out)) out <- Inf
   return(out)
 }

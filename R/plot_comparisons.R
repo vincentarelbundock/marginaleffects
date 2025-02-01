@@ -21,7 +21,7 @@
 #' @template model_specific_arguments
 #' @return A `ggplot2` object
 #' @export
-#' @examples
+#' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 #'
 #' plot_comparisons(mod, variables = "hp", condition = "drat")
@@ -39,9 +39,10 @@
 #'
 #' # marginal comparisons on a counterfactual grid
 #' plot_comparisons(mod,
-#'    variables = "hp",
-#'    by = "am",
-#'    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
+#'   variables = "hp",
+#'   by = "am",
+#'   newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+#' )
 #'
 plot_comparisons <- function(model,
                              variables = NULL,
@@ -92,12 +93,14 @@ plot_comparisons <- function(model,
   checkmate::assert(
     checkmate::check_character(variables, names = "unnamed"),
     checkmate::check_list(variables, names = "unique"),
-    .var.name = "variables")
+    .var.name = "variables"
+  )
 
   modeldata <- get_modeldata(
     model,
     additional_variables = c(names(condition), by),
-    wts = wts)
+    wts = wts
+  )
 
   # mlr3 and tidymodels
   if (is.null(modeldata) || nrow(modeldata) == 0) {
@@ -124,7 +127,8 @@ plot_comparisons <- function(model,
       transform = transform,
       cross = FALSE,
       modeldata = modeldata,
-      ...)
+      ...
+    )
   }
 
   # marginal
@@ -134,7 +138,8 @@ plot_comparisons <- function(model,
       newdata = newdata,
       modeldata = modeldata,
       by = by,
-      wts = wts)
+      wts = wts
+    )
     datplot <- comparisons(
       model,
       by = by,
@@ -148,7 +153,8 @@ plot_comparisons <- function(model,
       transform = transform,
       cross = FALSE,
       modeldata = modeldata,
-      ...)
+      ...
+    )
     v_x <- by[[1]]
     v_color <- hush(by[[2]])
     v_facet_1 <- hush(by[[3]])
