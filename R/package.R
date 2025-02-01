@@ -7,6 +7,9 @@
 utils::globalVariables(c(
   "marginaleffects_contrast_hi",
   "marginaleffects_contrast_lo",
+  "..lab_cols",
+  "..hypothesis_by",
+  "marginaleffects_unique_labels",
   "..lab",
   "..nd",
   "..bycols",
