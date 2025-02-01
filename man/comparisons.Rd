@@ -274,7 +274,7 @@ Columns may include:
 \item \code{estimate}: an estimate of the prediction, counterfactual comparison, or slope.
 \item \code{std.error}: standard errors computed via the delta method.
 \item \code{p.value}: p value associated to the \code{estimate} column. The null is determined by the \code{hypothesis} argument (0 by default).
-\item \code{s.value}: Shannon information transforms of p values. See the S values vignette at \href{marginaleffects.com}{https://marginaleffects.com} the marginaleffects website.
+\item \code{s.value}: Shannon information transforms of p values. See the S values vignette at \url{https://marginaleffects.com} the marginaleffects website.
 \item \code{conf.low}: lower bound of the confidence (or credible) interval defined by the \code{conf_level} argument.
 \item \code{conf.high}: upper bound of the confidence (or credible) interval defined by the \code{conf_level} argument.
 \item \code{predicted_lo}: predicted outcome for the "low" value of the focal predictor in a counterfactual comparison.
