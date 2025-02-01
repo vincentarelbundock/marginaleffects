@@ -29,7 +29,7 @@
 #' @template model_specific_arguments
 #' @return A `ggplot2` object
 #' @export
-#' @examples
+#' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' library(marginaleffects)
 #' mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 #'
@@ -44,13 +44,14 @@
 #' plot_slopes(mod, variables = "am", condition = list("hp", "drat" = "threenum"))
 #'
 #' # marginal slopes
-#' plot_slopes(mod, variables = "hp", by = "am") 
+#' plot_slopes(mod, variables = "hp", by = "am")
 #'
 #' # marginal slopes on a counterfactual grid
-#' plot_slopes(mod, 
-#'    variables = "hp",
-#'    by = "am",
-#'    newdata = datagrid(am = 0:1, grid_type = "counterfactual")) 
+#' plot_slopes(mod,
+#'   variables = "hp",
+#'   by = "am",
+#'   newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+#' )
 #'
 plot_slopes <- function(model,
                         variables = NULL,
@@ -103,7 +104,8 @@ plot_slopes <- function(model,
     rug = rug,
     gray = gray,
     comparison = slope,
-    ...)
+    ...
+  )
 
   if (inherits(out, "ggplot")) {
     out <- out + ggplot2::labs(x = condition[1], y = "Slope")

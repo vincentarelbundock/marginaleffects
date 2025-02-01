@@ -32,7 +32,7 @@
 #' @template type
 #' @return A `ggplot2` object or data frame (if `draw=FALSE`)
 #' @export
-#' @examples
+#' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' mod <- lm(mpg ~ hp + wt, data = mtcars)
 #' plot_predictions(mod, condition = "wt")
 #'
@@ -45,11 +45,13 @@
 #'
 #' # marginal predictions
 #' mod <- lm(mpg ~ hp * am, data = mtcars)
-#' plot_predictions(mod, by = "am") 
+#' plot_predictions(mod, by = "am")
 #'
 #' # marginal predictions on a counterfactual grid
-#' plot_predictions(mod, by = "am",
-#'    newdata = datagrid(am = 0:1, grid_type = "counterfactual")) 
+#' plot_predictions(mod,
+#'   by = "am",
+#'   newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+#' )
 #'
 plot_predictions <- function(model,
                              condition = NULL,
@@ -102,7 +104,8 @@ plot_predictions <- function(model,
   modeldata <- get_modeldata(
     model,
     additional_variables = c(names(condition), by),
-    wts = wts)
+    wts = wts
+  )
 
   # mlr3 and tidymodels
   if (is.null(modeldata) || nrow(modeldata) == 0) {
@@ -125,7 +128,8 @@ plot_predictions <- function(model,
       transform = transform,
       modeldata = modeldata,
       wts = wts,
-      ...)
+      ...
+    )
   }
 
   # marginal
@@ -137,7 +141,8 @@ plot_predictions <- function(model,
       newdata = newdata,
       modeldata = modeldata,
       by = by,
-      wts = wts)
+      wts = wts
+    )
 
     # tidymodels & mlr3
     if (is.null(modeldata)) {
@@ -154,7 +159,8 @@ plot_predictions <- function(model,
       transform = transform,
       newdata = newdata,
       modeldata = modeldata,
-      ...)
+      ...
+    )
     v_x <- by[[1]]
     v_color <- hush(by[[2]])
     v_facet_1 <- hush(by[[3]])
@@ -182,14 +188,16 @@ plot_predictions <- function(model,
     modeldata = modeldata,
     dv = dv,
     rug = rug,
-    gray = gray)
+    gray = gray
+  )
 
   p <- p + ggplot2::labs(
     x = v_x,
     y = dv,
     color = v_color,
     fill = v_color,
-    linetype = v_color)
+    linetype = v_color
+  )
 
   # attach model data for each of use
   attr(p, "modeldata") <- modeldata
