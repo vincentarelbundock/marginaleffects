@@ -7,7 +7,7 @@ requiet("emmeans")
 requiet("broom")
 tol_se <- 1e-4
 
-dat <- get_dataset("Affairs", "AER")
+dat <<- get_dataset("Affairs", "AER")
 
 
 # tobit: marginaleffects vs. Stata
@@ -56,3 +56,4 @@ expect_predictions(pred, n_row = nrow(dat))
 
 
 rm(list = ls())
+

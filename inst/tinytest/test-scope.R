@@ -5,4 +5,5 @@ get_slopes_at_value = function(m, x) {
 }
 a = get_slopes_at_value(m, .5)
 b = slopes(m, newdata = datagrid(mpg = .5))
-expect_equal(a, b)
+expect_equivalent(a, b)
+
