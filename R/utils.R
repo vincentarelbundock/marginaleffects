@@ -161,7 +161,7 @@ group_to_factor <- function(group, model) {
 
 ...get <- function(x, ifnotfound = NULL) {
     eval(
-        quote(if (!anyNA(.m1 <- match(.x, ...names())) && is_not_null(.m2 <- ...elt(.m1))) {
+        quote(if (!anyNA(.m1 <- match(.x, ...names())) && !is.null(.m2 <- ...elt(.m1))) {
             .m2
         } else {
             .ifnotfound

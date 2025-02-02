@@ -4,7 +4,7 @@ bootstrap_simulation <- function(model, INF_FUN, ...) {
     dots <- list(...)
 
     B <- get_coef(model)
-    V <- get_vcov(model, dots[["vcov"]])
+    V <- get_vcov(model, ...get("vcov"))
     R <- attr(model, "inferences_R")
     coefmat <- MASS::mvrnorm(R, mu = B, Sigma = V)
 

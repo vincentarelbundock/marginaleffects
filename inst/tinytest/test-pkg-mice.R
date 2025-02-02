@@ -63,4 +63,20 @@ expect_equivalent(cmp2$estimate, -1.084709, tol = 1e-6)
 expect_equivalent(cmp2$conf.low, -1.432959, tol = 1e-3)
 
 
+# Issue #1117
+data("lalonde_mis", package = "cobalt")
+imp <- mice(lalonde_mis, print = FALSE)
+est <- with(imp, lm(re78 ~ treat * (age + educ + re74)))
+pre <- avg_predictions(est,
+  variables = "treat",
+  newdata = subset(treat == 1))
+expect_inherits(pre, "predictions")
+cmp <- avg_comparisons(est,
+  variables = "treat",
+  newdata = subset(treat == 1))
+expect_inherits(cmp, "comparisons")
+
+
+
+
 source("helpers.R")
