@@ -159,6 +159,30 @@ group_to_factor <- function(group, model) {
 }
 
 
-...get <- function(name, ...) {
-    ...elt(match(name, ...names())[1L])
+...get <- function(x, ifnotfound = NULL) {
+    eval(
+        quote(if (!anyNA(.m1 <- match(.x, ...names())) && is_not_null(.m2 <- ...elt(.m1))) {
+            .m2
+        } else {
+            .ifnotfound
+        }),
+        pairlist(.x = x[1L], .ifnotfound = ifnotfound),
+        parent.frame(1L)
+    )
+}
+
+
+...mget <- function(x) {
+    found <- match(x, eval(quote(...names()), parent.frame(1L)))
+    not_found <- is.na(found)
+    if (all(not_found)) {
+        return(list())
+    }
+    setNames(lapply(found[!not_found], function(z) {
+        eval(
+            quote(...elt(.z)),
+            pairlist(.z = z),
+            parent.frame(3L)
+        )
+    }), x[!not_found])
 }
