@@ -244,4 +244,21 @@ cmp <- avg_comparisons(mod, variables = "period") |>
 expect_inherits(cmp, "comparisons")
 
 
+# simulation-based inference respects `vcov` argument
+mod <- lm(mpg ~ hp + cyl, data = mtcars)
+set.seed(48103)
+h1 <- hypotheses(mod, hypothesis = "hp/cyl=1", vcov = "HC3") |>
+  inferences(method = "simulation", R = 25)
+set.seed(48103)
+h2 <- hypotheses(mod, hypothesis = "hp/cyl=1", vcov = "HC3") |>
+  inferences(method = "simulation", R = 25)
+set.seed(48103)
+h3 <- hypotheses(mod, hypothesis = "hp/cyl=1") |>
+  inferences(method = "simulation", R = 25)
+expect_equivalent(h1$conf.low, h2$conf.low)
+expect_equivalent(h1$conf.high, h2$conf.high)
+expect_false(expect_equivalent(h1$conf.low, h3$conf.low))
+expect_false(expect_equivalent(h1$conf.high, h3$conf.high))
+
+
 rm(list = ls())

@@ -63,21 +63,21 @@
 #'
 #' # bootstrap
 #' avg_predictions(mod, by = "Species") %>%
-#'   inferences(method = "boot")
+#'     inferences(method = "boot")
 #'
 #' avg_predictions(mod, by = "Species") %>%
-#'   inferences(method = "rsample")
+#'     inferences(method = "rsample")
 #'
 #' # Fractional (bayesian) bootstrap
 #' avg_slopes(mod, by = "Species") %>%
-#'   inferences(method = "fwb") %>%
-#'   get_draws("rvar") %>%
-#'   data.frame()
+#'     inferences(method = "fwb") %>%
+#'     get_draws("rvar") %>%
+#'     data.frame()
 #'
 #' # Simulation-based inference
 #' slopes(mod) %>%
-#'   inferences(method = "simulation") %>%
-#'   head()
+#'     inferences(method = "simulation") %>%
+#'     head()
 #' }
 #' @export
 inferences <- function(x,
@@ -88,7 +88,6 @@ inferences <- function(x,
                        conformal_calibration = NULL,
                        conformal_score = "residual_abs",
                        ...) {
-
     # inherit conf_level from the original object
     conf_level <- attr(x, "conf_level")
     if (is.null(conf_level)) conf_level <- 0.95
@@ -132,7 +131,6 @@ inferences <- function(x,
         attr(model, "inferences_method") <- "boot"
         attr(model, "inferences_dots") <- c(list(R = R), list(...))
         attr(model, "inferences_conf_type") <- conf_type
-
     } else if (method == "fwb") {
         insight::check_if_installed("fwb")
         dots <- list(...)
@@ -143,15 +141,13 @@ inferences <- function(x,
         attr(model, "inferences_dots") <- c(list(R = R), dots)
         attr(model, "inferences_conf_type") <- conf_type
         if (isTRUE("wts" %in% names(attr(x, "call"))) && !isFALSE(attr(x, "call")[["wts"]])) {
-            insight::format_error('The `fwb` method is not supported with the `wts` argument.')
+            insight::format_error("The `fwb` method is not supported with the `wts` argument.")
         }
-
     } else if (method == "rsample") {
         insight::check_if_installed("rsample")
         attr(model, "inferences_method") <- "rsample"
         attr(model, "inferences_dots") <- c(list(times = R), list(...))
         attr(model, "inferences_conf_type") <- conf_type
-
     } else if (method == "simulation") {
         insight::check_if_installed("MASS")
         attr(model, "inferences_method") <- "simulation"
@@ -166,7 +162,6 @@ inferences <- function(x,
             test = conformal_test,
             calibration = conformal_calibration,
             score = conformal_score)
-
     } else {
         mfx_call[["model"]] <- model
         out <- recall(mfx_call)
@@ -199,9 +194,10 @@ inferences_dispatch <- function(model, INF_FUN, ...) {
     }
 
     switch(inf_method,
-           "rsample" = do.call(bootstrap_rsample, args),
-           "boot" = do.call(bootstrap_boot, args),
-           "fwb" = do.call(bootstrap_fwb, args),
-           "simulation" = do.call(bootstrap_simulation, args),
-           NULL)
+        "rsample" = do.call(bootstrap_rsample, args),
+        "boot" = do.call(bootstrap_boot, args),
+        "fwb" = do.call(bootstrap_fwb, args),
+        "simulation" = do.call(bootstrap_simulation, args),
+        NULL
+    )
 }

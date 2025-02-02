@@ -1,10 +1,10 @@
-bootstrap_simulation <- function(model, INF_FUN, vcov, ...) {
+bootstrap_simulation <- function(model, INF_FUN, ...) {
     insight::check_if_installed("MASS")
 
     dots <- list(...)
 
     B <- get_coef(model)
-    V <- get_vcov(model, vcov = vcov)
+    V <- get_vcov(model, dots[["vcov"]])
     R <- attr(model, "inferences_R")
     coefmat <- MASS::mvrnorm(R, mu = B, Sigma = V)
 
