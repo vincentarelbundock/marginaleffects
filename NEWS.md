@@ -1,4 +1,4 @@
-# News
+# News {.unnumbered}
 
 ## 0.25.0
 
