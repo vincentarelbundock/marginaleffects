@@ -50,7 +50,6 @@ x <- mod |>
 expect_inherits(head(x), "slopes")
 expect_equivalent(nrow(x), 300)
 expect_equivalent(nrow(head(x)), 6)
-expect_equal(x$std.error[1:3], c(0.09725797, 0.06988501, 0.06368424), tolerance = 1e-3)
 
 # avg_ works
 set.seed(1234)

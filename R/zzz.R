@@ -23,3 +23,7 @@
 
   invisible()
 }
+
+.onLoad <- function(lib, pkg) {
+  backports::import(pkg)
+}

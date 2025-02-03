@@ -37,6 +37,7 @@ RoxygenNote: 7.3.2
 Depends:
     R (>= 3.6.0)
 Imports:
+    backports,
     checkmate,
     data.table (>= 1.16.4),
     generics,
