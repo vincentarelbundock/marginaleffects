@@ -46,11 +46,11 @@
 #' King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361
 #'
 #' Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standard errors." Health services research 49.2 (2014): 731-750.
-#' 
+#'
 #' Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
-#' 
+#'
 #' Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.
-#' 
+#'
 #'
 #' @return
 #' A `marginaleffects` object with simulation or bootstrap resamples and objects attached.
@@ -63,32 +63,31 @@
 #'
 #' # bootstrap
 #' avg_predictions(mod, by = "Species") %>%
-#'   inferences(method = "boot")
+#'     inferences(method = "boot")
 #'
 #' avg_predictions(mod, by = "Species") %>%
-#'   inferences(method = "rsample")
+#'     inferences(method = "rsample")
 #'
 #' # Fractional (bayesian) bootstrap
 #' avg_slopes(mod, by = "Species") %>%
-#'   inferences(method = "fwb") %>%
-#'   get_draws("rvar") %>%
-#'   data.frame()
+#'     inferences(method = "fwb") %>%
+#'     get_draws("rvar") %>%
+#'     data.frame()
 #'
 #' # Simulation-based inference
 #' slopes(mod) %>%
-#'   inferences(method = "simulation") %>%
-#'   head()
+#'     inferences(method = "simulation") %>%
+#'     head()
 #' }
 #' @export
 inferences <- function(x,
-    method,
-    R = 1000,
-    conf_type = "perc",
-    conformal_test = NULL,
-    conformal_calibration = NULL,
-    conformal_score = "residual_abs",
-    ...) {
-
+                       method,
+                       R = 1000,
+                       conf_type = "perc",
+                       conformal_test = NULL,
+                       conformal_calibration = NULL,
+                       conformal_score = "residual_abs",
+                       ...) {
     # inherit conf_level from the original object
     conf_level <- attr(x, "conf_level")
     if (is.null(conf_level)) conf_level <- 0.95
@@ -125,13 +124,13 @@ inferences <- function(x,
     # default standard errors are Delta anyway
     if (method == "delta") {
         return(x)
+    }
 
-    } else if (method == "boot") {
+    if (method == "boot") {
         insight::check_if_installed("boot")
         attr(model, "inferences_method") <- "boot"
         attr(model, "inferences_dots") <- c(list(R = R), list(...))
         attr(model, "inferences_conf_type") <- conf_type
-
     } else if (method == "fwb") {
         insight::check_if_installed("fwb")
         dots <- list(...)
@@ -142,15 +141,13 @@ inferences <- function(x,
         attr(model, "inferences_dots") <- c(list(R = R), dots)
         attr(model, "inferences_conf_type") <- conf_type
         if (isTRUE("wts" %in% names(attr(x, "call"))) && !isFALSE(attr(x, "call")[["wts"]])) {
-            insight::format_error('The `fwb` method is not supported with the `wts` argument.')
+            insight::format_error("The `fwb` method is not supported with the `wts` argument.")
         }
-
     } else if (method == "rsample") {
         insight::check_if_installed("rsample")
         attr(model, "inferences_method") <- "rsample"
         attr(model, "inferences_dots") <- c(list(times = R), list(...))
         attr(model, "inferences_conf_type") <- conf_type
-
     } else if (method == "simulation") {
         insight::check_if_installed("MASS")
         attr(model, "inferences_method") <- "simulation"
@@ -165,7 +162,6 @@ inferences <- function(x,
             test = conformal_test,
             calibration = conformal_calibration,
             score = conformal_score)
-
     } else {
         mfx_call[["model"]] <- model
         out <- recall(mfx_call)
@@ -177,24 +173,31 @@ inferences <- function(x,
 
 
 inferences_dispatch <- function(model, INF_FUN, ...) {
+    inf_method <- attr(model, "inferences_method")
+
+    if (is.null(inf_method) || !is.character(inf_method) ||
+        length(inf_method) != 1L) {
+        return(NULL)
+    }
+
     args <- list(
         model = model,
         INF_FUN = INF_FUN
     )
-    args <- c(args, list(...))
+
+    if (...length() > 0) {
+        args <- utils::modifyList(args, list(...))
+    }
+
     if ("rowid" %in% names(args$newdata)) {
         args$newdata <- subset(args$newdata, rowid > 0)
     }
 
-    if (isTRUE(attr(model, "inferences_method") == "rsample")) {
-        do.call(bootstrap_rsample, args)
-    } else if (isTRUE(attr(model, "inferences_method") == "boot")) {
-        do.call(bootstrap_boot, args)
-    } else if (isTRUE(attr(model, "inferences_method") == "fwb")) {
-        do.call(bootstrap_fwb, args)
-    } else if (isTRUE(attr(model, "inferences_method") == "simulation")) {
-        do.call(bootstrap_simulation, args)
-    } else {
-        return(NULL)
-    }
+    switch(inf_method,
+        "rsample" = do.call(bootstrap_rsample, args),
+        "boot" = do.call(bootstrap_boot, args),
+        "fwb" = do.call(bootstrap_fwb, args),
+        "simulation" = do.call(bootstrap_simulation, args),
+        NULL
+    )
 }

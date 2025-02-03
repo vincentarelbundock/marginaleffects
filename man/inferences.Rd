@@ -98,20 +98,20 @@ mod <- lm(Sepal.Length ~ Sepal.Width * Species, data = iris)
 
 # bootstrap
 avg_predictions(mod, by = "Species") \%>\%
-  inferences(method = "boot")
+    inferences(method = "boot")
 
 avg_predictions(mod, by = "Species") \%>\%
-  inferences(method = "rsample")
+    inferences(method = "rsample")
 
 # Fractional (bayesian) bootstrap
 avg_slopes(mod, by = "Species") \%>\%
-  inferences(method = "fwb") \%>\%
-  get_draws("rvar") \%>\%
-  data.frame()
+    inferences(method = "fwb") \%>\%
+    get_draws("rvar") \%>\%
+    data.frame()
 
 # Simulation-based inference
 slopes(mod) \%>\%
-  inferences(method = "simulation") \%>\%
-  head()
+    inferences(method = "simulation") \%>\%
+    head()
 }
 }

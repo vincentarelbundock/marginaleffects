@@ -187,57 +187,48 @@ predictions <- function(model,
                         df = Inf,
                         numderiv = "fdforward",
                         ...) {
+
+  if ("cross" %in% ...names()) {
+    insight::format_error("The `cross` argument is not available in this function.")
+  }
+
+  call_attr <- construct_call(model, "predictions")
+
+  if ("transform_post" %in% ...names()) {
+    transform <- ...elt(match("transform_post", ...names())[1L])
+    call_attr[["transform"]] <- transform
+    insight::format_warning("The `transform_post` argument is deprecated. Use `transform` instead.")
+  }
+
+  # multiple imputation
+  if (inherits(model, c("mira", "amest"))) {
+    out <- process_imputation(model, call_attr)
+    return(out)
+  }
+
   dots <- list(...)
 
-  if ("transform_post" %in% names(dots)) {
-    transform <- dots[["transform_post"]]
-    insight::format_warning("The `transform_post` argument is deprecated. Use `transform` instead.")
+  # extracting modeldata repeatedly is slow.
+  if (isTRUE(by)) {
+    modeldata <- get_modeldata(model,
+                               additional_variables = FALSE,
+                               modeldata = dots[["modeldata"]],
+                               wts = wts)
+  } else {
+    modeldata <- get_modeldata(model,
+                               additional_variables = by,
+                               modeldata = dots[["modeldata"]],
+                               wts = wts)
+  }
+
+  if ("modeldata" %in% ...names()) {
+    call_attr[["modeldata"]] <- modeldata
   }
 
   # very early, before any use of newdata
   # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
   scall <- rlang::enquo(newdata)
   newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-
-  if ("cross" %in% names(dots)) {
-    insight::format_error("The `cross` argument is not available in this function.")
-  }
-
-  # extracting modeldata repeatedly is slow.
-  if (isTRUE(by)) {
-    modeldata <- get_modeldata(model,
-      additional_variables = FALSE,
-      modeldata = dots[["modeldata"]],
-      wts = wts)
-  } else {
-    modeldata <- get_modeldata(model,
-      additional_variables = by,
-      modeldata = dots[["modeldata"]],
-      wts = wts)
-  }
-
-  # build call: match.call() doesn't work well in *apply()
-  # after sanitize_newdata_call
-  call_attr <- c(
-    list(
-      name = "predictions",
-      model = model,
-      newdata = newdata,
-      variables = variables,
-      vcov = vcov,
-      conf_level = conf_level,
-      type = type,
-      by = by,
-      byfun = byfun,
-      wts = wts,
-      transform = transform,
-      hypothesis = hypothesis,
-      df = df),
-    dots)
-  if ("modeldata" %in% names(dots)) {
-    call_attr[["modeldata"]] <- modeldata
-  }
-  call_attr <- do.call("call", call_attr)
 
   # sanity checks
   sanity_dots(model = model, ...)
@@ -254,12 +245,6 @@ predictions <- function(model,
   tmp <- sanitize_hypothesis(hypothesis, ...)
   hypothesis <- tmp$hypothesis
   hypothesis_null <- tmp$hypothesis_null
-
-  # multiple imputation
-  if (inherits(model, c("mira", "amest"))) {
-    out <- process_imputation(model, call_attr)
-    return(out)
-  }
 
   # if type is NULL, we backtransform if relevant
   type_string <- sanitize_type(
@@ -677,8 +662,8 @@ avg_predictions <- function(model,
                             ...) {
   # order of the first few paragraphs is important
   # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-  scall <- rlang::enquo(newdata)
-  newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+  # scall <- rlang::enquo(newdata)
+  # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
   # group by focal variable automatically unless otherwise stated
   if (isTRUE(by)) {
@@ -699,21 +684,27 @@ avg_predictions <- function(model,
     return(out)
   }
 
-  out <- predictions(
-    model = model,
-    newdata = newdata,
-    variables = variables,
-    vcov = vcov,
-    conf_level = conf_level,
-    type = type,
-    by = by,
-    byfun = byfun,
-    wts = wts,
-    transform = transform,
-    hypothesis = hypothesis,
-    equivalence = equivalence,
-    df = df,
-    ...)
+  #Construct predictions() call
+  call_attr <- construct_call(model, "predictions")
+  call_attr[["by"]] <- by
+
+  out <- eval.parent(call_attr)
+
+  # out <- predictions(
+  #   model = model,
+  #   newdata = newdata,
+  #   variables = variables,
+  #   vcov = vcov,
+  #   conf_level = conf_level,
+  #   type = type,
+  #   by = by,
+  #   byfun = byfun,
+  #   wts = wts,
+  #   transform = transform,
+  #   hypothesis = hypothesis,
+  #   equivalence = equivalence,
+  #   df = df,
+  #   ...)
 
   return(out)
 }

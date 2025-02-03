@@ -67,10 +67,9 @@ plot_slopes <- function(model,
                         gray = getOption("marginaleffects_plot_gray", default = FALSE),
                         draw = TRUE,
                         ...) {
-  dots <- list(...)
-  if ("effect" %in% names(dots)) {
+  if ("effect" %in% ...names()) {
     if (is.null(variables)) {
-      variables <- dots[["effect"]]
+        variables <- ...elt(match("effect", ...names())[1L])
     } else {
       insight::format_error("The `effect` argument has been renamed to `variables`.")
     }

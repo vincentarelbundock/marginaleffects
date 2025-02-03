@@ -37,6 +37,7 @@ RoxygenNote: 7.3.2
 Depends:
     R (>= 3.6.0)
 Imports:
+    backports,
     checkmate,
     data.table (>= 1.16.4),
     generics,
@@ -201,6 +202,7 @@ Collate:
     'complete_levels.R'
     'config.R'
     'conformal.R'
+    'construct_call.R'
     'datagrid.R'
     'equivalence.R'
     'get_coef.R'

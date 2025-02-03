@@ -171,25 +171,11 @@ hypotheses <- function(
     insight::format_error(msg)
   }
 
-  dots <- list(...)
+  call_attr <- construct_call(model, "hypotheses")
 
-  call_attr <- c(
-    list(
-      name = "hypotheses",
-      model = model,
-      hypothesis = hypothesis,
-      vcov = vcov,
-      conf_level = conf_level,
-      df = df,
-      equivalence = equivalence,
-      joint = joint,
-      joint_test = joint_test,
-      numderiv = numderiv),
-    dots)
-  if ("modeldata" %in% names(dots)) {
-    call_attr[["modeldata"]] <- dots[["modeldata"]]
+  if ("modeldata" %in% ...names()) {
+    call_attr[["modeldata"]] <- ...elt(match("modeldata", ...names())[1L])
   }
-  call_attr <- do.call("call", call_attr)
 
   ###### Bootstrap
   # restore an already sanitized hypothesis if necessary
@@ -245,8 +231,8 @@ hypotheses <- function(
   # keep this NULL in case `hypothesis` was used in the previous call
   args[["hypothesis"]] <- hypothesis
 
-  if (length(dots) > 0) {
-    args <- c(args, dots)
+  if (...length() > 0) {
+    args <- utils::modifyList(args, list(...))
   }
 
   xcall <- substitute(model)
@@ -347,7 +333,9 @@ hypotheses <- function(
       hypothesis = hypothesis,
       FUN = FUNouter,
       numderiv = numderiv)
-    args <- c(args, dots)
+    if (...length() > 0) {
+      args <- utils::modifyList(args, list(...))
+    }
     se <- do.call("get_se_delta", args)
     J <- attr(se, "jacobian")
     attr(se, "jacobian") <- NULL
@@ -419,7 +407,7 @@ hypotheses <- function(
 
   attr(out, "posterior_draws") <- draws
   attr(out, "model") <- model
-  attr(out, "model_type") <- class(model)[1]
+  attr(out, "model_type") <- class(model)[1L]
   attr(out, "jacobian") <- J
   attr(out, "call") <- call_attr
   attr(out, "vcov") <- vcov

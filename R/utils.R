@@ -56,7 +56,9 @@ set_marginaleffects_attributes <- function(x, attr_cache, prefix = "") {
 
 
 warn_once <- function(msg, id) {
-    if (!isTRUE(getOption(id, default = TRUE))) return(invisible())
+    if (!isTRUE(getOption(id, default = TRUE))) {
+        return(invisible())
+    }
     msg <- paste(msg, "This warning appears once per session.")
     # insight::format_warning(msg, call. = FALSE)
     warning(msg, call. = FALSE)
@@ -87,7 +89,7 @@ evalup <- function(xcall) {
     }
     for (i in 1:10) {
         if (is.null(out)) {
-          out <- hush(eval(xcall, parent.frame(i)))
+            out <- hush(eval(xcall, parent.frame(i)))
         }
     }
     if (is.null(out) && !is.null(msg)) stop(msg)
@@ -113,7 +115,8 @@ merge_by_rowid <- function(x, y) {
         # `predictions()` output does include the original predictors.
         out <- tryCatch(
             merge(x, tmp, by = "rowid", sort = FALSE),
-            error = function(e) x)
+            error = function(e) x
+        )
     } else {
         out <- x
     }
@@ -123,28 +126,27 @@ merge_by_rowid <- function(x, y) {
 # faster than all(x %in% 0:1)
 is_binary <- function(x) {
     isTRUE(checkmate::check_integerish(
-        x, null.ok = TRUE, upper = 1, lower = 0, any.missing = FALSE)
-    )
+        x,
+        null.ok = TRUE, upper = 1, lower = 0, any.missing = FALSE
+    ))
 }
 
 
 sub_named_vector <- function(x, y) {
-  # issue 1005
-  xlab <- gsub("^`|`$", "", names(x))
-  ylab <- gsub("^`|`$", "", names(y))
+    # issue 1005
+    xlab <- gsub("^`|`$", "", names(x))
+    ylab <- gsub("^`|`$", "", names(y))
 
-  idx <- match(ylab, xlab)
-  if (length(stats::na.omit(idx)) > 0) {
-    x[stats::na.omit(idx)] <- y[!is.na(idx)]
+    idx <- match(ylab, xlab)
+    if (length(stats::na.omit(idx)) > 0) {
+        x[stats::na.omit(idx)] <- y[!is.na(idx)]
+    } else if (length(y) == length(x)) {
+        return(y)
+    } else {
+        stop("set_coef() substitution error. Please report on Github with a reproducible example: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
+    }
 
-  } else if (length(y) == length(x)) {
-    return(y)
-
-  } else {
-    stop("set_coef() substitution error. Please report on Github with a reproducible example: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
-  }
-
-  return(x)
+    return(x)
 }
 
 
@@ -154,4 +156,33 @@ group_to_factor <- function(group, model) {
         group <- factor(group, levels(dv))
     }
     return(group)
+}
+
+
+...get <- function(x, ifnotfound = NULL) {
+    eval(
+        quote(if (!anyNA(.m1 <- match(.x, ...names())) && !is.null(.m2 <- ...elt(.m1))) {
+            .m2
+        } else {
+            .ifnotfound
+        }),
+        pairlist(.x = x[1L], .ifnotfound = ifnotfound),
+        parent.frame(1L)
+    )
+}
+
+
+...mget <- function(x) {
+    found <- match(x, eval(quote(...names()), parent.frame(1L)))
+    not_found <- is.na(found)
+    if (all(not_found)) {
+        return(list())
+    }
+    setNames(lapply(found[!not_found], function(z) {
+        eval(
+            quote(...elt(.z)),
+            pairlist(.z = z),
+            parent.frame(3L)
+        )
+    }), x[!not_found])
 }

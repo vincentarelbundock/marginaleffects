@@ -102,7 +102,9 @@ add_wts_column <- function(wts, newdata, model) {
     # which.
     if (isFALSE(wts)) {
         return(newdata)
-    } else if (isTRUE(wts)) {
+    }
+
+    if (isTRUE(wts)) {
         wtsname <- insight::find_weights(model)
         if (!is.character(wtsname) || length(wtsname) != 1 || !wtsname %in% colnames(newdata)) {
             msg <- "Unable to retrieve weights automatically from the model. Please specify `wts` argument explicitly."
@@ -113,17 +115,16 @@ add_wts_column <- function(wts, newdata, model) {
         }
     }
 
-    if (!isFALSE(wts)) {
-        flag1 <- isTRUE(checkmate::check_string(wts)) && isTRUE(wts %in% colnames(newdata))
-        flag2 <- isTRUE(checkmate::check_numeric(wts, len = nrow(newdata)))
-        if (!flag1 && !flag2) {
-            msg <- sprintf("The `wts` argument must be a numeric vector of length %s, or a string which matches a column name in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `wts` variable may not have been available. The easiest strategy is often to supply a data frame such as the original data to `newdata` explicitly, and to make sure that it includes an appropriate column of weights, identified by the `wts` argument.", nrow(newdata))
-            stop(msg, call. = FALSE)
-        }
+    flag1 <- isTRUE(checkmate::check_string(wts)) && isTRUE(wts %in% colnames(newdata))
+    flag2 <- isTRUE(checkmate::check_numeric(wts, len = nrow(newdata)))
+    if (!flag1 && !flag2) {
+        msg <- sprintf("The `wts` argument must be a numeric vector of length %s, or a string which matches a column name in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `wts` variable may not have been available. The easiest strategy is often to supply a data frame such as the original data to `newdata` explicitly, and to make sure that it includes an appropriate column of weights, identified by the `wts` argument.", nrow(newdata))
+        stop(msg, call. = FALSE)
     }
 
+
     # weights: before sanitize_variables
-    if (!isFALSE(wts) && isTRUE(checkmate::check_string(wts))) {
+    if (isTRUE(checkmate::check_string(wts))) {
         newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
     } else {
         newdata[["marginaleffects_wts_internal"]] <- wts
@@ -217,10 +218,10 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
     flag <- isTRUE(checkmate::check_string(comparison, pattern = "avg"))
     if (!flag && (
         isFALSE(by) || # weights only make sense when we are marginalizing
-            !isFALSE(wts) ||
-            !is.null(byfun) ||
-            !isFALSE(cross) ||
-            isFALSE(getOption("marginaleffects_dedup", default = TRUE)))) {
+        !isFALSE(wts) ||
+        !is.null(byfun) ||
+        !isFALSE(cross) ||
+        isFALSE(getOption("marginaleffects_dedup", default = TRUE)))) {
         return(newdata)
     }
 

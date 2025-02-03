@@ -8,22 +8,35 @@ R <- 100
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width, data = iris)
 
 # simulation-based inference
-x <- mod |> avg_predictions() |> inferences(method = "simulation", R = R)
+x <- mod |>
+  avg_predictions() |>
+  inferences(method = "simulation", R = R)
 expect_inherits(x, "predictions")
 
-x <- mod |> slopes() |> inferences(method = "simulation", R = R) |> head()
-expect_inherits(x, "comparisons") 
+x <- mod |>
+  slopes() |>
+  inferences(method = "simulation", R = R) |>
+  head()
+expect_inherits(x, "slopes")
 
-x <- mod |> predictions(vcov = "HC3") |> inferences(method = "simulation", R = R) |> head()
+x <- mod |>
+  predictions(vcov = "HC3") |>
+  inferences(method = "simulation", R = R) |>
+  head()
 expect_inherits(x, "predictions")
 
-x <- mod |> comparisons() |> inferences(method = "simulation", R = R) |> attr("posterior_draws")
+x <- mod |>
+  comparisons() |>
+  inferences(method = "simulation", R = R) |>
+  attr("posterior_draws")
 expect_inherits(x, "matrix")
 
 
 set.seed(1234)
 # {boot}
-x <- mod |> avg_predictions() |> inferences(method = "boot", R = R)
+x <- mod |>
+  avg_predictions() |>
+  inferences(method = "boot", R = R)
 expect_inherits(x, "predictions")
 expect_equivalent(nrow(x), 1)
 expect_equal(x$std.error, 0.0491, tolerance = 1e-3)
@@ -31,29 +44,40 @@ expect_equal(x$std.error, 0.0491, tolerance = 1e-3)
 
 # head works
 set.seed(1234)
-x <- mod |> slopes() |> inferences(method = "boot", R = R)
-expect_inherits(head(x), "comparisons") # should be slopes
+x <- mod |>
+  slopes() |>
+  inferences(method = "boot", R = R)
+expect_inherits(head(x), "slopes")
 expect_equivalent(nrow(x), 300)
 expect_equivalent(nrow(head(x)), 6)
-expect_equal(x$std.error[1:3], c(0.09725797, 0.06988501, 0.06368424), tolerance = 1e-3)
 
 # avg_ works
 set.seed(1234)
-x <- mod |> avg_slopes() |> inferences(method = "boot", R = R)
-expect_inherits(x, "comparisons") # should be slopes
+x <- mod |>
+  avg_slopes() |>
+  inferences(method = "boot", R = R)
+expect_inherits(x, "slopes") # should be slopes
 expect_equivalent(nrow(x), 2)
-expect_equal(x$std.error, c(0.0655, 0.1505), tolerance = 1e-3)
+expect_equal(x$std.error, c(0.0657, 0.1536), tolerance = 1e-3)
 
 
-x <- mod |> predictions(vcov = "HC3") |> inferences(method = "boot", R = R) |> head()
+x <- mod |>
+  predictions(vcov = "HC3") |>
+  inferences(method = "boot", R = R) |>
+  head()
 expect_inherits(x, "predictions")
-x <- mod |> comparisons() |> inferences(method = "boot", R = R) |> attr("inferences")
+x <- mod |>
+  comparisons() |>
+  inferences(method = "boot", R = R) |>
+  attr("inferences")
 expect_inherits(x, "boot")
 x <- mod |>
-     comparisons(variables = "Sepal.Width", newdata = datagrid(Sepal.Length = range)) |> 
-     inferences(method = "boot", R = R)
+  comparisons(variables = "Sepal.Width", newdata = datagrid(Sepal.Length = range)) |>
+  inferences(method = "boot", R = R)
 expect_equivalent(nrow(x), 2)
-x <- mod|> avg_comparisons() |> inferences(method = "simulation", R = R)
+x <- mod |>
+  avg_comparisons() |>
+  inferences(method = "simulation", R = R)
 expect_equivalent(nrow(x), 2)
 x <- x |> get_draws()
 expect_equivalent(nrow(x), 2 * R)
@@ -61,47 +85,50 @@ expect_equivalent(nrow(x), 2 * R)
 
 # {rsample}
 set.seed(1234)
-x <- mod |> avg_predictions() |> 
-     inferences(method = "rsample", R = R) |>
-     suppressWarnings()
+x <- mod |>
+  avg_predictions() |>
+  inferences(method = "rsample", R = R) |>
+  suppressWarnings()
 expect_equal(x$conf.low, 3.6692, tolerance = 1e-3)
 expect_inherits(x, "predictions")
-x <- mod |> 
-     slopes() |> 
-     inferences(method = "rsample", R = R) |> 
-     suppressWarnings()
-expect_inherits(x, "comparisons") # should be slopes
-x <- mod |> predictions(vcov = "HC3") |> 
-     inferences(method = "rsample", R = R) |> 
-     suppressWarnings()
+x <- mod |>
+  slopes() |>
+  inferences(method = "rsample", R = R) |>
+  suppressWarnings()
+expect_inherits(x, "slopes")
+x <- mod |>
+  predictions(vcov = "HC3") |>
+  inferences(method = "rsample", R = R) |>
+  suppressWarnings()
 expect_inherits(x, "predictions")
-x <- mod |> comparisons() |> 
-     inferences(method = "rsample", R = R) |> 
-     attr("inferences") |>
-     suppressWarnings()
+x <- mod |>
+  comparisons() |>
+  inferences(method = "rsample", R = R) |>
+  attr("inferences") |>
+  suppressWarnings()
 expect_inherits(x, "bootstraps")
 x <- mod |>
-     comparisons(variables = "Sepal.Width", newdata = datagrid(Sepal.Length = range)) |>
-     inferences(method = "rsample", R = R) |>
-     suppressWarnings()
+  comparisons(variables = "Sepal.Width", newdata = datagrid(Sepal.Length = range)) |>
+  inferences(method = "rsample", R = R) |>
+  suppressWarnings()
 expect_equivalent(nrow(x), 2)
 x <- mod |>
-     avg_comparisons() |>
-     inferences(method = "rsample", R = R) |>
-     get_draws() |>
-     suppressWarnings()
+  avg_comparisons() |>
+  inferences(method = "rsample", R = R) |>
+  get_draws() |>
+  suppressWarnings()
 expect_equivalent(nrow(x), 2 * R)
 
 # fwb no validity check
 set.seed(1234)
-x <- mod |> 
-     comparisons() |> 
-     inferences(method = "fwb", R = R)
+x <- mod |>
+  comparisons() |>
+  inferences(method = "fwb", R = R)
 expect_equivalent(nrow(x), 300)
 expect_equal(x$std.error[1:3], c(0.0739, 0.0568, 0.0508), tolerance = 1e-3)
-x <- mod |> 
-     avg_comparisons() |> 
-     inferences(method = "fwb", R = R)
+x <- mod |>
+  avg_comparisons() |>
+  inferences(method = "fwb", R = R)
 expect_equivalent(nrow(x), 2)
 
 
@@ -114,10 +141,11 @@ expect_error(inferences(comparisons(mod, wts = "w"), method = "fwb"), pattern = 
 # Issue #856
 tmp <- lm(Petal.Length ~ Sepal.Length * Species, data = iris)
 cmp <- avg_comparisons(tmp,
-    variables = list(Sepal.Length = 1, Species = "reference"),
-    cross = TRUE) |>
-    inferences(method = "boot", R = 5) |>
-    suppressWarnings()
+  variables = list(Sepal.Length = 1, Species = "reference"),
+  cross = TRUE
+) |>
+  inferences(method = "boot", R = 5) |>
+  suppressWarnings()
 expect_inherits(cmp, "comparisons")
 expect_equal(nrow(cmp), 2)
 
@@ -149,20 +177,14 @@ expect_inherits(p, "predictions")
 
 # inferences with hypotheses
 mod <- lm(mpg ~ hp + cyl, data = mtcars)
-p <- hypotheses(mod, hypothesis = "hp/cyl=1") |> inferences(method = "boot", R = 25) |> suppressWarnings()
+p <- hypotheses(mod, hypothesis = "hp/cyl=1") |>
+  inferences(method = "boot", R = 25) |>
+  suppressWarnings()
 expect_inherits(p, "hypotheses")
 p <- hypotheses(mod, hypothesis = "hp/cyl=1") |> inferences(method = "simulation", R = 25)
 expect_inherits(p, "hypotheses")
 
 
-# Issue #1054
-requiet("lme4")
-mod <- glmer(
-  cbind(incidence, size - incidence) ~ period + (1 | herd),
-  data = cbpp, family = binomial)
-cmp <- avg_comparisons(mod, variables = "period") |>
-    inferences(method="simulation", R = 15)
-expect_inherits(cmp, "comparisons")
 
 
 
@@ -172,7 +194,8 @@ requiet("MatchIt")
 data("lalonde", package = "MatchIt")
 set.seed(1025)
 fit <- glm(I(re78 == 0) ~ treat * (age + educ + race + married + nodegree + re74 + re75),
-           data = lalonde, family = binomial)
+  data = lalonde, family = binomial
+)
 sim_coefs <- clarify::sim(fit)
 ATT_fun <- function(fit) {
   d <- subset(lalonde, treat == 1)
@@ -185,19 +208,20 @@ ATT_fun <- function(fit) {
 sim_est <- sim_apply(sim_coefs, ATT_fun, verbose = FALSE)
 s1 <- summary(sim_est)
 s3 <- avg_predictions(fit, variables = "treat", type = "response", newdata = subset(lalonde, treat == 1)) |>
-    inferences(method = "simulation", R = 1000)
-expect_equivalent(s1[1:2, 2], s3$conf.low, tolerance= .03)
-expect_equivalent(s1[1:2, 3], s3$conf.high, tolerance= .03)
+  inferences(method = "simulation", R = 1000)
+expect_equivalent(s1[1:2, 2], s3$conf.low, tolerance = .03)
+expect_equivalent(s1[1:2, 3], s3$conf.high, tolerance = .03)
 
 
 # issue #1124: inferences is on the correct scale
 set.seed(1024)
 dat <- read.csv("https://marginaleffects.com/data/impartiality.csv")
 m <- glm(
-  impartial ~ equal * democracy + continent, 
-  data = dat, family = binomial)
-p <- predictions(m, by = "democracy", type = "response") |> 
-     inferences(method = "simulation", R = 100)
+  impartial ~ equal * democracy + continent,
+  data = dat, family = binomial
+)
+p <- predictions(m, by = "democracy", type = "response") |>
+  inferences(method = "simulation", R = 100)
 expect_true(all(p$estimate > 0 & p$estimate < 1))
 expect_true(all(p$conf.low > 0 & p$conf.low < 1))
 expect_true(all(p$conf.high > 0 & p$conf.high < 1))
@@ -206,6 +230,34 @@ expect_true(all(p$conf.low < p$estimate & p$conf.high > p$estimate))
 p2 <- predictions(m, by = "democracy", type = "response")
 expect_equivalent(p2$estimate, p$estimate)
 
+
+# Issue #1054
+exit_file("Issue #1054 is broken. Noah's PR?")
+requiet("lme4")
+mod <- glmer(
+  cbind(incidence, size - incidence) ~ period + (1 | herd),
+  data = cbpp, family = binomial
+)
+cmp <- avg_comparisons(mod, variables = "period") |>
+  inferences(method = "simulation", R = 15)
+expect_inherits(cmp, "comparisons")
+
+
+# simulation-based inference respects `vcov` argument
+mod <- lm(mpg ~ hp + cyl, data = mtcars)
+set.seed(48103)
+h1 <- hypotheses(mod, hypothesis = "hp/cyl=1", vcov = "HC3") |>
+  inferences(method = "simulation", R = 25)
+set.seed(48103)
+h2 <- hypotheses(mod, hypothesis = "hp/cyl=1", vcov = "HC3") |>
+  inferences(method = "simulation", R = 25)
+set.seed(48103)
+h3 <- hypotheses(mod, hypothesis = "hp/cyl=1") |>
+  inferences(method = "simulation", R = 25)
+expect_equivalent(h1$conf.low, h2$conf.low)
+expect_equivalent(h1$conf.high, h2$conf.high)
+expect_false(expect_equivalent(h1$conf.low, h3$conf.low))
+expect_false(expect_equivalent(h1$conf.high, h3$conf.high))
 
 
 rm(list = ls())

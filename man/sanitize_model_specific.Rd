@@ -45,7 +45,7 @@ sanitize_model_specific(model, ...)
 
 \method{sanitize_model_specific}{mblogit}(model, calling_function = "marginaleffects", ...)
 
-\method{sanitize_model_specific}{mlogit}(model, newdata, ...)
+\method{sanitize_model_specific}{mlogit}(model, ...)
 
 \method{sanitize_model_specific}{clm}(model, ...)
 
@@ -85,27 +85,6 @@ arguments.}
 \item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
 \item Square covariance matrix
 \item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
-}}
-
-\item{newdata}{Grid of predictor values at which we evaluate the slopes.
-\itemize{
-\item Warning: Please avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
-\item \code{NULL} (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[insight:get_data]{insight::get_data()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
-\item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
-\itemize{
-\item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
-\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
-}
-\item \code{\link[=subset]{subset()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = subset(treatment == 1)}
-\item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
-\item string:
-\itemize{
-\item "mean": Slopes evaluated when each predictor is held at its mean or mode.
-\item "median": Slopes evaluated when each predictor is held at its median or mode.
-\item "balanced": Slopes evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
-\item "tukey": Slopes evaluated at Tukey's 5 numbers.
-\item "grid": Slopes evaluated on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
-}
 }}
 
 \item{wts}{logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not unit-level estimates. See \code{?weighted.mean}
