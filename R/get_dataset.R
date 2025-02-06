@@ -77,7 +77,7 @@ get_dataset <- function(
         } else if (grepl("^ces", dataset)) {
             documentation <- "https://marginaleffects.com/data/ces.html"
         } else {
-            documentation <- sub("parquet$", "html", data_url)
+            documentation <- sub("parquet$", "html", data)
         }
 
         temp_file <- tempfile(fileext = ".parquet")
