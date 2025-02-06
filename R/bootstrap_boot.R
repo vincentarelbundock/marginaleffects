@@ -40,7 +40,7 @@ bootstrap_boot <- function(model, INF_FUN, ...) {
     # print.boot prints an ugly nested call
     t <- matrix(B$t, nrow = nrow(B$t))
     op <- cbind(
-        apply(t, 2L, mean, na.rm = TRUE),
+        colMeans(t, na.rm = TRUE),
         sqrt(apply(t, 2L, function(t.st) stats::var(t.st[!is.na(t.st)]))))
     out$std.error <- op[, 2]
 
