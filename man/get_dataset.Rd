@@ -14,7 +14,7 @@ get_dataset(
 \arguments{
 \item{dataset}{String. Name of the dataset to download.
 \itemize{
-\item \code{marginaleffects} archive: \code{affairs}, \code{airbnb}, \code{immigration}, \code{lottery}, \code{military}, \code{thornton}
+\item \code{marginaleffects} archive: \code{affairs}, \code{airbnb}, \code{ces_demographics}, \code{ces_survey}, \code{immigration}, \code{lottery}, \code{military}, \code{thornton}, \code{factorial_01}, \code{interaction_01}, \code{interaction_02}, \code{interaction_03}, \code{interaction_04}, \code{polynomial_01}, \code{polynomial_02}
 \item Rdatasets archive: The name of a dataset listed on the Rdatasets index. See the website or the \code{search} argument.
 }}
 
