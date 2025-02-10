@@ -1,5 +1,11 @@
 # News {.unnumbered}
 
+## Development
+
+Bugs:
+
+* `collapse` is not necessary for hypothesis formulas. Thanks to @ngreifer for Issue #1383.
+
 ## 0.25.0
 
 Breaking changes in preparation for 1.0.0 release:
