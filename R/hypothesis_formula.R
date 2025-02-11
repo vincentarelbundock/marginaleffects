@@ -181,7 +181,6 @@ hypothesis_formula_list <- list(
 #' @noRd
 #' @keywords internal
 hypothesis_formula <- function(x, hypothesis, newdata, by) {
-    insight::check_if_installed("collapse")
     # default values
     draws <- attr(x, "posterior_draws")
 
@@ -194,7 +193,6 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
             newdata <- NULL
         }
     }
-
 
     form <- sanitize_hypothesis_formula(hypothesis)
 
