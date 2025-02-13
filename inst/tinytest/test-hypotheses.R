@@ -242,5 +242,14 @@ expect_equivalent(p1$std.error, p2$std.error)
 expect_equivalent(p1$std.error, p3$std.error)
 
 
+# Issue 1381: null hypothesis specification
+mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
+h1 <- hypotheses(mod)
+h2 <- hypotheses(mod, hypothesis = 1)
+expect_true(h1$statistic[1] > h2$statistic[1])
+expect_true(h1$p.value[1] > h2$p.value[1])
+h3 <- hypotheses(mod, hypothesis = 1, multcomp = "bonferroni")
+expect_true(h3$p.value[1] > h2$p.value[1])
+
 
 rm(list = ls())

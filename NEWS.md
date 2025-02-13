@@ -5,6 +5,7 @@
 Bugs:
 
 * `collapse` is not necessary for hypothesis formulas. Thanks to @ngreifer for Issue #1383.
+* `hypothesis` argument to specify the null was ignored when using `multcomp` in `hypotheses()`. Thanks to Julia Rohrer for the bug report.
 
 ## 0.25.0
 

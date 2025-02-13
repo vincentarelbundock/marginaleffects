@@ -416,7 +416,7 @@ hypotheses <- function(
   attr(out, "hypothesis_function_by") <- attr(b, "hypothesis_function_by")
 
   # must be after attributes for vcov
-  out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level)
+  out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level, hypothesis_null = hypothesis_null)
 
   # Issue #1102: hypotheses() should not be called twice on the same object
   attr(out, "hypotheses_call") <- TRUE
