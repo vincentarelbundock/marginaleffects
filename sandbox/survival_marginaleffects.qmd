@@ -1,0 +1,224 @@
+---
+title: "Survival analysis with marginaleffects"
+format: 
+  html:
+    embed-resources: true
+bibliography: references.bib
+---
+
+# Introduction
+
+Survival analysis is concerned with analyzing the (causal) effects of one or more variables on a time-to-event outcome, such as time until death or time until the occurrence of a disease. One of the main issues of survival analysis in practice is that the time-to-event outcomes are often **right-censored**, meaning that it is only known that the event of interest did not occur up until some point in time for some individuals. The most popular analysis strategy that directly deals with such right-censoring are Cox proportional hazards models [@Cox1972]. Although very useful, these models are not marginal models. They only produce hazard ratios (HR), which are conditional quantities, and as such do not directly estimate practically relevant causal estimands by themselves [@Hernan2010]. This issue is shared by a majority of other time-to-event models as well.
+
+Different authors instead recommend the usage of marginal estimands, such as the difference or ratio between counterfactual survival probabilities [@Klein2007; @Royston2013; @Uno2014]. These counterfactual probabilities may also be presented visually as **adjusted survival curves**, allowing for easier presentation of the results [@Denz2023]. A popular and statistically efficient way to calculate these quantities is the use of g-computation [@Robins1986], which the `marginaleffects` package is uniquely suited to perform. Contrary to most other packages allowing g-computation using survival models, the package directly supports estimation of confidence intervals and p-values for simple group comparisons and more complex hypotheses involving interactions or effect modification. The syntax required for this analysis does not differ from the usual syntax used in `marginaleffects`, making it easy for users already familiar with the package to get their hands on survival analysis as well.
+
+This vignette will illustrate how the `marginaleffects` package can be used to estimate various marginal causal estimands in survival analysis on the basis of time-to-event models. Our goal is mainly to give a non-technical overview of the capabilities of the package. For more technical and detailed explanations of the shown material we recommend consulting standard textbooks on survival analysis.
+
+# Example Data and Model
+
+To illustrate the functionality of `marginaleffects` we will use a classic real-data example from the survival analysis literature: the `rotterdam` dataset from the `survival` R package [@Hofman1991]. The `rotterdam` dataset, obtained from the Rotterdam tumor bank, contains information on 2982 breast cancer patients. It includes variables related to patient demographics, clinical characteristics, and survival outcomes. The dataset is used in survival analysis to study the relationship between predictors and survival time.
+
+For the purposes of this vignette, we will try to analyze the causal effect of an hormonal treatment on the time until death. In the `rotterdam` dataset, the hormonal treatment is a binary variable called `hormon`, where `0` indicates no treatment and `1` means that the patient did receive a treatment. The time until death is coded as a classic time-to-event variable with two columns: `dtime` and `death`. Here, `dtime` is the time until death or right-censoring in days and `death`is the event status indicator, where `0` indicates that the patient was still alive at `dtime` and `1` indicates that the patient died at `dtime`. The study did not randomize the `hormon` treatment, meaning that we have to adjust for confounding as is usual in observational data.
+
+The first 6 rows of the dataset look like this:
+
+```{r}
+library(marginaleffects)
+library(survival)
+library(splines)
+
+options(marginaleffects_print_type = FALSE)
+options(marginaleffects_print_column_names = FALSE)
+options(width = 300)
+
+head(rotterdam)
+```
+
+For the analysis of the data we will first fit a standard Cox proportional hazards model with the time to death or right-censoring as the response variable and the hormonal treatment as independent variable. Additionally, we will include `grade`, which is an ordinal variable reflecting the level of tumor differentiation, and `age` at surgery, a continuous variable including the age in years as further independent variables. To account for a possible non-linear relationship between `age` and the time until death we model this variable using a natural spline with two degrees of freedom, as shown below:
+
+```{r}
+model <- coxph(
+  Surv(dtime, death) ~ hormon + grade + ns(age, df=2), 
+  data=rotterdam
+)
+
+summary(model)
+```
+
+From the `summary()` output alone it looks like the `hormonal` treatment leads to a faster time until death on average with a HR of ~ 1.34, even after adjustment for `age` and `grade`. We will investigate this further below.
+
+# Average Counterfactual Predictions
+
+## Estimation
+
+We will start by plotting the average counterfactual predictions for each of the two possible values of `hormon` as a function of time. This is equivalent to performing g-computation for each point in time. As usual, this can be done using the `avg_predictions()` function in conjunction with the fitted model:
+
+```{r}
+p <- avg_predictions(model,
+  type = "survival",
+  by = c("dtime", "hormon"),
+  newdata = datagrid(
+    hormon = 0:1,
+    dtime = seq(min(rotterdam$dtime), max(rotterdam$dtime), length.out = 25),
+    grid_type = "counterfactual"
+  )
+)
+p
+```
+
+Note that we set `type="survival"` to obtain the average counterfactual predictions on the survival probability scale. Other options would be to use `type="risk"` to obtain the predictions on a death probability scale instead. Because we want to calculate counterfactual predictions, we also had to define the `newdata` argument using a call to the `datagrid()` function. As usual, this argument controls over which values of the variables in `by` the predictions should be made. To get a general view of the whole survival curves we used both possible values of `hormon` and 25 equally spaced points in time between the first and the last occurring event time.
+
+The `Estimate` column shows the estimated "counterfactual" survival probability at `dtime` for `hormon = 0` and `hormon = 1`. If the causal identifiability assumptions hold (see @Hernan2020 for a detailed discussion of these assumptions) and the model is correctly specified, these can be interpreted as the fraction of individuals that would have survived up to `dtime`, if, possibly contrary to the facts, every individual in the population had or had not received hormonal treatment. For example, the first row shows a value of `r round(p$estimate[1])` for $t = 5875$ and `hormon = 1`, meaning that if we had intervened to give every individual in the dataset the hormonal treatment, approximately `r round(p$estimate[1]) * 100` percent would still be alive by day 5875. The `Std. Error`, `2.5 %`, and `97.5 %` columns additionally include the corresponding standard error and the 95% confidence interval respectively.
+
+::: {.callout-warning}
+The "counterfactual" interpretation of the estimated survival probabilities only holds if the used model is correctly specified, and if the four fundamental causal identifiability assumptions can be assumed to be true. These are:
+
+1) the positivity assumption
+2) the counterfactual consistency assumption
+3) the no-interference assumption
+4) the conditional exchangeability assumption
+
+These assumptions are described in detail in @Hernan2020 and many other books and articles on causal inference based methods.
+:::
+
+## Plotting
+
+The results can be plotted using the `plot_predictions()` function using almost identical code:
+
+```{r}
+plot_predictions(model,
+  type = "survival",
+  by = c("dtime", "hormon"),
+  newdata = datagrid(
+    hormon = 0:1,
+    dtime = seq(min(rotterdam$dtime), max(rotterdam$dtime), length.out = 25),
+    grid_type = "counterfactual"
+  )
+)
+```
+
+The resulting plot shows the survival curves for both treatment options of `hormon`, adjusted for `age` and `grade`. By default, confidence intervals are included as bands around the curves. As can be seen quite clearly from the plot alone, the confidence intervals do not overlap for the majority of the shown time, but not all points in time. Using only the HR from the model, we would have been unable to make such distinctions or plot this graphic.
+
+
+## Hypothesis Testing
+
+From the previous analysis we could quite clearly see a difference between the two groups at almost every point in time. In some situations, however, it might be necessary to formally compare the survival probabilities at a specific point in time using a statistical hypothesis test [@Klein2007]. One option is to test whether the difference between the survival probability at some point in time $t$ is equal to 0. This can also be done quite easily using the `avg_predictions()` function. Suppose we are interested in performing this test at $t = 2500$. We could use the following code:
+
+```{r}
+avg_predictions(model,
+  hypothesis = "b1 - b2 = 0",
+  type = "survival",
+  by = "hormon",
+  newdata = datagrid(
+    hormon = 0:1,
+    dtime = 2500,
+    grid_type = "counterfactual"
+  )
+)
+```
+
+Note that the syntax is essentially identical to the syntax used when estimating the adjusted survival curves, with the only difference being that we focus on one point in time in the `datagrid()` call and that we additionally specified the `hypothesis` argument. In this argument, we directly specify the null hypothesis, which is that the survival probabilities at $t$ are equal. The `Estimate` column of the output now includes the estimated difference between the counterfactual survival probabilities at $t = 2500$, along with the associated standard error (`Std. Error`), p-value (`Pr(>|z|)`) and 95% confidence interval (`2.5%` and `97.5%`). In this particular case the p-value is < 0.01 and would thus be considered statistically significant by most standards.
+
+Another option would be to use the *ratio* of the two survival probabilities instead. Only a tiny change to the `hypothesis` argument is required to do this:
+
+```{r}
+avg_predictions(model,
+  hypothesis = "b1 / b2 = 0",
+  type = "survival",
+  by = "hormon",
+  newdata = datagrid(
+    hormon = 0:1,
+    dtime = 2500,
+    grid_type = "counterfactual"
+  )
+)
+```
+
+Here, the `Estimate` argument shows the ratio of the two survival probabilities at $t$ instead of the difference, again with associated standard error, p-value and 95% confidence interval. Again, the p-value is very small. Usually it does not make a large difference if the difference or the ratio is chosen as the test statistic of interest, but it is still good practice to specify this before actually performing the analysis. Users may define much more complicated hypotheses as well, as described in other parts of the packages documentation.
+
+# Average Counterfactual Predictions by Groups
+
+In the real world we often encounter heterogeneous treatment effects, meaning that the causal effect of one variable on an outcome is not necessarily the same in different groups of individuals. In the example used above, we might be interested in assessing whether the effect of the hormonal treatment differs by values of `grade`. The classic approach to assess such *interaction* effects is to include an interaction between the two variables in the Cox model:
+
+```{r}
+model <- coxph(
+  Surv(dtime, death) ~ hormon * factor(grade) + ns(age, df=2), 
+  data=rotterdam
+)
+
+summary(model)
+```
+
+Although there is nothing inherently wrong with this approach, the results from the Cox model alone are again not easy to interpret. In this case the HR of `hormon` no longer refers to the HR of the hormonal treatment in general, but only to the HR of `hormon` *in the `grade` = 2 group*, which can be confusing. Additionally, the HRs again only show conditional, not marginal, effects. Using g-computation we can instead visualize adjusted survival curves for `hormon` by `grade` and perform additional hypothesis tests.
+
+## Estimation
+
+Even though the model and the estimand changed, the syntax required to estimate the counterfactual survival probabilities stays essentially the same. The only change we have to perform is that we have to add `grade` to the `datagrid()` call and to the `by` argument. To make the output a little more comprehensible we focus on one point in time again here, but the code would work the same way with multiple points in time:
+
+```{r}
+p <- avg_predictions(model,
+  type = "survival",
+  by = c("dtime", "hormon", "grade"),
+  newdata = datagrid(
+    hormon = 0:1,
+    grade = c(2, 3),
+    dtime = 2500,
+    grid_type = "counterfactual"
+  )
+)
+p
+```
+
+Instead of two rows, the output now contains four rows per point in time. Each row represents a different combination of `hormon` and `grade`. For example, the first row show the counterfactual survival probability of `hormon = 0` and `grade = 2`. This probability can be interpreted as the proportion of individuals that would have survived up to time $t = 2500$, if everyone had received no hormonal treatment and had a `grade` value of `2`.
+
+::: {.callout-note}
+If we were instead interested in the **effect modification** of the effect of `hormon` by `grade`, we could use almost the same code. We would only have to remove the `grade` specification from the `datagrid()` call (see @VanderWeele2009 for an explanation of the distinction).
+:::
+
+## Plotting
+
+We can of course also plot these counterfactual predictions, using the `plot_predictions()` function, again using 25 equally spaced points in time:
+
+```{r}
+plot_predictions(model,
+  type = "survival",
+  by = c("dtime", "hormon", "grade"),
+  newdata = datagrid(
+    hormon = 0:1,
+    grade = c(2, 3),
+    dtime = seq(min(rotterdam$dtime), max(rotterdam$dtime), length.out = 25),
+    grid_type = "counterfactual"
+  )
+)
+```
+
+Instead of one adjusted survival curve per `hormon` group, we now get four adjusted survival curves in total. In the resulting graph we get some indication of an interaction effect between `grade` and `hormon`. For `grade = 2` the curves of `hormon = 0` and `hormon = 1` are very similar, whereas they do seem to be somewhat further apart for `grade = 3`. It is, however, difficult to make a solid judgement here because the confidence intervals of all groups are quite wide and mostly overlapping.
+
+## Hypothesis Testing
+
+Looking only at the adjusted survival curves above, it is unclear whether there actually is an interaction effect or not. Formally, the question is whether the difference in survival probabilities between `hormon = 0` and `hormon = 1` at $t$ for `grade = 2` is equal to the difference in survival probabilities between `hormon = 0` and `hormon = 1` at $t$ for `grade = 3`. Luckily, the `marginaleffects` package allows us to formally test this hypothesis directly, using the `avg_comparisons()` function:
+
+```{r}
+avg_comparisons(model,
+  hypothesis = "b1 - b2 = 0",
+  variables = "hormon",
+  type = "survival",
+  by = "grade",
+  newdata = datagrid(
+    grade = c(2, 3),
+    dtime = 2500,
+    grid_type = "counterfactual")
+)
+```
+
+By correctly specifying the `hypothesis` argument, a formal hypothesis test is conducted in which the effect of `hormon` on the survival probability is compared across strata of `grade` (`b1` and `b2` are the first and second row of the output that we would obtain if we left the `hypothesis` argument unspecified). In this case the output estimate is 0.0844, which is the difference between the differences of survival probabilities due to `hormon` in `grade = 2` and `grade = 3`. The associates p-value is rather large and the 95% confidence interval includes 0, so at least at this point in time there is no significant interaction on the marginal survival probability scale.
+
+As explained elsewhere in the package documentation, the `hypothesis` argument allows very flexible input types. For example, by substituting `hypothesis = "b1 - b2 = 0"` with `hypothesis = "b1 / b2 = 1"` we could instead test the hypothesis using a ratio of differences in survival probabilities. By supplying custom functions or formulas, much more complicated hypotheses may also be tested.
+
+# Conclusion
+
+Although the `marginaleffects` package is not specifically designed to do survival analysis, it can nevertheless be used very efficiently to perform such analysis as well. For users that are already familiar with the `marginaleffects` package this is particularly easy, because the syntax required for survival analysis is exactly the same syntax that can be used for non-survival models. Additionally, the included capabilities to test complex hypotheses dealing with interaction and effect modification is, to the best of our knowledge, not implemented elsewhere.
+
+Note, however, that although g-computation is one of the most popular and most efficient methods to estimate the causal estimands described here, it is not the only method and may not always be the best choice [@Denz2023]. Due to its' sole reliance on a time-to-event model, the resulting estimates are very susceptible to model misspecification. Other methods, such as augmented inverse probability of treatment weighting [@Wang2018] or targeted maximum likelihood estimation [@Cai2020], additionally use a model for the **treatment assignment process** and are doubly-robust in the sense that only one of the models needs to be correctly specified to obtain unbiased estimates. Additionally, we recommend that users keep in mind that the causal interpretation of the produced estimates of any method are only valid given the causal identifiability assumptions, which do not always hold in practice.  
+
+# References
