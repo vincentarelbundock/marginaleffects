@@ -1,6 +1,12 @@
 source("helpers.R")
 mod <- lm(mpg ~ qsec + hp * factor(cyl), data = mtcars)
 
+# Issue 1381: don't know how to set different null in multcomp::glht()
+expect_error(
+  hypotheses(mod, hypothesis = -10, multcomp = "bonferroni"),
+  pattern = "multcomp.*number"
+)
+
 cmp1 <- avg_comparisons(mod, variables = list(cyl = "pairwise"))
 cmp2 <- hypotheses(cmp1, multcomp = "hochberg")
 expect_true(any(cmp1$p.value < cmp2$p.value))
@@ -30,4 +36,3 @@ hyp1 <- hypotheses(mod)
 hyp2 <- hypotheses(mod, multcomp = "single-step")
 expect_true(any(hyp1$p.value < hyp2$p.value))
 expect_true(all(hyp1$p.value <= hyp2$p.value))
-
