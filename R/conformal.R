@@ -1,5 +1,11 @@
 get_conformal_score <- function(x, score) {
-  response_name <- insight::find_response(attr(x, "model"))
+  model <- attr(x, "model")
+  if (inherits(model, c("model_fit", "workflow"))) {
+    insight::check_if_installed("tune")
+    response_name <- tune::outcome_names(model)
+  } else {
+    response_name <- insight::find_response(attr(x, "model"))
+  }
   response <- x[[response_name]]
   if (!is.numeric(response) && score != "softmax") {
     insight::format_error('The response must be numeric. Did you want to use `conformal_score="softmax"`?')
@@ -32,7 +38,12 @@ get_conformal_score <- function(x, score) {
 
 get_conformal_bounds <- function(x, score, conf_level) {
   model <- attr(x, "model")
-  response_name <- insight::find_response(model)
+  if (inherits(model, c("model_fit", "workflow"))) {
+    insight::check_if_installed("tune")
+    response_name <- tune::outcome_names(model)
+  } else {
+    response_name <- insight::find_response(attr(x, "model"))
+  }
   response <- x[[response_name]]
   d <- min(score[score > stats::quantile(score, probs = conf_level)])
   if ("group" %in% colnames(x)) {
