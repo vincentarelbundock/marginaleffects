@@ -5,6 +5,7 @@
 Bugs:
 
 * `collapse` is not necessary for hypothesis formulas. Thanks to @ngreifer for Issue #1383.
+* Error when `hypotheses()` has both a number in `hypothesis` and a value in `multcomp`. Thanks to J. Rohrer for Issue #1381.
 
 ## 0.25.0
 
