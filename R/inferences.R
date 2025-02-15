@@ -88,6 +88,11 @@ inferences <- function(x,
                        conformal_calibration = NULL,
                        conformal_score = "residual_abs",
                        ...) {
+    if (inherits(attr(x, "model"), c("model_fit", "workflow"))) {
+        msg <- "The `inferences()` function is not supported for `tidymodels` objects."
+        stop(msg, call. = FALSE)
+    }
+
     # inherit conf_level from the original object
     conf_level <- attr(x, "conf_level")
     if (is.null(conf_level)) conf_level <- 0.95

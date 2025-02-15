@@ -12,6 +12,9 @@ dat$large_penguin <- factor(dat$large_penguin, levels = c("yes", "no"))
 mod <- set_engine(logistic_reg(), "glm") |>
   fit(large_penguin ~ bill_length_mm + flipper_length_mm + species, data = dat)
 
+# inferences() does not support tidymodels
+expect_error(predictions(mod, type = "prob") |> inferences(method = "conformal_cv+"), "not supported")
+
 p <- predictions(mod, newdata = dat, type = "prob")
 expect_inherits(p, "predictions")
 expect_true("std.error" %in% colnames(p))
@@ -99,4 +102,3 @@ expect_equivalent(mfx$y, my_data$y)
 
 
 rm(list = ls())
-
