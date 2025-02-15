@@ -5,6 +5,12 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         return(modeldata)
     }
 
+    # sometimes (ex: tidymodels) marginaleffects attaches the model data to the object
+    md <- attr(model, "modeldata")
+    if (!is.null(md)) {
+        return(md)
+    }
+
     # tidymodels: always require `newdata`, because sometimes there needs to be
     # some pre-processing, and we want to rely on the workflow to do that.
     # workflows are triggered on `stats::predict()`

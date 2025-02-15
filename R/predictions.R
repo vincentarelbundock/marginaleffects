@@ -520,15 +520,20 @@ predictions <- function(model,
     }
   } else {
     # other attributes
+    if (inherits(model, c("model_fit", "workflow"))) {
+      attr(model, "modeldata") <- newdata
+    }
+    attr(out, "model") <- model
+
     attr(out, "newdata") <- newdata
     attr(out, "call") <- call_attr
     attr(out, "model_type") <- class(model)[1]
-    attr(out, "model") <- model
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- V
     attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "transform") <- transform[[1]]
     attr(out, "hypothesis_by") <- hyp_by
+
 
     if (inherits(model, "brmsfit")) {
       insight::check_if_installed("brms")
