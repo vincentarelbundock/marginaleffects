@@ -286,7 +286,7 @@ d$cyl <- as.factor(d$cyl)
 m <- glmmTMB::glmmTMB(
   count ~ cyl,
   data = d,
-  family = glmmTMB::poisson()
+  family = poisson()
 )
 out <- avg_predictions(m, newdata = "balanced", by = "cyl")
 expect_true(all(out$conf.low >= 0 & out$conf.high >= 0))
