@@ -257,8 +257,12 @@ hypotheses <- function(
   hypothesis_null <- tmp$hypothesis_null
 
   vcov_false <- isFALSE(vcov)
-  vcov <- get_vcov(model = model, vcov = vcov)
-  vcov.type <- get_vcov_label(vcov = vcov)
+  if (!isTRUE(checkmate::check_matrix(vcov))) {
+    vcov <- get_vcov(model = model, vcov = vcov)
+    vcov.type <- get_vcov_label(vcov = vcov)
+  } else {
+    vcov.type <- "matrix"
+  }
 
   FUNouter <- function(model, hypothesis, newparams = NULL, ...) {
     if (isTRUE(checkmate::check_numeric(model))) {
