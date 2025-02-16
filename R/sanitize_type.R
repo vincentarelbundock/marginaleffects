@@ -13,7 +13,7 @@ sanitize_type <- function(model, type, by = FALSE, calling_function = "raw") {
     }
 
     checkmate::assert_character(type, len = 1, null.ok = TRUE)
-    
+
     if (inherits(model, "model_fit")) {
         cl <- "model_fit"
     } else {
@@ -40,7 +40,14 @@ sanitize_type <- function(model, type, by = FALSE, calling_function = "raw") {
 
     # fixest: invlink(link) only supported for glm model
     if (inherits(model, "fixest")) {
-        if (!isTRUE(hush(model[["method_type"]]) %in% c("feglm"))) {
+        if (!isTRUE(hush(model[["method_type"]]) %in% "feglm")) {
+            dict <- dict[dict$type != "invlink(link)", , drop = FALSE]
+        }
+    }
+
+    # glmmTMB: invlink(link) not applicable to zero-inflated / hurdle models
+    if (inherits(model, "glmmTMB")) {
+        if (!identical(deparse(model$modelInfo$allForm$ziformula, width.cutoff = 500L), "~0")) {
             dict <- dict[dict$type != "invlink(link)", , drop = FALSE]
         }
     }

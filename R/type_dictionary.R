@@ -83,11 +83,13 @@ glimML,link
 glm,invlink(link)
 glm,response
 glm,link
+glmerMod,invlink(link)
 glmerMod,response
 glmerMod,link
 glmgee,response
 glmrob,response
 glmrob,link
+glmmTMB,invlink(link)
 glmmTMB,response
 glmmTMB,link
 glmmTMB,conditional
