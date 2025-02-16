@@ -278,6 +278,18 @@ expect_false(anyNA(h$estimate))
 expect_false(anyNA(h$std.error))
 
 
+# Issue 1388
+data(mtcars)
+d <- mtcars
+d$count <- rep(c(0, 0, 0, 0, 1, 2, 4), length.out = nrow(mtcars))
+d$cyl <- as.factor(d$cyl)
+m <- glmmTMB::glmmTMB(
+  count ~ cyl,
+  data = d,
+  family = glmmTMB::poisson()
+)
+out <- avg_predictions(m, newdata = "balanced", by = "cyl")
+expect_true(all(out$conf.low >= 0 & out$conf.high >= 0))
 
 
 source("helpers.R")
