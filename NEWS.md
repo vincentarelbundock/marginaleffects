@@ -8,6 +8,10 @@ Bugs:
 * Error when `hypotheses()` has both a number in `hypothesis` and a value in `multcomp`. Thanks to J. Rohrer for Issue #1381.
 * Informative error: conformal inference is not supported for `tidymodels`
 
+Minor:
+
+* Print order for equivalence test p values is changed.
+
 ## 0.25.0
 
 Breaking changes in preparation for 1.0.0 release:
