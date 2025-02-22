@@ -7,6 +7,7 @@ Bugs:
 * `collapse` is not necessary for hypothesis formulas. Thanks to @ngreifer for Issue #1383.
 * Error when `hypotheses()` has both a number in `hypothesis` and a value in `multcomp`. Thanks to J. Rohrer for Issue #1381.
 * Informative error: conformal inference is not supported for `tidymodels`
+* `type` is respected for models of class `betareg`. Thanks to @strengejacke for reporting issue #1391.
 
 Minor:
 
