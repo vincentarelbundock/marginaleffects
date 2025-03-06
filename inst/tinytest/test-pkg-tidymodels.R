@@ -2,8 +2,8 @@ source("helpers.R")
 using("marginaleffects")
 requiet("tidymodels")
 
-dat <- get_dataset("penguins", "palmerpenguins")
-dat$large_penguin <- ifelse(
+dat <<- get_dataset("penguins", "palmerpenguins")
+dat$large_penguin <<- ifelse(
   dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), "yes", "no")
 dat$large_penguin <- factor(dat$large_penguin, levels = c("yes", "no"))
 
