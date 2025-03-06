@@ -178,7 +178,7 @@ group_to_factor <- function(group, model) {
     if (all(not_found)) {
         return(list())
     }
-    setNames(lapply(found[!not_found], function(z) {
+    stats::setNames(lapply(found[!not_found], function(z) {
         eval(
             quote(...elt(.z)),
             pairlist(.z = z),

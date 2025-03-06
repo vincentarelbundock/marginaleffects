@@ -21,7 +21,7 @@ expect_true(expect_margins(res, mar, tolerance = 0.1))
 # emtrends
 mfx <- slopes(mod, newdata = datagrid(batch = 1), variables = "temp")
 em <- suppressWarnings(
-emtrends(mod, ~temp, "temp", at = list("batch" = tmp$batch[1])))
+    emtrends(mod, ~temp, "temp", at = list("batch" = tmp$batch[1])))
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$temp.trend, tolerance = .001)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
@@ -41,9 +41,12 @@ expect_predictions(pred, n_row = nrow(GasolineYield))
 pred <- predictions(mod, newdata = datagrid(batch = 1:3, temp = c(300, 350)))
 expect_predictions(pred, n_row = 6)
 
+# link
+mm <- predictions(mod, type = "link", by = "batch", newdata = datagrid(grid_type = "balanced")) |>
+    dplyr::arrange(batch)
 
 # marginalmeans: vs. emmeans
-mm <- predictions(mod, type = "link", by = "batch", newdata = datagrid(grid_type = "balanced")) |> 
+mm <- predictions(mod, type = "response", by = "batch", newdata = datagrid(grid_type = "balanced")) |>
     dplyr::arrange(batch)
 expect_inherits(mm, "predictions")
 expect_equal(nrow(mm), 10)
@@ -51,5 +54,11 @@ em <- broom::tidy(emmeans::emmeans(mod, "batch"))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 
+# Issue #1391
+mm_link <- predictions(mod, type = "link", by = "batch", newdata = datagrid(grid_type = "balanced")) |>
+    dplyr::arrange(batch)
+expect_true(all(mm_link$estimate < mm$estimate))
+
 
 rm(list = ls())
+

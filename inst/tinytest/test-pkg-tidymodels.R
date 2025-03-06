@@ -1,6 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 requiet("tidymodels")
+if (ON_CRAN || ON_CI) exit_file("local only")
 
 dat <- get_dataset("penguins", "palmerpenguins")
 dat$large_penguin <- ifelse(

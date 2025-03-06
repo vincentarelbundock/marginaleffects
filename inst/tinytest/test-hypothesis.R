@@ -367,5 +367,18 @@ expect_equal(nrow(p), 3)
 expect_false(any(grepl("18", p$hypothesis))) # no duplicate label
 
 
+# Email issue: revreference deprecated by accident
+dat <- transform(mtcars, cyl = factor(cyl))
+mod <- lm(mpg ~ cyl - 1, dat)
+h <- hypotheses(mod, hypothesis = ratio ~ revreference)
+expect_true("(cyl4) / (cyl6)" %in% h$hypothesis)
+expect_equivalent(h$estimate, c(1.350545980792, 1.76580373269115))
+h <- hypotheses(mod, hypothesis = ~revreference)
+expect_true("(cyl4) - (cyl6)" %in% h$hypothesis)
+expect_equivalent(h$estimate, c(6.92077922077922, 11.5636363636364))
+cmp1 <- avg_comparisons(mod, hypothesis = ~revreference)
+cmp2 <- avg_comparisons(mod, hypothesis = ~reference)
+expect_equivalent(cmp1$estimate, cmp2$estimate * -1)
+
 
 rm(list = ls())
