@@ -40,8 +40,14 @@ get_coef.betareg <- function(model, ...) {
 #' @include get_predict.R
 #' @rdname get_predict
 #' @export
-get_predict.betareg <- function(model, newdata, type = "response", at = 0.5, ...) {
-    out <- stats::predict(model, newdata = newdata, type = type, at = at)
+get_predict.betareg <- function(model, newdata, type = "response", ...) {
+    dots <- list(...)
+    args <- list(
+        model,
+        newdata = newdata,
+        type = type)
+    args[["at"]] <- dots[["at"]]
+    out <- do.call(stats::predict, args)
     out <- data.frame(
         rowid = seq_len(nrow(newdata)),
         estimate = out)

@@ -73,7 +73,7 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{glimML}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{betareg}(model, newdata, type = "response", at = 0.5, ...)
+\method{get_predict}{betareg}(model, newdata, type = "response", ...)
 
 \method{get_predict}{bife}(model, newdata = insight::get_data(model), type = "response", ...)
 
