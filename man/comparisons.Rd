@@ -296,7 +296,7 @@ slopes, elasticities, etc.
 
 \code{variables} identifies the focal regressors whose "effect" we are interested in. \code{comparison} determines how predictions with different regressor values are compared (difference, ratio, odds, etc.). The \code{newdata} argument and the \code{datagrid()} function control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.
 
-See the comparisons vignette and package website for worked examples and case studies:
+See the comparisons chapter on the package website for worked examples and case studies:
 \itemize{
 \item \url{https://marginaleffects.com/chapters/comparisons.html}
 \item \url{https://marginaleffects.com/}
@@ -581,7 +581,7 @@ modlog <- lm(mpg ~ log(new_hp) + factor(cyl), data = dat)
 fdiff <- \(x) data.frame(x, x + 10)
 avg_comparisons(modlog, variables = list(new_hp = fdiff))
 
-# Adjusted Risk Ratio: see the contrasts vignette
+# Adjusted Risk Ratio
 mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
 avg_comparisons(mod, comparison = "lnratioavg", transform = exp)
 
