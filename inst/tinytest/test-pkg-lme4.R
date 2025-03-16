@@ -359,5 +359,23 @@ expect_true(all(cmp1$conf.low != cmp2$conf.low))
 expect_true(all(cmp1$std.error == cmp2$std.error))
 
 
+# Issue #1396: error on reserved names
+set.seed(123)
+dat <- data.frame(
+    outcome = rbinom(n = 100, size = 1, prob = 0.35),
+    var_binom = as.factor(rbinom(n = 100, size = 1, prob = 0.2)),
+    var_cont = rnorm(n = 100, mean = 10, sd = 7),
+    grp = as.factor(sample(letters[1:4], size = 100, replace = TRUE))
+)
+dat$group <- dat$grp
+dat$var_cont <- datawizard::standardize(dat$var_cont)
+m <- lme4::glmer(
+    outcome ~ var_binom + var_cont + (1 | group),
+    data = dat,
+    family = binomial(link = "logit")
+)
+expect_error(avg_predictions(m, by = "var_binom", newdata = "balanced"), pattern = "forbidden")
+
+
 
 rm(list = ls())

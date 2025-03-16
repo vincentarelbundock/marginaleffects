@@ -60,28 +60,7 @@ sanitize_variables <- function(variables,
     predictors <- stats::setNames(rep(list(NULL), length(predictors)), predictors)
   }
 
-  # reserved keywords
-  # Issue #697: we used to allow "group", as long as it wasn't in
-  # `variables`, but this created problems with automatic `by=TRUE`. Perhaps
-  # I could loosen this, but there are many interactions, and the lazy way is
-  # just to forbid entirely.
-  reserved <- c(
-    "rowid", "group", "term", "contrast", "estimate",
-    "std.error", "statistic", "conf.low", "conf.high", "p.value",
-    "p.value.nonsup", "p.value.noninf", "by")
-  # if no modeldata is available, we use `newdata`, but that often has a
-  # `rowid` column. This used to break the extensions.Rmd vignette.
-  if (no_modeldata) {
-    reserved <- setdiff(reserved, "rowid")
-  }
-  bad <- unique(intersect(c(names(predictors), colnames(modeldata)), reserved))
-  if (length(bad) > 0) {
-    msg <- c(
-      "These variable names are forbidden to avoid conflicts with the outputs of `marginaleffects`:",
-      sprintf("%s", paste(sprintf('"%s"', bad), collapse = ", ")),
-      "Please rename your variables before fitting the model.")
-    insight::format_error(msg)
-  }
+  sanity_reserved(model = model, modeldata = modeldata)
 
   # when comparisons() only inludes one focal predictor, we don't need to specify it in `newdata`
   # when `variables` is numeric, we still need to include it, because in
