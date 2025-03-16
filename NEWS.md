@@ -5,16 +5,16 @@
 Bugs:
 
 * `df` is now respected when using the `multcomp` argument. Thanks to @TonyRoberson for report #1414 and to @ngreifer for the solution.
-* `collapse` is not necessary for hypothesis formulas. Thanks to @ngreifer for Issue #1383.
 * Error when `hypotheses()` has both a number in `hypothesis` and a value in `multcomp`. Thanks to J. Rohrer for Issue #1381.
 * Informative error: conformal inference is not supported for `tidymodels`
 * `type` is respected for models of class `betareg`. Thanks to @strengejacke for reporting issue #1391.
 * `revreference` is available again in the `hypothesis` argument.
 * `conformal_score="residual_sq"` incorrectly added the score to the prediction instead of absolute residual. Coverage was probably incorrect, with wider intervals than necessary. Issue #1407.
 
-Minor:
+Miscellaneous:
 
 * Print order for equivalence test p values is changed.
+* `collapse` is not necessary for hypothesis formulas. Thanks to @ngreifer for Issue #1383.
 
 ## 0.25.0
 
