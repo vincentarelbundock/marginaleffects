@@ -36,3 +36,13 @@ hyp1 <- hypotheses(mod)
 hyp2 <- hypotheses(mod, multcomp = "single-step")
 expect_true(any(hyp1$p.value < hyp2$p.value))
 expect_true(all(hyp1$p.value <= hyp2$p.value))
+
+# Issue #1414
+mod <- lm(mpg ~ factor(gear), data = mtcars)
+preds <- avg_predictions(mod, variables = "gear", df = 29)
+h1 <- hypotheses(preds, df = 29, hypothesis = ~pairwise, multcomp = "bonferroni")
+h2 <- hypotheses(preds, hypothesis = ~pairwise, multcomp = "bonferroni")
+expect_true(all(h1$p.value > h2$p.value))
+expect_true(all(h1$conf.low < h2$conf.low))
+expect_true(all(h1$conf.high > h2$conf.high))
+expect_true(all(h1$s.value < h2$s.value))
