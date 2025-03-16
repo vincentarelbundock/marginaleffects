@@ -4,6 +4,7 @@
 
 Bugs:
 
+* `df` is now respected when using the `multcomp` argument. Thanks to @TonyRoberson for report #1414 and to @ngreifer for the solution.
 * `collapse` is not necessary for hypothesis formulas. Thanks to @ngreifer for Issue #1383.
 * Error when `hypotheses()` has both a number in `hypothesis` and a value in `multcomp`. Thanks to J. Rohrer for Issue #1381.
 * Informative error: conformal inference is not supported for `tidymodels`
