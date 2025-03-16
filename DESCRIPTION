@@ -305,6 +305,7 @@ Collate:
     'sanitize_interaction.R'
     'sanitize_newdata.R'
     'sanitize_numderiv.R'
+    'sanitize_reserved.R'
     'sanitize_type.R'
     'sanitize_variables.R'
     'sanitize_vcov.R'
