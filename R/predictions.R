@@ -225,6 +225,8 @@ predictions <- function(model,
     call_attr[["modeldata"]] <- modeldata
   }
 
+  sanity_reserved(model, modeldata)
+
   # very early, before any use of newdata
   # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
   scall <- rlang::enquo(newdata)
