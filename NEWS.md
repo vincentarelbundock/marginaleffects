@@ -10,6 +10,7 @@ Bugs:
 * `type` is respected for models of class `betareg`. Thanks to @strengejacke for reporting issue #1391.
 * `revreference` is available again in the `hypothesis` argument.
 * `conformal_score="residual_sq"` incorrectly added the score to the prediction instead of absolute residual. Coverage was probably incorrect, with wider intervals than necessary. Issue #1407.
+* `hypotheses()` supports multiple imputation objects from `mice`. Thanks to @ASKurz for raising issue #1420.
 
 Miscellaneous:
 

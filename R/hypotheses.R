@@ -183,6 +183,12 @@ hypotheses <- function(
     call_attr[["modeldata"]] <- ...elt(match("modeldata", ...names())[1L])
   }
 
+  # multiple imputation
+  if (inherits(model, c("mira", "amest"))) {
+    out <- process_imputation(model, call_attr)
+    return(out)
+  }
+
   ###### Bootstrap
   # restore an already sanitized hypothesis if necessary
   hypothesis <-
