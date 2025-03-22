@@ -1,6 +1,6 @@
 # News {.unnumbered}
 
-## Development
+## 0.25.1
 
 Bugs:
 
