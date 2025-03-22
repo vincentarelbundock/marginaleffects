@@ -77,6 +77,19 @@ cmp <- avg_comparisons(est,
 expect_inherits(cmp, "comparisons")
 
 
+# Issue #1420
+set.seed(1024)
+dat <- iris
+dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Sepal.Width[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Species[sample(seq_len(nrow(iris)), 40)] <- NA
+dat_mice <- mice(dat, m = 20, printFlag = FALSE, .Random.seed = 1024)
+mod_mice <- with(dat_mice, lm(Petal.Width ~ Sepal.Length))
+h <- hypotheses(mod_mice,
+  hypothesis = "Sepal.Length = 0",
+  equivalence = c(-1, 1))
+expect_false(anyNA(h$std.error))
+expect_false(anyNA(h$estimate))
 
 
 source("helpers.R")
