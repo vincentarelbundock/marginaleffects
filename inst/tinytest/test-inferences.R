@@ -231,7 +231,7 @@ expect_equivalent(p2$estimate, p$estimate)
 
 
 # Issue #1054
-exit_file("Issue #1054 is broken. Noah's PR?")
+# exit_file("Issue #1054 is broken. Noah's PR?")
 requiet("lme4")
 mod <- glmer(
   cbind(incidence, size - incidence) ~ period + (1 | herd),
@@ -255,8 +255,8 @@ h3 <- hypotheses(mod, hypothesis = "hp/cyl=1") |>
   inferences(method = "simulation", R = 25)
 expect_equivalent(h1$conf.low, h2$conf.low)
 expect_equivalent(h1$conf.high, h2$conf.high)
-expect_false(expect_equivalent(h1$conf.low, h3$conf.low))
-expect_false(expect_equivalent(h1$conf.high, h3$conf.high))
+expect_false(ignore(expect_equivalent)(h1$conf.low, h3$conf.low))
+expect_false(ignore(expect_equivalent)(h1$conf.high, h3$conf.high))
 
 # Issue #1407: conformal inference with `residual_sq` scores.
 set.seed(48103)
