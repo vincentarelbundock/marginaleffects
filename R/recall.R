@@ -1,9 +1,8 @@
 # fancy way to catch the call so that get_averages(slopes()) does not evaluate twice
 # and is fast
 recall <- function(x, ...) {
-
-
     funs <- c("comparisons", "slopes", "predictions", "hypotheses", "avg_predictions", "avg_comparisons", "avg_slopes")
+    funs <- c(funs, paste0("marginaleffects::", funs))
 
     # 2-step estimation with already evaluated & assigned call
     if (!is.call(x)) {

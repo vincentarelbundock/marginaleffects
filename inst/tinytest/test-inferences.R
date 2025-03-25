@@ -1,5 +1,4 @@
 source("helpers.R")
-if (!EXPENSIVE) exit_file("EXPENSIVE")
 
 # inferences() currently returns a `comparisons` object even with `slopes()`
 
