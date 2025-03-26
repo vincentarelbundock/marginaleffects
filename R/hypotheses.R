@@ -157,6 +157,13 @@ hypotheses <- function(
     ...) {
   hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
 
+  if (inherits(model, c("predictions", "comparisons", "slopes", "hypotheses"))) {
+    if (!is.null(vcov)) {
+      msg <- "The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call."
+      stop(msg, call. = FALSE)
+    }
+  }
+
   checkmate::assert_number(conf_level, null.ok = TRUE, lower = 0, upper = 1)
   if (is.null(conf_level)) {
     # inherit conf_level from marginaleffects objects
