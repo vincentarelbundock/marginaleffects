@@ -1,5 +1,6 @@
-if (requireNamespace("tinytest", quietly = TRUE) &&
-    isTRUE(Sys.getenv("R_NOT_CRAN") == "true") &&
-    !any(grepl("tinytest", readLines(here::here(".Rbuildignore"))))) {
+NOT_CRAN <- isTRUE(Sys.getenv("R_NOT_CRAN") == "true")
+TINYTEST <- requireNamespace("tinytest", quietly = TRUE)
+
+if (TINYTEST && NOT_CRAN) {
     tinytest::test_package("marginaleffects")
 }
