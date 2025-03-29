@@ -5,7 +5,9 @@ construct_call <- function(model, calling_function, env = parent.frame(1L)) {
     out <- list(name = calling_function, model = model)
 
     # known arguments
-    arg_names_all <- names(formals(get(calling_function), asNamespace(utils::packageName())))
+    arg_names_all <- names(formals(
+        get(calling_function, pos = asNamespace("marginaleffects")),
+        asNamespace(utils::packageName())))
     arg_names <- setdiff(arg_names_all, c("model", "..."))
     arg <- lapply(arg_names, function(i) {
         eval(substitute(substitute(arg), list(arg = as.name(i))), envir = env)
