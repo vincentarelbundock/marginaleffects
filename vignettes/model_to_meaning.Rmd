@@ -9,8 +9,8 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+   collapse = TRUE,
+   comment = "#>"
 )
 ```
 
@@ -27,7 +27,6 @@ In addition to full book chapters, [marginaleffects.com](https://marginaleffects
 1. [Quick start](https://marginaleffects.com/bonus/get_started.html)
 1. Interpretation
    - [Models and meaning](https://marginaleffects.com/chapters/challenge.html)
-   - [Tools and data](https://marginaleffects.com/chapters/tools.html)
    - [Conceptual framework](https://marginaleffects.com/chapters/framework.html)
 1. Quantities and Tests
    - [Hypothesis and equivalence tests](https://marginaleffects.com/chapters/hypothesis.html)
