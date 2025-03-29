@@ -49,7 +49,7 @@
 #'   - Examples:
 #'     + `variables = list(gear = "pairwise", hp = 10)`
 #'     + `variables = list(gear = "sequential", hp = c(100, 120))`
-#'     + `variables = list(hp = \(x) data.frame(low = x - 5, high = x + 10))`
+#'     + `variables = list(hp = function(x) data.frame(low = x - 5, high = x + 10))`
 #'     + See the Examples section below for more.
 #' @param newdata Grid of predictor values at which we evaluate the comparisons.
 #' + Warning: Avoid modifying your dataset between fitting the model and calling a `marginaleffects` function. This can sometimes lead to unexpected results.
@@ -139,7 +139,7 @@
 #' dat <- mtcars
 #' dat$new_hp <- 49 * (dat$hp - min(dat$hp)) / (max(dat$hp) - min(dat$hp)) + 1
 #' modlog <- lm(mpg ~ log(new_hp) + factor(cyl), data = dat)
-#' fdiff <- \(x) data.frame(x, x + 10)
+#' fdiff <- function(x) data.frame(x, x + 10)
 #' avg_comparisons(modlog, variables = list(new_hp = fdiff))
 #'
 #' # Adjusted Risk Ratio
