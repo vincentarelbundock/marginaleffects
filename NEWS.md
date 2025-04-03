@@ -1,5 +1,11 @@
 # News {.unnumbered}
 
+## Development
+
+New:
+
+* `get_dataset()` no longer requires the user to specify the `package` argument. It automatically searches the data index for a unique matching dataset.
+
 ## 0.25.1
 
 Bugs:

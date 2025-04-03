@@ -24,50 +24,68 @@
 #' @export
 get_dataset <- function(
     dataset = "thornton",
-    package = "marginaleffects",
+    package = NULL,
     docs = FALSE,
     search = NULL) {
-    checkmate::assert_string(package)
     checkmate::assert_string(dataset)
+    checkmate::assert_string(package, null.ok = TRUE)
     checkmate::assert_flag(docs)
     checkmate::assert_string(search, null.ok = TRUE)
 
     if (!is.null(search)) {
-        idx <- settings_get("get_dataset_index")
-        if (is.null(idx)) {
-            url <- "https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/datasets.csv"
-            idx <- utils::read.csv(url)
-        }
-        idx <- idx[grepl(search, idx$Item) | grepl(search, idx$Package) | grepl(search, idx$Title), ,
-            drop = FALSE]
-        if (nrow(idx) > 0) {
-            return(idx)
+        return(get_dataset_search(search))
+    }
+
+    # Define data dictionary for marginaleffects datasets
+    data_dict <- c(
+        "affairs" = "https://marginaleffects.com/data/affairs.parquet",
+        "airbnb" = "https://marginaleffects.com/data/airbnb.parquet",
+        "ces_demographics" = "https://marginaleffects.com/data/ces_demographics.parquet",
+        "ces_survey" = "https://marginaleffects.com/data/ces_survey.parquet",
+        "immigration" = "https://marginaleffects.com/data/immigration.parquet",
+        "lottery" = "https://marginaleffects.com/data/lottery.parquet",
+        "military" = "https://marginaleffects.com/data/military.parquet",
+        "thornton" = "https://marginaleffects.com/data/thornton.parquet",
+        "factorial_01" = "https://marginaleffects.com/data/factorial_01.parquet",
+        "interaction_01" = "https://marginaleffects.com/data/interaction_01.parquet",
+        "interaction_02" = "https://marginaleffects.com/data/interaction_02.parquet",
+        "interaction_03" = "https://marginaleffects.com/data/interaction_03.parquet",
+        "interaction_04" = "https://marginaleffects.com/data/interaction_04.parquet",
+        "polynomial_01" = "https://marginaleffects.com/data/polynomial_01.parquet",
+        "polynomial_02" = "https://marginaleffects.com/data/polynomial_02.parquet"
+    )
+
+    # If package is NULL, try to guess the correct source
+    if (is.null(package)) {
+        # First check if it's a marginaleffects dataset
+        if (dataset %in% names(data_dict)) {
+            package <- "marginaleffects"
         } else {
-            stop("Not dataset matches this regular expression.", call. = FALSE)
+            # Try to find exact match in Rdatasets
+            matches <- get_dataset_search(paste0("^", dataset, "$"))
+            if (nrow(matches) == 1) {
+                package <- matches$Package[1]
+                dataset <- matches$Item[1]
+            } else if (nrow(matches) > 1) {
+                msg <- sprintf(
+                    "Multiple matches found for dataset '%s'. Please specify the package name.\nAvailable options:\n%s",
+                    dataset,
+                    paste(sprintf("  - %s::%s", matches$Package, matches$Item), collapse = "\n")
+                )
+                stop(msg, call. = FALSE)
+            } else {
+                msg <- sprintf(
+                    "Dataset '%s' not found. Please:\n1. Specify the package name, or\n2. Use get_dataset(search = '...') to search available datasets",
+                    dataset
+                )
+                stop(msg, call. = FALSE)
+            }
         }
     }
 
     # marginaleffects
     if (identical(package, "marginaleffects")) {
         insight::check_if_installed("nanoparquet")
-
-        data_dict <- c(
-            "affairs" = "https://marginaleffects.com/data/affairs.parquet",
-            "airbnb" = "https://marginaleffects.com/data/airbnb.parquet",
-            "ces_demographics" = "https://marginaleffects.com/data/ces_demographics.parquet",
-            "ces_survey" = "https://marginaleffects.com/data/ces_survey.parquet",
-            "immigration" = "https://marginaleffects.com/data/immigration.parquet",
-            "lottery" = "https://marginaleffects.com/data/lottery.parquet",
-            "military" = "https://marginaleffects.com/data/military.parquet",
-            "thornton" = "https://marginaleffects.com/data/thornton.parquet",
-            "factorial_01" = "https://marginaleffects.com/data/factorial_01.parquet",
-            "interaction_01" = "https://marginaleffects.com/data/interaction_01.parquet",
-            "interaction_02" = "https://marginaleffects.com/data/interaction_02.parquet",
-            "interaction_03" = "https://marginaleffects.com/data/interaction_03.parquet",
-            "interaction_04" = "https://marginaleffects.com/data/interaction_04.parquet",
-            "polynomial_01" = "https://marginaleffects.com/data/polynomial_01.parquet",
-            "polynomial_02" = "https://marginaleffects.com/data/polynomial_02.parquet"
-        )
 
         checkmate::assert_choice(dataset, names(data_dict))
 
@@ -116,4 +134,15 @@ get_dataset <- function(
     } else {
         return(data)
     }
+}
+
+get_dataset_search <- function(search) {
+    idx <- settings_get("get_dataset_index")
+    if (is.null(idx)) {
+        url <- "https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/datasets.csv"
+        idx <- utils::read.csv(url)
+    }
+    idx <- idx[grepl(search, idx$Item) | grepl(search, idx$Package) | grepl(search, idx$Title), ,
+        drop = FALSE]
+    return(idx)
 }
