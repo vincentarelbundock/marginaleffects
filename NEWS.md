@@ -6,6 +6,10 @@ New:
 
 * `get_dataset()` no longer requires the user to specify the `package` argument. It automatically searches the data index for a unique matching dataset.
 
+Bugs:
+
+* `rms` package now allows tibbles. Thanks to @stephenrho for report #1428.
+
 ## 0.25.1
 
 Bugs:
