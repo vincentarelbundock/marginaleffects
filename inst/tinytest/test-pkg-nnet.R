@@ -176,11 +176,6 @@ expect_equivalent(p1, p2, ignore_attr = TRUE)
 
 
 # Issue #1432: response names in coef name{
-    "[r]": {
-        "editor.formatOnSave": true
-    }
-}
-s
 mod <- multinom(
     species ~ body_mass_g + sex,
     data = palmerpenguins::penguins,

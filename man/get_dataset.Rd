@@ -4,12 +4,7 @@
 \alias{get_dataset}
 \title{Download and Read Datasets from \code{marginaleffects} or Rdatasets}
 \usage{
-get_dataset(
-  dataset = "thornton",
-  package = "marginaleffects",
-  docs = FALSE,
-  search = NULL
-)
+get_dataset(dataset = "thornton", package = NULL, docs = FALSE, search = NULL)
 }
 \arguments{
 \item{dataset}{String. Name of the dataset to download.
