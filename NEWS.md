@@ -5,6 +5,7 @@
 New:
 
 * `get_dataset()` no longer requires the user to specify the `package` argument. It automatically searches the data index for a unique matching dataset.
+* `hypotheses()` adds response names to term names. This allows `hypothesis="groupa_var1=groupb_var1"`. Thanks to @mattansb for report #1432.
 
 Bugs:
 
