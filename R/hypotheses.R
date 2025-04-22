@@ -156,6 +156,7 @@ hypotheses <- function(
     multcomp = FALSE,
     numderiv = "fdforward",
     ...) {
+
   hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
 
   if (inherits(model, c("predictions", "comparisons", "slopes", "hypotheses"))) {
@@ -304,6 +305,8 @@ hypotheses <- function(
       out <- insight::get_parameters(model, ...)
       if ("Component" %in% colnames(out) && !anyNA(out$Component)) {
         out$Parameter <- sprintf("%s_%s", out$Component, out$Parameter)
+      } else if ("Response" %in% colnames(out) && !anyNA(out$Response)) {
+        out$Parameter <- sprintf("%s_%s", out$Response, out$Parameter)
       }
       idx <- intersect(colnames(model), c("term", "group", "estimate"))
       colnames(out)[1:2] <- c("term", "estimate")

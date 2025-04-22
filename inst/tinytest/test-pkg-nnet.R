@@ -175,6 +175,20 @@ p2 <- colMeans(p2[, grep("^Pr", colnames(p2))])
 expect_equivalent(p1, p2, ignore_attr = TRUE)
 
 
+# Issue #1432: response names in coef name{
+    "[r]": {
+        "editor.formatOnSave": true
+    }
+}
+s
+mod <- multinom(
+    species ~ body_mass_g + sex,
+    data = palmerpenguins::penguins,
+    trace = FALSE
+)
+h <- hypotheses(mod, hypothesis = "Chinstrap_body_mass_g = Gentoo_body_mass_g")
+expect_equal(nrow(h), 1)
+expect_inherits(h, "hypotheses")
 
 
 rm(list = ls())
