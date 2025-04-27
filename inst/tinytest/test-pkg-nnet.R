@@ -13,16 +13,23 @@ TitanicSurvival$age3 <- cut(
     include.lowest = TRUE,
     right = FALSE,
     dig.lab = 4,
-    breaks = c(0, 25, 50, 80))
-m1 <- nnet::multinom(passengerClass ~ sex * age3, data = TitanicSurvival, trace = FALSE)
+    breaks = c(0, 25, 50, 80)
+)
+m1 <- nnet::multinom(
+    passengerClass ~ sex * age3,
+    data = TitanicSurvival,
+    trace = FALSE
+)
 mfx <- slopes(
     m1,
     type = "probs",
     variables = "sex",
     by = "age3",
     newdata = datagrid(
-        age3 = c("[0,25)","[25,50)","[50,80]"),
-        grid_type = "counterfactual"))
+        age3 = c("[0,25)", "[25,50)", "[50,80]"),
+        grid_type = "counterfactual"
+    )
+)
 expect_equivalent(nrow(mfx), 9)
 
 
@@ -118,9 +125,16 @@ set.seed(42)
 dat <- data.frame(
     y = factor(sample(c(rep(4, 29), rep(3, 15), rep(2, 4), rep(1, 2)))),
     x = factor(sample(c(rep(1, 17), rep(2, 12), rep(2, 12), rep(1, 9)))),
-    z1 = sample(1:2, 50, replace=TRUE), z2=runif(50, 16, 18))
+    z1 = sample(1:2, 50, replace = TRUE),
+    z2 = runif(50, 16, 18)
+)
 void <- capture.output(
-    model <- nnet::multinom(y ~ x + z1 + z2, data = dat, verbose = FALSE, hessian = TRUE)
+    model <- nnet::multinom(
+        y ~ x + z1 + z2,
+        data = dat,
+        verbose = FALSE,
+        hessian = TRUE
+    )
 )
 mfx <- slopes(model, type = "probs")
 expect_inherits(mfx, "marginaleffects")
@@ -140,10 +154,13 @@ y2 <- 10 - y1
 dat <- data.frame(x, y1, y2)
 dat_long <- tidyr::pivot_longer(dat, !x, names_to = "y", values_to = "count")
 dat_long <- transform(dat_long, y = factor(y, levels = c("y2", "y1")))
-fit_multinom <- nnet::multinom(y ~ x, weights = count, data = dat_long, trace = FALSE)
-p <- predictions(fit_multinom,
-    newdata = datagrid(x = unique),
-    type = "latent")
+fit_multinom <- nnet::multinom(
+    y ~ x,
+    weights = count,
+    data = dat_long,
+    trace = FALSE
+)
+p <- predictions(fit_multinom, newdata = datagrid(x = unique), type = "latent")
 expect_inherits(p, "predictions")
 
 
@@ -151,7 +168,8 @@ expect_inherits(p, "predictions")
 mod <- nnet::multinom(factor(cyl) ~ mpg + am, data = mtcars, trace = FALSE)
 by <- data.frame(
     by = c("4,6", "4,6", "8"),
-    group = as.character(c(4, 6, 8)))
+    group = as.character(c(4, 6, 8))
+)
 p1 <- predictions(mod, newdata = "mean")
 p2 <- predictions(mod, newdata = "mean", byfun = sum, by = by)
 p3 <- predictions(mod, newdata = "mean", byfun = mean, by = by)
@@ -162,24 +180,32 @@ expect_equivalent(sum(p1$estimate[1:2]), p2$estimate[1])
 expect_equivalent(mean(p1$estimate[1:2]), p3$estimate[1])
 
 
-
 # Issue #788: match with {predictions::prediction}
-reg <- nnet::multinom(poverty ~ religion + degree + gender,
+reg <- nnet::multinom(
+    poverty ~ religion + degree + gender,
     family = multinomial(refLevel = 1),
     trace = FALSE,
-    data = carData::WVS)
-p1 <- avg_predictions(reg, variables = list(religion = c("no"), gender = c("male")))
+    data = carData::WVS
+)
+p1 <- avg_predictions(
+    reg,
+    variables = list(religion = c("no"), gender = c("male"))
+)
 p1 <- p1$estimate
-p2 <- prediction::prediction(reg , at = list(religion=c("no"), gender=c("male")))
+p2 <- prediction::prediction(
+    reg,
+    at = list(religion = c("no"), gender = c("male"))
+)
 p2 <- colMeans(p2[, grep("^Pr", colnames(p2))])
 expect_equivalent(p1, p2, ignore_attr = TRUE)
 
 
 # Issue #1432: response names in coef name{
-mod <- multinom(
-    species ~ body_mass_g + sex,
-    data = palmerpenguins::penguins,
-    trace = FALSE
+trace <- capture.output(
+    mod <- multinom(
+        species ~ body_mass_g + sex,
+        data = palmerpenguins::penguins,
+    )
 )
 h <- hypotheses(mod, hypothesis = "Chinstrap_body_mass_g = Gentoo_body_mass_g")
 expect_equal(nrow(h), 1)
