@@ -201,11 +201,10 @@ expect_equivalent(p1, p2, ignore_attr = TRUE)
 
 
 # Issue #1432: response names in coef name{
-trace <- capture.output(
-    mod <- multinom(
-        species ~ body_mass_g + sex,
-        data = palmerpenguins::penguins,
-    )
+mod <- nnet::multinom(
+    species ~ body_mass_g + sex,
+    data = palmerpenguins::penguins,
+    trace = FALSE
 )
 h <- hypotheses(mod, hypothesis = "Chinstrap_body_mass_g = Gentoo_body_mass_g")
 expect_equal(nrow(h), 1)
