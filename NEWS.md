@@ -10,6 +10,7 @@ New:
 Bugs:
 
 * `rms` package now allows tibbles. Thanks to @stephenrho for report #1428.
+* `get_vcov()` workaround when vcov does not match dimensions of jacobian. Thanks to @fisher-j for report #1435.
 
 ## 0.25.1
 

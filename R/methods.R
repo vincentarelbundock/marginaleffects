@@ -1,7 +1,32 @@
 #' @noRd
 #' @export
 vcov.comparisons <- function(object, ...) {
-  attr(object, "jacobian") %*% attr(object, "vcov") %*% t(attr(object, "jacobian"))
+  # align J and V: This might be a problematic hack, but I have not found examples yet.
+  V <- attr(object, "vcov")
+  J <- attr(object, "jacobian")
+  if (!isTRUE(ncol(J) == ncol(V))) {
+    beta <- get_coef(object, ...)
+    # Issue #718: ordinal::clm in test-pkg-ordinal.R
+    if (
+      anyNA(beta) &&
+        anyDuplicated(names(beta)) &&
+        ncol(J) > ncol(V) &&
+        ncol(J) == length(beta) &&
+        length(stats::na.omit(beta)) == ncol(V)
+    ) {
+      J <- J[, !is.na(beta), drop = FALSE]
+    } else {
+      cols <- intersect(colnames(J), colnames(V))
+      if (length(cols) == 0) {
+        insight::format_error(
+          "The jacobian does not match the variance-covariance matrix."
+        )
+      }
+      V <- V[cols, cols, drop = FALSE]
+      J <- J[, cols, drop = FALSE]
+    }
+  }
+  J %*% V %*% t(J)
 }
 
 
@@ -43,7 +68,6 @@ coef.comparisons <- function(object, ...) {
 coef.slopes <- coef.comparisons
 
 
-
 #' @export
 #' @noRd
 coef.predictions <- coef.comparisons
@@ -57,7 +81,10 @@ coef.hypotheses <- coef.comparisons
 #' @export
 #' @noRd
 df.residual.comparisons <- function(object, ...) {
-  out <- tryCatch(stats::df.residual(attr(object, "model")), error = function(e) NULL)
+  out <- tryCatch(
+    stats::df.residual(attr(object, "model")),
+    error = function(e) NULL
+  )
   if (is.null(out)) out <- Inf
   return(out)
 }
