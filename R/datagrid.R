@@ -105,24 +105,29 @@ datagrid <- function(
 
     explicit <- c(...names(), by)
 
+    mean_i <- function(x) as.integer(round(mean(x, na.rm = TRUE)))
+    mean_na <- function(x) mean(x, na.rm = TRUE)
     if (grid_type == "mean_or_mode") {
         if (is.null(FUN_character)) FUN_character <- get_mode
         if (is.null(FUN_logical)) FUN_logical <- get_mode
         if (is.null(FUN_factor)) FUN_factor <- get_mode
         if (is.null(FUN_binary)) FUN_binary <- get_mode
-        if (is.null(FUN_numeric)) FUN_numeric <- function(x) mean(x, na.rm = TRUE)
-        if (is.null(FUN_other)) FUN_other <- function(x) mean(x, na.rm = TRUE)
-        if (is.null(FUN_integer)) FUN_integer <- function(x) round(mean(x, na.rm = TRUE))
+        if (is.null(FUN_numeric)) FUN_numeric <- mean_na
+        if (is.null(FUN_other)) FUN_other <- mean_na
+        if (is.null(FUN_integer)) FUN_integer <- mean_i
 
     } else if (grid_type == "balanced") {
+        # decided not to sort strings because the levels are not explicit
+        # as in factors, and perhaps the order of rows is intentional.
+        # not a very strong argument either way, so we do not break backward compatibility
         if (is.null(FUN_character)) FUN_character <- unique
         if (is.null(FUN_logical)) FUN_logical <- unique
         # not just levels(), because that is string, and sorts badly ex: "2" vs "10"
         if (is.null(FUN_factor)) FUN_factor <- function(k) sort(unique(k))
         if (is.null(FUN_binary)) FUN_binary <- unique
-        if (is.null(FUN_numeric)) FUN_numeric <- function(x) mean(x, na.rm = TRUE)
-        if (is.null(FUN_other)) FUN_other <- function(x) mean(x, na.rm = TRUE)
-        if (is.null(FUN_integer)) FUN_integer <- function(x) round(mean(x, na.rm = TRUE))
+        if (is.null(FUN_numeric)) FUN_numeric <- mean_na
+        if (is.null(FUN_other)) FUN_other <- mean_na
+        if (is.null(FUN_integer)) FUN_integer <- mean_i
 
     } else if (grid_type == "counterfactual") {
         if (!is.null(by)) {
