@@ -12,6 +12,10 @@ Bugs:
 * `rms` package now allows tibbles. Thanks to @stephenrho for report #1428.
 * `get_vcov()` workaround when vcov does not match dimensions of jacobian. Thanks to @fisher-j for report #1435.
 
+Misc:
+
+* `datagrid()` ensures integers stay integers. Thanks to @mattansb for report #1439.
+
 ## 0.25.1
 
 Bugs:
