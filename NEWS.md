@@ -2,6 +2,10 @@
 
 ## Development
 
+Breaking change:
+
+* `datagrid()` now sorts values of variables that are not explicitly supplied. This may change the row order of some results. Thanks to @mattansb for feature request #1439.
+
 New:
 
 * `get_dataset()` no longer requires the user to specify the `package` argument. It automatically searches the data index for a unique matching dataset.
@@ -10,7 +14,7 @@ New:
 Bugs:
 
 * `rms` package now allows tibbles. Thanks to @stephenrho for report #1428.
-* `get_vcov()` workaround when vcov does not match dimensions of jacobian. Thanks to @fisher-j for report #1435.
+* `get_vcov()` workaround when vcov does not match dimensions of jacobian. Thanks to @fisher-j for report #1439.
 
 Misc:
 
