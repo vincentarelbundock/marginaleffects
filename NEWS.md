@@ -2,21 +2,46 @@
 
 ## Development
 
+Breaking change:
+
+* `datagrid()` now sorts values of variables that are not explicitly supplied. This may change the row order of some results. Thanks to @mattansb for feature request #1439.
+
+New:
+
+* `get_dataset()` no longer requires the user to specify the `package` argument. It automatically searches the data index for a unique matching dataset.
+* `hypotheses()` adds response names to term names. This allows `hypothesis="groupa_var1=groupb_var1"`. Thanks to @mattansb for report #1432.
+
 New:
 
 * The `hypothesis` argument can specify 1-tailed tests with strings: `avg_predictions(model, hypothesis = "<3")`
 
 Bugs:
 
-* `collapse` is not necessary for hypothesis formulas. Thanks to @ngreifer for Issue #1383.
+* `rms` package now allows tibbles. Thanks to @stephenrho for report #1428.
+* `get_vcov()` workaround when vcov does not match dimensions of jacobian. Thanks to @fisher-j for report #1439.
+
+Misc:
+
+* `datagrid()` ensures integers stay integers. Thanks to @mattansb for report #1439.
+
+## 0.25.1
+
+Bugs:
+
+* `df` is now respected when using the `multcomp` argument. Thanks to @TonyRoberson for report #1414 and to @ngreifer for the solution.
 * Error when `hypotheses()` has both a number in `hypothesis` and a value in `multcomp`. Thanks to J. Rohrer for Issue #1381.
 * Informative error: conformal inference is not supported for `tidymodels`
 * `type` is respected for models of class `betareg`. Thanks to @strengejacke for reporting issue #1391.
 * `revreference` is available again in the `hypothesis` argument.
+* `conformal_score="residual_sq"` incorrectly added the score to the prediction instead of absolute residual. Coverage was probably incorrect, with wider intervals than necessary. Issue #1407.
+* `hypotheses()` supports multiple imputation objects from `mice`. Thanks to @ASKurz for raising issue #1420.
+* `tidymodels()` reshape bug.
+* `revreference` is available again in the `hypothesis` argument.
 
-Minor:
+Miscellaneous:
 
 * Print order for equivalence test p values is changed.
+* `collapse` is not necessary for hypothesis formulas. Thanks to @ngreifer for Issue #1383.
 
 ## 0.25.0
 

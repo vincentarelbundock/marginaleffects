@@ -151,7 +151,8 @@
 #' nom <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
 #'
 #' # first 5 raw predictions
-#' predictions(nom, type = "probs") |> head()
+#' p <- predictions(nom, type = "probs")
+#' head(p)
 #'
 #' # average predictions
 #' avg_predictions(nom, type = "probs", by = "group")
@@ -224,6 +225,8 @@ predictions <- function(model,
   if ("modeldata" %in% ...names()) {
     call_attr[["modeldata"]] <- modeldata
   }
+
+  sanity_reserved(model, modeldata)
 
   # very early, before any use of newdata
   # if `newdata` is a call to `typical` or `counterfactual`, insert `model`

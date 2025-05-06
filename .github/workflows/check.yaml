@@ -51,7 +51,7 @@ jobs:
         run: ./run.sh bootstrap
 
       - name: png (for svglite)
-        run: sudo apt update -qq && sudo apt install --yes --no-install-recommends libpng-dev
+        run: sudo apt update -qq && sudo apt install --yes --no-install-recommends libpng-dev libfontconfig1-dev
 
       - name: svglite from source
         run: Rscript -e "bspm::disable();install.packages('svglite', from = 'source');bspm::enable()"

@@ -18,6 +18,11 @@ get_predict.rms <- function(model, newdata = insight::get_data(model), type = NU
     if (is.null(type)) {
         type <- sanitize_type(model, type, calling_function = "predictions")
     }
+    if (inherits(newdata, "tbl_df")) {
+        warning("Converting `newdata` from tibble to data.frame.", call. = FALSE)
+        newdata <- as.data.frame(newdata)
+    }
+
     # {rms} predict methods break on additional arguments
     get_predict.default(model, newdata = newdata, type = type)
 }
@@ -35,3 +40,4 @@ get_predict.lrm <- get_predict.rms
 #' @rdname get_predict
 #' @export
 get_predict.ols <- get_predict.rms
+

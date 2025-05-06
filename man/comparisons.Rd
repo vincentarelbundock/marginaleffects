@@ -110,7 +110,7 @@ avg_comparisons(
 \itemize{
 \item \code{variables = list(gear = "pairwise", hp = 10)}
 \item \code{variables = list(gear = "sequential", hp = c(100, 120))}
-\item \verb{variables = list(hp = \\(x) data.frame(low = x - 5, high = x + 10))}
+\item \code{variables = list(hp = function(x) data.frame(low = x - 5, high = x + 10))}
 \item See the Examples section below for more.
 }
 }
@@ -296,7 +296,7 @@ slopes, elasticities, etc.
 
 \code{variables} identifies the focal regressors whose "effect" we are interested in. \code{comparison} determines how predictions with different regressor values are compared (difference, ratio, odds, etc.). The \code{newdata} argument and the \code{datagrid()} function control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.
 
-See the comparisons vignette and package website for worked examples and case studies:
+See the comparisons chapter on the package website for worked examples and case studies:
 \itemize{
 \item \url{https://marginaleffects.com/chapters/comparisons.html}
 \item \url{https://marginaleffects.com/}
@@ -578,10 +578,10 @@ avg_comparisons(mod, variables = list(hp = "minmax"))
 dat <- mtcars
 dat$new_hp <- 49 * (dat$hp - min(dat$hp)) / (max(dat$hp) - min(dat$hp)) + 1
 modlog <- lm(mpg ~ log(new_hp) + factor(cyl), data = dat)
-fdiff <- \(x) data.frame(x, x + 10)
+fdiff <- function(x) data.frame(x, x + 10)
 avg_comparisons(modlog, variables = list(new_hp = fdiff))
 
-# Adjusted Risk Ratio: see the contrasts vignette
+# Adjusted Risk Ratio
 mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
 avg_comparisons(mod, comparison = "lnratioavg", transform = exp)
 

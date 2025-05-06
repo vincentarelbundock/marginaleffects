@@ -536,7 +536,8 @@ library(nnet)
 nom <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
 
 # first 5 raw predictions
-predictions(nom, type = "probs") |> head()
+p <- predictions(nom, type = "probs")
+head(p)
 
 # average predictions
 avg_predictions(nom, type = "probs", by = "group")

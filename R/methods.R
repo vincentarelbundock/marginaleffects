@@ -1,7 +1,13 @@
 #' @noRd
+
+#' @noRd
 #' @export
 vcov.comparisons <- function(object, ...) {
-  attr(object, "jacobian") %*% attr(object, "vcov") %*% t(attr(object, "jacobian"))
+  # align J and V: This might be a problematic hack, but I have not found examples yet.
+  V <- attr(object, "vcov")
+  J <- attr(object, "jacobian")
+  aligned <- align_jacobian_vcov(J, V, object, ...)
+  aligned$J %*% aligned$V %*% t(aligned$J)
 }
 
 
@@ -43,7 +49,6 @@ coef.comparisons <- function(object, ...) {
 coef.slopes <- coef.comparisons
 
 
-
 #' @export
 #' @noRd
 coef.predictions <- coef.comparisons
@@ -57,7 +62,10 @@ coef.hypotheses <- coef.comparisons
 #' @export
 #' @noRd
 df.residual.comparisons <- function(object, ...) {
-  out <- tryCatch(stats::df.residual(attr(object, "model")), error = function(e) NULL)
+  out <- tryCatch(
+    stats::df.residual(attr(object, "model")),
+    error = function(e) NULL
+  )
   if (is.null(out)) out <- Inf
   return(out)
 }

@@ -1,5 +1,4 @@
 sanitize_hypothesis_formula <- function(hypothesis) {
-  insight::check_if_installed("Formula")
   hypothesis <- Formula::Formula(hypothesis)
 
   if (!length(hypothesis)[1] %in% 0:1) {

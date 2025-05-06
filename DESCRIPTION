@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.25.0.8
+Version: 0.25.1.6
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -41,6 +41,7 @@ Imports:
     checkmate,
     data.table (>= 1.16.4),
     generics,
+    Formula,
     insight (>= 0.20.3),
     methods,
     rlang,
@@ -86,7 +87,6 @@ Suggests:
     flexsurv,
     fmeffects,
     fontquiver,
-    Formula,
     future,
     future.apply,
     fwb,
@@ -305,6 +305,7 @@ Collate:
     'sanitize_interaction.R'
     'sanitize_newdata.R'
     'sanitize_numderiv.R'
+    'sanitize_reserved.R'
     'sanitize_type.R'
     'sanitize_variables.R'
     'sanitize_vcov.R'

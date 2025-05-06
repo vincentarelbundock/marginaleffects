@@ -94,15 +94,16 @@
 #' library(dplyr)
 #' library(MASS)
 #' library(dplyr)
+#' library(magrittr)
 #'
 #' dat <- transform(mtcars, gear = factor(gear))
 #' mod <- polr(gear ~ factor(cyl) + hp, dat)
 #'
 #' aggregation_fun <- function(x) {
-#'   predictions(x, vcov = FALSE) |>
-#'     mutate(group = ifelse(group %in% c("3", "4"), "3 & 4", "5")) |>
-#'     summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) |>
-#'     summarize(estimate = mean(estimate), .by = c("cyl", "group")) |>
+#'   predictions(x, vcov = FALSE) %>%
+#'     mutate(group = ifelse(group %in% c("3", "4"), "3 & 4", "5")) %>%
+#'     summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) %>%
+#'     summarize(estimate = mean(estimate), .by = c("cyl", "group")) %>%
 #'     rename(term = cyl)
 #' }
 #'
@@ -155,7 +156,15 @@ hypotheses <- function(
     multcomp = FALSE,
     numderiv = "fdforward",
     ...) {
+
   hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
+
+  if (inherits(model, c("predictions", "comparisons", "slopes", "hypotheses"))) {
+    if (!is.null(vcov)) {
+      msg <- "The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call."
+      stop(msg, call. = FALSE)
+    }
+  }
 
   checkmate::assert_number(conf_level, null.ok = TRUE, lower = 0, upper = 1)
   if (is.null(conf_level)) {
@@ -181,6 +190,12 @@ hypotheses <- function(
 
   if ("modeldata" %in% ...names()) {
     call_attr[["modeldata"]] <- ...elt(match("modeldata", ...names())[1L])
+  }
+
+  # multiple imputation
+  if (inherits(model, c("mira", "amest"))) {
+    out <- process_imputation(model, call_attr)
+    return(out)
   }
 
   ###### Bootstrap
@@ -291,6 +306,8 @@ hypotheses <- function(
       out <- insight::get_parameters(model, ...)
       if ("Component" %in% colnames(out) && !anyNA(out$Component)) {
         out$Parameter <- sprintf("%s_%s", out$Component, out$Parameter)
+      } else if ("Response" %in% colnames(out) && !anyNA(out$Response)) {
+        out$Parameter <- sprintf("%s_%s", out$Response, out$Parameter)
       }
       idx <- intersect(colnames(model), c("term", "group", "estimate"))
       colnames(out)[1:2] <- c("term", "estimate")
@@ -428,7 +445,7 @@ hypotheses <- function(
   attr(out, "hypothesis_function_by") <- attr(b, "hypothesis_function_by")
 
   # must be after attributes for vcov
-  out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level)
+  out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level, df = df)
 
   # Issue #1102: hypotheses() should not be called twice on the same object
   attr(out, "hypotheses_call") <- TRUE
