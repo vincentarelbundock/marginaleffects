@@ -4,11 +4,12 @@ get_ci <- function(
     df = NULL,
     draws = NULL,
     vcov = TRUE,
-    null_hypothesis = 0,
+    hypothesis_null = 0,
+    hypothesis_direction = "=",
     model = NULL,
     ...) {
 
-    checkmate::assert_number(null_hypothesis)
+    checkmate::assert_number(hypothesis_null)
 
     if (!is.null(draws)) {
         out <- get_ci_draws(
@@ -51,21 +52,28 @@ get_ci <- function(
     }
 
     p_overwrite <-  !"p.value" %in% colnames(x) ||
-                    null_hypothesis != 0 ||
+                    hypothesis_null != 0 ||
+                    hypothesis_direction != "=" ||
                     identical(vcov, "satterthwaite") ||
                     identical(vcov, "kenward-roger")
 
     z_overwrite <- !"statistic" %in% colnames(x) ||
-                   null_hypothesis != 0 ||
+                   hypothesis_null != 0 ||
                    p_overwrite
 
     ci_overwrite <- !"conf.low" %in% colnames(x) &&
                     "std.error" %in% colnames(x)
 
     if (z_overwrite) {
-        x[["statistic"]] <- (x[["estimate"]] - null_hypothesis) / x[["std.error"]]
+        x[["statistic"]] <- (x[["estimate"]] - hypothesis_null) / x[["std.error"]]
         if (normal) {
-            x[["p.value"]] <- 2 * stats::pnorm(-abs(x$statistic))
+            if (hypothesis_direction == "=") {
+                x[["p.value"]] <- 2 * stats::pnorm(-abs(x$statistic))
+            } else if (hypothesis_direction == ">") {
+                x[["p.value"]] <- 1 - stats::pnorm(x$statistic)
+            } else if (hypothesis_direction == "<") {
+                x[["p.value"]] <- stats::pnorm(x$statistic)
+            }
         } else {
             x[["p.value"]] <- 2 * stats::pt(-abs(x$statistic), df = x[["df"]])
         }

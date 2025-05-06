@@ -245,6 +245,7 @@ predictions <- function(model,
   tmp <- sanitize_hypothesis(hypothesis, ...)
   hypothesis <- tmp$hypothesis
   hypothesis_null <- tmp$hypothesis_null
+  hypothesis_direction <- tmp$hypothesis_direction
 
   # if type is NULL, we backtransform if relevant
   type_string <- sanitize_type(
@@ -452,7 +453,8 @@ predictions <- function(model,
       vcov = vcov,
       draws = draws,
       estimate = "estimate",
-      null_hypothesis = hypothesis_null,
+      hypothesis_null = hypothesis_null,
+      hypothesis_direction = hypothesis_direction,
       df = df,
       model = model,
       ...)

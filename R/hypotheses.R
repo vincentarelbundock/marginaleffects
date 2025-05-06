@@ -255,6 +255,7 @@ hypotheses <- function(
   tmp <- sanitize_hypothesis(hypothesis, ...)
   hypothesis <- tmp$hypothesis
   hypothesis_null <- tmp$hypothesis_null
+  hypothesis_direction <- tmp$hypothesis_direction
 
   vcov_false <- isFALSE(vcov)
   if (!isTRUE(checkmate::check_matrix(vcov))) {
@@ -398,7 +399,8 @@ hypotheses <- function(
     vcov = vcov,
     draws = draws,
     estimate = "estimate",
-    null_hypothesis = hypothesis_null,
+    hypothesis_null = hypothesis_null,
+    hypothesis_direction = hypothesis_direction,
     df = df,
     model = model,
     ...)

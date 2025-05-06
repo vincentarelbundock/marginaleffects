@@ -1,11 +1,27 @@
 sanitize_hypothesis <- function(hypothesis, ...) {
     checkmate::assert(
         checkmate::check_character(hypothesis, pattern = "="),
+        checkmate::check_character(hypothesis, pattern = "^[><][0-9. -]+$"),
         checkmate::check_numeric(hypothesis),
         checkmate::check_formula(hypothesis),
         checkmate::check_matrix(hypothesis),
         checkmate::check_function(hypothesis),
-        checkmate::check_null(hypothesis))
+        checkmate::check_null(hypothesis)
+    )
+
+    if (
+        isTRUE(checkmate::check_character(
+            hypothesis,
+            pattern = "^[><][0-9. -]+$"
+        ))
+    ) {
+        out = list(
+            hypothesis = NULL,
+            hypothesis_null = as.numeric(sub("^[><]", "", trimws(hypothesis))),
+            hypothesis_direction = substr(hypothesis, 1, 1)
+        )
+        return(out)
+    }
 
     hnull <- 0
 
@@ -22,7 +38,8 @@ sanitize_hypothesis <- function(hypothesis, ...) {
 
     out <- list(
         "hypothesis" = hypothesis,
-        "hypothesis_null" = hnull
+        "hypothesis_null" = hnull,
+        "hypothesis_direction" = "="
     )
 
     return(out)

@@ -69,11 +69,13 @@
 #' + TRUE: Extract weights from the fitted object with `insight::find_weights()` and use them when taking weighted averages of estimates. Warning: `newdata=datagrid()` returns a single average weight, which is equivalent to using `wts=FALSE`
 #' @param hypothesis specify a hypothesis test or custom contrast using a number , formula, string equation, vector, matrix, or function.
 #' + Number: The null hypothesis used in the computation of Z and p (before applying `transform`).
-#' + String: Equation to specify linear or non-linear hypothesis tests. If the terms in `coef(object)` uniquely identify estimates, they can be used in the formula. Otherwise, use `b1`, `b2`, etc. to identify the position of each parameter. The `b*` wildcard can be used to test hypotheses on all estimates. If a named vector is used, the names are used as labels in the output. Examples:
+#' + String: Equation to specify linear or non-linear hypothesis tests. Two-tailed tests must include an equal `=` sign. One-tailed tests must start with `<` or `>`. If the terms in `coef(object)` uniquely identify estimates, they can be used in the formula. Otherwise, use `b1`, `b2`, etc. to identify the position of each parameter. The `b*` wildcard can be used to test hypotheses on all estimates. If a named vector is used, the names are used as labels in the output. Examples:
 #'   - `hp = drat`
 #'   - `hp + drat = 12`
 #'   - `b1 + b2 + b3 = 0`
 #'   - `b* / b1 = 1`
+#'   - `< 0`
+#'   - `> -3.5`
 #' + Formula: `lhs ~ rhs | group`
 #'   + `lhs`
 #'     - `ratio`

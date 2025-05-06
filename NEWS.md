@@ -2,6 +2,10 @@
 
 ## Development
 
+New:
+
+* The `hypothesis` argument can specify 1-tailed tests with strings: `avg_predictions(model, hypothesis = "<3")`
+
 Bugs:
 
 * `collapse` is not necessary for hypothesis formulas. Thanks to @ngreifer for Issue #1383.
