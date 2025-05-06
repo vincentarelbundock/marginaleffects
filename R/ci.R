@@ -65,17 +65,14 @@ get_ci <- function(
                     "std.error" %in% colnames(x)
 
     if (z_overwrite) {
+        cdf <- if (normal) stats::pnorm else stats::pt
         x[["statistic"]] <- (x[["estimate"]] - hypothesis_null) / x[["std.error"]]
-        if (normal) {
-            if (hypothesis_direction == "=") {
-                x[["p.value"]] <- 2 * stats::pnorm(-abs(x$statistic))
-            } else if (hypothesis_direction == ">") {
-                x[["p.value"]] <- 1 - stats::pnorm(x$statistic)
-            } else if (hypothesis_direction == "<") {
-                x[["p.value"]] <- stats::pnorm(x$statistic)
-            }
-        } else {
-            x[["p.value"]] <- 2 * stats::pt(-abs(x$statistic), df = x[["df"]])
+        if (hypothesis_direction == "=") {
+            x[["p.value"]] <- 2 * cdf(-abs(x$statistic))
+        } else if (hypothesis_direction == "<") {
+            x[["p.value"]] <- 1 - cdf(x$statistic)
+        } else if (hypothesis_direction == ">") {
+            x[["p.value"]] <- cdf(x$statistic)
         }
     }
 
