@@ -379,6 +379,7 @@ comparisons <- function(model,
   tmp <- sanitize_hypothesis(hypothesis, ...)
   hypothesis <- tmp$hypothesis
   hypothesis_null <- tmp$hypothesis_null
+  hypothesis_direction <- tmp$hypothesis_direction
 
   # compute contrasts and standard errors
   args <- list(
@@ -469,7 +470,8 @@ comparisons <- function(model,
     df = df,
     draws = draws,
     estimate = "estimate",
-    null_hypothesis = hypothesis_null,
+    hypothesis_null = hypothesis_null,
+    hypothesis_direction = hypothesis_direction,
     model = model)
 
   # clean rows and columns

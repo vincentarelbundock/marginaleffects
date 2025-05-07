@@ -381,4 +381,36 @@ cmp2 <- avg_comparisons(mod, hypothesis = ~reference)
 expect_equivalent(cmp1$estimate, cmp2$estimate * -1)
 
 
+# One-tailed tests: 25.7380058288958
+mod <- lm(mpg ~ hp + wt, data = mtcars)
+p1 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 > 26")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 < 26")
+expect_true(p1$p.value < p2$p.value)
+expect_equivalent(p1$p.value + p2$p.value, 1)
+
+p1 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 = 26")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 > 26")
+expect_equivalent(p1$p.value, p2$p.value * 2)
+
+p1 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 = 24")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 < 24")
+expect_equivalent(p1$p.value, p2$p.value * 2)
+
+p1 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 = 26")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 < 26")
+expect_true(p1$p.value > p2$p.value)
+
+p1 <- avg_predictions(mod, by = "cyl", hypothesis = ">26")$p.value[1]
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1>26")$p.value
+expect_equivalent(p1, p2)
+
+p1 <- avg_predictions(mod, by = "cyl", hypothesis = "<26")$p.value[1]
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1<26")$p.value
+expect_equivalent(p1, p2)
+
+p1 <- avg_predictions(mod, by = "cyl", hypothesis = "=26")$p.value[1]
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = 26)$p.value[1]
+expect_equivalent(p1, p2)
+
+
 rm(list = ls())

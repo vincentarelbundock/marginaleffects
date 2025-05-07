@@ -1,16 +1,32 @@
 sanitize_hypothesis <- function(hypothesis, ...) {
     checkmate::assert(
-        checkmate::check_character(hypothesis, pattern = "="),
+        checkmate::check_character(hypothesis, pattern = "[=<>]"),
         checkmate::check_numeric(hypothesis),
         checkmate::check_formula(hypothesis),
         checkmate::check_matrix(hypothesis),
         checkmate::check_function(hypothesis),
-        checkmate::check_null(hypothesis))
+        checkmate::check_null(hypothesis)
+    )
 
+    hypothesis_direction <- "="
     hnull <- 0
 
-    if (isTRUE(checkmate::check_character(hypothesis, pattern = "="))) {
-        out <- paste(gsub("=", "-(", hypothesis), ")")
+    if (isTRUE(checkmate::check_character(hypothesis))) {
+        if (isTRUE(grepl("<", hypothesis))) {
+            hypothesis_direction <- "<"
+        } else if (isTRUE(grepl(">", hypothesis))) {
+            hypothesis_direction <- ">"
+        }
+
+        if (isTRUE(grepl("^[=<>]", hypothesis))) {
+            hypothesis <- sub("^[=<>]", "", hypothesis)
+            hypothesis <- trimws(hypothesis)
+            hypothesis <- as.numeric(hypothesis)
+        }
+    }
+
+    if (isTRUE(checkmate::check_character(hypothesis, pattern = "=|>|<"))) {
+        out <- paste(gsub("=|<|>", "-(", hypothesis), ")")
         attr(out, "label") <- hypothesis
         hypothesis <- out
     } else if (isTRUE(checkmate::check_matrix(hypothesis))) {
@@ -22,7 +38,8 @@ sanitize_hypothesis <- function(hypothesis, ...) {
 
     out <- list(
         "hypothesis" = hypothesis,
-        "hypothesis_null" = hnull
+        "hypothesis_null" = hnull,
+        "hypothesis_direction" = hypothesis_direction
     )
 
     return(out)

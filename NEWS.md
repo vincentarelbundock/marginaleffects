@@ -8,6 +8,7 @@ Breaking change:
 
 New:
 
+* The `hypothesis` argument can specify 1-tailed tests with strings: `avg_predictions(model, hypothesis = "<3")`
 * `get_dataset()` no longer requires the user to specify the `package` argument. It automatically searches the data index for a unique matching dataset.
 * `hypotheses()` adds response names to term names. This allows `hypothesis="groupa_var1=groupb_var1"`. Thanks to @mattansb for report #1432.
 
@@ -32,6 +33,7 @@ Bugs:
 * `conformal_score="residual_sq"` incorrectly added the score to the prediction instead of absolute residual. Coverage was probably incorrect, with wider intervals than necessary. Issue #1407.
 * `hypotheses()` supports multiple imputation objects from `mice`. Thanks to @ASKurz for raising issue #1420.
 * `tidymodels()` reshape bug.
+* `revreference` is available again in the `hypothesis` argument.
 
 Miscellaneous:
 
