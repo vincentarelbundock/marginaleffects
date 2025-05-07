@@ -65,7 +65,14 @@ get_ci <- function(
                     "std.error" %in% colnames(x)
 
     if (z_overwrite) {
-        cdf <- if (normal) stats::pnorm else stats::pt
+        cdf <- function(k) {
+            if (normal) {
+                out <- stats::pnorm(k) 
+            } else {
+                out <- stats::pt(k, df = x[["df"]])
+            }
+            return(out)
+        }
         x[["statistic"]] <- (x[["estimate"]] - hypothesis_null) / x[["std.error"]]
         if (hypothesis_direction == "=") {
             x[["p.value"]] <- 2 * cdf(-abs(x$statistic))

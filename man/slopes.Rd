@@ -134,6 +134,7 @@ first entry in the error message is used by default.}
 \item \verb{b* / b1 = 1}
 \item \verb{< 0}
 \item \verb{> -3.5}
+\item \code{b1 > 10}
 }
 \item Formula: \code{lhs ~ rhs | group}
 \itemize{

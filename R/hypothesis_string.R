@@ -43,8 +43,6 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
         if (isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
             warn_once(msg, "hypothesis_positional_indices_are_dangerous")
         }
-
-
         bmax <- regmatches(lab, gregexpr("\\bb\\d+\\b", lab))[[1]]
         bmax <- tryCatch(max(as.numeric(gsub("b", "", bmax))), error = function(e) 0)
         if (bmax > nrow(x)) {
