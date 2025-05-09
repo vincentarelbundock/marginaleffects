@@ -54,11 +54,11 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
     }
     resp <- insight::get_response(model)
     respname <- insight::find_response(model)
-    
+
     flag <-  checkmate::check_true(all(names(condition) %in% c(colnames(dat), "group")))
     if (!isTRUE(flag)) {
         msg <- sprintf("Entries in the `condition` argument must be element of: %s",
-                       paste(colnames(dat), collapse = ", "))
+                       toString(colnames(dat)))
         insight::format_error(msg)
     }
 
@@ -136,7 +136,7 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
             }
         }
     }
-    
+
     # condition 4: facet_2
     if (length(condition) > 3) {
       if (is.null(condition[[4]])) {
@@ -156,7 +156,7 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
 
     at_list[["model"]] <- model
     at_list[["newdata"]] <- dat
-    
+
     if (isTRUE(checkmate::check_list(variables))) {
         flag <- all(names(variables) %in% names(condition))
     } else {
@@ -176,7 +176,7 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
     }
 
     # mlr3 and tidymodels are not supported by `insight::find_variables()`, so we need to create a grid based on all the variables supplied in `newdata`
-    if (inherits(at_list$model, "Learner") || 
+    if (inherits(at_list$model, "Learner") ||
         inherits(at_list$model, "model_fit") ||
         inherits(at_list$model, "workflow") ) {
         at_list$model <- NULL
@@ -187,13 +187,13 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
 
     out <- list(
         "modeldata" = dat,
-        "newdata" = nd, 
+        "newdata" = nd,
         "resp" = resp,
         "respname" = respname,
-        "condition" = condition, 
-        "condition1" = condition1, 
-        "condition2" = condition2, 
+        "condition" = condition,
+        "condition1" = condition1,
+        "condition2" = condition2,
         "condition3" = condition3,
-        "condition4" = condition4) 
+        "condition4" = condition4)
     return(out)
 }

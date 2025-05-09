@@ -21,7 +21,7 @@ sanity_by <- function(by, newdata) {
     }
 
     if (flag) {
-        bycols <- paste(setdiff(colnames(newdata), c("rowid", "rowidcf", "term", "group")), collapse = ", ")
+        bycols <- toString(setdiff(colnames(newdata), c("rowid", "rowidcf", "term", "group")))
         msg <- c(
             "The `by` argument must be either:", "",
             sprintf("1. Character vector in which each element is part of: %s", bycols),
