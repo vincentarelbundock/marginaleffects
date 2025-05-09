@@ -94,7 +94,7 @@ sanitize_variables <- function(variables,
   if (length(miss) > 0) {
     msg <- sprintf(
       "These variables were not found: %s.  Try specifying the `newdata` argument explicitly and make sure the missing variable is included.",
-      paste(miss, collapse = ", "))
+      toString(miss))
     insight::format_warning(msg)
   }
 
@@ -219,7 +219,7 @@ sanitize_variables <- function(variables,
         flag5 <- checkmate::check_data_frame(predictors[[v]])
         if (!isTRUE(flag1) && !isTRUE(flag2) && !isTRUE(flag3) && !isTRUE(flag4) && !isTRUE(flag5)) {
           msg <- "The %s element of the `variables` argument must be a vector of length 2 or one of: %s"
-          msg <- sprintf(msg, v, paste(valid, collapse = ", "))
+          msg <- sprintf(msg, v, toString(valid))
           insight::format_error(msg)
         }
       } else if (calling_function == "predictions") {
@@ -230,7 +230,7 @@ sanitize_variables <- function(variables,
               c("pairwise", "reference", "sequential", "revpairwise", "revreference", "revsequential"))
             if (length(invalid) > 0) {
               msg <- "These values are only supported by the `variables` argument in the `comparisons()` function: %s"
-              msg <- sprintf(msg, paste(invalid, collapse = ", "))
+              msg <- sprintf(msg, toString(invalid))
             } else {
               msg <- "Some elements of the `variables` argument are not in their original data. Check this variable: %s"
               msg <- sprintf(msg, v)

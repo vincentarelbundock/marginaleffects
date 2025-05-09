@@ -170,13 +170,13 @@ print.marginaleffects <- function(x,
       error = function(e) NULL)
   )
 
-  if ("term" %in% colnames(out) && length(unique(out$term)) == 1) {
-    print_term_text <- sprintf("Term: %s\n", out[["term"]][1])
+  if ("term" %in% colnames(out) && length(unique(out$term)) == 1L) {
+    print_term_text <- sprintf("Term: %s\n", out[["term"]][1L])
     useless <- c(useless, "term")
   }
 
-  if ("contrast" %in% colnames(out) && length(unique(out$contrast)) == 1) {
-    print_contrast_text <- sprintf("Comparison: %s\n", out[["contrast"]][1])
+  if ("contrast" %in% colnames(out) && length(unique(out$contrast)) == 1L) {
+    print_contrast_text <- sprintf("Comparison: %s\n", out[["contrast"]][1L])
     useless <- c(useless, "contrast")
   }
 
@@ -205,11 +205,11 @@ print.marginaleffects <- function(x,
 
   # Footnotes
   if (ncol(x) <= ncols && isTRUE(column_names)) {
-    print_columns_text <- paste("Columns:", paste(colnames(x), collapse = ", "), "\n")
+    print_columns_text <- sprintf("Columns: %s\n", toString(colnames(x)))
   }
 
   if (isTRUE(type) && !is.null(attr(x, "type"))) {
-    print_type_text <- paste("Type: ", attr(x, "type"), "\n")
+    print_type_text <- sprintf("Type: %s\n", attr(x, "type"))
   }
 
   # avoid infinite recursion by stripping marginaleffect.summary class
@@ -255,14 +255,17 @@ print.marginaleffects <- function(x,
 
   # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
   if (splitprint) {
-    print(utils::head(out, n = topn), row.names = FALSE)
-    msg <- "--- %s rows omitted. See ?print.marginaleffects ---"
+    tmp <- utils::capture.output(print(out, row.names = FALSE))
+
+    top <- paste(tmp[seq_len(topn + 1)], collapse = "\n")
+    cat(top)
+
+    msg <- "\n--- %s rows omitted. See ?print.marginaleffects ---\n"
     msg <- sprintf(msg, nrow(x) - 2 * topn)
-    cat(msg, "\n")
-    # remove colnames
-    tmp <- utils::capture.output(print(utils::tail(out, n = topn), row.names = FALSE))
-    tmp <- paste(tmp[-1], collapse = "\n")
-    cat(tmp)
+    cat(msg)
+
+    bottom <- paste(tmp[-seq_len(topn + 1)], collapse = "\n")
+    cat(bottom)
   } else {
     print(out, row.names = FALSE)
   }

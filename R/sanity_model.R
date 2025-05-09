@@ -126,7 +126,7 @@ sanity_model_supported_class <- function(model) {
         }
     }
     if (isFALSE(flag)) {
-        support <- paste(sort(unique(sapply(supported, function(x) x[1]))), collapse = ", ")
+        support <- toString(sort(unique(sapply(supported, function(x) x[1]))))
         msg <- c(
             sprintf('Models of class "%s" are not supported. Supported model classes include:', class(model)[1]),
             "",

@@ -453,7 +453,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
         warning(
             sprintf(
                 "Some of the variable names are missing from the model data: %s",
-                paste(variables_missing, collapse = ", ")
+                toString(variables_missing)
             ),
             call. = FALSE
         )
@@ -497,14 +497,14 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
             at[[n]] <- as.character(at[[n]])
             if (!all(at[[n]] %in% c(levs, NA))) {
                 msg <- sprintf(
-                    'The "%s" element of the `at` list corresponds to a factor variable. The values entered in the `at` list must be one of the factor levels: "%s".',
+                    'The "%s" element of the `at` list corresponds to a factor variable. The values entered in the `at` list must be one of the factor levels: %s.',
                     n,
-                    paste(levels(newdata[[n]]), collapse = '", "')
+                    toString(dQuote(levels(newdata[[n]]), NULL))
                 )
                 stop(msg, call. = FALSE)
-            } else {
-                at[[n]] <- factor(at[[n]], levels = levs)
             }
+
+            at[[n]] <- factor(at[[n]], levels = levs)
         }
     }
 

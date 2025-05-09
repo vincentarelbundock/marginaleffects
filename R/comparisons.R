@@ -69,7 +69,7 @@
 #' + [dplyr::filter()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = filter(treatment == 1)`
 #' @param comparison How should pairs of predictions be compared? Difference, ratio, odds ratio, or user-defined functions.
 #' * string: shortcuts to common contrast functions.
-#'   - Supported shortcuts strings: `r paste(names(marginaleffects:::comparison_function_dict), collapse = ", ")`
+#'   - Supported shortcuts strings: `r toString(names(marginaleffects:::comparison_function_dict))`
 #'   - See the Comparisons section below for definitions of each transformation.
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
 #'   - See the Transformations section below for examples of valid functions.
