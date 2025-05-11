@@ -3,12 +3,12 @@
 #' @export
 get_coef.gamlss <- function(model, ...){
   dots <- list(...)
-  
+
   if (is.null(dots$what))
     stop("Argument `what` indicating the parameter of interest is missing.")
-  
+
   out <- stats::coef(model, what = dots$what)
-  
+
   return(out)
 }
 
@@ -22,23 +22,23 @@ get_predict.gamlss <- function(
     type = "response",
     ...) {
 
- 
+
   # Get predictions
-  
+
   dots <- list(...)
-  
+
   if (is.null(dots$what)) {
       msg <- sprintf(
           "Please specifiy a `what` argument with one of these values: %s",
-          paste(model$parameter, collapse = ", "))
+          toString(model$parameter))
       stop(msg, call. = FALSE)
   }
-  
+
   # if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) {
   #   msg <- "The `vcov` argument is not supported for models of this class."
   #   stop(msg, call. = FALSE)
   # }
-  
+
   # predict.gamlss() breaks when `newdata` includes unknown variables
   origindata <- insight::get_data(model)
   originvars <- colnames(origindata)
@@ -46,13 +46,13 @@ get_predict.gamlss <- function(
   index <- which(colnames(newdata) %in% originvars)
   tmp <- newdata[, index]
   hush(out <- predict_gamlss(model, newdata = tmp, type = type, data = origindata, ...))
-  
+
   if ("rowid" %in% colnames(newdata)) {
     out <- data.frame(rowid = newdata$rowid, estimate = out)
   } else {
     out <- data.frame(rowid = seq_along(out), estimate = out)
   }
-  
+
   return(out)
 }
 
@@ -61,20 +61,20 @@ get_predict.gamlss <- function(
 #' @export
 get_vcov.gamlss <- function(model, ...){
   dots <- list(...)
-  
+
   if (is.null(dots$what)) {
       msg <- sprintf(
           "Please specifiy a `what` argument with one of these values: %s",
-          paste(model$parameter, collapse = ", "))
+          toString(model$parameter))
       stop(msg, call. = FALSE)
   }
-  
+
   p <- match(dots$what, model$parameters)
-  
-  vc <- stats::vcov(model, what = dots$what) 
+
+  vc <- stats::vcov(model, what = dots$what)
   index <- which(cumsum(rownames(vc) == "(Intercept)") == p)
   out <- vc[index, index, drop = FALSE]
-  
+
   return(out)
 }
 
@@ -83,14 +83,14 @@ get_vcov.gamlss <- function(model, ...){
 #' @export
 set_coef.gamlss <- function(model, coefs, ...){
   dots <- list(...)
-  
+
   if (is.null(dots$what))
     stop("Argument `what` indicating the parameter of interest is missing.")
-  
+
   p <- paste0(dots$what, ".coefficients")
   model[[p]][names(coefs)] <- coefs
   out <- model
-  
+
   return(out)
 }
 

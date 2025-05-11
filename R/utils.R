@@ -18,7 +18,9 @@ get_unique_index <- function(x, term_only = FALSE) {
 
     if (length(idx) == 0) {
         return(NULL)
-    } else if (length(idx) == 1) {
+    }
+
+    if (length(idx) == 1) {
         return(x[[idx]])
     }
 
@@ -30,7 +32,7 @@ get_unique_index <- function(x, term_only = FALSE) {
         }
     }
 
-    out <- apply(out, 1, paste, collapse = ", ")
+    out <- apply(out, 1, toString)
     return(out)
 }
 

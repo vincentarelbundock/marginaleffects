@@ -15,7 +15,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         if (length(unsupported) > 0) {
             msg <- sprintf(
                 "These arguments are supported by the `comparisons()` function but not by the `slopes()` function: %s",
-                paste(unsupported, collapse = ", "))
+                toString(unsupported))
             stop(msg, call. = FALSE)
         }
     }
@@ -78,11 +78,11 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         if (model_class %in% names(valid)) {
             msg <- sprintf(
                 "These arguments are not known to be supported for models of class `%s`: %s. These arguments are known to be valid: %s. All arguments are still passed to the model-specific prediction function, but users are encouraged to check if the argument is indeed supported by their modeling package. Please file a request on Github if you believe that an unknown argument should be added to the `marginaleffects` white list of known arguments, in order to avoid raising this warning: https://github.com/vincentarelbundock/marginaleffects/issues",
-                model_class, paste(bad, collapse = ", "), paste(valid[[model_class]], collapse = ", "))
+                model_class, toString(bad), toString(valid[[model_class]]))
         } else {
             msg <- sprintf(
                 "These arguments are not known to be supported for models of class `%s`: %s. All arguments are still passed to the model-specific prediction function, but users are encouraged to check if the argument is indeed supported by their modeling package. Please file a request on Github if you believe that an unknown argument should be added to the `marginaleffects` white list of known arguments, in order to avoid raising this warning: https://github.com/vincentarelbundock/marginaleffects/issues",
-                model_class, paste(bad, collapse = ", "))
+                model_class, toString(bad))
         }
         warning(msg, call. = FALSE)
     }

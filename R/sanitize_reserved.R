@@ -21,7 +21,7 @@ sanity_reserved <- function(model = NULL, modeldata = data.frame()) {
     if (length(bad) > 0) {
         msg <- c(
             "These variable names are forbidden to avoid conflicts with the outputs of `marginaleffects`:",
-            sprintf("%s", paste(sprintf('"%s"', bad), collapse = ", ")),
+            toString(dQuote(bad, NULL)),
             "Please rename your variables before fitting the model.")
         insight::format_error(msg)
     }
