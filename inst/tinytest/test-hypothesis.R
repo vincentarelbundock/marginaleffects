@@ -2,6 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 requiet("emmeans")
+requiet("multcomp")
 
 dat <- mtcars
 dat$carb <- factor(dat$carb)
@@ -411,6 +412,29 @@ expect_equivalent(p1, p2)
 p1 <- avg_predictions(mod, by = "cyl", hypothesis = "=26")$p.value[1]
 p2 <- avg_predictions(mod, by = "cyl", hypothesis = 26)$p.value[1]
 expect_equivalent(p1, p2)
+
+mod <- lm(mpg ~ hp + wt, data = mtcars)
+
+h1 <- hypotheses(mod, hypothesis = -3.5, df = 29)
+h2 <- glht(mod, linfct = c("(Intercept) == -3.5", "hp == -3.5", "wt == -3.5"))
+h2 <- summary(h2, test = univariate())
+expect_equivalent(h1$p.value, h2$test$pvalues)
+
+h1 <- hypotheses(mod, hypothesis = "> -3.5", df = 29)
+h2 <- glht(mod, linfct = c("(Intercept) >= -3.5", "hp >= -3.5", "wt >= -3.5"))
+h2 <- summary(h2, test = univariate())
+expect_equivalent(h1$p.value, h2$test$pvalues)
+
+h1 <- hypotheses(mod, hypothesis = "< -3.5", df = 29)
+h2 <- glht(mod, linfct = c("(Intercept) <= -3.5", "hp <= -3.5", "wt <= -3.5"))
+h2 <- summary(h2, test = univariate())
+expect_equivalent(h1$p.value, h2$test$pvalues)
+
+h1 <- hypotheses(mod, hypothesis = c("hp = -3.5", "wt = -3.5"), df = 29)
+h2 <- glht(mod, linfct = c("hp == -3.5", "wt == -3.5"))
+h2 <- summary(h2, test = univariate())
+expect_equivalent(h1$p.value, h2$test$pvalues)
+expect_equivalent(coef(mod)[2:3] + 3.5, h1$estimate)
 
 
 rm(list = ls())
