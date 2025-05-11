@@ -273,13 +273,9 @@ Standard errors for all quantities estimated by \code{marginaleffects} can be ob
 \item \code{options(marginaleffects_numDeriv = NULL)}
 }
 
-See the "Standard Errors and Confidence Intervals" vignette on the \code{marginaleffects} website for more details on the computation of standard errors:
+See the "Uncertainty" chapter on the \code{marginaleffects} website for more details on the computation of standard errors, bootstrapping, and more:
 
-https://marginaleffects.com/vignettes/uncertainty.html
-
-Note that the \code{inferences()} function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:
-
-https://marginaleffects.com/vignettes/bootstrap.html
+https://marginaleffects.com/chapters/uncertainty.html
 }
 
 \section{Model-Specific Arguments}{
