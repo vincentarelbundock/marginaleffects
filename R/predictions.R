@@ -344,6 +344,8 @@ predictions <- function(model,
     }
   }
 
+  vcov <- sanitize_vcov(model = model, vcov = vcov)
+
   if (is.null(by) || isFALSE(by)) {
     vcov_tmp <- vcov
   } else {

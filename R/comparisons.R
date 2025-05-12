@@ -338,6 +338,8 @@ comparisons <- function(model,
     comparison = comparison,
     eps = eps)
 
+  vcov <- sanitize_vcov(model = model, vcov = vcov)
+
   # get dof before transforming the vcov arg
   # get_df() produces a weird warning on non lmerMod. We can skip them
   # because get_vcov() will produce an informative error later.

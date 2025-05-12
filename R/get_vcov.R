@@ -19,7 +19,6 @@ get_vcov.default <- function(model,
     return(NULL)
   }
 
-  vcov <- sanitize_vcov(model = model, vcov = vcov)
   if (isTRUE(checkmate::check_matrix(vcov))) {
     return(vcov)
   }
@@ -106,7 +105,7 @@ get_varcov_args <- function(model, vcov) {
   }
 
   if (isTRUE(checkmate::check_choice(vcov, "satterthwaite")) ||
-    isTRUE(checkmate::check_choice(vcov, "kewnard-roger"))) {
+    isTRUE(checkmate::check_choice(vcov, "kenward-roger"))) {
     if (!isTRUE(inherits(model, "lmerMod")) && !isTRUE(inherits(model, "lmerModTest"))) {
       msg <- "Satterthwaite and Kenward-Roger corrections are only available for linear mixed effects models from the `lme4` package, and objects of class `lmerMod` or `lmerModTest`."
       stop(msg, call. = FALSE)
