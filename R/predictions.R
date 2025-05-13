@@ -236,7 +236,6 @@ predictions <- function(model,
   # sanity checks
   sanity_dots(model = model, ...)
   numderiv <- sanitize_numderiv(numderiv)
-  sanity_df(df, newdata)
   model <- sanitize_model(
     model = model,
     newdata = newdata,
@@ -245,6 +244,7 @@ predictions <- function(model,
     by = by,
     calling_function = "predictions",
     ...)
+  df <- sanitize_df(df = df, model = model, newdata = newdata, vcov = vcov)
   tmp <- sanitize_hypothesis(hypothesis, ...)
   hypothesis <- tmp$hypothesis
   hypothesis_null <- tmp$hypothesis_null
@@ -404,7 +404,7 @@ predictions <- function(model,
   }
 
   # degrees of freedom
-  df_numeric <- get_degrees_of_freedom(model = model, df = df, vcov = vcov, newdata = tmp)
+  df_numeric <- get_df(model = model, df = df, newdata = newdata)
   if (!is.null(df_numeric) && is.numeric(df_numeric)) {
     tmp$df <- df_numeric
   }

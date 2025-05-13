@@ -270,7 +270,6 @@ comparisons <- function(model,
 
   # sanity checks
   sanity_dots(model, ...)
-  sanity_df(df, newdata)
   conf_level <- sanitize_conf_level(conf_level, ...)
   checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
   numderiv <- sanitize_numderiv(numderiv)
@@ -282,6 +281,7 @@ comparisons <- function(model,
     by = by,
     calling_function = "comparisons",
     ...)
+  df <- sanitize_df(df = df, model = model, newdata = newdata, vcov = vcov)
   cross <- sanitize_cross(cross, variables, model)
   type <- sanitize_type(model = model, type = type, calling_function = "comparisons")
   sanity_comparison(comparison)
@@ -341,7 +341,7 @@ comparisons <- function(model,
   # get dof before transforming the vcov arg
   # get_df() produces a weird warning on non lmerMod. We can skip them
   # because get_vcov() will produce an informative error later.
-  df <- get_degrees_of_freedom(model = model, df = df, vcov = vcov, newdata = newdata)
+  df <- get_df(model = model, df = df, newdata = newdata)
 
   vcov_false <- isFALSE(vcov)
   vcov.type <- get_vcov_label(vcov)
