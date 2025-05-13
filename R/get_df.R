@@ -15,13 +15,19 @@ get_df <- function(model, df = Inf, newdata = NULL) {
             }
         }
 
-        df <- insight::get_df(x = model, data = newdata, type = df, df_per_obs = TRUE)
+        tmp <- try(insight::get_df(x = model, data = newdata, type = df, df_per_obs = TRUE), silent = TRUE)
+        if (inherits(tmp, "try-error")) {
+            msg <- sprintf("Unable to extract degrees of freedom of type `%s` for model of class `%s`.", df, class(model)[1])
+            insight::format_error(msg)
+        }
+        df <- tmp
+
     } else if (isTRUE(checkmate::check_number(df, lower = Inf)) || isFALSE(df) || isTRUE(checkmate::check_null(df))) {
         return(Inf)
     } else if (isTRUE(checkmate::check_numeric(df))) {
         # pass
     } else if (isTRUE(df)) {
-        df <- insight::get_df(x = model)
+        df <- try(insight::get_df(x = model), silent = TRUE)
     } else {
         stop("Invalid arguments for `get_df`.")
     }
