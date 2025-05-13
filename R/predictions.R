@@ -404,14 +404,9 @@ predictions <- function(model,
   }
 
   # degrees of freedom
-  if (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger")) {
-    df <- tryCatch(
-      # df_per_observation is an undocumented argument introduced in 0.18.4.7 to preserve backward incompatibility
-      insight::get_df(model, data = newdata, type = vcov, df_per_observation = TRUE),
-      error = function(e) NULL)
-    if (isTRUE(length(df) == nrow(tmp))) {
-      tmp$df <- df
-    }
+  df_numeric <- get_degrees_of_freedom(model = model, df = df, vcov = vcov, newdata = tmp)
+  if (!is.null(df_numeric) && is.numeric(df_numeric)) {
+    tmp$df <- df_numeric
   }
 
   # bayesian posterior draws

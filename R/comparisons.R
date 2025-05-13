@@ -341,20 +341,7 @@ comparisons <- function(model,
   # get dof before transforming the vcov arg
   # get_df() produces a weird warning on non lmerMod. We can skip them
   # because get_vcov() will produce an informative error later.
-  if (inherits(model, "lmerMod") && (isTRUE(hush(vcov %in% c("satterthwaite", "kenward-roger"))))) {
-    # predict.lmerTest requires the DV
-    dv <- insight::find_response(model)
-    if (!dv %in% colnames(newdata)) {
-      newdata[[dv]] <- mean(insight::get_response(model))
-    }
-
-    if (!isTRUE(hush(is.infinite(df)))) {
-      insight::format_error('The `df` argument is not supported when `vcov` is "satterthwaite" or "kenward-roger".')
-    }
-
-    # df_per_observation is an undocumented argument introduced in 0.18.4.7 to preserve backward incompatibility
-    df <- insight::get_df(model, type = vcov, data = newdata, df_per_observation = TRUE)
-  }
+  df <- get_degrees_of_freedom(model = model, df = df, vcov = vcov, newdata = newdata)
 
   vcov_false <- isFALSE(vcov)
   vcov.type <- get_vcov_label(vcov)
