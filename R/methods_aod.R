@@ -35,6 +35,7 @@ get_vcov.glimML <- function(model, vcov = NULL, ...) {
     if (!is.null(vcov) && !is.logical(vcov)) {
         stop("The `vcov` argument is not supported for this kind of model.")
     }
+    vcov <- sanitize_vcov(model, vcov)
     aod::vcov(model)
 }
 

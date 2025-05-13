@@ -40,6 +40,8 @@ get_predict.glmmTMB <- function(model,
 #' @rdname get_vcov
 #' @export
 get_vcov.glmmTMB <- function(model, ...) {
+  vcov <- sanitize_vcov(model, vcov)
+
   # Extract the full covariance matrix
   out <- stats::vcov(model, full = TRUE)
 

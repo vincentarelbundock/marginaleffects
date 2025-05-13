@@ -73,6 +73,7 @@ get_vcov.model_fit <- function(model, type = NULL, ...) {
     if (isTRUE(type == "class")) {
         return(FALSE)
     }
+    vcov <- sanitize_vcov(model, vcov)
     if (isTRUE(supported_engine(model))) {
         tmp <- parsnip::extract_fit_engine(model)
         out <- get_vcov(tmp)

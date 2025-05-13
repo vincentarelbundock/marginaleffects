@@ -48,5 +48,6 @@ get_vcov.bart <- function(model, vcov = NULL, ...) {
     if (!is.null(vcov) && !is.logical(vcov)) {
         insight::format_warning("The `vcov` argument is not supported for models of this class.")
     }
+    vcov <- sanitize_vcov(model, vcov)
     return(NULL)
 }
