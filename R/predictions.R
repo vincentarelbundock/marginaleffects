@@ -244,7 +244,7 @@ predictions <- function(model,
     by = by,
     calling_function = "predictions",
     ...)
-  df <- sanitize_df(df = df, model = model, newdata = newdata, vcov = vcov)
+  df <- sanitize_df(df = df, model = model, newdata = newdata, vcov = vcov, by = by, hypothesis = hypothesis)
   tmp <- sanitize_hypothesis(hypothesis, ...)
   hypothesis <- tmp$hypothesis
   hypothesis_null <- tmp$hypothesis_null

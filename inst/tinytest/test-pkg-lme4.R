@@ -342,11 +342,10 @@ d$Cat <- sample(c("A", "B"), replace = TRUE, size = nrow(d))
 fit <- lmer(Reaction ~ Days + Cat + (1 | Subject), d)
 expect_error(
     avg_comparisons(fit, vcov = "satterthwaite", re.form = NA),
-    pattern = "not supported"
+    pattern = "not supported.*with.*by.*hypothesis"
 )
-
 expect_error(
-    avg_predictions(fit, vcov = "satterthwaite", re.form = NA),
+    avg_predictions(fit, vcov = "kenward-roger", re.form = NA),
     pattern = "not supported"
 )
 

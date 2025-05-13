@@ -281,7 +281,7 @@ comparisons <- function(model,
     by = by,
     calling_function = "comparisons",
     ...)
-  df <- sanitize_df(df = df, model = model, newdata = newdata, vcov = vcov)
+  df <- sanitize_df(df = df, model = model, newdata = newdata, vcov = vcov, by = by, hypothesis = hypothesis)
   cross <- sanitize_cross(cross, variables, model)
   type <- sanitize_type(model = model, type = type, calling_function = "comparisons")
   sanity_comparison(comparison)

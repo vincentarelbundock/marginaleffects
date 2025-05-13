@@ -43,10 +43,14 @@ get_df <- function(model, df = Inf, newdata = NULL) {
 }
 
 
-sanitize_df <- function(df, model, newdata, vcov = NULL) {
+sanitize_df <- function(df, model, newdata, by = NULL, hypothesis = NULL, vcov = NULL) {
     # K-W changes both the vcov and the df
     # Satterthwaite changes the df but not the vcov
     if (isTRUE(checkmate::check_choice(vcov, c("satterthwaite", "kenward-roger")))) {
+        if (!isFALSE(by) || !isTRUE(checkmate::check_number(hypothesis, null.ok = TRUE))) {
+            msg <- sprintf("Satterthwaite and Kenward-Roger adjustments are not supported in this command with the `by` or `hypothesis` arguments.")
+            stop(msg, call. = FALSE)
+        }
         df <- vcov
     }
     checkmate::assert(

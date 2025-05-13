@@ -47,7 +47,7 @@ get_ci <- function(
 
         # mismatch
         } else {
-            insight::format_error("Satterthwaite and Kenward-Roger corrections are not supported in this command.")
+            stop("Please report this error with a fully reproducible example at: https://github.com/vincentarelbundock/marginaleffects")
         }
     }
 
