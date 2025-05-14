@@ -9,7 +9,7 @@ Breaking change:
 
 New:
 
-* The `hypothesis` argument can specify 1-tailed tests with strings: `avg_predictions(model, hypothesis = "<3")`
+* The `hypothesis` argument can specify 1-tailed tests with strings: `avg_predictions(model, hypothesis = "b1 <= 3")`
 * `get_dataset()` no longer requires the user to specify the `package` argument. It automatically searches the data index for a unique matching dataset.
 * `hypotheses()` adds response names to term names. This allows `hypothesis="groupa_var1=groupb_var1"`. Thanks to @mattansb for report #1432.
 

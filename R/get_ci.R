@@ -76,9 +76,9 @@ get_ci <- function(
         x[["statistic"]] <- (x[["estimate"]] - hypothesis_null) / x[["std.error"]]
         if (hypothesis_direction == "=") {
             x[["p.value"]] <- 2 * cdf(-abs(x$statistic))
-        } else if (hypothesis_direction == "<") {
+        } else if (hypothesis_direction == "<=") {
             x[["p.value"]] <- 1 - cdf(x$statistic)
-        } else if (hypothesis_direction == ">") {
+        } else if (hypothesis_direction == ">=") {
             x[["p.value"]] <- cdf(x$statistic)
         }
     }
