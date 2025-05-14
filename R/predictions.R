@@ -236,7 +236,6 @@ predictions <- function(model,
   # sanity checks
   sanity_dots(model = model, ...)
   numderiv <- sanitize_numderiv(numderiv)
-  sanity_df(df, newdata)
   model <- sanitize_model(
     model = model,
     newdata = newdata,
@@ -245,6 +244,7 @@ predictions <- function(model,
     by = by,
     calling_function = "predictions",
     ...)
+  df <- sanitize_df(df = df, model = model, newdata = newdata, vcov = vcov, by = by, hypothesis = hypothesis)
   tmp <- sanitize_hypothesis(hypothesis, ...)
   hypothesis <- tmp$hypothesis
   hypothesis_null <- tmp$hypothesis_null
@@ -404,14 +404,9 @@ predictions <- function(model,
   }
 
   # degrees of freedom
-  if (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger")) {
-    df <- tryCatch(
-      # df_per_observation is an undocumented argument introduced in 0.18.4.7 to preserve backward incompatibility
-      insight::get_df(model, data = newdata, type = vcov, df_per_observation = TRUE),
-      error = function(e) NULL)
-    if (isTRUE(length(df) == nrow(tmp))) {
-      tmp$df <- df
-    }
+  df_numeric <- get_degrees_of_freedom(model = model, df = df, newdata = newdata)
+  if (!is.null(df_numeric) && is.numeric(df_numeric)) {
+    tmp$df <- df_numeric
   }
 
   # bayesian posterior draws

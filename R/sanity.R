@@ -1,9 +1,4 @@
 
-sanity_df <- function(df, x) {
-    checkmate::assert(
-        checkmate::check_number(df, lower = 1),
-        checkmate::check_numeric(df, len = nrow(x)))
-}
 
 
 sanity_predict_vector <- function(pred, model, newdata, type) {
