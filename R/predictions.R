@@ -404,7 +404,7 @@ predictions <- function(model,
   }
 
   # degrees of freedom
-  df_numeric <- get_df(model = model, df = df, newdata = newdata)
+  df_numeric <- get_degrees_of_freedom(model = model, df = df, newdata = newdata)
   if (!is.null(df_numeric) && is.numeric(df_numeric)) {
     tmp$df <- df_numeric
   }

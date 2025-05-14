@@ -213,7 +213,7 @@ Collate:
     'get_contrast_data_numeric.R'
     'get_contrasts.R'
     'get_dataset.R'
-    'get_df.R'
+    'get_degrees_of_freedom.R'
     'get_draws.R'
     'get_group_names.R'
     'get_jacobian.R'

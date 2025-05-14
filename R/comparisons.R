@@ -339,9 +339,9 @@ comparisons <- function(model,
     eps = eps)
 
   # get dof before transforming the vcov arg
-  # get_df() produces a weird warning on non lmerMod. We can skip them
+  # get_degrees_of_freedom() produces a weird warning on non lmerMod. We can skip them
   # because get_vcov() will produce an informative error later.
-  df <- get_df(model = model, df = df, newdata = newdata)
+  df <- get_degrees_of_freedom(model = model, df = df, newdata = newdata)
 
   vcov_false <- isFALSE(vcov)
   vcov.type <- get_vcov_label(vcov)

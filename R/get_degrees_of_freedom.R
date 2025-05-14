@@ -1,4 +1,4 @@
-get_df <- function(model, df = Inf, newdata = NULL) {
+get_degrees_of_freedom <- function(model, df = Inf, newdata = NULL) {
 
     # before NULL return
     if (isTRUE(checkmate::check_choice(vcov, c("satterthwaite", "kenward-roger")))) {
