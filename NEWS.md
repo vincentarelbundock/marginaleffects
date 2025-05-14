@@ -16,6 +16,7 @@ Bugs:
 
 * `rms` package now allows tibbles. Thanks to @stephenrho for report #1428.
 * `get_vcov()` workaround when vcov does not match dimensions of jacobian. Thanks to @fisher-j for report #1439.
+* `na.rm=TRUE` when checking order of lower and upper bounds of confidence intervals. 38f86edb2f664b67ffc0294f69ca81967e71927d
 
 Misc:
 
