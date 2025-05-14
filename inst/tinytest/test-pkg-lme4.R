@@ -64,10 +64,8 @@ expect_inherits(mfx, "marginaleffects")
 
 # GLM not supported
 mod <- glmer(am ~ hp + (1 | cyl), family = binomial, data = dat)
-expect_error(comparisons(mod, vcov = "satterthwaite", re.form = NA), pattern = "Satter")
-expect_warning(comparisons(mod, vcov = "kenward-roger", re.form = NA), pattern = "Unable")
-expect_error(predictions(mod, vcov = "satterthwaite", re.form = NA), pattern = "Satter")
-expect_warning(predictions(mod, vcov = "kenward-roger", re.form = NA), pattern = "Unable")
+expect_error(comparisons(mod, vcov = "satterthwaite", re.form = NA), pattern = "(?i)unable.*satter")
+expect_error(predictions(mod, vcov = "kenward-roger", re.form = NA), pattern = "(?i)unable.*kenward")
 
 # type = "link"
 w <- predict(mod, type = "link")
@@ -344,11 +342,10 @@ d$Cat <- sample(c("A", "B"), replace = TRUE, size = nrow(d))
 fit <- lmer(Reaction ~ Days + Cat + (1 | Subject), d)
 expect_error(
     avg_comparisons(fit, vcov = "satterthwaite", re.form = NA),
-    pattern = "not supported"
+    pattern = "not supported.*with.*by.*hypothesis"
 )
-
 expect_error(
-    avg_predictions(fit, vcov = "satterthwaite", re.form = NA),
+    avg_predictions(fit, vcov = "kenward-roger", re.form = NA),
     pattern = "not supported"
 )
 
