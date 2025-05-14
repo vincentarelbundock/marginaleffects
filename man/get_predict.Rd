@@ -155,7 +155,13 @@ get_predict(model, newdata, type, ...)
   ...
 )
 
-\method{get_predict}{coxph}(model, newdata = insight::get_data(model), type = "lp", ...)
+\method{get_predict}{coxph}(
+  model,
+  newdata = insight::get_data(model),
+  type = "lp",
+  reference = "strata",
+  ...
+)
 
 \method{get_predict}{model_fit}(model, newdata, type = NULL, ...)
 

@@ -34,6 +34,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["brmsfit"]] <- c(
         "draw_ids", "nlpar", "ndraws", "re_formula", "allow_new_levels",
         "sample_new_levels", "dpar", "resp")
+    valid[["coxph"]] <- c("reference")
     valid[["brmsfit_multiple"]] <- valid[["brmsfit"]]
     valid[["selection"]] <- c("part") # sampleSelection
     valid[["glmmTMB"]] <- c("re.form", "allow.new.levels", "zitype") # glmmTMB

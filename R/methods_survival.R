@@ -23,11 +23,13 @@ set_coef.survreg <- function(model, coefs, ...) {
 get_predict.coxph <- function(model,
                               newdata = insight::get_data(model),
                               type = "lp",
+                              reference = "strata",
                               ...) {
 
     out <- stats::predict(model,
                           newdata = newdata,
                           type = type,
+                          reference = reference,
                           ...)
 
     out <- data.frame(rowid = seq_len(nrow(newdata)),
