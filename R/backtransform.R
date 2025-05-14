@@ -29,7 +29,7 @@ backtransform <- function(x, transform) {
 
     # Issue #1204: Some inverse link functions swap the order of low and high
     if (all(c("conf.low", "conf.high") %in% colnames(x))) {
-        if (all(x$conf.high < x$conf.low)) {
+        if (all(x$conf.high < x$conf.low, na.rm = TRUE)) {
             lo <- x[["conf.low"]]
             hi <- x[["conf.high"]]
             x[["conf.low"]] <- hi
