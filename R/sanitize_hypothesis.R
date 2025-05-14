@@ -11,6 +11,13 @@ sanitize_hypothesis <- function(hypothesis, ...) {
     hypothesis_direction <- "="
     hnull <- 0
 
+    # Issue #1453: ratio ~ should use hypothesis=1 as null
+    if (isTRUE(checkmate::check_formula(hypothesis))) {
+        if (isTRUE(identical("ratio", as.character(hypothesis)[2]))) {
+            hnull <- 1
+        }
+    }
+
     if (isTRUE(checkmate::check_character(hypothesis))) {
         if (isTRUE(grepl("<", hypothesis))) {
             hypothesis_direction <- "<"
