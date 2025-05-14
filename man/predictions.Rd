@@ -161,8 +161,8 @@ levels. See examples section.}
 \itemize{
 \item \code{lhs}
 \itemize{
-\item \code{ratio}
-\item \code{difference}
+\item \code{ratio} (null = 1)
+\item \code{difference} (null = 0)
 \item Leave empty for default value
 }
 \item \code{rhs}

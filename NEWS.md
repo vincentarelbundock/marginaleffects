@@ -5,6 +5,7 @@
 Breaking change:
 
 * `datagrid()` now sorts values of variables that are not explicitly supplied. This may change the row order of some results. Thanks to @mattansb for feature request #1439.
+* The default null hypothesis with `hypothesis=ratio~` is now 1. With `hypothesis=difference~` it is still 0. Thanks to Uffe Heide-Jørgensen for report #1453.
 
 New:
 

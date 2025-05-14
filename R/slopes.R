@@ -79,8 +79,8 @@
 #'   - `b1 > 10`
 #' + Formula: `lhs ~ rhs | group`
 #'   + `lhs`
-#'     - `ratio`
-#'     - `difference`
+#'     - `ratio` (null = 1)
+#'     - `difference` (null = 0)
 #'     - Leave empty for default value
 #'   + `rhs`
 #'     - `pairwise` and `revpairwise`: pairwise differences between estimates in each row.
