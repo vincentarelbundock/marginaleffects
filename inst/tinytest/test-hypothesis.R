@@ -384,29 +384,31 @@ expect_equivalent(cmp1$estimate, cmp2$estimate * -1)
 
 # One-tailed tests: 25.7380058288958
 mod <- lm(mpg ~ hp + wt, data = mtcars)
-p1 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 > 26")
-p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 < 26")
+p1 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 >= 26")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 <= 26")
 expect_true(p1$p.value < p2$p.value)
 expect_equivalent(p1$p.value + p2$p.value, 1)
 
 p1 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 = 26")
-p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 > 26")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 >= 26")
 expect_equivalent(p1$p.value, p2$p.value * 2)
 
 p1 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 = 24")
-p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 < 24")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 <= 24")
 expect_equivalent(p1$p.value, p2$p.value * 2)
 
 p1 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 = 26")
-p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 < 26")
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 <= 26")
 expect_true(p1$p.value > p2$p.value)
 
-p1 <- avg_predictions(mod, by = "cyl", hypothesis = ">26")$p.value[1]
-p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1>26")$p.value
+p1 <- avg_predictions(mod, by = "cyl", hypothesis = ">=26")$p.value[1]
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1>=26")$p.value
+p3 <- avg_predictions(mod, by = "cyl", hypothesis = "b1 >= 26")$p.value
 expect_equivalent(p1, p2)
+expect_equivalent(p1, p3)
 
-p1 <- avg_predictions(mod, by = "cyl", hypothesis = "<26")$p.value[1]
-p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1<26")$p.value
+p1 <- avg_predictions(mod, by = "cyl", hypothesis = "<=26")$p.value[1]
+p2 <- avg_predictions(mod, by = "cyl", hypothesis = "b1<=26")$p.value
 expect_equivalent(p1, p2)
 
 p1 <- avg_predictions(mod, by = "cyl", hypothesis = "=26")$p.value[1]
@@ -420,12 +422,12 @@ h2 <- glht(mod, linfct = c("(Intercept) == -3.5", "hp == -3.5", "wt == -3.5"))
 h2 <- summary(h2, test = univariate())
 expect_equivalent(h1$p.value, h2$test$pvalues)
 
-h1 <- hypotheses(mod, hypothesis = "> -3.5", df = 29)
+h1 <- hypotheses(mod, hypothesis = ">= -3.5", df = 29)
 h2 <- glht(mod, linfct = c("(Intercept) >= -3.5", "hp >= -3.5", "wt >= -3.5"))
 h2 <- summary(h2, test = univariate())
 expect_equivalent(h1$p.value, h2$test$pvalues)
 
-h1 <- hypotheses(mod, hypothesis = "< -3.5", df = 29)
+h1 <- hypotheses(mod, hypothesis = "<= -3.5", df = 29)
 h2 <- glht(mod, linfct = c("(Intercept) <= -3.5", "hp <= -3.5", "wt <= -3.5"))
 h2 <- summary(h2, test = univariate())
 expect_equivalent(h1$p.value, h2$test$pvalues)
