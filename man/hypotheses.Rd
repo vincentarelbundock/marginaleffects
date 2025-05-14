@@ -30,9 +30,9 @@ hypotheses(
 \item \code{hp + drat = 12}
 \item \code{b1 + b2 + b3 = 0}
 \item \verb{b* / b1 = 1}
-\item \verb{< 0}
-\item \verb{> -3.5}
-\item \code{b1 > 10}
+\item \verb{<= 0}
+\item \verb{>= -3.5}
+\item \code{b1 >= 10}
 }
 \item Formula: \code{lhs ~ rhs | group}
 \itemize{
