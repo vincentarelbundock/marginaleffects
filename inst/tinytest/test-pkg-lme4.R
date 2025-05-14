@@ -345,6 +345,10 @@ expect_error(
     pattern = "not supported.*with.*by.*hypothesis"
 )
 expect_error(
+    comparisons(fit, vcov = "satterthwaite", hypothesis = 'b1 = 0', re.form = NA),
+    pattern = "not supported.*with.*by.*hypothesis"
+)
+expect_error(
     avg_predictions(fit, vcov = "kenward-roger", re.form = NA),
     pattern = "not supported"
 )
