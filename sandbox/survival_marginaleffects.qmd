@@ -1,9 +1,9 @@
 ---
-title: "Survival analysis with marginaleffects"
+title: "Survival analysis"
 format: 
   html:
     embed-resources: true
-bibliography: references.bib
+bibliography: survival_marginaleffects.bib
 ---
 
 # Introduction
@@ -23,13 +23,15 @@ For the purposes of this vignette, we will try to analyze the causal effect of a
 The first 6 rows of the dataset look like this:
 
 ```{r}
-library(marginaleffects)
-library(survival)
-library(splines)
-
+#| include: false
 options(marginaleffects_print_type = FALSE)
 options(marginaleffects_print_column_names = FALSE)
 options(width = 300)
+``` 
+```{r}
+library(marginaleffects)
+library(survival)
+library(splines)
 
 head(rotterdam)
 ```
@@ -38,8 +40,8 @@ For the analysis of the data we will first fit a standard Cox proportional hazar
 
 ```{r}
 model <- coxph(
-  Surv(dtime, death) ~ hormon + grade + ns(age, df=2), 
-  data=rotterdam
+    Surv(dtime, death) ~ hormon + grade + ns(age, df = 2),
+    data = rotterdam
 )
 
 summary(model)
@@ -61,12 +63,12 @@ We will start by plotting the average counterfactual predictions for each of the
 p <- avg_predictions(model,
   type = "survival",
   by = c("dtime", "hormon"),
+  vcov = "rsample".
   newdata = datagrid(
     hormon = 0:1,
     dtime = seq(min(rotterdam$dtime), max(rotterdam$dtime), length.out = 25),
     grid_type = "counterfactual"
-  ),
-  vcov = "rsample"
+  )
 )
 p
 ```
@@ -78,10 +80,10 @@ The `Estimate` column shows the estimated "counterfactual" survival probability 
 ::: {.callout-warning}
 The "counterfactual" interpretation of the estimated survival probabilities only holds if the used model is correctly specified, and if the four fundamental causal identifiability assumptions can be assumed to be true. These are:
 
-1) the positivity assumption
-2) the counterfactual consistency assumption
-3) the no-interference assumption
-4) the conditional exchangeability assumption
+1. the positivity assumption
+2. the counterfactual consistency assumption
+3. the no-interference assumption
+4. the conditional exchangeability assumption
 
 These assumptions are described in detail in @Hernan2020 and many other books and articles on causal inference based methods.
 :::
@@ -91,15 +93,20 @@ These assumptions are described in detail in @Hernan2020 and many other books an
 The results can be plotted using the `plot_predictions()` function using almost identical code:
 
 ```{r}
-plot_predictions(model,
-  type = "survival",
-  by = c("dtime", "hormon"),
-  vcov = "rsample",
-  newdata = datagrid(
+grid <- newdata <- datagrid(
     hormon = 0:1,
     dtime = seq(min(rotterdam$dtime), max(rotterdam$dtime), length.out = 25),
+    model = model,
     grid_type = "counterfactual"
-  )
+)
+
+Q
+pkgload::load_all()
+plot_predictions(model,
+    type = "survival",
+    by = c("dtime", "hormon"),
+    vcov = "rsample",
+    newdata = grid
 )
 ```
 
