@@ -47,6 +47,10 @@ summary(model)
 
 From the `summary()` output alone it looks like the `hormonal` treatment leads to a faster time until death on average with a HR of ~ 1.34, even after adjustment for `age` and `grade`. We will investigate this further below.
 
+::: {.callout-warning}
+This notebook reports uncertainty estimates obtained via bootstrap, using the `vcov="rsample"` argument. See the section on Uncertainty below for an important note on this topic.
+:::
+
 # Average Counterfactual Predictions
 
 ## Estimation
@@ -61,7 +65,8 @@ p <- avg_predictions(model,
     hormon = 0:1,
     dtime = seq(min(rotterdam$dtime), max(rotterdam$dtime), length.out = 25),
     grid_type = "counterfactual"
-  )
+  ),
+  vcov = "rsample"
 )
 p
 ```
@@ -89,6 +94,7 @@ The results can be plotted using the `plot_predictions()` function using almost 
 plot_predictions(model,
   type = "survival",
   by = c("dtime", "hormon"),
+  vcov = "rsample",
   newdata = datagrid(
     hormon = 0:1,
     dtime = seq(min(rotterdam$dtime), max(rotterdam$dtime), length.out = 25),
@@ -109,6 +115,7 @@ avg_predictions(model,
   hypothesis = "b1 - b2 = 0",
   type = "survival",
   by = "hormon",
+  vcov = "rsample",
   newdata = datagrid(
     hormon = 0:1,
     dtime = 2500,
@@ -126,6 +133,7 @@ avg_predictions(model,
   hypothesis = "b1 / b2 = 0",
   type = "survival",
   by = "hormon",
+  vcov = "rsample",
   newdata = datagrid(
     hormon = 0:1,
     dtime = 2500,
@@ -159,6 +167,7 @@ Even though the model and the estimand changed, the syntax required to estimate 
 p <- avg_predictions(model,
   type = "survival",
   by = c("dtime", "hormon", "grade"),
+  vcov = "rsample",
   newdata = datagrid(
     hormon = 0:1,
     grade = c(2, 3),
@@ -183,6 +192,7 @@ We can of course also plot these counterfactual predictions, using the `plot_pre
 plot_predictions(model,
   type = "survival",
   by = c("dtime", "hormon", "grade"),
+  vcov = "rsample",
   newdata = datagrid(
     hormon = 0:1,
     grade = c(2, 3),
@@ -204,6 +214,7 @@ avg_comparisons(model,
   variables = "hormon",
   type = "survival",
   by = "grade",
+  vcov = "rsample",
   newdata = datagrid(
     grade = c(2, 3),
     dtime = 2500,
@@ -220,5 +231,63 @@ As explained elsewhere in the package documentation, the `hypothesis` argument a
 Although the `marginaleffects` package is not specifically designed to do survival analysis, it can nevertheless be used very efficiently to perform such analysis as well. For users that are already familiar with the `marginaleffects` package this is particularly easy, because the syntax required for survival analysis is exactly the same syntax that can be used for non-survival models. Additionally, the included capabilities to test complex hypotheses dealing with interaction and effect modification is, to the best of our knowledge, not implemented elsewhere.
 
 Note, however, that although g-computation is one of the most popular and most efficient methods to estimate the causal estimands described here, it is not the only method and may not always be the best choice [@Denz2023]. Due to its' sole reliance on a time-to-event model, the resulting estimates are very susceptible to model misspecification. Other methods, such as augmented inverse probability of treatment weighting [@Wang2018] or targeted maximum likelihood estimation [@Cai2020], additionally use a model for the **treatment assignment process** and are doubly-robust in the sense that only one of the models needs to be correctly specified to obtain unbiased estimates. Additionally, we recommend that users keep in mind that the causal interpretation of the produced estimates of any method are only valid given the causal identifiability assumptions, which do not always hold in practice.  
+
+# Uncertainty
+
+In the Cox proportional‐hazards model the log‑likelihood naturally factorizes into a *partial* component that involves only the regression coefficients and a *baseline* component that involves the cumulative hazard.  
+
+$$
+h(t\mid x)=h_{0}(t)\,\exp\{x^{\top}\beta\},
+$$
+
+with baseline hazard $h_{0}(t)$ and coefficients $\beta$.
+
+The key innovation that underpins this model is that we can that we do not need to optimize the likelihood of the full model. Instead, if we are willing to accept some assumptions (i.e., proportional hazard), we can proceed with the partial likelihood.
+
+Once we fit the model in this way, we can compute predictions on the linear-predictor scale easily.
+
+$$
+\hat\eta = x^{\top}\hat\beta,
+\qquad
+\widehat{\text{Var}}(\hat\eta)=x^{\top}\widehat{\text{Var}}(\hat\beta)\,x,
+$$
+
+The variance of those predictions can be obtained via the delta method, through the estimated variance–covariance matrix of the coefficients alone. 
+
+```{r}
+predictions(mod, newdata = head(rotterdam), type = "lp")
+```
+
+Unfortunately, other quantities of interest are functions of more than just the estimated coefficients. For functions that depend on the baseline hazard (e.g., survival or cumulative hazard curves) a second source of variability enters through the estimation of $H_{0}(t)$. 
+
+For any subject with covariates $x$, the marginal survivor estimate is
+
+$$
+\hat S(t\mid x)=\exp\!\bigl[-\hat H_{0}(t)\,\exp\{x^{\top}\hat\beta\}\bigr],
+$$
+
+Its variance decomposes as
+
+$$
+\text{Var}[\hat S]=
+\underbrace{\Bigl(\partial S/\partial\beta\Bigr)^{\!\top}
+\widehat{\text{Var}}(\hat\beta)\,
+\Bigl(\partial S/\partial\beta\Bigr)}_{\text{coefficient part}}
+\;+\;
+\underbrace{\Bigl(\partial S/\partial H_{0}\Bigr)^{\!\top}
+\widehat{\text{Var}}\bigl[\hat H_{0}(t)\bigr]\,
+\Bigl(\partial S/\partial H_{0}\Bigr)}_{\text{baseline part}}
+\;+\;2\,\text{Cov}\bigl(\hat\beta,\hat H_{0}\bigr), 
+$$
+
+with a baseline term that can be evaluated with different strategies.
+
+`marginaleffects` applies the multivariate delta method to propagate uncertainty from $\hat\beta$ to any user‑defined function $g(\hat\beta)$. For Cox models the current implementation ignores the extra variability in $\hat H_{0}(t)$.  When effect estimates depend on the baseline (e.g., survival probabilities, restricted mean survival time, hazard ratios evaluated at $t$) this omission produces anti‑conservative confidence intervals---often by a non‑trivial margin.
+
+A simple remedy is the non‑parametric bootstrap: resample subjects (or clusters) with replacement, refit the Cox model in each replicate, and re‑calculate the target function.  Because every replicate re‑estimates both $\beta$ *and* $H_{0}(t)$, the resulting empirical distribution captures their joint variability without analytic derivations.  While computationally heavier, this method usually restores nominal coverage and works seamlessly with `marginaleffects` via the `vcov = "rsample"` argument or the `inferences()` function.
+
+```{r}
+predictions(mod, newdata = head(rotterdam), type = "lp", vcov = "rsample")
+```
 
 # References
