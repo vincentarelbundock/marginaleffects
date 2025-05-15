@@ -236,6 +236,14 @@ comparisons <- function(model,
 
   call_attr <- construct_call(model, "comparisons")
 
+  methods <- c("rsample", "boot", "fwb", "simulation")
+  if (isTRUE(checkmate::check_choice(vcov, methods))) {
+    inferences_method <- vcov
+    vcov <- FALSE
+  } else {
+    inferences_method <- NULL
+  }
+
   # multiple imputation
   if (inherits(model, c("mira", "amest"))) {
       out <- process_imputation(model, call_attr)
@@ -529,6 +537,11 @@ comparisons <- function(model,
   }
 
   class(out) <- c("comparisons", class(out))
+
+  if (!is.null(inferences_method)) {
+    out <- inferences(out, method = inferences_method)
+  }
+
   return(out)
 }
 

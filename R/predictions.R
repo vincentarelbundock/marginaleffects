@@ -189,6 +189,14 @@ predictions <- function(model,
                         numderiv = "fdforward",
                         ...) {
 
+  methods <- c("rsample", "boot", "fwb", "simulation")
+  if (isTRUE(checkmate::check_choice(vcov, methods))) {
+    inferences_method <- vcov
+    vcov <- FALSE
+  } else {
+    inferences_method <- NULL
+  }
+
   if ("cross" %in% ...names()) {
     insight::format_error("The `cross` argument is not available in this function.")
   }
@@ -540,6 +548,10 @@ predictions <- function(model,
     out$group <- NULL
   }
 
+  if (!is.null(inferences_method)) {
+    out <- inferences(out, method = inferences_method)
+  }
+
   return(out)
 }
 
@@ -635,7 +647,6 @@ get_predictions <- function(model,
   # otherwise, users cannot know for sure what is going to be the first and
   # second rows, etc.
   out <- sort_columns(out, newdata, by)
-
 
   return(out)
 }
