@@ -41,7 +41,7 @@
 #'
 #' @section References:
 #'
-#' Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” Review of Economics and Statistics 68 (4): 715–9.
+#' Krinsky, I., and A. L. Robb. 1986. "On Approximating the Statistical Properties of Elasticities." Review of Economics and Statistics 68 (4): 715–9.
 #'
 #' King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361
 #'
@@ -49,7 +49,7 @@
 #'
 #' Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
 #'
-#' Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.
+#' Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. "Predictive Inference with the Jackknife+." arXiv. http://arxiv.org/abs/1905.02928.
 #'
 #'
 #' @return
@@ -120,20 +120,10 @@ inferences <- function(
         )
     )
 
-    if (method %in% c("conformal_split", "conformal_cv+")) {
-        checkmate::assert_class(x, "predictions")
-        checkmate::assert_choice(
-            conformal_score,
-            choices = c("residual_abs", "residual_sq", "softmax")
-        )
-        checkmate::assert_data_frame(conformal_test, null.ok = FALSE)
-    }
     if (method == "conformal_split") {
-        checkmate::assert_data_frame(conformal_calibration, null.ok = FALSE)
         conformal_fun <- conformal_split
     }
     if (method == "conformal_cv+") {
-        checkmate::assert_integerish(R, upper = 25)
         conformal_fun <- conformal_cv_plus
     }
 

@@ -213,12 +213,15 @@ predictions <- function(
     if ("modeldata" %in% ...names()) {
         modeldata <- call_attr[["modeldata"]] <- ...get("modeldata")
     } else {
-        modeldata <- call_attr[["modeldata"]] <- get_modeldata(
+        modeldata <- get_modeldata(
             model,
             additional_variables = if (isTRUE(by)) by else FALSE,
             modeldata = dots[["modeldata"]],
             wts = wts
         )
+        if (isTRUE(checkmate::check_data_frame(modeldata))) {
+            call_attr[["modeldata"]] <- modeldata
+        }
     }
 
     sanity_reserved(model, modeldata)
