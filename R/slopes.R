@@ -284,10 +284,10 @@ slopes <- function(
         wts = wts,
         vcov = vcov,
         by = by,
-        calling_function = "marginaleffects",
+        calling_function = "slopes",
         ...
     )
-    sanity_dots(model = model, calling_function = "marginaleffects", ...)
+    sanity_dots(model = model, calling_function = "slopes", ...)
     type <- sanitize_type(model = model, type = type, calling_function = "slopes")
 
     ############### sanity checks are over

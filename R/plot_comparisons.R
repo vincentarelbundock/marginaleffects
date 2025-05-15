@@ -61,20 +61,6 @@ plot_comparisons <- function(
     draw = TRUE,
     ...
 ) {
-    if ("effect" %in% ...names()) {
-        if (is.null(variables)) {
-            variables <- ...elt(match("effect", ...names())[1L])
-        } else {
-            insight::format_error(
-                "The `effect` argument has been renamed to `variables`."
-            )
-        }
-    }
-    if ("transform_post" %in% ...names()) {
-        # backward compatibility
-        transform <- ...elt(match("transform_post", ...names())[1L])
-    }
-
     if (inherits(model, "mira") && is.null(newdata)) {
         msg <- "Please supply a data frame to the `newdata` argument explicitly."
         insight::format_error(msg)

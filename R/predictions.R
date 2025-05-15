@@ -191,6 +191,7 @@ predictions <- function(
     ...
 ) {
     methods <- c("rsample", "boot", "fwb", "simulation")
+
     if (isTRUE(checkmate::check_choice(vcov, methods))) {
         inferences_method <- vcov
         vcov <- FALSE
@@ -198,21 +199,7 @@ predictions <- function(
         inferences_method <- NULL
     }
 
-    if ("cross" %in% ...names()) {
-        insight::format_error(
-            "The `cross` argument is not available in this function."
-        )
-    }
-
     call_attr <- construct_call(model, "predictions")
-
-    if ("transform_post" %in% ...names()) {
-        transform <- ...elt(match("transform_post", ...names())[1L])
-        call_attr[["transform"]] <- transform
-        insight::format_warning(
-            "The `transform_post` argument is deprecated. Use `transform` instead."
-        )
-    }
 
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {

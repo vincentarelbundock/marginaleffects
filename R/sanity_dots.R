@@ -1,44 +1,26 @@
 # This function is very strict.
 sanity_dots <- function(model, calling_function = NULL, ...) {
-    if ("p_adjust" %in% ...names()) {
-        msg <- "The `p_adjust` argument is deprecated. Please use the `multcomp` argument of the `hypotheses()` function instead."
-        stop(msg, call. = FALSE)
-    }
+    stop_deprecate <- c()
+    if ("p_adjust" %in% ...names()) stop_deprecate("p_adjust", "inferences()")
+    if ("transform_post" %in% ...names()) stop_deprecate("transform_post", "transform")
+    if ("interaction" %in% ...names()) stop_deprecate("interaction", "cross")
 
-    if (isTRUE(calling_function == "marginaleffects")) {
-        # comparison: this would break `dydx` normalization
-        # interaction: cross countrast+slope do not make sense
-        # transform: should we really be back-transforming slopes?
-        unsupported <- c(
-            "comparison",
-            "transform",
-            "cross",
-            "transform_pre",
-            "transform_post"
-        )
-        unsupported <- intersect(...names(), unsupported)
-        if (length(unsupported) > 0) {
-            msg <- sprintf(
-                "These arguments are supported by the `comparisons()` function but not by the `slopes()` function: %s",
-                toString(unsupported)
-            )
-            stop(msg, call. = FALSE)
-        }
-    }
-
-    # deprecated
-    if ("interaction" %in% ...names()) {
-        msg <- "The `interaction` argument has been deprecated. Please use `cross` instead."
-        insight::format_warning(msg)
+    if (identical(calling_function, "slopes")) {
+        if ("comparison" %in% ...names()) stop_deprecate("comparison")
+        if ("transform" %in% ...names()) stop_deprecate("transform")
+        if ("cross" %in% ...names()) stop_deprecate("cross")
     }
 
     valid <- list()
 
     # mixed effects
-    valid[["merMod"]] <- valid[["lmerMod"]] <- valid[["glmerMod"]] <- valid[[
-        "lmerModLmerTest"
-    ]] <-
-        c("include_random", "re.form", "allow.new.levels", "random.only")
+    me <- c("include_random", "re.form", "allow.new.levels", "random.only")
+    valid[["merMod"]] <- me
+    valid[["lmerMod"]] <- me
+    valid[["glmerMod"]] <- me
+    valid[["lmerModLmerTest"]] <- me
+
+    # bayes
     valid[["brmsfit"]] <- c(
         "draw_ids",
         "nlpar",
@@ -50,6 +32,8 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         "resp"
     )
     valid[["brmsfit_multiple"]] <- valid[["brmsfit"]]
+
+    # misc
     valid[["selection"]] <- c("part") # sampleSelection
     valid[["glmmTMB"]] <- c("re.form", "allow.new.levels", "zitype") # glmmTMB
     valid[["bam"]] <- c("exclude", "discrete") # mgcv
@@ -58,9 +42,8 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["gamlss"]] <- c("what", "safe") # gamlss
     valid[["lme"]] <- c("level") # nlme::lme
     valid[["bife"]] <- c("alpha_new", "corrected") # nlme::lme
-    valid[["process_error"]] <- # mvgam::mvgam
-        # flexsurv
-        valid[["flexsurvreg"]] <- c("times", "p", "start")
+    valid[["process_error"]] <- c("times", "p", "start")
+    valid[["flexsurvreg"]] <- c("times", "p", "start")
 
     # survival
     valid[["survreg"]] <- c("p")
@@ -81,8 +64,6 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         "equivalence",
         "draw",
         "flag", # internal dev
-        "transform_pre",
-        "transform_post", # backward compatibility everywhere
         "variables_grid", # backward compatibility in marginal_means()
         "at" # topmodels procast
     )

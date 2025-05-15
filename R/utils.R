@@ -87,7 +87,7 @@ cjdt <- function(dtlist) {
 
 # recurse up. mostly useful for `tinytest`
 # this is dumb, but it's late and i don't feel like thinking about this
-evalup <- function(xcall) {
+eval.parent <- function(xcall) {
     out <- myTryCatch(eval(xcall))
     if (inherits(out$error, "simpleError")) {
         msg <- out$error$message
@@ -205,4 +205,13 @@ group_to_factor <- function(group, model) {
         }),
         x[!not_found]
     )
+}
+
+stop_deprecate <- function(old, new = NULL) {
+    if (is.null(new)) {
+        msg <- sprintf("The `%s` argument is not supported.", old)
+    } else {
+        msg <- sprintf("The `%s` argument is not supported. Please use `%s` instead.", old, new)
+    }
+    stop(msg, call. = FALSE)
 }

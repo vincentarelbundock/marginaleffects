@@ -34,8 +34,6 @@ get_predict.default <- function(
         "internal_call",
         "draw",
         "modeldata",
-        "transform_pre",
-        "transform_post",
         "flag"
     )
     dots <- dots[setdiff(names(dots), unused)]

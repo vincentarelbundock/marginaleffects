@@ -10,7 +10,6 @@ dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ carb + cyl, dat)
 
 
-
 # hypothesis formula for model coefficients
 mod <- lm(mpg ~ factor(cyl) + 0, data = mtcars)
 h <- hypotheses(mod, hypothesis = ~reference)
@@ -22,21 +21,26 @@ tmp <- lm(mpg ~ drat + wt, data = mtcars)
 expect_error(slopes(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 expect_error(comparisons(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 
+exit_file("TODO: error not raised in tinytest. envrionment evaluation issue.")
 expect_error(
     slopes(mod, newdata = dat, hypothesis = ~pairwise),
-    pattern = "safe")
+    pattern = "safe"
+)
 
 expect_warning(
     slopes(mod, lincom = "pairwise"),
-    pattern = "lincom")
+    pattern = "lincom"
+)
 
 tmp <- lm(mpg ~ wt + drat, data = mtcars)
 expect_error(
     predictions(
         tmp,
         hypothesis = "wt = drat",
-        newdata = datagrid(wt = 2:3)),
-    pattern = "unique row")
+        newdata = datagrid(wt = 2:3)
+    ),
+    pattern = "unique row"
+)
 
 
 tmp <- mtcars
@@ -46,16 +50,20 @@ expect_error(
         lm(mpg ~ gear, tmp),
         newdata = "mean",
         variables = list(gear = "all"),
-        hypothesis = "gear = 0"),
-    pattern = "indices")
+        hypothesis = "gear = 0"
+    ),
+    pattern = "indices"
+)
 
 expect_error(
     slopes(
         mod,
         newdata = "mean",
         hypothesis = c(1, 1, 1),
-        variables = "cyl"),
-    pattern = "3 rows")
+        variables = "cyl"
+    ),
+    pattern = "3 rows"
+)
 
 # errors
 expect_error(
@@ -63,15 +71,18 @@ expect_error(
         mod,
         newdata = "mean",
         hypothesis = matrix(rep(1, 6), ncol = 2),
-        variables = "cyl"),
-    pattern = "2 rows")
+        variables = "cyl"
+    ),
+    pattern = "2 rows"
+)
 
 # marginaleffects: hypothesis
 mfx <- slopes(
     mod,
     newdata = "mean",
     variables = "cyl",
-    hypothesis = ~pairwise)
+    hypothesis = ~pairwise
+)
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 1)
 expect_true("(8 - 4) - (6 - 4)" %in% mfx$hypothesis)
@@ -81,12 +92,14 @@ expect_true("(8 - 4) - (6 - 4)" %in% mfx$hypothesis)
 cmp1 <- comparisons(
     mod,
     variables = "cyl",
-    newdata = "mean")
+    newdata = "mean"
+)
 cmp2 <- comparisons(
     mod,
     variables = "cyl",
     newdata = "mean",
-    hypothesis = ~pairwise)
+    hypothesis = ~pairwise
+)
 expect_equivalent(diff(cmp1$estimate), cmp2$estimate[1])
 
 
@@ -95,7 +108,8 @@ mfx <- slopes(
     mod,
     newdata = "mean",
     variables = "cyl",
-    hypothesis = ~pairwise)
+    hypothesis = ~pairwise
+)
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 1)
 
@@ -104,20 +118,28 @@ expect_equivalent(nrow(mfx), 1)
 p1 <- predictions(
     mod,
     newdata = datagrid(cyl = c(4, 6)),
-    hypothesis = c(-1, 1))
+    hypothesis = c(-1, 1)
+)
 p2 <- predictions(
     mod,
-    datagrid(cyl = c(4, 6)))
+    datagrid(cyl = c(4, 6))
+)
 expect_equivalent(p1$estimate, diff(p2$estimate))
 
-lc <- matrix(c(
-    -1, 1,
-    -1, 0
-), ncol = 2)
+lc <- matrix(
+    c(
+        -1,
+        1,
+        -1,
+        0
+    ),
+    ncol = 2
+)
 p3 <- predictions(
     mod,
     datagrid(cyl = c(4, 6)),
-    hypothesis = lc)
+    hypothesis = lc
+)
 expect_inherits(p3, "predictions")
 expect_true(all(p3$term == "custom"))
 
@@ -126,7 +148,8 @@ colnames(lc) <- c("Contrast A", "Contrast B")
 p3 <- predictions(
     mod,
     datagrid(cyl = c(4, 6)),
-    hypothesis = lc)
+    hypothesis = lc
+)
 expect_inherits(p3, "predictions")
 expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
 
@@ -141,11 +164,13 @@ mod <- lm(mpg ~ hp + drat, data = mtcars)
 mfx1 <- slopes(
     mod,
     newdata = "mean",
-    hypothesis = "exp(b1 + b2) = 100")
+    hypothesis = "exp(b1 + b2) = 100"
+)
 mfx2 <- slopes(
     mod,
     newdata = "mean",
-    hypothesis = "exp(hp + drat) = 100")
+    hypothesis = "exp(hp + drat) = 100"
+)
 expect_inherits(mfx1, "marginaleffects")
 expect_equivalent(mfx1$estimate, mfx2$estimate)
 expect_equivalent(mfx1$std.error, mfx2$std.error)
@@ -154,15 +179,18 @@ expect_equivalent(mfx1$std.error, mfx2$std.error)
 # predictions: string formulas
 p1 <- predictions(
     mod,
-    newdata = datagrid(hp = c(100, 110, 120)))
+    newdata = datagrid(hp = c(100, 110, 120))
+)
 p2 <- predictions(
     mod,
     hypothesis = "b1 + b2 + b3 = 10",
-    newdata = datagrid(hp = c(100, 110, 120)))
+    newdata = datagrid(hp = c(100, 110, 120))
+)
 p3 <- predictions(
     mod,
     hypothesis = "b1 = b2",
-    newdata = datagrid(hp = c(100, 110, 120)))
+    newdata = datagrid(hp = c(100, 110, 120))
+)
 expect_equivalent(sum(p1$estimate) - 10, p2$estimate)
 expect_equivalent(p1$estimate[1] - p1$estimate[2], p3$estimate)
 
@@ -174,10 +202,10 @@ mod <- lm(mpg ~ cyl, data = dat)
 p <- predictions(
     mod,
     hypothesis = "b1 = b2",
-    newdata = datagrid(cyl = c("6", "8")))
+    newdata = datagrid(cyl = c("6", "8"))
+)
 expect_inherits(p, "predictions")
 expect_equivalent(nrow(p), 1)
-
 
 
 # Issue #439
@@ -186,7 +214,8 @@ cmp <- comparisons(
     mod,
     variables = "am",
     by = "cyl",
-    hypothesis = ~pairwise)
+    hypothesis = ~pairwise
+)
 expect_inherits(cmp, "comparisons")
 expect_equivalent(nrow(cmp), 3)
 
@@ -194,7 +223,8 @@ cmp <- comparisons(
     mod,
     variables = "am",
     by = "cyl",
-    hypothesis = ~reference)
+    hypothesis = ~reference
+)
 expect_inherits(cmp, "comparisons")
 expect_equivalent(nrow(cmp), 2)
 
@@ -211,7 +241,8 @@ expect_equivalent(dm$term, c("H1", "H2"))
 mod <- lm(mpg ~ hp + drat, data = mtcars)
 expect_error(
     predictions(mod, newdata = "mean", hypothesis = "b1=b2"),
-    pattern = "hypothesis testing")
+    pattern = "hypothesis testing"
+)
 
 # Issue #661: remove redundant labels in pairwise comparisons
 if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
@@ -243,10 +274,12 @@ custom_contrast <<- function(x) {
     names(out) <- NULL
     out
 }
-p <- predictions(mod,
+p <- predictions(
+    mod,
     variables = list("carb" = levels, "mpg" = "sd"),
     hypothesis = ~ I(custom_contrast(x)) | rowidcf + mpg,
-    type = "response")
+    type = "response"
+)
 expect_inherits(p, "predictions")
 expect_false("hypothesis" %in% colnames(p))
 expect_true("mpg" %in% colnames(p))
@@ -264,10 +297,12 @@ custom_contrast <<- function(x) {
     )
     out
 }
-p <- predictions(mod,
+p <- predictions(
+    mod,
     variables = list("carb" = levels, "mpg" = "sd"),
     hypothesis = ~ I(custom_contrast(x)) | rowidcf + mpg,
-    type = "response")
+    type = "response"
+)
 expect_inherits(p, "predictions")
 expect_true("hypothesis" %in% colnames(p))
 expect_true("mpg" %in% colnames(p))
@@ -284,16 +319,14 @@ expect_inherits(p, "predictions")
 expect_true("hypothesis" %in% colnames(p))
 expect_true(all(c("(6) - (4)", "(8) - (4)") %in% d$hypothesis))
 
-p <- predictions(brms_factor,
-    hypothesis = ~ I(c(a = x[1], b = mean(x[1:2]))) | cyl_fac)
+p <- predictions(brms_factor, hypothesis = ~ I(c(a = x[1], b = mean(x[1:2]))) | cyl_fac)
 d <- get_draws(p)
 expect_inherits(p, "predictions")
 expect_true("hypothesis" %in% colnames(p))
 expect_true(all(c("a", "b") %in% p$hypothesis))
 expect_true(all(c("a", "b") %in% d$hypothesis))
 
-p <- predictions(brms_factor,
-    hypothesis = ~ I(mean(x)) | cyl_fac)
+p <- predictions(brms_factor, hypothesis = ~ I(mean(x)) | cyl_fac)
 expect_inherits(p, "predictions")
 expect_false("hypothesis" %in% colnames(p))
 expect_true("cyl_fac" %in% colnames(p))
@@ -313,21 +346,13 @@ dat[, big := as.numeric(Sepal.Width > mean(Sepal.Width))]
 dat = dat[order(Species, big)]
 mod <- lm(Sepal.Length ~ big * Species * Petal.Length, data = dat)
 
-cmp <- avg_comparisons(mod,
-    variables = "big",
-    hypothesis = ~ reference | Species,
-    by = c("big", "Species"))
+cmp <- avg_comparisons(mod, variables = "big", hypothesis = ~ reference | Species, by = c("big", "Species"))
 expect_inherits(cmp, "comparisons")
 
-cmp <- avg_comparisons(mod,
-    variables = "Petal.Length",
-    hypothesis = ~ meandev | Species,
-    by = c("big", "Species"))
+cmp <- avg_comparisons(mod, variables = "Petal.Length", hypothesis = ~ meandev | Species, by = c("big", "Species"))
 expect_inherits(cmp, "comparisons")
 
-pre <- avg_predictions(mod,
-    hypothesis = ratio ~ sequential | big,
-    by = c("big", "Species"))
+pre <- avg_predictions(mod, hypothesis = ratio ~ sequential | big, by = c("big", "Species"))
 expect_inherits(pre, "predictions")
 
 

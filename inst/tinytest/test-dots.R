@@ -17,8 +17,7 @@ expect_warning(slopes(mod, blah = 2), pattern = "Github")
 
 # deprecation: p_adjust
 mod <- lm(mpg ~ factor(cyl), data = mtcars)
-expect_error(avg_comparisons(mod, p_adjust = "holm"), pattern = "multcomp")
+expect_error(avg_comparisons(mod, p_adjust = "holm"), pattern = "inferences")
 
 
 rm(list = ls())
-

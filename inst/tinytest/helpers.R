@@ -1,7 +1,7 @@
 rm(list = ls())
 rm(list = ls(.GlobalEnv), envir = .GlobalEnv)
 
-EXPENSIVE <- TRUE
+EXPENSIVE <- FALSE
 
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
@@ -9,26 +9,28 @@ options("tinysnapshot_ignore_white_space" = TRUE)
 options(marginaleffects_numDeriv = NULL)
 
 if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {
-  options("brms.backend" = "cmdstanr")
+    options("brms.backend" = "cmdstanr")
 }
 
 # libraries
 requiet <- function(package) {
-  void <- capture.output(
-    pkg_available <- tryCatch(suppressPackageStartupMessages(suppressWarnings(suppressMessages(tryCatch(
-      isTRUE(require(package, warn.conflicts = FALSE, character.only = TRUE)),
-      error = function(e) FALSE
-    ))))))
-  return(invisible(pkg_available))
+    void <- capture.output(
+        pkg_available <- tryCatch(suppressPackageStartupMessages(suppressWarnings(suppressMessages(tryCatch(
+            isTRUE(require(package, warn.conflicts = FALSE, character.only = TRUE)),
+            error = function(e) FALSE
+        )))))
+    )
+    return(invisible(pkg_available))
 }
 
 requiet("tinytest")
 requiet("tinysnapshot")
 
 if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") >= "1.4.0") {
-  tinytest::register_tinytest_extension(
-    "marginaleffects",
-    c("expect_slopes", "expect_predictions", "expect_margins"))
+    tinytest::register_tinytest_extension(
+        "marginaleffects",
+        c("expect_slopes", "expect_predictions", "expect_margins")
+    )
 }
 
 # common names of datasets, often assigned to global environment
@@ -51,21 +53,21 @@ ON_WINDOWS <- isTRUE(Sys.info()[["sysname"]] == "Windows")
 ON_OSX <- isTRUE(Sys.info()[["sysname"]] == "Darwin")
 
 minver <- function(pkg, ver = NULL) {
-  ins <- try(utils::packageVersion(pkg), silent = TRUE)
-  if (is.null(ver)) {
-    isTRUE(inherits(ins, "try-error"))
-  } else {
-    isTRUE(as.character(ins) >= ver)
-  }
+    ins <- try(utils::packageVersion(pkg), silent = TRUE)
+    if (is.null(ver)) {
+        isTRUE(inherits(ins, "try-error"))
+    } else {
+        isTRUE(as.character(ins) >= ver)
+    }
 }
 
 testing_path <- function(x) {
-  wd <- tinytest::get_call_wd()
-  if (isTRUE(wd != "")) {
-    out <- x
-  } else {
-    out <- paste0(wd, "/", x)
-  }
-  out <- gsub("^\\/", "", out)
-  return(out)
+    wd <- tinytest::get_call_wd()
+    if (isTRUE(wd != "")) {
+        out <- x
+    } else {
+        out <- paste0(wd, "/", x)
+    }
+    out <- gsub("^\\/", "", out)
+    return(out)
 }

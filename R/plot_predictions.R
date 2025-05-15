@@ -71,21 +71,6 @@ plot_predictions <- function(
 ) {
     checkmate::assert_number(points, lower = 0, upper = 1)
 
-    if ("variables" %in% ...names()) {
-        insight::format_error(
-            "The `variables` argument is not supported by this function."
-        )
-    }
-    if ("effect" %in% ...names()) {
-        insight::format_error(
-            "The `effect` argument is not supported by this function."
-        )
-    }
-    if ("transform_post" %in% ...names()) {
-        # backward compatibility
-        transform <- ...elt(match("transform_post", ...names())[1L])
-    }
-
     if (inherits(model, "mira") && is.null(newdata)) {
         msg <- "Please supply a data frame to the `newdata` argument explicitly."
         insight::format_error(msg)
