@@ -333,23 +333,10 @@ predictions <- function(model,
     newdata[["rowid"]] <- seq_len(nrow(newdata))
   }
 
-  # mlogit models sometimes returns an `idx` column that is impossible to `rbind`
-  if (inherits(model, "mlogit") && inherits(newdata[["idx"]], "idx")) {
-    newdata[["idx"]] <- NULL
-  }
-
-  # mlogit uses an internal index that is very hard to track, so we don't
-  # support `newdata` and assume no padding the `idx` column is necessary for
-  # `get_predict` but it breaks binding, so we can't remove it in
-  # sanity_newdata and we can't rbind it with padding
   # pad factors: `model.matrix` breaks when factor levels are missing
-  if (inherits(model, "mlogit")) {
-    padding <- data.frame()
-  } else {
-    padding <- complete_levels(newdata, character_levels)
-    if (nrow(padding) > 0) {
-      newdata <- rbindlist(list(padding, newdata))
-    }
+  padding <- complete_levels(newdata, character_levels)
+  if (nrow(padding) > 0) {
+    newdata <- rbindlist(list(padding, newdata))
   }
 
   if (is.null(by) || isFALSE(by)) {

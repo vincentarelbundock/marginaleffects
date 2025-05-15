@@ -131,7 +131,6 @@ multinom_weightit,mean
 mhurdle,E
 mhurdle,Ep
 mhurdle,p
-mlogit,response
 mvgam,response
 mvgam,link
 mvgam,expected
