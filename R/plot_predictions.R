@@ -53,153 +53,184 @@
 #'   newdata = datagrid(am = 0:1, grid_type = "counterfactual")
 #' )
 #'
-plot_predictions <- function(model,
-                             condition = NULL,
-                             by = NULL,
-                             newdata = NULL,
-                             type = NULL,
-                             vcov = NULL,
-                             conf_level = 0.95,
-                             wts = FALSE,
-                             transform = NULL,
-                             points = 0,
-                             rug = FALSE,
-                             gray = getOption("marginaleffects_plot_gray", default = FALSE),
-                             draw = TRUE,
-                             ...) {
-
-  checkmate::assert_number(points, lower = 0, upper = 1)
-
-  if ("variables" %in% ...names()) {
-    insight::format_error("The `variables` argument is not supported by this function.")
-  }
-  if ("effect" %in% ...names()) {
-    insight::format_error("The `effect` argument is not supported by this function.")
-  }
-  if ("transform_post" %in% ...names()) { # backward compatibility
-      transform <- ...elt(match("transform_post", ...names())[1L])
-  }
-
-  if (inherits(model, "mira") && is.null(newdata)) {
-    msg <- "Please supply a data frame to the `newdata` argument explicitly."
-    insight::format_error(msg)
-  }
-
-  # order of the first few paragraphs is important
-  scall <- rlang::enquo(newdata)
-  newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-  if (!isFALSE(wts) && is.null(by)) {
-    insight::format_error("The `wts` argument requires a `by` argument.")
-  }
-  checkmate::assert_character(by, null.ok = TRUE)
-
-  # sanity check
-  checkmate::assert_character(by, null.ok = TRUE, max.len = 4, min.len = 1, names = "unnamed")
-  if ((!is.null(condition) && !is.null(by)) || (is.null(condition) && is.null(by))) {
-    msg <- "One of the `condition` and `by` arguments must be supplied, but not both."
-    insight::format_error(msg)
-  }
-
-  modeldata <- get_modeldata(
+plot_predictions <- function(
     model,
-    additional_variables = c(names(condition), by),
-    wts = wts
-  )
+    condition = NULL,
+    by = NULL,
+    newdata = NULL,
+    type = NULL,
+    vcov = NULL,
+    conf_level = 0.95,
+    wts = FALSE,
+    transform = NULL,
+    points = 0,
+    rug = FALSE,
+    gray = getOption("marginaleffects_plot_gray", default = FALSE),
+    draw = TRUE,
+    ...
+) {
+    checkmate::assert_number(points, lower = 0, upper = 1)
 
-  # mlr3 and tidymodels
-  if (is.null(modeldata) || nrow(modeldata) == 0) {
-    modeldata <- newdata
-  }
-
-  # conditional
-  if (!is.null(condition)) {
-    condition <- sanitize_condition(model, condition, variables = NULL, modeldata = modeldata)
-    v_x <- condition$condition1
-    v_color <- condition$condition2
-    v_facet_1 <- condition$condition3
-    v_facet_2 <- condition$condition4
-    datplot <- predictions(
-      model,
-      newdata = condition$newdata,
-      type = type,
-      vcov = vcov,
-      conf_level = conf_level,
-      transform = transform,
-      modeldata = modeldata,
-      wts = wts,
-      ...
-    )
-  }
-
-  # marginal
-  if (!isFALSE(by) && !is.null(by)) { # switched from NULL above
-    condition <- NULL
-
-    newdata <- sanitize_newdata(
-      model = model,
-      newdata = newdata,
-      modeldata = modeldata,
-      by = by,
-      wts = wts
-    )
-
-    # tidymodels & mlr3
-    if (is.null(modeldata)) {
-      modeldata <- newdata
+    if ("variables" %in% ...names()) {
+        insight::format_error(
+            "The `variables` argument is not supported by this function."
+        )
+    }
+    if ("effect" %in% ...names()) {
+        insight::format_error(
+            "The `effect` argument is not supported by this function."
+        )
+    }
+    if ("transform_post" %in% ...names()) {
+        # backward compatibility
+        transform <- ...elt(match("transform_post", ...names())[1L])
     }
 
-    datplot <- predictions(
-      model,
-      by = by,
-      type = type,
-      vcov = vcov,
-      conf_level = conf_level,
-      wts = wts,
-      transform = transform,
-      newdata = newdata,
-      modeldata = modeldata,
-      ...
+    if (inherits(model, "mira") && is.null(newdata)) {
+        msg <- "Please supply a data frame to the `newdata` argument explicitly."
+        insight::format_error(msg)
+    }
+
+    # order of the first few paragraphs is important
+    scall <- rlang::enquo(newdata)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+    if (!isFALSE(wts) && is.null(by)) {
+        insight::format_error("The `wts` argument requires a `by` argument.")
+    }
+    checkmate::assert_character(by, null.ok = TRUE)
+
+    # sanity check
+    checkmate::assert_character(
+        by,
+        null.ok = TRUE,
+        max.len = 4,
+        min.len = 1,
+        names = "unnamed"
     )
-    v_x <- by[[1]]
-    v_color <- hush(by[[2]])
-    v_facet_1 <- hush(by[[3]])
-    v_facet_2 <- hush(by[[4]])
-  }
+    if ((!is.null(condition) && !is.null(by)) || (is.null(condition) && is.null(by))) {
+        msg <- "One of the `condition` and `by` arguments must be supplied, but not both."
+        insight::format_error(msg)
+    }
 
-  dv <- unlist(insight::find_response(model, combine = TRUE), use.names = FALSE)[1]
-  datplot <- plot_preprocess(datplot, v_x = v_x, v_color = v_color, v_facet_1 = v_facet_1, v_facet_2 = v_facet_2, condition = condition, modeldata = modeldata)
+    modeldata <- get_modeldata(
+        model,
+        additional_variables = c(names(condition), by),
+        wts = wts
+    )
 
-  # return immediately if the user doesn't want a plot
-  if (isFALSE(draw)) {
-    out <- as.data.frame(datplot)
-    attr(out, "posterior_draws") <- attr(datplot, "posterior_draws")
-    return(out)
-  }
+    # mlr3 and tidymodels
+    if (is.null(modeldata) || nrow(modeldata) == 0) {
+        modeldata <- newdata
+    }
 
-  # ggplot2
-  insight::check_if_installed("ggplot2")
-  p <- plot_build(datplot,
-    v_x = v_x,
-    v_color = v_color,
-    v_facet_1 = v_facet_1,
-    v_facet_2 = v_facet_2,
-    points = points,
-    modeldata = modeldata,
-    dv = dv,
-    rug = rug,
-    gray = gray
-  )
+    # conditional
+    if (!is.null(condition)) {
+        condition <- sanitize_condition(
+            model,
+            condition,
+            variables = NULL,
+            modeldata = modeldata
+        )
+        v_x <- condition$condition1
+        v_color <- condition$condition2
+        v_facet_1 <- condition$condition3
+        v_facet_2 <- condition$condition4
+        datplot <- predictions(
+            model,
+            newdata = condition$newdata,
+            type = type,
+            vcov = vcov,
+            conf_level = conf_level,
+            transform = transform,
+            modeldata = modeldata,
+            wts = wts,
+            ...
+        )
+    }
 
-  p <- p + ggplot2::labs(
-    x = v_x,
-    y = dv,
-    color = v_color,
-    fill = v_color,
-    linetype = v_color
-  )
+    # marginal
+    if (!isFALSE(by) && !is.null(by)) {
+        # switched from NULL above
+        condition <- NULL
 
-  # attach model data for each of use
-  attr(p, "modeldata") <- modeldata
+        newdata <- sanitize_newdata(
+            model = model,
+            newdata = newdata,
+            modeldata = modeldata,
+            by = by,
+            wts = wts
+        )
 
-  return(p)
+        # tidymodels & mlr3
+        if (is.null(modeldata)) {
+            modeldata <- newdata
+        }
+
+        datplot <- predictions(
+            model,
+            by = by,
+            type = type,
+            vcov = vcov,
+            conf_level = conf_level,
+            wts = wts,
+            transform = transform,
+            newdata = newdata,
+            modeldata = modeldata,
+            ...
+        )
+        v_x <- by[[1]]
+        v_color <- hush(by[[2]])
+        v_facet_1 <- hush(by[[3]])
+        v_facet_2 <- hush(by[[4]])
+    }
+
+    dv <- unlist(
+        insight::find_response(model, combine = TRUE),
+        use.names = FALSE
+    )[1]
+    datplot <- plot_preprocess(
+        datplot,
+        v_x = v_x,
+        v_color = v_color,
+        v_facet_1 = v_facet_1,
+        v_facet_2 = v_facet_2,
+        condition = condition,
+        modeldata = modeldata
+    )
+
+    # return immediately if the user doesn't want a plot
+    if (isFALSE(draw)) {
+        out <- as.data.frame(datplot)
+        attr(out, "posterior_draws") <- attr(datplot, "posterior_draws")
+        return(out)
+    }
+
+    # ggplot2
+    insight::check_if_installed("ggplot2")
+    p <- plot_build(
+        datplot,
+        v_x = v_x,
+        v_color = v_color,
+        v_facet_1 = v_facet_1,
+        v_facet_2 = v_facet_2,
+        points = points,
+        modeldata = modeldata,
+        dv = dv,
+        rug = rug,
+        gray = gray
+    )
+
+    p <- p +
+        ggplot2::labs(
+            x = v_x,
+            y = dv,
+            color = v_color,
+            fill = v_color,
+            linetype = v_color
+        )
+
+    # attach model data for each of use
+    attr(p, "modeldata") <- modeldata
+
+    return(p)
 }

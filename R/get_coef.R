@@ -6,26 +6,26 @@
 #' @rdname get_coef
 #' @export
 get_coef <- function(model, ...) {
-  UseMethod("get_coef", model)
+    UseMethod("get_coef", model)
 }
 
 #' @rdname get_coef
 #' @export
 get_coef.default <- function(model, ...) {
-  ## faster
-  # out <-  stats::coef(model)
+    ## faster
+    # out <-  stats::coef(model)
 
-  # more general
-  out <- insight::get_parameters(model, component = "all")
+    # more general
+    out <- insight::get_parameters(model, component = "all")
 
-  out <- stats::setNames(out$Estimate, out$Parameter)
-  return(out)
+    out <- stats::setNames(out$Estimate, out$Parameter)
+    return(out)
 }
 
 
 #' @export
 get_coef.predictions <- function(model, ...) {
-  stats::coef(model)
+    stats::coef(model)
 }
 
 #' @export

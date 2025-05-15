@@ -1,9 +1,8 @@
 equivalence <- function(x, equivalence = NULL, df = Inf, ...) {
-
     if (is.null(equivalence)) {
         return(x)
-    } 
-    
+    }
+
     if (!is.null(equivalence) && !all(c("estimate", "std.error") %in% colnames(x))) {
         msg <- "The `equivalence` argument is not supported with models for which `marginaleffects` does not estimate a standard error (e.g., bayesian)."
         insight::format_error(msg)
@@ -29,8 +28,16 @@ equivalence <- function(x, equivalence = NULL, df = Inf, ...) {
         x$p.value.noninf <- stats::pnorm(x$statistic.noninf, lower.tail = FALSE)
         x$p.value.nonsup <- stats::pnorm(x$statistic.nonsup, lower.tail = TRUE)
     } else {
-        x$p.value.noninf <- stats::pt(x$statistic.noninf, lower.tail = FALSE, df = x[["df"]])
-        x$p.value.nonsup <- stats::pt(x$statistic.nonsup, lower.tail = TRUE, df = x[["df"]])
+        x$p.value.noninf <- stats::pt(
+            x$statistic.noninf,
+            lower.tail = FALSE,
+            df = x[["df"]]
+        )
+        x$p.value.nonsup <- stats::pt(
+            x$statistic.nonsup,
+            lower.tail = TRUE,
+            df = x[["df"]]
+        )
     }
     x$p.value.equiv <- pmax(x$p.value.nonsup, x$p.value.noninf)
 

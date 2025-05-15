@@ -58,14 +58,18 @@ build_newdata <- function(model, newdata, by, modeldata) {
     } else if (identical(newdata, "mean")) {
         newdata <- do.call("datagrid", args)
     } else if (identical(newdata, "median")) {
-        args[["FUN_numeric"]] <- args[["FUN_integer"]] <- args[["FUN_logical"]] <- function(x) stats::median(x, na.rm = TRUE)
+        args[["FUN_numeric"]] <- args[["FUN_integer"]] <- args[[
+            "FUN_logical"
+        ]] <- function(x) stats::median(x, na.rm = TRUE)
         newdata <- do.call("datagrid", args)
     } else if (identical(newdata, "tukey")) {
         args[["FUN_numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
         newdata <- do.call("datagrid", args)
     } else if (identical(newdata, "grid")) {
         args[["FUN_numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
-        args[["FUN_factor"]] <- args[["FUN_character"]] <- args[["FUN_logical"]] <- unique
+        args[["FUN_factor"]] <- args[["FUN_character"]] <- args[[
+            "FUN_logical"
+        ]] <- unique
         newdata <- do.call("datagrid", args)
 
         # grid with all unique values of categorical variables, and numerics at their means
@@ -106,7 +110,11 @@ add_wts_column <- function(wts, newdata, model) {
 
     if (isTRUE(wts)) {
         wtsname <- insight::find_weights(model)
-        if (!is.character(wtsname) || length(wtsname) != 1 || !wtsname %in% colnames(newdata)) {
+        if (
+            !is.character(wtsname) ||
+                length(wtsname) != 1 ||
+                !wtsname %in% colnames(newdata)
+        ) {
             msg <- "Unable to retrieve weights automatically from the model. Please specify `wts` argument explicitly."
             insight::format_error(msg)
         } else {
@@ -115,13 +123,16 @@ add_wts_column <- function(wts, newdata, model) {
         }
     }
 
-    flag1 <- isTRUE(checkmate::check_string(wts)) && isTRUE(wts %in% colnames(newdata))
+    flag1 <- isTRUE(checkmate::check_string(wts)) &&
+        isTRUE(wts %in% colnames(newdata))
     flag2 <- isTRUE(checkmate::check_numeric(wts, len = nrow(newdata)))
     if (!flag1 && !flag2) {
-        msg <- sprintf("The `wts` argument must be a numeric vector of length %s, or a string which matches a column name in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `wts` variable may not have been available. The easiest strategy is often to supply a data frame such as the original data to `newdata` explicitly, and to make sure that it includes an appropriate column of weights, identified by the `wts` argument.", nrow(newdata))
+        msg <- sprintf(
+            "The `wts` argument must be a numeric vector of length %s, or a string which matches a column name in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `wts` variable may not have been available. The easiest strategy is often to supply a data frame such as the original data to `newdata` explicitly, and to make sure that it includes an appropriate column of weights, identified by the `wts` argument.",
+            nrow(newdata)
+        )
         stop(msg, call. = FALSE)
     }
-
 
     # weights: before sanitize_variables
     if (isTRUE(checkmate::check_string(wts))) {
@@ -137,14 +148,19 @@ add_wts_column <- function(wts, newdata, model) {
 sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
     checkmate::assert(
         checkmate::check_data_frame(newdata, null.ok = TRUE),
-        checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "balanced")),
-        combine = "or")
+        checkmate::check_choice(
+            newdata,
+            choices = c("mean", "median", "tukey", "grid", "balanced")
+        ),
+        combine = "or"
+    )
 
     tmp <- build_newdata(
         model = model,
         newdata = newdata,
         by = by,
-        modeldata = modeldata)
+        modeldata = modeldata
+    )
     newdata <- tmp[["newdata"]]
     modeldata <- tmp[["modeldata"]]
 
@@ -159,8 +175,10 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
 
     # placeholder response
     resp <- insight::find_response(model)
-    if (isTRUE(checkmate::check_character(resp, len = 1)) &&
-        !resp %in% colnames(newdata)) {
+    if (
+        isTRUE(checkmate::check_character(resp, len = 1)) &&
+            !resp %in% colnames(newdata)
+    ) {
         y <- hush(insight::get_response(model))
         # protect df or matrix response
         if (isTRUE(checkmate::check_atomic_vector(y))) {
@@ -194,7 +212,8 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         column_attributes <- list(
             "matrix_columns" = mc,
             "character_levels" = cl,
-            "variable_class" = vc)
+            "variable_class" = vc
+        )
         newdata <- set_marginaleffects_attributes(newdata, column_attributes)
     }
 
@@ -202,11 +221,21 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
 }
 
 
-dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cross = FALSE, byfun = NULL) {
+dedup_newdata <- function(
+    model,
+    newdata,
+    by,
+    wts,
+    comparison = "difference",
+    cross = FALSE,
+    byfun = NULL
+) {
     # issue #1113: elasticities or custom functions should skip dedup because it is difficult to align x and y
     elasticities <- c("eyexavg", "eydxavg", "dyexavg")
-    if (isTRUE(checkmate::check_choice(comparison, elasticities)) ||
-        isTRUE(checkmate::check_function(comparison))) {
+    if (
+        isTRUE(checkmate::check_choice(comparison, elasticities)) ||
+            isTRUE(checkmate::check_function(comparison))
+    ) {
         return(newdata)
     }
 
@@ -216,12 +245,14 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
     }
 
     flag <- isTRUE(checkmate::check_string(comparison, pattern = "avg"))
-    if (!flag && (
-        isFALSE(by) || # weights only make sense when we are marginalizing
-        !isFALSE(wts) ||
-        !is.null(byfun) ||
-        !isFALSE(cross) ||
-        isFALSE(getOption("marginaleffects_dedup", default = TRUE)))) {
+    if (
+        !flag &&
+            (isFALSE(by) || # weights only make sense when we are marginalizing
+                !isFALSE(wts) ||
+                !is.null(byfun) ||
+                !isFALSE(cross) ||
+                isFALSE(getOption("marginaleffects_dedup", default = TRUE)))
+    ) {
         return(newdata)
     }
 

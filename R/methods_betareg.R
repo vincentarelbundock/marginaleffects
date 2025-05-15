@@ -7,10 +7,18 @@ set_coef.betareg <- function(model, coefs, ...) {
     # to match with get_varcov(., component = "all") output). In betareg object, these
     # are stored as two elements in a list, with precision coefs lacking the "(phi)_"
     # prefix, so we remove it.
-    mean_coefs <- coefs[names(coefs) != "(phi)" & !startsWith(names(coefs), "(phi)_")]
-    precision_coefs <- coefs[names(coefs) == "(phi)" | startsWith(names(coefs), "(phi)_")]
-    names(precision_coefs) <- sub("(phi)_", "", names(precision_coefs),
-        fixed = TRUE)
+    mean_coefs <- coefs[
+        names(coefs) != "(phi)" & !startsWith(names(coefs), "(phi)_")
+    ]
+    precision_coefs <- coefs[
+        names(coefs) == "(phi)" | startsWith(names(coefs), "(phi)_")
+    ]
+    names(precision_coefs) <- sub(
+        "(phi)_",
+        "",
+        names(precision_coefs),
+        fixed = TRUE
+    )
 
     if (length(mean_coefs) > 0) {
         model[["coefficients"]]$mean[names(mean_coefs)] <- mean_coefs
@@ -45,12 +53,14 @@ get_predict.betareg <- function(model, newdata, type = "response", ...) {
     args <- list(
         model,
         newdata = newdata,
-        type = type)
+        type = type
+    )
     args[["at"]] <- dots[["at"]]
     out <- do.call(stats::predict, args)
     out <- data.frame(
         rowid = seq_len(nrow(newdata)),
-        estimate = out)
+        estimate = out
+    )
     return(out)
 }
 

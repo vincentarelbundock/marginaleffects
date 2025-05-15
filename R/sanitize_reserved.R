@@ -13,16 +13,27 @@ sanity_reserved <- function(model = NULL, modeldata = data.frame()) {
     # NOTE: if no modeldata is available, we use `newdata`, but that often has a
     # `rowid` column. This used to break the extensions.Rmd vignette.
     reserved <- c(
-        "group", "term", "contrast", "estimate",
-        "std.error", "statistic", "conf.low", "conf.high", "p.value",
-        "p.value.nonsup", "p.value.noninf", "by")
+        "group",
+        "term",
+        "contrast",
+        "estimate",
+        "std.error",
+        "statistic",
+        "conf.low",
+        "conf.high",
+        "p.value",
+        "p.value.nonsup",
+        "p.value.noninf",
+        "by"
+    )
     bad <- unique(intersect(c(names(predictors), colnames(modeldata)), reserved))
 
     if (length(bad) > 0) {
         msg <- c(
             "These variable names are forbidden to avoid conflicts with the outputs of `marginaleffects`:",
             toString(dQuote(bad, NULL)),
-            "Please rename your variables before fitting the model.")
+            "Please rename your variables before fitting the model."
+        )
         insight::format_error(msg)
     }
 

@@ -1,10 +1,11 @@
-get_contrast_data <- function(model,
-                              newdata,
-                              variables,
-                              cross,
-                              modeldata = NULL,
-                              ...) {
-
+get_contrast_data <- function(
+    model,
+    newdata,
+    variables,
+    cross,
+    modeldata = NULL,
+    ...
+) {
     lo <- hi <- ter <- lab <- original <- rowid <- list()
 
     # after variable class assignment
@@ -15,7 +16,7 @@ get_contrast_data <- function(model,
     if (is.null(modeldata) || nrow(modeldata) == 0) {
         modeldata <- newdata
     }
-    
+
     # safety need for extensions not supported by `insight`
     variable_classes <- attr(newdata, "newdata_variable_class")
     if (length(variable_classes) == 0) {
@@ -27,7 +28,9 @@ get_contrast_data <- function(model,
     }
 
     if (any(c("factor", "character") %in% variable_classes)) {
-        first_cross <- names(variable_classes[variable_classes %in% c("factor", "character")])[1]
+        first_cross <- names(variable_classes[
+            variable_classes %in% c("factor", "character")
+        ])[1]
     } else {
         first_cross <- NULL
     }
@@ -43,7 +46,8 @@ get_contrast_data <- function(model,
             variable = v,
             cross = cross,
             first_cross = identical(v$name, first_cross),
-            modeldata = modeldata)
+            modeldata = modeldata
+        )
         args <- append(args, list(...))
 
         # logical and character before factor used to be important; but I don't think so anymore
@@ -56,7 +60,10 @@ get_contrast_data <- function(model,
         } else if (get_variable_class(modeldata, v$name, "numeric")) {
             fun <- get_contrast_data_numeric
         } else {
-            msg <- sprintf("Class of the `%s` variable is class is not supported.", v$name)
+            msg <- sprintf(
+                "Class of the `%s` variable is class is not supported.",
+                v$name
+            )
             stop(msg, call. = FALSE)
         }
 
@@ -91,16 +98,13 @@ get_contrast_data <- function(model,
             if (length(cl) == 2 && cl[1] == "labelled") {
                 class(x[[col]]) <- class(x[[col]])[2]
             }
-
         }
         return(x)
     }
 
-
     lo <- lapply(lo, clean)
     hi <- lapply(hi, clean)
     original <- lapply(original, clean)
-
 
     # single contrast
     if (!isTRUE(cross)) {
@@ -117,7 +121,7 @@ get_contrast_data <- function(model,
         hi[, "contrast" := marginaleffects_lab]
         original[, "contrast" := marginaleffects_lab]
 
-    # cross contrast
+        # cross contrast
     } else {
         # drop variables for which we have contrasts
         for (i in seq_along(lo)) {
@@ -129,14 +133,24 @@ get_contrast_data <- function(model,
             } else {
                 # exclude rowid and variables excluded from `variables`, for
                 # which we do not compute cross-contrasts
-                contrast_null <- grep("rowid|^null_contrast_", colnames(lo[[i]]), value = TRUE)
-                idx_lo <- c(setdiff(names(lo[[i]]), c(contrast_null, names(variables))),
-                    setdiff(names(variables), names(lo)[[i]]))
-                idx_hi <- c(setdiff(names(hi[[i]]), c(contrast_null, names(variables))),
-                    setdiff(names(variables), names(hi)[[i]]))
+                contrast_null <- grep(
+                    "rowid|^null_contrast_",
+                    colnames(lo[[i]]),
+                    value = TRUE
+                )
+                idx_lo <- c(
+                    setdiff(names(lo[[i]]), c(contrast_null, names(variables))),
+                    setdiff(names(variables), names(lo)[[i]])
+                )
+                idx_hi <- c(
+                    setdiff(names(hi[[i]]), c(contrast_null, names(variables))),
+                    setdiff(names(variables), names(hi)[[i]])
+                )
 
-                idx_or <- c(setdiff(names(original[[i]]), c(contrast_null, names(variables))),
-                    setdiff(names(variables), names(original)[[i]]))
+                idx_or <- c(
+                    setdiff(names(original[[i]]), c(contrast_null, names(variables))),
+                    setdiff(names(variables), names(original)[[i]])
+                )
             }
             lo[[i]] <- data.table(lo[[i]])[, !..idx_lo]
             hi[[i]] <- data.table(hi[[i]])[, !..idx_hi]
@@ -167,7 +181,7 @@ get_contrast_data <- function(model,
             original <- original[idx]
         }
     }
-    
+
     # get_predict() is much faster if we only build the model matrix once
     lo <- get_model_matrix_attribute(model, lo)
     hi <- get_model_matrix_attribute(model, hi)

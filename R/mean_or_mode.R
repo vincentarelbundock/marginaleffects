@@ -2,8 +2,8 @@
 #' https://stackoverflow.com/a/8189441/342331
 #' @noRd
 get_mode <- function(x) {
-  ux <- unique(x)
-  ux[which.max(tabulate(match(x, ux)))]
+    ux <- unique(x)
+    ux[which.max(tabulate(match(x, ux)))]
 }
 
 ####################################################################

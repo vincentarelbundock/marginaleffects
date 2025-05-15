@@ -1,12 +1,14 @@
 bootstrap_rsample <- function(model, INF_FUN, ...) {
-
     # attached by `inferences()`
     conf_type <- attr(model, "inferences_conf_type")
     checkmate::assert_choice(conf_type, choices = c("perc", "bca"))
 
     # attached by `inferences()`
     conf_type <- attr(model, "inferences_conf_type")
-    checkmate::assert_choice(conf_type, choices = c("perc", "norm", "basic", "bca"))
+    checkmate::assert_choice(
+        conf_type,
+        choices = c("perc", "norm", "basic", "bca")
+    )
 
     # bootstrap using the original data and call
     modcall <- insight::get_call(model)
@@ -51,19 +53,24 @@ bootstrap_rsample <- function(model, INF_FUN, ...) {
             splits,
             statistics = estimates,
             .fn = bootfun,
-            alpha = 1 - conf_level)
+            alpha = 1 - conf_level
+        )
     } else {
         ci <- rsample::int_pctl(
             splits,
             statistics = estimates,
-            alpha = 1 - conf_level)
+            alpha = 1 - conf_level
+        )
     }
 
     out$conf.low <- ci$.lower
     out$conf.high <- ci$.upper
 
     attr(out, "inferences") <- splits
-    draws <- lapply(splits$estimates, function(x) as.matrix(x[, "estimate", drop = FALSE]))
+    draws <- lapply(
+        splits$estimates,
+        function(x) as.matrix(x[, "estimate", drop = FALSE])
+    )
     draws[[length(draws)]] <- NULL # apparent=TRUE appended the original estimates to the end
     draws <- do.call("cbind", draws)
     colnames(draws) <- NULL

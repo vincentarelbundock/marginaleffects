@@ -3,12 +3,12 @@
 #' @keywords internal
 #' @export
 set_coef.merMod <- function(model, coefs, ...) {
-  # in 'merMod', predictions work the slot called "beta", which is unnamed
-  # `fixef(model)` returns the same thing named
-  beta <- methods::slot(model, "beta")
-  beta[match(names(coefs), names(lme4::fixef(model)))] <- as.numeric(coefs)
-  methods::slot(model, "beta") <- beta
-  model
+    # in 'merMod', predictions work the slot called "beta", which is unnamed
+    # `fixef(model)` returns the same thing named
+    beta <- methods::slot(model, "beta")
+    beta[match(names(coefs), names(lme4::fixef(model)))] <- as.numeric(coefs)
+    methods::slot(model, "beta") <- beta
+    model
 }
 
 
@@ -16,20 +16,19 @@ set_coef.merMod <- function(model, coefs, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.merMod <- function(model, ...) {
-  lme4::fixef(model)
+    lme4::fixef(model)
 }
 
 
 #' @rdname get_predict
 #' @export
-get_predict.merMod <- function(model,
-                               newdata = insight::get_data(model),
-                               type = "response",
-                               ...) {
-  get_predict.default(model,
-    newdata = newdata,
-    type = type,
-    ...)
+get_predict.merMod <- function(
+    model,
+    newdata = insight::get_data(model),
+    type = "response",
+    ...
+) {
+    get_predict.default(model, newdata = newdata, type = type, ...)
 }
 
 
@@ -66,10 +65,10 @@ get_predict.lmerMod <- get_predict.merMod
 #' @rdname sanitize_model_specific
 #' @export
 sanitize_model_specific.merMod <- function(model, re.form, ...) {
-  unsafe <- isFALSE(getOption("marginaleffects_safe", default = TRUE))
-  if (unsafe && (missing(re.form) || (!isTRUE(is.na(re.form))))) {
-    msg <- "For this model type, `marginaleffects` only takes into account the uncertainty in fixed-effect parameters. This is often appropriate when `re.form=NA`, but may be surprising to users who set `re.form=NULL` (default) or to some other value. Call `options(marginaleffects_safe = FALSE)` to silence this warning."
-    insight::format_warning(msg)
-  }
-  return(model)
+    unsafe <- isFALSE(getOption("marginaleffects_safe", default = TRUE))
+    if (unsafe && (missing(re.form) || (!isTRUE(is.na(re.form))))) {
+        msg <- "For this model type, `marginaleffects` only takes into account the uncertainty in fixed-effect parameters. This is often appropriate when `re.form=NA`, but may be surprising to users who set `re.form=NULL` (default) or to some other value. Call `options(marginaleffects_safe = FALSE)` to silence this warning."
+        insight::format_warning(msg)
+    }
+    return(model)
 }

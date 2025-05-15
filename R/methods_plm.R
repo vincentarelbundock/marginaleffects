@@ -3,8 +3,10 @@
 #' @keywords internal
 sanitize_model_specific.plm <- function(model, ...) {
     if ("within" %in% model$args$model) {
-        stop('The `plm::predict` function does not appear to support the `newdata` argument when `plm(model="within")`. Therefore, `marginaleffects` cannot support "within" models, even if it supports many other models produced by the `plm` package. You may want to try the `fixest` package instead.',
-             call. = FALSE)
+        stop(
+            'The `plm::predict` function does not appear to support the `newdata` argument when `plm(model="within")`. Therefore, `marginaleffects` cannot support "within" models, even if it supports many other models produced by the `plm` package. You may want to try the `fixest` package instead.',
+            call. = FALSE
+        )
     }
     return(model)
 }

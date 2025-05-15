@@ -51,7 +51,8 @@ hypothesis_formula_list <- list(
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
-            }),
+            }
+        ),
         difference = list(
             comparison = function(x) {
                 safe_mode <- getOption("marginaleffects_safe", default = TRUE)
@@ -73,7 +74,8 @@ hypothesis_formula_list <- list(
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
-            })
+            }
+        )
     ),
     revpairwise = list(
         ratio = list(
@@ -97,7 +99,8 @@ hypothesis_formula_list <- list(
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
-            }),
+            }
+        ),
         difference = list(
             comparison = function(x) {
                 out <- outer(x, x, "-")
@@ -119,7 +122,8 @@ hypothesis_formula_list <- list(
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
-            })
+            }
+        )
     ),
     trt_vs_ctrl = list(
         ratio = list(
@@ -168,8 +172,11 @@ hypothesis_formula_list <- list(
                 as.vector(crossprod(w, matrix(x)))
             },
             label = function(x) {
-                c("Linear", "Quadratic", "Cubic", "Quartic", "Quintic")[1:min(5, (length(x) - 1))]
-            })
+                c("Linear", "Quadratic", "Cubic", "Quartic", "Quintic")[
+                    1:min(5, (length(x) - 1))
+                ]
+            }
+        )
     ),
     helmert = list(
         dotproduct = list(
@@ -261,7 +268,10 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
     }
 
     lab <- function(x) suppressWarnings(names(fun_comparison(x)))
-    lab <- tryCatch(combined[, lapply(.SD, lab), keyby = groupval], error = function(e) NULL)
+    lab <- tryCatch(
+        combined[, lapply(.SD, lab), keyby = groupval],
+        error = function(e) NULL
+    )
 
     if (inherits(lab, "data.frame") && nrow(lab) == nrow(estimates)) {
         data.table::setnames(lab, old = "estimate", "hypothesis")
@@ -271,8 +281,10 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
 
     if (!is.null(labels) && !inherits(lab, "data.frame") || nrow(lab) == 0) {
         combined[, estimate := labels]
-        labels <- tryCatch(combined[, lapply(.SD, fun_label), keyby = groupval],
-            error = function(e) NULL)
+        labels <- tryCatch(
+            combined[, lapply(.SD, fun_label), keyby = groupval],
+            error = function(e) NULL
+        )
         if (inherits(labels, "data.frame") && nrow(labels) == nrow(estimates)) {
             data.table::setnames(labels, old = "estimate", "hypothesis")
             estimates <- cbind(labels, estimates)
@@ -295,7 +307,6 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
             row.names(draws) <- out$hypothesis
         }
     }
-
 
     attr(out, "posterior_draws") <- draws
     attr(out, "hypothesis_function_by") <- form$group

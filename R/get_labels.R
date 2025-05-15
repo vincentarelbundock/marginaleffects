@@ -1,4 +1,10 @@
-get_labels <- function(x, idx = NULL, by = NULL, wrap_parens = FALSE, hypothesis_by = NULL) {
+get_labels <- function(
+    x,
+    idx = NULL,
+    by = NULL,
+    wrap_parens = FALSE,
+    hypothesis_by = NULL
+) {
     if (!is.data.frame(x) && !is.vector(x)) {
         return(NULL)
     }
@@ -7,7 +13,11 @@ get_labels <- function(x, idx = NULL, by = NULL, wrap_parens = FALSE, hypothesis
         x <- data.table::data.table(x)
 
         # Identify relevant columns
-        lab_cols <- grep("^term$|^group$|^contrast$|^contrast_|^value$|^by$", names(x), value = TRUE)
+        lab_cols <- grep(
+            "^term$|^group$|^contrast$|^contrast_|^value$|^by$",
+            names(x),
+            value = TRUE
+        )
         if (isTRUE(checkmate::check_character(by))) {
             lab_cols <- unique(c(lab_cols, by))
         }
@@ -31,8 +41,14 @@ get_labels <- function(x, idx = NULL, by = NULL, wrap_parens = FALSE, hypothesis
                 uniq <- x[, ..hypothesis_by]
                 uniq[, marginaleffects_unique_labels := labels]
                 uniq <- uniq[,
-                    .(marginaleffects_uniq_labels = anyDuplicated(marginaleffects_unique_labels) > 0),
-                    by = hypothesis_by]
+                    .(
+                        marginaleffects_uniq_labels = anyDuplicated(
+                            marginaleffects_unique_labels
+                        ) >
+                            0
+                    ),
+                    by = hypothesis_by
+                ]
                 uniq <- !any(uniq$V1)
             } else if (anyDuplicated(labels) > 0) {
                 uniq <- FALSE

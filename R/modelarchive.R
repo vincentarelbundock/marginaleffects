@@ -2,7 +2,11 @@
 
 modelarchive_model <- function(name) {
     tmp <- tempfile()
-    url <- paste0("https://raw.github.com/vincentarelbundock/modelarchive/main/data/", name, ".rds")
+    url <- paste0(
+        "https://raw.github.com/vincentarelbundock/modelarchive/main/data/",
+        name,
+        ".rds"
+    )
     try(utils::download.file(url, tmp, quiet = TRUE), silent = TRUE)
     out <- try(readRDS(tmp), silent = TRUE)
     return(out)
@@ -11,7 +15,8 @@ modelarchive_model <- function(name) {
 modelarchive_data <- function(name) {
     dat <- sprintf(
         "https://raw.githubusercontent.com/vincentarelbundock/modelarchive/main/data-raw/%s.csv",
-        name)
+        name
+    )
     out <- utils::read.csv(dat)
     return(out)
 }

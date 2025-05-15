@@ -1,7 +1,10 @@
 bootstrap_boot <- function(model, INF_FUN, ...) {
     # attached by `inferences()`
     conf_type <- attr(model, "inferences_conf_type")
-    checkmate::assert_choice(conf_type, choices = c("perc", "norm", "basic", "bca"))
+    checkmate::assert_choice(
+        conf_type,
+        choices = c("perc", "norm", "basic", "bca")
+    )
 
     # bootstrap using the original data and call
     modcall <- insight::get_call(model)
@@ -41,15 +44,18 @@ bootstrap_boot <- function(model, INF_FUN, ...) {
     t <- matrix(B$t, nrow = nrow(B$t))
     op <- cbind(
         colMeans(t, na.rm = TRUE),
-        sqrt(apply(t, 2L, function(t.st) stats::var(t.st[!is.na(t.st)]))))
+        sqrt(apply(t, 2L, function(t.st) stats::var(t.st[!is.na(t.st)])))
+    )
     out$std.error <- op[, 2]
 
     # extract from weird boot.ci() list (inspired from `broom::tidy.broom` under MIT)
-    ci_list <- lapply(seq_along(B$t0),
+    ci_list <- lapply(
+        seq_along(B$t0),
         boot::boot.ci,
         boot.out = B,
         conf = conf_level,
-        type = conf_type)
+        type = conf_type
+    )
     pos <- pmatch(conf_type, names(ci_list[[1]]))
     if (conf_type == "norm") {
         cols <- 2:3

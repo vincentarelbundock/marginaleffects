@@ -21,7 +21,10 @@ hypothesis_string <- function(x, hypothesis) {
 
 eval_string_hypothesis <- function(x, hypothesis, lab) {
     # row indices: `hypotheses` includes them, but `term` does not
-    if (isTRUE(grepl("\\bb\\d+\\b", hypothesis)) && !any(grepl("\\bb\\d+\\b", x[["term"]]))) {
+    if (
+        isTRUE(grepl("\\bb\\d+\\b", hypothesis)) &&
+            !any(grepl("\\bb\\d+\\b", x[["term"]]))
+    ) {
         msg <- "
 It is essential to check the order of estimates when specifying hypothesis tests using positional indices like b1, b2, etc. The indices of estimates can change depending on the order of rows in the original dataset, user-supplied arguments, model-fitting package, and version of `marginaleffects`.
 
@@ -44,7 +47,10 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
             warn_once(msg, "hypothesis_positional_indices_are_dangerous")
         }
         bmax <- regmatches(lab, gregexpr("\\bb\\d+\\b", lab))[[1]]
-        bmax <- tryCatch(max(as.numeric(gsub("b", "", bmax))), error = function(e) 0)
+        bmax <- tryCatch(
+            max(as.numeric(gsub("b", "", bmax))),
+            error = function(e) 0
+        )
         if (bmax > nrow(x)) {
             msg <- "%s cannot be used in `hypothesis` because the call produced just %s estimate(s). Try executing the exact same command without the `hypothesis` argument to see which estimates are available for hypothesis testing."
             msg <- sprintf(msg, paste0("b", bmax), nrow(x))
@@ -65,7 +71,8 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
                 "mod <- lm(mpg ~ am * vs + cyl, data = mtcars)",
                 'comparisons(mod, newdata = "mean", hypothesis = "b1 = b2")',
                 'comparisons(mod, newdata = "mean", hypothesis = "am = vs")',
-                'comparisons(mod, variables = "am", by = "cyl", hypothesis = ~pairwise)')
+                'comparisons(mod, variables = "am", by = "cyl", hypothesis = ~pairwise)'
+            )
             insight::format_error(msg)
         }
         rowlabels <- x$term
@@ -74,9 +81,11 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
     eval_string_function <- function(vec, hypothesis, rowlabels) {
         envir <- parent.frame()
         void <- sapply(
-            seq_along(vec), function(i) {
+            seq_along(vec),
+            function(i) {
                 assign(rowlabels[i], vec[i], envir = envir)
-            })
+            }
+        )
         out <- eval(parse(text = hypothesis), envir = envir)
         return(out)
     }
@@ -95,19 +104,23 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
             MARGIN = 2,
             FUN = eval_string_function,
             hypothesis = hypothesis,
-            rowlabels = rowlabels)
+            rowlabels = rowlabels
+        )
         draws <- matrix(tmp, ncol = ncol(draws))
         out <- data.table(
             hypothesis = lab,
-            tmp = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian))
+            tmp = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian)
+        )
     } else {
         out <- eval_string_function(
             x[["estimate"]],
             hypothesis = hypothesis,
-            rowlabels = rowlabels)
+            rowlabels = rowlabels
+        )
         out <- data.table(
             hypothesis = lab,
-            tmp = out)
+            tmp = out
+        )
     }
 
     setnames(out, old = "tmp", new = "estimate")

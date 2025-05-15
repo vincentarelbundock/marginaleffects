@@ -26,7 +26,8 @@ get_dataset <- function(
     dataset = "thornton",
     package = NULL,
     docs = FALSE,
-    search = NULL) {
+    search = NULL
+) {
     checkmate::assert_string(dataset)
     checkmate::assert_string(package, null.ok = TRUE)
     checkmate::assert_flag(docs)
@@ -70,7 +71,10 @@ get_dataset <- function(
                 msg <- sprintf(
                     "Multiple matches found for dataset '%s'. Please specify the package name.\nAvailable options:\n%s",
                     dataset,
-                    paste(sprintf("  - %s::%s", matches$Package, matches$Item), collapse = "\n")
+                    paste(
+                        sprintf("  - %s::%s", matches$Package, matches$Item),
+                        collapse = "\n"
+                    )
                 )
                 stop(msg, call. = FALSE)
             } else {
@@ -106,7 +110,10 @@ get_dataset <- function(
     } else {
         data <- "https://vincentarelbundock.github.io/Rdatasets/csv/%s/%s.csv"
         data <- sprintf(data, package, dataset)
-        data <- tryCatch(data.table::fread(data, showProgress = FALSE), error = function(e) NULL)
+        data <- tryCatch(
+            data.table::fread(data, showProgress = FALSE),
+            error = function(e) NULL
+        )
         if (!inherits(data, "data.table")) stop("Unable to download this dataset.", call. = FALSE)
         data.table::setDF(data)
 
@@ -142,7 +149,12 @@ get_dataset_search <- function(search) {
         url <- "https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/datasets.csv"
         idx <- utils::read.csv(url)
     }
-    idx <- idx[grepl(search, idx$Item) | grepl(search, idx$Package) | grepl(search, idx$Title), ,
-        drop = FALSE]
+    idx <- idx[
+        grepl(search, idx$Item) |
+            grepl(search, idx$Package) |
+            grepl(search, idx$Title),
+        ,
+        drop = FALSE
+    ]
     return(idx)
 }

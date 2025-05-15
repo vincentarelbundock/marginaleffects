@@ -6,7 +6,6 @@
 #' factor levels are inevitably missing.
 #' @keywords internal
 complete_levels <- function(x, character_levels = NULL) {
-
     checkmate::assert_data_frame(x)
 
     # fixest returned an empty list()

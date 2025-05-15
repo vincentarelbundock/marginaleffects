@@ -35,7 +35,10 @@ comparison_function_dict <- list(
 
     "lnor" = function(hi, lo) log((hi / (1 - hi)) / (lo / (1 - lo))),
     "lnoravg" = function(hi, lo) log((mean(hi) / (1 - mean(hi))) / (mean(lo) / (1 - mean(lo)))),
-    "lnoravgwts" = function(hi, lo, w) log((wmean(hi, w) / (1 - wmean(hi, w))) / (wmean(lo, w) / (1 - wmean(lo, w)))),
+    "lnoravgwts" = function(hi, lo, w)
+        log(
+            (wmean(hi, w) / (1 - wmean(hi, w))) / (wmean(lo, w) / (1 - wmean(lo, w)))
+        ),
 
     # others
     "lift" = function(hi, lo) (hi - lo) / lo,
@@ -96,7 +99,8 @@ sanity_comparison <- function(comparison) {
     valid <- valid[!grepl("wts$", valid)]
     checkmate::assert(
         checkmate::check_choice(comparison, choices = valid),
-        checkmate::check_function(comparison))
+        checkmate::check_function(comparison)
+    )
 }
 
 
@@ -106,12 +110,14 @@ sanitize_transform <- function(x) {
     if (isTRUE(checkmate::check_list(x, names = "named"))) {
         checkmate::assert(
             checkmate::check_choice(x[[1]], choices = good, null.ok = TRUE),
-            checkmate::check_function(x[[1]]))
+            checkmate::check_function(x[[1]])
+        )
         x <- x[[1]]
     } else {
         checkmate::assert(
             checkmate::check_choice(x, choices = good, null.ok = TRUE),
-            checkmate::check_function(x))
+            checkmate::check_function(x)
+        )
     }
 
     if (is.null(x)) {
@@ -129,4 +135,3 @@ sanitize_transform <- function(x) {
 
     return(out)
 }
-

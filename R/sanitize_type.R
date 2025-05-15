@@ -13,7 +13,7 @@ sanitize_type <- function(model, type, by = FALSE, calling_function = "raw") {
     }
 
     checkmate::assert_character(type, len = 1, null.ok = TRUE)
-    
+
     if (inherits(model, "model_fit")) {
         cl <- "model_fit"
     } else {

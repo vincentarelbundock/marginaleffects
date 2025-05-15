@@ -34,7 +34,6 @@ unpack_matrix_1col <- function(x) {
     return(x)
 }
 
-
 # The content of this file was adapted from the `gratia` package
 # https://github.com/gavinsimpson/gratia
 

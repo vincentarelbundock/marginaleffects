@@ -1,4 +1,12 @@
-plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet_1 = NULL, v_facet_2 = NULL, condition = NULL, modeldata = NULL) {
+plot_preprocess <- function(
+    dat,
+    v_x,
+    v_color = NULL,
+    v_facet_1 = NULL,
+    v_facet_2 = NULL,
+    condition = NULL,
+    modeldata = NULL
+) {
     for (v in names(condition$condition)) {
         fun <- function(x, lab) {
             idx <- match(x, sort(unique(x)))
@@ -9,7 +17,8 @@ plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet_1 = NULL, v_facet_
         } else if (identical(condition$condition[[v]], "fivenum")) {
             labs <- stats::setNames(
                 sort(unique(dat[[v]])),
-                format(sort(unique(dat[[v]])), digits = 2))
+                format(sort(unique(dat[[v]])), digits = 2)
+            )
             dat[[v]] <- fun(dat[[v]], names(labs))
         } else if (identical(condition$condition[[v]], "minmax")) {
             dat[[v]] <- fun(dat[[v]], c("Min", "Max"))
@@ -28,7 +37,7 @@ plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet_1 = NULL, v_facet_
         dat[[v_facet_1]] <- factor(dat[[v_facet_1]])
     }
     if (isTRUE(v_facet_2 %in% colnames(dat))) {
-      dat[[v_facet_2]] <- factor(dat[[v_facet_2]])
+        dat[[v_facet_2]] <- factor(dat[[v_facet_2]])
     }
     return(dat)
 }
@@ -44,8 +53,8 @@ plot_build <- function(
     modeldata = NULL,
     points = 0,
     rug = FALSE,
-    gray = FALSE) {
-        
+    gray = FALSE
+) {
     checkmate::assert_flag(rug)
     checkmate::assert_flag(gray)
 
@@ -55,30 +64,50 @@ plot_build <- function(
 
     p <- ggplot2::ggplot(data = dat)
 
-    if (points > 0 &&
-        !get_variable_class(modeldata, v_x, "categorical") &&
-        !get_variable_class(modeldata, dv, "categorical")) {
+    if (
+        points > 0 &&
+            !get_variable_class(modeldata, v_x, "categorical") &&
+            !get_variable_class(modeldata, dv, "categorical")
+    ) {
         if (!is.null(v_color) && get_variable_class(modeldata, v_color, "categorical")) {
             if (isTRUE(gray)) {
-              p <- p + ggplot2::geom_point(
-                  data = modeldata, alpha = points,
-                  ggplot2::aes(x = .data[[v_x]], y = .data[[dv]], shape = factor(.data[[v_color]])))
+                p <- p +
+                    ggplot2::geom_point(
+                        data = modeldata,
+                        alpha = points,
+                        ggplot2::aes(
+                            x = .data[[v_x]],
+                            y = .data[[dv]],
+                            shape = factor(.data[[v_color]])
+                        )
+                    )
             } else {
-              p <- p + ggplot2::geom_point(
-                  data = modeldata, alpha = points,
-                  ggplot2::aes(x = .data[[v_x]], y = .data[[dv]], color = factor(.data[[v_color]])))
+                p <- p +
+                    ggplot2::geom_point(
+                        data = modeldata,
+                        alpha = points,
+                        ggplot2::aes(
+                            x = .data[[v_x]],
+                            y = .data[[dv]],
+                            color = factor(.data[[v_color]])
+                        )
+                    )
             }
         } else {
-            p <- p + ggplot2::geom_point(
-                data = modeldata, alpha = points,
-                ggplot2::aes(x = .data[[v_x]], y = .data[[dv]]))
+            p <- p +
+                ggplot2::geom_point(
+                    data = modeldata,
+                    alpha = points,
+                    ggplot2::aes(x = .data[[v_x]], y = .data[[dv]])
+                )
         }
     }
-    
+
     if (isTRUE(rug)) {
         p <- p + ggplot2::geom_rug(data = modeldata, ggplot2::aes(x = .data[[v_x]]))
         if (!is.null(dv)) {
-            p <- p + ggplot2::geom_rug(data = modeldata, ggplot2::aes(y = .data[[dv]]))
+            p <- p +
+                ggplot2::geom_rug(data = modeldata, ggplot2::aes(y = .data[[dv]]))
         }
     }
 
@@ -107,16 +136,20 @@ plot_build <- function(
         }
         aes_obj <- do.call(ggplot2::aes, aes_args)
         if ("conf.low" %in% colnames(dat)) {
-            p <- p + ggplot2::geom_pointrange(
-                mapping = aes_obj,
-                position = ggplot2::position_dodge(0.15))
+            p <- p +
+                ggplot2::geom_pointrange(
+                    mapping = aes_obj,
+                    position = ggplot2::position_dodge(0.15)
+                )
         } else {
-            p <- p + ggplot2::geom_point(
-                mapping = aes_obj,
-                position = ggplot2::position_dodge(0.15))
+            p <- p +
+                ggplot2::geom_point(
+                    mapping = aes_obj,
+                    position = ggplot2::position_dodge(0.15)
+                )
         }
 
-    # continuous x-axis
+        # continuous x-axis
     } else {
         if (!is.null(v_color)) {
             if (gray) {
@@ -140,15 +173,28 @@ plot_build <- function(
     # facets: 3rd and 4th variable and/or multiple effects
     ## If pass two facets then make facet grid
     if (!is.null(v_facet_1) && !is.null(v_facet_2)) {
-      fo <- stats::as.formula(paste(v_facet_2, "~", ifelse(multi_variables, "marginaleffects_term_index +", ""), v_facet_1))
-      p <- p + ggplot2::facet_grid(fo,
-                                   scales = "free",
-                                   labeller = function(x){
-                                     lapply(ggplot2::label_both(x), gsub, pattern = "marginaleffects_term_index: ", replacement="")
-                                   })
-    ## if pass only 1 facet then facet_wrap
+        fo <- stats::as.formula(paste(
+            v_facet_2,
+            "~",
+            ifelse(multi_variables, "marginaleffects_term_index +", ""),
+            v_facet_1
+        ))
+        p <- p +
+            ggplot2::facet_grid(fo, scales = "free", labeller = function(x) {
+                lapply(
+                    ggplot2::label_both(x),
+                    gsub,
+                    pattern = "marginaleffects_term_index: ",
+                    replacement = ""
+                )
+            })
+        ## if pass only 1 facet then facet_wrap
     } else if (!is.null(v_facet_1) && is.null(v_facet_2)) {
-        fo <- stats::as.formula(paste("~", ifelse(multi_variables, "marginaleffects_term_index +", ""), v_facet_1))
+        fo <- stats::as.formula(paste(
+            "~",
+            ifelse(multi_variables, "marginaleffects_term_index +", ""),
+            v_facet_1
+        ))
         p <- p + ggplot2::facet_wrap(fo, scales = "free")
     } else if (multi_variables) {
         fo <- stats::as.formula("~ marginaleffects_term_index")

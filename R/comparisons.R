@@ -216,333 +216,377 @@
 #' comparisons(mod, type = "probs", by = by)
 #'
 #' @export
-comparisons <- function(model,
-                        newdata = NULL,
-                        variables = NULL,
-                        comparison = "difference",
-                        type = NULL,
-                        vcov = TRUE,
-                        by = FALSE,
-                        conf_level = 0.95,
-                        transform = NULL,
-                        cross = FALSE,
-                        wts = FALSE,
-                        hypothesis = NULL,
-                        equivalence = NULL,
-                        df = Inf,
-                        eps = NULL,
-                        numderiv = "fdforward",
-                        ...) {
+comparisons <- function(
+    model,
+    newdata = NULL,
+    variables = NULL,
+    comparison = "difference",
+    type = NULL,
+    vcov = TRUE,
+    by = FALSE,
+    conf_level = 0.95,
+    transform = NULL,
+    cross = FALSE,
+    wts = FALSE,
+    hypothesis = NULL,
+    equivalence = NULL,
+    df = Inf,
+    eps = NULL,
+    numderiv = "fdforward",
+    ...
+) {
+    call_attr <- construct_call(model, "comparisons")
 
-  call_attr <- construct_call(model, "comparisons")
-
-  methods <- c("rsample", "boot", "fwb", "simulation")
-  if (isTRUE(checkmate::check_choice(vcov, methods))) {
-    inferences_method <- vcov
-    vcov <- FALSE
-  } else {
-    inferences_method <- NULL
-  }
-
-  # multiple imputation
-  if (inherits(model, c("mira", "amest"))) {
-      out <- process_imputation(model, call_attr)
-      return(out)
-  }
-
-  dots <- list(...)
-
-  # extracting modeldata repeatedly is slow.
-  if (isTRUE(by)) {
-    modeldata <- get_modeldata(model,
-      additional_variables = FALSE,
-      modeldata = dots[["modeldata"]],
-      wts = wts)
-  } else {
-    modeldata <- get_modeldata(model,
-      additional_variables = by,
-      modeldata = dots[["modeldata"]],
-      wts = wts)
-  }
-  if ("modeldata" %in% ...names()) {
-      call_attr[["modeldata"]] <- modeldata
-  }
-
-  # very early, before any use of newdata
-  # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-  scall <- rlang::enquo(newdata)
-  newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-
-  # required by stubcols later, but might be overwritten
-  bycols <- NULL
-
-  # sanity checks
-  sanity_dots(model, ...)
-  conf_level <- sanitize_conf_level(conf_level, ...)
-  checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
-  numderiv <- sanitize_numderiv(numderiv)
-  model <- sanitize_model(
-    model = model,
-    newdata = newdata,
-    wts = wts,
-    vcov = vcov,
-    by = by,
-    calling_function = "comparisons",
-    ...)
-  df <- sanitize_df(df = df, model = model, newdata = newdata, vcov = vcov, by = by, hypothesis = hypothesis)
-  cross <- sanitize_cross(cross, variables, model)
-  type <- sanitize_type(model = model, type = type, calling_function = "comparisons")
-  sanity_comparison(comparison)
-
-
-
-  # transforms
-  comparison_label <- transform_label <- NULL
-  if (is.function(comparison)) {
-    comparison_label <- deparse(substitute(comparison))
-  }
-  if (is.function(transform)) {
-    transform_label <- deparse(substitute(transform))
-    transform <- sanitize_transform(transform)
-    names(transform) <- transform_label
-  } else {
-    transform <- sanitize_transform(transform)
-    transform_label <- names(transform)
-  }
-
-
-  newdata <- sanitize_newdata(
-    model = model,
-    newdata = newdata,
-    modeldata = modeldata,
-    by = by,
-    wts = wts)
-
-  # after sanitize_newdata
-  sanity_by(by, newdata)
-
-
-  # after sanity_by
-  newdata <- dedup_newdata(
-    model = model,
-    newdata = newdata,
-    wts = wts,
-    by = by,
-    cross = cross,
-    comparison = comparison)
-  if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
-    wts <- "marginaleffects_wts_internal"
-  }
-
-  # after sanitize_newdata
-  # after dedup_newdata
-  variables_list <- sanitize_variables(
-    model = model,
-    newdata = newdata,
-    modeldata = modeldata,
-    variables = variables,
-    cross = cross,
-    by = by,
-    comparison = comparison,
-    eps = eps)
-
-  # get dof before transforming the vcov arg
-  # get_degrees_of_freedom() produces a weird warning on non lmerMod. We can skip them
-  # because get_vcov() will produce an informative error later.
-  df <- get_degrees_of_freedom(model = model, df = df, newdata = newdata)
-
-  vcov_false <- isFALSE(vcov)
-  vcov.type <- get_vcov_label(vcov)
-  vcov <- get_vcov(model, vcov = vcov, type = type, ...)
-
-  predictors <- variables_list$conditional
-
-  ############### sanity checks are over
-
-  # Bootstrap
-  out <- inferences_dispatch(
-    INF_FUN = comparisons,
-    model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
-    conf_level = conf_level,
-    cross = cross,
-    comparison = comparison, transform = transform, wts = wts, hypothesis = hypothesis, eps = eps, ...)
-  if (!is.null(out)) {
-    return(out)
-  }
-
-  # after inferences dispatch
-  tmp <- sanitize_hypothesis(hypothesis, ...)
-  hypothesis <- tmp$hypothesis
-  hypothesis_null <- tmp$hypothesis_null
-  hypothesis_direction <- tmp$hypothesis_direction
-
-  # compute contrasts and standard errors
-  args <- list(
-    model = model,
-    newdata = newdata,
-    variables = predictors,
-    cross = cross,
-    modeldata = modeldata)
-  dots[["modeldata"]] <- NULL # dont' pass twice
-  args <- utils::modifyList(args, dots)
-  contrast_data <- do.call("get_contrast_data", args)
-
-  args <- list(model,
-    newdata = newdata,
-    variables = predictors,
-    type = type,
-    original = contrast_data[["original"]],
-    hi = contrast_data[["hi"]],
-    lo = contrast_data[["lo"]],
-    wts = contrast_data[["original"]][["marginaleffects_wts_internal"]],
-    by = by,
-    cross = cross,
-    hypothesis = hypothesis,
-    modeldata = modeldata)
-  args <- utils::modifyList(args, dots)
-  mfx <- do.call("get_contrasts", args)
-
-  hyp_by <- attr(mfx, "hypothesis_function_by")
-
-  # bayesian posterior
-  if (!is.null(attr(mfx, "posterior_draws"))) {
-    draws <- attr(mfx, "posterior_draws")
-    J <- NULL
-
-    # standard errors via delta method
-  } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
-    idx <- intersect(colnames(mfx), c("group", "term", "contrast"))
-    idx <- mfx[, (idx), drop = FALSE]
-    args <- list(model,
-      vcov = vcov,
-      type = type,
-      FUN = get_se_delta_contrasts,
-      newdata = newdata,
-      index = idx,
-      variables = predictors,
-      hypothesis = hypothesis,
-      hi = contrast_data$hi,
-      lo = contrast_data$lo,
-      original = contrast_data$original,
-      by = by,
-      eps = eps,
-      cross = cross,
-      numderiv = numderiv)
-    args <- utils::modifyList(args, dots)
-    se <- do.call("get_se_delta", args)
-    J <- attr(se, "jacobian")
-    attr(se, "jacobian") <- NULL
-    mfx$std.error <- as.numeric(se)
-    draws <- NULL
-
-    # no standard error
-  } else {
-    J <- draws <- NULL
-  }
-
-  # merge original data back in
-  if ((is.null(by) || isFALSE(by)) && "rowid" %in% colnames(mfx)) {
-    if ("rowid" %in% colnames(newdata)) {
-      idx <- c("rowid", "rowidcf", "term", "contrast", "by", setdiff(colnames(contrast_data$original), colnames(mfx)))
-      idx <- intersect(idx, colnames(contrast_data$original))
-      tmp <- contrast_data$original[, ..idx, drop = FALSE]
-      # contrast_data is duplicated to compute contrasts for different terms or pairs
-      bycols <- intersect(colnames(tmp), colnames(mfx))
-      idx <- duplicated(tmp, by = bycols)
-      tmp <- tmp[!idx]
-      mfx <- merge(mfx, tmp, all.x = TRUE, by = bycols, sort = FALSE)
-      # HACK: relies on NO sorting at ANY point
+    methods <- c("rsample", "boot", "fwb", "simulation")
+    if (isTRUE(checkmate::check_choice(vcov, methods))) {
+        inferences_method <- vcov
+        vcov <- FALSE
     } else {
-      idx <- setdiff(colnames(contrast_data$original), colnames(mfx))
-      mfx <- data.table(mfx, contrast_data$original[, ..idx])
+        inferences_method <- NULL
     }
-  }
 
-  # meta info
-  mfx <- get_ci(
-    mfx,
-    conf_level = conf_level,
-    df = df,
-    draws = draws,
-    estimate = "estimate",
-    hypothesis_null = hypothesis_null,
-    hypothesis_direction = hypothesis_direction,
-    model = model)
+    # multiple imputation
+    if (inherits(model, c("mira", "amest"))) {
+        out <- process_imputation(model, call_attr)
+        return(out)
+    }
 
-  # clean rows and columns
-  # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
-  # applied in the middle, and it must already be sorted in the final order,
-  # otherwise, users cannot know for sure what is going to be the first and
-  # second rows, etc.
-  mfx <- sort_columns(mfx, newdata, by)
+    dots <- list(...)
 
-  # bayesian draws
-  attr(mfx, "posterior_draws") <- draws
+    # extracting modeldata repeatedly is slow.
+    if (isTRUE(by)) {
+        modeldata <- get_modeldata(
+            model,
+            additional_variables = FALSE,
+            modeldata = dots[["modeldata"]],
+            wts = wts
+        )
+    } else {
+        modeldata <- get_modeldata(
+            model,
+            additional_variables = by,
+            modeldata = dots[["modeldata"]],
+            wts = wts
+        )
+    }
+    if ("modeldata" %in% ...names()) {
+        call_attr[["modeldata"]] <- modeldata
+    }
 
-  # equivalence tests
-  mfx <- equivalence(mfx, equivalence = equivalence, df = df, ...)
+    # very early, before any use of newdata
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    scall <- rlang::enquo(newdata)
+    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
-  # after draws attribute
-  mfx <- backtransform(mfx, transform)
+    # required by stubcols later, but might be overwritten
+    bycols <- NULL
 
-  # save as attribute and not column
-  if (!all(is.na(mfx[["marginaleffects_wts_internal"]]))) {
-    marginaleffects_wts_internal <- mfx[["marginaleffects_wts_internal"]]
-  } else {
-    marginaleffects_wts_internal <- NULL
-  }
-  mfx[["marginaleffects_wts_internal"]] <- NULL
+    # sanity checks
+    sanity_dots(model, ...)
+    conf_level <- sanitize_conf_level(conf_level, ...)
+    checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
+    numderiv <- sanitize_numderiv(numderiv)
+    model <- sanitize_model(
+        model = model,
+        newdata = newdata,
+        wts = wts,
+        vcov = vcov,
+        by = by,
+        calling_function = "comparisons",
+        ...
+    )
+    df <- sanitize_df(
+        df = df,
+        model = model,
+        newdata = newdata,
+        vcov = vcov,
+        by = by,
+        hypothesis = hypothesis
+    )
+    cross <- sanitize_cross(cross, variables, model)
+    type <- sanitize_type(
+        model = model,
+        type = type,
+        calling_function = "comparisons"
+    )
+    sanity_comparison(comparison)
 
-  out <- mfx
+    # transforms
+    comparison_label <- transform_label <- NULL
+    if (is.function(comparison)) {
+        comparison_label <- deparse(substitute(comparison))
+    }
+    if (is.function(transform)) {
+        transform_label <- deparse(substitute(transform))
+        transform <- sanitize_transform(transform)
+        names(transform) <- transform_label
+    } else {
+        transform <- sanitize_transform(transform)
+        transform_label <- names(transform)
+    }
 
-  data.table::setDF(out)
+    newdata <- sanitize_newdata(
+        model = model,
+        newdata = newdata,
+        modeldata = modeldata,
+        by = by,
+        wts = wts
+    )
 
-  out <- set_marginaleffects_attributes(
-    out,
-    get_marginaleffects_attributes(newdata, include_regex = "^newdata.*class|explicit|matrix|levels"))
+    # after sanitize_newdata
+    sanity_by(by, newdata)
 
-  # Global option for lean return object
-  lean <- getOption("marginaleffects_lean", default = FALSE)
+    # after sanity_by
+    newdata <- dedup_newdata(
+        model = model,
+        newdata = newdata,
+        wts = wts,
+        by = by,
+        cross = cross,
+        comparison = comparison
+    )
+    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+        wts <- "marginaleffects_wts_internal"
+    }
 
-  # Only add (potentially large) attributes if lean is FALSE
-  # extra attributes needed for print method, even with lean return object
-  attr(out, "conf_level") <- conf_level
-  attr(out, "by") <- by
-  attr(out, "lean") <- lean
-  attr(out, "vcov.type") <- vcov.type
-  if (isTRUE(lean)) {
-    for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) attr(out, a) <- NULL
-  } else {
-    # other attributes
-    attr(out, "newdata") <- newdata
-    attr(out, "call") <- call_attr
-    attr(out, "type") <- type
-    attr(out, "model_type") <- class(model)[1]
-    attr(out, "model") <- model
-    attr(out, "variables") <- predictors
-    attr(out, "jacobian") <- J
-    attr(out, "vcov") <- vcov
+    # after sanitize_newdata
+    # after dedup_newdata
+    variables_list <- sanitize_variables(
+        model = model,
+        newdata = newdata,
+        modeldata = modeldata,
+        variables = variables,
+        cross = cross,
+        by = by,
+        comparison = comparison,
+        eps = eps
+    )
+
+    # get dof before transforming the vcov arg
+    # get_degrees_of_freedom() produces a weird warning on non lmerMod. We can skip them
+    # because get_vcov() will produce an informative error later.
+    df <- get_degrees_of_freedom(model = model, df = df, newdata = newdata)
+
+    vcov_false <- isFALSE(vcov)
+    vcov.type <- get_vcov_label(vcov)
+    vcov <- get_vcov(model, vcov = vcov, type = type, ...)
+
+    predictors <- variables_list$conditional
+
+    ############### sanity checks are over
+
+    # Bootstrap
+    out <- inferences_dispatch(
+        INF_FUN = comparisons,
+        model = model,
+        newdata = newdata,
+        vcov = vcov,
+        variables = variables,
+        type = type,
+        by = by,
+        conf_level = conf_level,
+        cross = cross,
+        comparison = comparison,
+        transform = transform,
+        wts = wts,
+        hypothesis = hypothesis,
+        eps = eps,
+        ...
+    )
+    if (!is.null(out)) {
+        return(out)
+    }
+
+    # after inferences dispatch
+    tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis <- tmp$hypothesis
+    hypothesis_null <- tmp$hypothesis_null
+    hypothesis_direction <- tmp$hypothesis_direction
+
+    # compute contrasts and standard errors
+    args <- list(
+        model = model,
+        newdata = newdata,
+        variables = predictors,
+        cross = cross,
+        modeldata = modeldata
+    )
+    dots[["modeldata"]] <- NULL # dont' pass twice
+    args <- utils::modifyList(args, dots)
+    contrast_data <- do.call("get_contrast_data", args)
+
+    args <- list(
+        model,
+        newdata = newdata,
+        variables = predictors,
+        type = type,
+        original = contrast_data[["original"]],
+        hi = contrast_data[["hi"]],
+        lo = contrast_data[["lo"]],
+        wts = contrast_data[["original"]][["marginaleffects_wts_internal"]],
+        by = by,
+        cross = cross,
+        hypothesis = hypothesis,
+        modeldata = modeldata
+    )
+    args <- utils::modifyList(args, dots)
+    mfx <- do.call("get_contrasts", args)
+
+    hyp_by <- attr(mfx, "hypothesis_function_by")
+
+    # bayesian posterior
+    if (!is.null(attr(mfx, "posterior_draws"))) {
+        draws <- attr(mfx, "posterior_draws")
+        J <- NULL
+
+        # standard errors via delta method
+    } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
+        idx <- intersect(colnames(mfx), c("group", "term", "contrast"))
+        idx <- mfx[, (idx), drop = FALSE]
+        args <- list(
+            model,
+            vcov = vcov,
+            type = type,
+            FUN = get_se_delta_contrasts,
+            newdata = newdata,
+            index = idx,
+            variables = predictors,
+            hypothesis = hypothesis,
+            hi = contrast_data$hi,
+            lo = contrast_data$lo,
+            original = contrast_data$original,
+            by = by,
+            eps = eps,
+            cross = cross,
+            numderiv = numderiv
+        )
+        args <- utils::modifyList(args, dots)
+        se <- do.call("get_se_delta", args)
+        J <- attr(se, "jacobian")
+        attr(se, "jacobian") <- NULL
+        mfx$std.error <- as.numeric(se)
+        draws <- NULL
+
+        # no standard error
+    } else {
+        J <- draws <- NULL
+    }
+
+    # merge original data back in
+    if ((is.null(by) || isFALSE(by)) && "rowid" %in% colnames(mfx)) {
+        if ("rowid" %in% colnames(newdata)) {
+            idx <- c(
+                "rowid",
+                "rowidcf",
+                "term",
+                "contrast",
+                "by",
+                setdiff(colnames(contrast_data$original), colnames(mfx))
+            )
+            idx <- intersect(idx, colnames(contrast_data$original))
+            tmp <- contrast_data$original[, ..idx, drop = FALSE]
+            # contrast_data is duplicated to compute contrasts for different terms or pairs
+            bycols <- intersect(colnames(tmp), colnames(mfx))
+            idx <- duplicated(tmp, by = bycols)
+            tmp <- tmp[!idx]
+            mfx <- merge(mfx, tmp, all.x = TRUE, by = bycols, sort = FALSE)
+            # HACK: relies on NO sorting at ANY point
+        } else {
+            idx <- setdiff(colnames(contrast_data$original), colnames(mfx))
+            mfx <- data.table(mfx, contrast_data$original[, ..idx])
+        }
+    }
+
+    # meta info
+    mfx <- get_ci(
+        mfx,
+        conf_level = conf_level,
+        df = df,
+        draws = draws,
+        estimate = "estimate",
+        hypothesis_null = hypothesis_null,
+        hypothesis_direction = hypothesis_direction,
+        model = model
+    )
+
+    # clean rows and columns
+    # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
+    # applied in the middle, and it must already be sorted in the final order,
+    # otherwise, users cannot know for sure what is going to be the first and
+    # second rows, etc.
+    mfx <- sort_columns(mfx, newdata, by)
+
+    # bayesian draws
+    attr(mfx, "posterior_draws") <- draws
+
+    # equivalence tests
+    mfx <- equivalence(mfx, equivalence = equivalence, df = df, ...)
+
+    # after draws attribute
+    mfx <- backtransform(mfx, transform)
+
+    # save as attribute and not column
+    if (!all(is.na(mfx[["marginaleffects_wts_internal"]]))) {
+        marginaleffects_wts_internal <- mfx[["marginaleffects_wts_internal"]]
+    } else {
+        marginaleffects_wts_internal <- NULL
+    }
+    mfx[["marginaleffects_wts_internal"]] <- NULL
+
+    out <- mfx
+
+    data.table::setDF(out)
+
+    out <- set_marginaleffects_attributes(
+        out,
+        get_marginaleffects_attributes(
+            newdata,
+            include_regex = "^newdata.*class|explicit|matrix|levels"
+        )
+    )
+
+    # Global option for lean return object
+    lean <- getOption("marginaleffects_lean", default = FALSE)
+
+    # Only add (potentially large) attributes if lean is FALSE
+    # extra attributes needed for print method, even with lean return object
+    attr(out, "conf_level") <- conf_level
+    attr(out, "by") <- by
+    attr(out, "lean") <- lean
     attr(out, "vcov.type") <- vcov.type
-    attr(out, "weights") <- marginaleffects_wts_internal
-    attr(out, "comparison") <- comparison
-    attr(out, "transform") <- transform[[1]]
-    attr(out, "comparison_label") <- comparison_label
-    attr(out, "hypothesis_by") <- hyp_by
-    attr(out, "transform_label") <- transform_label
+    if (isTRUE(lean)) {
+        for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) attr(out, a) <- NULL
+    } else {
+        # other attributes
+        attr(out, "newdata") <- newdata
+        attr(out, "call") <- call_attr
+        attr(out, "type") <- type
+        attr(out, "model_type") <- class(model)[1]
+        attr(out, "model") <- model
+        attr(out, "variables") <- predictors
+        attr(out, "jacobian") <- J
+        attr(out, "vcov") <- vcov
+        attr(out, "vcov.type") <- vcov.type
+        attr(out, "weights") <- marginaleffects_wts_internal
+        attr(out, "comparison") <- comparison
+        attr(out, "transform") <- transform[[1]]
+        attr(out, "comparison_label") <- comparison_label
+        attr(out, "hypothesis_by") <- hyp_by
+        attr(out, "transform_label") <- transform_label
 
-    if (inherits(model, "brmsfit")) {
-      insight::check_if_installed("brms")
-      attr(out, "nchains") <- brms::nchains(model)
+        if (inherits(model, "brmsfit")) {
+            insight::check_if_installed("brms")
+            attr(out, "nchains") <- brms::nchains(model)
+        }
     }
-  }
 
-  class(out) <- c("comparisons", class(out))
+    class(out) <- c("comparisons", class(out))
 
-  if (!is.null(inferences_method)) {
-    out <- inferences(out, method = inferences_method)
-  }
+    if (!is.null(inferences_method)) {
+        out <- inferences(out, method = inferences_method)
+    }
 
-  return(out)
+    return(out)
 }
 
 
@@ -550,61 +594,74 @@ comparisons <- function(model,
 #' @describeIn comparisons Average comparisons
 #' @export
 #'
-avg_comparisons <- function(model,
-                            newdata = NULL,
-                            variables = NULL,
-                            type = NULL,
-                            vcov = TRUE,
-                            by = TRUE,
-                            conf_level = 0.95,
-                            comparison = "difference",
-                            transform = NULL,
-                            cross = FALSE,
-                            wts = FALSE,
-                            hypothesis = NULL,
-                            equivalence = NULL,
-                            df = Inf,
-                            eps = NULL,
-                            numderiv = "fdforward",
-                            ...) {
-  # order of the first few paragraphs is important
-  # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-  # scall <- rlang::enquo(newdata)
-  # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+avg_comparisons <- function(
+    model,
+    newdata = NULL,
+    variables = NULL,
+    type = NULL,
+    vcov = TRUE,
+    by = TRUE,
+    conf_level = 0.95,
+    comparison = "difference",
+    transform = NULL,
+    cross = FALSE,
+    wts = FALSE,
+    hypothesis = NULL,
+    equivalence = NULL,
+    df = Inf,
+    eps = NULL,
+    numderiv = "fdforward",
+    ...
+) {
+    # order of the first few paragraphs is important
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    # scall <- rlang::enquo(newdata)
+    # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
-  # Bootstrap
-  out <- inferences_dispatch(
-    INF_FUN = avg_comparisons,
-    model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
-    cross = cross,
-    conf_level = conf_level,
-    comparison = comparison, transform = transform, wts = wts, hypothesis = hypothesis, eps = eps, ...)
-  if (!is.null(out)) {
+    # Bootstrap
+    out <- inferences_dispatch(
+        INF_FUN = avg_comparisons,
+        model = model,
+        newdata = newdata,
+        vcov = vcov,
+        variables = variables,
+        type = type,
+        by = by,
+        cross = cross,
+        conf_level = conf_level,
+        comparison = comparison,
+        transform = transform,
+        wts = wts,
+        hypothesis = hypothesis,
+        eps = eps,
+        ...
+    )
+    if (!is.null(out)) {
+        return(out)
+    }
+
+    #Construct comparisons() call
+    call_attr <- construct_call(model, "comparisons")
+
+    out <- eval.parent(call_attr)
+
+    # out <- comparisons(
+    #   model = model,
+    #   newdata = newdata,
+    #   variables = variables,
+    #   type = type,
+    #   vcov = vcov,
+    #   by = by,
+    #   conf_level = conf_level,
+    #   comparison = comparison,
+    #   transform = transform,
+    #   cross = cross,
+    #   wts = wts,
+    #   hypothesis = hypothesis,
+    #   equivalence = equivalence,
+    #   df = df,
+    #   eps = eps,
+    #   ...)
+
     return(out)
-  }
-
-  #Construct comparisons() call
-  call_attr <- construct_call(model, "comparisons")
-
-  out <- eval.parent(call_attr)
-
-  # out <- comparisons(
-  #   model = model,
-  #   newdata = newdata,
-  #   variables = variables,
-  #   type = type,
-  #   vcov = vcov,
-  #   by = by,
-  #   conf_level = conf_level,
-  #   comparison = comparison,
-  #   transform = transform,
-  #   cross = cross,
-  #   wts = wts,
-  #   hypothesis = hypothesis,
-  #   equivalence = equivalence,
-  #   df = df,
-  #   eps = eps,
-  #   ...)
-
-  return(out)
 }

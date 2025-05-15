@@ -80,14 +80,16 @@
 #'     head()
 #' }
 #' @export
-inferences <- function(x,
-                       method,
-                       R = 1000,
-                       conf_type = "perc",
-                       conformal_test = NULL,
-                       conformal_calibration = NULL,
-                       conformal_score = "residual_abs",
-                       ...) {
+inferences <- function(
+    x,
+    method,
+    R = 1000,
+    conf_type = "perc",
+    conformal_test = NULL,
+    conformal_calibration = NULL,
+    conformal_score = "residual_abs",
+    ...
+) {
     if (inherits(attr(x, "model"), c("model_fit", "workflow"))) {
         msg <- "The `inferences()` function is not supported for `tidymodels` objects."
         stop(msg, call. = FALSE)
@@ -107,11 +109,23 @@ inferences <- function(x,
     checkmate::assert_integerish(R, lower = 2)
     checkmate::assert_choice(
         method,
-        choices = c("delta", "boot", "fwb", "rsample", "simulation", "conformal_split", "conformal_cv+"))
+        choices = c(
+            "delta",
+            "boot",
+            "fwb",
+            "rsample",
+            "simulation",
+            "conformal_split",
+            "conformal_cv+"
+        )
+    )
 
     if (method %in% c("conformal_split", "conformal_cv+")) {
         checkmate::assert_class(x, "predictions")
-        checkmate::assert_choice(conformal_score, choices = c("residual_abs", "residual_sq", "softmax"))
+        checkmate::assert_choice(
+            conformal_score,
+            choices = c("residual_abs", "residual_sq", "softmax")
+        )
         checkmate::assert_data_frame(conformal_test, null.ok = FALSE)
     }
     if (method == "conformal_split") {
@@ -145,8 +159,13 @@ inferences <- function(x,
         attr(model, "inferences_method") <- "fwb"
         attr(model, "inferences_dots") <- c(list(R = R), dots)
         attr(model, "inferences_conf_type") <- conf_type
-        if (isTRUE("wts" %in% names(attr(x, "call"))) && !isFALSE(attr(x, "call")[["wts"]])) {
-            insight::format_error("The `fwb` method is not supported with the `wts` argument.")
+        if (
+            isTRUE("wts" %in% names(attr(x, "call"))) &&
+                !isFALSE(attr(x, "call")[["wts"]])
+        ) {
+            insight::format_error(
+                "The `fwb` method is not supported with the `wts` argument."
+            )
         }
     } else if (method == "rsample") {
         insight::check_if_installed("rsample")
@@ -166,12 +185,12 @@ inferences <- function(x,
             conf_level = conf_level,
             test = conformal_test,
             calibration = conformal_calibration,
-            score = conformal_score)
+            score = conformal_score
+        )
     } else {
         mfx_call[["model"]] <- model
         out <- recall(mfx_call)
     }
-
 
     return(out)
 }
@@ -180,8 +199,7 @@ inferences <- function(x,
 inferences_dispatch <- function(model, INF_FUN, ...) {
     inf_method <- attr(model, "inferences_method")
 
-    if (is.null(inf_method) || !is.character(inf_method) ||
-        length(inf_method) != 1L) {
+    if (is.null(inf_method) || !is.character(inf_method) || length(inf_method) != 1L) {
         return(NULL)
     }
 
@@ -198,7 +216,8 @@ inferences_dispatch <- function(model, INF_FUN, ...) {
         args$newdata <- subset(args$newdata, rowid > 0)
     }
 
-    switch(inf_method,
+    switch(
+        inf_method,
         "rsample" = do.call(bootstrap_rsample, args),
         "boot" = do.call(bootstrap_boot, args),
         "fwb" = do.call(bootstrap_fwb, args),

@@ -53,62 +53,66 @@
 #'   newdata = datagrid(am = 0:1, grid_type = "counterfactual")
 #' )
 #'
-plot_slopes <- function(model,
-                        variables = NULL,
-                        condition = NULL,
-                        by = NULL,
-                        newdata = NULL,
-                        type = NULL,
-                        vcov = NULL,
-                        conf_level = 0.95,
-                        wts = FALSE,
-                        slope = "dydx",
-                        rug = FALSE,
-                        gray = getOption("marginaleffects_plot_gray", default = FALSE),
-                        draw = TRUE,
-                        ...) {
-  if ("effect" %in% ...names()) {
-    if (is.null(variables)) {
-        variables <- ...elt(match("effect", ...names())[1L])
-    } else {
-      insight::format_error("The `effect` argument has been renamed to `variables`.")
-    }
-  }
-
-  if (inherits(model, "mira") && is.null(newdata)) {
-    msg <- "Please supply a data frame to the `newdata` argument explicitly."
-    insight::format_error(msg)
-  }
-
-  # order of the first few paragraphs is important
-  # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-  # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
-  scall <- rlang::enquo(newdata)
-  newdata <- sanitize_newdata_call(scall, newdata, model)
-
-  valid <- c("dydx", "eyex", "eydx", "dyex")
-  checkmate::assert_choice(slope, choices = valid)
-
-  out <- plot_comparisons(
+plot_slopes <- function(
     model,
-    variables = variables,
-    condition = condition,
-    by = by,
-    newdata = newdata,
-    type = type,
-    vcov = vcov,
-    conf_level = conf_level,
-    wts = wts,
-    draw = draw,
-    rug = rug,
-    gray = gray,
-    comparison = slope,
+    variables = NULL,
+    condition = NULL,
+    by = NULL,
+    newdata = NULL,
+    type = NULL,
+    vcov = NULL,
+    conf_level = 0.95,
+    wts = FALSE,
+    slope = "dydx",
+    rug = FALSE,
+    gray = getOption("marginaleffects_plot_gray", default = FALSE),
+    draw = TRUE,
     ...
-  )
+) {
+    if ("effect" %in% ...names()) {
+        if (is.null(variables)) {
+            variables <- ...elt(match("effect", ...names())[1L])
+        } else {
+            insight::format_error(
+                "The `effect` argument has been renamed to `variables`."
+            )
+        }
+    }
 
-  if (inherits(out, "ggplot")) {
-    out <- out + ggplot2::labs(x = condition[1], y = "Slope")
-  }
+    if (inherits(model, "mira") && is.null(newdata)) {
+        msg <- "Please supply a data frame to the `newdata` argument explicitly."
+        insight::format_error(msg)
+    }
 
-  return(out)
+    # order of the first few paragraphs is important
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
+    scall <- rlang::enquo(newdata)
+    newdata <- sanitize_newdata_call(scall, newdata, model)
+
+    valid <- c("dydx", "eyex", "eydx", "dyex")
+    checkmate::assert_choice(slope, choices = valid)
+
+    out <- plot_comparisons(
+        model,
+        variables = variables,
+        condition = condition,
+        by = by,
+        newdata = newdata,
+        type = type,
+        vcov = vcov,
+        conf_level = conf_level,
+        wts = wts,
+        draw = draw,
+        rug = rug,
+        gray = gray,
+        comparison = slope,
+        ...
+    )
+
+    if (inherits(out, "ggplot")) {
+        out <- out + ggplot2::labs(x = condition[1], y = "Slope")
+    }
+
+    return(out)
 }

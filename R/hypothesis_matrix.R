@@ -14,7 +14,8 @@ hypothesis_matrix <- function(x, hypothesis) {
         draws <- t(as.matrix(hypothesis)) %*% draws
         out <- data.table(
             term = colnames(hypothesis),
-            tmp = apply(draws, 1, stats::median))
+            tmp = apply(draws, 1, stats::median)
+        )
         setnames(out, old = "tmp", new = "estimate")
         attr(out, "posterior_draws") <- draws
 
@@ -22,7 +23,8 @@ hypothesis_matrix <- function(x, hypothesis) {
     } else {
         out <- data.table(
             term = colnames(hypothesis),
-            tmp = as.vector(x[["estimate"]] %*% hypothesis))
+            tmp = as.vector(x[["estimate"]] %*% hypothesis)
+        )
         setnames(out, old = "tmp", new = "estimate")
     }
 

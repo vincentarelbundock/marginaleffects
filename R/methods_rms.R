@@ -1,12 +1,10 @@
 #' @rdname get_vcov
 #' @export
-get_vcov.orm <- function(model,
-                         vcov = NULL,
-                         ...) {
+get_vcov.orm <- function(model, vcov = NULL, ...) {
     if (!is.null(vcov) && !isTRUE(checkmate::check_flag(vcov))) {
         msg <- "The `vcov` argument is not supported for models of this class."
         insight::format_error(msg)
-    }  
+    }
     vcov <- sanitize_vcov(model, vcov)
     out <- stats::vcov(model, intercepts = "all")
     return(out)
@@ -15,7 +13,12 @@ get_vcov.orm <- function(model,
 
 #' @rdname get_predict
 #' @export
-get_predict.rms <- function(model, newdata = insight::get_data(model), type = NULL, ...) {
+get_predict.rms <- function(
+    model,
+    newdata = insight::get_data(model),
+    type = NULL,
+    ...
+) {
     if (is.null(type)) {
         type <- sanitize_type(model, type, calling_function = "predictions")
     }
@@ -41,4 +44,3 @@ get_predict.lrm <- get_predict.rms
 #' @rdname get_predict
 #' @export
 get_predict.ols <- get_predict.rms
-

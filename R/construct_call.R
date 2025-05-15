@@ -7,7 +7,8 @@ construct_call <- function(model, calling_function, env = parent.frame(1L)) {
     # known arguments
     arg_names_all <- names(formals(
         get(calling_function, pos = asNamespace("marginaleffects")),
-        asNamespace(utils::packageName())))
+        asNamespace(utils::packageName())
+    ))
     arg_names <- setdiff(arg_names_all, c("model", "..."))
     arg <- lapply(arg_names, function(i) {
         eval(substitute(substitute(arg), list(arg = as.name(i))), envir = env)
@@ -23,7 +24,11 @@ construct_call <- function(model, calling_function, env = parent.frame(1L)) {
 
     # append marginaleffects:: to ensure function comes from package
     if (!startsWith(calling_function, paste0(utils::packageName(), "::"))) {
-      call_out[[1L]] <- str2lang(paste0(utils::packageName(), "::", calling_function))
+        call_out[[1L]] <- str2lang(paste0(
+            utils::packageName(),
+            "::",
+            calling_function
+        ))
     }
 
     call_out

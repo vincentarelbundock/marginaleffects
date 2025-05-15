@@ -9,7 +9,8 @@ sanitize_conf_level <- function(conf_level, ...) {
         checkmate::check_numeric(conf_level, len = 1),
         checkmate::check_true(conf_level > 0),
         checkmate::check_true(conf_level < 1),
-        combine = "and")
+        combine = "and"
+    )
 
     return(conf_level)
 }

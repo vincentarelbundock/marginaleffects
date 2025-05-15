@@ -11,12 +11,21 @@ sanitize_numderiv <- function(numderiv) {
     if (length(numderiv) > 1) {
         if (numderiv[[1L]] %in% c("fdforward", "fdcenter")) {
             if (!all(names(numderiv)[-1L] %in% "eps")) {
-                stop("The only valid argument for this numeric differentiation method is `eps`.", call. = FALSE)
+                stop(
+                    "The only valid argument for this numeric differentiation method is `eps`.",
+                    call. = FALSE
+                )
             }
         } else if (numderiv[[1L]] == "richardson") {
             valid <- c("eps", "d", "zero_tol", "size", "r", "v")
             if (!all(names(numderiv)[-1L] %in% valid)) {
-                stop(sprintf("The only valid arguments for this numeric differentiation method are: %s. See `?numDeriv::grad` for details.", toString(valid)), call. = FALSE)
+                stop(
+                    sprintf(
+                        "The only valid arguments for this numeric differentiation method are: %s. See `?numDeriv::grad` for details.",
+                        toString(valid)
+                    ),
+                    call. = FALSE
+                )
             }
         }
     }

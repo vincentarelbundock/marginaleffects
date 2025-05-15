@@ -47,7 +47,7 @@
 #'    - Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 #'    - Other: `"NeweyWest"`, `"KernHAC"`, `"OPG"`. See the `sandwich` package documentation.
 #'    - "rsample", "boot", "fwb", and "simulation" are passed to the `method` argument of the `inferences()` function. To customize the bootstrap or simulation process, call `inferences()` directly.
-#' 
+#'
 #'  * One-sided formula which indicates the name of cluster variables (e.g., `~unit_id`). This formula is passed to the `cluster` argument of the `sandwich::vcovCL` function.
 #'  * Square covariance matrix
 #'  * Function which returns a covariance matrix (e.g., `stats::vcov(model)`)
@@ -219,22 +219,23 @@
 #'   hypothesis = lc)
 #'
 #' @export
-slopes <- function(model,
-                   newdata = NULL,
-                   variables = NULL,
-                   type = NULL,
-                   by = FALSE,
-                   vcov = TRUE,
-                   conf_level = 0.95,
-                   slope = "dydx",
-                   wts = FALSE,
-                   hypothesis = NULL,
-                   equivalence = NULL,
-                   df = Inf,
-                   eps = NULL,
-                   numderiv = "fdforward",
-                   ...) {
-
+slopes <- function(
+    model,
+    newdata = NULL,
+    variables = NULL,
+    type = NULL,
+    by = FALSE,
+    vcov = TRUE,
+    conf_level = 0.95,
+    slope = "dydx",
+    wts = FALSE,
+    hypothesis = NULL,
+    equivalence = NULL,
+    df = Inf,
+    eps = NULL,
+    numderiv = "fdforward",
+    ...
+) {
     call_attr <- construct_call(model, "slopes")
 
     # very early, before any use of newdata
@@ -265,11 +266,27 @@ slopes <- function(model,
     checkmate::assert_character(variables, null.ok = TRUE)
 
     # slope
-    valid <- c("dydx", "eyex", "eydx", "dyex", "dydxavg", "eyexavg", "eydxavg", "dyexavg")
+    valid <- c(
+        "dydx",
+        "eyex",
+        "eydx",
+        "dyex",
+        "dydxavg",
+        "eyexavg",
+        "eydxavg",
+        "dyexavg"
+    )
     checkmate::assert_choice(slope, choices = valid)
 
     # sanity checks and pre-processing
-    model <- sanitize_model(model = model, wts = wts, vcov = vcov, by = by, calling_function = "marginaleffects", ...)
+    model <- sanitize_model(
+        model = model,
+        wts = wts,
+        vcov = vcov,
+        by = by,
+        calling_function = "marginaleffects",
+        ...
+    )
     sanity_dots(model = model, calling_function = "marginaleffects", ...)
     type <- sanitize_type(model = model, type = type, calling_function = "slopes")
 
@@ -278,10 +295,18 @@ slopes <- function(model,
     # Bootstrap
     out <- inferences_dispatch(
         INF_FUN = slopes,
-        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
+        model = model,
+        newdata = newdata,
+        vcov = vcov,
+        variables = variables,
+        type = type,
         conf_level = conf_level,
         by = by,
-        wts = wts, slope = slope, hypothesis = hypothesis, ...)
+        wts = wts,
+        slope = slope,
+        hypothesis = hypothesis,
+        ...
+    )
     if (!is.null(out)) {
         return(out)
     }
@@ -329,40 +354,48 @@ slopes <- function(model,
 }
 
 
-
-
 #' Average slopes (aka Average partial derivatives, marginal effects, or trends)
 #' @describeIn slopes Average slopes
 #' @export
 #'
-avg_slopes <- function(model,
-                       newdata = NULL,
-                       variables = NULL,
-                       type = NULL,
-                       by = TRUE,
-                       vcov = TRUE,
-                       conf_level = 0.95,
-                       slope = "dydx",
-                       wts = FALSE,
-                       hypothesis = NULL,
-                       equivalence = NULL,
-                       df = Inf,
-                       eps = NULL,
-                       numderiv = "fdforward",
-                       ...) {
+avg_slopes <- function(
+    model,
+    newdata = NULL,
+    variables = NULL,
+    type = NULL,
+    by = TRUE,
+    vcov = TRUE,
+    conf_level = 0.95,
+    slope = "dydx",
+    wts = FALSE,
+    hypothesis = NULL,
+    equivalence = NULL,
+    df = Inf,
+    eps = NULL,
+    numderiv = "fdforward",
+    ...
+) {
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     # scall <- rlang::enquo(newdata)
     # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
-
     # Bootstrap
     out <- inferences_dispatch(
         INF_FUN = avg_slopes,
-        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
-        conf_level = conf_level, by = by,
-        wts = wts, slope = slope, hypothesis = hypothesis, ...)
+        model = model,
+        newdata = newdata,
+        vcov = vcov,
+        variables = variables,
+        type = type,
+        conf_level = conf_level,
+        by = by,
+        wts = wts,
+        slope = slope,
+        hypothesis = hypothesis,
+        ...
+    )
     if (!is.null(out)) {
         return(out)
     }

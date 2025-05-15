@@ -21,7 +21,4 @@ sanitize_cross <- function(cross, variables, model) {
     } else {
         return(FALSE)
     }
-
 }
-
-

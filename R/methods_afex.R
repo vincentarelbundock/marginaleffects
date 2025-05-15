@@ -1,4 +1,3 @@
-
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export

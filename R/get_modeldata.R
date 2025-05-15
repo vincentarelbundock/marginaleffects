@@ -1,5 +1,10 @@
-get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, wts = FALSE, ...) {
-
+get_modeldata <- function(
+    model,
+    additional_variables = FALSE,
+    modeldata = NULL,
+    wts = FALSE,
+    ...
+) {
     # mice
     if (inherits(model, c("mira", "amest"))) {
         return(modeldata)
@@ -57,8 +62,10 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
     # after by
     if (isTRUE(checkmate::check_flag(additional_variables))) {
         out <- hush(insight::get_data(
-            model, additional_variables = additional_variables, verbose = FALSE)
-        )
+            model,
+            additional_variables = additional_variables,
+            verbose = FALSE
+        ))
         out <- set_variable_class(out, model = model)
         return(out)
     }
@@ -69,7 +76,10 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         additional_variables <- c(additional_variables, hush(all.vars(off)))
     } else if (isTRUE(checkmate::check_character(off, max.len = 4))) {
         if (isTRUE(grepl("~", off))) {
-            additional_variables <- c(additional_variables, hush(all.vars(stats::as.formula(off))))
+            additional_variables <- c(
+                additional_variables,
+                hush(all.vars(stats::as.formula(off)))
+            )
         } else {
             additional_variables <- c(additional_variables, off)
         }
@@ -81,19 +91,26 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         additional_variables <- c(additional_variables, hush(all.vars(wtsvname)))
     } else if (isTRUE(checkmate::check_character(wtsvname, max.len = 4))) {
         if (isTRUE(grepl("~", wtsvname))) {
-            additional_variables <- c(additional_variables, hush(all.vars(stats::as.formula(wtsvname))))
+            additional_variables <- c(
+                additional_variables,
+                hush(all.vars(stats::as.formula(wtsvname)))
+            )
         } else {
             additional_variables <- c(additional_variables, wtsvname)
         }
     }
 
-    out <- hush(insight::get_data(model, verbose = FALSE, additional_variables = additional_variables))
+    out <- hush(insight::get_data(
+        model,
+        verbose = FALSE,
+        additional_variables = additional_variables
+    ))
 
     if (isTRUE(wts)) {
-      tmp <- insight::get_weights(model)
-      if (is.numeric(tmp) && length(tmp) == nrow(out)) {
-        out[["marginaleffects_wts_internal"]] <- tmp
-      }
+        tmp <- insight::get_weights(model)
+        if (is.numeric(tmp) && length(tmp) == nrow(out)) {
+            out[["marginaleffects_wts_internal"]] <- tmp
+        }
     }
 
     # iv_robust and some others
@@ -113,7 +130,6 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
 
 
 set_variable_class <- function(modeldata, model = NULL) {
-
     if (is.null(modeldata)) return(modeldata)
 
     # this can be costly on large datasets, when only a portion of
@@ -122,7 +138,8 @@ set_variable_class <- function(modeldata, model = NULL) {
     if (is.null(model)) {
         variables <- tryCatch(
             unlist(insight::find_variables(model, flatten = TRUE), use.names = FALSE),
-            error = function(e) NULL)
+            error = function(e) NULL
+        )
     }
     if (is.null(variables)) variables <- colnames(modeldata)
 
@@ -136,7 +153,8 @@ set_variable_class <- function(modeldata, model = NULL) {
             cl[col] <- "character"
         } else if (is.factor(out[[col]])) {
             cl[col] <- "factor"
-        } else if (inherits(out[[col]], "Surv")) { # is numeric but breaks the %in% 0:1 check
+        } else if (inherits(out[[col]], "Surv")) {
+            # is numeric but breaks the %in% 0:1 check
             cl[col] <- "other"
         } else if (is.numeric(out[[col]])) {
             if (is_binary(out[[col]])) {
@@ -161,7 +179,8 @@ set_variable_class <- function(modeldata, model = NULL) {
     idx <- gsub(
         regex,
         "\\2",
-        Filter(function(x) grepl(regex, x), te))
+        Filter(function(x) grepl(regex, x), te)
+    )
     cl[names(cl) %in% idx] <- "factor"
 
     # in-formula categoricals
@@ -169,7 +188,8 @@ set_variable_class <- function(modeldata, model = NULL) {
     idx <- gsub(
         regex,
         "\\2",
-        Filter(function(x) grepl(regex, x), te))
+        Filter(function(x) grepl(regex, x), te)
+    )
     cl[names(cl) %in% idx] <- "strata"
 
     # in-formula numeric
@@ -177,7 +197,8 @@ set_variable_class <- function(modeldata, model = NULL) {
     idx <- gsub(
         regex,
         "\\1",
-        Filter(function(x) grepl(regex, x), te))
+        Filter(function(x) grepl(regex, x), te)
+    )
     cl[names(cl) %in% idx] <- "numeric"
 
     # in-formula logical
@@ -185,7 +206,8 @@ set_variable_class <- function(modeldata, model = NULL) {
     idx <- gsub(
         regex,
         "\\1",
-        Filter(function(x) grepl(regex, x), te))
+        Filter(function(x) grepl(regex, x), te)
+    )
     cl[names(cl) %in% idx] <- "logical"
 
     # in-formula: fixest::i()
@@ -211,7 +233,6 @@ set_variable_class <- function(modeldata, model = NULL) {
 
 
 get_variable_class <- function(newdata, variable = NULL, compare = NULL) {
-
     if ("marginaleffects_variable_class" %in% names(attributes(newdata))) {
         cl <- attributes(newdata)$marginaleffects_variable_class
     } else {
@@ -221,20 +242,21 @@ get_variable_class <- function(newdata, variable = NULL, compare = NULL) {
 
     if (is.null(compare) && is.null(variable)) {
         out <- cl
-
     } else if (is.null(compare)) {
         out <- cl[variable]
-
     } else if (is.null(variable)) {
         if (isTRUE(compare == "categorical")) {
-            out <- cl[cl %in% c("factor", "character", "logical", "strata", "cluster", "binary")]
+            out <- cl[
+                cl %in%
+                    c("factor", "character", "logical", "strata", "cluster", "binary")
+            ]
         } else {
             out <- cl[cl %in% compare]
         }
-
     } else {
         if (isTRUE(compare == "categorical")) {
-            out <- cl[variable] %in% c("factor", "character", "logical", "strata", "cluster", "binary")
+            out <- cl[variable] %in%
+                c("factor", "character", "logical", "strata", "cluster", "binary")
         } else {
             out <- cl[variable] %in% compare
         }

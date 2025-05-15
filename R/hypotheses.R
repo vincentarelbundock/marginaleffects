@@ -155,300 +155,319 @@ hypotheses <- function(
     joint_test = "f",
     multcomp = FALSE,
     numderiv = "fdforward",
-    ...) {
+    ...
+) {
+    hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
 
-  hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
-
-  if (inherits(model, c("predictions", "comparisons", "slopes", "hypotheses"))) {
-    if (!is.null(vcov)) {
-      msg <- "The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call."
-      stop(msg, call. = FALSE)
-    }
-  }
-
-  checkmate::assert_number(conf_level, null.ok = TRUE, lower = 0, upper = 1)
-  if (is.null(conf_level)) {
-    # inherit conf_level from marginaleffects objects
-    conf_level <- attr(model, "conf_level")
-    if (is.null(conf_level)) {
-      conf_level <- 0.95
-    }
-  }
-
-  # I don't know how to adjust p values for a different null in `multcomp::glht()`
-  if (!isFALSE(multcomp) && isTRUE(checkmate::check_number(hypothesis))) {
-    msg <- "The `multcomp` argument is not available when `hypothesis` is a number."
-    stop(msg, call. = FALSE)
-  }
-
-  if (!isFALSE(multcomp) && !isFALSE(joint)) {
-    msg <- "The `multcomp` argument cannot be used with the `joint` argument."
-    insight::format_error(msg)
-  }
-
-  call_attr <- construct_call(model, "hypotheses")
-
-  if ("modeldata" %in% ...names()) {
-    call_attr[["modeldata"]] <- ...elt(match("modeldata", ...names())[1L])
-  }
-
-  # multiple imputation
-  if (inherits(model, c("mira", "amest"))) {
-    out <- process_imputation(model, call_attr)
-    return(out)
-  }
-
-  ###### Bootstrap
-  # restore an already sanitized hypothesis if necessary
-  hypothesis <-
-    if (is.null(attr(hypothesis, "label"))) {
-      hypothesis
-    } else {
-      attr(hypothesis, "label")
-    }
-
-  # Apply inferences method
-  out <- inferences_dispatch(
-    INF_FUN = hypotheses,
-    model = model,
-    hypothesis = hypothesis,
-    vcov = vcov,
-    conf_level = conf_level,
-    df = df,
-    equivalence = equivalence,
-    joint = joint,
-    joint_test = joint_test,
-    numderiv = numderiv,
-    ...)
-  if (!is.null(out)) {
-    return(out)
-  }
-  ###### Done with Bootstrap
-
-
-  ###### Joint test
-  if (!isFALSE(joint)) {
-    out <- joint_test(
-      object = model,
-      joint_index = joint,
-      joint_test = joint_test,
-      hypothesis = hypothesis,
-      df = df,
-      vcov = vcov)
-    return(out)
-  }
-  ###### Done with Joint test
-
-
-  # after joint test, because ftest() can require two values
-  if (is.null(df)) df <- Inf
-
-  args <- list(
-    conf_level = conf_level,
-    vcov = vcov,
-    df = df,
-    equivalence = equivalence)
-
-  # keep this NULL in case `hypothesis` was used in the previous call
-  args[["hypothesis"]] <- hypothesis
-
-  if (...length() > 0) {
-    args <- utils::modifyList(args, list(...))
-  }
-
-  xcall <- substitute(model)
-
-  if (is.symbol(xcall)) {
-    model <- eval(xcall, envir = parent.frame())
-  } else if (is.call(xcall)) {
-    model <- eval(xcall, envir = parent.frame())
-  }
-
-  numderiv <- sanitize_numderiv(numderiv)
-
-  # after re-evaluation
-  tmp <- sanitize_hypothesis(hypothesis, ...)
-  hypothesis <- tmp$hypothesis
-  hypothesis_null <- tmp$hypothesis_null
-  hypothesis_direction <- tmp$hypothesis_direction
-
-  vcov_false <- isFALSE(vcov)
-  if (!isTRUE(checkmate::check_matrix(vcov))) {
-    vcov <- get_vcov(model = model, vcov = vcov)
-    vcov.type <- get_vcov_label(vcov = vcov)
-  } else {
-    vcov.type <- "matrix"
-  }
-
-  FUNouter <- function(model, hypothesis, newparams = NULL, ...) {
-    if (isTRUE(checkmate::check_numeric(model))) {
-      out <- data.frame(term = seq_along(out), estimate = out)
-    } else if (inherits(model, "data.frame")) {
-      out <- model
-      if (!"estimate" %in% colnames(out)) {
-        msg <- "`hypothesis` function must return a data.frame with a column named `estimate`."
-        insight::format_error(msg)
-      }
-      if (!"term" %in% colnames(out)) {
-        n <- tryCatch(names(stats::coef(model)), error = function(e) NULL)
-        if (is.null(n)) {
-          n <- paste0("b", seq_len(nrow(out)))
+    if (inherits(model, c("predictions", "comparisons", "slopes", "hypotheses"))) {
+        if (!is.null(vcov)) {
+            msg <- "The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call."
+            stop(msg, call. = FALSE)
         }
-        out$term <- n
-      }
-      if (!all(c("term", "estimate") %in% colnames(out))) {
-        msg <- "`hypothesis` function must return a data.frame with two columns named `term` and `estimate`."
+    }
+
+    checkmate::assert_number(conf_level, null.ok = TRUE, lower = 0, upper = 1)
+    if (is.null(conf_level)) {
+        # inherit conf_level from marginaleffects objects
+        conf_level <- attr(model, "conf_level")
+        if (is.null(conf_level)) {
+            conf_level <- 0.95
+        }
+    }
+
+    # I don't know how to adjust p values for a different null in `multcomp::glht()`
+    if (!isFALSE(multcomp) && isTRUE(checkmate::check_number(hypothesis))) {
+        msg <- "The `multcomp` argument is not available when `hypothesis` is a number."
+        stop(msg, call. = FALSE)
+    }
+
+    if (!isFALSE(multcomp) && !isFALSE(joint)) {
+        msg <- "The `multcomp` argument cannot be used with the `joint` argument."
         insight::format_error(msg)
-      }
-
-      # unknown model
-    } else if (!is.function(hypothesis)) {
-      out <- insight::get_parameters(model, ...)
-      if ("Component" %in% colnames(out) && !anyNA(out$Component)) {
-        out$Parameter <- sprintf("%s_%s", out$Component, out$Parameter)
-      } else if ("Response" %in% colnames(out) && !anyNA(out$Response)) {
-        out$Parameter <- sprintf("%s_%s", out$Response, out$Parameter)
-      }
-      idx <- intersect(colnames(model), c("term", "group", "estimate"))
-      colnames(out)[1:2] <- c("term", "estimate")
-
-      # glmmTMB
-      if (!is.null(newparams)) {
-        out$estimate <- newparams
-      }
-    } else if (hypothesis_is_formula) {
-      beta <- get_coef(model)
-      out <- data.table::data.table(estimate = beta, term = names(beta))
-
-      # unknown model but user-supplied hypothesis function
-    } else {
-      out <- model
     }
 
-    tmp <- get_hypothesis(out, hypothesis = hypothesis)
-    out <- tmp$estimate
-    hypothesis_function_by <- attr(tmp, "hypothesis_function_by")
+    call_attr <- construct_call(model, "hypotheses")
 
-    # labels
-    lab <- c("hypothesis", "term", hypothesis_function_by)
-    lab <- intersect(lab, colnames(tmp))
-    if (length(lab) > 0) {
-      lab <- tmp[, ..lab]
-      attr(out, "label") <- lab
+    if ("modeldata" %in% ...names()) {
+        call_attr[["modeldata"]] <- ...elt(match("modeldata", ...names())[1L])
     }
 
-    if ("group" %in% colnames(tmp)) {
-      attr(out, "grouplab") <- tmp[["group"]]
+    # multiple imputation
+    if (inherits(model, c("mira", "amest"))) {
+        out <- process_imputation(model, call_attr)
+        return(out)
     }
 
-    attr(out, "hypothesis_function_by") <- hypothesis_function_by
-    return(out)
-  }
+    ###### Bootstrap
+    # restore an already sanitized hypothesis if necessary
+    hypothesis <-
+        if (is.null(attr(hypothesis, "label"))) {
+            hypothesis
+        } else {
+            attr(hypothesis, "label")
+        }
 
-  b <- FUNouter(model = model, hypothesis = hypothesis, ...)
+    # Apply inferences method
+    out <- inferences_dispatch(
+        INF_FUN = hypotheses,
+        model = model,
+        hypothesis = hypothesis,
+        vcov = vcov,
+        conf_level = conf_level,
+        df = df,
+        equivalence = equivalence,
+        joint = joint,
+        joint_test = joint_test,
+        numderiv = numderiv,
+        ...
+    )
+    if (!is.null(out)) {
+        return(out)
+    }
+    ###### Done with Bootstrap
 
-  # bayesian posterior
-  if (!is.null(attr(b, "posterior_draws"))) {
-    draws <- attr(b, "posterior_draws")
-    J <- NULL
-    se <- rep(NA, length(b))
+    ###### Joint test
+    if (!isFALSE(joint)) {
+        out <- joint_test(
+            object = model,
+            joint_index = joint,
+            joint_test = joint_test,
+            hypothesis = hypothesis,
+            df = df,
+            vcov = vcov
+        )
+        return(out)
+    }
+    ###### Done with Joint test
 
-    # standard errors via delta method
-  } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
+    # after joint test, because ftest() can require two values
+    if (is.null(df)) df <- Inf
+
     args <- list(
-      model = model,
-      vcov = vcov,
-      hypothesis = hypothesis,
-      FUN = FUNouter,
-      numderiv = numderiv)
+        conf_level = conf_level,
+        vcov = vcov,
+        df = df,
+        equivalence = equivalence
+    )
+
+    # keep this NULL in case `hypothesis` was used in the previous call
+    args[["hypothesis"]] <- hypothesis
+
     if (...length() > 0) {
-      args <- utils::modifyList(args, list(...))
+        args <- utils::modifyList(args, list(...))
     }
-    se <- do.call("get_se_delta", args)
-    J <- attr(se, "jacobian")
-    attr(se, "jacobian") <- NULL
-    draws <- NULL
 
-    # no standard error
-  } else {
-    J <- draws <- NULL
-    se <- rep(NA, length(b))
-  }
+    xcall <- substitute(model)
 
-  hyplab <- attr(b, "label")
-  if (!is.null(hypothesis)) {
-    if (is.null(hyplab)) {
-      hyplab <- attr(hypothesis, "label")
+    if (is.symbol(xcall)) {
+        model <- eval(xcall, envir = parent.frame())
+    } else if (is.call(xcall)) {
+        model <- eval(xcall, envir = parent.frame())
     }
-    if (!is.null(hyplab)) {
-      out <- cbind(hyplab, data.frame(
-        estimate = b,
-        std.error = se))
+
+    numderiv <- sanitize_numderiv(numderiv)
+
+    # after re-evaluation
+    tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis <- tmp$hypothesis
+    hypothesis_null <- tmp$hypothesis_null
+    hypothesis_direction <- tmp$hypothesis_direction
+
+    vcov_false <- isFALSE(vcov)
+    if (!isTRUE(checkmate::check_matrix(vcov))) {
+        vcov <- get_vcov(model = model, vcov = vcov)
+        vcov.type <- get_vcov_label(vcov = vcov)
     } else {
-      out <- data.frame(
-        term = "custom",
-        estimate = b,
-        std.error = se)
+        vcov.type <- "matrix"
     }
-  } else {
-    if (!is.null(hyplab) && nrow(hyplab) == length(b)) {
-      out <- cbind(hyplab, data.frame(
-        estimate = b,
-        std.error = se))
+
+    FUNouter <- function(model, hypothesis, newparams = NULL, ...) {
+        if (isTRUE(checkmate::check_numeric(model))) {
+            out <- data.frame(term = seq_along(out), estimate = out)
+        } else if (inherits(model, "data.frame")) {
+            out <- model
+            if (!"estimate" %in% colnames(out)) {
+                msg <- "`hypothesis` function must return a data.frame with a column named `estimate`."
+                insight::format_error(msg)
+            }
+            if (!"term" %in% colnames(out)) {
+                n <- tryCatch(names(stats::coef(model)), error = function(e) NULL)
+                if (is.null(n)) {
+                    n <- paste0("b", seq_len(nrow(out)))
+                }
+                out$term <- n
+            }
+            if (!all(c("term", "estimate") %in% colnames(out))) {
+                msg <- "`hypothesis` function must return a data.frame with two columns named `term` and `estimate`."
+                insight::format_error(msg)
+            }
+
+            # unknown model
+        } else if (!is.function(hypothesis)) {
+            out <- insight::get_parameters(model, ...)
+            if ("Component" %in% colnames(out) && !anyNA(out$Component)) {
+                out$Parameter <- sprintf("%s_%s", out$Component, out$Parameter)
+            } else if ("Response" %in% colnames(out) && !anyNA(out$Response)) {
+                out$Parameter <- sprintf("%s_%s", out$Response, out$Parameter)
+            }
+            idx <- intersect(colnames(model), c("term", "group", "estimate"))
+            colnames(out)[1:2] <- c("term", "estimate")
+
+            # glmmTMB
+            if (!is.null(newparams)) {
+                out$estimate <- newparams
+            }
+        } else if (hypothesis_is_formula) {
+            beta <- get_coef(model)
+            out <- data.table::data.table(estimate = beta, term = names(beta))
+
+            # unknown model but user-supplied hypothesis function
+        } else {
+            out <- model
+        }
+
+        tmp <- get_hypothesis(out, hypothesis = hypothesis)
+        out <- tmp$estimate
+        hypothesis_function_by <- attr(tmp, "hypothesis_function_by")
+
+        # labels
+        lab <- c("hypothesis", "term", hypothesis_function_by)
+        lab <- intersect(lab, colnames(tmp))
+        if (length(lab) > 0) {
+            lab <- tmp[, ..lab]
+            attr(out, "label") <- lab
+        }
+
+        if ("group" %in% colnames(tmp)) {
+            attr(out, "grouplab") <- tmp[["group"]]
+        }
+
+        attr(out, "hypothesis_function_by") <- hypothesis_function_by
+        return(out)
+    }
+
+    b <- FUNouter(model = model, hypothesis = hypothesis, ...)
+
+    # bayesian posterior
+    if (!is.null(attr(b, "posterior_draws"))) {
+        draws <- attr(b, "posterior_draws")
+        J <- NULL
+        se <- rep(NA, length(b))
+
+        # standard errors via delta method
+    } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
+        args <- list(
+            model = model,
+            vcov = vcov,
+            hypothesis = hypothesis,
+            FUN = FUNouter,
+            numderiv = numderiv
+        )
+        if (...length() > 0) {
+            args <- utils::modifyList(args, list(...))
+        }
+        se <- do.call("get_se_delta", args)
+        J <- attr(se, "jacobian")
+        attr(se, "jacobian") <- NULL
+        draws <- NULL
+
+        # no standard error
     } else {
-      out <- data.frame(
-        term = paste0("b", seq_along(b)),
-        estimate = b,
-        std.error = se)
+        J <- draws <- NULL
+        se <- rep(NA, length(b))
     }
-  }
 
-  # Remove std.error column when not computing st.errors and in bootstrap
-  if (vcov_false) {
-    out$std.error <- NULL
-  }
+    hyplab <- attr(b, "label")
+    if (!is.null(hypothesis)) {
+        if (is.null(hyplab)) {
+            hyplab <- attr(hypothesis, "label")
+        }
+        if (!is.null(hyplab)) {
+            out <- cbind(
+                hyplab,
+                data.frame(
+                    estimate = b,
+                    std.error = se
+                )
+            )
+        } else {
+            out <- data.frame(
+                term = "custom",
+                estimate = b,
+                std.error = se
+            )
+        }
+    } else {
+        if (!is.null(hyplab) && nrow(hyplab) == length(b)) {
+            out <- cbind(
+                hyplab,
+                data.frame(
+                    estimate = b,
+                    std.error = se
+                )
+            )
+        } else {
+            out <- data.frame(
+                term = paste0("b", seq_along(b)),
+                estimate = b,
+                std.error = se
+            )
+        }
+    }
 
-  out[["group"]] <- attr(b, "grouplab")
+    # Remove std.error column when not computing st.errors and in bootstrap
+    if (vcov_false) {
+        out$std.error <- NULL
+    }
 
-  out <- get_ci(
-    out,
-    conf_level = conf_level,
-    vcov = vcov,
-    draws = draws,
-    estimate = "estimate",
-    hypothesis_null = hypothesis_null,
-    hypothesis_direction = hypothesis_direction,
-    df = df,
-    model = model,
-    ...)
+    out[["group"]] <- attr(b, "grouplab")
 
-  if (!is.null(equivalence)) {
-    out <- equivalence(
-      out,
-      df = df,
-      equivalence = equivalence)
-  }
+    out <- get_ci(
+        out,
+        conf_level = conf_level,
+        vcov = vcov,
+        draws = draws,
+        estimate = "estimate",
+        hypothesis_null = hypothesis_null,
+        hypothesis_direction = hypothesis_direction,
+        df = df,
+        model = model,
+        ...
+    )
 
-  out <- sort_columns(out)
+    if (!is.null(equivalence)) {
+        out <- equivalence(
+            out,
+            df = df,
+            equivalence = equivalence
+        )
+    }
 
-  data.table::setDF(out)
-  class(out) <- c("hypotheses", class(out))
+    out <- sort_columns(out)
 
-  attr(out, "posterior_draws") <- draws
-  attr(out, "model") <- model
-  attr(out, "model_type") <- class(model)[1L]
-  attr(out, "jacobian") <- J
-  attr(out, "call") <- call_attr
-  attr(out, "vcov") <- vcov
-  attr(out, "vcov.type") <- vcov.type
-  attr(out, "conf_level") <- conf_level
-  attr(out, "hypothesis_function_by") <- attr(b, "hypothesis_function_by")
+    data.table::setDF(out)
+    class(out) <- c("hypotheses", class(out))
 
-  # must be after attributes for vcov
-  out <- multcomp_test(out, multcomp = multcomp, conf_level = conf_level, df = df)
+    attr(out, "posterior_draws") <- draws
+    attr(out, "model") <- model
+    attr(out, "model_type") <- class(model)[1L]
+    attr(out, "jacobian") <- J
+    attr(out, "call") <- call_attr
+    attr(out, "vcov") <- vcov
+    attr(out, "vcov.type") <- vcov.type
+    attr(out, "conf_level") <- conf_level
+    attr(out, "hypothesis_function_by") <- attr(b, "hypothesis_function_by")
 
-  # Issue #1102: hypotheses() should not be called twice on the same object
-  attr(out, "hypotheses_call") <- TRUE
+    # must be after attributes for vcov
+    out <- multcomp_test(
+        out,
+        multcomp = multcomp,
+        conf_level = conf_level,
+        df = df
+    )
 
-  return(out)
+    # Issue #1102: hypotheses() should not be called twice on the same object
+    attr(out, "hypotheses_call") <- TRUE
+
+    return(out)
 }

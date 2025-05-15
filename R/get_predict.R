@@ -14,11 +14,12 @@ get_predict <- function(model, newdata, type, ...) {
 
 #' @rdname get_predict
 #' @export
-get_predict.default <- function(model,
-                                newdata = insight::get_data(model),
-                                type = "response",
-                                ...) {
-
+get_predict.default <- function(
+    model,
+    newdata = insight::get_data(model),
+    type = "response",
+    ...
+) {
     dots <- list(...)
 
     if (is.null(type)) {
@@ -26,7 +27,17 @@ get_predict.default <- function(model,
     }
 
     # some predict methods raise warnings on unused arguments
-    unused <- c("normalize_dydx", "eps", "numDeriv_method", "internal_call", "draw", "modeldata", "transform_pre", "transform_post", "flag")
+    unused <- c(
+        "normalize_dydx",
+        "eps",
+        "numDeriv_method",
+        "internal_call",
+        "draw",
+        "modeldata",
+        "transform_pre",
+        "transform_post",
+        "flag"
+    )
     dots <- dots[setdiff(names(dots), unused)]
 
     # first argument in the predict methods is not always named "x" or "model"
@@ -48,11 +59,13 @@ get_predict.default <- function(model,
     }
 
     # 1-d array to vector (e.g., Gam from {gam})
-    if (is.array(pred) &&
-        length(dim(pred)) == 3 &&
-        dim(pred)[1] == 1 &&
-        dim(pred)[2] == 1 &&
-        dim(pred)[3] > 1) {
+    if (
+        is.array(pred) &&
+            length(dim(pred)) == 3 &&
+            dim(pred)[1] == 1 &&
+            dim(pred)[2] == 1 &&
+            dim(pred)[3] > 1
+    ) {
         pred <- as.vector(pred)
     }
 
@@ -72,15 +85,14 @@ get_predict.default <- function(model,
             if ("rowid" %in% colnames(newdata)) {
                 out <- list(
                     rowid = newdata$rowid,
-                    estimate = pred)
+                    estimate = pred
+                )
             } else {
                 out <- list(rowid = seq_len(length(pred)), estimate = pred)
             }
-
         }
-        
 
-    # matrix with outcome levels as columns
+        # matrix with outcome levels as columns
     } else if (is.matrix(pred)) {
         if (is.null(colnames(pred))) {
             colnames(pred) <- seq_len(ncol(pred))
@@ -90,16 +102,25 @@ get_predict.default <- function(model,
             out <- list(
                 rowid = rep(newdata[["rowid"]], times = ncol(pred)),
                 group = rep(colnames(pred), each = nrow(pred)),
-                estimate = c(pred))
+                estimate = c(pred)
+            )
         } else {
-                        out <- list(
+            out <- list(
                 rowid = rep(seq_len(nrow(pred)), times = ncol(pred)),
                 group = rep(colnames(pred), each = nrow(pred)),
-                estimate = c(pred))
+                estimate = c(pred)
+            )
         }
         out$group <- group_to_factor(out$group, model)
     } else {
-        stop(sprintf("Unable to extract predictions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]), call. = FALSE)
+        stop(
+            sprintf(
+                "Unable to extract predictions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues",
+                type,
+                class(model)[1]
+            ),
+            call. = FALSE
+        )
     }
 
     data.table::setDF(out)

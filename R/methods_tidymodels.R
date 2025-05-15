@@ -42,7 +42,10 @@ get_predict.model_fit <- function(model, newdata, type = NULL, ...) {
         v <- intersect(c(".pred", ".pred_res"), colnames(out))[1]
         out <- data.frame(rowid = seq_len(nrow(out)), estimate = out[[v]])
     } else if (type == "class") {
-        out <- data.frame(rowid = seq_len(nrow(out)), estimate = out[[".pred_class"]])
+        out <- data.frame(
+            rowid = seq_len(nrow(out)),
+            estimate = out[[".pred_class"]]
+        )
     } else if (type == "prob") {
         colnames(out) <- substr(colnames(out), 7, nchar(colnames(out)))
         out$rowid <- seq_len(nrow(out))
@@ -51,7 +54,8 @@ get_predict.model_fit <- function(model, newdata, type = NULL, ...) {
             out,
             id.vars = "rowid",
             variable.name = "group",
-            value.name = "estimate")
+            value.name = "estimate"
+        )
     }
 
     return(out)
