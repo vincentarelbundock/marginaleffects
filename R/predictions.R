@@ -279,7 +279,6 @@ predictions <- function(
     transform <- sanitize_transform(transform)
 
     conf_level <- sanitize_conf_level(conf_level, ...)
-
     newdata <- sanitize_newdata(
         model = model,
         newdata = newdata,
@@ -764,7 +763,7 @@ avg_predictions <- function(
     call_attr <- construct_call(model, "predictions")
     call_attr[["by"]] <- by
 
-    out <- eval.parent(call_attr)
+    out <- evalup(call_attr)
 
     # out <- predictions(
     #   model = model,

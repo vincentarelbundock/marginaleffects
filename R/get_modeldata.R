@@ -115,11 +115,11 @@ get_modeldata <- function(
 
     # iv_robust and some others
     if (is.null(out)) {
-        out <- eval.parent(model[["call"]][["data"]])
+        out <- evalup(model[["call"]][["data"]])
     }
 
     if (is.null(out)) {
-        out <- eval.parent(attr(model, "call")$data)
+        out <- evalup(attr(model, "call")$data)
     }
 
     out <- unpack_matrix_1col(out)
