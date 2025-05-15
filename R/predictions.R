@@ -210,32 +210,22 @@ predictions <- function(
     dots <- list(...)
 
     # extracting modeldata repeatedly is slow.
-    if (isTRUE(by)) {
-        modeldata <- get_modeldata(
-            model,
-            additional_variables = FALSE,
-            modeldata = dots[["modeldata"]],
-            wts = wts
-        )
-    } else {
-        modeldata <- get_modeldata(
-            model,
-            additional_variables = by,
-            modeldata = dots[["modeldata"]],
-            wts = wts
-        )
-    }
-
     if ("modeldata" %in% ...names()) {
-        call_attr[["modeldata"]] <- modeldata
+        modeldata <- call_attr[["modeldata"]] <- ...get("modeldata")
+    } else {
+        modeldata <- call_attr[["modeldata"]] <- get_modeldata(
+            model,
+            additional_variables = if (isTRUE(by)) by else FALSE,
+            modeldata = dots[["modeldata"]],
+            wts = wts
+        )
     }
 
     sanity_reserved(model, modeldata)
 
     # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+    newdata <- sanitize_newdata_call(rlang::enquo(newdata), newdata, model, by = by)
 
     # sanity checks
     sanity_dots(model = model, ...)
@@ -289,6 +279,7 @@ predictions <- function(
     transform <- sanitize_transform(transform)
 
     conf_level <- sanitize_conf_level(conf_level, ...)
+
     newdata <- sanitize_newdata(
         model = model,
         newdata = newdata,
