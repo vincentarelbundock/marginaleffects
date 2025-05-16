@@ -28,7 +28,6 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
         colMeans(t, na.rm = TRUE),
         sqrt(apply(t, 2L, function(t.st) stats::var(t.st[!is.na(t.st)])))
     )
-    out$std.error <- op[, 2]
 
     # extract from weird boot.ci() list (inspired from `broom::tidy.broom` under MIT)
     ci_list <- lapply(
@@ -56,7 +55,7 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
         out$conf.high <- ci[2]
     }
 
-    cols <- setdiff(names(out), c("p.value", "statistic", "s.value", "df"))
+    cols <- setdiff(names(out), c("p.value", "std.error", "statistic", "s.value", "df"))
     out <- out[, cols, drop = FALSE]
 
     attr(out, "inferences") <- B

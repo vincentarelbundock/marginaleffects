@@ -13,13 +13,17 @@ get_predict.MCMCglmm <- function(
     } else {
         idx <- seq_len(ndraws_mod)
     }
+    # hack: predict() appears to require the response in `newdata`, but the value does not appear to maek a difference
+    nd <- newdata
+    dvname <- insight::find_response(model)
+    nd[, dvname] <- 1000
     draws <- lapply(
         idx,
-        function(i) stats::predict(model, newdata = newdata, it = i, ...)
+        function(i) stats::predict(model, newdata = nd, it = i, ...)
     )
     draws <- do.call("cbind", draws)
     out <- data.frame(
-        rowid = seq_len(nrow(newdata)),
+        rowid = seq_len(nrow(nd)),
         estimate = apply(draws, MARGIN = 1, FUN = stats::median)
     )
     attr(out, "posterior_draws") <- draws
