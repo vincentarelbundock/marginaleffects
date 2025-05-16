@@ -154,7 +154,7 @@ inferences2 <- function(
         out <- inferences_rsample(x, R = R, conf_level = conf_level, conf_type = conf_type, ...)
     } else if (method == "simulation") {
         insight::check_if_installed("MASS")
-        out <- bootstrap_simulation2(x, R = R, conf_level = conf_level, ...)
+        out <- inferences_simulation(x, R = R, conf_level = conf_level, ...)
     } else if (isTRUE(grepl("conformal", method))) {
         out <- conformal_fun(
             x,
@@ -164,6 +164,34 @@ inferences2 <- function(
             calibration = conformal_calibration,
             score = conformal_score
         )
+    }
+
+    # Preserve specific attributes from the input object
+    attrs <- c(
+        "conf_level",
+        "by",
+        "lean",
+        "type",
+        "newdata",
+        "call",
+        "model_type",
+        "model",
+        "jacobian",
+        "vcov",
+        "weights",
+        "transform",
+        "hypothesis_by",
+        "nchains",
+        "vcov.type",
+        "variables",
+        "comparison",
+        "comparison_label",
+        "transform_label"
+    )
+    for (n in attrs) {
+        if (!is.null(attr(x, n))) {
+            attr(out, n) <- attr(x, n)
+        }
     }
 
     return(out)
