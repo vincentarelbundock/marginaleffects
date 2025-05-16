@@ -291,6 +291,11 @@ predictions <- function(
     )
 
     # after sanitize_newdata
+    if (is.null(modeldata) && isTRUE(checkmate::check_data_frame(newdata))) {
+        modeldata <- call_attr[["modeldata"]] <- newdata
+    }
+
+    # after sanitize_newdata
     sanity_by(by, newdata)
 
     # after sanity_by
@@ -727,22 +732,6 @@ avg_predictions <- function(
     call_attr[["by"]] <- by
 
     out <- eval.parent(call_attr)
-
-    # out <- predictions(
-    #   model = model,
-    #   newdata = newdata,
-    #   variables = variables,
-    #   vcov = vcov,
-    #   conf_level = conf_level,
-    #   type = type,
-    #   by = by,
-    #   byfun = byfun,
-    #   wts = wts,
-    #   transform = transform,
-    #   hypothesis = hypothesis,
-    #   equivalence = equivalence,
-    #   df = df,
-    #   ...)
 
     return(out)
 }

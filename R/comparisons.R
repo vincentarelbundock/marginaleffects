@@ -272,6 +272,9 @@ comparisons <- function(
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+    if (is.null(modeldata) && isTRUE(checkmate::check_data_frame(newdata))) {
+        modeldata <- newdata
+    }
 
     # required by stubcols later, but might be overwritten
     bycols <- NULL
@@ -327,6 +330,11 @@ comparisons <- function(
         by = by,
         wts = wts
     )
+
+    # after sanitize_newdata
+    if (is.null(modeldata) && isTRUE(checkmate::check_data_frame(newdata))) {
+        modeldata <- call_attr[["modeldata"]] <- newdata
+    }
 
     # after sanitize_newdata
     sanity_by(by, newdata)
@@ -586,33 +594,9 @@ avg_comparisons <- function(
     numderiv = "fdforward",
     ...
 ) {
-    # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    # scall <- rlang::enquo(newdata)
-    # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-
-    #Construct comparisons() call
     call_attr <- construct_call(model, "comparisons")
 
     out <- eval.parent(call_attr)
-
-    # out <- comparisons(
-    #   model = model,
-    #   newdata = newdata,
-    #   variables = variables,
-    #   type = type,
-    #   vcov = vcov,
-    #   by = by,
-    #   conf_level = conf_level,
-    #   comparison = comparison,
-    #   transform = transform,
-    #   cross = cross,
-    #   wts = wts,
-    #   hypothesis = hypothesis,
-    #   equivalence = equivalence,
-    #   df = df,
-    #   eps = eps,
-    #   ...)
 
     return(out)
 }
