@@ -85,6 +85,7 @@ utils::globalVariables(c(
     "tmp_grp",
     "comparison_idx",
     "value",
+    "vcov",
     "where",
     "wts"
 ))
