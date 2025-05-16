@@ -1,6 +1,6 @@
 #' Bootstrap fwb v2
 #' @export
-bootstrap_fwb2 <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
+inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
     out <- x
     call_mfx <- attr(x, "call")
     call_mfx[["vcov"]] <- FALSE

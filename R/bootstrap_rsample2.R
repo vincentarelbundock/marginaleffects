@@ -1,6 +1,6 @@
 #' Bootstrap rsample v2
 #' @export
-bootstrap_rsample2 <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
+inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
     out <- x
     call_mfx <- attr(x, "call")
     call_mfx[["vcov"]] <- FALSE

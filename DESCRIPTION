@@ -238,6 +238,7 @@ Collate:
     'hypothesis_string.R'
     'imputation.R'
     'inferences.R'
+    'inferences2.R'
     'matrix_apply.R'
     'mean_or_mode.R'
     'methods.R'
