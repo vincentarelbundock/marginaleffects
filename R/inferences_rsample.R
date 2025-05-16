@@ -23,7 +23,12 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     args <- list("data" = modeldata, "apparent" = TRUE)
     args[["times"]] <- R
     splits <- do.call(rsample::bootstraps, args)
-    splits$estimates <- lapply(splits$splits, bootfun)
+    if (isTRUE(getOption("marginaleffects_parallel_inferences", default = FALSE))) {
+        insight::check_if_installed("future.apply")
+        splits$estimates <- future_lapply(splits$splits, bootfun, future.seed = TRUE)
+    } else {
+        splits$estimates <- lapply(splits$splits, bootfun)
+    }
 
     if (isTRUE(conf_type == "bca")) {
         ci <- rsample::int_bca(

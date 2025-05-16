@@ -1,4 +1,5 @@
 inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
+    insight::check_if_installed("fwb", minimum_version = "0.3.0")
     out <- x
     call_mfx <- attr(x, "call")
     call_mfx[["vcov"]] <- FALSE
@@ -27,6 +28,11 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", .
     }
 
     args <- list("data" = modeldata, "statistic" = bootfun, R = R, verbose = FALSE)
+
+    if (isTRUE(getOption("marginaleffects_parallel_inferences", default = FALSE))) {
+        args[["cl"]] <- "future"
+    }
+
     B <- do.call(fwb::fwb, args)
 
     # Extract SEs and CIs
