@@ -21,15 +21,9 @@ tmp <- lm(mpg ~ drat + wt, data = mtcars)
 expect_error(slopes(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 expect_error(comparisons(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 
-exit_file("TODO: error not raised in tinytest. envrionment evaluation issue.")
 expect_error(
-    slopes(mod, newdata = dat, hypothesis = ~pairwise),
+    slopes(tmp, newdata = dat, hypothesis = ~pairwise),
     pattern = "safe"
-)
-
-expect_warning(
-    slopes(mod, lincom = "pairwise"),
-    pattern = "lincom"
 )
 
 tmp <- lm(mpg ~ wt + drat, data = mtcars)
@@ -86,7 +80,6 @@ mfx <- slopes(
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 1)
 expect_true("(8 - 4) - (6 - 4)" %in% mfx$hypothesis)
-
 
 # contrasts: hypothesis
 cmp1 <- comparisons(

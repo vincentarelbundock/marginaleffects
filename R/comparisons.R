@@ -254,23 +254,18 @@ comparisons <- function(
     dots <- list(...)
 
     # extracting modeldata repeatedly is slow.
-    if (isTRUE(by)) {
-        modeldata <- get_modeldata(
-            model,
-            additional_variables = FALSE,
-            modeldata = dots[["modeldata"]],
-            wts = wts
-        )
+    if ("modeldata" %in% ...names()) {
+        modeldata <- call_attr[["modeldata"]] <- ...get("modeldata")
     } else {
         modeldata <- get_modeldata(
             model,
-            additional_variables = by,
+            additional_variables = if (is.logical(by)) FALSE else TRUE,
             modeldata = dots[["modeldata"]],
             wts = wts
         )
-    }
-    if ("modeldata" %in% ...names()) {
-        call_attr[["modeldata"]] <- modeldata
+        if (isTRUE(checkmate::check_data_frame(modeldata))) {
+            call_attr[["modeldata"]] <- modeldata
+        }
     }
 
     # very early, before any use of newdata
