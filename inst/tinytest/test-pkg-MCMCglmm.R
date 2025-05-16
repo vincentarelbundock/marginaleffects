@@ -6,8 +6,6 @@ requiet("MCMCglmm")
 
 mod <- MCMCglmm(mpg ~ hp, random = ~carb, data = mtcars, verbose = FALSE)
 
-Q
-pkgload::load_all()
 p <- avg_comparisons(mod, newdata = mtcars)
 expect_inherits(p, "comparisons")
 expect_equivalent(nrow(p), 1)
