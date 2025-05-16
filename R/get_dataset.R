@@ -108,15 +108,13 @@ get_dataset <- function(
 
         # Rdatasets
     } else {
-        data <- "https://vincentarelbundock.github.io/Rdatasets/csv/%s/%s.csv"
+        insight::check_if_installed("nanoparquet")
+        temp_file <- tempfile(fileext = ".parquet")
+        data <- "https://vincentarelbundock.github.io/Rdatasets/parquet/%s/%s.parquet"
         data <- sprintf(data, package, dataset)
-        data <- tryCatch(
-            data.table::fread(data, showProgress = FALSE),
-            error = function(e) NULL
-        )
-        if (!inherits(data, "data.table")) stop("Unable to download this dataset.", call. = FALSE)
+        utils::download.file(data, temp_file, mode = "wb", quiet = TRUE)
+        data <- nanoparquet::read_parquet(temp_file)
         data.table::setDF(data)
-
         documentation <- "https://vincentarelbundock.github.io/Rdatasets/doc/%s/%s.html"
         documentation <- sprintf(documentation, package, dataset)
     }
