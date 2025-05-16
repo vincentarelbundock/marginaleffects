@@ -375,28 +375,6 @@ comparisons <- function(
 
     ############### sanity checks are over
 
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = comparisons,
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        variables = variables,
-        type = type,
-        by = by,
-        conf_level = conf_level,
-        cross = cross,
-        comparison = comparison,
-        transform = transform,
-        wts = wts,
-        hypothesis = hypothesis,
-        eps = eps,
-        ...
-    )
-    if (!is.null(out)) {
-        return(out)
-    }
-
     # after inferences dispatch
     tmp <- sanitize_hypothesis(hypothesis, ...)
     hypothesis <- tmp$hypothesis
@@ -617,28 +595,6 @@ avg_comparisons <- function(
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # scall <- rlang::enquo(newdata)
     # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = avg_comparisons,
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        variables = variables,
-        type = type,
-        by = by,
-        cross = cross,
-        conf_level = conf_level,
-        comparison = comparison,
-        transform = transform,
-        wts = wts,
-        hypothesis = hypothesis,
-        eps = eps,
-        ...
-    )
-    if (!is.null(out)) {
-        return(out)
-    }
 
     #Construct comparisons() call
     call_attr <- construct_call(model, "comparisons")

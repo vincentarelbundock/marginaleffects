@@ -349,26 +349,6 @@ predictions <- function(
 
     ############### sanity checks are over
 
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = predictions,
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        variables = variables,
-        type = type_string,
-        by = by,
-        conf_level = conf_level,
-        byfun = byfun,
-        wts = wts,
-        transform = transform_original,
-        hypothesis = hypothesis,
-        ...
-    )
-    if (!is.null(out)) {
-        return(out)
-    }
-
     # pre-building the model matrix can speed up repeated predictions
     newdata <- get_model_matrix_attribute(model, newdata)
 
@@ -740,26 +720,6 @@ avg_predictions <- function(
         } else if (isTRUE(checkmate::check_list(variables, names = "named"))) {
             by <- names(variables)
         }
-    }
-
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = avg_predictions,
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        variables = variables,
-        type = type,
-        by = by,
-        conf_level = conf_level,
-        byfun = byfun,
-        wts = wts,
-        transform = transform,
-        hypothesis = hypothesis,
-        ...
-    )
-    if (!is.null(out)) {
-        return(out)
     }
 
     #Construct predictions() call

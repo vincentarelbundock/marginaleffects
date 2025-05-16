@@ -8,9 +8,13 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, ...) {
     call_mfx <- attr(x, "call")
     call_mfx[["vcov"]] <- FALSE
 
-    # Get coefficients and variance-covariance matrix
     B <- get_coef(model)
-    V <- get_vcov(model, ...get("vcov"))
+
+    # respect robust vcov from the first call
+    V <- attr(out, "vcov")
+    if (!isTRUE(checkmate::check_matrix(V))) {
+        V <- get_vcov(model)
+    }
 
     # Draw R sets of coefficients from multivariate normal
     coefmat <- MASS::mvrnorm(R, mu = B, Sigma = V)

@@ -56,7 +56,7 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
         out$conf.high <- ci[2]
     }
 
-    cols <- setdiff(names(out), c("p.value", "std.error", "statistic", "s.value", "df"))
+    cols <- setdiff(names(out), c("p.value", "statistic", "s.value", "df"))
     out <- out[, cols, drop = FALSE]
 
     attr(out, "inferences") <- B

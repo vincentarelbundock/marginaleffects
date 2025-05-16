@@ -235,7 +235,6 @@ Collate:
     'hypothesis_string.R'
     'imputation.R'
     'inferences.R'
-    'inferences2.R'
     'inferences_boot.R'
     'inferences_fwb.R'
     'inferences_rsample.R'
