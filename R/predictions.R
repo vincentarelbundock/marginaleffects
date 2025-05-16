@@ -215,7 +215,7 @@ predictions <- function(
     } else {
         modeldata <- get_modeldata(
             model,
-            additional_variables = if (is.logical(by) && isFALSE(wts)) FALSE else TRUE,
+            additional_variables = by,
             modeldata = dots[["modeldata"]],
             wts = wts
         )

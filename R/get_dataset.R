@@ -114,7 +114,7 @@ get_dataset <- function(
         data <- sprintf(data, package, dataset)
         utils::download.file(data, temp_file, mode = "wb", quiet = TRUE)
         data <- nanoparquet::read_parquet(temp_file)
-        data.table::setDF(data)
+        data <- as.data.frame(data)
         documentation <- "https://vincentarelbundock.github.io/Rdatasets/doc/%s/%s.html"
         documentation <- sprintf(documentation, package, dataset)
     }
