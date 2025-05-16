@@ -1,5 +1,3 @@
-#' Bootstrap boot v2
-#' @export
 inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
     out <- x
     call_mfx <- attr(x, "call")

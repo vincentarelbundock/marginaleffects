@@ -1,5 +1,3 @@
-#' Bootstrap fwb v2
-#' @export
 inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
     out <- x
     call_mfx <- attr(x, "call")

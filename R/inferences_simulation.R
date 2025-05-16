@@ -1,5 +1,3 @@
-#' Simulation-based inference
-#' @export
 inferences_simulation <- function(x, R = 1000, conf_level = 0.95, ...) {
     insight::check_if_installed("MASS")
 
