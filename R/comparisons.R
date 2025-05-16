@@ -594,7 +594,7 @@ avg_comparisons <- function(
     #Construct comparisons() call
     call_attr <- construct_call(model, "comparisons")
 
-    out <- evalup(call_attr)
+    out <- eval.parent(call_attr)
 
     # out <- comparisons(
     #   model = model,
