@@ -7,8 +7,7 @@ using("marginaleffects")
 # vab: possibly caused by a version of `emmeans` < 1.6.3
 dat <- get_dataset("penguins", "palmerpenguins")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
-mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species,
-  data = dat, family = binomial)
+mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species, data = dat, family = binomial)
 mfx <- slopes(mod, variables = "species")
 expect_inherits(mfx, "data.frame")
 expect_true(nrow(mfx) > 0)
@@ -16,11 +15,23 @@ expect_true(ncol(mfx) > 0)
 
 
 # Hernan & Robins replication: bug would not detect `as.factor()` in formula()
-nhefs <- read.csv("https://raw.githubusercontent.com/vincentarelbundock/modelarchive/main/data-raw/nhefs.csv")
-f <- wt82_71 ~ qsmk + sex + race + age + I(age * age) + factor(education) +
-  smokeintensity + I(smokeintensity * smokeintensity) + smokeyrs +
-  I(smokeyrs * smokeyrs) + as.factor(exercise) + as.factor(active) + wt71 +
-  I(wt71 * wt71) + I(qsmk * smokeintensity)
+nhefs <- get_dataset("nhefs", "causaldata")
+f <- wt82_71 ~
+    qsmk +
+        sex +
+        race +
+        age +
+        I(age * age) +
+        factor(education) +
+        smokeintensity +
+        I(smokeintensity * smokeintensity) +
+        smokeyrs +
+        I(smokeyrs * smokeyrs) +
+        as.factor(exercise) +
+        as.factor(active) +
+        wt71 +
+        I(wt71 * wt71) +
+        I(qsmk * smokeintensity)
 
 fit <- glm(f, data = nhefs)
 pre <- predictions(fit, newdata = nhefs)
@@ -29,7 +40,6 @@ cmp <- comparisons(fit, newdata = nhefs)
 expect_inherits(pre, "predictions")
 expect_inherits(cmp, "comparisons")
 expect_inherits(mfx, "marginaleffects")
-
 
 
 # Issue 372: reserved variable names
@@ -80,8 +90,9 @@ expect_equal(p2$std.error, p3$se.fit)
 
 # Issue #671
 dta <- data.frame(
-  lab = sample(0:1, size = 1000, replace = T),
-  age_group = sample(c("old", "young"), size = 1000, replace = TRUE))
+    lab = sample(0:1, size = 1000, replace = T),
+    age_group = sample(c("old", "young"), size = 1000, replace = TRUE)
+)
 mod <- lm(lab ~ age_group, dta)
 mfx <- avg_slopes(mod)
 expect_equivalent(nrow(mfx), 1)
@@ -90,41 +101,46 @@ expect_true("young - old" %in% mfx$contrast)
 
 # Issue #697
 dat <- data.frame(
-  outcome = rbinom(n = 100, size = 1, prob = 0.35),
-  var_binom = as.factor(rbinom(n = 100, size = 1, prob = 0.2)),
-  var_cont = rnorm(n = 100, mean = 10, sd = 7),
-  group = sample(letters[1:4], size = 100, replace = TRUE),
-  groups = sample(letters[1:4], size = 100, replace = TRUE))
+    outcome = rbinom(n = 100, size = 1, prob = 0.35),
+    var_binom = as.factor(rbinom(n = 100, size = 1, prob = 0.2)),
+    var_cont = rnorm(n = 100, mean = 10, sd = 7),
+    group = sample(letters[1:4], size = 100, replace = TRUE),
+    groups = sample(letters[1:4], size = 100, replace = TRUE)
+)
 
 m1 <- glm(
-  outcome ~ var_binom + var_cont + group,
-  data = dat, family = binomial())
+    outcome ~ var_binom + var_cont + group,
+    data = dat,
+    family = binomial()
+)
 expect_error(avg_slopes(m1), pattern = "forbidden")
 expect_error(avg_slopes(m1, variables = "var_cont"), pattern = "forbidden")
 
 m2 <- glm(
-  outcome ~ var_binom + var_cont + groups,
-  data = dat, family = binomial())
+    outcome ~ var_binom + var_cont + groups,
+    data = dat,
+    family = binomial()
+)
 expect_inherits(avg_slopes(m2), "slopes")
 expect_inherits(avg_slopes(m2, variables = "var_cont"), "slopes")
 
 
 # Issue #723
 dat <- data.frame(
-  rbind(
-    c(10., "A", "AU"),
-    c(20., "A", "AU"),
-    c(30., "A", "AU"),
-    c(20., "B", "AU"),
-    c(30., "B", "AU"),
-    c(40., "B", "AU"),
-    c(10., "B", "NZ"),
-    c(20., "B", "NZ"),
-    c(30., "B", "NZ"),
-    c(20., "A", "NZ"),
-    c(30., "A", "NZ"),
-    c(40., "A", "NZ")
-  )
+    rbind(
+        c(10., "A", "AU"),
+        c(20., "A", "AU"),
+        c(30., "A", "AU"),
+        c(20., "B", "AU"),
+        c(30., "B", "AU"),
+        c(40., "B", "AU"),
+        c(10., "B", "NZ"),
+        c(20., "B", "NZ"),
+        c(30., "B", "NZ"),
+        c(20., "A", "NZ"),
+        c(30., "A", "NZ"),
+        c(40., "A", "NZ")
+    )
 )
 colnames(dat) <- c("y", "treatment", "country")
 mod <- lm(y ~ treatment * country, dat)
@@ -132,11 +148,13 @@ cmp <- comparisons(mod, variables = "treatment", by = "country")
 expect_inherits(cmp, "comparisons")
 expect_equivalent(nrow(cmp), 2)
 expect_equivalent(
-  cmp$estimate[cmp$country == "AU"],
-  coef(mod)["treatmentB"])
+    cmp$estimate[cmp$country == "AU"],
+    coef(mod)["treatmentB"]
+)
 expect_equivalent(
-  cmp$estimate[cmp$country == "NZ"],
-  coef(mod)["treatmentB"] + coef(mod)["treatmentB:countryNZ"])
+    cmp$estimate[cmp$country == "NZ"],
+    coef(mod)["treatmentB"] + coef(mod)["treatmentB:countryNZ"]
+)
 
 
 # Issue #1005
@@ -156,8 +174,6 @@ p <- avg_predictions(mod)
 expect_false(is.na(p$estimate))
 expect_error(avg_slopes(mod), "No valid predictor")
 expect_error(avg_comparisons(mod), "No valid predictor")
-
-
 
 
 source("helpers.R")
