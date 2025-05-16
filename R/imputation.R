@@ -3,7 +3,7 @@ process_imputation <- function(x, call_attr, marginal_means = FALSE) {
 
     # issue #1269: transforms must be applied after pooling
     if ("transform" %in% names(call_attr)) {
-        tr <- evalup(call_attr[["transform"]])
+        tr <- eval.parent(call_attr[["transform"]])
         call_attr[["transform"]] <- NULL
     } else {
         tr <- NULL
@@ -28,7 +28,7 @@ process_imputation <- function(x, call_attr, marginal_means = FALSE) {
             )
         }
 
-        mfx_list[[i]] <- evalup(calltmp)
+        mfx_list[[i]] <- eval.parent(calltmp)
         if (i == 1) {
             out <- mfx_list[[1]]
         }

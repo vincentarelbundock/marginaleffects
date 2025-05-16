@@ -321,7 +321,7 @@ slopes <- function(
     #     internal_call = TRUE,
     #     ...)
 
-    out <- evalup(call_attr_c)
+    out <- eval.parent(call_attr_c)
 
     if (!is.null(attr(out, "call"))) {
         attr(out, "call") <- call_attr
@@ -358,14 +358,14 @@ avg_slopes <- function(
 ) {
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    # should probably not be nested too deeply in the call stack since we evalup() (not sure about this)
+    # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     # scall <- rlang::enquo(newdata)
     # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
     #Construct comparisons() call
     call_attr <- construct_call(model, "slopes")
 
-    out <- evalup(call_attr)
+    out <- eval.parent(call_attr)
 
     # out <- slopes(
     #     model = model,

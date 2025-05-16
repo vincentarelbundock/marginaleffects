@@ -13,10 +13,10 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
         d <- rsample::analysis(split)
         call_mod <- insight::get_call(call_mfx[["model"]])
         call_mod[["data"]] <- d
-        boot_mod <- evalup(call_mod)
+        boot_mod <- eval.parent(call_mod)
         call_mfx[["model"]] <- boot_mod
         call_mfx[["modeldata"]] <- d
-        boot_mfx <- evalup(call_mfx)
+        boot_mfx <- eval.parent(call_mfx)
         out <- tidy(boot_mfx)
         out$term <- seq_len(nrow(out))
         return(out)

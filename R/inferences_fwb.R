@@ -18,13 +18,13 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", .
         # Update the model's call and evaluate
         call_mod <- insight::get_call(call_mfx[["model"]])
         call_mod[["weights"]] <- w
-        boot_mod <- evalup(call_mod)
+        boot_mod <- eval.parent(call_mod)
 
         # Update marginaleffects call
         call_mfx[["model"]] <- boot_mod
         call_mfx[["modeldata"]] <- data
         call_mfx[["wts"]] <- w
-        boot_mfx <- evalup(call_mfx)
+        boot_mfx <- eval.parent(call_mfx)
         return(boot_mfx$estimate)
     }
 

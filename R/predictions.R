@@ -726,7 +726,7 @@ avg_predictions <- function(
     call_attr <- construct_call(model, "predictions")
     call_attr[["by"]] <- by
 
-    out <- evalup(call_attr)
+    out <- eval.parent(call_attr)
 
     # out <- predictions(
     #   model = model,
