@@ -406,11 +406,17 @@ and the dataset is relatively small.
 Warning: In many cases, parallel processing will not be useful at all.
 
 To activate parallel computation, users must load the \code{future.apply} package,
-call \code{plan()} function, and set a global option. For example:
+call \code{plan()} function, and set a global option.
+
+\code{options(marginaleffects_parallel = TRUE)}: parallelize delta method computation of standard errors.
+\code{options(marginaleffects_parallel_inferences = TRUE)}: parallelize \code{"rsample"} or \code{"fwb"} bootstrap computation in \code{inferences()}.
+
+For example:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(future.apply)
 plan("multicore", workers = 4)
 options(marginaleffects_parallel = TRUE)
+options(marginaleffects_parallel_inferences = TRUE)
 
 slopes(model)
 }\if{html}{\out{</div>}}
