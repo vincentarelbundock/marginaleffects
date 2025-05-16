@@ -27,7 +27,7 @@ p <- predictions(mod, newdata = dat, type = "class")
 expect_inherits(p, "predictions")
 expect_false("std.error" %in% colnames(p))
 
-mfx <- avg_slopes(mod, newdata = dat, type = "prob")
+mfx <- avg_slopes(mod, variables = c("bill_length_mm", "flipper_length_mm"), newdata = dat, type = "prob")
 expect_inherits(mfx, "marginaleffects")
 expect_true(nrow(mfx) > 0)
 
@@ -44,7 +44,7 @@ p <- predictions(mod, newdata = bikes, type = "numeric") |>
 expect_inherits(p, "predictions")
 expect_true("std.error" %in% colnames(p))
 
-mfx <- avg_slopes(mod, newdata = bikes, type = "numeric") |>
+mfx <- avg_slopes(mod, variables = c("temp", "season", "weather"), newdata = bikes, type = "numeric") |>
     suppressWarnings()
 expect_inherits(mfx, "marginaleffects")
 expect_true(nrow(mfx) > 0)
@@ -59,9 +59,9 @@ p <- predictions(mod, newdata = bikes, type = "numeric")
 expect_inherits(p, "predictions")
 expect_false("std.error" %in% colnames(p))
 
-m <- slopes(mod, newdata = bikes, type = "numeric")
-expect_inherits(m, "slopes")
-expect_false("std.error" %in% colnames(m))
+mfx <- slopes(mod, variables = c("temp", "season", "weather"), newdata = bikes, type = "numeric")
+expect_inherits(mfx, "slopes")
+expect_false("std.error" %in% colnames(mfx))
 
 
 # Issue #1202
