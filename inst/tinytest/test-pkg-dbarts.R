@@ -10,8 +10,11 @@ dat <- na.omit(dat)
 y <- as.vector(dat$bill_length_mm)
 X <- model.matrix(~., dat[, 3:ncol(dat)])
 mod <- dbarts::bart(
-    X, y,
-    verbose = FALSE) |> suppressWarnings()
+    X,
+    y,
+    verbose = FALSE
+) |>
+    suppressWarnings()
 expect_error(comparisons(mod, newdata = dat), "bart2") |> suppressWarnings()
 
 
@@ -20,11 +23,12 @@ mod <- dbarts::bart2(
     bill_length_mm ~ .,
     data = dat,
     keepTrees = TRUE,
-    verbose = FALSE)
+    verbose = FALSE
+)
 
 p <- predictions(mod, by = "species", newdata = dat)
 expect_inherits(p, "predictions")
-p <- avg_comparisons(mod, newdata = dat)
+p <- avg_comparisons(mod, variables = colnames(dat), newdata = dat)
 expect_inherits(p, "comparisons")
 
 
@@ -32,8 +36,12 @@ expect_inherits(p, "comparisons")
 options(marginaleffects_posterior_center = mean)
 dat <- get_dataset("lalonde", "MatchIt")
 
-fit <- dbarts::bart2(re78 ~ treat + age + educ + race + married + nodegree + re74 + re75,
-    data = dat, keepTrees = T, verbose = F)
+fit <- dbarts::bart2(
+    re78 ~ treat + age + educ + race + married + nodegree + re74 + re75,
+    data = dat,
+    keepTrees = TRUE,
+    verbose = FALSE
+)
 
 p0 <- predict(fit, newdata = transform(subset(dat, treat == 1), treat = 0))
 p1 <- predict(fit, newdata = transform(subset(dat, treat == 1), treat = 1))
