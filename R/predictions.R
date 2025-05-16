@@ -213,12 +213,15 @@ predictions <- function(
     if ("modeldata" %in% ...names()) {
         modeldata <- call_attr[["modeldata"]] <- ...get("modeldata")
     } else {
-        modeldata <- call_attr[["modeldata"]] <- get_modeldata(
+        modeldata <- get_modeldata(
             model,
-            additional_variables = if (isTRUE(by)) by else FALSE,
+            additional_variables = by,
             modeldata = dots[["modeldata"]],
             wts = wts
         )
+        if (isTRUE(checkmate::check_data_frame(modeldata))) {
+            call_attr[["modeldata"]] <- modeldata
+        }
     }
 
     sanity_reserved(model, modeldata)
@@ -279,7 +282,6 @@ predictions <- function(
     transform <- sanitize_transform(transform)
 
     conf_level <- sanitize_conf_level(conf_level, ...)
-
     newdata <- sanitize_newdata(
         model = model,
         newdata = newdata,
@@ -287,6 +289,11 @@ predictions <- function(
         by = by,
         wts = wts
     )
+
+    # after sanitize_newdata
+    if (is.null(modeldata) && isTRUE(checkmate::check_data_frame(newdata))) {
+        modeldata <- call_attr[["modeldata"]] <- newdata
+    }
 
     # after sanitize_newdata
     sanity_by(by, newdata)
@@ -346,26 +353,6 @@ predictions <- function(
     }
 
     ############### sanity checks are over
-
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = predictions,
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        variables = variables,
-        type = type_string,
-        by = by,
-        conf_level = conf_level,
-        byfun = byfun,
-        wts = wts,
-        transform = transform_original,
-        hypothesis = hypothesis,
-        ...
-    )
-    if (!is.null(out)) {
-        return(out)
-    }
 
     # pre-building the model matrix can speed up repeated predictions
     newdata <- get_model_matrix_attribute(model, newdata)
@@ -740,47 +727,11 @@ avg_predictions <- function(
         }
     }
 
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = avg_predictions,
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        variables = variables,
-        type = type,
-        by = by,
-        conf_level = conf_level,
-        byfun = byfun,
-        wts = wts,
-        transform = transform,
-        hypothesis = hypothesis,
-        ...
-    )
-    if (!is.null(out)) {
-        return(out)
-    }
-
     #Construct predictions() call
     call_attr <- construct_call(model, "predictions")
     call_attr[["by"]] <- by
 
     out <- eval.parent(call_attr)
-
-    # out <- predictions(
-    #   model = model,
-    #   newdata = newdata,
-    #   variables = variables,
-    #   vcov = vcov,
-    #   conf_level = conf_level,
-    #   type = type,
-    #   by = by,
-    #   byfun = byfun,
-    #   wts = wts,
-    #   transform = transform,
-    #   hypothesis = hypothesis,
-    #   equivalence = equivalence,
-    #   df = df,
-    #   ...)
 
     return(out)
 }

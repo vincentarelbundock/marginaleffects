@@ -78,7 +78,7 @@ When \code{method="fwb"}, drawn weights are supplied to the model fitting functi
 \section{References}{
 
 
-Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” Review of Economics and Statistics 68 (4): 715–9.
+Krinsky, I., and A. L. Robb. 1986. "On Approximating the Statistical Properties of Elasticities." Review of Economics and Statistics 68 (4): 715–9.
 
 King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361
 
@@ -86,7 +86,7 @@ Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standar
 
 Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
 
-Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.
+Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. "Predictive Inference with the Jackknife+." arXiv. http://arxiv.org/abs/1905.02928.
 }
 
 \examples{
@@ -98,20 +98,20 @@ mod <- lm(Sepal.Length ~ Sepal.Width * Species, data = iris)
 
 # bootstrap
 avg_predictions(mod, by = "Species") \%>\%
-    inferences(method = "boot")
+    inferences2(method = "boot")
 
 avg_predictions(mod, by = "Species") \%>\%
-    inferences(method = "rsample")
+    inferences2(method = "rsample")
 
 # Fractional (bayesian) bootstrap
 avg_slopes(mod, by = "Species") \%>\%
-    inferences(method = "fwb") \%>\%
+    inferences2(method = "fwb") \%>\%
     get_draws("rvar") \%>\%
     data.frame()
 
 # Simulation-based inference
 slopes(mod) \%>\%
-    inferences(method = "simulation") \%>\%
+    inferences2(method = "simulation") \%>\%
     head()
 }
 }

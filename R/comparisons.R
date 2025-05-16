@@ -254,13 +254,8 @@ comparisons <- function(
     dots <- list(...)
 
     # extracting modeldata repeatedly is slow.
-    if (isTRUE(by)) {
-        modeldata <- get_modeldata(
-            model,
-            additional_variables = FALSE,
-            modeldata = dots[["modeldata"]],
-            wts = wts
-        )
+    if ("modeldata" %in% ...names()) {
+        modeldata <- call_attr[["modeldata"]] <- ...get("modeldata")
     } else {
         modeldata <- get_modeldata(
             model,
@@ -268,15 +263,18 @@ comparisons <- function(
             modeldata = dots[["modeldata"]],
             wts = wts
         )
-    }
-    if ("modeldata" %in% ...names()) {
-        call_attr[["modeldata"]] <- modeldata
+        if (isTRUE(checkmate::check_data_frame(modeldata))) {
+            call_attr[["modeldata"]] <- modeldata
+        }
     }
 
     # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+    if (is.null(modeldata) && isTRUE(checkmate::check_data_frame(newdata))) {
+        modeldata <- newdata
+    }
 
     # required by stubcols later, but might be overwritten
     bycols <- NULL
@@ -334,6 +332,11 @@ comparisons <- function(
     )
 
     # after sanitize_newdata
+    if (is.null(modeldata) && isTRUE(checkmate::check_data_frame(newdata))) {
+        modeldata <- call_attr[["modeldata"]] <- newdata
+    }
+
+    # after sanitize_newdata
     sanity_by(by, newdata)
 
     # after sanity_by
@@ -374,28 +377,6 @@ comparisons <- function(
     predictors <- variables_list$conditional
 
     ############### sanity checks are over
-
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = comparisons,
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        variables = variables,
-        type = type,
-        by = by,
-        conf_level = conf_level,
-        cross = cross,
-        comparison = comparison,
-        transform = transform,
-        wts = wts,
-        hypothesis = hypothesis,
-        eps = eps,
-        ...
-    )
-    if (!is.null(out)) {
-        return(out)
-    }
 
     # after inferences dispatch
     tmp <- sanitize_hypothesis(hypothesis, ...)
@@ -613,55 +594,9 @@ avg_comparisons <- function(
     numderiv = "fdforward",
     ...
 ) {
-    # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    # scall <- rlang::enquo(newdata)
-    # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = avg_comparisons,
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        variables = variables,
-        type = type,
-        by = by,
-        cross = cross,
-        conf_level = conf_level,
-        comparison = comparison,
-        transform = transform,
-        wts = wts,
-        hypothesis = hypothesis,
-        eps = eps,
-        ...
-    )
-    if (!is.null(out)) {
-        return(out)
-    }
-
-    #Construct comparisons() call
     call_attr <- construct_call(model, "comparisons")
 
     out <- eval.parent(call_attr)
-
-    # out <- comparisons(
-    #   model = model,
-    #   newdata = newdata,
-    #   variables = variables,
-    #   type = type,
-    #   vcov = vcov,
-    #   by = by,
-    #   conf_level = conf_level,
-    #   comparison = comparison,
-    #   transform = transform,
-    #   cross = cross,
-    #   wts = wts,
-    #   hypothesis = hypothesis,
-    #   equivalence = equivalence,
-    #   df = df,
-    #   eps = eps,
-    #   ...)
 
     return(out)
 }

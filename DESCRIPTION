@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.25.1.8
+Version: 0.25.1.9
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -191,16 +191,11 @@ Suggests:
 Collate:
     'RcppExports.R'
     'backtransform.R'
-    'bootstrap_boot.R'
-    'bootstrap_fwb.R'
-    'bootstrap_rsample.R'
-    'bootstrap_simulation.R'
     'broom.R'
     'by.R'
     'comparisons.R'
     'complete_levels.R'
     'config.R'
-    'conformal.R'
     'construct_call.R'
     'datagrid.R'
     'equivalence.R'
@@ -235,6 +230,11 @@ Collate:
     'hypothesis_string.R'
     'imputation.R'
     'inferences.R'
+    'inferences_boot.R'
+    'inferences_conformal.R'
+    'inferences_fwb.R'
+    'inferences_rsample.R'
+    'inferences_simulation.R'
     'matrix_apply.R'
     'mean_or_mode.R'
     'methods.R'

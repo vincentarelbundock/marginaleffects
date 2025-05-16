@@ -41,7 +41,7 @@
 #'
 #' @section References:
 #'
-#' Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” Review of Economics and Statistics 68 (4): 715–9.
+#' Krinsky, I., and A. L. Robb. 1986. "On Approximating the Statistical Properties of Elasticities." Review of Economics and Statistics 68 (4): 715–9.
 #'
 #' King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361
 #'
@@ -49,8 +49,7 @@
 #'
 #' Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
 #'
-#' Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.
-#'
+#' Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. "Predictive Inference with the Jackknife+." arXiv. http://arxiv.org/abs/1905.02928.
 #'
 #' @return
 #' A `marginaleffects` object with simulation or bootstrap resamples and objects attached.
@@ -63,20 +62,20 @@
 #'
 #' # bootstrap
 #' avg_predictions(mod, by = "Species") %>%
-#'     inferences(method = "boot")
+#'     inferences2(method = "boot")
 #'
 #' avg_predictions(mod, by = "Species") %>%
-#'     inferences(method = "rsample")
+#'     inferences2(method = "rsample")
 #'
 #' # Fractional (bayesian) bootstrap
 #' avg_slopes(mod, by = "Species") %>%
-#'     inferences(method = "fwb") %>%
+#'     inferences2(method = "fwb") %>%
 #'     get_draws("rvar") %>%
 #'     data.frame()
 #'
 #' # Simulation-based inference
 #' slopes(mod) %>%
-#'     inferences(method = "simulation") %>%
+#'     inferences2(method = "simulation") %>%
 #'     head()
 #' }
 #' @export
@@ -91,7 +90,7 @@ inferences <- function(
     ...
 ) {
     if (inherits(attr(x, "model"), c("model_fit", "workflow"))) {
-        msg <- "The `inferences()` function is not supported for `tidymodels` objects."
+        msg <- "The `inferences2()` function is not supported for `tidymodels` objects."
         stop(msg, call. = FALSE)
     }
 
@@ -120,25 +119,12 @@ inferences <- function(
         )
     )
 
-    if (method %in% c("conformal_split", "conformal_cv+")) {
-        checkmate::assert_class(x, "predictions")
-        checkmate::assert_choice(
-            conformal_score,
-            choices = c("residual_abs", "residual_sq", "softmax")
-        )
-        checkmate::assert_data_frame(conformal_test, null.ok = FALSE)
-    }
     if (method == "conformal_split") {
-        checkmate::assert_data_frame(conformal_calibration, null.ok = FALSE)
         conformal_fun <- conformal_split
     }
     if (method == "conformal_cv+") {
-        checkmate::assert_integerish(R, upper = 25)
         conformal_fun <- conformal_cv_plus
     }
-
-    mfx_call <- attr(x, "call")
-    model <- mfx_call[["model"]]
 
     # default standard errors are Delta anyway
     if (method == "delta") {
@@ -147,18 +133,13 @@ inferences <- function(
 
     if (method == "boot") {
         insight::check_if_installed("boot")
-        attr(model, "inferences_method") <- "boot"
-        attr(model, "inferences_dots") <- c(list(R = R), list(...))
-        attr(model, "inferences_conf_type") <- conf_type
+        out <- inferences_boot(x, R = R, conf_level = conf_level, conf_type = conf_type, ...)
     } else if (method == "fwb") {
         insight::check_if_installed("fwb")
         dots <- list(...)
         if (!"verbose" %in% names(dots)) {
             dots[["verbose"]] <- FALSE
         }
-        attr(model, "inferences_method") <- "fwb"
-        attr(model, "inferences_dots") <- c(list(R = R), dots)
-        attr(model, "inferences_conf_type") <- conf_type
         if (
             isTRUE("wts" %in% names(attr(x, "call"))) &&
                 !isFALSE(attr(x, "call")[["wts"]])
@@ -167,18 +148,14 @@ inferences <- function(
                 "The `fwb` method is not supported with the `wts` argument."
             )
         }
+        out <- inferences_fwb(x, R = R, conf_level = conf_level, conf_type = conf_type, ...)
     } else if (method == "rsample") {
         insight::check_if_installed("rsample")
-        attr(model, "inferences_method") <- "rsample"
-        attr(model, "inferences_dots") <- c(list(times = R), list(...))
-        attr(model, "inferences_conf_type") <- conf_type
+        out <- inferences_rsample(x, R = R, conf_level = conf_level, conf_type = conf_type, ...)
     } else if (method == "simulation") {
         insight::check_if_installed("MASS")
-        attr(model, "inferences_method") <- "simulation"
-        attr(model, "inferences_R") <- R
-    }
-
-    if (isTRUE(grepl("conformal", method))) {
+        out <- inferences_simulation(x, R = R, conf_level = conf_level, ...)
+    } else if (isTRUE(grepl("conformal", method))) {
         out <- conformal_fun(
             x,
             R = R,
@@ -187,41 +164,35 @@ inferences <- function(
             calibration = conformal_calibration,
             score = conformal_score
         )
-    } else {
-        mfx_call[["model"]] <- model
-        out <- recall(mfx_call)
+    }
+
+    # Preserve specific attributes from the input object
+    attrs <- c(
+        "conf_level",
+        "by",
+        "lean",
+        "type",
+        "newdata",
+        "call",
+        "model_type",
+        "model",
+        "jacobian",
+        "vcov",
+        "weights",
+        "transform",
+        "hypothesis_by",
+        "nchains",
+        "vcov.type",
+        "variables",
+        "comparison",
+        "comparison_label",
+        "transform_label"
+    )
+    for (n in attrs) {
+        if (!is.null(attr(x, n))) {
+            attr(out, n) <- attr(x, n)
+        }
     }
 
     return(out)
-}
-
-
-inferences_dispatch <- function(model, INF_FUN, ...) {
-    inf_method <- attr(model, "inferences_method")
-
-    if (is.null(inf_method) || !is.character(inf_method) || length(inf_method) != 1L) {
-        return(NULL)
-    }
-
-    args <- list(
-        model = model,
-        INF_FUN = INF_FUN
-    )
-
-    if (...length() > 0) {
-        args <- utils::modifyList(args, list(...))
-    }
-
-    if ("rowid" %in% names(args$newdata)) {
-        args$newdata <- subset(args$newdata, rowid > 0)
-    }
-
-    switch(
-        inf_method,
-        "rsample" = do.call(bootstrap_rsample, args),
-        "boot" = do.call(bootstrap_boot, args),
-        "fwb" = do.call(bootstrap_fwb, args),
-        "simulation" = do.call(bootstrap_simulation, args),
-        NULL
-    )
 }

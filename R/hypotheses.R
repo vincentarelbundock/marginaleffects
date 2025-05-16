@@ -198,34 +198,6 @@ hypotheses <- function(
         return(out)
     }
 
-    ###### Bootstrap
-    # restore an already sanitized hypothesis if necessary
-    hypothesis <-
-        if (is.null(attr(hypothesis, "label"))) {
-            hypothesis
-        } else {
-            attr(hypothesis, "label")
-        }
-
-    # Apply inferences method
-    out <- inferences_dispatch(
-        INF_FUN = hypotheses,
-        model = model,
-        hypothesis = hypothesis,
-        vcov = vcov,
-        conf_level = conf_level,
-        df = df,
-        equivalence = equivalence,
-        joint = joint,
-        joint_test = joint_test,
-        numderiv = numderiv,
-        ...
-    )
-    if (!is.null(out)) {
-        return(out)
-    }
-    ###### Done with Bootstrap
-
     ###### Joint test
     if (!isFALSE(joint)) {
         out <- joint_test(

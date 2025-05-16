@@ -87,7 +87,7 @@ cjdt <- function(dtlist) {
 
 # recurse up. mostly useful for `tinytest`
 # this is dumb, but it's late and i don't feel like thinking about this
-eval.parent <- function(xcall) {
+evalup <- function(xcall) {
     out <- myTryCatch(eval(xcall))
     if (inherits(out$error, "simpleError")) {
         msg <- out$error$message

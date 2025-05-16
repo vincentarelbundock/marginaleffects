@@ -292,25 +292,6 @@ slopes <- function(
 
     ############### sanity checks are over
 
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = slopes,
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        variables = variables,
-        type = type,
-        conf_level = conf_level,
-        by = by,
-        wts = wts,
-        slope = slope,
-        hypothesis = hypothesis,
-        ...
-    )
-    if (!is.null(out)) {
-        return(out)
-    }
-
     call_attr_c <- call_attr
     call_attr_c[[1L]] <- quote(marginaleffects::comparisons)
     call_attr_c[["model"]] <- model
@@ -380,25 +361,6 @@ avg_slopes <- function(
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     # scall <- rlang::enquo(newdata)
     # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-
-    # Bootstrap
-    out <- inferences_dispatch(
-        INF_FUN = avg_slopes,
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        variables = variables,
-        type = type,
-        conf_level = conf_level,
-        by = by,
-        wts = wts,
-        slope = slope,
-        hypothesis = hypothesis,
-        ...
-    )
-    if (!is.null(out)) {
-        return(out)
-    }
 
     #Construct comparisons() call
     call_attr <- construct_call(model, "slopes")

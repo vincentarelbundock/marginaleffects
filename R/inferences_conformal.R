@@ -15,9 +15,9 @@ get_conformal_score <- function(x, score) {
         model <- attr(x, "model")
         response <- x[[insight::find_response(model)]]
         if (is.numeric(response) && is_binary(response)) {
-            # See p.4 of Angelopoulos, Anastasios N., and Stephen Bates. 2022. “A
+            # See p.4 of Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A
             # Gentle Introduction to Conformal Prediction and Distribution-Free
-            # Uncertainty Quantification.” arXiv.
+            # Uncertainty Quantification." arXiv.
             # https://doi.org/10.48550/arXiv.2107.07511.
             # 1 minus the softmax output of the true class
             out <- ifelse(response == 1, 1 - x$estimate, x$estimate)
@@ -68,6 +68,15 @@ get_conformal_bounds <- function(x, score, conf_level) {
 
 
 conformal_split <- function(x, test, calibration, score, conf_level, ...) {
+    # assertions
+    checkmate::assert_class(x, "predictions")
+    checkmate::assert_choice(
+        score,
+        choices = c("residual_abs", "residual_sq", "softmax")
+    )
+    checkmate::assert_data_frame(test, null.ok = FALSE)
+    checkmate::assert_data_frame(calibration, null.ok = FALSE)
+
     # calibration
     # use original model---fitted on the training set---to make predictions in the calibration set
     # p_calib is the `predictions()` call, which we re-evaluate on newdata=calibration
@@ -91,6 +100,15 @@ conformal_split <- function(x, test, calibration, score, conf_level, ...) {
 
 
 conformal_cv_plus <- function(x, test, R, score, conf_level, ...) {
+    # assertions
+    checkmate::assert_class(x, "predictions")
+    checkmate::assert_choice(
+        score,
+        choices = c("residual_abs", "residual_sq", "softmax")
+    )
+    checkmate::assert_data_frame(test, null.ok = FALSE)
+    checkmate::assert_integerish(R, upper = 25)
+
     # cross-validation
     train <- get_modeldata(attr(x, "model"))
     idx <- sample.int(nrow(train), nrow(train))

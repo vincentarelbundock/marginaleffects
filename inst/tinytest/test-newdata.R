@@ -47,13 +47,12 @@ expect_equivalent(cmp$estimate, emm$estimate)
 expect_equivalent(cmp$std.error, emm$SE, tolerance = 1e-6)
 
 
-# Issue #624: reserved "group" word in `by` and `newdata` but not in model.
-dat <- transform(mtcars, group = cyl)
-mod <- lm(mpg ~ hp, data = dat)
-exit_file("TODO: error not raised in tinytest. envrionment evaluation issue.")
-expect_error(slopes(mod, newdata = dat, by = "group"), pattern = "forbidden")
-expect_inherits(slopes(mod, newdata = dat, by = "cyl"), "slopes")
-
+# TODO: works interactively but not in tinytest
+# # Issue #624: reserved "group" word in `by` and `newdata` but not in model.
+# dat <- transform(mtcars, group = cyl)
+# mod <- lm(mpg ~ hp, data = dat)
+# expect_error(slopes(mod, newdata = dat, by = "group"), pattern = "forbidden")
+# expect_inherits(slopes(mod, newdata = dat, by = "cyl"), "slopes")
 
 # Issue #814
 data(lalonde, package = "MatchIt")

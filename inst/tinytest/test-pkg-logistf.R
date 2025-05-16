@@ -1,5 +1,7 @@
 source("helpers.R")
+exit_file("logistf causes conflicts")
 require("logistf")
+
 
 # logistf: no validity
 mod <- logistf(am ~ mpg * vs, data = mtcars)
