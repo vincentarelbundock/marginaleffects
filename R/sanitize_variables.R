@@ -42,32 +42,21 @@ sanitize_variables <- function(
         }
 
         # unsupported models like pytorch
-        if (
-            length(predictors) == 0 ||
-                (length(predictors) == 1 && names(predictors) == "response")
-        ) {
-            dv <- hush(unlist(
-                insight::find_response(model, combine = FALSE),
-                use.names = FALSE
-            ))
-            predictors <- setdiff(hush(colnames(newdata)), c(dv, "rowid"))
+        known <- c("fixed", "conditional", "zero_inflated", "scale", "nonlinear")
+        if (any(known %in% names(predictors))) {
+            predictors <- predictors[known]
+            # sometimes triggered by multivariate brms models where we get nested
+            # list: predictors$gear$hp
         } else {
-            known <- c("fixed", "conditional", "zero_inflated", "scale", "nonlinear")
-            if (any(known %in% names(predictors))) {
-                predictors <- predictors[known]
-                # sometimes triggered by multivariate brms models where we get nested
-                # list: predictors$gear$hp
-            } else {
-                predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
-                predictors <- unique(predictors)
-            }
-            # flatten
-            predictors <- unique(unlist(
-                predictors,
-                recursive = TRUE,
-                use.names = FALSE
-            ))
+            predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
+            predictors <- unique(predictors)
         }
+        # flatten
+        predictors <- unique(unlist(
+            predictors,
+            recursive = TRUE,
+            use.names = FALSE
+        ))
     } else {
         predictors <- variables
     }

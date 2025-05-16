@@ -116,6 +116,7 @@ m1 <- glm(
 expect_error(avg_slopes(m1), pattern = "forbidden")
 expect_error(avg_slopes(m1, variables = "var_cont"), pattern = "forbidden")
 
+dat$group <- NULL
 m2 <- glm(
     outcome ~ var_binom + var_cont + groups,
     data = dat,
@@ -123,7 +124,6 @@ m2 <- glm(
 )
 expect_inherits(avg_slopes(m2), "slopes")
 expect_inherits(avg_slopes(m2, variables = "var_cont"), "slopes")
-
 
 # Issue #723
 dat <- data.frame(
@@ -163,7 +163,7 @@ d2[["horse power"]] <- d2$hp
 m1 <- lm(mpg ~ hp, data = d1)
 m2 <- lm(mpg ~ `horse power`, data = d2)
 p1 <- plot_predictions(m1, condition = "hp", draw = FALSE)
-p2 <- plot_predictions(m2, condition = "horse power", draw = FALSE)
+p2 <- plot_predictions(m2, condition = "horse power", draw = FALSE) |> suppressWarnings()
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$std.error, p2$std.error)
 
@@ -172,8 +172,8 @@ expect_equivalent(p1$std.error, p2$std.error)
 mod <- lm(mpg ~ 1, mtcars)
 p <- avg_predictions(mod)
 expect_false(is.na(p$estimate))
-expect_error(avg_slopes(mod), "No valid predictor")
-expect_error(avg_comparisons(mod), "No valid predictor")
+expect_error(avg_slopes(mod), "no valid predictor")
+expect_error(avg_comparisons(mod), "no valid predictor")
 
 
 source("helpers.R")
