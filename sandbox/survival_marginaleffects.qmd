@@ -101,14 +101,19 @@ These assumptions are described in detail in @Hernan2020 and many other books an
 The results can be plotted using the `plot_predictions()` function using almost identical code:
 
 ```{r}
-ggplot(p, aes(
-    x = dtime,
-    y = estimate,
-    fill = factor(hormon),
-    ymin = conf.low,
-    ymax = conf.high)) +
-    geom_ribbon(alpha = .3) +
-    geom_line()
+#| warnings: false
+library(tinyplot)
+tinytheme("ipsum")
+with(p, {
+    plt(
+        x = dtime,
+        y = estimate,
+        ymin = conf.low,
+        ymax = conf.high,
+        by = hormon,
+        type = "ribbon"
+    )
+})
 ```
 
 The resulting plot shows the survival curves for both treatment options of `hormon`, adjusted for `age` and `grade`. By default, confidence intervals are included as bands around the curves. As can be seen quite clearly from the plot alone, the confidence intervals do not overlap for the majority of the shown time, but not all points in time. Using only the HR from the model, we would have been unable to make such distinctions or plot this graphic.
