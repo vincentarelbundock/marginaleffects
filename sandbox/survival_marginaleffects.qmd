@@ -35,7 +35,7 @@ library(splines)
 library(ggplot2)
 library(future.apply)
 plan(multisession)
-options(marginaleffects_parallel_inferences = FALSE)
+options(marginaleffects_parallel_inferences = TRUE)
 options(marginaleffects_parallel_packages = c("survival", "splines"))
 
 theme_set(theme_bw())
@@ -120,7 +120,7 @@ From the previous analysis we could quite clearly see a difference between the t
 
 ```{r}
 avg_predictions(model,
-  hypothesis = "b1 - b2 = 0",
+  hypothesis = difference ~ reference,
   type = "survival",
   by = "hormon",
   vcov = "rsample",
@@ -138,7 +138,7 @@ Another option would be to use the *ratio* of the two survival probabilities ins
 
 ```{r}
 avg_predictions(model,
-  hypothesis = "b1 / b2 = 0",
+  hypothesis = ratio ~ reference,
   type = "survival",
   by = "hormon",
   vcov = "rsample",
@@ -147,7 +147,7 @@ avg_predictions(model,
     dtime = 2500,
     grid_type = "counterfactual"
   )
-) |> inferences("rsample")
+)
 ```
 
 Here, the `Estimate` argument shows the ratio of the two survival probabilities at $t$ instead of the difference, again with associated standard error, p-value and 95% confidence interval. Again, the p-value is very small. Usually it does not make a large difference if the difference or the ratio is chosen as the test statistic of interest, but it is still good practice to specify this before actually performing the analysis. Users may define much more complicated hypotheses as well, as described in other parts of the packages documentation.
@@ -197,7 +197,7 @@ If we were instead interested in the **effect modification** of the effect of `h
 We can of course also plot these counterfactual predictions, using the `plot_predictions()` function, again using 25 equally spaced points in time:
 
 ```{r}
-plot_predictions(model,
+p <- predictions(model,
   type = "survival",
   by = c("dtime", "hormon", "grade"),
   vcov = "rsample",
@@ -208,6 +208,16 @@ plot_predictions(model,
     grid_type = "counterfactual"
   )
 )
+
+ggplot(p, aes(
+    x = dtime,
+    y = estimate,
+    fill = factor(hormon),
+    ymin = conf.low,
+    ymax = conf.high)) +
+    geom_ribbon(alpha = .3) +
+    geom_line() +
+    facet_wrap(~grade)
 ```
 
 Instead of one adjusted survival curve per `hormon` group, we now get four adjusted survival curves in total. In the resulting graph we get some indication of an interaction effect between `grade` and `hormon`. For `grade = 2` the curves of `hormon = 0` and `hormon = 1` are very similar, whereas they do seem to be somewhat further apart for `grade = 3`. It is, however, difficult to make a solid judgement here because the confidence intervals of all groups are quite wide and mostly overlapping.
