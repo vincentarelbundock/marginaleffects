@@ -133,10 +133,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
 # emtrends
 mod <- lme4::lmer(y ~ x1 + x2 + (1 | clus), data = tmp)
-mfx <- slopes(mod,
-    variables = "x1",
-    newdata = datagrid(x1 = 0, x2 = 0, clus = 1), re.form = NA
-)
+mfx <- slopes(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), re.form = NA)
 em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$x1.trend)
@@ -184,11 +181,13 @@ expect_predictions(pred1, n_row = 1)
 expect_predictions(pred2, n_row = 6)
 
 
-
 # glmer.nb: marginaleffects vs. emtrends
 set.seed(101)
 dd <- expand.grid(
-    f1 = factor(1:3), f2 = LETTERS[1:2], g = 1:9, rep = 1:15,
+    f1 = factor(1:3),
+    f2 = LETTERS[1:2],
+    g = 1:9,
+    rep = 1:15,
     KEEP.OUT.ATTRS = FALSE
 )
 dd$x <- rnorm(nrow(dd))
@@ -213,7 +212,6 @@ mar <- tidy(margins(mod))
 mfx <- avg_slopes(mod, re.form = NA)
 expect_equivalent(mfx$estimate, mar$estimate, tolerance = .0001)
 expect_equivalent(mfx$std.error, mar$std.error, tolerance = .0001)
-
 
 
 # population-level
@@ -282,20 +280,55 @@ expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")
 expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 
 
-
 # Issue #436
 # e = number of events
 # n = total
 dat <- data.frame(
     e = c(
-        1, 1, 134413, 92622, 110747,
-        3625, 35, 64695, 19428, 221, 913, 13, 5710, 121,
-        1339, 1851, 637, 20, 7, 10, 2508
+        1,
+        1,
+        134413,
+        92622,
+        110747,
+        3625,
+        35,
+        64695,
+        19428,
+        221,
+        913,
+        13,
+        5710,
+        121,
+        1339,
+        1851,
+        637,
+        20,
+        7,
+        10,
+        2508
     ),
     n = c(
-        165, 143, 10458616, 5338995, 6018504, 190810,
-        1607, 2504824, 471821, 5158, 15027, 205, 86371, 1785,
-        10661, 14406, 4048, 102, 916, 1079, 242715
+        165,
+        143,
+        10458616,
+        5338995,
+        6018504,
+        190810,
+        1607,
+        2504824,
+        471821,
+        5158,
+        15027,
+        205,
+        86371,
+        1785,
+        10661,
+        14406,
+        4048,
+        102,
+        916,
+        1079,
+        242715
     ),
     year = round(runif(21, min = 1, max = 24)),
     sid = as.factor(1:21)
@@ -320,7 +353,8 @@ p <- predictions(
 )
 expect_predictions(p)
 
-cmp <- comparisons(mod,
+cmp <- comparisons(
+    mod,
     variables = "year",
     newdata = datagrid(
         newdata = dat,
@@ -376,7 +410,3 @@ m <- lme4::glmer(
     family = binomial(link = "logit")
 )
 expect_error(avg_predictions(m, by = "var_binom", newdata = "balanced"), pattern = "forbidden")
-
-
-
-rm(list = ls())

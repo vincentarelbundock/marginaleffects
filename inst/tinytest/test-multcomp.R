@@ -3,8 +3,8 @@ mod <- lm(mpg ~ qsec + hp * factor(cyl), data = mtcars)
 
 # Issue 1381: don't know how to set different null in multcomp::glht()
 expect_error(
-  hypotheses(mod, hypothesis = -10, multcomp = "bonferroni"),
-  pattern = "multcomp.*number"
+    hypotheses(mod, hypothesis = -10, multcomp = "bonferroni"),
+    pattern = "multcomp.*number"
 )
 
 cmp1 <- avg_comparisons(mod, variables = list(cyl = "pairwise"))

@@ -15,7 +15,8 @@ svyd <- survey::svydesign(
     fpc = ~Nh,
     variables = ~ x + nh,
     data = fpc,
-    nest = TRUE)
+    nest = TRUE
+)
 mod <- survey::svyglm(x ~ nh, design = svyd)
 res <- slopes(mod, wts = "(weights)")
 mar <- suppressMessages(data.frame(margins(mod, unit_ses = TRUE)))
@@ -42,26 +43,11 @@ dat <- read.csv(dat, na.strings = c("*", ""))
 dat$weights <- runif(n = nrow(dat), min = 1, max = 100)
 dat$smoker <- factor(dat$smoker)
 design1 = svydesign(ids = ~1, weights = ~weights, data = dat)
-m <- suppressWarnings(svyglm(smoker ~ ban * education * gender + age, design = design1, family = binomial(), data = dat))
-cmp <- avg_comparisons(m,
-    variables = "education",
-    by = c("ban", "gender"),
-    wts = "weights",
-    hypothesis = ~reference)
+m <- suppressWarnings(svyglm(
+    smoker ~ ban * education * gender + age,
+    design = design1,
+    family = binomial(),
+    data = dat
+))
+cmp <- avg_comparisons(m, variables = "education", by = c("ban", "gender"), wts = "weights", hypothesis = ~reference)
 expect_false(anyNA(cmp$estimate))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-rm(list = ls())

@@ -66,6 +66,3 @@ p <- suppressWarnings(get_predict(f))
 expect_inherits(p, "data.frame")
 expect_equal(dim(p), c(100, 2))
 expect_warning(get_predict(f), pattern = "Converting.*tibble")
-
-
-rm(list = ls())

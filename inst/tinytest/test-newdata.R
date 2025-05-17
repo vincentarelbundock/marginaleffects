@@ -82,6 +82,3 @@ w = avg_comparisons(fit, variables = "treat", newdata = dplyr::filter(treat == 1
 expect_equal(k, x)
 expect_equal(k, y)
 expect_equal(k, w)
-
-
-rm(list = ls())

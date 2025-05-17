@@ -31,17 +31,11 @@ expect_equivalent(w, x$estimate)
 newdat <- mod1$obs_data
 newdat$season <- rep(1, nrow(newdat))
 w <- apply(
-    posterior_linpred(mod1,
-        newdata = newdat,
-        process_error = FALSE
-    ),
-    2, stats::median
+    posterior_linpred(mod1, newdata = newdat, process_error = FALSE),
+    2,
+    stats::median
 )
-x <- get_predict(mod1,
-    type = "link",
-    newdata = newdat,
-    process_error = FALSE
-)
+x <- get_predict(mod1, type = "link", newdata = newdat, process_error = FALSE)
 expect_equivalent(w, x$estimate)
 expect_equal(NROW(x), NROW(newdat))
 
@@ -62,7 +56,4 @@ expect_equal(NROW(ems), 3)
 expect_true(all(c("season", "estimate", "conf.low", "conf.high") %in% colnames(ems)))
 
 # latent_N should be an allowed type, but shouldn't work for this model
-expect_error(predictions(mod1, type = "latent_N"),
-    '"latent_N" type only available for N-mixture models',
-    fixed = TRUE
-)
+expect_error(predictions(mod1, type = "latent_N"), '"latent_N" type only available for N-mixture models', fixed = TRUE)

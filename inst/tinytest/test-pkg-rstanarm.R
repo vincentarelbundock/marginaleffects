@@ -37,5 +37,3 @@ options("marginaleffects_posterior_interval" = "eti")
 # mfx <- slopes(mod, variables = "hp", at = list(hp = 110, mpg = 20, vs = 0))
 # expect_equivalent(mfx$estimate, mar$dydx_hp)
 # expect_equivalent(mfx$std.error, mar$dydx_hp)
-
-rm(list = ls())

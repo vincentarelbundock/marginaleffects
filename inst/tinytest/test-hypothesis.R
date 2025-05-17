@@ -463,6 +463,3 @@ h1 <- hypotheses(mod, hypothesis = ratio ~ sequential)
 h2 <- hypotheses(mod, hypothesis = c("b2 / b1 = 1", "b3 / b2 = 1"))
 expect_equivalent(h1$p.value, c(0.000243703399238325, 0.191786862518089))
 expect_equivalent(h2$p.value, c(0.000243703399238325, 0.191786862518089))
-
-
-rm(list = ls())

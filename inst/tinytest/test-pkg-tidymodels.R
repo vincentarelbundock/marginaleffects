@@ -95,6 +95,3 @@ lr_fit <- lr_wf |>
 mfx <- slopes(lr_fit, newdata = my_data, variable = "x")
 expect_equivalent(mfx$x, my_data$x)
 expect_equivalent(mfx$y, my_data$y)
-
-
-rm(list = ls())

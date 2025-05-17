@@ -34,9 +34,3 @@ df <- causaldata::restaurant_inspections
 m1 <- glm(Weekend ~ Year, data = df, family = binomial)
 z <- avg_slopes(m1, variables = "Year", numderiv = "richardson")$statistic
 expect_equivalent(z, -2.0682935630417, tol = 1e-5)
-
-
-
-
-
-rm(list = ls())

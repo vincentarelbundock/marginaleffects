@@ -25,11 +25,10 @@ mfx <- slopes(
     model,
     variables = "PI",
     newdata = datagrid(PI = 15, EH = 2, NV = 0),
-    type = "link")
+    type = "link"
+)
 expect_equivalent(mfx$estimate, em$PI.trend)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
-
-
 
 
 # predictions: brglm2::brglm_fit: no validity
@@ -43,16 +42,12 @@ expect_predictions(pred1, n_row = nrow(endometrial))
 expect_predictions(pred2, n_row = 6)
 
 
-
 # brmultinom: no validity
 data("housing", package = "MASS")
 dat <<- housing
-mod <- brmultinom(Sat ~ Infl + Type + Cont,
-    weights = Freq,
-    data = housing, type = "ML", ref = 1)
+mod <- brmultinom(Sat ~ Infl + Type + Cont, weights = Freq, data = housing, type = "ML", ref = 1)
 expect_slopes(mod, type = "probs")
 expect_predictions(predictions(mod, type = "probs"))
-
 
 
 # bracl: no validity
@@ -62,7 +57,9 @@ dat$religion <- as.numeric(dat$religion)
 mod <- bracl(
     research ~ as.numeric(religion) + gender,
     weights = frequency,
-    data = dat, type = "ML")
+    data = dat,
+    type = "ML"
+)
 expect_predictions(predictions(mod, type = "probs"))
 expect_slopes(mod, type = "probs")
 
@@ -71,18 +68,16 @@ expect_slopes(mod, type = "probs")
 tmp <<- data.frame(
     freq = c(15, 16, 16, 27, 33, 20, 21, 18, 26, 41, 38, 27, 29, 21, 33, 60, 41, 42),
     dose = rep(c(0, 10, 33, 100, 333, 1000), 3),
-    observation = rep(1:3, each = 6))
+    observation = rep(1:3, each = 6)
+)
 model <- brnb(
     freq ~ dose + log(dose + 10),
     data = tmp,
     link = "log",
     transformation = "inverse",
-    type = "ML")
+    type = "ML"
+)
 expect_slopes(model, n_unique = 6, newdata = tmp)
 mfx <- suppressWarnings(slopes(model))
 mar <- suppressWarnings(margins(model))
 expect_margins(mar, mfx)
-
-
-rm(list = ls())
-

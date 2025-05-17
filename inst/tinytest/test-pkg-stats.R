@@ -196,4 +196,3 @@ expect_false(any(is.na(cmp$std.error)))
 
 
 source("helpers.R")
-rm(list = ls())

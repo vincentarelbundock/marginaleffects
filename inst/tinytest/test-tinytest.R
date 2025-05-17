@@ -7,6 +7,3 @@ pre <- predictions(mod)
 
 expect_slopes(mod)
 expect_predictions(pre)
-
-
-rm(list = ls())

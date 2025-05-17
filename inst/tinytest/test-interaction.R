@@ -7,7 +7,7 @@ dat <- diamonds[1:1000, ]
 dat$cut <- factor(as.character(dat$cut), levels = levels(dat$cut))
 dat$color <- factor(as.character(dat$color), levels = levels(dat$color))
 dat$clarity <- factor(as.character(dat$clarity), levels = levels(dat$clarity))
-mod <- lm(price ~ cut * color + clarity  + carat, data = dat)
+mod <- lm(price ~ cut * color + clarity + carat, data = dat)
 cmp1 <- comparisons(mod, variables = c("cut", "color"), cross = TRUE)
 cmp2 <- comparisons(mod, variables = "cut")
 
@@ -22,7 +22,6 @@ mod <- lm(mpg ~ hp * drat, mtcars)
 dm <- hypotheses(mod, "`hp:drat` = drat")
 expect_inherits(dm, "hypotheses")
 expect_equivalent(nrow(dm), 1)
-
 
 
 ## Issue #684
@@ -51,10 +50,7 @@ expect_equivalent(nrow(dm), 1)
 # Note: dy/dx for factor levels is the discrete change from the base level.
 dat <- get_dataset("penguins", "palmerpenguins")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
-mod <- glm(large_penguin ~ bill_length_mm * flipper_length_mm + species,
-           data = dat, family = binomial)
+mod <- glm(large_penguin ~ bill_length_mm * flipper_length_mm + species, data = dat, family = binomial)
 mfx <- avg_slopes(mod)
 expect_equivalent(mfx$estimate, c(.0278588, .0104927, -.4127852, .0609265), tol = 1e-4)
 expect_equivalent(mfx$std.error, c(.0059463, .0023708, .0560029, .1073649), tol = 1e-3)
-
-rm(list = ls())

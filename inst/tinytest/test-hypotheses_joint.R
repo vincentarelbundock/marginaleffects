@@ -80,7 +80,8 @@ h2 <- hypotheses(model_lm, joint = c("wt", "vs", "am"), vcov = "HC1")
 h3 <- hypotheses(
     model_lm,
     joint = c("wt", "vs", "am"),
-    vcov = sandwich::vcovHC(model_lm, type = "HC1"))
+    vcov = sandwich::vcovHC(model_lm, type = "HC1")
+)
 expect_false(h1$statistic == h2$statistic)
 expect_true(h2$statistic == h3$statistic)
 

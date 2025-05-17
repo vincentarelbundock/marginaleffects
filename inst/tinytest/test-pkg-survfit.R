@@ -6,9 +6,7 @@ requiet("MASS")
 # issue #1233: duplicated coefficient names
 set.seed(12345)
 N <- 100
-C <- matrix(c(1, .3, .3,
-              .3,  1, .3,
-              .3, .3,  1), 3, 3)
+C <- matrix(c(1, .3, .3, .3, 1, .3, .3, .3, 1), 3, 3)
 colnames(C) <- rownames(C) <- c("x1", "x2", "x3")
 data <- as.data.frame(mvrnorm(N, rep(0, 3), C))
 sys <- with(data, {

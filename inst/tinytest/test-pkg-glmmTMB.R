@@ -363,4 +363,3 @@ expect_equal(nrow(p), 10)
 
 
 source("helpers.R")
-rm(list = ls())

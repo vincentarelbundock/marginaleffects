@@ -7,10 +7,10 @@ requiet("ordinal")
 dat <- get_dataset("RainIbk", "crch")
 q <- unique(stats::quantile(dat$rain, seq(0.1, 0.9, 0.1)))
 dat$rain_sqrt <- sqrt(dat$rain)
-dat$sqrtensmean <- apply(sqrt(dat[,grep('^rainfc',names(dat))]), 1, mean)
-dat$sqrtenssd <- apply(sqrt(dat[,grep('^rainfc',names(dat))]), 1, sd)
-dat$enssd <- apply(dat[,grep('^rainfc',names(dat))], 1, sd)
-dat$ensmean <- apply(dat[,grep('^rainfc',names(dat))], 1, mean)
+dat$sqrtensmean <- apply(sqrt(dat[, grep('^rainfc', names(dat))]), 1, mean)
+dat$sqrtenssd <- apply(sqrt(dat[, grep('^rainfc', names(dat))]), 1, sd)
+dat$enssd <- apply(dat[, grep('^rainfc', names(dat))], 1, sd)
+dat$ensmean <- apply(dat[, grep('^rainfc', names(dat))], 1, mean)
 dat <<- subset(dat, enssd > 0)
 
 # marginaleffects: crch gaussian: no validity
@@ -48,7 +48,4 @@ expect_predictions(pred1, n_row = nrow(dat))
 expect_predictions(pred2, n_row = 6)
 
 
-
-
 source("helpers.R")
-rm(list = ls())

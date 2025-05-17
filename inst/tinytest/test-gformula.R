@@ -24,9 +24,9 @@ simdat_doA$group_id <- "A"
 simdat_doB$group_id <- "B"
 
 g1 <- mean(predict(model_additive, newdata = simdat_doB)) -
-      mean(predict(model_additive, newdata = simdat_doA))
+    mean(predict(model_additive, newdata = simdat_doA))
 g2 <- mean(predict(model_interaction, newdata = simdat_doB)) -
-      mean(predict(model_interaction, newdata = simdat_doA))
+    mean(predict(model_interaction, newdata = simdat_doA))
 
 c1 <- avg_comparisons(model_additive, variable = "group_id", newdata = tmp)
 
@@ -34,7 +34,3 @@ c2 <- avg_comparisons(model_interaction, variable = "group_id", newdata = tmp)
 
 expect_equivalent(g1, c1$estimate)
 expect_equivalent(g2, c2$estimate)
-
-
-
-rm(list = ls())

@@ -12,14 +12,14 @@ mod <- glm(am ~ vs + mpg, data = mtcars, family = binomial)
 cmp1 <- avg_comparisons(
     mod,
     variables = list(vs = 0:1),
-    comparison = function(hi, lo) mean(hi - lo))
+    comparison = function(hi, lo) mean(hi - lo)
+)
 cmp2 <- avg_comparisons(
     mod,
-    variables = list(vs = 0:1))
+    variables = list(vs = 0:1)
+)
 expect_equivalent(cmp1$estimate, cmp2$estimate)
 expect_equivalent(cmp1$std.error, cmp2$std.error, tolerance = tol)
-
-
 
 
 # error when function breaks or returns a bad vector
@@ -29,11 +29,8 @@ dat <- setNames(nhanes, tolower(names(nhanes)))
 dat$female <- dat$riagendr == 2
 dat$race <- sprintf("race%s", dat$race)
 mod <- glm(hi_chol ~ female, data = dat, family = binomial)
-expect_error(comparisons(mod, comparison = function(x) rep(1, 1234)),
-             pattern = "numeric vector")
-expect_error(comparisons(mod, comparison = function(hi, lo) head(hi - lo)),
-             pattern = "numeric vector")
-
+expect_error(comparisons(mod, comparison = function(x) rep(1, 1234)), pattern = "numeric vector")
+expect_error(comparisons(mod, comparison = function(hi, lo) head(hi - lo)), pattern = "numeric vector")
 
 
 # univariate vs. Stata
@@ -54,7 +51,6 @@ arr_r <- unlist(arr_r[, cols])
 
 expect_equivalent(arr_r[1:2], arr_s[1:2], tolerance = tol)
 expect_equivalent(ard_r[1:2], ard_s[1:2], tolerance = tol)
-
 
 
 # multivariate vs. Stata
@@ -78,7 +74,6 @@ expect_equivalent(arr_r[1:2], arr_s[1:2], tolerance = tol)
 expect_equivalent(arr_r[1:2], arr_s[1:2], tolerance = tol)
 
 
-
 # health insurance vs. Stata
 # known stata results
 arr_s <- c(arr.est = 1.04786879, arr.std_err = 0.00976999, arr.ci_l = 1.02889386, arr.ci_h = 1.06719366)
@@ -86,17 +81,20 @@ ard_s <- c(ard.est = 0.04277614, ard.std_err = 0.00837836, ard.ci_l = 0.02635485
 
 dat <- get_dataset("HealthInsurance", "AER")
 dat$health <- as.factor(dat$health)
-mod <- glm(health ~ insurance + gender + ethnicity + married + age,
-           data = dat, family = binomial)
+mod <- glm(health ~ insurance + gender + ethnicity + married + age, data = dat, family = binomial)
 
 
 ard_r <- avg_comparisons(
-    mod, variables = "insurance",
-    comparison = function(hi, lo) hi - lo)
+    mod,
+    variables = "insurance",
+    comparison = function(hi, lo) hi - lo
+)
 
 arr_r <- avg_comparisons(
-    mod, variables = "insurance",
-    comparison = function(hi, lo) mean(hi) / mean(lo))
+    mod,
+    variables = "insurance",
+    comparison = function(hi, lo) mean(hi) / mean(lo)
+)
 
 cols <- c("estimate", "std.error", "conf.low", "conf.high")
 ard_r <- unlist(ard_r[, cols])
@@ -111,10 +109,10 @@ arr_r <- avg_comparisons(
     mod,
     variables = "insurance",
     comparison = function(hi, lo) log(mean(hi) / mean(lo)),
-    transform = exp)
+    transform = exp
+)
 arr_r <- unlist(arr_r[, cols])
 expect_equivalent(arr_r, arr_s[c(1, 3, 4)], tolerance = tol)
-
 
 
 # bugfix: multiple terms w/ n=1 transform
@@ -125,7 +123,6 @@ mod <- glm(survived ~ passengerClass + sex, data = dat, family = binomial)
 cmp <- avg_comparisons(mod, comparison = function(hi, lo) mean(hi - lo))
 # bug created duplicate estimates
 expect_equivalent(length(unique(cmp$estimate)), nrow(cmp))
-
 
 
 # TODO: fix eps to make sure slopes() and comparisons() give same result
@@ -140,13 +137,8 @@ expect_equivalent(mfx1$std.error, mfx2$std.error)
 expect_equivalent(mfx3$estimate, mfx4$estimate)
 expect_equivalent(mfx3$std.error, mfx4$std.error)
 
-
-
 # # label ratios: We don't have fancy ratio labels anymore, because  +1 is a
 # # better label when we do centering.
 # mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 # cmp <- comparisons(mod, comparison = "ratio")
 # expect_true(all(grepl("\\/", cmp$contrast)))
-
-
-rm(list = ls())

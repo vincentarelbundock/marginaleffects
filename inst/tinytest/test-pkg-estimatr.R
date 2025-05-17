@@ -74,4 +74,3 @@ expect_predictions(predictions(model, newdata = head(tmp)), n_row = 6)
 
 
 source("helpers.R")
-rm(list = ls())

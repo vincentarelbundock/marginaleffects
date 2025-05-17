@@ -13,6 +13,3 @@ expect_equivalent(nrow(p), 1)
 p <- avg_predictions(mod, by = "carb", newdata = mtcars)
 expect_inherits(p, "predictions")
 expect_equivalent(nrow(p), 6)
-
-
-rm(list = ls())

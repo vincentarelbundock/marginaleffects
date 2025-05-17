@@ -208,6 +208,3 @@ mod <- nnet::multinom(
 h <- hypotheses(mod, hypothesis = "Chinstrap_body_mass_g = Gentoo_body_mass_g")
 expect_equal(nrow(h), 1)
 expect_inherits(h, "hypotheses")
-
-
-rm(list = ls())

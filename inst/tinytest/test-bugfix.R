@@ -177,4 +177,3 @@ expect_error(avg_comparisons(mod), "no valid predictor")
 
 
 source("helpers.R")
-rm(list = ls())

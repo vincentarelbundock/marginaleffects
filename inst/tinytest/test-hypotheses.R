@@ -232,6 +232,3 @@ expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$estimate, p3$estimate)
 expect_equivalent(p1$std.error, p2$std.error)
 expect_equivalent(p1$std.error, p3$std.error)
-
-
-rm(list = ls())

@@ -26,18 +26,16 @@ expect_snapshot_print(cmp, "print-comparisons_by_and_variables")
 # twitter Kurz request
 mod <- lm(mpg ~ hp * factor(am), mtcars)
 expect_snapshot_print(
-  comparisons(mod, variables = "am", newdata = data.frame(am = 0:1, hp = 120)),
-  "print-comparisons_1focal_dataframe")
+    comparisons(mod, variables = "am", newdata = data.frame(am = 0:1, hp = 120)),
+    "print-comparisons_1focal_dataframe"
+)
 
 expect_snapshot_print(
-  comparisons(mod, variables = "am", newdata = datagrid(am = 0:1, hp = 120)),
-  "print-comparisons_1focal_datagrid")
+    comparisons(mod, variables = "am", newdata = datagrid(am = 0:1, hp = 120)),
+    "print-comparisons_1focal_datagrid"
+)
 
 expect_snapshot_print(
-  predictions(mod, newdata = data.frame(am = 0:1, hp = 120)),
-  "print-predictions_newdata")
-
-
-
-
-rm(list = ls())
+    predictions(mod, newdata = data.frame(am = 0:1, hp = 120)),
+    "print-predictions_newdata"
+)

@@ -73,6 +73,3 @@ expect_true(nrow(tidy(cmp)) > 17)
 
 # deprecated argument
 expect_error(comparisons(mod, interaction = TRUE), pattern = "cross")
-
-
-rm(list = ls())

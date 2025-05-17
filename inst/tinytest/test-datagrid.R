@@ -123,4 +123,3 @@ expect_true(all(names(at1) %in% names(at2)))
 
 
 source("helpers.R")
-rm(list = ls())

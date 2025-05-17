@@ -74,7 +74,8 @@ expect_equivalent(cmp2$conf.high, cmp1[, "97.5%"], tol = .2)
 
 # method argument
 set.seed(1024)
-cmp1 <- suppressWarnings(comparisons(m1,
+cmp1 <- suppressWarnings(comparisons(
+    m1,
     m2 = m2,
     m3 = m3,
     type = "average",
@@ -84,7 +85,8 @@ cmp1 <- suppressWarnings(comparisons(m1,
 ))
 set.seed(1024)
 
-cmp2 <- suppressWarnings(comparisons(m1,
+cmp2 <- suppressWarnings(comparisons(
+    m1,
     m2 = m2,
     m3 = m3,
     type = "average",
@@ -92,8 +94,3 @@ cmp2 <- suppressWarnings(comparisons(m1,
     newdata = head(mtcars)
 ))
 expect_true(all(cmp1$estimate != cmp2$estimate))
-
-
-
-
-rm(list = ls())

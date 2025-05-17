@@ -91,8 +91,6 @@ p <- plot_slopes(mod2, variables = "x", condition = "w")
 expect_inherits(p, "ggplot")
 
 
-
-
 # plot_slopes: extracts all required data
 fe <- data.frame(unit = 1:25, fe = rnorm(25))
 dat <- expand.grid(unit = 1:25, time = 1:50)
@@ -110,7 +108,6 @@ k <- plot_slopes(mod2, variables = "x", condition = "w", draw = FALSE)
 expect_inherits(k, "data.frame")
 expect_false(anyNA(k$estimate))
 expect_false(any(k$estimate == 0))
-
 
 
 # predictions: bugs stay dead: Issue #203
@@ -134,8 +131,6 @@ expect_predictions(pred4)
 expect_predictions(pred5, se = FALSE)
 # vdiffr::expect_doppelganger("fixest plot_predictions with i()",
 #                         plot_predictions(m4, condition = c("hp", "am")))
-
-
 
 # bug stay dead: insight::get_data doesn't get all columns
 reg <- feols(
@@ -284,8 +279,6 @@ mod <- feols(mpg ~ drat | gear, data = mtcars, weights = ~qsec)
 res <- suppressWarnings(inferences(avg_slopes(mod), method = "boot", R = 20))
 expect_inherits(res, "slopes") # should be slopes but can't figure out inferences dispatch
 
-
-
 ## Issue #461
 ## commetned out because this seems to be an upstream problem. See issue.
 # gen_data <- function(rows) {
@@ -306,12 +299,8 @@ expect_inherits(res, "slopes") # should be slopes but can't figure out inference
 # nd <- datagrid(model = model)
 # expect_error(slopes(model, newdata = "mean"), "combined")
 
-
 ## Issue #229: works interactively
 # data(trade)
 # dat <- trade
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
 # expect_slopes(mod, newdata = dat) # environment issue
-
-
-rm(list = ls())

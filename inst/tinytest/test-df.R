@@ -48,8 +48,3 @@ using("tinysnapshot")
 mod <- lm(mpg ~ hp, mtcars)
 expect_snapshot_print(avg_comparisons(mod), "df-z")
 expect_snapshot_print(avg_comparisons(mod, df = 30), "df-t")
-
-
-
-
-rm(list = ls())

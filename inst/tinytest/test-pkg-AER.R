@@ -14,7 +14,8 @@ dat <<- get_dataset("Affairs", "AER")
 stata <- readRDS(testing_path("stata/stata.rds"))$aer_tobit
 mod1 <- tobit(
     affairs ~ age + yearsmarried + religiousness + occupation + rating,
-    data = dat)
+    data = dat
+)
 mfx <- merge(tidy(slopes(mod1, newdata = dat)), stata)
 expect_slopes(mod1, n_unique = 1, newdata = dat)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .00001)
@@ -23,14 +24,13 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = 1e-4)
 stata <- readRDS(testing_path("stata/stata.rds"))$aer_tobit_right
 mod2 <- tobit(
     affairs ~ age + yearsmarried + religiousness + occupation + rating,
-    right = 4, data = dat
+    right = 4,
+    data = dat
 )
 mfx <- merge(tidy(slopes(mod2, newdata = dat)), stata)
 expect_slopes(mod2, n_unique = 1, newdata = dat)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .1)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .1)
-
-
 
 
 # marginaleffects vs. emtrends
@@ -49,11 +49,7 @@ expect_equivalent(mfx$std.error[2], em2$std.error, tolerance = .0002)
 # predictions: tobit: no validity
 mod <- AER::tobit(
     affairs ~ age + yearsmarried + religiousness + occupation + rating,
-    data = dat)
+    data = dat
+)
 pred <- predictions(mod, newdata = dat)
 expect_predictions(pred, n_row = nrow(dat))
-
-
-
-rm(list = ls())
-

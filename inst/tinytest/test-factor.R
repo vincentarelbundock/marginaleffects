@@ -43,16 +43,12 @@ test1 <- data.frame(
     time = c(4, 3, 1, 1, 2, 2, 3),
     status = c(1, 1, 1, 0, 1, 1, 0),
     x = c(0, 2, 1, 1, 1, 0, 0),
-    sex = c(0, 0, 0, 0, 1, 1, 1))
-mod <- coxph(Surv(time, status) ~ x + strata(sex),
-    data = test1,
-    ties = "breslow")
+    sex = c(0, 0, 0, 0, 1, 1, 1)
+)
+mod <- coxph(Surv(time, status) ~ x + strata(sex), data = test1, ties = "breslow")
 
 nd <- datagrid(sex = 0, newdata = test1)
-mfx <- slopes(mod,
-    variables = "x",
-    newdata = nd,
-    type = "lp")
+mfx <- slopes(mod, variables = "x", newdata = nd, type = "lp")
 expect_inherits(mfx, "marginaleffects")
 
 
@@ -75,44 +71,42 @@ mod <- lm(mpg ~ cyl, mtcars)
 cmp <- comparisons(
     mod,
     variables = list(cyl = "minmax"),
-    transform = function(x) x / 3)
+    transform = function(x) x / 3
+)
 expect_inherits(cmp, "comparisons")
 
 
 # Issue #1105: do not merge `newdata` when `hypothesis` to avoid corner cases
 set.seed(1234)
 dat <- data.frame(
-  outcome = rbinom(n = 100, size = 1, prob = 0.35),
-  var_binom = as.factor(rbinom(n = 100, size = 1, prob = 0.3)),
-  var_cont = rnorm(n = 100, mean = 10, sd = 7),
-  groups = sample(letters[1:2], size = 100, replace = TRUE)
+    outcome = rbinom(n = 100, size = 1, prob = 0.35),
+    var_binom = as.factor(rbinom(n = 100, size = 1, prob = 0.3)),
+    var_cont = rnorm(n = 100, mean = 10, sd = 7),
+    groups = sample(letters[1:2], size = 100, replace = TRUE)
 )
 m1 <- glm(outcome ~ var_binom * groups + var_cont, data = dat, family = binomial())
 d <- datagrid(model = m1, by = c("var_binom", "groups"))
 p1 <- predictions(
-  m1,
-  type = "response",
-  newdata = d,
-  hypothesis = ~pairwise
+    m1,
+    type = "response",
+    newdata = d,
+    hypothesis = ~pairwise
 )
 set.seed(1234)
 dat <- data.frame(
-  outcome = rbinom(n = 100, size = 1, prob = 0.35),
-  var_binom = as.factor(rbinom(n = 100, size = 1, prob = 0.3)),
-  var_cont = rnorm(n = 100, mean = 10, sd = 7),
-  groups = factor(sample(letters[1:2], size = 100, replace = TRUE))
+    outcome = rbinom(n = 100, size = 1, prob = 0.35),
+    var_binom = as.factor(rbinom(n = 100, size = 1, prob = 0.3)),
+    var_cont = rnorm(n = 100, mean = 10, sd = 7),
+    groups = factor(sample(letters[1:2], size = 100, replace = TRUE))
 )
 m1 <- glm(outcome ~ var_binom * groups + var_cont, data = dat, family = binomial())
 d <- datagrid(model = m1, by = c("var_binom", "groups"))
 
 p2 <- predictions(
-  m1,
-  newdata = d,
-  type = "response",
-  hypothesis = ~pairwise
+    m1,
+    newdata = d,
+    type = "response",
+    hypothesis = ~pairwise
 )
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$std.error, p2$std.error)
-
-
-rm(list = ls())

@@ -21,7 +21,8 @@ expect_true(expect_margins(res, mar, tolerance = 0.1))
 # emtrends
 mfx <- slopes(mod, newdata = datagrid(batch = 1), variables = "temp")
 em <- suppressWarnings(
-    emtrends(mod, ~temp, "temp", at = list("batch" = tmp$batch[1])))
+    emtrends(mod, ~temp, "temp", at = list("batch" = tmp$batch[1]))
+)
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$temp.trend, tolerance = .001)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
@@ -58,7 +59,3 @@ expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 mm_link <- predictions(mod, type = "link", by = "batch", newdata = datagrid(grid_type = "balanced")) |>
     dplyr::arrange(batch)
 expect_true(all(mm_link$estimate < mm$estimate))
-
-
-rm(list = ls())
-

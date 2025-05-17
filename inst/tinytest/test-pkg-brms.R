@@ -733,4 +733,3 @@ expect_equivalent(
 
 
 source("helpers.R")
-rm(list = ls())

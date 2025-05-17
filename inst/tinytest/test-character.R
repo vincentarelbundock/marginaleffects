@@ -23,6 +23,3 @@ expect_equivalent(1, nrow(pred))
 # case 2
 pred <- predictions(mod, newdata = datagrid(species = c("Chinstrap", "Gentoo")))
 expect_equivalent(nrow(pred), 2)
-
-
-rm(list = ls())

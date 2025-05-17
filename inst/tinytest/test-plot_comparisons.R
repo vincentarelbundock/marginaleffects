@@ -38,25 +38,33 @@ expect_inherits(p, "gg")
 # Issue #545: blank graph
 library(ggplot2)
 dat_titanic <- get_dataset("Titanic", "Stat2Data")
-mod2 <- glm(Survived  ~ Age, data = dat_titanic, family = binomial)
+mod2 <- glm(Survived ~ Age, data = dat_titanic, family = binomial)
 p <- plot_comparisons(
     mod2,
     variables = list("Age" = 10),
     condition = "Age",
-    comparison = "ratio") +
+    comparison = "ratio"
+) +
     ylab("Adjusted Risk Ratio\nP(Survived = 1 | Age + 10) / P(Survived = 1 | Age)")
 expect_snapshot_plot(p, "plot_comparisons-rr_titanic")
 
 
-
 # Issue #725: `newdata` argument in plotting functions
 mod <- glm(vs ~ hp + am, mtcars, family = binomial)
-p1 <- plot_comparisons(mod,
-    variables = "hp", by = "am",
+p1 <- plot_comparisons(
+    mod,
+    variables = "hp",
+    by = "am",
     newdata = datagrid(am = 0:1, grid_type = "counterfactual"),
-    draw = FALSE)
-p2 <- avg_comparisons(mod, variables = "hp", by = "am", draw = FALSE,
-    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
+    draw = FALSE
+)
+p2 <- avg_comparisons(
+    mod,
+    variables = "hp",
+    by = "am",
+    draw = FALSE,
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+)
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$conf.low, p2$conf.low, tolerance = 1e-6)
 p3 <- plot_comparisons(mod, variables = "hp", by = "am", draw = FALSE)
@@ -72,8 +80,3 @@ expect_true(all(p1$conf.low != p5$conf.low))
 expect_true(all(p3$conf.low != p5$conf.low))
 expect_error(plot_comparisons(mod, variables = "hp", condition = "am", by = "am"))
 expect_error(plot_comparisons(mod, variables = "hp", newdata = mtcars))
-
-
-
-
-rm(list = ls())

@@ -281,6 +281,3 @@ p = predictions(mod, conf_level = 0.9) |>
     )
 coverage = mean(p$rank > p$pred.low & p$rank < p$pred.high)
 expect_equivalent(round(coverage, 2), .9)
-
-
-rm(list = ls())

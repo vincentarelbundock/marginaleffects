@@ -25,14 +25,12 @@ cmp <- avg_comparisons(mod, variables = list(hp = "2sd"))
 expect_equivalent(cmp$contrast, "(x + sd) - (x - sd)")
 
 
-
 # Issue #622 cross-contrasts
 mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
 cmp <- comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
 expect_equivalent(nrow(cmp), 64)
 cmp <- avg_comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
 expect_equivalent(nrow(cmp), 2)
-
 
 
 # Issue #794
@@ -56,9 +54,8 @@ cmp <- avg_comparisons(mod, variables = "am", comparison = "ratio")
 expect_equivalent(cmp$estimate, c2)
 
 
-
 # Issue #1137
-fit <- lm(mpg ~ vs + am + vs:am, data=mtcars) # equivalent to ~ vs*am
+fit <- lm(mpg ~ vs + am + vs:am, data = mtcars) # equivalent to ~ vs*am
 cmp <- avg_comparisons(fit, variables = list(am = c(0, 1), vs = c(1, 0)), cross = TRUE)
 expect_equivalent(cmp$estimate, -0.992857142857154)
 expect_error(avg_comparisons(fit, variables = list(am = 0, vs = 1:0), cross = TRUE), "length 2")
@@ -76,26 +73,28 @@ d <- tibble::tribble(
     "Mobile",     "English",         0.3,    0.05,       0.08,     0.03,
     "Mobile", "Non-English",         0.1,    0.05,       0.01,     0.01
 )
-experiment_data <- d %>% 
-    sample_n(20000, weight = exp_weight, replace=T) %>% 
-    group_by(device, lang) %>% 
+experiment_data <- d %>%
+    sample_n(20000, weight = exp_weight, replace = T) %>%
+    group_by(device, lang) %>%
     mutate(
-        treatment = sample(c('treatment','control'), size = n(), replace=T),
+        treatment = sample(c('treatment', 'control'), size = n(), replace = T),
         p = case_match(treatment, 'treatment' ~ p_treat, .default = p_control),
         y = rbinom(n(), 1, p)
-    ) %>% 
+    ) %>%
     ungroup
 
-model <- glm(y ~ treatment * device * lang, data=experiment_data, family = binomial())
+model <- glm(y ~ treatment * device * lang, data = experiment_data, family = binomial())
 lift <- function(hi, lo) mean(hi - lo) / mean(lo)
 c1 <- avg_comparisons(
-    model, 
+    model,
     variables = 'treatment',
-    comparison = "lift")
+    comparison = "lift"
+)
 c2 <- avg_comparisons(
-    model, 
+    model,
     variables = 'treatment',
-    comparison = lift)
+    comparison = lift
+)
 d_lo <- transform(experiment_data, treatment = "control")
 d_hi <- transform(experiment_data, treatment = "treatment")
 p_lo <- predict(model, newdata = d_lo, type = "response")
@@ -105,6 +104,3 @@ c3 <- liftavg(p_hi, p_lo)
 
 expect_equivalent(c1$estimate, c2$estimate)
 expect_equivalent(c1$estimate, c3)
-
-
-rm(list = ls())

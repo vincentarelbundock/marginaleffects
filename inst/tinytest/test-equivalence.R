@@ -13,7 +13,8 @@ e1 <- test(em, delta = delta, null = null, side = "noninferiority", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    equivalence = c(19, 21)) |>
+    equivalence = c(19, 21)
+) |>
     dplyr::arrange(gear)
 expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.noninf)
@@ -24,7 +25,8 @@ e1 <- test(em, delta = 1, null = 23, side = "nonsuperiority", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    equivalence = c(22, 24)) |>
+    equivalence = c(22, 24)
+) |>
     dplyr::arrange(gear)
 expect_equivalent(e1$z.ratio, e2$statistic.nonsup, tol = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.nonsup)
@@ -35,7 +37,8 @@ e1 <- test(em, delta = 1, null = 22, side = "equivalence", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    equivalence = c(21, 23)) |>
+    equivalence = c(21, 23)
+) |>
     dplyr::arrange(gear)
 expect_equivalent(e1$p.value, e2$p.value.equiv)
 
@@ -45,9 +48,9 @@ mfx <- slopes(
     mod,
     variables = "hp",
     newdata = "mean",
-    equivalence = c(-.09, .01))
+    equivalence = c(-.09, .01)
+)
 expect_inherits(mfx, "slopes")
-
 
 
 # two-sample t-test
@@ -56,7 +59,8 @@ set.seed(1024)
 N <- 100
 dat <- rbind(
     data.frame(y = rnorm(N), x = 0),
-    data.frame(y = rnorm(N, mean = 0.3), x = 1))
+    data.frame(y = rnorm(N, mean = 0.3), x = 1)
+)
 mod <- lm(y ~ x, data = dat)
 FUN <- function(x) {
     data.frame(term = "t-test", estimate = coef(x)[2])
@@ -66,7 +70,8 @@ e2 <- hypotheses(
     mod,
     hypothesis = FUN,
     equivalence = c(-.05, .05),
-    df = e1$parameter)
+    df = e1$parameter
+)
 expect_true(e1$tost.p.value > .5 && e1$tost.p.value < .9)
 expect_equivalent(e1$tost.p.value, e2$p.value.equiv)
 
@@ -80,7 +85,8 @@ e2 <- predictions(
     type = "link",
     newdata = datagrid(gear = unique),
     equivalence = c(.5, 1.5),
-    numderiv = "richardson") |>
+    numderiv = "richardson"
+) |>
     dplyr::arrange(gear)
 expect_equivalent(e1$emmean, e2$estimate)
 expect_equivalent(e1$z.ratio, e2$statistic.noninf)
@@ -109,7 +115,6 @@ x <- hypotheses(x, equivalence = c(-.2, .2))
 expect_inherits(x, "hypotheses")
 
 
-
 rm("mod")
 delta <- log(1.25)
 data(pigs, package = "emmeans")
@@ -123,7 +128,8 @@ mm <- predictions(
     newdata = datagrid(grid_type = "balanced"),
     by = "source",
     hypothesis = ~pairwise,
-    transform = \(x) -x)
+    transform = \(x) -x
+)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
@@ -141,4 +147,3 @@ expect_equivalent(e1$p.value, e2$p.value.equiv, tolerance = 1e-6)
 
 
 source("helpers.R")
-rm(list = ls())

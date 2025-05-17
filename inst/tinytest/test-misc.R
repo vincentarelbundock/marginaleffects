@@ -32,8 +32,8 @@ expect_false(anyNA(p$std.error))
 # Issue #1357
 m <- insight::download_model("brms_linear_1")
 p <- avg_predictions(
-  m,
-  by = "e42dep",
-  newdata = insight::get_datagrid(m, by = "e42dep")
+    m,
+    by = "e42dep",
+    newdata = insight::get_datagrid(m, by = "e42dep")
 )
 expect_inherits(p, "predictions")
