@@ -410,13 +410,15 @@ call \code{plan()} function, and set a global option.
 
 \code{options(marginaleffects_parallel = TRUE)}: parallelize delta method computation of standard errors.
 \code{options(marginaleffects_parallel_inferences = TRUE)}: parallelize \code{"rsample"} or \code{"fwb"} bootstrap computation in \code{inferences()}.
+\code{options(marginaleffects_parallel_packages = TRUE)}: vector of strings with the names of modelling packages used to fit the model, ex: c("survival", "splines")
 
 For example:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(future.apply)
-plan("multicore", workers = 4)
-options(marginaleffects_parallel = TRUE)
+plan("multisession", workers = 4)
+options(marginaleffects_parallel = FALSE)
 options(marginaleffects_parallel_inferences = TRUE)
+options(marginaleffects_parallel_packages = c("survival", "splines"))
 
 slopes(model)
 }\if{html}{\out{</div>}}

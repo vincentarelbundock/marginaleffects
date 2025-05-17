@@ -21,11 +21,6 @@ tmp <- lm(mpg ~ drat + wt, data = mtcars)
 expect_error(slopes(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 expect_error(comparisons(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 
-expect_error(
-    slopes(tmp, newdata = dat, hypothesis = ~pairwise),
-    pattern = "safe"
-)
-
 tmp <- lm(mpg ~ wt + drat, data = mtcars)
 expect_error(
     predictions(
