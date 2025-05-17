@@ -25,7 +25,14 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     splits <- do.call(rsample::bootstraps, args)
     if (isTRUE(getOption("marginaleffects_parallel_inferences", default = FALSE))) {
         insight::check_if_installed("future.apply")
-        splits$estimates <- future_lapply(splits$splits, bootfun, future.seed = TRUE)
+        pkg <- getOption("marginaleffects_parallel_packages", default = NULL)
+        pkg <- unique(c("marginaleffects", pkg))
+        splits$estimates <- future.apply::future_lapply(
+            splits$splits,
+            bootfun,
+            future.seed = TRUE,
+            future.packages = pkg
+        )
     } else {
         splits$estimates <- lapply(splits$splits, bootfun)
     }

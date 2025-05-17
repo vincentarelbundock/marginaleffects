@@ -137,6 +137,7 @@ Suggests:
     patchwork,
     pkgdown,
     phylolm,
+    pbapply,
     plm,
     polspline,
     posterior,

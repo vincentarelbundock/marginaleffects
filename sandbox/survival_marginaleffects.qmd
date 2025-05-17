@@ -33,6 +33,12 @@ library(marginaleffects)
 library(survival)
 library(splines)
 library(ggplot2)
+library(tictoc)
+library(future.apply)
+plan(multisession)
+options(marginaleffects_parallel_inferences = FALSE)
+options(marginaleffects_parallel_packages = c("survival", "splines"))
+
 theme_set(theme_bw())
 
 head(rotterdam)
@@ -62,6 +68,7 @@ This notebook reports uncertainty estimates obtained via non-parametric bootstra
 We will start by plotting the average counterfactual predictions for each of the two possible values of `hormon` as a function of time. This is equivalent to performing g-computation for each point in time. As usual, this can be done using the `avg_predictions()` function in conjunction with the fitted model:
 
 ```{r}
+tic()
 p <- avg_predictions(model,
     type = "survival",
     by = c("dtime", "hormon"),
@@ -72,6 +79,7 @@ p <- avg_predictions(model,
         grid_type = "counterfactual"
     )
 )
+toc()
 
 tail(p)
 ```
