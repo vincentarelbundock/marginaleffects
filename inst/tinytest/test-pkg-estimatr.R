@@ -71,6 +71,3 @@ tmp$am <- as.logical(tmp$am)
 model <- lm_robust(carb ~ wt + am + cyl, se_type = "stata", data = tmp)
 expect_predictions(predictions(model), n_row = nrow(tmp))
 expect_predictions(predictions(model, newdata = head(tmp)), n_row = 6)
-
-
-source("helpers.R")

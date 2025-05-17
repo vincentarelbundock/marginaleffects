@@ -56,6 +56,3 @@ pre <- predictions(mod)
 expect_inherits(mfx, "slopes")
 expect_inherits(cmp, "comparisons")
 expect_inherits(pre, "predictions")
-
-
-source("helpers.R")

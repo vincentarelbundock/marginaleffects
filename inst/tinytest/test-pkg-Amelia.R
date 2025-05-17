@@ -124,6 +124,3 @@ fit <- with(imp, glm(endp ~ trt, family = binomial(link = "logit")))
 auto <- suppressWarnings(avg_slopes(fit))
 expect_equivalent(auto$estimate, manu$estimate)
 expect_equivalent(auto$std.error, manu$std.error, tolerance = 1e-5)
-
-
-source("helpers.R")

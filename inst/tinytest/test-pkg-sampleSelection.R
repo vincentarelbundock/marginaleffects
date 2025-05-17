@@ -34,6 +34,3 @@ m <- selection(lfp ~ educ + age + kids5 + kids618 + nwifeinc, wage >= 5 ~ educ +
 
 avg_slopes(m, part = "selection", type = "response")
 avg_slopes(m, part = "outcome", type = "unconditional")
-
-
-source("helpers.R")

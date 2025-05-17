@@ -193,6 +193,3 @@ cmp <- avg_comparisons(mod, variables = "conc")
 expect_inherits(cmp, "comparisons")
 expect_false(any(is.na(cmp$estimate)))
 expect_false(any(is.na(cmp$std.error)))
-
-
-source("helpers.R")

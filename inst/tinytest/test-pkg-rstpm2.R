@@ -13,5 +13,3 @@ expect_equivalent(pred1, pred2$estimate)
 pred3 <- predict(test1, newdata = nd, type = "meansurv")
 pred4 <- avg_predictions(test1, type = "surv", newdata = nd, by = "x3")
 expect_equivalent(pred3[1], pred4$estimate)
-
-source("helpers.R")

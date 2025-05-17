@@ -159,6 +159,3 @@ mod_mice <- with(dat_mice, lm(Petal.Width ~ Sepal.Length))
 h <- hypotheses(mod_mice, hypothesis = "Sepal.Length = 0", equivalence = c(-1, 1))
 expect_false(anyNA(h$std.error))
 expect_false(anyNA(h$estimate))
-
-
-source("helpers.R")

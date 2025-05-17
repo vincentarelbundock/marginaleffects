@@ -46,6 +46,3 @@ pred1 <- predictions(model, newdata = dat)
 pred2 <- predictions(model, newdata = head(dat))
 expect_predictions(pred1, n_row = nrow(dat))
 expect_predictions(pred2, n_row = 6)
-
-
-source("helpers.R")

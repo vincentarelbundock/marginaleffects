@@ -144,6 +144,3 @@ expect_equivalent(e1$p.value, e2$p.value.noninf, tolerance = 1e-6)
 e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
 expect_equivalent(e1$p.value, e2$p.value.equiv, tolerance = 1e-6)
-
-
-source("helpers.R")

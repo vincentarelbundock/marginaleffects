@@ -134,7 +134,3 @@ fit <- survreg(Surv(time, status) ~ ph.ecog + age + sex, lung, dist = "weibull")
 p1 <- avg_predictions(fit, variables = "sex", type = "quantile", p = 0.5)
 p2 <- avg_predictions(fit, variables = "sex", type = "quantile", p = 0.1)
 expect_true(all(p1$estimate > p2$estimate))
-
-
-source("helpers.R")
-suppressWarnings(rm(list = paste0("test", 1:5), .GlobalEnv))

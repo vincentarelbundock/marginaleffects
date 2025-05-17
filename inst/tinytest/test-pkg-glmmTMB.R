@@ -360,6 +360,3 @@ p <- predictions(
     hypotheses()
 expect_inherits(p, "hypotheses")
 expect_equal(nrow(p), 10)
-
-
-source("helpers.R")

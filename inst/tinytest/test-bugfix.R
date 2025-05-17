@@ -174,6 +174,3 @@ p <- avg_predictions(mod)
 expect_false(is.na(p$estimate))
 expect_error(avg_slopes(mod), "no valid predictor")
 expect_error(avg_comparisons(mod), "no valid predictor")
-
-
-source("helpers.R")

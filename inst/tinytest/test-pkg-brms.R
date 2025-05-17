@@ -730,6 +730,3 @@ expect_equivalent(
     subset(cmp1, by == "LG0")$estimate,
     subset(cmp2, Cndtn == "NG" & TstTm == 0)$estimate
 )
-
-
-source("helpers.R")

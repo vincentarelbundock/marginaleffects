@@ -28,6 +28,3 @@ pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = dhead)
 expect_predictions(pred1, n_row = dhead)
 expect_predictions(pred2, n_row = 6)
-
-
-source("helpers.R")

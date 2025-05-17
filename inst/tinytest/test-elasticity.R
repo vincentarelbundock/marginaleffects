@@ -245,6 +245,3 @@ expect_inherits(s1, "slopes")
 expect_inherits(s2, "slopes")
 expect_inherits(s3, "slopes")
 expect_inherits(s4, "slopes")
-
-
-source("helpers.R")

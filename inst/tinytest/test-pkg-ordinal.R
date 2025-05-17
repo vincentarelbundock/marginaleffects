@@ -139,6 +139,3 @@ mfx4 <- slopes(mod, variables = "hp", slope = "dyex")
 expect_equivalent(mfx2$estimate, mfx1$estimate * (mfx1$hp / mfx1$predicted))
 expect_equivalent(mfx3$estimate, mfx1$estimate / mfx1$predicted)
 expect_equivalent(mfx4$estimate, mfx1$estimate * mfx1$hp)
-
-
-source("helpers.R")

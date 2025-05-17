@@ -32,6 +32,3 @@ mfx <- avg_slopes(fit)
 expect_inherits(pre, "predictions")
 expect_inherits(cmp, "comparisons")
 expect_inherits(mfx, "slopes")
-
-
-source("helpers.R")

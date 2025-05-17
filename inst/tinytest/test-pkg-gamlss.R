@@ -111,7 +111,4 @@ mod <- gamlss::gamlss(
 cmp <- avg_comparisons(mod, what = "mu") |> suppressWarnings()
 expect_inherits(cmp, "comparisons")
 
-
 # end.
-
-source("helpers.R")
