@@ -304,8 +304,8 @@ expect_true("rowidcf" %in% colnames(p))
 
 # Issue #1345: bayesian
 requiet("brms")
-requiet("rstan")
-brms_factor <- readRDS("modelarchive/data/brms_factor.rds")
+suppressPackageStartupMessages(requiet("rstan"))
+brms_factor <- readRDS(testing_path("modelarchive/data/brms_factor.rds"))
 p <- avg_predictions(brms_factor, by = "cyl_fac", hypothesis = ~reference)
 d <- get_draws(p)
 expect_inherits(p, "predictions")

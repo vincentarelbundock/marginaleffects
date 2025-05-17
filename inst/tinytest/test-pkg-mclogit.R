@@ -44,7 +44,7 @@ mfx <- suppressWarnings(slopes(mod, type = "link"))
 expect_inherits(mfx, "marginaleffects")
 
 
-dat <- "https://github.com/vincentarelbundock/modelarchive/raw/main/data-raw/covid_variants.csv"
+dat <- testing_path("modelarchive/data/covid_variants.csv")
 dat <- read.csv(dat)
 dat <- dat[dat$variant %in% c("Alpha", "Beta", "Other"), ]
 dat$variant <- factor(dat$variant, levels = c("Other", "Beta", "Alpha"))

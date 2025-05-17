@@ -1,4 +1,6 @@
 source("helpers.R")
+exit_file("parallel break")
+
 using("marginaleffects")
 
 
@@ -20,9 +22,7 @@ expect_true(all(is.na(nd$gear)))
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod_int <- lm(mpg ~ am * factor(cyl), tmp)
-mfx <- slopes(mod_int,
-                       newdata = datagrid(cyl = unique),
-                       variables = "am")
+mfx <- slopes(mod_int, newdata = datagrid(cyl = unique), variables = "am")
 expect_equivalent(nrow(mfx), 3)
 
 
@@ -35,7 +35,8 @@ typ <- datagrid(
     newdata = tmp,
     FUN_character = max,
     FUN_factor = function(x) sort(x)[1],
-    FUN_numeric = stats::median)
+    FUN_numeric = stats::median
+)
 expect_equivalent(typ$drat, stats::median(mtcars$drat))
 expect_equivalent(typ$cyl, factor("4", levels = c("4", "6", "8")))
 expect_equivalent(typ$gear, "5")

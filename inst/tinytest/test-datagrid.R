@@ -9,23 +9,26 @@ requiet("fixest")
 expect_error(datagrid(Petal.Length = 4.6), pattern = "inside")
 
 # numeric clusters no longer produce a warning; selects mode
-mod <-lme4::lmer(mpg ~ hp + (1 + drat | cyl), data = mtcars)
+mod <- lme4::lmer(mpg ~ hp + (1 + drat | cyl), data = mtcars)
 expect_true(datagrid(model = mod)$cyl == 8)
 
 # functions
 cmp <- comparisons(
     mod,
-    newdata = datagrid(hp = range, cyl = unique))
+    newdata = datagrid(hp = range, cyl = unique)
+)
 expect_equivalent(nrow(cmp), 6)
 
 cmp <- comparisons(
     mod,
-    newdata = datagrid(hp = range))
+    newdata = datagrid(hp = range)
+)
 expect_equivalent(nrow(cmp), 2)
 
 p <- predictions(
     mod,
-    newdata = datagrid(hp = fivenum))
+    newdata = datagrid(hp = fivenum)
+)
 expect_equivalent(nrow(p), 5)
 
 nd <- datagrid(newdata = mtcars, hp = range, mpg = fivenum, wt = sd)
@@ -38,10 +41,9 @@ cmp <- comparisons(mod, newdata = datagrid(am = unique, gear = max))
 expect_equivalent(nrow(cmp), 4)
 
 
-
 # Issue #721
 requiet("haven")
-m <- marginaleffects:::hush(read_dta("http://www.stata-press.com/data/r15/margex.dta"))
+m <- marginaleffects:::hush(read_dta(testing_path("modelarchive/data/margex.dta")))
 if (inherits(m, "data.frame")) {
     m <- data.frame(m)
     m$sex <- as.factor(m$sex)
@@ -66,7 +68,6 @@ expect_error(
 )
 
 
-
 # Issue #688
 dat <<- transform(mtcars, cyl = factor(cyl))
 mod <- lm(mpg ~ hp, data = dat)
@@ -75,17 +76,16 @@ k <- aggregate(cbind(mpg, hp) ~ carb + cyl, data = dat, FUN = mean)
 expect_equivalent(k$mpg, d$mpg)
 
 
-
 # Issue 766: categorical predictors + variables arg + avg
 requiet("Matchit")
-data('lalonde', package='MatchIt')
+data('lalonde', package = 'MatchIt')
 fit <- lm(re78 ~ race * treat, data = lalonde)
 
 a = predict(fit, branewdata = lalonde)
 b = predictions(fit, newdata = lalonde)
 expect_equivalent(a, b$estimate)
 
-nd = rbind( transform(lalonde, treat = 0), transform(lalonde, treat = 1)) 
+nd = rbind(transform(lalonde, treat = 0), transform(lalonde, treat = 1))
 a = predict(fit, newdata = nd)
 b = predictions(fit, newdata = lalonde, variables = "treat")
 expect_equivalent(a, b$estimate)
@@ -112,17 +112,14 @@ b = predictions(fit, variables = "treat", by = "treat")
 expect_equivalent(a, b$estimate)
 
 
-
-# Issue #1058:  Missing attributes for marginaleffects::datagrid(..., by = ) #1058 
+# Issue #1058:  Missing attributes for marginaleffects::datagrid(..., by = ) #1058
 tmp <- mtcars
 tmp <- tmp[c('mpg', 'cyl', 'hp')]
 tmp$cyl <- as.factor(tmp$cyl)
-tmp$hp  <- as.factor(tmp$hp)
+tmp$hp <- as.factor(tmp$hp)
 at1 <- attributes(datagrid(newdata = tmp, by = "cyl", hp = unique))
 at2 <- attributes(datagrid(newdata = tmp, cyl = unique, hp = unique))
 expect_true(all(names(at1) %in% names(at2)))
-
-
 
 
 source("helpers.R")

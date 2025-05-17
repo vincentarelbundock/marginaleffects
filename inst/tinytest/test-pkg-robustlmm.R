@@ -1,5 +1,4 @@
 source("helpers.R")
-if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 using("marginaleffects")
 
 requiet("robustlmm")

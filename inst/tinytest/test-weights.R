@@ -1,8 +1,10 @@
 source("helpers.R")
+exit_file("parallel break")
+
 using("marginaleffects")
 requiet("tidyverse")
 requiet("survey")
-requiet("rstan")
+suppressPackageStartupMessages(requiet("rstan"))
 
 # mtcars logit
 tmp <- get_dataset("mtcars", "datasets")

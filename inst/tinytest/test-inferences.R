@@ -208,7 +208,7 @@ expect_equivalent(s1[1:2, 3], s3$conf.high, tolerance = .03)
 
 # issue #1124: inferences is on the correct scale
 set.seed(1024)
-dat <- read.csv("https://marginaleffects.com/data/impartiality.csv")
+dat <- read.csv(testing_path("modelarchive/data/impartiality.csv"))
 m <- glm(
     impartial ~ equal * democracy + continent,
     data = dat,

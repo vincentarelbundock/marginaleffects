@@ -6,8 +6,7 @@ requiet("carData")
 if (!requiet("prediction")) exit_file("prediction")
 
 # multinom group estimates
-TitanicSurvival <- "https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv"
-TitanicSurvival <- read.csv(TitanicSurvival)
+TitanicSurvival <- get_dataset("TitanicSurvival", "carData")
 TitanicSurvival$age3 <- cut(
     TitanicSurvival$age,
     include.lowest = TRUE,

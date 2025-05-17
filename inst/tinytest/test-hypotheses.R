@@ -3,8 +3,6 @@ using("marginaleffects")
 requiet("car")
 
 
-
-
 # When `FUN` and `hypotheses` are `NULL`, `hypotheses()` returns a data.frame of parameters
 dat <- mtcars
 mod <- lm(mpg ~ hp + wt + factor(cyl), data = dat)
@@ -48,14 +46,14 @@ expect_true(all(p$std.error > 0))
 
 # equality between predictions: 1 and 2 equal, 2 and 3 different
 fun <- function(x) {
-  p <- predict(x, type = "link", newdata = mtcars)
-  data.frame(term = "b1 = b2", estimate = p[1] - p[2])
+    p <- predict(x, type = "link", newdata = mtcars)
+    data.frame(term = "b1 = b2", estimate = p[1] - p[2])
 }
 dmm <- hypotheses(mod, hypothesis = fun)
 expect_equivalent(dmm$estimate, 0)
 fun <- function(x) {
-  p <- predict(x, type = "link", newdata = mtcars)
-  data.frame(term = "b3 = b2", estimate = p[3] - p[2])
+    p <- predict(x, type = "link", newdata = mtcars)
+    data.frame(term = "b3 = b2", estimate = p[3] - p[2])
 }
 dmm <- hypotheses(mod, hypothesis = fun)
 expect_equivalent(dmm$estimate, 1.33154848763268)
@@ -63,9 +61,10 @@ expect_equivalent(dmm$estimate, 1.33154848763268)
 # named matrix
 mod <- lm(mpg ~ factor(cyl), data = mtcars)
 hyp <- matrix(
-  c(0, -1, 1, 1 / 3, 1 / 3, 1 / 3),
-  ncol = 2,
-  dimnames = list(NULL, c("H1", "H2")))
+    c(0, -1, 1, 1 / 3, 1 / 3, 1 / 3),
+    ncol = 2,
+    dimnames = list(NULL, c("H1", "H2"))
+)
 del <- hypotheses(mod, hypothesis = hyp)
 expect_equivalent(del$term, c("H1", "H2"))
 
@@ -125,9 +124,9 @@ expect_inherits(tmp, "list")
 expect_inherits(tmp[[1]], "tbl_df")
 expect_inherits(tmp[[2]], "tbl_df")
 tmp <- purrr::map(reg_list, function(reg) {
-  reg |>
-    hypotheses("wt = 0") |>
-    broom::tidy()
+    reg |>
+        hypotheses("wt = 0") |>
+        broom::tidy()
 })
 expect_inherits(tmp, "list")
 expect_inherits(tmp[[1]], "tbl_df")
@@ -139,25 +138,26 @@ expect_inherits(tmp[[2]], "tbl_df")
 
 
 # Issue #776: sort before hypothesis
-load(url("https://github.com/vincentarelbundock/modelarchive/raw/main/data-raw/gusto.rda"))
+load(testing_path("modelarchive/data/gusto.rda"))
 mod = glm(
-  day30 ~ tx * sex + age,
-  family = "binomial",
-  data = gusto)
+    day30 ~ tx * sex + age,
+    family = "binomial",
+    data = gusto
+)
 cmp = avg_comparisons(
-  mod,
-  type = "link",
-  variables = list("tx" = "pairwise"),
-  by = "sex"
+    mod,
+    type = "link",
+    variables = list("tx" = "pairwise"),
+    by = "sex"
 )
 x <- hypotheses(cmp, hypothesis = "b4 - b3 = 0")
 y <- cmp$estimate[4] - cmp$estimate[3]
 z <- avg_comparisons(
-  mod,
-  type = "link",
-  variables = list("tx" = "pairwise"),
-  by = "sex",
-  hypothesis = "b4 - b3 = 0"
+    mod,
+    type = "link",
+    variables = list("tx" = "pairwise"),
+    by = "sex",
+    hypothesis = "b4 - b3 = 0"
 )
 expect_equivalent(x$estimate, y)
 expect_equivalent(z$estimate, y)
@@ -197,32 +197,24 @@ expect_equivalent(hyp$hypothesis, sprintf("b%s=0", 1:5))
 # expect_true("b1=0.05" %in% dm$term)
 # expect_equivalent(nrow(dm), 1)
 
-
 # Issue #960
 requiet("nlme")
 fm1 <- lme(distance ~ age + Sex, data = Orthodont)
-expect_warning(hypotheses(fm1,
-  hypothesis = c(0, 0),
-  joint = c("SexFemale", "age")))
+expect_warning(hypotheses(fm1, hypothesis = c(0, 0), joint = c("SexFemale", "age")))
 # no warning generated
-h <- hypotheses(fm1,
-  hypothesis = c(0, 0),
-  df = c(1, 3),
-  joint = c("SexFemale", "age"))
+h <- hypotheses(fm1, hypothesis = c(0, 0), df = c(1, 3), joint = c("SexFemale", "age"))
 
 
 # Issue #1344
 mod <- lm(mpg ~ cyl * am * hp, mtcars)
 helmert <<- function(x) {
-  w <- contr.helmert(length(x))
-  setNames(
-    as.vector(x %*% w),
-    nm = paste0("h-", seq_len(ncol(w)))
-  )
+    w <- contr.helmert(length(x))
+    setNames(
+        as.vector(x %*% w),
+        nm = paste0("h-", seq_len(ncol(w)))
+    )
 }
-h <- avg_slopes(mod,
-  variables = c("hp"), by = c("cyl", "am"),
-  newdata = "balanced")
+h <- avg_slopes(mod, variables = c("hp"), by = c("cyl", "am"), newdata = "balanced")
 h <- hypotheses(h, hypothesis = ~ I(helmert(x)) | am)
 expect_true("am" %in% colnames(h))
 expect_inherits(h, "hypotheses")
@@ -240,7 +232,6 @@ expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$estimate, p3$estimate)
 expect_equivalent(p1$std.error, p2$std.error)
 expect_equivalent(p1$std.error, p3$std.error)
-
 
 
 rm(list = ls())

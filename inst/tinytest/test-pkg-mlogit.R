@@ -77,23 +77,23 @@
 # expect_true(cor(mfx1$estimate, mfx2$estimate) > .98)
 #
 # # Issue #551
-# mod1 <- mlogit(choice ~ wait + gcost | income + size, TravelMode) 
+# mod1 <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
 # mfx <- slopes(mod1, variables = c("income", "size"))
 # expect_inherits(mfx, "marginaleffects")
 #
 # TravelMode$dsize <- ifelse(TravelMode$size == "1", 1, 0)
-# mod2 <- mlogit(choice ~ wait + gcost | income + dsize, TravelMode) 
+# mod2 <- mlogit(choice ~ wait + gcost | income + dsize, TravelMode)
 # mfx <- slopes(mod2, variables = c("income", "dsize"))
 # expect_inherits(mfx, "marginaleffects")
 #
 # TravelMode$dsize <- as.factor(TravelMode$dsize)
-# mod3 <- mlogit(choice ~ wait + gcost | income + dsize, TravelMode) 
+# mod3 <- mlogit(choice ~ wait + gcost | income + dsize, TravelMode)
 # mfx <- slopes(mod3, variables = c("income", "dsize"))
 # expect_inherits(mfx, "marginaleffects")
 #
 # # Issue #1086
 # requiet("dplyr")
-# chocolate <- read.csv("modelarchive/data-raw/choco_candy.csv") |>
+# chocolate <- read.csv(testing_path("modelarchive/data-raw/choco_candy.csv")) |>
 #   mutate(
 #     dark = case_match(dark, 0 ~ "Milk", 1 ~ "Dark"),
 #     dark = factor(dark, levels = c("Milk", "Dark")),
@@ -109,7 +109,7 @@
 #   shape = "long"
 # )
 # m <- mlogit(
-#   choice ~ dark + soft + nuts | 0 | 0, 
+#   choice ~ dark + soft + nuts | 0 | 0,
 #   data = chocolate_idx
 # )
 # by <- data.frame(dark = c("Milk", "Dark"), by = c("Milk", "Dark"))

@@ -1,5 +1,4 @@
 source("helpers.R")
-if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 using("marginaleffects")
 
 requiet("polspline")
@@ -60,7 +59,8 @@ data <- tibble::tibble(
     y = rbinom(100, 1, .4),
     x1 = rnorm(100),
     x2 = rnorm(100),
-    x3 = rep(c("A", "B"), 50))
+    x3 = rep(c("A", "B"), 50)
+)
 f <- lrm(y ~ ., data = data)
 p <- suppressWarnings(get_predict(f))
 expect_inherits(p, "data.frame")
@@ -68,7 +68,4 @@ expect_equal(dim(p), c(100, 2))
 expect_warning(get_predict(f), pattern = "Converting.*tibble")
 
 
-
-
 rm(list = ls())
-
