@@ -110,10 +110,15 @@ get_dataset <- function(
     } else {
         insight::check_if_installed("nanoparquet")
         temp_file <- tempfile(fileext = ".parquet")
-        data <- "https://vincentarelbundock.github.io/Rdatasets/parquet/%s/%s.parquet"
-        data <- sprintf(data, package, dataset)
-        utils::download.file(data, temp_file, mode = "wb", quiet = TRUE)
-        data <- nanoparquet::read_parquet(temp_file)
+        stem <- "https://vincentarelbundock.github.io/Rdatasets/"
+        stem <- getOption("marginaleffects_rdataset_path", default = stem)
+        data <- sprintf(paste0(stem, "parquet/%s/%s.parquet"), package, dataset)
+        if (isTRUE(grepl("^http", data))) {
+            utils::download.file(data, temp_file, mode = "wb", quiet = TRUE)
+            data <- nanoparquet::read_parquet(temp_file)
+        } else {
+            data <- nanoparquet::read_parquet(data)
+        }
         data <- as.data.frame(data)
         documentation <- "https://vincentarelbundock.github.io/Rdatasets/doc/%s/%s.html"
         documentation <- sprintf(documentation, package, dataset)

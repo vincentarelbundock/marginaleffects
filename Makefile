@@ -57,6 +57,9 @@ clean: ## Clean the book directory
 setvar: ## Set the environment variable
 	export R_BUILD_DOC=true
 
+buildtest: document ## Build and test in parallel with 8 cores
+	Rscript -e "tinytest::build_install_test(ncpu = 1)"
+
 website: setvar ## altdoc::render_docs(verbose = TRUE)
 	# Rscript -e "altdoc::render_docs(verbose = TRUE, freeze = TRUE)"
 	Rscript -e "reticulate::use_virtualenv('~/.virtualenvs/r-reticulate');altdoc::render_docs(verbose = TRUE, freeze = TRUE)"

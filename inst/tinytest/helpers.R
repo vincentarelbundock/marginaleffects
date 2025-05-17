@@ -1,12 +1,18 @@
 rm(list = ls())
 rm(list = ls(.GlobalEnv), envir = .GlobalEnv)
 
+library(marginaleffects)
+
 EXPENSIVE <- TRUE
 
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
 options("tinysnapshot_ignore_white_space" = TRUE)
 options(marginaleffects_numDeriv = NULL)
+
+if (dir.exists("~/repos/Rdatasets/")) {
+    options("marginaleffects_rdataset_path" = "~/repos/Rdatasets/")
+}
 
 if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {
     options("brms.backend" = "cmdstanr")
