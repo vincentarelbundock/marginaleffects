@@ -3,6 +3,7 @@ using("marginaleffects")
 requiet("survival")
 requiet("emmeans")
 requiet("broom")
+requiet("splines")
 
 
 # Issue #911: survreg support
@@ -134,3 +135,16 @@ fit <- survreg(Surv(time, status) ~ ph.ecog + age + sex, lung, dist = "weibull")
 p1 <- avg_predictions(fit, variables = "sex", type = "quantile", p = 0.5)
 p2 <- avg_predictions(fit, variables = "sex", type = "quantile", p = 0.1)
 expect_true(all(p1$estimate > p2$estimate))
+
+
+# Issue #1467: warning about anti-conservative standard errors
+op <- getOption("marginaleffects_safe")
+options(marginaleffects_safe = TRUE)
+dat <- get_dataset("rotterdam", "survival")
+mod <- coxph(
+    Surv(dtime, death) ~ hormon * factor(grade) + ns(age, df = 2),
+    data = dat
+)
+expect_warning(avg_comparisons(mod), pattern = "bootstrap")
+expect_warning(predictions(mod), pattern = "bootstrap")
+options(marginaleffects_safe = op)

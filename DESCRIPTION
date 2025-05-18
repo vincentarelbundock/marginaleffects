@@ -165,6 +165,7 @@ Suggests:
     scam,
     spelling,
     speedglm,
+    splines,
     survey,
     survival,
     svglite,

@@ -30,3 +30,17 @@ get_predict.coxph <- function(
     out <- data.frame(rowid = seq_len(nrow(newdata)), estimate = out)
     return(out)
 }
+
+
+#' @rdname sanitize_model_specific
+sanitize_model_specific.coxph <- function(model, vcov, ...) {
+    insight::check_if_installed("survival")
+    flag1 <- !isFALSE(vcov)
+    flag2 <- !isTRUE(checkmate::check_choice(vcov, choices = c("rsample", "boot", "fwb")))
+    flag3 <- isTRUE(getOption("marginaleffects_safe", default = TRUE))
+    if (flag1 && flag2 && flag3) {
+        msg <- 'The default delta method standard errors for `coxph` models only take into account uncertainty in the regression coefficients. Standard errors may be too small. Use the `inferences()` function or set `vcov` to "rsample", "boot"  or "fwb" to compute confidence intervals by bootstrapping. Set `vcov` to `FALSE` or `options(marginaleffects_safe=FALSE)` to silence this warning.'
+        warning(msg, call. = FALSE)
+    }
+    return(model)
+}
