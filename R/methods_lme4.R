@@ -65,10 +65,9 @@ get_predict.lmerMod <- get_predict.merMod
 #' @rdname sanitize_model_specific
 #' @export
 sanitize_model_specific.merMod <- function(model, re.form, ...) {
-    unsafe <- isFALSE(getOption("marginaleffects_safe", default = TRUE))
-    if (unsafe && (missing(re.form) || (!isTRUE(is.na(re.form))))) {
+    if (missing(re.form) || (!isTRUE(is.na(re.form)))) {
         msg <- "For this model type, `marginaleffects` only takes into account the uncertainty in fixed-effect parameters. This is often appropriate when `re.form=NA`, but may be surprising to users who set `re.form=NULL` (default) or to some other value. Call `options(marginaleffects_safe = FALSE)` to silence this warning."
-        insight::format_warning(msg)
+        warn_sprintf(msg)
     }
     return(model)
 }
