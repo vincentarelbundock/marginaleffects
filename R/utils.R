@@ -63,7 +63,7 @@ set_marginaleffects_attributes <- function(x, attr_cache, prefix = "") {
 
 
 warn_once <- function(msg, id) {
-    if (!isTRUE(getOption(id, default = TRUE))) {
+    if (!isTRUE(getOption(id, default = TRUE)) || !isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
         return(invisible())
     }
     msg <- paste(msg, "This warning appears once per session.")
@@ -220,4 +220,13 @@ stop_deprecate <- function(old, new = NULL) {
 stop_sprintf <- function(msg, ...) {
     msg <- sprintf(msg, ...)
     stop(msg, call. = FALSE)
+}
+
+
+warn_sprintf <- function(msg, ...) {
+    if (!isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
+        return(invisible())
+    }
+    msg <- sprintf(msg, ...)
+    warning(msg, call. = FALSE)
 }

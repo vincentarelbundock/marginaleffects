@@ -3,7 +3,7 @@
 #' @param model model object
 #' @param type character vector
 #' @noRd
-sanitize_type <- function(model, type, by = FALSE, calling_function = "raw") {
+sanitize_type <- function(model, type, by = FALSE, hypothesis = NULL, calling_function = "raw") {
     # mlr3
     if (inherits(model, "Learner")) {
         if (is.null(type)) type <- "response"
@@ -54,6 +54,11 @@ sanitize_type <- function(model, type, by = FALSE, calling_function = "raw") {
     }
 
     if (is.null(type)) type <- "response"
+
+    if (identical(type, "invlink(link)") && !is.null(hypothesis)) {
+        msg <- 'When `type="invlink(link)"`, the `hypothesis` is tested and statistics are computed before back-transformation to the link scale. Make sure you specify the value of `hypothesis` accordingly.'
+        warn_once(msg, "marginaleffects_invlink_link_hypothesis_must_be_on_link_scale")
+    }
 
     return(type)
 }

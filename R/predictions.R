@@ -251,6 +251,7 @@ predictions <- function(
         hypothesis = hypothesis
     )
     tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis_input <- hypothesis
     hypothesis <- tmp$hypothesis
     hypothesis_null <- tmp$hypothesis_null
     hypothesis_direction <- tmp$hypothesis_direction
@@ -260,6 +261,7 @@ predictions <- function(
         model = model,
         type = type,
         by = by,
+        hypothesis = hypothesis_input,
         calling_function = "predictions"
     )
     if (identical(type_string, "invlink(link)")) {
