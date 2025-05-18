@@ -48,3 +48,30 @@ using("tinysnapshot")
 mod <- lm(mpg ~ hp, mtcars)
 expect_snapshot_print(avg_comparisons(mod), "df-z")
 expect_snapshot_print(avg_comparisons(mod, df = 30), "df-t")
+
+
+# df = "residual"
+dat <- transform(mtcars, cyl = factor(cyl))
+mod <- lm(mpg ~ cyl, data = dat)
+c1 <- avg_comparisons(mod, df = "residual")
+c2 <- avg_comparisons(mod)
+expect_true(all(c1$p.value > c2$p.value))
+expect_true(all(c1$s.value < c2$s.value))
+expect_true(all(c1$conf.low < c2$conf.low))
+p1 <- predictions(mod, df = "residual")
+p2 <- predictions(mod)
+expect_true(all(p1$p.value > p2$p.value))
+expect_true(all(p1$s.value < p2$s.value))
+expect_true(all(p1$conf.low < p2$conf.low))
+h1 <- hypotheses(mod, df = "residual")
+h2 <- hypotheses(mod)
+expect_true(all(c1$p.value > c2$p.value))
+expect_true(all(c1$s.value < c2$s.value))
+expect_true(all(c1$conf.low < c2$conf.low))
+
+
+
+
+
+
+

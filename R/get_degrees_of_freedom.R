@@ -19,14 +19,22 @@ get_degrees_of_freedom <- function(model, df = Inf, newdata = NULL) {
             silent = TRUE
         )
         if (inherits(tmp, "try-error")) {
-            msg <- sprintf(
-                "Unable to extract degrees of freedom of type `%s` for model of class `%s`.",
-                df,
-                class(model)[1]
-            )
-            insight::format_error(msg)
+            msg <- "Unable to extract degrees of freedom of type `%s` for model of class `%s`."
+            stop_sprintf(msg, df, class(model)[1])
         }
         df <- tmp
+
+    } else if (isTRUE(checkmate::check_choice(df, "residual"))) {
+        tmp <- try(
+            insight::get_df(x = model, data = newdata, type = df, df_per_obs = TRUE),
+            silent = TRUE
+        )
+        if (inherits(tmp, "try-error")) {
+            msg <- "Unable to extract degrees of freedom of type `%s` for model of class `%s`."
+            stop_sprintf(msg, df, class(model)[1])
+        }
+        df <- tmp
+
     } else if (
         isTRUE(checkmate::check_number(df, lower = Inf)) ||
             isFALSE(df) ||
@@ -55,7 +63,7 @@ get_degrees_of_freedom <- function(model, df = Inf, newdata = NULL) {
 sanitize_df <- function(
     df,
     model,
-    newdata,
+    newdata = NULL,
     by = NULL,
     hypothesis = NULL,
     vcov = NULL
@@ -78,7 +86,7 @@ sanitize_df <- function(
         checkmate::check_true(df),
         checkmate::check_number(df, lower = 1),
         checkmate::check_numeric(df, len = nrow(newdata)),
-        checkmate::check_choice(df, c("satterthwaite", "kenward-roger")),
+        checkmate::check_choice(df, c("residual", "satterthwaite", "kenward-roger"))
     )
 
     return(df)

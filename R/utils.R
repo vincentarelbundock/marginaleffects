@@ -215,3 +215,9 @@ stop_deprecate <- function(old, new = NULL) {
     }
     stop(msg, call. = FALSE)
 }
+
+
+stop_sprintf <- function(msg, ...) {
+    msg <- sprintf(msg, ...)
+    stop(msg, call. = FALSE)
+}

@@ -111,7 +111,10 @@
 #'   - The function can also accept optional input arguments: `newdata`, `by`, `draws`.
 #'   - This function approach will not work for Bayesian models or with bootstrapping. In those cases, it is easy to use `get_draws()` to extract and manipulate the draws directly.
 #' + See the Examples section below and the vignette: [https://marginaleffects.com/chapters/hypothesis.html](https://marginaleffects.com/chapters/hypothesis.html)
-#' @param df Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and `Inf`. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. See [insight::get_df] for a convenient function to extract degrees of freedom. Ex: `slopes(model, df = insight::get_df(model))`
+#' @param df Degrees of freedom used to compute p values and confidence intervals. 
+#'   - A single numeric value between 1 and `Inf`, or a numeric vector with length equal to the number of rows in the output. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. 
+#'   - "residual": Calls [insight::get_df] to extract degrees of freedom from the model automatically.
+#'   - "satterthwaite" or "kenward-roger": Use the Satterthwaite or Kenward-Roger approximation to compute degrees of freedom in mixed effects models.
 #' @param eps NULL or numeric value which determines the step size to use when
 #' calculating numerical derivatives: (f(x+eps)-f(x))/eps. When `eps` is
 #' `NULL`, the step size is 0.0001 multiplied by the difference between

@@ -15,6 +15,7 @@ New:
 * `vcov` accepts "rsample", "boot", "fwb", and "simulation". The object is automatically passed to `inferences(method=)` with default arguments. This is only meant as a shortcut.  To customize the bootstrap strategy, users should use `inferences()`.
 * `get_dataset()` downloads Parquet files instead of CSV. Faster.
 * `inferences()` methods "fwb" and "rsample" can now be parallelized using the global `options(marginaleffects_parallel_inferences=TRUE)`
+* `df="residual"` calls `insight::get_df(model)` to get degrees of freedom for the p value computation. This usually delegates extraction to `df.residual()`.
 
 Bugs:
 
