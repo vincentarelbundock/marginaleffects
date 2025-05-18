@@ -5,10 +5,12 @@ if (!EXPENSIVE) exit_file("EXPENSIVE")
 requiet("MASS")
 requiet("ordinal")
 
-dat <- read.csv(
-    "https://vincentarelbundock.github.io/Rdatasets/csv/MASS/housing.csv",
-    stringsAsFactors = TRUE
-)
+dat <- get_dataset("housing", "MASS")
+for (i in seq_along(dat)) {
+    if (is.character(dat[[i]])) {
+        dat[[i]] <- factor(dat[[i]])
+    }
+}
 
 # marginaleffects: clm: vs. MASS
 known <- MASS::polr(Sat ~ Infl + Type + Cont, weights = Freq, data = dat, Hess = TRUE)
