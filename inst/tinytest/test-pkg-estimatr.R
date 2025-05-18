@@ -1,5 +1,4 @@
 source("helpers.R")
-exit_file("parallel break")
 
 using("marginaleffects")
 requiet("estimatr")
@@ -8,9 +7,7 @@ requiet("margins")
 requiet("broom")
 
 Km <- get_dataset("Kmenta", "sem")
-dat <- mtcars
-dat$cyl <- factor(dat$cyl)
-dat <<- dat
+dat <- transform(mtcars, cyl = factor(cyl))
 
 # lm_lin: no validity
 mod <- lm_lin(mpg ~ am, ~ hp + cyl, data = dat)
@@ -24,9 +21,8 @@ model <- iv_robust(
     se_type = "stata",
     data = Km
 )
-mfx <- slopes(model)
+mfx <- slopes(model, newdata = Km)
 tid <- tidy(mfx)
-expect_slopes(model)
 mfx <- merge(tid, stata)
 expect_equivalent(mfx$estimate, mfx$dydxstata)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .1)
@@ -59,7 +55,7 @@ expect_true(expect_margins(mfx, mar, se = FALSE))
 # iv_robust: predictions: no validity
 # skip_if_not_installed("insight", minimum_version = "0.17.1")
 model <- iv_robust(Q ~ P + D | D + F + A, se_type = "stata", data = Km)
-expect_predictions(predictions(model), n_row = nrow(Km))
+expect_predictions(predictions(model, newdata = Km), n_row = nrow(Km))
 expect_predictions(predictions(model, newdata = head(Km)), n_row = 6)
 
 

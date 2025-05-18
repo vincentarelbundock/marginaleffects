@@ -14,8 +14,6 @@ requiet <- function(package) {
 requiet("marginaleffects")
 requiet("tinytest")
 requiet("tinysnapshot")
-using("marginaleffects")
-using("tinysnapshot")
 
 EXPENSIVE <- TRUE
 
