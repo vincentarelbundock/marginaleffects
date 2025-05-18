@@ -416,7 +416,7 @@ call \code{plan()} function, and set a global option.
 
 \code{options(marginaleffects_parallel = TRUE)}: parallelize delta method computation of standard errors.
 \code{options(marginaleffects_parallel_inferences = TRUE)}: parallelize \code{"rsample"} or \code{"fwb"} bootstrap computation in \code{inferences()}.
-\code{options(marginaleffects_parallel_packages = TRUE)}: vector of strings with the names of modelling packages used to fit the model, ex: c("survival", "splines")
+\code{options(marginaleffects_parallel_packages = TRUE)}: vector of strings with the names of modeling packages used to fit the model, ex: c("survival", "splines")
 
 For example:
 

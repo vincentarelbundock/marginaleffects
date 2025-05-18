@@ -15,7 +15,7 @@
 #'
 #' `options(marginaleffects_parallel = TRUE)`: parallelize delta method computation of standard errors.
 #' `options(marginaleffects_parallel_inferences = TRUE)`: parallelize `"rsample"` or `"fwb"` bootstrap computation in `inferences()`.
-#' `options(marginaleffects_parallel_packages = TRUE)`: vector of strings with the names of modelling packages used to fit the model, ex: c("survival", "splines")
+#' `options(marginaleffects_parallel_packages = TRUE)`: vector of strings with the names of modeling packages used to fit the model, ex: c("survival", "splines")
 #'
 #' For example:
 #'
