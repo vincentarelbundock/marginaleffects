@@ -16,6 +16,8 @@ New:
 * `get_dataset()` downloads Parquet files instead of CSV. Faster.
 * `inferences()` methods "fwb" and "rsample" can now be parallelized using the global `options(marginaleffects_parallel_inferences=TRUE)`
 * `df="residual"` calls `insight::get_df(model)` to get degrees of freedom for the p value computation. This usually delegates extraction to `df.residual()`.
+* `datagrid()` ensures integers stay integers. Thanks to @mattansb for report #1439.
+* `inferences()` now uses the `mvtnorm` package instead of `MASS` to draw multivariate normal numbers for simulation-based inference.
 
 Bugs:
 
@@ -24,7 +26,6 @@ Bugs:
 
 Misc:
 
-* `datagrid()` ensures integers stay integers. Thanks to @mattansb for report #1439.
 
 ## 0.25.1
 

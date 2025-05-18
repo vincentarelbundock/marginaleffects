@@ -1,5 +1,5 @@
 inferences_simulation <- function(x, R = 1000, conf_level = 0.95, ...) {
-    insight::check_if_installed("MASS")
+    insight::check_if_installed("mvtnorm")
 
     out <- x
     model <- attr(x, "model")
@@ -15,7 +15,7 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, ...) {
     }
 
     # Draw R sets of coefficients from multivariate normal
-    coefmat <- MASS::mvrnorm(R, mu = B, Sigma = V)
+    coefmat <- mvtnorm::rmvnorm(R, B, V)
 
     # avoid recursion
     args <- list(...)
