@@ -1,8 +1,7 @@
 source("helpers.R")
-# exit_file("CHECK THIS")
 using("marginaleffects")
 
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 requiet("broom")
 requiet("plm")
 

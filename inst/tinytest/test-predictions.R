@@ -136,8 +136,6 @@ mm <- predictions(mod, newdata = datagrid(am = TRUE))
 expect_equivalent(nrow(mm), 1)
 
 
-# exit_file("works interactively")
-
 # Issue #496
 mod <- lm(mpg ~ factor(vs), data = mtcars)
 p1 <- predictions(mod, variables = list(vs = 0:1))

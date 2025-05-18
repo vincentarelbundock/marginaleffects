@@ -81,7 +81,6 @@ p1 <- predictions(m2, type = "link")
 p2 <- predictions(m2, newdata = dat, type = "link")
 p3 <- as.data.frame(predict(m2, se.fit = TRUE, type = "link"))
 
-# exit_file("works locally")
 expect_equal(p1$estimate, p3$fit)
 expect_equal(p1$std.error, p3$se.fit)
 expect_equal(p2$estimate, p3$fit)

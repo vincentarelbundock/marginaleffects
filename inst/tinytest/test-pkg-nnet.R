@@ -3,7 +3,7 @@ using("marginaleffects")
 
 requiet("nnet")
 requiet("carData")
-if (!requiet("prediction")) exit_file("prediction")
+requiet("prediction")
 
 # multinom group estimates
 TitanicSurvival <- get_dataset("TitanicSurvival", "carData")

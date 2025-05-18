@@ -2,6 +2,7 @@ source("helpers.R")
 requiet("dplyr")
 requiet("emmeans")
 requiet("parameters")
+requiet("tinysnapshot")
 
 mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
 
@@ -101,9 +102,6 @@ pre <- avg_predictions(tmp) |> hypotheses(equivalence = c(-.2, 0))
 expect_inherits(cmp, "hypotheses")
 expect_inherits(mfx, "hypotheses")
 expect_inherits(pre, "hypotheses")
-if (!requiet("tinysnapshot")) {
-    exit_file("tinysnapshot")
-}
 cmp <- avg_comparisons(tmp, equivalence = c(-.1, 0))
 expect_snapshot_print(cmp, "equivalence-avg_comparisons")
 

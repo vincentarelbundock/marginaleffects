@@ -3,7 +3,7 @@ using("marginaleffects")
 
 requiet("glmx")
 requiet("MASS")
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 
 # glmx: marginaleffects vs. margins
 tmp <- data.frame(x = runif(200, -1, 1))

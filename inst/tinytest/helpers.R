@@ -1,7 +1,21 @@
 rm(list = ls())
 rm(list = ls(.GlobalEnv), envir = .GlobalEnv)
 
-library(marginaleffects)
+requiet <- function(package) {
+    void <- capture.output(
+        pkg_available <- tryCatch(suppressPackageStartupMessages(suppressWarnings(suppressMessages(tryCatch(
+            isTRUE(require(package, warn.conflicts = FALSE, character.only = TRUE)),
+            error = function(e) FALSE
+        )))))
+    )
+    return(invisible(pkg_available))
+}
+
+requiet("marginaleffects")
+requiet("tinytest")
+requiet("tinysnapshot")
+using("marginaleffects")
+using("tinysnapshot")
 
 EXPENSIVE <- TRUE
 
@@ -19,19 +33,6 @@ if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {
     options("brms.backend" = "cmdstanr")
 }
 
-# libraries
-requiet <- function(package) {
-    void <- capture.output(
-        pkg_available <- tryCatch(suppressPackageStartupMessages(suppressWarnings(suppressMessages(tryCatch(
-            isTRUE(require(package, warn.conflicts = FALSE, character.only = TRUE)),
-            error = function(e) FALSE
-        )))))
-    )
-    return(invisible(pkg_available))
-}
-
-requiet("tinytest")
-requiet("tinysnapshot")
 
 if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") >= "1.4.0") {
     tinytest::register_tinytest_extension(

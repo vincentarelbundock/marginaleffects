@@ -226,7 +226,6 @@ expect_equivalent(p2$estimate, p$estimate)
 
 
 # Issue #1054
-# exit_file("Issue #1054 is broken. Noah's PR?")
 requiet("lme4")
 mod <- glmer(
     cbind(incidence, size - incidence) ~ period + (1 | herd),

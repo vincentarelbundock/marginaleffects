@@ -1,10 +1,8 @@
 source("helpers.R")
-exit_file("parallel break")
-
 using("marginaleffects")
 requiet("tidyverse")
 requiet("survey")
-suppressPackageStartupMessages(requiet("rstan"))
+requiet("rstan")
 
 # mtcars logit
 tmp <- get_dataset("mtcars", "datasets")
@@ -158,7 +156,6 @@ expect_equivalent(cmp1$estimate, cmp2$estimate)
 
 
 # Issue #870
-pkgload::load_all()
 Guerry <- get_dataset("Guerry", "HistData")
 Guerry <- Guerry[which(Guerry$Region != ""), ]
 mod <- lm(Literacy ~ Pop1831 * Desertion, data = Guerry)

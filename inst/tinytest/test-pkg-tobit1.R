@@ -2,7 +2,7 @@ exit_file("tobit1 is not on CRAN")
 source("helpers.R")
 using("marginaleffects")
 
-if (!require("tobit1")) exit_file("tobit1")
+if (!require("tobit1")) exit_file("not on CRAN")
 requiet("tobit1")
 requiet("broom")
 tol <- 0.001

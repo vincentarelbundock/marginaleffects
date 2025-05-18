@@ -1,7 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 requiet("broom")
 requiet("emmeans")
 requiet("dplyr")

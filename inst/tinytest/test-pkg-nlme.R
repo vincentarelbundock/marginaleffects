@@ -48,7 +48,6 @@ expect_equivalent(mm$std.error, em$std.error, tolerance = 1e-5)
 
 
 # issue #99: Support `lme`
-if (packageVersion("insight") < "0.19.0.12") exit_file("insight version")
 mod <- lme(distance ~ age + Sex, data = Orthodont, random = ~1)
 mfx <- avg_slopes(mod)
 cmp <- comparisons(mod)

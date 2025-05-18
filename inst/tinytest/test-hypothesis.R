@@ -233,7 +233,7 @@ expect_error(
 )
 
 # Issue #661: remove redundant labels in pairwise comparisons
-if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
+requiet("tinysnapshot")
 using("tinysnapshot")
 set.seed(123)
 dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6))))

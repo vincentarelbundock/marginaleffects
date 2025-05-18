@@ -41,7 +41,7 @@ expect_equal(sum(a$p.value == b$p.value), 1)
 
 
 # Issue #627: print t instead of z in column names
-if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
+requiet("tinysnapshot")
 using("tinysnapshot")
 
 
@@ -68,10 +68,3 @@ h2 <- hypotheses(mod)
 expect_true(all(c1$p.value > c2$p.value))
 expect_true(all(c1$s.value < c2$s.value))
 expect_true(all(c1$conf.low < c2$conf.low))
-
-
-
-
-
-
-

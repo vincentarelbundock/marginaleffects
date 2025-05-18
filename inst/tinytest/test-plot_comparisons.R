@@ -1,6 +1,7 @@
 source("helpers.R")
-if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
 if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
+requiet("tinysnapshot")
+requiet("ggplot2")
 using("marginaleffects")
 
 
@@ -36,7 +37,6 @@ expect_inherits(p, "gg")
 
 
 # Issue #545: blank graph
-library(ggplot2)
 dat_titanic <- get_dataset("Titanic", "Stat2Data")
 mod2 <- glm(Survived ~ Age, data = dat_titanic, family = binomial)
 p <- plot_comparisons(

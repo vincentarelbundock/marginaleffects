@@ -4,7 +4,7 @@ using("marginaleffects")
 requiet("pscl")
 requiet("emmeans")
 requiet("broom")
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 tol <- 0.0001
 tol_se <- 0.001
 

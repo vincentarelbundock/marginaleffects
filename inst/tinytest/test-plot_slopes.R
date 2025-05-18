@@ -1,8 +1,8 @@
 source("helpers.R")
 using("marginaleffects")
-if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
-if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
+requiet("tinysnapshot")
 using("tinysnapshot")
+if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 
 # character predictors
 dat <- get_dataset("penguins", "palmerpenguins")

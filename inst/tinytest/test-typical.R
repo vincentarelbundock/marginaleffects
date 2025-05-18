@@ -1,6 +1,4 @@
 source("helpers.R")
-exit_file("parallel break")
-
 using("marginaleffects")
 
 
@@ -57,7 +55,7 @@ mfx <- slopes(mod, newdata = datagrid(cyl = unique), variables = "am")
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 3)
 
-# errors and warnings
+# errors and warning
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <- dat

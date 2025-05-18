@@ -1,5 +1,4 @@
 source("helpers.R")
-# exit_file("TODO: new bug")
 # https://stackoverflow.com/questions/72533745/loading-logistf-breaks-mcmcglmm
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 requiet("MCMCglmm")

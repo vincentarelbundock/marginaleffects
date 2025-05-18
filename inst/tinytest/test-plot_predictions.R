@@ -1,6 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
+requiet("tinysnapshot")
 if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 using("tinysnapshot")
 requiet("nnet")

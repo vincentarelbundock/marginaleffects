@@ -114,6 +114,7 @@ Suggests:
     MASS,
     mclogit,
     MCMCglmm,
+    mhurdle,
     missRanger,
     mgcv,
     mice,

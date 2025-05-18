@@ -2,7 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 requiet("brglm2")
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 requiet("emmeans")
 requiet("broom")
 

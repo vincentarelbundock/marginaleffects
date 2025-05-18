@@ -276,8 +276,6 @@ expect_equivalent(p1$estimate, p2$fit)
 expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
 
 
-# exit_file("Issue #810 is not fixed")
-
 # Issue #810
 m <- glmmTMB(Sepal.Length ~ Sepal.Width, data = iris)
 p1 <- predictions(m, newdata = iris, re.form = NA) |> head()

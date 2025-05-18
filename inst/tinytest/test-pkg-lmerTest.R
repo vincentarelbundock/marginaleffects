@@ -4,7 +4,7 @@ using("marginaleffects")
 requiet("lmerTest")
 requiet("emmeans")
 requiet("broom")
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 
 # vs. emmeans vs. margins
 dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))

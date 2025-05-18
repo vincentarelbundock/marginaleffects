@@ -1,6 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
+requiet("tinysnapshot")
 using("tinysnapshot")
 
 # from marginaleffects objects
