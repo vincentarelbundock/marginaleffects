@@ -1,2 +1,5 @@
-NOT_CRAN <- isTRUE(Sys.getenv("R_NOT_CRAN") == "true")
-if (NOT_CRAN) tinytest::test_package("marginaleffects")
+if (requireNamespace("tinytest", quietly = TRUE)) {
+    home <- grepl("(?i)vince", Sys.info()["nodename"])
+    local <- dir.exists("tinytest")
+    tinytest::test_package("marginaleffects", at_home = home)
+}
