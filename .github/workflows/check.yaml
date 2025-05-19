@@ -41,8 +41,11 @@ jobs:
       - name: Get Script
         run: curl -OLs https://eddelbuettel.github.io/r-ci/run.sh && chmod 0755 run.sh
 
-      - name: unignore tests
+      - name: runners up 1
         run: awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
+
+      - name: runners up 2
+      	run: awk '/^run <- FALSE/{print "run <- TRUE"; next} 1' tests/tinytest.R > temp && mv temp tests/tinytest.R
 
       - name: cat Rbuildignore
         run: cat .Rbuildignore
