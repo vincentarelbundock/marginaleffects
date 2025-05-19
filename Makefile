@@ -2,6 +2,14 @@
 
 BOOK_DIR := book
 
+runnersup: ## hack local files to run tests
+	awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
+	awk '/^run <- FALSE/{print "run <- TRUE"; next} 1' tests/tinytest.R > temp && mv temp tests/tinytest.R
+
+runnersdown: ## unhack local files to not run tests
+	git restore .Rbuildignore
+	git restore tests/tinytest.R
+
 help:  ## Display this help screen
 	@echo -e "\033[1mAvailable commands:\033[0m\n"
 	@grep -E '^[a-z.A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}' | sort
@@ -18,10 +26,9 @@ testone: install ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
 document: ## altdoc::render_docs()
 	Rscript -e "devtools::document()"
 
-check: document ## devtools::check()
-	awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
+check: document runnersup ## devtools::check()
 	Rscript -e "devtools::check()"
-	git restore .Rbuildignore
+	$(MAKE) runnersdown
 
 install: document ## devtools::install(dependencies = FALSE)
 	Rscript -e "devtools::install(dependencies = FALSE)"
@@ -57,8 +64,9 @@ clean: ## Clean the book directory
 setvar: ## Set the environment variable
 	export R_BUILD_DOC=true
 
-buildtest: document ## Build and test in parallel with 8 cores
+buildtest: document runnersup ## Build and test in parallel with 8 cores
 	Rscript -e "tinytest::build_install_test(ncpu = 10)"
+	$(MAKE) runnersdown
 
 website: setvar ## altdoc::render_docs(verbose = TRUE)
 	# Rscript -e "altdoc::render_docs(verbose = TRUE, freeze = TRUE)"
