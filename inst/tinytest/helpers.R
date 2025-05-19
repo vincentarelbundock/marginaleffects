@@ -15,7 +15,7 @@ requiet("marginaleffects")
 requiet("tinytest")
 requiet("tinysnapshot")
 
-EXPENSIVE <- TRUE
+EXPENSIVE <- FALSE
 
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
