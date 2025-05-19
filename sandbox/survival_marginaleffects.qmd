@@ -9,9 +9,9 @@ bibliography: survival_marginaleffects.bib
 
 # Survival analysis
 
-Survival analysis is concerned with analyzing the (causal) effects of one or more variables on a time-to-event outcome, such as time until death or time until the occurrence of a disease. One of the main issues of survival analysis in practice is that the time-to-event outcomes are often **right-censored**, meaning that it is only known that the event of interest did not occur up until some point in time for some individuals. The most popular class of models that directly deals with right-censoring are Cox proportional hazards models [@Cox1972]. Although very useful, these models are not marginal models. They only produce hazard ratios (HR), which are conditional quantities. As such, they do not directly estimate practically relevant causal estimands by themselves [@Hernan2010]. This makes the parameter estimates produced by such models quite difficult to interpret in practical settings, an issue that is shared by a majority of other time-to-event models as well.
+Survival analysis is concerned with analyzing the (causal) effects of one or more variables on a time-to-event outcome, such as time until death or time until the occurrence of a disease. One of the main issues of survival analysis in practice is that the time-to-event outcomes are often right-censored, meaning that it is only known that the event of interest did not occur up until some point in time for some individuals. The most popular class of models that directly deals with right-censoring are Cox proportional hazards models [@Cox1972]. Although very useful, these models are not marginal models. They only produce hazard ratios (HR), which are conditional quantities. As such, they do not directly estimate practically relevant causal estimands by themselves [@Hernan2010]. This makes the parameter estimates produced by such models quite difficult to interpret in practical settings, an issue that is shared by a majority of other time-to-event models as well.
 
-To interpret results from survival models, authors have recommended reporting marginal estimands, such as the difference or ratio between counterfactual survival probabilities [@Klein2007; @Royston2013; @Uno2014]. These counterfactual probabilities may also be presented visually as **adjusted survival curves**, allowing for easier presentation of the results [@Denz2023]. A popular and statistically efficient way to calculate these quantities is the use of g-computation [@Robins1986]. 
+To interpret results from survival models, authors have recommended reporting marginal estimands, such as the difference or ratio between counterfactual survival probabilities [@Klein2007; @Royston2013; @Uno2014]. These counterfactual probabilities may also be presented visually as "adjusted survival curves," allowing for easier presentation of the results [@Denz2023]. A popular and statistically efficient way to calculate these quantities is the use of g-computation [@Robins1986]. 
 
 The `marginaleffects` package is uniquely suited to perform these tasks. It allows users to compute a wide array of intuitive and meaningful quantities of interest, and to compare them to one another. The package also allows users to easily specify complex hypothesis tests, to study interactions or effect modification.
 
@@ -392,14 +392,9 @@ $$
 \widehat{\text{Var}}(\hat\eta)=x^{\top}\widehat{\text{Var}}(\hat\beta)\,x,
 $$
 
-The variance of those predictions can be obtained via the delta method, through the estimated variance–covariance matrix of the coefficients alone. 
+The variance of those predictions can be obtained via the delta method, through the estimated variance–covariance matrix of the coefficients alone. Unfortunately, other quantities of interest are functions of more than just the estimated coefficients. For functions that depend on the baseline hazard (e.g., survival or cumulative hazard curves) a second source of variability enters through the estimation of $H_{0}(t)$. 
 
-```{r}
-predictions(mod, newdata = head(rotterdam), type = "lp")
-```
-
-Unfortunately, other quantities of interest are functions of more than just the estimated coefficients. For functions that depend on the baseline hazard (e.g., survival or cumulative hazard curves) a second source of variability enters through the estimation of $H_{0}(t)$. 
-
+````{comment}
 For any subject with covariates $x$, the marginal survivor estimate is
 
 $$
@@ -421,8 +416,9 @@ $$
 $$
 
 with a baseline term that can be evaluated with different strategies.
+````
 
-`marginaleffects` applies the multivariate delta method to propagate uncertainty from $\hat\beta$ to any user‑defined function $g(\hat\beta)$. For Cox models the current implementation ignores the extra variability in $\hat H_{0}(t)$.  When effect estimates depend on the baseline (e.g., survival probabilities, restricted mean survival time, hazard ratios evaluated at $t$) this omission produces anti‑conservative confidence intervals---often by a non‑trivial margin.
+`marginaleffects` applies the multivariate delta method to propagate uncertainty from $\hat\beta$ to any user‑defined function $g(\hat\beta)$. For Cox models the current implementation ignores the extra variability in $\hat H_{0}(t)$.  When effect estimates depend on the baseline this omission produces anti‑conservative confidence intervals---often by a non‑trivial margin.
 
 A simple remedy is the non‑parametric bootstrap: resample subjects (or clusters) with replacement, refit the Cox model in each replicate, and re‑calculate the target function.  Because every replicate re‑estimates both $\beta$ *and* $H_{0}(t)$, the resulting empirical distribution captures their joint variability without analytic derivations.  While computationally heavier, this method usually restores nominal coverage and works seamlessly with `marginaleffects` via the `vcov = "rsample"` argument or the `inferences()` function.
 
