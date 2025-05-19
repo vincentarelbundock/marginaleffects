@@ -246,6 +246,7 @@ diff(p$estimate[c(1, 7)])
 Alternatively, we could use add the `hypothesis` argument to the previous call, which gives us the same point estimate plus confidence intervals.
 
 ```{r}
+#| warning: false
 avg_predictions(model,
   hypothesis = "b1 - b7 = 0",
   type = "survival",
