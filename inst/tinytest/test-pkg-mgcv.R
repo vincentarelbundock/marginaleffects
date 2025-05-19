@@ -1,5 +1,5 @@
 source("helpers.R")
-# if (!EXPENSIVE) exit_file("EXPENSIVE")
+if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
 # exit_file("environment?")
