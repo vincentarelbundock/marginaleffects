@@ -148,7 +148,7 @@ The resulting plot shows the survival curves for both treatment options of `horm
 
 ### Hypothesis Testing
 
-The plot in the previous section showed a difference between the two `hormon` groups at almost every point in time. The confidence intervals did not overlap much, which could lead the analyst to believe that the difference between surivival probabilities in the treatment and control groups are distinguishable. In some situations, however, it might be necessary to formally compare the survival probabilities at a specific point in time using a statistical hypothesis test [@Klein2007]. In other words, one may wish to check if we can reject this null hypothesis:
+The plot in the previous section showed a difference between the two `hormon` groups at almost every point in time. The confidence intervals did not overlap much, which could lead the analyst to believe that the difference between survival probabilities in the treatment and control groups are distinguishable. In some situations, however, it might be necessary to formally compare the survival probabilities at a specific point in time using a statistical hypothesis test [@Klein2007]. In other words, one may wish to check if we can reject this null hypothesis:
 
 > At time $t$, the difference between the estimated survival probability for patients in group `hormon=1` and `hormon=1` is equal to zero. 
 
@@ -196,7 +196,7 @@ As noted in [the hypothesis testing chapter](https://marginaleffects.com/chapter
 
 ### Interactions and heterogeneous treatment effects
 
-In the real world, we often encounter heterogeneous treatment effects, meaning that the causal effect of one variable on an outcome is not necessarily the same in different groups of individuals. For example, we might be interested in assessing whether the effect of the hormonal treatment differs by values of `grade`. The classic approach to assess such heterogeneity is to include a multiplicative interactions in the Cox model formula:
+In the real world, we often encounter heterogeneous treatment effects, meaning that the causal effect of one variable on an outcome is not necessarily the same in different groups of individuals. For example, we might be interested in assessing whether the effect of the hormonal treatment differs by values of `grade`. The classic approach to assess such heterogeneity is to allow multiplicative interactions in the Cox model formula:
 
 ```{r}
 model <- coxph(
