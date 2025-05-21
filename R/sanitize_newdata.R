@@ -196,6 +196,12 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
     if (is.null(wts)) wts <- FALSE
     newdata <- add_wts_column(newdata = newdata, wts = wts, model = model)
 
+    # otherwise we get a warning in setDT()
+    if (inherits(model, "mlogit") && isTRUE(inherits(modeldata[["idx"]], "idx"))) {
+        modeldata$idx <- NULL
+        newdata$idx <- NULL
+    }
+    
     data.table::setDT(newdata)
 
     # attributes: misc
