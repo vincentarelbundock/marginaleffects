@@ -343,9 +343,17 @@ predictions <- function(
     }
 
     # pad factors: `model.matrix` breaks when factor levels are missing
-    padding <- complete_levels(newdata, character_levels)
-    if (nrow(padding) > 0) {
-        newdata <- rbindlist(list(padding, newdata))
+    # support `newdata` and assume no padding the `idx` column is necessary for
+    # `get_predict` but it breaks binding, so we can't remove it in
+    # sanity_newdata and we can't rbind it with padding
+    # pad factors: `model.matrix` breaks when factor levels are missing
+    if (inherits(model, "mlogit")) {
+        padding <- data.frame()
+    } else {
+        padding <- complete_levels(newdata, character_levels)
+        if (nrow(padding) > 0) {
+            newdata <- rbindlist(list(padding, newdata))
+        }
     }
 
     if (is.null(by) || isFALSE(by)) {
