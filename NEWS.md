@@ -1,5 +1,9 @@
 # News {.unnumbered}
 
+## Development
+
+* In `brms` models, the extra argument `incl_autocor` no longer raises a warning. Thanks to @robbinscalebj for report #1473.
+
 ## 0.26.0
 
 Breaking change:
