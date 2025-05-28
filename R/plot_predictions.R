@@ -12,7 +12,7 @@
 #' * https://marginaleffects.com/bonus/plot.html
 #' * https://marginaleffects.com
 #'
-#' @param condition Conditional predictions
+#' @param condition Conditional predictions.
 #' + Character vector (max length 4): Names of the predictors to display.
 #' + Named list (max length 4): List names correspond to predictors. List elements can be:
 #'   - Numeric vector
@@ -23,7 +23,7 @@
 #' @param by Marginal predictions
 #' + Character vector (max length 3): Names of the categorical predictors to marginalize across.
 #' + 1: x-axis. 2: color. 3: facets.
-#' @param newdata When `newdata` is `NULL`, the grid is determined by the `condition` argument. When `newdata` is not `NULL`, the argument behaves in the same way as in the `predictions()` function.
+#' @param newdata When `newdata` is `NULL`, the grid is determined by the `condition` argument. When `newdata` is not `NULL`, the argument behaves in the same way as in the `predictions()` function. Note that the `condition` argument builds its own grid, so the `newdata` argument is ignored if the `condition` argument is supplied.
 #' @param points Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points. Warning: The points displayed are raw data, so the resulting plot is not a "partial residual plot."
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams plot_slopes

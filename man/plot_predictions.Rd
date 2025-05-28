@@ -24,7 +24,7 @@ plot_predictions(
 \arguments{
 \item{model}{Model object}
 
-\item{condition}{Conditional predictions
+\item{condition}{Conditional predictions.
 \itemize{
 \item Character vector (max length 4): Names of the predictors to display.
 \item Named list (max length 4): List names correspond to predictors. List elements can be:
@@ -43,7 +43,7 @@ plot_predictions(
 \item 1: x-axis. 2: color. 3: facets.
 }}
 
-\item{newdata}{When \code{newdata} is \code{NULL}, the grid is determined by the \code{condition} argument. When \code{newdata} is not \code{NULL}, the argument behaves in the same way as in the \code{predictions()} function.}
+\item{newdata}{When \code{newdata} is \code{NULL}, the grid is determined by the \code{condition} argument. When \code{newdata} is not \code{NULL}, the argument behaves in the same way as in the \code{predictions()} function. Note that the \code{condition} argument builds its own grid, so the \code{newdata} argument is ignored if the \code{condition} argument is supplied.}
 
 \item{type}{string indicates the type (scale) of the predictions used to
 compute contrasts or slopes. This can differ based on the model
