@@ -121,7 +121,7 @@ Suggests:
     miceadds,
     mlogit,
     mlr3verse,
-    mmrm (>= 0.3.12),
+    mmrm (>= 0.3.14),
     modelbased,
     modelsummary,
     multcomp,

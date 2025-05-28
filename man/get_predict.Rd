@@ -6,10 +6,10 @@
 %   R/methods_fixest.R, R/methods_flexsurv.R, R/methods_gamlss.R,
 %   R/methods_glmmTMB.R, R/methods_glmtoolbox.R, R/methods_lme4.R,
 %   R/methods_mclogit.R, R/methods_mhurdle.R, R/methods_mlr3.R,
-%   R/methods_ordinal.R, R/methods_quantreg.R, R/methods_rms.R,
-%   R/methods_robustlmm.R, R/methods_rstanarm.R, R/methods_rstpm2.R,
-%   R/methods_stats.R, R/methods_survey.R, R/methods_survival.R,
-%   R/methods_tidymodels.R, R/methods_tobit1.R
+%   R/methods_mmrm.R, R/methods_ordinal.R, R/methods_quantreg.R,
+%   R/methods_rms.R, R/methods_robustlmm.R, R/methods_rstanarm.R,
+%   R/methods_rstpm2.R, R/methods_stats.R, R/methods_survey.R,
+%   R/methods_survival.R, R/methods_tidymodels.R, R/methods_tobit1.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}

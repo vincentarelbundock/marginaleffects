@@ -3,7 +3,8 @@
 %   R/methods_afex.R, R/methods_aod.R, R/methods_biglm.R, R/methods_brms.R,
 %   R/methods_dbarts.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
 %   R/methods_mhurdle.R, R/methods_mlr3.R, R/methods_mmrm.R, R/methods_rms.R,
-%   R/methods_rstpm2.R, R/methods_scam.R, R/methods_tidymodels.R
+%   R/methods_rstpm2.R, R/methods_scam.R, R/methods_systemfit.R,
+%   R/methods_tidymodels.R
 \name{get_vcov}
 \alias{get_vcov}
 \alias{get_vcov.default}
