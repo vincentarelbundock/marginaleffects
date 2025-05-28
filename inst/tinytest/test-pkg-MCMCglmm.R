@@ -1,6 +1,5 @@
 source("helpers.R")
 # https://stackoverflow.com/questions/72533745/loading-logistf-breaks-mcmcglmm
-exit_file("Conflict with logistf")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 requiet("MCMCglmm")
 
@@ -13,7 +12,3 @@ expect_equivalent(nrow(p), 1)
 p <- avg_predictions(mod, by = "carb", newdata = mtcars)
 expect_inherits(p, "predictions")
 expect_equivalent(nrow(p), 6)
-
-
-
-rm(list = ls())

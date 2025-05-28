@@ -1,5 +1,5 @@
 #' `tinytest` helper
-#' 
+#'
 #' @export
 #' @keywords internal
 expect_slopes <- function(
@@ -7,8 +7,8 @@ expect_slopes <- function(
     n_unique = NULL,
     pct_na = 5,
     se = TRUE,
-    ...) {
-
+    ...
+) {
     insight::check_if_installed("tinytest")
 
     object <- hush(slopes(object, ...))
@@ -63,24 +63,18 @@ expect_slopes <- function(
     out <- tinytest::tinytest(
         result = !fail,
         call = sys.call(sys.parent(1)),
-        diff = diff)
+        diff = diff
+    )
 
     return(out)
 }
 
 
-
-
-
 #' `tinytest` helper
-#' 
+#'
 #' @export
 #' @keywords internal
-expect_predictions <- function(object,
-                               se = TRUE,
-                               n_row = NULL,
-                               n_col = NULL) {
-
+expect_predictions <- function(object, se = TRUE, n_row = NULL, n_col = NULL) {
     insight::check_if_installed("tinytest")
 
     diff <- ""
@@ -128,22 +122,24 @@ expect_predictions <- function(object,
     out <- tinytest::tinytest(
         result = !fail,
         call = sys.call(sys.parent(1)),
-        diff = diff)
+        diff = diff
+    )
 
     return(out)
 }
 
 
 #' `tinytest` helper
-#' 
+#'
 #' @export
 #' @keywords internal
-expect_margins <- function(results,
-                           margins_object,
-                           se = TRUE,
-                           tolerance = 1e-5,
-                           verbose = FALSE) {
-
+expect_margins <- function(
+    results,
+    margins_object,
+    se = TRUE,
+    tolerance = 1e-5,
+    verbose = FALSE
+) {
     insight::check_if_installed("tinytest")
 
     is_equal <- function(x, y) {
@@ -203,7 +199,8 @@ expect_margins <- function(results,
     out <- tinytest::tinytest(
         result = flag,
         call = sys.call(sys.parent(1)),
-        diff = diff)
+        diff = diff
+    )
 
     return(out)
 }

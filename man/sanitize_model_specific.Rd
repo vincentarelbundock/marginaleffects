@@ -3,7 +3,7 @@
 %   R/sanity_model.R, R/methods_brms.R, R/methods_dbarts.R, R/methods_glmmTMB.R,
 %   R/methods_lme4.R, R/methods_mclogit.R, R/methods_mlogit.R, R/methods_mmrm.R,
 %   R/methods_ordinal.R, R/methods_plm.R, R/methods_quantreg.R,
-%   R/methods_survey.R
+%   R/methods_survey.R, R/methods_survival.R
 \name{sanitize_model_specific.glimML}
 \alias{sanitize_model_specific.glimML}
 \alias{sanitize_model_specific.betareg}
@@ -21,6 +21,7 @@
 \alias{sanitize_model_specific.rqs}
 \alias{sanitize_model_specific.svyolr}
 \alias{sanitize_model_specific.svyglm}
+\alias{sanitize_model_specific.coxph}
 \title{Method to raise model-specific warnings and errors}
 \usage{
 \method{sanitize_model_specific}{glimML}(model, ...)
@@ -40,13 +41,13 @@ sanitize_model_specific(model, ...)
 
 \method{sanitize_model_specific}{bart}(model, ...)
 
-\method{sanitize_model_specific}{glmmTMB}(model, vcov = TRUE, re.form = NULL, ...)
+\method{sanitize_model_specific}{glmmTMB}(model, vcov = TRUE, re.form, ...)
 
-\method{sanitize_model_specific}{merMod}(model, re.form = NULL, ...)
+\method{sanitize_model_specific}{merMod}(model, re.form, ...)
 
 \method{sanitize_model_specific}{mblogit}(model, calling_function = "marginaleffects", ...)
 
-\method{sanitize_model_specific}{mlogit}(model, newdata, ...)
+\method{sanitize_model_specific}{mlogit}(model, ...)
 
 \method{sanitize_model_specific}{mmrm}(model, ...)
 
@@ -61,6 +62,8 @@ sanitize_model_specific(model, ...)
 \method{sanitize_model_specific}{svyolr}(model, wts = FALSE, by = FALSE, ...)
 
 \method{sanitize_model_specific}{svyglm}(model, wts = FALSE, by = FALSE, ...)
+
+\method{sanitize_model_specific}{coxph}(model, vcov, ...)
 }
 \arguments{
 \item{model}{Model object}
@@ -84,31 +87,11 @@ arguments.}
 \item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
 \item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 \item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
+\item "rsample", "boot", "fwb", and "simulation" are passed to the \code{method} argument of the \code{inferences()} function. To customize the bootstrap or simulation process, call \code{inferences()} directly.
 }
 \item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
 \item Square covariance matrix
 \item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
-}}
-
-\item{newdata}{Grid of predictor values at which we evaluate the slopes.
-\itemize{
-\item Warning: Please avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
-\item \code{NULL} (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[insight:get_data]{insight::get_data()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
-\item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
-\itemize{
-\item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
-\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
-}
-\item \code{\link[=subset]{subset()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = subset(treatment == 1)}
-\item \code{\link[dplyr:filter]{dplyr::filter()}} call with a single argument to select a subset of the dataset used to fit the model, ex: \code{newdata = filter(treatment == 1)}
-\item string:
-\itemize{
-\item "mean": Slopes evaluated when each predictor is held at its mean or mode.
-\item "median": Slopes evaluated when each predictor is held at its median or mode.
-\item "balanced": Slopes evaluated on a balanced grid with every combination of categories and numeric variables held at their means.
-\item "tukey": Slopes evaluated at Tukey's 5 numbers.
-\item "grid": Slopes evaluated on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
-}
 }}
 
 \item{wts}{logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not unit-level estimates. See \code{?weighted.mean}

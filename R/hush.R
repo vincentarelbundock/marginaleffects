@@ -5,7 +5,8 @@ hush <- function(code) {
         out <- invisible(
             suppressMessages(
                 suppressWarnings(
-                    tryCatch(code, error = function(e) NULL))
+                    tryCatch(code, error = function(e) NULL)
+                )
             )
         )
     })

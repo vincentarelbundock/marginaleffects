@@ -14,9 +14,10 @@ dat <- transform(
     mtcars,
     vs = factor(vs),
     gear = factor(gear),
-    am = factor(am))
+    am = factor(am)
+)
 mod <- glm(vs ~ gear + am, data = dat, family = binomial)
-p <- predictions(mod, newdata = "marginalmeans")
+p <- predictions(mod, newdata = "balanced")
 expect_equal(nrow(p), 6)
 
 
@@ -45,7 +46,8 @@ set.seed(1024)
 N <- 1e5
 dat <- data.frame(
     y = rbinom(N, 1, prob = .9),
-    x = rnorm(N))
+    x = rnorm(N)
+)
 mod <- glm(y ~ x, family = binomial, data = dat)
 p1 <- avg_predictions(mod) # average prediction outside [0,1]
 p2 <- avg_predictions(mod, type = "link", transform = insight::link_inverse(mod)) # average prediction inside [0,1]
@@ -76,7 +78,7 @@ dat <- mtcars
 dat$w <- 1:32
 mod <- lm(mpg ~ hp + am, dat)
 pre1 <- predictions(mod, by = "am")
-pre1 <- pre1[order(pre1$am),]
+pre1 <- pre1[order(pre1$am), ]
 pre2 <- predictions(mod)
 pre2 <- aggregate(estimate ~ am, FUN = mean, data = pre2)
 expect_equivalent(pre1$estimate, pre2$estimate)
@@ -90,7 +92,6 @@ pre2 <- avg_predictions(mod)
 expect_true(all(pre1$estimate != pre2$estimate))
 
 
-
 ######################################
 #  values against predict benchmark  #
 ######################################
@@ -98,9 +99,6 @@ mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
 nd <- datagrid(model = mod, cyl = c(4, 6, 8))
 mm <- predictions(mod, newdata = nd)
 expect_equivalent(mm$estimate, unname(predict(mod, newdata = nd)))
-
-
-
 
 
 #############################
@@ -138,13 +136,6 @@ mm <- predictions(mod, newdata = datagrid(am = TRUE))
 expect_equivalent(nrow(mm), 1)
 
 
-
-
-
-
-# exit_file("works interactively")
-
-
 # Issue #496
 mod <- lm(mpg ~ factor(vs), data = mtcars)
 p1 <- predictions(mod, variables = list(vs = 0:1))
@@ -168,7 +159,7 @@ expect_error(predictions(mod, variables = list(vs = "pairwise")), pattern = "pai
 #########################################################################
 
 # Issue 514
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv")
+dat <- get_dataset("lalonde", "MatchIt")
 
 fit <- lm(re78 ~ married + race + age, data = dat)
 
@@ -189,9 +180,13 @@ expect_equivalent(nrow(p), nrow(dat) * 3)
 
 expect_error(predictions(fit, variables = list(race = "all"), newdata = dat), pattern = "Check")
 
-p <- predictions(fit, newdata = datagrid(
-    race = c("black", "hispan", "white"),
-    grid_type = "counterfactual"))
+p <- predictions(
+    fit,
+    newdata = datagrid(
+        race = c("black", "hispan", "white"),
+        grid_type = "counterfactual"
+    )
+)
 expect_equivalent(nrow(p), nrow(dat) * 3)
 
 dat <- transform(mtcars, am = as.logical(am))
@@ -205,7 +200,7 @@ expect_equivalent(nrow(p), 64)
 
 
 # hurdle predictions
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/pscl/bioChemists.csv")
+dat <- get_dataset("bioChemists", "pscl")
 mod <- hurdle(art ~ phd + fem | ment, data = dat, dist = "negbin")
 pred <- predictions(mod, newdata = dat)
 expect_inherits(pred, "data.frame")
@@ -220,9 +215,7 @@ expect_equivalent(nrow(pre), 3)
 pre <- avg_predictions(mod, variables = list(cyl = c(4, 6)))
 expect_inherits(pre, "predictions")
 expect_equivalent(nrow(pre), 2)
-pre <- avg_predictions(mod,
-    by = "cyl",
-    newdata = datagrid(cyl = c(4, 6), grid_type = "counterfactual"))
+pre <- avg_predictions(mod, by = "cyl", newdata = datagrid(cyl = c(4, 6), grid_type = "counterfactual"))
 expect_inherits(pre, "predictions")
 expect_equivalent(nrow(pre), 2)
 
@@ -246,21 +239,13 @@ data(warpbreaks)
 
 mod <- glm(breaks ~ wool * tension, family = Gamma(), data = warpbreaks)
 p <- predictions(
-    mod, 
-    newdata = datagrid(grid_type = "balanced"), 
-    by = c("wool", "tension"), 
-    type = "invlink(link)")
+    mod,
+    newdata = datagrid(grid_type = "balanced"),
+    by = c("wool", "tension"),
+    type = "invlink(link)"
+)
 expect_true(all(p$conf.low <= p$conf.high))
 
 mod <- glm(breaks ~ wool * tension, family = Gamma("log"), data = warpbreaks)
-p <- predictions(mod,
-    newdata = datagrid(grid_type = "balanced"),
-    by = c("wool", "tension"),
-    type = "invlink(link)")
+p <- predictions(mod, newdata = datagrid(grid_type = "balanced"), by = c("wool", "tension"), type = "invlink(link)")
 expect_true(all(p$conf.low <= p$conf.high))
-
-
-
-
-
-rm(list = ls())

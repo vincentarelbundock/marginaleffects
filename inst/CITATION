@@ -1,25 +1,20 @@
 bibentry(bibtype = "Article",
-  key = "R-marginaleffects",
-  title        = "How to Interpret Statistical Models Using \\texttt{marginaleffects} in \\texttt{R} and \\texttt{Python}",
-  author       = c(
-    person(given = "Vincent",
-           family = "Arel-Bundock",
-           email = "vincent.arel-bundock@umontreal.ca"),
-    person(given = "Noah",
-           family = "Greifer",
-           email = "ngreifer@iq.harvard.edu"),
-    person(given = "Andrew",
-           family = "Heiss",
-           email = "aheiss@gsu.edu")
-  ),
-  year         = "Forthcoming",
+  title        = "How to Interpret Statistical Models Using {marginaleffects} for {R} and {Python}",
+  author       = c(person(given = "Vincent",
+                          family = "Arel-Bundock",
+                          email = "vincent.arel-bundock@umontreal.ca"),
+                   person(given = "Noah",
+                          family = "Greifer",
+                          email = "ngreifer@iq.harvard.edu"),
+                   person(given = "Andrew",
+                          family = "Heiss",
+                          email = "aheiss@gsu.edu")),
   journal      = "Journal of Statistical Software",
-  url = "https://marginaleffects.com",
-  header       = "To cite marginaleffects in publications, please use:",
-  textVersion =
-  paste("Vincent Arel-Bundock, Noah Greifer, and Andrew Heiss.",
-        "Forthcoming.",
-        "How to Interpret Statistical Models Using marginaleffects in R and Python.",
-        "Journal of Statistical Software.",
-	"https://marginaleffects.com")
+  year         = "2024",
+  volume       = "111",
+  number       = "9",
+  pages        = "1--32",
+  doi          = "10.18637/jss.v111.i09",
+  header       = "To cite marginaleffects in publications use:"
 )
+

@@ -5,22 +5,21 @@ source("helpers.R")
 using("marginaleffects")
 
 options("marginaleffects_posterior_interval" = "hdi")
-requiet("rstanarm")
+suppressPackageStartupMessages(requiet("rstanarm"))
 requiet("emmeans")
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 requiet("broom")
-if (!require("rstanarm")) exit_file("rstanarm") # after requiet to avoid messages
 
 # interactions
 void <- capture.output(
-  mod <- stan_glm(am ~ hp + mpg * vs, data = mtcars, family = binomial(link = "logit"))
+    mod <- stan_glm(am ~ hp + mpg * vs, data = mtcars, family = binomial(link = "logit"))
 )
 expect_slopes(mod, se = FALSE)
 expect_predictions(predictions(mod), se = FALSE)
 
 # no interactions
 void <- capture.output(
-  mod <- stan_glm(am ~ hp + mpg + vs, data = mtcars, family = binomial(link = "logit"))
+    mod <- stan_glm(am ~ hp + mpg + vs, data = mtcars, family = binomial(link = "logit"))
 )
 
 # emtrends
@@ -38,7 +37,3 @@ options("marginaleffects_posterior_interval" = "eti")
 # mfx <- slopes(mod, variables = "hp", at = list(hp = 110, mpg = 20, vs = 0))
 # expect_equivalent(mfx$estimate, mar$dydx_hp)
 # expect_equivalent(mfx$std.error, mar$dydx_hp)
-
-
-
-rm(list = ls())

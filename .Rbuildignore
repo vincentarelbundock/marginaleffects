@@ -17,7 +17,6 @@ Makefile
 ^README\.Rmd$
 ^sandbox$
 \.code-workspace$
-^vignettes$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 man-roxygen
@@ -25,11 +24,16 @@ man-roxygen
 ^altdoc$
 ^_quarto$
 README.qmd
-vignettes/
-vignettes
 \.python-version
 pyproject\.toml
 requirements\.lock
 requirements-dev\.lock
 .venv
-^inst/tinytest$
+.python-version
+pyproject.toml
+uv.lock
+^vignettes/\.quarto$
+^vignettes/*_files$
+air.toml
+inst/tinytest/
+

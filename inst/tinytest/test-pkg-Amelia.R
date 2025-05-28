@@ -16,18 +16,98 @@ expect_equivalent(nrow(mfx1), nrow(mfx2))
 
 
 # Issue #711
-data <- structure(list(id = 1:37, trt = c(
-    "soc", "soc", "soc", "soc",
-    "soc", "soc", "soc", "soc", "soc", "soc", "soc", "soc", "soc",
-    "soc", "soc", "soc", "soc", "soc", "soc", "soc", "soc", "arm",
-    "arm", "arm", "arm", "arm", "arm", "arm", "arm", "arm", "arm",
-    "arm", "arm", "arm", "arm", "arm", "arm"), endp = structure(c(
-    1L,
-    1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 2L,
-    2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L,
-    1L, 1L, 1L, 1L), levels = c("TRUE", "FALSE"), class = "factor")), row.names = c(
-    NA,
-    -37L), class = "data.frame")
+data <- structure(
+    list(
+        id = 1:37,
+        trt = c(
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "soc",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm",
+            "arm"
+        ),
+        endp = structure(
+            c(
+                1L,
+                1L,
+                2L,
+                1L,
+                2L,
+                1L,
+                2L,
+                1L,
+                2L,
+                1L,
+                2L,
+                1L,
+                2L,
+                1L,
+                2L,
+                2L,
+                2L,
+                2L,
+                2L,
+                2L,
+                2L,
+                1L,
+                1L,
+                1L,
+                1L,
+                1L,
+                1L,
+                1L,
+                2L,
+                2L,
+                2L,
+                2L,
+                2L,
+                1L,
+                1L,
+                1L,
+                1L
+            ),
+            levels = c("TRUE", "FALSE"),
+            class = "factor"
+        )
+    ),
+    row.names = c(
+        NA,
+        -37L
+    ),
+    class = "data.frame"
+)
 data$endp <- factor(data$endp, levels = c("TRUE", "FALSE"))
 data_miss <- data
 data_miss[c(1, 5, 7, 30), c("endp")] <- NA
@@ -40,12 +120,7 @@ fit_logistic <- function(dat) {
 }
 mod_imputation <- suppressWarnings(lapply(dat_amelia, fit_logistic))
 manu <- suppressWarnings(summary(mice::pool(mod_imputation), conf.int = TRUE))
-fit <- with(imp,  glm(endp ~ trt, family = binomial(link = "logit")))
+fit <- with(imp, glm(endp ~ trt, family = binomial(link = "logit")))
 auto <- suppressWarnings(avg_slopes(fit))
 expect_equivalent(auto$estimate, manu$estimate)
 expect_equivalent(auto$std.error, manu$std.error, tolerance = 1e-5)
-
-
-
-
-source("helpers.R")

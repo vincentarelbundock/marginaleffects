@@ -8,7 +8,7 @@ get_unique_index <- function(x, term_only = FALSE) {
         } else {
             idx <- c(idx, by)
         }
-        explicit <- attr(x, "newdata_explicit")
+        explicit <- attr(attr(x, "newdata"), "explicit")
         if (isTRUE(checkmate::check_character(explicit))) {
             idx <- explicit
         }
@@ -18,7 +18,9 @@ get_unique_index <- function(x, term_only = FALSE) {
 
     if (length(idx) == 0) {
         return(NULL)
-    } else if (length(idx) == 1) {
+    }
+
+    if (length(idx) == 1) {
         return(x[[idx]])
     }
 
@@ -30,12 +32,17 @@ get_unique_index <- function(x, term_only = FALSE) {
         }
     }
 
-    out <- apply(out, 1, paste, collapse = ", ")
+    out <- apply(out, 1, toString)
     return(out)
 }
 
 
-get_marginaleffects_attributes <- function(x, exclude = NULL, include = NULL, include_regex = NULL) {
+get_marginaleffects_attributes <- function(
+    x,
+    exclude = NULL,
+    include = NULL,
+    include_regex = NULL
+) {
     out <- list()
     attr_names <- names(attributes(x))
     attr_names <- setdiff(attr_names, exclude)
@@ -56,22 +63,26 @@ set_marginaleffects_attributes <- function(x, attr_cache, prefix = "") {
 
 
 warn_once <- function(msg, id) {
-    msg <- c(msg, "", "This warning appears once per session.")
-    if (isTRUE(getOption(id, default = TRUE))) {
-        insight::format_warning(msg, call. = FALSE)
-        opts <- list(FALSE)
-        names(opts) <- id
-        options(opts)
+    if (!isTRUE(getOption(id, default = TRUE)) || !isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
+        return(invisible())
     }
+    msg <- paste(msg, "This warning appears once per session.")
+    # insight::format_warning(msg, call. = FALSE)
+    warning(msg, call. = FALSE)
+    opts <- list(FALSE)
+    names(opts) <- id
+    options(opts)
 }
 
 
 # Cross join a list of data tables
 # Source: https://github.com/Rdatatable/data.table/issues/1717#issuecomment-545758165
 cjdt <- function(dtlist) {
-    Reduce(function(DT1, DT2) cbind(DT1, DT2[rep(1:.N, each = nrow(DT1))]), dtlist)
+    Reduce(
+        function(DT1, DT2) cbind(DT1, DT2[rep(1:.N, each = nrow(DT1))]),
+        dtlist
+    )
 }
-
 
 
 # recurse up. mostly useful for `tinytest`
@@ -87,7 +98,7 @@ evalup <- function(xcall) {
     }
     for (i in 1:10) {
         if (is.null(out)) {
-          out <- hush(eval(xcall, parent.frame(i)))
+            out <- hush(eval(xcall, parent.frame(i)))
         }
     }
     if (is.null(out) && !is.null(msg)) stop(msg)
@@ -113,7 +124,8 @@ merge_by_rowid <- function(x, y) {
         # `predictions()` output does include the original predictors.
         out <- tryCatch(
             merge(x, tmp, by = "rowid", sort = FALSE),
-            error = function(e) x)
+            error = function(e) x
+        )
     } else {
         out <- x
     }
@@ -123,28 +135,33 @@ merge_by_rowid <- function(x, y) {
 # faster than all(x %in% 0:1)
 is_binary <- function(x) {
     isTRUE(checkmate::check_integerish(
-        x, null.ok = TRUE, upper = 1, lower = 0, any.missing = FALSE)
-    )
+        x,
+        null.ok = TRUE,
+        upper = 1,
+        lower = 0,
+        any.missing = FALSE
+    ))
 }
 
 
 sub_named_vector <- function(x, y) {
-  # issue 1005
-  xlab <- gsub("^`|`$", "", names(x))
-  ylab <- gsub("^`|`$", "", names(y))
+    # issue 1005
+    xlab <- gsub("^`|`$", "", names(x))
+    ylab <- gsub("^`|`$", "", names(y))
 
-  idx <- match(ylab, xlab)
-  if (length(stats::na.omit(idx)) > 0) {
-    x[stats::na.omit(idx)] <- y[!is.na(idx)]
+    idx <- match(ylab, xlab)
+    if (length(stats::na.omit(idx)) > 0) {
+        x[stats::na.omit(idx)] <- y[!is.na(idx)]
+    } else if (length(y) == length(x)) {
+        return(y)
+    } else {
+        stop(
+            "set_coef() substitution error. Please report on Github with a reproducible example: https://github.com/vincentarelbundock/marginaleffects/issues",
+            call. = FALSE
+        )
+    }
 
-  } else if (length(y) == length(x)) {
-    return(y)
-
-  } else {
-    stop("set_coef() substitution error. Please report on Github with a reproducible example: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
-  }
-
-  return(x)
+    return(x)
 }
 
 
@@ -154,4 +171,62 @@ group_to_factor <- function(group, model) {
         group <- factor(group, levels(dv))
     }
     return(group)
+}
+
+
+...get <- function(x, ifnotfound = NULL) {
+    eval(
+        quote(
+            if (!anyNA(.m1 <- match(.x, ...names())) && !is.null(.m2 <- ...elt(.m1))) {
+                .m2
+            } else {
+                .ifnotfound
+            }
+        ),
+        pairlist(.x = x[1L], .ifnotfound = ifnotfound),
+        parent.frame(1L)
+    )
+}
+
+
+...mget <- function(x) {
+    found <- match(x, eval(quote(...names()), parent.frame(1L)))
+    not_found <- is.na(found)
+    if (all(not_found)) {
+        return(list())
+    }
+    stats::setNames(
+        lapply(found[!not_found], function(z) {
+            eval(
+                quote(...elt(.z)),
+                pairlist(.z = z),
+                parent.frame(3L)
+            )
+        }),
+        x[!not_found]
+    )
+}
+
+stop_deprecate <- function(old, new = NULL) {
+    if (is.null(new)) {
+        msg <- sprintf("The `%s` argument is not supported.", old)
+    } else {
+        msg <- sprintf("The `%s` argument is not supported. Please use `%s` instead.", old, new)
+    }
+    stop(msg, call. = FALSE)
+}
+
+
+stop_sprintf <- function(msg, ...) {
+    msg <- sprintf(msg, ...)
+    stop(msg, call. = FALSE)
+}
+
+
+warn_sprintf <- function(msg, ...) {
+    if (!isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
+        return(invisible())
+    }
+    msg <- sprintf(msg, ...)
+    warning(msg, call. = FALSE)
 }

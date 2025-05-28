@@ -24,6 +24,7 @@ get_predict.glmgee <- function(model, newdata, ...) {
     Yhat <- stats::predict(model, newdata = newdata, type = "response")
     out <- data.frame(
         rowid = seq_len(nrow(Yhat)),
-        estimate = as.vector(Yhat))
+        estimate = as.vector(Yhat)
+    )
     return(out)
 }

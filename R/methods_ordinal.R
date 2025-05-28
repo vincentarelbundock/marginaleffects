@@ -1,10 +1,11 @@
 #' @rdname get_predict
 #' @export
-get_predict.clm <- function(model,
-                            newdata = insight::get_data(model),
-                            type = "prob",
-                            ...) {
-
+get_predict.clm <- function(
+    model,
+    newdata = insight::get_data(model),
+    type = "prob",
+    ...
+) {
     # `predict.clm()` only makes predictions for the observed response group of
     # each observation in `newdata`. When we remove the response from
     # `newdata`, `predict.clm()` makes predictions for all levels, which is
@@ -17,7 +18,7 @@ get_predict.clm <- function(model,
     newdata <- newdata[, setdiff(colnames(newdata), resp), drop = FALSE]
 
     pred <- stats::predict(model, newdata = newdata, type = type)
-    
+
     contenders <- c("fit", "eta1", "eta2", "cprob1", "cprob2")
     tmp <- NULL
     for (con in contenders) {
@@ -29,7 +30,8 @@ get_predict.clm <- function(model,
 
     out <- data.frame(
         group = rep(colnames(pred), each = nrow(pred)),
-        estimate = c(pred))
+        estimate = c(pred)
+    )
     out$group <- group_to_factor(out$group, model)
 
     # often an internal call
@@ -52,14 +54,15 @@ get_group_names.clm <- get_group_names.polr
 #' @rdname sanitize_model_specific
 #' @keywords internal
 sanitize_model_specific.clm <- function(model, ...) {
-
     # Corner case: The `predict.clm` method does not make predictions when the
     # response was transformed to a factor in the formula AND the response is
     # missing from `newdata`.
     lhs <- names(attr(stats::terms(model), "dataClasses"))[1]
     if (isTRUE(grepl("^factor\\(", lhs))) {
-        stop("The response variable should not be transformed to a factor in the formula. Please convert the variable to factor before fitting your model.",
-             call. = FALSE)
+        stop(
+            "The response variable should not be transformed to a factor in the formula. Please convert the variable to factor before fitting your model.",
+            call. = FALSE
+        )
     }
     return(model)
 }

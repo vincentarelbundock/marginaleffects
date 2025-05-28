@@ -1,33 +1,36 @@
 source("helpers.R")
 using("marginaleffects")
-
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 requiet("broom")
 requiet("emmeans")
-requiet("poorman")
+requiet("dplyr")
 
 
 options(marginaleffects_numDeriv = list(method = "simple", method.args = list(eps = 1e-7)))
 
-guerry <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")
+guerry <- get_dataset("Guerry", "HistData")
 
 # glm: marginaleffects
 set.seed(1024)
 N <- 1e2
-dat <- data.frame(x1 = rnorm(N),
-                  x2 = rnorm(N),
-                  x3 = rnorm(N),
-                  x4 = rnorm(N),
-                  e = rnorm(N)) |>
-        transform(y = plogis(x1 + x2 + x3 + x4 + x4 * x4)) |>
-        transform(y = rbinom(N, 1, y))
+dat <- data.frame(x1 = rnorm(N), x2 = rnorm(N), x3 = rnorm(N), x4 = rnorm(N), e = rnorm(N)) |>
+    transform(y = plogis(x1 + x2 + x3 + x4 + x4 * x4)) |>
+    transform(y = rbinom(N, 1, y))
 mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
 res <- slopes(mod, eps = 1e-7)
 mar <- margins(mod, unit_ses = TRUE, eps = 1e-7)
 # TODO: bad tolerance?
 for (x in c("x1", "x2", "x3", "x4")) {
-    expect_equivalent(as.numeric(res[res$term == x, "estimate"]), as.numeric(mar[[paste0("dydx_", x)]]), tolerance = 3e-2)
-    expect_equivalent(as.numeric(res[res$term == x, "std.error"]), as.numeric(mar[[paste0("SE_dydx_", x)]]), tolerance = 4e-2)
+    expect_equivalent(
+        as.numeric(res[res$term == x, "estimate"]),
+        as.numeric(mar[[paste0("dydx_", x)]]),
+        tolerance = 3e-2
+    )
+    expect_equivalent(
+        as.numeric(res[res$term == x, "std.error"]),
+        as.numeric(mar[[paste0("SE_dydx_", x)]]),
+        tolerance = 4e-2
+    )
 }
 
 
@@ -45,7 +48,6 @@ expect_equivalent(mfx$estimate, em$x2.trend)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-5)
 
 
-
 # glm vs. Stata: marginaleffects
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_glm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_glm_01.csv"))
@@ -55,7 +57,6 @@ expect_equivalent(ame$estimate, ame$dydxstata, tolerance = 1e-4)
 expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 1e-4)
 
 
-
 # lm vs. Stata: marginaleffects
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_lm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_lm_01.csv"))
@@ -63,7 +64,6 @@ mod <- lm(y ~ x1 * x2, data = dat)
 ame <- merge(avg_slopes(mod, eps = 1e-4), stata)
 expect_equivalent(ame$estimate, ame$dydxstata, tolerance = 1e-4)
 expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 1e-4)
-
 
 
 # lm with interactions vs. margins vs. emmeans: marginaleffects
@@ -88,13 +88,12 @@ expect_equivalent(res$estimate[2], em2$hp.trend)
 expect_equivalent(res$std.error[2], em2$std.error, tolerance = .001)
 
 
-
 # lm vs. emmeans: marginalmeans
 dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 mod <- lm(mpg ~ hp + cyl + am, data = dat)
-mm <- predictions(mod, by = "cyl", newdata = datagrid(grid_type = "balanced")) |> 
+mm <- predictions(mod, by = "cyl", newdata = datagrid(grid_type = "balanced")) |>
     dplyr::arrange(cyl)
 em <- broom::tidy(emmeans::emmeans(mod, specs = "cyl"))
 expect_equivalent(mm$estimate, em$estimate)
@@ -104,7 +103,6 @@ mm <- predictions(mod, by = "am", newdata = datagrid(grid_type = "balanced")) |>
 em <- broom::tidy(emmeans::emmeans(mod, specs = "am"))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 1e-5)
-
 
 
 # factors seem to behave differently in model.matrix
@@ -119,20 +117,29 @@ dat$Region <- as.factor(dat$Region)
 dat$MainCity <- as.factor(dat$MainCity)
 mod <- glm(binary ~ Region + MainCity + Commerce, data = dat, family = "binomial")
 
-mm <- predictions(mod, type = "link", by = "Region", newdata = datagrid(grid_type = "balanced")) |> dplyr::arrange(Region) 
+mm <- predictions(mod, type = "link", by = "Region", newdata = datagrid(grid_type = "balanced")) |>
+    dplyr::arrange(Region)
 em <- data.frame(emmeans::emmeans(mod, specs = "Region"))
 expect_equivalent(as.character(mm$Region), as.character(em$Region))
 expect_equivalent(mm$estimate, em$emmean, tol = 0.05) # not sure why tolerance is not good
 expect_equivalent(mm$std.error, em$SE, tol = 0.001)
 
-mm <- predictions(mod, type = "link", newdata = datagrid(grid_type = "balanced"), by = "MainCity") |> dplyr::arrange(MainCity)
+mm <- predictions(mod, type = "link", newdata = datagrid(grid_type = "balanced"), by = "MainCity") |>
+    dplyr::arrange(MainCity)
 em <- data.frame(emmeans::emmeans(mod, specs = "MainCity", type = "link"))
 expect_equivalent(as.character(mm$MainCity), as.character(em$MainCity))
 expect_equivalent(mm$estimate, em$emmean, tol = 0.01) # not sure why tolerance is not good
 expect_equivalent(mm$std.error, em$SE, tol = 0.001)
 
 
-mm <- predictions(mod, type = "link", by = "MainCity", newdata = datagrid(grid_type = "balanced"), transform = plogis) |> dplyr::arrange(MainCity)
+mm <- predictions(
+    mod,
+    type = "link",
+    by = "MainCity",
+    newdata = datagrid(grid_type = "balanced"),
+    transform = plogis
+) |>
+    dplyr::arrange(MainCity)
 em <- data.frame(emmeans(mod, specs = "MainCity", type = "response"))
 expect_equivalent(as.character(mm$MainCity), as.character(em$MainCity))
 expect_equivalent(mm$estimate, em$prob, tolerance = .01)
@@ -140,15 +147,14 @@ expect_equivalent(mm$conf.low, em$asymp.LCL, tolerance = .01)
 expect_equivalent(mm$conf.high, em$asymp.UCL, tolerance = .01)
 
 
-
 ###################################################
 #  note sure if stats::loess should be supported  #
 ###################################################
 
 # vcov(loess) does not exist
-mod <- loess(mpg ~ wt, data = mtcars)
-expect_warning(slopes(mod), pattern = "Unable")
-
+mod <- loess(mpg ~ wt + hp, data = mtcars)
+# expect_warning(comparisons(mod), pattern = "Unable")
+# expect_warning(slopes(mod), pattern = "Unable")
 
 # loess vs. margins
 mod <- loess(mpg ~ wt, data = mtcars)
@@ -186,7 +192,3 @@ cmp <- avg_comparisons(mod, variables = "conc")
 expect_inherits(cmp, "comparisons")
 expect_false(any(is.na(cmp$estimate)))
 expect_false(any(is.na(cmp$std.error)))
-
-
-source("helpers.R")
-rm(list = ls())

@@ -1,7 +1,8 @@
 source("helpers.R")
-requiet("poorman")
+requiet("dplyr")
 requiet("emmeans")
 requiet("parameters")
+requiet("tinysnapshot")
 
 mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
 
@@ -13,8 +14,9 @@ e1 <- test(em, delta = delta, null = null, side = "noninferiority", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    equivalence = c(19, 21)) |>
-    poorman::arrange(gear)
+    equivalence = c(19, 21)
+) |>
+    dplyr::arrange(gear)
 expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.noninf)
 
@@ -24,8 +26,9 @@ e1 <- test(em, delta = 1, null = 23, side = "nonsuperiority", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    equivalence = c(22, 24)) |>
-    poorman::arrange(gear)
+    equivalence = c(22, 24)
+) |>
+    dplyr::arrange(gear)
 expect_equivalent(e1$z.ratio, e2$statistic.nonsup, tol = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.nonsup)
 
@@ -35,8 +38,9 @@ e1 <- test(em, delta = 1, null = 22, side = "equivalence", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    equivalence = c(21, 23)) |>
-    poorman::arrange(gear)
+    equivalence = c(21, 23)
+) |>
+    dplyr::arrange(gear)
 expect_equivalent(e1$p.value, e2$p.value.equiv)
 
 
@@ -45,9 +49,9 @@ mfx <- slopes(
     mod,
     variables = "hp",
     newdata = "mean",
-    equivalence = c(-.09, .01))
+    equivalence = c(-.09, .01)
+)
 expect_inherits(mfx, "slopes")
-
 
 
 # two-sample t-test
@@ -56,7 +60,8 @@ set.seed(1024)
 N <- 100
 dat <- rbind(
     data.frame(y = rnorm(N), x = 0),
-    data.frame(y = rnorm(N, mean = 0.3), x = 1))
+    data.frame(y = rnorm(N, mean = 0.3), x = 1)
+)
 mod <- lm(y ~ x, data = dat)
 FUN <- function(x) {
     data.frame(term = "t-test", estimate = coef(x)[2])
@@ -66,7 +71,8 @@ e2 <- hypotheses(
     mod,
     hypothesis = FUN,
     equivalence = c(-.05, .05),
-    df = e1$parameter)
+    df = e1$parameter
+)
 expect_true(e1$tost.p.value > .5 && e1$tost.p.value < .9)
 expect_equivalent(e1$tost.p.value, e2$p.value.equiv)
 
@@ -80,8 +86,9 @@ e2 <- predictions(
     type = "link",
     newdata = datagrid(gear = unique),
     equivalence = c(.5, 1.5),
-    numderiv = "richardson") |>
-    poorman::arrange(gear)
+    numderiv = "richardson"
+) |>
+    dplyr::arrange(gear)
 expect_equivalent(e1$emmean, e2$estimate)
 expect_equivalent(e1$z.ratio, e2$statistic.noninf)
 expect_equivalent(e1$p.value, e2$p.value.noninf)
@@ -95,20 +102,15 @@ pre <- avg_predictions(tmp) |> hypotheses(equivalence = c(-.2, 0))
 expect_inherits(cmp, "hypotheses")
 expect_inherits(mfx, "hypotheses")
 expect_inherits(pre, "hypotheses")
-
-if (!requiet("tinysnapshot")) {
-    exit_file("tinysnapshot")
-}
 cmp <- avg_comparisons(tmp, equivalence = c(-.1, 0))
 expect_snapshot_print(cmp, "equivalence-avg_comparisons")
 
 
 # bug on with call and symbols
 mod <- lm(mpg ~ hp * vs, data = mtcars)
-x <- avg_slopes(mod, by = "vs", variables = "hp", hypothesis = "pairwise")
+x <- avg_slopes(mod, by = "vs", variables = "hp", hypothesis = ~pairwise)
 x <- hypotheses(x, equivalence = c(-.2, .2))
 expect_inherits(x, "hypotheses")
-
 
 
 rm("mod")
@@ -123,28 +125,20 @@ mm <- predictions(
     mod,
     newdata = datagrid(grid_type = "balanced"),
     by = "source",
-    hypothesis = "pairwise")
+    hypothesis = ~pairwise,
+    transform = \(x) -x
+)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-e1 <- e1[order(e1$contrast), ]
-e2 <- e2[order(e2$term), ]
 expect_equivalent(e1$z.ratio, e2$statistic.nonsup, tol = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.nonsup, tol = 1e-6)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-e1 <- e1[order(e1$contrast), ]
-e2 <- e2[order(e2$term), ]
 expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.noninf, tolerance = 1e-6)
 
 e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-e1 <- e1[order(e1$contrast), ]
-e2 <- e2[order(e2$term), ]
 expect_equivalent(e1$p.value, e2$p.value.equiv, tolerance = 1e-6)
-
-
-source("helpers.R")
-rm(list = ls())

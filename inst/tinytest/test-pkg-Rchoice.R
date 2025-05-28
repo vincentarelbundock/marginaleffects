@@ -31,7 +31,3 @@ expect_equivalent(sort(mfx$std.error), sort(known[, "Std. error"]), tol = .001)
 # p_lo <- predict(mod, newdata = dat_lo)
 # p_hi <- predict(mod, newdata = dat_hi)
 # mean((p_hi - p_lo) / h)
-
-
-source("helpers.R")
-rm(list = ls())

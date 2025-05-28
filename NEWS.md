@@ -1,4 +1,139 @@
-# News
+# News {.unnumbered}
+
+## Development
+
+* In `brms` models, the extra argument `incl_autocor` no longer raises a warning. Thanks to @robbinscalebj for report #1473.
+
+## 0.26.0
+
+Breaking change:
+
+* `datagrid()` now sorts values of variables that are not explicitly supplied. This may change the row order of some results. Thanks to @mattansb for feature request #1439.
+* The default null hypothesis with `hypothesis=ratio~` is now 1. With `hypothesis=difference~` it is still 0. Thanks to Uffe Heide-Jørgensen for report #1453.
+
+New:
+
+* The `hypothesis` argument can specify 1-tailed tests with strings: `avg_predictions(model, hypothesis = "b1 <= 3")`
+* `get_dataset()` no longer requires the user to specify the `package` argument. It automatically searches the data index for a unique matching dataset.
+* `hypotheses()` adds response names to term names. This allows `hypothesis="groupa_var1=groupb_var1"`. Thanks to @mattansb for report #1432.
+* `vcov` accepts "rsample", "boot", "fwb", and "simulation". The object is automatically passed to `inferences(method=)` with default arguments. This is only meant as a shortcut.  To customize the bootstrap strategy, users should use `inferences()`.
+* `get_dataset()` downloads Parquet files instead of CSV. Faster.
+* `inferences()` methods "fwb" and "rsample" can now be parallelized using the global `options(marginaleffects_parallel_inferences=TRUE)`
+* `df="residual"` calls `insight::get_df(model)` to get degrees of freedom for the p value computation. This usually delegates extraction to `df.residual()`.
+* `datagrid()` ensures integers stay integers. Thanks to @mattansb for report #1439.
+* `inferences()` now uses the `mvtnorm` package instead of `MASS` to draw multivariate normal numbers for simulation-based inference.
+
+Bugs:
+
+* `rms` package now allows tibbles. Thanks to @stephenrho for report #1428.
+* `get_vcov()` workaround when vcov does not match dimensions of jacobian. Thanks to @fisher-j for report #1439.
+
+Misc:
+
+
+## 0.25.1
+
+Bugs:
+
+* `df` is now respected when using the `multcomp` argument. Thanks to @TonyRoberson for report #1414 and to @ngreifer for the solution.
+* Error when `hypotheses()` has both a number in `hypothesis` and a value in `multcomp`. Thanks to J. Rohrer for Issue #1381.
+* Informative error: conformal inference is not supported for `tidymodels`
+* `type` is respected for models of class `betareg`. Thanks to @strengejacke for reporting issue #1391.
+* `revreference` is available again in the `hypothesis` argument.
+* `conformal_score="residual_sq"` incorrectly added the score to the prediction instead of absolute residual. Coverage was probably incorrect, with wider intervals than necessary. Issue #1407.
+* `hypotheses()` supports multiple imputation objects from `mice`. Thanks to @ASKurz for raising issue #1420.
+* `tidymodels()` reshape bug.
+* `revreference` is available again in the `hypothesis` argument.
+
+Miscellaneous:
+
+* Print order for equivalence test p values is changed.
+* `collapse` is not necessary for hypothesis formulas. Thanks to @ngreifer for Issue #1383.
+
+## 0.25.0
+
+Breaking changes in preparation for 1.0.0 release:
+
+* The `hypothesis` argument no longer accepts strings like "reference" or "pairwise". Use the formula interface instead: `hypothesis= ~reference`
+* The default `type` is now "survival" for models of class `coxph`, `flexsurvreg`, and `coxph_weightit`.
+* `p_adjust` argument deprecated because of name-matching conflict with `p` argument in quantile regression and others. The recommended workflow is now to pass the object to the `hypotheses()` function and use its `multcomp` argument.
+* Removed long deprecated functions from the code base. These functions were already raising errors: `marginaleffects`, `meffects`, `marginal_means`, `deltamethod`, `datagridcf`. 
+* `newdata="marginalmeans"` was changed to `newdata="balanced"` several releases ago, but backward compatibility was maintained. This shortcut is no longer available at all.
+
+New:
+
+* The `hypothesis` argument is more flexible. Thanks to @mattansb for requests, testing, and documentation.
+  - `hypothesis = ratio ~ meandev | groupid`
+  - `hypothesis = ~ poly | groupid`
+  - `hypothesis = ~ helmert | groupid`
+  - `hypothesis = ~ trt_vs_ctrl | groupid`
+  - `hypothesis = ~ I(foo(x)) | groupid`
+  - `hypothesis = ~ I(\(x) c(a = x[1], b = mean(x[2:length(x))))`
+* New function `get_dataset()` to download example data frames from the https://marginaleffects.com website. Thanks to @bshor for the feature request.
+* New `multcomp` argument for the `hypotheses()` function.
+* `hypotheses()` inherits the `conf_level` from `marginaleffects` objects when available. Otherwise, the default remains 0.95.
+* More informative warning for `lme4` and `glmmTMB` models with `re.form=NULL`
+* `df.residual()` methods tries to call `stats::df.residual()` on the "model" attribute. If that fails or returns `NULL`, we return `Inf`.
+* Column names are no longer printed by default.
+* Allow multiple sequential `hypotheses()` calls. Issue #1316.
+* Better parameter name labels in `get_draws()`. Thanks to @andymilne for feature request #1318.
+* `rvar` column from `get_draws()` is now printed by default.
+* Matrix columns with 1 column are supported. Fixes errors when a variable was transformed by `scale()`, for example. Thanks to @barryrowlingson for the report.
+* Much faster inference with `inferences(method="boot")`. Thanks to @nremenyi for issue #1352.
+* `hypothesis=~pairwise` only errors when there are more than 300 comparisons. `options(marginaleffects_safe=FALSE)` to disable this check.
+
+Bugs:
+
+* Version 0.24.0 accidentally removed the "contrast" column from the output object in calls with only one focal predictor. This column is reinstated.
+* Reinstate some attributes lost with `marginaleffects_lean` but necessary for printing.
+* Encoding issue in bayesian models with `by`. Thanks to @Koalha for report #1290.
+* Retain necessary attribute information to ensure that "lean" return objects still print correctly #1295.
+* Indexing problem with `avg_comparisons(by=data.frame())` and `avg_slopes(by=data.frame())`. Thanks to @andymilne for report #1313.
+* `hypotheses(p, hypothesis=~reference)` did not work for some `p` objects. Issue #1310.
+* `gray` is respected for the `points` argument in `plot_*()`
+* `hypotheses(x, joint=1:2)` did not work when `x` was a `marginaleffects` object. Thanks to @mattansb for report #1340
+
+## 0.24.0
+
+Breaking changes in preparation for 1.0.0 release:
+
+* Rows are now sorted when using the `by` argument. This may change the order of estimates, which can affect hypothesis tests using positional indices like `b1-b2=0`.
+
+Bugs:
+
+* Intercept only model now works with `avg_predictions()`. Thanks to @vbrazao for report #1230.
+* `systemfit` models returned no standard errors when the same variables entered in different parts of the model. Thanks to @mronkko for report #1233.
+
+New features:
+
+* Users can reduce the size of `marginaleffects` objects by setting the new global option `options(marginaleffects_lean = TRUE)`. This will strip the return objects of all information about the original model and data, as well ancillary attributes. The benefit of dramatically smaller return objects comes at the cost of not being able to run some post-processing inference functions like `hypotheses()` on these lean objects. Thanks to @grantmcdermott for the suggestion and code contribution #1267.
+
+Misc:
+
+* Using positional indices with `hypothesis="b1=b2"` can be dangerous if row order is modified. A warning is now issued once per session with detailed advice. This warning can be disabled with `options(marginaleffects_safe=FALSE)`.
+* The `ggplot2` object returned by `plot_*()` functions now includes the estimates as a default object. This allows things like: `plot_predictions(model, condition="x")+geom_line()`. Thanks to @mattansb for code contribution #1259.
+* Be less strict about combining columns of different types. This allows us to handle types like `haven_labelled`. Thanks to @mwindzio for report #1238.
+* In `lme4` and `glmmTMB` models, warnings are now silenced when the user specifically passes `re.form=NULL`. Thanks to @mattansb for the feature request.
+* New startup message appears once per 24hr period and can be suppressed using `options(marginaleffects_startup_message = FALSE)`.
+* `posterior_draws()` is renamed `get_draws()` because it also applies to bootstrap and simulation-based inference draws.
+* `get_coef()` and `get_vcov()` are now documented on the main website, as they are useful helper functions.
+
+## 0.23.0
+
+Breaking change:
+
+* Support for `mlogit` is deprecated. The reason is that the data structure for these models is one observation-choice per row. Every other model-fitting package supported by `marginaleffects` treats rows as individual observations. The observation-choice structure made it harder to track indices and match individual predictions to rows in the original data. This added a lot of complexity to `marginaleffects`, and the results were not always reliable or safe.
+
+Bugs:
+
+* Improved `glmmTMB` support
+    - Standard errors are produced in models with `type="zprob"`. Thanks to @jgeller112 for issue #1189.
+    - `hypotheses()` bug resolved. Thanks to @reikookamoto for the code submission.
+* `multinom_weightit` models with `insight` version 0.20.4 and greater would produce an error. Thanks to Noah Greifer.
+* `hypotheses(joint = TRUE)` would throw an error if sample sizes could not be computed, even if they were not needed. Thanks to Noah Greifer.
+* `hypotheses(joint = TRUE)` respects the `vcov` argument. Thanks to @kennchua for report #1214.
+* `ordbetareg` models in `glmmTMB` are now supported. Thanks to @jgeller112 for code contribution #1221.
+* `tidymodels()`: Indexing overrode the value of predictors in the output data frame. The numerical estimates were unaffected. Thanks to @agmath for report #1209.
 
 ## 0.22.0
 
@@ -94,7 +229,7 @@ New modeling packages supported:
 
 New:
 
-* `wts=TRUE` tries to retrieves weights used in a weighted fit such as `lm()` with the `weights` argument or a model fitted using the `survey` package. Thanks to @ngreifer for feature request 
+* `wts=TRUE` tries to retrieves weights used in a weighted fit such as `lm()` with the `weights` argument or a model fitted using the `survey` package. Thanks to @ngreifer for feature request
 * `print.marginaleffects()` supports `style="tinytable"`, which returns a `tinytable` object. Call `print(avg_slopes(model))` to get a nice printed table in Quarto or Rmarkdown documents, via Typst, LaTeX or HTML. Default print format can be set using: `options(marginaleffects_print_style="tinytable")`
 * `hypothesis` argument accepts a function which takes a `marginaleffects` data frame and returns a transformed data frame with `term` and `estimate` columns.
 * `datagrid()` gets a `response` argument (default is `FALSE`) to control if the response variable is included or excluded from the grid-building process.
@@ -145,7 +280,7 @@ Minor:
 
 Bug fixes:
 
-* Error on `hypotheses(joint = "string")` for `comparisons()` objects (no result was returned). Thanks to @BorgeJorge for report #981. 
+* Error on `hypotheses(joint = "string")` for `comparisons()` objects (no result was returned). Thanks to @BorgeJorge for report #981.
 * Enhanced support for multi-equation Bayesian models with `brms` models. Thanks to @winterstat for report #1006.
 * Parameter names with spaces could break standard errors. Thanks to @Lefty2021 for report #1005.
 
@@ -187,7 +322,7 @@ Machine learning support:
 Misc:
 
 * New vignettes:
-  - Inverse Probability Weighting 
+  - Inverse Probability Weighting
   - Machine Learning
   - Matching
 * Add support for `hypotheses()` to `inferences()`. Thanks to @Tristan-Siegfried for code contribution #908.
@@ -369,14 +504,14 @@ Renamed arguments (backward compatibility is preserved):
 
 New:
 
-* `p_adjust` argument: Adjust p-values for multiple comparisons. 
+* `p_adjust` argument: Adjust p-values for multiple comparisons.
 * `equivalence` argument available everywhere.
 
 Performance:
 
 * Much faster results in `avg_*()` functions for models with only categorical predictors and many rows of data, using deduplication and weights instead of unit-level estimates.
 * Faster predictions in `lm()` and `glm()` models using `RcppEigen`.
-* Bayesian models with many rows. Thanks to Etienne Bacher. #694 
+* Bayesian models with many rows. Thanks to Etienne Bacher. #694
 * Faster predictions, especially with standard errors and large datasets.
 
 Bugs:
@@ -472,9 +607,9 @@ New features:
 
 Renamed functions (backward-compatibility is maintained by keeping the old function names as aliases):
 
-* `marginaleffects()` -> `slopes()` 
-* `posteriordraws()` -> `posterior_draws()` 
-* `marginalmeans()` -> `marginal_means()` 
+* `marginaleffects()` -> `slopes()`
+* `posteriordraws()` -> `posterior_draws()`
+* `marginalmeans()` -> `marginal_means()`
 * `plot_cap()` -> `plot_predictions()`
 * `plot_cme()` -> `plot_slopes()`
 * `plot_cco()` -> `plot_comparisons()`
@@ -545,7 +680,7 @@ Bug fixes and minor improvements:
 
 * New supported model class: `gamlss`. Thanks to Marcio Augusto Diniz.
 * `marginalmeans()` accepts a `wts` argument with values: "equal", "proportional", "cells".
-* `by` argument 
+* `by` argument
   - accepts data frames for complex groupings.
   - in `marginalmeans` only accepts data frames.
   - accepts "group" to group by response level.
@@ -557,7 +692,7 @@ Bug fixes and minor improvements:
   - new shortcuts "revpairwise", "revsequential", "revreference"
 * `wts` argument is respected in `by` argument and with `*avg` shortcuts in the `transform_pre` argument.
 * `tidy.predictions()` and `tidy.marginalmeans()` get a new `transform_avg` argument.
-* New vignettes: 
+* New vignettes:
   - Unit-level contrasts in logistic regressions. Thanks to @arthur-albuquerque.
   - Python Numpy models in `marginaleffects`. Thanks to timpipeseek.
   - Bootstrap example in standard errors vignette.
@@ -571,7 +706,7 @@ Breaking changes:
 
 Critical bug fix:
 
-* Contrasts with interactions were incorrect in version 0.6.0. The error should have been obvious to most analysts in most cases (weird-looking alignment). Thanks to @vmikk. 
+* Contrasts with interactions were incorrect in version 0.6.0. The error should have been obvious to most analysts in most cases (weird-looking alignment). Thanks to @vmikk.
 
 New supported packages and models:
 
@@ -641,7 +776,7 @@ Breaking changes:
 * `type` no longer accepts a character vector. Must be a single string.
 * `conf.int` argument deprecated. Use `vcov = FALSE` instead.
 
-New supported packages and models: 
+New supported packages and models:
 
 * `mlogit`
 * `mhurdle`
@@ -683,14 +818,14 @@ New pages on the `marginaleffects` website: https://marginaleffects.com/
 Argument name changes (backward compatibility is preserved:
 
 * Everywhere:
-    - `conf.level` -> `conf_level` 
+    - `conf.level` -> `conf_level`
 * `datagrid()`:
     - `FUN.factor` -> `FUN_factor` (same for related arguments)
     - `grid.type` -> `grid_type`
 
 ## 0.4.1
 
-New supported packages and models: 
+New supported packages and models:
 
 * `stats::loess`
 * `sampleSelection::selection`
@@ -698,8 +833,8 @@ New supported packages and models:
 
 Misc:
 
-* `mgcv::bam` models allow `exclude` argument. 
-* Gam models allow `include_smooth` argument. 
+* `mgcv::bam` models allow `exclude` argument.
+* Gam models allow `include_smooth` argument.
 * New tests
 * Bug fixes
 
@@ -731,7 +866,7 @@ New supported models:
 
 Misc:
 
-* Support `modelbased::visualisation_matrix` in `newdata` without having to specify `x` explicitly. 
+* Support `modelbased::visualisation_matrix` in `newdata` without having to specify `x` explicitly.
 * `tidy.predictions()` and `summary.predictions()` methods.
 * Documentation improvements.
 * CRAN test fixes

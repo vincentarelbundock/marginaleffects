@@ -4,14 +4,12 @@ using("marginaleffects")
 requiet("emmeans")
 
 
-
 # contrast as difference and CI make sense
 # problem reported with suggested fix by E.Book in Issue 58
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+dat <- get_dataset("penguins", "palmerpenguins")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
 dat <- dat
-mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species,
-       data = dat, family = binomial)
+mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species, data = dat, family = binomial)
 ti <- avg_slopes(mod)
 reject_ci <- ti$conf.high < 0 | ti$conf.low > 0
 reject_p <- ti$p.value < 0.05
@@ -73,14 +71,19 @@ expect_equivalent(cmp$conf.high, emm$asymp.UCL)
 # response scale
 cmp <- comparisons(mod, type = "response", newdata = datagrid(), variables = list(cyl = "pairwise"))
 emm <- emmeans(mod, specs = "cyl")
-emm <- emmeans::contrast(regrid(emm), method = "revpairwise", df = Inf, adjust = NULL,
-type = "response", ratios = FALSE)
+emm <- emmeans::contrast(
+    regrid(emm),
+    method = "revpairwise",
+    df = Inf,
+    adjust = NULL,
+    type = "response",
+    ratios = FALSE
+)
 emm <- data.frame(confint(emm))
 expect_equivalent(cmp$estimate, emm$estimate, tolerance = tol)
 expect_equivalent(cmp$std.error, emm$SE, tolerance = tol)
 expect_equivalent(cmp$conf.low, emm$asymp.LCL, tolerance = tol)
 expect_equivalent(cmp$conf.high, emm$asymp.UCL, tolerance = tol)
-
 
 
 # smart contrast labels
@@ -91,12 +94,10 @@ dat <- dat
 mod <- lm(mpg ~ hp + am + cyl + gear, data = dat)
 cmp1 <- comparisons(
     mod,
-    newdata = "mean") |>
+    newdata = "mean"
+) |>
     dplyr::arrange(term)
 expect_equivalent(
     cmp1$contrast,
-    c("TRUE - FALSE", "6 - 4", "8 - 4", "4 - 3", "5 - 3", "+1"))
-
-
-
-rm(list = ls())
+    c("TRUE - FALSE", "6 - 4", "8 - 4", "4 - 3", "5 - 3", "+1")
+)

@@ -9,60 +9,35 @@ generics::glance
 
 
 #' tidy helper
-#' 
+#'
 #' @noRd
 #' @export
 tidy.comparisons <- function(x, ...) {
     insight::check_if_installed("tibble")
     out <- tibble::as_tibble(x)
-    if (!"term" %in% names(out)) {
-        lab <- seq_len(nrow(out))
-        if ("group" %in% colnames(out) || is.character(attr(x, "by"))) {
-            tmp <- c("group", attr(x, "by"))
-            tmp <- Filter(function(j) j %in% colnames(x), tmp)
-            if (length(tmp) > 0) {
-                tmp <- do.call(paste, out[, tmp])
-                if (anyDuplicated(tmp)) {
-                    tmp <- paste(seq_len(nrow(out)), tmp)
-                }
-                lab <- tmp
-            }
-        }
-        out[["term"]] <- lab
-    }
     return(out)
 }
 
 
 #' tidy helper
-#' 
+#'
 #' @noRd
 #' @export
 tidy.slopes <- tidy.comparisons
 
 
 #' tidy helper
-#' 
+#'
 #' @noRd
 #' @export
 tidy.predictions <- tidy.comparisons
 
 
 #' tidy helper
-#' 
+#'
 #' @noRd
 #' @export
 tidy.hypotheses <- tidy.comparisons
-
-
-#' tidy helper
-#' 
-#' @noRd
-#' @export
-tidy.marginalmeans <- function(x, ...) {
-    insight::check_if_installed("tibble")
-    tibble::as_tibble(x)
-}
 
 
 #' @noRd
@@ -75,7 +50,9 @@ glance.slopes <- function(x, ...) {
         model <- tryCatch(attr(x, "call")[["model"]], error = function(e) NULL)
     }
     gl <- suppressMessages(suppressWarnings(try(
-        modelsummary::get_gof(model, ...), silent = TRUE)))
+        modelsummary::get_gof(model, ...),
+        silent = TRUE
+    )))
     if (inherits(gl, "data.frame")) {
         out <- data.frame(gl)
     } else {
@@ -105,8 +82,3 @@ glance.comparisons <- glance.slopes
 #' @noRd
 #' @export
 glance.hypotheses <- glance.slopes
-
-
-#' @noRd
-#' @export
-glance.marginalmeans <- glance.slopes

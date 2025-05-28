@@ -16,7 +16,7 @@ plot_predictions(
   transform = NULL,
   points = 0,
   rug = FALSE,
-  gray = FALSE,
+  gray = getOption("marginaleffects_plot_gray", default = FALSE),
   draw = TRUE,
   ...
 )
@@ -62,6 +62,7 @@ first entry in the error message is used by default.}
 \item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
 \item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 \item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
+\item "rsample", "boot", "fwb", and "simulation" are passed to the \code{method} argument of the \code{inferences()} function. To customize the bootstrap or simulation process, call \code{inferences()} directly.
 }
 \item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
 \item Square covariance matrix
@@ -109,7 +110,7 @@ The \code{condition} argument is used to plot conditional predictions, that is, 
 
 See the "Plots" vignette and website for tutorials and information on how to customize plots:
 \itemize{
-\item https://marginaleffects.com/vignettes/plot.html
+\item https://marginaleffects.com/bonus/plot.html
 \item https://marginaleffects.com
 }
 }
@@ -152,6 +153,7 @@ response, link, E, Ep, average, class, conditional, count, cum.prob, cumhaz, cum
 }
 
 \examples{
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 mod <- lm(mpg ~ hp + wt, data = mtcars)
 plot_predictions(mod, condition = "wt")
 
@@ -162,4 +164,14 @@ plot_predictions(mod, condition = list("hp", wt = "threenum"))
 
 plot_predictions(mod, condition = list("hp", wt = range))
 
+# marginal predictions
+mod <- lm(mpg ~ hp * am, data = mtcars)
+plot_predictions(mod, by = "am")
+
+# marginal predictions on a counterfactual grid
+plot_predictions(mod,
+  by = "am",
+  newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+)
+\dontshow{\}) # examplesIf}
 }

@@ -1,5 +1,4 @@
 AAP
-liftavgwts
 AAPs
 AFAICT
 AME
@@ -11,13 +10,16 @@ Adelies
 Anastasios
 Angelopoulos
 Arel
+Arel
 Augusto
 Avina
 BH
 Beaumais
 Boca
 BorgeJorge
+Brillemaf
 Brilleman
+Bundock
 Bundock
 CMD
 CRC
@@ -42,10 +44,14 @@ GLMMs
 Gam
 Gentoos
 Greifer
+Greifer
 HC
 HDI
 Hedeker
+Heide
 Heiss
+Heiss
+Helmert
 Hernán
 Heteroskedasticity
 Hufthammer
@@ -54,6 +60,7 @@ Isager
 J'VJ
 JM
 JVJ
+Jørgensen
 Kapre
 Kirill
 Krinsky
@@ -92,6 +99,9 @@ Rina
 Rmarkdown
 Robb
 Rohan
+Rohrer
+Rohrer
+Rstudio
 Scheel
 Solovev
 Stata
@@ -103,7 +113,9 @@ TOST
 Tibshirani
 Tomz
 Typst
+Uffe
 Umit
+Westfall
 Wittenberg
 XGBoost
 Xu
@@ -200,11 +212,13 @@ issuecomment
 jacobian
 jacobians
 jacobiansmbox
+jss
 kenward
 knitr
 kwaa
 lift
 liftavg
+liftavgwts
 linpred
 listwise
 lm
@@ -229,6 +243,7 @@ nd
 newdata
 numDeriv
 pairwise
+parallelize
 param
 perc
 plasminogen
@@ -261,7 +276,9 @@ softmax
 streptokinase
 tPA
 th
+thornton
 threenum
+tibbles
 tidiers
 timpipeseek
 tinytable
@@ -272,6 +289,7 @@ underspecified
 unintuitive
 untransformed
 varepsilon
+vcov
 vcovHC
 vincentarelbundock
 wmean

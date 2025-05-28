@@ -1,4 +1,3 @@
-
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
@@ -31,6 +30,7 @@ get_vcov.afex_aov <- function(model, vcov = NULL, ...) {
     if (!is.null(vcov) && !is.logical(vcov)) {
         stop("The `vcov` argument is not supported for models of this class.")
     }
+    vcov <- sanitize_vcov(model, vcov)
     insight::get_varcov(model)
 }
 

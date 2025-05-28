@@ -1,33 +1,42 @@
 rm(list = ls())
 rm(list = ls(.GlobalEnv), envir = .GlobalEnv)
 
-EXPENSIVE <- FALSE
-
-options("tinysnapshot_device" = "svglite")
-options("tinysnapshot_tol" = 200)
-options(marginaleffects_numDeriv = NULL)
-
-if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {
-    options("brms.backend" = "cmdstanr")
-}
-
-# libraries
 requiet <- function(package) {
     void <- capture.output(
         pkg_available <- tryCatch(suppressPackageStartupMessages(suppressWarnings(suppressMessages(tryCatch(
             isTRUE(require(package, warn.conflicts = FALSE, character.only = TRUE)),
             error = function(e) FALSE
-        ))))))
-    return(pkg_available)
+        )))))
+    )
+    return(invisible(pkg_available))
 }
 
+requiet("marginaleffects")
 requiet("tinytest")
 requiet("tinysnapshot")
+
+EXPENSIVE <- FALSE
+
+options("tinysnapshot_device" = "svglite")
+options("tinysnapshot_tol" = 200)
+options("tinysnapshot_ignore_white_space" = TRUE)
+options(marginaleffects_numDeriv = NULL)
+options(marginaleffects_safe = FALSE)
+
+if (dir.exists("~/repos/Rdatasets/")) {
+    options("marginaleffects_rdataset_path" = "~/repos/Rdatasets/")
+}
+
+if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {
+    options("brms.backend" = "cmdstanr")
+}
+
 
 if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") >= "1.4.0") {
     tinytest::register_tinytest_extension(
         "marginaleffects",
-        c("expect_slopes", "expect_predictions", "expect_margins"))
+        c("expect_slopes", "expect_predictions", "expect_margins")
+    )
 }
 
 # common names of datasets, often assigned to global environment
@@ -42,9 +51,10 @@ Sys.setenv(TZ = "America/New_York")
 options(width = 10000)
 options(digits = 5)
 
-ON_CRAN <- !identical(Sys.getenv("R_NOT_CRAN"), "true")
-ON_GH <- identical(Sys.getenv("R_GH"), "true")
-ON_CI <- isTRUE(ON_CRAN) || isTRUE(ON_GH)
+ON_LOCAL <- Sys.info()["user"] %in% c("vince", "vincent")
+ON_CRAN <- !identical(Sys.getenv("R_NOT_CRAN"), "true") && !ON_LOCAL
+ON_GH <- identical(Sys.getenv("R_GH"), "true") && !ON_LOCAL
+ON_CI <- (isTRUE(ON_CRAN) || isTRUE(ON_GH)) && !ON_LOCAL
 ON_WINDOWS <- isTRUE(Sys.info()[["sysname"]] == "Windows")
 ON_OSX <- isTRUE(Sys.info()[["sysname"]] == "Darwin")
 

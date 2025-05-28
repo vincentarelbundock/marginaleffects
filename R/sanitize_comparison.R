@@ -35,7 +35,10 @@ comparison_function_dict <- list(
 
     "lnor" = function(hi, lo) log((hi / (1 - hi)) / (lo / (1 - lo))),
     "lnoravg" = function(hi, lo) log((mean(hi) / (1 - mean(hi))) / (mean(lo) / (1 - mean(lo)))),
-    "lnoravgwts" = function(hi, lo, w) log((wmean(hi, w) / (1 - wmean(hi, w))) / (wmean(lo, w) / (1 - wmean(lo, w)))),
+    "lnoravgwts" = function(hi, lo, w)
+        log(
+            (wmean(hi, w) / (1 - wmean(hi, w))) / (wmean(lo, w) / (1 - wmean(lo, w)))
+        ),
 
     # others
     "lift" = function(hi, lo) (hi - lo) / lo,
@@ -49,27 +52,27 @@ comparison_function_dict <- list(
 
 comparison_label_dict <- list(
     "difference" = "%s - %s",
-    "differenceavg" = "mean(%s) - mean(%s)",
-    "differenceavgwts" = "mean(%s) - mean(%s)",
+    "differenceavg" = "%s - %s",
+    "differenceavgwts" = "%s - %s",
 
     "dydx" = "dY/dX",
     "eyex" = "eY/eX",
     "eydx" = "eY/dX",
     "dyex" = "dY/eX",
 
-    "dydxavg" = "mean(dY/dX)",
-    "eyexavg" = "mean(eY/eX)",
-    "eydxavg" = "mean(eY/dX)",
-    "dyexavg" = "mean(dY/eX)",
+    "dydxavg" = "dY/dX",
+    "eyexavg" = "eY/eX",
+    "eydxavg" = "eY/dX",
+    "dyexavg" = "dY/eX",
 
-    "dydxavg" = "mean(dY/dX)",
-    "eyexavg" = "mean(eY/eX)",
-    "eydxavg" = "mean(eY/dX)",
-    "dyexavg" = "mean(dY/eX)",
-    "dydxavgwts" = "mean(dY/dX)",
-    "eyexavgwts" = "mean(eY/eX)",
-    "eydxavgwts" = "mean(eY/dX)",
-    "dyexavgwts" = "mean(dY/eX)",
+    "dydxavg" = "dY/dX",
+    "eyexavg" = "eY/eX",
+    "eydxavg" = "eY/dX",
+    "dyexavg" = "dY/eX",
+    "dydxavgwts" = "dY/dX",
+    "eyexavgwts" = "eY/eX",
+    "eydxavgwts" = "eY/dX",
+    "dyexavgwts" = "dY/eX",
 
     "ratio" = "%s / %s",
     "ratioavg" = "mean(%s) / mean(%s)",
@@ -96,7 +99,8 @@ sanity_comparison <- function(comparison) {
     valid <- valid[!grepl("wts$", valid)]
     checkmate::assert(
         checkmate::check_choice(comparison, choices = valid),
-        checkmate::check_function(comparison))
+        checkmate::check_function(comparison)
+    )
 }
 
 
@@ -106,17 +110,21 @@ sanitize_transform <- function(x) {
     if (isTRUE(checkmate::check_list(x, names = "named"))) {
         checkmate::assert(
             checkmate::check_choice(x[[1]], choices = good, null.ok = TRUE),
-            checkmate::check_function(x[[1]]))
+            checkmate::check_function(x[[1]])
+        )
         x <- x[[1]]
     } else {
         checkmate::assert(
             checkmate::check_choice(x, choices = good, null.ok = TRUE),
-            checkmate::check_function(x))
+            checkmate::check_function(x)
+        )
     }
 
     if (is.null(x)) {
         return(x)
-    } else if (is.function(x)) {
+    }
+
+    if (is.function(x)) {
         out <- list(x)
         names(out) <- deparse(substitute(x))
     } else if (x == "exp") {
@@ -127,4 +135,3 @@ sanitize_transform <- function(x) {
 
     return(out)
 }
-

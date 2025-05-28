@@ -18,11 +18,14 @@ expect_true("contrast" %in% colnames(cmp2))
 expect_true(all(c("contrast_cyl", "contrast_gear") %in% colnames(cmp3)))
 
 # variables must be unnamed vector
-expect_error(comparisons(
-    mod2,
-    variables = c("cyl" = "ratio", "gear" = "difference"),
-    newdata = datagrid()),
-    pattern = "May not have names")
+expect_error(
+    comparisons(
+        mod2,
+        variables = c("cyl" = "ratio", "gear" = "difference"),
+        newdata = datagrid()
+    ),
+    pattern = "May not have names"
+)
 
 # interaction vs. emmeans
 mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)
@@ -30,14 +33,13 @@ cmp <- suppressWarnings(comparisons(
     mod,
     variables = list("cyl" = "all", "am" = "all"),
     newdata = datagrid(),
-    cross = TRUE))
+    cross = TRUE
+))
 em <- emmeans(mod, c("cyl", "am"))
 em <- emmeans::contrast(em, method = "revpairwise")
 em <- data.frame(em)
 expect_true(all(round(abs(em$estimate), 5) %in% round(abs(cmp$estimate), 5)))
 expect_true(all(round(abs(em$SE), 4) %in% round(abs(cmp$std.error), 4)))
-
-
 
 
 # tidy does not error (no validity)
@@ -47,13 +49,11 @@ tid <- tidy(cmp)
 expect_true(all(tid$term == "cross"))
 
 
-
 # `variables` must be specified
 mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)
 cmp <- comparisons(mod, variables = c("am", "cyl"), cross = TRUE)
 expect_inherits(cmp, "comparisons")
 expect_error(comparisons(mod, cross = TRUE), pattern = "variables")
-
 
 
 # interaction (no validity)
@@ -65,17 +65,11 @@ cmp <- comparisons(
     mod,
     variables = list("cyl" = "all", "am" = "all"),
     newdata = datagrid(),
-    cross = TRUE)
-expect_true(nrow(cmp) > 17) 
+    cross = TRUE
+)
+expect_true(nrow(cmp) > 17)
 expect_true(nrow(tidy(cmp)) > 17)
 
 
-
-
 # deprecated argument
-expect_warning(comparisons(mod, interaction = TRUE))
-
-
-
-
-rm(list = ls())
+expect_error(comparisons(mod, interaction = TRUE), pattern = "cross")

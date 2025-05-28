@@ -1,9 +1,16 @@
 # fancy way to catch the call so that get_averages(slopes()) does not evaluate twice
 # and is fast
 recall <- function(x, ...) {
-
-
-    funs <- c("comparisons", "slopes", "predictions", "marginalmeans", "hypotheses", "avg_predictions", "avg_comparisons", "avg_slopes")
+    funs <- c(
+        "comparisons",
+        "slopes",
+        "predictions",
+        "hypotheses",
+        "avg_predictions",
+        "avg_comparisons",
+        "avg_slopes"
+    )
+    funs <- c(funs, paste0("marginaleffects::", funs))
 
     # 2-step estimation with already evaluated & assigned call
     if (!is.call(x)) {
@@ -15,11 +22,14 @@ recall <- function(x, ...) {
         # retrieve call
         mc <- attr(x, "call")
         if (!is.call(mc)) {
-            msg <- sprintf("Call could not be retrieved from object of class %s.", class(x)[1])
+            msg <- sprintf(
+                "Call could not be retrieved from object of class %s.",
+                class(x)[1]
+            )
             insight::format_error(msg)
         }
 
-    # unsupported call: return `NULL`
+        # unsupported call: return `NULL`
     } else {
         if (!as.character(x[1]) %in% funs) {
             return(NULL)
@@ -53,23 +63,6 @@ recall <- function(x, ...) {
             mc[[n]] <- dots[[n]]
         }
     }
-
-    ## old `rlang` convenience. I don't think the current version is toooo unsafe.
-    # FUN <- rlang::call_modify
-    # args <- c(list(".call" = quote(mc)), dots)
-    # # evaluate call
-    # mc <- do.call("FUN", args)
-
-    # # expand user-supplied arguments (don't think this is necessary)
-    # funs <- list(
-    #     "predictions" = predictions,
-    #     "comparisons" = comparisons,
-    #     "slopes" = slopes,
-    #     "hypotheses" = hypotheses,
-    #     "marginalmeans" = marginalmeans)
-    # mc <- match.call(
-    #     definition = funs[[as.character(mc)[1]]],
-    #     call = mc)
 
     out <- eval(mc)
 

@@ -1,0 +1,9 @@
+
+ Estimate Std. Error    z Pr(>|z|)    S 2.5 % 97.5 % am  hp
+     5.27       1.19 4.43   <0.001 16.7  2.94    7.6  0 120
+     5.27       1.19 4.43   <0.001 16.7  2.94    7.6  1 120
+
+Term: am
+Type:  response 
+Comparison: 1 - 0
+

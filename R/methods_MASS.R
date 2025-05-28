@@ -39,11 +39,12 @@ get_group_names.polr <- function(model, ...) {
 #' @include get_predict.R
 #' @rdname get_predict
 #' @export
-get_predict.polr <- function(model,
-                             newdata = insight::get_data(model),
-                             type = "probs",
-                             ...) {
-
+get_predict.polr <- function(
+    model,
+    newdata = insight::get_data(model),
+    type = "probs",
+    ...
+) {
     type <- sanitize_type(model, type, calling_function = "predictions")
 
     # hack: 1-row newdata returns a vector, so get_predict.default does not learn about groups
@@ -55,10 +56,7 @@ get_predict.polr <- function(model,
         hack <- FALSE
     }
 
-    out <- get_predict.default(model,
-                               newdata = newdata,
-                               type = type,
-                               ...)
+    out <- get_predict.default(model, newdata = newdata, type = type, ...)
 
     # hack
     out <- out[out$rowid != -Inf, ]
@@ -78,14 +76,16 @@ set_coef.glmmPQL <- function(model, coefs, ...) {
 
 #' @rdname get_predict
 #' @export
-get_predict.glmmPQL <- function(model,
-                                newdata = insight::get_data(model),
-                                type = "response",
-                                ...) {
+get_predict.glmmPQL <- function(
+    model,
+    newdata = insight::get_data(model),
+    type = "response",
+    ...
+) {
     out <- stats::predict(model, newdata = newdata, type = type, ...)
     out <- data.frame(
         rowid = seq_len(nrow(newdata)),
-        estimate = out)
+        estimate = out
+    )
     return(out)
 }
-

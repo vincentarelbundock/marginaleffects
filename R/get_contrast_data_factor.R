@@ -1,23 +1,24 @@
-get_contrast_data_factor <- function(model,
-                                     newdata,
-                                     variable,
-                                     cross,
-                                     first_cross,
-                                     modeldata,
-                                     ...) {
-
+get_contrast_data_factor <- function(
+    model,
+    newdata,
+    variable,
+    cross,
+    first_cross,
+    modeldata,
+    ...
+) {
     if (is.factor(newdata[[variable$name]])) {
         levs <- levels(newdata[[variable$name]])
         convert_to_factor <- TRUE
-
     } else if (get_variable_class(newdata, variable$name, "binary")) {
         levs <- variable$value
         convert_to_factor <- FALSE
-
     } else {
-        msg <- "The `%s` variable is treated as a categorical (factor) variable, but the original data is of class %s. It is safer and faster to convert such variables to factor before fitting the model and calling a `marginaleffects` function." 
-        msg <- sprintf(msg, variable$name, class(newdata[[variable$name]])[1])
-        warn_once(msg, "marginaleffects_warning_factor_on_the_fly_conversion")
+        if (isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
+            msg <- "The `%s` variable is treated as a categorical (factor) variable, but the original data is of class %s. It is safer and faster to convert such variables to factor before fitting the model and calling a `marginaleffects` function."
+            msg <- sprintf(msg, variable$name, class(newdata[[variable$name]])[1])
+            warn_once(msg, "marginaleffects_warning_factor_on_the_fly_conversion")
+        }
         if (is.factor(modeldata[[variable$name]])) {
             levs <- levels(modeldata[[variable$name]])
             convert_to_factor <- TRUE
@@ -28,16 +29,31 @@ get_contrast_data_factor <- function(model,
     }
 
     # string shortcuts
-    flag <- checkmate::check_choice(variable$value, c("reference", "revreference", "pairwise", "revpairwise", "sequential", "revsequential", "all", "minmax"))
+    flag <- checkmate::check_choice(
+        variable$value,
+        c(
+            "reference",
+            "revreference",
+            "pairwise",
+            "revpairwise",
+            "sequential",
+            "revsequential",
+            "all",
+            "minmax"
+        )
+    )
     if (isTRUE(flag)) {
         levs_idx <- contrast_categories_shortcuts(levs, variable, interaction)
 
-    # custom data frame or function
-    } else if (isTRUE(checkmate::check_function(variable$value)) || isTRUE(checkmate::check_data_frame(variable$value))) {
+        # custom data frame or function
+    } else if (
+        isTRUE(checkmate::check_function(variable$value)) ||
+            isTRUE(checkmate::check_data_frame(variable$value))
+    ) {
         out <- contrast_categories_custom(variable, newdata)
         return(out)
 
-    # vector of two values
+        # vector of two values
     } else if (isTRUE(checkmate::check_atomic_vector(variable$value, len = 2))) {
         if (is.character(variable$value)) {
             tmp <- modeldata[[variable$name]]
@@ -52,24 +68,42 @@ get_contrast_data_factor <- function(model,
             if (convert_to_factor) {
                 levs_idx <- data.table::data.table(
                     lo = factor(as.character(variable$value[1]), levels = levels(tmp)),
-                    hi = factor(as.character(variable$value[2]), levels = levels(tmp)))
+                    hi = factor(as.character(variable$value[2]), levels = levels(tmp))
+                )
             } else {
-                levs_idx <- data.table::data.table(lo = variable$value[1], hi = variable$value[2])
+                levs_idx <- data.table::data.table(
+                    lo = variable$value[1],
+                    hi = variable$value[2]
+                )
             }
         } else {
-            levs_idx <- data.table::data.table(lo = variable$value[1], hi = variable$value[2])
+            levs_idx <- data.table::data.table(
+                lo = variable$value[1],
+                hi = variable$value[2]
+            )
         }
     }
 
-
-    tmp <- contrast_categories_processing(first_cross, levs_idx, levs, variable, newdata)
+    tmp <- contrast_categories_processing(
+        first_cross,
+        levs_idx,
+        levs,
+        variable,
+        newdata
+    )
     lo <- tmp[[1]]
     hi <- tmp[[2]]
     original <- tmp[[3]]
 
     if (is.factor(newdata[[variable$name]]) || isTRUE(convert_to_factor)) {
-        lo[[variable$name]] <- factor(lo[["marginaleffects_contrast_lo"]], levels = levs)
-        hi[[variable$name]] <- factor(hi[["marginaleffects_contrast_hi"]], levels = levs)
+        lo[[variable$name]] <- factor(
+            lo[["marginaleffects_contrast_lo"]],
+            levels = levs
+        )
+        hi[[variable$name]] <- factor(
+            hi[["marginaleffects_contrast_hi"]],
+            levels = levs
+        )
     } else {
         lo[[variable$name]] <- lo[["marginaleffects_contrast_lo"]]
         hi[[variable$name]] <- hi[["marginaleffects_contrast_hi"]]
@@ -82,13 +116,15 @@ get_contrast_data_factor <- function(model,
     lo <- lo[, tmp, with = FALSE]
     hi <- hi[, tmp, with = FALSE]
 
-    out <- list(rowid = original$rowid,
-                lo = lo,
-                hi = hi,
-                original = original,
-                ter = rep(variable$name, nrow(lo)), # lo can be different dimension than newdata
-                lab = contrast_label,
-                contrast_null = contrast_null)
+    out <- list(
+        rowid = original$rowid,
+        lo = lo,
+        hi = hi,
+        original = original,
+        ter = rep(variable$name, nrow(lo)), # lo can be different dimension than newdata
+        lab = contrast_label,
+        contrast_null = contrast_null
+    )
     return(out)
 }
 
@@ -98,37 +134,43 @@ contrast_categories_shortcuts <- function(levs, variable, interaction) {
     if (isTRUE(variable$value %in% c("reference", "revreference"))) {
         # null contrasts are interesting with interactions
         if (!isTRUE(interaction)) {
-            levs_idx <- data.table::data.table(lo = levs[1], hi = levs[2:length(levs)])
+            levs_idx <- data.table::data.table(
+                lo = levs[1],
+                hi = levs[2:length(levs)]
+            )
         } else {
             levs_idx <- data.table::data.table(lo = levs[1], hi = levs)
         }
-
     } else if (isTRUE(variable$value %in% c("pairwise", "revpairwise"))) {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
         # null contrasts are interesting with interactions
         if (!isTRUE(interaction)) {
             levs_idx <- levs_idx[levs_idx$hi != levs_idx$lo, ]
-            levs_idx <- levs_idx[match(levs_idx$lo, levs) < match(levs_idx$hi, levs), ]
+            levs_idx <- levs_idx[
+                match(levs_idx$lo, levs) < match(levs_idx$hi, levs),
+            ]
         }
-
     } else if (isTRUE(variable$value %in% c("sequential", "revsequential"))) {
-        levs_idx <- data.table::data.table(lo = levs[1:(length(levs) - 1)],
-                                           hi = levs[2:length(levs)])
-
+        levs_idx <- data.table::data.table(
+            lo = levs[1:(length(levs) - 1)],
+            hi = levs[2:length(levs)]
+        )
     } else if (isTRUE(variable$value == "all")) {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
-
     } else if (isTRUE(variable$value == "minmax")) {
         levs_idx <- data.table::data.table(lo = levs[1], hi = levs[length(levs)])
     }
 
-    if (isTRUE(variable$value %in% c("revreference", "revpairwise", "revsequential"))) {
+    if (
+        isTRUE(
+            variable$value %in% c("revreference", "revpairwise", "revsequential")
+        )
+    ) {
         levs_idx <- levs_idx[, .(lo = hi, hi = lo)]
     }
 
     return(levs_idx)
 }
-
 
 
 contrast_categories_df <- function(variable) {
@@ -151,7 +193,13 @@ contrast_categories_df <- function(variable) {
 }
 
 
-contrast_categories_processing <- function(first_cross, levs_idx, levs, variable, newdata) {
+contrast_categories_processing <- function(
+    first_cross,
+    levs_idx,
+    levs,
+    variable,
+    newdata
+) {
     # internal option applied to the first of several contrasts when
     # interaction=TRUE to avoid duplication. when only the first contrast
     # flips, we get a negative sign, but if first increases and second
@@ -166,19 +214,29 @@ contrast_categories_processing <- function(first_cross, levs_idx, levs, variable
     levs_idx$isNULL <- levs_idx$hi == levs_idx$lo
     levs_idx$label <- suppressWarnings(tryCatch(
         sprintf(variable$label, levs_idx$hi, levs_idx$lo),
-        error = function(e) variable$label))
-    levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
-    if (!"marginaleffects_contrast_label" %in% colnames(levs_idx) || all(levs_idx$marginaleffects_contrast_label == "custom")) {
-        levs_idx[, "marginaleffects_contrast_label" := paste0(marginaleffects_contrast_hi, ", ", marginaleffects_contrast_lo)]
+        error = function(e) variable$label
+    ))
+    levs_idx <- stats::setNames(
+        levs_idx,
+        paste0("marginaleffects_contrast_", colnames(levs_idx))
+    )
+    if (
+        !"marginaleffects_contrast_label" %in% colnames(levs_idx) ||
+            all(levs_idx$marginaleffects_contrast_label == "custom")
+    ) {
+        levs_idx[,
+            "marginaleffects_contrast_label" := paste0(
+                marginaleffects_contrast_hi,
+                ", ",
+                marginaleffects_contrast_lo
+            )
+        ]
     }
 
     lo <- hi <- cjdt(list(newdata, levs_idx))
     original <- data.table::rbindlist(rep(list(newdata), nrow(levs_idx)))
     return(list(lo, hi, original))
 }
-
-
-
 
 
 contrast_categories_custom <- function(variable, newdata) {

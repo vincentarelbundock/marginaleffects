@@ -1,8 +1,8 @@
 
- Term Contrast Estimate Std. Error     z Pr(>|z|)    S  2.5 %  97.5 % p (NonSup) p (NonInf) p (Equiv)
- hp         +1   -0.112     0.0126 -8.92  < 0.001 60.9 -0.137 -0.0874     <0.001      0.831     0.831
- qsec       +1   -1.382     0.4331 -3.19  0.00141  9.5 -2.231 -0.5336     <0.001      0.998     0.998
+ Term Estimate Std. Error     z Pr(>|z|)    S  2.5 %  97.5 % p (NonSup) p (NonInf) p (Equiv)
+ hp     -0.112     0.0126 -8.92  < 0.001 60.9 -0.137 -0.0874     <0.001      0.831     0.831
+ qsec   -1.382     0.4331 -3.19  0.00141  9.5 -2.231 -0.5336     <0.001      0.998     0.998
 
-Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv 
 Type:  response 
+Comparison: +1
 

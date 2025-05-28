@@ -4,11 +4,11 @@ using("marginaleffects")
 requiet("lmerTest")
 requiet("emmeans")
 requiet("broom")
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 
 # vs. emmeans vs. margins
 dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
-mod <-lme4::lmer(y ~ x1 * x2 + (1 | clus), data = dat)
+mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = dat)
 
 # no validity
 expect_slopes(mod)
@@ -29,26 +29,15 @@ expect_equivalent(me$std.error, ma$std.error, tolerance = .0001)
 expect_equivalent(me$estimate, ma$estimate)
 
 
-
 # bug: population-level predictions() when {lmerTest} is loaded
 requiet("lmerTest")
 mod <- suppressMessages(lmer(
-  weight ~ 1 + Time + I(Time^2) + Diet + Time:Diet + I(Time^2):Diet + (1 + Time + I(Time^2) | Chick),
-  data = ChickWeight))
-expect_inherits(predictions(mod,
-                       newdata = datagrid(Chick = NA,
-                                          Diet = 1:4,
-                                          Time = 0:21),
-                       re.form = NA),
-           "predictions")
+    weight ~ 1 + Time + I(Time^2) + Diet + Time:Diet + I(Time^2):Diet + (1 + Time + I(Time^2) | Chick),
+    data = ChickWeight
+))
+expect_inherits(predictions(mod, newdata = datagrid(Chick = NA, Diet = 1:4, Time = 0:21), re.form = NA), "predictions")
 
 expect_inherits(
-    predictions(mod,
-        newdata = datagrid(Diet = 1:4,
-                           Time = 0:21),
-        re.form = NA),
-    "predictions")
-
-
-
-rm(list = ls())
+    predictions(mod, newdata = datagrid(Diet = 1:4, Time = 0:21), re.form = NA),
+    "predictions"
+)

@@ -1,30 +1,37 @@
 source("helpers.R")
-# exit_file("CHECK THIS")
 using("marginaleffects")
 
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 requiet("broom")
 requiet("plm")
 
 tol <- .001
 tol_se <- .01 # BDR emergency email about tiny numerical differences
 
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/Grunfeld.csv")
+dat <- get_dataset("Grunfeld", "plm")
 dat$rownames <- NULL
 dat <<- pdata.frame(dat)
 pool <- plm(inv ~ value * capital, data = dat, model = "pooling")
 swamy <- plm(
     inv ~ value * capital,
     data = dat,
-    model = "random", variables = "individual")
+    model = "random",
+    variables = "individual"
+)
 amemiya <- plm(
     inv ~ value * capital,
-    data = dat, model = "random", random.method = "amemiya",
-    variables = "twoways")
+    data = dat,
+    model = "random",
+    random.method = "amemiya",
+    variables = "twoways"
+)
 walhus <- plm(
     inv ~ value * capital,
-    data = dat, model = "random", random.method = "walhus",
-    variables = "twoways")
+    data = dat,
+    model = "random",
+    random.method = "walhus",
+    variables = "twoways"
+)
 
 ### marginaleffects
 
@@ -34,7 +41,6 @@ mfx <- merge(avg_slopes(pool), stata)
 expect_slopes(pool, n_unique = 1)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = tol)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
-
 
 
 # Swamy-Arora vs. Stata
@@ -47,10 +53,9 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
 # margins
 mfx <- avg_slopes(swamy)
 mar <- tidy(margins(swamy))
-mfx <- mfx[order(mfx$term),]
+mfx <- mfx[order(mfx$term), ]
 expect_equivalent(mfx$estimate, mar$estimate, tolerance = tol)
 expect_equivalent(mfx$std.error, mar$std.error, tolerance = tol_se)
-
 
 
 # no validity checks
@@ -60,7 +65,7 @@ avg_slopes(amemiya, type = "link")
 avg_slopes(amemiya, type = "response")
 mfx <- avg_slopes(amemiya)
 mar <- tidy(margins(amemiya))
-mfx <- mfx[order(mfx$term),]
+mfx <- mfx[order(mfx$term), ]
 expect_equivalent(mfx$estimate, mar$estimate, tolerance = tol)
 expect_equivalent(mfx$std.error, mar$std.error, tolerance = tol_se)
 
@@ -69,10 +74,9 @@ expect_slopes(walhus)
 # margins
 mfx <- avg_slopes(walhus)
 mar <- tidy(margins(walhus))
-mfx <- mfx[order(mfx$term),]
+mfx <- mfx[order(mfx$term), ]
 expect_equivalent(mfx$estimate, mar$estimate, tolerance = tol)
 expect_equivalent(mfx$std.error, mar$std.error, tolerance = tol_se)
-
 
 
 # # commented out because the dev version of {plm} now has a fully-working predict method
@@ -82,8 +86,6 @@ expect_equivalent(mfx$std.error, mar$std.error, tolerance = tol_se)
 # mod <- plm(inv ~ value * capital, data = dat, model = "within", variables = "twoways")
 # expect_error(slopes(mod), pattern = "Unable")
 
-
-
 ### predictions
 
 # predictions: pooling no validity
@@ -91,9 +93,3 @@ pred1 <- predictions(pool)
 pred2 <- predictions(pool, newdata = head(dat))
 expect_predictions(pred1, n_row = nrow(dat))
 expect_predictions(pred2, n_row = 6)
-
-
-
-
-source("helpers.R")
-rm(list = ls())

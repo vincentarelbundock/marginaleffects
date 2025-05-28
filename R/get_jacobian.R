@@ -28,7 +28,7 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
     # h <- max(1e-8, 1e-4 * min(abs(x), na.rm = TRUE))
     baseline <- func(x)
 
-    # we pre-chunk because future does not cache datasets in nodes, which means we 
+    # we pre-chunk because future does not cache datasets in nodes, which means we
     # must pass every worker the full data and model for every future.
     inner_loop <- function(chunk, ...) {
         out <- list()
@@ -53,8 +53,9 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
         chunks <- parallel::splitIndices(length(x), future::nbrOfWorkers())
         df <- future.apply::future_lapply(
             chunks,
-            inner_loop, 
-            future.seed = TRUE)
+            inner_loop,
+            future.seed = TRUE
+        )
         df <- do.call("cbind", df)
     } else {
         chunks <- seq_along(x)
@@ -68,7 +69,7 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
 
 get_jacobian_fdcenter <- function(func, x, eps = NULL) {
     baseline <- func(x)
-    # we pre-chunk because future does not cache datasets in nodes, which means we 
+    # we pre-chunk because future does not cache datasets in nodes, which means we
     # must pass every worker the full data and model for every future.
     inner_loop <- function(chunk, ...) {
         out <- list()
@@ -94,8 +95,9 @@ get_jacobian_fdcenter <- function(func, x, eps = NULL) {
         chunks <- parallel::splitIndices(length(x), future::nbrOfWorkers())
         df <- future.apply::future_lapply(
             chunks,
-            inner_loop, 
-            future.seed = TRUE)
+            inner_loop,
+            future.seed = TRUE
+        )
         df <- do.call("cbind", df)
     } else {
         chunks <- seq_along(x)
@@ -117,8 +119,8 @@ get_jacobian_richardson <- function(
     side = NULL,
     r = 4,
     v = 2,
-    ...) {
-
+    ...
+) {
     n <- length(x)
     f <- func(x, ...)
 
@@ -126,7 +128,8 @@ get_jacobian_richardson <- function(
     h <- abs(d * x) + eps * (abs(x) < zero_tol)
     pna <- (side == 1) & !is.na(side) # double these on plus side
     mna <- (side == -1) & !is.na(side) # double these on minus side
-    for (k in 1:r) { # successively reduce h
+    for (k in 1:r) {
+        # successively reduce h
         ph <- mh <- h
         ph[pna] <- 2 * ph[pna]
         ph[mna] <- 0
@@ -134,13 +137,17 @@ get_jacobian_richardson <- function(
         mh[pna] <- 0
         for (i in 1:n) {
             a[, k, i] <- (func(x + ph * (i == seq(n)), ...) -
-                func(x - mh * (i == seq(n)), ...)) / (2 * h[i])
+                func(x - mh * (i == seq(n)), ...)) /
+                (2 * h[i])
             # if((k != 1)) a[,(abs(a[,(k-1),i]) < 1e-20)] <- 0 #some func are unstable near zero
         }
         h <- h / v # Reduced h by 1/v.
     }
     for (m in 1:(r - 1)) {
-        a <- (a[, 2:(r + 1 - m), , drop = FALSE] * (4^m) - a[, 1:(r - m), , drop = FALSE]) / (4^m - 1)
+        a <- (a[, 2:(r + 1 - m), , drop = FALSE] *
+            (4^m) -
+            a[, 1:(r - m), , drop = FALSE]) /
+            (4^m - 1)
     }
     # drop second dim of a, which is now 1 (but not other dim's even if they are 1
     return(array(a, dim(a)[c(1, 3)]))

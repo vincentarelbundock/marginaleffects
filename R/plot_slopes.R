@@ -9,15 +9,15 @@
 
 #' See the "Plots" vignette and website for tutorials and information on how to customize plots:
 #'
-#' * https://marginaleffects.com/vignettes/plot.html
+#' * https://marginaleffects.com/bonus/plot.html
 #' * https://marginaleffects.com
-#' 
+#'
 #' @param variables Name of the variable whose marginal effect (slope) we want to plot on the y-axis.
 #' @param condition Conditional slopes
 #' + Character vector (max length 4): Names of the predictors to display.
 #' + Named list (max length 4): List names correspond to predictors. List elements can be:
 #'   - Numeric vector
-#'   - Function which returns a numeric vector or a set of unique categorical values 
+#'   - Function which returns a numeric vector or a set of unique categorical values
 #'   - Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 #' + 1: x-axis. 2: color/shape. 3: facet (wrap if no fourth variable, otherwise cols of grid). 4: facet (rows of grid).
 #' + Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers `?stats::fivenum`.
@@ -29,41 +29,53 @@
 #' @template model_specific_arguments
 #' @return A `ggplot2` object
 #' @export
-#' @examples
+#' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' library(marginaleffects)
 #' mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
-#' 
+#'
 #' plot_slopes(mod, variables = "hp", condition = "drat")
 #'
 #' plot_slopes(mod, variables = "hp", condition = c("drat", "am"))
-#' 
+#'
 #' plot_slopes(mod, variables = "hp", condition = list("am", "drat" = 3:5))
-#' 
+#'
 #' plot_slopes(mod, variables = "am", condition = list("hp", "drat" = range))
 #'
 #' plot_slopes(mod, variables = "am", condition = list("hp", "drat" = "threenum"))
-#' 
-plot_slopes <- function(model,
-                        variables = NULL,
-                        condition = NULL,
-                        by = NULL,
-                        newdata = NULL,
-                        type = NULL,
-                        vcov = NULL,
-                        conf_level = 0.95,
-                        wts = FALSE,
-                        slope = "dydx",
-                        rug = FALSE,
-                        gray = FALSE,
-                        draw = TRUE,
-                        ...) {
-
-    dots <- list(...)
-    if ("effect" %in% names(dots)) {
+#'
+#' # marginal slopes
+#' plot_slopes(mod, variables = "hp", by = "am")
+#'
+#' # marginal slopes on a counterfactual grid
+#' plot_slopes(mod,
+#'   variables = "hp",
+#'   by = "am",
+#'   newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+#' )
+#'
+plot_slopes <- function(
+    model,
+    variables = NULL,
+    condition = NULL,
+    by = NULL,
+    newdata = NULL,
+    type = NULL,
+    vcov = NULL,
+    conf_level = 0.95,
+    wts = FALSE,
+    slope = "dydx",
+    rug = FALSE,
+    gray = getOption("marginaleffects_plot_gray", default = FALSE),
+    draw = TRUE,
+    ...
+) {
+    if ("effect" %in% ...names()) {
         if (is.null(variables)) {
-            variables <- dots[["effect"]]
+            variables <- ...elt(match("effect", ...names())[1L])
         } else {
-            insight::format_error("The `effect` argument has been renamed to `variables`.")
+            insight::format_error(
+                "The `effect` argument has been renamed to `variables`."
+            )
         }
     }
 
@@ -95,7 +107,8 @@ plot_slopes <- function(model,
         rug = rug,
         gray = gray,
         comparison = slope,
-        ...)
+        ...
+    )
 
     if (inherits(out, "ggplot")) {
         out <- out + ggplot2::labs(x = condition[1], y = "Slope")
@@ -103,4 +116,3 @@ plot_slopes <- function(model,
 
     return(out)
 }
-

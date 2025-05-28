@@ -1,14 +1,12 @@
 backtransform <- function(x, transform) {
-
     # transform can be a function or a named list of length 1 with a function, but could be NULL
     if (!is.function(transform)) {
         if (is.null(transform[[1]])) {
             return(x)
-        } else {
-            transform <- transform[[1]]
         }
+
+        transform <- transform[[1]]
     }
-   
 
     checkmate::assert_data_frame(x)
     checkmate::assert_function(transform)
@@ -20,7 +18,9 @@ backtransform <- function(x, transform) {
         draws <- transform(draws)
         dim_post <- dim(draws)
         if (!identical(dim_pre, dim_post)) {
-            insight::format_error("The `transform` function must return an object of the same class as its input: a matrix input must return a matrix of the same size, and a vector input must return a vector of the same length.")
+            insight::format_error(
+                "The `transform` function must return an object of the same class as its input: a matrix input must return a matrix of the same size, and a vector input must return a vector of the same length."
+            )
         }
     }
 

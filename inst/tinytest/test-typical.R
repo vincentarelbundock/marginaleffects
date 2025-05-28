@@ -20,9 +20,7 @@ expect_true(all(is.na(nd$gear)))
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod_int <- lm(mpg ~ am * factor(cyl), tmp)
-mfx <- slopes(mod_int,
-                       newdata = datagrid(cyl = unique),
-                       variables = "am")
+mfx <- slopes(mod_int, newdata = datagrid(cyl = unique), variables = "am")
 expect_equivalent(nrow(mfx), 3)
 
 
@@ -35,7 +33,8 @@ typ <- datagrid(
     newdata = tmp,
     FUN_character = max,
     FUN_factor = function(x) sort(x)[1],
-    FUN_numeric = stats::median)
+    FUN_numeric = stats::median
+)
 expect_equivalent(typ$drat, stats::median(mtcars$drat))
 expect_equivalent(typ$cyl, factor("4", levels = c("4", "6", "8")))
 expect_equivalent(typ$gear, "5")
@@ -56,7 +55,7 @@ mfx <- slopes(mod, newdata = datagrid(cyl = unique), variables = "am")
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 3)
 
-# errors and warnings
+# errors and warning
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <- dat
@@ -66,6 +65,3 @@ expect_error(datagrid(), pattern = "are both .NULL")
 mod <- lm(hp ~ factor(cyl), dat)
 expect_inherits(datagrid(model = mod, cyl = "4"), "data.frame")
 expect_error(datagrid(model = mod, cyl = "2"), pattern = "must be one of the factor levels")
-
-
-rm(list = ls())

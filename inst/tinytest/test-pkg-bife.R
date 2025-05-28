@@ -37,10 +37,6 @@ s1 <- avg_slopes(mod, variables = "AGE", by = "KID", newdata = psid)
 xb <- predict(mod, type = "link", X_new = psid)
 psid$s <- dnorm(xb) * (coef(mod)["AGE"] + coef(mod)["KID:AGE"] * psid$KID)
 s2 <- aggregate(s ~ KID, FUN = mean, data = psid)
-s2 <- s2[order(s2$KID),]
-s1 <- s1[order(s1$KID),]
+s2 <- s2[order(s2$KID), ]
+s1 <- s1[order(s1$KID), ]
 expect_equivalent(s1$estimate, s2$s, tolerance = 1e-4)
-
-
-
-rm(list = ls())

@@ -1,8 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
-
-if (!requiet("speedglm")) exit_file("speedglm not on CRAN")
-if (!requiet("margins")) exit_file("margins")
+requiet("speedglm")
+requiet("margins")
 
 # glm vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_glm_01"]]
@@ -31,7 +30,3 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 mfx <- slopes(mod)
 mar <- margins(mod, unit_ses = TRUE)
 expect_true(expect_margins(mfx, mar, tolerance = 1e-3))
-
-
-
-rm(list = ls())

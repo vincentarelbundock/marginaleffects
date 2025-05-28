@@ -6,7 +6,6 @@
 #' factor levels are inevitably missing.
 #' @keywords internal
 complete_levels <- function(x, character_levels = NULL) {
-
     checkmate::assert_data_frame(x)
 
     # fixest returned an empty list()
@@ -33,7 +32,9 @@ complete_levels <- function(x, character_levels = NULL) {
         # HACK: Some models use a character variable with many levels (e.g.,
         # mixed-effects groups). This creates a massive padding dataset, and making
         # predictions can become very expensive.
-        if (isTRUE(sum(lengths(vault)) > 100)) return(data.frame())
+        if (isTRUE(sum(lengths(vault)) > 100)) {
+            return(data.frame())
+        }
 
         padding <- utils::head(x, 1)
         data.table::setDT(padding)

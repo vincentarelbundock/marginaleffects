@@ -1,9 +1,10 @@
-get_contrast_data_numeric <- function(model,
-                                      newdata,
-                                      variable,
-                                      modeldata,
-                                      ...) {
-    
+get_contrast_data_numeric <- function(
+    model,
+    newdata,
+    variable,
+    modeldata,
+    ...
+) {
     h <- variable[["eps"]]
 
     s <- m <- NA
@@ -19,7 +20,8 @@ get_contrast_data_numeric <- function(model,
         args <- append(list(lab), as.list(val))
         out <- tryCatch(
             do.call("sprintf", args),
-            error = function(e) lab)
+            error = function(e) lab
+        )
         return(out)
     }
 
@@ -33,7 +35,8 @@ get_contrast_data_numeric <- function(model,
         "mean(dY/dX)",
         "mean(eY/eX)",
         "mean(eY/dX)",
-        "mean(dY/eX)")
+        "mean(dY/eX)"
+    )
 
     # manual high
     if (isTRUE(checkmate::check_data_frame(variable$value))) {
@@ -45,22 +48,22 @@ get_contrast_data_numeric <- function(model,
             high <- variable$value[[2]]
         }
         lab <- "manual"
-
     } else if (isTRUE(variable$label %in% slopes)) {
         low <- x - h / 2
         high <- x + h / 2
         lab <- variable$label
-
     } else if (identical(variable$label, "exp(dY/dX)")) {
         low <- x - h / 2
         high <- x + h / 2
         lab <- "exp(dY/dX)"
 
-    # contrast_label is designed for categorical predictors
-    # numeric contrasts first
+        # contrast_label is designed for categorical predictors
+        # numeric contrasts first
     } else if (isTRUE(checkmate::check_numeric(variable$value, len = 1))) {
-
-        direction <- getOption("marginaleffects_contrast_direction", default = "forward")
+        direction <- getOption(
+            "marginaleffects_contrast_direction",
+            default = "forward"
+        )
         if (isTRUE(direction == "center")) {
             low <- x - variable$value / 2
             high <- x + variable$value / 2
@@ -80,7 +83,6 @@ get_contrast_data_numeric <- function(model,
         } else {
             lab <- sprintf("mean(+%s)", variable$value)
         }
-
     } else if (isTRUE(checkmate::check_numeric(variable$value, len = 2))) {
         variable$value <- sort(variable$value)
         low <- variable$value[1]
@@ -88,7 +90,7 @@ get_contrast_data_numeric <- function(model,
         gap <- diff(variable$value)
         lab <- make_label(variable$label, rev(variable$value))
 
-    # character contrasts
+        # character contrasts
     } else if (identical(variable$value, "sd")) {
         low <- m - s / 2
         high <- m + s / 2
@@ -97,7 +99,6 @@ get_contrast_data_numeric <- function(model,
             lab <- sprintf("(%s)", lab)
         }
         lab <- make_label(variable$label, lab)
-
     } else if (identical(variable$value, "2sd")) {
         low <- m - s
         high <- m + s
@@ -106,17 +107,14 @@ get_contrast_data_numeric <- function(model,
             lab <- sprintf("(%s)", lab)
         }
         lab <- make_label(variable$label, lab)
-
     } else if (identical(variable$value, "iqr")) {
         low <- stats::quantile(xmd, probs = 0.25, na.rm = TRUE)
         high <- stats::quantile(xmd, probs = 0.75, na.rm = TRUE)
         lab <- make_label(variable$label, c("Q3", "Q1"))
-
     } else if (identical(variable$value, "minmax")) {
         low <- min(xmd, na.rm = TRUE)
         high <- max(xmd, na.rm = TRUE)
         lab <- make_label(variable$label, c("Max", "Min"))
-
     } else if (isTRUE(checkmate::check_function(variable$value))) {
         tmp <- variable$value(x)
         low <- tmp[, 1]
@@ -127,11 +125,13 @@ get_contrast_data_numeric <- function(model,
     lo <- hi <- newdata
     lo[[variable$name]] <- low
     hi[[variable$name]] <- high
-    out <- list(rowid = seq_len(nrow(newdata)),
-                lo = lo,
-                hi = hi,
-                original = newdata,
-                ter = rep(variable$name, nrow(newdata)),
-                lab = rep(lab, nrow(newdata)))
+    out <- list(
+        rowid = seq_len(nrow(newdata)),
+        lo = lo,
+        hi = hi,
+        original = newdata,
+        ter = rep(variable$name, nrow(newdata)),
+        lab = rep(lab, nrow(newdata))
+    )
     return(out)
 }

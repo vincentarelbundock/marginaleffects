@@ -1,10 +1,9 @@
-
 #' internal function to build the type dictionary
 #'
 #' @noRd
 type_dictionary_build <- function() {
-text <-
-'class,type
+    text <-
+        'class,type
 bam,response
 bam,link
 bart,ev
@@ -32,14 +31,14 @@ clogit,expected
 clogit,lp
 clogit,risk
 clogit,survival
+coxph,survival
 coxph,expected
 coxph,lp
 coxph,risk
-coxph,survival
+coxph_weightit,survival
 coxph_weightit,expected
 coxph_weightit,lp
 coxph_weightit,risk
-coxph_weightit,survival
 crch,response
 crch,location
 crch,scale
@@ -52,13 +51,13 @@ hxlr,scale
 hxlr,density
 ivpml,pr
 ivpml,xb
+flexsurvreg,survival,
 flexsurvreg,response,
 flexsurvreg,mean,
 flexsurvreg,link,
 flexsurvreg,lp,
 flexsurvreg,linear,
 flexsurvreg,rmst,
-flexsurvreg,survival,
 flexsurvreg,hazard,
 flexsurvreg,cumhaz,
 fixest,invlink(link)
@@ -131,7 +130,6 @@ multinom_weightit,mean
 mhurdle,E
 mhurdle,Ep
 mhurdle,p
-mlogit,response
 mvgam,response
 mvgam,link
 mvgam,expected
@@ -177,13 +175,14 @@ zeroinfl,response
 zeroinfl,prob
 zeroinfl,count
 zeroinfl,zero'
-out <- utils::read.csv(
-    text = text,
-    colClasses = c("character", "character"))
-for (i in 1:2) {
-    out[[i]] <- trimws(out[[i]])
-}
-return(out)
+    out <- utils::read.csv(
+        text = text,
+        colClasses = c("character", "character")
+    )
+    for (i in 1:2) {
+        out[[i]] <- trimws(out[[i]])
+    }
+    return(out)
 }
 
 

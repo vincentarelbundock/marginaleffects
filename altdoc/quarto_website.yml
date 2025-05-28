@@ -3,75 +3,46 @@ project:
   output-dir: ../docs/
 
 website:
-  title: "Marginal Effects Zoo"
-  favicon: "images/favicon.png"
-  page-navigation: true
-
+  favicon: assets/favicon.ico
+  site-url: https://marginaleffects.com
   navbar:
     background: "#eeeeee"
     search: true
-    logo: images/marginaleffects_icon.png
+    logo: assets/marginaleffects_icon.png
     logo-alt: "marginaleffects logo"
+    left:
+      - text: Model to Meaning
+        href: https://marginaleffects.com
     right:
-      - text: Get started
-        href: vignettes/get_started.qmd
+      - text: Quick start
+        href: https::/marginaleffects.com/bonus/get_started.html
       - text: Article
-        href: files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf
+        href: assets/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf
       - text: Help
-        href: vignettes/help.qmd
+        href: bonus/help.html
+      - text: Documentation
+        menu:
+          - text: R
+            href: https://marginaleffects.com/r/index.html
+          - text: Python
+            href: https://marginaleffects.com/bonus/python.html
       - icon: github
-        href: $ALTDOC_PACKAGE_URL_GITHUB
-        aria-label: $ALTDOC_PACKAGE_NAME GitHub
+        aria-label: marginaleffects GitHub
+        menu:
+          - text: R
+            href: https://github.com/vincentarelbundock/marginaleffects
+          - text: Python
+            href: https://github.com/vincentarelbundock/pymarginaleffects
       - icon: twitter
         href: https://twitter.com/vincentab
+      - icon: mastodon
+        href: https://fosstodon.org/@vincentab
 
   sidebar:
     collapse-level: 1
     contents:
-      - vignettes/get_started.qmd
-      - section: Tutorials
-        contents:
-          - vignettes/predictions.qmd
-          - vignettes/comparisons.qmd
-          - vignettes/slopes.qmd
-          - vignettes/hypothesis.qmd
-          - vignettes/plot.qmd
-      - section: Case studies
-        contents:
-          - vignettes/brms.qmd
-          - vignettes/bootstrap.qmd
-          - vignettes/categorical.qmd
-          - vignettes/conformal.qmd
-          - vignettes/conjoint.qmd
-          - vignettes/elasticity.qmd
-          - vignettes/equivalence.qmd
-          - vignettes/experiments.qmd
-          - vignettes/gam.qmd
-          - vignettes/gcomputation.qmd
-          - vignettes/heterogeneity.qmd
-          - vignettes/interactions.qmd
-          - vignettes/ipw.qmd
-          - vignettes/logit.qmd
-          - vignettes/lme4.qmd
-          - vignettes/machine_learning.qmd
-          - vignettes/marginalmeans.qmd
-          - vignettes/matching.qmd
-          - vignettes/mrp.qmd
-          - vignettes/multiple_imputation.qmd
-          - vignettes/svalues.qmd
-      - section: Miscellaneous
-        contents:
-          - vignettes/help.qmd
-          - vignettes/faq.qmd
-          - vignettes/meme.qmd
-          - vignettes/alternative_software.qmd
-          - vignettes/extensions.qmd
-          - vignettes/links.qmd
-          - vignettes/performance.qmd
-          - vignettes/numpyro.qmd
-          - vignettes/supported_models.qmd
-          - vignettes/tables.qmd
-          - vignettes/uncertainty.qmd
+      - text: Home
+        href: https://marginaleffects.com
       - section: Functions
         contents:
           - text: "`predictions`"
@@ -90,24 +61,29 @@ website:
             file: man/hypotheses.qmd
           - text: "`inferences`"
             file: man/inferences.qmd
-          - text: "`posterior_draws`"
-            file: man/posterior_draws.qmd
           - text: "`datagrid`"
             file: man/datagrid.qmd
+          - text: "`get_draws`"
+            file: man/get_draws.qmd
+          - text: "`get_vcov`"
+            file: man/get_vcov.qmd
+          - text: "`get_coef`"
+            file: man/get_coef.qmd
           - text: "`print.marginaleffects`"
             file: man/print.marginaleffects.qmd
-      - text: Article
-        href: files/marginaleffects_arel-bundock_greifer_heiss_jss5115.pdf
-      - $ALTDOC_NEWS
-      - $ALTDOC_LICENSE
-      - $ALTDOC_CITATION
+      - text: News
+        file: $ALTDOC_NEWS
+      - vignettes/citation.qmd
 
 format:
   html:
-    toc: true
+    reader-mode: true
     theme:
       - flatly
       - custom.scss
+    top-level-division: chapter
+    citeproc: true
+    toc: true
     highlight-style: atom-one
     code-copy: true
     code-link: true

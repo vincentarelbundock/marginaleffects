@@ -1,8 +1,8 @@
 
- Term Contrast Estimate Std. Error     z Pr(>|z|)    S   2.5 %  97.5 %
-   hp mean(+1)  -0.0682     0.0101 -6.74   <0.001 35.9 -0.0881 -0.0484
+ Estimate Std. Error     z Pr(>|z|)    S   2.5 %  97.5 %
+  -0.0682     0.0101 -6.74   <0.001 35.9 -0.0881 -0.0484
 
-Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
+Term: hp
 Type:  response 
-
+Comparison: +1
 

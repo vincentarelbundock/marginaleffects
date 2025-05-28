@@ -2,7 +2,7 @@
 using("marginaleffects")
 source("helpers.R")
 
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 requiet("MASS")
 requiet("broom")
 requiet("emmeans")
@@ -58,7 +58,7 @@ expect_equivalent(mfx$std.error[mfx$term == "wt"], em$std.error, tolerance = 1e-
 
 # emmeans contrasts
 mfx <- slopes(model, type = "link", newdata = datagrid(wt = 3, cyl = 4))
-em <- emmeans(model, specs = "cyl") 
+em <- emmeans(model, specs = "cyl")
 em <- emmeans::contrast(em, method = "revpairwise", at = list(wt = 3, cyl = 4))
 em <- tidy(em)
 expect_equivalent(mfx$estimate[mfx$contrast == "6 - 4"], em$estimate[em$contrast == "cyl6 - cyl4"])
@@ -67,11 +67,11 @@ expect_equivalent(mfx$estimate[mfx$contrast == "8 - 4"], em$estimate[em$contrast
 expect_equivalent(mfx$std.error[mfx$contrast == "8 - 4"], em$std.error[em$contrast == "cyl8 - cyl4"], tolerance = 1e-4)
 
 
-
 # glm.nb: marginaleffects: vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$mass_glm_nb
 model <- suppressWarnings(
-MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
+    MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars)
+)
 mfx <- avg_slopes(model)
 stata$contrast <- ifelse(stata$term == "factor(cyl)6", "6 - 4", "")
 stata$contrast <- ifelse(stata$term == "factor(cyl)8", "8 - 4", stata$contrast)
@@ -109,8 +109,7 @@ dat$y <- factor(dat$y)
 mod <- MASS::polr(y ~ x1 + x2, data = dat, Hess = TRUE)
 em <- emmeans::emtrends(mod, ~y, var = "x1", mode = "prob", at = list(x1 = 0, x2 = 0))
 em <- tidy(em)
-mfx <- slopes(mod, newdata = datagrid(x1 = 0, x2 = 0),
-                   type = "probs", variables = "x1")
+mfx <- slopes(mod, newdata = datagrid(x1 = 0, x2 = 0), type = "probs", variables = "x1")
 expect_equivalent(mfx$estimate, em$x1.trend, tolerance = .01)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
 
@@ -163,9 +162,6 @@ expect_equivalent(ti$estimate, em$estimate)
 expect_equivalent(ti$std.error, em$std.error, tolerance = 1e-4)
 
 
-
-
-
 # glmmPQL
 
 # glmmPQL: no validity
@@ -177,7 +173,8 @@ mod <- glmmPQL(
     random = ~ 1 | ID,
     family = binomial,
     verbose = FALSE,
-    data = tmp)
+    data = tmp
+)
 expect_slopes(mod, type = "link", n_unique = 1)
 expect_slopes(mod, type = "response")
 expect_predictions(predictions(mod))
@@ -206,11 +203,13 @@ p <- suppressMessages(avg_predictions(mod, type = "probs"))
 expect_equivalent(
     p$estimate,
     c(.4933237, .363384, .1432922),
-    tolerance = tol)
+    tolerance = tol
+)
 expect_equivalent(
     p$std.error,
     c(.0867256, .0838539, .0591208),
-    tolerance = tol_se)
+    tolerance = tol_se
+)
 
 # Predictive margins                              Number of obs     =         32
 # Model VCE    : OIM
@@ -227,8 +226,6 @@ expect_equivalent(
 #           1  |   .4933237   .0867256     5.69   0.000     .3233448    .6633027
 #           2  |    .363384   .0838539     4.33   0.000     .1990335    .5277346
 #           3  |   .1432922   .0591208     2.42   0.015     .0274175    .2591669
-
-
 
 # polr: marginalmeans vs. emmeans
 k <- mtcars
@@ -248,10 +245,7 @@ mod <- polr(
     gear ~ mpg + cyl + vs,
     data = mtcars,
     method = "probit",
-    Hess = TRUE)
+    Hess = TRUE
+)
 p <- predictions(mod, newdata = "median", type = "probs")
 expect_true(all(p$vs == 0))
-
-
-
-rm(list = ls())

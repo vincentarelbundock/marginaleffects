@@ -12,10 +12,9 @@ expect_error(predictions(mod, type = "junk"), pattern = "Must be element")
 expect_error(slopes(mod, type = "junk"), pattern = "Must be element")
 
 
-
 # error: multivariate
 requiet("pscl")
-dat2 <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/pscl/bioChemists.csv")
+dat2 <- get_dataset("bioChemists", "pscl")
 model <- hurdle(art ~ phd + fem | ment, data = dat2, dist = "negbin")
 mfx <- slopes(model, type = "prob")
 expect_true(all(as.character(0:19) %in% mfx$group))
@@ -28,8 +27,3 @@ p2 <- avg_predictions(mod, type = "response")
 p3 <- avg_predictions(mod, type = "invlink(link)")
 expect_equivalent(p1$estimate, p2$estimate)
 expect_false(isTRUE(all.equal(p1$estimate, p3$estimate)))
-
-
-
-
-rm(list = ls())

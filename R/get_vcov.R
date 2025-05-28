@@ -1,9 +1,9 @@
-#' Get a named variance-covariance matrix from a model object (internal function)
+#' Get a named variance-covariance matrix from a model object
 #'
+#' Mostly for internal use, but can be useful because the output is consistent across model classes.
 #' @inheritParams slopes
 #' @return A named square matrix of variance and covariances. The names must match the coefficient names.
 #' @rdname get_vcov
-#' @keywords internal
 #' @export
 get_vcov <- function(model, ...) {
     UseMethod("get_vcov", model)
@@ -12,10 +12,7 @@ get_vcov <- function(model, ...) {
 
 #' @rdname get_vcov
 #' @export
-get_vcov.default <- function(model,
-                             vcov = NULL,
-                             ...) {
-
+get_vcov.default <- function(model, vcov = NULL, ...) {
     if (isFALSE(vcov)) {
         return(NULL)
     }
@@ -48,7 +45,7 @@ get_vcov.default <- function(model,
         warning(msg, call. = FALSE)
         return(NULL)
 
-    # valid matrix with warning
+        # valid matrix with warning
     } else if (!is.null(out$warning)) {
         warning(out$warning$message, call. = FALSE)
     }
@@ -90,7 +87,6 @@ get_vcov.default <- function(model,
 }
 
 
-
 #' Take a `summary()` style `vcov` argument and convert it to
 #' `insight::get_varcov()`
 #'
@@ -106,9 +102,15 @@ get_varcov_args <- function(model, vcov) {
         return(out)
     }
 
-    if (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger")) {
-        if (!isTRUE(inherits(model, "lmerMod")) && !isTRUE(inherits(model, "lmerModTest"))) {
-            msg <- 'Satterthwaite and Kenward-Roger corrections are only available for linear mixed effects models from the `lme4` package, and objects of class `lmerMod` or `lmerModTest`.'
+    if (
+        isTRUE(checkmate::check_choice(vcov, "satterthwaite")) ||
+            isTRUE(checkmate::check_choice(vcov, "kewnard-roger"))
+    ) {
+        if (
+            !isTRUE(inherits(model, "lmerMod")) &&
+                !isTRUE(inherits(model, "lmerModTest"))
+        ) {
+            msg <- "Satterthwaite and Kenward-Roger corrections are only available for linear mixed effects models from the `lme4` package, and objects of class `lmerMod` or `lmerModTest`."
             stop(msg, call. = FALSE)
         }
         if (isTRUE(vcov == "satterthwaite")) {
@@ -118,22 +120,26 @@ get_varcov_args <- function(model, vcov) {
         }
     }
 
-    out <- switch(vcov,
+    out <- switch(
+        vcov,
         "stata" = list(vcov = "HC2"),
         "robust" = list(vcov = "HC3"),
         "bootstrap" = list(vcov = "BS"),
         "outer-product" = list(vcov = "OPG"),
-        list(vcov = vcov))
+        list(vcov = vcov)
+    )
     return(out)
 }
 
 
-
 get_vcov_label <- function(vcov) {
     if (is.null(vcov)) vcov <- ""
-    if (!is.character(vcov)) return(NULL)
+    if (!is.character(vcov)) {
+        return(NULL)
+    }
 
-    out <- switch(vcov,
+    out <- switch(
+        vcov,
         "stata" = "Stata",
         "robust" = "Robust",
         "kenward-roger" = "Kenward-Roger",
@@ -156,3 +162,28 @@ get_vcov_label <- function(vcov) {
 }
 
 
+#' internal get_vcov
+#'
+#' @export
+#' @noRd
+get_vcov.comparisons <- function(model, ...) {
+    stats::vcov(model)
+}
+
+#' internal get_vcov
+#'
+#' @export
+#' @noRd
+get_vcov.slopes <- get_vcov.comparisons
+
+#' internal get_vcov
+#'
+#' @export
+#' @noRd
+get_vcov.hypotheses <- get_vcov.comparisons
+
+#' internal get_vcov
+#'
+#' @export
+#' @noRd
+get_vcov.predictions <- get_vcov.comparisons

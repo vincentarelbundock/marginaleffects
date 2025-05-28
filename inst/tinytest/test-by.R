@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 requiet("nnet")
 tol <- 1e-4
 tol_se <- 1e-2
@@ -68,18 +68,20 @@ mar <- data.frame(summary(mar))
 mfx <- slopes(
     mod,
     by = "cyl",
-    newdata = datagrid(cyl = c(4, 6, 8), grid_type = "counterfactual"))
+    newdata = datagrid(cyl = c(4, 6, 8), grid_type = "counterfactual")
+)
+mfx <- mfx[order(mfx$term, mfx$contrast), ]
 expect_equivalent(mfx$estimate, mar$AME)
 expect_equivalent(mfx$std.error, mar$SE, tolerance = 1e6)
 
 
-
 # issue #434 by with character precitors
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/Affairs.csv")
+dat <- get_dataset("Affairs", "AER")
 mod <- glm(
     affairs ~ children + gender + yearsmarried,
     family = poisson,
-    data = dat)
+    data = dat
+)
 p <- predictions(mod, by = "children")
 expect_equivalent(nrow(p), 2)
 expect_false(anyNA(p$estimate))
@@ -98,11 +100,12 @@ expect_equivalent(nrow(cmp), 9)
 
 by <- data.frame(
     group = c("3", "4", "5"),
-    by = c("(3,4)", "(3,4)", "(5)"))
+    by = c("(3,4)", "(3,4)", "(5)")
+)
 p1 <- predictions(mod, type = "probs")
 p2 <- predictions(mod, type = "probs", by = by)
-p3 <- predictions(mod, type = "probs", by = by, hypothesis = "sequential")
-p4 <- predictions(mod, type = "probs", by = by, hypothesis = "reference")
+p3 <- predictions(mod, type = "probs", by = by, hypothesis = ~sequential)
+p4 <- predictions(mod, type = "probs", by = by, hypothesis = ~reference)
 p5 <- predictions(mod, type = "probs", by = c("am", "vs", "group"))
 expect_equivalent(mean(subset(p1, group == "5")$estimate), p2$estimate[2])
 expect_equivalent(p3$estimate, diff(p2$estimate))
@@ -116,15 +119,17 @@ cmp <- comparisons(
     mod,
     variables = "am",
     by = by,
-    type = "probs")
+    type = "probs"
+)
 expect_equivalent(nrow(cmp), 2)
 
 cmp <- comparisons(
     mod,
     variables = "am",
     by = by,
-    hypothesis = "sequential",
-    type = "probs")
+    hypothesis = ~sequential,
+    type = "probs"
+)
 expect_equivalent(nrow(cmp), 1)
 
 
@@ -132,7 +137,8 @@ expect_equivalent(nrow(cmp), 1)
 mod <- nnet::multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
 by <- data.frame(
     by = c("4", "5"),
-    group = 4:5)
+    group = 4:5
+)
 expect_warning(comparisons(mod, variables = "mpg", newdata = "mean", by = by))
 expect_warning(predictions(mod, newdata = "mean", by = by))
 
@@ -164,7 +170,9 @@ mfx <- avg_slopes(
     newdata = datagrid(
         cyl = unique,
         am = unique,
-        grid_type = "counterfactual")) |>
+        grid_type = "counterfactual"
+    )
+) |>
     dplyr::arrange(term, cyl, am)
 mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
 mar <- summary(mar)
@@ -184,11 +192,13 @@ mfx <- comparisons(
     newdata = datagrid(
         cyl = unique,
         am = unique,
-        grid_type = "counterfactual"))
+        grid_type = "counterfactual"
+    )
+)
 
 mfx <- tidy(mfx)
 
-mfx <- mfx[order(mfx$term, mfx$contrast, mfx$cyl, mfx$am),]
+mfx <- mfx[order(mfx$term, mfx$contrast, mfx$cyl, mfx$am), ]
 mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
 mar <- summary(mar)
 expect_equivalent(mfx$estimate, mar$AME, tolerance = tol)
@@ -213,12 +223,12 @@ requiet("dplyr")
 tmp <- mtcars %>% transform(am = factor(am), cyl = factor(cyl), mpg = mpg)
 mod <- lm(mpg ~ am * cyl, data = tmp)
 cmp1 <- avg_comparisons(mod, variables = "am", by = "cyl") |>
-  dplyr::arrange(cyl)
+    dplyr::arrange(cyl)
 cmp2 <- comparisons(mod, variables = "am") %>%
-  dplyr::group_by(cyl) %>%
-  dplyr::summarize(estimate = mean(estimate), .groups = "keep") |>
-  dplyr::ungroup()
-cmp3 <- predictions(mod)  |>
+    dplyr::group_by(cyl) %>%
+    dplyr::summarize(estimate = mean(estimate), .groups = "keep") |>
+    dplyr::ungroup()
+cmp3 <- predictions(mod) |>
     aggregate(estimate ~ am + cyl, FUN = mean) |>
     aggregate(estimate ~ cyl, FUN = diff)
 expect_equivalent(cmp1$estimate, cmp2$estimate)
@@ -227,12 +237,8 @@ expect_equivalent(cmp1$estimate, cmp3$estimate)
 
 # Issue #1058
 tmp <- mtcars
-tmp <- tmp[c('mpg', 'cyl', 'hp')]
+tmp <- tmp[c("mpg", "cyl", "hp")]
 tmp$cyl <- as.factor(tmp$cyl) # 3 levels
-tmp$hp  <- as.factor(tmp$hp)
+tmp$hp <- as.factor(tmp$hp)
 bygrid <- datagrid(newdata = tmp, by = "cyl", hp = unique)
 expect_equivalent(nrow(bygrid), 23)
-
-
-
-rm(list = ls())

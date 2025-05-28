@@ -8,7 +8,8 @@ condition_shortcuts <- function(x, tr, shortcuts) {
     } else if (identical(tr, "minmax")) {
         out <- c(
             min(x, na.rm = TRUE),
-            max(x, na.rm = TRUE))
+            max(x, na.rm = TRUE)
+        )
     } else if (identical(tr, "quartile")) {
         out <- stats::quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
     }
@@ -16,18 +17,27 @@ condition_shortcuts <- function(x, tr, shortcuts) {
 }
 
 
-sanitize_condition <- function(model, condition, variables = NULL, modeldata = NULL) {
+sanitize_condition <- function(
+    model,
+    condition,
+    variables = NULL,
+    modeldata = NULL
+) {
     # allow multiple conditions and/or effects
     checkmate::assert(
         checkmate::check_character(condition, min.len = 1, max.len = 4),
-        checkmate::check_list(condition, min.len = 1, max.len = 4))
+        checkmate::check_list(condition, min.len = 1, max.len = 4)
+    )
 
     # c("a", "b") or list("a", "b") -> named list of NULLs
     flag1 <- isTRUE(checkmate::check_character(condition))
     flag2 <- isTRUE(checkmate::check_list(condition, names = "unnamed")) &&
-             all(sapply(condition, function(x) isTRUE(checkmate::check_string(x))))
+        all(sapply(condition, function(x) isTRUE(checkmate::check_string(x))))
     if (flag1 || flag2) {
-        condition <- stats::setNames(rep(list(NULL), length(condition)), unlist(condition))
+        condition <- stats::setNames(
+            rep(list(NULL), length(condition)),
+            unlist(condition)
+        )
     }
 
     # validity of the list
@@ -54,14 +64,17 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
     }
     resp <- insight::get_response(model)
     respname <- insight::find_response(model)
-    
-    flag <-  checkmate::check_true(all(names(condition) %in% c(colnames(dat), "group")))
+
+    flag <- checkmate::check_true(all(
+        names(condition) %in% c(colnames(dat), "group")
+    ))
     if (!isTRUE(flag)) {
-        msg <- sprintf("Entries in the `condition` argument must be element of: %s",
-                       paste(colnames(dat), collapse = ", "))
+        msg <- sprintf(
+            "Entries in the `condition` argument must be element of: %s",
+            toString(colnames(dat))
+        )
         insight::format_error(msg)
     }
-
 
     # condition names
     condition1 <- names(condition)[[1]]
@@ -78,17 +91,25 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
     if (is.null(condition[[1]])) {
         if (get_variable_class(dat, condition1, "binary")) {
             at_list[[condition1]] <- 0:1
-        } else if (is.numeric(dat[[condition1]]) && !get_variable_class(dat, condition1, "categorical")) {
+        } else if (
+            is.numeric(dat[[condition1]]) &&
+                !get_variable_class(dat, condition1, "categorical")
+        ) {
             at_list[[condition1]] <- seq(
                 min(dat[[condition1]], na.rm = TRUE),
                 max(dat[[condition1]], na.rm = TRUE),
-                length.out = 50)
+                length.out = 50
+            )
         } else {
             at_list[[condition1]] <- factor(unique(dat[[condition1]]))
         }
     } else {
         if (isTRUE(checkmate::check_choice(condition[[1]], shortcuts))) {
-            at_list[[condition1]] <- condition_shortcuts(dat[[condition1]], condition[[1]], shortcuts)
+            at_list[[condition1]] <- condition_shortcuts(
+                dat[[condition1]],
+                condition[[1]],
+                shortcuts
+            )
         } else {
             at_list[[condition1]] <- condition[[1]]
         }
@@ -100,21 +121,23 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
         if (is.null(condition[[2]])) {
             #binary
             if (get_variable_class(dat, condition2, "binary")) {
-              at_list[[condition2]] <- condition[[2]] <- 0:1
-            # numeric default = Tukey's 5 numbers
+                at_list[[condition2]] <- condition[[2]] <- 0:1
+                # numeric default = Tukey's 5 numbers
             } else if (is.numeric(dat[[condition2]])) {
-              condition[[2]] <- "fivenum"
-            # other default = unique values
+                condition[[2]] <- "fivenum"
+                # other default = unique values
             } else if (condition2 %in% colnames(dat)) {
-              condition[[2]] <- unique(dat[[condition2]])
+                condition[[2]] <- unique(dat[[condition2]])
             }
         }
         # known string shortcuts
         if (isTRUE(checkmate::check_choice(condition[[2]], shortcuts))) {
             at_list[[condition2]] <- condition_shortcuts(
-                dat[[condition2]], condition[[2]], shortcuts
+                dat[[condition2]],
+                condition[[2]],
+                shortcuts
             )
-        # user-supplied
+            # user-supplied
         } else {
             at_list[[condition2]] <- condition[[2]]
         }
@@ -130,33 +153,41 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
             }
         } else {
             if (isTRUE(checkmate::check_choice(condition[[3]], shortcuts))) {
-                at_list[[condition3]] <- condition_shortcuts(dat[[condition3]], condition[[3]], shortcuts)
+                at_list[[condition3]] <- condition_shortcuts(
+                    dat[[condition3]],
+                    condition[[3]],
+                    shortcuts
+                )
             } else {
                 at_list[[condition3]] <- condition[[3]]
             }
         }
     }
-    
+
     # condition 4: facet_2
     if (length(condition) > 3) {
-      if (is.null(condition[[4]])) {
-        if (is.numeric(dat[[condition4]])) {
-          at_list[[condition4]] <- stats::fivenum(dat[[condition4]])
+        if (is.null(condition[[4]])) {
+            if (is.numeric(dat[[condition4]])) {
+                at_list[[condition4]] <- stats::fivenum(dat[[condition4]])
+            } else {
+                at_list[[condition4]] <- unique(dat[[condition4]])
+            }
         } else {
-          at_list[[condition4]] <- unique(dat[[condition4]])
+            if (isTRUE(checkmate::check_choice(condition[[4]], shortcuts))) {
+                at_list[[condition4]] <- condition_shortcuts(
+                    dat[[condition4]],
+                    condition[[4]],
+                    shortcuts
+                )
+            } else {
+                at_list[[condition4]] <- condition[[4]]
+            }
         }
-      } else {
-        if (isTRUE(checkmate::check_choice(condition[[4]], shortcuts))) {
-          at_list[[condition4]] <- condition_shortcuts(dat[[condition4]], condition[[4]], shortcuts)
-        } else {
-          at_list[[condition4]] <- condition[[4]]
-        }
-      }
     }
 
     at_list[["model"]] <- model
     at_list[["newdata"]] <- dat
-    
+
     if (isTRUE(checkmate::check_list(variables))) {
         flag <- all(names(variables) %in% names(condition))
     } else {
@@ -176,9 +207,11 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
     }
 
     # mlr3 and tidymodels are not supported by `insight::find_variables()`, so we need to create a grid based on all the variables supplied in `newdata`
-    if (inherits(at_list$model, "Learner") || 
-        inherits(at_list$model, "model_fit") ||
-        inherits(at_list$model, "workflow") ) {
+    if (
+        inherits(at_list$model, "Learner") ||
+            inherits(at_list$model, "model_fit") ||
+            inherits(at_list$model, "workflow")
+    ) {
         at_list$model <- NULL
     }
 
@@ -187,13 +220,14 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
 
     out <- list(
         "modeldata" = dat,
-        "newdata" = nd, 
+        "newdata" = nd,
         "resp" = resp,
         "respname" = respname,
-        "condition" = condition, 
-        "condition1" = condition1, 
-        "condition2" = condition2, 
+        "condition" = condition,
+        "condition1" = condition1,
+        "condition2" = condition2,
         "condition3" = condition3,
-        "condition4" = condition4) 
+        "condition4" = condition4
+    )
     return(out)
 }

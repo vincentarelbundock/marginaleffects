@@ -10,7 +10,7 @@ dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.factor(dat$am)
 mod <- lm(mpg ~ cyl, data = dat)
 
-em <- emmeans(mod, ~ cyl)
+em <- emmeans(mod, ~cyl)
 em <- confint(pairs(em), adjust = "none") |>
     dplyr::arrange(contrast)
 
@@ -41,16 +41,30 @@ expect_equal(sum(a$p.value == b$p.value), 1)
 
 
 # Issue #627: print t instead of z in column names
-if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
+requiet("tinysnapshot")
 using("tinysnapshot")
 
 
-exit_file("i hate white space in snapshots")
 mod <- lm(mpg ~ hp, mtcars)
 expect_snapshot_print(avg_comparisons(mod), "df-z")
 expect_snapshot_print(avg_comparisons(mod, df = 30), "df-t")
 
 
-
-
-rm(list = ls())
+# df = "residual"
+dat <- transform(mtcars, cyl = factor(cyl))
+mod <- lm(mpg ~ cyl, data = dat)
+c1 <- avg_comparisons(mod, df = "residual")
+c2 <- avg_comparisons(mod)
+expect_true(all(c1$p.value > c2$p.value))
+expect_true(all(c1$s.value < c2$s.value))
+expect_true(all(c1$conf.low < c2$conf.low))
+p1 <- predictions(mod, df = "residual")
+p2 <- predictions(mod)
+expect_true(all(p1$p.value > p2$p.value))
+expect_true(all(p1$s.value < p2$s.value))
+expect_true(all(p1$conf.low < p2$conf.low))
+h1 <- hypotheses(mod, df = "residual")
+h2 <- hypotheses(mod)
+expect_true(all(c1$p.value > c2$p.value))
+expect_true(all(c1$s.value < c2$s.value))
+expect_true(all(c1$conf.low < c2$conf.low))

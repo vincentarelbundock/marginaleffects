@@ -10,14 +10,13 @@ supported_engine <- function(x) {
 #' @rdname set_coef
 #' @export
 set_coef.model_fit <- function(model, coefs, ...) {
+    if (!"fit" %in% names(model)) {
+        return(model)
+    }
 
-  if (!"fit" %in% names(model)) {
+    model$fit <- set_coef(model$fit, coefs, ...)
+
     return(model)
-  }
-
-  model$fit <- set_coef(model$fit, coefs, ...)
-
-  return(model)
 }
 
 
@@ -41,19 +40,22 @@ get_predict.model_fit <- function(model, newdata, type = NULL, ...) {
 
     if (type == "numeric") {
         v <- intersect(c(".pred", ".pred_res"), colnames(out))[1]
-        out <- data.frame(rowid = seq_along(out), estimate = out[[v]])
-
+        out <- data.frame(rowid = seq_len(nrow(out)), estimate = out[[v]])
     } else if (type == "class") {
-        out <- data.frame(rowid = seq_along(out), estimate = out[[".pred_class"]])
-
+        out <- data.frame(
+            rowid = seq_len(nrow(out)),
+            estimate = out[[".pred_class"]]
+        )
     } else if (type == "prob") {
         colnames(out) <- substr(colnames(out), 7, nchar(colnames(out)))
         out$rowid <- seq_len(nrow(out))
+        data.table::setDT(out)
         out <- data.table::melt(
             out,
             id.vars = "rowid",
             variable.name = "group",
-            value.name = "estimate")
+            value.name = "estimate"
+        )
     }
 
     return(out)
@@ -75,6 +77,7 @@ get_vcov.model_fit <- function(model, type = NULL, ...) {
     if (isTRUE(type == "class")) {
         return(FALSE)
     }
+    vcov <- sanitize_vcov(model, vcov)
     if (isTRUE(supported_engine(model))) {
         tmp <- parsnip::extract_fit_engine(model)
         out <- get_vcov(tmp)

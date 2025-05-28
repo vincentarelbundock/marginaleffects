@@ -16,7 +16,7 @@ plot_slopes(
   wts = FALSE,
   slope = "dydx",
   rug = FALSE,
-  gray = FALSE,
+  gray = getOption("marginaleffects_plot_gray", default = FALSE),
   draw = TRUE,
   ...
 )
@@ -68,6 +68,7 @@ first entry in the error message is used by default.}
 \item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
 \item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 \item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
+\item "rsample", "boot", "fwb", and "simulation" are passed to the \code{method} argument of the \code{inferences()} function. To customize the bootstrap or simulation process, call \code{inferences()} directly.
 }
 \item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
 \item Square covariance matrix
@@ -119,7 +120,7 @@ The \code{by} argument is used to plot marginal slopes, that is, slopes made on 
 The \code{condition} argument is used to plot conditional slopes, that is, slopes computed on a user-specified grid. This is analogous to using the \code{newdata} argument and \code{datagrid()} function in a \code{slopes()} call. All variables whose values are not specified explicitly are treated as usual by \code{datagrid()}, that is, they are held at their mean or mode (or rounded mean for integers). This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the \code{condition} argument, or supply model-specific arguments to compute population-level estimates. See details below.
 See the "Plots" vignette and website for tutorials and information on how to customize plots:
 \itemize{
-\item https://marginaleffects.com/vignettes/plot.html
+\item https://marginaleffects.com/bonus/plot.html
 \item https://marginaleffects.com
 }
 }
@@ -150,6 +151,7 @@ https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
 }
 
 \examples{
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(marginaleffects)
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 
@@ -163,4 +165,14 @@ plot_slopes(mod, variables = "am", condition = list("hp", "drat" = range))
 
 plot_slopes(mod, variables = "am", condition = list("hp", "drat" = "threenum"))
 
+# marginal slopes
+plot_slopes(mod, variables = "hp", by = "am")
+
+# marginal slopes on a counterfactual grid
+plot_slopes(mod,
+  variables = "hp",
+  by = "am",
+  newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+)
+\dontshow{\}) # examplesIf}
 }

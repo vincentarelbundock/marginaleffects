@@ -24,6 +24,7 @@ set_coef.aft <- set_coef.stpm2
 #' @export
 get_vcov.stpm2 <- function(model, ...) {
     insight::check_if_installed("rstpm2")
+    vcov <- sanitize_vcov(model, vcov)
     rstpm2::vcov(model)
 }
 
@@ -48,8 +49,9 @@ get_predict.stpm2 <- function(model, newdata = NULL, ...) {
     sanity_predict_vector(pred = pred, model = model, newdata = newdata)
     sanity_predict_numeric(pred = pred, model = model, newdata = newdata)
     out <- data.frame(
-        rowid = 1:nrow(newdata),
-        estimate = pred)
+        rowid = seq_len(nrow(newdata)),
+        estimate = pred
+    )
     return(out)
 }
 

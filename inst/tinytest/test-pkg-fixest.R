@@ -25,7 +25,7 @@ mod2 <- suppressMessages(feglm(am ~ mpg | gear, family = binomial(link = "logit"
 mod3 <- suppressMessages(feglm(am ~ mpg + mpg^2 | gear, family = binomial(link = "logit"), data = mtcars, warn = FALSE))
 mod4 <- suppressMessages(feglm(am ~ mpg | gear, family = binomial(link = "logit"), data = mtcars, warn = FALSE))
 
-#skip_if_not_installed("fixest", minimum_version = "0.10.2")
+# skip_if_not_installed("fixest", minimum_version = "0.10.2")
 expect_inherits(insight::get_data(mod1), "data.frame")
 expect_inherits(insight::get_data(mod2), "data.frame")
 expect_inherits(insight::get_data(mod3), "data.frame")
@@ -66,9 +66,10 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
 # fixest::feols: predictions
 data(trade, package = "fixest")
-model <- feols(Euros ~ dist_km | Destination + Origin, data = trade)
+dat <- trade
+model <- feols(Euros ~ dist_km | Destination + Origin, data = dat)
 pred1 <- predictions(model)
-pred2 <- predictions(model, newdata = head(trade))
+pred2 <- predictions(model, newdata = head(dat))
 expect_predictions(pred1)
 expect_predictions(pred2, n_row = 6)
 
@@ -90,8 +91,6 @@ p <- plot_slopes(mod2, variables = "x", condition = "w")
 expect_inherits(p, "ggplot")
 
 
-
-
 # plot_slopes: extracts all required data
 fe <- data.frame(unit = 1:25, fe = rnorm(25))
 dat <- expand.grid(unit = 1:25, time = 1:50)
@@ -111,10 +110,9 @@ expect_false(anyNA(k$estimate))
 expect_false(any(k$estimate == 0))
 
 
-
 # predictions: bugs stay dead: Issue #203
 dat <- mtcars
-dat$factor_am = factor(dat$am)
+dat$factor_am <- factor(dat$am)
 dat <- dat
 m1 <- feols(mpg ~ hp * am, data = dat)
 m2 <- feols(mpg ~ hp * factor_am, data = dat)
@@ -134,12 +132,11 @@ expect_predictions(pred5, se = FALSE)
 # vdiffr::expect_doppelganger("fixest plot_predictions with i()",
 #                         plot_predictions(m4, condition = c("hp", "am")))
 
-
-
 # bug stay dead: insight::get_data doesn't get all columns
 reg <- feols(
-Sepal.Width ~ Petal.Length | Species | Sepal.Length ~ Petal.Width, 
-data = iris)
+    Sepal.Width ~ Petal.Length | Species | Sepal.Length ~ Petal.Width,
+    data = iris
+)
 mfx1 <- slopes(reg, newdata = iris)
 mfx2 <- slopes(reg)
 expect_inherits(mfx1, "marginaleffects")
@@ -163,11 +160,11 @@ expect_inherits(mfx3, "marginaleffects")
 dat <- data.table(mtcars)
 m <- feols(mpg ~ cyl * disp, dat)
 m1 <- slopes(m)
-m2 <- slopes(m, newdata = datagrid(disp = 0))  
+m2 <- slopes(m, newdata = datagrid(disp = 0))
 expect_inherits(m1, "marginaleffects")
 expect_inherits(m2, "marginaleffects")
 m1 <- comparisons(m)
-m2 <- comparisons(m, newdata = datagrid(disp = 0))  
+m2 <- comparisons(m, newdata = datagrid(disp = 0))
 expect_inherits(m1, "comparisons")
 expect_inherits(m2, "comparisons")
 
@@ -190,14 +187,16 @@ mod <- feols(vs ~ hp * factor(cyl), data = mtcars)
 cmp <- comparisons(
     mod,
     newdata = datagrid(hp = c(80, 100, 120)),
-    by = "hp")
+    by = "hp"
+)
 expect_equivalent(nrow(cmp), 9)
 expect_equivalent(nrow(tidy(cmp)), 9)
 mod <- feglm(vs ~ hp * factor(cyl), data = mtcars, family = "binomial")
 cmp <- comparisons(
     mod,
     newdata = datagrid(hp = c(80, 100, 120)),
-    by = "hp")
+    by = "hp"
+)
 
 
 # Issue #484: fixest::i() parsing
@@ -258,17 +257,17 @@ expect_false(anyNA(p$std.error))
 
 # Issue #705
 data(trade, package = "fixest")
-mod1 <- fepois(data = trade, Euros ~ 1 | Origin, offset = ~ log(dist_km))
-mod2 <- fepois(data = trade, Euros ~ 1 | Origin)
-
-mfx1 <- avg_slopes(mod1)
-mfx2 <- avg_slopes(mod2)
+dat <- trade
+mod1 <- fepois(data = dat, Euros ~ 1 | Origin, offset = ~ log(dist_km))
+mod2 <- fepois(data = dat, Euros ~ 1 | Origin)
+mfx1 <- avg_slopes(mod1, vcov = FALSE)
+mfx2 <- avg_slopes(mod2, vcov = FALSE)
 expect_inherits(mfx1, "slopes")
 expect_inherits(mfx2, "slopes")
 
 
 # Issue #727: backtransform predictions
-mod = fixest::feglm(am ~ hp, data = mtcars, family = binomial)
+mod <- fixest::feglm(am ~ hp, data = mtcars, family = binomial)
 p1 <- avg_predictions(mod, type = "invlink(link)")
 p2 <- avg_predictions(mod, type = "link", transform = mod$family$linkinv)
 expect_equivalent(p1$estimate, p2$estimate)
@@ -278,9 +277,7 @@ expect_equivalent(p1$conf.low, p2$conf.low)
 # Issue #839
 mod <- feols(mpg ~ drat | gear, data = mtcars, weights = ~qsec)
 res <- suppressWarnings(inferences(avg_slopes(mod), method = "boot", R = 20))
-expect_inherits(res, "slopes")
-
-
+expect_inherits(res, "slopes") # should be slopes but can't figure out inferences dispatch
 
 ## Issue #461
 ## commetned out because this seems to be an upstream problem. See issue.
@@ -302,15 +299,8 @@ expect_inherits(res, "slopes")
 # nd <- datagrid(model = model)
 # expect_error(slopes(model, newdata = "mean"), "combined")
 
-
 ## Issue #229: works interactively
 # data(trade)
 # dat <- trade
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
 # expect_slopes(mod, newdata = dat) # environment issue
-
-
-rm(list = ls())
-
-
-

@@ -2,19 +2,21 @@ source("helpers.R")
 using("marginaleffects")
 
 # exponentiate
-acs12 <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/acs12.csv")
+acs12 <- get_dataset("acs12", "openintro")
 acs12$disability <- as.numeric(acs12$disability == "yes")
 mod <- glm(disability ~ gender + race + married + age, data = acs12, family = binomial)
 
 cmp1 <- comparisons(
     mod,
     variables = "gender",
-    comparison = "lnratioavg")
+    comparison = "lnratioavg"
+)
 cmp2 <- comparisons(
     mod,
     variables = "gender",
     comparison = "lnratioavg",
-    transform = exp)
+    transform = exp
+)
 expect_equivalent(exp(cmp1$estimate), cmp2$estimate)
 expect_equivalent(exp(cmp1$conf.low), cmp2$conf.low)
 expect_equivalent(exp(cmp1$conf.high), cmp2$conf.high)
@@ -31,7 +33,6 @@ expect_equivalent(exp(cmp1$conf.high), cmp2$conf.high)
 # expect_equivalent(exp(tid1$conf.low), tid2$conf.low)
 # expect_equivalent(exp(tid1$conf.high), tid2$conf.high)
 
-
 # issue #1115
 set.seed(0)
 n <- 500
@@ -44,9 +45,7 @@ cmp <- avg_comparisons(
     fit,
     variables = "trt",
     comparison = "lnratioavg",
-    transform = "exp") |>
+    transform = "exp"
+) |>
     inferences(method = "boot", R = 100)
 expect_inherits(cmp, "comparisons")
-
-
-rm(list = ls())

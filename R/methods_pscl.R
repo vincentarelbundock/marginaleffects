@@ -13,10 +13,15 @@ set_coef.hurdle <- function(model, coefs, ...) {
         idx <- match(idx, names(coefs))
         # probably too conservative
         if (anyNA(idx)) {
-            stop("Mismatched coefficients names. Please check the `marginaleffects::`set_coef.hurdle` or `set_coef.zeroinfl` function.",
-                 call. = FALSE)
+            stop(
+                "Mismatched coefficients names. Please check the `marginaleffects::`set_coef.hurdle` or `set_coef.zeroinfl` function.",
+                call. = FALSE
+            )
         }
-        out$coefficients[[lab]] <- stats::setNames(coefs[idx], names(out$coefficients[[lab]]))
+        out$coefficients[[lab]] <- stats::setNames(
+            coefs[idx],
+            names(out$coefficients[[lab]])
+        )
     }
     return(out)
 }
@@ -34,7 +39,6 @@ get_group_names.hurdle <- function(model, type = "count", ...) {
         out <- colnames(stats::predict(model, type = "prob"))
     } else {
         out <- "main_marginaleffect"
-    } 
+    }
     return(out)
 }
-

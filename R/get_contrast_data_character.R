@@ -1,11 +1,12 @@
-get_contrast_data_character <- function(model,
-                                        newdata,
-                                        variable,
-                                        cross,
-                                        first_cross,
-                                        modeldata,
-                                        ...) {
-
+get_contrast_data_character <- function(
+    model,
+    newdata,
+    variable,
+    cross,
+    first_cross,
+    modeldata,
+    ...
+) {
     # factors store all levels, but characters do not, so we need to extract the
     # original data from the model.
     tmp <- modeldata
@@ -18,16 +19,31 @@ get_contrast_data_character <- function(model,
     levs <- sort(unique(tmp[[variable$name]]))
 
     # string shortcuts
-    flag <- checkmate::check_choice(variable$value, c("reference", "revreference", "pairwise", "revpairwise", "sequential", "revsequential", "all", "minmax"))
+    flag <- checkmate::check_choice(
+        variable$value,
+        c(
+            "reference",
+            "revreference",
+            "pairwise",
+            "revpairwise",
+            "sequential",
+            "revsequential",
+            "all",
+            "minmax"
+        )
+    )
     if (isTRUE(flag)) {
         levs_idx <- contrast_categories_shortcuts(levs, variable, interaction)
 
-    # custom data frame or function
-    } else if (isTRUE(checkmate::check_function(variable$value)) || isTRUE(checkmate::check_data_frame(variable$value))) {
+        # custom data frame or function
+    } else if (
+        isTRUE(checkmate::check_function(variable$value)) ||
+            isTRUE(checkmate::check_data_frame(variable$value))
+    ) {
         out <- contrast_categories_custom(variable, newdata)
         return(out)
 
-    # vector of two values
+        # vector of two values
     } else if (isTRUE(checkmate::check_atomic_vector(variable$value, len = 2))) {
         if (is.character(variable$value)) {
             tmp <- modeldata[[variable$name]]
@@ -41,13 +57,23 @@ get_contrast_data_character <- function(model,
             tmp <- newdata[[variable$name]]
             levs_idx <- data.table::data.table(
                 lo = as.character(variable$value[1]),
-                hi = as.character(variable$value[2]))
+                hi = as.character(variable$value[2])
+            )
         } else {
-            levs_idx <- data.table::data.table(lo = variable$value[1], hi = variable$value[2])
+            levs_idx <- data.table::data.table(
+                lo = variable$value[1],
+                hi = variable$value[2]
+            )
         }
     }
 
-    tmp <- contrast_categories_processing(first_cross, levs_idx, levs, variable, newdata)
+    tmp <- contrast_categories_processing(
+        first_cross,
+        levs_idx,
+        levs,
+        variable,
+        newdata
+    )
     lo <- tmp[[1]]
     hi <- tmp[[2]]
     original <- tmp[[3]]
@@ -61,13 +87,14 @@ get_contrast_data_character <- function(model,
     lo <- lo[, tmp, with = FALSE]
     hi <- hi[, tmp, with = FALSE]
 
-
-    out <- list(rowid = original$rowid,
-                lo = lo,
-                hi = hi,
-                original = original,
-                ter = rep(variable$name, nrow(lo)), # lo can be different dimension than newdata
-                lab = contrast_label,
-                contrast_null = contrast_null)
+    out <- list(
+        rowid = original$rowid,
+        lo = lo,
+        hi = hi,
+        original = original,
+        ter = rep(variable$name, nrow(lo)), # lo can be different dimension than newdata
+        lab = contrast_label,
+        contrast_null = contrast_null
+    )
     return(out)
 }

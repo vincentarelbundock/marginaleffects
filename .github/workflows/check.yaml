@@ -24,8 +24,7 @@ jobs:
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel'}
           - {os: ubuntu-latest,   r: '4.1.3'}
-          - {os: ubuntu-latest,   r: '4.0.5'}
-          - {os: ubuntu-latest,   r: '3.6.0'}
+          - {os: ubuntu-latest,   r: '4.0.0'}
 
     runs-on: ${{ matrix.os }}
 
@@ -42,8 +41,11 @@ jobs:
       - name: Get Script
         run: curl -OLs https://eddelbuettel.github.io/r-ci/run.sh && chmod 0755 run.sh
 
-      - name: unignore tests
+      - name: runners up 1
         run: awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
+
+      - name: runners up 2
+        run: awk '/^run <- FALSE/{print "run <- TRUE"; next} 1' tests/tinytest.R > temp && mv temp tests/tinytest.R
 
       - name: cat Rbuildignore
         run: cat .Rbuildignore
@@ -52,22 +54,10 @@ jobs:
         run: ./run.sh bootstrap
 
       - name: png (for svglite)
-        run: sudo apt update -qq && sudo apt install --yes --no-install-recommends libpng-dev
+        run: sudo apt update -qq && sudo apt install --yes --no-install-recommends libpng-dev libfontconfig1-dev
 
       - name: svglite from source
         run: Rscript -e "bspm::disable();install.packages('svglite', from = 'source');bspm::enable()"
-
-      - name: TMB
-        run: ./run.sh install_source TMB
-
-      - name: glmmTMB source
-        run: ./run.sh install_source glmmTMB
-
-      - name: tinysnapshot dev
-        run: ./run.sh install_github vincentarelbundock/tinysnapshot
-
-      - name: Matrix source
-        run: ./run.sh install_source Matrix
 
       - name: Dependencies
         run: ./run.sh install_all

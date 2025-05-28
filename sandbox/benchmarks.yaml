@@ -1,0 +1,69 @@
+name: Benchmark
+
+on:
+  pull_request_target:
+    branches:
+      - '*'
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - 'R/**'
+      - 'src/**'
+      - '.github/scripts/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: 
+  pull-requests: write 
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    container: ghcr.io/iterative/cml:0-dvc2-base1
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      repo_token: ${{ secrets.GITHUB_TOKEN }}
+      PR_NUMBER: ${{ github.event.number }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: R Setup
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Pandoc setup
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Install required dependencies for benchmark
+        run: |
+          install.packages(c("remotes", "bench", "Formula", "pandoc", "tinytable", "collapse"))
+          remotes::install_github("DavisVaughan/cross")
+        shell: Rscript {0}
+  
+      - name: Run benchmark script
+        run: |
+          source(".github/scripts/benchmarks.R", echo = TRUE)
+        shell: Rscript {0}
+
+      - name: Upload results
+        id: artifact-upload-step
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: .github/scripts/
+
+      - name: Push generated plot as a GH-bot comment
+        run: |
+          # Comment contents:
+          echo -e "\nGenerated via commit ${{ github.event.pull_request.head.sha }}" >> report.md
+          echo -e "\nDownload link for the artifact containing the test results: [↓ benchmark-results.zip](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.artifact-upload-step.outputs.artifact-id }})" >> report.md
+          cml comment update report.md
+        shell: bash

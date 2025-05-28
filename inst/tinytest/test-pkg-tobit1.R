@@ -2,7 +2,7 @@ exit_file("tobit1 is not on CRAN")
 source("helpers.R")
 using("marginaleffects")
 
-if (!require("tobit1")) exit_file("tobit1")
+if (!require("tobit1")) exit_file("not on CRAN")
 requiet("tobit1")
 requiet("broom")
 tol <- 0.001
@@ -10,7 +10,7 @@ tol_se <- 0.001
 
 charitable$logdon <- log(charitable$donation) - log(25)
 data("feesadm", package = "tobit1")
-mod <- tobit1(fees ~ expense + I(expense ^ 2) + region, feesadm)
+mod <- tobit1(fees ~ expense + I(expense^2) + region, feesadm)
 
 # marginaleffects vs. margins (custom method shipped by tobit1)
 mfx1 <- slopes(mod, type = "linpred")
@@ -32,8 +32,3 @@ expect_equivalent(mfx2$std.error, mar2$SE, tolerance = tol_se)
 mar <- prediction(mod, what = "expvalue")
 mfx <- predictions(mod, type = "expvalue")
 expect_equivalent(mar$fitted, mfx$estimate)
-
-
-
-
-rm(list = ls())

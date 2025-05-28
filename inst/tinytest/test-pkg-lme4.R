@@ -2,7 +2,7 @@ source("helpers.R")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 requiet("haven")
 requiet("lme4")
 requiet("insight")
@@ -11,11 +11,11 @@ requiet("broom")
 
 
 # satterthwaite (no validity)
-#skip_if_not_installed("insight", minimum_version = "0.17.1")
+# skip_if_not_installed("insight", minimum_version = "0.17.1")
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <- dat
-mod <-lme4::lmer(mpg ~ hp + (1 | cyl), data = dat)
+mod <- lme4::lmer(mpg ~ hp + (1 | cyl), data = dat)
 x <- predictions(mod, re.form = NA)
 y <- predictions(mod, vcov = "satterthwaite", re.form = NA)
 z <- predictions(mod, vcov = "kenward-roger", re.form = NA)
@@ -57,16 +57,15 @@ mfx <- slopes(
     mod,
     newdata = datagrid(),
     vcov = "satterthwaite",
-    re.form = NA)
+    re.form = NA
+)
 expect_inherits(mfx, "marginaleffects")
 
 
 # GLM not supported
 mod <- glmer(am ~ hp + (1 | cyl), family = binomial, data = dat)
-expect_error(comparisons(mod, vcov = "satterthwaite", re.form = NA), pattern = "Satter")
-expect_error(comparisons(mod, vcov = "kenward-roger", re.form = NA), pattern = "Satter")
-expect_error(predictions(mod, vcov = "satterthwaite", re.form = NA), pattern = "Satter")
-expect_error(predictions(mod, vcov = "kenward-roger", re.form = NA), pattern = "Satter")
+expect_error(comparisons(mod, vcov = "satterthwaite", re.form = NA), pattern = "(?i)unable.*satter")
+expect_error(predictions(mod, vcov = "kenward-roger", re.form = NA), pattern = "(?i)unable.*kenward")
 
 # type = "link"
 w <- predict(mod, type = "link")
@@ -123,7 +122,7 @@ expect_equivalent(w, x$estimate)
 expect_equivalent(w, y$estimate)
 
 
-#lme4::lmer vs. stata
+# lme4::lmer vs. stata
 tmp <- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = tmp)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_lmer
@@ -133,9 +132,8 @@ expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
 # emtrends
-mod <-lme4::lmer(y ~ x1 + x2 + (1 | clus), data = tmp)
-mfx <- slopes(mod, variables = "x1",
-                   newdata = datagrid(x1 = 0, x2 = 0, clus = 1), re.form = NA)
+mod <- lme4::lmer(y ~ x1 + x2 + (1 | clus), data = tmp)
+mfx <- slopes(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), re.form = NA)
 em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$x1.trend)
@@ -183,12 +181,15 @@ expect_predictions(pred1, n_row = 1)
 expect_predictions(pred2, n_row = 6)
 
 
-
 # glmer.nb: marginaleffects vs. emtrends
 set.seed(101)
 dd <- expand.grid(
-    f1 = factor(1:3), f2 = LETTERS[1:2], g = 1:9, rep = 1:15,
-    KEEP.OUT.ATTRS = FALSE)
+    f1 = factor(1:3),
+    f2 = LETTERS[1:2],
+    g = 1:9,
+    rep = 1:15,
+    KEEP.OUT.ATTRS = FALSE
+)
 dd$x <- rnorm(nrow(dd))
 mu <- 5 * (-4 + with(dd, as.integer(f1) + 4 * as.numeric(f2)))
 dd$y <- rnbinom(nrow(dd), mu = mu, size = 0.5)
@@ -213,27 +214,31 @@ expect_equivalent(mfx$estimate, mar$estimate, tolerance = .0001)
 expect_equivalent(mfx$std.error, mar$std.error, tolerance = .0001)
 
 
-
 # population-level
 # Some contrasts are identical with include_random TRUE/FALSE because on Time has a random effect
 mod <- suppressMessages(lmer(
-  weight ~ 1 + Time + I(Time^2) + Diet + Time:Diet + I(Time^2):Diet + (1 + Time + I(Time^2) | Chick),
-  data = ChickWeight))
+    weight ~ 1 + Time + I(Time^2) + Diet + Time:Diet + I(Time^2):Diet + (1 + Time + I(Time^2) | Chick),
+    data = ChickWeight
+))
 
 mfx2 <- slopes(
     mod,
     newdata = datagrid(
         Chick = NA,
         Diet = 1:4,
-        Time = 0:21),
-    re.form = NA)
+        Time = 0:21
+    ),
+    re.form = NA
+)
 mfx3 <- slopes(
     mod,
     newdata = datagrid(
         Chick = "1",
         Diet = 1:4,
-        Time = 0:21),
-    re.form = NA)
+        Time = 0:21
+    ),
+    re.form = NA
+)
 expect_inherits(mfx2, "marginaleffects")
 expect_inherits(mfx3, "marginaleffects")
 
@@ -242,15 +247,19 @@ pred2 <- predictions(
     newdata = datagrid(
         Chick = NA,
         Diet = 1:4,
-        Time = 0:21),
-    re.form = NA)
+        Time = 0:21
+    ),
+    re.form = NA
+)
 pred3 <- predictions(
     mod,
     newdata = datagrid(
         Chick = "1",
         Diet = 1:4,
-        Time = 0:21), 
-    re.form = NA)
+        Time = 0:21
+    ),
+    re.form = NA
+)
 expect_inherits(pred2, "predictions")
 expect_inherits(pred3, "predictions")
 
@@ -259,7 +268,7 @@ tmp <- mtcars
 tmp$cyl <- factor(tmp$cyl)
 tmp$am <- as.logical(tmp$am)
 tmp <- tmp
-mod <-lme4::lmer(mpg ~ hp + am + (1 | cyl), data = tmp)
+mod <- lme4::lmer(mpg ~ hp + am + (1 | cyl), data = tmp)
 
 mfx <- slopes(mod, vcov = "kenward-roger", re.form = NA)
 cmp <- comparisons(mod, vcov = "kenward-roger", re.form = NA)
@@ -271,26 +280,65 @@ expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")
 expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 
 
-
 # Issue #436
 # e = number of events
 # n = total
 dat <- data.frame(
     e = c(
-        1, 1, 134413, 92622, 110747,
-        3625, 35, 64695, 19428, 221, 913, 13, 5710, 121,
-        1339, 1851, 637, 20, 7, 10, 2508),
+        1,
+        1,
+        134413,
+        92622,
+        110747,
+        3625,
+        35,
+        64695,
+        19428,
+        221,
+        913,
+        13,
+        5710,
+        121,
+        1339,
+        1851,
+        637,
+        20,
+        7,
+        10,
+        2508
+    ),
     n = c(
-        165, 143, 10458616, 5338995, 6018504, 190810,
-        1607, 2504824, 471821, 5158, 15027, 205, 86371, 1785,
-        10661, 14406, 4048, 102, 916, 1079, 242715),
+        165,
+        143,
+        10458616,
+        5338995,
+        6018504,
+        190810,
+        1607,
+        2504824,
+        471821,
+        5158,
+        15027,
+        205,
+        86371,
+        1785,
+        10661,
+        14406,
+        4048,
+        102,
+        916,
+        1079,
+        242715
+    ),
     year = round(runif(21, min = 1, max = 24)),
-    sid = as.factor(1:21))
+    sid = as.factor(1:21)
+)
 
 mod <- glmer(
     cbind(e, n - e) ~ 1 + year + (1 | sid),
     data = dat,
-    family = binomial())
+    family = binomial()
+)
 
 p <- predictions(
     mod,
@@ -299,19 +347,24 @@ p <- predictions(
         e = 1,
         n = 160,
         year = 1:5,
-        sid = NA),
-    re.form = NA)
+        sid = NA
+    ),
+    re.form = NA
+)
 expect_predictions(p)
 
-cmp <- comparisons(mod,
+cmp <- comparisons(
+    mod,
     variables = "year",
     newdata = datagrid(
         newdata = dat,
         e = 1,
         n = 160,
         year = 1:5,
-        sid = NA),
-    re.form = NA)
+        sid = NA
+    ),
+    re.form = NA
+)
 expect_inherits(cmp, "comparisons")
 
 
@@ -323,11 +376,16 @@ d$Cat <- sample(c("A", "B"), replace = TRUE, size = nrow(d))
 fit <- lmer(Reaction ~ Days + Cat + (1 | Subject), d)
 expect_error(
     avg_comparisons(fit, vcov = "satterthwaite", re.form = NA),
-    pattern = "not supported")
-
+    pattern = "not supported.*with.*by.*hypothesis"
+)
 expect_error(
-    avg_predictions(fit, vcov = "satterthwaite", re.form = NA),
-    pattern = "not supported")
+    comparisons(fit, vcov = "satterthwaite", hypothesis = 'b1 = 0', re.form = NA),
+    pattern = "not supported.*with.*by.*hypothesis"
+)
+expect_error(
+    avg_predictions(fit, vcov = "kenward-roger", re.form = NA),
+    pattern = "not supported"
+)
 
 
 cmp1 <- comparisons(fit, newdata = datagrid(Cat = unique), vcov = "satterthwaite", re.form = NA)
@@ -336,5 +394,19 @@ expect_true(all(cmp1$conf.low != cmp2$conf.low))
 expect_true(all(cmp1$std.error == cmp2$std.error))
 
 
-
-rm(list = ls())
+# Issue #1396: error on reserved names
+set.seed(123)
+dat <- data.frame(
+    outcome = rbinom(n = 100, size = 1, prob = 0.35),
+    var_binom = as.factor(rbinom(n = 100, size = 1, prob = 0.2)),
+    var_cont = rnorm(n = 100, mean = 10, sd = 7),
+    grp = as.factor(sample(letters[1:4], size = 100, replace = TRUE))
+)
+dat$group <- dat$grp
+dat$var_cont <- datawizard::standardize(dat$var_cont)
+m <- lme4::glmer(
+    outcome ~ var_binom + var_cont + (1 | group),
+    data = dat,
+    family = binomial(link = "logit")
+)
+expect_error(avg_predictions(m, by = "var_binom", newdata = "balanced"), pattern = "forbidden")

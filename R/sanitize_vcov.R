@@ -10,10 +10,30 @@ sanitize_vcov <- function(model, vcov) {
     }
 
     # strings should be case-insensitive
-    vcov_strings <- c("stata", "robust", "HC", "HC0", "HC1", "HC2", "HC3",
-                      "HC4", "HC4m", "HC5", "HAC", "NeweyWest", "kernHAC", "OPG",
-                      "satterthwaite", "kenward-roger")
-    if (isTRUE(checkmate::check_choice(hush(tolower(vcov)), choices = tolower(vcov_strings)))) {
+    vcov_strings <- c(
+        "stata",
+        "robust",
+        "HC",
+        "HC0",
+        "HC1",
+        "HC2",
+        "HC3",
+        "HC4",
+        "HC4m",
+        "HC5",
+        "HAC",
+        "NeweyWest",
+        "kernHAC",
+        "OPG",
+        "satterthwaite",
+        "kenward-roger"
+    )
+    if (
+        isTRUE(checkmate::check_choice(
+            hush(tolower(vcov)),
+            choices = tolower(vcov_strings)
+        ))
+    ) {
         idx <- match(tolower(vcov), tolower(vcov_strings))
         return(vcov_strings[idx])
     }
@@ -23,7 +43,8 @@ sanitize_vcov <- function(model, vcov) {
         checkmate::check_function(vcov),
         checkmate::check_matrix(vcov),
         checkmate::check_formula(vcov),
-        checkmate::check_choice(vcov, choices = vcov_strings))
+        checkmate::check_choice(vcov, choices = vcov_strings)
+    )
 
     out <- vcov
 
@@ -36,6 +57,6 @@ sanitize_vcov <- function(model, vcov) {
             stop("The `vcov` matrix must be square.", call. = FALSE)
         }
     }
-    
+
     return(out)
 }

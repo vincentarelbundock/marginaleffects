@@ -4,16 +4,18 @@
 #' @return A warning, an error, or nothing
 #' @rdname sanitize_model_specific
 #' @keywords internal
-sanitize_model_specific <- function (model, ...) {
+sanitize_model_specific <- function(model, ...) {
     UseMethod("sanitize_model_specific", model)
 }
 
 
 #' @rdname sanitize_model_specific
-sanitize_model_specific.default <- function(model,
-                                          vcov = NULL,
-                                          calling_function = "marginaleffects",
-                                          ...) {
+sanitize_model_specific.default <- function(
+    model,
+    vcov = NULL,
+    calling_function = "marginaleffects",
+    ...
+) {
     return(model)
 }
 
@@ -21,7 +23,8 @@ sanitize_model_specific.default <- function(model,
 sanity_model_supported_class <- function(model) {
     checkmate::assert_character(
         getOption("marginaleffects_model_classes", default = NULL),
-        null.ok = TRUE)
+        null.ok = TRUE
+    )
     custom_classes <- getOption("marginaleffects_model_classes", default = NULL)
     custom_classes <- as.list(custom_classes)
     supported <- append(custom_classes, list(
@@ -127,26 +130,37 @@ sanity_model_supported_class <- function(model) {
         }
     }
     if (isFALSE(flag)) {
-        support <- paste(sort(unique(sapply(supported, function(x) x[1]))), collapse = ", ")
+        support <- toString(sort(unique(sapply(supported, function(x) x[1]))))
         msg <- c(
-            sprintf('Models of class "%s" are not supported. Supported model classes include:', class(model)[1]),
+            sprintf(
+                'Models of class "%s" are not supported. Supported model classes include:',
+                class(model)[1]
+            ),
             "",
             support,
             "",
-            "New modeling packages can usually be supported by `marginaleffects` if they include a working `predict()` method. If you believe that this is the case, please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues")
+            "New modeling packages can usually be supported by `marginaleffects` if they include a working `predict()` method. If you believe that this is the case, please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues"
+        )
         msg <- insight::format_message(msg)
         stop(msg, call. = FALSE)
     }
 }
 
 
-sanitize_model <- function(model,
-                           newdata = NULL,
-                           vcov = NULL,
-                           by = FALSE,
-                           ...) {
-
-    model <- sanitize_model_specific(model, vcov = vcov, newdata = newdata, by = by, ...)
+sanitize_model <- function(
+    model,
+    newdata = NULL,
+    vcov = NULL,
+    by = FALSE,
+    ...
+) {
+    model <- sanitize_model_specific(
+        model,
+        vcov = vcov,
+        newdata = newdata,
+        by = by,
+        ...
+    )
     sanity_model_supported_class(model)
     return(model)
 }

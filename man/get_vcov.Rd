@@ -24,9 +24,10 @@
 \alias{get_vcov.gsm}
 \alias{get_vcov.aft}
 \alias{get_vcov.scam}
+\alias{get_vcov.systemfit}
 \alias{get_vcov.model_fit}
 \alias{get_vcov.workflow}
-\title{Get a named variance-covariance matrix from a model object (internal function)}
+\title{Get a named variance-covariance matrix from a model object}
 \usage{
 get_vcov(model, ...)
 
@@ -66,6 +67,8 @@ get_vcov(model, ...)
 
 \method{get_vcov}{scam}(model, vcov = NULL, ...)
 
+\method{get_vcov}{systemfit}(model, ...)
+
 \method{get_vcov}{model_fit}(model, type = NULL, ...)
 
 \method{get_vcov}{workflow}(model, type = NULL, ...)
@@ -92,6 +95,7 @@ arguments.}
 \item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
 \item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 \item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
+\item "rsample", "boot", "fwb", and "simulation" are passed to the \code{method} argument of the \code{inferences()} function. To customize the bootstrap or simulation process, call \code{inferences()} directly.
 }
 \item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
 \item Square covariance matrix
@@ -109,6 +113,6 @@ first entry in the error message is used by default.}
 A named square matrix of variance and covariances. The names must match the coefficient names.
 }
 \description{
-Get a named variance-covariance matrix from a model object (internal function)
+Mostly for internal use, but can be useful because the output is consistent across model classes.
 }
 \keyword{internal}

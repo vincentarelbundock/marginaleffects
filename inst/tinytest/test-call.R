@@ -14,8 +14,6 @@ for (col in c("estimate", "std.error", "p.value", "conf.high")) {
 suppressWarnings(rm("modd", .GlobalEnv))
 suppressWarnings(rm("modd"))
 
-
-
 # #### Are caught calls roughly twice as fast?
 # long_avg <- function() {
 #     cmp1 <- comparisons(mod)
@@ -43,7 +41,3 @@ suppressWarnings(rm("modd"))
 #     check = FALSE,
 #     iterations = 25
 # )
-
-
-
-rm(list = ls())

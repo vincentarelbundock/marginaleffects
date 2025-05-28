@@ -16,13 +16,12 @@ get_coef.scam <- function(model, ...) {
 
 #' @rdname get_vcov
 #' @export
-get_vcov.scam <- function(model,
-                          vcov = NULL,
-                          ...) {
-
+get_vcov.scam <- function(model, vcov = NULL, ...) {
     if (isTRUE(checkmate::check_matrix(vcov))) {
         return(vcov)
     }
+
+    vcov <- sanitize_vcov(model, vcov)
 
     # email from developer Natalya Pya
     # "one of the elements of the returned 'scam' object is 'Vp.t' which is an
@@ -30,13 +29,19 @@ get_vcov.scam <- function(model,
     # 'model$coefficients.t'."
 
     if (!is.null(vcov) && !is.logical(vcov)) {
-        stop("The `vcov` argument is not supported for models of class `scam`.", .call = FALSE)
+        stop(
+            "The `vcov` argument is not supported for models of class `scam`.",
+            .call = FALSE
+        )
     }
 
     V <- model$Vp.t
     b <- model$coefficients.t
     if (length(b) != nrow(V)) {
-        stop("The size of the variance-covariance matrix does not match the length of the coefficients vector.", call. = FALSE)
+        stop(
+            "The size of the variance-covariance matrix does not match the length of the coefficients vector.",
+            call. = FALSE
+        )
     }
     colnames(V) <- row.names(V) <- names(b)
     return(V)

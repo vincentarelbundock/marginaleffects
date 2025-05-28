@@ -1,7 +1,7 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.22.0
-Authors@R: 
+Version: 0.26.0.1
+Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
              role = c("aut", "cre", "cph"),
@@ -15,8 +15,17 @@ Authors@R:
       person("Etienne", "Bacher",
              email = "etienne.bacher@protonmail.com",
              role = "ctb",
-             comment = c(ORCID = "0000-0002-9271-5075")))
-Description: Compute and plot predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, odds, etc.) for over 100 classes of statistical and machine learning models in R. Conduct linear and non-linear hypothesis tests, or equivalence tests. Calculate uncertainty estimates using the delta method, bootstrapping, or simulation-based inference.
+             comment = c(ORCID = "0000-0002-9271-5075")),
+      person(given = "Grant",
+             family = "McDermott",
+             role = c("ctb"),
+             comment = c(ORCID = "0000-0001-7883-8573")),
+      person(given = "Andrew",
+             family = "Heiss",
+             role = c("ctb"),
+             comment = c(ORCID = "0000-0002-3948-3914"))
+             )
+Description: Compute and plot predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, odds, etc.) for over 100 classes of statistical and machine learning models in R. Conduct linear and non-linear hypothesis tests, or equivalence tests. Calculate uncertainty estimates using the delta method, bootstrapping, or simulation-based inference. Details can be found in Arel-Bundock, Greifer, and Heiss (2024) <doi:10.18637/jss.v111.i09>.
 License: GPL (>= 3)
 Copyright: inst/COPYRIGHTS
 LazyData: true
@@ -25,20 +34,20 @@ URL: https://marginaleffects.com/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Depends: 
+Depends:
     R (>= 3.6.0)
-Imports: 
+Imports:
+    backports,
     checkmate,
-    data.table,
+    data.table (>= 1.16.4),
     generics,
+    Formula,
     insight (>= 0.20.3),
     methods,
     rlang,
     Rcpp (>= 1.0.0)
-Enhances:
-    knitr
 LinkingTo: Rcpp, RcppEigen
-Suggests: 
+Suggests:
     AER,
     Amelia,
     afex,
@@ -78,7 +87,6 @@ Suggests:
     flexsurv,
     fmeffects,
     fontquiver,
-    Formula,
     future,
     future.apply,
     fwb,
@@ -106,6 +114,7 @@ Suggests:
     MASS,
     mclogit,
     MCMCglmm,
+    mhurdle,
     missRanger,
     mgcv,
     mice,
@@ -115,11 +124,15 @@ Suggests:
     mmrm (>= 0.3.12),
     modelbased,
     modelsummary,
+    multcomp,
+    mvtnorm,
+    nanoparquet,
     nlme,
     nnet,
     numDeriv,
     nycflights13,
     optmatch,
+    ordbetareg,
     ordinal,
     parameters,
     parsnip,
@@ -127,9 +140,9 @@ Suggests:
     patchwork,
     pkgdown,
     phylolm,
+    pbapply,
     plm,
     polspline,
-    poorman,
     posterior,
     pscl,
     purrr,
@@ -148,23 +161,26 @@ Suggests:
     rstanarm,
     rstantools,
     rstpm2,
+    rstudioapi,
     rsvg,
     sampleSelection,
     sandwich,
     scam,
     spelling,
     speedglm,
+    splines,
     survey,
     survival,
     svglite,
+    systemfit,
     systemfonts,
     tibble,
     tictoc,
     tidymodels,
     tidyr,
     tidyverse,
-    tinysnapshot,
-    tinytable (>= 0.4.0),
+    tinysnapshot (>= 0.0.7),
+    tinytable (>= 0.6.1),
     tinytest,
     titanic,
     truncreg,
@@ -174,23 +190,21 @@ Suggests:
     yaml,
     xgboost,
     testthat (>= 3.0.0),
-    altdoc
-Collate: 
+    altdoc,
+    knitr,
+    quarto
+Collate:
     'RcppExports.R'
     'backtransform.R'
-    'bootstrap_boot.R'
-    'bootstrap_fwb.R'
-    'bootstrap_rsample.R'
-    'bootstrap_simulation.R'
     'broom.R'
     'by.R'
-    'ci.R'
     'comparisons.R'
     'complete_levels.R'
-    'conformal.R'
+    'config.R'
+    'construct_call.R'
     'datagrid.R'
-    'deprecated.R'
     'equivalence.R'
+    'get_ci.R'
     'get_coef.R'
     'get_contrast_data.R'
     'get_contrast_data_character.R'
@@ -198,23 +212,35 @@ Collate:
     'get_contrast_data_logical.R'
     'get_contrast_data_numeric.R'
     'get_contrasts.R'
+    'get_dataset.R'
+    'get_degrees_of_freedom.R'
+    'get_draws.R'
     'get_group_names.R'
-    'get_hypothesis.R'
     'get_jacobian.R'
+    'get_labels.R'
     'get_model_matrix.R'
     'get_model_matrix_attribute.R'
     'get_modeldata.R'
     'get_predict.R'
     'get_se_delta.R'
-    'get_term_labels.R'
     'get_vcov.R'
     'github_issue.R'
     'hush.R'
     'hypotheses.R'
     'hypotheses_joint.R'
-    'hypothesis_helper.R'
+    'hypothesis.R'
+    'hypothesis_formula.R'
+    'hypothesis_function.R'
+    'hypothesis_matrix.R'
+    'hypothesis_string.R'
     'imputation.R'
     'inferences.R'
+    'inferences_boot.R'
+    'inferences_conformal.R'
+    'inferences_fwb.R'
+    'inferences_rsample.R'
+    'inferences_simulation.R'
+    'matrix_apply.R'
     'mean_or_mode.R'
     'methods.R'
     'set_coef.R'
@@ -222,6 +248,7 @@ Collate:
     'methods_MASS.R'
     'methods_MCMCglmm.R'
     'methods_Rchoice.R'
+    'methods_WeightIt.R'
     'methods_afex.R'
     'methods_aod.R'
     'methods_betareg.R'
@@ -262,9 +289,11 @@ Collate:
     'methods_stats.R'
     'methods_survey.R'
     'methods_survival.R'
+    'methods_systemfit.R'
     'methods_tidymodels.R'
     'methods_tobit1.R'
     'modelarchive.R'
+    'multcomp.R'
     'myTryCatch.R'
     'package.R'
     'plot.R'
@@ -272,7 +301,6 @@ Collate:
     'plot_comparisons.R'
     'plot_predictions.R'
     'plot_slopes.R'
-    'posterior_draws.R'
     'predictions.R'
     'print.R'
     'recall.R'
@@ -284,6 +312,7 @@ Collate:
     'sanitize_interaction.R'
     'sanitize_newdata.R'
     'sanitize_numderiv.R'
+    'sanitize_reserved.R'
     'sanitize_type.R'
     'sanitize_variables.R'
     'sanitize_vcov.R'
@@ -297,5 +326,7 @@ Collate:
     'type_dictionary.R'
     'unpack_matrix_cols.R'
     'utils.R'
+    'zzz.R'
 Language: en-US
 Config/testthat/edition: 3
+VignetteBuilder: knitr, quarto

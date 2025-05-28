@@ -4,7 +4,7 @@ using("marginaleffects")
 requiet("sandwich")
 
 
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv")
+dat <- get_dataset("mtcars", "datasets")
 
 # working but no validity check
 mod <- lm(mpg ~ hp + drat, data = dat)
@@ -34,7 +34,6 @@ cmp2 <- comparisons(mod, vcov = V)
 expect_true(all(cmp1$std.error != cmp2$std.error))
 
 
-
 # marginaleffects strings (no validity)
 mod <- lm(mpg ~ hp * wt, data = dat)
 
@@ -47,7 +46,7 @@ expect_equivalent(mfx1$std.error, mfx2$std.error)
 expect_equivalent(mfx3$std.error, mfx4$std.error)
 
 # different (no validity)
-mfx5 <- slopes(mod, vcov = ~ cyl)
+mfx5 <- slopes(mod, vcov = ~cyl)
 mfx6 <- slopes(mod, vcov = "HAC")
 expect_true(all(mfx1$std.error != mfx3$std.error))
 expect_true(all(mfx1$std.error != mfx4$std.error))
@@ -56,7 +55,6 @@ expect_true(all(mfx1$std.error != mfx6$std.error))
 expect_true(all(mfx3$std.error != mfx5$std.error))
 expect_true(all(mfx3$std.error != mfx6$std.error))
 expect_true(all(mfx5$std.error != mfx6$std.error))
-
 
 
 # predictions strings (no validity)
@@ -71,7 +69,7 @@ expect_equivalent(pre1$std.error, pre2$std.error)
 expect_equivalent(pre3$std.error, pre4$std.error)
 
 # different (no validity)
-pre5 <- predictions(mod, vcov = ~ cyl)
+pre5 <- predictions(mod, vcov = ~cyl)
 pre6 <- predictions(mod, vcov = "HAC")
 expect_true(all(pre1$std.error != pre3$std.error))
 expect_true(all(pre1$std.error != pre4$std.error))
@@ -92,6 +90,3 @@ expect_equivalent(x, y)
 x <- slopes(mod, vcov = sandwich::vcovHC)
 y <- slopes(mod, vcov = "HC3")
 expect_equivalent(x, y)
-
-
-rm(list = ls())

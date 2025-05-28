@@ -4,7 +4,7 @@ using("marginaleffects")
 requiet("pscl")
 requiet("emmeans")
 requiet("broom")
-if (!requiet("margins")) exit_file("margins")
+requiet("margins")
 tol <- 0.0001
 tol_se <- 0.001
 
@@ -45,7 +45,6 @@ expect_equivalent(res$estimate[res$term == "phd"], as.numeric(mar$dydx_phd), tol
 expect_equivalent(res$estimate[res$term == "fem"], as.numeric(mar$dydx_femWomen), tolerance = .00001)
 
 
-
 # bugs stay dead: hurdle with multi-level regressor
 data("bioChemists", package = "pscl")
 tmp <- bioChemists
@@ -56,12 +55,9 @@ model <- hurdle(art ~ phd + fem | ment, data = tmp, dist = "negbin")
 expect_slopes(model)
 
 
-
 # marginaleffects: zeroinfl vs. Stata vs. emtrends
 data("bioChemists", package = "pscl")
-model <- zeroinfl(art ~ kid5 + phd | ment,
-              dist = "negbin",
-              data = bioChemists)
+model <- zeroinfl(art ~ kid5 + phd | ment, dist = "negbin", data = bioChemists)
 
 # stata
 stata <- readRDS(testing_path("stata/stata.rds"))$pscl_zeroinfl_01
@@ -86,30 +82,20 @@ expect_equivalent(sort(summary(mar)$AME), sort(mfx$estimate), tolerance = 1e-3)
 ### predictions
 # marginaleffects: zeroinfl: no validity
 data("bioChemists", package = "pscl")
-model <- zeroinfl(art ~ kid5 + phd | ment,
-              dist = "negbin",
-              data = bioChemists)
+model <- zeroinfl(art ~ kid5 + phd | ment, dist = "negbin", data = bioChemists)
 pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = head(bioChemists))
 expect_predictions(pred1)
 expect_predictions(pred2, n_row = 6)
 
 
-
 ### marginalmeans
 
 # zeroinfl: marginalmeans vs. emmeans
 data("bioChemists", package = "pscl")
-model <- zeroinfl(art ~ kid5 + phd + mar | ment,
-              dist = "negbin",
-              data = bioChemists)
+model <- zeroinfl(art ~ kid5 + phd + mar | ment, dist = "negbin", data = bioChemists)
 # response
 mm <- predictions(model, by = "mar", newdata = datagrid(grid_type = "balanced")) |> dplyr::arrange(mar)
 em <- tidy(emmeans(model, specs = "mar", df = Inf))
 expect_equivalent(mm$estimate, em$estimate, tol = 0.01)
 expect_equivalent(mm$std.error, em$std.error, tolerance = .01)
-
-
-
-
-rm(list = ls())

@@ -7,10 +7,18 @@ set_coef.betareg <- function(model, coefs, ...) {
     # to match with get_varcov(., component = "all") output). In betareg object, these
     # are stored as two elements in a list, with precision coefs lacking the "(phi)_"
     # prefix, so we remove it.
-    mean_coefs <- coefs[names(coefs) != "(phi)" & !startsWith(names(coefs), "(phi)_")]
-    precision_coefs <- coefs[names(coefs) == "(phi)" | startsWith(names(coefs), "(phi)_")]
-    names(precision_coefs) <- sub("(phi)_", "", names(precision_coefs),
-                                  fixed = TRUE)
+    mean_coefs <- coefs[
+        names(coefs) != "(phi)" & !startsWith(names(coefs), "(phi)_")
+    ]
+    precision_coefs <- coefs[
+        names(coefs) == "(phi)" | startsWith(names(coefs), "(phi)_")
+    ]
+    names(precision_coefs) <- sub(
+        "(phi)_",
+        "",
+        names(precision_coefs),
+        fixed = TRUE
+    )
 
     if (length(mean_coefs) > 0) {
         model[["coefficients"]]$mean[names(mean_coefs)] <- mean_coefs
@@ -31,7 +39,7 @@ get_coef.betareg <- function(model, ...) {
     # never have this, so no risk of duplicate names, and precision coefs are always determined.
     # Mimicking coef.betareg(., "full").
     if (!identical(names(precision_coefs), "(phi)")) {
-      names(precision_coefs) <- paste0("(phi)_", names(precision_coefs))
+        names(precision_coefs) <- paste0("(phi)_", names(precision_coefs))
     }
     c(mean_coefs, precision_coefs)
 }
@@ -40,10 +48,19 @@ get_coef.betareg <- function(model, ...) {
 #' @include get_predict.R
 #' @rdname get_predict
 #' @export
-get_predict.betareg <- function(model, newdata, ...) {
-    out <- stats::predict(model, newdata = newdata)
-    out <- data.frame(rowid = seq_len(nrow(newdata)),
-                      estimate = out)
+get_predict.betareg <- function(model, newdata, type = "response", ...) {
+    dots <- list(...)
+    args <- list(
+        model,
+        newdata = newdata,
+        type = type
+    )
+    args[["at"]] <- dots[["at"]]
+    out <- do.call(stats::predict, args)
+    out <- data.frame(
+        rowid = seq_len(nrow(newdata)),
+        estimate = out
+    )
     return(out)
 }
 
@@ -53,4 +70,3 @@ sanitize_model_specific.betareg <- function(model, ...) {
     insight::check_if_installed("insight", minimum_version = "0.17.1")
     return(model)
 }
-

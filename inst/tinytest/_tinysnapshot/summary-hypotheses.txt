@@ -1,6 +1,0 @@
-
-    Term Estimate Std. Error    z Pr(>|z|)   S 2.5 % 97.5 %
- b3 = b4     2.55       1.98 1.29    0.197 2.3 -1.32   6.43
-
-Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
-

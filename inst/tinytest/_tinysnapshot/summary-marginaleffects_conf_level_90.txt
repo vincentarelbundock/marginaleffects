@@ -1,9 +1,0 @@
-
- Term          Contrast Estimate Std. Error     z Pr(>|z|)    5.0 %   95.0 %
-  cyl mean(6) - mean(4)   -5.968     1.6393 -3.64   <0.001  -8.6640 -3.27128
-  cyl mean(8) - mean(4)   -8.521     2.3261 -3.66   <0.001 -12.3469 -4.69480
-  hp  mean(dY/dX)         -0.024     0.0154 -1.56    0.119  -0.0494  0.00131
-
-Columns: term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high 
-Type:  response 
-

@@ -18,3 +18,22 @@ expect_equal(nrow(s), 2)
 s <- avg_slopes(mod, variables = "Miles per gallon")
 expect_inherits(s, "slopes")
 expect_equal(nrow(s), 1)
+
+
+# scale() returns a 1-column matrix
+dat <- transform(mtcars, hp = scale(hp))
+mod <- lm(mpg ~ hp, data = dat)
+p <- predictions(mod)
+expect_inherits(p, "predictions")
+expect_false(anyNA(p$estimate))
+expect_false(anyNA(p$std.error))
+
+
+# Issue #1357
+m <- insight::download_model("brms_linear_1")
+p <- avg_predictions(
+    m,
+    by = "e42dep",
+    newdata = insight::get_datagrid(m, by = "e42dep")
+)
+expect_inherits(p, "predictions")
