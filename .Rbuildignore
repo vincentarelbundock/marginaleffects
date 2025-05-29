@@ -36,4 +36,4 @@ uv.lock
 ^vignettes/*_files$
 air.toml
 inst/tinytest/
-
+CLAUDE.md
