@@ -3,7 +3,7 @@
 #' @keywords internal
 #' @export
 set_coef.mmrm <- function(model, coefs, ...) {
-  model$beta_est  <- coefs
+  model$beta_est <- coefs
   return(model)
 }
 
@@ -43,6 +43,6 @@ get_predict.mmrm <- function(model, newdata = model$data, type = "response", ...
 #' @rdname sanitize_model_specific
 #' @keywords internal
 sanitize_model_specific.mmrm <- function(model, ...) {
-    insight::check_if_installed("mmrm", minimum_version = "0.3.11.9000")
-    return(model)
+  insight::check_if_installed("mmrm", minimum_version = "0.3.14")
+  return(model)
 }
