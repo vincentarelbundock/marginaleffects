@@ -26,6 +26,7 @@
 #' @param conformal_score String. Warning: The `type` argument in `predictions()` must generate predictions which are on the same scale as the outcome variable. Typically, this means that `type` must be "response" or "probs".
 #'   + "residual_abs" or "residual_sq" for regression tasks (numeric outcome)
 #'   + "softmax" for classification tasks (when `predictions()` returns a `group` columns, such as multinomial or ordinal logit models.
+#' @param estimator Function that accepts a data frame, fits a model, applies a marginaleffects function, and returns the object. Only supported with method="rsample" or method="boot". When method="rsample", the output must include a "term" column. This is not always the case for predictions(), in which case users may have to create the column manually.
 #' @param ...
 #' + If `method="boot"`, additional arguments are passed to `boot::boot()`.
 #' + If `method="fwb"`, additional arguments are passed to `fwb::fwb()`.
@@ -87,8 +88,8 @@ inferences <- function(
     conformal_test = NULL,
     conformal_calibration = NULL,
     conformal_score = "residual_abs",
-    ...
-) {
+    estimator = NULL,
+    ...) {
     if (inherits(attr(x, "model"), c("model_fit", "workflow"))) {
         msg <- "The `inferences2()` function is not supported for `tidymodels` objects."
         stop(msg, call. = FALSE)
@@ -118,6 +119,12 @@ inferences <- function(
             "conformal_cv+"
         )
     )
+    checkmate::assert_function(estimator, null.ok = TRUE)
+
+    # Check if estimator is used with incompatible methods
+    if (!is.null(estimator) && !method %in% c("rsample", "boot")) {
+        stop_sprintf("The `estimator` argument is only supported when `method` is \"rsample\" or \"boot\".")
+    }
 
     if (method == "conformal_split") {
         conformal_fun <- conformal_split
@@ -133,7 +140,7 @@ inferences <- function(
 
     if (method == "boot") {
         insight::check_if_installed("boot")
-        out <- inferences_boot(x, R = R, conf_level = conf_level, conf_type = conf_type, ...)
+        out <- inferences_boot(x, R = R, conf_level = conf_level, conf_type = conf_type, estimator = estimator, ...)
     } else if (method == "fwb") {
         insight::check_if_installed("fwb")
         dots <- list(...)
@@ -151,7 +158,7 @@ inferences <- function(
         out <- inferences_fwb(x, R = R, conf_level = conf_level, conf_type = conf_type, ...)
     } else if (method == "rsample") {
         insight::check_if_installed("rsample")
-        out <- inferences_rsample(x, R = R, conf_level = conf_level, conf_type = conf_type, ...)
+        out <- inferences_rsample(x, R = R, conf_level = conf_level, conf_type = conf_type, estimator = estimator, ...)
     } else if (method == "simulation") {
         insight::check_if_installed("MASS")
         out <- inferences_simulation(x, R = R, conf_level = conf_level, ...)

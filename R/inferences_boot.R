@@ -1,4 +1,4 @@
-inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
+inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, ...) {
     out <- x
     call_mfx <- attr(x, "call")
     call_mfx[["vcov"]] <- FALSE
@@ -6,15 +6,23 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
     if (is.null(modeldata)) {
         modeldata <- get_modeldata(call_mfx[["model"]])
     }
-    bootfun <- function(data, indices) {
-        d <- data[indices, , drop = FALSE]
-        call_mod <- insight::get_call(call_mfx[["model"]])
-        call_mod[["data"]] <- d
-        boot_mod <- eval.parent(call_mod)
-        call_mfx[["model"]] <- boot_mod
-        call_mfx[["modeldata"]] <- d
-        boot_mfx <- eval.parent(call_mfx)
-        return(boot_mfx$estimate)
+    if (!is.null(estimator)) {
+        bootfun <- function(data, indices) {
+            d <- data[indices, , drop = FALSE]
+            boot_mfx <- estimator(d)
+            return(boot_mfx$estimate)
+        }
+    } else {
+        bootfun <- function(data, indices) {
+            d <- data[indices, , drop = FALSE]
+            call_mod <- insight::get_call(call_mfx[["model"]])
+            call_mod[["data"]] <- d
+            boot_mod <- eval.parent(call_mod)
+            call_mfx[["model"]] <- boot_mod
+            call_mfx[["modeldata"]] <- d
+            boot_mfx <- eval.parent(call_mfx)
+            return(boot_mfx$estimate)
+        }
     }
 
     args <- list("data" = modeldata, "statistic" = bootfun, R = R)

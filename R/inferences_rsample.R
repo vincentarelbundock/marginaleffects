@@ -1,4 +1,4 @@
-inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
+inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, ...) {
     out <- x
     call_mfx <- attr(x, "call")
     call_mfx[["vcov"]] <- FALSE
@@ -7,17 +7,24 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
         modeldata <- get_modeldata(call_mfx[["model"]])
     }
 
-    bootfun <- function(split, ...) {
-        d <- rsample::analysis(split)
-        call_mod <- insight::get_call(call_mfx[["model"]])
-        call_mod[["data"]] <- d
-        boot_mod <- eval.parent(call_mod)
-        call_mfx[["model"]] <- boot_mod
-        call_mfx[["modeldata"]] <- d
-        boot_mfx <- eval.parent(call_mfx)
-        out <- tidy(boot_mfx)
-        out$term <- seq_len(nrow(out))
-        return(out)
+    if (!is.null(estimator)) {
+        bootfun <- function(split, ...) {
+            d <- rsample::analysis(split)
+            return(estimator(d))
+        }
+    } else {
+        bootfun <- function(split, ...) {
+            d <- rsample::analysis(split)
+            call_mod <- insight::get_call(call_mfx[["model"]])
+            call_mod[["data"]] <- d
+            boot_mod <- eval.parent(call_mod)
+            call_mfx[["model"]] <- boot_mod
+            call_mfx[["modeldata"]] <- d
+            boot_mfx <- eval.parent(call_mfx)
+            out <- tidy(boot_mfx)
+            out$term <- seq_len(nrow(out))
+            return(out)
+        }
     }
 
     args <- list("data" = modeldata, "apparent" = TRUE)

@@ -12,6 +12,7 @@ inferences(
   conformal_test = NULL,
   conformal_calibration = NULL,
   conformal_score = "residual_abs",
+  estimator = NULL,
   ...
 )
 }
@@ -49,6 +50,8 @@ inferences(
 \item "residual_abs" or "residual_sq" for regression tasks (numeric outcome)
 \item "softmax" for classification tasks (when \code{predictions()} returns a \code{group} columns, such as multinomial or ordinal logit models.
 }}
+
+\item{estimator}{Function that accepts a data frame, fits a model, applies a marginaleffects function, and returns the object. Only supported with method="rsample" or method="boot". When method="rsample", the output must include a "term" column. This is not always the case for predictions(), in which case users may have to create the column manually.}
 
 \item{...}{\itemize{
 \item If \code{method="boot"}, additional arguments are passed to \code{boot::boot()}.
