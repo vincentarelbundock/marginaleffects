@@ -4,6 +4,7 @@
 
 * `inferences()` gets an optional `estimator` argument. This should be a function that accepts a data frame and returns a `marginaleffects` object. This is especially useful when the estimation strategy involves multiple steps such as computing weights, estimating a model, and computing a treatment effect via G-computation. In that case, we specify an `estimator()` function and the `inferences()` function returns a clean `marginaleffects` object with all the draws, without having to manually process the raw output from a bootstrap package.
 * In `brms` models, the extra argument `incl_autocor` no longer raises a warning. Thanks to @robbinscalebj for report #1473.
+* `mmrm` package for mixed effects modelling. Thanks to @kkmann for contribution #1000, as well as @clarkliming and @lang-benjamin for useful comments.
 
 ## 0.26.0
 
@@ -145,7 +146,7 @@ Breaking changes:
 
 New models supported:
 
-* `stpm2`, `pstpm2`, `gsm`, and `aft` models from `rstpm2`. Thanks to @aghaynes and @mclements.
+* `rstpm2` package: support for `stpm2`, `pstpm2`, `gsm`, and `aft` models. Thanks to @mclements for contribution #1188 and @aghayes for useful comments.
 * `glm_weightit`, `coxph_weightit`, `multinom_weightit`, and `ordinal_weightit` models from `Weightit`. Thanks to @ngreifer.
 * `glmmgee` from the `glmtoolbox` package. Thanks to @adrianolszewski for the request and @lhvanegasp for help with implementation.
 

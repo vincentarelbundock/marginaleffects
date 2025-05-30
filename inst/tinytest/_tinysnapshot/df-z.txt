@@ -3,6 +3,6 @@
   -0.0682     0.0101 -6.74   <0.001 35.9 -0.0881 -0.0484
 
 Term: hp
-Type:  response 
+Type: response
 Comparison: +1
 

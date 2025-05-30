@@ -14,8 +14,7 @@ sanitize_model_specific.default <- function(
     model,
     vcov = NULL,
     calling_function = "marginaleffects",
-    ...
-) {
+    ...) {
     return(model)
 }
 
@@ -31,7 +30,7 @@ sanity_model_supported_class <- function(model) {
         custom_classes,
         list(
             "afex_aov",
-            "amest", #package: Amelia
+            "amest", # package: Amelia
             "bart", # package: dbarts
             "betareg",
             "bglmerMod",
@@ -92,7 +91,7 @@ sanity_model_supported_class <- function(model) {
             "MCMCglmm",
             "mhurdle",
             "mira",
-            "mlogit",
+            "mmrm",
             "model_fit",
             c("multinom", "nnet"),
             "multinom_weightit",
@@ -158,8 +157,7 @@ sanitize_model <- function(
     newdata = NULL,
     vcov = NULL,
     by = FALSE,
-    ...
-) {
+    ...) {
     model <- sanitize_model_specific(
         model,
         vcov = vcov,

@@ -3,8 +3,8 @@
 %   R/methods_Rchoice.R, R/methods_afex.R, R/methods_aod.R, R/methods_betareg.R,
 %   R/methods_nnet.R, R/methods_crch.R, R/methods_dataframe.R,
 %   R/methods_flexsurv.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
-%   R/methods_glmtoolbox.R, R/methods_glmx.R, R/methods_lme4.R,
-%   R/methods_mlm.R, R/methods_nlme.R, R/methods_pscl.R, R/methods_robustlmm.R,
+%   R/methods_glmtoolbox.R, R/methods_glmx.R, R/methods_lme4.R, R/methods_mlm.R,
+%   R/methods_mmrm.R, R/methods_nlme.R, R/methods_pscl.R, R/methods_robustlmm.R,
 %   R/methods_rstpm2.R, R/methods_sampleSelection.R, R/methods_scam.R,
 %   R/methods_stats.R, R/methods_survey.R, R/methods_survival.R,
 %   R/methods_tidymodels.R
@@ -32,6 +32,7 @@
 \alias{set_coef.lmerModLmerTest}
 \alias{set_coef.lmerMod}
 \alias{set_coef.mlm}
+\alias{set_coef.mmrm}
 \alias{set_coef.lme}
 \alias{set_coef.hurdle}
 \alias{set_coef.zeroinfl}
@@ -96,6 +97,8 @@ set_coef(model, coefs, ...)
 \method{set_coef}{lmerMod}(model, coefs, ...)
 
 \method{set_coef}{mlm}(model, coefs, ...)
+
+\method{set_coef}{mmrm}(model, coefs, ...)
 
 \method{set_coef}{lme}(model, coefs, ...)
 
