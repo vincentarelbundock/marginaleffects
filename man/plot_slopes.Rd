@@ -49,7 +49,7 @@ plot_slopes(
 \item For more complex aggregations, you can use the \code{FUN} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
 }}
 
-\item{newdata}{When \code{newdata} is \code{NULL}, the grid is determined by the \code{condition} argument. When \code{newdata} is not \code{NULL}, the argument behaves in the same way as in the \code{slopes()} function.}
+\item{newdata}{When \code{newdata} is \code{NULL}, the grid is determined by the \code{condition} argument. When \code{newdata} is not \code{NULL}, the argument behaves in the same way as in the \code{predictions()} function. Note that the \code{condition} argument builds its own grid, so the \code{newdata} argument is ignored if the \code{condition} argument is supplied.}
 
 \item{type}{string indicates the type (scale) of the predictions used to
 compute contrasts or slopes. This can differ based on the model
