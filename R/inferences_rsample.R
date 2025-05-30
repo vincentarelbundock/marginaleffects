@@ -10,7 +10,18 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     if (!is.null(estimator)) {
         bootfun <- function(split, ...) {
             d <- rsample::analysis(split)
-            return(estimator(d))
+            result <- estimator(d)
+            # Validate output
+            if (!inherits(result, c("hypotheses", "predictions", "slopes", "comparisons"))) {
+                stop_sprintf(
+                    "The `estimator` function must return an object of class 'hypotheses', 'predictions', 'slopes', or 'comparisons', but it returned an object of class: %s",
+                    paste(class(result), collapse = ", ")
+                )
+            }
+            if (!"term" %in% colnames(result)) {
+                stop_sprintf("The `estimator` function must return an object with a 'term' column.")
+            }
+            return(result)
         }
     } else {
         bootfun <- function(split, ...) {
@@ -29,6 +40,7 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
 
     args <- list("data" = modeldata, "apparent" = TRUE)
     args[["times"]] <- R
+    args <- c(args, list(...))
     splits <- do.call(rsample::bootstraps, args)
     if (isTRUE(getOption("marginaleffects_parallel_inferences", default = FALSE))) {
         insight::check_if_installed("future.apply")
