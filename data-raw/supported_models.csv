@@ -59,6 +59,7 @@ mgcv,gam,TRUE,TRUE,,,U,U,TRUE,TRUE
 mhurdle,mhurdle,TRUE,TRUE,,,TRUE,TRUE,U,U
 mlogit,mlogit,TRUE,TRUE,,,U,U,U,U
 mlr3,Learner,TRUE,FALSE,,,,,,
+mmrm,mmrm,TRUE,TRUE,,,,,,
 mvgam,mvgam,,,,,,,,
 nlme,gls,TRUE,TRUE,,,U,U,TRUE,TRUE
 nlme,lme,TRUE,TRUE,,,,,,
