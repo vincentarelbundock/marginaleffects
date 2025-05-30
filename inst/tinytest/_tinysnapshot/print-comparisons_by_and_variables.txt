@@ -4,6 +4,6 @@
   1     51.3       23.4 2.20   0.0281 5.2  5.51   97.1
 
 Term: am
-Type:  response 
+Type: response
 Comparison: 1 - 0
 
