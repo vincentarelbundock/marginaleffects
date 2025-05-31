@@ -5,6 +5,122 @@
 * `inferences()` gets an optional `estimator` argument. This should be a function that accepts a data frame and returns a `marginaleffects` object. This is especially useful when the estimation strategy involves multiple steps such as computing weights, estimating a model, and computing a treatment effect via G-computation. In that case, we specify an `estimator()` function and the `inferences()` function returns a clean `marginaleffects` object with all the draws, without having to manually process the raw output from a bootstrap package.
 * In `brms` models, the extra argument `incl_autocor` no longer raises a warning. Thanks to @robbinscalebj for report #1473.
 * Do not run `get_dataset()` examples to avoid CRAN note.
+* `mlogit` support is back for `predictions()` and `avg_predictions()`. A vignette is added to the website
+Multinomial Logit Model Tutorial
+Note on Implementation
+
+This tutorial demonstrates how to work with multinomial logit models using predictions() and custom hypothesis functions, rather than comparisons(). While comparisons() would be more complex to implement for multinomial logit models (due to various complications and potential problems), the predictions() approach with custom hypothesis functions provides a flexible and powerful alternative. With minimal additional work on my end, this approach can be extended to support more complex analyses while maintaining the core functionality needed for most use cases.
+Installation
+
+First, install the mlogit_v2 branch of the marginaleffects package from Github.
+
+remotes::install_github("vincentarelbundock/marginaleffects@mlogit_v2")
+
+Make sure this says 0.26.0.1 in the console.
+
+packageVersion("marginaleffects")
+
+[1] '0.26.0.1'
+
+Fit model
+
+library(dplyr)
+library(mlogit)
+library(marginaleffects)
+
+data(Fishing)
+Fish <- dfidx(Fishing, varying = 2:9, shape = "wide", choice = "mode")
+
+m <- mlogit(mode ~ price + catch | income, data = Fish)
+
+Contrast Analysis
+
+Let’s analyze how a $100 increase in beach trip prices affects mode choices. We’ll create full replicates of the original dataset with two scenarios: one with original prices (lo) and one with increased beach prices (hi). The term label indicates the scenario (the “side” of the contrast or difference).
+
+We need to drop the idx column, because handling is not properly supported by marginaleffects.
+
+lo <- transform(as.data.frame(Fish), term = "lo")
+lo$id1 <- Fish$idx$id1
+lo$id2 <- Fish$idx$id2
+lo$idx <- NULL
+hi <- transform(lo, 
+    price = ifelse(id2 == "beach", price + 100, price),
+    term = "hi")
+dat <- rbind(lo, hi)
+dat$term <- factor(dat$term, levels = c("lo", "hi"))
+
+Average probability of each mode under both scenarios
+
+Let’s calculate the average predicted probabilities for each mode under both scenarios. The by argument tells predictions() to compute unit-level predictions (fitted values), and to marginalize those predictions by group and contrast level.
+
+predictions(m,
+    newdata = dat,
+    by = c("group", "term"))
+
+
+ Term   Group Estimate Std. Error     z Pr(>|z|)     S   2.5 % 97.5 %  Df
+   lo beach     0.1134    0.00843 13.45   <0.001 134.5 0.09684 0.1299 Inf
+   lo boat      0.3536    0.01304 27.13   <0.001 535.9 0.32809 0.3792 Inf
+   lo charter   0.3824    0.01338 28.58   <0.001 594.2 0.35617 0.4086 Inf
+   lo pier      0.1506    0.00928 16.22   <0.001 194.1 0.13239 0.1688 Inf
+   hi beach     0.0125    0.00233  5.38   <0.001  23.7 0.00796 0.0171 Inf
+   hi boat      0.3781    0.01382 27.36   <0.001 545.3 0.35098 0.4051 Inf
+   hi charter   0.4104    0.01411 29.08   <0.001 615.3 0.38274 0.4381 Inf
+   hi pier      0.1990    0.00996 19.97   <0.001 292.4 0.17949 0.2186 Inf
+
+Type: response
+
+Alternative: custom hypothesis functions
+
+We can achieve the exact same results using a custom hypothesis function. It is useful to see the equivalence because custom functions give us a lot of flexibility.
+
+h <- function(x) {
+    x |> 
+    summarize(estimate = mean(estimate), .by = c("term", "group"))
+}
+predictions(m, newdata = dat, hypothesis = h)
+
+
+ Term   Group Estimate Std. Error     z Pr(>|z|)     S   2.5 % 97.5 %  Df
+   lo beach     0.1134    0.00843 13.45   <0.001 134.5 0.09684 0.1299 Inf
+   lo boat      0.3536    0.01304 27.13   <0.001 535.9 0.32809 0.3792 Inf
+   lo charter   0.3824    0.01338 28.58   <0.001 594.2 0.35617 0.4086 Inf
+   lo pier      0.1506    0.00928 16.22   <0.001 194.1 0.13239 0.1688 Inf
+   hi beach     0.0125    0.00233  5.38   <0.001  23.7 0.00796 0.0171 Inf
+   hi boat      0.3781    0.01382 27.36   <0.001 545.3 0.35098 0.4051 Inf
+   hi charter   0.4104    0.01411 29.08   <0.001 615.3 0.38274 0.4381 Inf
+   hi pier      0.1990    0.00996 19.97   <0.001 292.4 0.17949 0.2186 Inf
+
+Type: response
+
+Contrast, risk difference, or marginal effect
+
+Finally, Imagine that we wish to estimate the average effect of increase beach trip prices by 100$ on the expected probabilities of all modes. We proceed as follows:
+
+    Compute unit-level predicted probabilities for each mode under both scenarios (i.e., for each row in dat):
+    Compute the average predicted probability for each mode/contrast level combination.
+    Take the difference between the expected probabilities for hi and lo, within each mode.
+
+# Compute average marginal effects within groups
+h <- function(x) {
+    x |> 
+    summarize(estimate = mean(estimate), .by = c("term", "group")) |>
+    summarize(estimate = diff(estimate), .by = "group") |>
+    rename(term = group) # rename because `marginaleffects` expects a column called `term`
+}
+predictions(m, newdata = dat, hypothesis = h)
+
+
+    Term Estimate Std. Error     z Pr(>|z|)     S   2.5 %  97.5 %  Df
+ beach    -0.1008    0.00749 -13.5   <0.001 134.9 -0.1155 -0.0862 Inf
+ boat      0.0244    0.00226  10.8   <0.001  88.2  0.0200  0.0288 Inf
+ charter   0.0280    0.00257  10.9   <0.001  89.5  0.0230  0.0330 Inf
+ pier      0.0484    0.00426  11.4   <0.001  97.1  0.0401  0.0568 Inf
+
+Type: response
+
+This shows us that an increase of 100$ in beach trip prices reduces the expected probability of choosing the beach mode by 10 percentage points, and increases the expected probability of choosing the pier by about 5 percentage points.
+.
 
 ## 0.26.0
 
