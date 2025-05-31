@@ -23,6 +23,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     # bayes
     valid[["brmsfit"]] <- c(
         "draw_ids",
+        "incl_autocor",
         "nlpar",
         "ndraws",
         "re_formula",

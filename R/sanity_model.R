@@ -158,6 +158,7 @@ sanitize_model <- function(
     newdata = NULL,
     vcov = NULL,
     by = FALSE,
+    calling_function = NULL,
     ...
 ) {
     model <- sanitize_model_specific(
@@ -165,6 +166,7 @@ sanitize_model <- function(
         vcov = vcov,
         newdata = newdata,
         by = by,
+        calling_function = calling_function,
         ...
     )
     sanity_model_supported_class(model)
