@@ -6,8 +6,6 @@
 * In `brms` models, the extra argument `incl_autocor` no longer raises a warning. Thanks to @robbinscalebj for report #1473.
 * Do not run `get_dataset()` examples to avoid CRAN note.
 * `mlogit` support is back for `predictions()` and `avg_predictions()`. A vignette is added to the website
-Multinomial Logit Model Tutorial
-Note on Implementation
 
 ## 0.26.0
 
