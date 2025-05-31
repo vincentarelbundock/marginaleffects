@@ -42,7 +42,7 @@ Imports:
     data.table (>= 1.16.4),
     generics,
     Formula,
-    insight (>= 0.20.3),
+    insight (>= 1.3.0),
     methods,
     rlang,
     Rcpp (>= 1.0.0)
