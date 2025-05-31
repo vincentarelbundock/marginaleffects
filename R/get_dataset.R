@@ -13,21 +13,20 @@
 #' @param search Regular expression. Download the dataset index from Rdatasets; search the "Package", "Item", and "Title" columns; and return the matching rows.
 #' @return A data frame containing the dataset.
 #' library(marginaleffects)
-#' @examples
+#' @examplesIf FALSE
 #' dat <- get_dataset("Titanic", "Stat2Data")
 #' head(dat)
 #'
 #' get_dataset(search = "(?i)titanic")
 #'
 #' # View documentation in the browser
-#' # get_dataset("Titanic", "Stat2Data", docs = TRUE)
+#' get_dataset("Titanic", "Stat2Data", docs = TRUE)
 #' @export
 get_dataset <- function(
     dataset = "thornton",
     package = NULL,
     docs = FALSE,
-    search = NULL
-) {
+    search = NULL) {
     checkmate::assert_string(dataset)
     checkmate::assert_string(package, null.ok = TRUE)
     checkmate::assert_flag(docs)
@@ -155,8 +154,7 @@ get_dataset_search <- function(search) {
     idx <- idx[
         grepl(search, idx$Item) |
             grepl(search, idx$Package) |
-            grepl(search, idx$Title),
-        ,
+            grepl(search, idx$Title), ,
         drop = FALSE
     ]
     return(idx)
