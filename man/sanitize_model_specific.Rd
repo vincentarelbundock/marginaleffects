@@ -46,7 +46,7 @@ sanitize_model_specific(model, ...)
 
 \method{sanitize_model_specific}{mblogit}(model, calling_function = "marginaleffects", ...)
 
-\method{sanitize_model_specific}{mlogit}(model, ...)
+\method{sanitize_model_specific}{mlogit}(model, calling_function = NULL, ...)
 
 \method{sanitize_model_specific}{clm}(model, ...)
 
