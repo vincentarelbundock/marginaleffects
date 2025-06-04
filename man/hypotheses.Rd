@@ -116,7 +116,7 @@ hypotheses(
 \item String: A regular expression to match parameters to be tested jointly. \code{grep(joint, perl = TRUE)}
 \item Character vector of parameter names to be tested. Characters refer to the names of the vector returned by \code{marginaleffects::get_coef(object)}.
 \item Integer vector of indices. Which parameters positions to test jointly.
-\item Note: When using the \code{joint} argument, the \code{hypothesis} argument is limited to \code{NULL} or numeric values.
+\item Note: When using the \code{joint} argument, the \code{hypothesis} argument is limited to \code{NULL} or numeric values. Users can chain multiple \code{hypotheses()} for complex joint hypothesis tests.
 }}
 
 \item{joint_test}{A character string specifying the type of test, either "f" or "chisq". The null hypothesis is set by the \code{hypothesis} argument, with default null equal to 0 for all parameters.}
