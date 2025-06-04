@@ -10,7 +10,8 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     if (!is.null(estimator)) {
         bootfun <- function(split, ...) {
             d <- rsample::analysis(split)
-            result <- estimator(d)
+            if (!"term" %in% colnames(result)) {
+            }
             # Validate output
             if (!inherits(result, c("hypotheses", "predictions", "slopes", "comparisons"))) {
                 stop_sprintf(
@@ -19,7 +20,7 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
                 )
             }
             if (!"term" %in% colnames(result)) {
-                stop_sprintf("The `estimator` function must return an object with a 'term' column.")
+                result$term <- as.character(seq_len(nrow(result)))
             }
             return(result)
         }
@@ -33,7 +34,9 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
             call_mfx[["modeldata"]] <- d
             boot_mfx <- eval.parent(call_mfx)
             out <- tidy(boot_mfx)
-            out$term <- seq_len(nrow(out))
+            if (!"term" %in% colnames(out)) {
+                out$term <- as.character(seq_len(nrow(out)))
+            }
             return(out)
         }
     }
@@ -76,6 +79,10 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
 
     cols <- setdiff(names(out), c("p.value", "std.error", "statistic", "s.value", "df"))
     out <- out[, cols, drop = FALSE]
+
+    if (all(out$term == seq_len(nrow(out)))) {
+        out$term <- NULL
+    }
 
     attr(out, "inferences") <- splits
     draws <- lapply(
