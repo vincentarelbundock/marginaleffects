@@ -110,7 +110,7 @@ sanitize_model_specific.glmmTMB <- function(model, vcov = TRUE, re.form, ...) {
         insight::format_error(msg)
     }
 
-    if (missing(re.form) || (!isTRUE(is.na(re.form)))) {
+    if (!isFALSE(vcov) && (missing(re.form) || (!isTRUE(is.na(re.form))))) {
         msg <- "For this model type, `marginaleffects` only takes into account the uncertainty in fixed-effect parameters. This is often appropriate when `re.form=NA`, but may be surprising to users who set `re.form=NULL` (default) or to some other value. Call `options(marginaleffects_safe = FALSE)` to silence this warning."
         warn_sprintf(msg)
     }

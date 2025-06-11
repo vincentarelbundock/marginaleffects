@@ -358,3 +358,12 @@ p <- predictions(
     hypotheses()
 expect_inherits(p, "hypotheses")
 expect_equal(nrow(p), 10)
+
+
+# Issue #1490: no warning when vcov=FALSE
+options(marginaleffects_safe = TRUE)
+mod <- glmmTMB(Sepal.Length ~ Sepal.Width + (1|Species), data = iris)
+expect_warning(avg_comparisons(mod, vcov = TRUE))
+expect_warning(avg_comparisons(mod))
+expect_false(ignore(expect_warning)(avg_comparisons(mod, vcov = FALSE)))
+options(marginaleffects_safe = NULL)
