@@ -34,6 +34,7 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
     }
 
     args <- list("data" = modeldata, "statistic" = bootfun, R = R)
+    args <- c(args, list(...))
     B <- do.call(boot::boot, args)
 
     # print.boot prints an ugly nested call

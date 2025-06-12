@@ -5,6 +5,7 @@
 Bugs:
 
 * No warning emitted when `vcov=FALSE` in `lme4` and `glmmTMB` models. Thanks to @ASKurz for report #1460.
+* `inferences()` passes extra arguments to `boot()`, as documented.
 
 ## 0.27.0
 
