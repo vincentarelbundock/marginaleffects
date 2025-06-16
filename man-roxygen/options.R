@@ -16,7 +16,7 @@
 #' advanced post-processing features and functions like [hypotheses].
 #'
 #' ```r
-#' options(marginaleffects_lean = TRUE)`
+#' options(marginaleffects_lean = TRUE)
 #' ```
 #'
 #' Other options:

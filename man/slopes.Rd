@@ -458,7 +458,7 @@ Enforce lean return objects, sans information about the original model and
 data, and other ancillary attributes. Note that this will disable some
 advanced post-processing features and functions like \link{hypotheses}.
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_lean = TRUE)`
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_lean = TRUE)
 }\if{html}{\out{</div>}}
 
 Other options:
