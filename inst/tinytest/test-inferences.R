@@ -286,3 +286,15 @@ expect_equivalent(round(coverage, 2), .9)
 mod <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris)
 k <- avg_comparisons(mod) |> inferences(method = "rsample", R = 10) |> suppressWarnings()
 expect_inherits(k, "comparisons")
+
+# `estimator` function
+lalonde <- get_dataset("lalonde")
+estimator <- function(data) {
+    fit1 <- glm(treat ~ age + educ + race, family = binomial, data = data)
+    ps <- predict(fit1, type = "response") 
+    m <- lm(re78 ~ treat * (re75 + age + educ + race), data = data, weight = ps)
+    avg_comparisons(m, variables = "treat", wts = ps, vcov = FALSE)
+}
+cmp <- estimator(lalonde) |> inferences(method = "rsample", estimator = estimator, R = 10) |>
+    suppressWarnings()
+expect_inherits(cmp, "comparisons")

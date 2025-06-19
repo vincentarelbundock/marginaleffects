@@ -10,8 +10,7 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     if (!is.null(estimator)) {
         bootfun <- function(split, ...) {
             d <- rsample::analysis(split)
-            if (!"term" %in% colnames(result)) {
-            }
+            result <- estimator(d)
             # Validate output
             if (!inherits(result, c("hypotheses", "predictions", "slopes", "comparisons"))) {
                 stop_sprintf(
