@@ -281,3 +281,8 @@ p = predictions(mod, conf_level = 0.9) |>
     )
 coverage = mean(p$rank > p$pred.low & p$rank < p$pred.high)
 expect_equivalent(round(coverage, 2), .9)
+
+# Bug: rsample collapses non-unique term
+mod <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris)
+k <- avg_comparisons(mod) |> inferences(method = "rsample", R = 10) |> suppressWarnings()
+expect_inherits(k, "comparisons")

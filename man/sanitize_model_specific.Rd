@@ -42,7 +42,7 @@ sanitize_model_specific(model, ...)
 
 \method{sanitize_model_specific}{glmmTMB}(model, vcov = TRUE, re.form, ...)
 
-\method{sanitize_model_specific}{merMod}(model, re.form, ...)
+\method{sanitize_model_specific}{merMod}(model, re.form, vcov = TRUE, ...)
 
 \method{sanitize_model_specific}{mblogit}(model, calling_function = "marginaleffects", ...)
 

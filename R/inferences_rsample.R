@@ -41,6 +41,13 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
         }
     }
 
+    # rsample::int_bca/pctl collapse estimates when term is duplicated because of term/contrast/by unique
+    bootfun_term <- function(split, ...) {
+        out <- bootfun(split, ...)
+        out$term <- paste(out$term, paste0("marginaleffects", seq_len(nrow(out))))
+        return(out)/boot
+    }
+
     args <- list("data" = modeldata, "apparent" = TRUE)
     args[["times"]] <- R
     args <- c(args, list(...))
@@ -51,12 +58,12 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
         pkg <- unique(c("marginaleffects", pkg))
         splits$estimates <- future.apply::future_lapply(
             splits$splits,
-            bootfun,
+            bootfun_term,
             future.seed = TRUE,
             future.packages = pkg
         )
     } else {
-        splits$estimates <- lapply(splits$splits, bootfun)
+        splits$estimates <- lapply(splits$splits, bootfun_term)
     }
 
     if (isTRUE(conf_type == "bca")) {
