@@ -7,6 +7,7 @@ Bugs:
 * No warning emitted when `vcov=FALSE` in `lme4` and `glmmTMB` models. Thanks to @ASKurz for report #1460.
 * `inferences()` passes extra arguments to `boot()`, as documented.
 * `inferences(method="rsample")` should not collapse estimates when `term` is not unique (ex: contrast, by, etc.)
+* `inferences(method="rsample")` does not retain all attributes (data, model, etc.) in every iteration.
 
 ## 0.27.0
 

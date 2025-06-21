@@ -44,7 +44,8 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     bootfun_term <- function(split, ...) {
         out <- bootfun(split, ...)
         out$term <- paste(out$term, paste0("marginaleffects", seq_len(nrow(out))))
-        return(out)/boot
+        # data.frame() to remove super heavy attributes (model, data, etc.)
+        return(data.frame(out))
     }
 
     args <- list("data" = modeldata, "apparent" = TRUE)
