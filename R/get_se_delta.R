@@ -98,6 +98,14 @@ get_se_delta <- function(
         coefs <- coefs[bnames]
     }
 
+    # get Jacobian for predictions using JAX
+    jax_flag <- isTRUE(getOption("jax", default = FALSE))
+    if (jax_flag) {
+        X <- attr(newdata, "marginaleffects_model_matrix")
+        # assigning a value to J immediately will skip the expensive computations below
+        J <- jacobian_jax_lm(X, coefs)
+    }
+
     # input: named vector of coefficients
     # output: gradient
     inner <- function(x) {
