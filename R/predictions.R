@@ -651,9 +651,9 @@ get_predictions <- function(
         out$rowid <- newdata$rowid
     }
     # unpad
-    if ("rowid" %in% colnames(out)) draws <- subset(draws, out$rowid > 0)
-    if ("rowid" %in% colnames(out)) out <- subset(out, rowid > 0)
-    if ("rowid" %in% colnames(newdata)) newdata <- subset(newdata, rowid > 0)
+    if ("rowid" %in% colnames(out)) draws <- draws[out$rowid > 0, , drop = FALSE]
+    if ("rowid" %in% colnames(out)) out <- out[out$rowid > 0, , drop = FALSE]
+    if ("rowid" %in% colnames(newdata)) newdata <- newdata[newdata$rowid > 0, , drop = FALSE]
 
     # expensive: only do this inside the jacobian if necessary
     if (

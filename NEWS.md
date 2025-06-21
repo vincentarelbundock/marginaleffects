@@ -9,6 +9,10 @@ Bugs:
 * `inferences(method="rsample")` should not collapse estimates when `term` is not unique (ex: contrast, by, etc.)
 * `inferences(method="rsample")` does not retain all attributes (data, model, etc.) in every iteration.
 
+Misc:
+
+* Performance improvements.
+
 ## 0.27.0
 
 * `inferences()` gets an optional `estimator` argument. This should be a function that accepts a data frame and returns a `marginaleffects` object. This is especially useful when the estimation strategy involves multiple steps such as computing weights, estimating a model, and computing a treatment effect via G-computation. In that case, we specify an `estimator()` function and the `inferences()` function returns a clean `marginaleffects` object with all the draws, without having to manually process the raw output from a bootstrap package.
