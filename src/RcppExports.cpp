@@ -11,6 +11,18 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// eigen_J_V_SE
+Eigen::VectorXd eigen_J_V_SE(const Eigen::Map<Eigen::MatrixXd> J, const Eigen::Map<Eigen::MatrixXd> V);
+RcppExport SEXP _marginaleffects_eigen_J_V_SE(SEXP JSEXP, SEXP VSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type J(JSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type V(VSEXP);
+    rcpp_result_gen = Rcpp::wrap(eigen_J_V_SE(J, V));
+    return rcpp_result_gen;
+END_RCPP
+}
 // eigenMatMult
 SEXP eigenMatMult(const Eigen::Map<Eigen::MatrixXd> A, Eigen::Map<Eigen::VectorXd> B);
 RcppExport SEXP _marginaleffects_eigenMatMult(SEXP ASEXP, SEXP BSEXP) {
@@ -37,6 +49,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_marginaleffects_eigen_J_V_SE", (DL_FUNC) &_marginaleffects_eigen_J_V_SE, 2},
     {"_marginaleffects_eigenMatMult", (DL_FUNC) &_marginaleffects_eigenMatMult, 2},
     {"_marginaleffects_eigenTCrossProd", (DL_FUNC) &_marginaleffects_eigenTCrossProd, 2},
     {NULL, NULL, 0}
