@@ -23,9 +23,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// eigenTCrossProd
+SEXP eigenTCrossProd(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B);
+RcppExport SEXP _marginaleffects_eigenTCrossProd(SEXP ASEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(eigenTCrossProd(A, B));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_marginaleffects_eigenMatMult", (DL_FUNC) &_marginaleffects_eigenMatMult, 2},
+    {"_marginaleffects_eigenTCrossProd", (DL_FUNC) &_marginaleffects_eigenTCrossProd, 2},
     {NULL, NULL, 0}
 };
 

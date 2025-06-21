@@ -5,3 +5,7 @@ eigenMatMult <- function(A, B) {
     .Call('_marginaleffects_eigenMatMult', PACKAGE = 'marginaleffects', A, B)
 }
 
+eigenTCrossProd <- function(A, B) {
+    .Call('_marginaleffects_eigenTCrossProd', PACKAGE = 'marginaleffects', A, B)
+}
+
