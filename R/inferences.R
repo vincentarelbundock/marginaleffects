@@ -5,7 +5,7 @@
 #'
 #' Apply this function to a `marginaleffects` object to change the inferential method used to compute uncertainty estimates.
 #'
-#' @param x Object produced by one of the core `marginaleffects` functions.
+#' @param x Object produced by one of the core `marginaleffects` functions, or a data frame suitable for the function supplied to the `estimator` argument.
 #' @param method String
 #' + "delta": delta method standard errors
 #' + "boot" package
@@ -63,22 +63,38 @@
 #'
 #' # bootstrap
 #' avg_predictions(mod, by = "Species") %>%
-#'     inferences2(method = "boot")
+#'     inferences(method = "boot")
 #'
 #' avg_predictions(mod, by = "Species") %>%
-#'     inferences2(method = "rsample")
+#'     inferences(method = "rsample")
 #'
 #' # Fractional (bayesian) bootstrap
 #' avg_slopes(mod, by = "Species") %>%
-#'     inferences2(method = "fwb") %>%
+#'     inferences(method = "fwb") %>%
 #'     get_draws("rvar") %>%
 #'     data.frame()
 #'
 #' # Simulation-based inference
 #' slopes(mod) %>%
-#'     inferences2(method = "simulation") %>%
+#'     inferences(method = "simulation") %>%
 #'     head()
 #' }
+#' 
+#' # Two-step estimation procedure: Propensity score + G-Computation
+#' lalonde <- get_dataset("lalonde")
+#' estimator <- function(data) {
+#'     # Step 1: Estimate propensity scores
+#'     fit1 <- glm(treat ~ age + educ + race, family = binomial, data = data)
+#'     ps <- predict(fit1, type = "response") 
+#'     # Step 2: Fit weighted outcome model
+#'     m <- lm(re78 ~ treat * (re75 + age + educ + race),
+#'         data = data, weight = ps
+#'     )
+#'     # Step 3: Compute average treatment effect by G-computation
+#'     avg_comparisons(m, variables = "treat", wts = ps, vcov = FALSE)
+#' }
+#' inferences(lalonde, method = "rsample", estimator = estimator)
+#' 
 #' @export
 inferences <- function(
     x,
@@ -90,21 +106,18 @@ inferences <- function(
     conformal_score = "residual_abs",
     estimator = NULL,
     ...) {
+
     if (inherits(attr(x, "model"), c("model_fit", "workflow"))) {
-        msg <- "The `inferences2()` function is not supported for `tidymodels` objects."
-        stop(msg, call. = FALSE)
+        msg <- "The `inferences()` function does not support for `tidymodels` objects."
+        stop_sprintf(msg)
     }
+
+    x <- sanitize_estimator(x = x, estimator = estimator, method = method)
 
     # inherit conf_level from the original object
     conf_level <- attr(x, "conf_level")
     if (is.null(conf_level)) conf_level <- 0.95
 
-    checkmate::assert(
-        checkmate::check_class(x, "predictions"),
-        checkmate::check_class(x, "comparisons"),
-        checkmate::check_class(x, "slopes"),
-        checkmate::check_class(x, "hypotheses")
-    )
     checkmate::assert_number(conf_level, lower = 1e-10, upper = 1 - 1e-10)
     checkmate::assert_integerish(R, lower = 2)
     checkmate::assert_choice(
@@ -119,12 +132,14 @@ inferences <- function(
             "conformal_cv+"
         )
     )
-    checkmate::assert_function(estimator, null.ok = TRUE)
 
-    # Check if estimator is used with incompatible methods
-    if (!is.null(estimator) && !method %in% c("rsample", "boot")) {
-        stop_sprintf("The `estimator` argument is only supported when `method` is \"rsample\" or \"boot\".")
-    }
+
+    checkmate::assert(
+        checkmate::check_class(x, "predictions"),
+        checkmate::check_class(x, "comparisons"),
+        checkmate::check_class(x, "slopes"),
+        checkmate::check_class(x, "hypotheses")
+    )
 
     if (method == "conformal_split") {
         conformal_fun <- conformal_split

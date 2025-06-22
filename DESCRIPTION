@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.27.0.6
+Version: 0.27.0.7
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -305,6 +305,7 @@ Collate:
     'sanitize_comparison.R'
     'sanitize_condition.R'
     'sanitize_conf_level.R'
+    'sanitize_estimator.R'
     'sanitize_hypothesis.R'
     'sanitize_hypothesis_formula.R'
     'sanitize_interaction.R'

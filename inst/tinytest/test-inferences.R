@@ -295,6 +295,10 @@ estimator <- function(data) {
     m <- lm(re78 ~ treat * (re75 + age + educ + race), data = data, weight = ps)
     avg_comparisons(m, variables = "treat", wts = ps, vcov = FALSE)
 }
-cmp <- estimator(lalonde) |> inferences(method = "rsample", estimator = estimator, R = 10) |>
+cmp <- inferences(lalonde, method = "rsample", estimator = estimator, R = 10) |>
     suppressWarnings()
 expect_inherits(cmp, "comparisons")
+expect_error(inferences(lalonde, method = "rsample"), "when supplying a function to the `estimator` argument.")
+expect_error(inferences(estimator(lalonde), estimator = estimator, method = "rsample"), "The `x` argument must be a raw data frame when using the `estimator` argument.")
+expect_false(ignore(expect_error)(inferences(lalonde, method = "rsample", estimator = estimator, R = 3))) |> suppressWarnings()
+

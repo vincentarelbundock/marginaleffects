@@ -7,6 +7,9 @@ Breaking changes:
 * `marginaleffects` can no longer compute standard errors for `fixest` models in the following configurations (see Issue #1487):
   - `predictions()` in all model.
   - `slopes()` and `comparisons()` in models with non-linear link (ex: `fepois`), that is, with a `$family` component.
+* The syntax for the `estimator` argument of the `inferences()` function is simpler:
+  - Old: `inferences(est_fun(data), estimator = est_fun, method = "rsample")`
+  - New: `inferences(data, estimator = est_fun, method = "rsample")`
 
 Bugs:
 

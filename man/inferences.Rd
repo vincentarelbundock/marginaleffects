@@ -17,7 +17,7 @@ inferences(
 )
 }
 \arguments{
-\item{x}{Object produced by one of the core \code{marginaleffects} functions.}
+\item{x}{Object produced by one of the core \code{marginaleffects} functions, or a data frame suitable for the function supplied to the \code{estimator} argument.}
 
 \item{method}{String
 \itemize{
@@ -101,20 +101,36 @@ mod <- lm(Sepal.Length ~ Sepal.Width * Species, data = iris)
 
 # bootstrap
 avg_predictions(mod, by = "Species") \%>\%
-    inferences2(method = "boot")
+    inferences(method = "boot")
 
 avg_predictions(mod, by = "Species") \%>\%
-    inferences2(method = "rsample")
+    inferences(method = "rsample")
 
 # Fractional (bayesian) bootstrap
 avg_slopes(mod, by = "Species") \%>\%
-    inferences2(method = "fwb") \%>\%
+    inferences(method = "fwb") \%>\%
     get_draws("rvar") \%>\%
     data.frame()
 
 # Simulation-based inference
 slopes(mod) \%>\%
-    inferences2(method = "simulation") \%>\%
+    inferences(method = "simulation") \%>\%
     head()
 }
+
+# Two-step estimation procedure: Propensity score + G-Computation
+lalonde <- get_dataset("lalonde")
+estimator <- function(data) {
+    # Step 1: Estimate propensity scores
+    fit1 <- glm(treat ~ age + educ + race, family = binomial, data = data)
+    ps <- predict(fit1, type = "response") 
+    # Step 2: Fit weighted outcome model
+    m <- lm(re78 ~ treat * (re75 + age + educ + race),
+        data = data, weight = ps
+    )
+    # Step 3: Compute average treatment effect by G-computation
+    avg_comparisons(m, variables = "treat", wts = ps, vcov = FALSE)
+}
+inferences(lalonde, method = "rsample", estimator = estimator)
+
 }
