@@ -79,13 +79,13 @@
 #'     inferences(method = "simulation") %>%
 #'     head()
 #' }
-#' 
+#'
 #' # Two-step estimation procedure: Propensity score + G-Computation
 #' lalonde <- get_dataset("lalonde")
 #' estimator <- function(data) {
 #'     # Step 1: Estimate propensity scores
 #'     fit1 <- glm(treat ~ age + educ + race, family = binomial, data = data)
-#'     ps <- predict(fit1, type = "response") 
+#'     ps <- predict(fit1, type = "response")
 #'     # Step 2: Fit weighted outcome model
 #'     m <- lm(re78 ~ treat * (re75 + age + educ + race),
 #'         data = data, weight = ps
@@ -94,7 +94,7 @@
 #'     avg_comparisons(m, variables = "treat", wts = ps, vcov = FALSE)
 #' }
 #' inferences(lalonde, method = "rsample", estimator = estimator)
-#' 
+#'
 #' @export
 inferences <- function(
     x,
@@ -106,9 +106,8 @@ inferences <- function(
     conformal_score = "residual_abs",
     estimator = NULL,
     ...) {
-
     if (inherits(attr(x, "model"), c("model_fit", "workflow"))) {
-        msg <- "The `inferences()` function does not support for `tidymodels` objects."
+        msg <- "The `inferences()` function does not support `tidymodels` objects."
         stop_sprintf(msg)
     }
 
