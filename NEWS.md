@@ -2,6 +2,12 @@
 
 ## Development
 
+Breaking changes:
+
+* `marginaleffects` can no longer compute standard errors for `fixest` models in the following configurations (see Issue #1487):
+  - `predictions()` in all model.
+  - `slopes()` and `comparisons()` in models with non-linear link (ex: `fepois`), that is, with a `$family` component.
+
 Bugs:
 
 * No warning emitted when `vcov=FALSE` in `lme4` and `glmmTMB` models. Thanks to @ASKurz for report #1460.

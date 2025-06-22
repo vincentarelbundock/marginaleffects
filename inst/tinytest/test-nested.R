@@ -9,7 +9,7 @@ test <- function() {
     test_data <- mtcars
     mod <- feols(mpg ~ hp + factor(cyl), data = test_data)
     nd <- datagrid(cyl = mtcars$cyl, newdata = test_data)
-    preds <- predictions(mod, newdata = nd)
+    preds <- predictions(mod, newdata = nd, vcov = FALSE)
     return(preds)
 }
 p <- test()
@@ -22,7 +22,7 @@ test <- function() {
     data(mtcars)
     test_data <- mtcars
     mod <- feols(mpg ~ hp + factor(cyl), data = test_data)
-    p <- predictions(mod, variables = "cyl", newdata = test_data)
+    p <- predictions(mod, variables = "cyl", newdata = test_data, vcov = FALSE)
     return(p)
 }
 p <- test()

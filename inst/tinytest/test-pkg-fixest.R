@@ -31,13 +31,8 @@ expect_inherits(insight::get_data(mod2), "data.frame")
 expect_inherits(insight::get_data(mod3), "data.frame")
 expect_inherits(insight::get_data(mod4), "data.frame")
 
-expect_slopes(mod1, pct_na = 62.5)
-expect_slopes(mod2, pct_na = 62.5)
-expect_slopes(mod3, pct_na = 62.5)
-expect_slopes(mod4, pct_na = 62.5)
-
 # 20 observations for which we can't compute results
-mfx <- slopes(mod1, variables = "mpg")
+mfx <- slopes(mod1, variables = "mpg", vcov = FALSE)
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 12)
 
@@ -58,20 +53,19 @@ requiet("plm")
 data(EmplUK, package = "plm")
 stata <- readRDS(testing_path("stata/stata.rds"))$fixest_fepois
 model <- fepois(log(wage) ~ capital * output | firm, EmplUK)
-mfx <- merge(tidy(slopes(model, type = "link")), stata)
-expect_slopes(model)
+mfx <- merge(tidy(slopes(model, type = "link", vcov = FALSE)), stata)
 expect_equivalent(mfx$estimate, mfx$estimate, tolerance = .000001)
-expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
+# expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
 
 # fixest::feols: predictions
 data(trade, package = "fixest")
 dat <- trade
 model <- feols(Euros ~ dist_km | Destination + Origin, data = dat)
-pred1 <- predictions(model)
-pred2 <- predictions(model, newdata = head(dat))
-expect_predictions(pred1)
-expect_predictions(pred2, n_row = 6)
+pred1 <- predictions(model, vcov = FALSE)
+pred2 <- predictions(model, newdata = head(dat), vcov = FALSE)
+expect_inherits(pred1, "predictions")
+expect_inherits(pred2, "predictions")
 
 
 # numeric cluster variable raises warning
@@ -119,15 +113,15 @@ m2 <- feols(mpg ~ hp * factor_am, data = dat)
 m3 <- feols(mpg ~ hp * wt, data = dat)
 m4 <- feols(mpg ~ i(am, hp), data = dat)
 m5 <- feglm(am ~ hp | gear, data = dat)
-pred1 <- predictions(m1)
-pred2 <- predictions(m2)
-pred3 <- predictions(m3)
-pred4 <- predictions(m4)
-pred5 <- predictions(m5)
-expect_predictions(pred1)
-expect_predictions(pred2)
-expect_predictions(pred3)
-expect_predictions(pred4)
+pred1 <- predictions(m1, vcov = FALSE)
+pred2 <- predictions(m2, vcov = FALSE)
+pred3 <- predictions(m3, vcov = FALSE)
+pred4 <- predictions(m4, vcov = FALSE)
+pred5 <- predictions(m5, vcov = FALSE)
+expect_predictions(pred1, se = FALSE)
+expect_predictions(pred2, se = FALSE)
+expect_predictions(pred3, se = FALSE)
+expect_predictions(pred4, se = FALSE)
 expect_predictions(pred5, se = FALSE)
 # vdiffr::expect_doppelganger("fixest plot_predictions with i()",
 #                         plot_predictions(m4, condition = c("hp", "am")))
@@ -195,7 +189,8 @@ mod <- feglm(vs ~ hp * factor(cyl), data = mtcars, family = "binomial")
 cmp <- comparisons(
     mod,
     newdata = datagrid(hp = c(80, 100, 120)),
-    by = "hp"
+    by = "hp",
+    vcov = FALSE
 )
 
 
@@ -224,7 +219,7 @@ dat <- mtcars
 dat$mpg[1] <- NA
 dat <- dat
 mod <- suppressMessages(feglm(am ~ mpg, family = binomial, data = dat))
-mfx <- slopes(mod)
+mfx <- slopes(mod, vcov = FALSE, )
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 31)
 expect_true("mpg" %in% colnames(mfx))
@@ -242,7 +237,7 @@ expect_true(all(mfx$conf.high > mfx$estimate))
 # can't override global binding for `rep()`
 rep <- data.frame(Y = runif(100) > .5, X = rnorm(100))
 mod <- feglm(Y ~ X, data = rep, family = binomial)
-mfx <- slopes(mod)
+mfx <- slopes(mod, vcov = FALSE)
 expect_inherits(mfx, "marginaleffects")
 
 
@@ -250,7 +245,7 @@ expect_inherits(mfx, "marginaleffects")
 dat <- mtcars
 dat$mpg[1] <- NA
 mod <- fepois(hp ~ mpg + am, data = dat)
-p <- predictions(mod, by = "am")
+p <- predictions(mod, by = "am", vcov = FALSE)
 expect_false(anyNA(p$estimate))
 expect_false(anyNA(p$std.error))
 
@@ -268,8 +263,8 @@ expect_inherits(mfx2, "slopes")
 
 # Issue #727: backtransform predictions
 mod <- fixest::feglm(am ~ hp, data = mtcars, family = binomial)
-p1 <- avg_predictions(mod, type = "invlink(link)")
-p2 <- avg_predictions(mod, type = "link", transform = mod$family$linkinv)
+p1 <- avg_predictions(mod, type = "invlink(link)", vcov = FALSE)
+p2 <- avg_predictions(mod, type = "link", transform = mod$family$linkinv, vcov = FALSE)
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$conf.low, p2$conf.low)
 
@@ -278,6 +273,18 @@ expect_equivalent(p1$conf.low, p2$conf.low)
 mod <- feols(mpg ~ drat | gear, data = mtcars, weights = ~qsec)
 res <- suppressWarnings(inferences(avg_slopes(mod), method = "boot", R = 20))
 expect_inherits(res, "slopes") # should be slopes but can't figure out inferences dispatch
+
+# Issue #1487: uncertainty in fixed-effects parameters
+m <- feols(Ozone ~ Wind | Month, airquality, vcov = "iid")
+expect_error(predictions(m), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
+expect_false(ignore(expect_error)(avg_comparisons(m)))
+expect_false(ignore(expect_error)(avg_slopes(m)))
+expect_false(ignore(expect_error)(predictions(m, vcov = FALSE)))
+
+m <- fepois(Ozone ~ Wind | Month, airquality, vcov = "iid")
+expect_error(predictions(m), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
+expect_error(avg_comparisons(m), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
+expect_error(avg_slopes(m), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
 
 ## Issue #461
 ## commetned out because this seems to be an upstream problem. See issue.
@@ -304,3 +311,5 @@ expect_inherits(res, "slopes") # should be slopes but can't figure out inference
 # dat <- trade
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
 # expect_slopes(mod, newdata = dat) # environment issue
+
+
