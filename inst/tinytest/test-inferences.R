@@ -4,7 +4,7 @@ if (!EXPENSIVE) exit_file("expensive")
 # inferences() currently returns a `comparisons` object even with `slopes()`
 
 set.seed(1024)
-R <- 100
+R <- 1000
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width, data = iris)
 
 # simulation-based inference
@@ -88,7 +88,7 @@ x <- mod |>
     avg_predictions() |>
     inferences(method = "rsample", R = R) |>
     suppressWarnings()
-expect_equal(x$conf.low, 3.53, tolerance = 1e-3)
+expect_equal(x$conf.low, 3.48, tolerance = 1e-3)
 expect_inherits(x, "predictions")
 x <- mod |>
     slopes() |>
@@ -125,7 +125,7 @@ x <- mod |>
     comparisons() |>
     inferences(method = "fwb", R = R)
 expect_equivalent(nrow(x), 300)
-expect_equal(x$std.error[1:3], c(0.0739, 0.0568, 0.0508), tolerance = 1e-3)
+expect_equal(x$std.error[1:3], c(0.0849030331466763, 0.0586647307699558, 0.0534097699918214)) # TODO: failure
 x <- mod |>
     avg_comparisons() |>
     inferences(method = "fwb", R = R)
@@ -286,7 +286,7 @@ expect_equivalent(round(coverage, 2), .9)
 
 # Bug: rsample collapses non-unique term
 mod <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris)
-k <- avg_comparisons(mod) |> inferences(method = "rsample", R = 10) |> suppressWarnings()
+k <- avg_comparisons(mod) |> inferences(method = "rsample", R = R) |> suppressWarnings()
 expect_inherits(k, "comparisons")
 
 # `estimator` function
@@ -297,7 +297,7 @@ estimator <- function(data) {
     m <- lm(re78 ~ treat * (re75 + age + educ + race), data = data, weight = ps)
     avg_comparisons(m, variables = "treat", wts = ps, vcov = FALSE)
 }
-cmp <- inferences(lalonde, method = "rsample", estimator = estimator, R = 10) |>
+cmp <- inferences(lalonde, method = "rsample", estimator = estimator, R = R) |>
     suppressWarnings()
 expect_inherits(cmp, "comparisons")
 expect_error(inferences(lalonde, method = "rsample"), "when supplying a function to the `estimator` argument.")
@@ -305,7 +305,9 @@ expect_error(inferences(estimator(lalonde), estimator = estimator, method = "rsa
 expect_false(ignore(expect_error)(inferences(lalonde, method = "rsample", estimator = estimator, R = 3))) |> suppressWarnings()
 
 
+# survival vignette
 requiet("survival")
+requiet("splines")
 model <- coxph(
     Surv(dtime, death) ~ hormon * factor(grade) + ns(age, df = 2),
     data = rotterdam

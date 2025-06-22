@@ -149,8 +149,10 @@ inferences <- function(
         msg <- "The `newdata` argument should not use `datagrid()`. Create a data frame outside the `marginaleffects` function call, and then pass the fully-formed data frame to the `newdata` argument."
         stop_sprintf(msg)
     } else {
-        call_mfx[["newdata"]] <- eval.parent(call_mfx[["newdata"]])
-        attr(x, "call") <- call_mfx
+        if ("newdata" %in% names(call_mfx)) {
+            call_mfx[["newdata"]] <- eval.parent(call_mfx[["newdata"]])
+            attr(x, "call") <- call_mfx
+        }
     }
 
     if (method == "conformal_split") {
