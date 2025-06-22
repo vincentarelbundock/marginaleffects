@@ -123,7 +123,7 @@ lalonde <- get_dataset("lalonde")
 estimator <- function(data) {
     # Step 1: Estimate propensity scores
     fit1 <- glm(treat ~ age + educ + race, family = binomial, data = data)
-    ps <- predict(fit1, type = "response") 
+    ps <- predict(fit1, type = "response")
     # Step 2: Fit weighted outcome model
     m <- lm(re78 ~ treat * (re75 + age + educ + race),
         data = data, weight = ps
