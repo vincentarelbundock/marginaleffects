@@ -1,6 +1,7 @@
 sanitize_estimator <- function(x, estimator, method) {
     if (is.null(estimator)) {
-        if (isTRUE(checkmate::check_data_frame(x))) {
+        cl <- c("data.frame", "data.table", "tbl_df", "tbl")
+        if (any(cl %in% class(x)[1])) {
             msg <- "`x` can only be a data.frame when supplying a function to the `estimator` argument."
             stop_sprintf(msg)
         }
