@@ -69,8 +69,9 @@ x <- mod |>
     inferences(method = "boot", R = R) |>
     attr("inferences")
 expect_inherits(x, "boot")
+nd <- datagrid(Sepal.Length = range, model = mod)
 x <- mod |>
-    comparisons(variables = "Sepal.Width", newdata = datagrid(Sepal.Length = range)) |>
+    comparisons(variables = "Sepal.Width", newdata = nd) |>
     inferences(method = "boot", R = R)
 expect_equivalent(nrow(x), 2)
 x <- mod |>
@@ -105,8 +106,9 @@ x <- mod |>
     attr("inferences") |>
     suppressWarnings()
 expect_inherits(x, "bootstraps")
+nd <- datagrid(Sepal.Length = range, model = mod)
 x <- mod |>
-    comparisons(variables = "Sepal.Width", newdata = datagrid(Sepal.Length = range)) |>
+    comparisons(variables = "Sepal.Width", newdata = nd) |>
     inferences(method = "rsample", R = R) |>
     suppressWarnings()
 expect_equivalent(nrow(x), 2)
@@ -302,3 +304,20 @@ expect_error(inferences(lalonde, method = "rsample"), "when supplying a function
 expect_error(inferences(estimator(lalonde), estimator = estimator, method = "rsample"), "The `x` argument must be a raw data frame when using the `estimator` argument.")
 expect_false(ignore(expect_error)(inferences(lalonde, method = "rsample", estimator = estimator, R = 3))) |> suppressWarnings()
 
+
+requiet("survival")
+model <- coxph(
+    Surv(dtime, death) ~ hormon * factor(grade) + ns(age, df = 2),
+    data = rotterdam
+)
+nd <- datagrid(
+    hormon = unique,
+    grade = unique,
+    dtime = seq(36, 7043, length.out = 25),
+    grid_type = "counterfactual",
+    model = model
+)
+p <- predictions(model, type = "survival", by = c("dtime", "hormon", "grade"), vcov = "rsample", newdata = nd)
+p <- inferences(p, method = "rsample", R = R)
+expect_true(all(p$term > p.conf.low))
+expect_true(all(p$term < p.conf.high))

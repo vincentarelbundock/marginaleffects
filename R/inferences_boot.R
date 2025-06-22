@@ -10,14 +10,6 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
         bootfun <- function(data, indices) {
             d <- data[indices, , drop = FALSE]
             boot_mfx <- estimator(d)
-            # Validate output
-            if (!inherits(boot_mfx, c("hypotheses", "predictions", "slopes", "comparisons"))) {
-                stop_sprintf("The `estimator` function must return an object of class 'hypotheses', 'predictions', 'slopes', or 'comparisons', but it returned an object of class: %s", 
-                            paste(class(boot_mfx), collapse = ", "))
-            }
-            if (!"term" %in% colnames(boot_mfx)) {
-                stop_sprintf("The `estimator` function must return an object with a 'term' column.")
-            }
             return(boot_mfx$estimate)
         }
     } else {

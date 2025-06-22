@@ -11,16 +11,6 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
         bootfun <- function(split, ...) {
             d <- rsample::analysis(split)
             result <- estimator(d)
-            # Validate output
-            if (!inherits(result, c("hypotheses", "predictions", "slopes", "comparisons"))) {
-                stop_sprintf(
-                    "The `estimator` function must return an object of class 'hypotheses', 'predictions', 'slopes', or 'comparisons', but it returned an object of class: %s",
-                    paste(class(result), collapse = ", ")
-                )
-            }
-            if (!"term" %in% colnames(result)) {
-                result$term <- as.character(seq_len(nrow(result)))
-            }
             return(result)
         }
     } else {
@@ -32,10 +22,7 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
             call_mfx[["model"]] <- boot_mod
             call_mfx[["modeldata"]] <- d
             boot_mfx <- eval.parent(call_mfx)
-            out <- tidy(boot_mfx)
-            if (!"term" %in% colnames(out)) {
-                out$term <- as.character(seq_len(nrow(out)))
-            }
+            out <- data.frame(boot_mfx)
             return(out)
         }
     }
@@ -43,9 +30,11 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     # rsample::int_bca/pctl collapse estimates when term is duplicated because of term/contrast/by unique
     bootfun_term <- function(split, ...) {
         out <- bootfun(split, ...)
-        out$term <- paste(out$term, paste0("marginaleffects", seq_len(nrow(out))))
+        # This is a hack to avoid the issue of rsample::int_bca/pctl collapsing estimates when term is duplicated because of term/contrast/by unique
+        # Warning: assumes that we always return estimates in the same order as the original {marginaleffects} call.
         # data.frame() to remove super heavy attributes (model, data, etc.)
-        return(data.frame(out))
+        out <- data.frame(term = seq_len(nrow(out)), estimate = out$estimate)
+        return(out)
     }
 
     args <- list("data" = modeldata, "apparent" = TRUE)
@@ -63,20 +52,20 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
             future.packages = pkg
         )
     } else {
-        splits$estimates <- lapply(splits$splits, bootfun_term)
+        splits$results <- lapply(splits$splits, bootfun_term)
     }
 
     if (isTRUE(conf_type == "bca")) {
         ci <- rsample::int_bca(
             splits,
-            statistics = estimates,
-            .fn = bootfun,
+            statistics = results,
+            .fn = bootfun_term,
             alpha = 1 - conf_level
         )
     } else {
         ci <- rsample::int_pctl(
             splits,
-            statistics = estimates,
+            statistics = results,
             alpha = 1 - conf_level
         )
     }
@@ -93,7 +82,7 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
 
     attr(out, "inferences") <- splits
     draws <- lapply(
-        splits$estimates,
+        splits$results,
         function(x) as.matrix(x[, "estimate", drop = FALSE])
     )
     draws[[length(draws)]] <- NULL # apparent=TRUE appended the original estimates to the end
