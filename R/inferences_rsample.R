@@ -33,7 +33,12 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
         # This is a hack to avoid the issue of rsample::int_bca/pctl collapsing estimates when term is duplicated because of term/contrast/by unique
         # Warning: assumes that we always return estimates in the same order as the original {marginaleffects} call.
         # data.frame() to remove super heavy attributes (model, data, etc.)
-        out <- data.frame(term = seq_len(nrow(out)), estimate = out$estimate)
+        # as.character() because `rsample` assumes character `term`. Reported here: 
+        # https://github.com/tidymodels/rsample/issues/574
+        out <- data.frame(
+            term = as.character(seq_len(nrow(out))), 
+            estimate = out$estimate
+        )
         return(out)
     }
 
@@ -69,6 +74,11 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
             alpha = 1 - conf_level
         )
     }
+
+    # hack: rsample only supports character `term`
+    # https://github.com/tidymodels/rsample/issues/574
+    ci$term <- as.numeric(ci$term)
+    ci <- ci[order(ci$term),]
 
     out$conf.low <- ci$.lower
     out$conf.high <- ci$.upper

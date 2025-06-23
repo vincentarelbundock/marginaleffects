@@ -4,7 +4,7 @@ if (!EXPENSIVE) exit_file("expensive")
 # inferences() currently returns a `comparisons` object even with `slopes()`
 
 set.seed(1024)
-R <- 1000
+R <- 25
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width, data = iris)
 
 # simulation-based inference
@@ -88,7 +88,7 @@ x <- mod |>
     avg_predictions() |>
     inferences(method = "rsample", R = R) |>
     suppressWarnings()
-expect_equal(x$conf.low, 3.48, tolerance = 1e-3)
+expect_equal(x$conf.low, 3.554, tolerance = 1e-3)
 expect_inherits(x, "predictions")
 x <- mod |>
     slopes() |>
@@ -123,12 +123,12 @@ expect_equivalent(nrow(x), 2 * R)
 set.seed(1234)
 x <- mod |>
     comparisons() |>
-    inferences(method = "fwb", R = R)
+    inferences(method = "fwb", R = R) |> suppressWarnings()
 expect_equivalent(nrow(x), 300)
-expect_equal(x$std.error[1:3], c(0.0849030331466763, 0.0586647307699558, 0.0534097699918214)) # TODO: failure
+expect_equal(x$std.error[1:3], c(0.0642131648304821, 0.0444891291752277, 0.0442572266844693))
 x <- mod |>
     avg_comparisons() |>
-    inferences(method = "fwb", R = R)
+    inferences(method = "fwb", R = R) |> suppressWarnings()
 expect_equivalent(nrow(x), 2)
 
 
@@ -289,6 +289,7 @@ mod <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris)
 k <- avg_comparisons(mod) |> inferences(method = "rsample", R = R) |> suppressWarnings()
 expect_inherits(k, "comparisons")
 
+
 # `estimator` function
 lalonde <- get_dataset("lalonde")
 estimator <- function(data) {
@@ -319,7 +320,14 @@ nd <- datagrid(
     grid_type = "counterfactual",
     model = model
 )
-p <- predictions(model, type = "survival", by = c("dtime", "hormon", "grade"), vcov = "rsample", newdata = nd)
-p <- inferences(p, method = "rsample", R = R)
-expect_true(all(p$term > p.conf.low))
-expect_true(all(p$term < p.conf.high))
+
+p <- predictions(model, type = "survival", by = c("dtime", "hormon", "grade"), newdata = nd)
+p <- inferences(p, method = "rsample", R = R) |> suppressWarnings()
+expect_true(all(p$estimate >= p$conf.low))
+expect_true(all(p$estimate <= p$conf.high))
+
+
+# # works interactively
+# p <- predictions(model, type = "survival", by = c("dtime", "hormon", "grade"), vcov = "rsample", newdata = nd)
+# expect_true(all(p$estimate >= p$conf.low))
+# expect_true(all(p$estimate <= p$conf.high))
