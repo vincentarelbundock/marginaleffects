@@ -439,7 +439,8 @@ comparisons <- function(
             by = by,
             eps = eps,
             cross = cross,
-            numderiv = numderiv
+            numderiv = numderiv,
+            calling_function = "comparisons"
         )
         args <- utils::modifyList(args, dots)
         se <- do.call("get_se_delta", args)
@@ -536,7 +537,9 @@ comparisons <- function(
     attr(out, "lean") <- lean
     attr(out, "vcov.type") <- vcov.type
     if (isTRUE(lean)) {
-        for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) attr(out, a) <- NULL
+        for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) {
+            attr(out, a) <- NULL
+        }
     } else {
         # other attributes
         attr(out, "newdata") <- newdata
