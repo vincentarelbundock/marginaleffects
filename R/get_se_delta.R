@@ -114,6 +114,7 @@ get_se_delta <- function(
             newdata = newdata,
             model = model,
             hypothesis = hypothesis,
+            type = type,
             calling_function = "predictions"
         )
         checkmate::assert_matrix(J, mode = "numeric", ncols = length(coefs), null.ok = TRUE)
