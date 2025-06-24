@@ -116,7 +116,6 @@ avg_slopes(mod, by = "Species") \%>\%
 slopes(mod) \%>\%
     inferences(method = "simulation") \%>\%
     head()
-}
 
 # Two-step estimation procedure: Propensity score + G-Computation
 lalonde <- get_dataset("lalonde")
@@ -133,4 +132,5 @@ estimator <- function(data) {
 }
 inferences(lalonde, method = "rsample", estimator = estimator)
 
+}
 }
