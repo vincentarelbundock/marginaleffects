@@ -35,6 +35,9 @@ get_se_delta_contrasts <- function(
     hi,
     original,
     cross,
+    comparison,
+    by,
+    byfun,
     ...
 ) {
     get_contrasts(
@@ -49,6 +52,8 @@ get_se_delta_contrasts <- function(
         cross = cross,
         verbose = FALSE,
         deltamethod = TRUE,
+        by = by,
+        byfun = byfun,
         ...
     )$estimate
 }
@@ -73,6 +78,13 @@ get_se_delta <- function(
     J = NULL,
     hypothesis = NULL,
     numderiv = NULL,
+    calling_function = NULL,
+    comparison = NULL,
+    by = NULL,
+    byfun = NULL,
+    hi = NULL,
+    lo = NULL,
+    original = NULL,
     ...
 ) {
     # delta method does not work for these models
@@ -115,7 +127,13 @@ get_se_delta <- function(
             model = model,
             hypothesis = hypothesis,
             type = type,
-            calling_function = "predictions"
+            by = by,
+            byfun = byfun,
+            hi = hi,
+            lo = lo,
+            original = original,
+            comparison = comparison,
+            calling_function = calling_function
         )
         checkmate::assert_matrix(J, mode = "numeric", ncols = length(coefs), null.ok = TRUE)
     }
@@ -126,7 +144,17 @@ get_se_delta <- function(
         names(x) <- names(coefs)
         model_tmp <- set_coef(model, x, ...)
         # do not pass NULL arguments. Important for `deltam` to allow users to supply FUN without ...
-        args <- c(list(model = model_tmp, hypothesis = hypothesis), list(...))
+        args <- list(
+            model = model_tmp,
+            hypothesis = hypothesis,
+            type = type,
+            hi = hi,
+            lo = lo,
+            original = original,
+            by = by,
+            byfun = byfun
+        )
+        args <- c(args, list(...))
         if (inherits(model, "gamlss")) {
             args[["safe"]] <- FALSE
         }

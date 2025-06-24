@@ -65,7 +65,7 @@ clean: ## Clean the book directory
 setvar: ## Set the environment variable
 	export R_BUILD_DOC=true
 
-buildtest: document runnersup ## Build and test in parallel with 8 cores
+buildtest: install runnersup ## Build and test in parallel with 8 cores
 	Rscript -e "tinytest::build_install_test(ncpu = 10)"
 	$(MAKE) runnersdown
 

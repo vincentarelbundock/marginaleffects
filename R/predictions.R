@@ -586,6 +586,9 @@ get_predictions <- function(
     hypothesis = NULL,
     verbose = TRUE,
     wts = FALSE,
+    hi = NULL, # sink hole for shared comparisons/predictions call
+    lo = NULL, # sink hole
+    original = NULL, # sink hole
     ...
 ) {
     out <- myTryCatch(get_predict(

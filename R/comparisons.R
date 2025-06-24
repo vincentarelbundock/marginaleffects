@@ -440,6 +440,7 @@ comparisons <- function(
             eps = eps,
             cross = cross,
             numderiv = numderiv,
+            comparison = comparison,
             calling_function = "comparisons"
         )
         args <- utils::modifyList(args, dots)

@@ -8,6 +8,7 @@ get_contrasts <- function(
     hi,
     wts = FALSE,
     by = NULL,
+    byfun = NULL,
     hypothesis = NULL,
     cross = FALSE,
     verbose = TRUE,
