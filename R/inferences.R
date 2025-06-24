@@ -140,22 +140,14 @@ inferences <- function(
         checkmate::check_class(x, "hypotheses")
     )
 
-    # Issue #1501: `newdata` should not be `datagrid()`, because the automatic
-    # summaries could be means of the original data or the re-sampled data.
-    # Indeterminate and unclear. Better to be explicit.
-    # Further implementation issue: We cannot just eval() the `newdata`
-    # argument, because there is a ton of internal processing when the full
-    # marginaleffects call is evaluated.
+    # Issue #1501: `newdata` should only use the pre-evaluated `newdata` instead of bootstrapping datagrid()
     call_mfx <- attr(x, "call")
-    if ("newdata" %in% names(call_mfx)) {
-        nd <- call_mfx[["newdata"]]
-        if ((is.call(nd)) && "datagrid" == as.character(nd)[1]) {
-            msg <- "The `newdata` argument should not use `datagrid()`. Create a data frame outside the `marginaleffects` function call, and then pass the fully-formed data frame to the `newdata` argument."
-            stop_sprintf(msg)
-        } else {
-            call_mfx[["newdata"]] <- eval.parent(call_mfx[["newdata"]])
-            attr(x, "call") <- call_mfx
+    if (!is.null(call_mfx)) {
+        nd <- attr(x, "newdata")
+        if (inherits(nd, "data.frame")) {
+            call_mfx[["newdata"]] <- nd
         }
+        attr(x, "call") <- call_mfx
     }
 
     if (method == "conformal_split") {
