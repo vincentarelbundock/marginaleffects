@@ -50,7 +50,7 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
         insight::check_if_installed("future.apply")
         pkg <- getOption("marginaleffects_parallel_packages", default = NULL)
         pkg <- unique(c("marginaleffects", pkg))
-        splits$estimates <- future.apply::future_lapply(
+        splits$results <- future.apply::future_lapply(
             splits$splits,
             bootfun_term,
             future.seed = TRUE,

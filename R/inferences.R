@@ -143,6 +143,9 @@ inferences <- function(
     # Issue #1501: `newdata` should not be `datagrid()`, because the automatic
     # summaries could be means of the original data or the re-sampled data.
     # Indeterminate and unclear. Better to be explicit.
+    # Further implementation issue: We cannot just eval() the `newdata`
+    # argument, because there is a ton of internal processing when the full
+    # marginaleffects call is evaluated.
     call_mfx <- attr(x, "call")
     if ("newdata" %in% names(call_mfx)) {
         nd <- call_mfx[["newdata"]]
