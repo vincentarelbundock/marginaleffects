@@ -20,7 +20,7 @@ sanitize_estimator <- function(x, estimator, method) {
         cl <- c("predictions", "comparisons", "slopes", "hypotheses")
         if (!any(cl %in% class(x))) {
             msg <- sprintf("The `estimator` function must return a `marginaleffects` object.")
-            stop_springf(msg)
+            stop_sprintf(msg)
         }
     }
     return(x)
