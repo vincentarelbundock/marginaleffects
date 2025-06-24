@@ -17,6 +17,7 @@ Bugs:
 * `inferences()` passes extra arguments to `boot()`, as documented.
 * `inferences(method="rsample")` should not collapse estimates when `term` is not unique (ex: contrast, by, etc.)
 * `inferences(method="rsample")` does not retain all attributes (data, model, etc.) in every iteration.
+* `inferences(method="rsample")` alignment bug between estimates and CIs.
 
 Misc:
 
