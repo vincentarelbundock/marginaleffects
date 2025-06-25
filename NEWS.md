@@ -1,5 +1,9 @@
 # News {.unnumbered}
 
+## Development
+
+* Better error message for bayesian/bootstrap models when `hypotheses()` attempts to post-process a previous `marginaleffects` call.
+
 ## 0.28.0
 
 Breaking changes:

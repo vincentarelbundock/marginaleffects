@@ -730,3 +730,8 @@ expect_equivalent(
     subset(cmp1, by == "LG0")$estimate,
     subset(cmp2, Cndtn == "NG" & TstTm == 0)$estimate
 )
+
+
+# Issue #1508: cannot post-process with `hypotheses()`. Issue #1508.
+cmp <- avg_comparisons(brms_factor, variables = list("cyl_fac" = "pairwise"))
+expect_error(hypotheses(cmp), pattern = "posterior.*get_draws")
