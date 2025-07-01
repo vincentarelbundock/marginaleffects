@@ -37,3 +37,10 @@ p <- avg_predictions(
     newdata = insight::get_datagrid(m, by = "e42dep")
 )
 expect_inherits(p, "predictions")
+
+
+# Issue #6 marginaleffectsJAX: missing model matrix attribute
+mod_factor <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+p <- predictions(mod_factor, by = "cyl") 
+M <- attr(attr(p, "newdata"), "marginaleffects_model_matrix")
+expect_inherits(M, "matrix")

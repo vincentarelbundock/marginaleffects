@@ -7,7 +7,9 @@ get_model_matrix_attribute <- function(model, newdata = NULL) {
     # stats::model.matrix creates all-0 columns with splines::bs() and other functions
     # this may be too aggressive, but it avoids all functions
     flag <- any(grepl("\\(", setdiff(names(get_coef(model)), "(Intercept)")))
-    if (isTRUE(flag)) {
+    funs <- grep("\\(", names(get_coef(model)), value = TRUE)
+    funs <- funs[!grepl("factor\\(|\\(Intercept", funs)]
+    if (length(funs) > 0) {
         return(newdata)
     }
 
