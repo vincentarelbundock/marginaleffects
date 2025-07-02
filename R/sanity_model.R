@@ -20,13 +20,19 @@ sanitize_model_specific.default <- function(
 }
 
 
-sanity_model_supported_class <- function(model) {
+sanity_model_supported_class <- function(model, custom = TRUE) {
     checkmate::assert_character(
         getOption("marginaleffects_model_classes", default = NULL),
         null.ok = TRUE
     )
-    custom_classes <- getOption("marginaleffects_model_classes", default = NULL)
-    custom_classes <- as.list(custom_classes)
+
+    if (isTRUE(custom)) {
+        custom_classes <- getOption("marginaleffects_model_classes", default = NULL)
+        custom_classes <- as.list(custom_classes)
+    } else {
+        custom_classes <- NULL
+    }
+
     supported <- append(
         custom_classes,
         list(

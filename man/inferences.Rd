@@ -77,6 +77,8 @@ When \code{method="simulation"}, we conduct simulation-based inference following
 }
 
 When \code{method="fwb"}, drawn weights are supplied to the model fitting function's \code{weights} argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by \code{\link[=weights]{weights()}} and multiplied by the drawn weights. These weights are supplied to the \code{wts} argument of the estimation function (e.g., \code{comparisons()}).
+
+Warning: custom model classes are not supported by \code{inferences()} because they are not guaranteed to come with an appropriate \code{update()} method.
 }
 \section{References}{
 

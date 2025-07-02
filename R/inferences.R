@@ -40,6 +40,8 @@
 #'
 #' When `method="fwb"`, drawn weights are supplied to the model fitting function's `weights` argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by [weights()] and multiplied by the drawn weights. These weights are supplied to the `wts` argument of the estimation function (e.g., `comparisons()`).
 #'
+#' Warning: custom model classes are not supported by `inferences()` because they are not guaranteed to come with an appropriate `update()` method.
+#'
 #' @section References:
 #'
 #' Krinsky, I., and A. L. Robb. 1986. "On Approximating the Statistical Properties of Elasticities." Review of Economics and Statistics 68 (4): 715–9.
@@ -105,17 +107,23 @@ inferences <- function(
     conformal_calibration = NULL,
     conformal_score = "residual_abs",
     estimator = NULL,
-    ...) {
+    ...
+) {
     if (inherits(attr(x, "model"), c("model_fit", "workflow"))) {
         msg <- "The `inferences()` function does not support `tidymodels` objects."
         stop_sprintf(msg)
     }
 
+    # we cannot support custom classes because they do not come with `update()` method.
+    sanity_model_supported_class(x, custom = FALSE)
+
     x <- sanitize_estimator(x = x, estimator = estimator, method = method)
 
     # inherit conf_level from the original object
     conf_level <- attr(x, "conf_level")
-    if (is.null(conf_level)) conf_level <- 0.95
+    if (is.null(conf_level)) {
+        conf_level <- 0.95
+    }
 
     checkmate::assert_number(conf_level, lower = 1e-10, upper = 1 - 1e-10)
     checkmate::assert_integerish(R, lower = 2)
@@ -131,7 +139,6 @@ inferences <- function(
             "conformal_cv+"
         )
     )
-
 
     checkmate::assert(
         checkmate::check_class(x, "predictions"),
