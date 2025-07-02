@@ -114,10 +114,14 @@ inferences <- function(
         stop_sprintf(msg)
     }
 
-    # we cannot support custom classes because they do not come with `update()` method.
-    sanity_model_supported_class(x, custom = FALSE)
-
     x <- sanitize_estimator(x = x, estimator = estimator, method = method)
+
+    # we cannot support custom classes because they do not come with `update()` method.
+    if (
+        !inherits(x, c("hypotheses", "slopes", "comparisons", "predictions")) && !identical(class(x)[1], "data.frame")
+    ) {
+        sanity_model_supported_class(x, custom = FALSE)
+    }
 
     # inherit conf_level from the original object
     conf_level <- attr(x, "conf_level")
