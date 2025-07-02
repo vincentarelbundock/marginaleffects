@@ -60,7 +60,6 @@ get_predict.fixest <- function(
 }
 
 
-
 #' @rdname sanitize_model_specific
 sanitize_model_specific.fixest <- function(model, vcov = TRUE, calling_function = "predictions", ...) {
     # issue #1487 is only a problem for standard errors
@@ -70,11 +69,17 @@ sanitize_model_specific.fixest <- function(model, vcov = TRUE, calling_function 
 
     msg <- "For this model type, `marginaleffects` cannot take into account the uncertainty in fixed-effects parameters. Set `vcov=FALSE` to compute estimates without standard errors."
 
-    # issue #1487: fixed-effects always matter for predictions
-    if (identical(calling_function, "predictions")) stop_sprintf(msg)
+    if (!is.null(model[["fixef_vars"]])) {
+        # issue #1487: fixed-effects always matter for predictions
+        if (identical(calling_function, "predictions")) {
+            stop_sprintf(msg)
+        }
 
-    # issue #1487: fixed-effects matter for slopes and contrasts, except for linear models
-    if (!is.null(model$family)) stop_sprintf(msg)
+        # issue #1487: fixed-effects matter for slopes and contrasts, except for linear models
+        if (!is.null(model$family)) {
+            stop_sprintf(msg)
+        }
+    }
 
     return(model)
 }

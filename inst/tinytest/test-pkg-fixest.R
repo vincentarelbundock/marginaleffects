@@ -57,7 +57,6 @@ mfx <- merge(tidy(slopes(model, type = "link", vcov = FALSE)), stata)
 expect_equivalent(mfx$estimate, mfx$estimate, tolerance = .000001)
 # expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
-
 # fixest::feols: predictions
 data(trade, package = "fixest")
 dat <- trade
@@ -286,6 +285,11 @@ expect_error(predictions(m), pattern = "cannot take into account the uncertainty
 expect_error(avg_comparisons(m), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
 expect_error(avg_slopes(m), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
 
+# allow when there are no fixed effects
+mod <- feols(Sepal.Width ~ Sepal.Length + factor(Species), iris, vcov = "iid")
+p <- predictions(mod)
+expect_inherits(p, "predictions")
+
 ## Issue #461
 ## commetned out because this seems to be an upstream problem. See issue.
 # gen_data <- function(rows) {
@@ -311,5 +315,3 @@ expect_error(avg_slopes(m), pattern = "cannot take into account the uncertainty 
 # dat <- trade
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
 # expect_slopes(mod, newdata = dat) # environment issue
-
-
