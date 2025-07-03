@@ -19,14 +19,17 @@ get_model_matrix_attribute <- function(model, newdata = NULL) {
     }
 
     # subset variables for listwise deletion
+    dv <- insight::find_response(model)
     vars <- unlist(
         insight::find_predictors(model, verbose = FALSE),
         use.names = FALSE
     )
-    vars <- c(vars, unlist(insight::find_response(model), use.names = FALSE))
+    vars <- c(vars, unlist(dv, use.names = FALSE))
     vars <- intersect(vars, colnames(newdata))
 
-    MM <- hush(get_model_matrix(model, newdata = data.frame(newdata)[, vars]))
+    nd <- as.data.frame(newdata)[, vars, drop = FALSE]
+
+    MM <- hush(get_model_matrix(model, newdata = nd))
 
     attr(newdata, "marginaleffects_model_matrix") <- MM
     return(newdata)
