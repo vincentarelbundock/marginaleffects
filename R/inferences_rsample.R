@@ -1,4 +1,6 @@
 inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, ...) {
+    insight::check_if_installed("rsample")
+
     out <- x
     call_mfx <- attr(x, "call")
     call_mfx[["vcov"]] <- FALSE
@@ -33,10 +35,10 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
         # This is a hack to avoid the issue of rsample::int_bca/pctl collapsing estimates when term is duplicated because of term/contrast/by unique
         # Warning: assumes that we always return estimates in the same order as the original {marginaleffects} call.
         # data.frame() to remove super heavy attributes (model, data, etc.)
-        # as.character() because `rsample` assumes character `term`. Reported here: 
+        # as.character() because `rsample` assumes character `term`. Reported here:
         # https://github.com/tidymodels/rsample/issues/574
         out <- data.frame(
-            term = as.character(seq_len(nrow(out))), 
+            term = as.character(seq_len(nrow(out))),
             estimate = out$estimate
         )
         return(out)

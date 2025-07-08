@@ -18,27 +18,27 @@
 #' @param R Number of resamples, simulations, or cross-validation folds.
 #' @param conf_type String: type of bootstrap interval to construct.
 #' + `boot`: "perc", "norm", "basic", or "bca"
-#' + `fwb`: "perc", "norm", "basic", "bc", or "bca"
+#' + `fwb`: "perc", "norm", "wald", "basic", "bc", or "bca"
 #' + `rsample`: "perc" or "bca"
-#' + `simulation`: argument ignored.
+#' + `simulation`: "perc" or "wald"
 #' @param conformal_test Data frame of test data for conformal prediction.
 #' @param conformal_calibration Data frame of calibration data for split conformal prediction (`method="conformal_split`).
 #' @param conformal_score String. Warning: The `type` argument in `predictions()` must generate predictions which are on the same scale as the outcome variable. Typically, this means that `type` must be "response" or "probs".
 #'   + "residual_abs" or "residual_sq" for regression tasks (numeric outcome)
 #'   + "softmax" for classification tasks (when `predictions()` returns a `group` columns, such as multinomial or ordinal logit models.
-#' @param estimator Function that accepts a data frame, fits a model, applies a marginaleffects function, and returns the object. Only supported with method="rsample" or method="boot". When method="rsample", the output must include a "term" column. This is not always the case for predictions(), in which case users may have to create the column manually.
+#' @param estimator Function that accepts a data frame, fits a model, applies a `marginaleffects` function, and returns the object. Only supported with `method = "rsample"` or `method = "boot"`. When `method = "rsample"`, the output must include a "term" column. This is not always the case for `predictions()`, in which case users may have to create the column manually.
 #' @param ...
-#' + If `method="boot"`, additional arguments are passed to `boot::boot()`.
-#' + If `method="fwb"`, additional arguments are passed to `fwb::fwb()`.
-#' + If `method="rsample"`, additional arguments are passed to `rsample::bootstraps()`.
+#' + If `method = "boot"`, additional arguments are passed to `boot::boot()`.
+#' + If `method = "fwb"`, additional arguments are passed to `fwb::fwb()`.
+#' + If `method = "rsample"`, additional arguments are passed to `rsample::bootstraps()`.
 #' + Additional arguments are ignored for all other methods.
 #' @details
-#' When `method="simulation"`, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
+#' When `method = "simulation"`, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
 #' 1. Draw `R` sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
 #' 2. Use the `R` sets of coefficients to compute `R` sets of estimands: predictions, comparisons, slopes, or hypotheses.
-#' 3. Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
+#' 3. Take quantiles of the resulting distribution of estimands to obtain a confidence interval (when `conf_type = "perc"`) and the standard deviation of simulated estimates to estimate the standard error (which is used for a Z-test and Wald confidence intervals when `conf_type = "wald"`).
 #'
-#' When `method="fwb"`, drawn weights are supplied to the model fitting function's `weights` argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by [weights()] and multiplied by the drawn weights. These weights are supplied to the `wts` argument of the estimation function (e.g., `comparisons()`).
+#' When `method = "fwb"`, drawn weights are supplied to the model fitting function's `weights` argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by [weights()] and multiplied by the drawn weights. These weights are supplied to the `wts` argument of the estimation function (e.g., `comparisons()`).
 #'
 #' Warning: custom model classes are not supported by `inferences()` because they are not guaranteed to come with an appropriate `update()` method.
 #'
@@ -174,14 +174,8 @@ inferences <- function(
     }
 
     if (method == "boot") {
-        insight::check_if_installed("boot")
         out <- inferences_boot(x, R = R, conf_level = conf_level, conf_type = conf_type, estimator = estimator, ...)
     } else if (method == "fwb") {
-        insight::check_if_installed("fwb")
-        dots <- list(...)
-        if (!"verbose" %in% names(dots)) {
-            dots[["verbose"]] <- FALSE
-        }
         if (
             isTRUE("wts" %in% names(attr(x, "call"))) &&
                 !isFALSE(attr(x, "call")[["wts"]])
@@ -192,11 +186,9 @@ inferences <- function(
         }
         out <- inferences_fwb(x, R = R, conf_level = conf_level, conf_type = conf_type, ...)
     } else if (method == "rsample") {
-        insight::check_if_installed("rsample")
         out <- inferences_rsample(x, R = R, conf_level = conf_level, conf_type = conf_type, estimator = estimator, ...)
     } else if (method == "simulation") {
-        insight::check_if_installed("MASS")
-        out <- inferences_simulation(x, R = R, conf_level = conf_level, ...)
+        out <- inferences_simulation(x, R = R, conf_level = conf_level, conf_type = conf_type, ...)
     } else if (isTRUE(grepl("conformal", method))) {
         out <- conformal_fun(
             x,

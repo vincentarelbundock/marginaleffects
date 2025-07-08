@@ -36,9 +36,9 @@ inferences(
 \item{conf_type}{String: type of bootstrap interval to construct.
 \itemize{
 \item \code{boot}: "perc", "norm", "basic", or "bca"
-\item \code{fwb}: "perc", "norm", "basic", "bc", or "bca"
+\item \code{fwb}: "perc", "norm", "wald", "basic", "bc", or "bca"
 \item \code{rsample}: "perc" or "bca"
-\item \code{simulation}: argument ignored.
+\item \code{simulation}: "perc" or "wald"
 }}
 
 \item{conformal_test}{Data frame of test data for conformal prediction.}
@@ -51,12 +51,12 @@ inferences(
 \item "softmax" for classification tasks (when \code{predictions()} returns a \code{group} columns, such as multinomial or ordinal logit models.
 }}
 
-\item{estimator}{Function that accepts a data frame, fits a model, applies a marginaleffects function, and returns the object. Only supported with method="rsample" or method="boot". When method="rsample", the output must include a "term" column. This is not always the case for predictions(), in which case users may have to create the column manually.}
+\item{estimator}{Function that accepts a data frame, fits a model, applies a \code{marginaleffects} function, and returns the object. Only supported with \code{method = "rsample"} or \code{method = "boot"}. When \code{method = "rsample"}, the output must include a "term" column. This is not always the case for \code{predictions()}, in which case users may have to create the column manually.}
 
 \item{...}{\itemize{
-\item If \code{method="boot"}, additional arguments are passed to \code{boot::boot()}.
-\item If \code{method="fwb"}, additional arguments are passed to \code{fwb::fwb()}.
-\item If \code{method="rsample"}, additional arguments are passed to \code{rsample::bootstraps()}.
+\item If \code{method = "boot"}, additional arguments are passed to \code{boot::boot()}.
+\item If \code{method = "fwb"}, additional arguments are passed to \code{fwb::fwb()}.
+\item If \code{method = "rsample"}, additional arguments are passed to \code{rsample::bootstraps()}.
 \item Additional arguments are ignored for all other methods.
 }}
 }
@@ -69,14 +69,14 @@ Warning: This function is experimental. It may be renamed, the user interface ma
 Apply this function to a \code{marginaleffects} object to change the inferential method used to compute uncertainty estimates.
 }
 \details{
-When \code{method="simulation"}, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
+When \code{method = "simulation"}, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
 \enumerate{
 \item Draw \code{R} sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
 \item Use the \code{R} sets of coefficients to compute \code{R} sets of estimands: predictions, comparisons, slopes, or hypotheses.
-\item Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
+\item Take quantiles of the resulting distribution of estimands to obtain a confidence interval (when \code{conf_type = "perc"}) and the standard deviation of simulated estimates to estimate the standard error (which is used for a Z-test and Wald confidence intervals when \code{conf_type = "wald"}).
 }
 
-When \code{method="fwb"}, drawn weights are supplied to the model fitting function's \code{weights} argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by \code{\link[=weights]{weights()}} and multiplied by the drawn weights. These weights are supplied to the \code{wts} argument of the estimation function (e.g., \code{comparisons()}).
+When \code{method = "fwb"}, drawn weights are supplied to the model fitting function's \code{weights} argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by \code{\link[=weights]{weights()}} and multiplied by the drawn weights. These weights are supplied to the \code{wts} argument of the estimation function (e.g., \code{comparisons()}).
 
 Warning: custom model classes are not supported by \code{inferences()} because they are not guaranteed to come with an appropriate \code{update()} method.
 }
