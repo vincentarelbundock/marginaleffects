@@ -1,4 +1,6 @@
 inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, ...) {
+    insight::check_if_installed("boot")
+
     out <- x
     call_mfx <- attr(x, "call")
     call_mfx[["vcov"]] <- FALSE

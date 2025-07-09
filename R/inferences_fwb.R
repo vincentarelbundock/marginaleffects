@@ -1,5 +1,6 @@
 inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
-    insight::check_if_installed("fwb", minimum_version = "0.3.0")
+    insight::check_if_installed("fwb", minimum_version = "0.5.0")
+
     out <- x
     call_mfx <- attr(x, "call")
     call_mfx[["vcov"]] <- FALSE
@@ -8,7 +9,7 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", .
         modeldata <- get_modeldata(call_mfx[["model"]])
     }
 
-    bootfun <- function(data, w) {
+    bootfun <- function(data, w, ...) {
         # If model has weights, multiply them by random weights
         if (!is.null(w0 <- stats::weights(call_mfx[["model"]]))) {
             w <- w * w0
@@ -27,22 +28,46 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", .
         return(boot_mfx$estimate)
     }
 
-    args <- list("data" = modeldata, "statistic" = bootfun, R = R, verbose = FALSE)
+    args <- list("data" = modeldata, "statistic" = bootfun, R = R)
+    args <- c(args, list(...))
 
-    if (isTRUE(getOption("marginaleffects_parallel_inferences", default = FALSE))) {
+    # fwb default verbose is TRUE
+    if (!"verbose" %in% names(args)) {
+      args[["verbose"]] <- FALSE
+    }
+
+    if (isTRUE(getOption("marginaleffects_parallel_inferences", default = FALSE)) &&
+        !"cl" %in% names(args)) {
         args[["cl"]] <- "future"
     }
 
     B <- do.call(fwb::fwb, args)
 
     # Extract SEs and CIs
-    fwb_summary <- summary(B, conf = conf_level, ci.type = conf_type)
+    fwb_summary <- tidy(summary(B, conf = conf_level, ci.type = conf_type,
+                                p.value = TRUE))
 
-    out$std.error <- fwb_summary[, "Std. Error"]
-    out$conf.low <- fwb_summary[, 3]
-    out$conf.high <- fwb_summary[, 4]
+    out$std.error <- fwb_summary$std.error
+    out$conf.low <- fwb_summary$conf.low
+    out$conf.high <- fwb_summary$conf.high
 
-    cols <- setdiff(names(out), c("p.value", "statistic", "s.value", "df"))
+    cols <- setdiff(names(out), "df")
+
+    if ("p.value" %in% names(fwb_summary)) {
+      out$p.value <- fwb_summary$p.value
+      out$s.value <- -log2(out$p.value)
+    }
+    else {
+      cols <- setdiff(cols, c("s.value", "p.value"))
+    }
+
+    if ("statistic" %in% names(fwb_summary)) {
+      out$statistic <- fwb_summary$statistic
+    }
+    else {
+      cols <- setdiff(cols, "statistic")
+    }
+
     out <- out[, cols, drop = FALSE]
 
     attr(out, "inferences") <- B

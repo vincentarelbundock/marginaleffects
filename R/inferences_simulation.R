@@ -1,5 +1,13 @@
-inferences_simulation <- function(x, R = 1000, conf_level = 0.95, ...) {
+inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
     insight::check_if_installed("mvtnorm")
+
+    checkmate::assert_choice(
+      conf_type,
+        choices = c(
+            "perc",
+            "wald"
+        )
+    )
 
     out <- x
     model <- attr(x, "model")
@@ -38,11 +46,27 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, ...) {
     # Compute confidence intervals
     out$std.error <- apply(draws, 1, stats::sd)
     alpha <- 1 - conf_level
-    out$conf.low <- apply(draws, 1, stats::quantile, probs = alpha / 2)
-    out$conf.high <- apply(draws, 1, stats::quantile, probs = 1 - alpha / 2)
+
+    if (conf_type == "perc") {
+        out$conf.low <- apply(draws, 1, stats::quantile, probs = alpha / 2, names = FALSE)
+        out$conf.high <- apply(draws, 1, stats::quantile, probs = 1 - alpha / 2, names = FALSE)
+
+        cols <- setdiff(names(out), c("p.value", "std.error", "statistic", "s.value", "df"))
+    } else if (conf_type == "wald") {
+        out$statistic <- out$estimate / out$std.error
+
+        critical <- abs(stats::qnorm(alpha / 2))
+
+        out$conf.low <- out$estimate - critical * out$std.error
+        out$conf.high <- out$estimate + critical * out$std.error
+
+        out$p.value <- 2 * stats::pnorm(-abs(out$statistic))
+        out$s.value <- -log2(out$p.value)
+
+        cols <- setdiff(names(out), "df")
+    }
 
     # Drop unnecessary columns
-    cols <- setdiff(names(out), c("p.value", "std.error", "statistic", "s.value", "df"))
     out <- out[, cols, drop = FALSE]
 
     attr(out, "posterior_draws") <- draws
