@@ -27,6 +27,8 @@
 #' `newdata` argument, the model is automatically inserted in the `model` argument of `datagrid()`
 #' call, and users do not need to specify either the `model` or `newdata` arguments. The same behavior will occur when the value supplied to `newdata=` is a function call which starts with "datagrid". This is intended to allow users to create convenience shortcuts like:
 #'
+#' **Warning about hierarchical grouping variables:** When using the default `grid_type = "mean_or_mode"` with hierarchical models (such as mixed models with nested grouping factors), `datagrid()` may create invalid combinations of grouping variables. For example, if you have students nested within schools, or countries nested within regions, the modal values of each grouping variable may not correspond to valid nested relationships in the data. This can cause prediction errors. To avoid this issue, explicitly specify valid combinations of hierarchical grouping variables in the `datagrid()` call, or use `grid_type = "counterfactual"` to preserve the original data structure.
+#'
 #' \preformatted{
 #' library(marginaleffects)
 #' mod <- lm(mpg ~ am + vs + factor(cyl) + hp, mtcars)

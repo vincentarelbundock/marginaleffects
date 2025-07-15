@@ -70,6 +70,8 @@ If \code{datagrid} is used in a \code{predictions()}, \code{comparisons()}, or \
 \code{newdata} argument, the model is automatically inserted in the \code{model} argument of \code{datagrid()}
 call, and users do not need to specify either the \code{model} or \code{newdata} arguments. The same behavior will occur when the value supplied to \verb{newdata=} is a function call which starts with "datagrid". This is intended to allow users to create convenience shortcuts like:
 
+\strong{Warning about hierarchical grouping variables:} When using the default \code{grid_type = "mean_or_mode"} with hierarchical models (such as mixed models with nested grouping factors), \code{datagrid()} may create invalid combinations of grouping variables. For example, if you have students nested within schools, or countries nested within regions, the modal values of each grouping variable may not correspond to valid nested relationships in the data. This can cause prediction errors. To avoid this issue, explicitly specify valid combinations of hierarchical grouping variables in the \code{datagrid()} call, or use \code{grid_type = "counterfactual"} to preserve the original data structure.
+
 \preformatted{
 library(marginaleffects)
 mod <- lm(mpg ~ am + vs + factor(cyl) + hp, mtcars)
