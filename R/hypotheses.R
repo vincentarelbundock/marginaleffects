@@ -4,7 +4,7 @@
 #' Uncertainty estimates are calculated as first-order approximate standard errors for linear or non-linear functions of a vector of random variables with known or estimated covariance matrix. In that sense, [`hypotheses`] emulates the behavior of the excellent and well-established [car::deltaMethod] and [car::linearHypothesis] functions, but it supports more models; requires fewer dependencies; expands the range of tests to equivalence and superiority/inferiority; and offers convenience features like robust standard errors.
 #'
 #' To learn more, read the hypothesis tests vignette, visit the
-#' package website, or scroll down this page for a full list of vignettes:
+#' package website:
 #'
 #' * <https://marginaleffects.com/chapters/hypothesis.html>
 #' * <https://marginaleffects.com/>
