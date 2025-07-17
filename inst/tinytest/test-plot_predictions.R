@@ -1,7 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
 requiet("tinysnapshot")
-if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 using("tinysnapshot")
 requiet("nnet")
 
@@ -132,7 +131,7 @@ expect_true("conf.high" %in% colnames(p))
 
 
 # vcov
-#skip_if_not_installed("insight", minimum_version = "0.17.1")
+# skip_if_not_installed("insight", minimum_version = "0.17.1")
 mod <- lm(mpg ~ hp * wt, data = mtcars)
 mfx0 <- plot_predictions(mod, condition = "wt", vcov = FALSE, draw = FALSE)
 mfx1 <- plot_predictions(mod, condition = "wt", draw = FALSE)
@@ -238,8 +237,8 @@ expect_equal(length(unique(p$am)), 2)
 expect_equal(length(unique(p$hp)), 50)
 expect_equal(nrow(p), 100)
 
-mod <- lm(mpg ~ hp * wt, data = mtcars)
-p <- plot_predictions(mod, condition = c("hp", "wt"), draw = FALSE)
+mod <- lm(mpg ~ hp * am, data = mtcars)
+p <- plot_predictions(mod, condition = c("hp", "am"), draw = FALSE)
 expect_equal(length(unique(p$am)), 2)
 expect_equal(length(unique(p$hp)), 50)
 expect_equal(nrow(p), 100)

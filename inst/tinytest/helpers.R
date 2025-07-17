@@ -17,6 +17,7 @@ requiet("tinysnapshot")
 
 EXPENSIVE <- FALSE
 
+options("tinysnapshot_os" = "Linux")
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
 options("tinysnapshot_ignore_white_space" = TRUE)
