@@ -1,8 +1,8 @@
 
- Term Estimate Std. Error     z Pr(>|z|)    S  2.5 %  97.5 % p (NonSup) p (NonInf) p (Equiv)
- hp     -0.112     0.0126 -8.92  < 0.001 60.9 -0.137 -0.0874     <0.001      0.831     0.831
- qsec   -1.382     0.4331 -3.19  0.00141  9.5 -2.231 -0.5336     <0.001      0.998     0.998
+ Term Estimate Std. Error     z Pr(>|z|)    S  2.5 %  97.5 % p (NonInf) p (NonSup) p (Equiv)
+ hp     -0.112     0.0126 -8.92  < 0.001 60.9 -0.137 -0.0874      0.831     <0.001     0.831
+ qsec   -1.382     0.4331 -3.19  0.00141  9.5 -2.231 -0.5336      0.998     <0.001     0.998
 
-Type:  response 
+Type: response
 Comparison: +1
 
