@@ -13,6 +13,8 @@
 #' * [https://marginaleffects.com/chapters/slopes.html](https://marginaleffects.com/chapters/slopes.html)
 #' * [https://marginaleffects.com/](https://marginaleffects.com/)
 #'
+#' Warning: Slopes and elasticities can only be calculated for continuous numeric variables. The `slopes()` functions will automatically revert to `comparisons()` for binary or categorical variables.
+#'
 #' @details
 #' A "slope" or "marginal effect" is the partial derivative of the regression equation
 #' with respect to a variable in the model. This function uses automatic
@@ -181,9 +183,9 @@
 #' # original values, and the whole dataset is duplicated once for each
 #' # combination of the values in `datagrid()`
 #' mfx <- slopes(mod,
-#'   newdata = datagrid(
-#'     hp = c(100, 110),
-#'     grid_type = "counterfactual"))
+#'     newdata = datagrid(
+#'         hp = c(100, 110),
+#'         grid_type = "counterfactual"))
 #' head(mfx)
 #'
 #' # Heteroskedasticity robust standard errors
@@ -194,33 +196,33 @@
 #' mod <- lm(mpg ~ wt + drat, data = mtcars)
 #'
 #' slopes(
-#'   mod,
-#'   newdata = "mean",
-#'   hypothesis = "wt = drat")
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = "wt = drat")
 #'
 #' # same hypothesis test using row indices
 #' slopes(
-#'   mod,
-#'   newdata = "mean",
-#'   hypothesis = "b1 - b2 = 0")
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = "b1 - b2 = 0")
 #'
 #' # same hypothesis test using numeric vector of weights
 #' slopes(
-#'   mod,
-#'   newdata = "mean",
-#'   hypothesis = c(1, -1))
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = c(1, -1))
 #'
 #' # two custom contrasts using a matrix of weights
 #' lc <- matrix(
-#'   c(
-#'     1, -1,
-#'     2, 3),
-#'   ncol = 2)
+#'     c(
+#'         1, -1,
+#'         2, 3),
+#'     ncol = 2)
 #' colnames(lc) <- c("Contrast A", "Contrast B")
 #' slopes(
-#'   mod,
-#'   newdata = "mean",
-#'   hypothesis = lc)
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = lc)
 #'
 #' @export
 slopes <- function(
@@ -238,8 +240,7 @@ slopes <- function(
     df = Inf,
     eps = NULL,
     numderiv = "fdforward",
-    ...
-) {
+    ...) {
     call_attr <- construct_call(model, "slopes")
 
     # very early, before any use of newdata
@@ -357,15 +358,14 @@ avg_slopes <- function(
     df = Inf,
     eps = NULL,
     numderiv = "fdforward",
-    ...
-) {
+    ...) {
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     # scall <- rlang::enquo(newdata)
     # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
-    #Construct comparisons() call
+    # Construct comparisons() call
     call_attr <- construct_call(model, "slopes")
 
     out <- eval.parent(call_attr)

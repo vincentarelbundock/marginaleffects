@@ -6,6 +6,7 @@
 * Model matrix is attached to more `newdata`. Useful for Issue #6 in `marginaleffectsJAX`.
 * Better error for unsupported custom classes with `inferences()`. Unfortunately, we cannot support them because they are not guaranteed to come with an appropriate `update()` class.
 * `inferences()` new computes p-values for `method = "fwb"`. `conf_type` can now be `"perc"` or `"wald"` for `method = "simulation"`.
+* Documentation improvements.
 
 ## 0.28.0
 

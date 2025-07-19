@@ -257,6 +257,8 @@ See the slopes vignette and package website for worked examples and case studies
 \item \url{https://marginaleffects.com/chapters/slopes.html}
 \item \url{https://marginaleffects.com/}
 }
+
+Warning: Slopes and elasticities can only be calculated for continuous numeric variables. The \code{slopes()} functions will automatically revert to \code{comparisons()} for binary or categorical variables.
 }
 \details{
 A "slope" or "marginal effect" is the partial derivative of the regression equation
@@ -503,9 +505,9 @@ avg_slopes(mod2, variables = "hp", by = "cyl")
 # original values, and the whole dataset is duplicated once for each
 # combination of the values in `datagrid()`
 mfx <- slopes(mod,
-  newdata = datagrid(
-    hp = c(100, 110),
-    grid_type = "counterfactual"))
+    newdata = datagrid(
+        hp = c(100, 110),
+        grid_type = "counterfactual"))
 head(mfx)
 
 # Heteroskedasticity robust standard errors
@@ -516,33 +518,33 @@ head(mfx)
 mod <- lm(mpg ~ wt + drat, data = mtcars)
 
 slopes(
-  mod,
-  newdata = "mean",
-  hypothesis = "wt = drat")
+    mod,
+    newdata = "mean",
+    hypothesis = "wt = drat")
 
 # same hypothesis test using row indices
 slopes(
-  mod,
-  newdata = "mean",
-  hypothesis = "b1 - b2 = 0")
+    mod,
+    newdata = "mean",
+    hypothesis = "b1 - b2 = 0")
 
 # same hypothesis test using numeric vector of weights
 slopes(
-  mod,
-  newdata = "mean",
-  hypothesis = c(1, -1))
+    mod,
+    newdata = "mean",
+    hypothesis = c(1, -1))
 
 # two custom contrasts using a matrix of weights
 lc <- matrix(
-  c(
-    1, -1,
-    2, 3),
-  ncol = 2)
+    c(
+        1, -1,
+        2, 3),
+    ncol = 2)
 colnames(lc) <- c("Contrast A", "Contrast B")
 slopes(
-  mod,
-  newdata = "mean",
-  hypothesis = lc)
+    mod,
+    newdata = "mean",
+    hypothesis = lc)
 \dontshow{\}) # examplesIf}
 }
 \references{
