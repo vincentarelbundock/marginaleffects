@@ -7,7 +7,7 @@ requiet("splines")
 
 
 # Issue #911: survreg support
-fit <- survreg(Surv(futime, fustat) ~ ecog.ps + rx, ovarian, dist = 'weibull', scale = 1)
+fit <- survreg(Surv(futime, fustat) ~ ecog.ps + rx, ovarian, dist = "weibull", scale = 1)
 s <- avg_slopes(fit)
 expect_inherits(s, "slopes")
 
@@ -81,7 +81,7 @@ expect_true(all(p1$estimate != p2$estimate))
 
 
 # bugs stay dead: numeric vs factor strata
-#skip_if_not_installed("insight", minimum_version = "0.17.0")
+# skip_if_not_installed("insight", minimum_version = "0.17.0")
 stata <- readRDS(testing_path("stata/stata.rds"))$survival_coxph_01
 test4 <<- data.frame(
     time = c(4, 3, 1, 1, 2, 2, 3),
@@ -139,7 +139,7 @@ expect_true(all(p1$estimate > p2$estimate))
 # Issue #1467: warning about anti-conservative standard errors
 op <- getOption("marginaleffects_safe")
 options(marginaleffects_safe = TRUE)
-dat <- get_dataset("rotterdam", "survival")
+dat <- survival::rotterdam
 mod <- coxph(
     Surv(dtime, death) ~ hormon * factor(grade) + ns(age, df = 2),
     data = dat

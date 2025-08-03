@@ -149,6 +149,7 @@ Suggests:
     Rchoice,
     REndo,
     rcmdcheck,
+    Rdatasets,
     remotes,
     reticulate,
     rmarkdown,

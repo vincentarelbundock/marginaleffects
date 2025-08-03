@@ -12,10 +12,10 @@ expect_inherits(attr(avg_slopes(mod), "model"), "lm")
 tmp <- mtcars
 colnames(tmp)[1] <- "Miles per gallon"
 mod <- lm(hp ~ wt * `Miles per gallon`, tmp)
-s <- avg_slopes(mod)
+s <- avg_slopes(mod) |> suppressWarnings()
 expect_inherits(s, "slopes")
 expect_equal(nrow(s), 2)
-s <- avg_slopes(mod, variables = "Miles per gallon")
+s <- avg_slopes(mod, variables = "Miles per gallon") |> suppressWarnings()
 expect_inherits(s, "slopes")
 expect_equal(nrow(s), 1)
 
@@ -29,18 +29,19 @@ expect_false(anyNA(p$estimate))
 expect_false(anyNA(p$std.error))
 
 
-# Issue #1357
-m <- insight::download_model("brms_linear_1")
-p <- avg_predictions(
-    m,
-    by = "e42dep",
-    newdata = insight::get_datagrid(m, by = "e42dep")
-)
-expect_inherits(p, "predictions")
-
-
 # Issue #6 marginaleffectsJAX: missing model matrix attribute
 mod_factor <- lm(mpg ~ hp + factor(cyl), data = mtcars)
-p <- predictions(mod_factor, by = "cyl") 
+p <- predictions(mod_factor, by = "cyl")
 M <- attr(attr(p, "newdata"), "marginaleffects_model_matrix")
 expect_inherits(M, "matrix")
+
+
+# # Issue #1357
+# exit_file("insight::get_datagrid() no longer returns proper e42dep")
+# m <- insight::download_model("brms_linear_1")
+# p <- avg_predictions(
+#     m,
+#     by = "e42dep",
+#     newdata = insight::get_datagrid(m, by = "e42dep")
+# )
+# expect_inherits(p, "predictions")

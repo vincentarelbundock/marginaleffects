@@ -7,7 +7,8 @@
 * Better error for unsupported custom classes with `inferences()`. Unfortunately, we cannot support them because they are not guaranteed to come with an appropriate `update()` class.
 * `inferences()` new computes p-values for `method = "fwb"`. `conf_type` can now be `"perc"` or `"wald"` for `method = "simulation"`.
 * Documentation improvements.
-
+* `get_dataset()` now delegates most of the work to the `Rdatasets` package (optional dependency).
+ 
 ## 0.28.0
 
 Breaking changes:
