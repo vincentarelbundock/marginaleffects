@@ -41,6 +41,7 @@ get_dataset <- function(
     data_dict <- c(
         "affairs" = "https://marginaleffects.com/data/affairs.parquet",
         "airbnb" = "https://marginaleffects.com/data/airbnb.parquet",
+        "cameras" = "https://marginaleffects.com/data/cameras.parquet",
         "ces_demographics" = "https://marginaleffects.com/data/ces_demographics.parquet",
         "ces_survey" = "https://marginaleffects.com/data/ces_survey.parquet",
         "immigration" = "https://marginaleffects.com/data/immigration.parquet",
