@@ -9,6 +9,7 @@
 #' @slot vcov_model The variance-covariance matrix
 #' @slot call The original function call
 #' @slot df The degrees of freedom
+#' @slot wts The weights specification
 #' @keywords internal
 setClass(
     "marginaleffects_internal",
@@ -18,7 +19,8 @@ setClass(
         newdata = "data.frame",
         vcov_model = "ANY",
         call = "ANY",
-        df = "ANY"
+        df = "ANY",
+        wts = "ANY"
     )
 )
 
@@ -30,6 +32,7 @@ setClass(
 #' @param vcov_model The variance-covariance matrix
 #' @param call The original function call
 #' @param df The degrees of freedom
+#' @param wts The weights specification
 #' @return An object of class marginaleffects_internal
 #' @keywords internal
 new_marginaleffects_internal <- function(model = NULL,
@@ -37,12 +40,14 @@ new_marginaleffects_internal <- function(model = NULL,
                                          newdata = data.frame(),
                                          vcov_model = NULL,
                                          call = NULL,
-                                         df = NULL) {
+                                         df = NULL,
+                                         wts = FALSE) {
     new("marginaleffects_internal",
         model = model,
         modeldata = modeldata,
         newdata = newdata,
         vcov_model = vcov_model,
         call = call,
-        df = df)
+        df = df,
+        wts = wts)
 }

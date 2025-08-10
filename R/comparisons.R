@@ -273,33 +273,15 @@ comparisons <- function(
 
     # very early, before any use of newdata
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, mfx@model, by = by)
-    newdata <- sanitize_newdata(
-        model = mfx@model,
-        newdata = newdata,
-        modeldata = mfx@modeldata,
-        by = by,
-        wts = wts
-    )
-    newdata <- dedup_newdata(
-        model = mfx@model,
-        newdata = newdata,
-        wts = wts,
-        by = by,
-        cross = cross,
-        comparison = comparison
-    )
-    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
-        wts <- "marginaleffects_wts_internal"
-    }
+    mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, cross = cross, comparison = comparison)
+    wts <- mfx@wts
+    newdata <- mfx@newdata
 
     # misc
     conf_level <- sanitize_conf_level(conf_level, ...)
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
     numderiv <- sanitize_numderiv(numderiv)
 
-    # Assign final newdata to mfx
-    mfx@newdata <- newdata
 
     # misc sanitation
     sanity_by(by, mfx@newdata)

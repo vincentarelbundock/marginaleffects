@@ -291,3 +291,62 @@ dedup_newdata <- function(
 
     return(out)
 }
+
+
+#' Add processed newdata to mfx object
+#'
+#' Orchestrates the complete newdata processing pipeline by calling sanitize_newdata_call,
+#' sanitize_newdata, and dedup_newdata in sequence, then stores the result in mfx@newdata.
+#'
+#' @param mfx marginaleffects_internal S4 object
+#' @param scall Quoted expression for newdata (from rlang::enquo)
+#' @param newdata Raw newdata input
+#' @param by Grouping variables
+#' @param wts Weights specification
+#' @param cross Cross-contrast flag (for comparisons)
+#' @param comparison Comparison type (for comparisons)
+#' @param byfun Function for aggregation (for predictions)
+#' @return Updated mfx object with processed newdata in @newdata slot and updated wts in @wts slot
+#' @keywords internal
+add_newdata <- function(mfx, scall, newdata = NULL, by = FALSE, wts = FALSE, 
+                       cross = NULL, comparison = NULL, byfun = NULL) {
+    
+    # Step 1: Handle quoted calls to datagrid, subset, etc.
+    newdata <- sanitize_newdata_call(scall, newdata, mfx@model, by = by)
+    
+    # Step 2: Core newdata sanitization
+    newdata <- sanitize_newdata(
+        model = mfx@model,
+        newdata = newdata,
+        modeldata = mfx@modeldata,
+        by = by,
+        wts = wts
+    )
+    
+    # Step 3: Deduplication - handle different parameter sets for predictions vs comparisons
+    dedup_args <- list(
+        model = mfx@model,
+        newdata = newdata,
+        wts = wts,
+        by = by
+    )
+    
+    # Add function-specific arguments
+    if (!is.null(cross)) dedup_args$cross <- cross
+    if (!is.null(comparison)) dedup_args$comparison <- comparison
+    if (!is.null(byfun)) dedup_args$byfun <- byfun
+    
+    newdata <- do.call(dedup_newdata, dedup_args)
+    
+    # Step 4: Handle internal weights column
+    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+        wts <- "marginaleffects_wts_internal"
+    }
+    
+    # Store processed newdata and updated wts in the mfx object
+    mfx@newdata <- newdata
+    mfx@wts <- wts
+    
+    # Return the updated mfx object
+    return(mfx)
+}

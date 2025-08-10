@@ -227,24 +227,10 @@ predictions <- function(
 
 
     # newdata
-    newdata <- sanitize_newdata_call(rlang::enquo(newdata), newdata, model, by = by)
-    newdata <- sanitize_newdata(
-        model = model,
-        newdata = newdata,
-        modeldata = modeldata,
-        by = by,
-        wts = wts
-    )
-    newdata <- dedup_newdata(
-        model = model,
-        newdata = newdata,
-        wts = wts,
-        by = by,
-        byfun = byfun
-    )
-    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
-        wts <- "marginaleffects_wts_internal"
-    }
+    scall <- rlang::enquo(newdata)
+    mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, byfun = byfun)
+    wts <- mfx@wts
+    newdata <- mfx@newdata
 
     # sanity checks
     numderiv <- sanitize_numderiv(numderiv)
@@ -343,7 +329,7 @@ predictions <- function(
     # pre-building the model matrix can speed up repeated predictions
     newdata <- get_model_matrix_attribute(model, newdata)
     
-    # Assign final newdata to mfx
+    # Update mfx with the final newdata (after model matrix processing)
     mfx@newdata <- newdata
 
     # main estimation
