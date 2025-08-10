@@ -287,7 +287,6 @@ comparisons <- function(
     sanity_by(by, mfx@newdata)
     sanity_reserved(model, modeldata)
 
-
     cross <- sanitize_cross(cross, variables, mfx@model)
     type <- sanitize_type(
         model = mfx@model,
@@ -371,9 +370,9 @@ comparisons <- function(
     hyp_by <- attr(cmp, "hypothesis_function_by")
 
     # bayesian posterior
+    J <- draws <- NULL
     if (!is.null(attr(cmp, "posterior_draws"))) {
         draws <- attr(cmp, "posterior_draws")
-        J <- NULL
 
         # standard errors via delta method
     } else if (!isFALSE(vcov) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
@@ -404,10 +403,6 @@ comparisons <- function(
         attr(se, "jacobian") <- NULL
         cmp$std.error <- as.numeric(se)
         draws <- NULL
-
-        # no standard error
-    } else {
-        J <- draws <- NULL
     }
 
     # merge original data back in

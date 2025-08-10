@@ -378,41 +378,37 @@ predictions <- function(
     # bayesian posterior draws
     draws <- attr(tmp, "posterior_draws")
 
-    V <- NULL
     J <- NULL
     if (!isFALSE(vcov)) {
         mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = type, ...)
 
-        # Delta method
-        if (!"std.error" %in% colnames(tmp) && is.null(draws)) {
-            if (isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
-                # vcov = FALSE to speed things up
-                fun <- function(...) {
-                    get_predictions(..., wts = wts, verbose = FALSE)$estimate
-                }
-                args <- list(
-                    mfx = mfx,
-                    model_perturbed = mfx@model,
-                    vcov = mfx@vcov_model,
-                    type = type_call,
-                    FUN = fun,
-                    J = J,
-                    hypothesis = hypothesis,
-                    by = by,
-                    byfun = byfun,
-                    numderiv = numderiv,
-                    calling_function = "predictions"
-                )
-                args <- utils::modifyList(args, dots)
-                se <- do.call(get_se_delta, args)
-                if (is.numeric(se) && length(se) == nrow(tmp)) {
-                    J <- attr(se, "jacobian")
-                    attr(se, "jacobian") <- NULL
-                    tmp[["std.error"]] <- se
-                }
+        # Delta method for standard errors
+        if (!"std.error" %in% colnames(tmp) && is.null(draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+            fun <- function(...) {
+                get_predictions(..., wts = wts, verbose = FALSE)$estimate
+            }
+            args <- list(
+                mfx = mfx,
+                model_perturbed = mfx@model,
+                vcov = mfx@vcov_model,
+                type = type_call,
+                FUN = fun,
+                hypothesis = hypothesis,
+                by = by,
+                byfun = byfun,
+                numderiv = numderiv,
+                calling_function = "predictions"
+            )
+            args <- utils::modifyList(args, dots)
+            se <- do.call(get_se_delta, args)
+            if (is.numeric(se) && length(se) == nrow(tmp)) {
+                J <- attr(se, "jacobian")
+                attr(se, "jacobian") <- NULL
+                tmp[["std.error"]] <- se
             }
         }
 
+        # Confidence intervals
         tmp <- get_ci(
             tmp,
             conf_level = conf_level,
@@ -447,29 +443,11 @@ predictions <- function(
         bycols <- by
     }
 
-    # sort rows: do NOT sort rows because it breaks hypothesis b1, b2, b3 indexing.
-
-    # clean columns
-    stubcols <- c(
-        "rowid",
-        "rowidcf",
-        "term",
-        "group",
-        "hypothesis",
-        bycols,
-        "estimate",
-        "std.error",
-        "statistic",
-        "p.value",
-        "s.value",
-        "conf.low",
-        "conf.high",
-        "marginaleffects_wts",
-        sort(grep("^predicted", colnames(mfx@newdata), value = TRUE))
-    )
-    cols <- intersect(stubcols, colnames(out))
-    cols <- unique(c(cols, colnames(out)))
-    out <- out[, ..cols]
+    # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
+    # applied in the middle, and it must already be sorted in the final order,
+    # otherwise, users cannot know for sure what is going to be the first and
+    # second rows, etc.
+    out <- sort_columns(out, mfx@newdata, by)
 
     attr(out, "posterior_draws") <- draws
 
@@ -669,11 +647,6 @@ get_predictions <- function(
         draws = draws
     )
 
-    # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
-    # applied in the middle, and it must already be sorted in the final order,
-    # otherwise, users cannot know for sure what is going to be the first and
-    # second rows, etc.
-    out <- sort_columns(out, newdata, by)
 
     return(out)
 }
