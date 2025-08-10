@@ -209,20 +209,12 @@ predictions <- function(
 
     dots <- list(...)
 
-    # extracting modeldata repeatedly is slow.
-    if ("modeldata" %in% ...names()) {
-        modeldata <- call_attr[["modeldata"]] <- ...get("modeldata")
-    } else {
-        modeldata <- get_modeldata(
-            model,
-            additional_variables = by,
-            modeldata = dots[["modeldata"]],
-            wts = wts
-        )
-        if (isTRUE(checkmate::check_data_frame(modeldata))) {
-            call_attr[["modeldata"]] <- modeldata
-        }
-    }
+    # get modeldata
+    modeldata <- get_modeldata(
+        model,
+        additional_variables = by,
+        wts = wts
+    )
 
     sanity_reserved(model, modeldata)
 
@@ -294,7 +286,7 @@ predictions <- function(
 
     # after sanitize_newdata
     if (is.null(modeldata) && isTRUE(checkmate::check_data_frame(newdata))) {
-        modeldata <- call_attr[["modeldata"]] <- newdata
+        modeldata <- newdata
     }
 
     # after sanitize_newdata
@@ -559,6 +551,7 @@ predictions <- function(
         attr(out, "weights") <- marginaleffects_wts_internal
         attr(out, "transform") <- transform[[1]]
         attr(out, "hypothesis_by") <- hyp_by
+        attr(out, "mfx") <- mfx
 
         if (inherits(mfx@model, "brmsfit")) {
             insight::check_if_installed("brms")

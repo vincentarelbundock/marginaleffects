@@ -253,20 +253,12 @@ comparisons <- function(
 
     dots <- list(...)
 
-    # extracting modeldata repeatedly is slow.
-    if ("modeldata" %in% ...names()) {
-        modeldata <- call_attr[["modeldata"]] <- ...get("modeldata")
-    } else {
-        modeldata <- get_modeldata(
-            model,
-            additional_variables = by,
-            modeldata = dots[["modeldata"]],
-            wts = wts
-        )
-        if (isTRUE(checkmate::check_data_frame(modeldata))) {
-            call_attr[["modeldata"]] <- modeldata
-        }
-    }
+    # get modeldata
+    modeldata <- get_modeldata(
+        model,
+        additional_variables = by,
+        wts = wts
+    )
 
     # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
@@ -333,7 +325,7 @@ comparisons <- function(
 
     # after sanitize_newdata
     if (is.null(modeldata) && isTRUE(checkmate::check_data_frame(newdata))) {
-        modeldata <- call_attr[["modeldata"]] <- newdata
+        modeldata <- newdata
     }
 
     # after sanitize_newdata
@@ -561,6 +553,7 @@ comparisons <- function(
         attr(out, "comparison_label") <- comparison_label
         attr(out, "hypothesis_by") <- hyp_by
         attr(out, "transform_label") <- transform_label
+        attr(out, "mfx") <- mfx
 
         if (inherits(model, "brmsfit")) {
             insight::check_if_installed("brms")

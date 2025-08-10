@@ -206,9 +206,6 @@ hypotheses <- function(
 
     call_attr <- construct_call(model, "hypotheses")
 
-    if ("modeldata" %in% ...names()) {
-        call_attr[["modeldata"]] <- ...elt(match("modeldata", ...names())[1L])
-    }
 
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {
@@ -452,6 +449,7 @@ hypotheses <- function(
     attr(out, "vcov.type") <- vcov.type
     attr(out, "conf_level") <- conf_level
     attr(out, "hypothesis_function_by") <- attr(b, "hypothesis_function_by")
+    attr(out, "mfx") <- mfx
 
     # must be after attributes for vcov
     out <- multcomp_test(

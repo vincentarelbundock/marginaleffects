@@ -4,9 +4,17 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     out <- x
     call_mfx <- attr(x, "call")
     call_mfx[["vcov"]] <- FALSE
-    modeldata <- call_mfx[["modeldata"]]
-    if (is.null(modeldata)) {
-        modeldata <- get_modeldata(call_mfx[["model"]])
+    
+    # Check if mfx object is available with modeldata
+    mfx <- attr(x, "mfx")
+    if (!is.null(mfx) && isTRUE(checkmate::check_data_frame(mfx@modeldata))) {
+        modeldata <- mfx@modeldata
+    } else {
+        # Fallback to getting modeldata from call or model
+        modeldata <- call_mfx[["modeldata"]]
+        if (is.null(modeldata)) {
+            modeldata <- get_modeldata(call_mfx[["model"]])
+        }
     }
 
     if (!is.null(estimator)) {
