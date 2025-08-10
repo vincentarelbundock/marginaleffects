@@ -240,7 +240,8 @@ slopes <- function(
     df = Inf,
     eps = NULL,
     numderiv = "fdforward",
-    ...) {
+    ...
+) {
     call_attr <- construct_call(model, "slopes")
 
     # very early, before any use of newdata
@@ -358,7 +359,8 @@ avg_slopes <- function(
     df = Inf,
     eps = NULL,
     numderiv = "fdforward",
-    ...) {
+    ...
+) {
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)

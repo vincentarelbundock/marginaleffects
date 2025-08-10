@@ -251,7 +251,6 @@ print.marginaleffects <- function(
     # avoid infinite recursion by stripping marginaleffect.summary class
     data.table::setDF(out)
 
-
     if (style %in% c("tinytable", "html", "latex", "typst", "markdown")) {
         insight::check_if_installed("tinytable")
 
@@ -283,7 +282,6 @@ print.marginaleffects <- function(
         return(invisible(tab))
     }
 
-        
     # head
     cat("\n")
     print_head <- attr(x, "print_head")

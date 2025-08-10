@@ -13,7 +13,6 @@ get_model_matrix <- function(model, newdata) {
 #' @keywords internal
 #' @export
 get_model_matrix.default <- function(model, newdata) {
-
     # some models require the response variable first value only allows us to
     # handle `newdata="balanced"` and friends. This is a hack, but it probably
     # doesn't matter.

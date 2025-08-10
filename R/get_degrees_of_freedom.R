@@ -23,7 +23,6 @@ get_degrees_of_freedom <- function(model, df = Inf, newdata = NULL) {
             stop_sprintf(msg, df, class(model)[1])
         }
         df <- tmp
-
     } else if (isTRUE(checkmate::check_choice(df, "residual"))) {
         tmp <- try(
             insight::get_df(x = model, data = newdata, type = df, df_per_obs = TRUE),
@@ -34,7 +33,6 @@ get_degrees_of_freedom <- function(model, df = Inf, newdata = NULL) {
             stop_sprintf(msg, df, class(model)[1])
         }
         df <- tmp
-
     } else if (
         isTRUE(checkmate::check_number(df, lower = Inf)) ||
             isFALSE(df) ||

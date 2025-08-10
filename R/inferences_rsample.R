@@ -80,7 +80,7 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     # hack: rsample only supports character `term`
     # https://github.com/tidymodels/rsample/issues/574
     ci$term <- as.numeric(ci$term)
-    ci <- ci[order(ci$term),]
+    ci <- ci[order(ci$term), ]
 
     out$conf.low <- ci$.lower
     out$conf.high <- ci$.upper

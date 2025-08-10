@@ -33,19 +33,20 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", .
 
     # fwb default verbose is TRUE
     if (!"verbose" %in% names(args)) {
-      args[["verbose"]] <- FALSE
+        args[["verbose"]] <- FALSE
     }
 
-    if (isTRUE(getOption("marginaleffects_parallel_inferences", default = FALSE)) &&
-        !"cl" %in% names(args)) {
+    if (
+        isTRUE(getOption("marginaleffects_parallel_inferences", default = FALSE)) &&
+            !"cl" %in% names(args)
+    ) {
         args[["cl"]] <- "future"
     }
 
     B <- do.call(fwb::fwb, args)
 
     # Extract SEs and CIs
-    fwb_summary <- tidy(summary(B, conf = conf_level, ci.type = conf_type,
-                                p.value = TRUE))
+    fwb_summary <- tidy(summary(B, conf = conf_level, ci.type = conf_type, p.value = TRUE))
 
     out$std.error <- fwb_summary$std.error
     out$conf.low <- fwb_summary$conf.low
@@ -54,18 +55,16 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", .
     cols <- setdiff(names(out), "df")
 
     if ("p.value" %in% names(fwb_summary)) {
-      out$p.value <- fwb_summary$p.value
-      out$s.value <- -log2(out$p.value)
-    }
-    else {
-      cols <- setdiff(cols, c("s.value", "p.value"))
+        out$p.value <- fwb_summary$p.value
+        out$s.value <- -log2(out$p.value)
+    } else {
+        cols <- setdiff(cols, c("s.value", "p.value"))
     }
 
     if ("statistic" %in% names(fwb_summary)) {
-      out$statistic <- fwb_summary$statistic
-    }
-    else {
-      cols <- setdiff(cols, "statistic")
+        out$statistic <- fwb_summary$statistic
+    } else {
+        cols <- setdiff(cols, "statistic")
     }
 
     out <- out[, cols, drop = FALSE]

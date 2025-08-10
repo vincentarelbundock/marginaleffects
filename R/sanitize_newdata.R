@@ -201,7 +201,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         modeldata$idx <- NULL
         newdata$idx <- NULL
     }
-    
+
     data.table::setDT(newdata)
 
     # attributes: misc

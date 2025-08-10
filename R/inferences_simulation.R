@@ -2,7 +2,7 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     insight::check_if_installed("mvtnorm")
 
     checkmate::assert_choice(
-      conf_type,
+        conf_type,
         choices = c(
             "perc",
             "wald"

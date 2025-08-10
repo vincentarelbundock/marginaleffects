@@ -26,7 +26,8 @@ get_dataset <- function(
     dataset = "thornton",
     package = NULL,
     docs = FALSE,
-    search = NULL) {
+    search = NULL
+) {
     checkmate::assert_string(dataset)
     checkmate::assert_string(package, null.ok = TRUE)
     checkmate::assert_flag(docs)
