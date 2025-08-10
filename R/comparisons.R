@@ -352,6 +352,12 @@ comparisons <- function(
         wts <- "marginaleffects_wts_internal"
     }
 
+    mfx <- new_marginaleffects_internal(
+        model = model,
+        modeldata = modeldata,
+        newdata = newdata
+    )
+
     # after sanitize_newdata
     # after dedup_newdata
     variables_list <- sanitize_variables(
@@ -386,19 +392,16 @@ comparisons <- function(
 
     # compute contrasts and standard errors
     args <- list(
-        model = model,
-        newdata = newdata,
+        mfx = mfx,
         variables = predictors,
-        cross = cross,
-        modeldata = modeldata
+        cross = cross
     )
     dots[["modeldata"]] <- NULL # dont' pass twice
     args <- utils::modifyList(args, dots)
     contrast_data <- do.call("get_contrast_data", args)
 
     args <- list(
-        model,
-        newdata = newdata,
+        mfx = mfx,
         variables = predictors,
         type = type,
         original = contrast_data[["original"]],
@@ -407,29 +410,28 @@ comparisons <- function(
         wts = contrast_data[["original"]][["marginaleffects_wts_internal"]],
         by = by,
         cross = cross,
-        hypothesis = hypothesis,
-        modeldata = modeldata
+        hypothesis = hypothesis
     )
     args <- utils::modifyList(args, dots)
-    mfx <- do.call("get_contrasts", args)
+    cmp <- do.call("get_contrasts", args)
 
-    hyp_by <- attr(mfx, "hypothesis_function_by")
+    hyp_by <- attr(cmp, "hypothesis_function_by")
 
     # bayesian posterior
-    if (!is.null(attr(mfx, "posterior_draws"))) {
-        draws <- attr(mfx, "posterior_draws")
+    if (!is.null(attr(cmp, "posterior_draws"))) {
+        draws <- attr(cmp, "posterior_draws")
         J <- NULL
 
         # standard errors via delta method
     } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
-        idx <- intersect(colnames(mfx), c("group", "term", "contrast"))
-        idx <- mfx[, (idx), drop = FALSE]
+        idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
+        idx <- cmp[, (idx), drop = FALSE]
         args <- list(
-            model,
+            mfx = mfx,
+            model_perturbed = model,
             vcov = vcov,
             type = type,
             FUN = get_se_delta_contrasts,
-            newdata = newdata,
             index = idx,
             variables = predictors,
             hypothesis = hypothesis,
@@ -447,7 +449,7 @@ comparisons <- function(
         se <- do.call("get_se_delta", args)
         J <- attr(se, "jacobian")
         attr(se, "jacobian") <- NULL
-        mfx$std.error <- as.numeric(se)
+        cmp$std.error <- as.numeric(se)
         draws <- NULL
 
         # no standard error
@@ -456,7 +458,7 @@ comparisons <- function(
     }
 
     # merge original data back in
-    if ((is.null(by) || isFALSE(by)) && "rowid" %in% colnames(mfx)) {
+    if ((is.null(by) || isFALSE(by)) && "rowid" %in% colnames(cmp)) {
         if ("rowid" %in% colnames(newdata)) {
             idx <- c(
                 "rowid",
@@ -464,25 +466,25 @@ comparisons <- function(
                 "term",
                 "contrast",
                 "by",
-                setdiff(colnames(contrast_data$original), colnames(mfx))
+                setdiff(colnames(contrast_data$original), colnames(cmp))
             )
             idx <- intersect(idx, colnames(contrast_data$original))
             tmp <- contrast_data$original[, ..idx, drop = FALSE]
             # contrast_data is duplicated to compute contrasts for different terms or pairs
-            bycols <- intersect(colnames(tmp), colnames(mfx))
+            bycols <- intersect(colnames(tmp), colnames(cmp))
             idx <- duplicated(tmp, by = bycols)
             tmp <- tmp[!idx]
-            mfx <- merge(mfx, tmp, all.x = TRUE, by = bycols, sort = FALSE)
+            cmp <- merge(cmp, tmp, all.x = TRUE, by = bycols, sort = FALSE)
             # HACK: relies on NO sorting at ANY point
         } else {
-            idx <- setdiff(colnames(contrast_data$original), colnames(mfx))
-            mfx <- data.table(mfx, contrast_data$original[, ..idx])
+            idx <- setdiff(colnames(contrast_data$original), colnames(cmp))
+            cmp <- data.table(cmp, contrast_data$original[, ..idx])
         }
     }
 
     # meta info
-    mfx <- get_ci(
-        mfx,
+    cmp <- get_ci(
+        cmp,
         conf_level = conf_level,
         df = df,
         draws = draws,
@@ -497,26 +499,26 @@ comparisons <- function(
     # applied in the middle, and it must already be sorted in the final order,
     # otherwise, users cannot know for sure what is going to be the first and
     # second rows, etc.
-    mfx <- sort_columns(mfx, newdata, by)
+    cmp <- sort_columns(cmp, newdata, by)
 
     # bayesian draws
-    attr(mfx, "posterior_draws") <- draws
+    attr(cmp, "posterior_draws") <- draws
 
     # equivalence tests
-    mfx <- equivalence(mfx, equivalence = equivalence, df = df, ...)
+    cmp <- equivalence(cmp, equivalence = equivalence, df = df, ...)
 
     # after draws attribute
-    mfx <- backtransform(mfx, transform)
+    cmp <- backtransform(cmp, transform)
 
     # save as attribute and not column
-    if (!all(is.na(mfx[["marginaleffects_wts_internal"]]))) {
-        marginaleffects_wts_internal <- mfx[["marginaleffects_wts_internal"]]
+    if (!all(is.na(cmp[["marginaleffects_wts_internal"]]))) {
+        marginaleffects_wts_internal <- cmp[["marginaleffects_wts_internal"]]
     } else {
         marginaleffects_wts_internal <- NULL
     }
-    mfx[["marginaleffects_wts_internal"]] <- NULL
+    cmp[["marginaleffects_wts_internal"]] <- NULL
 
-    out <- mfx
+    out <- cmp
 
     data.table::setDF(out)
 

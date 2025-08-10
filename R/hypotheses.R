@@ -149,7 +149,7 @@
 #'
 #' @export
 hypotheses <- function(
-    model,
+    model = NULL,
     hypothesis = NULL,
     vcov = NULL,
     conf_level = NULL,
@@ -161,6 +161,16 @@ hypotheses <- function(
     numderiv = "fdforward",
     ...
 ) {
+
+    if (is.null(model)) {
+        if ("model_perturbed" %in% ...names()) {
+            model <- ...get("model_perturbed")
+        } else {
+            msg <- "The `model` argument is required."
+            stop_sprintf(msg)
+        }
+    }
+
     hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
 
     if (inherits(model, c("predictions", "comparisons", "slopes", "hypotheses"))) {
@@ -263,17 +273,17 @@ hypotheses <- function(
         vcov.type <- "matrix"
     }
 
-    FUNouter <- function(model, hypothesis, newparams = NULL, ...) {
-        if (isTRUE(checkmate::check_numeric(model))) {
+    FUNouter <- function(model_perturbed, hypothesis, newparams = NULL, ...) {
+        if (isTRUE(checkmate::check_numeric(model_perturbed))) {
             out <- data.frame(term = seq_along(out), estimate = out)
-        } else if (inherits(model, "data.frame")) {
-            out <- model
+        } else if (inherits(model_perturbed, "data.frame")) {
+            out <- model_perturbed
             if (!"estimate" %in% colnames(out)) {
                 msg <- "`hypothesis` function must return a data.frame with a column named `estimate`."
                 insight::format_error(msg)
             }
             if (!"term" %in% colnames(out)) {
-                n <- tryCatch(names(stats::coef(model)), error = function(e) NULL)
+                n <- tryCatch(names(stats::coef(model_perturbed)), error = function(e) NULL)
                 if (is.null(n)) {
                     n <- paste0("b", seq_len(nrow(out)))
                 }
@@ -286,13 +296,13 @@ hypotheses <- function(
 
             # unknown model
         } else if (!is.function(hypothesis)) {
-            out <- insight::get_parameters(model, ...)
+            out <- insight::get_parameters(model_perturbed, ...)
             if ("Component" %in% colnames(out) && !anyNA(out$Component)) {
                 out$Parameter <- sprintf("%s_%s", out$Component, out$Parameter)
             } else if ("Response" %in% colnames(out) && !anyNA(out$Response)) {
                 out$Parameter <- sprintf("%s_%s", out$Response, out$Parameter)
             }
-            idx <- intersect(colnames(model), c("term", "group", "estimate"))
+            idx <- intersect(colnames(model_perturbed), c("term", "group", "estimate"))
             colnames(out)[1:2] <- c("term", "estimate")
 
             # glmmTMB
@@ -300,12 +310,12 @@ hypotheses <- function(
                 out$estimate <- newparams
             }
         } else if (hypothesis_is_formula) {
-            beta <- get_coef(model)
+            beta <- get_coef(model_perturbed)
             out <- data.table::data.table(estimate = beta, term = names(beta))
 
             # unknown model but user-supplied hypothesis function
         } else {
-            out <- model
+            out <- model_perturbed
         }
 
         tmp <- get_hypothesis(out, hypothesis = hypothesis)
@@ -328,7 +338,7 @@ hypotheses <- function(
         return(out)
     }
 
-    b <- FUNouter(model = model, hypothesis = hypothesis, ...)
+    b <- FUNouter(model_perturbed = model, hypothesis = hypothesis, ...)
 
     # bayesian posterior
     if (!is.null(attr(b, "posterior_draws"))) {
@@ -339,7 +349,7 @@ hypotheses <- function(
         # standard errors via delta method
     } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
         args <- list(
-            model = model,
+            model_perturbed = model,
             vcov = vcov,
             hypothesis = hypothesis,
             FUN = FUNouter,

@@ -32,7 +32,7 @@ dat$vs <- as.factor(dat$vs)
 
 
 # marginalmeans vs. emmeans: poisson link or response
-#skip_if_not_installed("emmeans", minimum_version = "1.7.3") # transform -> regrid
+# skip_if_not_installed("emmeans", minimum_version = "1.7.3") # transform -> regrid
 dat <- mtcars
 dat$am <- factor(dat$am)
 dat$cyl <- factor(dat$cyl)

@@ -1,11 +1,11 @@
 get_contrasts <- function(
-    model,
-    newdata,
+    mfx,
     type,
     variables,
     original,
     lo,
     hi,
+    model_perturbed = NULL,
     wts = FALSE,
     by = NULL,
     byfun = NULL,
@@ -15,6 +15,18 @@ get_contrasts <- function(
     deltamethod = FALSE,
     ...
 ) {
+
+    if (!inherits(mfx, "marginaleffects_internal")) browser()
+    newdata <- mfx@newdata
+    data.table::setDT(newdata)
+
+    # get_se_delta() needs perturbed coefficients model
+    if (is.null(model_perturbed)) { 
+        model <- mfx@model
+    } else {
+        model <- model_perturbed
+    }
+
     settings_init()
 
     # some predict() methods need data frames and will convert data.tables

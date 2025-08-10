@@ -120,6 +120,7 @@ x <- mod |>
 expect_equivalent(nrow(x), 2 * R)
 
 # fwb no validity check
+exit_file("Issue $#6 on fwb")
 set.seed(1234)
 x <- mod |>
     comparisons() |>

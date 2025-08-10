@@ -1,11 +1,14 @@
 get_contrast_data <- function(
-    model,
-    newdata,
+    mfx,
     variables,
     cross,
-    modeldata = NULL,
     ...
 ) {
+
+    newdata <- mfx@newdata
+    model <- mfx@model
+    modeldata <- mfx@modeldata
+
     lo <- hi <- ter <- lab <- original <- rowid <- list()
 
     # after variable class assignment

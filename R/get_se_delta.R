@@ -26,7 +26,8 @@ align_jacobian_vcov <- function(J, V, object, ...) {
 
 
 get_se_delta_contrasts <- function(
-    model,
+    mfx,
+    model_perturbed,
     variables,
     newdata,
     type,
@@ -40,8 +41,8 @@ get_se_delta_contrasts <- function(
     byfun,
     ...) {
     get_contrasts(
-        model,
-        newdata = newdata,
+        model_perturbed = model_perturbed,
+        mfx = mfx,
         variables = variables,
         type = type,
         hypothesis = hypothesis,
@@ -67,7 +68,7 @@ get_se_delta_contrasts <- function(
 #' @return vector of standard errors
 #' @noRd
 get_se_delta <- function(
-    model,
+    model_perturbed,
     vcov,
     FUN,
     mfx = NULL,
@@ -88,11 +89,11 @@ get_se_delta <- function(
     ...) {
     # delta method does not work for these models
     bad <- c("brmsfit", "stanreg", "bart")
-    if (any(inherits(model, bad))) {
+    if (any(inherits(model_perturbed, bad))) {
         return(NULL)
     }
 
-    coefs <- get_coef(model, ...)
+    coefs <- get_coef(model_perturbed, ...)
 
     # TODO: this is a terrible sanity check
     # some vcov methods return an unnamed matrix, some have duplicate names
@@ -124,7 +125,7 @@ get_se_delta <- function(
             coefs = coefs,
             mfx = mfx,
             newdata = newdata,
-            model = model,
+            model_perturbed = model_perturbed,
             hypothesis = hypothesis,
             type = type,
             by = by,
@@ -142,11 +143,11 @@ get_se_delta <- function(
     # output: gradient
     inner <- function(x) {
         names(x) <- names(coefs)
-        model_tmp <- set_coef(model, x, ...)
+        model_tmp <- set_coef(model_perturbed, x, ...)
         # do not pass NULL arguments. Important for `deltam` to allow users to supply FUN without ...
         args <- list(
             mfx = mfx,
-            model = model_tmp,
+            model_perturbed = model_tmp,
             hypothesis = hypothesis,
             type = type,
             hi = hi,
@@ -156,7 +157,7 @@ get_se_delta <- function(
             byfun = byfun
         )
         args <- c(args, list(...))
-        if (inherits(model, "gamlss")) {
+        if (inherits(model_perturbed, "gamlss")) {
             args[["safe"]] <- FALSE
         }
         if (!is.null(eps)) {
@@ -175,7 +176,7 @@ get_se_delta <- function(
             args[["eps"]] <- eps
         }
 
-        if (inherits(model, "glmmTMB")) {
+        if (inherits(model_perturbed, "glmmTMB")) {
             args$newparams <- x
         }
 
@@ -191,13 +192,13 @@ get_se_delta <- function(
             numderiv = numderiv
         )
         J <- do.call("get_jacobian", args)
-        colnames(J) <- names(get_coef(model, ...))
+        colnames(J) <- names(get_coef(model_perturbed, ...))
     }
 
     # align J and V: This might be a problematic hack, but I have not found examples yet.
     V <- vcov
     if (!isTRUE(ncol(J) == ncol(V))) {
-        aligned <- align_jacobian_vcov(J, V, model, ...)
+        aligned <- align_jacobian_vcov(J, V, model_perturbed, ...)
         J <- aligned$J
         V <- aligned$V
     }

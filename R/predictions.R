@@ -376,8 +376,6 @@ predictions <- function(
     # main estimation
     args <- list(
         mfx = mfx,
-        model = mfx@model,
-        newdata = mfx@newdata,
         type = type_call,
         hypothesis = hypothesis,
         wts = wts,
@@ -443,8 +441,7 @@ predictions <- function(
                 }
                 args <- list(
                     mfx = mfx,
-                    model = mfx@model,
-                    newdata = mfx@newdata,
+                    model_perturbed = mfx@model,
                     vcov = V,
                     type = type_call,
                     FUN = fun,
@@ -587,9 +584,8 @@ predictions <- function(
 # wrapper used only for standard_error_delta
 get_predictions <- function(
     mfx,
-    newdata,
     type,
-    model = NULL, # important for perturbed model
+    model_perturbed = NULL, # important for perturbed model
     by = NULL,
     byfun = byfun,
     hypothesis = NULL,
@@ -604,8 +600,10 @@ get_predictions <- function(
     newdata <- mfx@newdata
 
     # sometimes we want the perturbed coefficients model supplied by get_se_delta().
-    if (is.null(model)) {
+    if (is.null(model_perturbed)) {
         model <- mfx@model
+    } else {
+        model <- model_perturbed
     }
 
     out <- myTryCatch(get_predict(

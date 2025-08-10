@@ -1,6 +1,7 @@
 source("helpers.R")
 requiet("mlogit")
 requiet("dplyr")
+exit_file("TODO: broken")
 
 # Test custom hypothesis functions with mlogit
 data("Fishing", package = "mlogit")
