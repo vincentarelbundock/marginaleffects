@@ -230,12 +230,11 @@ predictions <- function(
     scall <- rlang::enquo(newdata)
     mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, byfun = byfun)
     wts <- mfx@wts
-    newdata <- mfx@newdata
 
     # sanity checks
     numderiv <- sanitize_numderiv(numderiv)
-    sanity_by(by, newdata)
-    sanity_reserved(model, modeldata)
+    sanity_by(by, mfx@newdata)
+    sanity_reserved(model, mfx@modeldata)
 
     tmp <- sanitize_hypothesis(hypothesis, ...)
     hypothesis_input <- hypothesis
@@ -271,37 +270,37 @@ predictions <- function(
     transform <- sanitize_transform(transform)
 
     conf_level <- sanitize_conf_level(conf_level, ...)
-    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(mfx@newdata)) {
         wts <- "marginaleffects_wts_internal"
     }
 
     # analogous to comparisons(variables=list(...))
     if (!is.null(variables)) {
         args <- list(
-            "model" = model,
-            "newdata" = newdata,
-            "grid_type" = "counterfactual"
+            model = mfx@model,
+            newdata = mfx@newdata,
+            grid_type = "counterfactual"
         )
         tmp <- sanitize_variables(
             variables = variables,
-            model = model,
-            newdata = newdata,
-            modeldata = modeldata,
+            model = mfx@model,
+            newdata = mfx@newdata,
+            modeldata = mfx@modeldata,
             calling_function = "predictions"
         )$conditional
         for (v in tmp) {
             args[[v$name]] <- v$value
         }
-        newdata <- do.call("datagrid", args)
+        mfx@newdata <- do.call("datagrid", args)
         # the original rowids are no longer valid after averaging et al.
-        newdata[["rowid"]] <- NULL
+        mfx@newdata[["rowid"]] <- NULL
     }
 
-    character_levels <- attr(newdata, "newdata_character_levels")
+    character_levels <- attr(mfx@newdata, "newdata_character_levels")
 
     # trust newdata$rowid
-    if (!"rowid" %in% colnames(newdata)) {
-        newdata[["rowid"]] <- seq_len(nrow(newdata))
+    if (!"rowid" %in% colnames(mfx@newdata)) {
+        mfx@newdata[["rowid"]] <- seq_len(nrow(mfx@newdata))
     }
 
     # pad factors: `model.matrix` breaks when factor levels are missing
@@ -312,9 +311,9 @@ predictions <- function(
     if (inherits(model, "mlogit")) {
         padding <- data.frame()
     } else {
-        padding <- complete_levels(newdata, character_levels)
+        padding <- complete_levels(mfx@newdata, character_levels)
         if (nrow(padding) > 0) {
-            newdata <- rbindlist(list(padding, newdata))
+            mfx@newdata <- rbindlist(list(padding, mfx@newdata))
         }
     }
 
@@ -327,10 +326,7 @@ predictions <- function(
     ############### sanity checks are over
 
     # pre-building the model matrix can speed up repeated predictions
-    newdata <- get_model_matrix_attribute(model, newdata)
-    
-    # Update mfx with the final newdata (after model matrix processing)
-    mfx@newdata <- newdata
+    mfx@newdata <- get_model_matrix_attribute(mfx@model, mfx@newdata)
 
     # main estimation
     args <- list(
@@ -357,20 +353,20 @@ predictions <- function(
             skip_absent = TRUE
         )
     } else {
-        tmp <- data.frame(newdata$rowid, type, tmp)
+        tmp <- data.frame(mfx@newdata$rowid, type, tmp)
         colnames(tmp) <- c("rowid", "estimate")
-        if ("rowidcf" %in% colnames(newdata)) {
-            tmp[["rowidcf"]] <- newdata[["rowidcf"]]
+        if ("rowidcf" %in% colnames(mfx@newdata)) {
+            tmp[["rowidcf"]] <- mfx@newdata[["rowidcf"]]
         }
     }
 
     # issue #1105: hypothesis may change the meaning of rows, so we don't want to force-merge `newdata`
     if (
         !"rowid" %in% colnames(tmp) &&
-            nrow(tmp) == nrow(newdata) &&
+            nrow(tmp) == nrow(mfx@newdata) &&
             is.null(hypothesis)
     ) {
-        tmp$rowid <- newdata$rowid
+        tmp$rowid <- mfx@newdata$rowid
     }
 
     # degrees of freedom
@@ -432,12 +428,12 @@ predictions <- function(
     }
 
     out <- data.table::data.table(tmp)
-    data.table::setDT(newdata)
+    data.table::setDT(mfx@newdata)
 
     # expensive: only do this inside jacobian if necessary
     if (!inherits(mfx@model, "mclogit")) {
         # weird case. probably a cleaner way but lazy now...
-        out <- merge_by_rowid(out, newdata)
+        out <- merge_by_rowid(out, mfx@newdata)
     }
 
     # save weights as attribute and not column
@@ -469,7 +465,7 @@ predictions <- function(
         "conf.low",
         "conf.high",
         "marginaleffects_wts",
-        sort(grep("^predicted", colnames(newdata), value = TRUE))
+        sort(grep("^predicted", colnames(mfx@newdata), value = TRUE))
     )
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
@@ -508,7 +504,7 @@ predictions <- function(
         }
     } else {
         # other attributes
-        attr(out, "newdata") <- newdata
+        attr(out, "newdata") <- mfx@newdata
         attr(out, "call") <- mfx@call
         attr(out, "model_type") <- class(mfx@model)[1]
         attr(out, "model") <- mfx@model
@@ -601,10 +597,10 @@ get_predictions <- function(
 
     if (
         !"rowid" %in% colnames(out) &&
-            "rowid" %in% colnames(newdata) &&
-            nrow(out) == nrow(newdata)
+            "rowid" %in% colnames(mfx@newdata) &&
+            nrow(out) == nrow(mfx@newdata)
     ) {
-        out$rowid <- newdata$rowid
+        out$rowid <- mfx@newdata$rowid
     }
 
     # extract attributes before setDT
