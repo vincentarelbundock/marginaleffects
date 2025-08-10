@@ -1,4 +1,7 @@
-get_degrees_of_freedom <- function(model, df = Inf, newdata = NULL) {
+get_degrees_of_freedom <- function(mfx, df = Inf) {
+    model <- mfx@model
+    newdata <- mfx@newdata
+
     # before NULL return
     if (isTRUE(checkmate::check_choice(vcov, c("satterthwaite", "kenward-roger")))) {
         df <- vcov
@@ -64,8 +67,7 @@ sanitize_df <- function(
     newdata = NULL,
     by = NULL,
     hypothesis = NULL,
-    vcov = NULL
-) {
+    vcov = NULL) {
     # K-W changes both the vcov and the df
     # Satterthwaite changes the df but not the vcov
     if (isTRUE(checkmate::check_choice(vcov, c("satterthwaite", "kenward-roger")))) {

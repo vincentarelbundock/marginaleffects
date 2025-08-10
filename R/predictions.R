@@ -415,11 +415,7 @@ predictions <- function(
     }
 
     # degrees of freedom
-    df_numeric <- get_degrees_of_freedom(
-        model = mfx@model,
-        df = df,
-        newdata = newdata
-    )
+    df_numeric <- get_degrees_of_freedom(mfx = mfx, df = df)
     if (!is.null(df_numeric) && is.numeric(df_numeric)) {
         tmp$df <- df_numeric
     }
@@ -430,11 +426,11 @@ predictions <- function(
     V <- NULL
     J <- NULL
     if (!isFALSE(vcov)) {
-        V <- get_vcov(mfx@model, vcov = vcov, type = type, ...)
+        mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = type, ...)
 
         # Delta method
         if (!"std.error" %in% colnames(tmp) && is.null(draws)) {
-            if (isTRUE(checkmate::check_matrix(V))) {
+            if (isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
                 # vcov = FALSE to speed things up
                 fun <- function(...) {
                     get_predictions(..., wts = wts, verbose = FALSE)$estimate
@@ -442,7 +438,7 @@ predictions <- function(
                 args <- list(
                     mfx = mfx,
                     model_perturbed = mfx@model,
-                    vcov = V,
+                    vcov = mfx@vcov_model,
                     type = type_call,
                     FUN = fun,
                     J = J,
@@ -465,7 +461,7 @@ predictions <- function(
         tmp <- get_ci(
             tmp,
             conf_level = conf_level,
-            vcov = vcov,
+            vcov = mfx@vcov_model,
             draws = draws,
             estimate = "estimate",
             hypothesis_null = hypothesis_null,
@@ -558,7 +554,7 @@ predictions <- function(
         attr(out, "model_type") <- class(mfx@model)[1]
         attr(out, "model") <- mfx@model
         attr(out, "jacobian") <- J
-        attr(out, "vcov") <- V
+        attr(out, "vcov") <- mfx@vcov_model
         attr(out, "weights") <- marginaleffects_wts_internal
         attr(out, "transform") <- transform[[1]]
         attr(out, "hypothesis_by") <- hyp_by

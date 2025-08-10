@@ -374,11 +374,11 @@ comparisons <- function(
     # get dof before transforming the vcov arg
     # get_degrees_of_freedom() produces a weird warning on non lmerMod. We can skip them
     # because get_vcov() will produce an informative error later.
-    df <- get_degrees_of_freedom(model = model, df = df, newdata = newdata)
+    df <- get_degrees_of_freedom(mfx = mfx, df = df)
 
     vcov_false <- isFALSE(vcov)
     vcov.type <- get_vcov_label(vcov)
-    vcov <- get_vcov(model, vcov = vcov, type = type, ...)
+    mfx@vcov_model <- get_vcov(model, vcov = vcov, type = type, ...)
 
     predictors <- variables_list$conditional
 
@@ -423,13 +423,13 @@ comparisons <- function(
         J <- NULL
 
         # standard errors via delta method
-    } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
+    } else if (!isFALSE(vcov) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
         idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
         idx <- cmp[, (idx), drop = FALSE]
         args <- list(
             mfx = mfx,
             model_perturbed = model,
-            vcov = vcov,
+            vcov = mfx@vcov_model,
             type = type,
             FUN = get_se_delta_contrasts,
             index = idx,
@@ -552,7 +552,7 @@ comparisons <- function(
         attr(out, "model") <- model
         attr(out, "variables") <- predictors
         attr(out, "jacobian") <- J
-        attr(out, "vcov") <- vcov
+        attr(out, "vcov") <- mfx@vcov_model
         attr(out, "vcov.type") <- vcov.type
         attr(out, "weights") <- marginaleffects_wts_internal
         attr(out, "comparison") <- comparison

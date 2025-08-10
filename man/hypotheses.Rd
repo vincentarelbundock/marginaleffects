@@ -5,7 +5,7 @@
 \title{(Non-)Linear Tests for Null Hypotheses, Joint Hypotheses, Equivalence, Non Superiority, and Non Inferiority}
 \usage{
 hypotheses(
-  model,
+  model = NULL,
   hypothesis = NULL,
   vcov = NULL,
   conf_level = NULL,
