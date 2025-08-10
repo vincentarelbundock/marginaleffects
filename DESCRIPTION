@@ -240,6 +240,7 @@ Collate:
     'inferences_fwb.R'
     'inferences_rsample.R'
     'inferences_simulation.R'
+    'marginaleffects_internal.R'
     'matrix_apply.R'
     'mean_or_mode.R'
     'methods.R'

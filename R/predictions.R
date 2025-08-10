@@ -367,10 +367,17 @@ predictions <- function(
     # pre-building the model matrix can speed up repeated predictions
     newdata <- get_model_matrix_attribute(model, newdata)
 
+    mfx <- new_marginaleffects_internal(
+        model = model,
+        modeldata = modeldata,
+        newdata = newdata
+    )
+
     # main estimation
     args <- list(
-        model = model,
-        newdata = newdata,
+        mfx = mfx,
+        model = mfx@model,
+        newdata = mfx@newdata,
         type = type_call,
         hypothesis = hypothesis,
         wts = wts,
@@ -411,7 +418,7 @@ predictions <- function(
 
     # degrees of freedom
     df_numeric <- get_degrees_of_freedom(
-        model = model,
+        model = mfx@model,
         df = df,
         newdata = newdata
     )
@@ -425,7 +432,7 @@ predictions <- function(
     V <- NULL
     J <- NULL
     if (!isFALSE(vcov)) {
-        V <- get_vcov(model, vcov = vcov, type = type, ...)
+        V <- get_vcov(mfx@model, vcov = vcov, type = type, ...)
 
         # Delta method
         if (!"std.error" %in% colnames(tmp) && is.null(draws)) {
@@ -435,8 +442,9 @@ predictions <- function(
                     get_predictions(..., wts = wts, verbose = FALSE)$estimate
                 }
                 args <- list(
-                    model,
-                    newdata = newdata,
+                    mfx = mfx,
+                    model = mfx@model,
+                    newdata = mfx@newdata,
                     vcov = V,
                     type = type_call,
                     FUN = fun,
@@ -466,7 +474,7 @@ predictions <- function(
             hypothesis_null = hypothesis_null,
             hypothesis_direction = hypothesis_direction,
             df = df,
-            model = model,
+            model = mfx@model,
             ...
         )
     }
@@ -475,7 +483,7 @@ predictions <- function(
     data.table::setDT(newdata)
 
     # expensive: only do this inside jacobian if necessary
-    if (!inherits(model, "mclogit")) {
+    if (!inherits(mfx@model, "mclogit")) {
         # weird case. probably a cleaner way but lazy now...
         out <- merge_by_rowid(out, newdata)
     }
@@ -522,7 +530,7 @@ predictions <- function(
 
     # after rename to estimate / after assign draws
     if (identical(type_string, "invlink(link)")) {
-        linv <- tryCatch(insight::link_inverse(model), error = function(e) identity)
+        linv <- tryCatch(insight::link_inverse(mfx@model), error = function(e) identity)
         out <- backtransform(out, transform = linv)
     }
     out <- backtransform(out, transform = transform)
@@ -550,17 +558,17 @@ predictions <- function(
         # other attributes
         attr(out, "newdata") <- newdata
         attr(out, "call") <- call_attr
-        attr(out, "model_type") <- class(model)[1]
-        attr(out, "model") <- model
+        attr(out, "model_type") <- class(mfx@model)[1]
+        attr(out, "model") <- mfx@model
         attr(out, "jacobian") <- J
         attr(out, "vcov") <- V
         attr(out, "weights") <- marginaleffects_wts_internal
         attr(out, "transform") <- transform[[1]]
         attr(out, "hypothesis_by") <- hyp_by
 
-        if (inherits(model, "brmsfit")) {
+        if (inherits(mfx@model, "brmsfit")) {
             insight::check_if_installed("brms")
-            attr(out, "nchains") <- brms::nchains(model)
+            attr(out, "nchains") <- brms::nchains(mfx@model)
         }
     }
 
@@ -578,9 +586,10 @@ predictions <- function(
 
 # wrapper used only for standard_error_delta
 get_predictions <- function(
-    model,
+    mfx,
     newdata,
     type,
+    model = NULL, # important for perturbed model
     by = NULL,
     byfun = byfun,
     hypothesis = NULL,
@@ -591,6 +600,14 @@ get_predictions <- function(
     original = NULL, # sink hole
     ...
 ) {
+
+    newdata <- mfx@newdata
+
+    # sometimes we want the perturbed coefficients model supplied by get_se_delta().
+    if (is.null(model)) {
+        model <- mfx@model
+    }
+
     out <- myTryCatch(get_predict(
         model,
         newdata = newdata,

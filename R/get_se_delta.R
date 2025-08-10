@@ -38,8 +38,7 @@ get_se_delta_contrasts <- function(
     comparison,
     by,
     byfun,
-    ...
-) {
+    ...) {
     get_contrasts(
         model,
         newdata = newdata,
@@ -71,6 +70,7 @@ get_se_delta <- function(
     model,
     vcov,
     FUN,
+    mfx = NULL,
     type = NULL,
     newdata = NULL,
     index = NULL,
@@ -85,8 +85,7 @@ get_se_delta <- function(
     hi = NULL,
     lo = NULL,
     original = NULL,
-    ...
-) {
+    ...) {
     # delta method does not work for these models
     bad <- c("brmsfit", "stanreg", "bart")
     if (any(inherits(model, bad))) {
@@ -123,6 +122,7 @@ get_se_delta <- function(
         }
         J <- fun(
             coefs = coefs,
+            mfx = mfx,
             newdata = newdata,
             model = model,
             hypothesis = hypothesis,
@@ -145,6 +145,7 @@ get_se_delta <- function(
         model_tmp <- set_coef(model, x, ...)
         # do not pass NULL arguments. Important for `deltam` to allow users to supply FUN without ...
         args <- list(
+            mfx = mfx,
             model = model_tmp,
             hypothesis = hypothesis,
             type = type,

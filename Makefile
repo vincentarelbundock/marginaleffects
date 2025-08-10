@@ -21,7 +21,7 @@ testall: ## tinytest::build_install_test()
 	Rscript -e "pkgload::load_all();tinytest::run_test_dir()"
 	git restore .Rbuildignore
 
-testone: install ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
+testone: ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
 	Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
 
 document: ## altdoc::render_docs()
