@@ -7,6 +7,7 @@
 #' @slot modeldata The model data frame
 #' @slot newdata The new data frame for predictions
 #' @slot vcov_model The variance-covariance matrix
+#' @slot call The original function call
 #' @keywords internal
 setClass(
     "marginaleffects_internal",
@@ -14,7 +15,8 @@ setClass(
         model = "ANY",
         modeldata = "ANY", # TODO: lmerTest returns nfnGroupedData
         newdata = "data.frame",
-        vcov_model = "ANY"
+        vcov_model = "ANY",
+        call = "ANY"
     )
 )
 
@@ -24,15 +26,18 @@ setClass(
 #' @param modeldata The model data frame
 #' @param newdata The new data frame for predictions
 #' @param vcov_model The variance-covariance matrix
+#' @param call The original function call
 #' @return An object of class marginaleffects_internal
 #' @keywords internal
 new_marginaleffects_internal <- function(model,
                                          modeldata = data.frame(),
                                          newdata = data.frame(),
-                                         vcov_model = NULL) {
+                                         vcov_model = NULL,
+                                         call = NULL) {
     new("marginaleffects_internal",
         model = model,
         modeldata = modeldata,
         newdata = newdata,
-        vcov_model = vcov_model)
+        vcov_model = vcov_model,
+        call = call)
 }

@@ -370,7 +370,8 @@ predictions <- function(
     mfx <- new_marginaleffects_internal(
         model = model,
         modeldata = modeldata,
-        newdata = newdata
+        newdata = newdata,
+        call = call_attr
     )
 
     # main estimation
@@ -550,7 +551,7 @@ predictions <- function(
     } else {
         # other attributes
         attr(out, "newdata") <- newdata
-        attr(out, "call") <- call_attr
+        attr(out, "call") <- mfx@call
         attr(out, "model_type") <- class(mfx@model)[1]
         attr(out, "model") <- mfx@model
         attr(out, "jacobian") <- J

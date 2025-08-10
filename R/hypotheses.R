@@ -230,7 +230,7 @@ hypotheses <- function(
     }
     ###### Done with Joint test
 
-    mfx <- new_marginaleffects_internal(model = model)
+    mfx <- new_marginaleffects_internal(model = model, call = call_attr)
 
     # after joint test, because ftest() can require two values
     df <- if (is.null(df)) Inf else df
@@ -447,7 +447,7 @@ hypotheses <- function(
     attr(out, "model") <- model
     attr(out, "model_type") <- class(model)[1L]
     attr(out, "jacobian") <- J
-    attr(out, "call") <- call_attr
+    attr(out, "call") <- mfx@call
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
     attr(out, "conf_level") <- conf_level

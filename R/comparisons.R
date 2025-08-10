@@ -355,7 +355,8 @@ comparisons <- function(
     mfx <- new_marginaleffects_internal(
         model = model,
         modeldata = modeldata,
-        newdata = newdata
+        newdata = newdata,
+        call = call_attr
     )
 
     # after sanitize_newdata
@@ -546,7 +547,7 @@ comparisons <- function(
     } else {
         # other attributes
         attr(out, "newdata") <- newdata
-        attr(out, "call") <- call_attr
+        attr(out, "call") <- mfx@call
         attr(out, "type") <- type
         attr(out, "model_type") <- class(model)[1]
         attr(out, "model") <- model
