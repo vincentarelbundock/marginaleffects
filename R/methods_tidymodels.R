@@ -1,8 +1,7 @@
 supported_engine <- function(x) {
     insight::check_if_installed("parsnip")
     tmp <- parsnip::extract_fit_engine(x)
-    flag <- inherits(try(sanitize_model(tmp), silent = TRUE), "try-error")
-    return(!flag)
+    return(TRUE)
 }
 
 

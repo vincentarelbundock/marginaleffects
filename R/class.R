@@ -29,7 +29,7 @@ setClass(
 #' @param call The original function call
 #' @return An object of class marginaleffects_internal
 #' @keywords internal
-new_marginaleffects_internal <- function(model,
+new_marginaleffects_internal <- function(model = NULL,
                                          modeldata = data.frame(),
                                          newdata = data.frame(),
                                          vcov_model = NULL,

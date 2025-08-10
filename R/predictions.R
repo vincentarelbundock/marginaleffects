@@ -200,6 +200,9 @@ predictions <- function(
     }
 
     call_attr <- construct_call(model, "predictions")
+    
+    # Create mfx object early and populate as objects become available
+    mfx <- new_marginaleffects_internal(call = call_attr)
 
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {
@@ -209,12 +212,14 @@ predictions <- function(
 
     dots <- list(...)
 
-    # get modeldata
+    # get modeldata and populate mfx
     modeldata <- get_modeldata(
         model,
         additional_variables = by,
         wts = wts
     )
+    mfx@model <- model
+    mfx@modeldata <- modeldata
 
     sanity_reserved(model, modeldata)
 
@@ -225,15 +230,9 @@ predictions <- function(
     # sanity checks
     sanity_dots(model = model, ...)
     numderiv <- sanitize_numderiv(numderiv)
-    model <- sanitize_model(
-        model = model,
-        newdata = newdata,
-        wts = wts,
-        vcov = vcov,
-        by = by,
-        calling_function = "predictions",
-        ...
-    )
+
+    mfx <- sanitize_model(mfx, model, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+    model <- mfx@model
     df <- sanitize_df(
         df = df,
         model = model,
@@ -358,13 +357,9 @@ predictions <- function(
 
     # pre-building the model matrix can speed up repeated predictions
     newdata <- get_model_matrix_attribute(model, newdata)
-
-    mfx <- new_marginaleffects_internal(
-        model = model,
-        modeldata = modeldata,
-        newdata = newdata,
-        call = call_attr
-    )
+    
+    # Assign final newdata to mfx
+    mfx@newdata <- newdata
 
     # main estimation
     args <- list(

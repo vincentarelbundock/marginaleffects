@@ -159,14 +159,16 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
 }
 
 
-sanitize_model <- function(
-    model,
-    newdata = NULL,
-    vcov = NULL,
-    by = FALSE,
-    calling_function = NULL,
-    ...
-) {
+# Function that operates on mfx objects
+sanitize_model <- function(mfx, model, newdata = NULL, vcov = NULL, by = FALSE, ...) {
+    # Extract calling_function from mfx@call
+    calling_function <- if (!is.null(mfx@call) && length(mfx@call) > 0) {
+        as.character(mfx@call[[1]])[1]  # Take only the first element (function name)
+    } else {
+        NULL
+    }
+    
+    # Sanitize the model
     model <- sanitize_model_specific(
         model,
         vcov = vcov,
@@ -176,5 +178,9 @@ sanitize_model <- function(
         ...
     )
     sanity_model_supported_class(model)
-    return(model)
+    
+    # Assign the sanitized model to the slot
+    mfx@model <- model
+    return(mfx)
 }
+

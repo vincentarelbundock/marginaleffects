@@ -236,6 +236,9 @@ comparisons <- function(
     ...
 ) {
     call_attr <- construct_call(model, "comparisons")
+    
+    # Create mfx object early and populate as objects become available
+    mfx <- new_marginaleffects_internal(call = call_attr)
 
     methods <- c("rsample", "boot", "fwb", "simulation")
     if (isTRUE(checkmate::check_choice(vcov, methods))) {
@@ -253,12 +256,13 @@ comparisons <- function(
 
     dots <- list(...)
 
-    # get modeldata
+    # get modeldata and populate mfx
     modeldata <- get_modeldata(
         model,
         additional_variables = by,
         wts = wts
     )
+    mfx@modeldata <- modeldata
 
     # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
@@ -276,15 +280,10 @@ comparisons <- function(
     conf_level <- sanitize_conf_level(conf_level, ...)
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
     numderiv <- sanitize_numderiv(numderiv)
-    model <- sanitize_model(
-        model = model,
-        newdata = newdata,
-        wts = wts,
-        vcov = vcov,
-        by = by,
-        calling_function = "comparisons",
-        ...
-    )
+
+    mfx <- sanitize_model(mfx, model, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+    model <- mfx@model
+
     df <- sanitize_df(
         df = df,
         model = model,
@@ -344,12 +343,8 @@ comparisons <- function(
         wts <- "marginaleffects_wts_internal"
     }
 
-    mfx <- new_marginaleffects_internal(
-        model = model,
-        modeldata = modeldata,
-        newdata = newdata,
-        call = call_attr
-    )
+    # Assign final newdata to mfx
+    mfx@newdata <- newdata
 
     # after sanitize_newdata
     # after dedup_newdata

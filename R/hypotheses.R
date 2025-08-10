@@ -205,7 +205,9 @@ hypotheses <- function(
     }
 
     call_attr <- construct_call(model, "hypotheses")
-
+    
+    # Create mfx object early and populate as objects become available
+    mfx <- new_marginaleffects_internal(model = model, call = call_attr)
 
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {
@@ -226,8 +228,6 @@ hypotheses <- function(
         return(out)
     }
     ###### Done with Joint test
-
-    mfx <- new_marginaleffects_internal(model = model, call = call_attr)
 
     # after joint test, because ftest() can require two values
     df <- if (is.null(df)) Inf else df

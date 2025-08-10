@@ -285,14 +285,7 @@ slopes <- function(
     checkmate::assert_choice(slope, choices = valid)
 
     # sanity checks and pre-processing
-    model <- sanitize_model(
-        model = model,
-        wts = wts,
-        vcov = vcov,
-        by = by,
-        calling_function = "slopes",
-        ...
-    )
+    # Note: model sanitization is handled in comparisons()
     sanity_dots(model = model, calling_function = "slopes", ...)
 
     ############### sanity checks are over
