@@ -231,8 +231,8 @@ hypotheses <- function(
 
     # after joint test, because ftest() can require two values
     df <- if (is.null(df)) Inf else df
-    df <- sanitize_df(df, model, vcov = vcov)
-    df <- get_degrees_of_freedom(mfx = mfx, df = df)
+    mfx <- get_degrees_of_freedom(mfx = mfx, df = df, vcov = vcov)
+    df <- mfx@df
 
     args <- list(
         conf_level = conf_level,

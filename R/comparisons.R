@@ -240,6 +240,21 @@ comparisons <- function(
     # Create mfx object early and populate as objects become available
     mfx <- new_marginaleffects_internal(call = call_attr)
 
+    # model sanity checks
+    mfx <- sanitize_model(mfx, model, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+    model <- mfx@model
+
+    # sanity checks
+    dots <- list(...)
+    sanity_dots(mfx@model, ...)
+
+    # multiple imputation
+    if (inherits(model, c("mira", "amest"))) {
+        out <- process_imputation(model, call_attr)
+        return(out)
+    }
+
+    # inferences() dispatch
     methods <- c("rsample", "boot", "fwb", "simulation")
     if (isTRUE(checkmate::check_choice(vcov, methods))) {
         inferences_method <- vcov
@@ -248,53 +263,52 @@ comparisons <- function(
         inferences_method <- NULL
     }
 
-    # multiple imputation
-    if (inherits(model, c("mira", "amest"))) {
-        out <- process_imputation(model, call_attr)
-        return(out)
-    }
-
-    dots <- list(...)
-
     # get modeldata and populate mfx
     modeldata <- get_modeldata(
-        model,
+        mfx@model,
         additional_variables = by,
         wts = wts
     )
     mfx@modeldata <- modeldata
 
     # very early, before any use of newdata
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-    if (is.null(modeldata) && isTRUE(checkmate::check_data_frame(newdata))) {
-        modeldata <- newdata
+    newdata <- sanitize_newdata_call(scall, newdata, mfx@model, by = by)
+    newdata <- sanitize_newdata(
+        model = mfx@model,
+        newdata = newdata,
+        modeldata = mfx@modeldata,
+        by = by,
+        wts = wts
+    )
+    newdata <- dedup_newdata(
+        model = mfx@model,
+        newdata = newdata,
+        wts = wts,
+        by = by,
+        cross = cross,
+        comparison = comparison
+    )
+    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+        wts <- "marginaleffects_wts_internal"
     }
 
-    # required by stubcols later, but might be overwritten
-    bycols <- NULL
-
-    # sanity checks
-    sanity_dots(model, ...)
+    # misc
     conf_level <- sanitize_conf_level(conf_level, ...)
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
     numderiv <- sanitize_numderiv(numderiv)
 
-    mfx <- sanitize_model(mfx, model, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
-    model <- mfx@model
+    # Assign final newdata to mfx
+    mfx@newdata <- newdata
 
-    df <- sanitize_df(
-        df = df,
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        by = by,
-        hypothesis = hypothesis
-    )
-    cross <- sanitize_cross(cross, variables, model)
+    # misc sanitation
+    sanity_by(by, mfx@newdata)
+    sanity_reserved(model, modeldata)
+
+
+    cross <- sanitize_cross(cross, variables, mfx@model)
     type <- sanitize_type(
-        model = model,
+        model = mfx@model,
         type = type,
         calling_function = "comparisons"
     )
@@ -314,44 +328,12 @@ comparisons <- function(
         transform_label <- names(transform)
     }
 
-    newdata <- sanitize_newdata(
-        model = model,
-        newdata = newdata,
-        modeldata = modeldata,
-        by = by,
-        wts = wts
-    )
-
-    # after sanitize_newdata
-    if (is.null(modeldata) && isTRUE(checkmate::check_data_frame(newdata))) {
-        modeldata <- newdata
-    }
-
-    # after sanitize_newdata
-    sanity_by(by, newdata)
-
-    # after sanity_by
-    newdata <- dedup_newdata(
-        model = model,
-        newdata = newdata,
-        wts = wts,
-        by = by,
-        cross = cross,
-        comparison = comparison
-    )
-    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
-        wts <- "marginaleffects_wts_internal"
-    }
-
-    # Assign final newdata to mfx
-    mfx@newdata <- newdata
-
     # after sanitize_newdata
     # after dedup_newdata
     variables_list <- sanitize_variables(
-        model = model,
-        newdata = newdata,
-        modeldata = modeldata,
+        model = mfx@model,
+        newdata = mfx@newdata,
+        modeldata = mfx@modeldata,
         variables = variables,
         cross = cross,
         by = by,
@@ -362,21 +344,22 @@ comparisons <- function(
     # get dof before transforming the vcov arg
     # get_degrees_of_freedom() produces a weird warning on non lmerMod. We can skip them
     # because get_vcov() will produce an informative error later.
-    df <- get_degrees_of_freedom(mfx = mfx, df = df)
+    mfx <- get_degrees_of_freedom(mfx = mfx, df = df, by = by, hypothesis = hypothesis, vcov = vcov)
+    df <- mfx@df
 
-    vcov_false <- isFALSE(vcov)
     vcov.type <- get_vcov_label(vcov)
-    mfx@vcov_model <- get_vcov(model, vcov = vcov, type = type, ...)
+    mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = type, ...)
 
     predictors <- variables_list$conditional
 
-    ############### sanity checks are over
 
     # after inferences dispatch
     tmp <- sanitize_hypothesis(hypothesis, ...)
     hypothesis <- tmp$hypothesis
     hypothesis_null <- tmp$hypothesis_null
     hypothesis_direction <- tmp$hypothesis_direction
+
+    ############### sanity checks are over
 
     # compute contrasts and standard errors
     args <- list(
@@ -416,7 +399,7 @@ comparisons <- function(
         idx <- cmp[, (idx), drop = FALSE]
         args <- list(
             mfx = mfx,
-            model_perturbed = model,
+            model_perturbed = mfx@model,
             vcov = mfx@vcov_model,
             type = type,
             FUN = get_se_delta_contrasts,
@@ -447,7 +430,7 @@ comparisons <- function(
 
     # merge original data back in
     if ((is.null(by) || isFALSE(by)) && "rowid" %in% colnames(cmp)) {
-        if ("rowid" %in% colnames(newdata)) {
+        if ("rowid" %in% colnames(mfx@newdata)) {
             idx <- c(
                 "rowid",
                 "rowidcf",
@@ -479,7 +462,7 @@ comparisons <- function(
         estimate = "estimate",
         hypothesis_null = hypothesis_null,
         hypothesis_direction = hypothesis_direction,
-        model = model
+        model = mfx@model
     )
 
     # clean rows and columns
@@ -487,7 +470,7 @@ comparisons <- function(
     # applied in the middle, and it must already be sorted in the final order,
     # otherwise, users cannot know for sure what is going to be the first and
     # second rows, etc.
-    cmp <- sort_columns(cmp, newdata, by)
+    cmp <- sort_columns(cmp, mfx@newdata, by)
 
     # bayesian draws
     attr(cmp, "posterior_draws") <- draws
@@ -513,7 +496,7 @@ comparisons <- function(
     out <- set_marginaleffects_attributes(
         out,
         get_marginaleffects_attributes(
-            newdata,
+            mfx@newdata,
             include_regex = "^newdata.*class|explicit|matrix|levels"
         )
     )
@@ -533,11 +516,11 @@ comparisons <- function(
         }
     } else {
         # other attributes
-        attr(out, "newdata") <- newdata
+        attr(out, "newdata") <- mfx@newdata
         attr(out, "call") <- mfx@call
         attr(out, "type") <- type
-        attr(out, "model_type") <- class(model)[1]
-        attr(out, "model") <- model
+        attr(out, "model_type") <- class(mfx@model)[1]
+        attr(out, "model") <- mfx@model
         attr(out, "variables") <- predictors
         attr(out, "jacobian") <- J
         attr(out, "vcov") <- mfx@vcov_model

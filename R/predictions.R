@@ -204,43 +204,53 @@ predictions <- function(
     # Create mfx object early and populate as objects become available
     mfx <- new_marginaleffects_internal(call = call_attr)
 
+    # model sanity checks
+    mfx <- sanitize_model(mfx, model, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+    model <- mfx@model
+
+    dots <- list(...)
+    sanity_dots(model = model, ...)
+
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {
         out <- process_imputation(model, call_attr)
         return(out)
     }
 
-    dots <- list(...)
-
-    # get modeldata and populate mfx
+    # modeldata
     modeldata <- get_modeldata(
         model,
         additional_variables = by,
         wts = wts
     )
-    mfx@model <- model
     mfx@modeldata <- modeldata
 
-    sanity_reserved(model, modeldata)
 
-    # very early, before any use of newdata
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    # newdata
     newdata <- sanitize_newdata_call(rlang::enquo(newdata), newdata, model, by = by)
-
-    # sanity checks
-    sanity_dots(model = model, ...)
-    numderiv <- sanitize_numderiv(numderiv)
-
-    mfx <- sanitize_model(mfx, model, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
-    model <- mfx@model
-    df <- sanitize_df(
-        df = df,
+    newdata <- sanitize_newdata(
         model = model,
         newdata = newdata,
-        vcov = vcov,
+        modeldata = modeldata,
         by = by,
-        hypothesis = hypothesis
+        wts = wts
     )
+    newdata <- dedup_newdata(
+        model = model,
+        newdata = newdata,
+        wts = wts,
+        by = by,
+        byfun = byfun
+    )
+    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+        wts <- "marginaleffects_wts_internal"
+    }
+
+    # sanity checks
+    numderiv <- sanitize_numderiv(numderiv)
+    sanity_by(by, newdata)
+    sanity_reserved(model, modeldata)
+
     tmp <- sanitize_hypothesis(hypothesis, ...)
     hypothesis_input <- hypothesis
     hypothesis <- tmp$hypothesis
@@ -275,31 +285,6 @@ predictions <- function(
     transform <- sanitize_transform(transform)
 
     conf_level <- sanitize_conf_level(conf_level, ...)
-    newdata <- sanitize_newdata(
-        model = model,
-        newdata = newdata,
-        modeldata = modeldata,
-        by = by,
-        wts = wts
-    )
-
-    # after sanitize_newdata
-    if (is.null(modeldata) && isTRUE(checkmate::check_data_frame(newdata))) {
-        modeldata <- newdata
-    }
-
-    # after sanitize_newdata
-    sanity_by(by, newdata)
-
-    # after sanity_by
-    newdata <- dedup_newdata(
-        model = model,
-        newdata = newdata,
-        wts = wts,
-        by = by,
-        byfun = byfun
-    )
-
     if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
         wts <- "marginaleffects_wts_internal"
     }
@@ -403,9 +388,9 @@ predictions <- function(
     }
 
     # degrees of freedom
-    df_numeric <- get_degrees_of_freedom(mfx = mfx, df = df)
-    if (!is.null(df_numeric) && is.numeric(df_numeric)) {
-        tmp$df <- df_numeric
+    mfx <- get_degrees_of_freedom(mfx = mfx, df = df, by = by, hypothesis = hypothesis, vcov = vcov)
+    if (!is.null(mfx@df) && is.numeric(mfx@df)) {
+        tmp$df <- mfx@df
     }
 
     # bayesian posterior draws
