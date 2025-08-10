@@ -46,6 +46,8 @@ The package achieves broad model compatibility through a modular approach:
 - **Generic dispatching**: The main functions dispatch to model-specific methods via S3 method system
 
 - **Sanitization layer**: `sanitize_*.R` files handle input validation and standardization across different model types
+  - Functions like `sanitize_comparison()`, `sanitize_newdata()`, `sanitize_vcov()` ensure consistent input processing
+  - Model-specific sanitization via `sanitize_model_specific.classname()` methods
 
 ### Data Flow
 1. User calls main function (`predictions()`, `comparisons()`, etc.)
@@ -61,6 +63,10 @@ The package achieves broad model compatibility through a modular approach:
 - **`inferences_*.R` files**: Different approaches to uncertainty quantification (bootstrap, simulation, etc.)
 - **`plot_*.R` files**: Visualization functions for each main analysis type  
 - **`hypothesis_*.R` files**: Hypothesis testing framework supporting matrices, strings, and formulas
+- **Comparison functions**: Dictionary of functions for computing different types of contrasts:
+  - `difference`, `ratio`, `odds`, `lift` for basic comparisons
+  - `dydx`, `eyex`, `eydx`, `dyex` for slopes and elasticities
+  - Averaging variants (`*avg`) and weighted variants (`*avgwts`)
 
 ## Testing Framework
 
@@ -70,11 +76,18 @@ Uses `tinytest` as the primary testing framework:
 - Visual regression testing via `tinysnapshot` for plots
 - Stata comparison tests in `inst/tinytest/stata/` directory
 - Custom tinytest extensions: `expect_slopes()`, `expect_predictions()`, `expect_margins()`
+- Test helpers in `inst/tinytest/helpers.R` provide utilities like `requiet()` for quiet package loading
 
 Tests are organized by:
 - Functionality (`test-predictions.R`, `test-slopes.R`, etc.)
 - Model packages (`test-pkg-brms.R`, `test-pkg-lme4.R`, etc.)  
 - Special cases (`test-interaction.R`, `test-missing.R`, etc.)
+
+### Test Development Guidelines
+- All test files source `helpers.R` and use `using("marginaleffects")`
+- Use `requiet()` to quietly load optional packages
+- Model archive contains pre-fitted models to avoid expensive refitting during tests
+- Visual regression tests use `tinysnapshot` with SVG output format
 
 ## Model Method Development
 
@@ -94,3 +107,22 @@ When adding support for new model types:
 4. Update supported models documentation
 
 The modular architecture means most new model support requires < 50 lines of code.
+
+## Package Structure Notes
+
+### Dependencies and Compilation
+- Uses `Rcpp` and `RcppEigen` for high-performance linear algebra operations
+- Core dependencies: `data.table`, `insight`, `checkmate`, `rlang`
+- Extensive suggested packages (100+) for model compatibility testing
+
+### Development Workflow
+- Uses `devtools` workflow for development (`make install`, `make document`)
+- Package check includes automatic test runner setup via `runnersup`/`runnersdown` targets
+- Uses `altdoc` for documentation website generation with Quarto integration
+- Built-in support for both HTML and PDF book rendering
+
+### Code Organization Conventions
+- Model-specific methods follow `get_predict.classname()` pattern
+- Test files use `test-pkg-packagename.R` naming for model packages
+- Sanitization functions use `sanitize_*()` naming pattern
+- Internal utilities use descriptive names (`get_*`, `sanitize_*`, `plot_*`)
