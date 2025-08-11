@@ -259,10 +259,8 @@ hypotheses <- function(
     numderiv <- sanitize_numderiv(numderiv)
 
     # after re-evaluation
-    tmp <- sanitize_hypothesis(hypothesis, ...)
-    hypothesis <- tmp$hypothesis
-    hypothesis_null <- tmp$hypothesis_null
-    hypothesis_direction <- tmp$hypothesis_direction
+    tmp <- sanitize_hypothesis(hypothesis)
+    list2env(tmp, envir = environment())
 
     vcov_false <- isFALSE(vcov)
     if (!isTRUE(checkmate::check_matrix(vcov))) {

@@ -1,4 +1,4 @@
-sanitize_hypothesis <- function(hypothesis, ...) {
+sanitize_hypothesis <- function(hypothesis) {
     checkmate::assert(
         checkmate::check_character(hypothesis, pattern = "=|<=|>="),
         checkmate::check_numeric(hypothesis),

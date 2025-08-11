@@ -333,10 +333,10 @@ comparisons <- function(
 
 
     # after inferences dispatch
-    tmp <- sanitize_hypothesis(hypothesis, ...)
-    hypothesis <- tmp$hypothesis
-    hypothesis_null <- tmp$hypothesis_null
-    hypothesis_direction <- tmp$hypothesis_direction
+    # hypothesis_null, hypothesis_direction
+    tmp <- sanitize_hypothesis(hypothesis)
+    list2env(tmp, envir = environment())
+
 
     ############### sanity checks are over
 

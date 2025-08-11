@@ -236,19 +236,14 @@ predictions <- function(
     sanity_by(by, mfx@newdata)
     sanity_reserved(model, mfx@modeldata)
 
-    tmp <- sanitize_hypothesis(hypothesis, ...)
-    hypothesis_input <- hypothesis
-    hypothesis <- tmp$hypothesis
-    hypothesis_null <- tmp$hypothesis_null
-    hypothesis_direction <- tmp$hypothesis_direction
-
     # if type is NULL, we backtransform if relevant
+    # before sanitize_hypothesis()
     link_to_response <- FALSE
     mfx@type <- sanitize_type(
         model = model,
         type = type,
         by = by,
-        hypothesis = hypothesis_input,
+        hypothesis = hypothesis,
         calling_function = "predictions"
     )
     if (identical(mfx@type, "invlink(link)")) {
@@ -263,6 +258,10 @@ predictions <- function(
             )
         }
     }
+
+    # hypothesis
+    tmp <- sanitize_hypothesis(hypothesis)
+    list2env(tmp, envir = environment())
 
     # save the original because it gets converted to a named list, which breaks
     # user-input sanity checks
