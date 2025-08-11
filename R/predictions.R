@@ -243,6 +243,7 @@ predictions <- function(
     hypothesis_direction <- tmp$hypothesis_direction
 
     # if type is NULL, we backtransform if relevant
+    link_to_response <- FALSE
     mfx@type <- sanitize_type(
         model = model,
         type = type,
@@ -253,16 +254,14 @@ predictions <- function(
     if (identical(mfx@type, "invlink(link)")) {
         # backtransform: yes
         if (is.null(hypothesis)) {
-            type <- "link"
+            link_to_response <- TRUE
         # backtransform: no
         } else {
-            mfx@type <- type <- "response"
+            mfx@type <- "response"
             insight::format_warning(
                 'The `type="invlink"` argument is not available unless `hypothesis` is `NULL` or a single number. The value of the `type` argument was changed to "response" automatically. To suppress this warning, use `type="response"` explicitly in your function call.'
             )
         }
-    } else {
-        type <- mfx@type
     }
 
     # save the original because it gets converted to a named list, which breaks
@@ -332,7 +331,7 @@ predictions <- function(
     # main estimation
     args <- list(
         mfx = mfx,
-        type = type,
+        type = if (link_to_response) "link" else mfx@type,
         hypothesis = hypothesis,
         wts = wts,
         by = by,
@@ -371,7 +370,12 @@ predictions <- function(
     }
 
     # degrees of freedom
-    mfx <- get_degrees_of_freedom(mfx = mfx, df = df, by = by, hypothesis = hypothesis, vcov = vcov)
+    mfx <- get_degrees_of_freedom(
+        mfx = mfx, 
+        df = df, 
+        by = by, 
+        hypothesis = hypothesis, 
+        vcov = vcov)
     if (!is.null(mfx@df) && is.numeric(mfx@df)) {
         tmp$df <- mfx@df
     }
@@ -392,7 +396,7 @@ predictions <- function(
                 mfx = mfx,
                 model_perturbed = mfx@model,
                 vcov = mfx@vcov_model,
-                type = type,
+                type = if (link_to_response) "link" else mfx@type,
                 FUN = fun,
                 hypothesis = hypothesis,
                 by = by,
@@ -456,7 +460,7 @@ predictions <- function(
     out <- equivalence(out, equivalence = equivalence, df = df, ...)
 
     # after rename to estimate / after assign draws
-    if (identical(mfx@type, "invlink(link)")) {
+    if (isTRUE(link_to_response)) {
         linv <- tryCatch(insight::link_inverse(mfx@model), error = function(e) identity)
         out <- backtransform(out, transform = linv)
     }
