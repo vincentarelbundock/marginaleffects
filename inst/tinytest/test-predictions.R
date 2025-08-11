@@ -249,3 +249,18 @@ expect_true(all(p$conf.low <= p$conf.high))
 mod <- glm(breaks ~ wool * tension, family = Gamma("log"), data = warpbreaks)
 p <- predictions(mod, newdata = datagrid(grid_type = "balanced"), by = c("wool", "tension"), type = "invlink(link)")
 expect_true(all(p$conf.low <= p$conf.high))
+
+
+# Test backtransform
+mod <- glm(vs ~ mpg + cyl, data = mtcars, family = binomial)
+p0 <- predictions(mod)
+p1 <- predictions(mod, type = "invlink(link)")
+p2 <- predictions(mod, type = "response")
+expect_true(all(p0$conf.high == p1$conf.high))
+expect_true(all(p0$conf.high != p2$conf.high))
+expect_warning(
+    predictions(mod, hypothesis = "b1 - b3 = 0", type = "invlink(link)"),
+    "invlink.*not available")
+expect_warning(
+    predictions(mod, hypothesis = "b1 - b3 = 0"),
+    "invlink.*not available")

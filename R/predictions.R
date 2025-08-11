@@ -243,25 +243,26 @@ predictions <- function(
     hypothesis_direction <- tmp$hypothesis_direction
 
     # if type is NULL, we backtransform if relevant
-    type_string <- sanitize_type(
+    mfx@type <- sanitize_type(
         model = model,
         type = type,
         by = by,
         hypothesis = hypothesis_input,
         calling_function = "predictions"
     )
-    if (identical(type_string, "invlink(link)")) {
+    if (identical(mfx@type, "invlink(link)")) {
+        # backtransform: yes
         if (is.null(hypothesis)) {
-            type_call <- "link"
+            type <- "link"
+        # backtransform: no
         } else {
-            type_call <- "response"
-            type_string <- "response"
+            mfx@type <- type <- "response"
             insight::format_warning(
                 'The `type="invlink"` argument is not available unless `hypothesis` is `NULL` or a single number. The value of the `type` argument was changed to "response" automatically. To suppress this warning, use `type="response"` explicitly in your function call.'
             )
         }
     } else {
-        type_call <- type_string
+        type <- mfx@type
     }
 
     # save the original because it gets converted to a named list, which breaks
@@ -331,7 +332,7 @@ predictions <- function(
     # main estimation
     args <- list(
         mfx = mfx,
-        type = type_call,
+        type = type,
         hypothesis = hypothesis,
         wts = wts,
         by = by,
@@ -353,7 +354,7 @@ predictions <- function(
             skip_absent = TRUE
         )
     } else {
-        tmp <- data.frame(mfx@newdata$rowid, type, tmp)
+        tmp <- data.frame(mfx@newdata$rowid, mfx@type, tmp)
         colnames(tmp) <- c("rowid", "estimate")
         if ("rowidcf" %in% colnames(mfx@newdata)) {
             tmp[["rowidcf"]] <- mfx@newdata[["rowidcf"]]
@@ -380,7 +381,7 @@ predictions <- function(
 
     J <- NULL
     if (!isFALSE(vcov)) {
-        mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = type, ...)
+        mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
 
         # Delta method for standard errors
         if (!"std.error" %in% colnames(tmp) && is.null(draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
@@ -391,7 +392,7 @@ predictions <- function(
                 mfx = mfx,
                 model_perturbed = mfx@model,
                 vcov = mfx@vcov_model,
-                type = type_call,
+                type = type,
                 FUN = fun,
                 hypothesis = hypothesis,
                 by = by,
@@ -455,7 +456,7 @@ predictions <- function(
     out <- equivalence(out, equivalence = equivalence, df = df, ...)
 
     # after rename to estimate / after assign draws
-    if (identical(type_string, "invlink(link)")) {
+    if (identical(mfx@type, "invlink(link)")) {
         linv <- tryCatch(insight::link_inverse(mfx@model), error = function(e) identity)
         out <- backtransform(out, transform = linv)
     }
@@ -472,7 +473,7 @@ predictions <- function(
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
     attr(out, "lean") <- lean
-    attr(out, "type") <- type_string
+    attr(out, "type") <- mfx@type
     if (isTRUE(lean)) {
         for (a in setdiff(
             names(attributes(out)),

@@ -288,7 +288,7 @@ comparisons <- function(
     sanity_reserved(model, modeldata)
 
     cross <- sanitize_cross(cross, variables, mfx@model)
-    type <- sanitize_type(
+    mfx@type <- sanitize_type(
         model = mfx@model,
         type = type,
         calling_function = "comparisons"
@@ -329,7 +329,7 @@ comparisons <- function(
     df <- mfx@df
 
     vcov.type <- get_vcov_label(vcov)
-    mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = type, ...)
+    mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
 
     predictors <- variables_list$conditional
 
@@ -355,7 +355,7 @@ comparisons <- function(
     args <- list(
         mfx = mfx,
         variables = predictors,
-        type = type,
+        type = mfx@type,
         original = contrast_data[["original"]],
         hi = contrast_data[["hi"]],
         lo = contrast_data[["lo"]],
@@ -382,7 +382,7 @@ comparisons <- function(
             mfx = mfx,
             model_perturbed = mfx@model,
             vcov = mfx@vcov_model,
-            type = type,
+            type = mfx@type,
             FUN = get_se_delta_contrasts,
             index = idx,
             variables = predictors,
@@ -495,7 +495,7 @@ comparisons <- function(
         # other attributes
         attr(out, "newdata") <- mfx@newdata
         attr(out, "call") <- mfx@call
-        attr(out, "type") <- type
+        attr(out, "type") <- mfx@type
         attr(out, "model_type") <- class(mfx@model)[1]
         attr(out, "model") <- mfx@model
         attr(out, "variables") <- predictors

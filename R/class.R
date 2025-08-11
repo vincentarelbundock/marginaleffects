@@ -10,6 +10,7 @@
 #' @slot call The original function call
 #' @slot df The degrees of freedom
 #' @slot wts The weights specification
+#' @slot type The sanitized type from sanitize_type()
 #' @keywords internal
 setClass(
     "marginaleffects_internal",
@@ -20,7 +21,8 @@ setClass(
         vcov_model = "ANY",
         call = "ANY",
         df = "ANY",
-        wts = "ANY"
+        wts = "ANY",
+        type = "ANY"
     )
 )
 
@@ -33,6 +35,7 @@ setClass(
 #' @param call The original function call
 #' @param df The degrees of freedom
 #' @param wts The weights specification
+#' @param type The sanitized type from sanitize_type()
 #' @return An object of class marginaleffects_internal
 #' @keywords internal
 new_marginaleffects_internal <- function(model = NULL,
@@ -41,7 +44,8 @@ new_marginaleffects_internal <- function(model = NULL,
                                          vcov_model = NULL,
                                          call = NULL,
                                          df = NULL,
-                                         wts = FALSE) {
+                                         wts = FALSE,
+                                         type = NULL) {
     new("marginaleffects_internal",
         model = model,
         modeldata = modeldata,
@@ -49,5 +53,6 @@ new_marginaleffects_internal <- function(model = NULL,
         vcov_model = vcov_model,
         call = call,
         df = df,
-        wts = wts)
+        wts = wts,
+        type = type)
 }
