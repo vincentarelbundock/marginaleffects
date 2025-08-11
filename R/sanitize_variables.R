@@ -1,16 +1,19 @@
 # input: character vector or named list
 # output: named list of lists where each element represents a variable with: name, value, function, label
-sanitize_variables <- function(
+add_variables <- function(
     variables,
-    model,
-    newdata, # need for NumPyro where `find_variables()`` does not work
-    modeldata,
+    mfx,
     comparison = NULL,
     by = NULL,
     cross = FALSE,
     calling_function = "comparisons",
     eps = NULL
 ) {
+    # need for NumPyro where `find_variables()`` does not work
+    newdata <- mfx@newdata
+    model <- mfx@model
+    modeldata <- mfx@modeldata
+
     checkmate::assert(
         checkmate::check_null(variables),
         checkmate::check_character(variables, min.len = 1, names = "unnamed"),
@@ -443,7 +446,7 @@ sanitize_variables <- function(
     }
 
     # output
-    out <- list(conditional = predictors, others = others)
-
-    return(out)
+    mfx@variables[["conditional"]] <- predictors
+    mfx@variables[["others"]] <- others
+    return(mfx)
 }

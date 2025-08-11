@@ -311,10 +311,8 @@ comparisons <- function(
 
     # after sanitize_newdata
     # after dedup_newdata
-    variables_list <- sanitize_variables(
-        model = mfx@model,
-        newdata = mfx@newdata,
-        modeldata = mfx@modeldata,
+    mfx <- add_variables(
+        mfx = mfx,
         variables = variables,
         cross = cross,
         by = by,
@@ -331,7 +329,7 @@ comparisons <- function(
     vcov.type <- get_vcov_label(vcov)
     mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
 
-    predictors <- variables_list$conditional
+    predictors <- mfx@variables$conditional
 
 
     # after inferences dispatch

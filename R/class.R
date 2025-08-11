@@ -15,14 +15,15 @@
 setClass(
     "marginaleffects_internal",
     slots = c(
+        call = "ANY",
+        df = "ANY",
         model = "ANY",
         modeldata = "ANY", # TODO: lmerTest returns nfnGroupedData
         newdata = "data.frame",
+        type = "ANY",
+        variables = "list",
         vcov_model = "ANY",
-        call = "ANY",
-        df = "ANY",
-        wts = "ANY",
-        type = "ANY"
+        wts = "ANY"
     )
 )
 
@@ -39,20 +40,21 @@ setClass(
 #' @return An object of class marginaleffects_internal
 #' @keywords internal
 new_marginaleffects_internal <- function(model = NULL,
-                                         modeldata = data.frame(),
-                                         newdata = data.frame(),
-                                         vcov_model = NULL,
                                          call = NULL,
                                          df = NULL,
-                                         wts = FALSE,
-                                         type = NULL) {
+                                         modeldata = data.frame(),
+                                         newdata = data.frame(),
+                                         type = NULL,
+                                         variables = list(),
+                                         vcov_model = NULL,
+                                         wts = FALSE) {
     new("marginaleffects_internal",
+        call = call,
+        df = df,
         model = model,
         modeldata = modeldata,
         newdata = newdata,
+        type = type,
         vcov_model = vcov_model,
-        call = call,
-        df = df,
-        wts = wts,
-        type = type)
+        wts = wts)
 }

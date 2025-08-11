@@ -281,14 +281,12 @@ predictions <- function(
             newdata = mfx@newdata,
             grid_type = "counterfactual"
         )
-        tmp <- sanitize_variables(
+        mfx <- add_variables(
             variables = variables,
-            model = mfx@model,
-            newdata = mfx@newdata,
-            modeldata = mfx@modeldata,
+            mfx = mfx,
             calling_function = "predictions"
-        )$conditional
-        for (v in tmp) {
+        )
+        for (v in mfx@variables$conditional) {
             args[[v$name]] <- v$value
         }
         mfx@newdata <- do.call("datagrid", args)

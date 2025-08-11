@@ -16,7 +16,6 @@ get_contrasts <- function(
     ...
 ) {
 
-    if (!inherits(mfx, "marginaleffects_internal")) browser()
     newdata <- mfx@newdata
     data.table::setDT(newdata)
 

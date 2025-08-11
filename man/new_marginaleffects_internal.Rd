@@ -5,17 +5,33 @@
 \title{Constructor for marginaleffects_internal class}
 \usage{
 new_marginaleffects_internal(
-  model,
+  model = NULL,
+  call = NULL,
+  df = NULL,
   modeldata = data.frame(),
-  newdata = data.frame()
+  newdata = data.frame(),
+  type = NULL,
+  variables = list(),
+  vcov_model = NULL,
+  wts = FALSE
 )
 }
 \arguments{
 \item{model}{The fitted model object}
 
+\item{call}{The original function call}
+
+\item{df}{The degrees of freedom}
+
 \item{modeldata}{The model data frame}
 
 \item{newdata}{The new data frame for predictions}
+
+\item{type}{The sanitized type from sanitize_type()}
+
+\item{vcov_model}{The variance-covariance matrix}
+
+\item{wts}{The weights specification}
 }
 \value{
 An object of class marginaleffects_internal
