@@ -321,10 +321,9 @@ comparisons <- function(
     )
 
     # get dof before transforming the vcov arg
-    # get_degrees_of_freedom() produces a weird warning on non lmerMod. We can skip them
+    # add_degrees_of_freedom() produces a weird warning on non lmerMod. We can skip them
     # because get_vcov() will produce an informative error later.
-    mfx <- get_degrees_of_freedom(mfx = mfx, df = df, by = by, hypothesis = hypothesis, vcov = vcov)
-    df <- mfx@df
+    mfx <- add_degrees_of_freedom(mfx = mfx, df = df, by = by, hypothesis = hypothesis, vcov = vcov)
 
     vcov.type <- get_vcov_label(vcov)
     mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
@@ -432,7 +431,7 @@ comparisons <- function(
     cmp <- get_ci(
         cmp,
         conf_level = conf_level,
-        df = df,
+        df = mfx@df,
         draws = draws,
         estimate = "estimate",
         hypothesis_null = hypothesis_null,
@@ -451,7 +450,7 @@ comparisons <- function(
     attr(cmp, "posterior_draws") <- draws
 
     # equivalence tests
-    cmp <- equivalence(cmp, equivalence = equivalence, df = df, ...)
+    cmp <- equivalence(cmp, equivalence = equivalence, df = mfx@df, ...)
 
     # after draws attribute
     cmp <- backtransform(cmp, transform)

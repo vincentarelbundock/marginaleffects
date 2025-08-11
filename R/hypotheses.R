@@ -231,13 +231,12 @@ hypotheses <- function(
 
     # after joint test, because ftest() can require two values
     df <- if (is.null(df)) Inf else df
-    mfx <- get_degrees_of_freedom(mfx = mfx, df = df, vcov = vcov)
-    df <- mfx@df
+    mfx <- add_degrees_of_freedom(mfx = mfx, df = df, vcov = vcov)
 
     args <- list(
         conf_level = conf_level,
         vcov = vcov,
-        df = df,
+        df = mfx@df,
         equivalence = equivalence
     )
 
@@ -420,7 +419,7 @@ hypotheses <- function(
         estimate = "estimate",
         hypothesis_null = hypothesis_null,
         hypothesis_direction = hypothesis_direction,
-        df = df,
+        df = mfx@df,
         model = model,
         ...
     )
@@ -428,7 +427,7 @@ hypotheses <- function(
     if (!is.null(equivalence)) {
         out <- equivalence(
             out,
-            df = df,
+            df = mfx@df,
             equivalence = equivalence
         )
     }
@@ -454,7 +453,7 @@ hypotheses <- function(
         out,
         multcomp = multcomp,
         conf_level = conf_level,
-        df = df
+        df = mfx@df
     )
 
     # Issue #1102: hypotheses() should not be called twice on the same object

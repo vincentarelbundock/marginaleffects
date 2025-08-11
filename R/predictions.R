@@ -367,7 +367,7 @@ predictions <- function(
     }
 
     # degrees of freedom
-    mfx <- get_degrees_of_freedom(
+    mfx <- add_degrees_of_freedom(
         mfx = mfx, 
         df = df, 
         by = by, 
@@ -419,7 +419,7 @@ predictions <- function(
             estimate = "estimate",
             hypothesis_null = hypothesis_null,
             hypothesis_direction = hypothesis_direction,
-            df = df,
+            df = mfx@df,
             model = mfx@model,
             ...
         )
@@ -454,7 +454,7 @@ predictions <- function(
     attr(out, "posterior_draws") <- draws
 
     # equivalence tests
-    out <- equivalence(out, equivalence = equivalence, df = df, ...)
+    out <- equivalence(out, equivalence = equivalence, df = mfx@df, ...)
 
     # after rename to estimate / after assign draws
     if (isTRUE(link_to_response)) {

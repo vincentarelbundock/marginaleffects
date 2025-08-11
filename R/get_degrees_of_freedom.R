@@ -1,6 +1,6 @@
 # Combined function that sanitizes and computes degrees of freedom from mfx object
 # Stores the result in mfx@df and returns the numeric df for backward compatibility
-get_degrees_of_freedom <- function(mfx, df = Inf, by = NULL, hypothesis = NULL, vcov = NULL) {
+add_degrees_of_freedom <- function(mfx, df = Inf, by = NULL, hypothesis = NULL, vcov = NULL) {
     model <- mfx@model
     newdata <- mfx@newdata
 
