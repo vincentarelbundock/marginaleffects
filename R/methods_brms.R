@@ -123,7 +123,7 @@ get_predict.brmsfit <- function(
 
     # group for multi-valued outcome
     if (length(dim(draws)) == 3) {
-        draws <- lapply(1:dim(draws)[3], function(i) draws[,, i])
+        draws <- lapply(seq_len(dim(draws)[3]), function(i) draws[,, i])
         draws <- do.call("cbind", draws)
     }
     attr(out, "posterior_draws") <- t(draws)

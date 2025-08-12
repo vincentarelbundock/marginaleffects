@@ -168,7 +168,7 @@ hypothesis_formula_list <- list(
             comparison = function(x) {
                 nx <- length(x)
                 w <- stats::contr.poly(nx)
-                w <- w[, 1:min(5, ncol(w))]
+                w <- w[, seq_len(min(5, ncol(w))), drop = FALSE]
                 as.vector(crossprod(w, matrix(x)))
             },
             label = function(x) {

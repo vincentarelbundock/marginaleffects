@@ -403,9 +403,9 @@ get_comparisons <- function(
     # need a temp index for group-by operations when elasticities is a vector of length equal to full rows of `out`
     tmp <- grep("^term$|^contrast|^group$", colnames(out), value = TRUE)
     if (length(tmp) > 0) {
-        out[, tmp_idx := 1:.N, by = tmp]
+        out[, tmp_idx := seq_len(.N), by = tmp]
     } else {
-        out[, tmp_idx := 1:.N]
+        out[, tmp_idx := seq_len(.N)]
     }
 
     # bayesian
