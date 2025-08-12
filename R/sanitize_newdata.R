@@ -338,14 +338,15 @@ add_newdata <- function(mfx, scall, newdata = NULL, by = FALSE, wts = FALSE,
     
     newdata <- do.call(dedup_newdata, dedup_args)
     
-    # Step 4: Handle internal weights column
-    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
-        wts <- "marginaleffects_wts_internal"
+    # Step 4: Extract numeric weights from newdata and store in @wts slot
+    if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
+        mfx@wts <- newdata[["marginaleffects_wts_internal"]]
+    } else {
+        mfx@wts <- NULL
     }
     
-    # Store processed newdata and updated wts in the mfx object
+    # Store processed newdata in the mfx object
     mfx@newdata <- newdata
-    mfx@wts <- wts
     
     # Return the updated mfx object
     return(mfx)

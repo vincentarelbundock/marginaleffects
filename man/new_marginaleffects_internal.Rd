@@ -19,7 +19,7 @@ new_marginaleffects_internal(
   type = NULL,
   variables = list(),
   vcov_model = NULL,
-  wts = FALSE
+  wts = NULL
 )
 }
 \arguments{

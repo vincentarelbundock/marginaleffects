@@ -229,7 +229,6 @@ predictions <- function(
     # newdata
     scall <- rlang::enquo(newdata)
     mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, byfun = byfun)
-    wts <- mfx@wts
 
     # sanity checks
     numderiv <- sanitize_numderiv(numderiv)
@@ -267,9 +266,6 @@ predictions <- function(
     transform <- sanitize_transform(transform)
 
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
-    if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(mfx@newdata)) {
-        wts <- "marginaleffects_wts_internal"
-    }
 
     # analogous to comparisons(variables=list(...))
     if (!is.null(variables)) {
@@ -328,7 +324,7 @@ predictions <- function(
         mfx = mfx,
         type = if (link_to_response) "link" else mfx@type,
         hypothesis = mfx@hypothesis,
-        wts = wts,
+        wts = mfx@wts,
         by = by,
         byfun = byfun
     )
@@ -385,7 +381,7 @@ predictions <- function(
         # Delta method for standard errors
         if (!"std.error" %in% colnames(tmp) && is.null(mfx@draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
             fun <- function(...) {
-                get_predictions(..., wts = wts, verbose = FALSE)$estimate
+                get_predictions(..., wts = mfx@wts, verbose = FALSE)$estimate
             }
             args <- list(
                 mfx = mfx,
@@ -422,8 +418,7 @@ predictions <- function(
         out <- merge_by_rowid(out, mfx@newdata)
     }
 
-    # save weights as attribute and not column
-    marginaleffects_wts_internal <- out[["marginaleffects_wts_internal"]]
+    # remove weights column (now handled by add_attributes)
     out[["marginaleffects_wts_internal"]] <- NULL
 
     # bycols
@@ -459,7 +454,6 @@ predictions <- function(
     
     # Add function-specific attributes
     attr(out, "by") <- by
-    attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "transform") <- transform[[1]]
     attr(out, "hypothesis_by") <- hyp_by
     attr(out, "mfx") <- mfx

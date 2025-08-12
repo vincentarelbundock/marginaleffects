@@ -274,7 +274,6 @@ comparisons <- function(
     # very early, before any use of newdata
     scall <- rlang::enquo(newdata)
     mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, cross = cross, comparison = comparison)
-    wts <- mfx@wts
     newdata <- mfx@newdata
 
     # misc
@@ -353,7 +352,7 @@ comparisons <- function(
         original = contrast_data[["original"]],
         hi = contrast_data[["hi"]],
         lo = contrast_data[["lo"]],
-        wts = contrast_data[["original"]][["marginaleffects_wts_internal"]],
+        wts = mfx@wts,
         by = by,
         cross = cross,
         hypothesis = mfx@hypothesis
@@ -447,12 +446,7 @@ comparisons <- function(
     # after draws attribute
     cmp <- backtransform(cmp, transform)
 
-    # save as attribute and not column
-    if (!all(is.na(cmp[["marginaleffects_wts_internal"]]))) {
-        marginaleffects_wts_internal <- cmp[["marginaleffects_wts_internal"]]
-    } else {
-        marginaleffects_wts_internal <- NULL
-    }
+    # remove weights column (now handled by add_attributes)
     cmp[["marginaleffects_wts_internal"]] <- NULL
 
     out <- cmp
@@ -474,7 +468,6 @@ comparisons <- function(
     attr(out, "by") <- by
     attr(out, "vcov.type") <- vcov.type
     attr(out, "variables") <- predictors
-    attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "comparison") <- comparison
     attr(out, "transform") <- transform[[1]]
     attr(out, "comparison_label") <- comparison_label

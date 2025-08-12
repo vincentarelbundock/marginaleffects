@@ -23,5 +23,10 @@ add_attributes <- function(out, mfx) {
         attr(out, "jacobian") <- mfx@jacobian
     }
     
+    # Add weights if present
+    if (!is.null(mfx@wts)) {
+        attr(out, "weights") <- mfx@wts
+    }
+    
     return(out)
 }

@@ -1,7 +1,11 @@
-#' Define class union
+#' Define class unions
 #' @keywords internal
 #' @noRd
 setClassUnion("matrixOrNULL", c("matrix", "NULL"))
+
+#' @keywords internal
+#' @noRd
+setClassUnion("numericOrNULL", c("numeric", "NULL"))
 
 #' Internal S4 class for marginaleffects
 #'
@@ -35,7 +39,7 @@ setClass(
         type = "ANY",
         variables = "list",
         vcov_model = "ANY",
-        wts = "ANY"
+        wts = "numericOrNULL"
     )
 )
 
@@ -65,7 +69,7 @@ new_marginaleffects_internal <- function(model = NULL,
                                          type = NULL,
                                          variables = list(),
                                          vcov_model = NULL,
-                                         wts = FALSE) {
+                                         wts = NULL) {
     new("marginaleffects_internal",
         call = call,
         conf_level = conf_level,
