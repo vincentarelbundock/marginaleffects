@@ -405,10 +405,7 @@ add_variables <- function(
 
     # can't take the slope of an outcome, except in weird brms models (issue #1006)
     if (!inherits(model, "brmsfit") || !isTRUE(length(model$formula$forms) > 1)) {
-        dv <- hush(unlist(
-            insight::find_response(model, combine = FALSE),
-            use.names = FALSE
-        ))
+        dv <- mfx@variable_names_response
         # sometimes insight doesn't work
         if (length(dv) > 0) {
             predictors <- predictors[setdiff(names(predictors), dv)]
