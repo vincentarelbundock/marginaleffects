@@ -434,17 +434,15 @@ predictions <- function(
     # second rows, etc.
     out <- sort_columns(out, mfx@newdata, by)
 
-    attr(out, "posterior_draws") <- mfx@draws
-
     # equivalence tests
     out <- equivalence(out, equivalence = equivalence, df = mfx@df, ...)
 
-    # after rename to estimate / after assign draws
+    # after rename to estimate
     if (isTRUE(link_to_response)) {
         linv <- tryCatch(insight::link_inverse(mfx@model), error = function(e) identity)
-        out <- backtransform(out, transform = linv)
+        out <- backtransform(out, transform = linv, draws = mfx@draws)
     }
-    out <- backtransform(out, transform = transform)
+    out <- backtransform(out, transform = transform, draws = mfx@draws)
 
     data.table::setDF(out)
     class(out) <- c("predictions", class(out))

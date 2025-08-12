@@ -437,14 +437,11 @@ comparisons <- function(
     # second rows, etc.
     cmp <- sort_columns(cmp, mfx@newdata, by)
 
-    # bayesian draws
-    attr(cmp, "posterior_draws") <- mfx@draws
-
     # equivalence tests
     cmp <- equivalence(cmp, equivalence = equivalence, df = mfx@df, ...)
 
     # after draws attribute
-    cmp <- backtransform(cmp, transform)
+    cmp <- backtransform(cmp, transform, draws = mfx@draws)
 
     # remove weights column (now handled by add_attributes)
     cmp[["marginaleffects_wts_internal"]] <- NULL
