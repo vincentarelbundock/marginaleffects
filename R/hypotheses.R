@@ -243,11 +243,7 @@ hypotheses <- function(
 
     numderiv <- sanitize_numderiv(numderiv)
 
-    # after re-evaluation
-    tmp <- sanitize_hypothesis(hypothesis)
-    hypothesis <- tmp$hypothesis
-    mfx@hypothesis_direction <- tmp$hypothesis_direction
-    mfx@hypothesis_null <- tmp$hypothesis_null
+    mfx <- add_hypothesis(mfx, hypothesis)
 
     vcov_false <- isFALSE(vcov)
     if (!isTRUE(checkmate::check_matrix(vcov))) {
@@ -322,7 +318,7 @@ hypotheses <- function(
         return(out)
     }
 
-    b <- FUNouter(model_perturbed = model, hypothesis = hypothesis, ...)
+    b <- FUNouter(model_perturbed = model, hypothesis = mfx@hypothesis, ...)
 
     # bayesian posterior
     if (!is.null(attr(b, "posterior_draws"))) {
@@ -335,7 +331,7 @@ hypotheses <- function(
         args <- list(
             model_perturbed = model,
             vcov = vcov,
-            hypothesis = hypothesis,
+            hypothesis = mfx@hypothesis,
             FUN = FUNouter,
             numderiv = numderiv,
             calling_function = "hypotheses"
@@ -355,9 +351,9 @@ hypotheses <- function(
     }
 
     hyplab <- attr(b, "label")
-    if (!is.null(hypothesis)) {
+    if (!is.null(mfx@hypothesis)) {
         if (is.null(hyplab)) {
-            hyplab <- attr(hypothesis, "label")
+            hyplab <- attr(mfx@hypothesis, "label")
         }
         if (!is.null(hyplab)) {
             out <- cbind(

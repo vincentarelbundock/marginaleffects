@@ -237,7 +237,7 @@ predictions <- function(
     sanity_reserved(model, mfx@modeldata)
 
     # if type is NULL, we backtransform if relevant
-    # before sanitize_hypothesis()
+    # before add_hypothesis()
     link_to_response <- FALSE
     mfx@type <- sanitize_type(
         model = model,
@@ -259,11 +259,7 @@ predictions <- function(
         }
     }
 
-    # hypothesis
-    tmp <- sanitize_hypothesis(hypothesis)
-    hypothesis <- tmp$hypothesis
-    mfx@hypothesis_null <- tmp$hypothesis_null
-    mfx@hypothesis_direction <- tmp$hypothesis_direction
+    mfx <- add_hypothesis(mfx, hypothesis)
 
     # save the original because it gets converted to a named list, which breaks
     # user-input sanity checks
@@ -331,7 +327,7 @@ predictions <- function(
     args <- list(
         mfx = mfx,
         type = if (link_to_response) "link" else mfx@type,
-        hypothesis = hypothesis,
+        hypothesis = mfx@hypothesis,
         wts = wts,
         by = by,
         byfun = byfun
@@ -363,7 +359,7 @@ predictions <- function(
     if (
         !"rowid" %in% colnames(tmp) &&
             nrow(tmp) == nrow(mfx@newdata) &&
-            is.null(hypothesis)
+            is.null(mfx@hypothesis)
     ) {
         tmp$rowid <- mfx@newdata$rowid
     }
@@ -373,7 +369,7 @@ predictions <- function(
         mfx = mfx, 
         df = df, 
         by = by, 
-        hypothesis = hypothesis, 
+        hypothesis = mfx@hypothesis, 
         vcov = vcov)
     if (!is.null(mfx@df) && is.numeric(mfx@df)) {
         tmp$df <- mfx@df
@@ -397,7 +393,7 @@ predictions <- function(
                 vcov = mfx@vcov_model,
                 type = if (link_to_response) "link" else mfx@type,
                 FUN = fun,
-                hypothesis = hypothesis,
+                hypothesis = mfx@hypothesis,
                 by = by,
                 byfun = byfun,
                 numderiv = numderiv,

@@ -331,12 +331,7 @@ comparisons <- function(
     predictors <- mfx@variables$conditional
 
 
-    # after inferences dispatch
-    # hypothesis_null, hypothesis_direction
-    tmp <- sanitize_hypothesis(hypothesis)
-    hypothesis <- tmp$hypothesis
-    mfx@hypothesis_null <- tmp$hypothesis_null
-    mfx@hypothesis_direction <- tmp$hypothesis_direction
+    mfx <- add_hypothesis(mfx, hypothesis)
 
 
     ############### sanity checks are over
@@ -361,7 +356,7 @@ comparisons <- function(
         wts = contrast_data[["original"]][["marginaleffects_wts_internal"]],
         by = by,
         cross = cross,
-        hypothesis = hypothesis
+        hypothesis = mfx@hypothesis
     )
     args <- utils::modifyList(args, dots)
     cmp <- do.call("get_contrasts", args)
@@ -385,7 +380,7 @@ comparisons <- function(
             FUN = get_se_delta_contrasts,
             index = idx,
             variables = predictors,
-            hypothesis = hypothesis,
+            hypothesis = mfx@hypothesis,
             hi = contrast_data$hi,
             lo = contrast_data$lo,
             original = contrast_data$original,

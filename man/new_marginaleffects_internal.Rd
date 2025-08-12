@@ -8,6 +8,7 @@ new_marginaleffects_internal(
   model = NULL,
   call = NULL,
   df = NULL,
+  hypothesis = NULL,
   hypothesis_null = NULL,
   hypothesis_direction = NULL,
   modeldata = data.frame(),

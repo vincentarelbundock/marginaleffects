@@ -195,6 +195,7 @@ Suggests:
     quarto
 Collate:
     'RcppExports.R'
+    'add_hypothesis.R'
     'backtransform.R'
     'broom.R'
     'by.R'
@@ -308,7 +309,6 @@ Collate:
     'sanitize_condition.R'
     'sanitize_conf_level.R'
     'sanitize_estimator.R'
-    'sanitize_hypothesis.R'
     'sanitize_hypothesis_formula.R'
     'sanitize_interaction.R'
     'sanitize_newdata.R'
