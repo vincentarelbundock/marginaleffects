@@ -1,4 +1,4 @@
-get_contrast_data_factor <- function(
+get_comparisons_data_factor <- function(
     model,
     newdata,
     variable,

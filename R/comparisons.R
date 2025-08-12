@@ -344,7 +344,7 @@ comparisons <- function(
     )
     dots[["modeldata"]] <- NULL # dont' pass twice
     args <- utils::modifyList(args, dots)
-    contrast_data <- do.call("get_contrast_data", args)
+    contrast_data <- do.call("get_comparisons_data", args)
 
     args <- list(
         mfx = mfx,
@@ -359,7 +359,7 @@ comparisons <- function(
         hypothesis = mfx@hypothesis
     )
     args <- utils::modifyList(args, dots)
-    cmp <- do.call("get_contrasts", args)
+    cmp <- do.call("get_comparisons", args)
 
     hyp_by <- attr(cmp, "hypothesis_function_by")
 

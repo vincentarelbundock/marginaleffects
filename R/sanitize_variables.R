@@ -123,7 +123,7 @@ add_variables <- function(
     }
 
     # functions to values
-    # only for predictions; get_contrast_data_numeric handles this for comparisons()
+    # only for predictions; get_comparisons_data_numeric handles this for comparisons()
     # do this before NULL-to-defaults so we can fill it in with default in case of failure
     if (calling_function == "predictions") {
         for (v in names(predictors)) {
@@ -188,7 +188,7 @@ add_variables <- function(
                 )
                 insight::format_error(msg)
             }
-            # get_contrast_data requires both levels
+            # get_comparisons_data requires both levels
             if (calling_function == "comparisons") {
                 if (length(predictors[[v]]) != 2) {
                     msg <- sprintf(
@@ -420,7 +420,7 @@ add_variables <- function(
         )
     }
 
-    # interaction: get_contrasts() assumes there is only one function when interaction=TRUE
+    # interaction: get_comparisons() assumes there is only one function when interaction=TRUE
     if (isTRUE(interaction)) {
         for (p in predictors) {
             flag <- !identical(p[["function"]], predictors[[1]][["function"]])

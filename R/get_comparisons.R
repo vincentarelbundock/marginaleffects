@@ -1,4 +1,4 @@
-get_contrasts <- function(
+get_comparisons <- function(
     mfx,
     type,
     variables,

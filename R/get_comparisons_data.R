@@ -1,4 +1,4 @@
-get_contrast_data <- function(
+get_comparisons_data <- function(
     mfx,
     variables,
     cross,
@@ -55,13 +55,13 @@ get_contrast_data <- function(
 
         # logical and character before factor used to be important; but I don't think so anymore
         if (get_variable_class(modeldata, v$name, "logical")) {
-            fun <- get_contrast_data_logical
+            fun <- get_comparisons_data_logical
         } else if (get_variable_class(modeldata, v$name, "character")) {
-            fun <- get_contrast_data_character
+            fun <- get_comparisons_data_character
         } else if (get_variable_class(modeldata, v$name, "categorical")) {
-            fun <- get_contrast_data_factor
+            fun <- get_comparisons_data_factor
         } else if (get_variable_class(modeldata, v$name, "numeric")) {
-            fun <- get_contrast_data_numeric
+            fun <- get_comparisons_data_numeric
         } else {
             msg <- sprintf(
                 "Class of the `%s` variable is class is not supported.",
@@ -90,7 +90,7 @@ get_contrast_data <- function(
                 x[[col]] <- as.numeric(x[[col]])
             }
 
-            # plm creates c("pseries", "numeric"), but when get_contrast_data
+            # plm creates c("pseries", "numeric"), but when get_comparisons_data
             # assigns +1 numeric, we lose the inheritance
             if (inherits(x[[col]], "pseries")) {
                 x[[col]] <- as.numeric(x[[col]])

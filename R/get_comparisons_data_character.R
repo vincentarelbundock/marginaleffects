@@ -1,4 +1,4 @@
-get_contrast_data_character <- function(
+get_comparisons_data_character <- function(
     model,
     newdata,
     variable,

@@ -1,4 +1,4 @@
-get_contrast_data_logical <- function(model, newdata, variable, ...) {
+get_comparisons_data_logical <- function(model, newdata, variable, ...) {
     # custom data frame or function
     if (
         isTRUE(checkmate::check_function(variable$value)) ||

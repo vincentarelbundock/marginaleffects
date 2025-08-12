@@ -40,7 +40,7 @@ get_se_delta_contrasts <- function(
     by,
     byfun,
     ...) {
-    get_contrasts(
+    get_comparisons(
         model_perturbed = model_perturbed,
         mfx = mfx,
         variables = variables,

@@ -1,4 +1,4 @@
-get_contrast_data_numeric <- function(
+get_comparisons_data_numeric <- function(
     model,
     newdata,
     variable,
