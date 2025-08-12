@@ -409,18 +409,7 @@ predictions <- function(
         }
 
         # Confidence intervals
-        tmp <- get_ci(
-            tmp,
-            conf_level = mfx@conf_level,
-            vcov = mfx@vcov_model,
-            draws = mfx@draws,
-            estimate = "estimate",
-            hypothesis_null = mfx@hypothesis_null,
-            hypothesis_direction = mfx@hypothesis_direction,
-            df = mfx@df,
-            model = mfx@model,
-            ...
-        )
+        tmp <- get_ci(tmp, mfx)
     }
 
     out <- data.table::data.table(tmp)
@@ -469,18 +458,15 @@ predictions <- function(
     
     # Add function-specific attributes
     attr(out, "by") <- by
-    attr(out, "lean") <- getOption("marginaleffects_lean", default = FALSE)
-    if (!isTRUE(getOption("marginaleffects_lean", default = FALSE))) {
-        attr(out, "jacobian") <- J
-        attr(out, "weights") <- marginaleffects_wts_internal
-        attr(out, "transform") <- transform[[1]]
-        attr(out, "hypothesis_by") <- hyp_by
-        attr(out, "mfx") <- mfx
+    attr(out, "jacobian") <- J
+    attr(out, "weights") <- marginaleffects_wts_internal
+    attr(out, "transform") <- transform[[1]]
+    attr(out, "hypothesis_by") <- hyp_by
+    attr(out, "mfx") <- mfx
 
-        if (inherits(mfx@model, "brmsfit")) {
-            insight::check_if_installed("brms")
-            attr(out, "nchains") <- brms::nchains(mfx@model)
-        }
+    if (inherits(mfx@model, "brmsfit")) {
+        insight::check_if_installed("brms")
+        attr(out, "nchains") <- brms::nchains(mfx@model)
     }
 
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {

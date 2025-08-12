@@ -1,13 +1,11 @@
-get_ci <- function(
-    x,
-    conf_level,
-    df = NULL,
-    draws = NULL,
-    vcov = TRUE,
-    hypothesis_null = 0,
-    hypothesis_direction = "=",
-    model = NULL,
-    ...) {
+get_ci <- function(x, mfx) {
+    conf_level <- mfx@conf_level
+    df <- mfx@df
+    draws <- mfx@draws
+    hypothesis_null <- mfx@hypothesis_null
+    hypothesis_direction <- mfx@hypothesis_direction
+    model <- mfx@model
+
     checkmate::assert_number(hypothesis_null)
 
     if (!is.null(draws)) {
@@ -53,18 +51,9 @@ get_ci <- function(
         }
     }
 
-    p_overwrite <- !"p.value" %in% colnames(x) ||
-        hypothesis_null != 0 ||
-        hypothesis_direction != "=" ||
-        identical(vcov, "satterthwaite") ||
-        identical(vcov, "kenward-roger")
-
-    z_overwrite <- !"statistic" %in% colnames(x) ||
-        hypothesis_null != 0 ||
-        p_overwrite
-
-    ci_overwrite <- !"conf.low" %in% colnames(x) &&
-        "std.error" %in% colnames(x)
+    p_overwrite <- !"p.value" %in% colnames(x) || hypothesis_null != 0 || hypothesis_direction != "="
+    z_overwrite <- !"statistic" %in% colnames(x) || hypothesis_null != 0 || p_overwrite
+    ci_overwrite <- !"conf.low" %in% colnames(x) && "std.error" %in% colnames(x)
 
     if (z_overwrite) {
         cdf <- function(k) {

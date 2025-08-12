@@ -425,16 +425,7 @@ comparisons <- function(
     }
 
     # meta info
-    cmp <- get_ci(
-        cmp,
-        conf_level = mfx@conf_level,
-        df = mfx@df,
-        draws = mfx@draws,
-        estimate = "estimate",
-        hypothesis_null = mfx@hypothesis_null,
-        hypothesis_direction = mfx@hypothesis_direction,
-        model = mfx@model
-    )
+    cmp <- get_ci(cmp, mfx)
 
     # clean rows and columns
     # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
@@ -477,23 +468,20 @@ comparisons <- function(
     
     # Add function-specific attributes
     attr(out, "by") <- by
-    attr(out, "lean") <- getOption("marginaleffects_lean", default = FALSE)
     attr(out, "vcov.type") <- vcov.type
-    if (!isTRUE(getOption("marginaleffects_lean", default = FALSE))) {
-        attr(out, "variables") <- predictors
-        attr(out, "jacobian") <- J
-        attr(out, "weights") <- marginaleffects_wts_internal
-        attr(out, "comparison") <- comparison
-        attr(out, "transform") <- transform[[1]]
-        attr(out, "comparison_label") <- comparison_label
-        attr(out, "hypothesis_by") <- hyp_by
-        attr(out, "transform_label") <- transform_label
-        attr(out, "mfx") <- mfx
+    attr(out, "variables") <- predictors
+    attr(out, "jacobian") <- J
+    attr(out, "weights") <- marginaleffects_wts_internal
+    attr(out, "comparison") <- comparison
+    attr(out, "transform") <- transform[[1]]
+    attr(out, "comparison_label") <- comparison_label
+    attr(out, "hypothesis_by") <- hyp_by
+    attr(out, "transform_label") <- transform_label
+    attr(out, "mfx") <- mfx
 
-        if (inherits(model, "brmsfit")) {
-            insight::check_if_installed("brms")
-            attr(out, "nchains") <- brms::nchains(model)
-        }
+    if (inherits(model, "brmsfit")) {
+        insight::check_if_installed("brms")
+        attr(out, "nchains") <- brms::nchains(model)
     }
 
     class(out) <- c("comparisons", class(out))

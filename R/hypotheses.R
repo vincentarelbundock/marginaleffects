@@ -395,18 +395,7 @@ hypotheses <- function(
 
     out[["group"]] <- attr(b, "grouplab")
 
-    out <- get_ci(
-        out,
-        conf_level = mfx@conf_level,
-        vcov = vcov,
-        draws = mfx@draws,
-        estimate = "estimate",
-        hypothesis_null = mfx@hypothesis_null,
-        hypothesis_direction = mfx@hypothesis_direction,
-        df = mfx@df,
-        model = model,
-        ...
-    )
+    out <- get_ci(out, mfx)
 
     if (!is.null(equivalence)) {
         out <- equivalence(
@@ -424,7 +413,7 @@ hypotheses <- function(
     # Add common attributes from mfx S4 slots
     out <- add_attributes(out, mfx)
     
-    # Add function-specific attributes
+    # Add function-specific attributes (always set these for multcomp compatibility)
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
