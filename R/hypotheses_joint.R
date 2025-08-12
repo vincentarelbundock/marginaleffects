@@ -4,8 +4,7 @@ joint_test <- function(
     hypothesis = 0,
     joint_test = "f",
     df = NULL,
-    vcov = TRUE
-) {
+    vcov = TRUE) {
     checkmate::assert_choice(joint_test, c("f", "chisq"))
 
     if (joint_test == "f") {
@@ -62,7 +61,9 @@ joint_test <- function(
         checkmate::check_numeric(hypothesis, len = nrow(R)),
         checkmate::check_null(hypothesis)
     )
-    if (is.null(hypothesis)) hypothesis <- 0
+    if (is.null(hypothesis)) {
+        hypothesis <- 0
+    }
     r <- matrix(hypothesis, nrow = nrow(R), ncol = 1)
 
     # Calculate the difference between R*theta_hat and r
@@ -87,24 +88,28 @@ joint_test <- function(
                 insight::get_df(attr(object, "model")),
                 error = function(e) NULL
             )
-            if (is.null(df2)) tryCatch(insight::get_df(object), error = function(e) NULL)
+            if (is.null(df2)) {
+                tryCatch(insight::get_df(object), error = function(e) NULL)
+            }
             if (is.null(df2)) {
                 # n: sample size
                 n <- tryCatch(stats::nobs(object), error = function(e) NULL)
-                if (is.null(n))
+                if (is.null(n)) {
                     n <- tryCatch(
                         stats::nobs(attr(object, "model")),
                         error = function(e) NULL
                     )
-                if (is.null(n))
+                }
+                if (is.null(n)) {
                     insight::format_error(
                         "Could not extract sample size from model object."
                     )
+                }
 
                 if (inherits(object, "lme")) {
                     msg <- "The `hypotheses()` functions uses simple heuristics to select degrees of freedom for this test. See the relevant section in `?hypotheses`. These rules are likely to yield inappropriate results for models of class `%s`. Please supply degrees of freedom values explicitly via the `df` argument."
-                    msg <- sprintf(msg, class(object)[1])
-                    insight::format_warning(msg)
+                    warn_sprintf(msg) # <- sprintf(msg, class(object)[1])
+                    # warning(msg, call. = FALSE)
                 }
 
                 df2 <- n - length(theta_hat) # n - P

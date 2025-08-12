@@ -114,23 +114,47 @@ datagrid <- function(
     mean_na <- function(x) mean(x, na.rm = TRUE)
     unique_s <- function(x) sort(unique(x))
     if (grid_type == "mean_or_mode") {
-        if (is.null(FUN_character)) FUN_character <- get_mode
-        if (is.null(FUN_logical)) FUN_logical <- get_mode
-        if (is.null(FUN_factor)) FUN_factor <- get_mode
-        if (is.null(FUN_binary)) FUN_binary <- get_mode
-        if (is.null(FUN_numeric)) FUN_numeric <- mean_na
-        if (is.null(FUN_other)) FUN_other <- mean_na
+        if (is.null(FUN_character)) {
+            FUN_character <- get_mode
+        }
+        if (is.null(FUN_logical)) {
+            FUN_logical <- get_mode
+        }
+        if (is.null(FUN_factor)) {
+            FUN_factor <- get_mode
+        }
+        if (is.null(FUN_binary)) {
+            FUN_binary <- get_mode
+        }
+        if (is.null(FUN_numeric)) {
+            FUN_numeric <- mean_na
+        }
+        if (is.null(FUN_other)) {
+            FUN_other <- mean_na
+        }
         if (is.null(FUN_integer)) FUN_integer <- mean_i
     } else if (grid_type == "balanced") {
         # decided not to sort strings because the levels are not explicit
         # as in factors, and perhaps the order of rows is intentional.
         # not a very strong argument either way, so we do not break backward compatibility
-        if (is.null(FUN_character)) FUN_character <- unique_s
-        if (is.null(FUN_logical)) FUN_logical <- unique_s
-        if (is.null(FUN_factor)) FUN_factor <- unique_s
-        if (is.null(FUN_binary)) FUN_binary <- unique_s
-        if (is.null(FUN_numeric)) FUN_numeric <- mean_na
-        if (is.null(FUN_other)) FUN_other <- mean_na
+        if (is.null(FUN_character)) {
+            FUN_character <- unique_s
+        }
+        if (is.null(FUN_logical)) {
+            FUN_logical <- unique_s
+        }
+        if (is.null(FUN_factor)) {
+            FUN_factor <- unique_s
+        }
+        if (is.null(FUN_binary)) {
+            FUN_binary <- unique_s
+        }
+        if (is.null(FUN_numeric)) {
+            FUN_numeric <- mean_na
+        }
+        if (is.null(FUN_other)) {
+            FUN_other <- mean_na
+        }
         if (is.null(FUN_integer)) FUN_integer <- mean_i
     } else if (grid_type == "counterfactual") {
         if (!is.null(by)) {
@@ -464,7 +488,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
     idx <- vapply(newdata, is.matrix, logical(1L))
     if (any(idx)) {
         if (any(names(newdata)[idx] %in% variables_all)) {
-            insight::format_warning(
+            warn_sprintf(
                 "Matrix columns are not supported as predictors and are therefore omitted. This may prevent computation of the quantities of interest. You can construct your own prediction dataset and supply it explicitly to the `newdata` argument. This issue can happen when using functions like `scale()`, which returns matrices rather than vectors. Convert your column to a vector before fitting you model."
             )
         }

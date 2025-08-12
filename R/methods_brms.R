@@ -149,7 +149,7 @@ get_group_names.brmsfit <- function(model, ...) {
 #' @export
 get_vcov.brmsfit <- function(model, vcov = NULL, ...) {
     if (!is.null(vcov) && !is.logical(vcov)) {
-        insight::format_warning(
+        warn_sprintf(
             "The `vcov` argument is not supported for models of this class."
         )
     }

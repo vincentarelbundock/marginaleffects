@@ -190,8 +190,6 @@ predictions <- function(
     numderiv = "fdforward",
     ...
 ) {
-
-
     # init
     if (inherits(model, "marginaleffects_internal")) {
         mfx <- model
@@ -245,10 +243,10 @@ predictions <- function(
         # backtransform: yes
         if (is.null(hypothesis)) {
             link_to_response <- TRUE
-        # backtransform: no
+            # backtransform: no
         } else {
             mfx@type <- "response"
-            insight::format_warning(
+            warn_sprintf(
                 'The `type="invlink"` argument is not available unless `hypothesis` is `NULL` or a single number. The value of the `type` argument was changed to "response" automatically. To suppress this warning, use `type="response"` explicitly in your function call.'
             )
         }
@@ -301,7 +299,6 @@ predictions <- function(
         }
     }
 
-
     ############### sanity checks are over
 
     # pre-building the model matrix can speed up repeated predictions
@@ -349,11 +346,12 @@ predictions <- function(
 
     # degrees of freedom
     mfx <- add_degrees_of_freedom(
-        mfx = mfx, 
-        df = df, 
-        by = by, 
-        hypothesis = mfx@hypothesis, 
-        vcov = vcov)
+        mfx = mfx,
+        df = df,
+        by = by,
+        hypothesis = mfx@hypothesis,
+        vcov = vcov
+    )
     if (!is.null(mfx@df) && is.numeric(mfx@df)) {
         tmp$df <- mfx@df
     }
@@ -426,7 +424,7 @@ predictions <- function(
 
     # Add common attributes from mfx S4 slots
     out <- add_attributes(out, mfx)
-    
+
     # Add function-specific attributes
     attr(out, "by") <- by
     attr(out, "transform") <- transform[[1]]
@@ -448,7 +446,6 @@ predictions <- function(
 
     return(out)
 }
-
 
 
 #' Average predictions

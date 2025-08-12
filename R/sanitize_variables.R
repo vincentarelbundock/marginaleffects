@@ -96,7 +96,7 @@ add_variables <- function(
     mc <- attr(newdata, "matrix_columns")
     if (length(mc) > 0 && any(names(predictors) %in% mc)) {
         predictors <- predictors[!names(predictors) %in% mc]
-        insight::format_warning(
+        warn_sprintf(
             "Matrix columns are not supported. Use the `variables` argument to specify valid predictors, or use a function like `drop()` to convert your matrix columns into vectors."
         )
     }
@@ -109,7 +109,7 @@ add_variables <- function(
             "These variables were not found: %s.  Try specifying the `newdata` argument explicitly and make sure the missing variable is included.",
             toString(miss)
         )
-        insight::format_warning(msg)
+        warn_sprintf(msg)
     }
 
     # sometimes `insight` returns interaction component as if it were a constituent variable
@@ -134,7 +134,7 @@ add_variables <- function(
                         "The `%s` function produced invalid output when applied to the dataset used to fit the model.",
                         v
                     )
-                    insight::format_warning(msg)
+                    warn_sprintf(msg)
                 }
                 predictors[[v]] <- hush(predictors[[v]](modeldata[[v]]))
             }

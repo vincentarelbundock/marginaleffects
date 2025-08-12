@@ -41,13 +41,16 @@ get_marginaleffects_attributes <- function(
     x,
     exclude = NULL,
     include = NULL,
-    include_regex = NULL
-) {
+    include_regex = NULL) {
     out <- list()
     attr_names <- names(attributes(x))
     attr_names <- setdiff(attr_names, exclude)
-    if (!is.null(include)) attr_names <- intersect(attr_names, include)
-    if (!is.null(include_regex)) attr_names <- attr_names[grepl(include_regex, attr_names)]
+    if (!is.null(include)) {
+        attr_names <- intersect(attr_names, include)
+    }
+    if (!is.null(include_regex)) {
+        attr_names <- attr_names[grepl(include_regex, attr_names)]
+    }
     for (n in attr_names) {
         out[[n]] <- attr(x, n)
     }
@@ -67,7 +70,7 @@ warn_once <- function(msg, id) {
         return(invisible())
     }
     msg <- paste(msg, "This warning appears once per session.")
-    # insight::format_warning(msg, call. = FALSE)
+    # warn_sprintf(msg, call. = FALSE)
     warning(msg, call. = FALSE)
     opts <- list(FALSE)
     names(opts) <- id
@@ -101,7 +104,9 @@ evalup <- function(xcall) {
             out <- hush(eval(xcall, parent.frame(i)))
         }
     }
-    if (is.null(out) && !is.null(msg)) stop(msg)
+    if (is.null(out) && !is.null(msg)) {
+        stop(msg)
+    }
     return(out)
 }
 
@@ -181,8 +186,7 @@ group_to_factor <- function(group, model) {
                 .m2
             } else {
                 .ifnotfound
-            }
-        ),
+            }),
         pairlist(.x = x[1L], .ifnotfound = ifnotfound),
         parent.frame(1L)
     )
@@ -218,7 +222,10 @@ stop_deprecate <- function(old, new = NULL) {
 
 
 stop_sprintf <- function(msg, ...) {
-    msg <- sprintf(msg, ...)
+    dots <- list(...)
+    if (length(dots) > 0) {
+        msg <- sprintf(msg, ...)
+    }
     stop(msg, call. = FALSE)
 }
 
@@ -227,6 +234,9 @@ warn_sprintf <- function(msg, ...) {
     if (!isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
         return(invisible())
     }
-    msg <- sprintf(msg, ...)
+    dots <- list(...)
+    if (length(dots) > 0) {
+        msg <- sprintf(msg, ...)
+    }
     warning(msg, call. = FALSE)
 }
