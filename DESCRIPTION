@@ -219,6 +219,7 @@ Collate:
     'get_degrees_of_freedom.R'
     'get_draws.R'
     'get_group_names.R'
+    'get_hypotheses.R'
     'get_jacobian.R'
     'get_labels.R'
     'get_model_matrix.R'
