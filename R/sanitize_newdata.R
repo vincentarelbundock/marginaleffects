@@ -1,27 +1,25 @@
-sanitize_newdata_call <- function(scall, newdata = NULL, model, by = NULL) {
+sanitize_newdata_call <- function(scall, newdata = NULL, mfx = NULL, by = NULL) {
     if (rlang::quo_is_call(scall)) {
         df <- FALSE
         if (grepl("^datagrid", rlang::call_name(scall))) {
             if (!"model" %in% rlang::call_args_names(scall)) {
-                scall <- rlang::call_modify(scall, model = model)
+                scall <- rlang::call_modify(scall, model = mfx@model)
             }
         } else if (isTRUE(rlang::call_name(scall) == "data.frame")) {
             df <- TRUE
         } else if (isTRUE(rlang::call_name(scall) == "subset")) {
             argnames <- rlang::call_args_names(scall)
             if (!"x" %in% argnames && length(argnames) == 1) {
-                tmp <- get_modeldata(model, additional_variables = by)
-                scall <- rlang::call_modify(scall, x = tmp)
+                scall <- rlang::call_modify(scall, x = mfx@modeldata)
             }
         } else if (isTRUE(rlang::call_name(scall) == "filter")) {
             argnames <- rlang::call_args_names(scall)
             if (!".data" %in% argnames && length(argnames) == 1) {
-                tmp <- get_modeldata(model, additional_variables = by)
-                scall <- rlang::call_modify(scall, .data = tmp)
+                scall <- rlang::call_modify(scall, .data = mfx@modeldata)
             }
         } else if (rlang::call_name(scall) %in% "visualisation_matrix") {
             if (!"x" %in% rlang::call_args_names(scall)) {
-                scall <- rlang::call_modify(scall, x = get_modeldata)
+                scall <- rlang::call_modify(scall, x = mfx@modeldata)
             }
         }
         out <- rlang::eval_tidy(scall)
@@ -145,7 +143,7 @@ add_wts_column <- function(wts, newdata, model) {
 }
 
 
-sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
+sanitize_newdata <- function(mfx, newdata, by, wts) {
     checkmate::assert(
         checkmate::check_data_frame(newdata, null.ok = TRUE),
         checkmate::check_choice(
@@ -155,12 +153,14 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         combine = "or"
     )
 
+    # overwrite with processed `newdata`
     tmp <- build_newdata(
-        model = model,
+        model = mfx@model,
+        modeldata = mfx@modeldata,
         newdata = newdata,
-        by = by,
-        modeldata = modeldata
+        by = by
     )
+    model <- mfx@model
     newdata <- tmp[["newdata"]]
     modeldata <- tmp[["modeldata"]]
 
@@ -174,12 +174,12 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
     }
 
     # placeholder response
-    resp <- insight::find_response(model)
+    resp <- mfx@variable_names_response
     if (
         isTRUE(checkmate::check_character(resp, len = 1)) &&
             !resp %in% colnames(newdata)
     ) {
-        y <- hush(insight::get_response(model))
+        y <- modeldata[[resp]]
         # protect df or matrix response
         if (isTRUE(checkmate::check_atomic_vector(y))) {
             newdata[[resp]] <- y[1]
@@ -234,8 +234,7 @@ dedup_newdata <- function(
     wts,
     comparison = "difference",
     cross = FALSE,
-    byfun = NULL
-) {
+    byfun = NULL) {
     # issue #1113: elasticities or custom functions should skip dedup because it is difficult to align x and y
     elasticities <- c("eyexavg", "eydxavg", "dyexavg")
     if (
@@ -308,21 +307,19 @@ dedup_newdata <- function(
 #' @param byfun Function for aggregation (for predictions)
 #' @return Updated mfx object with processed newdata in @newdata slot and updated wts in @wts slot
 #' @keywords internal
-add_newdata <- function(mfx, scall, newdata = NULL, by = FALSE, wts = FALSE, 
-                       cross = NULL, comparison = NULL, byfun = NULL) {
-    
+add_newdata <- function(mfx, scall, newdata = NULL, by = FALSE, wts = FALSE,
+                        cross = NULL, comparison = NULL, byfun = NULL) {
     # Step 1: Handle quoted calls to datagrid, subset, etc.
-    newdata <- sanitize_newdata_call(scall, newdata, mfx@model, by = by)
-    
+    newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
+
     # Step 2: Core newdata sanitization
     newdata <- sanitize_newdata(
-        model = mfx@model,
+        mfx = mfx,
         newdata = newdata,
-        modeldata = mfx@modeldata,
         by = by,
         wts = wts
     )
-    
+
     # Step 3: Deduplication - handle different parameter sets for predictions vs comparisons
     dedup_args <- list(
         model = mfx@model,
@@ -330,24 +327,24 @@ add_newdata <- function(mfx, scall, newdata = NULL, by = FALSE, wts = FALSE,
         wts = wts,
         by = by
     )
-    
+
     # Add function-specific arguments
     if (!is.null(cross)) dedup_args$cross <- cross
     if (!is.null(comparison)) dedup_args$comparison <- comparison
     if (!is.null(byfun)) dedup_args$byfun <- byfun
-    
+
     newdata <- do.call(dedup_newdata, dedup_args)
-    
+
     # Step 4: Extract numeric weights from newdata and store in @wts slot
     if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
         mfx@wts <- newdata[["marginaleffects_wts_internal"]]
     } else {
         mfx@wts <- NULL
     }
-    
+
     # Store processed newdata in the mfx object
     mfx@newdata <- newdata
-    
+
     # Return the updated mfx object
     return(mfx)
 }

@@ -308,33 +308,7 @@ avg_slopes <- function(
     eps = NULL,
     numderiv = "fdforward",
     ...) {
-    # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
-    # scall <- rlang::enquo(newdata)
-    # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-
-    # Construct comparisons() call
     call_attr <- construct_call(model, "slopes")
-
     out <- eval.parent(call_attr)
-
-    # out <- slopes(
-    #     model = model,
-    #     newdata = newdata,
-    #     variables = variables,
-    #     type = type,
-    #     vcov = vcov,
-    #     conf_level = conf_level,
-    #     by = by,
-    #     slope = slope,
-    #     wts = wts,
-    #     hypothesis = hypothesis,
-    #     equivalence = equivalence,
-    #     df = df,
-    #     eps = eps,
-    #     numderiv = numderiv,
-    #     ...)
-
     return(out)
 }

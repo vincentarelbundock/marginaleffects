@@ -196,8 +196,6 @@ hypotheses <- function(
         if (is.null(conf_level)) {
             conf_level <- attr(model, "conf_level")
         }
-    } else {
-        model <- sanitize_model(model = model, call = call, vcov = vcov)
     }
 
     # init
@@ -206,7 +204,9 @@ hypotheses <- function(
         mfx <- model
     } else {
         call <- construct_call(model, "comparisons")
-        model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+        if (!inherits(model, internal_classes)) {
+            model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+        }
         mfx <- new_marginaleffects_internal(
             call = call,
             model = model

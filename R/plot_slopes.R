@@ -48,9 +48,9 @@
 #'
 #' # marginal slopes on a counterfactual grid
 #' plot_slopes(mod,
-#'   variables = "hp",
-#'   by = "am",
-#'   newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+#'     variables = "hp",
+#'     by = "am",
+#'     newdata = datagrid(am = 0:1, grid_type = "counterfactual")
 #' )
 #'
 plot_slopes <- function(
@@ -95,7 +95,7 @@ plot_slopes <- function(
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, mfx@model)
+    newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx)
 
     valid <- c("dydx", "eyex", "eydx", "dyex")
     checkmate::assert_choice(slope, choices = valid)

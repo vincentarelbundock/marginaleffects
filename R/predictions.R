@@ -474,8 +474,6 @@ avg_predictions <- function(
 ) {
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    # scall <- rlang::enquo(newdata)
-    # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
 
     # group by focal variable automatically unless otherwise stated
     if (isTRUE(by)) {

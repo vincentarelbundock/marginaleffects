@@ -39,9 +39,9 @@
 #'
 #' # marginal comparisons on a counterfactual grid
 #' plot_comparisons(mod,
-#'   variables = "hp",
-#'   by = "am",
-#'   newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+#'     variables = "hp",
+#'     by = "am",
+#'     newdata = datagrid(am = 0:1, grid_type = "counterfactual")
 #' )
 #'
 plot_comparisons <- function(
@@ -60,7 +60,6 @@ plot_comparisons <- function(
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
     ...) {
-
     # init
     call <- construct_call(model, "comparisons")
     model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
@@ -76,7 +75,7 @@ plot_comparisons <- function(
 
     # order of the first few paragraphs is important
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, mfx@model, by = by)
+    newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
     if (!isFALSE(wts) && is.null(by)) {
         insight::format_error("The `wts` argument requires a `by` argument.")
     }
@@ -137,9 +136,8 @@ plot_comparisons <- function(
     # marginal
     if (!is.null(by)) {
         newdata <- sanitize_newdata(
-            model = mfx@model,
+            mfx = mfx,
             newdata = newdata,
-            modeldata = mfx@modeldata,
             by = by,
             wts = wts
         )

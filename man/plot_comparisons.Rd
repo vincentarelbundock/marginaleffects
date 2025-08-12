@@ -177,9 +177,9 @@ plot_comparisons(mod, variables = "hp", by = "am")
 
 # marginal comparisons on a counterfactual grid
 plot_comparisons(mod,
-  variables = "hp",
-  by = "am",
-  newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+    variables = "hp",
+    by = "am",
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual")
 )
 \dontshow{\}) # examplesIf}
 }
