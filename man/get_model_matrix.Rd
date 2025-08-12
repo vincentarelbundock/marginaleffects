@@ -5,9 +5,9 @@
 \alias{get_model_matrix.default}
 \title{Get a named model matrix}
 \usage{
-get_model_matrix(model, newdata)
+get_model_matrix(model, newdata, mfx = NULL)
 
-\method{get_model_matrix}{default}(model, newdata)
+\method{get_model_matrix}{default}(model, newdata, mfx = NULL)
 }
 \arguments{
 \item{model}{Model object}

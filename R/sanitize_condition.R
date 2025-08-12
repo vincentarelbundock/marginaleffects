@@ -18,11 +18,18 @@ condition_shortcuts <- function(x, tr, shortcuts) {
 
 
 sanitize_condition <- function(
-    model,
+    mfx,
     condition,
-    variables = NULL,
-    modeldata = NULL
-) {
+    variables = NULL) {
+
+    # init
+    model <- mfx@model
+    dat <- mfx@modeldata
+    respname <- mfx@variable_names_response
+
+    # multi-equation models (ex: test-pkg-brms.R)
+    resp <- if (length(respname) == 1 && respname %in% colnames(dat)) dat[[respname]] else NULL
+
     # allow multiple conditions and/or effects
     checkmate::assert(
         checkmate::check_character(condition, min.len = 1, max.len = 4),
@@ -54,10 +61,6 @@ sanitize_condition <- function(
         }
     }
 
-    # use modeldata that should always be provided from mfx object
-    dat <- modeldata
-    resp <- insight::get_response(model)
-    respname <- insight::find_response(model)
 
     flag <- checkmate::check_true(all(
         names(condition) %in% c(colnames(dat), "group")
@@ -113,7 +116,7 @@ sanitize_condition <- function(
     if (length(condition) > 1) {
         # defaults
         if (is.null(condition[[2]])) {
-            #binary
+            # binary
             if (get_variable_class(dat, condition2, "binary")) {
                 at_list[[condition2]] <- condition[[2]] <- 0:1
                 # numeric default = Tukey's 5 numbers
@@ -200,7 +203,7 @@ sanitize_condition <- function(
         }
     }
 
-    # mlr3 and tidymodels are not supported by `insight::find_variables()`, 
+    # mlr3 and tidymodels are not supported by `insight::find_variables()`,
     # so we need to create a grid based on all the variables supplied in `newdata`
     if (
         inherits(at_list$model, "Learner") ||

@@ -113,10 +113,9 @@ plot_predictions <- function(
     # conditional
     if (!is.null(condition)) {
         condition <- sanitize_condition(
-            mfx@model,
-            condition,
-            variables = NULL,
-            modeldata = mfx@modeldata
+            mfx = mfx,
+            condition = condition,
+            variables = NULL
         )
         v_x <- condition$condition1
         v_color <- condition$condition2

@@ -222,7 +222,6 @@ Collate:
     'get_jacobian.R'
     'get_labels.R'
     'get_model_matrix.R'
-    'get_model_matrix_attribute.R'
     'get_modeldata.R'
     'get_predict.R'
     'get_predictions.R'

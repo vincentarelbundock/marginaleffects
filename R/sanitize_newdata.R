@@ -34,7 +34,9 @@ sanitize_newdata_call <- function(scall, newdata = NULL, mfx = NULL, by = NULL) 
 }
 
 
-build_newdata <- function(model, newdata, by, modeldata) {
+build_newdata <- function(mfx, newdata, by) {
+    model <- mfx@model
+    modeldata <- mfx@modeldata
     if (isTRUE(checkmate::check_data_frame(by))) {
         by <- setdiff(colnames(by), "by")
     } else if (isTRUE(checkmate::check_flag(by))) {
@@ -75,10 +77,13 @@ build_newdata <- function(model, newdata, by, modeldata) {
         args[["grid_type"]] <- "balanced"
         newdata <- do.call("datagrid", args)
         # Issue #580: outcome should not duplicate grid rows
-        dv <- hush(insight::find_response(model))
-        if (isTRUE(dv %in% colnames(newdata))) {
-            newdata[[dv]] <- get_mean_or_mode(newdata[[dv]])
-            newdata <- unique(newdata)
+        # there can be multiple response variables
+        dv <- mfx@variable_names_response
+        for (d in dv) {
+            if (isTRUE(d %in% colnames(newdata))) {
+                newdata[[d]] <- get_mean_or_mode(newdata[[d]])
+                newdata <- unique(newdata)
+            }
         }
     }
 
@@ -155,8 +160,7 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
 
     # overwrite with processed `newdata`
     tmp <- build_newdata(
-        model = mfx@model,
-        modeldata = mfx@modeldata,
+        mfx = mfx,
         newdata = newdata,
         by = by
     )
@@ -228,13 +232,16 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
 
 
 dedup_newdata <- function(
-    model,
+    mfx,
     newdata,
     by,
     wts,
     comparison = "difference",
     cross = FALSE,
     byfun = NULL) {
+    # init
+    model <- mfx@model
+
     # issue #1113: elasticities or custom functions should skip dedup because it is difficult to align x and y
     elasticities <- c("eyexavg", "eydxavg", "dyexavg")
     if (
@@ -266,7 +273,7 @@ dedup_newdata <- function(
     # copy to allow mod by reference later without overwriting newdata
     out <- data.table(newdata)
 
-    dv <- hush(unlist(insight::find_response(model), use.names = FALSE))
+    dv <- mfx@variable_names_response
     if (isTRUE(checkmate::check_string(dv)) && dv %in% colnames(out)) {
         out[, (dv) := NULL]
         vclass <- vclass[names(vclass) != dv]
@@ -322,7 +329,7 @@ add_newdata <- function(mfx, scall, newdata = NULL, by = FALSE, wts = FALSE,
 
     # Step 3: Deduplication - handle different parameter sets for predictions vs comparisons
     dedup_args <- list(
-        model = mfx@model,
+        mfx = mfx,
         newdata = newdata,
         wts = wts,
         by = by

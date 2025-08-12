@@ -107,10 +107,9 @@ plot_comparisons <- function(
     # conditional
     if (!is.null(condition)) {
         condition <- sanitize_condition(
-            mfx@model,
-            condition,
-            variables,
-            modeldata = mfx@modeldata
+            mfx = mfx,
+            condition = condition,
+            variables = variables
         )
         v_x <- condition$condition1
         v_color <- condition$condition2

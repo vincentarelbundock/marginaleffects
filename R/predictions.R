@@ -305,7 +305,7 @@ predictions <- function(
     ############### sanity checks are over
 
     # pre-building the model matrix can speed up repeated predictions
-    mfx@newdata <- get_model_matrix_attribute(mfx@model, mfx@newdata)
+    mfx@newdata <- add_model_matrix_attribute(mfx)
 
     # main estimation
     args <- list(

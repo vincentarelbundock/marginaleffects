@@ -295,7 +295,6 @@ comparisons <- function(
     transform <- sanitize_transform(transform)
 
     # after sanitize_newdata
-    # after dedup_newdata
     mfx <- add_variables(
         mfx = mfx,
         variables = variables,
