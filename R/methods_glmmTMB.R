@@ -7,8 +7,7 @@ get_predict.glmmTMB <- function(
     newdata = insight::get_data(model),
     type = "response",
     newparams = NULL,
-    ...
-) {
+    ...) {
     if (inherits(vcov, "vcov.glmmTMB")) {
         vcov <- vcov[[1]]
     }

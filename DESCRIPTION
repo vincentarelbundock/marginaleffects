@@ -320,6 +320,7 @@ Collate:
     'sanity.R'
     'sanity_by.R'
     'sanity_dots.R'
+    'sanity_multcomp.R'
     'settings.R'
     'slopes.R'
     'sort.R'

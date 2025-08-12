@@ -1,5 +1,6 @@
 rm(list = ls())
 rm(list = ls(.GlobalEnv), envir = .GlobalEnv)
+options(traceback.max.lines = 5)
 
 requiet <- function(package) {
     void <- capture.output(

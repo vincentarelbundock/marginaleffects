@@ -334,7 +334,9 @@ comparisons <- function(
     # after inferences dispatch
     # hypothesis_null, hypothesis_direction
     tmp <- sanitize_hypothesis(hypothesis)
-    list2env(tmp, envir = environment())
+    hypothesis <- tmp$hypothesis
+    mfx@hypothesis_null <- tmp$hypothesis_null
+    mfx@hypothesis_direction <- tmp$hypothesis_direction
 
 
     ############### sanity checks are over
@@ -434,8 +436,8 @@ comparisons <- function(
         df = mfx@df,
         draws = draws,
         estimate = "estimate",
-        hypothesis_null = hypothesis_null,
-        hypothesis_direction = hypothesis_direction,
+        hypothesis_null = mfx@hypothesis_null,
+        hypothesis_direction = mfx@hypothesis_direction,
         model = mfx@model
     )
 

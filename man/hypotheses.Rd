@@ -7,7 +7,7 @@
 hypotheses(
   model = NULL,
   hypothesis = NULL,
-  vcov = NULL,
+  vcov = TRUE,
   conf_level = NULL,
   df = NULL,
   equivalence = NULL,

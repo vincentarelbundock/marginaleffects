@@ -229,8 +229,7 @@ model_data <- dplyr::select(
         ),
         function(c) {
             factor(c, exclude = levels(c)[length(levels(c))])
-        }
-    ) |>
+        }) |>
     # need to make these ordered factors for BRMS
     transform(
         education = ordered(education),
@@ -362,7 +361,7 @@ expect_equal(nrow(p), 10)
 
 # Issue #1490: no warning when vcov=FALSE
 options(marginaleffects_safe = TRUE)
-mod <- glmmTMB(Sepal.Length ~ Sepal.Width + (1|Species), data = iris)
+mod <- glmmTMB(Sepal.Length ~ Sepal.Width + (1 | Species), data = iris)
 expect_warning(avg_comparisons(mod, vcov = TRUE))
 expect_warning(avg_comparisons(mod))
 expect_false(ignore(expect_warning)(avg_comparisons(mod, vcov = FALSE)))

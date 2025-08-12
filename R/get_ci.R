@@ -7,8 +7,7 @@ get_ci <- function(
     hypothesis_null = 0,
     hypothesis_direction = "=",
     model = NULL,
-    ...
-) {
+    ...) {
     checkmate::assert_number(hypothesis_null)
 
     if (!is.null(draws)) {

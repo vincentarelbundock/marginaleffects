@@ -151,7 +151,7 @@
 hypotheses <- function(
     model = NULL,
     hypothesis = NULL,
-    vcov = NULL,
+    vcov = TRUE,
     conf_level = NULL,
     df = NULL,
     equivalence = NULL,
@@ -162,19 +162,22 @@ hypotheses <- function(
     ...
 ) {
 
-    if (is.null(model)) {
-        if ("model_perturbed" %in% ...names()) {
-            model <- ...get("model_perturbed")
-        } else {
-            msg <- "The `model` argument is required."
-            stop_sprintf(msg)
-        }
+    # Create mfx object early and populate as objects become available
+    mfx <- new_marginaleffects_internal(call = construct_call(model, "hypotheses"))
+
+    # multiple imputation
+    if (inherits(model, c("mira", "amest"))) {
+        out <- process_imputation(model, mfx@call)
+        return(out)
     }
 
-    hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
+    if (is.null(model)) model <- ...get("model_perturbed")
+    if (is.null(model)) model <- stop_sprintf("`model` is missing.")
+    sanity_multcomp(multcomp, hypothesis, joint)
 
-    if (inherits(model, c("predictions", "comparisons", "slopes", "hypotheses"))) {
-        if (!is.null(vcov)) {
+    internal_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
+    if (inherits(model, internal_classes)) {
+        if (!isTRUE(checkmate::check_flag(vcov))) {
             msg <- "The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call."
             stop_sprintf(msg)
         }
@@ -182,38 +185,21 @@ hypotheses <- function(
             msg <- "The `hypotheses()` function cannot be used to post-process `marginaleffects` objects that include draws from a bootstrap, simulation, or bayesian posterior distribution. Users should call the `get_draws()` function and process draws manually."
             stop_sprintf(msg)
         }
-    }
-
-    checkmate::assert_number(conf_level, null.ok = TRUE, lower = 0, upper = 1)
-    if (is.null(conf_level)) {
         # inherit conf_level from marginaleffects objects
-        conf_level <- attr(model, "conf_level")
         if (is.null(conf_level)) {
-            conf_level <- 0.95
+            conf_level <- attr(model, "conf_level")
         }
+
+    } else {
+        mfx <- sanitize_model(mfx, model = model, vcov = vcov)
+        model <- mfx@model
     }
 
-    # I don't know how to adjust p values for a different null in `multcomp::glht()`
-    if (!isFALSE(multcomp) && isTRUE(checkmate::check_number(hypothesis))) {
-        msg <- "The `multcomp` argument is not available when `hypothesis` is a number."
-        stop(msg, call. = FALSE)
-    }
 
-    if (!isFALSE(multcomp) && !isFALSE(joint)) {
-        msg <- "The `multcomp` argument cannot be used with the `joint` argument."
-        insight::format_error(msg)
-    }
+    conf_level <- sanitize_conf_level(conf_level, ...)
 
-    call_attr <- construct_call(model, "hypotheses")
-    
-    # Create mfx object early and populate as objects become available
-    mfx <- new_marginaleffects_internal(model = model, call = call_attr)
+    hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
 
-    # multiple imputation
-    if (inherits(model, c("mira", "amest"))) {
-        out <- process_imputation(model, call_attr)
-        return(out)
-    }
 
     ###### Joint test
     if (!isFALSE(joint)) {
@@ -259,7 +245,9 @@ hypotheses <- function(
 
     # after re-evaluation
     tmp <- sanitize_hypothesis(hypothesis)
-    list2env(tmp, envir = environment())
+    hypothesis <- tmp$hypothesis
+    mfx@hypothesis_direction <- tmp$hypothesis_direction
+    mfx@hypothesis_null <- tmp$hypothesis_null
 
     vcov_false <- isFALSE(vcov)
     if (!isTRUE(checkmate::check_matrix(vcov))) {
@@ -417,8 +405,8 @@ hypotheses <- function(
         vcov = vcov,
         draws = draws,
         estimate = "estimate",
-        hypothesis_null = hypothesis_null,
-        hypothesis_direction = hypothesis_direction,
+        hypothesis_null = mfx@hypothesis_null,
+        hypothesis_direction = mfx@hypothesis_direction,
         df = mfx@df,
         model = model,
         ...

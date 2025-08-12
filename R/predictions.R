@@ -261,7 +261,9 @@ predictions <- function(
 
     # hypothesis
     tmp <- sanitize_hypothesis(hypothesis)
-    list2env(tmp, envir = environment())
+    hypothesis <- tmp$hypothesis
+    mfx@hypothesis_null <- tmp$hypothesis_null
+    mfx@hypothesis_direction <- tmp$hypothesis_direction
 
     # save the original because it gets converted to a named list, which breaks
     # user-input sanity checks
@@ -417,8 +419,8 @@ predictions <- function(
             vcov = mfx@vcov_model,
             draws = draws,
             estimate = "estimate",
-            hypothesis_null = hypothesis_null,
-            hypothesis_direction = hypothesis_direction,
+            hypothesis_null = mfx@hypothesis_null,
+            hypothesis_direction = mfx@hypothesis_direction,
             df = mfx@df,
             model = mfx@model,
             ...
