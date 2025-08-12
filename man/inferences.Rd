@@ -133,6 +133,5 @@ estimator <- function(data) {
     avg_comparisons(m, variables = "treat", wts = ps, vcov = FALSE)
 }
 inferences(lalonde, method = "rsample", estimator = estimator)
-
 }
 }

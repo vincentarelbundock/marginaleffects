@@ -295,17 +295,10 @@ comparisons <- function(
     sanity_comparison(comparison)
 
     # transforms
-    comparison_label <- transform_label <- NULL
-    if (is.function(comparison)) {
-        comparison_label <- deparse(substitute(comparison))
-    }
     if (is.function(transform)) {
-        transform_label <- deparse(substitute(transform))
         transform <- sanitize_transform(transform)
-        names(transform) <- transform_label
     } else {
         transform <- sanitize_transform(transform)
-        transform_label <- names(transform)
     }
 
     # after sanitize_newdata
@@ -467,9 +460,7 @@ comparisons <- function(
     attr(out, "variables") <- predictors
     attr(out, "comparison") <- comparison
     attr(out, "transform") <- transform[[1]]
-    attr(out, "comparison_label") <- comparison_label
     attr(out, "hypothesis_by") <- hyp_by
-    attr(out, "transform_label") <- transform_label
     attr(out, "mfx") <- mfx
 
     if (inherits(model, "brmsfit")) {

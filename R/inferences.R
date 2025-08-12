@@ -95,7 +95,6 @@
 #'     avg_comparisons(m, variables = "treat", wts = ps, vcov = FALSE)
 #' }
 #' inferences(lalonde, method = "rsample", estimator = estimator)
-#'
 #' }
 #' @export
 inferences <- function(
@@ -107,8 +106,7 @@ inferences <- function(
     conformal_calibration = NULL,
     conformal_score = "residual_abs",
     estimator = NULL,
-    ...
-) {
+    ...) {
     if (inherits(attr(x, "model"), c("model_fit", "workflow"))) {
         msg <- "The `inferences()` function does not support `tidymodels` objects."
         stop_sprintf(msg)
@@ -218,9 +216,7 @@ inferences <- function(
         "nchains",
         "vcov.type",
         "variables",
-        "comparison",
-        "comparison_label",
-        "transform_label"
+        "comparison"
     )
     for (n in attrs) {
         if (!is.null(attr(x, n))) {
