@@ -6,7 +6,6 @@ get_comparisons <- function(
     lo,
     hi,
     model_perturbed = NULL,
-    wts = FALSE,
     by = NULL,
     byfun = NULL,
     hypothesis = NULL,
@@ -20,11 +19,7 @@ get_comparisons <- function(
     data.table::setDT(newdata)
 
     # get_se_delta() needs perturbed coefficients model
-    if (is.null(model_perturbed)) { 
-        model <- mfx@model
-    } else {
-        model <- model_perturbed
-    }
+    model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
 
     settings_init()
 
@@ -315,9 +310,8 @@ get_comparisons <- function(
     # frequentist
     if (is.null(draws)) {
         draws_lo <- draws_hi <- draws_or <- NULL
-
-        # bayes
     } else {
+        # bayes
         draws_lo <- attr(pred_lo, "posterior_draws")
         draws_hi <- attr(pred_hi, "posterior_draws")
         draws_or <- attr(pred_or, "posterior_draws")

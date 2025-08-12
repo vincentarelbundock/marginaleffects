@@ -6,19 +6,14 @@ get_predictions <- function(
     byfun = byfun,
     hypothesis = NULL,
     verbose = TRUE,
-    wts = FALSE,
     hi = NULL, # sink hole for shared comparisons/predictions call
-    lo = NULL, # sink hole
+    lo = NULL, # sink hole avoids pushing these variables through ... in get_predict()
     original = NULL, # sink hole
     ...) {
     newdata <- mfx@newdata
 
     # sometimes we want the perturbed coefficients model supplied by get_se_delta().
-    if (is.null(model_perturbed)) {
-        model <- mfx@model
-    } else {
-        model <- model_perturbed
-    }
+    model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
 
     out <- myTryCatch(get_predict(
         model,
@@ -96,7 +91,7 @@ get_predictions <- function(
 
     # expensive: only do this inside the jacobian if necessary
     if (
-        !isFALSE(wts) ||
+        !is.null(mfx@wts) ||
             !isTRUE(checkmate::check_flag(by, null.ok = TRUE)) ||
             inherits(model, "mclogit")
     ) {

@@ -295,11 +295,7 @@ comparisons <- function(
     sanity_comparison(comparison)
 
     # transforms
-    if (is.function(transform)) {
-        transform <- sanitize_transform(transform)
-    } else {
-        transform <- sanitize_transform(transform)
-    }
+    transform <- sanitize_transform(transform)
 
     # after sanitize_newdata
     # after dedup_newdata
@@ -345,7 +341,6 @@ comparisons <- function(
         original = contrast_data[["original"]],
         hi = contrast_data[["hi"]],
         lo = contrast_data[["lo"]],
-        wts = mfx@wts,
         by = by,
         cross = cross,
         hypothesis = mfx@hypothesis
@@ -356,7 +351,7 @@ comparisons <- function(
     hyp_by <- attr(cmp, "hypothesis_function_by")
 
     # bayesian posterior
-    J <- mfx@draws <- NULL
+    mfx@draws <- NULL
     if (!is.null(attr(cmp, "posterior_draws"))) {
         mfx@draws <- attr(cmp, "posterior_draws")
 
@@ -388,8 +383,7 @@ comparisons <- function(
         )
         args <- utils::modifyList(args, dots)
         se <- do.call("get_se_delta", args)
-        J <- attr(se, "jacobian")
-        mfx@jacobian <- J
+        mfx@jacobian <- attr(se, "jacobian")
         attr(se, "jacobian") <- NULL
         cmp$std.error <- as.numeric(se)
         mfx@draws <- NULL

@@ -260,9 +260,6 @@ predictions <- function(
 
     mfx <- add_hypothesis(mfx, hypothesis)
 
-    # save the original because it gets converted to a named list, which breaks
-    # user-input sanity checks
-    transform_original <- transform
     transform <- sanitize_transform(transform)
 
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
@@ -308,11 +305,6 @@ predictions <- function(
         }
     }
 
-    if (is.null(by) || isFALSE(by)) {
-        vcov_tmp <- vcov
-    } else {
-        vcov_tmp <- FALSE
-    }
 
     ############### sanity checks are over
 
@@ -324,7 +316,6 @@ predictions <- function(
         mfx = mfx,
         type = if (link_to_response) "link" else mfx@type,
         hypothesis = mfx@hypothesis,
-        wts = mfx@wts,
         by = by,
         byfun = byfun
     )
@@ -374,14 +365,13 @@ predictions <- function(
     # bayesian posterior draws
     mfx@draws <- attr(tmp, "posterior_draws")
 
-    J <- NULL
     if (!isFALSE(vcov)) {
         mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
 
         # Delta method for standard errors
         if (!"std.error" %in% colnames(tmp) && is.null(mfx@draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
             fun <- function(...) {
-                get_predictions(..., wts = mfx@wts, verbose = FALSE)$estimate
+                get_predictions(..., verbose = FALSE)$estimate
             }
             args <- list(
                 mfx = mfx,
@@ -398,8 +388,7 @@ predictions <- function(
             args <- utils::modifyList(args, dots)
             se <- do.call(get_se_delta, args)
             if (is.numeric(se) && length(se) == nrow(tmp)) {
-                J <- attr(se, "jacobian")
-                mfx@jacobian <- J
+                mfx@jacobian <- attr(se, "jacobian")
                 attr(se, "jacobian") <- NULL
                 tmp[["std.error"]] <- se
             }
@@ -420,13 +409,6 @@ predictions <- function(
 
     # remove weights column (now handled by add_attributes)
     out[["marginaleffects_wts_internal"]] <- NULL
-
-    # bycols
-    if (isTRUE(checkmate::check_data_frame(by))) {
-        bycols <- setdiff(colnames(by), "by")
-    } else {
-        bycols <- by
-    }
 
     # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
     # applied in the middle, and it must already be sorted in the final order,
