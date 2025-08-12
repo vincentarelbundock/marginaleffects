@@ -43,7 +43,7 @@ get_vcov.glimML <- function(model, vcov = NULL, ...) {
 sanitize_model_specific.glimML <- function(model, ...) {
     mdat <- get_modeldata(model, additional_variables = FALSE)
     if (isTRUE("character" %in% attr(mdat, "marginaleffects_variable_class"))) {
-        insight::format_error(
+        stop_sprintf(
             "This function does not support character predictors. Please convert them to factors before fitting the model."
         )
     }

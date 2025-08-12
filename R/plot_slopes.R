@@ -67,12 +67,13 @@ plot_slopes <- function(
     rug = FALSE,
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
-    ...) {
+    ...
+) {
     if ("effect" %in% ...names()) {
         if (is.null(variables)) {
             variables <- ...elt(match("effect", ...names())[1L])
         } else {
-            insight::format_error(
+            stop_sprintf(
                 "The `effect` argument has been renamed to `variables`."
             )
         }
@@ -88,7 +89,7 @@ plot_slopes <- function(
 
     if (inherits(mfx@model, "mira") && is.null(newdata)) {
         msg <- "Please supply a data frame to the `newdata` argument explicitly."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # order of the first few paragraphs is important

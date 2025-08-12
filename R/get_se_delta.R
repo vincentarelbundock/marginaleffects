@@ -13,7 +13,7 @@ align_jacobian_vcov <- function(J, V, object, ...) {
         } else {
             cols <- intersect(colnames(J), colnames(V))
             if (length(cols) == 0) {
-                insight::format_error(
+                stop_sprintf(
                     "The jacobian does not match the variance-covariance matrix."
                 )
             }
@@ -23,7 +23,6 @@ align_jacobian_vcov <- function(J, V, object, ...) {
     }
     return(list(J = J, V = V))
 }
-
 
 
 #' Compute standard errors using the delta method
@@ -52,7 +51,8 @@ get_se_delta <- function(
     hi = NULL,
     lo = NULL,
     original = NULL,
-    ...) {
+    ...
+) {
     # delta method does not work for these models
     bad <- c("brmsfit", "stanreg", "bart")
     if (any(inherits(model_perturbed, bad))) {

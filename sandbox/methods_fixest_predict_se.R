@@ -1,12 +1,13 @@
 #' @rdname get_predict
 #' @export
-get_predict.fixest <- function(model,
-                               newdata = insight::get_data(model),
-                               vcov = FALSE,
-                               conf_level = 0.95,
-                               type = "response",
-                               ...) {
-
+get_predict.fixest <- function(
+    model,
+    newdata = insight::get_data(model),
+    vcov = FALSE,
+    conf_level = 0.95,
+    type = "response",
+    ...
+) {
     insight::check_if_installed("fixest")
 
     dots <- list(...)
@@ -18,7 +19,8 @@ get_predict.fixest <- function(model,
     args <- list(
         object = model,
         newdata = newdata,
-        type = type)
+        type = type
+    )
 
     if (!is.null(conf_level)) {
         args[["level"]] <- conf_level
@@ -47,24 +49,30 @@ get_predict.fixest <- function(model,
 
     # fixest is super slow when using do call because of some `deparse()` call
     if (!isFALSE(vcov) && !is.null(conf_level)) {
-        pred <- try(stats::predict(
-            object = args$object,
-            newdata = args$newdata,
-            type = args$type,
-            interval = args$interval,
-            level = args$level,
-            vcov = args$vcov,
-            ...),
-        silent = TRUE)
-    # issue #531: we don't want to waste time computing intervals or risk having
-    # them as leftover columns in contrast computations
+        pred <- try(
+            stats::predict(
+                object = args$object,
+                newdata = args$newdata,
+                type = args$type,
+                interval = args$interval,
+                level = args$level,
+                vcov = args$vcov,
+                ...
+            ),
+            silent = TRUE
+        )
+        # issue #531: we don't want to waste time computing intervals or risk having
+        # them as leftover columns in contrast computations
     } else {
-        pred <- try(stats::predict(
-            object = args$object,
-            newdata = args$newdata,
-            type = args$type,
-            ...),
-        silent = TRUE)
+        pred <- try(
+            stats::predict(
+                object = args$object,
+                newdata = args$newdata,
+                type = args$type,
+                ...
+            ),
+            silent = TRUE
+        )
     }
 
     # unable to compute confidence intervals; try again
@@ -72,14 +80,17 @@ get_predict.fixest <- function(model,
         args[["interval"]] <- "none"
         args[["level"]] <- NULL
         # fixest is super slow when using do call because of some `deparse()` call
-        pred <- try(stats::predict(
-            object = args$object,
-            newdata = args$newdata,
-            type = args$type,
-            interval = args$interval,
-            vcov = args$vcov,
-            ...),
-        silent = TRUE)
+        pred <- try(
+            stats::predict(
+                object = args$object,
+                newdata = args$newdata,
+                type = args$type,
+                interval = args$interval,
+                vcov = args$vcov,
+                ...
+            ),
+            silent = TRUE
+        )
     }
 
     if (inherits(pred, "data.frame")) {
@@ -99,18 +110,20 @@ get_predict.fixest <- function(model,
         if ("rowid" %in% colnames(newdata)) {
             out <- data.frame(
                 rowid = newdata$rowid,
-                estimate = as.numeric(pred))
+                estimate = as.numeric(pred)
+            )
         } else {
             out <- data.frame(
                 rowid = 1:nrow(newdata),
-                estimate = as.numeric(pred))
+                estimate = as.numeric(pred)
+            )
         }
     } else {
         if (inherits(pred, "try-error")) {
             stop(as.character(pred), call. = FALSE)
         }
         msg <- "Unable to extract predictions from a model of type `fixest`. Please report this problem, along with replicable code, on the `marginaleffects` issue tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     return(out)

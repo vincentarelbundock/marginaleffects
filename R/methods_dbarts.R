@@ -40,7 +40,7 @@ sanitize_model_specific.bart <- function(model, ...) {
         )
     ) {
         msg <- "`marginaleffects` only supports models estimated using the formula interface in `bart2()` function, not the matrix input in `bart()`."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
     return(model)
 }

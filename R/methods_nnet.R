@@ -85,7 +85,7 @@ get_predict.multinom <- function(
             colnames(pred)[1] <- missing_level
             pred <- pred - rowMeans(pred)
         } else {
-            insight::format_error(
+            stop_sprintf(
                 "Unable to compute predictions on the latent scale."
             )
         }

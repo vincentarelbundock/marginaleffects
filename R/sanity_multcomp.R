@@ -6,7 +6,7 @@ sanity_multcomp <- function(multcomp, hypothesis, joint) {
     }
     if (!isFALSE(multcomp) && !isFALSE(joint)) {
         msg <- "The `multcomp` argument cannot be used with the `joint` argument."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
     return(invisible(NULL))
 }

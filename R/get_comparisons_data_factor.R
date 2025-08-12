@@ -59,7 +59,7 @@ get_comparisons_data_factor <- function(
             tmp <- modeldata[[variable$name]]
             if (!all(variable$value %in% as.character(tmp))) {
                 msg <- "Some of the values supplied to the `variables` argument were not found in the dataset."
-                insight::format_error(msg)
+                stop_sprintf(msg)
             }
             idx <- match(variable$value, as.character(tmp))
             levs_idx <- data.table::data.table(lo = tmp[idx[1]], hi = tmp[idx[[2]]])

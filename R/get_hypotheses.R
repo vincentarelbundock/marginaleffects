@@ -5,7 +5,7 @@ get_hypotheses <- function(model_perturbed, hypothesis, hypothesis_is_formula, n
         out <- model_perturbed
         if (!"estimate" %in% colnames(out)) {
             msg <- "`hypothesis` function must return a data.frame with a column named `estimate`."
-            insight::format_error(msg)
+            stop_sprintf(msg)
         }
         if (!"term" %in% colnames(out)) {
             n <- tryCatch(names(stats::coef(model_perturbed)), error = function(e) NULL)
@@ -16,7 +16,7 @@ get_hypotheses <- function(model_perturbed, hypothesis, hypothesis_is_formula, n
         }
         if (!all(c("term", "estimate") %in% colnames(out))) {
             msg <- "`hypothesis` function must return a data.frame with two columns named `term` and `estimate`."
-            insight::format_error(msg)
+            stop_sprintf(msg)
         }
 
         # unknown model

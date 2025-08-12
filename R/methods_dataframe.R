@@ -4,7 +4,7 @@
 get_coef.data.frame <- function(model, ...) {
     checkmate::assert_data_frame(model)
     if (!"estimate" %in% colnames(model)) {
-        insight::format_error(
+        stop_sprintf(
             "The model object is a data.frame but doesn't contain the column 'estimate'. Make sure these columns are present"
         )
     }

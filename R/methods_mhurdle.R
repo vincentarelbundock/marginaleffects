@@ -16,7 +16,7 @@ get_predict.mhurdle <- function(
 #' @export
 get_vcov.mhurdle <- function(model, vcov = NULL, ...) {
     if (!is.null(vcov) && !is.logical(vcov)) {
-        insight::format_error(
+        stop_sprintf(
             "The `vcov` for this class of models must be TRUE or FALSE."
         )
     }

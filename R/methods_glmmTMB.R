@@ -7,7 +7,8 @@ get_predict.glmmTMB <- function(
     newdata = insight::get_data(model),
     type = "response",
     newparams = NULL,
-    ...) {
+    ...
+) {
     if (inherits(vcov, "vcov.glmmTMB")) {
         vcov <- vcov[[1]]
     }
@@ -106,7 +107,7 @@ sanitize_model_specific.glmmTMB <- function(model, vcov = TRUE, re.form, ...) {
     # re.form=NA
     if (!isTRUE(checkmate::check_flag(vcov))) {
         msg <- "For this model type, `vcov` must be `TRUE` or `FALSE`."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     if (!isFALSE(vcov) && (missing(re.form) || (!isTRUE(is.na(re.form))))) {

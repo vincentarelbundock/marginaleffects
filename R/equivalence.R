@@ -5,7 +5,7 @@ equivalence <- function(x, equivalence = NULL, df = Inf, ...) {
 
     if (!is.null(equivalence) && !all(c("estimate", "std.error") %in% colnames(x))) {
         msg <- "The `equivalence` argument is not supported with models for which `marginaleffects` does not estimate a standard error (e.g., bayesian)."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     checkmate::assert_numeric(equivalence, min.len = 1, max.len = 2)

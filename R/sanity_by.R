@@ -18,7 +18,7 @@ sanity_by <- function(by, newdata) {
 
     if (isTRUE(by == "group") && "group" %in% colnames(newdata)) {
         msg <- 'The "group" variable name is forbidden to avoid conflicts with the column names of the outputs produced by the `marginaleffects` package. Please rename your variable of change the value of the `by` argument.'
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     if (isTRUE(checkmate::check_flag(by))) {

@@ -67,9 +67,9 @@ plot_predictions <- function(
     rug = FALSE,
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
-    ...) {
+    ...
+) {
     checkmate::assert_number(points, lower = 0, upper = 1)
-
 
     # init
     call <- construct_call(model, "comparisons")
@@ -81,14 +81,14 @@ plot_predictions <- function(
 
     if (inherits(mfx@model, "mira") && is.null(newdata)) {
         msg <- "Please supply a data frame to the `newdata` argument explicitly."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # order of the first few paragraphs is important
     scall <- rlang::enquo(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
     if (!isFALSE(wts) && is.null(by)) {
-        insight::format_error("The `wts` argument requires a `by` argument.")
+        stop_sprintf("The `wts` argument requires a `by` argument.")
     }
     checkmate::assert_character(by, null.ok = TRUE)
 
@@ -102,7 +102,7 @@ plot_predictions <- function(
     )
     if ((!is.null(condition) && !is.null(by)) || (is.null(condition) && is.null(by))) {
         msg <- "One of the `condition` and `by` arguments must be supplied, but not both."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # mlr3 and tidymodels

@@ -158,7 +158,7 @@ datagrid <- function(
         if (is.null(FUN_integer)) FUN_integer <- mean_i
     } else if (grid_type == "counterfactual") {
         if (!is.null(by)) {
-            insight::format_error(
+            stop_sprintf(
                 "The `by` argument is not supported for counterfactual grids."
             )
         }
@@ -173,7 +173,7 @@ datagrid <- function(
 
     if (!is.null(by)) {
         if (is.null(newdata) && is.null(model)) {
-            insight::format_error(
+            stop_sprintf(
                 "One of `newdata` and `model` must not be `NULL`."
             )
         }
@@ -181,7 +181,7 @@ datagrid <- function(
             newdata <- get_modeldata(model, additional_variables = by)
         }
         if (!all(by %in% colnames(newdata))) {
-            insight::format_error(
+            stop_sprintf(
                 "All elements of `by` must match column names in `newdata`."
             )
         }
@@ -359,7 +359,7 @@ datagridcf_internal <- function(
     newdata = NULL
 ) {
     if (...length() == 0) {
-        insight::format_error(
+        stop_sprintf(
             "Users must specify variable values when `grid_type='counterfactual'"
         )
     }
@@ -426,7 +426,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
 
     if (is.null(model) & is.null(newdata)) {
         msg <- "The `model` and `newdata` arguments are both `NULL`. When calling `datagrid()` *inside* the `slopes()` or `comparisons()` functions, the `model` and `newdata` arguments can both be omitted. However, when calling `datagrid()` on its own, users must specify either the `model` or the `newdata` argument (but not both)."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # newdata before model: if user supplies newdata explicitly, they might want

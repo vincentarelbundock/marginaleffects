@@ -26,7 +26,7 @@ recall <- function(x, ...) {
                 "Call could not be retrieved from object of class %s.",
                 class(x)[1]
             )
-            insight::format_error(msg)
+            stop_sprintf(msg)
         }
 
         # unsupported call: return `NULL`

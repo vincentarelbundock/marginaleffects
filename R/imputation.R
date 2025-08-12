@@ -78,7 +78,7 @@ process_imputation <- function(x, call_attr, marginal_means = FALSE) {
 #' @export
 tidy.marginaleffects_mids <- function(x, ...) {
     if (!"std.error" %in% colnames(x)) {
-        insight::format_error(
+        stop_sprintf(
             'The output does not include a `std.error` column. Some models do not generate standard errors when estimates are backtransformed (e.g., GLM models). One solution is to use `type="response"` for those models.'
         )
     }

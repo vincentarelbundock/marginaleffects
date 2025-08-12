@@ -2,7 +2,7 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
     draws <- attr(x, "posterior_draws")
     if (!is.null(draws)) {
         msg <- "The `hypothesis` argument does not support function for models with draws. You can use `get_draws()` to extract draws and manipulate them directly instead."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     if ("rowid" %in% colnames(x) && "rowid" %in% colnames(newdata)) {
@@ -20,13 +20,14 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
     attr(x, "by") <- if (is.character(by)) by else names(by)
 
     argnames <- names(formals(hypothesis))
-    if (!"x" %in% argnames)
-        insight::format_error(
+    if (!"x" %in% argnames) {
+        stop_sprintf(
             "The `hypothesis` function must accept an `x` argument."
         )
+    }
     if (!all(argnames %in% c("x", "draws"))) {
         msg <- "The allowable arguments for the `hypothesis` function are: `x` and `draws`"
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
     args <- list(x = x, newdata = newdata, by = by, draws = draws)
     args <- args[names(args) %in% argnames]
@@ -40,7 +41,7 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
             !all(c("term", "estimate") %in% colnames(out)) &&
                 !all(c("hypothesis", "estimate") %in% colnames(out))
         ) {
-            insight::format_error(msg)
+            stop_sprintf(msg)
         }
     } else if (isTRUE(checkmate::check_numeric(out))) {
         if (
@@ -52,7 +53,7 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
             out <- data.frame(term = seq_along(out), estimate = out)
         }
     } else {
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     data.table::setDT(out)

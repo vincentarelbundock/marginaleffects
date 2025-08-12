@@ -87,7 +87,7 @@ get_predict.brmsfit <- function(
             ncol(draws),
             nrow(newdata)
         )
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # 1d outcome

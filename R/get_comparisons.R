@@ -14,7 +14,6 @@ get_comparisons <- function(
     deltamethod = FALSE,
     ...
 ) {
-
     newdata <- mfx@newdata
     data.table::setDT(newdata)
 
@@ -47,7 +46,7 @@ get_comparisons <- function(
 
         # informative error in case of allow.new.levels level breakage
         if (inherits(pred_both[["error"]], "simpleError")) {
-            insight::format_error(pred_both[["error"]][["message"]])
+            stop_sprintf(pred_both[["error"]][["message"]])
         } else {
             pred_both <- pred_both[["value"]]
         }
@@ -79,7 +78,7 @@ get_comparisons <- function(
             inherits(pred_lo$error, "rlang_error") &&
                 isTRUE(grepl("the object should be", pred_lo$error$message))
         ) {
-            insight::format_error(pred_lo$error$message)
+            stop_sprintf(pred_lo$error$message)
         } else {
             pred_lo <- pred_lo[["value"]]
         }
@@ -152,7 +151,7 @@ get_comparisons <- function(
             "",
             "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
         )
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # output data.frame
@@ -215,7 +214,7 @@ get_comparisons <- function(
                 out <- merge(out, nd, by = bycol, sort = FALSE)
                 tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
             } else {
-                insight::format_error(
+                stop_sprintf(
                     "The column in `by` must be present in `newdata`."
                 )
             }
@@ -351,7 +350,9 @@ get_comparisons <- function(
     }
 
     # we feed these columns to safefun(), even if they are useless for categoricals
-    if (!"marginaleffects_wts_internal" %in% colnames(out)) out[, "marginaleffects_wts_internal" := NA]
+    if (!"marginaleffects_wts_internal" %in% colnames(out)) {
+        out[, "marginaleffects_wts_internal" := NA]
+    }
 
     # safe version of comparison
     # unknown arguments
@@ -390,7 +391,7 @@ get_comparisons <- function(
                 n,
                 n
             ) #nolint
-            insight::format_error(msg)
+            stop_sprintf(msg)
         }
         if (length(con) == 1) {
             con <- c(con, rep(NA_real_, length(hi) - 1))

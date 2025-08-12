@@ -40,7 +40,7 @@ get_ci <- function(x, mfx) {
                 rowids <- data.table(rowid = rowids, df = df)
                 x <- merge(x, rowids, all.x = TRUE, by = "rowid", sort = FALSE)
             } else {
-                insight::format_error("The degrees of freedom argument was ignored.")
+                stop_sprintf("The degrees of freedom argument was ignored.")
             }
 
             # mismatch

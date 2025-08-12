@@ -119,7 +119,7 @@ add_variables <- function(
     # anything left?
     if (length(predictors) == 0) {
         msg <- "There is no valid predictor variable. Please change the `variables` argument or supply a new data frame to the `newdata` argument."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # functions to values
@@ -186,7 +186,7 @@ add_variables <- function(
                     "The `%s` variable is binary. The corresponding entry in the `variables` argument must be 0 or 1.",
                     v
                 )
-                insight::format_error(msg)
+                stop_sprintf(msg)
             }
             # get_comparisons_data requires both levels
             if (calling_function == "comparisons") {
@@ -195,7 +195,7 @@ add_variables <- function(
                         "The `%s` variable is binary. The corresponding entry in the `variables` argument must be a vector of length 2.",
                         v
                     )
-                    insight::format_error(msg)
+                    stop_sprintf(msg)
                 }
             }
         } else if (get_variable_class(modeldata, v, "numeric")) {
@@ -216,7 +216,7 @@ add_variables <- function(
                 if (!isTRUE(flag)) {
                     msg <- "The %s element of the `variables` argument is invalid."
                     msg <- sprintf(msg, v)
-                    insight::format_error(msg)
+                    stop_sprintf(msg)
                 }
             } else if (calling_function == "predictions") {
                 # string shortcuts
@@ -250,7 +250,7 @@ add_variables <- function(
                         '%s is a numeric variable. The summary shortcuts supported by the variables argument are: "iqr", "minmax", "sd", "2sd", "threenum", "fivenum".',
                         v
                     )
-                    insight::format_error(msg)
+                    stop_sprintf(msg)
                 }
             }
         } else {
@@ -286,7 +286,7 @@ add_variables <- function(
                 ) {
                     msg <- "The %s element of the `variables` argument must be a vector of length 2 or one of: %s"
                     msg <- sprintf(msg, v, toString(valid))
-                    insight::format_error(msg)
+                    stop_sprintf(msg)
                 }
             } else if (calling_function == "predictions") {
                 if (is.character(predictors[[v]]) || is.factor(predictors[[v]])) {
@@ -313,7 +313,7 @@ add_variables <- function(
                             msg <- "Some elements of the `variables` argument are not in their original data. Check this variable: %s"
                             msg <- sprintf(msg, v)
                         }
-                        insight::format_error(msg)
+                        stop_sprintf(msg)
                     }
                 }
             }
@@ -412,7 +412,7 @@ add_variables <- function(
         }
     }
     if (length(predictors) == 0) {
-        insight::format_error(
+        stop_sprintf(
             "There is no valid predictor variable. Please make sure your model includes predictors and use the `variables` argument."
         )
     }
@@ -439,7 +439,7 @@ add_variables <- function(
         !names(predictors) %in% c("marginaleffects_wts_internal", "rowid_dedup")
     ]
     if (length(predictors) == 0 && calling_function == "comparisons") {
-        insight::format_error("No valid predictor variable.")
+        stop_sprintf("No valid predictor variable.")
     }
 
     # output

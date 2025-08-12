@@ -106,7 +106,8 @@ inferences <- function(
     conformal_calibration = NULL,
     conformal_score = "residual_abs",
     estimator = NULL,
-    ...) {
+    ...
+) {
     if (inherits(attr(x, "model"), c("model_fit", "workflow"))) {
         msg <- "The `inferences()` function does not support `tidymodels` objects."
         stop_sprintf(msg)
@@ -178,7 +179,7 @@ inferences <- function(
             isTRUE("wts" %in% names(attr(x, "call"))) &&
                 !isFALSE(attr(x, "call")[["wts"]])
         ) {
-            insight::format_error(
+            stop_sprintf(
                 "The `fwb` method is not supported with the `wts` argument."
             )
         }

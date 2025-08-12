@@ -17,7 +17,7 @@ backtransform <- function(x, transform, draws = NULL) {
         draws <- transform(draws)
         dim_post <- dim(draws)
         if (!identical(dim_pre, dim_post)) {
-            insight::format_error(
+            stop_sprintf(
                 "The `transform` function must return an object of the same class as its input: a matrix input must return a matrix of the same size, and a vector input must return a vector of the same length."
             )
         }

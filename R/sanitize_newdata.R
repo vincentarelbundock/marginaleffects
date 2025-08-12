@@ -90,7 +90,7 @@ build_newdata <- function(mfx, newdata, by) {
     if (!inherits(newdata, "data.frame")) {
         msg <- "Unable to extract the data from model of class `%s`. This can happen in a variety of cases, such as when a `marginaleffects` package function is called from inside a user-defined function, or using an `*apply()`-style operation on a list. Please supply a data frame explicitly via the `newdata` argument."
         msg <- sprintf(msg, class(model)[1])
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     out <- list(
@@ -119,7 +119,7 @@ add_wts_column <- function(wts, newdata, model) {
                 !wtsname %in% colnames(newdata)
         ) {
             msg <- "Unable to retrieve weights automatically from the model. Please specify `wts` argument explicitly."
-            insight::format_error(msg)
+            stop_sprintf(msg)
         } else {
             newdata[["marginaleffects_wts_internal"]] <- newdata[[wtsname]]
             return(newdata)
@@ -197,7 +197,9 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
     }
 
     # add weights column if available
-    if (is.null(wts)) wts <- FALSE
+    if (is.null(wts)) {
+        wts <- FALSE
+    }
     newdata <- add_wts_column(newdata = newdata, wts = wts, model = model)
 
     # otherwise we get a warning in setDT()
@@ -238,7 +240,8 @@ dedup_newdata <- function(
     wts,
     comparison = "difference",
     cross = FALSE,
-    byfun = NULL) {
+    byfun = NULL
+) {
     # init
     model <- mfx@model
 
@@ -314,8 +317,16 @@ dedup_newdata <- function(
 #' @param byfun Function for aggregation (for predictions)
 #' @return Updated mfx object with processed newdata in @newdata slot and updated wts in @wts slot
 #' @keywords internal
-add_newdata <- function(mfx, scall, newdata = NULL, by = FALSE, wts = FALSE,
-                        cross = NULL, comparison = NULL, byfun = NULL) {
+add_newdata <- function(
+    mfx,
+    scall,
+    newdata = NULL,
+    by = FALSE,
+    wts = FALSE,
+    cross = NULL,
+    comparison = NULL,
+    byfun = NULL
+) {
     # Step 1: Handle quoted calls to datagrid, subset, etc.
     newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
 
@@ -336,9 +347,15 @@ add_newdata <- function(mfx, scall, newdata = NULL, by = FALSE, wts = FALSE,
     )
 
     # Add function-specific arguments
-    if (!is.null(cross)) dedup_args$cross <- cross
-    if (!is.null(comparison)) dedup_args$comparison <- comparison
-    if (!is.null(byfun)) dedup_args$byfun <- byfun
+    if (!is.null(cross)) {
+        dedup_args$cross <- cross
+    }
+    if (!is.null(comparison)) {
+        dedup_args$comparison <- comparison
+    }
+    if (!is.null(byfun)) {
+        dedup_args$byfun <- byfun
+    }
 
     newdata <- do.call(dedup_newdata, dedup_args)
 

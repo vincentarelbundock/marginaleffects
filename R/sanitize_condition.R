@@ -20,8 +20,8 @@ condition_shortcuts <- function(x, tr, shortcuts) {
 sanitize_condition <- function(
     mfx,
     condition,
-    variables = NULL) {
-
+    variables = NULL
+) {
     # init
     model <- mfx@model
     dat <- mfx@modeldata
@@ -52,7 +52,7 @@ sanitize_condition <- function(
         if (identical(names(condition)[i], "")) {
             if (!isTRUE(checkmate::check_character(condition[[i]], len = 1))) {
                 msg <- "The `condition` argument must be a character vector or a named list."
-                insight::format_error(msg)
+                stop_sprintf(msg)
             } else {
                 names(condition)[i] <- condition[[i]]
                 tmp <- stats::setNames(list(NULL), names(condition)[i])
@@ -60,7 +60,6 @@ sanitize_condition <- function(
             }
         }
     }
-
 
     flag <- checkmate::check_true(all(
         names(condition) %in% c(colnames(dat), "group")
@@ -70,7 +69,7 @@ sanitize_condition <- function(
             "Entries in the `condition` argument must be element of: %s",
             toString(colnames(dat))
         )
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # condition names

@@ -2,7 +2,7 @@ get_conformal_score <- function(x, score) {
     response_name <- insight::find_response(attr(x, "model"))
     response <- x[[response_name]]
     if (!is.numeric(response) && score != "softmax") {
-        insight::format_error(
+        stop_sprintf(
             'The response must be numeric. Did you want to use `conformal_score="softmax"`?'
         )
     }
@@ -26,7 +26,7 @@ get_conformal_score <- function(x, score) {
             idx <- as.character(response) == as.character(x$group)
             out <- 1 - x$estimate[idx]
         } else {
-            insight::format_error("Failed to compute the conformity score.")
+            stop_sprintf("Failed to compute the conformity score.")
         }
     }
     return(out)

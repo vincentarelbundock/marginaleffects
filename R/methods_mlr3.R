@@ -5,7 +5,7 @@
 get_predict.Learner <- function(model, newdata, type = NULL, ...) {
     if (!is.null(type) && !type %in% model$predict_types) {
         msg <- sprintf("Valid `type` values: %s", toString(model$predict_types))
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
     out <- drop(stats::predict(model, newdata = newdata, predict_type = type))
     out <- data.frame(rowid = seq_along(out), estimate = out)

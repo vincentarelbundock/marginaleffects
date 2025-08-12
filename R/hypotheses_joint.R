@@ -4,7 +4,8 @@ joint_test <- function(
     hypothesis = 0,
     joint_test = "f",
     df = NULL,
-    vcov = TRUE) {
+    vcov = TRUE
+) {
     checkmate::assert_choice(joint_test, c("f", "chisq"))
 
     if (joint_test == "f") {
@@ -101,7 +102,7 @@ joint_test <- function(
                     )
                 }
                 if (is.null(n)) {
-                    insight::format_error(
+                    stop_sprintf(
                         "Could not extract sample size from model object."
                     )
                 }

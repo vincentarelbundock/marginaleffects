@@ -34,7 +34,7 @@ sanity_reserved <- function(model = NULL, modeldata = data.frame()) {
             toString(dQuote(bad, NULL)),
             "Please rename your variables before fitting the model."
         )
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     return(invisible(NULL))

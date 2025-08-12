@@ -9,7 +9,8 @@ get_predictions <- function(
     hi = NULL, # sink hole for shared comparisons/predictions call
     lo = NULL, # sink hole avoids pushing these variables through ... in get_predict()
     original = NULL, # sink hole
-    ...) {
+    ...
+) {
     newdata <- mfx@newdata
 
     # sometimes we want the perturbed coefficients model supplied by get_se_delta().
@@ -30,7 +31,7 @@ get_predictions <- function(
             inherits(out$error, "rlang_error") &&
                 isTRUE(grepl("the object should be", out$error$message))
         ) {
-            insight::format_error(out$error$message)
+            stop_sprintf(out$error$message)
         }
 
         msg <- "Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument."
@@ -49,7 +50,7 @@ get_predictions <- function(
             "",
             "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
         )
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     if (
@@ -125,7 +126,6 @@ get_predictions <- function(
         newdata = newdata,
         draws = draws
     )
-
 
     return(out)
 }
