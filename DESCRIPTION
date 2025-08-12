@@ -225,6 +225,7 @@ Collate:
     'get_model_matrix_attribute.R'
     'get_modeldata.R'
     'get_predict.R'
+    'get_predictions.R'
     'get_se_delta.R'
     'get_vcov.R'
     'github_issue.R'
