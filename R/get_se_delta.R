@@ -25,39 +25,6 @@ align_jacobian_vcov <- function(J, V, object, ...) {
 }
 
 
-get_se_delta_contrasts <- function(
-    mfx,
-    model_perturbed,
-    variables,
-    newdata,
-    type,
-    hypothesis,
-    lo,
-    hi,
-    original,
-    cross,
-    comparison,
-    by,
-    byfun,
-    ...) {
-    get_comparisons(
-        model_perturbed = model_perturbed,
-        mfx = mfx,
-        variables = variables,
-        type = type,
-        hypothesis = hypothesis,
-        lo = lo,
-        hi = hi,
-        original = original,
-        cross = cross,
-        verbose = FALSE,
-        deltamethod = TRUE,
-        by = by,
-        byfun = byfun,
-        ...
-    )$estimate
-}
-
 
 #' Compute standard errors using the delta method
 #'

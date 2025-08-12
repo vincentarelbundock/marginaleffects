@@ -372,12 +372,15 @@ comparisons <- function(
     } else if (!isFALSE(vcov) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
         idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
         idx <- cmp[, (idx), drop = FALSE]
+        fun <- function(...) {
+            get_comparisons(..., verbose = FALSE)$estimate
+        }
         args <- list(
             mfx = mfx,
             model_perturbed = mfx@model,
             vcov = mfx@vcov_model,
             type = mfx@type,
-            FUN = get_se_delta_contrasts,
+            FUN = fun,
             index = idx,
             variables = predictors,
             hypothesis = mfx@hypothesis,
