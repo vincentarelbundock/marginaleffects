@@ -47,6 +47,11 @@ get_model_matrix.default <- function(model, newdata, mfx = NULL) {
 }
 
 
+#' Add model matrix attribute to newdata
+#' @param mfx marginaleffects object
+#' @param newdata data frame to add attributes to
+#' @keywords internal
+#' @export
 add_model_matrix_attribute <- function(mfx, newdata = NULL) {
     model <- mfx@model
 
@@ -66,7 +71,6 @@ add_model_matrix_attribute <- function(mfx, newdata = NULL) {
 
     # stats::model.matrix creates all-0 columns with splines::bs() and other functions
     # this may be too aggressive, but it avoids all functions
-    flag <- any(grepl("\\(", setdiff(names(get_coef(model)), "(Intercept)")))
     funs <- grep("\\(", names(get_coef(model)), value = TRUE)
     funs <- funs[!grepl("factor\\(|\\(Intercept", funs)]
     if (length(funs) > 0) {

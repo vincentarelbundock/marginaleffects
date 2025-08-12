@@ -261,8 +261,6 @@ datagrid_engine <- function(
 
     at <- tmp$at
     dat <- tmp$newdata
-    variables_all <- tmp$all
-    variables_manual <- names(at)
     variables_automatic <- tmp$automatic
 
     # usually we don't want the response in the grid, but
@@ -342,9 +340,8 @@ datagrid_engine <- function(
         )
     }
 
-    fun <- data.table::CJ
     args <- c(out, list(sorted = FALSE))
-    out <- do.call("fun", args)
+    out <- do.call(data.table::CJ, args)
 
     # better to assume "standard" class as output
     data.table::setDF(out)
@@ -367,8 +364,6 @@ datagridcf_internal <- function(
     tmp <- prep_datagrid(..., model = model, newdata = newdata)
     at <- tmp$at
     dat <- tmp$newdata
-    variables_all <- tmp$all
-    variables_manual <- names(at)
     variables_automatic <- c(
         tmp$automatic,
         "marginaleffects_wts_internal",
@@ -378,9 +373,8 @@ datagridcf_internal <- function(
     # `at` -> `data.frame`
     at <- lapply(at, unique)
 
-    fun <- data.table::CJ
     args <- c(at, list(sorted = FALSE))
-    at <- do.call("fun", args)
+    at <- do.call(data.table::CJ, args)
 
     rowid <- data.frame(rowidcf = seq_len(nrow(dat)))
     if (length(variables_automatic) > 0) {

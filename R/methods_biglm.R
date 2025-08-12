@@ -7,7 +7,6 @@ get_predict.biglm <- function(
     ...
 ) {
     type <- sanitize_type(model, type, calling_function = "predictions")
-    type_base <- unname(type)
     out <- stats::predict(
         model,
         newdata = newdata,

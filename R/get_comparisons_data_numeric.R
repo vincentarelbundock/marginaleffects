@@ -87,7 +87,6 @@ get_comparisons_data_numeric <- function(
         variable$value <- sort(variable$value)
         low <- variable$value[1]
         high <- variable$value[2]
-        gap <- diff(variable$value)
         lab <- make_label(variable$label, rev(variable$value))
 
         # character contrasts

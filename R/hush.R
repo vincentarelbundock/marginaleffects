@@ -1,7 +1,7 @@
 # Execute code silently
 # Do not export to avoid conflict with modelsummary
 hush <- function(code) {
-    void <- utils::capture.output({
+    utils::capture.output({
         out <- invisible(
             suppressMessages(
                 suppressWarnings(

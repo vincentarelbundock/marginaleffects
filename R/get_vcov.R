@@ -28,8 +28,7 @@ get_vcov.default <- function(model, vcov = NULL, ...) {
     args[["component"]] <- "all"
 
     # 1st try: with arguments
-    fun <- get("get_varcov", asNamespace("insight"))
-    out <- myTryCatch(do.call("fun", args))
+    out <- myTryCatch(do.call(get("get_varcov", asNamespace("insight")), args))
 
     # 2nd try: without arguments
     if (!isTRUE(checkmate::check_matrix(out$value, min.rows = 1))) {

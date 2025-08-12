@@ -27,7 +27,6 @@ get_hypotheses <- function(model_perturbed, hypothesis, hypothesis_is_formula, n
         } else if ("Response" %in% colnames(out) && !anyNA(out$Response)) {
             out$Parameter <- sprintf("%s_%s", out$Response, out$Parameter)
         }
-        idx <- intersect(colnames(model_perturbed), c("term", "group", "estimate"))
         colnames(out)[1:2] <- c("term", "estimate")
 
         # glmmTMB

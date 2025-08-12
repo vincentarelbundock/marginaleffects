@@ -14,7 +14,6 @@ equivalence <- function(x, equivalence = NULL, df = Inf, ...) {
     }
 
     delta <- abs(diff(equivalence)) / 2
-    null <- min(equivalence) + delta
 
     # definitions from `emmeans`, with a different user interface based on symmetric "equivalence"
     x$statistic.noninf <- (x$estimate - equivalence[1]) / x$std.error
