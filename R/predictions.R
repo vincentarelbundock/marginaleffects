@@ -376,14 +376,14 @@ predictions <- function(
     }
 
     # bayesian posterior draws
-    draws <- attr(tmp, "posterior_draws")
+    mfx@draws <- attr(tmp, "posterior_draws")
 
     J <- NULL
     if (!isFALSE(vcov)) {
         mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
 
         # Delta method for standard errors
-        if (!"std.error" %in% colnames(tmp) && is.null(draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+        if (!"std.error" %in% colnames(tmp) && is.null(mfx@draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
             fun <- function(...) {
                 get_predictions(..., wts = wts, verbose = FALSE)$estimate
             }
@@ -413,7 +413,7 @@ predictions <- function(
             tmp,
             conf_level = mfx@conf_level,
             vcov = mfx@vcov_model,
-            draws = draws,
+            draws = mfx@draws,
             estimate = "estimate",
             hypothesis_null = mfx@hypothesis_null,
             hypothesis_direction = mfx@hypothesis_direction,
@@ -449,7 +449,7 @@ predictions <- function(
     # second rows, etc.
     out <- sort_columns(out, mfx@newdata, by)
 
-    attr(out, "posterior_draws") <- draws
+    attr(out, "posterior_draws") <- mfx@draws
 
     # equivalence tests
     out <- equivalence(out, equivalence = equivalence, df = mfx@df, ...)

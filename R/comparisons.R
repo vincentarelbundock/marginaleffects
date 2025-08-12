@@ -364,9 +364,9 @@ comparisons <- function(
     hyp_by <- attr(cmp, "hypothesis_function_by")
 
     # bayesian posterior
-    J <- draws <- NULL
+    J <- mfx@draws <- NULL
     if (!is.null(attr(cmp, "posterior_draws"))) {
-        draws <- attr(cmp, "posterior_draws")
+        mfx@draws <- attr(cmp, "posterior_draws")
 
         # standard errors via delta method
     } else if (!isFALSE(vcov) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
@@ -396,7 +396,7 @@ comparisons <- function(
         J <- attr(se, "jacobian")
         attr(se, "jacobian") <- NULL
         cmp$std.error <- as.numeric(se)
-        draws <- NULL
+        mfx@draws <- NULL
     }
 
     # merge original data back in
@@ -429,7 +429,7 @@ comparisons <- function(
         cmp,
         conf_level = mfx@conf_level,
         df = mfx@df,
-        draws = draws,
+        draws = mfx@draws,
         estimate = "estimate",
         hypothesis_null = mfx@hypothesis_null,
         hypothesis_direction = mfx@hypothesis_direction,
@@ -444,7 +444,7 @@ comparisons <- function(
     cmp <- sort_columns(cmp, mfx@newdata, by)
 
     # bayesian draws
-    attr(cmp, "posterior_draws") <- draws
+    attr(cmp, "posterior_draws") <- mfx@draws
 
     # equivalence tests
     cmp <- equivalence(cmp, equivalence = equivalence, df = mfx@df, ...)

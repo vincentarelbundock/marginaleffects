@@ -322,7 +322,7 @@ hypotheses <- function(
 
     # bayesian posterior
     if (!is.null(attr(b, "posterior_draws"))) {
-        draws <- attr(b, "posterior_draws")
+        mfx@draws <- attr(b, "posterior_draws")
         J <- NULL
         se <- rep(NA, length(b))
 
@@ -342,11 +342,11 @@ hypotheses <- function(
         se <- do.call("get_se_delta", args)
         J <- attr(se, "jacobian")
         attr(se, "jacobian") <- NULL
-        draws <- NULL
+        mfx@draws <- NULL
 
         # no standard error
     } else {
-        J <- draws <- NULL
+        J <- mfx@draws <- NULL
         se <- rep(NA, length(b))
     }
 
@@ -399,7 +399,7 @@ hypotheses <- function(
         out,
         conf_level = mfx@conf_level,
         vcov = vcov,
-        draws = draws,
+        draws = mfx@draws,
         estimate = "estimate",
         hypothesis_null = mfx@hypothesis_null,
         hypothesis_direction = mfx@hypothesis_direction,
@@ -421,7 +421,7 @@ hypotheses <- function(
     data.table::setDF(out)
     class(out) <- c("hypotheses", class(out))
 
-    attr(out, "posterior_draws") <- draws
+    attr(out, "posterior_draws") <- mfx@draws
     attr(out, "model") <- model
     attr(out, "model_type") <- class(model)[1L]
     attr(out, "jacobian") <- J
