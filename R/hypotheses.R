@@ -422,7 +422,7 @@ hypotheses <- function(
     class(out) <- c("hypotheses", class(out))
 
     # Add common attributes from mfx S4 slots
-    out <- add_attributes(out, mfx, lean = FALSE)
+    out <- add_attributes(out, mfx)
     
     # Add function-specific attributes
     attr(out, "jacobian") <- J

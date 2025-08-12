@@ -464,16 +464,13 @@ predictions <- function(
     data.table::setDF(out)
     class(out) <- c("predictions", class(out))
 
-    # Global option for lean return object
-    lean <- getOption("marginaleffects_lean", default = FALSE)
-
     # Add common attributes from mfx S4 slots
-    out <- add_attributes(out, mfx, lean = lean)
+    out <- add_attributes(out, mfx)
     
     # Add function-specific attributes
     attr(out, "by") <- by
-    attr(out, "lean") <- lean
-    if (!isTRUE(lean)) {
+    attr(out, "lean") <- getOption("marginaleffects_lean", default = FALSE)
+    if (!isTRUE(getOption("marginaleffects_lean", default = FALSE))) {
         attr(out, "jacobian") <- J
         attr(out, "weights") <- marginaleffects_wts_internal
         attr(out, "transform") <- transform[[1]]

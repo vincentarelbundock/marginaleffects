@@ -472,17 +472,14 @@ comparisons <- function(
         )
     )
 
-    # Global option for lean return object
-    lean <- getOption("marginaleffects_lean", default = FALSE)
-
     # Add common attributes from mfx S4 slots
-    out <- add_attributes(out, mfx, lean = lean)
+    out <- add_attributes(out, mfx)
     
     # Add function-specific attributes
     attr(out, "by") <- by
-    attr(out, "lean") <- lean
+    attr(out, "lean") <- getOption("marginaleffects_lean", default = FALSE)
     attr(out, "vcov.type") <- vcov.type
-    if (!isTRUE(lean)) {
+    if (!isTRUE(getOption("marginaleffects_lean", default = FALSE))) {
         attr(out, "variables") <- predictors
         attr(out, "jacobian") <- J
         attr(out, "weights") <- marginaleffects_wts_internal
