@@ -60,21 +60,23 @@ setClass(
 #' @param type The sanitized type from sanitize_type()
 #' @return An object of class marginaleffects_internal
 #' @keywords internal
-new_marginaleffects_internal <- function(model,
-                                         call,
-                                         conf_level = 0.95,
-                                         df = NULL,
-                                         draws = NULL,
-                                         hypothesis = NULL,
-                                         hypothesis_null = NULL,
-                                         hypothesis_direction = NULL,
-                                         jacobian = NULL,
-                                         newdata = data.frame(),
-                                         numderiv = list("fdforward"),
-                                         type = NULL,
-                                         variables = list(),
-                                         vcov_model = NULL,
-                                         wts = NULL) {
+new_marginaleffects_internal <- function(
+    model,
+    call,
+    conf_level = 0.95,
+    df = NULL,
+    draws = NULL,
+    hypothesis = NULL,
+    hypothesis_null = NULL,
+    hypothesis_direction = NULL,
+    jacobian = NULL,
+    newdata = data.frame(),
+    numderiv = list("fdforward"),
+    type = NULL,
+    variables = list(),
+    vcov_model = NULL,
+    wts = NULL
+) {
     modeldata <- hush(insight::get_data(
         model,
         additional_variables = TRUE,
@@ -87,7 +89,8 @@ new_marginaleffects_internal <- function(model,
         use.names = FALSE
     ))
 
-    new("marginaleffects_internal",
+    new(
+        "marginaleffects_internal",
         call = call,
         conf_level = conf_level,
         df = df,
@@ -104,5 +107,6 @@ new_marginaleffects_internal <- function(model,
         variables = variables,
         variable_names_response = variable_names_response,
         vcov_model = vcov_model,
-        wts = wts)
+        wts = wts
+    )
 }

@@ -229,7 +229,8 @@ model_data <- dplyr::select(
         ),
         function(c) {
             factor(c, exclude = levels(c)[length(levels(c))])
-        }) |>
+        }
+    ) |>
     # need to make these ordered factors for BRMS
     transform(
         education = ordered(education),

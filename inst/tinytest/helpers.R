@@ -23,7 +23,7 @@ options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
 options("tinysnapshot_ignore_white_space" = TRUE)
 options(marginaleffects_numDeriv = NULL)
-options(marginaleffects_safe = FALSE)
+# options(marginaleffects_safe = FALSE)
 
 if (dir.exists("~/repos/Rdatasets/")) {
     options("marginaleffects_rdataset_path" = "~/repos/Rdatasets/")

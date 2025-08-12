@@ -39,4 +39,3 @@ expect_error(get_dataset("nonexistent_dataset_xyz123"))
 
 # Test marginaleffects dataset that doesn't exist
 expect_error(get_dataset("nonexistent", package = "marginaleffects"))
-

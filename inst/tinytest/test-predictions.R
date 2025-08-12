@@ -260,7 +260,9 @@ expect_true(all(p0$conf.high == p1$conf.high))
 expect_true(all(p0$conf.high != p2$conf.high))
 expect_warning(
     predictions(mod, hypothesis = "b1 - b3 = 0", type = "invlink(link)"),
-    "invlink.*not available")
+    "invlink.*not available"
+)
 expect_warning(
     predictions(mod, hypothesis = "b1 - b3 = 0"),
-    "invlink.*not available")
+    "invlink.*not available"
+)

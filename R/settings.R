@@ -49,13 +49,13 @@ settings_get <- function(name) {
     if (name %in% names(marginaleffects_settings)) {
         return(get(name, envir = marginaleffects_settings))
     }
-    
+
     # Then check persistent storage
     persistent_config <- settings_read_persistent()
     if (name %in% names(persistent_config)) {
         return(persistent_config[[name]])
     }
-    
+
     return(NULL)
 }
 

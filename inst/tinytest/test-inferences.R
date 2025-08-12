@@ -308,8 +308,12 @@ cmp <- inferences(lalonde, method = "rsample", estimator = estimator, R = R) |>
     suppressWarnings()
 expect_inherits(cmp, "comparisons")
 expect_error(inferences(lalonde, method = "rsample"), "when supplying a function to the `estimator` argument.")
-expect_error(inferences(estimator(lalonde), estimator = estimator, method = "rsample"), "The `x` argument must be a raw data frame when using the `estimator` argument.")
-expect_false(ignore(expect_error)(inferences(lalonde, method = "rsample", estimator = estimator, R = 3))) |> suppressWarnings()
+expect_error(
+    inferences(estimator(lalonde), estimator = estimator, method = "rsample"),
+    "The `x` argument must be a raw data frame when using the `estimator` argument."
+)
+expect_false(ignore(expect_error)(inferences(lalonde, method = "rsample", estimator = estimator, R = 3))) |>
+    suppressWarnings()
 
 
 # survival vignette
@@ -331,7 +335,6 @@ p <- predictions(model, type = "survival", by = c("dtime", "hormon", "grade"), n
 p <- inferences(p, method = "rsample", R = R) |> suppressWarnings()
 expect_true(all(p$estimate >= p$conf.low))
 expect_true(all(p$estimate <= p$conf.high))
-
 
 # # works interactively
 # p <- predictions(model, type = "survival", by = c("dtime", "hormon", "grade"), vcov = "rsample", newdata = nd)

@@ -4,7 +4,7 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
     out <- x
     call_mfx <- attr(x, "call")
     call_mfx[["vcov"]] <- FALSE
-    
+
     # Check if mfx object is available with modeldata
     mfx <- attr(x, "mfx")
     if (!is.null(mfx) && isTRUE(checkmate::check_data_frame(mfx@modeldata))) {

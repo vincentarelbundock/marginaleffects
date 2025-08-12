@@ -14,7 +14,8 @@ sanitize_model_specific.default <- function(
     model,
     vcov = NULL,
     calling_function = "marginaleffects",
-    ...) {
+    ...
+) {
     return(model)
 }
 

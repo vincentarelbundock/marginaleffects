@@ -35,7 +35,6 @@ p <- predictions(mod_factor, by = "cyl")
 M <- attr(attr(p, "newdata"), "marginaleffects_model_matrix")
 expect_inherits(M, "matrix")
 
-
 # # Issue #1357
 # exit_file("insight::get_datagrid() no longer returns proper e42dep")
 # m <- insight::download_model("brms_linear_1")

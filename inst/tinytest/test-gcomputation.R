@@ -13,4 +13,3 @@ rd_auto <- avg_comparisons(mod, variables = "vs", comparison = "difference")$est
 rr_auto <- avg_comparisons(mod, variables = "vs", comparison = "ratio")$estimate
 expect_equivalent(rd_manu, rd_auto)
 expect_equivalent(rr_manu, rr_auto)
-

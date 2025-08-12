@@ -159,14 +159,14 @@ hypotheses <- function(
     joint_test = "f",
     multcomp = FALSE,
     numderiv = "fdforward",
-    ...) {
+    ...
+) {
     call <- construct_call(model, "hypotheses")
 
     # Early validation and setup
     if (is.null(model)) model <- ...get("model_perturbed")
     if (is.null(model)) stop_sprintf("`model` is missing.")
     sanity_multcomp(multcomp, hypothesis, joint)
-
 
     # Early returns for special cases
     if (inherits(model, c("mira", "amest"))) {
@@ -188,10 +188,14 @@ hypotheses <- function(
     internal_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
     if (inherits(model, internal_classes)) {
         if (!isTRUE(checkmate::check_flag(vcov))) {
-            stop_sprintf("The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call.")
+            stop_sprintf(
+                "The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call."
+            )
         }
         if (!is.null(attr(model, "posterior_draws"))) {
-            stop_sprintf("The `hypotheses()` function cannot be used to post-process `marginaleffects` objects that include draws from a bootstrap, simulation, or bayesian posterior distribution. Users should call the `get_draws()` function and process draws manually.")
+            stop_sprintf(
+                "The `hypotheses()` function cannot be used to post-process `marginaleffects` objects that include draws from a bootstrap, simulation, or bayesian posterior distribution. Users should call the `get_draws()` function and process draws manually."
+            )
         }
         if (is.null(conf_level)) {
             conf_level <- attr(model, "conf_level")
@@ -230,7 +234,12 @@ hypotheses <- function(
         vcov.type <- "matrix"
     }
 
-    b <- get_hypotheses(model_perturbed = model, hypothesis = mfx@hypothesis, hypothesis_is_formula = hypothesis_is_formula, ...)
+    b <- get_hypotheses(
+        model_perturbed = model,
+        hypothesis = mfx@hypothesis,
+        hypothesis_is_formula = hypothesis_is_formula,
+        ...
+    )
 
     # bayesian posterior
     if (!is.null(attr(b, "posterior_draws"))) {

@@ -235,8 +235,6 @@ comparisons <- function(
     numderiv = "fdforward",
     ...
 ) {
-
-
     # init
     if (inherits(model, "marginaleffects_internal")) {
         mfx <- model
@@ -278,7 +276,6 @@ comparisons <- function(
     mfx <- add_numderiv(mfx, numderiv)
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
 
-
     # misc sanitation
     sanity_by(by, mfx@newdata)
     sanity_reserved(mfx@model, mfx@modeldata)
@@ -314,9 +311,7 @@ comparisons <- function(
 
     predictors <- mfx@variables$conditional
 
-
     mfx <- add_hypothesis(mfx, hypothesis)
-
 
     ############### sanity checks are over
 
@@ -443,7 +438,7 @@ comparisons <- function(
 
     # Add common attributes from mfx S4 slots
     out <- add_attributes(out, mfx)
-    
+
     # Add function-specific attributes
     attr(out, "by") <- by
     attr(out, "vcov.type") <- vcov.type
