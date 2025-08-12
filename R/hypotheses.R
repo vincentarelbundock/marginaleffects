@@ -421,14 +421,13 @@ hypotheses <- function(
     data.table::setDF(out)
     class(out) <- c("hypotheses", class(out))
 
-    attr(out, "posterior_draws") <- mfx@draws
-    attr(out, "model") <- model
-    attr(out, "model_type") <- class(model)[1L]
+    # Add common attributes from mfx S4 slots
+    out <- add_attributes(out, mfx, lean = FALSE)
+    
+    # Add function-specific attributes
     attr(out, "jacobian") <- J
-    attr(out, "call") <- mfx@call
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
-    attr(out, "conf_level") <- mfx@conf_level
     attr(out, "hypothesis_function_by") <- attr(b, "hypothesis_function_by")
     attr(out, "mfx") <- mfx
 

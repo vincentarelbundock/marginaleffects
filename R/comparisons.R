@@ -475,27 +475,16 @@ comparisons <- function(
     # Global option for lean return object
     lean <- getOption("marginaleffects_lean", default = FALSE)
 
-    # Only add (potentially large) attributes if lean is FALSE
-    # extra attributes needed for print method, even with lean return object
-    attr(out, "conf_level") <- mfx@conf_level
+    # Add common attributes from mfx S4 slots
+    out <- add_attributes(out, mfx, lean = lean)
+    
+    # Add function-specific attributes
     attr(out, "by") <- by
     attr(out, "lean") <- lean
     attr(out, "vcov.type") <- vcov.type
-    if (isTRUE(lean)) {
-        for (a in setdiff(names(attributes(out)), c("names", "row.names", "class"))) {
-            attr(out, a) <- NULL
-        }
-    } else {
-        # other attributes
-        attr(out, "newdata") <- mfx@newdata
-        attr(out, "call") <- mfx@call
-        attr(out, "type") <- mfx@type
-        attr(out, "model_type") <- class(mfx@model)[1]
-        attr(out, "model") <- mfx@model
+    if (!isTRUE(lean)) {
         attr(out, "variables") <- predictors
         attr(out, "jacobian") <- J
-        attr(out, "vcov") <- mfx@vcov_model
-        attr(out, "vcov.type") <- vcov.type
         attr(out, "weights") <- marginaleffects_wts_internal
         attr(out, "comparison") <- comparison
         attr(out, "transform") <- transform[[1]]

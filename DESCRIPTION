@@ -195,6 +195,7 @@ Suggests:
     quarto
 Collate:
     'RcppExports.R'
+    'add_attributes.R'
     'add_hypothesis.R'
     'backtransform.R'
     'broom.R'
