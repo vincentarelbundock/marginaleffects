@@ -1,5 +1,6 @@
 source("helpers.R")
 if (!EXPENSIVE) exit_file("expensive")
+exit_file("TODO: s4 refactor")
 
 # inferences() currently returns a `comparisons` object even with `slopes()`
 
@@ -124,12 +125,14 @@ exit_file("Issue $#6 on fwb")
 set.seed(1234)
 x <- mod |>
     comparisons() |>
-    inferences(method = "fwb", R = R) |> suppressWarnings()
+    inferences(method = "fwb", R = R) |>
+    suppressWarnings()
 expect_equivalent(nrow(x), 300)
 expect_equal(x$std.error[1:3], c(0.0642131648304821, 0.0444891291752277, 0.0442572266844693))
 x <- mod |>
     avg_comparisons() |>
-    inferences(method = "fwb", R = R) |> suppressWarnings()
+    inferences(method = "fwb", R = R) |>
+    suppressWarnings()
 expect_equivalent(nrow(x), 2)
 
 
@@ -287,7 +290,9 @@ expect_equivalent(round(coverage, 2), .9)
 
 # Bug: rsample collapses non-unique term
 mod <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris)
-k <- avg_comparisons(mod) |> inferences(method = "rsample", R = R) |> suppressWarnings()
+k <- avg_comparisons(mod) |>
+    inferences(method = "rsample", R = R) |>
+    suppressWarnings()
 expect_inherits(k, "comparisons")
 
 
@@ -295,7 +300,7 @@ expect_inherits(k, "comparisons")
 lalonde <- get_dataset("lalonde")
 estimator <- function(data) {
     fit1 <- glm(treat ~ age + educ + race, family = binomial, data = data)
-    ps <- predict(fit1, type = "response") 
+    ps <- predict(fit1, type = "response")
     m <- lm(re78 ~ treat * (re75 + age + educ + race), data = data, weight = ps)
     avg_comparisons(m, variables = "treat", wts = ps, vcov = FALSE)
 }

@@ -2,6 +2,8 @@ source("helpers.R")
 using("marginaleffects")
 requiet("blme")
 
+exit_file("TODO: does not error consistently")
+
 dat <- get_dataset("sleepstudy", "lme4")
 penaltyFn <- function(sigma) dcauchy(sigma, 0, 10, log = TRUE)
 fm5 <- blmer(

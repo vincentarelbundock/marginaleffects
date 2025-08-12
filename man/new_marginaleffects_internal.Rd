@@ -5,8 +5,8 @@
 \title{Constructor for marginaleffects_internal class}
 \usage{
 new_marginaleffects_internal(
-  model = NULL,
-  call = NULL,
+  model,
+  call,
   conf_level = 0.95,
   df = NULL,
   draws = NULL,
@@ -14,7 +14,6 @@ new_marginaleffects_internal(
   hypothesis_null = NULL,
   hypothesis_direction = NULL,
   jacobian = NULL,
-  modeldata = data.frame(),
   newdata = data.frame(),
   type = NULL,
   variables = list(),
@@ -23,13 +22,11 @@ new_marginaleffects_internal(
 )
 }
 \arguments{
-\item{model}{The fitted model object}
+\item{model}{The fitted model object (required)}
 
-\item{call}{The original function call}
+\item{call}{The original function call (required)}
 
 \item{df}{The degrees of freedom}
-
-\item{modeldata}{The model data frame}
 
 \item{newdata}{The new data frame for predictions}
 

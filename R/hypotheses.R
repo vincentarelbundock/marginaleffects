@@ -104,11 +104,11 @@
 #' mod <- polr(gear ~ factor(cyl) + hp, dat)
 #'
 #' aggregation_fun <- function(x) {
-#'   predictions(x, vcov = FALSE) %>%
-#'     mutate(group = ifelse(group %in% c("3", "4"), "3 & 4", "5")) %>%
-#'     summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) %>%
-#'     summarize(estimate = mean(estimate), .by = c("cyl", "group")) %>%
-#'     rename(term = cyl)
+#'     predictions(x, vcov = FALSE) %>%
+#'         mutate(group = ifelse(group %in% c("3", "4"), "3 & 4", "5")) %>%
+#'         summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) %>%
+#'         summarize(estimate = mean(estimate), .by = c("cyl", "group")) %>%
+#'         rename(term = cyl)
 #' }
 #'
 #' hypotheses(mod, hypothesis = aggregation_fun)
@@ -159,22 +159,20 @@ hypotheses <- function(
     joint_test = "f",
     multcomp = FALSE,
     numderiv = "fdforward",
-    ...
-) {
+    ...) {
+    call <- construct_call(model, "hypotheses")
 
     # Early validation and setup
     if (is.null(model)) model <- ...get("model_perturbed")
     if (is.null(model)) stop_sprintf("`model` is missing.")
     sanity_multcomp(multcomp, hypothesis, joint)
-    
-    # Create mfx object early and populate as objects become available
-    mfx <- new_marginaleffects_internal(call = construct_call(model, "hypotheses"))
+
 
     # Early returns for special cases
     if (inherits(model, c("mira", "amest"))) {
         return(process_imputation(model, mfx@call))
     }
-    
+
     if (!isFALSE(joint)) {
         return(joint_test(
             object = model,
@@ -199,9 +197,15 @@ hypotheses <- function(
             conf_level <- attr(model, "conf_level")
         }
     } else {
-        mfx <- sanitize_model(mfx, model = model, vcov = vcov)
-        model <- mfx@model
+        model <- sanitize_model(model = model, call = call, vcov = vcov)
     }
+
+    # init after early returns
+    # in this function we need to sanitize_model() later
+    mfx <- new_marginaleffects_internal(
+        call = call,
+        model = model
+    )
 
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
     hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
@@ -259,7 +263,7 @@ hypotheses <- function(
     if (is.null(hyplab) && !is.null(mfx@hypothesis)) {
         hyplab <- attr(mfx@hypothesis, "label")
     }
-    
+
     if (!is.null(hyplab) && nrow(hyplab) == length(b)) {
         out <- cbind(hyplab, data.frame(estimate = b, std.error = se))
     } else {
@@ -291,7 +295,7 @@ hypotheses <- function(
 
     # Add common attributes from mfx S4 slots
     out <- add_attributes(out, mfx)
-    
+
     # Add function-specific attributes (always set these for multcomp compatibility)
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type

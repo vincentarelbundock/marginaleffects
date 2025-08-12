@@ -235,22 +235,23 @@ comparisons <- function(
     numderiv = "fdforward",
     ...
 ) {
-    call_attr <- construct_call(model, "comparisons")
-    
-    # Create mfx object early and populate as objects become available
-    mfx <- new_marginaleffects_internal(call = call_attr)
 
-    # model sanity checks
-    mfx <- sanitize_model(mfx, model, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
-    model <- mfx@model
+
+    # init
+    call <- construct_call(model, "comparisons")
+    model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+    mfx <- new_marginaleffects_internal(
+        call = call,
+        model = model
+    )
 
     # sanity checks
     dots <- list(...)
     sanity_dots(mfx@model, ...)
 
     # multiple imputation
-    if (inherits(model, c("mira", "amest"))) {
-        out <- process_imputation(model, call_attr)
+    if (inherits(mfx@model, c("mira", "amest"))) {
+        out <- process_imputation(mfx@model, mfx@call)
         return(out)
     }
 
@@ -262,14 +263,6 @@ comparisons <- function(
     } else {
         inferences_method <- NULL
     }
-
-    # get modeldata and populate mfx
-    modeldata <- get_modeldata(
-        mfx@model,
-        additional_variables = by,
-        wts = wts
-    )
-    mfx@modeldata <- modeldata
 
     # very early, before any use of newdata
     scall <- rlang::enquo(newdata)
@@ -284,7 +277,7 @@ comparisons <- function(
 
     # misc sanitation
     sanity_by(by, mfx@newdata)
-    sanity_reserved(model, modeldata)
+    sanity_reserved(mfx@model, mfx@modeldata)
 
     cross <- sanitize_cross(cross, variables, mfx@model)
     mfx@type <- sanitize_type(
@@ -457,9 +450,9 @@ comparisons <- function(
     attr(out, "hypothesis_by") <- hyp_by
     attr(out, "mfx") <- mfx
 
-    if (inherits(model, "brmsfit")) {
+    if (inherits(mfx@model, "brmsfit")) {
         insight::check_if_installed("brms")
-        attr(out, "nchains") <- brms::nchains(model)
+        attr(out, "nchains") <- brms::nchains(mfx@model)
     }
 
     class(out) <- c("comparisons", class(out))

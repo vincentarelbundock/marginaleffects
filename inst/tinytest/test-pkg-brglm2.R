@@ -43,9 +43,8 @@ expect_predictions(pred2, n_row = 6)
 
 
 # brmultinom: no validity
-data("housing", package = "MASS")
-dat <<- housing
-mod <- brmultinom(Sat ~ Infl + Type + Cont, weights = Freq, data = housing, type = "ML", ref = 1)
+z <- get_dataset("housing", package = "MASS")
+mod <- brmultinom(Sat ~ Infl + Type + Cont, weights = Freq, data = z, type = "ML", ref = 1)
 expect_slopes(mod, type = "probs")
 expect_predictions(predictions(mod, type = "probs"))
 

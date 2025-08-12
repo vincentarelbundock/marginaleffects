@@ -7,6 +7,10 @@ setClassUnion("matrixOrNULL", c("matrix", "NULL"))
 #' @noRd
 setClassUnion("numericOrNULL", c("numeric", "NULL"))
 
+#' @keywords internal
+#' @noRd
+setClassUnion("characterOrNULL", c("character", "NULL"))
+
 #' Internal S4 class for marginaleffects
 #'
 #' This S4 class is used internally to hold common arguments passed between
@@ -38,6 +42,7 @@ setClass(
         newdata = "data.frame",
         type = "ANY",
         variables = "list",
+        variable_names_response = "characterOrNULL",
         vcov_model = "ANY",
         wts = "numericOrNULL"
     )
@@ -45,18 +50,17 @@ setClass(
 
 #' Constructor for marginaleffects_internal class
 #'
-#' @param model The fitted model object
-#' @param modeldata The model data frame
+#' @param model The fitted model object (required)
+#' @param call The original function call (required)
 #' @param newdata The new data frame for predictions
 #' @param vcov_model The variance-covariance matrix
-#' @param call The original function call
 #' @param df The degrees of freedom
 #' @param wts The weights specification
 #' @param type The sanitized type from sanitize_type()
 #' @return An object of class marginaleffects_internal
 #' @keywords internal
-new_marginaleffects_internal <- function(model = NULL,
-                                         call = NULL,
+new_marginaleffects_internal <- function(model,
+                                         call,
                                          conf_level = 0.95,
                                          df = NULL,
                                          draws = NULL,
@@ -64,12 +68,23 @@ new_marginaleffects_internal <- function(model = NULL,
                                          hypothesis_null = NULL,
                                          hypothesis_direction = NULL,
                                          jacobian = NULL,
-                                         modeldata = data.frame(),
                                          newdata = data.frame(),
                                          type = NULL,
                                          variables = list(),
                                          vcov_model = NULL,
                                          wts = NULL) {
+    modeldata <- hush(insight::get_data(
+        model,
+        additional_variables = TRUE,
+        verbose = FALSE
+    ))
+    modeldata <- set_variable_class(modeldata, model = model)
+
+    variable_names_response <- hush(unlist(
+        insight::find_response(model, combine = TRUE, component = "all"),
+        use.names = FALSE
+    ))
+
     new("marginaleffects_internal",
         call = call,
         conf_level = conf_level,
@@ -84,6 +99,7 @@ new_marginaleffects_internal <- function(model = NULL,
         newdata = newdata,
         type = type,
         variables = variables,
+        variable_names_response = variable_names_response,
         vcov_model = vcov_model,
         wts = wts)
 }

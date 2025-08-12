@@ -190,8 +190,18 @@ predictions <- function(
     numderiv = "fdforward",
     ...
 ) {
-    methods <- c("rsample", "boot", "fwb", "simulation")
 
+
+    # init
+    call <- construct_call(model, "comparisons")
+    model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+    mfx <- new_marginaleffects_internal(
+        call = call,
+        model = model
+    )
+
+    # inferences() dispatch
+    methods <- c("rsample", "boot", "fwb", "simulation")
     if (isTRUE(checkmate::check_choice(vcov, methods))) {
         inferences_method <- vcov
         vcov <- FALSE
@@ -199,32 +209,14 @@ predictions <- function(
         inferences_method <- NULL
     }
 
-    call_attr <- construct_call(model, "predictions")
-    
-    # Create mfx object early and populate as objects become available
-    mfx <- new_marginaleffects_internal(call = call_attr)
-
-    # model sanity checks
-    mfx <- sanitize_model(mfx, model, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
-    model <- mfx@model
-
     dots <- list(...)
     sanity_dots(model = model, ...)
 
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {
-        out <- process_imputation(model, call_attr)
+        out <- process_imputation(model, call)
         return(out)
     }
-
-    # modeldata
-    modeldata <- get_modeldata(
-        model,
-        additional_variables = by,
-        wts = wts
-    )
-    mfx@modeldata <- modeldata
-
 
     # newdata
     scall <- rlang::enquo(newdata)

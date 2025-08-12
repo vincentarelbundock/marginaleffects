@@ -16,7 +16,7 @@ requiet("marginaleffects")
 requiet("tinytest")
 requiet("tinysnapshot")
 
-EXPENSIVE <- FALSE
+EXPENSIVE <- TRUE
 
 options("tinysnapshot_os" = "Linux")
 options("tinysnapshot_device" = "svglite")
