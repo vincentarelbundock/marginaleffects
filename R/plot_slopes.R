@@ -67,8 +67,7 @@ plot_slopes <- function(
     rug = FALSE,
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
-    ...
-) {
+    ...) {
     if ("effect" %in% ...names()) {
         if (is.null(variables)) {
             variables <- ...elt(match("effect", ...names())[1L])
@@ -79,7 +78,15 @@ plot_slopes <- function(
         }
     }
 
-    if (inherits(model, "mira") && is.null(newdata)) {
+    # init
+    call <- construct_call(model, "comparisons")
+    model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+    mfx <- new_marginaleffects_internal(
+        call = call,
+        model = model
+    )
+
+    if (inherits(mfx@model, "mira") && is.null(newdata)) {
         msg <- "Please supply a data frame to the `newdata` argument explicitly."
         insight::format_error(msg)
     }
@@ -88,13 +95,13 @@ plot_slopes <- function(
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
+    newdata <- sanitize_newdata_call(scall, newdata, mfx@model)
 
     valid <- c("dydx", "eyex", "eydx", "dyex")
     checkmate::assert_choice(slope, choices = valid)
 
     out <- plot_comparisons(
-        model,
+        mfx@model,
         variables = variables,
         condition = condition,
         by = by,

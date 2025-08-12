@@ -238,12 +238,16 @@ comparisons <- function(
 
 
     # init
-    call <- construct_call(model, "comparisons")
-    model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
-    mfx <- new_marginaleffects_internal(
-        call = call,
-        model = model
-    )
+    if (inherits(model, "marginaleffects_internal")) {
+        mfx <- model
+    } else {
+        call <- construct_call(model, "comparisons")
+        model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+        mfx <- new_marginaleffects_internal(
+            call = call,
+            model = model
+        )
+    }
 
     # sanity checks
     dots <- list(...)

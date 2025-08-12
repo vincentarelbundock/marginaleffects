@@ -200,12 +200,18 @@ hypotheses <- function(
         model <- sanitize_model(model = model, call = call, vcov = vcov)
     }
 
-    # init after early returns
+    # init
     # in this function we need to sanitize_model() later
-    mfx <- new_marginaleffects_internal(
-        call = call,
-        model = model
-    )
+    if (inherits(model, "marginaleffects_internal")) {
+        mfx <- model
+    } else {
+        call <- construct_call(model, "comparisons")
+        model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+        mfx <- new_marginaleffects_internal(
+            call = call,
+            model = model
+        )
+    }
 
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
     hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))

@@ -24,6 +24,11 @@ testall: ## tinytest::build_install_test()
 testone: ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
 	Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
 
+testplot: ## test the plots
+	make testone testfile="inst/tinytest/test-plot_predictions.R"
+	make testone testfile="inst/tinytest/test-plot_comparisons.R"
+	make testone testfile="inst/tinytest/test-plot_slopes.R"
+
 document: ## altdoc::render_docs()
 	Rscript -e "devtools::document()"
 

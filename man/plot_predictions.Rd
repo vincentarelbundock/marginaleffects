@@ -170,8 +170,8 @@ plot_predictions(mod, by = "am")
 
 # marginal predictions on a counterfactual grid
 plot_predictions(mod,
-  by = "am",
-  newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+    by = "am",
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual")
 )
 \dontshow{\}) # examplesIf}
 }

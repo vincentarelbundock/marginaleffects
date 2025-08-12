@@ -35,6 +35,7 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
     supported <- append(
         custom_classes,
         list(
+            "marginaleffects_internal",
             "afex_aov",
             "amest", # package: Amelia
             "bart", # package: dbarts

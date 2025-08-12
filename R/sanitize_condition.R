@@ -54,14 +54,8 @@ sanitize_condition <- function(
         }
     }
 
-    # get data to know over what range of values we should plot
-    if (is.null(modeldata) && isTRUE(checkmate::check_character(condition))) {
-        dat <- get_modeldata(model, additional_variables = condition)
-    } else if (is.null(modeldata) && isTRUE(checkmate::check_list(condition))) {
-        dat <- get_modeldata(model, additional_variables = names(condition))
-    } else {
-        dat <- modeldata
-    }
+    # use modeldata that should always be provided from mfx object
+    dat <- modeldata
     resp <- insight::get_response(model)
     respname <- insight::find_response(model)
 

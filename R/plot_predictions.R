@@ -49,8 +49,8 @@
 #'
 #' # marginal predictions on a counterfactual grid
 #' plot_predictions(mod,
-#'   by = "am",
-#'   newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+#'     by = "am",
+#'     newdata = datagrid(am = 0:1, grid_type = "counterfactual")
 #' )
 #'
 plot_predictions <- function(
@@ -67,18 +67,26 @@ plot_predictions <- function(
     rug = FALSE,
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
-    ...
-) {
+    ...) {
     checkmate::assert_number(points, lower = 0, upper = 1)
 
-    if (inherits(model, "mira") && is.null(newdata)) {
+
+    # init
+    call <- construct_call(model, "comparisons")
+    model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+    mfx <- new_marginaleffects_internal(
+        call = call,
+        model = model
+    )
+
+    if (inherits(mfx@model, "mira") && is.null(newdata)) {
         msg <- "Please supply a data frame to the `newdata` argument explicitly."
         insight::format_error(msg)
     }
 
     # order of the first few paragraphs is important
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+    newdata <- sanitize_newdata_call(scall, newdata, mfx@model, by = by)
     if (!isFALSE(wts) && is.null(by)) {
         insight::format_error("The `wts` argument requires a `by` argument.")
     }
@@ -97,37 +105,31 @@ plot_predictions <- function(
         insight::format_error(msg)
     }
 
-    modeldata <- get_modeldata(
-        model,
-        additional_variables = c(names(condition), by),
-        wts = wts
-    )
-
     # mlr3 and tidymodels
-    if (is.null(modeldata) || nrow(modeldata) == 0) {
-        modeldata <- newdata
+    if (is.null(mfx@modeldata) || nrow(mfx@modeldata) == 0) {
+        mfx@modeldata <- newdata
     }
 
     # conditional
     if (!is.null(condition)) {
         condition <- sanitize_condition(
-            model,
+            mfx@model,
             condition,
             variables = NULL,
-            modeldata = modeldata
+            modeldata = mfx@modeldata
         )
         v_x <- condition$condition1
         v_color <- condition$condition2
         v_facet_1 <- condition$condition3
         v_facet_2 <- condition$condition4
         datplot <- predictions(
-            model,
+            mfx@model,
             newdata = condition$newdata,
             type = type,
             vcov = vcov,
             conf_level = conf_level,
             transform = transform,
-            modeldata = modeldata,
+            modeldata = mfx@modeldata,
             wts = wts,
             ...
         )
@@ -139,20 +141,20 @@ plot_predictions <- function(
         condition <- NULL
 
         newdata <- sanitize_newdata(
-            model = model,
+            model = mfx@model,
             newdata = newdata,
-            modeldata = modeldata,
+            modeldata = mfx@modeldata,
             by = by,
             wts = wts
         )
 
         # tidymodels & mlr3
-        if (is.null(modeldata)) {
-            modeldata <- newdata
+        if (is.null(mfx@modeldata)) {
+            mfx@modeldata <- newdata
         }
 
         datplot <- predictions(
-            model,
+            mfx@model,
             by = by,
             type = type,
             vcov = vcov,
@@ -160,7 +162,7 @@ plot_predictions <- function(
             wts = wts,
             transform = transform,
             newdata = newdata,
-            modeldata = modeldata,
+            modeldata = mfx@modeldata,
             ...
         )
         v_x <- by[[1]]
@@ -169,10 +171,7 @@ plot_predictions <- function(
         v_facet_2 <- hush(by[[4]])
     }
 
-    dv <- unlist(
-        insight::find_response(model, combine = TRUE),
-        use.names = FALSE
-    )[1]
+    dv <- mfx@variable_names_response
     datplot <- plot_preprocess(
         datplot,
         v_x = v_x,
@@ -180,7 +179,7 @@ plot_predictions <- function(
         v_facet_1 = v_facet_1,
         v_facet_2 = v_facet_2,
         condition = condition,
-        modeldata = modeldata
+        modeldata = mfx@modeldata
     )
 
     # return immediately if the user doesn't want a plot
@@ -199,7 +198,7 @@ plot_predictions <- function(
         v_facet_1 = v_facet_1,
         v_facet_2 = v_facet_2,
         points = points,
-        modeldata = modeldata,
+        modeldata = mfx@modeldata,
         dv = dv,
         rug = rug,
         gray = gray
@@ -215,7 +214,7 @@ plot_predictions <- function(
         )
 
     # attach model data for each of use
-    attr(p, "modeldata") <- modeldata
+    attr(p, "modeldata") <- mfx@modeldata
 
     return(p)
 }

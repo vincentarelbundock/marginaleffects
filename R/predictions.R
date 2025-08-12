@@ -193,12 +193,16 @@ predictions <- function(
 
 
     # init
-    call <- construct_call(model, "comparisons")
-    model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
-    mfx <- new_marginaleffects_internal(
-        call = call,
-        model = model
-    )
+    if (inherits(model, "marginaleffects_internal")) {
+        mfx <- model
+    } else {
+        call <- construct_call(model, "comparisons")
+        model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+        mfx <- new_marginaleffects_internal(
+            call = call,
+            model = model
+        )
+    }
 
     # inferences() dispatch
     methods <- c("rsample", "boot", "fwb", "simulation")
@@ -214,7 +218,7 @@ predictions <- function(
 
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {
-        out <- process_imputation(model, call)
+        out <- process_imputation(mfx@model, mfx@call)
         return(out)
     }
 
