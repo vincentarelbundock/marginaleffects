@@ -2,8 +2,7 @@ multcomp_test <- function(
     object,
     multcomp = FALSE,
     conf_level = 0.95,
-    df = Inf
-) {
+    df = Inf) {
     valid <- c(
         "holm",
         "hochberg",

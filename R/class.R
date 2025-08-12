@@ -16,6 +16,7 @@ setClass(
     "marginaleffects_internal",
     slots = c(
         call = "ANY",
+        conf_level = "ANY",
         df = "ANY",
         hypothesis = "ANY",
         hypothesis_null = "ANY",
@@ -44,6 +45,7 @@ setClass(
 #' @keywords internal
 new_marginaleffects_internal <- function(model = NULL,
                                          call = NULL,
+                                         conf_level = 0.95,
                                          df = NULL,
                                          hypothesis = NULL,
                                          hypothesis_null = NULL,
@@ -56,6 +58,7 @@ new_marginaleffects_internal <- function(model = NULL,
                                          wts = FALSE) {
     new("marginaleffects_internal",
         call = call,
+        conf_level = conf_level,
         df = df,
         hypothesis = hypothesis,
         hypothesis_null = hypothesis_null,

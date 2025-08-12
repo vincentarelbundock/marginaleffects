@@ -7,6 +7,7 @@
 new_marginaleffects_internal(
   model = NULL,
   call = NULL,
+  conf_level = 0.95,
   df = NULL,
   hypothesis = NULL,
   hypothesis_null = NULL,

@@ -266,7 +266,7 @@ predictions <- function(
     transform_original <- transform
     transform <- sanitize_transform(transform)
 
-    conf_level <- sanitize_conf_level(conf_level, ...)
+    mfx@conf_level <- sanitize_conf_level(conf_level, ...)
     if (isFALSE(wts) && "marginaleffects_wts_internal" %in% colnames(mfx@newdata)) {
         wts <- "marginaleffects_wts_internal"
     }
@@ -411,7 +411,7 @@ predictions <- function(
         # Confidence intervals
         tmp <- get_ci(
             tmp,
-            conf_level = conf_level,
+            conf_level = mfx@conf_level,
             vcov = mfx@vcov_model,
             draws = draws,
             estimate = "estimate",
@@ -469,7 +469,7 @@ predictions <- function(
 
     # Only add (potentially large) attributes if lean is FALSE
     # extra attributes needed for print method, even with lean return object
-    attr(out, "conf_level") <- conf_level
+    attr(out, "conf_level") <- mfx@conf_level
     attr(out, "by") <- by
     attr(out, "lean") <- lean
     attr(out, "type") <- mfx@type

@@ -196,7 +196,7 @@ hypotheses <- function(
     }
 
 
-    conf_level <- sanitize_conf_level(conf_level, ...)
+    mfx@conf_level <- sanitize_conf_level(conf_level, ...)
 
     hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
 
@@ -220,7 +220,7 @@ hypotheses <- function(
     mfx <- add_degrees_of_freedom(mfx = mfx, df = df, vcov = vcov)
 
     args <- list(
-        conf_level = conf_level,
+        conf_level = mfx@conf_level,
         vcov = vcov,
         df = mfx@df,
         equivalence = equivalence
@@ -397,7 +397,7 @@ hypotheses <- function(
 
     out <- get_ci(
         out,
-        conf_level = conf_level,
+        conf_level = mfx@conf_level,
         vcov = vcov,
         draws = draws,
         estimate = "estimate",
@@ -428,7 +428,7 @@ hypotheses <- function(
     attr(out, "call") <- mfx@call
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
-    attr(out, "conf_level") <- conf_level
+    attr(out, "conf_level") <- mfx@conf_level
     attr(out, "hypothesis_function_by") <- attr(b, "hypothesis_function_by")
     attr(out, "mfx") <- mfx
 
@@ -436,7 +436,7 @@ hypotheses <- function(
     out <- multcomp_test(
         out,
         multcomp = multcomp,
-        conf_level = conf_level,
+        conf_level = mfx@conf_level,
         df = mfx@df
     )
 

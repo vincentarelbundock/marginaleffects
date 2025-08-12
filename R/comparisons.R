@@ -278,7 +278,7 @@ comparisons <- function(
     newdata <- mfx@newdata
 
     # misc
-    conf_level <- sanitize_conf_level(conf_level, ...)
+    mfx@conf_level <- sanitize_conf_level(conf_level, ...)
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
     numderiv <- sanitize_numderiv(numderiv)
 
@@ -427,7 +427,7 @@ comparisons <- function(
     # meta info
     cmp <- get_ci(
         cmp,
-        conf_level = conf_level,
+        conf_level = mfx@conf_level,
         df = mfx@df,
         draws = draws,
         estimate = "estimate",
@@ -477,7 +477,7 @@ comparisons <- function(
 
     # Only add (potentially large) attributes if lean is FALSE
     # extra attributes needed for print method, even with lean return object
-    attr(out, "conf_level") <- conf_level
+    attr(out, "conf_level") <- mfx@conf_level
     attr(out, "by") <- by
     attr(out, "lean") <- lean
     attr(out, "vcov.type") <- vcov.type
