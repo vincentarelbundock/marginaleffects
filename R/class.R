@@ -1,3 +1,8 @@
+#' Define class union
+#' @keywords internal
+#' @noRd
+setClassUnion("matrixOrNULL", c("matrix", "NULL"))
+
 #' Internal S4 class for marginaleffects
 #'
 #' This S4 class is used internally to hold common arguments passed between
@@ -11,6 +16,7 @@
 #' @slot df The degrees of freedom
 #' @slot wts The weights specification
 #' @slot type The sanitized type from sanitize_type()
+#' @slot jacobian The jacobian matrix or NULL
 #' @keywords internal
 setClass(
     "marginaleffects_internal",
@@ -18,10 +24,11 @@ setClass(
         call = "ANY",
         conf_level = "ANY",
         df = "ANY",
-        draws = "ANY",
+        draws = "matrixOrNULL",
         hypothesis = "ANY",
         hypothesis_null = "ANY",
         hypothesis_direction = "ANY",
+        jacobian = "matrixOrNULL",
         model = "ANY",
         modeldata = "ANY", # TODO: lmerTest returns nfnGroupedData
         newdata = "data.frame",
@@ -52,6 +59,7 @@ new_marginaleffects_internal <- function(model = NULL,
                                          hypothesis = NULL,
                                          hypothesis_null = NULL,
                                          hypothesis_direction = NULL,
+                                         jacobian = NULL,
                                          modeldata = data.frame(),
                                          newdata = data.frame(),
                                          type = NULL,
@@ -66,10 +74,12 @@ new_marginaleffects_internal <- function(model = NULL,
         hypothesis = hypothesis,
         hypothesis_null = hypothesis_null,
         hypothesis_direction = hypothesis_direction,
+        jacobian = jacobian,
         model = model,
         modeldata = modeldata,
         newdata = newdata,
         type = type,
+        variables = variables,
         vcov_model = vcov_model,
         wts = wts)
 }

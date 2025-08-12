@@ -13,6 +13,7 @@ new_marginaleffects_internal(
   hypothesis = NULL,
   hypothesis_null = NULL,
   hypothesis_direction = NULL,
+  jacobian = NULL,
   modeldata = data.frame(),
   newdata = data.frame(),
   type = NULL,

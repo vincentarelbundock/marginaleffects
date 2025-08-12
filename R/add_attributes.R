@@ -18,5 +18,10 @@ add_attributes <- function(out, mfx) {
         attr(out, "df") <- mfx@df
     }
     
+    # Add jacobian if present
+    if (!is.null(mfx@jacobian)) {
+        attr(out, "jacobian") <- mfx@jacobian
+    }
+    
     return(out)
 }

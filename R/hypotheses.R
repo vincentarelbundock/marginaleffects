@@ -244,6 +244,7 @@ hypotheses <- function(
         }
         se <- do.call("get_se_delta", args)
         J <- attr(se, "jacobian")
+        mfx@jacobian <- J
         attr(se, "jacobian") <- NULL
         mfx@draws <- NULL
 
@@ -292,7 +293,6 @@ hypotheses <- function(
     out <- add_attributes(out, mfx)
     
     # Add function-specific attributes (always set these for multcomp compatibility)
-    attr(out, "jacobian") <- J
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
     attr(out, "hypothesis_function_by") <- attr(b, "hypothesis_function_by")

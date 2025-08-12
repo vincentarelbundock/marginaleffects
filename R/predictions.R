@@ -403,6 +403,7 @@ predictions <- function(
             se <- do.call(get_se_delta, args)
             if (is.numeric(se) && length(se) == nrow(tmp)) {
                 J <- attr(se, "jacobian")
+                mfx@jacobian <- J
                 attr(se, "jacobian") <- NULL
                 tmp[["std.error"]] <- se
             }
@@ -458,7 +459,6 @@ predictions <- function(
     
     # Add function-specific attributes
     attr(out, "by") <- by
-    attr(out, "jacobian") <- J
     attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "transform") <- transform[[1]]
     attr(out, "hypothesis_by") <- hyp_by

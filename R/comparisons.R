@@ -397,6 +397,7 @@ comparisons <- function(
         args <- utils::modifyList(args, dots)
         se <- do.call("get_se_delta", args)
         J <- attr(se, "jacobian")
+        mfx@jacobian <- J
         attr(se, "jacobian") <- NULL
         cmp$std.error <- as.numeric(se)
         mfx@draws <- NULL
@@ -473,7 +474,6 @@ comparisons <- function(
     attr(out, "by") <- by
     attr(out, "vcov.type") <- vcov.type
     attr(out, "variables") <- predictors
-    attr(out, "jacobian") <- J
     attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "comparison") <- comparison
     attr(out, "transform") <- transform[[1]]

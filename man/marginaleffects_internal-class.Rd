@@ -26,6 +26,8 @@ functions to simplify the function signatures and reduce redundant argument pass
 \item{\code{wts}}{The weights specification}
 
 \item{\code{type}}{The sanitized type from sanitize_type()}
+
+\item{\code{jacobian}}{The jacobian matrix or NULL}
 }}
 
 \keyword{internal}
