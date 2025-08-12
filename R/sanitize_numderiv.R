@@ -1,4 +1,4 @@
-sanitize_numderiv <- function(numderiv) {
+add_numderiv <- function(mfx, numderiv) {
     checkmate::assert(
         checkmate::check_choice(numderiv, c("richardson", "fdforward", "fdcenter")),
         checkmate::check_list(numderiv, min.len = 1)
@@ -30,5 +30,6 @@ sanitize_numderiv <- function(numderiv) {
         }
     }
 
-    return(numderiv)
+    mfx@numderiv <- numderiv
+    return(mfx)
 }

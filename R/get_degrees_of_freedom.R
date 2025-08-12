@@ -4,7 +4,7 @@ add_degrees_of_freedom <- function(mfx, df = Inf, by = NULL, hypothesis = NULL, 
     model <- mfx@model
     newdata <- mfx@newdata
 
-    # K-W changes both the vcov and the df  
+    # K-W changes both the vcov and the df
     # Satterthwaite changes the df but not the vcov
     if (isTRUE(checkmate::check_choice(vcov, c("satterthwaite", "kenward-roger")))) {
         if (
@@ -18,7 +18,7 @@ add_degrees_of_freedom <- function(mfx, df = Inf, by = NULL, hypothesis = NULL, 
         }
         df <- vcov
     }
-    
+
     # Sanitize df input
     checkmate::assert(
         checkmate::check_true(df),
@@ -31,7 +31,7 @@ add_degrees_of_freedom <- function(mfx, df = Inf, by = NULL, hypothesis = NULL, 
         checkmate::assert_data_frame(newdata)
         # predict.lmerTest requires the DV
         if (inherits(model, "lmerMod")) {
-            dv <- insight::find_response(model)
+            dv <- mfx@variable_names_response
             if (!dv %in% colnames(newdata)) {
                 newdata[[dv]] <- mean(insight::get_response(model))
             }

@@ -214,7 +214,7 @@ hypotheses <- function(
     df <- if (is.null(df)) Inf else df
     mfx <- add_degrees_of_freedom(mfx = mfx, df = df, vcov = vcov)
     mfx <- add_hypothesis(mfx, hypothesis)
-    numderiv <- sanitize_numderiv(numderiv)
+    mfx <- add_numderiv(mfx, numderiv)
 
     vcov_false <- isFALSE(vcov)
     if (!isTRUE(checkmate::check_matrix(vcov))) {
@@ -235,12 +235,12 @@ hypotheses <- function(
         # standard errors via delta method
     } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
         args <- list(
+            mfx = mfx,
             model_perturbed = model,
             vcov = vcov,
             hypothesis = mfx@hypothesis,
             FUN = get_hypotheses,
             hypothesis_is_formula = hypothesis_is_formula,
-            numderiv = numderiv,
             calling_function = "hypotheses"
         )
         if (...length() > 0) {

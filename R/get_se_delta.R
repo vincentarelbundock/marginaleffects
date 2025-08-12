@@ -45,7 +45,6 @@ get_se_delta <- function(
     eps = NULL,
     J = NULL,
     hypothesis = NULL,
-    numderiv = NULL,
     calling_function = NULL,
     comparison = NULL,
     by = NULL,
@@ -156,7 +155,7 @@ get_se_delta <- function(
         args <- list(
             func = inner,
             x = coefs,
-            numderiv = numderiv
+            numderiv = mfx@numderiv
         )
         J <- do.call("get_jacobian", args)
         colnames(J) <- names(get_coef(model_perturbed, ...))

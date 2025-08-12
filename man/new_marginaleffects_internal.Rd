@@ -15,6 +15,7 @@ new_marginaleffects_internal(
   hypothesis_direction = NULL,
   jacobian = NULL,
   newdata = data.frame(),
+  numderiv = list("fdforward"),
   type = NULL,
   variables = list(),
   vcov_model = NULL,

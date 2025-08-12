@@ -223,7 +223,7 @@ predictions <- function(
     mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, byfun = byfun)
 
     # sanity checks
-    numderiv <- sanitize_numderiv(numderiv)
+    mfx <- add_numderiv(mfx, numderiv)
     sanity_by(by, mfx@newdata)
     sanity_reserved(model, mfx@modeldata)
 
@@ -374,7 +374,6 @@ predictions <- function(
                 hypothesis = mfx@hypothesis,
                 by = by,
                 byfun = byfun,
-                numderiv = numderiv,
                 calling_function = "predictions"
             )
             args <- utils::modifyList(args, dots)

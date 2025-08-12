@@ -271,8 +271,8 @@ comparisons <- function(
 
     # misc
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
+    mfx <- add_numderiv(mfx, numderiv)
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
-    numderiv <- sanitize_numderiv(numderiv)
 
 
     # misc sanitation
