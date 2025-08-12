@@ -203,7 +203,6 @@ Collate:
     'class.R'
     'comparisons.R'
     'complete_levels.R'
-    'config.R'
     'construct_call.R'
     'datagrid.R'
     'equivalence.R'
