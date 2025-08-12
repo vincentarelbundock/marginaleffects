@@ -162,88 +162,55 @@ hypotheses <- function(
     ...
 ) {
 
+    # Early validation and setup
+    if (is.null(model)) model <- ...get("model_perturbed")
+    if (is.null(model)) stop_sprintf("`model` is missing.")
+    sanity_multcomp(multcomp, hypothesis, joint)
+    
     # Create mfx object early and populate as objects become available
     mfx <- new_marginaleffects_internal(call = construct_call(model, "hypotheses"))
 
-    # multiple imputation
+    # Early returns for special cases
     if (inherits(model, c("mira", "amest"))) {
-        out <- process_imputation(model, mfx@call)
-        return(out)
+        return(process_imputation(model, mfx@call))
     }
-
-    if (is.null(model)) model <- ...get("model_perturbed")
-    if (is.null(model)) model <- stop_sprintf("`model` is missing.")
-    sanity_multcomp(multcomp, hypothesis, joint)
-
-    internal_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
-    if (inherits(model, internal_classes)) {
-        if (!isTRUE(checkmate::check_flag(vcov))) {
-            msg <- "The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call."
-            stop_sprintf(msg)
-        }
-        if (!is.null(attr(model, "posterior_draws"))) {
-            msg <- "The `hypotheses()` function cannot be used to post-process `marginaleffects` objects that include draws from a bootstrap, simulation, or bayesian posterior distribution. Users should call the `get_draws()` function and process draws manually."
-            stop_sprintf(msg)
-        }
-        # inherit conf_level from marginaleffects objects
-        if (is.null(conf_level)) {
-            conf_level <- attr(model, "conf_level")
-        }
-
-    } else {
-        mfx <- sanitize_model(mfx, model = model, vcov = vcov)
-        model <- mfx@model
-    }
-
-
-    mfx@conf_level <- sanitize_conf_level(conf_level, ...)
-
-    hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
-
-
-    ###### Joint test
+    
     if (!isFALSE(joint)) {
-        out <- joint_test(
+        return(joint_test(
             object = model,
             joint_index = joint,
             joint_test = joint_test,
             hypothesis = hypothesis,
             df = df,
             vcov = vcov
-        )
-        return(out)
+        ))
     }
-    ###### Done with Joint test
 
-    # after joint test, because ftest() can require two values
+    # Handle marginaleffects objects vs regular models
+    internal_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
+    if (inherits(model, internal_classes)) {
+        if (!isTRUE(checkmate::check_flag(vcov))) {
+            stop_sprintf("The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call.")
+        }
+        if (!is.null(attr(model, "posterior_draws"))) {
+            stop_sprintf("The `hypotheses()` function cannot be used to post-process `marginaleffects` objects that include draws from a bootstrap, simulation, or bayesian posterior distribution. Users should call the `get_draws()` function and process draws manually.")
+        }
+        if (is.null(conf_level)) {
+            conf_level <- attr(model, "conf_level")
+        }
+    } else {
+        mfx <- sanitize_model(mfx, model = model, vcov = vcov)
+        model <- mfx@model
+    }
+
+    mfx@conf_level <- sanitize_conf_level(conf_level, ...)
+    hypothesis_is_formula <- isTRUE(checkmate::check_formula(hypothesis))
+
+    # Setup degrees of freedom and hypothesis
     df <- if (is.null(df)) Inf else df
     mfx <- add_degrees_of_freedom(mfx = mfx, df = df, vcov = vcov)
-
-    args <- list(
-        conf_level = mfx@conf_level,
-        vcov = vcov,
-        df = mfx@df,
-        equivalence = equivalence
-    )
-
-    # keep this NULL in case `hypothesis` was used in the previous call
-    args[["hypothesis"]] <- hypothesis
-
-    if (...length() > 0) {
-        args <- utils::modifyList(args, list(...))
-    }
-
-    xcall <- substitute(model)
-
-    if (is.symbol(xcall)) {
-        model <- eval(xcall, envir = parent.frame())
-    } else if (is.call(xcall)) {
-        model <- eval(xcall, envir = parent.frame())
-    }
-
-    numderiv <- sanitize_numderiv(numderiv)
-
     mfx <- add_hypothesis(mfx, hypothesis)
+    numderiv <- sanitize_numderiv(numderiv)
 
     vcov_false <- isFALSE(vcov)
     if (!isTRUE(checkmate::check_matrix(vcov))) {
@@ -286,42 +253,17 @@ hypotheses <- function(
         se <- rep(NA, length(b))
     }
 
+    # Build output data frame
     hyplab <- attr(b, "label")
-    if (!is.null(mfx@hypothesis)) {
-        if (is.null(hyplab)) {
-            hyplab <- attr(mfx@hypothesis, "label")
-        }
-        if (!is.null(hyplab)) {
-            out <- cbind(
-                hyplab,
-                data.frame(
-                    estimate = b,
-                    std.error = se
-                )
-            )
-        } else {
-            out <- data.frame(
-                term = "custom",
-                estimate = b,
-                std.error = se
-            )
-        }
+    if (is.null(hyplab) && !is.null(mfx@hypothesis)) {
+        hyplab <- attr(mfx@hypothesis, "label")
+    }
+    
+    if (!is.null(hyplab) && nrow(hyplab) == length(b)) {
+        out <- cbind(hyplab, data.frame(estimate = b, std.error = se))
     } else {
-        if (!is.null(hyplab) && nrow(hyplab) == length(b)) {
-            out <- cbind(
-                hyplab,
-                data.frame(
-                    estimate = b,
-                    std.error = se
-                )
-            )
-        } else {
-            out <- data.frame(
-                term = paste0("b", seq_along(b)),
-                estimate = b,
-                std.error = se
-            )
-        }
+        term_name <- if (!is.null(mfx@hypothesis)) "custom" else paste0("b", seq_along(b))
+        out <- data.frame(term = term_name, estimate = b, std.error = se)
     }
 
     # Remove std.error column when not computing st.errors and in bootstrap
