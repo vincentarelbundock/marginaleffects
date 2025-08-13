@@ -1,8 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_file("TODO: s4 borked this")
-
 requiet("brglm2")
 requiet("margins")
 requiet("emmeans")
