@@ -124,6 +124,7 @@ Suggests:
     modelbased,
     modelsummary,
     multcomp,
+    mvgam,
     mvtnorm,
     nanoparquet,
     nlme,

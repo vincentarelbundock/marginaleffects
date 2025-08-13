@@ -1,6 +1,5 @@
 source("helpers.R")
 using("marginaleffects")
-exit_file("broken")
 
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 if (ON_WINDOWS) exit_file("on windows")
@@ -12,19 +11,17 @@ if (!requiet("mvgam")) exit_file("mvgam not installed")
 mod1 <- mvgam:::mvgam_example1
 
 # slopes() and tidy()
-mfx <- slopes(mod1)
-ti <- tidy(mfx)
-expect_inherits(ti, "data.frame")
-expect_true(nrow(ti) == 1)
-expect_true(ncol(ti) >= 5)
-expect_true(all(c("term", "estimate", "conf.low") %in% colnames(ti)))
+mfx <- avg_slopes(mod1)
+expect_true(nrow(mfx) == 3)
+expect_true(ncol(mfx) >= 5)
+expect_true(all(c("term", "estimate", "conf.low") %in% colnames(mfx)))
 
 # get_predict() with original data
-preds <- get_predict(mod1)
+preds <- get_predict(mod1, newdata = mod1$obs_data)
 expect_equal(NROW(preds), NROW(mod1$obs_data))
 
 w <- apply(posterior_linpred(mod1, process_error = FALSE), 2, stats::median)
-x <- get_predict(mod1, type = "link", process_error = FALSE)
+x <- get_predict(mod1, type = "link", process_error = FALSE, newdata = mod1$obs_data)
 expect_equivalent(w, x$estimate)
 
 # get_predict() with newdata

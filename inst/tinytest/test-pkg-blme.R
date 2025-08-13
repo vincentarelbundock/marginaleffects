@@ -2,7 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 requiet("blme")
 
-exit_file("TODO: does not error consistently")
+# exit_file("TODO: does not error consistently")
 
 dat <- get_dataset("sleepstudy", "lme4")
 penaltyFn <- function(sigma) dcauchy(sigma, 0, 10, log = TRUE)
@@ -23,9 +23,10 @@ expect_slopes(fm5)
 expect_slopes(fm6)
 expect_slopes(mod)
 
-pre <- predictions(fm5)
+# suppressWarnings about standard errors not account for uncertainty in random effects
+pre <- predictions(fm5) |> suppressWarnings()
 expect_predictions(pre)
-pre <- predictions(fm6)
+pre <- predictions(fm6) |> suppressWarnings()
 expect_predictions(pre)
-pre <- predictions(mod)
+pre <- predictions(mod) |> suppressWarnings()
 expect_predictions(pre)
