@@ -308,13 +308,12 @@ hypotheses <- function(
     class(out) <- c("hypotheses", class(out))
 
     # Add common attributes from mfx S4 slots
-    out <- add_attributes(out, mfx)
-
-    # Add function-specific attributes (always set these for multcomp compatibility)
-    attr(out, "vcov") <- vcov
-    attr(out, "vcov.type") <- vcov.type
-    attr(out, "hypothesis_function_by") <- attr(b, "hypothesis_function_by")
-    attr(out, "mfx") <- mfx
+    out <- add_attributes(out, mfx,
+        vcov = vcov,
+        vcov.type = vcov.type,
+        multcomp = multcomp,
+        hypothesis_function_by = attr(b, "hypothesis_function_by")
+    )
 
     # must be after attributes for vcov
     out <- multcomp_test(

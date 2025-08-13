@@ -1,5 +1,6 @@
-add_attributes <- function(out, mfx) {
+add_attributes <- function(out, mfx, ...) {
     # Always add all attributes from S4 slots
+    attr(out, "mfx") <- mfx
     attr(out, "call") <- mfx@call
     attr(out, "newdata") <- mfx@newdata
     attr(out, "model") <- mfx@model
@@ -26,6 +27,13 @@ add_attributes <- function(out, mfx) {
     # Add weights if present
     if (!is.null(mfx@wts)) {
         attr(out, "weights") <- mfx@wts
+    }
+
+    dots <- list(...)
+    for (n in names(dots)) {
+        if (is.null(attr(out, n))) {
+            attr(out, n) <- dots[[n]]
+        }
     }
 
     return(out)

@@ -422,13 +422,9 @@ predictions <- function(
     class(out) <- c("predictions", class(out))
 
     # Add common attributes from mfx S4 slots
-    out <- add_attributes(out, mfx)
-
-    # Add function-specific attributes
-    attr(out, "by") <- by
-    attr(out, "transform") <- transform[[1]]
-    attr(out, "hypothesis_by") <- hyp_by
-    attr(out, "mfx") <- mfx
+    out <- add_attributes(out, mfx,
+        by = by,
+        hypothesis_by = hyp_by)
 
     if (inherits(mfx@model, "brmsfit")) {
         insight::check_if_installed("brms")
