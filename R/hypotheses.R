@@ -255,8 +255,7 @@ hypotheses <- function(
             vcov = vcov,
             hypothesis = mfx@hypothesis,
             FUN = get_hypotheses,
-            hypothesis_is_formula = hypothesis_is_formula,
-            calling_function = mfx@calling_function
+            hypothesis_is_formula = hypothesis_is_formula
         )
         if (...length() > 0) {
             args <- utils::modifyList(args, list(...))

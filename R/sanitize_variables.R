@@ -1,9 +1,10 @@
 # Helper functions for add_variables()
 
-get_predictors <- function(variables, mfx, calling_function) {
+get_predictors <- function(variables, mfx) {
     model <- mfx@model
     modeldata <- mfx@modeldata
     newdata <- mfx@newdata
+    calling_function <- mfx@calling_function
 
     stop_zero <- function(predictors) {
         if (length(predictors) == 0) {
@@ -329,11 +330,13 @@ sanitize_predictor_specs <- function(predictors, mfx, calling_function) {
     predictors
 }
 
-get_comparison_functions <- function(comparison, by, mfx) {
+get_comparison_functions <- function(mfx) {
     # goals:
     # allow multiple function types: slopes() uses both difference and dydx
     # when comparison is defined, use that if it works or turn back to defaults
     # predictors list elements: name, value, function, label
+    comparison <- mfx@comparison
+    by <- mfx@by
 
     if (is.null(comparison)) {
         fun_numeric <- fun_categorical <- comparison_function_dict[["difference"]]
@@ -467,11 +470,7 @@ get_weight_variables <- function(mfx) {
 # output: named list of lists where each element represents a variable with: name, value, function, label
 add_variables <- function(
     variables,
-    mfx,
-    comparison = NULL,
-    by = NULL,
-    cross = FALSE,
-    eps = NULL) {
+    mfx) {
     # Input validation
     checkmate::assert(
         checkmate::check_null(variables),
@@ -481,7 +480,7 @@ add_variables <- function(
     )
 
     # Extract and normalize predictors
-    predictors <- get_predictors(variables, mfx, mfx@calling_function)
+    predictors <- get_predictors(variables, mfx)
     predictors <- sanitize_predictor_container(predictors)
 
     # Handle predictions-specific processing
@@ -497,11 +496,11 @@ add_variables <- function(
     predictors <- sanitize_predictor_specs(predictors, mfx, mfx@calling_function)
 
     # Configure comparison functions and labels
-    comparison_config <- get_comparison_functions(comparison, by, mfx)
+    comparison_config <- get_comparison_functions(mfx)
     predictors <- add_functions_and_labels(predictors, comparison_config, mfx)
 
     # Add epsilon values
-    predictors <- add_epsilon_values(predictors, mfx, eps)
+    predictors <- add_epsilon_values(predictors, mfx, mfx@eps)
 
     # Final sanitization
     predictors <- sanitize_internal_variables(predictors, mfx, mfx@model, mfx@calling_function)

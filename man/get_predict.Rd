@@ -198,7 +198,13 @@ get_predict(model, newdata, type, mfx = NULL, ...)
   ...
 )
 
-\method{get_predict}{rlmerMod}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{rlmerMod}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  mfx = NULL,
+  ...
+)
 
 \method{get_predict}{stanreg}(model, newdata = insight::get_data(model), type = "response", ...)
 

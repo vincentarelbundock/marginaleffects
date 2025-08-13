@@ -11,25 +11,35 @@ functions to simplify the function signatures and reduce redundant argument pass
 \section{Slots}{
 
 \describe{
+\item{\code{by}}{Aggregation/grouping specification}
+
+\item{\code{byfun}}{Function for aggregation when using by}
+
+\item{\code{call}}{The original function call}
+
+\item{\code{calling_function}}{The name of the calling function (comparisons, predictions, hypotheses)}
+
+\item{\code{comparison}}{Comparison function specification}
+
+\item{\code{cross}}{Boolean flag for cross-contrasts}
+
+\item{\code{df}}{The degrees of freedom}
+
+\item{\code{eps}}{Epsilon value for numerical derivatives}
+
+\item{\code{jacobian}}{The jacobian matrix or NULL}
+
 \item{\code{model}}{The fitted model object}
 
 \item{\code{modeldata}}{The model data frame}
 
 \item{\code{newdata}}{The new data frame for predictions}
 
-\item{\code{vcov_model}}{The variance-covariance matrix}
-
-\item{\code{call}}{The original function call}
-
-\item{\code{calling_function}}{The name of the calling function (comparisons, predictions, hypotheses)}
-
-\item{\code{df}}{The degrees of freedom}
-
-\item{\code{wts}}{The weights specification}
-
 \item{\code{type}}{The sanitized type from sanitize_type()}
 
-\item{\code{jacobian}}{The jacobian matrix or NULL}
+\item{\code{vcov_model}}{The variance-covariance matrix}
+
+\item{\code{wts}}{The weights specification}
 }}
 
 \keyword{internal}

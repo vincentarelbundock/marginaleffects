@@ -243,7 +243,11 @@ comparisons <- function(
         model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
         mfx <- new_marginaleffects_internal(
             call = call,
-            model = model
+            model = model,
+            by = by,
+            comparison = comparison,
+            cross = cross,
+            eps = eps
         )
     }
 
@@ -294,12 +298,8 @@ comparisons <- function(
 
     # after sanitize_newdata
     mfx <- add_variables(
-        mfx = mfx,
         variables = variables,
-        cross = cross,
-        by = by,
-        comparison = comparison,
-        eps = eps
+        mfx = mfx
     )
 
     # get dof before transforming the vcov arg
@@ -366,12 +366,7 @@ comparisons <- function(
             hi = contrast_data$hi,
             lo = contrast_data$lo,
             original = contrast_data$original,
-            by = by,
-            eps = eps,
-            cross = cross,
-            numderiv = numderiv,
-            comparison = comparison,
-            calling_function = mfx@calling_function
+            numderiv = numderiv
         )
         args <- utils::modifyList(args, dots)
         se <- do.call("get_se_delta", args)

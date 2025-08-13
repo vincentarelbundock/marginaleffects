@@ -198,7 +198,9 @@ predictions <- function(
         model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
         mfx <- new_marginaleffects_internal(
             call = call,
-            model = model
+            model = model,
+            by = by,
+            byfun = byfun
         )
     }
 
@@ -373,10 +375,7 @@ predictions <- function(
                 vcov = mfx@vcov_model,
                 type = if (link_to_response) "link" else mfx@type,
                 FUN = fun,
-                hypothesis = mfx@hypothesis,
-                by = by,
-                byfun = byfun,
-                calling_function = mfx@calling_function
+                hypothesis = mfx@hypothesis
             )
             args <- utils::modifyList(args, dots)
             se <- do.call(get_se_delta, args)

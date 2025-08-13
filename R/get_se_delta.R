@@ -53,6 +53,14 @@ get_se_delta <- function(
     original = NULL,
     ...
 ) {
+    # Use mfx slots when available
+    if (!is.null(mfx)) {
+        eps <- if (is.null(eps)) mfx@eps else eps
+        calling_function <- if (is.null(calling_function)) mfx@calling_function else calling_function
+        comparison <- if (is.null(comparison)) mfx@comparison else comparison
+        by <- if (is.null(by)) mfx@by else by
+        byfun <- if (is.null(byfun)) mfx@byfun else byfun
+    }
     # delta method does not work for these models
     bad <- c("brmsfit", "stanreg", "bart")
     if (any(inherits(model_perturbed, bad))) {
