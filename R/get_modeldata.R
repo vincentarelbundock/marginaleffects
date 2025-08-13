@@ -24,7 +24,6 @@ get_modeldata <- function(
     }
 
     if (!is.null(modeldata)) {
-        modeldata <- set_variable_class(modeldata, model = model)
         return(modeldata)
     }
 
@@ -227,7 +226,9 @@ set_variable_class <- function(modeldata, model = NULL) {
 
 
 get_variable_class <- function(newdata, variable = NULL, compare = NULL) {
-    if ("marginaleffects_variable_class" %in% names(attributes(newdata))) {
+    if (inherits(newdata, "marginaleffects_internal")) {
+        cl <- newdata@variable_class
+    } else if ("marginaleffects_variable_class" %in% names(attributes(newdata))) {
         cl <- attributes(newdata)$marginaleffects_variable_class
     } else {
         newdata <- set_variable_class(newdata)

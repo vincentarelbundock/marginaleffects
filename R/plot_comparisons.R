@@ -59,8 +59,7 @@ plot_comparisons <- function(
     rug = FALSE,
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
-    ...
-) {
+    ...) {
     # init
     call <- construct_call(model, "comparisons")
     model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
@@ -189,7 +188,7 @@ plot_comparisons <- function(
         v_facet_2 = v_facet_2,
         gray = gray,
         rug = rug,
-        modeldata = mfx@modeldata
+        mfx = mfx
     )
     p <- p + ggplot2::labs(x = v_x, y = sprintf("Comparison"))
 

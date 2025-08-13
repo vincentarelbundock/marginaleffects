@@ -1,5 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
+exit_file("Broken get_variable_class() on missing modeldata")
 requiet("tidymodels")
 if (ON_CRAN || ON_CI) exit_file("local only")
 

@@ -85,11 +85,11 @@ sanitize_condition <- function(
 
     # condition 1: x-axis
     if (is.null(condition[[1]])) {
-        if (get_variable_class(dat, condition1, "binary")) {
+        if (get_variable_class(mfx, condition1, "binary")) {
             at_list[[condition1]] <- 0:1
         } else if (
             is.numeric(dat[[condition1]]) &&
-                !get_variable_class(dat, condition1, "categorical")
+                !get_variable_class(mfx, condition1, "categorical")
         ) {
             at_list[[condition1]] <- seq(
                 min(dat[[condition1]], na.rm = TRUE),
@@ -116,7 +116,7 @@ sanitize_condition <- function(
         # defaults
         if (is.null(condition[[2]])) {
             # binary
-            if (get_variable_class(dat, condition2, "binary")) {
+            if (get_variable_class(mfx, condition2, "binary")) {
                 at_list[[condition2]] <- condition[[2]] <- 0:1
                 # numeric default = Tukey's 5 numbers
             } else if (is.numeric(dat[[condition2]])) {

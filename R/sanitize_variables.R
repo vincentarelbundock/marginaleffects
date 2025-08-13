@@ -53,7 +53,7 @@ get_predictors <- function(variables, mfx) {
 
     # warn if matrix column
     mat <- sapply(names(predictors), function(v) {
-        get_variable_class(modeldata, variable = v, compare = "matrix")
+        get_variable_class(mfx, variable = v, compare = "matrix")
     })
     if (any(mat)) {
         warn_sprintf("Matrix columns are not supported: %s. Use the `variables` argument to specify valid predictors, or use a function like `drop()` to convert your matrix columns into vectors.", toString(names(mat)[mat]))
@@ -101,10 +101,11 @@ add_prediction_functions <- function(predictors, modeldata) {
     predictors
 }
 
-add_numeric_shortcuts <- function(predictors, modeldata) {
+add_numeric_shortcuts <- function(predictors, mfx) {
     # string shortcuts for predictions only
+    modeldata <- mfx@modeldata
     for (v in names(predictors)) {
-        if (get_variable_class(modeldata, v, "numeric")) {
+        if (get_variable_class(mfx, v, "numeric")) {
             if (identical(predictors[[v]], "iqr")) {
                 predictors[[v]] <- stats::quantile(
                     modeldata[[v]],
@@ -142,13 +143,15 @@ add_numeric_shortcuts <- function(predictors, modeldata) {
     predictors
 }
 
-add_default_values <- function(predictors, modeldata, calling_function) {
+add_default_values <- function(predictors, mfx) {
+    calling_function <- mfx@calling_function
+
     # NULL to defaults
     for (v in names(predictors)) {
         if (is.null(predictors[[v]])) {
-            if (get_variable_class(modeldata, v, "binary")) {
+            if (get_variable_class(mfx, v, "binary")) {
                 predictors[[v]] <- 0:1
-            } else if (get_variable_class(modeldata, v, "numeric")) {
+            } else if (get_variable_class(mfx, v, "numeric")) {
                 if (calling_function == "comparisons") {
                     predictors[[v]] <- 1
                 } else if (calling_function == "predictions") {
@@ -156,7 +159,7 @@ add_default_values <- function(predictors, modeldata, calling_function) {
                     if (length(v_unique) < 6) {
                         predictors[[v]] <- v_unique
                     } else {
-                        predictors[[v]] <- stats::fivenum(modeldata[[v]])
+                        predictors[[v]] <- stats::fivenum(mfx@modeldata[[v]])
                     }
                 }
             } else {
@@ -164,7 +167,7 @@ add_default_values <- function(predictors, modeldata, calling_function) {
                     predictors[[v]] <- "reference"
                 } else if (calling_function == "predictions") {
                     # TODO: warning when this is too large. Here or elsewhere?
-                    predictors[[v]] <- unique(modeldata[[v]])
+                    predictors[[v]] <- unique(mfx@modeldata[[v]])
                 }
             }
         }
@@ -172,9 +175,10 @@ add_default_values <- function(predictors, modeldata, calling_function) {
     predictors
 }
 
-sanitize_predictor_specs <- function(predictors, mfx, calling_function) {
+sanitize_predictor_specs <- function(predictors, mfx) {
     modeldata <- mfx@modeldata
     newdata <- mfx@newdata
+    calling_function <- mfx@calling_function
 
     # shortcuts and validity
     for (v in names(predictors)) {
@@ -185,7 +189,7 @@ sanitize_predictor_specs <- function(predictors, mfx, calling_function) {
             ))
         ) {
             # do nothing, but don't take the other validity check branches
-        } else if (get_variable_class(modeldata, v, "binary")) {
+        } else if (get_variable_class(mfx, v, "binary")) {
             if (
                 !isTRUE(checkmate::check_numeric(predictors[[v]])) ||
                     !is_binary(predictors[[v]])
@@ -206,7 +210,7 @@ sanitize_predictor_specs <- function(predictors, mfx, calling_function) {
                     stop_sprintf(msg)
                 }
             }
-        } else if (get_variable_class(modeldata, v, "numeric")) {
+        } else if (get_variable_class(mfx, v, "numeric")) {
             if (calling_function == "comparisons") {
                 # For comparisons(), the string shortcuts are processed in contrast_data_* functions because we need fancy labels.
                 # Eventually it would be nice to consolidate, but that's a lot of work.
@@ -389,8 +393,8 @@ add_functions_and_labels <- function(predictors, comparison_config, mfx) {
 
     for (v in names(predictors)) {
         if (
-            get_variable_class(modeldata, v, "numeric") &&
-                !get_variable_class(modeldata, v, "binary")
+            get_variable_class(mfx, v, "numeric") &&
+                !get_variable_class(mfx, v, "binary")
         ) {
             fun <- comparison_config$fun_numeric
             lab <- comparison_config$lab_numeric
@@ -487,13 +491,13 @@ add_variables <- function(
     if (mfx@calling_function == "predictions") {
         modeldata <- mfx@modeldata
         predictors <- add_prediction_functions(predictors, modeldata)
-        predictors <- add_numeric_shortcuts(predictors, modeldata)
+        predictors <- add_numeric_shortcuts(predictors, mfx)
     }
 
     # Set defaults and validate
     modeldata <- mfx@modeldata
-    predictors <- add_default_values(predictors, modeldata, mfx@calling_function)
-    predictors <- sanitize_predictor_specs(predictors, mfx, mfx@calling_function)
+    predictors <- add_default_values(predictors, mfx)
+    predictors <- sanitize_predictor_specs(predictors, mfx)
 
     # Configure comparison functions and labels
     comparison_config <- get_comparison_functions(mfx)

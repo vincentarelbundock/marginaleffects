@@ -52,13 +52,13 @@ get_comparisons_data <- function(
         args <- append(args, list(...))
 
         # logical and character before factor used to be important; but I don't think so anymore
-        if (get_variable_class(modeldata, v$name, "logical")) {
+        if (get_variable_class(mfx, v$name, "logical")) {
             fun <- get_comparisons_data_logical
-        } else if (get_variable_class(modeldata, v$name, "character")) {
+        } else if (get_variable_class(mfx, v$name, "character")) {
             fun <- get_comparisons_data_character
-        } else if (get_variable_class(modeldata, v$name, "categorical")) {
+        } else if (get_variable_class(mfx, v$name, "categorical")) {
             fun <- get_comparisons_data_factor
-        } else if (get_variable_class(modeldata, v$name, "numeric")) {
+        } else if (get_variable_class(mfx, v$name, "numeric")) {
             fun <- get_comparisons_data_numeric
         } else {
             msg <- sprintf(

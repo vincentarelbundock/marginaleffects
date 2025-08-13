@@ -63,6 +63,7 @@ setClass(
         numderiv = "list",
         type = "ANY",
         variables = "list",
+        variable_class = "character",
         variable_names_response = "characterOrNULL",
         vcov_model = "ANY",
         wts = "ANY"
@@ -108,6 +109,10 @@ new_marginaleffects_internal <- function(
         modeldata <- get_modeldata(model, additional_variables = TRUE)
     }
 
+    modeldata <- set_variable_class(modeldata, model = model)
+
+    variable_class <- attr(modeldata, "marginaleffects_variable_class")
+
     variable_names_response <- hush(unlist(
         insight::find_response(model, combine = TRUE, component = "all"),
         use.names = FALSE
@@ -138,6 +143,7 @@ new_marginaleffects_internal <- function(
         numderiv = numderiv,
         type = type,
         variables = variables,
+        variable_class = variable_class,
         variable_names_response = variable_names_response,
         vcov_model = vcov_model,
         wts = wts

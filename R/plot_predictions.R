@@ -67,8 +67,7 @@ plot_predictions <- function(
     rug = FALSE,
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
-    ...
-) {
+    ...) {
     checkmate::assert_number(points, lower = 0, upper = 1)
 
     # init
@@ -196,10 +195,10 @@ plot_predictions <- function(
         v_facet_1 = v_facet_1,
         v_facet_2 = v_facet_2,
         points = points,
-        modeldata = mfx@modeldata,
         dv = dv,
         rug = rug,
-        gray = gray
+        gray = gray,
+        mfx = mfx
     )
 
     p <- p +

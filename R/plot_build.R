@@ -50,13 +50,15 @@ plot_build <- function(
     v_facet_1 = NULL,
     v_facet_2 = NULL,
     dv = NULL,
-    modeldata = NULL,
     points = 0,
     rug = FALSE,
-    gray = FALSE
+    gray = FALSE,
+    mfx = NULL
 ) {
     checkmate::assert_flag(rug)
     checkmate::assert_flag(gray)
+
+    modeldata <- mfx@modeldata
 
     # create index before building ggplot to make sure it is available
     dat$marginaleffects_term_index <- get_unique_index(dat, term_only = TRUE)
@@ -66,10 +68,10 @@ plot_build <- function(
 
     if (
         points > 0 &&
-            !get_variable_class(modeldata, v_x, "categorical") &&
-            !get_variable_class(modeldata, dv, "categorical")
+            !get_variable_class(mfx, v_x, "categorical") &&
+            !get_variable_class(mfx, dv, "categorical")
     ) {
-        if (!is.null(v_color) && get_variable_class(modeldata, v_color, "categorical")) {
+        if (!is.null(v_color) && get_variable_class(mfx, v_color, "categorical")) {
             if (isTRUE(gray)) {
                 p <- p +
                     ggplot2::geom_point(
