@@ -16,7 +16,7 @@ process_imputation <- function(mfx) {
 
     if (inherits(model, "mira")) {
         modellist <- model$analyses
-    } else if (inherits(x, "amest")) {
+    } else if (inherits(model, "amest")) {
         # amest already in the right format
         modellist <- model
     } else {

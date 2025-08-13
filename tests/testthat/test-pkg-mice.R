@@ -1,9 +1,5 @@
 skip_if_not_installed("mice")
-
-suppressPackageStartupMessages({
-  library(testthat)
-  library(mice)
-})
+withr_library("mice")
 
 
 test_that("basic classes", {
@@ -109,9 +105,8 @@ test_that("Issue #1117: predictions and comparisons class on subsetted newdata",
 test_that("newdata correspondence: subset() vs dplyr::filter()", {
   skip_if_not_installed("cobalt")
   skip_if_not_installed("dplyr")
-  library(dplyr)
+  withr_library("dplyr")
   withr_rm(c("imp", "est"))
-  withr_detach("dplyr")
 
   data("lalonde_mis", package = "cobalt")
   imp <<- mice::mice(lalonde_mis, print = FALSE)

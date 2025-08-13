@@ -15,6 +15,9 @@ runnersdown: ## unhack local files to not run tests
 	git restore tests/tinytest.R
 
 
+testthat:
+	Rscript -e "pkgload::load_all();devtools::test()"
+
 testall: ## tinytest::build_install_test()
 	# Rscript -e "pkgload::load_all();cl <- parallel::makeCluster(5);tinytest::run_test_dir(cluster = cl)"
 	awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
