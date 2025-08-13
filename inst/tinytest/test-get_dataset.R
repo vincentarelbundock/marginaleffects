@@ -1,4 +1,5 @@
 source("helpers.R")
+if (!INTERNET) exit_file("INTERNET")
 
 # Test marginaleffects dataset
 dataset <- get_dataset("thornton")

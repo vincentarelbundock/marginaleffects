@@ -2,6 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 if (ON_CI) exit_file("on ci") # install and test fails on Github
+if (!EXPENSIVE) exit_file("EXPENSIVE")
 requiet("glmmTMB")
 requiet("emmeans")
 requiet("broom")
@@ -229,8 +230,7 @@ model_data <- dplyr::select(
         ),
         function(c) {
             factor(c, exclude = levels(c)[length(levels(c))])
-        }
-    ) |>
+        }) |>
     # need to make these ordered factors for BRMS
     transform(
         education = ordered(education),

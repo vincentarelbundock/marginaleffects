@@ -17,8 +17,7 @@ get_predict.rms <- function(
     model,
     newdata = insight::get_data(model),
     type = NULL,
-    ...
-) {
+    ...) {
     if (is.null(type)) {
         type <- sanitize_type(model, type, calling_function = "predictions")
     }

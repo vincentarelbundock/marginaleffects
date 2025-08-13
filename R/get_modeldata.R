@@ -3,25 +3,15 @@ get_modeldata <- function(
     additional_variables = FALSE,
     modeldata = NULL,
     wts = FALSE,
-    ...
-) {
+    ...) {
     # mice
     if (inherits(model, c("mira", "amest"))) {
         return(modeldata)
     }
 
-    # tidymodels: always require `newdata`, because sometimes there needs to be
-    # some pre-processing, and we want to rely on the workflow to do that.
-    # workflows are triggered on `stats::predict()`
+    # tidymodels : do not extract anything. It's too tricky and inconsistent.
+    # NULL forces the user to supply their own `newdata`
     if (inherits(model, c("model_fit", "workflow"))) {
-        if ("fit" %in% names(model)) {
-            tmp <- try(get_modeldata(model$fit), silent = TRUE)
-            if (inherits(tmp, "data.frame")) {
-                out <- unpack_matrix_1col(tmp)
-                data.table::setDT(out)
-                return(out)
-            }
-        }
         return(NULL)
     }
 
@@ -130,7 +120,9 @@ get_modeldata <- function(
 
 
 set_variable_class <- function(modeldata, model = NULL) {
-    if (is.null(modeldata)) return(modeldata)
+    if (is.null(modeldata)) {
+        return(modeldata)
+    }
 
     # this can be costly on large datasets, when only a portion of
     # variables are used in the model
@@ -147,7 +139,9 @@ set_variable_class <- function(modeldata, model = NULL) {
 
     cl <- NULL
     for (col in variables) {
-        if (is.logical(out[[col]])) {
+        if (is.matrix(out[[col]])) {
+            cl[col] <- "matrix"
+        } else if (is.logical(out[[col]])) {
             cl[col] <- "logical"
         } else if (is.character(out[[col]])) {
             cl[col] <- "character"
@@ -243,7 +237,7 @@ get_variable_class <- function(newdata, variable = NULL, compare = NULL) {
     if (is.null(compare) && is.null(variable)) {
         out <- cl
     } else if (is.null(compare)) {
-        out <- cl[variable]
+        out <- if (variable %in% names(cl)) cl[variable] else NA
     } else if (is.null(variable)) {
         if (isTRUE(compare == "categorical")) {
             out <- cl[
@@ -254,11 +248,15 @@ get_variable_class <- function(newdata, variable = NULL, compare = NULL) {
             out <- cl[cl %in% compare]
         }
     } else {
-        if (isTRUE(compare == "categorical")) {
-            out <- cl[variable] %in%
-                c("factor", "character", "logical", "strata", "cluster", "binary")
+        if (variable %in% names(cl)) {
+            if (isTRUE(compare == "categorical")) {
+                out <- cl[variable] %in%
+                    c("factor", "character", "logical", "strata", "cluster", "binary")
+            } else {
+                out <- cl[variable] %in% compare
+            }
         } else {
-            out <- cl[variable] %in% compare
+            out <- FALSE
         }
     }
 

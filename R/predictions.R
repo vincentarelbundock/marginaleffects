@@ -202,6 +202,10 @@ predictions <- function(
         )
     }
 
+    # newdata
+    scall <- rlang::enquo(newdata)
+    mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, byfun = byfun)
+
     # inferences() dispatch
     methods <- c("rsample", "boot", "fwb", "simulation")
     if (isTRUE(checkmate::check_choice(vcov, methods))) {
@@ -220,9 +224,6 @@ predictions <- function(
         return(out)
     }
 
-    # newdata
-    scall <- rlang::enquo(newdata)
-    mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, byfun = byfun)
 
     # sanity checks
     mfx <- add_numderiv(mfx, numderiv)

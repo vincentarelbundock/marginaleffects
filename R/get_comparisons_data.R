@@ -2,8 +2,7 @@ get_comparisons_data <- function(
     mfx,
     variables,
     cross,
-    ...
-) {
+    ...) {
     newdata <- mfx@newdata
     model <- mfx@model
     modeldata <- mfx@modeldata

@@ -240,8 +240,7 @@ dedup_newdata <- function(
     wts,
     comparison = "difference",
     cross = FALSE,
-    byfun = NULL
-) {
+    byfun = NULL) {
     # init
     model <- mfx@model
 
@@ -325,8 +324,7 @@ add_newdata <- function(
     wts = FALSE,
     cross = NULL,
     comparison = NULL,
-    byfun = NULL
-) {
+    byfun = NULL) {
     # Step 1: Handle quoted calls to datagrid, subset, etc.
     newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
 
@@ -368,6 +366,14 @@ add_newdata <- function(
 
     # Store processed newdata in the mfx object
     mfx@newdata <- newdata
+
+    # if `modeldata` is unavailable, we default to `newdata`
+    flag1 <- isTRUE(checkmate::check_data_frame(mfx@modeldata, min.rows = 1))
+    flag2 <- isTRUE(checkmate::check_data_frame(newdata, min.rows = 1))
+    if (!flag1 && flag2) {
+        newdata <- set_variable_class(newdata, model = mfx@model)
+        mfx@modeldata <- newdata
+    }
 
     # Return the updated mfx object
     return(mfx)

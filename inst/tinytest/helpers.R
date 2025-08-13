@@ -16,7 +16,8 @@ requiet("marginaleffects")
 requiet("tinytest")
 requiet("tinysnapshot")
 
-EXPENSIVE <- FALSE
+EXPENSIVE <- TRUE
+INTERNET <- TRUE
 
 options("tinysnapshot_os" = "Linux")
 options("tinysnapshot_device" = "svglite")
@@ -27,6 +28,9 @@ options(marginaleffects_numDeriv = NULL)
 
 if (dir.exists("~/repos/Rdatasets/")) {
     options("marginaleffects_rdataset_path" = "~/repos/Rdatasets/")
+}
+if (dir.exists("~/repos/marginaleffectscom/")) {
+    options("marginaleffects_website_path" = "~/repos/marginaleffectscom/")
 }
 
 if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {

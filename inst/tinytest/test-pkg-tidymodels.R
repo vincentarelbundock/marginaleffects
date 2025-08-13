@@ -17,7 +17,8 @@ mod <- set_engine(logistic_reg(), "glm") |>
     fit(large_penguin ~ bill_length_mm + flipper_length_mm + species, data = dat)
 
 # inferences() does not support tidymodels
-expect_error(predictions(mod, type = "prob") |> inferences(method = "conformal_cv+"), "does not support")
+expect_error(
+    predictions(mod, type = "prob", newdata = dat) |> inferences(method = "conformal_cv+"), "does not support")
 
 p <- predictions(mod, newdata = dat, type = "prob")
 expect_inherits(p, "predictions")
@@ -44,7 +45,9 @@ p <- predictions(mod, newdata = bikes, type = "numeric") |>
 expect_inherits(p, "predictions")
 expect_true("std.error" %in% colnames(p))
 
-mfx <- avg_slopes(mod, variables = c("temp", "season", "weather"), newdata = bikes, type = "numeric") |>
+mfx <- avg_slopes(mod,
+    variables = c("temp", "season", "weather"),
+    newdata = bikes, type = "numeric") |>
     suppressWarnings()
 expect_inherits(mfx, "marginaleffects")
 expect_true(nrow(mfx) > 0)
@@ -68,13 +71,13 @@ expect_false("std.error" %in% colnames(mfx))
 fit <- linear_reg() |>
     set_engine("lm") |>
     fit(hp ~ am * vs, data = mtcars)
-p <- plot_predictions(fit, condition = "am", draw = FALSE)
+p <- plot_predictions(fit, condition = "am", draw = FALSE, newdata = mtcars)
 expect_inherits(p, "data.frame")
 
-p <- plot_comparisons(fit, variables = "am", condition = "vs", draw = FALSE)
+p <- plot_comparisons(fit, variables = "am", condition = "vs", draw = FALSE, newdata = mtcars)
 expect_inherits(p, "data.frame")
 
-p <- plot_comparisons(fit, variables = "am", condition = "vs", draw = FALSE)
+p <- plot_comparisons(fit, variables = "am", condition = "vs", draw = FALSE, newdata = mtcars)
 expect_inherits(p, "data.frame")
 
 

@@ -247,6 +247,9 @@ comparisons <- function(
         )
     }
 
+    scall <- rlang::enquo(newdata)
+    mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, cross = cross, comparison = comparison)
+
     # sanity checks
     dots <- list(...)
     sanity_dots(mfx@model, ...)
@@ -267,8 +270,6 @@ comparisons <- function(
     }
 
     # very early, before any use of newdata
-    scall <- rlang::enquo(newdata)
-    mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, cross = cross, comparison = comparison)
     newdata <- mfx@newdata
 
     # misc

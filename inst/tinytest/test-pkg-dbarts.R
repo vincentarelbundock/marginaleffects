@@ -3,8 +3,8 @@ requiet("dbarts")
 requiet("modeldata")
 requiet("marginaleffects")
 
-dat <- get_dataset("penguins", "palmerpenguins")
-dat <- na.omit(dat)
+dat <<- get_dataset("penguins", "palmerpenguins")
+dat <<- na.omit(dat)
 
 # matrix interface not supported
 y <- as.vector(dat$bill_length_mm)
@@ -28,13 +28,15 @@ mod <- dbarts::bart2(
 
 p <- predictions(mod, by = "species", newdata = dat)
 expect_inherits(p, "predictions")
-p <- avg_comparisons(mod, variables = colnames(dat), newdata = dat)
+expect_warning(
+    p <- avg_comparisons(mod, variables = colnames(dat), newdata = dat),
+    "These variables were not found")
 expect_inherits(p, "comparisons")
 
 
 # Issue 940: Indexing hell
 options(marginaleffects_posterior_center = mean)
-dat <- get_dataset("lalonde", "MatchIt")
+dat <<- get_dataset("lalonde", "MatchIt")
 
 fit <- dbarts::bart2(
     re78 ~ treat + age + educ + race + married + nodegree + re74 + re75,

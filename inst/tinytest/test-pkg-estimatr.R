@@ -6,8 +6,8 @@ requiet("emmeans")
 requiet("margins")
 requiet("broom")
 
-Km <- get_dataset("Kmenta", "sem")
-dat <- transform(mtcars, cyl = factor(cyl))
+Km <<- get_dataset("Kmenta", "sem")
+dat <<- transform(mtcars, cyl = factor(cyl))
 
 # lm_lin: no validity
 mod <- lm_lin(mpg ~ am, ~ hp + cyl, data = dat)

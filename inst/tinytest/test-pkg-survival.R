@@ -4,6 +4,7 @@ requiet("survival")
 requiet("emmeans")
 requiet("broom")
 requiet("splines")
+if (!EXPENSIVE) exit_file("EXPENSIVE")
 
 
 # Issue #911: survreg support

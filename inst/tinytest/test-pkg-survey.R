@@ -38,8 +38,7 @@ expect_inherits(p, "data.frame")
 
 
 # Issue #1161
-dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/AER/SmokeBan.csv"
-dat <- read.csv(dat, na.strings = c("*", ""))
+dat <- get_dataset("SmokeBan", "AER")
 dat$weights <- runif(n = nrow(dat), min = 1, max = 100)
 dat$smoker <- factor(dat$smoker)
 design1 = svydesign(ids = ~1, weights = ~weights, data = dat)

@@ -11,7 +11,10 @@ model <- rms::lrm(am ~ mpg, mtcars)
 void <- capture.output({
     expect_slopes(model, type = "lp", n_unique = 1)
 })
-mfx <- slopes(model, newdata = data.frame(mpg = 30), type = "lp", eps = 1 / 1000 * diff(range(mtcars$mpg)))
+mfx <- slopes(model,
+    newdata = data.frame(mpg = 30),
+    type = "lp",
+    eps = 1 / 1000 * diff(range(mtcars$mpg)))
 em <- emtrends(model, ~mpg, "mpg", at = list(mpg = 30))
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$mpg.trend)

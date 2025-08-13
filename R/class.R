@@ -75,14 +75,8 @@ new_marginaleffects_internal <- function(
     type = NULL,
     variables = list(),
     vcov_model = NULL,
-    wts = NULL
-) {
-    modeldata <- hush(insight::get_data(
-        model,
-        additional_variables = TRUE,
-        verbose = FALSE
-    ))
-    modeldata <- set_variable_class(modeldata, model = model)
+    wts = NULL) {
+    modeldata <- get_modeldata(model, additional_variables = TRUE)
 
     variable_names_response <- hush(unlist(
         insight::find_response(model, combine = TRUE, component = "all"),
