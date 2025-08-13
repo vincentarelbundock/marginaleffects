@@ -17,9 +17,11 @@ get_predict.rms <- function(
     model,
     newdata = insight::get_data(model),
     type = NULL,
+    mfx = NULL,
     ...) {
     if (is.null(type)) {
-        type <- sanitize_type(model, type, calling_function = "predictions")
+        calling_function <- if (!is.null(mfx)) mfx@calling_function else "predictions"
+        type <- sanitize_type(model, type, calling_function = calling_function)
     }
     if (inherits(newdata, "tbl_df")) {
         warning("Converting `newdata` from tibble to data.frame.", call. = FALSE)

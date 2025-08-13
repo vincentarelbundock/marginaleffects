@@ -194,7 +194,7 @@ predictions <- function(
     if (inherits(model, "marginaleffects_internal")) {
         mfx <- model
     } else {
-        call <- construct_call(model, "comparisons")
+        call <- construct_call(model, "predictions")
         model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
         mfx <- new_marginaleffects_internal(
             call = call,
@@ -238,7 +238,7 @@ predictions <- function(
         type = type,
         by = by,
         hypothesis = hypothesis,
-        calling_function = "predictions"
+        calling_function = mfx@calling_function
     )
     if (identical(mfx@type, "invlink(link)")) {
         # backtransform: yes
@@ -268,8 +268,7 @@ predictions <- function(
         )
         mfx <- add_variables(
             variables = variables,
-            mfx = mfx,
-            calling_function = "predictions"
+            mfx = mfx
         )
         for (v in mfx@variables$conditional) {
             args[[v$name]] <- v$value
@@ -377,7 +376,7 @@ predictions <- function(
                 hypothesis = mfx@hypothesis,
                 by = by,
                 byfun = byfun,
-                calling_function = "predictions"
+                calling_function = mfx@calling_function
             )
             args <- utils::modifyList(args, dots)
             se <- do.call(get_se_delta, args)

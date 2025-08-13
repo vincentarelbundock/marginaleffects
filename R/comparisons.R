@@ -285,7 +285,7 @@ comparisons <- function(
     mfx@type <- sanitize_type(
         model = mfx@model,
         type = type,
-        calling_function = "comparisons"
+        calling_function = mfx@calling_function
     )
     sanity_comparison(comparison)
 
@@ -371,7 +371,7 @@ comparisons <- function(
             cross = cross,
             numderiv = numderiv,
             comparison = comparison,
-            calling_function = "comparisons"
+            calling_function = mfx@calling_function
         )
         args <- utils::modifyList(args, dots)
         se <- do.call("get_se_delta", args)

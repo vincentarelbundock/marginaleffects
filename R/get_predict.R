@@ -7,7 +7,7 @@
 #' @inheritParams slopes
 #' @keywords internal
 #' @export
-get_predict <- function(model, newdata, type, ...) {
+get_predict <- function(model, newdata, type, mfx = NULL, ...) {
     UseMethod("get_predict", model)
 }
 
@@ -18,6 +18,7 @@ get_predict.default <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
+    mfx = NULL,
     ...
 ) {
     dots <- list(...)
@@ -34,7 +35,8 @@ get_predict.default <- function(
         "internal_call",
         "draw",
         "modeldata",
-        "flag"
+        "flag",
+        "mfx"
     )
     dots <- dots[setdiff(names(dots), unused)]
 

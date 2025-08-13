@@ -41,9 +41,11 @@ get_predict.svyolr <- function(
     model,
     newdata = insight::get_data(model),
     type = "probs",
+    mfx = NULL,
     ...
 ) {
-    type <- sanitize_type(model, type, calling_function = "predictions")
+    calling_function <- if (!is.null(mfx)) mfx@calling_function else "predictions"
+    type <- sanitize_type(model, type, calling_function = calling_function)
 
     # hack: 1-row newdata returns a vector, so get_predict.default does not learn about groups
     if (nrow(newdata) == 1) {
@@ -71,6 +73,7 @@ get_predict.svyglm <- function(
     newdata = insight::get_data(model),
     type = "response",
     se.fit = FALSE,
+    mfx = NULL,
     ...
 ) {
     estimate <- stats::predict(

@@ -14,8 +14,7 @@ sanitize_model_specific.default <- function(
     model,
     vcov = NULL,
     calling_function = "marginaleffects",
-    ...
-) {
+    ...) {
     return(model)
 }
 
@@ -163,11 +162,7 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
 # Function that operates on mfx objects
 sanitize_model <- function(model, call, newdata = NULL, vcov = NULL, by = FALSE, ...) {
     # Extract calling_function from mfx@call
-    calling_function <- if (!is.null(call) && length(call) > 0) {
-        as.character(call[[1]])[1] # Take only the first element (function name)
-    } else {
-        NULL
-    }
+    calling_function <- extract_calling_function(call)
 
     # Sanitize the model
     model <- sanitize_model_specific(

@@ -46,9 +46,11 @@ get_predict.multinom <- function(
     model,
     newdata = insight::get_data(model),
     type = "probs",
+    mfx = NULL,
     ...
 ) {
-    type <- sanitize_type(model, type, calling_function = "predictions")
+    calling_function <- if (!is.null(mfx)) mfx@calling_function else "predictions"
+    type <- sanitize_type(model, type, calling_function = calling_function)
 
     is_latent <- is_mclogit <- is_nnet <- FALSE
     if (isTRUE(type == "latent") && inherits(model, c("mblogit", "mclogit"))) {

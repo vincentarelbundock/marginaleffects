@@ -60,13 +60,31 @@
 \alias{get_predict.tobit1}
 \title{Get predicted values from a model object (internal function)}
 \usage{
-get_predict(model, newdata, type, ...)
+get_predict(model, newdata, type, mfx = NULL, ...)
 
-\method{get_predict}{default}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{default}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  mfx = NULL,
+  ...
+)
 
-\method{get_predict}{polr}(model, newdata = insight::get_data(model), type = "probs", ...)
+\method{get_predict}{polr}(
+  model,
+  newdata = insight::get_data(model),
+  type = "probs",
+  mfx = NULL,
+  ...
+)
 
-\method{get_predict}{glmmPQL}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{glmmPQL}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  mfx = NULL,
+  ...
+)
 
 \method{get_predict}{MCMCglmm}(model, newdata, type = "response", ndraws = 1000, ...)
 
@@ -78,11 +96,29 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{bife}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{biglm}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{biglm}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  mfx = NULL,
+  ...
+)
 
-\method{get_predict}{multinom}(model, newdata = insight::get_data(model), type = "probs", ...)
+\method{get_predict}{multinom}(
+  model,
+  newdata = insight::get_data(model),
+  type = "probs",
+  mfx = NULL,
+  ...
+)
 
-\method{get_predict}{brmultinom}(model, newdata = insight::get_data(model), type = "probs", ...)
+\method{get_predict}{brmultinom}(
+  model,
+  newdata = insight::get_data(model),
+  type = "probs",
+  mfx = NULL,
+  ...
+)
 
 \method{get_predict}{brmsfit}(model, newdata = insight::get_data(model), type = "response", ...)
 
@@ -90,7 +126,13 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{bart}(model, newdata = NULL, ...)
 
-\method{get_predict}{fixest}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{fixest}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  mfx = NULL,
+  ...
+)
 
 \method{get_predict}{flexsurvreg}(model, newdata, type, ...)
 
@@ -124,13 +166,37 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{rq}(model, newdata = insight::get_data(model), type = NULL, ...)
 
-\method{get_predict}{rms}(model, newdata = insight::get_data(model), type = NULL, ...)
+\method{get_predict}{rms}(
+  model,
+  newdata = insight::get_data(model),
+  type = NULL,
+  mfx = NULL,
+  ...
+)
 
-\method{get_predict}{orm}(model, newdata = insight::get_data(model), type = NULL, ...)
+\method{get_predict}{orm}(
+  model,
+  newdata = insight::get_data(model),
+  type = NULL,
+  mfx = NULL,
+  ...
+)
 
-\method{get_predict}{lrm}(model, newdata = insight::get_data(model), type = NULL, ...)
+\method{get_predict}{lrm}(
+  model,
+  newdata = insight::get_data(model),
+  type = NULL,
+  mfx = NULL,
+  ...
+)
 
-\method{get_predict}{ols}(model, newdata = insight::get_data(model), type = NULL, ...)
+\method{get_predict}{ols}(
+  model,
+  newdata = insight::get_data(model),
+  type = NULL,
+  mfx = NULL,
+  ...
+)
 
 \method{get_predict}{rlmerMod}(model, newdata = insight::get_data(model), type = "response", ...)
 
@@ -148,13 +214,20 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{glm}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{svyolr}(model, newdata = insight::get_data(model), type = "probs", ...)
+\method{get_predict}{svyolr}(
+  model,
+  newdata = insight::get_data(model),
+  type = "probs",
+  mfx = NULL,
+  ...
+)
 
 \method{get_predict}{svyglm}(
   model,
   newdata = insight::get_data(model),
   type = "response",
   se.fit = FALSE,
+  mfx = NULL,
   ...
 )
 

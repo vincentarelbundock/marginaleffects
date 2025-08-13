@@ -256,7 +256,7 @@ hypotheses <- function(
             hypothesis = mfx@hypothesis,
             FUN = get_hypotheses,
             hypothesis_is_formula = hypothesis_is_formula,
-            calling_function = "hypotheses"
+            calling_function = mfx@calling_function
         )
         if (...length() > 0) {
             args <- utils::modifyList(args, list(...))

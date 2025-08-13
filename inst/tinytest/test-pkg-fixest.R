@@ -275,8 +275,7 @@ expect_inherits(res, "slopes") # should be slopes but can't figure out inference
 
 # Issue #1487: uncertainty in fixed-effects parameters
 m <- feols(Ozone ~ Wind | Month, airquality, vcov = "iid")
-exit_file("TODO: reinstate this important warning")
-expect_error(predictions(m), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
+expect_error(predictions(m), pattern = "uncertainty in fixed-effects parameters")
 expect_false(ignore(expect_error)(avg_comparisons(m)))
 expect_false(ignore(expect_error)(avg_slopes(m)))
 expect_false(ignore(expect_error)(predictions(m, vcov = FALSE)))

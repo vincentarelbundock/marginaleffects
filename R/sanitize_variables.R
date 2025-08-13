@@ -471,7 +471,6 @@ add_variables <- function(
     comparison = NULL,
     by = NULL,
     cross = FALSE,
-    calling_function = "comparisons",
     eps = NULL) {
     # Input validation
     checkmate::assert(
@@ -482,11 +481,11 @@ add_variables <- function(
     )
 
     # Extract and normalize predictors
-    predictors <- get_predictors(variables, mfx, calling_function)
+    predictors <- get_predictors(variables, mfx, mfx@calling_function)
     predictors <- sanitize_predictor_container(predictors)
 
     # Handle predictions-specific processing
-    if (calling_function == "predictions") {
+    if (mfx@calling_function == "predictions") {
         modeldata <- mfx@modeldata
         predictors <- add_prediction_functions(predictors, modeldata)
         predictors <- add_numeric_shortcuts(predictors, modeldata)
@@ -494,8 +493,8 @@ add_variables <- function(
 
     # Set defaults and validate
     modeldata <- mfx@modeldata
-    predictors <- add_default_values(predictors, modeldata, calling_function)
-    predictors <- sanitize_predictor_specs(predictors, mfx, calling_function)
+    predictors <- add_default_values(predictors, modeldata, mfx@calling_function)
+    predictors <- sanitize_predictor_specs(predictors, mfx, mfx@calling_function)
 
     # Configure comparison functions and labels
     comparison_config <- get_comparison_functions(comparison, by, mfx)
@@ -505,7 +504,7 @@ add_variables <- function(
     predictors <- add_epsilon_values(predictors, mfx, eps)
 
     # Final sanitization
-    predictors <- sanitize_internal_variables(predictors, mfx, mfx@model, calling_function)
+    predictors <- sanitize_internal_variables(predictors, mfx, mfx@model, mfx@calling_function)
 
     # Get weight variables
     others <- get_weight_variables(mfx)

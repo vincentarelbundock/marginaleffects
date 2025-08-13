@@ -20,6 +20,7 @@ get_predictions <- function(
         model,
         newdata = newdata,
         type = type,
+        mfx = mfx,
         ...
     ))
 

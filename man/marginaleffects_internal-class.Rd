@@ -21,6 +21,8 @@ functions to simplify the function signatures and reduce redundant argument pass
 
 \item{\code{call}}{The original function call}
 
+\item{\code{calling_function}}{The name of the calling function (comparisons, predictions, hypotheses)}
+
 \item{\code{df}}{The degrees of freedom}
 
 \item{\code{wts}}{The weights specification}

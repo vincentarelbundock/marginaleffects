@@ -4,9 +4,11 @@ get_predict.biglm <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
+    mfx = NULL,
     ...
 ) {
-    type <- sanitize_type(model, type, calling_function = "predictions")
+    calling_function <- if (!is.null(mfx)) mfx@calling_function else "predictions"
+    type <- sanitize_type(model, type, calling_function = calling_function)
     out <- stats::predict(
         model,
         newdata = newdata,
