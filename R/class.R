@@ -63,7 +63,7 @@ setClass(
         numderiv = "list",
         type = "ANY",
         variables = "list",
-        variable_class = "character",
+        variable_class = "characterOrNULL",
         variable_names_response = "characterOrNULL",
         vcov_model = "ANY",
         wts = "ANY"

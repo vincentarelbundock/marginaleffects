@@ -5,12 +5,12 @@ get_comparisons_data_factor <- function(
     cross,
     first_cross,
     modeldata,
-    ...
-) {
+    mfx,
+    ...) {
     if (is.factor(newdata[[variable$name]])) {
         levs <- levels(newdata[[variable$name]])
         convert_to_factor <- TRUE
-    } else if (get_variable_class(newdata, variable$name, "binary")) {
+    } else if (get_variable_class(mfx, variable$name, "binary")) {
         levs <- variable$value
         convert_to_factor <- FALSE
     } else {
@@ -198,8 +198,7 @@ contrast_categories_processing <- function(
     levs_idx,
     levs,
     variable,
-    newdata
-) {
+    newdata) {
     # internal option applied to the first of several contrasts when
     # interaction=TRUE to avoid duplication. when only the first contrast
     # flips, we get a negative sign, but if first increases and second
@@ -224,7 +223,8 @@ contrast_categories_processing <- function(
         !"marginaleffects_contrast_label" %in% colnames(levs_idx) ||
             all(levs_idx$marginaleffects_contrast_label == "custom")
     ) {
-        levs_idx[,
+        levs_idx[
+            ,
             "marginaleffects_contrast_label" := paste0(
                 marginaleffects_contrast_hi,
                 ", ",

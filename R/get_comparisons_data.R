@@ -47,7 +47,8 @@ get_comparisons_data <- function(
             variable = v,
             cross = cross,
             first_cross = identical(v$name, first_cross),
-            modeldata = modeldata
+            modeldata = modeldata,
+            mfx = mfx
         )
         args <- append(args, list(...))
 

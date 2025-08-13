@@ -3,8 +3,7 @@ get_comparisons_data_numeric <- function(
     newdata,
     variable,
     modeldata,
-    ...
-) {
+    ...) {
     h <- variable[["eps"]]
 
     s <- m <- NA
@@ -16,7 +15,9 @@ get_comparisons_data_numeric <- function(
     xmd <- modeldata[[variable$name]]
 
     make_label <- function(lab, val) {
-        if (identical(lab, "custom")) return(lab)
+        if (identical(lab, "custom")) {
+            return(lab)
+        }
         args <- append(list(lab), as.list(val))
         out <- tryCatch(
             do.call("sprintf", args),

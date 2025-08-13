@@ -1,6 +1,7 @@
 source("helpers.R")
 # https://stackoverflow.com/questions/72533745/loading-logistf-breaks-mcmcglmm
 if (!EXPENSIVE) exit_file("EXPENSIVE")
+exit_file("TODO: set_class_variable()")
 requiet("MCMCglmm")
 
 mod <- MCMCglmm(mpg ~ hp, random = ~carb, data = mtcars, verbose = FALSE)
