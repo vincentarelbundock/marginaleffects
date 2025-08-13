@@ -155,7 +155,7 @@ add_default_values <- function(predictors, mfx) {
                 if (calling_function == "comparisons") {
                     predictors[[v]] <- 1
                 } else if (calling_function == "predictions") {
-                    v_unique <- unique(modeldata[[v]])
+                    v_unique <- unique(mfx@modeldata[[v]])
                     if (length(v_unique) < 6) {
                         predictors[[v]] <- v_unique
                     } else {
