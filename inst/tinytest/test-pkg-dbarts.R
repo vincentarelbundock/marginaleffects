@@ -30,7 +30,7 @@ p <- predictions(mod, by = "species", newdata = dat)
 expect_inherits(p, "predictions")
 expect_warning(
     p <- avg_comparisons(mod, variables = colnames(dat), newdata = dat),
-    "These variables were not found")
+    pattern = "Variable\\(s\\) not found")
 expect_inherits(p, "comparisons")
 
 

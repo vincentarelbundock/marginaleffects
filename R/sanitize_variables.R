@@ -22,6 +22,13 @@ get_predictors <- function(variables, mfx, calling_function) {
     } else {
         # we don't want group ids in multi-level models and other weirdness
         predictors <- insight::find_predictors(mfx@model)
+
+        # mhurdle names variables weirdly
+        if (inherits(model, "mhurdle")) {
+            predictors <- unlist(predictors)
+            predictors <- list(conditional = predictors)
+        }
+
         known <- c("fixed", "conditional", "zero_inflated", "scale", "nonlinear")
         if (any(known %in% names(predictors))) {
             predictors <- predictors[known]
