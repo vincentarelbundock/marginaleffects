@@ -1,11 +1,23 @@
 get_ci <- function(x, mfx) {
-    conf_level <- mfx@conf_level
-    df <- mfx@df
-    draws <- mfx@draws
-    hypothesis_null <- mfx@hypothesis_null
-    hypothesis_direction <- mfx@hypothesis_direction
-    model <- mfx@model
+    get_ci_internal(
+        x = x,
+        conf_level = mfx@conf_level,
+        df = mfx@df,
+        draws = mfx@draws,
+        hypothesis_null = mfx@hypothesis_null,
+        hypothesis_direction = mfx@hypothesis_direction,
+        model = mfx@model
+    )
+}
 
+get_ci_internal <- function(
+    x,
+    conf_level,
+    df,
+    draws,
+    hypothesis_null,
+    hypothesis_direction,
+    model) {
     checkmate::assert_number(hypothesis_null)
 
     if (!is.null(draws)) {
@@ -27,13 +39,9 @@ get_ci <- function(x, mfx) {
     if (!"df" %in% colnames(x)) {
         if (identical(df, Inf)) {
             normal <- TRUE
-
-            # 1 or matching length
         } else if (length(df) %in% c(1, nrow(x))) {
             x[["df"]] <- df
             normal <- FALSE
-
-            # multiple, such as rbind() contrast terms
         } else if (length(df) < nrow(x) && "rowid" %in% colnames(x)) {
             rowids <- unique(x$rowid)
             if (length(rowids) == length(df)) {
@@ -42,8 +50,6 @@ get_ci <- function(x, mfx) {
             } else {
                 stop_sprintf("The degrees of freedom argument was ignored.")
             }
-
-            # mismatch
         } else {
             stop(
                 "Please report this error with a fully reproducible example at: https://github.com/vincentarelbundock/marginaleffects"
@@ -58,11 +64,10 @@ get_ci <- function(x, mfx) {
     if (z_overwrite) {
         cdf <- function(k) {
             if (normal) {
-                out <- stats::pnorm(k)
+                stats::pnorm(k)
             } else {
-                out <- stats::pt(k, df = x[["df"]])
+                stats::pt(k, df = x[["df"]])
             }
-            return(out)
         }
         x[["statistic"]] <- (x[["estimate"]] - hypothesis_null) / x[["std.error"]]
         if (hypothesis_direction == "=") {
@@ -85,12 +90,11 @@ get_ci <- function(x, mfx) {
         x[["conf.high"]] <- x[["estimate"]] + critical * x[["std.error"]]
     }
 
-    # s-value
     if ("p.value" %in% colnames(x)) {
         x$s.value <- -log2(x$p.value)
     }
 
-    return(x)
+    x
 }
 
 

@@ -1,4 +1,10 @@
 sanitize_newdata_call <- function(scall, newdata = NULL, mfx = NULL, by = NULL) {
+    # For mice objects, defer newdata processing to process_imputation()
+    if (!is.null(mfx) && inherits(mfx@model, c("mira", "amest"))) {
+        # Return the call as-is, will be processed later with actual model data
+        return(scall)
+    }
+    
     if (rlang::quo_is_call(scall)) {
         df <- FALSE
         if (grepl("^datagrid", rlang::call_name(scall))) {
@@ -37,6 +43,17 @@ sanitize_newdata_call <- function(scall, newdata = NULL, mfx = NULL, by = NULL) 
 build_newdata <- function(mfx, newdata, by) {
     model <- mfx@model
     modeldata <- mfx@modeldata
+    
+    # For mice objects, defer processing - newdata might be a call
+    if (inherits(model, c("mira", "amest"))) {
+        # Return placeholder that will be handled in process_imputation()
+        return(list(
+            "newdata" = newdata, # could be a call like subset(treat == 1)
+            "explicit" = TRUE,
+            "modeldata" = modeldata
+        ))
+    }
+    
     if (isTRUE(checkmate::check_data_frame(by))) {
         by <- setdiff(colnames(by), "by")
     } else if (isTRUE(checkmate::check_flag(by))) {
@@ -149,14 +166,17 @@ add_wts_column <- function(wts, newdata, model) {
 
 
 sanitize_newdata <- function(mfx, newdata, by, wts) {
-    checkmate::assert(
-        checkmate::check_data_frame(newdata, null.ok = TRUE),
-        checkmate::check_choice(
-            newdata,
-            choices = c("mean", "median", "tukey", "grid", "balanced")
-        ),
-        combine = "or"
-    )
+    # For mice objects, skip validation as newdata might be a deferred call
+    if (!inherits(mfx@model, c("mira", "amest"))) {
+        checkmate::assert(
+            checkmate::check_data_frame(newdata, null.ok = TRUE),
+            checkmate::check_choice(
+                newdata,
+                choices = c("mean", "median", "tukey", "grid", "balanced")
+            ),
+            combine = "or"
+        )
+    }
 
     # overwrite with processed `newdata`
     tmp <- build_newdata(
@@ -325,6 +345,13 @@ add_newdata <- function(
     cross = NULL,
     comparison = NULL,
     byfun = NULL) {
+    # For mice objects, defer all processing to process_imputation()
+    if (inherits(mfx@model, c("mira", "amest"))) {
+        # Store the raw newdata (could be a call) for later processing
+        mfx@newdata <- scall
+        return(mfx)
+    }
+    
     # Step 1: Handle quoted calls to datagrid, subset, etc.
     newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
 

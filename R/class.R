@@ -59,7 +59,7 @@ setClass(
         jacobian = "matrixOrNULL",
         model = "ANY",
         modeldata = "ANY", # TODO: lmerTest returns nfnGroupedData
-        newdata = "data.frame",
+        newdata = "ANY", # Changed from "data.frame" to handle mira deferred processing
         numderiv = "list",
         type = "ANY",
         variables = "list",
@@ -101,7 +101,12 @@ new_marginaleffects_internal <- function(
     variables = list(),
     vcov_model = NULL,
     wts = NULL) {
-    modeldata <- get_modeldata(model, additional_variables = TRUE)
+    # For mice objects, modeldata handling is deferred to process_imputation()
+    if (inherits(model, c("mira", "amest"))) {
+        modeldata <- data.frame() # placeholder - actual processing happens in process_imputation()
+    } else {
+        modeldata <- get_modeldata(model, additional_variables = TRUE)
+    }
 
     variable_names_response <- hush(unlist(
         insight::find_response(model, combine = TRUE, component = "all"),

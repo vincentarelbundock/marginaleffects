@@ -1,6 +1,5 @@
 source("helpers.R")
 requiet("mice")
-exit_file("TODO")
 
 dat <- iris
 dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA

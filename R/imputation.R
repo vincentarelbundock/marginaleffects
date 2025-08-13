@@ -22,10 +22,29 @@ process_imputation <- function(x, call_attr, marginal_means = FALSE) {
 
         # not sure why but this breaks marginal_means on "modeldata specified twice"
         if (isFALSE(marginal_means)) {
-            calltmp[["modeldata"]] <- get_modeldata(
+            modeldata_i <- get_modeldata(
                 x[[i]],
                 additional_variables = FALSE
             )
+            calltmp[["modeldata"]] <- modeldata_i
+
+            # Handle deferred newdata processing for calls like subset(treat == 1)
+            if ("newdata" %in% names(calltmp) && rlang::is_call(calltmp[["newdata"]])) {
+                newdata_call <- calltmp[["newdata"]]
+                if (rlang::call_name(newdata_call) == "subset") {
+                    # Add the model data as the 'x' argument for subset
+                    if (!"x" %in% rlang::call_args_names(newdata_call)) {
+                        newdata_call <- rlang::call_modify(newdata_call, x = modeldata_i)
+                    }
+                } else if (rlang::call_name(newdata_call) == "filter") {
+                    # Add the model data as the '.data' argument for filter
+                    if (!".data" %in% rlang::call_args_names(newdata_call)) {
+                        newdata_call <- rlang::call_modify(newdata_call, .data = modeldata_i)
+                    }
+                }
+                # Evaluate the newdata call with the individual model's data
+                calltmp[["newdata"]] <- eval(newdata_call)
+            }
         }
 
         mfx_list[[i]] <- eval.parent(calltmp)
@@ -34,7 +53,7 @@ process_imputation <- function(x, call_attr, marginal_means = FALSE) {
         }
         mfx_list[[i]]$term <- seq_len(nrow(mfx_list[[i]]))
 
-        #Needed for mice::pool() to get dfcom, even when lean = TRUE
+        # Needed for mice::pool() to get dfcom, even when lean = TRUE
         attr(mfx_list[[i]], "model") <- x[[i]]
 
         class(mfx_list[[i]]) <- c("marginaleffects_mids", class(mfx_list[[i]]))
@@ -52,12 +71,13 @@ process_imputation <- function(x, call_attr, marginal_means = FALSE) {
     }
     out$std.error <- sqrt(mipool$pooled$t)
 
-    out <- get_ci(
-        out,
-        vcov = NULL,
-        conf_level = call_attr[["conf_level"]],
-        df = mipool$pooled$df
-    )
+    # Extract confidence level with fallback
+    conf_level <- call_attr[["conf_level"]]
+    if (is.null(conf_level)) {
+        conf_level <- 0.95 # Default fallback
+    }
+
+    out <- get_ci_internal(out, conf_level = conf_level, df = mipool$pooled$df)
 
     out <- backtransform(out, sanitize_transform(tr))
 

@@ -167,10 +167,7 @@ hypotheses <- function(
     if (is.null(model)) stop_sprintf("`model` is missing.")
     sanity_multcomp(multcomp, hypothesis, joint)
 
-    # Early returns for special cases
-    if (inherits(model, c("mira", "amest"))) {
-        return(process_imputation(model, mfx@call))
-    }
+    # Early returns for special cases - removed mice check, moved later
 
     if (!isFALSE(joint)) {
         return(joint_test(
@@ -213,6 +210,11 @@ hypotheses <- function(
             call = call,
             model = model
         )
+    }
+
+    # multiple imputation - moved here after mfx object creation
+    if (inherits(model, c("mira", "amest"))) {
+        return(process_imputation(mfx@model, mfx@call))
     }
 
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
