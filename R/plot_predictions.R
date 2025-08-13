@@ -176,7 +176,7 @@ plot_predictions <- function(
         v_facet_1 = v_facet_1,
         v_facet_2 = v_facet_2,
         condition = condition,
-        modeldata = mfx@modeldata
+        mfx = mfx
     )
 
     # return immediately if the user doesn't want a plot

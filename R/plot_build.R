@@ -5,7 +5,7 @@ plot_preprocess <- function(
     v_facet_1 = NULL,
     v_facet_2 = NULL,
     condition = NULL,
-    modeldata = NULL
+    mfx = NULL
 ) {
     for (v in names(condition$condition)) {
         fun <- function(x, lab) {
@@ -26,7 +26,7 @@ plot_preprocess <- function(
             dat[[v]] <- fun(dat[[v]], c("Q1", "Q2", "Q3"))
         }
     }
-    if (get_variable_class(modeldata, v_x, "categorical")) {
+    if (get_variable_class(mfx, v_x, "categorical")) {
         dat[[v_x]] <- factor(dat[[v_x]])
     }
     # colors, linetypes, and facets are categorical attributes
@@ -58,8 +58,6 @@ plot_build <- function(
     checkmate::assert_flag(rug)
     checkmate::assert_flag(gray)
 
-    modeldata <- mfx@modeldata
-
     # create index before building ggplot to make sure it is available
     dat$marginaleffects_term_index <- get_unique_index(dat, term_only = TRUE)
     multi_variables <- isTRUE(length(unique(dat$marginaleffects_term_index)) > 1)
@@ -75,7 +73,7 @@ plot_build <- function(
             if (isTRUE(gray)) {
                 p <- p +
                     ggplot2::geom_point(
-                        data = modeldata,
+                        data = mfx@modeldata,
                         alpha = points,
                         ggplot2::aes(
                             x = .data[[v_x]],
@@ -86,7 +84,7 @@ plot_build <- function(
             } else {
                 p <- p +
                     ggplot2::geom_point(
-                        data = modeldata,
+                        data = mfx@modeldata,
                         alpha = points,
                         ggplot2::aes(
                             x = .data[[v_x]],
@@ -98,7 +96,7 @@ plot_build <- function(
         } else {
             p <- p +
                 ggplot2::geom_point(
-                    data = modeldata,
+                    data = mfx@modeldata,
                     alpha = points,
                     ggplot2::aes(x = .data[[v_x]], y = .data[[dv]])
                 )
@@ -106,10 +104,10 @@ plot_build <- function(
     }
 
     if (isTRUE(rug)) {
-        p <- p + ggplot2::geom_rug(data = modeldata, ggplot2::aes(x = .data[[v_x]]))
+        p <- p + ggplot2::geom_rug(data = mfx@modeldata, ggplot2::aes(x = .data[[v_x]]))
         if (!is.null(dv)) {
             p <- p +
-                ggplot2::geom_rug(data = modeldata, ggplot2::aes(y = .data[[dv]]))
+                ggplot2::geom_rug(data = mfx@modeldata, ggplot2::aes(y = .data[[dv]]))
         }
     }
 
