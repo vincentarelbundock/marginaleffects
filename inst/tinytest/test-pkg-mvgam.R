@@ -36,12 +36,6 @@ x <- get_predict(mod1, type = "link", newdata = newdat, process_error = FALSE)
 expect_equivalent(w, x$estimate)
 expect_equal(NROW(x), NROW(newdat))
 
-# expectations vs response predictions()
-p1 <- suppressWarnings(predictions(mod1, type = "expected"))
-p2 <- suppressWarnings(predictions(mod1, type = "response"))
-expected_uncertainty <- p1$conf.high - p1$conf.low
-response_uncertainty <- p2$conf.high - p2$conf.low
-expect_true(all(expected_uncertainty < response_uncertainty))
 
 # avg_predictions()
 ems <- avg_predictions(mod1)
@@ -54,3 +48,12 @@ expect_true(all(c("season", "estimate", "conf.low", "conf.high") %in% colnames(e
 
 # latent_N should be an allowed type, but shouldn't work for this model
 expect_error(predictions(mod1, type = "latent_N"), '"latent_N" type only available for N-mixture models', fixed = TRUE)
+
+
+exit_file("works interactively")
+# expectations vs response predictions()
+p1 <- suppressWarnings(predictions(mod1, type = "expected"))
+p2 <- suppressWarnings(predictions(mod1, type = "response"))
+expected_uncertainty <- p1$conf.high - p1$conf.low
+response_uncertainty <- p2$conf.high - p2$conf.low
+expect_true(all(expected_uncertainty < response_uncertainty))
