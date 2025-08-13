@@ -46,7 +46,7 @@ if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") 
 }
 
 # common names of datasets, often assigned to global environment
-common <- c("dat", "tmp", "d", "k", "mod", "tmp1", "tmp2", "test1", "test2", "threenum")
+common <- c("dat", "nd", "tmp", "d", "k", "mod", "tmp1", "tmp2", "test1", "test2", "threenum")
 suppressWarnings(rm(list = common, envir = .GlobalEnv))
 suppressWarnings(rm(list = common))
 

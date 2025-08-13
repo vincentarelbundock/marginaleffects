@@ -1,6 +1,5 @@
 source("helpers.R")
 if (!EXPENSIVE) exit_file("expensive")
-exit_file("TODO: s4 refactor")
 
 # inferences() currently returns a `comparisons` object even with `slopes()`
 
@@ -70,7 +69,7 @@ x <- mod |>
     inferences(method = "boot", R = R) |>
     attr("inferences")
 expect_inherits(x, "boot")
-nd <- datagrid(Sepal.Length = range, model = mod)
+nd <<- datagrid(Sepal.Length = range, model = mod)
 x <- mod |>
     comparisons(variables = "Sepal.Width", newdata = nd) |>
     inferences(method = "boot", R = R)
@@ -107,7 +106,7 @@ x <- mod |>
     attr("inferences") |>
     suppressWarnings()
 expect_inherits(x, "bootstraps")
-nd <- datagrid(Sepal.Length = range, model = mod)
+nd <<- datagrid(Sepal.Length = range, model = mod)
 x <- mod |>
     comparisons(variables = "Sepal.Width", newdata = nd) |>
     inferences(method = "rsample", R = R) |>
@@ -121,7 +120,6 @@ x <- mod |>
 expect_equivalent(nrow(x), 2 * R)
 
 # fwb no validity check
-exit_file("Issue $#6 on fwb")
 set.seed(1234)
 x <- mod |>
     comparisons() |>
@@ -323,7 +321,7 @@ model <- coxph(
     Surv(dtime, death) ~ hormon * factor(grade) + ns(age, df = 2),
     data = rotterdam
 )
-nd <- datagrid(
+nd <<- datagrid(
     hormon = unique,
     grade = unique,
     dtime = seq(36, 7043, length.out = 25),
@@ -340,3 +338,58 @@ expect_true(all(p$estimate <= p$conf.high))
 # p <- predictions(model, type = "survival", by = c("dtime", "hormon", "grade"), vcov = "rsample", newdata = nd)
 # expect_true(all(p$estimate >= p$conf.low))
 # expect_true(all(p$estimate <= p$conf.high))
+
+
+# Minimal interval validity tests for all methods
+set.seed(1024)
+mod_test <- lm(mpg ~ hp + cyl, data = mtcars)
+pred_default <- avg_predictions(mod_test)
+cmp_default <- avg_comparisons(mod_test)
+pred_sim <- avg_predictions(mod_test) |> inferences(method = "simulation", R = 50)
+cmp_sim <- avg_comparisons(mod_test) |> inferences(method = "simulation", R = 50)
+pred_boot <- avg_predictions(mod_test) |>
+    inferences(method = "boot", R = 50) |>
+    suppressWarnings()
+cmp_boot <- avg_comparisons(mod_test) |>
+    inferences(method = "boot", R = 50) |>
+    suppressWarnings()
+pred_fwb <- avg_predictions(mod_test) |>
+    inferences(method = "fwb", R = 50) |>
+    suppressWarnings()
+cmp_fwb <- avg_comparisons(mod_test) |>
+    inferences(method = "fwb", R = 50) |>
+    suppressWarnings()
+pred_rsample <- avg_predictions(mod_test) |>
+    inferences(method = "rsample", R = 50) |>
+    suppressWarnings()
+cmp_rsample <- avg_comparisons(mod_test) |>
+    inferences(method = "rsample", R = 50) |>
+    suppressWarnings()
+
+# 1. Test interval validity: conf.low < estimate < conf.high
+expect_true(all(pred_sim$conf.low < pred_sim$estimate & pred_sim$estimate < pred_sim$conf.high))
+expect_true(all(cmp_sim$conf.low < cmp_sim$estimate & cmp_sim$estimate < cmp_sim$conf.high))
+expect_true(all(pred_boot$conf.low < pred_boot$estimate & pred_boot$estimate < pred_boot$conf.high))
+expect_true(all(cmp_boot$conf.low < cmp_boot$estimate & cmp_boot$estimate < cmp_boot$conf.high))
+expect_true(all(pred_fwb$conf.low < pred_fwb$estimate & pred_fwb$estimate < pred_fwb$conf.high))
+expect_true(all(cmp_fwb$conf.low < cmp_fwb$estimate & cmp_fwb$estimate < cmp_fwb$conf.high))
+expect_true(all(pred_rsample$conf.low < pred_rsample$estimate & pred_rsample$estimate < pred_rsample$conf.high))
+expect_true(all(cmp_rsample$conf.low < cmp_rsample$estimate & cmp_rsample$estimate < cmp_rsample$conf.high))
+
+# 2. Test that intervals differ from default delta method
+expect_false(all(abs(pred_sim$conf.low - pred_default$conf.low) < 1e-4))
+expect_false(all(abs(pred_sim$conf.high - pred_default$conf.high) < 1e-4))
+expect_false(all(abs(cmp_sim$conf.low - cmp_default$conf.low) < 1e-4))
+expect_false(all(abs(cmp_sim$conf.high - cmp_default$conf.high) < 1e-4))
+expect_false(all(abs(pred_boot$conf.low - pred_default$conf.low) < 1e-4))
+expect_false(all(abs(pred_boot$conf.high - pred_default$conf.high) < 1e-4))
+expect_false(all(abs(cmp_boot$conf.low - cmp_default$conf.low) < 1e-4))
+expect_false(all(abs(cmp_boot$conf.high - cmp_default$conf.high) < 1e-4))
+expect_false(all(abs(pred_rsample$conf.low - pred_default$conf.low) < 1e-4))
+expect_false(all(abs(pred_rsample$conf.high - pred_default$conf.high) < 1e-4))
+expect_false(all(abs(cmp_rsample$conf.low - cmp_default$conf.low) < 1e-4))
+expect_false(all(abs(cmp_rsample$conf.high - cmp_default$conf.high) < 1e-4))
+expect_false(all(abs(pred_fwb$conf.low - pred_default$conf.low) < 1e-4))
+expect_false(all(abs(pred_fwb$conf.high - pred_default$conf.high) < 1e-4))
+expect_false(all(abs(cmp_fwb$conf.low - cmp_default$conf.low) < 1e-4))
+expect_false(all(abs(cmp_fwb$conf.high - cmp_default$conf.high) < 1e-4))

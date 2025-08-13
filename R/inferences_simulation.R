@@ -1,4 +1,4 @@
-inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
+inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", mfx = NULL, ...) {
     insight::check_if_installed("mvtnorm")
 
     checkmate::assert_choice(
@@ -10,8 +10,8 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     )
 
     out <- x
-    model <- attr(x, "model")
-    call_mfx <- attr(x, "call")
+    model <- mfx@model
+    call_mfx <- mfx@call
     call_mfx[["vcov"]] <- FALSE
 
     B <- get_coef(model)

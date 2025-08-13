@@ -1,21 +1,10 @@
-inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, ...) {
+inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, mfx = NULL, ...) {
     insight::check_if_installed("boot")
 
     out <- x
-    call_mfx <- attr(x, "call")
+    call_mfx <- mfx@call
     call_mfx[["vcov"]] <- FALSE
 
-    # Check if mfx object is available with modeldata
-    mfx <- attr(x, "mfx")
-    if (!is.null(mfx) && isTRUE(checkmate::check_data_frame(mfx@modeldata))) {
-        modeldata <- mfx@modeldata
-    } else {
-        # Fallback to getting modeldata from call or model
-        modeldata <- call_mfx[["modeldata"]]
-        if (is.null(modeldata)) {
-            modeldata <- get_modeldata(call_mfx[["model"]])
-        }
-    }
     if (!is.null(estimator)) {
         bootfun <- function(data, indices) {
             d <- data[indices, , drop = FALSE]
@@ -25,17 +14,17 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
     } else {
         bootfun <- function(data, indices) {
             d <- data[indices, , drop = FALSE]
-            call_mod <- insight::get_call(call_mfx[["model"]])
+            call_mod <- insight::get_call(mfx@model)
             call_mod[["data"]] <- d
             boot_mod <- eval.parent(call_mod)
+            call_mfx <- mfx@call
             call_mfx[["model"]] <- boot_mod
-            call_mfx[["modeldata"]] <- d
             boot_mfx <- eval.parent(call_mfx)
             return(boot_mfx$estimate)
         }
     }
 
-    args <- list("data" = modeldata, "statistic" = bootfun, R = R)
+    args <- list("data" = mfx@modeldata, "statistic" = bootfun, R = R)
     args <- c(args, list(...))
     B <- do.call(boot::boot, args)
 

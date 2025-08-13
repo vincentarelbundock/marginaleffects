@@ -1,20 +1,19 @@
-inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, ...) {
+inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, mfx = NULL, ...) {
     insight::check_if_installed("rsample")
 
     out <- x
-    call_mfx <- attr(x, "call")
+    call_mfx <- mfx@call
     call_mfx[["vcov"]] <- FALSE
 
-    # Check if mfx object is available with modeldata
-    mfx <- attr(x, "mfx")
-    if (!is.null(mfx) && isTRUE(checkmate::check_data_frame(mfx@modeldata))) {
-        modeldata <- mfx@modeldata
-    } else {
-        # Fallback to getting modeldata from call or model
-        modeldata <- call_mfx[["modeldata"]]
-        if (is.null(modeldata)) {
-            modeldata <- get_modeldata(call_mfx[["model"]])
-        }
+    # Get modeldata from mfx object
+    modeldata <- mfx@modeldata
+
+    # Ensure parameters are embedded in the call, not just references
+    if (!is.null(mfx@newdata)) {
+        call_mfx[["newdata"]] <- mfx@newdata
+    }
+    if (!is.null(mfx@comparison)) {
+        call_mfx[["comparison"]] <- mfx@comparison
     }
 
     if (!is.null(estimator)) {
@@ -26,7 +25,7 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     } else {
         bootfun <- function(split, ...) {
             d <- rsample::analysis(split)
-            call_mod <- insight::get_call(call_mfx[["model"]])
+            call_mod <- insight::get_call(mfx@model)
             call_mod[["data"]] <- d
             boot_mod <- eval.parent(call_mod)
             call_mfx[["model"]] <- boot_mod

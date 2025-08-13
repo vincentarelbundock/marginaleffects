@@ -1,30 +1,29 @@
-inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
+inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", mfx = NULL, ...) {
     insight::check_if_installed("fwb", minimum_version = "0.5.0")
 
     out <- x
-    call_mfx <- attr(x, "call")
+    call_mfx <- mfx@call
     call_mfx[["vcov"]] <- FALSE
 
-    # Check if mfx object is available with modeldata
-    mfx <- attr(x, "mfx")
-    if (!is.null(mfx) && isTRUE(checkmate::check_data_frame(mfx@modeldata))) {
-        modeldata <- mfx@modeldata
-    } else {
-        # Fallback to getting modeldata from call or model
-        modeldata <- call_mfx[["modeldata"]]
-        if (is.null(modeldata)) {
-            modeldata <- get_modeldata(call_mfx[["model"]])
-        }
+    # Get modeldata from mfx object
+    modeldata <- mfx@modeldata
+    
+    # Ensure parameters are embedded in the call, not just references
+    if (!is.null(mfx@newdata)) {
+        call_mfx[["newdata"]] <- mfx@newdata
+    }
+    if (!is.null(mfx@comparison)) {
+        call_mfx[["comparison"]] <- mfx@comparison
     }
 
     bootfun <- function(data, w, ...) {
         # If model has weights, multiply them by random weights
-        if (!is.null(w0 <- stats::weights(call_mfx[["model"]]))) {
+        if (!is.null(w0 <- stats::weights(mfx@model))) {
             w <- w * w0
         }
 
         # Update the model's call and evaluate
-        call_mod <- insight::get_call(call_mfx[["model"]])
+        call_mod <- insight::get_call(mfx@model)
         call_mod[["weights"]] <- w
         boot_mod <- eval.parent(call_mod)
 

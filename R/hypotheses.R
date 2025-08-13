@@ -159,8 +159,7 @@ hypotheses <- function(
     joint_test = "f",
     multcomp = FALSE,
     numderiv = "fdforward",
-    ...
-) {
+    ...) {
     call <- construct_call(model, "hypotheses")
 
     # Early validation and setup
@@ -207,7 +206,6 @@ hypotheses <- function(
     if (inherits(model, "marginaleffects_internal")) {
         mfx <- model
     } else {
-        call <- construct_call(model, "comparisons")
         if (!inherits(model, internal_classes)) {
             model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
         }

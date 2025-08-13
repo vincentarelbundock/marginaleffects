@@ -106,8 +106,7 @@ inferences <- function(
     conformal_calibration = NULL,
     conformal_score = "residual_abs",
     estimator = NULL,
-    ...
-) {
+    ...) {
     if (inherits(attr(x, "model"), c("model_fit", "workflow"))) {
         msg <- "The `inferences()` function does not support `tidymodels` objects."
         stop_sprintf(msg)
@@ -151,13 +150,22 @@ inferences <- function(
     )
 
     # Issue #1501: `newdata` should only use the pre-evaluated `newdata` instead of bootstrapping datagrid()
+    mfx <- attr(x, "mfx")
     call_mfx <- attr(x, "call")
+
+    # Update call with pre-evaluated newdata if available
     if (!is.null(call_mfx)) {
         nd <- attr(x, "newdata")
         if (inherits(nd, "data.frame")) {
             call_mfx[["newdata"]] <- nd
         }
         attr(x, "call") <- call_mfx
+
+        # Update mfx object if available
+        if (!is.null(mfx) && inherits(nd, "data.frame")) {
+            mfx@newdata <- nd
+            attr(x, "mfx") <- mfx
+        }
     }
 
     if (method == "conformal_split") {
@@ -173,7 +181,7 @@ inferences <- function(
     }
 
     if (method == "boot") {
-        out <- inferences_boot(x, R = R, conf_level = conf_level, conf_type = conf_type, estimator = estimator, ...)
+        out <- inferences_boot(x, R = R, conf_level = conf_level, conf_type = conf_type, estimator = estimator, mfx = mfx, ...)
     } else if (method == "fwb") {
         if (
             isTRUE("wts" %in% names(attr(x, "call"))) &&
@@ -183,11 +191,11 @@ inferences <- function(
                 "The `fwb` method is not supported with the `wts` argument."
             )
         }
-        out <- inferences_fwb(x, R = R, conf_level = conf_level, conf_type = conf_type, ...)
+        out <- inferences_fwb(x, R = R, conf_level = conf_level, conf_type = conf_type, mfx = mfx, ...)
     } else if (method == "rsample") {
-        out <- inferences_rsample(x, R = R, conf_level = conf_level, conf_type = conf_type, estimator = estimator, ...)
+        out <- inferences_rsample(x, R = R, conf_level = conf_level, conf_type = conf_type, estimator = estimator, mfx = mfx, ...)
     } else if (method == "simulation") {
-        out <- inferences_simulation(x, R = R, conf_level = conf_level, conf_type = conf_type, ...)
+        out <- inferences_simulation(x, R = R, conf_level = conf_level, conf_type = conf_type, mfx = mfx, ...)
     } else if (isTRUE(grepl("conformal", method))) {
         out <- conformal_fun(
             x,
@@ -195,7 +203,8 @@ inferences <- function(
             conf_level = conf_level,
             test = conformal_test,
             calibration = conformal_calibration,
-            score = conformal_score
+            score = conformal_score,
+            mfx = mfx
         )
     }
 
@@ -220,7 +229,7 @@ inferences <- function(
         "comparison"
     )
     for (n in attrs) {
-        if (!is.null(attr(x, n))) {
+        if (n %in% names(attributes(x))) {
             attr(out, n) <- attr(x, n)
         }
     }

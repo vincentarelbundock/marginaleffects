@@ -65,7 +65,7 @@ setClass(
         variables = "list",
         variable_names_response = "characterOrNULL",
         vcov_model = "ANY",
-        wts = "numericOrNULL"
+        wts = "ANY"
     )
 )
 
