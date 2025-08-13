@@ -260,7 +260,7 @@ comparisons <- function(
 
     # multiple imputation
     if (inherits(mfx@model, c("mira", "amest"))) {
-        out <- process_imputation(mfx@model, mfx@call)
+        out <- process_imputation(mfx)
         return(out)
     }
 

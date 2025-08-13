@@ -222,7 +222,7 @@ predictions <- function(
 
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {
-        out <- process_imputation(mfx@model, mfx@call)
+        out <- process_imputation(mfx)
         return(out)
     }
 

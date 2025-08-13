@@ -1,83 +1,87 @@
-process_imputation <- function(x, call_attr, marginal_means = FALSE) {
+process_imputation <- function(mfx) {
     insight::check_if_installed("mice")
 
+    model <- mfx@model
+    mfxcall <- mfx@call
+
+    micedata <- tryCatch(get_modeldata_mids(model), error = function(e) NULL)
+
     # issue #1269: transforms must be applied after pooling
-    if ("transform" %in% names(call_attr)) {
-        tr <- eval.parent(call_attr[["transform"]])
-        call_attr[["transform"]] <- NULL
+    if ("transform" %in% names(mfxcall)) {
+        tr <- eval.parent(mfxcall[["transform"]])
+        mfxcall[["transform"]] <- NULL
     } else {
         tr <- NULL
     }
 
-    if (inherits(x, "mira")) {
-        x <- x$analyses
+    if (inherits(model, "mira")) {
+        modellist <- model$analyses
     } else if (inherits(x, "amest")) {
-        x <- x
+        # amest already in the right format
+        modellist <- model
+    } else {
+        stop_sprintf("MI class not implemented yet.")
     }
 
-    mfx_list <- vector("list", length(x))
-    for (i in seq_along(x)) {
-        calltmp <- call_attr
-        calltmp[["model"]] <- x[[i]]
+    mfxlist <- vector("list", length(modellist))
+    for (i in seq_along(modellist)) {
+        calltmp <- mfxcall
+        calltmp[["model"]] <- modellist[[i]]
 
-        # not sure why but this breaks marginal_means on "modeldata specified twice"
-        if (isFALSE(marginal_means)) {
-            modeldata_i <- get_modeldata(
-                x[[i]],
-                additional_variables = FALSE
-            )
-            calltmp[["modeldata"]] <- modeldata_i
-
-            # Handle deferred newdata processing for calls like subset(treat == 1)
-            if ("newdata" %in% names(calltmp) && rlang::is_call(calltmp[["newdata"]])) {
-                newdata_call <- calltmp[["newdata"]]
-                if (rlang::call_name(newdata_call) == "subset") {
-                    # Add the model data as the 'x' argument for subset
-                    if (!"x" %in% rlang::call_args_names(newdata_call)) {
-                        newdata_call <- rlang::call_modify(newdata_call, x = modeldata_i)
-                    }
-                } else if (rlang::call_name(newdata_call) == "filter") {
-                    # Add the model data as the '.data' argument for filter
-                    if (!".data" %in% rlang::call_args_names(newdata_call)) {
-                        newdata_call <- rlang::call_modify(newdata_call, .data = modeldata_i)
-                    }
+        # Handle deferred newdata processing for calls like subset(treat == 1)
+        if ("newdata" %in% names(calltmp) && rlang::is_call(calltmp[["newdata"]])) {
+            newdata_call <- calltmp[["newdata"]]
+            if (rlang::call_name(newdata_call) == "subset") {
+                # Add the model data as the 'x' argument for subset
+                if (!"x" %in% rlang::call_args_names(newdata_call)) {
+                    newdata_call <- rlang::call_modify(newdata_call, x = micedata[[i]])
                 }
-                # Evaluate the newdata call with the individual model's data
-                calltmp[["newdata"]] <- eval(newdata_call)
+            } else if (rlang::call_name(newdata_call) == "filter") {
+                # Add the model data as the '.data' argument for filter
+                if (!".data" %in% rlang::call_args_names(newdata_call)) {
+                    newdata_call <- rlang::call_modify(newdata_call, .data = micedata[[i]])
+                }
             }
+            # Evaluate the newdata call with the individual model's data
+            calltmp[["newdata"]] <- eval(newdata_call)
         }
 
-        mfx_list[[i]] <- eval.parent(calltmp)
+        mfxlist[[i]] <- eval.parent(calltmp)
+
+        # save the S4 structure of a single model to host the eventual output
         if (i == 1) {
-            out <- mfx_list[[1]]
+            out <- mfxlist[[i]]
         }
-        mfx_list[[i]]$term <- seq_len(nrow(mfx_list[[i]]))
+
+        # needed for mice::pool(); after saving `out`
+        mfxlist[[i]]$term <- seq_len(nrow(mfxlist[[i]]))
 
         # Needed for mice::pool() to get dfcom, even when lean = TRUE
-        attr(mfx_list[[i]], "model") <- x[[i]]
-
-        class(mfx_list[[i]]) <- c("marginaleffects_mids", class(mfx_list[[i]]))
+        attr(mfxlist[[i]], "model") <- modellist[[i]]
+        class(mfxlist[[i]]) <- c("marginaleffects_mids", class(mfxlist[[i]]))
     }
-    mipool <- mice::pool(mfx_list)
-    for (col in c("estimate", "statistic", "p.value", "conf.low", "conf.high")) {
-        if (col %in% colnames(out) && col %in% colnames(mipool$pooled)) {
-            out[[col]] <- mipool$pooled[[col]]
+
+    mipool <- mice::pool(mfxlist)
+
+    ti <- mice::tidy(mipool)
+    for (col in c("estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df")) {
+        if (col %in% colnames(ti)) {
+            out[[col]] <- ti[[col]]
         } else {
             out[[col]] <- NULL
         }
     }
-    if ("df" %in% colnames(mipool$pooled)) {
-        out$df <- mipool$pooled$df
-    }
-    out$std.error <- sqrt(mipool$pooled$t)
 
     # Extract confidence level with fallback
-    conf_level <- call_attr[["conf_level"]]
+    conf_level <- mfxcall[["conf_level"]]
     if (is.null(conf_level)) {
         conf_level <- 0.95 # Default fallback
     }
 
-    out <- get_ci_internal(out, conf_level = conf_level, df = mipool$pooled$df)
+    out$df <- mipool$pooled$df
+
+    # TODO: change this once we store the metadata in its final place
+    out <- get_ci(out, attr(mfxlist[[1]], "mfx"))
 
     out <- backtransform(out, sanitize_transform(tr))
 
@@ -86,7 +90,7 @@ process_imputation <- function(x, call_attr, marginal_means = FALSE) {
 
     if (!lean) {
         attr(out, "inferences") <- mipool
-        attr(out, "model") <- mice::pool(lapply(mfx_list, attr, "model"))
+        attr(out, "model") <- mice::pool(lapply(mfxlist, attr, "model"))
     }
 
     return(out)

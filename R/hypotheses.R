@@ -214,7 +214,7 @@ hypotheses <- function(
 
     # multiple imputation - moved here after mfx object creation
     if (inherits(model, c("mira", "amest"))) {
-        return(process_imputation(mfx@model, mfx@call))
+        return(process_imputation(mfx))
     }
 
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)

@@ -276,6 +276,7 @@ Collate:
     'methods_mclogit.R'
     'methods_mgcv.R'
     'methods_mhurdle.R'
+    'methods_mice.R'
     'methods_mlm.R'
     'methods_mlogit.R'
     'methods_mlr3.R'
