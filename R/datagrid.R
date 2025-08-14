@@ -414,11 +414,6 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
         }
     }
 
-    # if (!is.null(model) & !is.null(newdata)) {
-    #     msg <- "One of the `model` or `newdata` arguments must be `NULL`."
-    #     stop(msg, call. = FALSE)
-    # }
-
     if (is.null(model) & is.null(newdata)) {
         msg <- "The `model` and `newdata` arguments are both `NULL`. When calling `datagrid()` *inside* the `slopes()` or `comparisons()` functions, the `model` and `newdata` arguments can both be omitted. However, when calling `datagrid()` on its own, users must specify either the `model` or the `newdata` argument (but not both)."
         stop_sprintf(msg)
@@ -443,10 +438,9 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
     # fill in missing data after sanity checks
     if (is.null(newdata)) {
         newdata <- get_modeldata(model, additional_variables = FALSE)
-        newdata <- set_variable_class(modeldata = newdata, model = model)
     }
 
-    attr_variable_classes <- attr(newdata, "marginaleffects_variable_class")
+    attr_variable_classes <- set_get_variable_class(newdata, model = model)
 
     # subset columns, otherwise it can be ultra expensive to compute summaries for every variable. But do the expensive thing anyway if `newdata` is supplied explicitly by the user, or in counterfactual grids.
     if (!is.null(model) && is.null(newdata)) {
@@ -493,7 +487,6 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
 
     # restore attributes after subsetting
     attr(newdata, "marginaleffects_variable_class") <- attr_variable_classes
-
     # check `at` elements and convert them to factor as needed
     for (n in names(at)) {
         # functions first otherwise we try to coerce functions to character
@@ -509,7 +502,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
         # not an "else" situation because we want to process the output of functions too
         if (
             is.factor(newdata[[n]]) ||
-                isTRUE(get_variable_class(newdata, n, "factor"))
+                isTRUE(get_variable_class(attr_variable_classes, n, "factor"))
         ) {
             if (is.factor(newdata[[n]])) {
                 levs <- levels(newdata[[n]])

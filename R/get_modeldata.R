@@ -6,6 +6,13 @@ get_modeldata <- function(model, ...) {
 }
 
 
+set_get_variable_class <- function(modeldata, model = NULL) {
+    out <- set_variable_class(modeldata, model = model)
+    out <- attr(out, "marginaleffects_variable_class")
+    return(out)
+}
+
+
 set_variable_class <- function(modeldata, model = NULL) {
     if (is.null(modeldata)) {
         return(modeldata)
@@ -118,6 +125,8 @@ get_variable_class <- function(newdata, variable = NULL, compare = NULL) {
         cl <- newdata@variable_class
     } else if ("marginaleffects_variable_class" %in% names(attributes(newdata))) {
         cl <- attributes(newdata)$marginaleffects_variable_class
+    } else if (isTRUE(checkmate::check_character(newdata))) {
+        cl <- newdata
     } else {
         cl <- character()
     }
