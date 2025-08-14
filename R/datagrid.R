@@ -179,7 +179,6 @@ datagrid <- function(
         }
         if (is.null(newdata)) {
             newdata <- get_modeldata(model, additional_variables = by)
-            newdata <- set_variable_class(modeldata = newdata, model = model)
         }
         if (!all(by %in% colnames(newdata))) {
             stop_sprintf(
@@ -424,7 +423,6 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
     if (!is.null(newdata)) {
         variables_list <- NULL
         variables_all <- colnames(newdata)
-        newdata <- set_variable_class(modeldata = newdata, model = model)
     } else if (!is.null(model)) {
         variables_list <- insight::find_variables(model, verbose = FALSE)
         variables_all <- unlist(variables_list, recursive = TRUE)

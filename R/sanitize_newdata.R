@@ -199,6 +199,56 @@ add_wts_column <- function(wts, newdata, model) {
 
 
 
+add_newdata <- function(
+    mfx,
+    scall,
+    newdata = NULL,
+    by = FALSE,
+    wts = FALSE,
+    cross = NULL,
+    comparison = NULL,
+    byfun = NULL) {
+    # For mice objects, defer all processing to process_imputation()
+    if (inherits(mfx@model, c("mira", "amest"))) {
+        # Store the raw newdata (could be a call) for later processing
+        mfx@newdata <- scall
+        return(mfx)
+    }
+
+    # Step 1: Handle quoted calls to datagrid, subset, etc.
+    newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
+
+    # Step 2: Streamlined newdata processing (combines sanitize_newdata + build_newdata)
+    newdata <- sanitize_newdata(
+        mfx = mfx,
+        newdata = newdata,
+        by = by,
+        wts = wts
+    )
+
+    # Step 3: Extract numeric weights from newdata and store in @wts slot
+    if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
+        mfx@wts <- newdata[["marginaleffects_wts_internal"]]
+    } else {
+        mfx@wts <- NULL
+    }
+
+    # Store processed newdata in the mfx object
+    mfx@newdata <- newdata
+
+    # if `modeldata` is unavailable, we default to `newdata`
+    flag1 <- isTRUE(checkmate::check_data_frame(mfx@modeldata, min.rows = 1))
+    flag2 <- isTRUE(checkmate::check_data_frame(newdata, min.rows = 1))
+    if (!flag1 && flag2) {
+        newdata <- set_variable_class(newdata, model = mfx@model)
+        mfx@modeldata <- newdata
+    }
+
+    # Return the updated mfx object
+    return(mfx)
+}
+
+
 dedup_newdata <- function(
     mfx,
     newdata,
@@ -264,54 +314,4 @@ dedup_newdata <- function(
     attr(out, "marginaleffects_variable_class") <- vclass
 
     return(out)
-}
-
-
-add_newdata <- function(
-    mfx,
-    scall,
-    newdata = NULL,
-    by = FALSE,
-    wts = FALSE,
-    cross = NULL,
-    comparison = NULL,
-    byfun = NULL) {
-    # For mice objects, defer all processing to process_imputation()
-    if (inherits(mfx@model, c("mira", "amest"))) {
-        # Store the raw newdata (could be a call) for later processing
-        mfx@newdata <- scall
-        return(mfx)
-    }
-
-    # Step 1: Handle quoted calls to datagrid, subset, etc.
-    newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
-
-    # Step 2: Streamlined newdata processing (combines sanitize_newdata + build_newdata)
-    newdata <- sanitize_newdata(
-        mfx = mfx,
-        newdata = newdata,
-        by = by,
-        wts = wts
-    )
-
-    # Step 3: Extract numeric weights from newdata and store in @wts slot
-    if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
-        mfx@wts <- newdata[["marginaleffects_wts_internal"]]
-    } else {
-        mfx@wts <- NULL
-    }
-
-    # Store processed newdata in the mfx object
-    mfx@newdata <- newdata
-
-    # if `modeldata` is unavailable, we default to `newdata`
-    flag1 <- isTRUE(checkmate::check_data_frame(mfx@modeldata, min.rows = 1))
-    flag2 <- isTRUE(checkmate::check_data_frame(newdata, min.rows = 1))
-    if (!flag1 && flag2) {
-        newdata <- set_variable_class(newdata, model = mfx@model)
-        mfx@modeldata <- newdata
-    }
-
-    # Return the updated mfx object
-    return(mfx)
 }
