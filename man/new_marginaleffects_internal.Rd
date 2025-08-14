@@ -9,6 +9,7 @@ new_marginaleffects_internal(
   call,
   by = FALSE,
   byfun = NULL,
+  draws_chains = 0,
   comparison = NULL,
   conf_level = 0.95,
   cross = FALSE,

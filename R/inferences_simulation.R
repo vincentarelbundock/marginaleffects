@@ -69,6 +69,9 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     # Drop unnecessary columns
     out <- out[, cols, drop = FALSE]
 
-    attr(out, "posterior_draws") <- draws
+    mfx <- attr(x, "mfx")
+    mfx@draws <- draws
+    attr(out, "mfx") <- mfx
+
     return(out)
 }

@@ -428,7 +428,7 @@ predictions <- function(
 
     if (inherits(mfx@model, "brmsfit")) {
         insight::check_if_installed("brms")
-        attr(out, "nchains") <- brms::nchains(mfx@model)
+        mfx@draws_chains <- brms::nchains(mfx@model)
     }
 
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
@@ -438,6 +438,8 @@ predictions <- function(
     if (!is.null(inferences_method)) {
         out <- inferences(out, method = inferences_method)
     }
+
+    attr(out, "mfx") <- mfx
 
     return(out)
 }

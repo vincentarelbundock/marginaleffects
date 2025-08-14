@@ -99,7 +99,6 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
         out$term <- NULL
     }
 
-    attr(out, "inferences") <- splits
     draws <- lapply(
         splits$results,
         function(x) as.matrix(x[, "estimate", drop = FALSE])
@@ -107,6 +106,11 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     draws[[length(draws)]] <- NULL # apparent=TRUE appended the original estimates to the end
     draws <- do.call("cbind", draws)
     colnames(draws) <- NULL
-    attr(out, "posterior_draws") <- draws
+
+    mfx <- attr(x, "mfx")
+    mfx@draws <- draws
+    mfx@inferences <- splits
+    attr(out, "mfx") <- mfx
+
     return(out)
 }

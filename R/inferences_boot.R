@@ -64,7 +64,10 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
     cols <- setdiff(names(out), c("p.value", "std.error", "statistic", "s.value", "df"))
     out <- out[, cols, drop = FALSE]
 
-    attr(out, "inferences") <- B
-    attr(out, "posterior_draws") <- t(B$t)
+    mfx <- attr(x, "mfx")
+    mfx@draws <- t(B$t)
+    mfx@inferences <- B
+    attr(out, "mfx") <- mfx
+
     return(out)
 }

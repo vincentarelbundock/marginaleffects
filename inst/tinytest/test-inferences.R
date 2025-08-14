@@ -27,9 +27,8 @@ expect_inherits(x, "predictions")
 
 x <- mod |>
     comparisons() |>
-    inferences(method = "simulation", R = R) |>
-    attr("posterior_draws")
-expect_inherits(x, "matrix")
+    inferences(method = "simulation", R = R)
+expect_inherits(attr(x, "mfx")@draws, "matrix")
 
 
 set.seed(1234)
@@ -66,9 +65,8 @@ x <- mod |>
 expect_inherits(x, "predictions")
 x <- mod |>
     comparisons() |>
-    inferences(method = "boot", R = R) |>
-    attr("inferences")
-expect_inherits(x, "boot")
+    inferences(method = "boot", R = R)
+expect_inherits(attr(x, "mfx")@inferences, "boot")
 nd <<- datagrid(Sepal.Length = range, model = mod)
 x <- mod |>
     comparisons(variables = "Sepal.Width", newdata = nd) |>
@@ -103,9 +101,8 @@ expect_inherits(x, "predictions")
 x <- mod |>
     comparisons() |>
     inferences(method = "rsample", R = R) |>
-    attr("inferences") |>
     suppressWarnings()
-expect_inherits(x, "bootstraps")
+expect_inherits(attr(x, "mfx")@inferences, "bootstraps")
 nd <<- datagrid(Sepal.Length = range, model = mod)
 x <- mod |>
     comparisons(variables = "Sepal.Width", newdata = nd) |>

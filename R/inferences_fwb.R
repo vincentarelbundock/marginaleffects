@@ -7,7 +7,7 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", m
 
     # Get modeldata from mfx object
     modeldata <- mfx@modeldata
-    
+
     # Ensure parameters are embedded in the call, not just references
     if (!is.null(mfx@newdata)) {
         call_mfx[["newdata"]] <- mfx@newdata
@@ -76,7 +76,10 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", m
 
     out <- out[, cols, drop = FALSE]
 
-    attr(out, "inferences") <- B
-    attr(out, "posterior_draws") <- t(B$t)
+    mfx <- attr(x, "mfx")
+    mfx@draws <- t(B$t)
+    mfx@inferences <- B
+    attr(out, "mfx") <- mfx
+
     return(out)
 }

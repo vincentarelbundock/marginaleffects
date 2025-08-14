@@ -188,7 +188,8 @@ hypotheses <- function(
                 "The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call."
             )
         }
-        if (!is.null(attr(model, "posterior_draws"))) {
+        mfx <- attr(model, "mfx")
+        if (!is.null(mfx) && !is.null(mfx@draws)) {
             stop_sprintf(
                 "The `hypotheses()` function cannot be used to post-process `marginaleffects` objects that include draws from a bootstrap, simulation, or bayesian posterior distribution. Users should call the `get_draws()` function and process draws manually."
             )

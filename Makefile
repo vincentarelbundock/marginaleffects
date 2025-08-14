@@ -18,7 +18,7 @@ runnersdown: ## unhack local files to not run tests
 testthat:
 	Rscript -e "pkgload::load_all();devtools::test()"
 
-testall: testthat ## tinytest::build_install_test()
+testall: document testthat ## tinytest::build_install_test()
 	# Rscript -e "pkgload::load_all();cl <- parallel::makeCluster(5);tinytest::run_test_dir(cluster = cl)"
 	awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
 	Rscript -e "pkgload::load_all();tinytest::run_test_dir()"
