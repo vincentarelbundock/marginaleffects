@@ -240,8 +240,7 @@ slopes <- function(
     df = Inf,
     eps = NULL,
     numderiv = "fdforward",
-    ...
-) {
+    ...) {
     call_attr <- construct_call(model, "slopes")
 
     # slopes() does not support a named list of variables like comparisons()
@@ -277,10 +276,6 @@ slopes <- function(
 
     out <- eval.parent(call_attr_c)
 
-    if (!is.null(attr(out, "call"))) {
-        attr(out, "call") <- call_attr
-    }
-
     # class
     data.table::setDF(out)
     class(out) <- setdiff(class(out), "comparisons")
@@ -308,8 +303,7 @@ avg_slopes <- function(
     df = Inf,
     eps = NULL,
     numderiv = "fdforward",
-    ...
-) {
+    ...) {
     call_attr <- construct_call(model, "slopes")
     out <- eval.parent(call_attr)
     return(out)

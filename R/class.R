@@ -64,7 +64,8 @@ setClass(
         type = "ANY",
         variables = "list",
         variable_class = "characterOrNULL",
-        variable_names_response = "characterOrNULL",
+        variable_names_response = "character",
+        variable_names_by = "character",
         vcov_model = "ANY",
         wts = "ANY"
     )
@@ -111,10 +112,11 @@ new_marginaleffects_internal <- function(
 
     variable_class <- detect_variable_class(modeldata, model = model)
 
-    variable_names_response <- hush(unlist(
-        insight::find_response(model, combine = TRUE, component = "all"),
-        use.names = FALSE
-    ))
+    variable_names_response <- hush(insight::find_response(model,
+        combine = TRUE, component = "all", flatten = TRUE))
+    if (is.null(variable_names_response)) {
+        variable_names_response <- character(0)
+    }
 
     # Extract calling function from call
     calling_function <- extract_calling_function(call)

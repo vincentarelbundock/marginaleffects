@@ -1,4 +1,4 @@
-sanity_by <- function(by, newdata) {
+sanity_by <- function(mfx, by) {
     checkmate::assert(
         checkmate::check_flag(by),
         checkmate::check_data_frame(by, min.cols = 1, min.rows = 1),
@@ -13,10 +13,10 @@ sanity_by <- function(by, newdata) {
         "rowid",
         "rowidcf",
         "contrast",
-        colnames(newdata)
+        colnames(mfx@newdata)
     )
 
-    if (isTRUE(by == "group") && "group" %in% colnames(newdata)) {
+    if (isTRUE(by == "group") && "group" %in% colnames(mfx@newdata)) {
         msg <- 'The "group" variable name is forbidden to avoid conflicts with the column names of the outputs produced by the `marginaleffects` package. Please rename your variable of change the value of the `by` argument.'
         stop_sprintf(msg)
     }
@@ -31,7 +31,7 @@ sanity_by <- function(by, newdata) {
 
     if (flag) {
         bycols <- toString(setdiff(
-            colnames(newdata),
+            colnames(mfx@newdata),
             c("rowid", "rowidcf", "term", "group")
         ))
         msg <- c(
@@ -51,4 +51,16 @@ sanity_by <- function(by, newdata) {
         )
         stop(insight::format_message(msg), call. = FALSE)
     }
+}
+
+add_by <- function(mfx, by) {
+    sanity_by(mfx, by)
+
+    if (isTRUE(checkmate::check_data_frame(by))) {
+        mfx@variable_names_by <- colnames(by)
+    } else if (isTRUE(checkmate::check_character(by))) {
+        mfx@variable_names_by <- by
+    }
+
+    return(mfx)
 }

@@ -4,8 +4,7 @@ joint_test <- function(
     hypothesis = 0,
     joint_test = "f",
     df = NULL,
-    vcov = TRUE
-) {
+    vcov = TRUE) {
     checkmate::assert_choice(joint_test, c("f", "chisq"))
 
     if (joint_test == "f") {

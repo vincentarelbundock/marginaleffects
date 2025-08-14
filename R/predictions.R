@@ -229,7 +229,7 @@ predictions <- function(
 
     # sanity checks
     mfx <- add_numderiv(mfx, numderiv)
-    sanity_by(by, mfx@newdata)
+    mfx <- add_by(mfx, by)
     sanity_reserved(model, mfx@modeldata)
 
     # if type is NULL, we backtransform if relevant

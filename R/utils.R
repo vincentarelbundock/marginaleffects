@@ -41,8 +41,7 @@ get_marginaleffects_attributes <- function(
     x,
     exclude = NULL,
     include = NULL,
-    include_regex = NULL
-) {
+    include_regex = NULL) {
     out <- list()
     attr_names <- names(attributes(x))
     attr_names <- setdiff(attr_names, exclude)
@@ -187,8 +186,7 @@ group_to_factor <- function(group, model) {
                 .m2
             } else {
                 .ifnotfound
-            }
-        ),
+            }),
         pairlist(.x = x[1L], .ifnotfound = ifnotfound),
         parent.frame(1L)
     )

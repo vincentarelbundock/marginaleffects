@@ -182,7 +182,14 @@ print.marginaleffects <- function(
     )
 
     # explicitly given by user in `datagrid()` or `by` or `newdata`
-    explicit <- get_explicit(x)
+    bycols <- c("by", attr(x, "mfx")@variable_names_by)
+    explicit <- c(
+        bycols,
+        attr(attr(x, "newdata"), "explicit"),
+        attr(x, "hypothesis_by"),
+        attr(x, "newdata_explicit"),
+        attr(x, "hypothesis_function_by")
+    )
 
     # useless columns should not be printed
     useless <- c(
@@ -353,22 +360,3 @@ knit_print.comparisons <- knit_print.marginaleffects
 #' @exportS3Method knitr::knit_print
 knit_print.slopes <- knit_print.marginaleffects
 
-
-get_explicit <- function(x) {
-    bycols <- "by"
-
-    by <- attr(x, "by")
-    if (isTRUE(checkmate::check_character(by))) {
-        bycols <- c(by, bycols)
-    }
-
-    explicit <- c(
-        bycols,
-        attr(attr(x, "newdata"), "explicit"),
-        attr(x, "hypothesis_by"),
-        attr(x, "newdata_explicit"),
-        attr(x, "hypothesis_function_by")
-    )
-
-    return(explicit)
-}

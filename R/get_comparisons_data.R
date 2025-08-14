@@ -9,10 +9,6 @@ get_comparisons_data <- function(
 
     lo <- hi <- ter <- lab <- original <- rowid <- list()
 
-    # after variable class assignment
-    if (is.null(modeldata)) {
-        modeldata <- attr(newdata, "newdata_modeldata")
-    }
     # sometimes needed for extensions when get_data doesn't work
     if (is.null(modeldata) || nrow(modeldata) == 0) {
         modeldata <- newdata

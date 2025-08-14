@@ -288,7 +288,7 @@ comparisons <- function(
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
 
     # misc sanitation
-    sanity_by(by, mfx@newdata)
+    mfx <- add_by(mfx, by)
     sanity_reserved(mfx@model, mfx@modeldata)
 
     cross <- sanitize_cross(cross, variables, mfx@model)
