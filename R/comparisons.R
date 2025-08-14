@@ -349,12 +349,13 @@ comparisons <- function(
     hyp_by <- attr(cmp, "hypothesis_function_by")
 
     # bayesian posterior
-    mfx@draws <- NULL
-    if (!is.null(attr(cmp, "posterior_draws"))) {
-        mfx@draws <- attr(cmp, "posterior_draws")
+    mfx@draws <- attr(cmp, "posterior_draws")
 
-        # standard errors via delta method
-    } else if (!isFALSE(vcov) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+    # standard errors via delta method
+    if (is.null(mfx@draws) && 
+        !isFALSE(vcov) && 
+        isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+
         idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
         idx <- cmp[, (idx), drop = FALSE]
         fun <- function(...) {

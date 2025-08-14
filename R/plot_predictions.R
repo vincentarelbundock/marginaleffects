@@ -182,7 +182,6 @@ plot_predictions <- function(
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
         out <- as.data.frame(datplot)
-        attr(out, "posterior_draws") <- attr(datplot, "posterior_draws")
         return(out)
     }
 

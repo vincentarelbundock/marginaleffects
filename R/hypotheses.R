@@ -243,8 +243,8 @@ hypotheses <- function(
     )
 
     # bayesian posterior
-    if (!is.null(attr(b, "posterior_draws"))) {
-        mfx@draws <- attr(b, "posterior_draws")
+    mfx@draws <- attr(b, "posterior_draws")
+    if (!is.null(mfx@draws)) {
         J <- NULL
         se <- rep(NA, length(b))
 

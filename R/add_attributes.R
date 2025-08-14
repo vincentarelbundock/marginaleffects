@@ -13,7 +13,6 @@ add_attributes <- function(out, mfx, ...) {
     if (!is.null(mfx@draws) && is.null(attr(out, "posterior_draws"))) {
         attr(out, "posterior_draws") <- mfx@draws
     }
-
     # Add df if present and numeric
     if (!is.null(mfx@df) && is.numeric(mfx@df)) {
         attr(out, "df") <- mfx@df
