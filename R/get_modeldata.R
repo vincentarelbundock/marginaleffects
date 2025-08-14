@@ -2,7 +2,6 @@ get_modeldata <- function(model, ...) {
     out <- insight::get_data(model, verbose = FALSE, additional_variables = TRUE)
     out <- unpack_matrix_1col(out)
     data.table::setDF(out)
-    # out <- set_variable_class(out, model = model)
     return(out)
 }
 
@@ -119,6 +118,8 @@ get_variable_class <- function(newdata, variable = NULL, compare = NULL) {
         cl <- newdata@variable_class
     } else if ("marginaleffects_variable_class" %in% names(attributes(newdata))) {
         cl <- attributes(newdata)$marginaleffects_variable_class
+    } else {
+        cl <- character()
     }
 
     if (is.null(compare) && is.null(variable)) {
