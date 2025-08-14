@@ -124,7 +124,7 @@ new_marginaleffects_internal <- function(
     # Extract calling function from call
     calling_function <- extract_calling_function(call)
 
-    new(
+    methods::new(
         "marginaleffects_internal",
         by = by,
         byfun = byfun,

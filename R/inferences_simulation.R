@@ -33,7 +33,7 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     inner_fun <- function(i = NULL) {
         mod_tmp <- set_coef(model, coefmat[i, ])
         call_mfx[["model"]] <- mod_tmp
-        boot_mfx <- recall(call_mfx)
+        boot_mfx <- eval.parent(call_mfx)
         return(boot_mfx$estimate)
     }
 

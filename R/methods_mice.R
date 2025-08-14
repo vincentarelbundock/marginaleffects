@@ -6,7 +6,7 @@ get_modeldata_mids <- function(model, envir = parent.frame()) {
         # Try to recover the mids object from the model's call
         cl <- tryCatch(
             {
-                if (!is.null(model$call)) model$call else getCall(model)
+                if (!is.null(model$call)) model$call else stats::getCall(model)
             },
             error = function(e) NULL)
 
@@ -23,7 +23,7 @@ get_modeldata_mids <- function(model, envir = parent.frame()) {
             # environment attached to the call (if any)
             attr(cl, ".Environment"),
             # formula/terms env (for lm/glm fits)
-            tryCatch(environment(formula(model)), error = function(e) NULL),
+            tryCatch(environment(stats::formula(model)), error = function(e) NULL),
             tryCatch(environment(stats::terms(model)), error = function(e) NULL),
             # current and global as fallbacks
             environment(),

@@ -111,6 +111,7 @@ Suggests:
     lmerTest,
     logistf,
     magrittr,
+    margins,
     MatchIt,
     MASS,
     mclogit,
@@ -309,7 +310,6 @@ Collate:
     'predictions.R'
     'print.R'
     'prune.R'
-    'recall.R'
     'sanitize_comparison.R'
     'sanitize_condition.R'
     'sanitize_conf_level.R'

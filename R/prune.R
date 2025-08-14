@@ -7,28 +7,28 @@ generics::prune
 #'
 #' Remove large attributes from marginaleffects objects to reduce memory usage.
 #' Warning: This will disable many useful post-processing features of `marginaleffects`
-#' @param x A marginaleffects object (predictions, comparisons, slopes, or hypotheses)
+#' @param tree A marginaleffects object (predictions, comparisons, slopes, or hypotheses)
 #' @param ... Unused
 #' @return A pruned marginaleffects object
 #' @details ...
 #' @rdname prune_mfx
 #' @export
-prune.comparisons <- function(x, ...) {
-    mfx <- attr(x, "mfx")
+prune.comparisons <- function(tree, ...) {
+    mfx <- attr(tree, "mfx")
     if (!is.null(mfx)) {
         mfx@model <- NULL
         mfx@newdata <- NULL
         mfx@modeldata <- NULL
         mfx@call <- NULL
         mfx@jacobian <- matrix()
-        attr(x, "mfx") <- mfx
+        attr(tree, "mfx") <- mfx
     }
     essential_attrs <- c("names", "row.names", "class", "mfx")
-    for (nm in setdiff(names(attributes(x)), essential_attrs)) {
-        attr(x, nm) <- NULL
+    for (nm in setdiff(names(attributes(tree)), essential_attrs)) {
+        attr(tree, nm) <- NULL
     }
-    attr(x, "lean") <- TRUE
-    x
+    attr(tree, "lean") <- TRUE
+    return(tree)
 }
 
 # Inherit the same docs and share the same Rd page:

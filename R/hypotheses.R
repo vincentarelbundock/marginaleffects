@@ -205,7 +205,7 @@ hypotheses <- function(
         mfx <- model
     } else {
         if (!inherits(model, internal_classes)) {
-            model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+            model <- sanitize_model(model, call = call, newdata = NULL, wts = wts, vcov = vcov, by = by, ...)
         }
         mfx <- new_marginaleffects_internal(
             call = call,

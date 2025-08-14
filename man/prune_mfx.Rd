@@ -7,16 +7,16 @@
 \alias{prune.slopes}
 \title{Prune marginaleffects objects to reduce memory usage}
 \usage{
-\method{prune}{comparisons}(x, ...)
+\method{prune}{comparisons}(tree, ...)
 
-\method{prune}{predictions}(x, ...)
+\method{prune}{predictions}(tree, ...)
 
-\method{prune}{hypotheses}(x, ...)
+\method{prune}{hypotheses}(tree, ...)
 
-\method{prune}{slopes}(x, ...)
+\method{prune}{slopes}(tree, ...)
 }
 \arguments{
-\item{x}{A marginaleffects object (predictions, comparisons, slopes, or hypotheses)}
+\item{tree}{A marginaleffects object (predictions, comparisons, slopes, or hypotheses)}
 
 \item{...}{Unused}
 }

@@ -182,7 +182,11 @@ print.marginaleffects <- function(
     )
 
     # explicitly given by user in `datagrid()` or `by` or `newdata`
-    bycols <- c("by", attr(x, "mfx")@variable_names_by)
+    bycols <- "by"
+    mfx <- attr(x, "mfx")
+    if (!is.null(mfx)) {
+        bycols <- c("by", mfx@variable_names_by)
+    }
     explicit <- c(
         bycols,
         attr(attr(x, "newdata"), "explicit"),
