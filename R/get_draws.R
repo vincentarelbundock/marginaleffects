@@ -14,7 +14,8 @@ get_draws <- function(x, shape = "long") {
     checkmate::assert_choice(shape, choices = c("long", "DxP", "PxD", "rvar"))
 
     # tidy.comparisons() sometimes already saves draws in a nice long format
-    draws <- attr(x, "mfx")@draws
+    mfx <- attr(x, "mfx")
+    draws <- mfx@draws
 
     if (is.null(draws)) {
         warning(
@@ -51,8 +52,8 @@ get_draws <- function(x, shape = "long") {
     if (shape == "rvar") {
         insight::check_if_installed("posterior")
         draws <- t(draws)
-        if (!is.null(attr(x, "nchains"))) {
-            x[["rvar"]] <- posterior::rvar(draws, nchains = attr(x, "nchains"))
+        if (!is.null(mfx@draws_chains)) {
+            x[["rvar"]] <- posterior::rvar(draws, nchains = mfx@draws_chains)
         } else {
             x[["rvar"]] <- posterior::rvar(draws)
         }
