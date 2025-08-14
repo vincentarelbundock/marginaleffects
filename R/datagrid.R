@@ -179,6 +179,7 @@ datagrid <- function(
         }
         if (is.null(newdata)) {
             newdata <- get_modeldata(model, additional_variables = by)
+            newdata <- set_variable_class(modeldata = newdata, model = model)
         }
         if (!all(by %in% colnames(newdata))) {
             stop_sprintf(
@@ -442,6 +443,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
     # fill in missing data after sanity checks
     if (is.null(newdata)) {
         newdata <- get_modeldata(model, additional_variables = FALSE)
+        newdata <- set_variable_class(modeldata = newdata, model = model)
     }
 
     attr_variable_classes <- attr(newdata, "marginaleffects_variable_class")

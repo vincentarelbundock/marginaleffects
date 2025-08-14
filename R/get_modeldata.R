@@ -2,7 +2,7 @@ get_modeldata <- function(model, ...) {
     out <- insight::get_data(model, verbose = FALSE, additional_variables = TRUE)
     out <- unpack_matrix_1col(out)
     data.table::setDF(out)
-    out <- set_variable_class(out, model = model)
+    # out <- set_variable_class(out, model = model)
     return(out)
 }
 
