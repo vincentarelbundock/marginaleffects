@@ -6,16 +6,8 @@ get_predict.glmmTMB <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
-    mfx = NULL,
     newparams = NULL,
-    ndraws = NULL,
-    se.fit = NULL,
-    ...
-) {
-    if (inherits(vcov, "vcov.glmmTMB")) {
-        vcov <- vcov[[1]]
-    }
-
+    ...) {
     # hack to avoid re-optimization
     # see https://github.com/vincentarelbundock/marginaleffects/issues/1064
     b_vec <- model$obj$env$parList()$b

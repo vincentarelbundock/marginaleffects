@@ -76,7 +76,6 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", m
 
     out <- out[, cols, drop = FALSE]
 
-    mfx <- attr(x, "mfx")
     mfx@draws <- t(B$t)
     mfx@inferences <- B
     attr(out, "mfx") <- mfx

@@ -1,0 +1,8 @@
+	(1)	(2)
+	y1	
+VARIABLES	coef	se
+		
+capital	0.0007906052	0.0010165426
+output	-0.0005876415	0.0001588062
+		
+Observations	1,031	

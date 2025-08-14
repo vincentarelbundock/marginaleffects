@@ -17,7 +17,7 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     B <- get_coef(model)
 
     # respect robust vcov from the first call
-    V <- attr(out, "mfx")@vcov_model
+    V <- mfx@vcov_model
     if (!isTRUE(checkmate::check_matrix(V))) {
         V <- get_vcov(model)
     }
@@ -69,7 +69,6 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     # Drop unnecessary columns
     out <- out[, cols, drop = FALSE]
 
-    mfx <- attr(x, "mfx")
     mfx@draws <- draws
     attr(out, "mfx") <- mfx
 

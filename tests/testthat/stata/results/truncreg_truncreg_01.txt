@@ -1,0 +1,8 @@
+	(1)	(2)
+	y1	
+VARIABLES	coef	se
+		
+age	0.4309943818	0.2271971588
+quant	-0.1187764230	0.0325884872
+		
+Observations	7	

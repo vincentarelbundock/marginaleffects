@@ -163,10 +163,7 @@ get_predict(
   model,
   newdata = insight::get_data(model),
   type = "response",
-  mfx = NULL,
   newparams = NULL,
-  ndraws = NULL,
-  se.fit = NULL,
   ...
 )
 

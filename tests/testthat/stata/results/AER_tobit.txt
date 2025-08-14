@@ -1,0 +1,11 @@
+	(1)	(2)
+	y1	
+VARIABLES	coef	se
+		
+age	-0.1793325837	0.0790928495
+yearsmarried	0.5541418129	0.1345172487
+religiousness	-1.68622e+00	0.4037494784
+occupation	0.3260532488	0.2544235157
+rating	-2.28497e+00	0.4078257650
+		
+Observations	601	

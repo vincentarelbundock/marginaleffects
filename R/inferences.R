@@ -108,6 +108,12 @@ inferences <- function(
     estimator = NULL,
     ...) {
     mfx <- attr(x, "mfx")
+
+    # dummy mfx for `estimator` and no marginaleffects object
+    if (!inherits(mfx, "marginaleffects_internal")) {
+        mfx <- new_marginaleffects_internal(NULL, call("predictions"))
+    }
+
     if (inherits(mfx@model, c("model_fit", "workflow"))) {
         msg <- "The `inferences()` function does not support `tidymodels` objects."
         stop_sprintf(msg)

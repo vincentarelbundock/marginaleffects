@@ -381,8 +381,7 @@ predictions <- function(
             se <- do.call(get_se_delta, args)
             if (is.numeric(se) && length(se) == nrow(tmp)) {
                 mfx@jacobian <- attr(se, "jacobian")
-                attr(se, "jacobian") <- NULL
-                tmp[["std.error"]] <- se
+                tmp[["std.error"]] <- as.vector(se) # drop attribute
             }
         }
 

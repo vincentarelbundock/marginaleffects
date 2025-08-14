@@ -1,0 +1,122 @@
+# modelarchive
+
+## `brms`
+
+```{r}
+#| eval: false
+library("brms")
+
+dat <- mtcars
+dat$logic <- as.logical(dat$vs)
+dat$cyl_fac <- as.factor(dat$cyl)
+dat$cyl_cha <- as.character(dat$cyl)
+
+
+brms_numeric <- brm(am ~ hp, data = dat, family = bernoulli(), backend = "cmdstanr",
+               seed = 1024, silent = 2, chains = 4, iter = 1000)
+
+brms_numeric2 <- brm(am ~ mpg + hp, data = dat, family = bernoulli(), backend = "cmdstanr",
+                     seed = 1024, silent = 2, chains = 4, iter = 1000)
+
+brms_character <- brm(am ~ mpg + cyl_cha, data = dat, family = bernoulli(), backend = "cmdstanr",
+                      seed = 1024, silent = 2, chains = 4, iter = 1000)
+
+brms_factor <- brm(am ~ mpg + cyl_fac, data = dat, family = bernoulli(), backend = "cmdstanr",
+                   seed = 1024, silent = 2, chains = 4, iter = 1000)
+
+brms_factor_formula <- brm(am ~ mpg + factor(cyl), data = dat, family = bernoulli(), backend = "cmdstanr",
+                           seed = 1024, silent = 2, chains = 4, iter = 1000)
+
+brms_interaction <- brm(am ~ mpg * vs, data = dat, family = bernoulli(), backend = "cmdstanr",
+                        seed = 1024, silent = 2, chains = 4, iter = 1000)
+
+brms_logical <- brm(am ~ logic, data = dat, family = bernoulli(), backend = "cmdstanr",
+                    seed = 1024, silent = 2, chains = 4, iter = 1000)
+
+
+brms_cumulative_random <- brm(rating ~ treat + period + (1 | subject), family = cumulative(),
+                              data = inhaler, backend = "cmdstanr", silent = 2)
+
+brms_monotonic <- brm(mpg ~ hp + mo(carb), backend = "cmdstanr", data = mtcars, silent = 2)
+
+brms_monotonic_factor <- brm(mpg ~ hp + factor(cyl) + mo(carb), backend = "cmdstanr", data = mtcars, silent = 2)
+
+d  <- structure(list(events = c(1, 1, 1, 0, 11, 12, 125, 1, 1, 3, 0, 1, 1, 4, 19,
+                            173, 0, 0),
+                 total = c(10, 25, 11, 6, 128, 116, 766, 14, 20, 12, 21, 12, 1,
+                           72, 118, 765,2, 14),
+                 tx = c("toci", "toci", "toci", "toci", "toci", "toci", "toci",
+                        "toci", "toci", "control", "control", "control",
+                        "control", "control", "control", "control", "control",
+                        "control")),
+            row.names = c(NA,-18L),
+            class = "data.frame") 
+brms_binomial <- brms::brm(
+    data = d,
+    family = binomial,
+    formula = brms::bf( events | trials(total) ~ 1 + tx),
+    prior = prior(normal(0, 1.5), class = "b"))
+
+
+
+set.seed(1024)
+brms_lognormal_hurdle2 <- brm(
+    bf(mpg ~ disp, hu ~ disp),
+    data = mtcars,
+    family = hurdle_lognormal(),
+    seed = 1024,
+    silent = 2)
+
+brms_inhaler_cat <- brm(rating ~ cs(treat),
+  data = inhaler, family = acat(),
+  iter = 1000)
+
+# epi
+prior1 <- prior(normal(0, 10), class = b) + prior(cauchy(0, 2), class = sd)
+brms_epi <- brm(count ~ zAge + zBase * Trt + (1 | patient), backend = "cmdstanr",
+                data = epilepsy, family = poisson(), prior = prior1,
+                seed = 1024, iter = 1000, silent = 2)
+
+# vdem
+vdem_2015 <- read.csv("https://github.com/vincentarelbundock/marginaleffects/raw/main/data-raw/vdem_2015.csv")
+brms_vdem <- suppressWarnings(brm(
+  bf(media_index ~ party_autonomy + civil_liberties + (1 | region),
+     phi ~ (1 | region)),
+  data = vdem_2015,
+  family = Beta(),
+  backend = "cmdstanr",
+  control = list(adapt_delta = 0.9)))
+
+# lognormal
+library(tidyverse)
+library(brms)
+library(gapminder)
+
+set.seed(1234)
+gapminder <- gapminder::gapminder |> 
+  filter(continent != "Oceania") |> 
+  # Make a bunch of GDP values 0
+  mutate(prob_zero = ifelse(lifeExp < 50, 0.3, 0.02),
+         will_be_zero = rbinom(n(), 1, prob = prob_zero),
+         gdpPercap0 = ifelse(will_be_zero, 0, gdpPercap)) |> 
+  select(-prob_zero, -will_be_zero)
+
+brms_lognormal_hurdle <- brm(
+  bf(gdpPercap0 ~ lifeExp, hu ~ lifeExp),
+  data = gapminder,
+  family = hurdle_lognormal(),
+  chains = 4, cores = 4, seed = 1234,
+  backend = "cmdstanr")
+
+# downloaded from the easystats circus and hosted here as stable duplicate
+brms_mv_1 <- insight::download_model("brms_mv_1")
+brms_categorical_1 <- insight::download_model("brms_categorical_1")
+
+
+# logit with random effects
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/EmplUK.csv")
+dat$x <- as.numeric(dat$output > median(dat$output))
+dat$y <- as.numeric(dat$emp > median(dat$emp))
+brms_logit_re <- brm(y ~ x + (1 | firm), data = dat, backend = "cmdstanr", family = "bernoulli")
+saveRDS(brms_logit_re, "data/brms_logit_re.rds")
+```

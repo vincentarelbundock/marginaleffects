@@ -36,13 +36,13 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
     )
 
     # extract from weird boot.ci() list (inspired from `broom::tidy.broom` under MIT)
-    ci_list <- lapply(
+    ci_list <- suppressWarnings(lapply(
         seq_along(B$t0),
         boot::boot.ci,
         boot.out = B,
         conf = conf_level,
         type = conf_type
-    )
+    )) # extreme order statistics
     pos <- pmatch(conf_type, names(ci_list[[1]]))
     if (conf_type == "norm") {
         cols <- 2:3
@@ -64,7 +64,6 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
     cols <- setdiff(names(out), c("p.value", "std.error", "statistic", "s.value", "df"))
     out <- out[, cols, drop = FALSE]
 
-    mfx <- attr(x, "mfx")
     mfx@draws <- t(B$t)
     mfx@inferences <- B
     attr(out, "mfx") <- mfx

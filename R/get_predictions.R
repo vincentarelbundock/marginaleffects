@@ -9,8 +9,7 @@ get_predictions <- function(
     hi = NULL, # sink hole for shared comparisons/predictions call
     lo = NULL, # sink hole avoids pushing these variables through ... in get_predict()
     original = NULL, # sink hole
-    ...
-) {
+    ...) {
     newdata <- mfx@newdata
 
     # sometimes we want the perturbed coefficients model supplied by get_se_delta().

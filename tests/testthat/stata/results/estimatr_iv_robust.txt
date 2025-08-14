@@ -1,0 +1,9 @@
+	(1)	(2)
+	y1	
+VARIABLES	coef	se
+		
+P	-0.2435565378	(0.0823240385)
+D	0.3139917943	(0.0465590737)
+		
+Observations	20	
+Standard errors in parentheses		

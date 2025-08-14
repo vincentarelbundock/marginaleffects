@@ -46,6 +46,9 @@ get_predict.default <- function(
     # first argument in the predict methods is not always named "x" or "model"
     dots[["newdata"]] <- newdata
     dots[["type"]] <- type
+    if (!is.null(newparams)) {
+        dots[["newparams"]] <- newparams
+    }
     args <- c(list(model), dots)
 
     # `pred` is a secret argument called by `predict.lm` to turn a numeric vector into a data frame with correct `rowid`

@@ -1,0 +1,7 @@
+	(1)	(2)
+	y1	
+VARIABLES	coef	se
+		
+x	0.7357497853	0.8044699767
+		
+Observations	7	

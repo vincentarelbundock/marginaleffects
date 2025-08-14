@@ -86,6 +86,13 @@ joint_test <- function(
         df1 <- dim(R)[1] # Q
 
         if (joint_test == "f") {
+            # Check for lme models and warn about df heuristics
+            if (inherits(object, "lme") || (!is.null(mfx) && inherits(mfx@model, "lme"))) {
+                model_class <- if (inherits(object, "lme")) class(object)[1] else class(mfx@model)[1]
+                msg <- "The `hypotheses()` functions uses simple heuristics to select degrees of freedom for this test. See the relevant section in `?hypotheses`. These rules are likely to yield inappropriate results for models of class `%s`. Please supply degrees of freedom values explicitly via the `df` argument."
+                warn_sprintf(msg, model_class)
+            }
+            
             df2 <- tryCatch(
                 insight::get_df(mfx@model),
                 error = function(e) NULL
@@ -106,12 +113,6 @@ joint_test <- function(
                     stop_sprintf(
                         "Could not extract sample size from model object."
                     )
-                }
-
-                if (inherits(object, "lme")) {
-                    msg <- "The `hypotheses()` functions uses simple heuristics to select degrees of freedom for this test. See the relevant section in `?hypotheses`. These rules are likely to yield inappropriate results for models of class `%s`. Please supply degrees of freedom values explicitly via the `df` argument."
-                    warn_sprintf(msg) # <- sprintf(msg, class(object)[1])
-                    # warning(msg, call. = FALSE)
                 }
 
                 df2 <- n - length(theta_hat) # n - P

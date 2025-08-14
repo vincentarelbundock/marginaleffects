@@ -378,8 +378,7 @@ comparisons <- function(
         args <- utils::modifyList(args, dots)
         se <- do.call("get_se_delta", args)
         mfx@jacobian <- attr(se, "jacobian")
-        attr(se, "jacobian") <- NULL
-        cmp$std.error <- as.numeric(se)
+        cmp$std.error <- as.vector(as.numeric(se)) # drop attributes
         mfx@draws <- NULL
     }
 

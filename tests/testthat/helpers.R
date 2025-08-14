@@ -1,3 +1,5 @@
+options(marginaleffects_safe = FALSE)
+
 withr_rm <- function(names) {
   withr::defer(rm(
     list = intersect(names, ls(envir = .GlobalEnv)),

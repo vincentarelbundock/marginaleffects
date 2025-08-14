@@ -1,0 +1,7 @@
+	(1)	(2)
+	y1	
+VARIABLES	coef	se
+		
+temp	0.0016064063	0.0000570207
+		
+Observations	32	

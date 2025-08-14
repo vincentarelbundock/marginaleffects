@@ -209,8 +209,5 @@ plot_predictions <- function(
             linetype = v_color
         )
 
-    # attach model data for each of use
-    attr(p, "modeldata") <- mfx@modeldata
-
     return(p)
 }
