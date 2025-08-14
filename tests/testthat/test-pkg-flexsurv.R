@@ -10,3 +10,4 @@ test_that("flexsurv package works", {
     x <- comparisons(mod)
     expect_s3_class(x, "comparisons")
 })
+

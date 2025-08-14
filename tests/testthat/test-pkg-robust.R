@@ -8,3 +8,4 @@ test_that("robust package works", {
     expect_s3_class(slopes(mod), "slopes")
     expect_s3_class(predictions(mod), "predictions")
 })
+

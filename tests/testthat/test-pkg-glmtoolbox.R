@@ -13,3 +13,4 @@ test_that("glmtoolbox package works", {
     k <- avg_comparisons(fit)
     expect_s3_class(k, "comparisons")
 })
+

@@ -7,3 +7,4 @@ test_that("plot() gives informative errors for marginaleffects objects", {
     expect_error(plot(slopes(mod)), regexp = "plot_slopes")
     expect_error(plot(comparisons(mod)), regexp = "plot_comparisons")
 })
+

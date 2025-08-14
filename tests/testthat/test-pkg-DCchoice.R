@@ -21,3 +21,4 @@ test_that("DCchoice package works", {
     expect_s3_class(pre, "predictions")
     expect_s3_class(slo, "slopes")
 })
+

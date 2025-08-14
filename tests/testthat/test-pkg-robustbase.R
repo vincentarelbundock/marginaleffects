@@ -26,3 +26,4 @@ test_that("glmrob vs. margins comparison", {
     mfx <- slopes(model)
     expect_true(expect_margins(mar, mfx))
 })
+

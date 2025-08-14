@@ -16,3 +16,4 @@ test_that("aod package betabin works with factor variables", {
     pre <- predictions(mod)
     expect_s3_class(pre, "predictions")
 })
+

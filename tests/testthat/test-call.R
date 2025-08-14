@@ -12,3 +12,4 @@ test_that("recall captures calls to avoid evaluating twice", {
     suppressWarnings(rm("modd", .GlobalEnv))
     suppressWarnings(rm("modd"))
 })
+

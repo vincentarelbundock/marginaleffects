@@ -23,3 +23,4 @@ test_that("deprecation: p_adjust produces appropriate error", {
     mod <- lm(mpg ~ factor(cyl), data = mtcars)
     expect_error(avg_comparisons(mod, p_adjust = "holm"), regexp = "inferences")
 })
+

@@ -23,3 +23,4 @@ test_that("predictions work with missing character levels", {
     pred <- predictions(mod, newdata = datagrid(species = c("Chinstrap", "Gentoo")))
     expect_equal(nrow(pred), 2)
 })
+

@@ -26,3 +26,4 @@ test_that("Issue #1123: invlink(link) not default for avg_predictions()", {
     expect_equal(p1$estimate, p2$estimate, ignore_attr = TRUE)
     expect_false(isTRUE(all.equal(p1$estimate, p3$estimate)))
 })
+

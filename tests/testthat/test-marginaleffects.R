@@ -12,3 +12,4 @@ test_that("unsupported arguments produce appropriate errors", {
     expect_error(slopes(mod, transform = exp), regexp = "supported")
     expect_error(slopes(mod, cross = TRUE), regexp = "supported")
 })
+
