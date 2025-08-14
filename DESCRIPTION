@@ -308,6 +308,7 @@ Collate:
     'plot_slopes.R'
     'predictions.R'
     'print.R'
+    'prune.R'
     'recall.R'
     'sanitize_comparison.R'
     'sanitize_condition.R'

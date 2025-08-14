@@ -36,5 +36,9 @@ add_attributes <- function(out, mfx, ...) {
         }
     }
 
+    if (isTRUE(getOption("marginaleffects.lean"))) {
+        out <- prune(out)
+    }
+
     return(out)
 }
