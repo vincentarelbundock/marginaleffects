@@ -335,4 +335,5 @@ Collate:
     'zzz.R'
 Language: en-US
 Config/testthat/edition: 3
+Config/testthat/parallel: true
 VignetteBuilder: knitr, quarto
