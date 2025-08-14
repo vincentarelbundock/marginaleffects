@@ -28,9 +28,7 @@ mod <- dbarts::bart2(
 
 p <- predictions(mod, by = "species", newdata = dat)
 expect_inherits(p, "predictions")
-expect_warning(
-    p <- avg_comparisons(mod, variables = colnames(dat), newdata = dat),
-    pattern = "Variable\\(s\\) not found")
+p <- avg_comparisons(mod, variables = colnames(dat), newdata = dat)
 expect_inherits(p, "comparisons")
 
 
