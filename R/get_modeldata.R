@@ -119,9 +119,6 @@ get_variable_class <- function(newdata, variable = NULL, compare = NULL) {
         cl <- newdata@variable_class
     } else if ("marginaleffects_variable_class" %in% names(attributes(newdata))) {
         cl <- attributes(newdata)$marginaleffects_variable_class
-    } else {
-        newdata <- set_variable_class(newdata)
-        cl <- attributes(newdata)$marginaleffects_variable_class
     }
 
     if (is.null(compare) && is.null(variable)) {
