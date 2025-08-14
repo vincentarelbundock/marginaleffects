@@ -59,7 +59,7 @@ plot_build <- function(
     checkmate::assert_flag(gray)
 
     # create index before building ggplot to make sure it is available
-    dat$marginaleffects_term_index <- get_unique_index(dat, term_only = TRUE)
+    dat$marginaleffects_term_index <- get_unique_index(dat, mfx)
     multi_variables <- isTRUE(length(unique(dat$marginaleffects_term_index)) > 1)
 
     p <- ggplot2::ggplot(data = dat)

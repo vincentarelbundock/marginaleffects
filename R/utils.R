@@ -1,37 +1,18 @@
 get_unique_index <- function(x, term_only = FALSE) {
     idx <- c("term", "contrast", grep("^contrast_", colnames(x), value = TRUE))
-
-    if (!term_only) {
-        by <- attr(x, "by")
-        if (isTRUE(checkmate::check_data_frame(by))) {
-            idx <- c(idx, colnames(by))
-        } else {
-            idx <- c(idx, by)
-        }
-        explicit <- attr(attr(x, "newdata"), "explicit")
-        if (isTRUE(checkmate::check_character(explicit))) {
-            idx <- explicit
-        }
-    }
-
     idx <- intersect(unique(idx), colnames(x))
-
     if (length(idx) == 0) {
         return(NULL)
     }
-
     if (length(idx) == 1) {
         return(x[[idx]])
     }
-
     out <- x[, idx, drop = FALSE]
-
     for (i in ncol(out):2) {
         if (length(unique(out[[i]])) == 1) {
             out[[i]] <- NULL
         }
     }
-
     out <- apply(out, 1, toString)
     return(out)
 }
