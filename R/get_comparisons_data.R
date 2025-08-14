@@ -19,19 +19,9 @@ get_comparisons_data <- function(
     }
 
     # safety need for extensions not supported by `insight`
-    variable_classes <- attr(newdata, "newdata_variable_class")
-    if (length(variable_classes) == 0) {
-        newdata <- set_variable_class(newdata, model)
-        variable_classes <- attr(newdata, "marginaleffects_variable_class")
-    }
-    if (length(attr(modeldata, "marginaleffects_variable_class")) == 0) {
-        modeldata <- set_variable_class(modeldata, model)
-    }
-
-    if (any(c("factor", "character") %in% variable_classes)) {
-        first_cross <- names(variable_classes[
-            variable_classes %in% c("factor", "character")
-        ])[1]
+    if (any(c("factor", "character") %in% mfx@variable_class)) {
+        idx <- mfx@variable_class %in% c("factor", "character")
+        first_cross <- names(mfx@variable_class[idx])[1]
     } else {
         first_cross <- NULL
     }
