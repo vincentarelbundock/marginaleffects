@@ -293,7 +293,7 @@ datagrid_engine <- function(
         # created by insight::get_data
         for (n in names(dat_automatic)) {
             if (
-                get_variable_class(dat, n, c("factor", "strata", "cluster")) ||
+                check_variable_class(dat, n, c("factor", "strata", "cluster")) ||
                     n %in% tmp[["cluster"]]
             ) {
                 if (is.factor(dat_automatic[[n]])) {
@@ -301,13 +301,13 @@ datagrid_engine <- function(
                 } else {
                     out[[n]] <- FUN_character(dat_automatic[[n]])
                 }
-            } else if (get_variable_class(dat, n, "binary")) {
+            } else if (check_variable_class(dat, n, "binary")) {
                 out[[n]] <- FUN_binary(dat_automatic[[n]])
-            } else if (get_variable_class(dat, n, "logical")) {
+            } else if (check_variable_class(dat, n, "logical")) {
                 out[[n]] <- FUN_logical(dat_automatic[[n]])
-            } else if (get_variable_class(dat, n, "character")) {
+            } else if (check_variable_class(dat, n, "character")) {
                 out[[n]] <- FUN_character(dat_automatic[[n]])
-            } else if (get_variable_class(dat, n, "numeric")) {
+            } else if (check_variable_class(dat, n, "numeric")) {
                 if (is.integer(dat_automatic[[n]])) {
                     out[[n]] <- FUN_integer(dat_automatic[[n]])
                 } else {
@@ -438,7 +438,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
         newdata <- get_modeldata(model, additional_variables = FALSE)
     }
 
-    attr_variable_classes <- set_get_variable_class(newdata, model = model)
+    attr_variable_classes <- detect_variable_class(newdata, model = model)
 
     # subset columns, otherwise it can be ultra expensive to compute summaries for every variable. But do the expensive thing anyway if `newdata` is supplied explicitly by the user, or in counterfactual grids.
     if (!is.null(model) && is.null(newdata)) {
@@ -500,7 +500,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
         # not an "else" situation because we want to process the output of functions too
         if (
             is.factor(newdata[[n]]) ||
-                isTRUE(get_variable_class(attr_variable_classes, n, "factor"))
+                isTRUE(check_variable_class(attr_variable_classes, n, "factor"))
         ) {
             if (is.factor(newdata[[n]])) {
                 levs <- levels(newdata[[n]])

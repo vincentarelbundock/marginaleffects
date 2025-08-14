@@ -10,7 +10,7 @@ get_comparisons_data_factor <- function(
     if (is.factor(newdata[[variable$name]])) {
         levs <- levels(newdata[[variable$name]])
         convert_to_factor <- TRUE
-    } else if (get_variable_class(mfx, variable$name, "binary")) {
+    } else if (check_variable_class(mfx, variable$name, "binary")) {
         levs <- variable$value
         convert_to_factor <- FALSE
     } else {

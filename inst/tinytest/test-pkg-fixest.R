@@ -273,17 +273,16 @@ p <- predictions(mod)
 expect_inherits(p, "predictions")
 
 
-exit_file("TODO: get_variable_class() has changed")
+exit_file("TODO: check_variable_class() should only apply to pruned modeldata")
 # Issue #484: fixest::i() parsing
 mod1 <- feols(mpg ~ drat + i(cyl, i.gear), data = mtcars)
 mod2 <- feols(mpg ~ drat + i(cyl, gear), data = mtcars)
 mod3 <- feols(mpg ~ drat + i(cyl), data = mtcars)
 mod4 <- feols(mpg ~ drat + i(cyl, wt) + i(gear, i.am), data = mtcars)
 fun <- function(model) {
-    out <- marginaleffects:::get_modeldata(model)
-    out <- marginaleffects:::get_variable_class(out, compare = "categorical")
-    out <- names(out)
-    return(out)
+    p <- predictions(model)
+    s <- attr(p, "mfx")
+    check_variable_class(s, compare = "categorical")
 }
 expect_true(all(c("cyl", "gear") %in% fun(mod1)))
 expect_true("cyl" %in% fun(mod2))

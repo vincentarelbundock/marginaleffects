@@ -1,5 +1,5 @@
 source("helpers.R")
-exit_file("Broken get_variable_class() on missing modeldata")
+exit_file("Broken check_variable_class() on missing modeldata")
 
 requiet("mlr3verse")
 requiet("fmeffects")

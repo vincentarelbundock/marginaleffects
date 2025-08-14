@@ -109,7 +109,7 @@ new_marginaleffects_internal <- function(
         modeldata <- get_modeldata(model, additional_variables = TRUE)
     }
 
-    variable_class <- set_get_variable_class(modeldata, model = model)
+    variable_class <- detect_variable_class(modeldata, model = model)
 
     variable_names_response <- hush(unlist(
         insight::find_response(model, combine = TRUE, component = "all"),

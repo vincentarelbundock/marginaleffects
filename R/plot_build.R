@@ -26,7 +26,7 @@ plot_preprocess <- function(
             dat[[v]] <- fun(dat[[v]], c("Q1", "Q2", "Q3"))
         }
     }
-    if (get_variable_class(mfx, v_x, "categorical")) {
+    if (check_variable_class(mfx, v_x, "categorical")) {
         dat[[v_x]] <- factor(dat[[v_x]])
     }
     # colors, linetypes, and facets are categorical attributes
@@ -66,10 +66,10 @@ plot_build <- function(
 
     if (
         points > 0 &&
-            !get_variable_class(mfx, v_x, "categorical") &&
-            !get_variable_class(mfx, dv, "categorical")
+            !check_variable_class(mfx, v_x, "categorical") &&
+            !check_variable_class(mfx, dv, "categorical")
     ) {
-        if (!is.null(v_color) && get_variable_class(mfx, v_color, "categorical")) {
+        if (!is.null(v_color) && check_variable_class(mfx, v_color, "categorical")) {
             if (isTRUE(gray)) {
                 p <- p +
                     ggplot2::geom_point(

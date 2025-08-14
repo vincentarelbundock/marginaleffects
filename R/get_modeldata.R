@@ -6,16 +6,9 @@ get_modeldata <- function(model, ...) {
 }
 
 
-set_get_variable_class <- function(modeldata, model = NULL) {
-    out <- set_variable_class(modeldata, model = model)
-    out <- attr(out, "marginaleffects_variable_class")
-    return(out)
-}
-
-
-set_variable_class <- function(modeldata, model = NULL) {
+detect_variable_class <- function(modeldata, model = NULL) {
     if (is.null(modeldata)) {
-        return(modeldata)
+        return(character())
     }
 
     # this can be costly on large datasets, when only a portion of
@@ -56,8 +49,7 @@ set_variable_class <- function(modeldata, model = NULL) {
     }
 
     if (is.null(model)) {
-        attr(out, "marginaleffects_variable_class") <- cl
-        return(out)
+        return(cl)
     }
 
     te <- hush(insight::find_terms(model, flatten = TRUE))
@@ -113,14 +105,11 @@ set_variable_class <- function(modeldata, model = NULL) {
         cl[f] <- "cluster"
     }
 
-    # attributes
-    attr(out, "marginaleffects_variable_class") <- cl
-
-    return(out)
+    return(cl)
 }
 
 
-get_variable_class <- function(newdata, variable = NULL, compare = NULL) {
+check_variable_class <- function(newdata, variable = NULL, compare = NULL) {
     if (inherits(newdata, "marginaleffects_internal")) {
         cl <- newdata@variable_class
     } else if ("marginaleffects_variable_class" %in% names(attributes(newdata))) {
