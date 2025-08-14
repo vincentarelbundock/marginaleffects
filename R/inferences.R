@@ -107,7 +107,8 @@ inferences <- function(
     conformal_score = "residual_abs",
     estimator = NULL,
     ...) {
-    if (inherits(attr(x, "model"), c("model_fit", "workflow"))) {
+    mfx <- attr(x, "mfx")
+    if (inherits(mfx@model, c("model_fit", "workflow"))) {
         msg <- "The `inferences()` function does not support `tidymodels` objects."
         stop_sprintf(msg)
     }

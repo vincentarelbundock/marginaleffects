@@ -7,6 +7,8 @@ joint_test <- function(
     vcov = TRUE) {
     checkmate::assert_choice(joint_test, c("f", "chisq"))
 
+    mfx <- attr(object, "mfx")
+
     if (joint_test == "f") {
         checkmate::assert_numeric(df, len = 2, null.ok = TRUE)
     } else {
@@ -85,7 +87,7 @@ joint_test <- function(
 
         if (joint_test == "f") {
             df2 <- tryCatch(
-                insight::get_df(attr(object, "model")),
+                insight::get_df(mfx@model),
                 error = function(e) NULL
             )
             if (is.null(df2)) {
@@ -96,7 +98,7 @@ joint_test <- function(
                 n <- tryCatch(stats::nobs(object), error = function(e) NULL)
                 if (is.null(n)) {
                     n <- tryCatch(
-                        stats::nobs(attr(object, "model")),
+                        stats::nobs(mfx@model),
                         error = function(e) NULL
                     )
                 }
