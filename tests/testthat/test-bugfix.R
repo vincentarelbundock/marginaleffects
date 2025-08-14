@@ -1,0 +1,182 @@
+test_that("Issue 55: slopes with species variable works", {
+    # Bug stay dead: Issue 55
+    # Error: Argument 1 must have names.
+    # vab: possibly caused by a version of `emmeans` < 1.6.3
+    dat <- get_dataset("penguins", "palmerpenguins")
+    dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
+    mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species, data = dat, family = binomial)
+    mfx <- slopes(mod, variables = "species")
+    expect_s3_class(mfx, "data.frame")
+    expect_gt(nrow(mfx), 0)
+    expect_gt(ncol(mfx), 0)
+})
+
+
+test_that("Hernan & Robins replication: as.factor() in formula works", {
+    nhefs <- get_dataset("nhefs", "causaldata")
+    f <- wt82_71 ~
+        qsmk +
+        sex +
+        race +
+        age +
+        I(age * age) +
+        factor(education) +
+        smokeintensity +
+        I(smokeintensity * smokeintensity) +
+        smokeyrs +
+        I(smokeyrs * smokeyrs) +
+        as.factor(exercise) +
+        as.factor(active) +
+        wt71 +
+        I(wt71 * wt71) +
+        I(qsmk * smokeintensity)
+
+    fit <- glm(f, data = nhefs)
+    pre <- predictions(fit, newdata = nhefs)
+    mfx <- slopes(fit, newdata = nhefs) |> suppressWarnings()
+    cmp <- comparisons(fit, newdata = nhefs)
+    expect_s3_class(pre, "predictions")
+    expect_s3_class(cmp, "comparisons")
+    expect_s3_class(mfx, "marginaleffects")
+})
+
+
+test_that("Issue 372: reserved variable names are forbidden", {
+    dat <- mtcars
+    dat$group <- dat$am
+    mod <- lm(mpg ~ group, data = dat)
+    expect_error(comparisons(mod), regexp = "forbidden")
+    mod <- lm(mpg ~ group + hp, data = dat)
+    expect_error(comparisons(mod), regexp = "forbidden")
+})
+
+
+test_that("Issue #556: predictions match base R predict", {
+    set.seed(12345)
+    n <- 500
+    x <- sample(1:3, n, replace = TRUE)
+    y <- rnorm(n)
+    z <- ifelse(x + y + rlogis(n) > 1.5, 1, 0)
+    dat <- data.frame(x = factor(x), y = y, z = z)
+
+    m1 <- glm(z ~ x + y, family = binomial, data = dat)
+    nd <- datagrid(model = m1, y = seq(-2.5, 2.5, by = 0.25))
+    p1 <- predictions(m1, newdata = nd, type = "link")
+    p2 <- as.data.frame(predict(m1, newdata = nd, se.fit = TRUE))
+
+    expect_equal(p1$estimate, p2$fit)
+    expect_equal(p1$std.error, p2$se.fit)
+
+    set.seed(12345)
+    n <- 60
+    x <- sample(1:3, n, replace = TRUE)
+    z <- ifelse(x + rlogis(n) > 1.5, 1, 0)
+    dat <- data.frame(x = factor(x), z = z)
+
+    m2 <- glm(z ~ I(x == 2) + I(x == 3), family = binomial, data = dat)
+
+    p1 <- predictions(m2, type = "link")
+    p2 <- predictions(m2, newdata = dat, type = "link")
+    p3 <- as.data.frame(predict(m2, se.fit = TRUE, type = "link"))
+
+    expect_equal(p1$estimate, p3$fit)
+    expect_equal(p1$std.error, p3$se.fit)
+    expect_equal(p2$estimate, p3$fit)
+    expect_equal(p2$std.error, p3$se.fit)
+})
+
+
+test_that("Issue #671: avg_slopes with factor variables", {
+    dta <- data.frame(
+        lab = sample(0:1, size = 1000, replace = TRUE),
+        age_group = sample(c("old", "young"), size = 1000, replace = TRUE)
+    )
+    mod <- lm(lab ~ age_group, dta)
+    mfx <- avg_slopes(mod)
+    expect_equal(nrow(mfx), 1)
+    expect_true("young - old" %in% mfx$contrast)
+})
+
+
+test_that("Issue #697: forbidden variable names", {
+    dat <- data.frame(
+        outcome = rbinom(n = 100, size = 1, prob = 0.35),
+        var_binom = as.factor(rbinom(n = 100, size = 1, prob = 0.2)),
+        var_cont = rnorm(n = 100, mean = 10, sd = 7),
+        group = sample(letters[1:4], size = 100, replace = TRUE),
+        groups = sample(letters[1:4], size = 100, replace = TRUE)
+    )
+
+    m1 <- glm(
+        outcome ~ var_binom + var_cont + group,
+        data = dat,
+        family = binomial()
+    )
+    expect_error(avg_slopes(m1), regexp = "forbidden")
+    expect_error(avg_slopes(m1, variables = "var_cont"), regexp = "forbidden")
+
+    dat$group <- NULL
+    m2 <- glm(
+        outcome ~ var_binom + var_cont + groups,
+        data = dat,
+        family = binomial()
+    )
+    expect_s3_class(avg_slopes(m2), "slopes")
+    expect_s3_class(avg_slopes(m2, variables = "var_cont"), "slopes")
+})
+
+
+test_that("Issue #723: comparisons with interaction and by", {
+    dat <- data.frame(
+        rbind(
+            c(10., "A", "AU"),
+            c(20., "A", "AU"),
+            c(30., "A", "AU"),
+            c(20., "B", "AU"),
+            c(30., "B", "AU"),
+            c(40., "B", "AU"),
+            c(10., "B", "NZ"),
+            c(20., "B", "NZ"),
+            c(30., "B", "NZ"),
+            c(20., "A", "NZ"),
+            c(30., "A", "NZ"),
+            c(40., "A", "NZ")
+        )
+    )
+    colnames(dat) <- c("y", "treatment", "country")
+    mod <- lm(y ~ treatment * country, dat)
+    cmp <- comparisons(mod, variables = "treatment", by = "country")
+    expect_s3_class(cmp, "comparisons")
+    expect_equal(nrow(cmp), 2)
+    expect_equal(
+        cmp$estimate[cmp$country == "AU"],
+        coef(mod)["treatmentB"],
+        ignore_attr = TRUE
+    )
+    expect_equal(
+        cmp$estimate[cmp$country == "NZ"],
+        coef(mod)["treatmentB"] + coef(mod)["treatmentB:countryNZ"],
+        ignore_attr = TRUE
+    )
+})
+
+
+test_that("Issue #1005: plot_predictions with spaces in variable names", {
+    d1 <- d2 <- mtcars
+    d2[["horse power"]] <- d2$hp
+    m1 <- lm(mpg ~ hp, data = d1)
+    m2 <- lm(mpg ~ `horse power`, data = d2)
+    p1 <- plot_predictions(m1, condition = "hp", draw = FALSE)
+    p2 <- plot_predictions(m2, condition = "horse power", draw = FALSE) |> suppressWarnings()
+    expect_equal(p1$estimate, p2$estimate)
+    expect_equal(p1$std.error, p2$std.error)
+})
+
+
+test_that("Issue #1230: intercept-only models", {
+    mod <- lm(mpg ~ 1, mtcars)
+    p <- avg_predictions(mod)
+    expect_false(is.na(p$estimate))
+    expect_error(avg_slopes(mod), regexp = "no valid predictor")
+    expect_error(avg_comparisons(mod), regexp = "no valid predictor")
+})
