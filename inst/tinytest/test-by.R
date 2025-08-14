@@ -48,10 +48,6 @@ expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 # input sanity check
 expect_error(slopes(mod, slope = "bad"), pattern = "eyexavg")
 
-##### aggregate() refactor makes this possible again
-# by is deprecated in `summary()` and `tidy()`
-# expect_error(summary(comparisons(mod), by = "am"), pattern = "instead")
-# expect_error(tidy(comparisons(mod), by = "am"), pattern = "instead")
 
 # by argument
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
@@ -242,3 +238,9 @@ tmp$cyl <- as.factor(tmp$cyl) # 3 levels
 tmp$hp <- as.factor(tmp$hp)
 bygrid <- datagrid(newdata = tmp, by = "cyl", hp = unique)
 expect_equivalent(nrow(bygrid), 23)
+
+
+exit_file("aggregate() refactor makes this possible again")
+# by is deprecated in `summary()` and `tidy()`
+expect_error(summary(comparisons(mod), by = "am"), pattern = "instead")
+expect_error(tidy(comparisons(mod), by = "am"), pattern = "instead")

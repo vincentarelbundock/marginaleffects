@@ -4,7 +4,7 @@ sanitize_newdata_call <- function(scall, newdata = NULL, mfx = NULL, by = NULL) 
         # Return the call as-is, will be processed later with actual model data
         return(scall)
     }
-    
+
     if (rlang::quo_is_call(scall)) {
         df <- FALSE
         if (grepl("^datagrid", rlang::call_name(scall))) {
@@ -43,17 +43,16 @@ sanitize_newdata_call <- function(scall, newdata = NULL, mfx = NULL, by = NULL) 
 build_newdata <- function(mfx, newdata, by) {
     model <- mfx@model
     modeldata <- mfx@modeldata
-    
+
     # For mice objects, defer processing - newdata might be a call
     if (inherits(model, c("mira", "amest"))) {
         # Return placeholder that will be handled in process_imputation()
         return(list(
             "newdata" = newdata, # could be a call like subset(treat == 1)
-            "explicit" = TRUE,
             "modeldata" = modeldata
         ))
     }
-    
+
     if (isTRUE(checkmate::check_data_frame(by))) {
         by <- setdiff(colnames(by), "by")
     } else if (isTRUE(checkmate::check_flag(by))) {
@@ -64,12 +63,9 @@ build_newdata <- function(mfx, newdata, by) {
         args[[b]] <- unique
     }
 
-    newdata_explicit <- TRUE
-
     # NULL -> modeldata
     if (is.null(newdata)) {
         newdata <- modeldata
-        newdata_explicit <- FALSE
 
         # string -> datagrid()
     } else if (identical(newdata, "mean")) {
@@ -112,7 +108,6 @@ build_newdata <- function(mfx, newdata, by) {
 
     out <- list(
         "newdata" = newdata,
-        "explicit" = newdata_explicit,
         "modeldata" = modeldata
     )
     return(out)
@@ -216,38 +211,7 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
         newdata$rowid <- seq_len(nrow(newdata))
     }
 
-    # add weights column if available
-    if (is.null(wts)) {
-        wts <- FALSE
-    }
-    newdata <- add_wts_column(newdata = newdata, wts = wts, model = model)
-
-    # otherwise we get a warning in setDT()
-    if (inherits(model, "mlogit") && isTRUE(inherits(modeldata[["idx"]], "idx"))) {
-        modeldata$idx <- NULL
-        newdata$idx <- NULL
-    }
-
     data.table::setDT(newdata)
-
-    # attributes: misc
-    attr(newdata, "explicit") <- attr(tmp$newdata, "explicit")
-    attr(newdata, "newdata_modeldata") <- modeldata
-
-    # attributes: column classes
-    if (!is.null(modeldata)) {
-        mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
-        cl <- Filter(function(x) is.character(modeldata[[x]]), colnames(modeldata))
-        modeldata <- subset(modeldata, select = cl)
-        cl <- lapply(modeldata, unique)
-        vc <- attributes(modeldata)$marginaleffects_variable_class
-        column_attributes <- list(
-            "matrix_columns" = mc,
-            "character_levels" = cl,
-            "variable_class" = vc
-        )
-        newdata <- set_marginaleffects_attributes(newdata, column_attributes)
-    }
 
     return(newdata)
 }
@@ -351,7 +315,7 @@ add_newdata <- function(
         mfx@newdata <- scall
         return(mfx)
     }
-    
+
     # Step 1: Handle quoted calls to datagrid, subset, etc.
     newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
 
@@ -362,27 +326,6 @@ add_newdata <- function(
         by = by,
         wts = wts
     )
-
-    # Step 3: Deduplication - handle different parameter sets for predictions vs comparisons
-    dedup_args <- list(
-        mfx = mfx,
-        newdata = newdata,
-        wts = wts,
-        by = by
-    )
-
-    # Add function-specific arguments
-    if (!is.null(cross)) {
-        dedup_args$cross <- cross
-    }
-    if (!is.null(comparison)) {
-        dedup_args$comparison <- comparison
-    }
-    if (!is.null(byfun)) {
-        dedup_args$byfun <- byfun
-    }
-
-    newdata <- do.call(dedup_newdata, dedup_args)
 
     # Step 4: Extract numeric weights from newdata and store in @wts slot
     if ("marginaleffects_wts_internal" %in% colnames(newdata)) {

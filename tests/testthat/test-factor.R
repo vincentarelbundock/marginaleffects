@@ -8,8 +8,8 @@ test_that("factor handling works correctly in formulas", {
     mod2 <- lm(mpg ~ hp + cyl, tmp)
     mfx1 <- suppressWarnings(slopes(mod1))
     mfx2 <- slopes(mod2)
-         expect_equal(mfx1$estimate, mfx2$estimate, ignore_attr = TRUE)
-     expect_equal(mfx1$std.error, mfx2$std.error, tolerance = 1e-5, ignore_attr = TRUE)
+    expect_equal(mfx1$estimate, mfx2$estimate, ignore_attr = TRUE)
+    expect_equal(mfx1$std.error, mfx2$std.error, tolerance = 1e-5, ignore_attr = TRUE)
 })
 
 test_that("factor works on LHS and RHS at the same time", {
@@ -41,7 +41,7 @@ test_that("factor in formula works with incomplete newdata", {
     mod <- lm(mpg ~ factor(cyl), data = mtcars)
     mfx1 <- slopes(mod, newdata = data.frame(cyl = 4))
     mfx2 <- slopes(mod, newdata = datagrid(cyl = 4))
-         expect_equal(mfx1[, 1:5], mfx2[, 1:5], ignore_attr = TRUE)
+    expect_equal(mfx1[, 1:5], mfx2[, 1:5], ignore_attr = TRUE)
 })
 
 test_that("get_data.coxph() works with strata()", {
@@ -58,7 +58,8 @@ test_that("get_data.coxph() works with strata()", {
     mod <- coxph(Surv(time, status) ~ x + strata(sex), data = test1, ties = "breslow")
 
     nd <- datagrid(sex = 0, newdata = test1)
-    mfx <- slopes(mod, variables = "x", newdata = nd, type = "lp")
+    mfx <- slopes(mod, variables = "x", newdata = nd, type = "lp") |>
+        suppressWarnings()
     expect_s3_class(mfx, "marginaleffects")
 })
 
@@ -127,6 +128,6 @@ test_that("factor handling works with hypothesis and newdata", {
         type = "response",
         hypothesis = ~pairwise
     )
-         expect_equal(p1$estimate, p2$estimate, ignore_attr = TRUE)
-     expect_equal(p1$std.error, p2$std.error, ignore_attr = TRUE)
+    expect_equal(p1$estimate, p2$estimate, ignore_attr = TRUE)
+    expect_equal(p1$std.error, p2$std.error, ignore_attr = TRUE)
 })

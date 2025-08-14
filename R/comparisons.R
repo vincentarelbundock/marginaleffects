@@ -252,7 +252,13 @@ comparisons <- function(
     }
 
     scall <- rlang::enquo(newdata)
-    mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, cross = cross, comparison = comparison)
+    mfx <- add_newdata(mfx, 
+        scall, 
+        newdata = newdata, 
+        by = by, 
+        wts = wts, 
+        cross = cross, 
+        comparison = comparison)
 
     # sanity checks
     dots <- list(...)
