@@ -430,14 +430,6 @@ comparisons <- function(
 
     data.table::setDF(out)
 
-    out <- set_marginaleffects_attributes(
-        out,
-        get_marginaleffects_attributes(
-            mfx@newdata,
-            include_regex = "^newdata.*class|explicit|matrix|levels"
-        )
-    )
-
     out <- add_attributes(out, mfx,
         by = by,
         vcov.type = vcov.type,
