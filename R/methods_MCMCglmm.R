@@ -4,7 +4,10 @@ get_predict.MCMCglmm <- function(
     model,
     newdata,
     type = "response",
+    mfx = NULL,
+    newparams = NULL,
     ndraws = 1000,
+    se.fit = NULL,
     ...
 ) {
     ndraws_mod <- nrow(model$VCV)

@@ -60,13 +60,25 @@
 \alias{get_predict.tobit1}
 \title{Get predicted values from a model object (internal function)}
 \usage{
-get_predict(model, newdata, type, mfx = NULL, ...)
+get_predict(
+  model,
+  newdata,
+  type,
+  mfx = NULL,
+  newparams = NULL,
+  ndraws = NULL,
+  se.fit = NULL,
+  ...
+)
 
 \method{get_predict}{default}(
   model,
   newdata = insight::get_data(model),
   type = "response",
   mfx = NULL,
+  newparams = NULL,
+  ndraws = NULL,
+  se.fit = NULL,
   ...
 )
 
@@ -86,7 +98,16 @@ get_predict(model, newdata, type, mfx = NULL, ...)
   ...
 )
 
-\method{get_predict}{MCMCglmm}(model, newdata, type = "response", ndraws = 1000, ...)
+\method{get_predict}{MCMCglmm}(
+  model,
+  newdata,
+  type = "response",
+  mfx = NULL,
+  newparams = NULL,
+  ndraws = 1000,
+  se.fit = NULL,
+  ...
+)
 
 \method{get_predict}{afex_aov}(model, newdata = NULL, ...)
 
@@ -142,7 +163,10 @@ get_predict(model, newdata, type, mfx = NULL, ...)
   model,
   newdata = insight::get_data(model),
   type = "response",
+  mfx = NULL,
   newparams = NULL,
+  ndraws = NULL,
+  se.fit = NULL,
   ...
 )
 
@@ -232,8 +256,10 @@ get_predict(model, newdata, type, mfx = NULL, ...)
   model,
   newdata = insight::get_data(model),
   type = "response",
-  se.fit = FALSE,
   mfx = NULL,
+  newparams = NULL,
+  ndraws = NULL,
+  se.fit = FALSE,
   ...
 )
 

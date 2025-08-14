@@ -6,7 +6,10 @@ get_predict.glmmTMB <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
+    mfx = NULL,
     newparams = NULL,
+    ndraws = NULL,
+    se.fit = NULL,
     ...
 ) {
     if (inherits(vcov, "vcov.glmmTMB")) {

@@ -72,8 +72,10 @@ get_predict.svyglm <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
-    se.fit = FALSE,
     mfx = NULL,
+    newparams = NULL,
+    ndraws = NULL,
+    se.fit = FALSE,
     ...
 ) {
     estimate <- stats::predict(

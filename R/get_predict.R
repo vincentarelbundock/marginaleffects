@@ -7,7 +7,7 @@
 #' @inheritParams slopes
 #' @keywords internal
 #' @export
-get_predict <- function(model, newdata, type, mfx = NULL, ...) {
+get_predict <- function(model, newdata, type, mfx = NULL, newparams = NULL, ndraws = NULL, se.fit = NULL, ...) {
     UseMethod("get_predict", model)
 }
 
@@ -19,6 +19,9 @@ get_predict.default <- function(
     newdata = insight::get_data(model),
     type = "response",
     mfx = NULL,
+    newparams = NULL,
+    ndraws = NULL,
+    se.fit = NULL,
     ...
 ) {
     dots <- list(...)
