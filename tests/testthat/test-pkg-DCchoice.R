@@ -1,4 +1,5 @@
 skip_if_not_installed("DCchoice")
+withr_library("DCchoice")
 
 test_that("DCchoice package works", {
     data(oohbsyn)
