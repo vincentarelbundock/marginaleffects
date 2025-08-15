@@ -21,12 +21,13 @@ generics::components
 #' without warning in future versions of the marginaleffects package.
 #' @export
 components.marginaleffects <- function(object, component = NULL, ...) {
-    mfx <- components(object, "all")
+    mfx <- attr(object, "marginaleffects", exact = TRUE)
+
     if (is.null(mfx)) {
         stop("No mfx attribute found in object")
     }
 
-    if (identical(components, "all")) {
+    if (identical(component, "all")) {
         return(mfx)
     }
 
@@ -35,8 +36,7 @@ components.marginaleffects <- function(object, component = NULL, ...) {
 
     if (is.null(component)) {
         msg <- checkmate::check_choice(component, choices = valid_components)
-        msg <- sub(".*a subset of", "one of", msg)
-        msg <- paste("The `component` argument must be", msg)
+        msg <- sub(".*\\{", "The `component` argument must be one of {'all',", msg)
         message(msg)
         return(invisible(NULL))
     }

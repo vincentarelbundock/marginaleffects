@@ -556,7 +556,5 @@ get_comparisons <- function(
     # reset settings
     settings_rm("marginaleffects_safefun_return1")
 
-    # output
-    attr(out, "original") <- original
     return(out)
 }

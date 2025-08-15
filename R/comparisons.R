@@ -313,7 +313,7 @@ comparisons <- function(
     # because get_vcov() will produce an informative error later.
     mfx <- add_degrees_of_freedom(mfx = mfx, df = df, by = by, hypothesis = hypothesis, vcov = vcov)
 
-    vcov.type <- get_vcov_label(vcov)
+    mfx@vcov_type <- get_vcov_label(vcov)
     mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
 
     predictors <- mfx@variables$conditional
@@ -432,7 +432,6 @@ comparisons <- function(
 
     out <- add_attributes(out, mfx,
         by = by,
-        vcov.type = vcov.type,
         hypothesis_by = hyp_by)
 
     if (inherits(mfx@model, "brmsfit")) {

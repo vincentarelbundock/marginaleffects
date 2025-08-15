@@ -229,11 +229,11 @@ hypotheses <- function(
 
     vcov_false <- isFALSE(vcov)
     if (!isTRUE(checkmate::check_matrix(vcov))) {
-        vcov.type <- get_vcov_label(vcov = vcov)
+        mfx@vcov_type <- get_vcov_label(vcov = vcov)
         vcov <- get_vcov(model = model, vcov = vcov)
         mfx@vcov_model <- vcov
     } else {
-        vcov.type <- "matrix"
+        mfx@vcov_type <- "matrix"
     }
 
     b <- get_hypotheses(
@@ -312,7 +312,6 @@ hypotheses <- function(
     # Add common attributes from mfx S4 slots
     out <- add_attributes(out, mfx,
         vcov = vcov,
-        vcov.type = vcov.type,
         multcomp = multcomp,
         hypothesis_function_by = attr(b, "hypothesis_function_by")
     )

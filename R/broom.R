@@ -59,11 +59,11 @@ glance.slopes <- function(x, ...) {
     } else {
         out <- NULL
     }
-    vcov.type <- attr(x, "vcov.type")
-    if (is.null(out) && !is.null(vcov.type)) {
-        out <- data.frame("vcov.type" = vcov.type)
+    vcov_type <- components(x, "vcov_type")
+    if (is.null(out) && !is.null(vcov_type)) {
+        out <- data.frame("vcov.type" = vcov_type)
     } else if (!is.null(out)) {
-        out[["vcov.type"]] <- vcov.type
+        out[["vcov.type"]] <- vcov_type
     }
     out <- tibble::as_tibble(out)
     return(out)

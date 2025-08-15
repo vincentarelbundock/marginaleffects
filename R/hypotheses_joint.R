@@ -7,7 +7,8 @@ joint_test <- function(
     vcov = TRUE) {
     checkmate::assert_choice(joint_test, c("f", "chisq"))
 
-    mfx <- components(object, "all")
+    # do not use components() because this may be a model object
+    mfx <- attr(object, "marginaleffects")
 
     if (joint_test == "f") {
         checkmate::assert_numeric(df, len = 2, null.ok = TRUE)

@@ -13,8 +13,7 @@ get_predict.rlmerMod <- function(
     newdata = insight::get_data(model),
     type = "response",
     mfx = NULL,
-    ...
-) {
+    ...) {
     args <- list(...)
     # some predict methods raise warnings on unused arguments
     unused <- c(
@@ -29,6 +28,7 @@ get_predict.rlmerMod <- function(
         "vcov",
         "eps",
         "modeldata",
+        "marginaleffects",
         "mfx"
     )
     args <- args[setdiff(names(args), unused)]

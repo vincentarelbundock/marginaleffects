@@ -69,6 +69,7 @@ setClass(
         variable_names_response = "character",
         variable_names_by = "character",
         vcov_model = "ANY",
+        vcov_type = "characterOrNULL",
         wts = "ANY"
     )
 )
@@ -105,6 +106,7 @@ new_marginaleffects_internal <- function(
     type = NULL,
     variables = list(),
     vcov_model = NULL,
+    vcov_type = NULL,
     wts = NULL) {
     # For mice objects, modeldata handling is deferred to process_imputation()
     if (inherits(model, c("mira", "amest"))) {
@@ -150,6 +152,7 @@ new_marginaleffects_internal <- function(
         variable_class = variable_class,
         variable_names_response = variable_names_response,
         vcov_model = vcov_model,
+        vcov_type = vcov_type,
         wts = wts
     )
 }

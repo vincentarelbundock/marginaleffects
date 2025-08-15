@@ -25,6 +25,7 @@ new_marginaleffects_internal(
   type = NULL,
   variables = list(),
   vcov_model = NULL,
+  vcov_type = NULL,
   wts = NULL
 )
 }

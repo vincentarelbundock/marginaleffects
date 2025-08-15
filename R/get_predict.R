@@ -22,8 +22,7 @@ get_predict.default <- function(
     newparams = NULL,
     ndraws = NULL,
     se.fit = NULL,
-    ...
-) {
+    ...) {
     dots <- list(...)
 
     if (is.null(type)) {
@@ -39,6 +38,7 @@ get_predict.default <- function(
         "draw",
         "modeldata",
         "flag",
+        "marginaleffects",
         "mfx"
     )
     dots <- dots[setdiff(names(dots), unused)]

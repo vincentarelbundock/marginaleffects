@@ -276,8 +276,8 @@ cmp2 <- comparisons(mod, re.form = NA)
 mfx2 <- slopes(mod, re.form = NA)
 expect_equivalent(mfx$estimate, cmp$estimate)
 expect_equivalent(mfx$std.error, cmp$std.error, tolerance = .0001)
-expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")
-expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
+expect_equivalent(components(mfx, "vcov_type"), "Kenward-Roger")
+expect_equivalent(components(cmp, "vcov_type"), "Kenward-Roger")
 
 
 # Issue #436
@@ -379,7 +379,7 @@ expect_error(
     pattern = "not supported.*with.*by.*hypothesis"
 )
 expect_error(
-    comparisons(fit, vcov = "satterthwaite", hypothesis = 'b1 = 0', re.form = NA),
+    comparisons(fit, vcov = "satterthwaite", hypothesis = "b1 = 0", re.form = NA),
     pattern = "not supported.*with.*by.*hypothesis"
 )
 expect_error(
@@ -414,7 +414,7 @@ expect_error(avg_predictions(m, by = "var_binom", newdata = "balanced"), pattern
 
 # Issue #1490: no warning when vcov=FALSE
 options(marginaleffects_safe = TRUE)
-mod <- lmer(Sepal.Length ~ Sepal.Width + (1|Species), data = iris)
+mod <- lmer(Sepal.Length ~ Sepal.Width + (1 | Species), data = iris)
 expect_warning(avg_comparisons(mod, vcov = TRUE))
 expect_warning(avg_comparisons(mod))
 expect_false(ignore(expect_warning)(avg_comparisons(mod, vcov = FALSE)))

@@ -362,6 +362,7 @@ predictions <- function(
     mfx@draws <- attr(tmp, "posterior_draws")
 
     if (!isFALSE(vcov)) {
+        mfx@vcov_type <- get_vcov_label(vcov)
         mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
 
         # Delta method for standard errors

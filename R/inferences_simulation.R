@@ -70,7 +70,7 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     out <- out[, cols, drop = FALSE]
 
     mfx@draws <- draws
-    attr(out, "mfx") <- mfx
+    attr(out, "marginaleffects") <- mfx
 
     return(out)
 }

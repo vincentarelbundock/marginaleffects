@@ -17,7 +17,6 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
     }
 
     attr(x, "variables_datagrid") <- attr(newdata, "variables_datagrid")
-    attr(x, "by") <- if (is.character(by)) by else names(by)
 
     argnames <- names(formals(hypothesis))
     if (!"x" %in% argnames) {
