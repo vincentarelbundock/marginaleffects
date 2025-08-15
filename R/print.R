@@ -181,13 +181,7 @@ print.marginaleffects <- function(
         # user-supplied omissions
         getOption("marginaleffects_print_omit", default = NULL),
         # response variable
-        tryCatch(
-            unlist(
-                insight::find_response(attr(x, "model"), combine = TRUE),
-                use.names = FALSE
-            ),
-            error = function(e) NULL
-        )
+        mfx@variable_names_response
     )
 
     if ("term" %in% colnames(out) && length(unique(out$term)) == 1L) {

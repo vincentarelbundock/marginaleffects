@@ -45,8 +45,8 @@ tidy.hypotheses <- tidy.comparisons
 glance.slopes <- function(x, ...) {
     insight::check_if_installed("insight")
     insight::check_if_installed("modelsummary")
-    model <- tryCatch(attr(x, "model"), error = function(e) NULL)
     mfx <- attr(x, "mfx")
+    model <- tryCatch(mfx@model, error = function(e) NULL)
     if (is.null(model) || isTRUE(checkmate::check_string(model))) {
         model <- tryCatch(mfx@call[["model"]], error = function(e) NULL)
     }

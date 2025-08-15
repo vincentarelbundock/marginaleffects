@@ -159,7 +159,7 @@ inferences <- function(
 
     # Update call with pre-evaluated newdata if available
     if (!is.null(call_mfx)) {
-        nd <- attr(x, "newdata")
+        nd <- mfx@newdata
         if (inherits(nd, "data.frame")) {
             call_mfx[["newdata"]] <- nd
         }

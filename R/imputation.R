@@ -57,7 +57,7 @@ process_imputation <- function(mfx) {
         mfxlist[[i]]$term <- seq_len(nrow(mfxlist[[i]]))
 
         # Needed for mice::pool() to get dfcom, even when lean = TRUE
-        attr(mfxlist[[i]], "model") <- modellist[[i]]
+        attr(mfxlist[[i]], "mfx")@model <- modellist[[i]]
         class(mfxlist[[i]]) <- c("marginaleffects_mids", class(mfxlist[[i]]))
     }
 
@@ -84,14 +84,6 @@ process_imputation <- function(mfx) {
     out <- get_ci(out, attr(mfxlist[[1]], "mfx"))
 
     out <- backtransform(out, sanitize_transform(tr))
-
-    # Global option for lean return object
-    lean <- getOption("marginaleffects_lean", default = FALSE)
-
-    if (!lean) {
-        attr(out, "inferences") <- mipool
-        attr(out, "model") <- mice::pool(lapply(mfxlist, attr, "model"))
-    }
 
     return(out)
 }

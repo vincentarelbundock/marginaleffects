@@ -32,7 +32,7 @@ expect_false(anyNA(p$std.error))
 # Issue #6 marginaleffectsJAX: missing model matrix attribute
 mod_factor <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 p <- predictions(mod_factor, by = "cyl")
-M <- attr(attr(p, "newdata"), "marginaleffects_model_matrix")
+M <- attr(attr(p, "mfx")@newdata, "marginaleffects_model_matrix")
 expect_inherits(M, "matrix")
 
 
