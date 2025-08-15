@@ -24,6 +24,8 @@ new_marginaleffects_internal(
   numderiv = list("fdforward"),
   type = NULL,
   variables = list(),
+  variable_names_by = character(),
+  variable_names_by_hypothesis = character(),
   vcov_model = NULL,
   vcov_type = NULL,
   wts = NULL

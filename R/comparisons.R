@@ -346,7 +346,8 @@ comparisons <- function(
     args <- utils::modifyList(args, dots)
     cmp <- do.call("get_comparisons", args)
 
-    hyp_by <- attr(cmp, "hypothesis_function_by")
+    tmp <- attr(cmp, "hypothesis_function_by")
+    if (!is.null(tmp)) mfx@variable_names_by_hypothesis <- tmp
 
     # bayesian posterior
     mfx@draws <- attr(cmp, "posterior_draws")
@@ -430,8 +431,7 @@ comparisons <- function(
 
     data.table::setDF(out)
 
-    out <- add_attributes(out, mfx,
-        hypothesis_by = hyp_by)
+    out <- add_attributes(out, mfx)
 
     if (inherits(mfx@model, "brmsfit")) {
         insight::check_if_installed("brms")

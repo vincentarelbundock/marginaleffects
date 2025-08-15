@@ -168,7 +168,7 @@ print.marginaleffects <- function(
     explicit <- c(
         bycols,
         if (!is.null(mfx) && is.data.frame(mfx@newdata)) attr(mfx@newdata, "explicit") else NULL,
-        attr(x, "hypothesis_by"),
+        mfx@variable_names_by_hypothesis,
         attr(x, "newdata_explicit"),
         attr(x, "hypothesis_function_by")
     )

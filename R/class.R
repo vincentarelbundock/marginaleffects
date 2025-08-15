@@ -68,6 +68,7 @@ setClass(
         variable_class = "characterOrNULL",
         variable_names_response = "character",
         variable_names_by = "character",
+        variable_names_by_hypothesis = "character",
         vcov_model = "ANY",
         vcov_type = "characterOrNULL",
         wts = "ANY"
@@ -105,6 +106,8 @@ new_marginaleffects_internal <- function(
     numderiv = list("fdforward"),
     type = NULL,
     variables = list(),
+    variable_names_by = character(),
+    variable_names_by_hypothesis = character(),
     vcov_model = NULL,
     vcov_type = NULL,
     wts = NULL) {
@@ -151,6 +154,8 @@ new_marginaleffects_internal <- function(
         variables = variables,
         variable_class = variable_class,
         variable_names_response = variable_names_response,
+        variable_names_by = variable_names_by,
+        variable_names_by_hypothesis = variable_names_by_hypothesis,
         vcov_model = vcov_model,
         vcov_type = vcov_type,
         wts = wts

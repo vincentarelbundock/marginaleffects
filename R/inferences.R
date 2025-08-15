@@ -225,7 +225,6 @@ inferences <- function(
         "vcov",
         "weights",
         "transform",
-        "hypothesis_by",
         "nchains",
         "vcov.type",
         "variables",

@@ -318,7 +318,8 @@ predictions <- function(
     args <- utils::modifyList(args, dots)
     tmp <- do.call(get_predictions, args)
 
-    hyp_by <- attr(tmp, "hypothesis_function_by")
+    hyp <- attr(tmp, "hypothesis_function_by")
+    if (!is.null(hyp)) mfx@variable_names_by_hypothesis <- hyp
 
     # two cases when tmp is a data.frame
     # get_predict gets us rowid with the original rows
@@ -422,8 +423,7 @@ predictions <- function(
     class(out) <- c("predictions", class(out))
 
     # Add common attributes from mfx S4 slots
-    out <- add_attributes(out, mfx,
-        hypothesis_by = hyp_by)
+    out <- add_attributes(out, mfx)
 
     if (inherits(mfx@model, "brmsfit")) {
         insight::check_if_installed("brms")
