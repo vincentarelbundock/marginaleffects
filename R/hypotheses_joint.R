@@ -94,17 +94,20 @@ joint_test <- function(
                 warn_sprintf(msg, model_class)
             }
 
-            df2 <- tryCatch(
-                insight::get_df(mfx@model),
-                error = function(e) NULL
-            )
+            df2 <- NULL
+            if (!is.null(mfx)) {
+                df2 <- tryCatch(
+                    insight::get_df(mfx@model),
+                    error = function(e) NULL
+                )
+            }
             if (is.null(df2)) {
-                tryCatch(insight::get_df(object), error = function(e) NULL)
+                df2 <- tryCatch(insight::get_df(object), error = function(e) NULL)
             }
             if (is.null(df2)) {
                 # n: sample size
                 n <- tryCatch(stats::nobs(object), error = function(e) NULL)
-                if (is.null(n)) {
+                if (is.null(n) && !is.null(mfx)) {
                     n <- tryCatch(
                         stats::nobs(mfx@model),
                         error = function(e) NULL

@@ -90,3 +90,8 @@ expect_true(h2$statistic == h3$statistic)
 mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 mfx <- slopes(mod, variables = "wt", newdata = datagrid(hp = fivenum))
 h <- hypotheses(mfx, joint = 1:2)
+
+# joint hypotheses: character vector on model object directly (bug fix)
+model <- lm(mpg ~ as.factor(cyl) * hp, data = mtcars)
+h <- hypotheses(model, joint = c("as.factor(cyl)6:hp", "as.factor(cyl)8:hp"))
+expect_inherits(h, "hypotheses")
