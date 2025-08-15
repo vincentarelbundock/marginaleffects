@@ -4,9 +4,9 @@ source("helpers.R")
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ am + factor(cyl), tmp)
-expect_inherits(attr(predictions(mod), "model"), "lm")
-expect_inherits(attr(comparisons(mod), "model"), "lm")
-expect_inherits(attr(avg_slopes(mod), "model"), "lm")
+expect_inherits(components(predictions(mod), "model"), "lm")
+expect_inherits(components(comparisons(mod), "model"), "lm")
+expect_inherits(components(avg_slopes(mod), "model"), "lm")
 
 # Issue #1089 white space in variable name
 tmp <- mtcars
@@ -32,7 +32,7 @@ expect_false(anyNA(p$std.error))
 # Issue #6 marginaleffectsJAX: missing model matrix attribute
 mod_factor <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 p <- predictions(mod_factor, by = "cyl")
-M <- attr(attr(p, "mfx")@newdata, "marginaleffects_model_matrix")
+M <- attr(components(p, "newdata"), "marginaleffects_model_matrix")
 expect_inherits(M, "matrix")
 
 

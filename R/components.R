@@ -16,6 +16,9 @@ generics::components
 #'   attribute of marginaleffects objects. The `mfx` attribute contains an S4 object of
 #'   class "marginaleffects_internal" with various slots containing model information,
 #'   data, and computational details used by the marginaleffects functions.
+#'
+#' Warning: the internal slot names are not considered part of the public API and may change
+#' without warning in future versions of the marginaleffects package.
 #' @export
 components.marginaleffects <- function(object, component = NULL, ...) {
     mfx <- attr(object, "mfx")

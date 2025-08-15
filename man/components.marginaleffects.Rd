@@ -27,4 +27,7 @@ This function provides access to the internal components stored in the \code{mfx
 attribute of marginaleffects objects. The \code{mfx} attribute contains an S4 object of
 class "marginaleffects_internal" with various slots containing model information,
 data, and computational details used by the marginaleffects functions.
+
+Warning: the internal slot names are not considered part of the public API and may change
+without warning in future versions of the marginaleffects package.
 }

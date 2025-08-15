@@ -167,7 +167,7 @@ print.marginaleffects <- function(
     }
     explicit <- c(
         bycols,
-        attr(attr(x, "newdata"), "explicit"),
+        if (!is.null(mfx) && is.data.frame(mfx@newdata)) attr(mfx@newdata, "explicit") else NULL,
         attr(x, "hypothesis_by"),
         attr(x, "newdata_explicit"),
         attr(x, "hypothesis_function_by")
@@ -195,7 +195,7 @@ print.marginaleffects <- function(
     }
 
     # Subset columns
-    implicit <- attr(attr(x, "newdata"), "implicit")
+    implicit <- if (!is.null(mfx) && is.data.frame(mfx@newdata)) attr(mfx@newdata, "implicit") else NULL
     idx <- c(
         explicit,
         names(dict),

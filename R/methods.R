@@ -4,8 +4,8 @@
 #' @export
 vcov.comparisons <- function(object, ...) {
     # align J and V: This might be a problematic hack, but I have not found examples yet.
-    V <- attr(object, "vcov")
-    J <- attr(object, "jacobian")
+    V <- components(object, "vcov_model")
+    J <- components(object, "jacobian")
     aligned <- align_jacobian_vcov(J, V, object, ...)
     aligned$J %*% aligned$V %*% t(aligned$J)
 }
@@ -63,7 +63,7 @@ coef.hypotheses <- coef.comparisons
 #' @noRd
 df.residual.comparisons <- function(object, ...) {
     out <- tryCatch(
-        stats::df.residual(attr(object, "mfx")@model),
+        stats::df.residual(components(object, "model")),
         error = function(e) NULL
     )
     if (is.null(out)) out <- Inf
