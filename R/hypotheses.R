@@ -229,8 +229,9 @@ hypotheses <- function(
 
     vcov_false <- isFALSE(vcov)
     if (!isTRUE(checkmate::check_matrix(vcov))) {
-        vcov <- get_vcov(model = model, vcov = vcov)
         vcov.type <- get_vcov_label(vcov = vcov)
+        vcov <- get_vcov(model = model, vcov = vcov)
+        mfx@vcov_model <- vcov
     } else {
         vcov.type <- "matrix"
     }
