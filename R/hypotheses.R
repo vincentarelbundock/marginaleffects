@@ -311,8 +311,6 @@ hypotheses <- function(
 
     # Add common attributes from mfx S4 slots
     out <- add_attributes(out, mfx,
-        vcov = vcov,
-        multcomp = multcomp,
         hypothesis_function_by = attr(b, "hypothesis_function_by")
     )
 

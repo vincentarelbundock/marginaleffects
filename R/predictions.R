@@ -423,7 +423,6 @@ predictions <- function(
 
     # Add common attributes from mfx S4 slots
     out <- add_attributes(out, mfx,
-        by = by,
         hypothesis_by = hyp_by)
 
     if (inherits(mfx@model, "brmsfit")) {

@@ -227,8 +227,8 @@ print.marginaleffects <- function(
         print_columns_text <- sprintf("Columns: %s\n", toString(colnames(x)))
     }
 
-    if (isTRUE(type) && !is.null(attr(x, "type"))) {
-        print_type_text <- sprintf("Type: %s\n", attr(x, "type"))
+    if (isTRUE(type) && !is.null(mfx@type)) {
+        print_type_text <- sprintf("Type: %s\n", mfx@type)
     }
 
     # avoid infinite recursion by stripping marginaleffect.summary class

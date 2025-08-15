@@ -1,7 +1,6 @@
 add_attributes <- function(out, mfx, ...) {
     # Always add all attributes from S4 slots
     attr(out, "marginaleffects") <- mfx
-    attr(out, "type") <- mfx@type
 
     # Add draws if present and not already set
     if (!is.null(mfx@draws) && is.null(attr(out, "posterior_draws"))) {

@@ -63,7 +63,7 @@ setClass(
         modeldata = "ANY", # TODO: lmerTest returns nfnGroupedData
         newdata = "ANY", # Changed from "data.frame" to handle mira deferred processing
         numderiv = "list",
-        type = "ANY",
+        type = "characterOrNULL",
         variables = "list",
         variable_class = "characterOrNULL",
         variable_names_response = "character",

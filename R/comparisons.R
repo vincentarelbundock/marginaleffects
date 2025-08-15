@@ -431,7 +431,6 @@ comparisons <- function(
     data.table::setDF(out)
 
     out <- add_attributes(out, mfx,
-        by = by,
         hypothesis_by = hyp_by)
 
     if (inherits(mfx@model, "brmsfit")) {
