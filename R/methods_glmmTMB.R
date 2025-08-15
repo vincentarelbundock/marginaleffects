@@ -6,6 +6,7 @@ get_predict.glmmTMB <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
+    mfx = NULL,
     newparams = NULL,
     ...) {
     # hack to avoid re-optimization

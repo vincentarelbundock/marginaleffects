@@ -116,7 +116,7 @@ print.marginaleffects <- function(
         }
     }
 
-    conf_level <- mfx@conf_level
+    conf_level <- if (is.null(mfx)) 0.95 else mfx@conf_level
     alpha <- 100 * (1 - conf_level)
 
     statistic_label <- attr(x, "statistic_label")
@@ -181,7 +181,7 @@ print.marginaleffects <- function(
         # user-supplied omissions
         getOption("marginaleffects_print_omit", default = NULL),
         # response variable
-        mfx@variable_names_response
+        if (!is.null(mfx)) mfx@variable_names_response else NULL
     )
 
     if ("term" %in% colnames(out) && length(unique(out$term)) == 1L) {
@@ -227,7 +227,7 @@ print.marginaleffects <- function(
         print_columns_text <- sprintf("Columns: %s\n", toString(colnames(x)))
     }
 
-    if (isTRUE(type) && !is.null(mfx@type)) {
+    if (isTRUE(type) && !is.null(mfx) && !is.null(mfx@type)) {
         print_type_text <- sprintf("Type: %s\n", mfx@type)
     }
 
