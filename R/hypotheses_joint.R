@@ -9,6 +9,17 @@ joint_test <- function(
 
     # do not use components() because this may be a model object
     mfx <- attr(object, "marginaleffects")
+    
+    # Create mfx object if it doesn't exist (needed for joint tests on model objects)
+    if (is.null(mfx) && !inherits(object, c("slopes", "comparisons", "predictions", "hypotheses"))) {
+        call <- construct_call(object, "hypotheses")
+        object_sanitized <- sanitize_model(object, call = call, newdata = NULL, vcov = vcov)
+        mfx <- new_marginaleffects_internal(
+            call = call,
+            model = object_sanitized
+        )
+        mfx@conf_level <- sanitize_conf_level(NULL)
+    }
 
     if (joint_test == "f") {
         checkmate::assert_numeric(df, len = 2, null.ok = TRUE)
@@ -180,6 +191,11 @@ joint_test <- function(
         print_head <- c(print_head, tmp)
     }
     attr(out, "print_head") <- print_head
+
+    # Add marginaleffects attribute for printing
+    if (!is.null(mfx)) {
+        out <- add_attributes(out, mfx)
+    }
 
     return(out)
 }
