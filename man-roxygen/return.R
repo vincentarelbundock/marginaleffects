@@ -16,9 +16,9 @@
 #'
 #' See `?print.marginaleffects` for printing options.
 #'
-#' The `data.frame`s produced by `marginaleffects` come with several attributes to hold the original model, data, and much other information that can be used for post-processing. These attributes are not considered part of the public API of the package. Their names and contents can change without warning or notice. Users should not rely on them.
+#' The `data.frame`s produced by `marginaleffects` stores an attribute that holds many internal objects, such as the original model, data, and much other information that can be used for post-processing. This information can be inspected using the `components()` function.
 #'
-#' Depending on the model, this information can use up a substantial amount of memory. To avoid saving these attributes, users can set a global option. Note that setting this option may result in a loss of functionality, such as the ability to call `hypotheses()` to post-process estimates.
+#' Warning: The internal attributes retrieved by `components()` are not considered part of the public API of the package. Their names and contents can change without warning or notice. Users should not rely on them.
 #'
-#' `options(marginaleffects_lean = TRUE)`
+#' Warning: In some cases, the internal attributes used by `marginaleffects()` can use up a substantial amount of memory. To clear this data, use the `prune()` function or set `options(marginaleffects_lean=TRUE)`.
 #'
