@@ -195,7 +195,7 @@ hypotheses <- function(
             )
         }
         if (is.null(conf_level)) {
-            conf_level <- attr(model, "conf_level")
+            conf_level <- mfx@conf_level
         }
     }
 

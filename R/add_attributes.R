@@ -1,12 +1,9 @@
 add_attributes <- function(out, mfx, ...) {
     # Always add all attributes from S4 slots
     attr(out, "mfx") <- mfx
-    attr(out, "call") <- mfx@call
     attr(out, "newdata") <- mfx@newdata
     attr(out, "model") <- mfx@model
-    attr(out, "model_type") <- class(mfx@model)[1]
     attr(out, "vcov") <- mfx@vcov_model
-    attr(out, "conf_level") <- mfx@conf_level
     attr(out, "type") <- mfx@type
 
     # Add draws if present and not already set

@@ -78,6 +78,8 @@ print.marginaleffects <- function(
         )
     )
 
+    mfx <- attr(x, "mfx")
+
     if (isTRUE(style == "data.frame")) {
         print(as.data.frame(x))
         return(invisible(x))
@@ -114,11 +116,8 @@ print.marginaleffects <- function(
         }
     }
 
-    if (is.null(attr(x, "conf_level"))) {
-        alpha <- NULL
-    } else {
-        alpha <- 100 * (1 - attr(x, "conf_level"))
-    }
+    conf_level <- mfx@conf_level
+    alpha <- 100 * (1 - conf_level)
 
     statistic_label <- attr(x, "statistic_label")
     if (is.null(statistic_label)) {
@@ -147,31 +146,11 @@ print.marginaleffects <- function(
         "statistic" = statistic_label,
         "p.value" = sprintf("Pr(>|%s|)", statistic_label),
         "s.value" = "S",
-        "conf.low" = ifelse(
-            is.null(alpha),
-            "CI low",
-            sprintf("%.1f %%", alpha / 2)
-        ),
-        "conf.high" = ifelse(
-            is.null(alpha),
-            "CI high",
-            sprintf("%.1f %%", 100 - alpha / 2)
-        ),
-        "pred.low" = ifelse(
-            is.null(alpha),
-            "Pred low",
-            sprintf("Pred. %.1f %%", alpha / 2)
-        ),
-        "pred.high" = ifelse(
-            is.null(alpha),
-            "Pred high",
-            sprintf("Pred. %.1f %%", 100 - alpha / 2)
-        ),
-        "pred.set" = ifelse(
-            is.null(alpha),
-            "Pred Set",
-            sprintf("Pred Set %.1f %%", 100 - alpha / 2)
-        ),
+        "conf.low" = sprintf("%.1f %%", alpha / 2),
+        "conf.high" = sprintf("%.1f %%", 100 - alpha / 2),
+        "pred.low" = sprintf("Pred. %.1f %%", alpha / 2),
+        "pred.high" = sprintf("Pred. %.1f %%", 100 - alpha / 2),
+        "pred.set" = sprintf("Pred Set %.1f %%", 100 - alpha / 2),
         "p.value.noninf" = "p (NonInf)",
         "p.value.nonsup" = "p (NonSup)",
         "p.value.equiv" = "p (Equiv)",
@@ -183,7 +162,6 @@ print.marginaleffects <- function(
 
     # explicitly given by user in `datagrid()` or `by` or `newdata`
     bycols <- "by"
-    mfx <- attr(x, "mfx")
     if (!is.null(mfx)) {
         bycols <- c("by", mfx@variable_names_by)
     }

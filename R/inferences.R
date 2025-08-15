@@ -129,10 +129,7 @@ inferences <- function(
     }
 
     # inherit conf_level from the original object
-    conf_level <- attr(x, "conf_level")
-    if (is.null(conf_level)) {
-        conf_level <- 0.95
-    }
+    conf_level <- mfx@conf_level
 
     checkmate::assert_number(conf_level, lower = 1e-10, upper = 1 - 1e-10)
     checkmate::assert_integerish(R, lower = 2)
@@ -158,7 +155,7 @@ inferences <- function(
 
     # Issue #1501: `newdata` should only use the pre-evaluated `newdata` instead of bootstrapping datagrid()
     mfx <- attr(x, "mfx")
-    call_mfx <- attr(x, "call")
+    call_mfx <- mfx@call
 
     # Update call with pre-evaluated newdata if available
     if (!is.null(call_mfx)) {
@@ -166,7 +163,6 @@ inferences <- function(
         if (inherits(nd, "data.frame")) {
             call_mfx[["newdata"]] <- nd
         }
-        attr(x, "call") <- call_mfx
 
         # Update mfx object if available
         if (!is.null(mfx) && inherits(nd, "data.frame")) {
@@ -191,8 +187,8 @@ inferences <- function(
         out <- inferences_boot(x, R = R, conf_level = conf_level, conf_type = conf_type, estimator = estimator, mfx = mfx, ...)
     } else if (method == "fwb") {
         if (
-            isTRUE("wts" %in% names(attr(x, "call"))) &&
-                !isFALSE(attr(x, "call")[["wts"]])
+            isTRUE("wts" %in% names(mfx@call)) &&
+                !isFALSE(mfx@call[["wts"]])
         ) {
             stop_sprintf(
                 "The `fwb` method is not supported with the `wts` argument."

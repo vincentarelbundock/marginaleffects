@@ -48,7 +48,7 @@ setClass(
         call = "ANY",
         calling_function = "character",
         comparison = "ANY",
-        conf_level = "ANY",
+        conf_level = "numeric",
         cross = "logicalOrNULL",
         df = "ANY",
         draws = "matrixOrNULL",
