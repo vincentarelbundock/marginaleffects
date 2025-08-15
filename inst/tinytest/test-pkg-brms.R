@@ -375,7 +375,9 @@ expect_true(length(unique(ti$estimate)) == nrow(ti))
 
 
 # warning: vcov not supported
+options(marginaleffects_safe = TRUE)
 expect_warning(slopes(brms_numeric, vcov = "HC3"), pattern = "vcov.*not supported")
+options(marginaleffects_safe = FALSE)
 
 # Andrew Heiss says that lognormal_hurdle are tricky because the link is
 # identity even if the response is actually logged
