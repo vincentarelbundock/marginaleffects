@@ -107,7 +107,7 @@ inferences <- function(
     conformal_score = "residual_abs",
     estimator = NULL,
     ...) {
-    mfx <- attr(x, "mfx")
+    mfx <- attr(x, "marginaleffects")
 
     # dummy mfx for `estimator` and no marginaleffects object
     if (!inherits(mfx, "marginaleffects_internal")) {
@@ -154,7 +154,7 @@ inferences <- function(
     )
 
     # Issue #1501: `newdata` should only use the pre-evaluated `newdata` instead of bootstrapping datagrid()
-    mfx <- attr(x, "mfx")
+    mfx <- attr(x, "marginaleffects")
     call_mfx <- mfx@call
 
     # Update call with pre-evaluated newdata if available
@@ -167,7 +167,7 @@ inferences <- function(
         # Update mfx object if available
         if (!is.null(mfx) && inherits(nd, "data.frame")) {
             mfx@newdata <- nd
-            attr(x, "mfx") <- mfx
+            attr(x, "marginaleffects") <- mfx
         }
     }
 

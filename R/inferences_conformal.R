@@ -1,6 +1,6 @@
 get_conformal_score <- function(x, score, mfx = NULL) {
     if (is.null(mfx)) {
-        mfx <- attr(x, "mfx")
+        mfx <- attr(x, "marginaleffects")
     }
     model <- mfx@model
     response_name <- insight::find_response(model)
@@ -38,7 +38,7 @@ get_conformal_score <- function(x, score, mfx = NULL) {
 
 get_conformal_bounds <- function(x, score, conf_level, mfx = NULL) {
     if (is.null(mfx)) {
-        mfx <- attr(x, "mfx")
+        mfx <- attr(x, "marginaleffects")
     }
     model <- mfx@model
     response_name <- insight::find_response(model)

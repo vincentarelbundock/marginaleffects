@@ -7,7 +7,7 @@ joint_test <- function(
     vcov = TRUE) {
     checkmate::assert_choice(joint_test, c("f", "chisq"))
 
-    mfx <- attr(object, "mfx")
+    mfx <- components(object, "all")
 
     if (joint_test == "f") {
         checkmate::assert_numeric(df, len = 2, null.ok = TRUE)
@@ -92,7 +92,7 @@ joint_test <- function(
                 msg <- "The `hypotheses()` functions uses simple heuristics to select degrees of freedom for this test. See the relevant section in `?hypotheses`. These rules are likely to yield inappropriate results for models of class `%s`. Please supply degrees of freedom values explicitly via the `df` argument."
                 warn_sprintf(msg, model_class)
             }
-            
+
             df2 <- tryCatch(
                 insight::get_df(mfx@model),
                 error = function(e) NULL

@@ -107,10 +107,10 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     draws <- do.call("cbind", draws)
     colnames(draws) <- NULL
 
-    mfx <- attr(x, "mfx")
+    mfx <- attr(x, "marginaleffects")
     mfx@draws <- draws
     mfx@inferences <- splits
-    attr(out, "mfx") <- mfx
+    attr(out, "marginaleffects") <- mfx
 
     return(out)
 }

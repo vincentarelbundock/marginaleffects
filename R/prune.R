@@ -13,14 +13,14 @@ generics::prune
 #' @details ...
 #' @export
 prune.marginaleffects <- function(tree, ...) {
-    mfx <- attr(tree, "mfx")
+    mfx <- components(tree, "all")
     if (!is.null(mfx)) {
         mfx@model <- NULL
         mfx@newdata <- NULL
         mfx@modeldata <- NULL
         mfx@call <- NULL
         mfx@jacobian <- matrix()
-        attr(tree, "mfx") <- mfx
+        attr(tree, "marginaleffects") <- mfx
     }
     essential_attrs <- c("names", "row.names", "class", "mfx")
     for (nm in setdiff(names(attributes(tree)), essential_attrs)) {

@@ -21,9 +21,13 @@ generics::components
 #' without warning in future versions of the marginaleffects package.
 #' @export
 components.marginaleffects <- function(object, component = NULL, ...) {
-    mfx <- attr(object, "mfx")
+    mfx <- components(object, "all")
     if (is.null(mfx)) {
         stop("No mfx attribute found in object")
+    }
+
+    if (identical(components, "all")) {
+        return(mfx)
     }
 
     # Get all slot names from the S4 object

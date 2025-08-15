@@ -1,6 +1,6 @@
 add_attributes <- function(out, mfx, ...) {
     # Always add all attributes from S4 slots
-    attr(out, "mfx") <- mfx
+    attr(out, "marginaleffects") <- mfx
     attr(out, "vcov") <- mfx@vcov_model
     attr(out, "type") <- mfx@type
 

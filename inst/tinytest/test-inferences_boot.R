@@ -41,8 +41,8 @@ expect_inherits(x, "predictions")
 x <- mod |>
     comparisons() |>
     inferences(method = "boot", R = R) |>
-    attr("mfx")
-expect_inherits(x@inferences, "boot")
+    components("inferences")
+expect_inherits(x, "boot")
 nd <<- datagrid(Sepal.Length = range, model = mod)
 x <- mod |>
     comparisons(variables = "Sepal.Width", newdata = nd) |>
@@ -93,3 +93,4 @@ p <- hypotheses(mod, hypothesis = "hp/cyl=1") |>
     inferences(method = "boot", R = 25) |>
     suppressWarnings()
 expect_inherits(p, "hypotheses")
+

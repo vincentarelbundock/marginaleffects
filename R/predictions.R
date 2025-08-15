@@ -438,7 +438,7 @@ predictions <- function(
         out <- inferences(out, method = inferences_method)
     }
 
-    attr(out, "mfx") <- mfx
+    attr(out, "marginaleffects") <- mfx
 
     return(out)
 }

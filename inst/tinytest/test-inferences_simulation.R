@@ -107,8 +107,8 @@ expect_inherits(x, "predictions")
 x <- mod |>
     comparisons() |>
     inferences(method = "simulation", R = R) |>
-    attr("mfx")
-expect_inherits(x@draws, "matrix")
+    components("draws")
+expect_inherits(x, "matrix")
 
 # simulation-based inference respects `vcov` argument
 mod <- lm(mpg ~ hp + cyl, data = mtcars)
@@ -148,3 +148,4 @@ h3 <- hypotheses(mod, hypothesis = "hp/cyl=1") |>
     inferences(method = "simulation", R = 25)
 expect_true(all(h1$conf.low == h2$conf.low))
 expect_true(all(h2$conf.low != h3$conf.low))
+

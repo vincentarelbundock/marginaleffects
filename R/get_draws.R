@@ -14,7 +14,7 @@ get_draws <- function(x, shape = "long") {
     checkmate::assert_choice(shape, choices = c("long", "DxP", "PxD", "rvar"))
 
     # tidy.comparisons() sometimes already saves draws in a nice long format
-    mfx <- attr(x, "mfx")
+    mfx <- attr(x, "marginaleffects")
     draws <- mfx@draws
 
     if (is.null(draws)) {

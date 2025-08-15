@@ -15,7 +15,7 @@ Misc:
 * `inferences()` new computes p-values for `method = "fwb"`. `conf_type` can now be `"perc"` or `"wald"` for `method = "simulation"`.
 * Documentation improvements.
 * `get_dataset()` now delegates most of the work to the `Rdatasets` package (optional dependency).
-* Major internal refactoring to simplify the code base and make maintenance easier. We use fewer attributes and store internal information in a single S4 object stored as `attr(x, "mfx")`.
+* Major internal refactoring to simplify the code base and make maintenance easier. We use fewer attributes and store internal information in a single S4 object stored as `attr(x, "marginaleffects")`.
  
 ## 0.28.0
 

@@ -27,9 +27,9 @@ expect_inherits(x, "predictions")
 x <- mod |>
     comparisons() |>
     inferences(method = "rsample", R = R) |>
-    attr("mfx") |>
+    components("inferences") |>
     suppressWarnings()
-expect_inherits(x@inferences, "bootstraps")
+expect_inherits(x, "bootstraps")
 nd <<- datagrid(Sepal.Length = range, model = mod)
 x <- mod |>
     comparisons(variables = "Sepal.Width", newdata = nd) |>
@@ -84,3 +84,4 @@ p <- predictions(model, type = "survival", by = c("dtime", "hormon", "grade"), n
 p <- inferences(p, method = "rsample", R = R) |> suppressWarnings()
 expect_true(all(p$estimate >= p$conf.low))
 expect_true(all(p$estimate <= p$conf.high))
+

@@ -78,7 +78,7 @@ print.marginaleffects <- function(
         )
     )
 
-    mfx <- attr(x, "mfx")
+    mfx <- attr(x, "marginaleffects")
 
     if (isTRUE(style == "data.frame")) {
         print(as.data.frame(x))
