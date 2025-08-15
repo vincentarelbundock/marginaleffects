@@ -51,7 +51,7 @@ get_model_matrix.default <- function(model, newdata, mfx = NULL) {
 #' @param mfx marginaleffects object
 #' @param newdata data frame to add attributes to
 #' @keywords internal
-#' @export
+#' @noRd
 add_model_matrix_attribute <- function(mfx, newdata = NULL) {
     model <- mfx@model
 
