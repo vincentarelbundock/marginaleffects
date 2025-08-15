@@ -7,7 +7,7 @@ test_that("speedglm package works", {
 
     # glm vs. Stata
     stata <- readRDS(test_path("stata/stata.rds"))[["stats_glm_01"]]
-    dat <- read.csv(test_path("stata/databases/stats_glm_01.csv"))
+    dat <<- read.csv(test_path("stata/databases/stats_glm_01.csv"))
     mod <- speedglm(y ~ x1 * x2, family = binomial(), data = dat)
     mfx <- merge(avg_slopes(mod), stata)
     slo <- slopes(mod)

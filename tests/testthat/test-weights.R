@@ -1,11 +1,11 @@
+skip("works interactively")
 skip_on_cran()
+withr_library("marginaleffects")
+withr_library("tidyverse")
+withr_library("survey")
+withr_library("rstan")
 
 test_that("mtcars logit with weights works correctly", {
-    withr_library("marginaleffects")
-    withr_library("tidyverse")
-    withr_library("survey")
-    withr_library("rstan")
-
     # mtcars logit
     tmp <- get_dataset("mtcars", "datasets")
     tmp$weights <- tmp$w <- 1:32

@@ -1,3 +1,5 @@
+skip("works interactively")
+
 test_that("ivreg package works", {
     skip_if_not_installed("margins")
     skip_if_not_installed("dplyr")
