@@ -11,9 +11,8 @@ generics::prune
 #' @param ... Unused
 #' @return A pruned marginaleffects object
 #' @details ...
-#' @rdname prune_mfx
 #' @export
-prune.comparisons <- function(tree, ...) {
+prune.marginaleffects <- function(tree, ...) {
     mfx <- attr(tree, "mfx")
     if (!is.null(mfx)) {
         mfx@model <- NULL
@@ -31,15 +30,14 @@ prune.comparisons <- function(tree, ...) {
     return(tree)
 }
 
-# Inherit the same docs and share the same Rd page:
-#' @rdname prune_mfx
 #' @export
-prune.predictions <- prune.comparisons
+prune.predictions <- prune.marginaleffects
 
-#' @rdname prune_mfx
 #' @export
-prune.hypotheses <- prune.comparisons
+prune.hypotheses <- prune.marginaleffects
 
-#' @rdname prune_mfx
 #' @export
-prune.slopes <- prune.comparisons
+prune.slopes <- prune.marginaleffects
+
+#' @export
+prune.comparisons <- prune.marginaleffects

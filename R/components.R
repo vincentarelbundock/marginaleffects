@@ -16,9 +16,8 @@ generics::components
 #'   attribute of marginaleffects objects. The `mfx` attribute contains an S4 object of
 #'   class "marginaleffects_internal" with various slots containing model information,
 #'   data, and computational details used by the marginaleffects functions.
-#' @rdname components_mfx
 #' @export
-components.comparisons <- function(object, component = NULL, ...) {
+components.marginaleffects <- function(object, component = NULL, ...) {
     mfx <- attr(object, "mfx")
     if (is.null(mfx)) {
         stop("No mfx attribute found in object")
@@ -40,15 +39,14 @@ components.comparisons <- function(object, component = NULL, ...) {
     return(methods::slot(mfx, component))
 }
 
-# Inherit the same docs and share the same Rd page:
-#' @rdname components_mfx
 #' @export
-components.predictions <- components.comparisons
+components.predictions <- components.marginaleffects
 
-#' @rdname components_mfx
 #' @export
-components.hypotheses <- components.comparisons
+components.hypotheses <- components.marginaleffects
 
-#' @rdname components_mfx
 #' @export
-components.slopes <- components.comparisons
+components.slopes <- components.marginaleffects
+
+#' @export
+components.comparisons <- components.marginaleffects
