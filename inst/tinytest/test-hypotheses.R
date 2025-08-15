@@ -198,11 +198,13 @@ expect_equivalent(hyp$hypothesis, sprintf("b%s=0", 1:5))
 # expect_equivalent(nrow(dm), 1)
 
 # Issue #960
+options(marginaleffects_safe = TRUE)
 requiet("nlme")
 fm1 <- lme(distance ~ age + Sex, data = Orthodont)
 expect_warning(hypotheses(fm1, hypothesis = c(0, 0), joint = c("SexFemale", "age")))
 # no warning generated
 h <- hypotheses(fm1, hypothesis = c(0, 0), df = c(1, 3), joint = c("SexFemale", "age"))
+options(marginaleffects_safe = TRUE)
 
 
 # Issue #1344

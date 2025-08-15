@@ -14,7 +14,7 @@ mod <- suppressWarnings(svyglm(
     family = binomial
 ))
 
-p1 <- avg_predictions(mod, newdata = dat)
+expect_warning(p1 <- avg_predictions(mod, newdata = dat))
 p2 <- avg_predictions(mod, wts = "weights", newdata = dat)
 p3 <- avg_predictions(mod, wts = "w", newdata = dat)
 p4 <- avg_predictions(mod, wts = dat$weights)
@@ -26,9 +26,7 @@ expect_equivalent(p2, p4)
 
 # backward compatibility
 p1 <- avg_predictions(mod, wts = "weights", newdata = dat)
-p2 <- avg_predictions(mod, wts = NULL, newdata = dat)
-p3 <- suppressWarnings(avg_predictions(mod, wts = FALSE, newdata = dat))
-expect_equivalent(p2$estimate, p3$estimate)
+p2 <- suppressWarnings(avg_predictions(mod, wts = FALSE, newdata = dat))
 expect_true(p1$estimate != p2$estimate)
 
 
@@ -87,18 +85,19 @@ expect_equivalent(mfx$std.error, stata[2], tolerance = 0.002)
 
 # Issue #737
 # fmt: skip
-md <- tibble::tribble( ~g, ~device, ~y, ~N, ~p, 
-    "Control", "desktop", 12403, 103341L, 0.120020127538925, 
-    "Control", "mobile", 1015, 16192L, 0.0626852766798419, 
-    "Control", "tablet", 38, 401L, 0.0947630922693267, 
-    "X", "desktop", 12474, 103063L, 0.121032766366203, 
-    "X", "mobile", 1030, 16493L, 0.0624507366761656, 
-    "X", "tablet", 47, 438L, 0.107305936073059, 
-    "Z", "desktop", 12968, 102867L, 0.126065696481865, 
-    "Z", "mobile", 973, 16145L, 0.0602663363270362, 
-    "Z", "tablet", 34, 438L, 0.0776255707762557, 
-    "W", "desktop", 12407, 103381L, 0.120012381385361, 
-    "W", "mobile", 1007, 16589L, 0.060702875399361, 
+md <- tibble::tribble(
+    ~g, ~device, ~y, ~N, ~p,
+    "Control", "desktop", 12403, 103341L, 0.120020127538925,
+    "Control", "mobile", 1015, 16192L, 0.0626852766798419,
+    "Control", "tablet", 38, 401L, 0.0947630922693267,
+    "X", "desktop", 12474, 103063L, 0.121032766366203,
+    "X", "mobile", 1030, 16493L, 0.0624507366761656,
+    "X", "tablet", 47, 438L, 0.107305936073059,
+    "Z", "desktop", 12968, 102867L, 0.126065696481865,
+    "Z", "mobile", 973, 16145L, 0.0602663363270362,
+    "Z", "tablet", 34, 438L, 0.0776255707762557,
+    "W", "desktop", 12407, 103381L, 0.120012381385361,
+    "W", "mobile", 1007, 16589L, 0.060702875399361,
     "W", "tablet", 30, 435L, 0.0689655172413793)
 tmp <<- as.data.frame(md)
 tmp <- as.data.frame(md)

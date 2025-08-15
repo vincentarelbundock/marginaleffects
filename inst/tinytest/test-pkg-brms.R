@@ -152,13 +152,14 @@ expect_equivalent(w2, y$estimate)
 
 
 # brms: cumulative: predictions: no validity
+options(marginaleffects_safe = TRUE)
 set.seed(1024)
 p1 <- predictions(brms_cumulative_random)
 p2 <- predictions(brms_cumulative_random, re_formula = NA)
 expect_true(mean(p1$conf.low < p2$conf.low) > .95) # tolerance
 expect_true(mean(p1$conf.high > p2$conf.high) > .99) # tolerance
 expect_warning(predictions(brms_cumulative_random, include_random = FALSE)) # only for lme4
-
+options(marginaleffects_safe = FALSE)
 
 # marginaleffects: ordinal no validity
 expect_slopes(brms_ordinal_1, se = FALSE)

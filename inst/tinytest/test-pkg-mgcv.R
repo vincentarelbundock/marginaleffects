@@ -117,7 +117,9 @@ expect_error(suppressWarnings(slopes(b, variables = "L")), pattern = "no valid")
 expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
 expect_error(suppressWarnings(plot_predictions(b, condition = "z", draw = FALSE)))
 expect_error(suppressWarnings(plot_slopes(b, variables = "L", condition = "z")))
+options(marginaleffects_safe = TRUE)
 expect_warning(plot_slopes(b, variables = "L", condition = "z"))
+options(marginaleffects_safe = FALSE)
 
 
 # Issue #365: exclude argument changes predictions

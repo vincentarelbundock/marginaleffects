@@ -46,13 +46,10 @@ expect_error(comparisons(mod, variables = list(vs = 1), "length 2"))
 # no need to include categorical focal variable when there is only one of them
 mod <- lm(mpg ~ hp + factor(am) + wt, mtcars)
 nd <- data.frame(hp = 120, am = 1)
-expect_warning(comparisons(mod, variables = "wt", newdata = nd), pattern = "explicitly")
-expect_error(suppressWarnings(comparisons(mod, variables = "wt", newdata = nd)))
-nd <- data.frame(hp = 120, wt = 2.5)
+expect_error(comparisons(mod, variables = "wt", newdata = nd), pattern = "newdata")
+nd <- data.frame(hp = 120, am = 0, wt = 2.5)
 cmp <- comparisons(mod, variables = "am", newdata = nd)
 expect_inherits(cmp, "comparisons")
-expect_warning(comparisons(mod, newdata = nd), pattern = "is included")
-expect_error(suppressWarnings(comparisons(mod, newdata = nd), pattern = "is included"))
 
 
 # comparisons() variables = data.frame()
@@ -123,10 +120,10 @@ expect_inherits(cmp, "comparisons")
 expect_equal(nrow(cmp), 4)
 
 DF = \(x)
-    data.frame(
-        lo = x,
-        hi = ifelse(x == FALSE, TRUE, FALSE)
-    )
+data.frame(
+    lo = x,
+    hi = ifelse(x == FALSE, TRUE, FALSE)
+)
 cmp <- comparisons(mod, variables = list(temp = DF))
 expect_inherits(cmp, "comparisons")
 expect_equal(nrow(cmp), 288)
