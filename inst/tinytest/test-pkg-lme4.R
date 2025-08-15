@@ -414,7 +414,7 @@ expect_error(avg_predictions(m, by = "var_binom", newdata = "balanced"), pattern
 
 # Issue #1490: no warning when vcov=FALSE
 options(marginaleffects_safe = TRUE)
-mod <- lmer(Sepal.Length ~ Sepal.Width + (1 | Species), data = iris)
+mod <- lmer(Sepal.Length ~ Sepal.Width + (1|Species), data = iris)
 expect_warning(avg_comparisons(mod, vcov = TRUE))
 expect_warning(avg_comparisons(mod))
 expect_false(ignore(expect_warning)(avg_comparisons(mod, vcov = FALSE)))

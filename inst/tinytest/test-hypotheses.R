@@ -24,7 +24,7 @@ dmm <- hypotheses(mod, "hp = wt", vcov = "HC3")
 expect_inherits(dmm, "data.frame")
 
 # b1, b2, ... shortcuts can be used to identify rows in the output of FUN
-dmm <- hypotheses(mod, "b2 = b3") # first time calling issues a warning
+dmm <- hypotheses(mod, "b2 = b3") |> suppressWarnings() # first time calling issues a warning
 expect_inherits(dmm, "data.frame")
 
 # term names with special characters have to be enclosed in backticks
@@ -200,9 +200,7 @@ expect_equivalent(hyp$hypothesis, sprintf("b%s=0", 1:5))
 # Issue #960
 requiet("nlme")
 fm1 <- lme(distance ~ age + Sex, data = Orthodont)
-options(marginaleffects_safe = TRUE)
 expect_warning(hypotheses(fm1, hypothesis = c(0, 0), joint = c("SexFemale", "age")))
-options(marginaleffects_safe = FALSE)
 # no warning generated
 h <- hypotheses(fm1, hypothesis = c(0, 0), df = c(1, 3), joint = c("SexFemale", "age"))
 

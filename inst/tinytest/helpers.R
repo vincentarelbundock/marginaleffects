@@ -1,6 +1,5 @@
 rm(list = ls())
 rm(list = ls(.GlobalEnv), envir = .GlobalEnv)
-options(traceback.max.lines = 5)
 
 requiet <- function(package) {
     void <- capture.output(
@@ -16,8 +15,7 @@ requiet("marginaleffects")
 requiet("tinytest")
 requiet("tinysnapshot")
 
-EXPENSIVE <- TRUE
-INTERNET <- TRUE
+EXPENSIVE <- FALSE
 
 options("tinysnapshot_os" = "Linux")
 options("tinysnapshot_device" = "svglite")
@@ -28,9 +26,6 @@ options(marginaleffects_safe = FALSE)
 
 if (dir.exists("~/repos/Rdatasets/")) {
     options("marginaleffects_rdataset_path" = "~/repos/Rdatasets/")
-}
-if (dir.exists("~/repos/marginaleffectscom/")) {
-    options("marginaleffects_website_path" = "~/repos/marginaleffectscom/")
 }
 
 if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {
@@ -46,7 +41,7 @@ if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") 
 }
 
 # common names of datasets, often assigned to global environment
-common <- c("dat", "nd", "tmp", "d", "k", "mod", "tmp1", "tmp2", "test1", "test2", "threenum")
+common <- c("dat", "tmp", "d", "k", "mod", "tmp1", "tmp2", "test1", "test2", "threenum")
 suppressWarnings(rm(list = common, envir = .GlobalEnv))
 suppressWarnings(rm(list = common))
 

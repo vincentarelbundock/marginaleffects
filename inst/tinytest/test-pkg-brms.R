@@ -100,7 +100,7 @@ expect_slopes(brms_cumulative_random, se = FALSE)
 # brms: logical regressor
 mfx <- slopes(brms_logical)
 expect_inherits(mfx, "marginaleffects")
-expect_equivalent(nrow(mfx), nrow(attr(mfx, "mfx")@draws))
+expect_equivalent(nrow(mfx), nrow(attr(mfx, "posterior_draws")))
 
 
 ## Not sure what the intent of those tests are, and the first one fails
@@ -190,7 +190,7 @@ expect_true(all(c("term", "estimate", "conf.low") %in% colnames(ti)))
 # simple
 pred <- predictions(brms_numeric2, newdata = datagrid(hp = c(100, 120)))
 expect_predictions(pred, se = FALSE)
-expect_equivalent(dim(attr(pred, "mfx")@draws), c(2, 2000))
+expect_equivalent(dim(attr(pred, "posterior_draws")), c(2, 2000))
 # interaction
 pred <- predictions(brms_interaction, newdata = datagrid(mpg = c(20, 25)))
 expect_predictions(pred, se = FALSE)
@@ -232,8 +232,8 @@ tmp <- slopes(brms_factor)
 expect_true("conf.low" %in% colnames(tmp))
 expect_true(all(tmp$estimate > tmp$conf.low))
 expect_true(all(tmp$estimate < tmp$conf.high))
-expect_false(is.null(attr(tmp, "mfx")@draws))
-expect_equivalent(nrow(attr(tmp, "mfx")@draws), nrow(tmp))
+expect_false(is.null(attr(tmp, "posterior_draws")))
+expect_equivalent(nrow(attr(tmp, "posterior_draws")), nrow(tmp))
 
 
 # marginaleffects vs. emmeans
@@ -499,7 +499,7 @@ p <- predictions(
     by = "cyl_fac"
 )
 expect_inherits(p, "predictions")
-expect_equal(ncol(attr(p, "mfx")@draws), 2000)
+expect_equal(ncol(attr(p, "posterior_draws")), 2000)
 expect_equal(nrow(p), 3)
 expect_true(all(c("conf.low", "conf.high") %in% colnames(p)))
 
