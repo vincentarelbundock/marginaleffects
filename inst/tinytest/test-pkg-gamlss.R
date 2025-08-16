@@ -7,6 +7,15 @@ requiet("broom")
 requiet("gamlss")
 requiet("titanic")
 
+# Basic expectation tests
+mod_simple <- gamlss::gamlss(mpg ~ wt + am,
+    data = mtcars,
+    family = "NO", trace = FALSE)
+expect_slopes(mod_simple, what = "mu")
+expect_predictions(mod_simple, what = "mu")
+expect_comparisons(mod_simple, what = "mu")
+expect_error(hypotheses(mod_simple), pattern = "does not support")
+
 # Beta regression
 tmp <- get_dataset("GasolineYield", "betareg")
 tmp$batch <- factor(tmp$batch)
@@ -43,9 +52,9 @@ expect_equivalent(mfx$std.error, em$SE, tolerance = .001)
 
 # predictions: no validity
 pred <- suppressWarnings(predictions(mod, what = "mu"))
-expect_predictions(pred, n_row = nrow(tmp))
+expect_predictions(mod, what = "mu", n_row = nrow(tmp))
 pred <- predictions(mod, newdata = datagrid(batch = 1:3, temp = c(300, 350)), what = "mu")
-expect_predictions(pred, n_row = 6)
+expect_predictions(mod, newdata = datagrid(batch = 1:3, temp = c(300, 350)), what = "mu", n_row = 6)
 
 
 # marginalmeans: vs. emmeans
@@ -79,13 +88,13 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 # predictions: no validity
 pred <- predictions(mod, what = "mu")
 
-expect_predictions(pred, n_row = nrow(na.omit(titanic_train)))
+expect_predictions(mod, what = "mu", n_row = nrow(na.omit(titanic_train)))
 pred <- predictions(
     mod,
     newdata = datagrid(Pclass = 1:3, Age = c(25, 50)),
     what = "mu"
 )
-expect_predictions(pred, n_row = 6)
+expect_predictions(mod, newdata = datagrid(Pclass = 1:3, Age = c(25, 50)), what = "mu", n_row = 6)
 
 
 # marginalmeans: vs. emmeans

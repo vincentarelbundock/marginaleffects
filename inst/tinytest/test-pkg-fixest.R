@@ -6,6 +6,12 @@ requiet("data.table")
 fixest::setFixest_nthreads(1)
 fixest::setFixest_notes(FALSE)
 
+# Basic expectation tests
+mod_simple <- fixest::feols(mpg ~ wt + am, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 # Issue #375: friendly warning when sandwich fails
 options(marginaleffects_safe = TRUE)
@@ -119,11 +125,11 @@ pred2 <- predictions(m2, vcov = FALSE)
 pred3 <- predictions(m3, vcov = FALSE)
 pred4 <- predictions(m4, vcov = FALSE)
 pred5 <- predictions(m5, vcov = FALSE)
-expect_predictions(pred1, se = FALSE)
-expect_predictions(pred2, se = FALSE)
-expect_predictions(pred3, se = FALSE)
-expect_predictions(pred4, se = FALSE)
-expect_predictions(pred5, se = FALSE)
+expect_predictions(m1, vcov = FALSE, se = FALSE)
+expect_predictions(m2, vcov = FALSE, se = FALSE)
+expect_predictions(m3, vcov = FALSE, se = FALSE)
+expect_predictions(m4, vcov = FALSE, se = FALSE)
+expect_predictions(m5, vcov = FALSE, se = FALSE)
 # vdiffr::expect_doppelganger("fixest plot_predictions with i()",
 #                         plot_predictions(m4, condition = c("hp", "am")))
 

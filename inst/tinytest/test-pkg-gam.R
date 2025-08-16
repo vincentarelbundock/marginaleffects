@@ -5,6 +5,13 @@ requiet("gam")
 requiet("emmeans")
 requiet("broom")
 
+# Basic expectation tests
+mod_simple <- gam::gam(mpg ~ gam::s(wt), data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple, se = FALSE) # backtransform
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # gam: marginaleffects vs. emtrends
 data(kyphosis, package = "gam")
 model <- gam::gam(Kyphosis ~ gam::s(Age, 4) + Number, family = binomial, data = kyphosis)
@@ -24,8 +31,8 @@ data(kyphosis, package = "gam")
 model <- gam::gam(Kyphosis ~ gam::s(Age, 4) + Number, family = binomial, data = kyphosis)
 pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = head(kyphosis))
-expect_predictions(pred1, se = FALSE)
-expect_predictions(pred2, n_row = 6, se = FALSE)
+expect_predictions(model, se = FALSE)
+expect_predictions(model, newdata = head(kyphosis), n_row = 6, se = FALSE)
 
 
 # gam: marginalmeans vs. emmeans

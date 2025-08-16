@@ -8,6 +8,14 @@ requiet("plm")
 tol <- .001
 tol_se <- .01 # BDR emergency email about tiny numerical differences
 
+# Basic expectation tests
+data("Produc", package = "plm")
+mod_simple <- plm::plm(log(gsp) ~ log(pcap) + log(pc), data = Produc, index = c("state", "year"))
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 dat <- get_dataset("Grunfeld", "plm")
 dat$rownames <- NULL
 dat <<- pdata.frame(dat)
@@ -91,5 +99,5 @@ expect_equivalent(mfx$std.error, mar$std.error, tolerance = tol_se)
 # predictions: pooling no validity
 pred1 <- predictions(pool)
 pred2 <- predictions(pool, newdata = head(dat))
-expect_predictions(pred1, n_row = nrow(dat))
-expect_predictions(pred2, n_row = 6)
+expect_predictions(pool, n_row = nrow(dat))
+expect_predictions(pool, newdata = head(dat), n_row = 6)

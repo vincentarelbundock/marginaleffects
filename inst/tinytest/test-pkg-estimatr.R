@@ -6,6 +6,13 @@ requiet("emmeans")
 requiet("margins")
 requiet("broom")
 
+# Basic expectation tests
+mod_simple <- estimatr::lm_robust(mpg ~ wt + am, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 Km <- get_dataset("Kmenta", "sem")
 dat <- transform(mtcars, cyl = factor(cyl))
 
@@ -55,8 +62,8 @@ expect_true(expect_margins(mfx, mar, se = FALSE))
 # iv_robust: predictions: no validity
 # skip_if_not_installed("insight", minimum_version = "0.17.1")
 model <- iv_robust(Q ~ P + D | D + F + A, se_type = "stata", data = Km)
-expect_predictions(predictions(model, newdata = Km), n_row = nrow(Km))
-expect_predictions(predictions(model, newdata = head(Km)), n_row = 6)
+expect_predictions(model, newdata = Km, n_row = nrow(Km))
+expect_predictions(model, newdata = head(Km), n_row = 6)
 
 
 # lm_robust: marginalmeans predictions: no validity
@@ -65,5 +72,5 @@ tmp <- mtcars
 tmp$cyl <- as.factor(tmp$cyl)
 tmp$am <- as.logical(tmp$am)
 model <- lm_robust(carb ~ wt + am + cyl, se_type = "stata", data = tmp)
-expect_predictions(predictions(model), n_row = nrow(tmp))
-expect_predictions(predictions(model, newdata = head(tmp)), n_row = 6)
+expect_predictions(model, n_row = nrow(tmp))
+expect_predictions(model, newdata = head(tmp), n_row = 6)

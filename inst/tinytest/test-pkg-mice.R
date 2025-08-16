@@ -1,5 +1,13 @@
 source("helpers.R")
+using("marginaleffects")
 requiet("mice")
+
+# Basic expectation tests
+mod_simple <- lm(mpg ~ wt + am, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 dat <- iris
 dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA

@@ -1,7 +1,19 @@
 source("helpers.R")
+using("marginaleffects")
 requiet("dbarts")
 requiet("modeldata")
-requiet("marginaleffects")
+
+# Basic expectation tests
+mod_simple <- dbarts::bart2(
+    mpg ~ .,
+    data = mtcars,
+    keepTrees = TRUE,
+    verbose = FALSE
+)
+expect_slopes(mod_simple, se = FALSE)
+expect_predictions(mod_simple, se = FALSE)
+expect_comparisons(mod_simple, se = FALSE)
+expect_error(hypotheses(mod_simple), "does not support hypothesis tests")
 
 dat <- get_dataset("penguins", "palmerpenguins")
 dat <- na.omit(dat)

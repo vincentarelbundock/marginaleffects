@@ -1,6 +1,15 @@
 source("helpers.R")
+using("marginaleffects")
 requiet("haven")
 requiet("Rchoice")
+
+# Basic expectation tests
+dat_simple <- transform(mtcars, y = mpg > median(mpg))
+mod_simple <- Rchoice::hetprob(y ~ wt + am | 1, data = dat_simple, link = "logit")
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 # hetprob() dy/dx
 dat <<- transform(iris, y = Sepal.Length > median(Sepal.Length))

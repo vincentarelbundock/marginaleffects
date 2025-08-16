@@ -3,6 +3,13 @@ using("marginaleffects")
 requiet("truncreg")
 requiet("margins")
 
+# Basic expectation tests
+data("tobin", package = "survival")
+mod_simple <- truncreg::truncreg(durable ~ age, data = tobin, subset = durable > 0)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 # truncreg: no validity check
 data("tobin", package = "survival")

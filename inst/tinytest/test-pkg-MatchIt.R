@@ -1,6 +1,16 @@
 source("helpers.R")
+using("marginaleffects")
 requiet("MatchIt")
 using("checkmate")
+
+# Basic expectation tests
+data("lalonde", package = "MatchIt")
+match_obj <- MatchIt::matchit(treat ~ age + educ + race + married, data = lalonde, method = "nearest")
+mod_simple <- lm(re78 ~ treat + age + educ, data = lalonde, weights = match_obj$weights)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 gen_X <- function(n) {
     X <- matrix(rnorm(9 * n), nrow = n, ncol = 9)

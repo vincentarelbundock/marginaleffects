@@ -6,6 +6,13 @@ requiet("margins")
 requiet("emmeans")
 requiet("broom")
 
+# Basic expectation tests
+mod_simple <- glm(am ~ mpg + wt, data = mtcars, family = binomial(), method = "brglm_fit")
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # brglm2::brglm_fit vs. margins vs. emtrends
 data("endometrial", package = "brglm2", envir = environment())
 dat <<- endometrial
@@ -38,8 +45,8 @@ model <- glm(HG ~ NV + PI + EH, family = binomial("probit"), data = dat)
 model <- update(model, method = "brglm_fit")
 pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = head(endometrial))
-expect_predictions(pred1, n_row = nrow(endometrial))
-expect_predictions(pred2, n_row = 6)
+expect_predictions(model, n_row = nrow(endometrial))
+expect_predictions(model, newdata = head(endometrial), n_row = 6)
 
 
 # brmultinom: no validity
@@ -47,7 +54,7 @@ data("housing", package = "MASS")
 dat <<- housing
 mod <- brmultinom(Sat ~ Infl + Type + Cont, weights = Freq, data = housing, type = "ML", ref = 1)
 expect_slopes(mod, type = "probs")
-expect_predictions(predictions(mod, type = "probs"))
+expect_predictions(mod, type = "probs")
 
 
 # bracl: no validity
@@ -60,7 +67,7 @@ mod <- bracl(
     data = dat,
     type = "ML"
 )
-expect_predictions(predictions(mod, type = "probs"))
+expect_predictions(mod, type = "probs")
 expect_slopes(mod, type = "probs")
 
 

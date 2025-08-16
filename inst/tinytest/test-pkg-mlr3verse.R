@@ -1,10 +1,20 @@
 source("helpers.R")
-
+using("marginaleffects")
 requiet("mlr3verse")
 requiet("fmeffects")
 requiet("tidymodels")
 data("bikes", package = "fmeffects")
 bikes <<- bikes
+
+
+# Basic expectation tests
+task_simple <- mlr3::as_task_regr(mtcars, target = "mpg", id = "mtcars")
+mod_simple <- mlr3::lrn("regr.lm")$train(task_simple)
+expect_slopes(mod_simple, variables = "hp", newdata = mtcars, se = FALSE)
+expect_comparisons(mod_simple, variables = "hp", newdata = mtcars, se = FALSE)
+expect_predictions(mod_simple, newdata = mtcars, se = FALSE)
+expect_error(hypotheses(mod_simple), pattern = "does not support")
+
 
 # fit model
 task <- as_task_regr(x = bikes, id = "bikes", target = "count")
@@ -46,5 +56,8 @@ cmp <- avg_comparisons(
 forest_tidy <- rand_forest(mode = "regression") |>
     set_engine("ranger") |>
     fit(count ~ ., data = bikes)
-cmp <- avg_comparisons(forest_tidy, newdata = bikes, type = "numeric", variables = c("temp", "season", "weather"))
+cmp <- avg_comparisons(forest_tidy,
+    newdata = bikes,
+    type = "numeric", variables = c("temp", "season", "weather")) |>
+    suppressWarnings()
 expect_inherits(cmp, "comparisons")

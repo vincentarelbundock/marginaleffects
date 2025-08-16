@@ -6,6 +6,13 @@ requiet("glmmTMB")
 requiet("emmeans")
 requiet("broom")
 
+# Basic expectation tests
+mod_simple <- glmmTMB::glmmTMB(mpg ~ wt + am + (1|cyl), data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 data("Owls", package = "glmmTMB")
 
 # marginaleffects no validity

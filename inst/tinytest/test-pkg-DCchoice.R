@@ -4,6 +4,14 @@ source("helpers.R")
 using("marginaleffects")
 if (!requiet("DCchoice")) exit_file("DCchoice not available")
 
+# Basic expectation tests
+data(oohbsyn)
+mod_simple <- DCchoice::oohbchoice(R1 + R2 ~ age + gender | log(BL) + log(BH), data = oohbsyn)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 data(oohbsyn)
 mod <- oohbchoice(R1 + R2 ~ age + gender | log(BL) + log(BH), data = oohbsyn)
 

@@ -5,6 +5,13 @@ requiet("nlme")
 requiet("emmeans")
 requiet("broom")
 
+# Basic expectation tests
+mod_simple <- nlme::lme(mpg ~ wt + am, random = ~ 1|cyl, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 dat <<- get_dataset("Ovary", "nlme")
 
 
@@ -27,8 +34,8 @@ expect_equivalent(mfx$estimate, em$Time.trend, tolerance = .01)
 model <- gls(follicles ~ sin(2 * pi * Time) + cos(2 * pi * Time), data = dat, correlation = corAR1(form = ~ 1 | Mare))
 pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = head(dat))
-expect_predictions(pred1, n_row = nrow(dat))
-expect_predictions(pred2, n_row = 6)
+expect_predictions(model, n_row = nrow(dat))
+expect_predictions(model, newdata = head(dat), n_row = 6)
 
 
 # glm: marginalmeans vs emmeans

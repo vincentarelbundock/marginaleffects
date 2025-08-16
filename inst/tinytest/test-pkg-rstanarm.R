@@ -10,12 +10,21 @@ requiet("emmeans")
 requiet("margins")
 requiet("broom")
 
+# Basic expectation tests  
+void <- capture.output(
+    mod_simple <- rstanarm::stan_lm(mpg ~ wt + am, data = mtcars, chains = 1, iter = 100, refresh = 0)
+)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # interactions
 void <- capture.output(
     mod <- stan_glm(am ~ hp + mpg * vs, data = mtcars, family = binomial(link = "logit"))
 )
 expect_slopes(mod, se = FALSE)
-expect_predictions(predictions(mod), se = FALSE)
+expect_predictions(mod, se = FALSE)
 
 # no interactions
 void <- capture.output(

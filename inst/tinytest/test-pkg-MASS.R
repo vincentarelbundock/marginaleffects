@@ -9,6 +9,12 @@ requiet("emmeans")
 tol <- 0.0001
 tol_se <- 0.001
 
+# Basic expectation tests
+mod_simple <- MASS::rlm(mpg ~ wt + am, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 ### marginaleffects
 # rlm: marginaleffects: vs. margins vs. emmeans
@@ -119,7 +125,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
 # polr: predictions: no validity
 mod <- MASS::polr(factor(gear) ~ mpg + factor(cyl), data = mtcars, Hess = TRUE)
 pred <- suppressMessages(predictions(mod, type = "probs"))
-expect_predictions(pred)
+expect_predictions(mod, type = "probs")
 # bugs stay dead
 expect_true(all(c("rowid", "estimate", "std.error", "group") %in% colnames(pred)))
 
@@ -127,15 +133,15 @@ expect_true(all(c("rowid", "estimate", "std.error", "group") %in% colnames(pred)
 # glm.nb: predictions: no validity
 model <- suppressWarnings(MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
 pred <- predictions(model)
-expect_predictions(pred, se = FALSE)
+expect_predictions(model, se = FALSE)
 
 
 # rlm: predictions: no validity
 model <- MASS::rlm(mpg ~ hp + drat, mtcars)
 pred <- predictions(model)
-expect_predictions(pred, n_row = nrow(mtcars))
+expect_predictions(model, n_row = nrow(mtcars))
 pred <- predictions(model, newdata = head(mtcars))
-expect_predictions(pred, n_row = 6)
+expect_predictions(model, newdata = head(mtcars), n_row = 6)
 
 ### marginalmeans
 
@@ -177,7 +183,7 @@ mod <- glmmPQL(
 )
 expect_slopes(mod, type = "link", n_unique = 1)
 expect_slopes(mod, type = "response")
-expect_predictions(predictions(mod))
+expect_predictions(mod)
 
 # emtrends
 em <- emmeans::emtrends(mod, ~week_bin, "week_bin", at = list(week_bin = 0))

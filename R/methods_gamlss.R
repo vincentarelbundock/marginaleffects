@@ -357,3 +357,17 @@ predict_gamlss <- function(
     }
     pred
 }
+
+
+#' @include sanity_model.R
+#' @rdname sanitize_model_specific
+#' @export
+sanitize_model_specific.gamlss <- function(model, calling_function, ...) {
+    if (calling_function == "hypotheses") {
+        msg <- "`marginaleffects` does not support hypothesis tests for models of this class."
+        stop_sprintf(msg)
+    }
+    return(model)
+}
+
+

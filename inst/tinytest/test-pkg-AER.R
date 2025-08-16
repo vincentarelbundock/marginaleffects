@@ -7,6 +7,13 @@ requiet("emmeans")
 requiet("broom")
 tol_se <- 1e-4
 
+# Basic expectation tests
+mod_simple <- AER::tobit(mpg ~ wt + am, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 dat <<- get_dataset("Affairs", "AER")
 
 
@@ -52,4 +59,4 @@ mod <- AER::tobit(
     data = dat
 )
 pred <- predictions(mod, newdata = dat)
-expect_predictions(pred, n_row = nrow(dat))
+expect_predictions(mod, newdata = dat, n_row = nrow(dat))

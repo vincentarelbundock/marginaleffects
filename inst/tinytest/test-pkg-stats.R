@@ -8,6 +8,13 @@ requiet("dplyr")
 
 options(marginaleffects_numDeriv = list(method = "simple", method.args = list(eps = 1e-7)))
 
+# Basic expectation tests
+mod_simple <- lm(mpg ~ wt + am, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 guerry <- get_dataset("Guerry", "HistData")
 
 # glm: marginaleffects
@@ -167,7 +174,7 @@ expect_equivalent(as.numeric(res), as.numeric(mar), tolerance = 1e-3)
 mod <- loess(mpg ~ wt, data = mtcars)
 expect_warning(predictions(mod))
 pred <- predictions(mod, vcov = FALSE)
-expect_predictions(pred, se = FALSE)
+expect_predictions(mod, vcov = FALSE, se = FALSE)
 
 
 # Issue #548: mlm support

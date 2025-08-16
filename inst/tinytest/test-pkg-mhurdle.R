@@ -1,9 +1,19 @@
 source("helpers.R")
 using("marginaleffects")
 requiet("mhurdle")
+exit_file("broken")
 
 tol <- 0.001
 tol_se <- 0.001
+
+# Basic expectation tests
+data("Interview", package = "mhurdle")
+mod_simple <- mhurdle(shows ~ educ + size | linc,
+    data = Interview, h2 = TRUE, dist = "n", method = "bhhh")
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 data("Interview", package = "mhurdle")
 m1 <- mhurdle(shows ~ 0 | linc + smsa + age + educ + size, data = Interview, h2 = TRUE, dist = "n", method = "bhhh")

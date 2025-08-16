@@ -5,6 +5,13 @@ requiet("quantreg")
 requiet("emmeans")
 requiet("broom")
 
+# Basic expectation tests
+mod_simple <- quantreg::rq(mpg ~ wt + am, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # marginaleffects: rq: Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$quantreg_rq_01
 model <- suppressWarnings(quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcars))
@@ -28,8 +35,8 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 model <- quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcars)
 pred1 <- predictions(model)
 pred2 <- suppressWarnings(predictions(model, newdata = head(mtcars)))
-expect_predictions(pred1, n_row = nrow(mtcars))
-expect_predictions(pred2, n_row = 6)
+expect_predictions(model, n_row = nrow(mtcars))
+expect_predictions(model, newdata = head(mtcars), n_row = 6)
 expect_equivalent(pred1$estimate, predict(model))
 expect_equivalent(pred2$estimate, predict(model, newdata = head(mtcars)))
 

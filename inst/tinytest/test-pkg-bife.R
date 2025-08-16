@@ -16,7 +16,7 @@ expect_slopes(mod)
 # only retrieve from model.frame, which is shorter than the full data.
 pred <- predictions(mod, newdata = dat, type = "response")
 expect_equivalent(pred$estimate, predict(mod, newdata = dat, type = "response"))
-expect_predictions(pred, n_row = nrow(dat))
+expect_predictions(mod, newdata = dat, type = "response", n_row = nrow(dat))
 
 
 # Issue 809

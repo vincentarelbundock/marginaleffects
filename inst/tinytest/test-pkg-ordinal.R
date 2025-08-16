@@ -5,6 +5,14 @@ if (!EXPENSIVE) exit_file("EXPENSIVE")
 requiet("MASS")
 requiet("ordinal")
 
+# Basic expectation tests
+data("wine", package = "ordinal")
+mod_simple <- ordinal::clm(rating ~ temp + contact, data = wine)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 dat <- get_dataset("housing", "MASS")
 for (i in seq_along(dat)) {
     if (is.character(dat[[i]])) {

@@ -4,6 +4,14 @@ using("marginaleffects")
 requiet("afex")
 requiet("emmeans")
 
+# Basic expectation tests
+data(md_12.1, package = "afex")
+mod_simple <- afex::aov_ez("id", "rt", md_12.1, within = c("angle", "noise"))
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 data(md_12.1, package = "afex")
 mod <- aov_ez("id", "rt", md_12.1, within = c("angle", "noise"))
 

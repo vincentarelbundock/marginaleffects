@@ -6,6 +6,13 @@ requiet("emmeans")
 requiet("broom")
 requiet("survey")
 
+# Basic expectation tests
+mod_simple <- lm(mpg ~ wt + am, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # survey: marginaleffects vs. margins vs. emtrends
 data("fpc", package = "survey")
 svyd <- survey::svydesign(

@@ -4,6 +4,13 @@ using("marginaleffects")
 requiet("robustbase")
 requiet("margins")
 
+# Basic expectation tests
+mod_simple <- robustbase::lmrob(mpg ~ wt + am, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # lmrob vs. margins
 data(coleman, package = "robustbase")
 model <- lmrob(Y ~ ., data = coleman, setting = "KS2014")

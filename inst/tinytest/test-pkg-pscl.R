@@ -8,6 +8,14 @@ requiet("margins")
 tol <- 0.0001
 tol_se <- 0.001
 
+# Basic expectation tests
+data("bioChemists", package = "pscl")
+mod_simple <- pscl::hurdle(art ~ fem + phd, data = bioChemists)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 ### marginaleffects
 
 # hurdle: set_coef
@@ -85,8 +93,8 @@ data("bioChemists", package = "pscl")
 model <- zeroinfl(art ~ kid5 + phd | ment, dist = "negbin", data = bioChemists)
 pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = head(bioChemists))
-expect_predictions(pred1)
-expect_predictions(pred2, n_row = 6)
+expect_predictions(model)
+expect_predictions(model, newdata = head(bioChemists), n_row = 6)
 
 
 ### marginalmeans

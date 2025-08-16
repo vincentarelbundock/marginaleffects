@@ -6,6 +6,14 @@ requiet("margins")
 requiet("emmeans")
 requiet("broom")
 
+# Basic expectation tests
+data("GasolineYield", package = "betareg")
+mod_simple <- betareg::betareg(yield ~ temp + batch, data = GasolineYield)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 data("GasolineYield", package = "betareg")
 tmp <- GasolineYield
 tmp$batch <- factor(tmp$batch)
@@ -38,9 +46,9 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 
 # predictions: no validity
 pred <- suppressWarnings(predictions(mod))
-expect_predictions(pred, n_row = nrow(GasolineYield))
+expect_predictions(mod, n_row = nrow(GasolineYield))
 pred <- predictions(mod, newdata = datagrid(batch = 1:3, temp = c(300, 350)))
-expect_predictions(pred, n_row = 6)
+expect_predictions(mod, newdata = datagrid(batch = 1:3, temp = c(300, 350)), n_row = 6)
 
 # link
 mm <- predictions(mod, type = "link", by = "batch", newdata = datagrid(grid_type = "balanced")) |>

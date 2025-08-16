@@ -3,6 +3,13 @@ using("marginaleffects")
 requiet("tidymodels")
 if (ON_CRAN || ON_CI) exit_file("local only")
 
+# Basic expectation tests
+mod_simple <- parsnip::linear_reg() |> parsnip::set_engine("lm") |> parsnip::fit(mpg ~ wt + am, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 dat <- get_dataset("penguins", "palmerpenguins")
 dat$large_penguin <- ifelse(
     dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE),
