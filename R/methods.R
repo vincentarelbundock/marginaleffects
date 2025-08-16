@@ -79,3 +79,55 @@ df.residual.predictions <- df.residual.comparisons
 #' @export
 #' @noRd
 df.residual.slopes <- df.residual.comparisons
+
+
+
+#' @noRd
+#' @export
+`[.marginaleffects` <- function(x, i, j, drop = FALSE) {
+    out <- NextMethod() # dispatch to [.data.frame
+    attr(out, "marginaleffects") <- attr(x, "marginaleffects", exact = TRUE)
+    class(out) <- class(x)
+    out
+}
+
+#' @noRd
+#' @export
+subset.marginaleffects <- function(x, subset, select, drop = FALSE, ...) {
+    out <- NextMethod() # dispatch to subset.data.frame
+    attr(out, "marginaleffects") <- attr(x, "marginaleffects", exact = TRUE)
+    class(out) <- class(x)
+    out
+}
+
+#' @noRd
+#' @export
+`[.predictions` <- `[.marginaleffects`
+
+#' @noRd
+#' @export
+`[.comparisons` <- `[.marginaleffects`
+
+#' @noRd
+#' @export
+`[.slopes` <- `[.marginaleffects`
+
+#' @noRd
+#' @export
+`[.hypotheses` <- `[.marginaleffects`
+
+#' @noRd
+#' @export
+subset.predictions <- subset.marginaleffects
+
+#' @noRd
+#' @export
+subset.comparisons <- subset.marginaleffects
+
+#' @noRd
+#' @export
+subset.slopes <- subset.marginaleffects
+
+#' @noRd
+#' @export
+subset.hypotheses <- subset.marginaleffects
