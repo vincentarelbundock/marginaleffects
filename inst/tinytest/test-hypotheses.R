@@ -158,7 +158,7 @@ z <- avg_comparisons(
     variables = list("tx" = "pairwise"),
     by = "sex",
     hypothesis = "b4 - b3 = 0"
-)
+) |> suppressWarnings()
 expect_equivalent(x$estimate, y)
 expect_equivalent(z$estimate, y)
 
@@ -178,24 +178,6 @@ expect_equivalent(hyp$hypothesis, c("equal", "sums to zero"))
 hyp <- hypotheses(mod, hypothesis = c("equal" = "b*=0"))
 expect_equivalent(hyp$hypothesis, sprintf("b%s=0", 1:5))
 
-# hypotheses() applied to {marginaleffects} package objects
-# commented out because doesn't work in environments because of match.call()
-# mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)
-
-# cmp <- comparisons(mod, by = "am")
-# dm <- hypotheses(cmp, hypothesis = "b1 = b3")
-# expect_true("b1=b3" %in% dm$term)
-# expect_equivalent(nrow(dm), 1)
-
-# mfx <- slopes(mod)
-# dm <- hypotheses(mfx, hypothesis = "b1 = b3")
-# expect_true("b1=b3" %in% dm$term)
-# expect_equivalent(nrow(dm), 1)
-
-# pre <- predictions(mod, newdata = datagrid())
-# dm <- hypotheses(pre, hypothesis = "b1 = 0.05")
-# expect_true("b1=0.05" %in% dm$term)
-# expect_equivalent(nrow(dm), 1)
 
 # Issue #960
 options(marginaleffects_safe = TRUE)
@@ -204,7 +186,7 @@ fm1 <- lme(distance ~ age + Sex, data = Orthodont)
 expect_warning(hypotheses(fm1, hypothesis = c(0, 0), joint = c("SexFemale", "age")))
 # no warning generated
 h <- hypotheses(fm1, hypothesis = c(0, 0), df = c(1, 3), joint = c("SexFemale", "age"))
-options(marginaleffects_safe = TRUE)
+options(marginaleffects_safe = FALSE)
 
 
 # Issue #1344
