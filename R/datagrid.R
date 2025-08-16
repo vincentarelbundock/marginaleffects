@@ -214,7 +214,7 @@ datagrid <- function(
         out <- data.table::rbindlist(newdata_list)
         data.table::setDF(out)
 
-        attr(out, "explicit") <- explicit
+        attr(out, "variable_names_datagrid") <- explicit
 
         return(out)
     }
@@ -237,7 +237,7 @@ datagrid <- function(
         out$rowid <- seq_len(nrow(out))
     }
 
-    attr(out, "explicit") <- explicit
+    attr(out, "variable_names_datagrid") <- explicit
     return(out)
 }
 

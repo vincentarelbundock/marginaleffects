@@ -66,6 +66,7 @@ setClass(
         type = "characterOrNULL",
         variables = "list",
         variable_class = "characterOrNULL",
+        variable_names_datagrid = "character",
         variable_names_response = "character",
         variable_names_by = "character",
         variable_names_by_hypothesis = "character",
@@ -102,7 +103,6 @@ new_marginaleffects_internal <- function(
     hypothesis_null = NULL,
     hypothesis_direction = NULL,
     jacobian = NULL,
-    newdata = data.frame(),
     numderiv = list("fdforward"),
     type = NULL,
     variables = list(),
@@ -122,6 +122,7 @@ new_marginaleffects_internal <- function(
 
     variable_names_response <- hush(insight::find_response(model,
         combine = TRUE, component = "all", flatten = TRUE))
+
     if (is.null(variable_names_response)) {
         variable_names_response <- character(0)
     }
@@ -148,14 +149,15 @@ new_marginaleffects_internal <- function(
         jacobian = jacobian,
         model = model,
         modeldata = modeldata,
-        newdata = newdata,
+        newdata = data.frame(),
         numderiv = numderiv,
         type = type,
         variables = variables,
         variable_class = variable_class,
-        variable_names_response = variable_names_response,
         variable_names_by = variable_names_by,
         variable_names_by_hypothesis = variable_names_by_hypothesis,
+        variable_names_datagrid = character(),
+        variable_names_response = variable_names_response,
         vcov_model = vcov_model,
         vcov_type = vcov_type,
         wts = wts

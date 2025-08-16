@@ -243,6 +243,12 @@ hypotheses <- function(
         ...
     )
 
+    # Store hypothesis group-by variables in S4 slot
+    hypothesis_by_vars <- attr(b, "hypothesis_function_by")
+    if (!is.null(hypothesis_by_vars)) {
+        mfx@variable_names_by_hypothesis <- hypothesis_by_vars
+    }
+
     # bayesian posterior
     mfx@draws <- attr(b, "posterior_draws")
     if (!is.null(mfx@draws)) {
@@ -310,9 +316,7 @@ hypotheses <- function(
     class(out) <- c("hypotheses", class(out))
 
     # Add common attributes from mfx S4 slots
-    out <- add_attributes(out, mfx,
-        hypothesis_function_by = attr(b, "hypothesis_function_by")
-    )
+    out <- add_attributes(out, mfx)
 
     # must be after attributes for vcov
     out <- multcomp_test(

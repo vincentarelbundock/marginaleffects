@@ -235,6 +235,12 @@ add_newdata <- function(
 
     # Store processed newdata in the mfx object
     mfx@newdata <- newdata
+    
+    # Extract and store variable_names_datagrid attribute from newdata
+    datagrid_vars <- attr(newdata, "variable_names_datagrid")
+    if (!is.null(datagrid_vars)) {
+        mfx@variable_names_datagrid <- datagrid_vars
+    }
 
     # if `modeldata` is unavailable, we default to `newdata`
     flag1 <- isTRUE(checkmate::check_data_frame(mfx@modeldata, min.rows = 1))

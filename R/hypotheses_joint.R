@@ -153,9 +153,9 @@ joint_test <- function(
     out <- data.frame(statistic = drop(wald_statistic), p.value = drop(p_value))
     class(out) <- c("hypotheses", "data.frame")
     if (joint_test == "f") {
-        attr(out, "statistic_label") <- "F"
+        attr(out, "hypotheses_joint_label") <- "F"
     } else if (joint_test == "chisq") {
-        attr(out, "statistic_label") <- "ChiSq"
+        attr(out, "hypotheses_joint_label") <- "ChiSq"
     }
 
     # degrees of freedom print

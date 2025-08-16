@@ -31,7 +31,6 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
     args <- list(x = x, newdata = newdata, by = by, draws = draws)
     args <- args[names(args) %in% argnames]
     out <- do.call(hypothesis, args)
-    at <- attr(out, "hypothesis_function_by")
 
     # sanity
     msg <- "The `hypothesis` argument function must return a data frame with `term` (or `hypothesis`) and `estimate` columns."
@@ -56,6 +55,5 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
     }
 
     data.table::setDT(out)
-    attr(out, "hypothesis_function_by") <- at
     return(out)
 }

@@ -346,9 +346,6 @@ comparisons <- function(
     args <- utils::modifyList(args, dots)
     cmp <- do.call("get_comparisons", args)
 
-    tmp <- attr(cmp, "hypothesis_function_by")
-    if (!is.null(tmp)) mfx@variable_names_by_hypothesis <- tmp
-
     # bayesian posterior
     mfx@draws <- attr(cmp, "posterior_draws")
 

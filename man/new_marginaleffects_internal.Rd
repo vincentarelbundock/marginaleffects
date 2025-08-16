@@ -20,7 +20,6 @@ new_marginaleffects_internal(
   hypothesis_null = NULL,
   hypothesis_direction = NULL,
   jacobian = NULL,
-  newdata = data.frame(),
   numderiv = list("fdforward"),
   type = NULL,
   variables = list(),
@@ -38,13 +37,13 @@ new_marginaleffects_internal(
 
 \item{df}{The degrees of freedom}
 
-\item{newdata}{The new data frame for predictions}
-
 \item{type}{The sanitized type from sanitize_type()}
 
 \item{vcov_model}{The variance-covariance matrix}
 
 \item{wts}{The weights specification}
+
+\item{newdata}{The new data frame for predictions}
 }
 \value{
 An object of class marginaleffects_internal

@@ -318,9 +318,6 @@ predictions <- function(
     args <- utils::modifyList(args, dots)
     tmp <- do.call(get_predictions, args)
 
-    hyp <- attr(tmp, "hypothesis_function_by")
-    if (!is.null(hyp)) mfx@variable_names_by_hypothesis <- hyp
-
     # two cases when tmp is a data.frame
     # get_predict gets us rowid with the original rows
     if (inherits(tmp, "data.frame")) {

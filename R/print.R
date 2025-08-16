@@ -119,12 +119,12 @@ print.marginaleffects <- function(
     conf_level <- if (is.null(mfx)) 0.95 else mfx@conf_level
     alpha <- 100 * (1 - conf_level)
 
-    statistic_label <- attr(x, "statistic_label")
-    if (is.null(statistic_label)) {
+    hypotheses_joint_label <- attr(x, "hypotheses_joint_label")
+    if (is.null(hypotheses_joint_label)) {
         if (any(out[["df"]] < Inf)) {
-            statistic_label <- "t"
+            hypotheses_joint_label <- "t"
         } else {
-            statistic_label <- "z"
+            hypotheses_joint_label <- "z"
         }
     }
 
@@ -143,8 +143,8 @@ print.marginaleffects <- function(
         "by" = "By",
         "estimate" = "Estimate",
         "std.error" = "Std. Error",
-        "statistic" = statistic_label,
-        "p.value" = sprintf("Pr(>|%s|)", statistic_label),
+        "statistic" = hypotheses_joint_label,
+        "p.value" = sprintf("Pr(>|%s|)", hypotheses_joint_label),
         "s.value" = "S",
         "conf.low" = sprintf("%.1f %%", alpha / 2),
         "conf.high" = sprintf("%.1f %%", 100 - alpha / 2),
@@ -163,15 +163,12 @@ print.marginaleffects <- function(
     # explicitly given by user in `datagrid()` or `by` or `newdata`
     bycols <- "by"
     if (!is.null(mfx)) {
-        bycols <- c("by", mfx@variable_names_by)
+        bycols <- c(
+            bycols,
+            mfx@variable_names_by, 
+            mfx@variable_names_by_hypothesis, 
+            mfx@variable_names_datagrid)
     }
-    explicit <- c(
-        bycols,
-        if (!is.null(mfx) && is.data.frame(mfx@newdata)) attr(mfx@newdata, "explicit") else NULL,
-        if (!is.null(mfx)) mfx@variable_names_by_hypothesis else NULL,
-        attr(x, "newdata_explicit"),
-        attr(x, "hypothesis_function_by")
-    )
 
     # useless columns should not be printed
     useless <- c(
@@ -197,7 +194,7 @@ print.marginaleffects <- function(
     # Subset columns
     implicit <- if (!is.null(mfx) && is.data.frame(mfx@newdata)) attr(mfx@newdata, "implicit") else NULL
     idx <- c(
-        explicit,
+        bycols,
         names(dict),
         grep("^contrast_", colnames(x), value = TRUE)
     )
@@ -206,7 +203,7 @@ print.marginaleffects <- function(
         c(names(dict), colnames(x)),
         value = TRUE
     )
-    middle <- explicit
+    middle <- bycols
     end <- setdiff(intersect(names(dict), colnames(x)), c(start, middle))
     end <- c(end, implicit)
     idx <- c(start, middle, end)
