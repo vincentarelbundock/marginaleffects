@@ -230,7 +230,7 @@ predictions <- function(
     # sanity checks
     mfx <- add_numderiv(mfx, numderiv)
     mfx <- add_by(mfx, by)
-    sanity_reserved(model, mfx@modeldata)
+    sanity_reserved(mfx)
 
     # if type is NULL, we backtransform if relevant
     # before add_hypothesis()
@@ -415,19 +415,23 @@ predictions <- function(
         out <- backtransform(out, transform = linv, draws = mfx@draws)
     }
     out <- backtransform(out, transform = transform, draws = mfx@draws)
+    new_draws <- attr(out, "posterior_draws") # important!
+    if (!is.null(new_draws)) mfx@draws <- new_draws
 
     data.table::setDF(out)
     class(out) <- c("predictions", class(out))
+
+    # before add_attributes()
+    if (inherits(mfx@model, "brmsfit")) {
+        insight::check_if_installed("brms")
+        mfx@draws_chains <- brms::nchains(mfx@model)
+    }
 
     # Add common attributes from mfx S4 slots
     # class before prune
     out <- add_attributes(out, mfx)
     out <- prune_attributes(out)
 
-    if (inherits(mfx@model, "brmsfit")) {
-        insight::check_if_installed("brms")
-        mfx@draws_chains <- brms::nchains(mfx@model)
-    }
 
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL

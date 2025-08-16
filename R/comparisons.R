@@ -289,7 +289,7 @@ comparisons <- function(
 
     # misc sanitation
     mfx <- add_by(mfx, by)
-    sanity_reserved(mfx@model, mfx@modeldata)
+    sanity_reserved(mfx)
 
     cross <- sanitize_cross(cross, variables, mfx@model)
     mfx@type <- sanitize_type(
@@ -420,6 +420,8 @@ comparisons <- function(
 
     # after draws attribute
     cmp <- backtransform(cmp, transform, draws = mfx@draws)
+    new_draws <- attr(cmp, "posterior_draws") # important!
+    if (!is.null(new_draws)) mfx@draws <- new_draws
 
     # remove weights column (now handled by add_attributes)
     cmp[["marginaleffects_wts_internal"]] <- NULL
@@ -430,14 +432,16 @@ comparisons <- function(
 
     class(out) <- c("comparisons", class(out))
 
-    # class before prune
-    out <- add_attributes(out, mfx)
-    out <- prune_attributes(out)
-
+    # before add_attributes()
     if (inherits(mfx@model, "brmsfit")) {
         insight::check_if_installed("brms")
         mfx@draws_chains <- brms::nchains(mfx@model) 
     }
+
+    # class before prune
+    out <- add_attributes(out, mfx)
+    out <- prune_attributes(out)
+
 
     if (!is.null(inferences_method)) {
         out <- inferences(out, method = inferences_method)

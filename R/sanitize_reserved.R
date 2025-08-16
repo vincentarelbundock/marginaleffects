@@ -1,10 +1,5 @@
-sanity_reserved <- function(model = NULL, modeldata = data.frame()) {
-    if (is.null(model)) {
-        return(invisible(NULL))
-    }
-
-    predictors <- insight::find_variables(model, flatten = TRUE)
-
+sanity_reserved <- function(mfx) {
+    modeldata <- mfx@modeldata
     # reserved keywords
     # Issue #697: we used to allow "group", as long as it wasn't in
     # `variables`, but this created problems with automatic `by=TRUE`. Perhaps
@@ -26,8 +21,7 @@ sanity_reserved <- function(model = NULL, modeldata = data.frame()) {
         "p.value.noninf",
         "by"
     )
-    bad <- unique(intersect(c(names(predictors), colnames(modeldata)), reserved))
-
+    bad <- unique(intersect(names(modeldata), reserved))
     if (length(bad) > 0) {
         msg <- c(
             "These variable names are forbidden to avoid conflicts with the outputs of `marginaleffects`:",
@@ -36,6 +30,5 @@ sanity_reserved <- function(model = NULL, modeldata = data.frame()) {
         )
         stop_sprintf(msg)
     }
-
     return(invisible(NULL))
 }

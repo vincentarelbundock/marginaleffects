@@ -1,43 +1,23 @@
-#' @importFrom generics prune
-#' @export
-generics::prune
+add_attributes <- function(out, mfx = NULL, ...) {
+    # Always add all attributes from S4 slots
+    if (!is.null(mfx)) attr(out, "marginaleffects") <- mfx
 
+    dots <- list(...)
+    for (n in names(dots)) {
+        if (is.null(attr(out, n))) {
+            attr(out, n) <- dots[[n]]
+        }
+    }
 
-#' Prune marginaleffects objects to reduce memory usage
-#'
-#' Remove large attributes from marginaleffects objects to reduce memory usage.
-#' Warning: This will disable many useful post-processing features of `marginaleffects`
-#' @param tree A marginaleffects object (predictions, comparisons, slopes, or hypotheses)
-#' @param ... Unused
-#' @return A pruned marginaleffects object
-#' @details ...
-#' @export
-prune.marginaleffects <- function(tree, ...) {
-    mfx <- components(tree, "all")
-    if (!is.null(mfx)) {
-        mfx@model <- NULL
-        mfx@newdata <- NULL
-        mfx@modeldata <- NULL
-        mfx@call <- NULL
-        mfx@jacobian <- matrix()
-        attr(tree, "marginaleffects") <- mfx
-    }
-    essential_attrs <- c("names", "row.names", "class", "mfx")
-    for (nm in setdiff(names(attributes(tree)), essential_attrs)) {
-        attr(tree, nm) <- NULL
-    }
-    attr(tree, "lean") <- TRUE
-    return(tree)
+    return(out)
 }
 
-#' @export
-prune.predictions <- prune.marginaleffects
 
-#' @export
-prune.hypotheses <- prune.marginaleffects
-
-#' @export
-prune.slopes <- prune.marginaleffects
-
-#' @export
-prune.comparisons <- prune.marginaleffects
+prune_attributes <- function(out) {
+    if (isTRUE(getOption("marginaleffects_lean", default = FALSE))) {
+        out <- prune(out, component = "all")
+    } else {
+        out <- prune(out, component = "modeldata")
+    }
+    return(out)
+}

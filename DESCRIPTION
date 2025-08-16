@@ -198,7 +198,6 @@ Suggests:
     quarto
 Collate:
     'RcppExports.R'
-    'add_attributes.R'
     'add_hypothesis.R'
     'attributes.R'
     'backtransform.R'
@@ -311,6 +310,7 @@ Collate:
     'plot_slopes.R'
     'predictions.R'
     'print.R'
+    'prune.R'
     'sanitize_comparison.R'
     'sanitize_condition.R'
     'sanitize_conf_level.R'
