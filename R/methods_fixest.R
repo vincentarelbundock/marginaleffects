@@ -4,15 +4,16 @@ get_predict.fixest <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
-    ...
-) {
+    mfx = NULL,
+    ...) {
     insight::check_if_installed("fixest")
 
     if (is.null(type)) {
+        calling_function <- if (!is.null(mfx)) mfx@calling_function else "predictions"
         type <- sanitize_type(
             model = model,
             type = type,
-            calling_function = "predictions"
+            calling_function = calling_function
         )
     }
 

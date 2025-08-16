@@ -240,33 +240,8 @@ slopes <- function(
     df = Inf,
     eps = NULL,
     numderiv = "fdforward",
-    ...
-) {
+    ...) {
     call_attr <- construct_call(model, "slopes")
-
-    # very early, before any use of newdata
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    # scall <- rlang::enquo(newdata)
-    # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-
-    # build call: match.call() doesn't work well in *apply()
-    # call_attr <- c(
-    #     list(
-    #         name = "slopes",
-    #         model = model,
-    #         newdata = newdata,
-    #         variables = variables,
-    #         type = type,
-    #         vcov = vcov,
-    #         by = by,
-    #         conf_level = conf_level,
-    #         slope = slope,
-    #         wts = wts,
-    #         hypothesis = hypothesis,
-    #         df = df,
-    #         eps = eps),
-    #     list(...))
-    # call_attr <- do.call("call", call_attr)
 
     # slopes() does not support a named list of variables like comparisons()
     checkmate::assert_character(variables, null.ok = TRUE)
@@ -285,14 +260,7 @@ slopes <- function(
     checkmate::assert_choice(slope, choices = valid)
 
     # sanity checks and pre-processing
-    model <- sanitize_model(
-        model = model,
-        wts = wts,
-        vcov = vcov,
-        by = by,
-        calling_function = "slopes",
-        ...
-    )
+    # Note: model sanitization is handled in comparisons()
     sanity_dots(model = model, calling_function = "slopes", ...)
 
     ############### sanity checks are over
@@ -306,31 +274,7 @@ slopes <- function(
     call_attr_c[["internal_call"]] <- TRUE
     call_attr_c[["slope"]] <- NULL
 
-    # out <- comparisons(
-    #     model,
-    #     newdata = newdata,
-    #     variables = variables,
-    #     vcov = vcov,
-    #     conf_level = conf_level,
-    #     type = type,
-    #     wts = wts,
-    #     hypothesis = hypothesis,
-    #     equivalence = equivalence,
-    #     df = df,
-    #     by = by,
-    #     eps = eps,
-    #     numderiv = numderiv,
-    #     comparison = slope,
-    #     cross = FALSE,
-    #     # secret arguments
-    #     internal_call = TRUE,
-    #     ...)
-
     out <- eval.parent(call_attr_c)
-
-    if (!is.null(attr(out, "call"))) {
-        attr(out, "call") <- call_attr
-    }
 
     # class
     data.table::setDF(out)
@@ -359,35 +303,8 @@ avg_slopes <- function(
     df = Inf,
     eps = NULL,
     numderiv = "fdforward",
-    ...
-) {
-    # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
-    # scall <- rlang::enquo(newdata)
-    # newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
-
-    # Construct comparisons() call
+    ...) {
     call_attr <- construct_call(model, "slopes")
-
     out <- eval.parent(call_attr)
-
-    # out <- slopes(
-    #     model = model,
-    #     newdata = newdata,
-    #     variables = variables,
-    #     type = type,
-    #     vcov = vcov,
-    #     conf_level = conf_level,
-    #     by = by,
-    #     slope = slope,
-    #     wts = wts,
-    #     hypothesis = hypothesis,
-    #     equivalence = equivalence,
-    #     df = df,
-    #     eps = eps,
-    #     numderiv = numderiv,
-    #     ...)
-
     return(out)
 }

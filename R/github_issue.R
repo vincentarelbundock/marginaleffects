@@ -6,4 +6,5 @@ github_issue <- function() {
     https://github.com/vincentarelbundock/marginaleffects/issues
     "
     )
+    return(msg)
 }

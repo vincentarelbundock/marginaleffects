@@ -12,14 +12,14 @@ big <- bigglm(y ~ x1 + x2, data = dat, family = binomial())
 small <- glm(y ~ x1 + x2, data = dat, family = binomial())
 
 # vcov not supported
+options(marginaleffects_safe = TRUE)
 expect_warning(comparisons(big), pattern = "not supported")
+options(marginaleffects_safe = FALSE)
 
 # dydx supported
 big_m <- comparisons(big, vcov = FALSE)
 small_m <- comparisons(small, vcov = FALSE)
-t1 <- tidy(big_m)
-t2 <- tidy(small_m)
-expect_equivalent(t1$estimate, t2$estimate)
+expect_equivalent(big_m$estimate, small_m$estimate)
 
 big_m <- slopes(big, type = "link", vcov = FALSE)
 small_m <- slopes(small, type = "link", vcov = FALSE)

@@ -78,6 +78,8 @@ print.marginaleffects <- function(
         )
     )
 
+    mfx <- attr(x, "marginaleffects")
+
     if (isTRUE(style == "data.frame")) {
         print(as.data.frame(x))
         return(invisible(x))
@@ -114,18 +116,15 @@ print.marginaleffects <- function(
         }
     }
 
-    if (is.null(attr(x, "conf_level"))) {
-        alpha <- NULL
-    } else {
-        alpha <- 100 * (1 - attr(x, "conf_level"))
-    }
+    conf_level <- if (is.null(mfx)) 0.95 else mfx@conf_level
+    alpha <- 100 * (1 - conf_level)
 
-    statistic_label <- attr(x, "statistic_label")
-    if (is.null(statistic_label)) {
+    hypotheses_joint_label <- attr(x, "hypotheses_joint_label")
+    if (is.null(hypotheses_joint_label)) {
         if (any(out[["df"]] < Inf)) {
-            statistic_label <- "t"
+            hypotheses_joint_label <- "t"
         } else {
-            statistic_label <- "z"
+            hypotheses_joint_label <- "z"
         }
     }
 
@@ -144,34 +143,14 @@ print.marginaleffects <- function(
         "by" = "By",
         "estimate" = "Estimate",
         "std.error" = "Std. Error",
-        "statistic" = statistic_label,
-        "p.value" = sprintf("Pr(>|%s|)", statistic_label),
+        "statistic" = hypotheses_joint_label,
+        "p.value" = sprintf("Pr(>|%s|)", hypotheses_joint_label),
         "s.value" = "S",
-        "conf.low" = ifelse(
-            is.null(alpha),
-            "CI low",
-            sprintf("%.1f %%", alpha / 2)
-        ),
-        "conf.high" = ifelse(
-            is.null(alpha),
-            "CI high",
-            sprintf("%.1f %%", 100 - alpha / 2)
-        ),
-        "pred.low" = ifelse(
-            is.null(alpha),
-            "Pred low",
-            sprintf("Pred. %.1f %%", alpha / 2)
-        ),
-        "pred.high" = ifelse(
-            is.null(alpha),
-            "Pred high",
-            sprintf("Pred. %.1f %%", 100 - alpha / 2)
-        ),
-        "pred.set" = ifelse(
-            is.null(alpha),
-            "Pred Set",
-            sprintf("Pred Set %.1f %%", 100 - alpha / 2)
-        ),
+        "conf.low" = sprintf("%.1f %%", alpha / 2),
+        "conf.high" = sprintf("%.1f %%", 100 - alpha / 2),
+        "pred.low" = sprintf("Pred. %.1f %%", alpha / 2),
+        "pred.high" = sprintf("Pred. %.1f %%", 100 - alpha / 2),
+        "pred.set" = sprintf("Pred Set %.1f %%", 100 - alpha / 2),
         "p.value.noninf" = "p (NonInf)",
         "p.value.nonsup" = "p (NonSup)",
         "p.value.equiv" = "p (Equiv)",
@@ -182,7 +161,14 @@ print.marginaleffects <- function(
     )
 
     # explicitly given by user in `datagrid()` or `by` or `newdata`
-    explicit <- get_explicit(x)
+    bycols <- "by"
+    if (!is.null(mfx)) {
+        bycols <- c(
+            bycols,
+            mfx@variable_names_by, 
+            mfx@variable_names_by_hypothesis, 
+            mfx@variable_names_datagrid)
+    }
 
     # useless columns should not be printed
     useless <- c(
@@ -192,13 +178,7 @@ print.marginaleffects <- function(
         # user-supplied omissions
         getOption("marginaleffects_print_omit", default = NULL),
         # response variable
-        tryCatch(
-            unlist(
-                insight::find_response(attr(x, "model"), combine = TRUE),
-                use.names = FALSE
-            ),
-            error = function(e) NULL
-        )
+        if (!is.null(mfx)) mfx@variable_names_response else NULL
     )
 
     if ("term" %in% colnames(out) && length(unique(out$term)) == 1L) {
@@ -212,9 +192,9 @@ print.marginaleffects <- function(
     }
 
     # Subset columns
-    implicit <- attr(attr(x, "newdata"), "implicit")
+    implicit <- if (!is.null(mfx) && is.data.frame(mfx@newdata)) attr(mfx@newdata, "implicit") else NULL
     idx <- c(
-        explicit,
+        bycols,
         names(dict),
         grep("^contrast_", colnames(x), value = TRUE)
     )
@@ -223,7 +203,7 @@ print.marginaleffects <- function(
         c(names(dict), colnames(x)),
         value = TRUE
     )
-    middle <- explicit
+    middle <- bycols
     end <- setdiff(intersect(names(dict), colnames(x)), c(start, middle))
     end <- c(end, implicit)
     idx <- c(start, middle, end)
@@ -244,8 +224,8 @@ print.marginaleffects <- function(
         print_columns_text <- sprintf("Columns: %s\n", toString(colnames(x)))
     }
 
-    if (isTRUE(type) && !is.null(attr(x, "type"))) {
-        print_type_text <- sprintf("Type: %s\n", attr(x, "type"))
+    if (isTRUE(type) && !is.null(mfx) && !is.null(mfx@type)) {
+        print_type_text <- sprintf("Type: %s\n", mfx@type)
     }
 
     # avoid infinite recursion by stripping marginaleffect.summary class
@@ -313,14 +293,6 @@ print.marginaleffects <- function(
     cat(print_columns_text)
     cat("\n")
 
-    ## This is tricky to extract nicely when transform_* are passed from avg_comparisons to comparisons. I could certainly figure it out, but at the same time, I don't think the print method should return information that is immediately visible from the call. This is different from `type`, where users often rely on the default value, which can change from model to model, so printing it is often
-    # if (!is.null(attr(x, "comparison_label"))) {
-    #     cat("Pre-transformation: ", paste(attr(x, "comparison_label"), collapse = ""), "\n")
-    # }
-    # if (!is.null(attr(x, "transform_label"))) {
-    #     cat("Post-transformation: ", paste(attr(x, "transform_label"), collapse = ""), "\n")
-    # }
-
     print_tail <- attr(x, "print_tail")
     if (!is.null(print_tail)) {
         cat(print_tail, "\n")
@@ -361,22 +333,3 @@ knit_print.comparisons <- knit_print.marginaleffects
 #' @exportS3Method knitr::knit_print
 knit_print.slopes <- knit_print.marginaleffects
 
-
-get_explicit <- function(x) {
-    bycols <- "by"
-
-    by <- attr(x, "by")
-    if (isTRUE(checkmate::check_character(by))) {
-        bycols <- c(by, bycols)
-    }
-
-    explicit <- c(
-        bycols,
-        attr(attr(x, "newdata"), "explicit"),
-        attr(x, "hypothesis_by"),
-        attr(x, "newdata_explicit"),
-        attr(x, "hypothesis_function_by")
-    )
-
-    return(explicit)
-}

@@ -39,9 +39,9 @@
 #'
 #' # marginal comparisons on a counterfactual grid
 #' plot_comparisons(mod,
-#'   variables = "hp",
-#'   by = "am",
-#'   newdata = datagrid(am = 0:1, grid_type = "counterfactual")
+#'     variables = "hp",
+#'     by = "am",
+#'     newdata = datagrid(am = 0:1, grid_type = "counterfactual")
 #' )
 #'
 plot_comparisons <- function(
@@ -59,18 +59,25 @@ plot_comparisons <- function(
     rug = FALSE,
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
-    ...
-) {
-    if (inherits(model, "mira") && is.null(newdata)) {
+    ...) {
+    # init
+    call <- construct_call(model, "comparisons")
+    model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+    mfx <- new_marginaleffects_internal(
+        call = call,
+        model = model
+    )
+
+    if (inherits(mfx@model, "mira") && is.null(newdata)) {
         msg <- "Please supply a data frame to the `newdata` argument explicitly."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # order of the first few paragraphs is important
     scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model, by = by)
+    newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
     if (!isFALSE(wts) && is.null(by)) {
-        insight::format_error("The `wts` argument requires a `by` argument.")
+        stop_sprintf("The `wts` argument requires a `by` argument.")
     }
 
     checkmate::assert_character(
@@ -82,7 +89,7 @@ plot_comparisons <- function(
     )
     if ((!is.null(condition) && !is.null(by)) || (is.null(condition) && is.null(by))) {
         msg <- "One of the `condition` and `by` arguments must be supplied, but not both."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # sanity check
@@ -92,31 +99,24 @@ plot_comparisons <- function(
         .var.name = "variables"
     )
 
-    modeldata <- get_modeldata(
-        model,
-        additional_variables = c(names(condition), by),
-        wts = wts
-    )
-
     # mlr3 and tidymodels
-    if (is.null(modeldata) || nrow(modeldata) == 0) {
-        modeldata <- newdata
+    if (is.null(mfx@modeldata) || nrow(mfx@modeldata) == 0) {
+        mfx@modeldata <- newdata
     }
 
     # conditional
     if (!is.null(condition)) {
         condition <- sanitize_condition(
-            model,
-            condition,
-            variables,
-            modeldata = modeldata
+            mfx = mfx,
+            condition = condition,
+            variables = variables
         )
         v_x <- condition$condition1
         v_color <- condition$condition2
         v_facet_1 <- condition$condition3
         v_facet_2 <- condition$condition4
         datplot <- comparisons(
-            model,
+            mfx@model,
             newdata = condition$newdata,
             type = type,
             vcov = vcov,
@@ -127,7 +127,7 @@ plot_comparisons <- function(
             comparison = comparison,
             transform = transform,
             cross = FALSE,
-            modeldata = modeldata,
+            modeldata = mfx@modeldata,
             ...
         )
     }
@@ -135,14 +135,13 @@ plot_comparisons <- function(
     # marginal
     if (!is.null(by)) {
         newdata <- sanitize_newdata(
-            model = model,
+            mfx = mfx,
             newdata = newdata,
-            modeldata = modeldata,
             by = by,
             wts = wts
         )
         datplot <- comparisons(
-            model,
+            mfx@model,
             by = by,
             newdata = newdata,
             type = type,
@@ -153,7 +152,7 @@ plot_comparisons <- function(
             comparison = comparison,
             transform = transform,
             cross = FALSE,
-            modeldata = modeldata,
+            modeldata = mfx@modeldata,
             ...
         )
         v_x <- by[[1]]
@@ -169,13 +168,12 @@ plot_comparisons <- function(
         v_facet_1 = v_facet_1,
         v_facet_2 = v_facet_2,
         condition = condition,
-        modeldata = modeldata
+        mfx = mfx
     )
 
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
         out <- as.data.frame(datplot)
-        attr(out, "posterior_draws") <- attr(datplot, "posterior_draws")
         return(out)
     }
 
@@ -189,7 +187,7 @@ plot_comparisons <- function(
         v_facet_2 = v_facet_2,
         gray = gray,
         rug = rug,
-        modeldata = modeldata
+        mfx = mfx
     )
     p <- p + ggplot2::labs(x = v_x, y = sprintf("Comparison"))
 

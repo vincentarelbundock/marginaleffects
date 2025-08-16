@@ -39,3 +39,9 @@ expect_snapshot_print(
     predictions(mod, newdata = data.frame(am = 0:1, hp = 120)),
     "print-predictions_newdata"
 )
+
+# Test from tmp.R - predictions with by argument and subsetting
+mod_tmp <- lm(mpg ~ hp + am + factor(gear), data = mtcars)
+p_tmp <- predictions(mod_tmp, by = c("am", "gear"))
+result_tmp <- subset(p_tmp, am == 1)
+expect_snapshot_print(result_tmp, "print-predictions_by_am_gear_subset")

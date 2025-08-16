@@ -5,7 +5,7 @@ equivalence <- function(x, equivalence = NULL, df = Inf, ...) {
 
     if (!is.null(equivalence) && !all(c("estimate", "std.error") %in% colnames(x))) {
         msg <- "The `equivalence` argument is not supported with models for which `marginaleffects` does not estimate a standard error (e.g., bayesian)."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     checkmate::assert_numeric(equivalence, min.len = 1, max.len = 2)
@@ -14,7 +14,6 @@ equivalence <- function(x, equivalence = NULL, df = Inf, ...) {
     }
 
     delta <- abs(diff(equivalence)) / 2
-    null <- min(equivalence) + delta
 
     # definitions from `emmeans`, with a different user interface based on symmetric "equivalence"
     x$statistic.noninf <- (x$estimate - equivalence[1]) / x$std.error

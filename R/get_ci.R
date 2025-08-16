@@ -1,14 +1,23 @@
-get_ci <- function(
+get_ci <- function(x, mfx) {
+    get_ci_internal(
+        x = x,
+        conf_level = mfx@conf_level,
+        df = mfx@df,
+        draws = mfx@draws,
+        hypothesis_null = mfx@hypothesis_null,
+        hypothesis_direction = mfx@hypothesis_direction,
+        model = mfx@model
+    )
+}
+
+get_ci_internal <- function(
     x,
     conf_level,
-    df = NULL,
-    draws = NULL,
-    vcov = TRUE,
-    hypothesis_null = 0,
-    hypothesis_direction = "=",
-    model = NULL,
-    ...
-) {
+    df,
+    draws,
+    hypothesis_null,
+    hypothesis_direction,
+    model) {
     checkmate::assert_number(hypothesis_null)
 
     if (!is.null(draws)) {
@@ -30,23 +39,17 @@ get_ci <- function(
     if (!"df" %in% colnames(x)) {
         if (identical(df, Inf)) {
             normal <- TRUE
-
-            # 1 or matching length
         } else if (length(df) %in% c(1, nrow(x))) {
             x[["df"]] <- df
             normal <- FALSE
-
-            # multiple, such as rbind() contrast terms
         } else if (length(df) < nrow(x) && "rowid" %in% colnames(x)) {
             rowids <- unique(x$rowid)
             if (length(rowids) == length(df)) {
                 rowids <- data.table(rowid = rowids, df = df)
                 x <- merge(x, rowids, all.x = TRUE, by = "rowid", sort = FALSE)
             } else {
-                insight::format_error("The degrees of freedom argument was ignored.")
+                stop_sprintf("The degrees of freedom argument was ignored.")
             }
-
-            # mismatch
         } else {
             stop(
                 "Please report this error with a fully reproducible example at: https://github.com/vincentarelbundock/marginaleffects"
@@ -54,27 +57,17 @@ get_ci <- function(
         }
     }
 
-    p_overwrite <- !"p.value" %in% colnames(x) ||
-        hypothesis_null != 0 ||
-        hypothesis_direction != "=" ||
-        identical(vcov, "satterthwaite") ||
-        identical(vcov, "kenward-roger")
-
-    z_overwrite <- !"statistic" %in% colnames(x) ||
-        hypothesis_null != 0 ||
-        p_overwrite
-
-    ci_overwrite <- !"conf.low" %in% colnames(x) &&
-        "std.error" %in% colnames(x)
+    p_overwrite <- !"p.value" %in% colnames(x) || hypothesis_null != 0 || hypothesis_direction != "="
+    z_overwrite <- !"statistic" %in% colnames(x) || hypothesis_null != 0 || p_overwrite
+    ci_overwrite <- !"conf.low" %in% colnames(x) && "std.error" %in% colnames(x)
 
     if (z_overwrite) {
         cdf <- function(k) {
             if (normal) {
-                out <- stats::pnorm(k)
+                stats::pnorm(k)
             } else {
-                out <- stats::pt(k, df = x[["df"]])
+                stats::pt(k, df = x[["df"]])
             }
-            return(out)
         }
         x[["statistic"]] <- (x[["estimate"]] - hypothesis_null) / x[["std.error"]]
         if (hypothesis_direction == "=") {
@@ -97,12 +90,11 @@ get_ci <- function(
         x[["conf.high"]] <- x[["estimate"]] + critical * x[["std.error"]]
     }
 
-    # s-value
     if ("p.value" %in% colnames(x)) {
         x$s.value <- -log2(x$p.value)
     }
 
-    return(x)
+    x
 }
 
 

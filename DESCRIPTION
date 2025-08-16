@@ -1,6 +1,7 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.28.0.7
+Version: 0.28.0.9
+Remotes: ngreifer/fwb
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -110,6 +111,7 @@ Suggests:
     lmerTest,
     logistf,
     magrittr,
+    margins,
     MatchIt,
     MASS,
     mclogit,
@@ -124,6 +126,7 @@ Suggests:
     modelbased,
     modelsummary,
     multcomp,
+    mvgam,
     mvtnorm,
     nanoparquet,
     nlme,
@@ -195,33 +198,37 @@ Suggests:
     quarto
 Collate:
     'RcppExports.R'
+    'add_hypothesis.R'
+    'attributes.R'
     'backtransform.R'
     'broom.R'
     'by.R'
+    'class.R'
     'comparisons.R'
     'complete_levels.R'
-    'config.R'
+    'components.R'
     'construct_call.R'
     'datagrid.R'
     'equivalence.R'
     'get_ci.R'
     'get_coef.R'
-    'get_contrast_data.R'
-    'get_contrast_data_character.R'
-    'get_contrast_data_factor.R'
-    'get_contrast_data_logical.R'
-    'get_contrast_data_numeric.R'
-    'get_contrasts.R'
+    'get_comparisons.R'
+    'get_comparisons_data.R'
+    'get_comparisons_data_character.R'
+    'get_comparisons_data_factor.R'
+    'get_comparisons_data_logical.R'
+    'get_comparisons_data_numeric.R'
     'get_dataset.R'
     'get_degrees_of_freedom.R'
     'get_draws.R'
     'get_group_names.R'
+    'get_hypotheses.R'
     'get_jacobian.R'
     'get_labels.R'
     'get_model_matrix.R'
-    'get_model_matrix_attribute.R'
     'get_modeldata.R'
     'get_predict.R'
+    'get_predictions.R'
     'get_se_delta.R'
     'get_vcov.R'
     'github_issue.R'
@@ -271,6 +278,7 @@ Collate:
     'methods_mclogit.R'
     'methods_mgcv.R'
     'methods_mhurdle.R'
+    'methods_mice.R'
     'methods_mlm.R'
     'methods_mlogit.R'
     'methods_mlr3.R'
@@ -302,12 +310,11 @@ Collate:
     'plot_slopes.R'
     'predictions.R'
     'print.R'
-    'recall.R'
+    'prune.R'
     'sanitize_comparison.R'
     'sanitize_condition.R'
     'sanitize_conf_level.R'
     'sanitize_estimator.R'
-    'sanitize_hypothesis.R'
     'sanitize_hypothesis_formula.R'
     'sanitize_interaction.R'
     'sanitize_newdata.R'
@@ -319,6 +326,7 @@ Collate:
     'sanity.R'
     'sanity_by.R'
     'sanity_dots.R'
+    'sanity_multcomp.R'
     'settings.R'
     'slopes.R'
     'sort.R'
@@ -329,4 +337,6 @@ Collate:
     'zzz.R'
 Language: en-US
 Config/testthat/edition: 3
+Config/testthat/parallel: true
+Config/testthat/start-first: inferences
 VignetteBuilder: knitr, quarto

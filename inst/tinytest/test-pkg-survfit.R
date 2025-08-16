@@ -1,3 +1,4 @@
+exit_file("should survfit be supported?")
 source("helpers.R")
 using("marginaleffects")
 requiet("systemfit")

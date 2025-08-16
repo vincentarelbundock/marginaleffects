@@ -1,12 +1,11 @@
-get_contrasts <- function(
-    model,
-    newdata,
+get_comparisons <- function(
+    mfx,
     type,
     variables,
     original,
     lo,
     hi,
-    wts = FALSE,
+    model_perturbed = NULL,
     by = NULL,
     byfun = NULL,
     hypothesis = NULL,
@@ -15,6 +14,12 @@ get_contrasts <- function(
     deltamethod = FALSE,
     ...
 ) {
+    newdata <- mfx@newdata
+    data.table::setDT(newdata)
+
+    # get_se_delta() needs perturbed coefficients model
+    model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
+
     settings_init()
 
     # some predict() methods need data frames and will convert data.tables
@@ -41,7 +46,7 @@ get_contrasts <- function(
 
         # informative error in case of allow.new.levels level breakage
         if (inherits(pred_both[["error"]], "simpleError")) {
-            insight::format_error(pred_both[["error"]][["message"]])
+            stop_sprintf(pred_both[["error"]][["message"]])
         } else {
             pred_both <- pred_both[["value"]]
         }
@@ -73,7 +78,7 @@ get_contrasts <- function(
             inherits(pred_lo$error, "rlang_error") &&
                 isTRUE(grepl("the object should be", pred_lo$error$message))
         ) {
-            insight::format_error(pred_lo$error$message)
+            stop_sprintf(pred_lo$error$message)
         } else {
             pred_lo <- pred_lo[["value"]]
         }
@@ -146,7 +151,7 @@ get_contrasts <- function(
             "",
             "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
         )
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # output data.frame
@@ -209,7 +214,7 @@ get_contrasts <- function(
                 out <- merge(out, nd, by = bycol, sort = FALSE)
                 tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
             } else {
-                insight::format_error(
+                stop_sprintf(
                     "The column in `by` must be present in `newdata`."
                 )
             }
@@ -304,9 +309,8 @@ get_contrasts <- function(
     # frequentist
     if (is.null(draws)) {
         draws_lo <- draws_hi <- draws_or <- NULL
-
-        # bayes
     } else {
+        # bayes
         draws_lo <- attr(pred_lo, "posterior_draws")
         draws_hi <- attr(pred_hi, "posterior_draws")
         draws_or <- attr(pred_or, "posterior_draws")
@@ -346,7 +350,9 @@ get_contrasts <- function(
     }
 
     # we feed these columns to safefun(), even if they are useless for categoricals
-    if (!"marginaleffects_wts_internal" %in% colnames(out)) out[, "marginaleffects_wts_internal" := NA]
+    if (!"marginaleffects_wts_internal" %in% colnames(out)) {
+        out[, "marginaleffects_wts_internal" := NA]
+    }
 
     # safe version of comparison
     # unknown arguments
@@ -385,7 +391,7 @@ get_contrasts <- function(
                 n,
                 n
             ) #nolint
-            insight::format_error(msg)
+            stop_sprintf(msg)
         }
         if (length(con) == 1) {
             con <- c(con, rep(NA_real_, length(hi) - 1))
@@ -397,9 +403,9 @@ get_contrasts <- function(
     # need a temp index for group-by operations when elasticities is a vector of length equal to full rows of `out`
     tmp <- grep("^term$|^contrast|^group$", colnames(out), value = TRUE)
     if (length(tmp) > 0) {
-        out[, tmp_idx := 1:.N, by = tmp]
+        out[, tmp_idx := seq_len(.N), by = tmp]
     } else {
-        out[, tmp_idx := 1:.N]
+        out[, tmp_idx := seq_len(.N)]
     }
 
     # bayesian
@@ -550,7 +556,5 @@ get_contrasts <- function(
     # reset settings
     settings_rm("marginaleffects_safefun_return1")
 
-    # output
-    attr(out, "original") <- original
     return(out)
 }

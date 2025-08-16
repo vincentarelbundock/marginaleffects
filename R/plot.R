@@ -2,15 +2,15 @@
 
 #' @export
 plot.predictions <- function(x, ...) {
-    insight::format_error("Please use the `plot_predictions()` function.")
+    stop_sprintf("Please use the `plot_predictions()` function.")
 }
 
 #' @export
 plot.comparisons <- function(x, ...) {
-    insight::format_error("Please use the `plot_comparisons()` function.")
+    stop_sprintf("Please use the `plot_comparisons()` function.")
 }
 
 #' @export
 plot.slopes <- function(x, ...) {
-    insight::format_error("Please use the `plot_slopes()` function.")
+    stop_sprintf("Please use the `plot_slopes()` function.")
 }

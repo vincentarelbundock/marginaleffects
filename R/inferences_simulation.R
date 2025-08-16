@@ -1,4 +1,4 @@
-inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", ...) {
+inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", mfx = NULL, ...) {
     insight::check_if_installed("mvtnorm")
 
     checkmate::assert_choice(
@@ -10,14 +10,14 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     )
 
     out <- x
-    model <- attr(x, "model")
-    call_mfx <- attr(x, "call")
+    model <- mfx@model
+    call_mfx <- mfx@call
     call_mfx[["vcov"]] <- FALSE
 
     B <- get_coef(model)
 
     # respect robust vcov from the first call
-    V <- attr(out, "vcov")
+    V <- mfx@vcov_model
     if (!isTRUE(checkmate::check_matrix(V))) {
         V <- get_vcov(model)
     }
@@ -33,7 +33,7 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     inner_fun <- function(i = NULL) {
         mod_tmp <- set_coef(model, coefmat[i, ])
         call_mfx[["model"]] <- mod_tmp
-        boot_mfx <- recall(call_mfx)
+        boot_mfx <- eval.parent(call_mfx)
         return(boot_mfx$estimate)
     }
 
@@ -69,6 +69,8 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     # Drop unnecessary columns
     out <- out[, cols, drop = FALSE]
 
-    attr(out, "posterior_draws") <- draws
+    mfx@draws <- draws
+    attr(out, "marginaleffects") <- mfx
+
     return(out)
 }

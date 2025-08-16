@@ -14,8 +14,7 @@ sanitize_model_specific.default <- function(
     model,
     vcov = NULL,
     calling_function = "marginaleffects",
-    ...
-) {
+    ...) {
     return(model)
 }
 
@@ -36,8 +35,9 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
     supported <- append(
         custom_classes,
         list(
+            "marginaleffects_internal",
             "afex_aov",
-            "amest", #package: Amelia
+            "amest", # package: Amelia
             "bart", # package: dbarts
             "betareg",
             "bglmerMod",
@@ -159,14 +159,12 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
 }
 
 
-sanitize_model <- function(
-    model,
-    newdata = NULL,
-    vcov = NULL,
-    by = FALSE,
-    calling_function = NULL,
-    ...
-) {
+# Function that operates on mfx objects
+sanitize_model <- function(model, call, newdata = NULL, vcov = NULL, by = FALSE, ...) {
+    # Extract calling_function from mfx@call
+    calling_function <- extract_calling_function(call)
+
+    # Sanitize the model
     model <- sanitize_model_specific(
         model,
         vcov = vcov,
@@ -176,5 +174,7 @@ sanitize_model <- function(
         ...
     )
     sanity_model_supported_class(model)
+
+    # Assign the sanitized model to the slot
     return(model)
 }

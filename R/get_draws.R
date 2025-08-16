@@ -14,14 +14,12 @@ get_draws <- function(x, shape = "long") {
     checkmate::assert_choice(shape, choices = c("long", "DxP", "PxD", "rvar"))
 
     # tidy.comparisons() sometimes already saves draws in a nice long format
-    draws <- attr(x, "posterior_draws")
-    if (inherits(draws, "posterior_draws")) {
-        return(draws)
-    }
+    mfx <- attr(x, "marginaleffects")
+    draws <- mfx@draws
 
-    if (is.null(attr(x, "posterior_draws"))) {
+    if (is.null(draws)) {
         warning(
-            'This object does not include a "posterior_draws" attribute. The `posterior_draws` function only supports bayesian models produced by the `marginaleffects` or `predictions` functions of the `marginaleffects` package.',
+            "This object does not include draws. The `posterior_draws` function only supports bayesian models produced by the `marginaleffects` or `predictions` functions of the `marginaleffects` package.",
             call. = FALSE
         )
         return(x)
@@ -54,8 +52,8 @@ get_draws <- function(x, shape = "long") {
     if (shape == "rvar") {
         insight::check_if_installed("posterior")
         draws <- t(draws)
-        if (!is.null(attr(x, "nchains"))) {
-            x[["rvar"]] <- posterior::rvar(draws, nchains = attr(x, "nchains"))
+        if (!is.null(mfx@draws_chains)) {
+            x[["rvar"]] <- posterior::rvar(draws, nchains = mfx@draws_chains)
         } else {
             x[["rvar"]] <- posterior::rvar(draws)
         }

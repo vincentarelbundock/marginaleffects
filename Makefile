@@ -15,14 +15,22 @@ runnersdown: ## unhack local files to not run tests
 	git restore tests/tinytest.R
 
 
-testall: ## tinytest::build_install_test()
+testthat:
+	Rscript -e "pkgload::load_all();devtools::test()"
+
+testall: document ## tinytest::build_install_test()
 	# Rscript -e "pkgload::load_all();cl <- parallel::makeCluster(5);tinytest::run_test_dir(cluster = cl)"
 	awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
-	Rscript -e "pkgload::load_all();tinytest::run_test_dir()"
+	Rscript -e "tinytest::build_install_test(ncpu = 7)"
 	git restore .Rbuildignore
 
-testone: install ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
+testone: ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
 	Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
+
+testplot: ## test the plots
+	make testone testfile="inst/tinytest/test-plot_predictions.R"
+	make testone testfile="inst/tinytest/test-plot_comparisons.R"
+	make testone testfile="inst/tinytest/test-plot_slopes.R"
 
 document: ## altdoc::render_docs()
 	Rscript -e "devtools::document()"

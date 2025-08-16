@@ -2,12 +2,20 @@
 
 ## Development
 
+New functions:
+
+* `prune()` deletes internal information from a `marginaleffects` object to save memory space.
+* `components()` returns internal information from a `marginaleffects` object.
+
+Misc:
+
 * Better error message for bayesian/bootstrap models when `hypotheses()` attempts to post-process a previous `marginaleffects` call.
 * Model matrix is attached to more `newdata`. Useful for Issue #6 in `marginaleffectsJAX`.
-* Better error for unsupported custom classes with `inferences()`. Unfortunately, we cannot support them because they are not guaranteed to come with an appropriate `update()` class.
+* Better error messages for unsupported custom classes with `inferences()`. Unfortunately, we cannot support them because they are not guaranteed to come with an appropriate `update()` class.
 * `inferences()` new computes p-values for `method = "fwb"`. `conf_type` can now be `"perc"` or `"wald"` for `method = "simulation"`.
 * Documentation improvements.
 * `get_dataset()` now delegates most of the work to the `Rdatasets` package (optional dependency).
+* Major internal refactoring to simplify the code base and make maintenance easier. We use fewer attributes and store internal information in a single S4 object stored as `attr(x, "marginaleffects")`.
  
 ## 0.28.0
 

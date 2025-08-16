@@ -5,9 +5,9 @@
 \title{(Non-)Linear Tests for Null Hypotheses, Joint Hypotheses, Equivalence, Non Superiority, and Non Inferiority}
 \usage{
 hypotheses(
-  model,
+  model = NULL,
   hypothesis = NULL,
-  vcov = NULL,
+  vcov = TRUE,
   conf_level = NULL,
   df = NULL,
   equivalence = NULL,
@@ -258,11 +258,11 @@ dat <- transform(mtcars, gear = factor(gear))
 mod <- polr(gear ~ factor(cyl) + hp, dat)
 
 aggregation_fun <- function(x) {
-  predictions(x, vcov = FALSE) \%>\%
-    mutate(group = ifelse(group \%in\% c("3", "4"), "3 & 4", "5")) \%>\%
-    summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) \%>\%
-    summarize(estimate = mean(estimate), .by = c("cyl", "group")) \%>\%
-    rename(term = cyl)
+    predictions(x, vcov = FALSE) \%>\%
+        mutate(group = ifelse(group \%in\% c("3", "4"), "3 & 4", "5")) \%>\%
+        summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) \%>\%
+        summarize(estimate = mean(estimate), .by = c("cyl", "group")) \%>\%
+        rename(term = cyl)
 }
 
 hypotheses(mod, hypothesis = aggregation_fun)

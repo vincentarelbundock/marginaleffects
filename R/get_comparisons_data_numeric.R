@@ -1,10 +1,9 @@
-get_contrast_data_numeric <- function(
+get_comparisons_data_numeric <- function(
     model,
     newdata,
     variable,
     modeldata,
-    ...
-) {
+    ...) {
     h <- variable[["eps"]]
 
     s <- m <- NA
@@ -16,7 +15,9 @@ get_contrast_data_numeric <- function(
     xmd <- modeldata[[variable$name]]
 
     make_label <- function(lab, val) {
-        if (identical(lab, "custom")) return(lab)
+        if (identical(lab, "custom")) {
+            return(lab)
+        }
         args <- append(list(lab), as.list(val))
         out <- tryCatch(
             do.call("sprintf", args),
@@ -87,7 +88,6 @@ get_contrast_data_numeric <- function(
         variable$value <- sort(variable$value)
         low <- variable$value[1]
         high <- variable$value[2]
-        gap <- diff(variable$value)
         lab <- make_label(variable$label, rev(variable$value))
 
         # character contrasts

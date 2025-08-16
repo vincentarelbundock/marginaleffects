@@ -87,7 +87,7 @@ get_predict.brmsfit <- function(
             ncol(draws),
             nrow(newdata)
         )
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # 1d outcome
@@ -123,7 +123,7 @@ get_predict.brmsfit <- function(
 
     # group for multi-valued outcome
     if (length(dim(draws)) == 3) {
-        draws <- lapply(1:dim(draws)[3], function(i) draws[,, i])
+        draws <- lapply(seq_len(dim(draws)[3]), function(i) draws[,, i])
         draws <- do.call("cbind", draws)
     }
     attr(out, "posterior_draws") <- t(draws)
@@ -149,7 +149,7 @@ get_group_names.brmsfit <- function(model, ...) {
 #' @export
 get_vcov.brmsfit <- function(model, vcov = NULL, ...) {
     if (!is.null(vcov) && !is.logical(vcov)) {
-        insight::format_warning(
+        warn_sprintf(
             "The `vcov` argument is not supported for models of this class."
         )
     }

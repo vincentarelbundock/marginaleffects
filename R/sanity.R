@@ -25,17 +25,3 @@ sanity_predict_numeric <- function(pred, model, newdata, type) {
         stop(msg, call. = FALSE)
     }
 }
-
-# OBSOLETE CHECKS KEPT FOR POSTERITY
-
-# sanitize_return_data <- function() {
-#     return_data <- getOption("marginaleffects_return_data", default = TRUE)
-#     checkmate::assert_flag(return_data)
-#     return(return_data)
-# }
-
-# sanitize_numDeriv_method <- function() {
-#     numDeriv_method <- getOption("marginaleffects_numDeriv_method", default = "simple")
-#     checkmate::assert_choice(numDeriv_method, choices = c("simple", "complex", "Richardson"))
-#     return(numDeriv_method)
-# }

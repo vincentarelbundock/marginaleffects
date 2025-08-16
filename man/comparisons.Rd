@@ -293,11 +293,11 @@ Columns may include:
 
 See \code{?print.marginaleffects} for printing options.
 
-The \code{data.frame}s produced by \code{marginaleffects} come with several attributes to hold the original model, data, and much other information that can be used for post-processing. These attributes are not considered part of the public API of the package. Their names and contents can change without warning or notice. Users should not rely on them.
+The \code{data.frame}s produced by \code{marginaleffects} stores an attribute that holds many internal objects, such as the original model, data, and much other information that can be used for post-processing. This information can be inspected using the \code{components()} function.
 
-Depending on the model, this information can use up a substantial amount of memory. To avoid saving these attributes, users can set a global option. Note that setting this option may result in a loss of functionality, such as the ability to call \code{hypotheses()} to post-process estimates.
+Warning: The internal attributes retrieved by \code{components()} are not considered part of the public API of the package. Their names and contents can change without warning or notice. Users should not rely on them.
 
-\code{options(marginaleffects_lean = TRUE)}
+Warning: In some cases, the internal attributes used by \code{marginaleffects()} can use up a substantial amount of memory. To clear this data, use the \code{prune()} function or set \code{options(marginaleffects_lean=TRUE)}.
 }
 \description{
 Predict the outcome variable at different regressor values (e.g., college

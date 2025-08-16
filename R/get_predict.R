@@ -7,7 +7,7 @@
 #' @inheritParams slopes
 #' @keywords internal
 #' @export
-get_predict <- function(model, newdata, type, ...) {
+get_predict <- function(model, newdata, type, mfx = NULL, newparams = NULL, ndraws = NULL, se.fit = NULL, ...) {
     UseMethod("get_predict", model)
 }
 
@@ -18,8 +18,11 @@ get_predict.default <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
-    ...
-) {
+    mfx = NULL,
+    newparams = NULL,
+    ndraws = NULL,
+    se.fit = NULL,
+    ...) {
     dots <- list(...)
 
     if (is.null(type)) {
@@ -34,13 +37,18 @@ get_predict.default <- function(
         "internal_call",
         "draw",
         "modeldata",
-        "flag"
+        "flag",
+        "marginaleffects",
+        "mfx"
     )
     dots <- dots[setdiff(names(dots), unused)]
 
     # first argument in the predict methods is not always named "x" or "model"
     dots[["newdata"]] <- newdata
     dots[["type"]] <- type
+    if (!is.null(newparams)) {
+        dots[["newparams"]] <- newparams
+    }
     args <- c(list(model), dots)
 
     # `pred` is a secret argument called by `predict.lm` to turn a numeric vector into a data frame with correct `rowid`

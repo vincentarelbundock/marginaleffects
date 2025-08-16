@@ -28,15 +28,14 @@ get_vcov.default <- function(model, vcov = NULL, ...) {
     args[["component"]] <- "all"
 
     # 1st try: with arguments
-    fun <- get("get_varcov", asNamespace("insight"))
-    out <- myTryCatch(do.call("fun", args))
+    out <- myTryCatch(do.call(get("get_varcov", asNamespace("insight")), args))
 
     # 2nd try: without arguments
     if (!isTRUE(checkmate::check_matrix(out$value, min.rows = 1))) {
         out <- myTryCatch(insight::get_varcov(model))
         if (isTRUE(checkmate::check_matrix(out$value, min.rows = 1))) {
             msg <- "Unable to extract a variance-covariance matrix using this `vcov` argument. Standard errors are computed using the default variance instead. Perhaps the model or argument is not supported by the `sandwich` ('HC0', 'HC3', ~clusterid, etc.) or `clubSandwich` ('CR0', etc.) packages. If you believe that the model is supported by one of these two packages, you can open a feature request on Github."
-            insight::format_warning(msg)
+            warn_sprintf(msg)
         }
     }
 
@@ -133,7 +132,9 @@ get_varcov_args <- function(model, vcov) {
 
 
 get_vcov_label <- function(vcov) {
-    if (is.null(vcov)) vcov <- ""
+    if (is.null(vcov)) {
+        vcov <- ""
+    }
     if (!is.character(vcov)) {
         return(NULL)
     }

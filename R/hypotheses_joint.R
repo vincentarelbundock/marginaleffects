@@ -4,9 +4,22 @@ joint_test <- function(
     hypothesis = 0,
     joint_test = "f",
     df = NULL,
-    vcov = TRUE
-) {
+    vcov = TRUE) {
     checkmate::assert_choice(joint_test, c("f", "chisq"))
+
+    # do not use components() because this may be a model object
+    mfx <- attr(object, "marginaleffects")
+
+    # Create mfx object if it doesn't exist (needed for joint tests on model objects)
+    if (is.null(mfx) && !inherits(object, c("slopes", "comparisons", "predictions", "hypotheses"))) {
+        call <- construct_call(object, "hypotheses")
+        object_sanitized <- sanitize_model(object, call = call, newdata = NULL, vcov = vcov)
+        mfx <- new_marginaleffects_internal(
+            call = call,
+            model = object_sanitized
+        )
+        mfx@conf_level <- sanitize_conf_level(NULL)
+    }
 
     if (joint_test == "f") {
         checkmate::assert_numeric(df, len = 2, null.ok = TRUE)
@@ -62,7 +75,9 @@ joint_test <- function(
         checkmate::check_numeric(hypothesis, len = nrow(R)),
         checkmate::check_null(hypothesis)
     )
-    if (is.null(hypothesis)) hypothesis <- 0
+    if (is.null(hypothesis)) {
+        hypothesis <- 0
+    }
     r <- matrix(hypothesis, nrow = nrow(R), ncol = 1)
 
     # Calculate the difference between R*theta_hat and r
@@ -83,28 +98,36 @@ joint_test <- function(
         df1 <- dim(R)[1] # Q
 
         if (joint_test == "f") {
-            df2 <- tryCatch(
-                insight::get_df(attr(object, "model")),
-                error = function(e) NULL
-            )
-            if (is.null(df2)) tryCatch(insight::get_df(object), error = function(e) NULL)
+            # Check for lme models and warn about df heuristics
+            if (inherits(object, "lme") || (!is.null(mfx) && inherits(mfx@model, "lme"))) {
+                model_class <- if (inherits(object, "lme")) class(object)[1] else class(mfx@model)[1]
+                msg <- "The `hypotheses()` functions uses simple heuristics to select degrees of freedom for this test. See the relevant section in `?hypotheses`. These rules are likely to yield inappropriate results for models of class `%s`. Please supply degrees of freedom values explicitly via the `df` argument."
+                warn_sprintf(msg, model_class)
+            }
+
+            df2 <- NULL
+            if (!is.null(mfx)) {
+                df2 <- tryCatch(
+                    insight::get_df(mfx@model),
+                    error = function(e) NULL
+                )
+            }
+            if (is.null(df2)) {
+                df2 <- tryCatch(insight::get_df(object), error = function(e) NULL)
+            }
             if (is.null(df2)) {
                 # n: sample size
                 n <- tryCatch(stats::nobs(object), error = function(e) NULL)
-                if (is.null(n))
+                if (is.null(n) && !is.null(mfx)) {
                     n <- tryCatch(
-                        stats::nobs(attr(object, "model")),
+                        stats::nobs(mfx@model),
                         error = function(e) NULL
                     )
-                if (is.null(n))
-                    insight::format_error(
+                }
+                if (is.null(n)) {
+                    stop_sprintf(
                         "Could not extract sample size from model object."
                     )
-
-                if (inherits(object, "lme")) {
-                    msg <- "The `hypotheses()` functions uses simple heuristics to select degrees of freedom for this test. See the relevant section in `?hypotheses`. These rules are likely to yield inappropriate results for models of class `%s`. Please supply degrees of freedom values explicitly via the `df` argument."
-                    msg <- sprintf(msg, class(object)[1])
-                    insight::format_warning(msg)
                 }
 
                 df2 <- n - length(theta_hat) # n - P
@@ -130,9 +153,9 @@ joint_test <- function(
     out <- data.frame(statistic = drop(wald_statistic), p.value = drop(p_value))
     class(out) <- c("hypotheses", "data.frame")
     if (joint_test == "f") {
-        attr(out, "statistic_label") <- "F"
+        attr(out, "hypotheses_joint_label") <- "F"
     } else if (joint_test == "chisq") {
-        attr(out, "statistic_label") <- "ChiSq"
+        attr(out, "hypotheses_joint_label") <- "ChiSq"
     }
 
     # degrees of freedom print
@@ -168,6 +191,12 @@ joint_test <- function(
         print_head <- c(print_head, tmp)
     }
     attr(out, "print_head") <- print_head
+
+    # Add marginaleffects attribute for printing
+    out <- add_attributes(out, mfx)
+
+    # class before prune
+    out <- prune_attributes(out)
 
     return(out)
 }

@@ -9,6 +9,8 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         if ("comparison" %in% ...names()) stop_deprecate("comparison")
         if ("transform" %in% ...names()) stop_deprecate("transform")
         if ("cross" %in% ...names()) stop_deprecate("cross")
+        # rest will be handled by sanity_dots() in comparisons()
+        return(invisible(NULL))
     }
 
     valid <- list()

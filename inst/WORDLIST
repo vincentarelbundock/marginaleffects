@@ -236,9 +236,11 @@ mbox
 meandev
 meanotherdev
 methodologists
+mfx
 minmax
 mislabelled
 modelbased
+modeldata
 nd
 newdata
 numDeriv
@@ -292,6 +294,7 @@ varepsilon
 vcov
 vcovHC
 vincentarelbundock
+wald
 wmean
 xb
 zlink

@@ -8,6 +8,7 @@ fixest::setFixest_notes(FALSE)
 
 
 # Issue #375: friendly warning when sandwich fails
+options(marginaleffects_safe = TRUE)
 mod <- feols(y ~ x1 + i(period, treat, 5) | id + period, base_did)
 hyp <- as.numeric(1:10 %in% 6:10)
 # not supported
@@ -15,6 +16,7 @@ expect_warning(hypotheses(mod, hypothesis = hyp, vcov = "HC0"), pattern = "sandw
 # supported
 d <- hypotheses(mod, hypothesis = hyp, vcov = "HC1")
 expect_inherits(d, "data.frame")
+options(marginaleffects_safe = FALSE)
 
 # bugs stay dead: logit with transformations
 dat <- mtcars
@@ -200,7 +202,8 @@ mod3 <- feols(mpg ~ drat + i(cyl), data = mtcars)
 mod4 <- feols(mpg ~ drat + i(cyl, wt) + i(gear, i.am), data = mtcars)
 fun <- function(model) {
     out <- marginaleffects:::get_modeldata(model)
-    out <- marginaleffects:::get_variable_class(out, compare = "categorical")
+    mfx <- marginaleffects:::new_marginaleffects_internal(model = model, call = call("test"))
+    out <- marginaleffects:::check_variable_class(mfx, compare = "categorical")
     out <- names(out)
     return(out)
 }

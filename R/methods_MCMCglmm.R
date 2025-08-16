@@ -4,7 +4,10 @@ get_predict.MCMCglmm <- function(
     model,
     newdata,
     type = "response",
+    mfx = NULL,
+    newparams = NULL,
     ndraws = 1000,
+    se.fit = NULL,
     ...
 ) {
     ndraws_mod <- nrow(model$VCV)
@@ -35,7 +38,7 @@ get_predict.MCMCglmm <- function(
 #' @export
 get_vcov.MCMCglmm <- function(model, vcov = NULL, ...) {
     if (!is.null(vcov) && !is.logical(vcov)) {
-        insight::format_warning(
+        warn_sprintf(
             "The `vcov` argument is not supported for models of this class."
         )
     }

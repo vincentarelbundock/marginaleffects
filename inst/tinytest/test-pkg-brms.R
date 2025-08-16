@@ -100,7 +100,7 @@ expect_slopes(brms_cumulative_random, se = FALSE)
 # brms: logical regressor
 mfx <- slopes(brms_logical)
 expect_inherits(mfx, "marginaleffects")
-expect_equivalent(nrow(mfx), nrow(attr(mfx, "posterior_draws")))
+expect_equivalent(nrow(mfx), nrow(components(mfx, "draws")))
 
 
 ## Not sure what the intent of those tests are, and the first one fails
@@ -152,13 +152,14 @@ expect_equivalent(w2, y$estimate)
 
 
 # brms: cumulative: predictions: no validity
+options(marginaleffects_safe = TRUE)
 set.seed(1024)
 p1 <- predictions(brms_cumulative_random)
 p2 <- predictions(brms_cumulative_random, re_formula = NA)
 expect_true(mean(p1$conf.low < p2$conf.low) > .95) # tolerance
 expect_true(mean(p1$conf.high > p2$conf.high) > .99) # tolerance
 expect_warning(predictions(brms_cumulative_random, include_random = FALSE)) # only for lme4
-
+options(marginaleffects_safe = FALSE)
 
 # marginaleffects: ordinal no validity
 expect_slopes(brms_ordinal_1, se = FALSE)
@@ -190,7 +191,7 @@ expect_true(all(c("term", "estimate", "conf.low") %in% colnames(ti)))
 # simple
 pred <- predictions(brms_numeric2, newdata = datagrid(hp = c(100, 120)))
 expect_predictions(pred, se = FALSE)
-expect_equivalent(dim(attr(pred, "posterior_draws")), c(2, 2000))
+expect_equivalent(dim(components(pred, "draws")), c(2, 2000))
 # interaction
 pred <- predictions(brms_interaction, newdata = datagrid(mpg = c(20, 25)))
 expect_predictions(pred, se = FALSE)
@@ -232,8 +233,9 @@ tmp <- slopes(brms_factor)
 expect_true("conf.low" %in% colnames(tmp))
 expect_true(all(tmp$estimate > tmp$conf.low))
 expect_true(all(tmp$estimate < tmp$conf.high))
-expect_false(is.null(attr(tmp, "posterior_draws")))
-expect_equivalent(nrow(attr(tmp, "posterior_draws")), nrow(tmp))
+draws <- components(tmp, "draws")
+expect_false(is.null(draws))
+expect_equivalent(nrow(draws), nrow(tmp))
 
 
 # marginaleffects vs. emmeans
@@ -374,7 +376,9 @@ expect_true(length(unique(ti$estimate)) == nrow(ti))
 
 
 # warning: vcov not supported
+options(marginaleffects_safe = TRUE)
 expect_warning(slopes(brms_numeric, vcov = "HC3"), pattern = "vcov.*not supported")
+options(marginaleffects_safe = FALSE)
 
 # Andrew Heiss says that lognormal_hurdle are tricky because the link is
 # identity even if the response is actually logged
@@ -499,7 +503,7 @@ p <- predictions(
     by = "cyl_fac"
 )
 expect_inherits(p, "predictions")
-expect_equal(ncol(attr(p, "posterior_draws")), 2000)
+expect_equal(ncol(components(p, "draws")), 2000)
 expect_equal(nrow(p), 3)
 expect_true(all(c("conf.low", "conf.high") %in% colnames(p)))
 
@@ -554,14 +558,14 @@ p2 <- predictions(brms_poisson, type = "link", transform = exp)
 expect_equivalent(exp(p1$estimate), p2$estimate)
 expect_equivalent(exp(p1$conf.low), p2$conf.low)
 expect_equivalent(exp(p1$conf.high), p2$conf.high)
-expect_equivalent(exp(attr(p1, "posterior_draws")), attr(p2, "posterior_draws"))
+expect_equivalent(exp(components(p1, "draws")), components(p2, "draws"))
 
 p1 <- comparisons(brms_poisson, type = "link")
 p2 <- comparisons(brms_poisson, type = "link", transform = exp)
 expect_equivalent(exp(p1$estimate), p2$estimate)
 expect_equivalent(exp(p1$conf.low), p2$conf.low)
 expect_equivalent(exp(p1$conf.high), p2$conf.high)
-expect_equivalent(exp(attr(p1, "posterior_draws")), attr(p2, "posterior_draws"))
+expect_equivalent(exp(components(p1, "draws")), components(p2, "draws"))
 
 
 # byfun

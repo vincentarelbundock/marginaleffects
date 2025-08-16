@@ -54,7 +54,7 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
         if (bmax > nrow(x)) {
             msg <- "%s cannot be used in `hypothesis` because the call produced just %s estimate(s). Try executing the exact same command without the `hypothesis` argument to see which estimates are available for hypothesis testing."
             msg <- sprintf(msg, paste0("b", bmax), nrow(x))
-            insight::format_error(msg)
+            stop_sprintf(msg)
         }
         for (i in seq_len(nrow(x))) {
             tmp <- paste0("marginaleffects__", i)
@@ -73,7 +73,7 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
                 'comparisons(mod, newdata = "mean", hypothesis = "am = vs")',
                 'comparisons(mod, variables = "am", by = "cyl", hypothesis = ~pairwise)'
             )
-            insight::format_error(msg)
+            stop_sprintf(msg)
         }
         rowlabels <- x$term
     }
@@ -137,7 +137,7 @@ expand_wildcard <- function(hyp, bmax, lab) {
     }
     bstar_count <- length(bstar_indices)
     if (bstar_count > 1) {
-        insight::format_error("Error: More than one 'b*' substring found.")
+        stop_sprintf("Error: More than one 'b*' substring found.")
     }
 
     # Replace b* with b1, b2, b3, ..., bmax

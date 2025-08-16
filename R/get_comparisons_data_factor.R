@@ -1,16 +1,16 @@
-get_contrast_data_factor <- function(
+get_comparisons_data_factor <- function(
     model,
     newdata,
     variable,
     cross,
     first_cross,
     modeldata,
-    ...
-) {
+    mfx,
+    ...) {
     if (is.factor(newdata[[variable$name]])) {
         levs <- levels(newdata[[variable$name]])
         convert_to_factor <- TRUE
-    } else if (get_variable_class(newdata, variable$name, "binary")) {
+    } else if (check_variable_class(mfx, variable$name, "binary")) {
         levs <- variable$value
         convert_to_factor <- FALSE
     } else {
@@ -59,7 +59,7 @@ get_contrast_data_factor <- function(
             tmp <- modeldata[[variable$name]]
             if (!all(variable$value %in% as.character(tmp))) {
                 msg <- "Some of the values supplied to the `variables` argument were not found in the dataset."
-                insight::format_error(msg)
+                stop_sprintf(msg)
             }
             idx <- match(variable$value, as.character(tmp))
             levs_idx <- data.table::data.table(lo = tmp[idx[1]], hi = tmp[idx[[2]]])
@@ -198,8 +198,7 @@ contrast_categories_processing <- function(
     levs_idx,
     levs,
     variable,
-    newdata
-) {
+    newdata) {
     # internal option applied to the first of several contrasts when
     # interaction=TRUE to avoid duplication. when only the first contrast
     # flips, we get a negative sign, but if first increases and second
@@ -224,7 +223,8 @@ contrast_categories_processing <- function(
         !"marginaleffects_contrast_label" %in% colnames(levs_idx) ||
             all(levs_idx$marginaleffects_contrast_label == "custom")
     ) {
-        levs_idx[,
+        levs_idx[
+            ,
             "marginaleffects_contrast_label" := paste0(
                 marginaleffects_contrast_hi,
                 ", ",

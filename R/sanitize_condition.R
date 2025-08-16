@@ -18,11 +18,18 @@ condition_shortcuts <- function(x, tr, shortcuts) {
 
 
 sanitize_condition <- function(
-    model,
+    mfx,
     condition,
-    variables = NULL,
-    modeldata = NULL
+    variables = NULL
 ) {
+    # init
+    model <- mfx@model
+    dat <- mfx@modeldata
+    respname <- mfx@variable_names_response
+
+    # multi-equation models (ex: test-pkg-brms.R)
+    resp <- if (length(respname) == 1 && respname %in% colnames(dat)) dat[[respname]] else NULL
+
     # allow multiple conditions and/or effects
     checkmate::assert(
         checkmate::check_character(condition, min.len = 1, max.len = 4),
@@ -45,7 +52,7 @@ sanitize_condition <- function(
         if (identical(names(condition)[i], "")) {
             if (!isTRUE(checkmate::check_character(condition[[i]], len = 1))) {
                 msg <- "The `condition` argument must be a character vector or a named list."
-                insight::format_error(msg)
+                stop_sprintf(msg)
             } else {
                 names(condition)[i] <- condition[[i]]
                 tmp <- stats::setNames(list(NULL), names(condition)[i])
@@ -53,17 +60,6 @@ sanitize_condition <- function(
             }
         }
     }
-
-    # get data to know over what range of values we should plot
-    if (is.null(modeldata) && isTRUE(checkmate::check_character(condition))) {
-        dat <- get_modeldata(model, additional_variables = condition)
-    } else if (is.null(modeldata) && isTRUE(checkmate::check_list(condition))) {
-        dat <- get_modeldata(model, additional_variables = names(condition))
-    } else {
-        dat <- modeldata
-    }
-    resp <- insight::get_response(model)
-    respname <- insight::find_response(model)
 
     flag <- checkmate::check_true(all(
         names(condition) %in% c(colnames(dat), "group")
@@ -73,7 +69,7 @@ sanitize_condition <- function(
             "Entries in the `condition` argument must be element of: %s",
             toString(colnames(dat))
         )
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     # condition names
@@ -89,11 +85,11 @@ sanitize_condition <- function(
 
     # condition 1: x-axis
     if (is.null(condition[[1]])) {
-        if (get_variable_class(dat, condition1, "binary")) {
+        if (check_variable_class(mfx, condition1, "binary")) {
             at_list[[condition1]] <- 0:1
         } else if (
             is.numeric(dat[[condition1]]) &&
-                !get_variable_class(dat, condition1, "categorical")
+                !check_variable_class(mfx, condition1, "categorical")
         ) {
             at_list[[condition1]] <- seq(
                 min(dat[[condition1]], na.rm = TRUE),
@@ -119,8 +115,8 @@ sanitize_condition <- function(
     if (length(condition) > 1) {
         # defaults
         if (is.null(condition[[2]])) {
-            #binary
-            if (get_variable_class(dat, condition2, "binary")) {
+            # binary
+            if (check_variable_class(mfx, condition2, "binary")) {
                 at_list[[condition2]] <- condition[[2]] <- 0:1
                 # numeric default = Tukey's 5 numbers
             } else if (is.numeric(dat[[condition2]])) {
@@ -206,7 +202,8 @@ sanitize_condition <- function(
         }
     }
 
-    # mlr3 and tidymodels are not supported by `insight::find_variables()`, so we need to create a grid based on all the variables supplied in `newdata`
+    # mlr3 and tidymodels are not supported by `insight::find_variables()`,
+    # so we need to create a grid based on all the variables supplied in `newdata`
     if (
         inherits(at_list$model, "Learner") ||
             inherits(at_list$model, "model_fit") ||

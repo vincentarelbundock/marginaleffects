@@ -4,8 +4,7 @@ get_predict.glimML <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
-    ...
-) {
+    ...) {
     insight::check_if_installed("aod")
 
     out <- aod::predict(model, newdata = newdata, type = type, ...)
@@ -41,9 +40,10 @@ get_vcov.glimML <- function(model, vcov = NULL, ...) {
 
 #' @rdname sanitize_model_specific
 sanitize_model_specific.glimML <- function(model, ...) {
-    mdat <- get_modeldata(model, additional_variables = FALSE)
-    if (isTRUE("character" %in% attr(mdat, "marginaleffects_variable_class"))) {
-        insight::format_error(
+    mdat <- get_modeldata(model)
+    cl <- detect_variable_class(mdat, model = model)
+    if (isTRUE("character" %in% cl)) {
+        stop_sprintf(
             "This function does not support character predictors. Please convert them to factors before fitting the model."
         )
     }

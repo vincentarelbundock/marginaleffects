@@ -6,13 +6,9 @@ get_predict.glmmTMB <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
+    mfx = NULL,
     newparams = NULL,
-    ...
-) {
-    if (inherits(vcov, "vcov.glmmTMB")) {
-        vcov <- vcov[[1]]
-    }
-
+    ...) {
     # hack to avoid re-optimization
     # see https://github.com/vincentarelbundock/marginaleffects/issues/1064
     b_vec <- model$obj$env$parList()$b
@@ -107,7 +103,7 @@ sanitize_model_specific.glmmTMB <- function(model, vcov = TRUE, re.form, ...) {
     # re.form=NA
     if (!isTRUE(checkmate::check_flag(vcov))) {
         msg <- "For this model type, `vcov` must be `TRUE` or `FALSE`."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     if (!isFALSE(vcov) && (missing(re.form) || (!isTRUE(is.na(re.form))))) {

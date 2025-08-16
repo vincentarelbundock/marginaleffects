@@ -1,4 +1,4 @@
-sanitize_hypothesis <- function(hypothesis, ...) {
+add_hypothesis <- function(mfx, hypothesis) {
     checkmate::assert(
         checkmate::check_character(hypothesis, pattern = "=|<=|>="),
         checkmate::check_numeric(hypothesis),
@@ -43,11 +43,9 @@ sanitize_hypothesis <- function(hypothesis, ...) {
         hypothesis <- NULL
     }
 
-    out <- list(
-        "hypothesis" = hypothesis,
-        "hypothesis_null" = hnull,
-        "hypothesis_direction" = hypothesis_direction
-    )
+    mfx@hypothesis <- hypothesis
+    mfx@hypothesis_null <- hnull
+    mfx@hypothesis_direction <- hypothesis_direction
 
-    return(out)
+    return(mfx)
 }

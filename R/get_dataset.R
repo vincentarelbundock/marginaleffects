@@ -26,8 +26,7 @@ get_dataset <- function(
     dataset = "thornton",
     package = NULL,
     docs = FALSE,
-    search = NULL
-) {
+    search = NULL) {
     checkmate::assert_string(dataset)
     checkmate::assert_string(package, null.ok = TRUE)
     checkmate::assert_flag(docs)
@@ -63,20 +62,47 @@ get_dataset <- function(
         package <- "marginaleffects"
     }
 
-    # Handle marginaleffects datasets or delegate to Rdatasets
+    # marginaleffects-specific datasets
     if (identical(package, "marginaleffects")) {
         if (docs) {
             get_dataset_docs(dataset, data_dict)
             return(invisible(NULL))
         } else {
-            return(get_dataset_data(dataset, data_dict))
+            rdpath <- getOption("marginaleffects_website_path", default = NULL)
+            if (is.null(rdpath)) {
+                out <- get_dataset_data(dataset, data_dict)
+            } else {
+                insight::check_if_installed("nanoparquet")
+                out <- nanoparquet::read_parquet(file.path(
+                    rdpath, "data", paste0(dataset, ".parquet")))
+            }
+            out <- as.data.frame(out, check.names = FALSE)
+            return(out)
+        }
+        # Rdatasets
+    } else if (is.null(package)) {
+        if (docs) {
+            Rdatasets::rddocs(dataset)
+            return(invisible(NULL))
+        } else {
+            return(Rdatasets::rddata(dataset))
         }
     } else {
         if (docs) {
             Rdatasets::rddocs(dataset, package)
             return(invisible(NULL))
         } else {
-            return(Rdatasets::rddata(dataset, package))
+            rdpath <- getOption("marginaleffects_rdataset_path", default = NULL)
+            if (is.null(rdpath)) {
+                return(Rdatasets::rddata(dataset, package))
+            }
+
+            insight::check_if_installed("nanoparquet")
+            out <- nanoparquet::read_parquet(file.path(
+                rdpath, "parquet", package,
+                paste0(dataset, ".parquet")))
+            out <- as.data.frame(out, check.names = FALSE)
+            return(out)
         }
     }
 }

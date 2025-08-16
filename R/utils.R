@@ -1,64 +1,20 @@
 get_unique_index <- function(x, term_only = FALSE) {
     idx <- c("term", "contrast", grep("^contrast_", colnames(x), value = TRUE))
-
-    if (!term_only) {
-        by <- attr(x, "by")
-        if (isTRUE(checkmate::check_data_frame(by))) {
-            idx <- c(idx, colnames(by))
-        } else {
-            idx <- c(idx, by)
-        }
-        explicit <- attr(attr(x, "newdata"), "explicit")
-        if (isTRUE(checkmate::check_character(explicit))) {
-            idx <- explicit
-        }
-    }
-
     idx <- intersect(unique(idx), colnames(x))
-
     if (length(idx) == 0) {
         return(NULL)
     }
-
     if (length(idx) == 1) {
         return(x[[idx]])
     }
-
     out <- x[, idx, drop = FALSE]
-
     for (i in ncol(out):2) {
         if (length(unique(out[[i]])) == 1) {
             out[[i]] <- NULL
         }
     }
-
     out <- apply(out, 1, toString)
     return(out)
-}
-
-
-get_marginaleffects_attributes <- function(
-    x,
-    exclude = NULL,
-    include = NULL,
-    include_regex = NULL
-) {
-    out <- list()
-    attr_names <- names(attributes(x))
-    attr_names <- setdiff(attr_names, exclude)
-    if (!is.null(include)) attr_names <- intersect(attr_names, include)
-    if (!is.null(include_regex)) attr_names <- attr_names[grepl(include_regex, attr_names)]
-    for (n in attr_names) {
-        out[[n]] <- attr(x, n)
-    }
-    return(out)
-}
-
-set_marginaleffects_attributes <- function(x, attr_cache, prefix = "") {
-    for (n in names(attr_cache)) {
-        attr(x, paste0(prefix, n)) <- attr_cache[[n]]
-    }
-    return(x)
 }
 
 
@@ -67,7 +23,7 @@ warn_once <- function(msg, id) {
         return(invisible())
     }
     msg <- paste(msg, "This warning appears once per session.")
-    # insight::format_warning(msg, call. = FALSE)
+    # warn_sprintf(msg, call. = FALSE)
     warning(msg, call. = FALSE)
     opts <- list(FALSE)
     names(opts) <- id
@@ -79,7 +35,7 @@ warn_once <- function(msg, id) {
 # Source: https://github.com/Rdatatable/data.table/issues/1717#issuecomment-545758165
 cjdt <- function(dtlist) {
     Reduce(
-        function(DT1, DT2) cbind(DT1, DT2[rep(1:.N, each = nrow(DT1))]),
+        function(DT1, DT2) cbind(DT1, DT2[rep(seq_len(.N), each = nrow(DT1))]),
         dtlist
     )
 }
@@ -101,7 +57,9 @@ evalup <- function(xcall) {
             out <- hush(eval(xcall, parent.frame(i)))
         }
     }
-    if (is.null(out) && !is.null(msg)) stop(msg)
+    if (is.null(out) && !is.null(msg)) {
+        stop(msg)
+    }
     return(out)
 }
 
@@ -181,8 +139,7 @@ group_to_factor <- function(group, model) {
                 .m2
             } else {
                 .ifnotfound
-            }
-        ),
+            }),
         pairlist(.x = x[1L], .ifnotfound = ifnotfound),
         parent.frame(1L)
     )
@@ -218,7 +175,10 @@ stop_deprecate <- function(old, new = NULL) {
 
 
 stop_sprintf <- function(msg, ...) {
-    msg <- sprintf(msg, ...)
+    dots <- list(...)
+    if (length(dots) > 0) {
+        msg <- sprintf(msg, ...)
+    }
     stop(msg, call. = FALSE)
 }
 
@@ -227,6 +187,9 @@ warn_sprintf <- function(msg, ...) {
     if (!isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
         return(invisible())
     }
-    msg <- sprintf(msg, ...)
+    dots <- list(...)
+    if (length(dots) > 0) {
+        msg <- sprintf(msg, ...)
+    }
     warning(msg, call. = FALSE)
 }

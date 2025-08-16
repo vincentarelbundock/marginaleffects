@@ -1,36 +1,23 @@
-get_contrast_data <- function(
-    model,
-    newdata,
+get_comparisons_data <- function(
+    mfx,
     variables,
     cross,
-    modeldata = NULL,
-    ...
-) {
+    ...) {
+    newdata <- mfx@newdata
+    model <- mfx@model
+    modeldata <- mfx@modeldata
+
     lo <- hi <- ter <- lab <- original <- rowid <- list()
 
-    # after variable class assignment
-    if (is.null(modeldata)) {
-        modeldata <- attr(newdata, "newdata_modeldata")
-    }
     # sometimes needed for extensions when get_data doesn't work
     if (is.null(modeldata) || nrow(modeldata) == 0) {
         modeldata <- newdata
     }
 
     # safety need for extensions not supported by `insight`
-    variable_classes <- attr(newdata, "newdata_variable_class")
-    if (length(variable_classes) == 0) {
-        newdata <- set_variable_class(newdata, model)
-        variable_classes <- attr(newdata, "marginaleffects_variable_class")
-    }
-    if (length(attr(modeldata, "marginaleffects_variable_class")) == 0) {
-        modeldata <- set_variable_class(modeldata, model)
-    }
-
-    if (any(c("factor", "character") %in% variable_classes)) {
-        first_cross <- names(variable_classes[
-            variable_classes %in% c("factor", "character")
-        ])[1]
+    if (any(c("factor", "character") %in% mfx@variable_class)) {
+        idx <- mfx@variable_class %in% c("factor", "character")
+        first_cross <- names(mfx@variable_class[idx])[1]
     } else {
         first_cross <- NULL
     }
@@ -46,19 +33,20 @@ get_contrast_data <- function(
             variable = v,
             cross = cross,
             first_cross = identical(v$name, first_cross),
-            modeldata = modeldata
+            modeldata = modeldata,
+            mfx = mfx
         )
         args <- append(args, list(...))
 
         # logical and character before factor used to be important; but I don't think so anymore
-        if (get_variable_class(modeldata, v$name, "logical")) {
-            fun <- get_contrast_data_logical
-        } else if (get_variable_class(modeldata, v$name, "character")) {
-            fun <- get_contrast_data_character
-        } else if (get_variable_class(modeldata, v$name, "categorical")) {
-            fun <- get_contrast_data_factor
-        } else if (get_variable_class(modeldata, v$name, "numeric")) {
-            fun <- get_contrast_data_numeric
+        if (check_variable_class(mfx, v$name, "logical")) {
+            fun <- get_comparisons_data_logical
+        } else if (check_variable_class(mfx, v$name, "character")) {
+            fun <- get_comparisons_data_character
+        } else if (check_variable_class(mfx, v$name, "categorical")) {
+            fun <- get_comparisons_data_factor
+        } else if (check_variable_class(mfx, v$name, "numeric")) {
+            fun <- get_comparisons_data_numeric
         } else {
             msg <- sprintf(
                 "Class of the `%s` variable is class is not supported.",
@@ -67,7 +55,7 @@ get_contrast_data <- function(
             stop(msg, call. = FALSE)
         }
 
-        tmp <- do.call("fun", args)
+        tmp <- do.call(fun, args)
 
         lo[[v$name]] <- tmp$lo
         if (isTRUE(cross)) {
@@ -87,7 +75,7 @@ get_contrast_data <- function(
                 x[[col]] <- as.numeric(x[[col]])
             }
 
-            # plm creates c("pseries", "numeric"), but when get_contrast_data
+            # plm creates c("pseries", "numeric"), but when get_comparisons_data
             # assigns +1 numeric, we lose the inheritance
             if (inherits(x[[col]], "pseries")) {
                 x[[col]] <- as.numeric(x[[col]])
@@ -183,9 +171,9 @@ get_contrast_data <- function(
     }
 
     # get_predict() is much faster if we only build the model matrix once
-    lo <- get_model_matrix_attribute(model, lo)
-    hi <- get_model_matrix_attribute(model, hi)
-    original <- get_model_matrix_attribute(model, original)
+    lo <- add_model_matrix_attribute(mfx, lo)
+    hi <- add_model_matrix_attribute(mfx, hi)
+    original <- add_model_matrix_attribute(mfx, original)
 
     out <- list(lo = lo, hi = hi, original = original)
 

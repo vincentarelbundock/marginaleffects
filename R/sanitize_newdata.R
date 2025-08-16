@@ -1,27 +1,31 @@
-sanitize_newdata_call <- function(scall, newdata = NULL, model, by = NULL) {
+sanitize_newdata_call <- function(scall, newdata = NULL, mfx = NULL, by = NULL) {
+    # For mice objects, defer newdata processing to process_imputation()
+    if (!is.null(mfx) && inherits(mfx@model, c("mira", "amest"))) {
+        # Return the call as-is, will be processed later with actual model data
+        return(scall)
+    }
+
     if (rlang::quo_is_call(scall)) {
         df <- FALSE
         if (grepl("^datagrid", rlang::call_name(scall))) {
             if (!"model" %in% rlang::call_args_names(scall)) {
-                scall <- rlang::call_modify(scall, model = model)
+                scall <- rlang::call_modify(scall, model = mfx@model)
             }
         } else if (isTRUE(rlang::call_name(scall) == "data.frame")) {
             df <- TRUE
         } else if (isTRUE(rlang::call_name(scall) == "subset")) {
             argnames <- rlang::call_args_names(scall)
             if (!"x" %in% argnames && length(argnames) == 1) {
-                tmp <- get_modeldata(model, additional_variables = by)
-                scall <- rlang::call_modify(scall, x = tmp)
+                scall <- rlang::call_modify(scall, x = mfx@modeldata)
             }
         } else if (isTRUE(rlang::call_name(scall) == "filter")) {
             argnames <- rlang::call_args_names(scall)
             if (!".data" %in% argnames && length(argnames) == 1) {
-                tmp <- get_modeldata(model, additional_variables = by)
-                scall <- rlang::call_modify(scall, .data = tmp)
+                scall <- rlang::call_modify(scall, .data = mfx@modeldata)
             }
         } else if (rlang::call_name(scall) %in% "visualisation_matrix") {
             if (!"x" %in% rlang::call_args_names(scall)) {
-                scall <- rlang::call_modify(scall, x = get_modeldata)
+                scall <- rlang::call_modify(scall, x = mfx@modeldata)
             }
         }
         out <- rlang::eval_tidy(scall)
@@ -36,66 +40,115 @@ sanitize_newdata_call <- function(scall, newdata = NULL, model, by = NULL) {
 }
 
 
-build_newdata <- function(model, newdata, by, modeldata) {
-    if (isTRUE(checkmate::check_data_frame(by))) {
-        by <- setdiff(colnames(by), "by")
-    } else if (isTRUE(checkmate::check_flag(by))) {
-        by <- NULL
+sanitize_newdata <- function(mfx, newdata, by, wts) {
+    model <- mfx@model
+    modeldata <- mfx@modeldata
+
+    # For mice objects, defer processing - newdata might be a call
+    if (inherits(model, c("mira", "amest"))) {
+        # Return placeholder that will be handled in process_imputation()
+        return(list(
+            "newdata" = newdata, # could be a call like subset(treat == 1)
+            "modeldata" = modeldata
+        ))
     }
+
+    # Input validation (skip for mice objects)
+    checkmate::assert(
+        checkmate::check_data_frame(newdata, null.ok = TRUE),
+        checkmate::check_choice(
+            newdata,
+            choices = c("mean", "median", "tukey", "grid", "balanced")
+        ),
+        combine = "or"
+    )
+
+    # Process 'by' argument for datagrid calls
+    if (isTRUE(checkmate::check_data_frame(by))) {
+        by_vars <- setdiff(colnames(by), "by")
+    } else if (isTRUE(checkmate::check_flag(by))) {
+        by_vars <- NULL
+    } else {
+        by_vars <- by
+    }
+
+    # Build datagrid arguments
     args <- list(model = model)
-    for (b in by) {
+    for (b in by_vars) {
         args[[b]] <- unique
     }
 
-    newdata_explicit <- TRUE
-
-    # NULL -> modeldata
+    # Process newdata input
     if (is.null(newdata)) {
+        # NULL -> modeldata
         newdata <- modeldata
-        newdata_explicit <- FALSE
-
-        # string -> datagrid()
     } else if (identical(newdata, "mean")) {
+        # string -> datagrid()
         newdata <- do.call("datagrid", args)
     } else if (identical(newdata, "median")) {
-        args[["FUN_numeric"]] <- args[["FUN_integer"]] <- args[[
-            "FUN_logical"
-        ]] <- function(x) stats::median(x, na.rm = TRUE)
+        args[["FUN_numeric"]] <- args[["FUN_integer"]] <- args[["FUN_logical"]] <-
+            function(x) stats::median(x, na.rm = TRUE)
         newdata <- do.call("datagrid", args)
     } else if (identical(newdata, "tukey")) {
         args[["FUN_numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
         newdata <- do.call("datagrid", args)
     } else if (identical(newdata, "grid")) {
         args[["FUN_numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
-        args[["FUN_factor"]] <- args[["FUN_character"]] <- args[[
-            "FUN_logical"
-        ]] <- unique
+        args[["FUN_factor"]] <- args[["FUN_character"]] <- args[["FUN_logical"]] <- unique
         newdata <- do.call("datagrid", args)
-
-        # grid with all unique values of categorical variables, and numerics at their means
     } else if (identical(newdata, "balanced")) {
+        # grid with all unique values of categorical variables, and numerics at their means
         args[["grid_type"]] <- "balanced"
         newdata <- do.call("datagrid", args)
         # Issue #580: outcome should not duplicate grid rows
-        dv <- hush(insight::find_response(model))
-        if (isTRUE(dv %in% colnames(newdata))) {
-            newdata[[dv]] <- get_mean_or_mode(newdata[[dv]])
-            newdata <- unique(newdata)
+        # there can be multiple response variables
+        dv <- mfx@variable_names_response
+        for (d in dv) {
+            if (isTRUE(d %in% colnames(newdata))) {
+                newdata[[d]] <- get_mean_or_mode(newdata[[d]])
+                newdata <- unique(newdata)
+            }
         }
     }
 
+    # Validate that we have a data.frame
     if (!inherits(newdata, "data.frame")) {
         msg <- "Unable to extract the data from model of class `%s`. This can happen in a variety of cases, such as when a `marginaleffects` package function is called from inside a user-defined function, or using an `*apply()`-style operation on a list. Please supply a data frame explicitly via the `newdata` argument."
         msg <- sprintf(msg, class(model)[1])
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
-    out <- list(
-        "newdata" = newdata,
-        "explicit" = newdata_explicit,
-        "modeldata" = modeldata
-    )
-    return(out)
+    # Process matrix columns
+    # Issue #1327: matrix columns with single column breaks rbindlist(). See `scale()`
+    newdata <- unpack_matrix_1col(newdata)
+
+    # Issue #363: unpacking matrix columns works with {mgcv} but breaks {mclogit}
+    if (inherits(model, "gam")) {
+        newdata <- unpack_matrix_cols(newdata)
+    }
+
+    # Add placeholder response variable if missing
+    resp <- mfx@variable_names_response
+    if (isTRUE(checkmate::check_character(resp, len = 1)) && !resp %in% colnames(newdata)) {
+        y <- modeldata[[resp]]
+        # protect df or matrix response
+        if (isTRUE(checkmate::check_atomic_vector(y))) {
+            newdata[[resp]] <- y[1]
+        }
+    }
+
+    # Add rowid column for tracking
+    if (!"rowid" %in% colnames(newdata)) {
+        newdata$rowid <- seq_len(nrow(newdata))
+    }
+
+    # Add weights column if needed
+    newdata <- add_wts_column(wts, newdata, model)
+
+    # Convert to data.table
+    data.table::setDT(newdata)
+
+    return(newdata)
 }
 
 
@@ -116,7 +169,7 @@ add_wts_column <- function(wts, newdata, model) {
                 !wtsname %in% colnames(newdata)
         ) {
             msg <- "Unable to retrieve weights automatically from the model. Please specify `wts` argument explicitly."
-            insight::format_error(msg)
+            stop_sprintf(msg)
         } else {
             newdata[["marginaleffects_wts_internal"]] <- newdata[[wtsname]]
             return(newdata)
@@ -145,97 +198,74 @@ add_wts_column <- function(wts, newdata, model) {
 }
 
 
-sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
-    checkmate::assert(
-        checkmate::check_data_frame(newdata, null.ok = TRUE),
-        checkmate::check_choice(
-            newdata,
-            choices = c("mean", "median", "tukey", "grid", "balanced")
-        ),
-        combine = "or"
-    )
 
-    tmp <- build_newdata(
-        model = model,
+add_newdata <- function(
+    mfx,
+    scall,
+    newdata = NULL,
+    by = FALSE,
+    wts = FALSE,
+    cross = NULL,
+    comparison = NULL,
+    byfun = NULL) {
+    # For mice objects, defer all processing to process_imputation()
+    if (inherits(mfx@model, c("mira", "amest"))) {
+        # Store the raw newdata (could be a call) for later processing
+        mfx@newdata <- scall
+        return(mfx)
+    }
+
+    # Step 1: Handle quoted calls to datagrid, subset, etc.
+    newdata <- sanitize_newdata_call(scall, newdata, mfx = mfx, by = by)
+
+    # Step 2: Streamlined newdata processing (combines sanitize_newdata + build_newdata)
+    newdata <- sanitize_newdata(
+        mfx = mfx,
         newdata = newdata,
         by = by,
-        modeldata = modeldata
+        wts = wts
     )
-    newdata <- tmp[["newdata"]]
-    modeldata <- tmp[["modeldata"]]
 
-    # Issue #1327: matrix columns with single column breaks rbindlist(). See `scale()`
-    newdata <- unpack_matrix_1col(newdata)
-
-    # Issue #363
-    # unpacking matrix columns works with {mgcv} but breaks {mclogit}
-    if (inherits(model, "gam")) {
-        newdata <- unpack_matrix_cols(newdata)
+    # Step 3: Extract numeric weights from newdata and store in @wts slot
+    if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
+        mfx@wts <- newdata[["marginaleffects_wts_internal"]]
+    } else {
+        mfx@wts <- NULL
     }
 
-    # placeholder response
-    resp <- insight::find_response(model)
-    if (
-        isTRUE(checkmate::check_character(resp, len = 1)) &&
-            !resp %in% colnames(newdata)
-    ) {
-        y <- hush(insight::get_response(model))
-        # protect df or matrix response
-        if (isTRUE(checkmate::check_atomic_vector(y))) {
-            newdata[[resp]] <- y[1]
-        }
+    # Store processed newdata in the mfx object
+    mfx@newdata <- newdata
+    
+    # Extract and store variable_names_datagrid attribute from newdata
+    datagrid_vars <- attr(newdata, "variable_names_datagrid")
+    if (!is.null(datagrid_vars)) {
+        mfx@variable_names_datagrid <- datagrid_vars
     }
 
-    # we will need this to merge the original data back in, and it is better to
-    # do it in a centralized upfront way.
-    if (!"rowid" %in% colnames(newdata)) {
-        newdata$rowid <- seq_len(nrow(newdata))
+    # if `modeldata` is unavailable, we default to `newdata`
+    flag1 <- isTRUE(checkmate::check_data_frame(mfx@modeldata, min.rows = 1))
+    flag2 <- isTRUE(checkmate::check_data_frame(newdata, min.rows = 1))
+    if (!flag1 && flag2) {
+        mfx@modeldata <- newdata
+        mfx@variable_class <- detect_variable_class(newdata, model = mfx@model)
     }
 
-    # add weights column if available
-    if (is.null(wts)) wts <- FALSE
-    newdata <- add_wts_column(newdata = newdata, wts = wts, model = model)
-
-    # otherwise we get a warning in setDT()
-    if (inherits(model, "mlogit") && isTRUE(inherits(modeldata[["idx"]], "idx"))) {
-        modeldata$idx <- NULL
-        newdata$idx <- NULL
-    }
-
-    data.table::setDT(newdata)
-
-    # attributes: misc
-    attr(newdata, "explicit") <- attr(tmp$newdata, "explicit")
-    attr(newdata, "newdata_modeldata") <- modeldata
-
-    # attributes: column classes
-    if (!is.null(modeldata)) {
-        mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
-        cl <- Filter(function(x) is.character(modeldata[[x]]), colnames(modeldata))
-        modeldata <- subset(modeldata, select = cl)
-        cl <- lapply(modeldata, unique)
-        vc <- attributes(modeldata)$marginaleffects_variable_class
-        column_attributes <- list(
-            "matrix_columns" = mc,
-            "character_levels" = cl,
-            "variable_class" = vc
-        )
-        newdata <- set_marginaleffects_attributes(newdata, column_attributes)
-    }
-
-    return(newdata)
+    # Return the updated mfx object
+    return(mfx)
 }
 
 
 dedup_newdata <- function(
-    model,
+    mfx,
     newdata,
     by,
     wts,
     comparison = "difference",
     cross = FALSE,
-    byfun = NULL
-) {
+    byfun = NULL) {
+    # init
+    model <- mfx@model
+
     # issue #1113: elasticities or custom functions should skip dedup because it is difficult to align x and y
     elasticities <- c("eyexavg", "eydxavg", "dyexavg")
     if (
@@ -267,7 +297,7 @@ dedup_newdata <- function(
     # copy to allow mod by reference later without overwriting newdata
     out <- data.table(newdata)
 
-    dv <- hush(unlist(insight::find_response(model), use.names = FALSE))
+    dv <- mfx@variable_names_response
     if (isTRUE(checkmate::check_string(dv)) && dv %in% colnames(out)) {
         out[, (dv) := NULL]
         vclass <- vclass[names(vclass) != dv]

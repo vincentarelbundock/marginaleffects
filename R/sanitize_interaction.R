@@ -6,7 +6,7 @@ sanitize_cross <- function(cross, variables, model) {
 
     if (isTRUE(cross) && is.null(variables)) {
         msg <- "When `cross = TRUE`, you must use the `variables` argument to specify which variables should be interacted."
-        insight::format_error(msg)
+        stop_sprintf(msg)
     }
 
     if (isTRUE(checkmate::check_flag(cross))) {

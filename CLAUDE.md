@@ -9,6 +9,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Key Commands
 
 ### Development
+
+Run one set of tests:
+
+make testone testfile="inst/tinytest/test-bugfix.R"
+
+marginaleffects on  s4 [$!+?] is 📦 v0.28.0.7 via ⨁ v1.7.32 via 📐 v4.4.1 took 3s
+❯
+
 - `make install` - Install package with dependencies=FALSE using devtools
 - `make deps` - Install package with all dependencies using devtools  
 - `make document` - Generate documentation using devtools::document()

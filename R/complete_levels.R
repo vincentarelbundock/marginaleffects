@@ -41,8 +41,7 @@ complete_levels <- function(x, character_levels = NULL) {
         for (v in names(vault)) {
             padding[[v]] <- NULL
         }
-        fun <- data.table::CJ
-        gr <- do.call("fun", vault)
+        gr <- do.call(data.table::CJ, vault)
         padding <- cjdt(list(padding, gr))
         to_keep <- colnames(x)
         padding[, ..to_keep]
