@@ -16,6 +16,10 @@ Misc:
 * Documentation improvements.
 * `get_dataset()` now delegates most of the work to the `Rdatasets` package (optional dependency).
 * Major internal refactoring to simplify the code base and make maintenance easier. We use fewer attributes and store internal information in a single S4 object stored as `attr(x, "marginaleffects")`.
+
+Bugs:
+
+* Fixed bug in `sampleSelection` models.
  
 ## 0.28.0
 

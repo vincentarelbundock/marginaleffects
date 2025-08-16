@@ -5,13 +5,12 @@ if (!EXPENSIVE) exit_file("EXPENSIVE")
 requiet("MCMCglmm")
 
 # Basic expectation tests
-mod_simple <- MCMCglmm(mpg ~ wt + am, random = ~1, data = mtcars, verbose = FALSE)
-expect_slopes(mod_simple)
-expect_predictions(mod_simple)
-expect_hypotheses(mod_simple)
-expect_comparisons(mod_simple)
-
 mod <- MCMCglmm(mpg ~ hp, random = ~carb, data = mtcars, verbose = FALSE)
+expect_slopes(mod, newdata = mtcars, se = FALSE)
+expect_predictions(mod, newdata = mtcars, se = FALSE)
+expect_hypotheses(mod, newdata = mtcars, se = FALSE)
+expect_comparisons(mod, newdata = mtcars, se = FALSE)
+
 
 p <- avg_comparisons(mod, newdata = mtcars)
 expect_inherits(p, "comparisons")

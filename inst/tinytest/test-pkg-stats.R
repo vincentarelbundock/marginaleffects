@@ -42,8 +42,7 @@ for (x in c("x1", "x2", "x3", "x4")) {
 
 
 # predictions
-pre <- predictions(mod)
-expect_predictions(pre, se = FALSE)
+expect_predictions(mod, se = FALSE)
 
 
 # emmeans comparison
@@ -113,7 +112,7 @@ expect_equivalent(mm$std.error, em$std.error, tolerance = 1e-5)
 
 
 # factors seem to behave differently in model.matrix
-#skip_if_not_installed("emmeans", minimum_version = "1.7.3")
+# skip_if_not_installed("emmeans", minimum_version = "1.7.3")
 dat <- guerry
 dat$binary <- dat$Crime_prop > median(dat$Crime_prop)
 # character variables sometimes break the order

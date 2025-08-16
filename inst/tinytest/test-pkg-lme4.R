@@ -10,7 +10,7 @@ requiet("emmeans")
 requiet("broom")
 
 # Basic expectation tests
-mod_simple <- lme4::lmer(mpg ~ wt + am + (1|cyl), data = mtcars)
+mod_simple <- lme4::lmer(mpg ~ wt + am + (1 | cyl), data = mtcars)
 expect_slopes(mod_simple)
 expect_predictions(mod_simple)
 expect_hypotheses(mod_simple)
@@ -346,7 +346,7 @@ mod <- glmer(
     family = binomial()
 )
 
-p <- predictions(
+expect_predictions(
     mod,
     newdata = datagrid(
         newdata = dat,
@@ -357,7 +357,6 @@ p <- predictions(
     ),
     re.form = NA
 )
-expect_predictions(p)
 
 cmp <- comparisons(
     mod,
