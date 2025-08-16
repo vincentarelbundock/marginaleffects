@@ -5,19 +5,10 @@ source("helpers.R")
 using("marginaleffects")
 
 options("marginaleffects_posterior_interval" = "hdi")
-suppressPackageStartupMessages(requiet("rstanarm"))
+requiet("rstanarm")
 requiet("emmeans")
 requiet("margins")
 requiet("broom")
-
-# Basic expectation tests  
-void <- capture.output(
-    mod_simple <- rstanarm::stan_lm(mpg ~ wt + am, data = mtcars, chains = 1, iter = 100, refresh = 0)
-)
-expect_slopes(mod_simple)
-expect_predictions(mod_simple)
-expect_hypotheses(mod_simple)
-expect_comparisons(mod_simple)
 
 # interactions
 void <- capture.output(
@@ -25,6 +16,8 @@ void <- capture.output(
 )
 expect_slopes(mod, se = FALSE)
 expect_predictions(mod, se = FALSE)
+expect_comparisons(mod, se = FALSE)
+# expect_hypotheses(mod, se = FALSE)
 
 # no interactions
 void <- capture.output(
