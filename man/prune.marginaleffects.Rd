@@ -9,6 +9,8 @@
 \arguments{
 \item{tree}{A marginaleffects object (predictions, comparisons, slopes, or hypotheses)}
 
+\item{component}{A character string indicating which component to prune: "all" or "modeldata".}
+
 \item{...}{Unused}
 }
 \value{

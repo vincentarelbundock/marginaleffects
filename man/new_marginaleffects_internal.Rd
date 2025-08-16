@@ -42,8 +42,6 @@ new_marginaleffects_internal(
 \item{vcov_model}{The variance-covariance matrix}
 
 \item{wts}{The weights specification}
-
-\item{newdata}{The new data frame for predictions}
 }
 \value{
 An object of class marginaleffects_internal
