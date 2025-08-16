@@ -316,7 +316,7 @@ comparisons <- function(
     mfx@vcov_type <- get_vcov_label(vcov)
     mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
 
-    predictors <- mfx@variables$conditional
+    predictors <- mfx@variables
 
     mfx <- add_hypothesis(mfx, hypothesis)
 
@@ -428,20 +428,20 @@ comparisons <- function(
 
     data.table::setDF(out)
 
+    class(out) <- c("comparisons", class(out))
+
+    # class before prune
     out <- add_attributes(out, mfx)
+    out <- prune_attributes(out)
 
     if (inherits(mfx@model, "brmsfit")) {
         insight::check_if_installed("brms")
         mfx@draws_chains <- brms::nchains(mfx@model) 
     }
 
-    class(out) <- c("comparisons", class(out))
-
     if (!is.null(inferences_method)) {
         out <- inferences(out, method = inferences_method)
     }
-
-    attr(out, "marginaleffects") <- mfx
 
     return(out)
 }

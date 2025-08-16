@@ -9,7 +9,7 @@ joint_test <- function(
 
     # do not use components() because this may be a model object
     mfx <- attr(object, "marginaleffects")
-    
+
     # Create mfx object if it doesn't exist (needed for joint tests on model objects)
     if (is.null(mfx) && !inherits(object, c("slopes", "comparisons", "predictions", "hypotheses"))) {
         call <- construct_call(object, "hypotheses")
@@ -193,9 +193,10 @@ joint_test <- function(
     attr(out, "print_head") <- print_head
 
     # Add marginaleffects attribute for printing
-    if (!is.null(mfx)) {
-        out <- add_attributes(out, mfx)
-    }
+    out <- add_attributes(out, mfx)
+
+    # class before prune
+    out <- prune_attributes(out)
 
     return(out)
 }

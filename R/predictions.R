@@ -272,7 +272,7 @@ predictions <- function(
             variables = variables,
             mfx = mfx
         )
-        for (v in mfx@variables$conditional) {
+        for (v in mfx@variables) {
             args[[v$name]] <- v$value
         }
         mfx@newdata <- do.call("datagrid", args)
@@ -420,7 +420,9 @@ predictions <- function(
     class(out) <- c("predictions", class(out))
 
     # Add common attributes from mfx S4 slots
+    # class before prune
     out <- add_attributes(out, mfx)
+    out <- prune_attributes(out)
 
     if (inherits(mfx@model, "brmsfit")) {
         insight::check_if_installed("brms")
@@ -434,8 +436,6 @@ predictions <- function(
     if (!is.null(inferences_method)) {
         out <- inferences(out, method = inferences_method)
     }
-
-    attr(out, "marginaleffects") <- mfx
 
     return(out)
 }

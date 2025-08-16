@@ -1,11 +1,6 @@
-add_attributes <- function(out, mfx, ...) {
+add_attributes <- function(out, mfx = NULL, ...) {
     # Always add all attributes from S4 slots
-    attr(out, "marginaleffects") <- mfx
-
-    # Add draws if present and not already set
-    if (!is.null(mfx@draws) && is.null(attr(out, "posterior_draws"))) {
-        attr(out, "posterior_draws") <- mfx@draws
-    }
+    if (!is.null(mfx)) attr(out, "marginaleffects") <- mfx
 
     dots <- list(...)
     for (n in names(dots)) {
@@ -14,9 +9,13 @@ add_attributes <- function(out, mfx, ...) {
         }
     }
 
+    return(out)
+}
+
+
+prune_attributes <- function(out) {
     if (isTRUE(getOption("marginaleffects_lean", default = FALSE))) {
         out <- prune(out)
     }
-
     return(out)
 }

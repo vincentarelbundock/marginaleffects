@@ -317,6 +317,7 @@ hypotheses <- function(
 
     # Add common attributes from mfx S4 slots
     out <- add_attributes(out, mfx)
+    out <- prune_attributes(out)
 
     # must be after attributes for vcov
     out <- multcomp_test(

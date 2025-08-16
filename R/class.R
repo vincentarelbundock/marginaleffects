@@ -66,10 +66,11 @@ setClass(
         type = "characterOrNULL",
         variables = "list",
         variable_class = "characterOrNULL",
-        variable_names_datagrid = "character",
-        variable_names_response = "character",
-        variable_names_by = "character",
-        variable_names_by_hypothesis = "character",
+        variable_names_datagrid = "characterOrNULL",
+        variable_names_response = "characterOrNULL",
+        variable_names_by = "characterOrNULL",
+        variable_names_by_hypothesis = "characterOrNULL",
+        variable_names_wts = "characterOrNULL",
         vcov_model = "ANY",
         vcov_type = "characterOrNULL",
         wts = "ANY"
@@ -127,6 +128,8 @@ new_marginaleffects_internal <- function(
         variable_names_response <- character(0)
     }
 
+    variable_names_wts <- hush(insight::find_weights(model))
+
     # Extract calling function from call
     calling_function <- extract_calling_function(call)
 
@@ -158,6 +161,7 @@ new_marginaleffects_internal <- function(
         variable_names_by_hypothesis = variable_names_by_hypothesis,
         variable_names_datagrid = character(),
         variable_names_response = variable_names_response,
+        variable_names_wts = variable_names_wts,
         vcov_model = vcov_model,
         vcov_type = vcov_type,
         wts = wts

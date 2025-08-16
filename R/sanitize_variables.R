@@ -464,8 +464,7 @@ sanitize_internal_variables <- function(predictors, mfx, model, calling_function
 }
 
 get_weight_variables <- function(mfx) {
-    # sometimes weights don't get extracted by `find_variables()`
-    w <- tryCatch(insight::find_weights(mfx@model), error = function(e) NULL)
+    w <- mfx@variable_names_wts
     w <- intersect(w, colnames(mfx@newdata))
     w
 }
@@ -509,12 +508,8 @@ add_variables <- function(
     # Final sanitization
     predictors <- sanitize_internal_variables(predictors, mfx, mfx@model, mfx@calling_function)
 
-    # Get weight variables
-    others <- get_weight_variables(mfx)
-
     # output
-    mfx@variables[["conditional"]] <- predictors
-    mfx@variables[["others"]] <- others
+    mfx@variables <- predictors
     return(mfx)
 }
 
