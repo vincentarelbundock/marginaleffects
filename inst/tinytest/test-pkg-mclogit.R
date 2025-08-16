@@ -7,6 +7,16 @@ requiet("emmeans")
 requiet("broom")
 requiet("splines")
 
+# Basic expectation tests
+data("Transport", package = "mclogit")
+void <- capture.output(
+    mod_simple <- mclogit::mclogit(cbind(resp, suburb) ~ distance + cost, data = Transport)
+)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # mclogit: no validity
 data(Transport, package = "mclogit")
 dat <- Transport
@@ -14,9 +24,8 @@ void <- capture.output(
     model <- mclogit(cbind(resp, suburb) ~ distance + cost, data = Transport)
 )
 # type = "link" works
-expect_slopes(model, type = "link", n_unique = 1)
-pred <- predictions(model, type = "link")
-expect_predictions(pred)
+expect_slopes(model, type = "link")
+expect_predictions(model, type = "link")
 
 
 # mblogit: error on character regressors
@@ -27,7 +36,7 @@ dat <- dat
 void <- capture.output(
     mod <- mblogit(Sat ~ Infl + Type + Cont + x, weights = Freq, data = dat)
 )
-expect_predictions(predictions(mod))
+expect_predictions(mod)
 
 # mblogit: works on factor regressors
 dat <- get_dataset("housing", "MASS")
@@ -39,7 +48,7 @@ dat$Type <- factor(dat$Type)
 void <- capture.output(
     mod <- mblogit(Sat ~ Infl + Type + Cont + x, weights = Freq, data = dat)
 )
-expect_predictions(predictions(mod))
+expect_predictions(mod)
 mfx <- suppressWarnings(slopes(mod, type = "link"))
 expect_inherits(mfx, "marginaleffects")
 

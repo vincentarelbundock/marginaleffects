@@ -32,7 +32,7 @@ get_predict.bart <- function(model, newdata = NULL, ...) {
 #' @include sanity_model.R
 #' @rdname sanitize_model_specific
 #' @export
-sanitize_model_specific.bart <- function(model, ...) {
+sanitize_model_specific.bart <- function(model, calling_function, ...) {
     insight::check_if_installed("collapse", minimum_version = "1.9.0")
     if (
         !isTRUE(
@@ -40,6 +40,10 @@ sanitize_model_specific.bart <- function(model, ...) {
         )
     ) {
         msg <- "`marginaleffects` only supports models estimated using the formula interface in `bart2()` function, not the matrix input in `bart()`."
+        stop_sprintf(msg)
+    }
+    if (calling_function == "hypotheses") {
+        msg <- "`marginaleffects` does not support hypothesis tests for models of class `bart`."
         stop_sprintf(msg)
     }
     return(model)

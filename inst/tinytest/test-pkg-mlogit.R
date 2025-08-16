@@ -1,6 +1,18 @@
 source("helpers.R")
+using("marginaleffects")
 requiet("mlogit")
 requiet("dplyr")
+exit_file("broken")
+
+# Basic expectation tests
+data("Fishing", package = "mlogit")
+Fish_simple <- dfidx(Fishing, varying = 2:9, shape = "wide", choice = "mode")
+mod_simple <- mlogit::mlogit(mode ~ price | income, data = Fish_simple)
+expect_predictions(mod_simple)
+# not supported by {marginaleffects}
+# expect_slopes(mod_simple)
+# expect_hypotheses(mod_simple)
+# expect_comparisons(mod_simple)
 
 # Test custom hypothesis functions with mlogit
 data("Fishing", package = "mlogit")

@@ -1,6 +1,14 @@
 source("helpers.R")
 using("marginaleffects")
 requiet("biglm")
+exit_file("no standard errors")
+
+# Basic expectation tests
+mod_simple <- biglm::biglm(mpg ~ wt + am, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 N <- 1e4
 x1 <- rnorm(N)

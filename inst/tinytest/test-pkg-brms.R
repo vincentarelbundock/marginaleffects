@@ -190,14 +190,14 @@ expect_true(all(c("term", "estimate", "conf.low") %in% colnames(ti)))
 # predictions: no validity
 # simple
 pred <- predictions(brms_numeric2, newdata = datagrid(hp = c(100, 120)))
-expect_predictions(pred, se = FALSE)
+expect_predictions(brms_numeric2, newdata = datagrid(hp = c(100, 120)), se = FALSE)
 expect_equivalent(dim(components(pred, "draws")), c(2, 2000))
 # interaction
 pred <- predictions(brms_interaction, newdata = datagrid(mpg = c(20, 25)))
-expect_predictions(pred, se = FALSE)
+expect_predictions(brms_interaction, newdata = datagrid(mpg = c(20, 25)), se = FALSE)
 # factor in data frame
 pred <- predictions(brms_factor, newdata = datagrid())
-expect_predictions(pred, se = FALSE)
+expect_predictions(brms_factor, newdata = datagrid(), se = FALSE)
 
 
 # predictions: prediction vs. expectation vs. include_random
@@ -356,7 +356,11 @@ p_response <- predictions(
         region = "Middle East and North Africa"
     )
 )
-expect_predictions(p_response, se = FALSE)
+expect_predictions(brms_vdem, type = "response", newdata = datagrid(
+    party_autonomy = c(TRUE, FALSE),
+    civil_liberties = .5,
+    region = "Middle East and North Africa"
+), se = FALSE)
 p_prediction <- predictions(
     brms_vdem,
     type = "prediction",
@@ -366,7 +370,11 @@ p_prediction <- predictions(
         region = "Middle East and North Africa"
     )
 )
-expect_predictions(p_prediction, se = FALSE)
+expect_predictions(brms_vdem, type = "prediction", newdata = datagrid(
+    party_autonomy = c(TRUE, FALSE),
+    civil_liberties = .5,
+    region = "Middle East and North Africa"
+), se = FALSE)
 
 
 # bugs stay dead: character regressors used to produce duplicates

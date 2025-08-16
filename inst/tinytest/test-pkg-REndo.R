@@ -1,6 +1,14 @@
 source("helpers.R")
+using("marginaleffects")
 requiet("REndo")
-requiet("marginaleffects")
+
+# Basic expectation tests
+data("dataLatentIV", package = "REndo")
+mod_simple <- REndo::latentIV(y ~ P, data = dataLatentIV, verbose = FALSE)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 data("dataLatentIV", package = "REndo")
 mod <- latentIV(y ~ P, data = dataLatentIV, verbose = FALSE)

@@ -3,6 +3,14 @@ using("marginaleffects")
 
 requiet("sampleSelection")
 
+# Basic expectation tests
+data("Mroz87", package = "sampleSelection")
+mod_simple <- sampleSelection::heckit(lfp ~ age + faminc, wage ~ exper + educ, data = Mroz87)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 dat <- get_dataset("Mroz87", "sampleSelection")
 dat$kids <- dat$kids5 + dat$kids618 > 0
 dat <<- dat

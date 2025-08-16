@@ -1,9 +1,19 @@
 source("helpers.R")
+using("marginaleffects")
 requiet("haven")
 requiet("Rchoice")
 
+# Basic expectation tests
+dat <- transform(iris, y = Sepal.Length > median(Sepal.Length))
+mod_simple <- hetprob(y ~ Petal.Width * Petal.Length | factor(Species),
+    data = dat, link = "logit")
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # hetprob() dy/dx
-dat <<- transform(iris, y = Sepal.Length > median(Sepal.Length))
+dat <- transform(iris, y = Sepal.Length > median(Sepal.Length))
 mod <- hetprob(y ~ Petal.Width * Petal.Length | factor(Species), data = dat, link = "logit")
 known <- Rchoice::effect(mod)$margins
 mfx <- avg_slopes(mod)

@@ -5,6 +5,12 @@ requiet("emmeans")
 requiet("broom")
 requiet("splines")
 
+# Basic expectation tests
+mod_simple <- survival::coxph(Surv(time, status) ~ age + sex, data = lung)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 # Issue #911: survreg support
 fit <- survreg(Surv(futime, fustat) ~ ecog.ps + rx, ovarian, dist = "weibull", scale = 1)

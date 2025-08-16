@@ -5,6 +5,14 @@ requiet("margins")
 requiet("dplyr")
 requiet("ivreg")
 
+# Basic expectation tests
+data("Kmenta", package = "ivreg")
+mod_simple <- ivreg::ivreg(Q ~ P + D | D + F, data = Kmenta)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # marginaleffects: vs. margins
 data(Kmenta, package = "ivreg")
 mod <- ivreg::ivreg(Q ~ P * D | D + F + A, data = Kmenta)
@@ -36,5 +44,5 @@ data(Kmenta, package = "ivreg")
 mod <- ivreg::ivreg(Q ~ P * D | D + F + A, data = Kmenta)
 pred1 <- predictions(mod)
 pred2 <- predictions(mod, newdata = head(Kmenta))
-expect_predictions(pred1, n_row = nrow(Kmenta))
-expect_predictions(pred2, n_row = 6)
+expect_predictions(mod, n_row = nrow(Kmenta))
+expect_predictions(mod, newdata = head(Kmenta), n_row = 6)

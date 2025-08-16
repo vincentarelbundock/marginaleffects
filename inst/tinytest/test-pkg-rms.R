@@ -6,11 +6,16 @@ requiet("rms")
 requiet("emmeans")
 requiet("broom")
 
+# Basic expectation tests
+mod_simple <- rms::lrm(am ~ mpg + wt, data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # lmr: marginaleffects vs emtrends
 model <- rms::lrm(am ~ mpg, mtcars)
-void <- capture.output({
-    expect_slopes(model, type = "lp", n_unique = 1)
-})
+expect_slopes(model, type = "lp", n_unique = 1)
 mfx <- slopes(model, newdata = data.frame(mpg = 30), type = "lp", eps = 1 / 1000 * diff(range(mtcars$mpg)))
 em <- emtrends(model, ~mpg, "mpg", at = list(mpg = 30))
 em <- tidy(em)
@@ -22,8 +27,8 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .0001)
 model <- rms::lrm(am ~ mpg, mtcars)
 pred1 <- predictions(model, type = "lp")
 pred2 <- predictions(model, type = "lp", newdata = head(mtcars))
-expect_predictions(pred1, n_row = 32)
-expect_predictions(pred2, n_row = 6)
+expect_predictions(model, n_row = 32)
+expect_predictions(model, n_row = 6)
 
 
 # comparisons

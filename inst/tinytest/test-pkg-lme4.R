@@ -9,6 +9,12 @@ requiet("insight")
 requiet("emmeans")
 requiet("broom")
 
+# Basic expectation tests
+mod_simple <- lme4::lmer(mpg ~ wt + am + (1|cyl), data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 # satterthwaite (no validity)
 # skip_if_not_installed("insight", minimum_version = "0.17.1")
@@ -177,8 +183,8 @@ tmp <- tmp
 model <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 pred1 <- predictions(model, newdata = datagrid(), re.form = NA)
 pred2 <- predictions(model, newdata = head(tmp), re.form = NA)
-expect_predictions(pred1, n_row = 1)
-expect_predictions(pred2, n_row = 6)
+expect_predictions(model, newdata = datagrid(), re.form = NA, n_row = 1)
+expect_predictions(model, newdata = head(tmp), re.form = NA, n_row = 6)
 
 
 # glmer.nb: marginaleffects vs. emtrends

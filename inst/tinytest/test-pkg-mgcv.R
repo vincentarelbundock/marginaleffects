@@ -10,6 +10,12 @@ requiet("broom")
 requiet("tibble")
 requiet("tsModel")
 
+# Basic expectation tests
+mod_simple <- mgcv::gam(mpg ~ s(wt), data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
 
 # marginaleffects vs. emtrends
 set.seed(2)
@@ -66,8 +72,8 @@ dat <<- dat
 mod <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
 pred1 <- predictions(mod)
 pred2 <- predictions(mod, newdata = head(dat))
-expect_predictions(pred1, n_row = nrow(dat))
-expect_predictions(pred2, n_row = 6)
+expect_predictions(mod, n_row = nrow(dat))
+expect_predictions(mod, newdata = head(dat), n_row = 6)
 
 # Issue #364: predictions confidence intervals for binomial models
 void <- capture.output(

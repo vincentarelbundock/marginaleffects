@@ -1,5 +1,38 @@
 source("helpers.R")
+using("marginaleffects")
 requiet("phylolm")
+
+set.seed(123456)
+tre = rcoal(60)
+taxa = sort(tre$tip.label)
+b0 = 0
+b1 = 1
+x <- rTrait(
+    n = 1,
+    phy = tre,
+    model = "BM",
+    parameters = list(ancestral.state = 0, sigma2 = 10)
+)
+y <- b0 +
+    b1 * x +
+    rTrait(
+        n = 1,
+        phy = tre,
+        model = "lambda",
+        parameters = list(
+            ancestral.state = 0,
+            sigma2 = 1,
+            lambda = 0.5
+        )
+    )
+dat <<- data.frame(trait = y[taxa], pred = x[taxa])
+fit <- phylolm(trait ~ pred, data = dat, phy = tre, model = "lambda")
+
+# Basic expectation tests (simplified for phylolm)
+expect_slopes(fit)
+expect_predictions(fit)
+expect_hypotheses(fit)
+expect_comparisons(fit)
 
 set.seed(123456)
 tre = rcoal(60)

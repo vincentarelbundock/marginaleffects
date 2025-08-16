@@ -19,3 +19,15 @@ get_predict.Learner <- function(model, newdata, type = NULL, ...) {
 get_vcov.Learner <- function(model, ...) {
     return(FALSE)
 }
+
+
+#' @include sanity_model.R
+#' @rdname sanitize_model_specific
+#' @export
+sanitize_model_specific.Learner <- function(model, calling_function, ...) {
+    if (calling_function == "hypotheses") {
+        msg <- "`marginaleffects` does not support hypothesis tests for models of this class."
+        stop_sprintf(msg)
+    }
+    return(model)
+}

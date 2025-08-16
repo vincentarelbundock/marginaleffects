@@ -5,6 +5,16 @@ requiet("glmx")
 requiet("MASS")
 requiet("margins")
 
+# Basic expectation tests
+tmp <- data.frame(x = runif(200, -1, 1))
+tmp$y <- rnbinom(200, mu = exp(0 + 3 * tmp$x), size = 1)
+d <- tmp
+mod_simple <- glmx(y ~ x, data = d, family = negative.binomial, xlink = "log", xstart = 0)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # glmx: marginaleffects vs. margins
 tmp <- data.frame(x = runif(200, -1, 1))
 tmp$y <- rnbinom(200, mu = exp(0 + 3 * tmp$x), size = 1)
@@ -18,7 +28,7 @@ expect_true(expect_margins(mfx, mar, se = FALSE, tolerance = .001))
 
 
 # predictions: glmx: no validity check
-#skip_if_not_installed("insight", minimum_version = "0.17.1")
+# skip_if_not_installed("insight", minimum_version = "0.17.1")
 tmp <- data.frame(x = runif(200, -1, 1))
 tmp$y <- rnbinom(200, mu = exp(0 + 3 * tmp$x), size = 1)
 d <- tmp
@@ -26,5 +36,5 @@ dhead <- head(d)
 model <- glmx(y ~ x, data = d, family = negative.binomial, xlink = "log", xstart = 0)
 pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = dhead)
-expect_predictions(pred1, n_row = dhead)
-expect_predictions(pred2, n_row = 6)
+expect_predictions(model, n_row = nrow(d))
+expect_predictions(model, newdata = dhead, n_row = 6)

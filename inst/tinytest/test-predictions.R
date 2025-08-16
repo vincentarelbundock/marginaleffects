@@ -24,7 +24,7 @@ expect_equal(nrow(p), 6)
 # bugfix: counterfactual predictions keep rowid
 mod <- lm(mpg ~ hp + am, mtcars)
 pred <- predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
-expect_predictions(pred, n_row = 64)
+expect_predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual"), n_row = 64)
 expect_true("rowidcf" %in% colnames(pred))
 
 

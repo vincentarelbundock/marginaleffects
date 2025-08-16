@@ -5,7 +5,7 @@ source("helpers.R")
 using("marginaleffects")
 
 options("marginaleffects_posterior_interval" = "hdi")
-suppressPackageStartupMessages(requiet("rstanarm"))
+requiet("rstanarm")
 requiet("emmeans")
 requiet("margins")
 requiet("broom")
@@ -15,7 +15,9 @@ void <- capture.output(
     mod <- stan_glm(am ~ hp + mpg * vs, data = mtcars, family = binomial(link = "logit"))
 )
 expect_slopes(mod, se = FALSE)
-expect_predictions(predictions(mod), se = FALSE)
+expect_predictions(mod, se = FALSE)
+expect_comparisons(mod, se = FALSE)
+# expect_hypotheses(mod, se = FALSE)
 
 # no interactions
 void <- capture.output(

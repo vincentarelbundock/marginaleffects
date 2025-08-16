@@ -6,13 +6,20 @@ requiet("emmeans")
 requiet("broom")
 requiet("margins")
 
+# Basic expectation tests
+mod_simple <- lmerTest::lmer(mpg ~ wt + am + (1|cyl), data = mtcars)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # vs. emmeans vs. margins
 dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = dat)
 
 # no validity
 expect_slopes(mod)
-expect_predictions(predictions(mod))
+expect_predictions(mod)
 
 # emmeans
 em <- suppressMessages(emmeans::emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0)))

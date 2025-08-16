@@ -3,6 +3,13 @@ using("marginaleffects")
 requiet("speedglm")
 requiet("margins")
 
+# Basic expectation tests
+mod_simple <- speedglm::speedglm(am ~ mpg + wt, data = mtcars, family = binomial())
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 # glm vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_glm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_glm_01.csv"))

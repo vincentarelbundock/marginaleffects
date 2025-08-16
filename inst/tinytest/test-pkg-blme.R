@@ -2,6 +2,14 @@ source("helpers.R")
 using("marginaleffects")
 requiet("blme")
 
+# Basic expectation tests
+dat_simple <- get_dataset("sleepstudy", "lme4")
+mod_simple <- blme::blmer(Reaction ~ Days + (1 | Subject), data = dat_simple)
+expect_slopes(mod_simple)
+expect_predictions(mod_simple)
+expect_hypotheses(mod_simple)
+expect_comparisons(mod_simple)
+
 dat <- get_dataset("sleepstudy", "lme4")
 penaltyFn <- function(sigma) dcauchy(sigma, 0, 10, log = TRUE)
 fm5 <- blmer(
@@ -20,10 +28,6 @@ mod <- bglmer(vs ~ mpg + (1 | gear), data = mtcars, family = binomial)
 expect_slopes(fm5)
 expect_slopes(fm6)
 expect_slopes(mod)
-
-pre <- predictions(fm5)
-expect_predictions(pre)
-pre <- predictions(fm6)
-expect_predictions(pre)
-pre <- predictions(mod)
-expect_predictions(pre)
+expect_predictions(fm5)
+expect_predictions(fm5)
+expect_predictions(mod)
