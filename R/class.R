@@ -81,7 +81,6 @@ setClass(
 #'
 #' @param model The fitted model object (required)
 #' @param call The original function call (required)
-#' @param newdata The new data frame for predictions
 #' @param vcov_model The variance-covariance matrix
 #' @param df The degrees of freedom
 #' @param wts The weights specification

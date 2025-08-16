@@ -8,6 +8,7 @@ generics::prune
 #' Remove large attributes from marginaleffects objects to reduce memory usage.
 #' Warning: This will disable many useful post-processing features of `marginaleffects`
 #' @param tree A marginaleffects object (predictions, comparisons, slopes, or hypotheses)
+#' @param component A character string indicating which component to prune: "all" or "modeldata".
 #' @param ... Unused
 #' @return A pruned marginaleffects object
 #' @details ...
