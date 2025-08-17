@@ -613,6 +613,10 @@ detect_variable_class <- function(modeldata, model = NULL) {
         cl[f] <- "cluster"
     }
 
+    # random effects groups
+    re <- hush(insight::find_random(model, flatten = TRUE))
+    cl[names(cl) %in% re] <- "cluster"
+
     return(cl)
 }
 

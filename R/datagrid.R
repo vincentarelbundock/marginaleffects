@@ -148,7 +148,11 @@ datagrid <- function(
 
     variable_class <- detect_variable_class(newdata, model = model)
 
-    idx <- newdata[, by, drop = FALSE]
+    if (is.null(by)) {
+        idx <- data.frame()
+    } else {
+        idx <- newdata[, by, drop = FALSE]
+    }
     if (ncol(idx) == 0) {
         newdata_split <- list(newdata)
     } else {
@@ -196,7 +200,8 @@ datagrid <- function(
             data.table::setDF(explicit)
             implicit <- implicit[, setdiff(names(implicit), names(explicit)),
                 drop = FALSE]
-            merge(explicit, implicit, all = NULL)
+            implicit <- cbind(data.frame(rowidcf = seq_len(nrow(implicit))), implicit)
+            merge(implicit, explicit, all = NULL, sort = FALSE)
         })
     } else {
         stop_sprintf("Unknown grid_type '%s'.", grid_type)
@@ -205,6 +210,11 @@ datagrid <- function(
     out <- data.table::rbindlist(out_split)
 
     out <- data.frame(out, check.names = FALSE)
+
+    if (!"rowid" %in% colnames(out) && nrow(out) > 0) {
+        out <- cbind(data.frame(rowid = seq_len(nrow(out))), out)
+    }
+
     return(out)
 }
 
@@ -279,33 +289,70 @@ datagrid_newdata_to_list <- function(
     explicit <- list(...)
     for (e in names(explicit)) {
         if (is.function(explicit[[e]])) {
+            if (!e %in% colnames(newdata)) {
+                warn_sprintf("The variable '%s' is not in the newdata.", e)
+            }
             explicit_values[[e]] <- explicit[[e]](newdata[[e]])
-        } else {
+        } else if (isTRUE(checkmate::check_atomic_vector(explicit[[e]]))) {
             explicit_values[[e]] <- unique(explicit[[e]])
+        } else {
+            stop_sprintf("The value for '%s' must be a vector or a function.", e)
         }
     }
 
     implicit_values <- list()
     implicit <- setdiff(colnames(newdata), names(explicit))
-    implicit <- setdiff(implicit, hush(insight::find_response(model, flatten = TRUE)))
+    # some packages require the response variable to be included in the grid for predict()
+    # implicit <- setdiff(implicit, hush(insight::find_response(model, flatten = TRUE)))
     for (i in implicit) {
-        if (variable_class[[i]] == "binary") {
+        if (check_variable_class(variable_class, i, "binary")) {
             implicit_values[[i]] <- .FUN_binary(newdata[[i]])
-        } else if (variable_class[[i]] == "character") {
+        } else if (check_variable_class(variable_class, i, "character")) {
             implicit_values[[i]] <- .FUN_character(newdata[[i]])
-        } else if (variable_class[[i]] == "factor") {
-            implicit_values[[i]] <- .FUN_factor(newdata[[i]])
-        } else if (variable_class[[i]] == "logical") {
+        } else if (check_variable_class(variable_class, i, "logical")) {
             implicit_values[[i]] <- .FUN_logical(newdata[[i]])
-        } else if (variable_class[[i]] == "numeric") {
+        } else if (check_variable_class(variable_class, i, "categorical")) {
+            implicit_values[[i]] <- .FUN_factor(newdata[[i]])
+        } else if (check_variable_class(variable_class, i, "numeric")) {
             implicit_values[[i]] <- .FUN_numeric(newdata[[i]])
-        } else if (variable_class[[i]] == "integer") {
+        } else if (check_variable_class(variable_class, i, "integer")) {
             implicit_values[[i]] <- .FUN_integer(newdata[[i]])
         } else {
             implicit_values[[i]] <- .FUN_other(newdata[[i]])
         }
     }
 
+    # Process factors in explicit values
+    for (e in names(explicit_values)) {
+        explicit_values[[e]] <- sanitize_datagrid_factor(explicit_values[[e]], newdata[[e]], variable_class, e)
+    }
+
     out <- list(implicit = implicit_values, explicit = explicit_values)
     return(out)
+}
+
+
+sanitize_datagrid_factor <- function(values, newdata_col, variable_class, var_name) {
+    if (
+        is.factor(newdata_col) ||
+            isTRUE(check_variable_class(variable_class, var_name, "factor"))
+    ) {
+        if (is.factor(newdata_col)) {
+            levs <- levels(newdata_col)
+        } else {
+            levs <- as.character(sort(unique(newdata_col)))
+        }
+        values <- as.character(values)
+        if (!all(values %in% c(levs, NA))) {
+            msg <- sprintf(
+                'The "%s" element of the `at` list corresponds to a factor variable. The values entered in the `at` list must be one of the factor levels: %s.',
+                var_name,
+                toString(dQuote(levs, NULL))
+            )
+            stop(msg, call. = FALSE)
+        }
+        
+        values <- factor(values, levels = levs)
+    }
+    return(values)
 }

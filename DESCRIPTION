@@ -192,7 +192,6 @@ Suggests:
     workflows,
     yaml,
     xgboost,
-    testthat (>= 3.0.0),
     altdoc,
     knitr,
     quarto
@@ -336,7 +335,4 @@ Collate:
     'utils.R'
     'zzz.R'
 Language: en-US
-Config/testthat/edition: 3
-Config/testthat/parallel: true
-Config/testthat/start-first: inferences
 VignetteBuilder: knitr, quarto
