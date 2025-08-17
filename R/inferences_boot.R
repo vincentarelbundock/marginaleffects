@@ -18,6 +18,7 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
             call_mod[["data"]] <- d
             boot_mod <- eval.parent(call_mod)
             call_mfx <- mfx@call
+            call_mfx[["modeldata"]] <- mfx@modeldata
             call_mfx[["model"]] <- boot_mod
             boot_mfx <- eval.parent(call_mfx)
             return(boot_mfx$estimate)

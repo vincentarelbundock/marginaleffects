@@ -148,4 +148,3 @@ h3 <- hypotheses(mod, hypothesis = "hp/cyl=1") |>
     inferences(method = "simulation", R = 25)
 expect_true(all(h1$conf.low == h2$conf.low))
 expect_true(all(h2$conf.low != h3$conf.low))
-

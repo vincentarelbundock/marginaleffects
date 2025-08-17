@@ -239,11 +239,23 @@ comparisons <- function(
     if (inherits(model, "marginaleffects_internal")) {
         mfx <- model
     } else {
+        # pass through ... to avoid calling `get_modeldata()` in inferences()
+        if ("modeldata" %in% ...names()) {
+            modeldata <- ...get("modeldata")
+        } else {
+            modeldata <- NULL
+        }
         call <- construct_call(model, "comparisons")
-        model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
+        model <- sanitize_model(model, 
+            call = call, 
+            newdata = newdata, 
+            wts = wts, 
+            vcov = vcov, 
+            by = by, ...)
         mfx <- new_marginaleffects_internal(
             call = call,
             model = model,
+            modeldata = modeldata,
             by = by,
             comparison = comparison,
             cross = cross,

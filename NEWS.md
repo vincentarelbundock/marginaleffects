@@ -21,6 +21,7 @@ Misc:
 * Documentation improvements.
 * `get_dataset()` now delegates most of the work to the `Rdatasets` package (optional dependency).
 * Major internal refactoring to simplify the code base and make maintenance easier. We use fewer attributes and store internal information in a single S4 object stored as `attr(x, "marginaleffects")`.
+* More efficient `inferences()` by avoiding repeated calls to `get_modeldata()`
 
 Bugs:
 

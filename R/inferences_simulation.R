@@ -13,6 +13,8 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     model <- mfx@model
     call_mfx <- mfx@call
     call_mfx[["vcov"]] <- FALSE
+    # avoid calling get_modeldata() repeatedly via ...
+    call_mfx[["modeldata"]] <- mfx@modeldata
 
     B <- get_coef(model)
 
