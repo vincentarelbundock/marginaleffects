@@ -304,6 +304,12 @@ datagrid_newdata_to_list <- function(
 
     implicit_values <- list()
     implicit <- setdiff(colnames(newdata), names(explicit))
+
+    # balanced grid should not balance on response otherwise we multiple the rows
+    if (grid_type == "balanced") {
+        implicit <- setdiff(implicit, hush(insight::find_response(model, flatten = TRUE)))
+    }
+
     # some packages require the response variable to be included in the grid for predict()
     # implicit <- setdiff(implicit, hush(insight::find_response(model, flatten = TRUE)))
     for (i in implicit) {

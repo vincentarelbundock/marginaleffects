@@ -39,6 +39,7 @@ datagrid(
 \itemize{
 \item "mean_or_mode": Character, factor, logical, and binary variables are set to their modes. Numeric, integer, and other variables are set to their means.
 \item "balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use \code{grid_type="mean_or_mode"} and to specify the unique levels of a subset of named variables explicitly.
+\item "dataframe": Similar to "mean_or_mode" but creates a data frame by binding columns element-wise rather than taking the cross-product. All explicitly specified vectors must have the same length (or length 1), and the result has as many rows as the longest vector. This differs from other grid types which use \code{expand.grid()} or \code{data.table::CJ()} to create all combinations.
 \item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}. Variables not explicitly supplied to \code{datagrid()} are set to their observed values in the original dataset.
 }}
 
