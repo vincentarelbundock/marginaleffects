@@ -114,4 +114,14 @@ nrow(dg)
 mod <- lm(mpg ~ hp, mtcars)
 dg <- datagrid(model = mod, hp = c(100, 110), grid_type = "counterfactual")
 nrow(dg)
+
+# Use `by` to hold variables at group-specific values
+mod2 <- lm(mpg ~ hp + cyl, mtcars)
+datagrid(model = mod2, hp = mean, by = "cyl")
+
+# Use `FUN` to apply function to all variables
+datagrid(model = mod2, FUN = median)
+
+# Use `grid_type="dataframe"` for column-wise binding instead of cross-product
+datagrid(model = mod2, hp = c(100, 200), cyl = c(4, 6), grid_type = "dataframe")
 }
