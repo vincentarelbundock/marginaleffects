@@ -55,7 +55,9 @@ mm <- predictions(mod, type = "link", by = "batch", newdata = datagrid(grid_type
     dplyr::arrange(batch)
 
 # marginalmeans: vs. emmeans
-mm <- predictions(mod, type = "response", by = "batch", newdata = datagrid(grid_type = "balanced")) |>
+mm <- predictions(mod,
+    type = "response", by = "batch",
+    newdata = datagrid(grid_type = "balanced", FUN_integer = mean)) |>
     dplyr::arrange(batch)
 expect_inherits(mm, "predictions")
 expect_equal(nrow(mm), 10)

@@ -99,12 +99,16 @@ dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 mod <- lm(mpg ~ hp + cyl + am, data = dat)
-mm <- predictions(mod, by = "cyl", newdata = datagrid(grid_type = "balanced")) |>
+mm <- predictions(mod,
+    by = "cyl",
+    newdata = datagrid(grid_type = "balanced", FUN_integer = mean)) |>
     dplyr::arrange(cyl)
 em <- broom::tidy(emmeans::emmeans(mod, specs = "cyl"))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 1e-6)
-mm <- predictions(mod, by = "am", newdata = datagrid(grid_type = "balanced")) |>
+mm <- predictions(mod,
+    by = "am",
+    newdata = datagrid(grid_type = "balanced", FUN_integer = mean)) |>
     dplyr::arrange(am)
 em <- broom::tidy(emmeans::emmeans(mod, specs = "am"))
 expect_equivalent(mm$estimate, em$estimate)

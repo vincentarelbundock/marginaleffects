@@ -125,9 +125,9 @@ e2 <- plot_comparisons(mod, variables = "x", condition = "zcat", type = "lp", dr
 e3 <- hypotheses(
     mod,
     hypothesis = c(
-        "xNonmaintained + `xNonmaintained:zcat(0.5,10]` = 0",
+        "xNonmaintained = 0",
         "xNonmaintained + `xNonmaintained:zcat(-0.5,0.5]` = 0",
-        "xNonmaintained = 0"
+        "xNonmaintained + `xNonmaintained:zcat(0.5,10]` = 0"
     )
 )
 expect_equivalent(e0$estimate, e1$estimate)
