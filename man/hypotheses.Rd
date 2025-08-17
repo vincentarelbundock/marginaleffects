@@ -197,7 +197,7 @@ Thanks to Russell V. Lenth for the excellent \code{emmeans} package and document
 }
 
 \examples{
-library(marginaleffects)
+library("marginaleffects")
 mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
 
 hypotheses(mod)

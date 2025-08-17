@@ -98,7 +98,7 @@
 #' @template return
 #'
 #' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
-#' library(marginaleffects)
+#' library("marginaleffects")
 #'
 #' # Linear model
 #' tmp <- mtcars

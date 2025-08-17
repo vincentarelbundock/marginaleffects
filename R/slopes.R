@@ -155,6 +155,7 @@
 #' @template options
 #' @template return
 #' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
+#' library("marginaleffects")
 #' # Unit-level (conditional) Marginal Effects
 #' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 #' mfx <- slopes(mod)
