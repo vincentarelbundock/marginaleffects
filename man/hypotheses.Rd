@@ -107,7 +107,7 @@ hypotheses(
 \item When using \code{joint_test="f"}, the \code{df} argument should be a numeric vector of length 2.
 }}
 
-\item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
+\item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. For bayesian models, this report the proportion of posterior draws in the interval and the ROPE. See Details section below.}
 
 \item{joint}{Joint test of statistical significance. The null hypothesis value can be set using the \code{hypothesis} argument.
 \itemize{

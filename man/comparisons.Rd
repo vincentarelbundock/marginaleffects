@@ -240,7 +240,7 @@ first entry in the error message is used by default.}
 \item Warning: When calling \code{predictions()} with \code{type="invlink(link)"} (the default in some models), \code{hypothesis} is tested and p values are computed on the link scale.
 }}
 
-\item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
+\item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. For bayesian models, this report the proportion of posterior draws in the interval and the ROPE. See Details section below.}
 
 \item{df}{Degrees of freedom used to compute p values and confidence intervals.
 \itemize{
@@ -289,6 +289,8 @@ Columns may include:
 \item \code{conf.high}: upper bound of the confidence (or credible) interval defined by the \code{conf_level} argument.
 \item \code{predicted_lo}: predicted outcome for the "low" value of the focal predictor in a counterfactual comparison.
 \item \code{predicted_hi}: predicted outcome for the "high" value of the focal predictor in a counterfactual comparison.
+\item \code{p.equivalence}: share of posterior draws in the interval specified by the \code{equivalence} argument. This is only available for Bayesian models.
+\item \code{rope}: share of the posterior draws between \code{conf.low} and \code{conf.high} that are covered by the interval specified by the \code{equivalence} argument.
 }
 
 See \code{?print.marginaleffects} for printing options.
