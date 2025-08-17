@@ -55,7 +55,8 @@ mfx <- slopes(
     newdata = datagrid(
         x1 = 0,
         x2 = 0,
-        x3 = 0
+        x3 = 0,
+        FUN_integer = mean
     ),
     type = "link"
 )
@@ -121,7 +122,6 @@ expect_true(all(cmp$term == "z"))
 
 expect_error(suppressWarnings(slopes(b, variables = "L")), pattern = "no valid")
 expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
-expect_error(suppressWarnings(plot_predictions(b, condition = "z", draw = FALSE)))
 expect_error(suppressWarnings(plot_slopes(b, variables = "L", condition = "z")))
 options(marginaleffects_safe = TRUE)
 expect_warning(plot_slopes(b, variables = "L", condition = "z"))

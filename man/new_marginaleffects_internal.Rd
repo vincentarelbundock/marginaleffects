@@ -20,6 +20,7 @@ new_marginaleffects_internal(
   hypothesis_null = NULL,
   hypothesis_direction = NULL,
   jacobian = NULL,
+  modeldata = NULL,
   numderiv = list("fdforward"),
   type = NULL,
   variables = list(),

@@ -127,16 +127,6 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
         newdata <- unpack_matrix_cols(newdata)
     }
 
-    # Add placeholder response variable if missing
-    resp <- mfx@variable_names_response
-    if (isTRUE(checkmate::check_character(resp, len = 1)) && !resp %in% colnames(newdata)) {
-        y <- modeldata[[resp]]
-        # protect df or matrix response
-        if (isTRUE(checkmate::check_atomic_vector(y))) {
-            newdata[[resp]] <- y[1]
-        }
-    }
-
     # Add rowid column for tracking
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- seq_len(nrow(newdata))
@@ -235,7 +225,7 @@ add_newdata <- function(
 
     # Store processed newdata in the mfx object
     mfx@newdata <- newdata
-    
+
     # Extract and store variable_names_datagrid attribute from newdata
     datagrid_vars <- attr(newdata, "variable_names_datagrid")
     if (!is.null(datagrid_vars)) {

@@ -11,6 +11,7 @@ datagrid(
   by = NULL,
   grid_type = "mean_or_mode",
   response = FALSE,
+  FUN = NULL,
   FUN_character = NULL,
   FUN_factor = NULL,
   FUN_logical = NULL,
@@ -38,10 +39,13 @@ datagrid(
 \itemize{
 \item "mean_or_mode": Character, factor, logical, and binary variables are set to their modes. Numeric, integer, and other variables are set to their means.
 \item "balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use \code{grid_type="mean_or_mode"} and to specify the unique levels of a subset of named variables explicitly.
+\item "dataframe": Similar to "mean_or_mode" but creates a data frame by binding columns element-wise rather than taking the cross-product. All explicitly specified vectors must have the same length (or length 1), and the result has as many rows as the longest vector. This differs from other grid types which use \code{expand.grid()} or \code{data.table::CJ()} to create all combinations.
 \item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}. Variables not explicitly supplied to \code{datagrid()} are set to their observed values in the original dataset.
 }}
 
 \item{response}{Logical should the response variable be included in the grid, even if it is not specified explicitly.}
+
+\item{FUN}{a function to be applied to all variables in the grid. This is useful when you want to apply the same function to all variables, such as \code{mean} or \code{median}. If you specify \code{FUN}, it will override the \code{grid_type} defaults, but not other \verb{FUN_*} arguments below.}
 
 \item{FUN_character}{the function to be applied to character variables.}
 
@@ -93,7 +97,7 @@ datagrid(model = mod, hp = c(100, 110))
 
 # Use in `marginaleffects` to compute "Typical Marginal Effects". When used
 # in `slopes()` or `predictions()` we do not need to specify the
-#`model` or `newdata` arguments.
+# `model` or `newdata` arguments.
 slopes(mod, newdata = datagrid(hp = c(100, 110)))
 
 # datagrid accepts functions

@@ -26,7 +26,7 @@ dat <- mtcars
 mod <- glm(vs ~ hp + factor(cyl), family = binomial, data = dat)
 cmp1 <- comparisons(mod, newdata = "mean")
 cmp2 <- comparisons(mod, newdata = "median")
-expect_true(all(cmp1$hp == mean(dat$hp)))
+expect_true(all(cmp1$hp == round(mean(dat$hp))))
 expect_true(all(cmp2$hp == stats::median(dat$hp)))
 expect_true(all(cmp2$estimate != cmp1$estimate))
 

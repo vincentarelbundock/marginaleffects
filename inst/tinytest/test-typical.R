@@ -60,7 +60,7 @@ dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <- dat
 mod <- lm(hp ~ mpg, dat)
-expect_error(datagrid(), pattern = "are both .NULL")
+expect_error(datagrid(), pattern = "One of")
 
 mod <- lm(hp ~ factor(cyl), dat)
 expect_inherits(datagrid(model = mod, cyl = "4"), "data.frame")

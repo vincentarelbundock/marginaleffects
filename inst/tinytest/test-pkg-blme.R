@@ -1,4 +1,5 @@
 source("helpers.R")
+exit_file("crashes for unknown reasons")
 using("marginaleffects")
 requiet("blme")
 

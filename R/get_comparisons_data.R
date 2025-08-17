@@ -47,6 +47,8 @@ get_comparisons_data <- function(
             fun <- get_comparisons_data_factor
         } else if (check_variable_class(mfx, v$name, "numeric")) {
             fun <- get_comparisons_data_numeric
+        } else if (check_variable_class(mfx, v$name, "integer")) {
+            fun <- get_comparisons_data_numeric
         } else {
             msg <- sprintf(
                 "Class of the `%s` variable is class is not supported.",

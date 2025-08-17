@@ -103,7 +103,10 @@ expect_predictions(model, newdata = head(bioChemists), n_row = 6)
 data("bioChemists", package = "pscl")
 model <- zeroinfl(art ~ kid5 + phd + mar | ment, dist = "negbin", data = bioChemists)
 # response
-mm <- predictions(model, by = "mar", newdata = datagrid(grid_type = "balanced")) |> dplyr::arrange(mar)
+mm <- predictions(model,
+    by = "mar",
+    newdata = datagrid(grid_type = "balanced", FUN_integer = mean)) |>
+    sort_by(~mar)
 em <- tidy(emmeans(model, specs = "mar", df = Inf))
 expect_equivalent(mm$estimate, em$estimate, tol = 0.01)
 expect_equivalent(mm$std.error, em$std.error, tolerance = .01)

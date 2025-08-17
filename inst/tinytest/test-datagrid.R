@@ -6,7 +6,7 @@ requiet("fixest")
 
 
 # informative errors
-expect_error(datagrid(Petal.Length = 4.6), pattern = "inside")
+expect_error(datagrid(Petal.Length = 4.6), pattern = "must not be `NULL`")
 
 # numeric clusters no longer produce a warning; selects mode
 mod <- lme4::lmer(mpg ~ hp + (1 + drat | cyl), data = mtcars)
@@ -78,7 +78,7 @@ expect_equivalent(k$mpg, d$mpg)
 
 # Issue 766: categorical predictors + variables arg + avg
 requiet("Matchit")
-data('lalonde', package = 'MatchIt')
+data("lalonde", package = "MatchIt")
 fit <- lm(re78 ~ race * treat, data = lalonde)
 
 a = predict(fit, branewdata = lalonde)
@@ -114,7 +114,7 @@ expect_equivalent(a, b$estimate)
 
 # Issue #1058:  Missing attributes for marginaleffects::datagrid(..., by = ) #1058
 tmp <- mtcars
-tmp <- tmp[c('mpg', 'cyl', 'hp')]
+tmp <- tmp[c("mpg", "cyl", "hp")]
 tmp$cyl <- as.factor(tmp$cyl)
 tmp$hp <- as.factor(tmp$hp)
 at1 <- attributes(datagrid(newdata = tmp, by = "cyl", hp = unique))

@@ -103,6 +103,7 @@ new_marginaleffects_internal <- function(
     hypothesis_null = NULL,
     hypothesis_direction = NULL,
     jacobian = NULL,
+    modeldata = NULL,
     numderiv = list("fdforward"),
     type = NULL,
     variables = list(),
@@ -112,10 +113,12 @@ new_marginaleffects_internal <- function(
     vcov_type = NULL,
     wts = NULL) {
     # For mice objects, modeldata handling is deferred to process_imputation()
-    if (inherits(model, c("mira", "amest"))) {
-        modeldata <- data.frame() # placeholder - actual processing happens in process_imputation()
-    } else {
-        modeldata <- get_modeldata(model, additional_variables = TRUE)
+    if (is.null(modeldata)) {
+        if (inherits(model, c("mira", "amest"))) {
+            modeldata <- data.frame() # placeholder - actual processing happens in process_imputation()
+        } else {
+            modeldata <- get_modeldata(model, additional_variables = TRUE)
+        }
     }
 
     variable_class <- detect_variable_class(modeldata, model = model)

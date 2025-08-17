@@ -40,8 +40,9 @@ expect_equivalent(nrow(datagrid(wt = 2:3, model = mod)), 2)
 
 
 # warning on bad `at` entry
-expect_warning(datagrid(newdata = mtcars, at = list("blah" = 0:1), grid_type = "counterfactual"))
-expect_warning(datagrid(newdata = mtcars, at = list("blah" = 0:1)))
+expect_error(
+    datagrid(newdata = mtcars, at = list("blah" = 0:1), grid_type = "counterfactual"),
+    pattern = "vector or a function")
 
 
 # datagrid(): factor, logical, automatic variable
@@ -57,7 +58,7 @@ res <- datagrid(
     grid_type = "counterfactual"
 )
 expect_inherits(res, "data.frame")
-expect_equivalent(dim(res), c(128, 6))
+expect_equivalent(dim(res), c(128, 7))
 
 
 # datagrid(): factor, logical, numeric

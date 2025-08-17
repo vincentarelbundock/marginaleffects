@@ -1,3 +1,8 @@
+mean_i <- function(x) as.integer(round(mean(x, na.rm = TRUE)))
+mean_na <- function(x) mean(x, na.rm = TRUE)
+unique_s <- function(x) sort(unique(x))
+
+
 #' Data grids
 #'
 #' @description
@@ -11,6 +16,7 @@
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments can be used.)
 #' @param by character vector with grouping variables within which `FUN_*` functions are applied to create "sub-grids" with unspecified variables.
 #' @param response Logical should the response variable be included in the grid, even if it is not specified explicitly.
+#' @param FUN a function to be applied to all variables in the grid. This is useful when you want to apply the same function to all variables, such as `mean` or `median`. If you specify `FUN`, it will override the `grid_type` defaults, but not other `FUN_*` arguments below.
 #' @param FUN_character the function to be applied to character variables.
 #' @param FUN_factor the function to be applied to factor variables. This only applies if the variable in the original data is a factor. For variables converted to factor in a model-fitting formula, for example, `FUN_character` is used.
 #' @param FUN_logical the function to be applied to logical variables.
@@ -21,6 +27,7 @@
 #' @param grid_type character. Determines the functions to apply to each variable. The defaults can be overridden by defining individual variables explicitly in `...`, or by supplying a function to one of the `FUN_*` arguments.
 #'   * "mean_or_mode": Character, factor, logical, and binary variables are set to their modes. Numeric, integer, and other variables are set to their means.
 #'   * "balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use `grid_type="mean_or_mode"` and to specify the unique levels of a subset of named variables explicitly.
+#'   * "dataframe": Similar to "mean_or_mode" but creates a data frame by binding columns element-wise rather than taking the cross-product. All explicitly specified vectors must have the same length (or length 1), and the result has as many rows as the longest vector. This differs from other grid types which use `expand.grid()` or `data.table::CJ()` to create all combinations.
 #'   * "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in `...`. Variables not explicitly supplied to `datagrid()` are set to their observed values in the original dataset.
 #' @details
 #' If `datagrid` is used in a `predictions()`, `comparisons()`, or `slopes()` call as the
@@ -55,7 +62,7 @@
 #'
 #' # Use in `marginaleffects` to compute "Typical Marginal Effects". When used
 #' # in `slopes()` or `predictions()` we do not need to specify the
-#' #`model` or `newdata` arguments.
+#' # `model` or `newdata` arguments.
 #' slopes(mod, newdata = datagrid(hp = c(100, 110)))
 #'
 #' # datagrid accepts functions
@@ -79,24 +86,19 @@ datagrid <- function(
     by = NULL,
     grid_type = "mean_or_mode",
     response = FALSE,
+    FUN = NULL,
     FUN_character = NULL,
     FUN_factor = NULL,
     FUN_logical = NULL,
     FUN_numeric = NULL,
     FUN_integer = NULL,
     FUN_binary = NULL,
-    FUN_other = NULL
-) {
-    # backward compatibility: 20231220
-    if (identical(grid_type, "typical")) {
-        grid_type <- "mean_or_mode"
-    }
-
-    # sanity
+    FUN_other = NULL) {
     checkmate::assert_choice(
         grid_type,
-        choices = c("mean_or_mode", "balanced", "counterfactual")
+        choices = c("mean_or_mode", "balanced", "counterfactual", "dataframe")
     )
+    checkmate::assert_function(FUN, null.ok = TRUE)
     checkmate::assert_function(FUN_character, null.ok = TRUE)
     checkmate::assert_function(FUN_factor, null.ok = TRUE)
     checkmate::assert_function(FUN_logical, null.ok = TRUE)
@@ -108,437 +110,260 @@ datagrid <- function(
     checkmate::assert_data_frame(newdata, null.ok = TRUE)
     checkmate::assert_flag(response)
 
-    explicit <- c(...names(), by)
+    if (is.null(newdata) && is.null(model)) {
+        stop_sprintf("One of `newdata` and `model` must not be `NULL`.")
+    }
 
-    mean_i <- function(x) as.integer(round(mean(x, na.rm = TRUE)))
-    mean_na <- function(x) mean(x, na.rm = TRUE)
-    unique_s <- function(x) sort(unique(x))
-    if (grid_type == "mean_or_mode") {
-        if (is.null(FUN_character)) {
-            FUN_character <- get_mode
-        }
-        if (is.null(FUN_logical)) {
-            FUN_logical <- get_mode
-        }
-        if (is.null(FUN_factor)) {
-            FUN_factor <- get_mode
-        }
-        if (is.null(FUN_binary)) {
-            FUN_binary <- get_mode
-        }
-        if (is.null(FUN_numeric)) {
-            FUN_numeric <- mean_na
-        }
-        if (is.null(FUN_other)) {
-            FUN_other <- mean_na
-        }
-        if (is.null(FUN_integer)) FUN_integer <- mean_i
-    } else if (grid_type == "balanced") {
-        # decided not to sort strings because the levels are not explicit
-        # as in factors, and perhaps the order of rows is intentional.
-        # not a very strong argument either way, so we do not break backward compatibility
-        if (is.null(FUN_character)) {
-            FUN_character <- unique_s
-        }
-        if (is.null(FUN_logical)) {
-            FUN_logical <- unique_s
-        }
-        if (is.null(FUN_factor)) {
-            FUN_factor <- unique_s
-        }
-        if (is.null(FUN_binary)) {
-            FUN_binary <- unique_s
-        }
-        if (is.null(FUN_numeric)) {
-            FUN_numeric <- mean_na
-        }
-        if (is.null(FUN_other)) {
-            FUN_other <- mean_na
-        }
-        if (is.null(FUN_integer)) FUN_integer <- mean_i
-    } else if (grid_type == "counterfactual") {
-        if (!is.null(by)) {
-            stop_sprintf(
-                "The `by` argument is not supported for counterfactual grids."
-            )
-        }
-        args <- list(
+    # internal model settings are useful if available
+    if ("marginaleffects_internal" %in% ...names()) {
+        mfx <- ...get("marginaleffects_internal")
+    } else {
+        mfx <- new_marginaleffects_internal(
             model = model,
-            newdata = newdata
-        )
-        args <- c(list(...), args)
-        out <- do.call("datagridcf_internal", args)
-        return(out)
+            call = call("predictions"))
     }
 
-    if (!is.null(by)) {
-        if (is.null(newdata) && is.null(model)) {
-            stop_sprintf(
-                "One of `newdata` and `model` must not be `NULL`."
-            )
-        }
-        if (is.null(newdata)) {
-            newdata <- get_modeldata(model, additional_variables = by)
-        }
-        if (!all(by %in% colnames(newdata))) {
-            stop_sprintf(
-                "All elements of `by` must match column names in `newdata`."
-            )
-        }
-        data.table::setDT(newdata)
-        idx <- subset(newdata, select = by)
-        newdata_list <- split(newdata, idx, keep.by = TRUE)
-        for (i in seq_along(newdata_list)) {
-            args <- c(
-                list(...),
-                list(
-                    model = model,
-                    newdata = newdata_list[[i]],
-                    response = response,
-                    FUN_character = FUN_character,
-                    FUN_factor = FUN_factor,
-                    FUN_logical = FUN_logical,
-                    FUN_binary = FUN_binary,
-                    FUN_numeric = FUN_numeric,
-                    FUN_integer = FUN_integer,
-                    FUN_other = FUN_other,
-                    by = by
-                )
-            )
-            for (b in by) {
-                args[[b]] <- unique_s
-            }
-            newdata_list[[i]] <- do.call(datagrid_engine, args)
-        }
-
-        out <- data.table::rbindlist(newdata_list)
-        data.table::setDF(out)
-
-        attr(out, "variable_names_datagrid") <- explicit
-
-        return(out)
-    }
-
-    out <- datagrid_engine(
-        ...,
-        model = model,
-        newdata = newdata,
-        response = response,
-        FUN_character = FUN_character,
-        FUN_factor = FUN_factor,
-        FUN_logical = FUN_logical,
-        FUN_binary = FUN_binary,
-        FUN_numeric = FUN_numeric,
-        FUN_integer = FUN_integer,
-        FUN_other = FUN_other
-    )
-
-    if (!"rowid" %in% colnames(out)) {
-        out$rowid <- seq_len(nrow(out))
-    }
-
-    attr(out, "variable_names_datagrid") <- explicit
-    return(out)
-}
-
-
-datagrid_engine <- function(
-    ...,
-    model = NULL,
-    newdata = NULL,
-    response = response,
-    FUN_character = get_mode,
-    # need to be explicit for numeric variables transfered to factor in model formula
-    FUN_factor = get_mode,
-    FUN_logical = get_mode,
-    FUN_binary = get_mode,
-    FUN_numeric = function(x) mean(x, na.rm = TRUE),
-    FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
-    FUN_other = function(x) mean(x, na.rm = TRUE),
-    by = NULL
-) {
-    tmp <- prep_datagrid(..., model = model, newdata = newdata, by = by)
-
-    at <- tmp$at
-    dat <- tmp$newdata
-    variables_automatic <- tmp$automatic
-
-    # usually we don't want the response in the grid, but
-    # sometimes there are two responses and we need one of them:
-    # brms::brm(y | trials(n) ~ x + w + z)
-    if (!is.null(model) && isFALSE(response)) {
-        resp <- insight::find_response(model)
-        if (inherits(model, "brmsfit")) {
-            fl <- as.character(stats::formula(model))
-            matches <- regexpr("trials\\(.*?\\)", fl)
-            extracted <- regmatches(fl, matches)[1]
-            if (isFALSE(is.na(extracted[1]))) {
-                extracted <- gsub("trials\\((.*)\\)", "\\1", extracted)
-            } else {
-                extracted <- NULL
-            }
-            extracted <- unlist(extracted)
-            resp <- setdiff(resp, extracted)
-        }
-
-        variables_automatic <- setdiff(variables_automatic, resp)
-    }
-
-    if (length(variables_automatic) > 0) {
-        idx <- intersect(variables_automatic, colnames(dat))
-        dat_automatic <- dat[, ..idx, drop = FALSE]
-        dat_automatic <- stats::na.omit(dat_automatic)
-        out <- list()
-        # na.omit destroys attributes, and we need the "factor" attribute
-        # created by insight::get_data
-        for (n in names(dat_automatic)) {
-            if (
-                check_variable_class(dat, n, c("factor", "strata", "cluster")) ||
-                    n %in% tmp[["cluster"]]
-            ) {
-                if (is.factor(dat_automatic[[n]])) {
-                    out[[n]] <- FUN_factor(dat_automatic[[n]])
-                } else {
-                    out[[n]] <- FUN_character(dat_automatic[[n]])
-                }
-            } else if (check_variable_class(dat, n, "binary")) {
-                out[[n]] <- FUN_binary(dat_automatic[[n]])
-            } else if (check_variable_class(dat, n, "logical")) {
-                out[[n]] <- FUN_logical(dat_automatic[[n]])
-            } else if (check_variable_class(dat, n, "character")) {
-                out[[n]] <- FUN_character(dat_automatic[[n]])
-            } else if (check_variable_class(dat, n, "numeric")) {
-                if (is.integer(dat_automatic[[n]])) {
-                    out[[n]] <- FUN_integer(dat_automatic[[n]])
-                } else {
-                    out[[n]] <- FUN_numeric(dat_automatic[[n]])
-                }
-            } else {
-                out[[n]] <- FUN_other(dat_automatic[[n]])
-            }
-        }
-    } else {
-        out <- list()
-    }
-
-    if (!is.null(at)) {
-        for (n in names(at)) {
-            out[n] <- at[n]
-        }
-    }
-
-    # unique before counting
-    out <- lapply(out, unique)
-
-    # warn on very large prediction grid
-    num <- as.numeric(lengths(out)) # avoid integer overflow
-    num <- Reduce(f = "*", num)
-    if (isTRUE(num > 1e9)) {
-        stop(
-            "You are trying to create a prediction grid with more than 1 billion rows, which is likely to exceed the memory and computational power available on your local machine. Presumably this is because you are considering many variables with many levels. All of the functions in the `marginaleffects` package include arguments to specify a restricted list of variables over which to create a prediction grid.",
-            call. = FALSE
-        )
-    }
-
-    args <- c(out, list(sorted = FALSE))
-    out <- do.call(data.table::CJ, args)
-
-    # better to assume "standard" class as output
-    data.table::setDF(out)
-
-    return(out)
-}
-
-
-datagridcf_internal <- function(
-    ...,
-    model = NULL,
-    newdata = NULL
-) {
-    if (...length() == 0) {
-        stop_sprintf(
-            "Users must specify variable values when `grid_type='counterfactual'"
-        )
-    }
-
-    tmp <- prep_datagrid(..., model = model, newdata = newdata)
-    at <- tmp$at
-    dat <- tmp$newdata
-    variables_automatic <- c(
-        tmp$automatic,
-        "marginaleffects_wts_internal",
-        "rowid_dedup"
-    )
-
-    # `at` -> `data.frame`
-    at <- lapply(at, unique)
-
-    args <- c(at, list(sorted = FALSE))
-    at <- do.call(data.table::CJ, args)
-
-    rowid <- data.frame(rowidcf = seq_len(nrow(dat)))
-    if (length(variables_automatic) > 0) {
-        idx <- intersect(variables_automatic, colnames(dat))
-        dat_automatic <- dat[, ..idx, drop = FALSE]
-        dat_automatic$rowidcf <- rowid$rowidcf
-        setcolorder(
-            dat_automatic,
-            c("rowidcf", setdiff(names(dat_automatic), "rowidcf"))
-        )
-        # cross-join 2 data.tables, faster than merging two dataframes
-        out <- cjdt(list(dat_automatic, at))
-    } else {
-        out <- merge(rowid, at, all = TRUE)
-    }
-
-    data.table::setDF(out)
-
-    attr(out, "variables_datagrid") <- names(out)
-
-    return(out)
-}
-
-
-prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
-    checkmate::assert_data_frame(newdata, null.ok = TRUE)
-
-    at <- list(...)
-
-    # e.g., mlogit vignette we plot by group, but group is of length 0 because
-    # we don't know how many groups there are until we make the first
-    # prediction.
-    for (i in seq_along(at)) {
-        if (length(at[[i]]) == 0) {
-            at[[i]] <- NULL
-        }
-    }
-
-    if (is.null(model) & is.null(newdata)) {
-        msg <- "The `model` and `newdata` arguments are both `NULL`. When calling `datagrid()` *inside* the `slopes()` or `comparisons()` functions, the `model` and `newdata` arguments can both be omitted. However, when calling `datagrid()` on its own, users must specify either the `model` or the `newdata` argument (but not both)."
-        stop_sprintf(msg)
-    }
-
-    # newdata before model: if user supplies newdata explicitly, they might want
-    # all columns for something like `hypothesis = function()`
-    if (!is.null(newdata)) {
-        variables_list <- NULL
-        variables_all <- colnames(newdata)
-    } else if (!is.null(model)) {
-        variables_list <- insight::find_variables(model, verbose = FALSE)
-        variables_all <- unlist(variables_list, recursive = TRUE)
-        # weights are not extracted by default
-        variables_all <- c(variables_all, insight::find_weights(model))
-    }
-
-    variables_manual <- names(at)
-    variables_automatic <- setdiff(variables_all, variables_manual)
-
-    # fill in missing data after sanity checks
+    # priority: newdata. fallback: modeldata
     if (is.null(newdata)) {
-        newdata <- get_modeldata(model, additional_variables = FALSE)
+        newdata <- mfx@modeldata
     }
 
-    attr_variable_classes <- detect_variable_class(newdata, model = model)
+    # sanity checks
+    if (!is.null(by)) {
+        checkmate::assert_true(all(by %in% colnames(newdata)))
+    }
 
-    # subset columns, otherwise it can be ultra expensive to compute summaries for every variable. But do the expensive thing anyway if `newdata` is supplied explicitly by the user, or in counterfactual grids.
-    if (!is.null(model) && is.null(newdata)) {
-        variables_sub <- c(
-            hush(insight::find_variables(
-                model,
-                flatten = TRUE,
-                verbose = FALSE
-            )),
-            hush(unlist(insight::find_weights(model), use.names = FALSE))
-        ) # glmmTMB needs weights column for predictions
-        variables_sub <- c(variables_sub, variables_manual)
-        variables_sub <- c(
-            variables_sub,
-            c("marginaleffects_wts_internal", "rowid_dedup")
-        )
-        variables_sub <- intersect(colnames(newdata), variables_sub)
-        if (length(variables_sub) > 0) {
-            newdata <- subset(newdata, select = variables_sub)
+    # prune data, otherwise it can be very expensive to summarize all columns
+    # hack because prune works on final marginaleffects objects
+    if (!is.null(mfx@model)) {
+        variable_names <- c(
+            hush(insight::find_variables(mfx@model, flatten = TRUE)),
+            hush(insight::find_weights(mfx@model, flatten = TRUE)),
+            by)
+        variable_names <- intersect(sort(unique(variable_names)), colnames(newdata))
+        if (length(variable_names) > 0) {
+            newdata <- subset(newdata, select = variable_names)
         }
-    }
-
-    # check `at` names
-    variables_missing <- setdiff(names(at), c(variables_all, "group", by))
-    if (length(variables_missing) > 0) {
-        warning(
-            sprintf(
-                "Some of the variable names are missing from the model data: %s",
-                toString(variables_missing)
-            ),
-            call. = FALSE
-        )
-    }
-
-    idx <- vapply(newdata, is.matrix, logical(1L))
-    if (any(idx)) {
-        if (any(names(newdata)[idx] %in% variables_all)) {
-            warn_sprintf(
-                "Matrix columns are not supported as predictors and are therefore omitted. This may prevent computation of the quantities of interest. You can construct your own prediction dataset and supply it explicitly to the `newdata` argument. This issue can happen when using functions like `scale()`, which returns matrices rather than vectors. Convert your column to a vector before fitting you model."
-            )
-        }
-        newdata <- newdata[, !idx, drop = FALSE]
-    }
-
-    # restore attributes after subsetting
-    attr(newdata, "marginaleffects_variable_class") <- attr_variable_classes
-    # check `at` elements and convert them to factor as needed
-    for (n in names(at)) {
-        # functions first otherwise we try to coerce functions to character
-        if (is.function(at[[n]])) {
-            modeldata <- attr(newdata, "newdata_modeldata")
-            if (!is.null(modeldata) && n %in% colnames(modeldata)) {
-                at[[n]] <- at[[n]](modeldata[[n]])
-            } else {
-                at[[n]] <- at[[n]](newdata[[n]])
-            }
-        }
-
-        # not an "else" situation because we want to process the output of functions too
-        if (
-            is.factor(newdata[[n]]) ||
-                isTRUE(check_variable_class(attr_variable_classes, n, "factor"))
-        ) {
-            if (is.factor(newdata[[n]])) {
-                levs <- levels(newdata[[n]])
-            } else {
-                levs <- as.character(sort(unique(newdata[[n]])))
-            }
-            at[[n]] <- as.character(at[[n]])
-            if (!all(at[[n]] %in% c(levs, NA))) {
-                msg <- sprintf(
-                    'The "%s" element of the `at` list corresponds to a factor variable. The values entered in the `at` list must be one of the factor levels: %s.',
-                    n,
-                    toString(dQuote(levels(newdata[[n]]), NULL))
-                )
-                stop(msg, call. = FALSE)
-            }
-
-            at[[n]] <- factor(at[[n]], levels = levs)
-        }
-    }
-
-    # cluster identifiers will eventually be treated as factors
-    if (!is.null(model)) {
-        v <- insight::find_variables(model, verbose = FALSE)
-        v <- unlist(v[names(v) %in% c("cluster", "strata")], recursive = TRUE)
-        variables_cluster <- c(v, insight::find_random(model, flatten = TRUE))
     } else {
-        variables_cluster <- NULL
+        variable_names <- colnames(newdata)
     }
 
-    data.table::setDT(newdata)
+    variable_class <- detect_variable_class(newdata, model = model)
 
-    out <- list(
-        "newdata" = newdata,
-        "at" = at,
-        "all" = variables_all,
-        "manual" = variables_manual,
-        "automatic" = variables_automatic,
-        "cluster" = variables_cluster
-    )
+    if (is.null(by)) {
+        idx <- data.frame()
+    } else {
+        idx <- newdata[, by, drop = FALSE]
+    }
+    if (ncol(idx) == 0) {
+        newdata_split <- list(newdata)
+    } else {
+        newdata_split <- split(newdata, idx, drop = TRUE)
+    }
+
+    values_split <- lapply(newdata_split, function(x) {
+        datagrid_newdata_to_list(
+            ...,
+            newdata = x,
+            model = model,
+            variable_class = variable_class,
+            grid_type = grid_type,
+            FUN = FUN,
+            FUN_character = FUN_character,
+            FUN_factor = FUN_factor,
+            FUN_logical = FUN_logical,
+            FUN_numeric = FUN_numeric,
+            FUN_integer = FUN_integer,
+            FUN_binary = FUN_binary,
+            FUN_other = FUN_other
+        )
+    })
+
+    if (grid_type %in% c("balanced", "mean_or_mode")) {
+        out_split <- lapply(seq_along(values_split), function(i) {
+            x <- c(values_split[[i]][[1]], values_split[[i]][[2]], use.names = TRUE)
+            len <- setdiff(unique(sapply(x, length)), 1)
+            do.call(data.table::CJ, x)
+        })
+    } else if (grid_type == "dataframe") {
+        out_split <- lapply(seq_along(values_split), function(i) {
+            x <- c(values_split[[i]][[1]], values_split[[i]][[2]], use.names = TRUE)
+            len <- setdiff(unique(sapply(x, length)), 1)
+            if (length(len) > 1) {
+                stop_sprintf('With `grid_type="dataframe"`, the length of each vector must be 1 or be the same for every variable.')
+            }
+            as.data.frame(x, check.names = FALSE)
+        })
+    } else if (grid_type == "counterfactual") {
+        out_split <- lapply(seq_along(values_split), function(i) {
+            explicit <- do.call(data.table::CJ, values_split[[i]]$explicit)
+            implicit <- newdata_split[[i]]
+            data.table::setDF(implicit)
+            data.table::setDF(explicit)
+            implicit <- implicit[, setdiff(names(implicit), names(explicit)),
+                drop = FALSE]
+            implicit <- cbind(data.frame(rowidcf = seq_len(nrow(implicit))), implicit)
+            merge(implicit, explicit, all = NULL, sort = FALSE)
+        })
+    } else {
+        stop_sprintf("Unknown grid_type '%s'.", grid_type)
+    }
+
+    out <- data.table::rbindlist(out_split)
+
+    out <- data.frame(out, check.names = FALSE)
+
+    if (!"rowid" %in% colnames(out) && nrow(out) > 0) {
+        out <- cbind(data.frame(rowid = seq_len(nrow(out))), out)
+    }
+
+    attr(out, "variable_names_datagrid") <- names(list(...))
+
+
     return(out)
+}
+
+
+datagrid_newdata_to_list <- function(
+    ...,
+    newdata,
+    model,
+    variable_class,
+    grid_type,
+    FUN = NULL,
+    FUN_character = NULL,
+    FUN_factor = NULL,
+    FUN_logical = NULL,
+    FUN_numeric = NULL,
+    FUN_integer = NULL,
+    FUN_binary = NULL,
+    FUN_other = NULL) {
+    FUN_balanced <- list(
+        ".FUN_character" = unique_s,
+        ".FUN_factor" = unique_s,
+        ".FUN_logical" = unique_s,
+        ".FUN_binary" = unique_s,
+        ".FUN_numeric" = mean_na,
+        ".FUN_integer" = mean_i,
+        ".FUN_other" = mean_na
+    )
+
+    FUN_mean_or_mode <- list(
+        ".FUN_character" = get_mode,
+        ".FUN_factor" = get_mode,
+        ".FUN_logical" = get_mode,
+        ".FUN_binary" = get_mode,
+        ".FUN_numeric" = mean_na,
+        ".FUN_integer" = mean_i,
+        ".FUN_other" = mean_na
+    )
+
+    FUN_countefactual <- stats::setNames(
+        rep(list(identity), length(FUN_balanced)),
+        names(FUN_balanced)
+    )
+
+    if (grid_type == "balanced") {
+        FUN_list <- FUN_balanced
+    } else if (grid_type == "mean_or_mode") {
+        FUN_list <- FUN_mean_or_mode
+    } else if (grid_type == "dataframe") {
+        FUN_list <- FUN_mean_or_mode
+    } else if (grid_type == "counterfactual") {
+        FUN_list <- FUN_countefactual
+    }
+
+    # FUN overrides defaults from grid_type but not manual specifications
+    # order matters
+    if (!is.null(FUN)) {
+        FUN_list <- stats::setNames(rep(list(FUN), length(FUN_list)), names(FUN_list))
+    }
+
+    list2env(FUN_list, envir = environment())
+    if (!is.null(FUN_character)) .FUN_character <- FUN_character
+    if (!is.null(FUN_factor)) .FUN_factor <- FUN_factor
+    if (!is.null(FUN_logical)) .FUN_logical <- FUN_logical
+    if (!is.null(FUN_numeric)) .FUN_numeric <- FUN_numeric
+    if (!is.null(FUN_integer)) .FUN_integer <- FUN_integer
+    if (!is.null(FUN_binary)) .FUN_binary <- FUN_binary
+    if (!is.null(FUN_other)) .FUN_other <- FUN_other
+
+    values <- list()
+
+    explicit_values <- list()
+    explicit <- list(...)
+    for (e in names(explicit)) {
+        if (is.function(explicit[[e]])) {
+            if (!e %in% colnames(newdata)) {
+                warn_sprintf("The variable '%s' is not in the newdata.", e)
+            }
+            explicit_values[[e]] <- explicit[[e]](newdata[[e]])
+        } else if (isTRUE(checkmate::check_atomic_vector(explicit[[e]]))) {
+            explicit_values[[e]] <- unique(explicit[[e]])
+        } else {
+            stop_sprintf("The value for '%s' must be a vector or a function.", e)
+        }
+    }
+
+    implicit_values <- list()
+    implicit <- setdiff(colnames(newdata), names(explicit))
+
+    # balanced grid should not balance on response otherwise we multiple the rows
+    if (grid_type == "balanced") {
+        implicit <- setdiff(implicit, hush(insight::find_response(model, flatten = TRUE)))
+    }
+
+    # some packages require the response variable to be included in the grid for predict()
+    # implicit <- setdiff(implicit, hush(insight::find_response(model, flatten = TRUE)))
+    for (i in implicit) {
+        if (check_variable_class(variable_class, i, "binary")) {
+            implicit_values[[i]] <- .FUN_binary(newdata[[i]])
+        } else if (check_variable_class(variable_class, i, "character")) {
+            implicit_values[[i]] <- .FUN_character(newdata[[i]])
+        } else if (check_variable_class(variable_class, i, "logical")) {
+            implicit_values[[i]] <- .FUN_logical(newdata[[i]])
+        } else if (check_variable_class(variable_class, i, "categorical")) {
+            implicit_values[[i]] <- .FUN_factor(newdata[[i]])
+        } else if (check_variable_class(variable_class, i, "numeric")) {
+            implicit_values[[i]] <- .FUN_numeric(newdata[[i]])
+        } else if (check_variable_class(variable_class, i, "integer")) {
+            implicit_values[[i]] <- .FUN_integer(newdata[[i]])
+        } else {
+            implicit_values[[i]] <- .FUN_other(newdata[[i]])
+        }
+    }
+
+    # Process factors in explicit values
+    for (e in names(explicit_values)) {
+        explicit_values[[e]] <- sanitize_datagrid_factor(explicit_values[[e]], newdata[[e]], variable_class, e)
+    }
+
+    out <- list(implicit = implicit_values, explicit = explicit_values)
+    return(out)
+}
+
+
+sanitize_datagrid_factor <- function(values, newdata_col, variable_class, var_name) {
+    if (
+        is.factor(newdata_col) ||
+            isTRUE(check_variable_class(variable_class, var_name, "factor"))
+    ) {
+        if (is.factor(newdata_col)) {
+            levs <- levels(newdata_col)
+        } else {
+            levs <- as.character(sort(unique(newdata_col)))
+        }
+        values <- as.character(values)
+        if (!all(values %in% c(levs, NA))) {
+            msg <- sprintf(
+                'The "%s" element of the `at` list corresponds to a factor variable. The values entered in the `at` list must be one of the factor levels: %s.',
+                var_name,
+                toString(dQuote(levs, NULL))
+            )
+            stop(msg, call. = FALSE)
+        }
+
+        values <- factor(values, levels = levs)
+    }
+    return(values)
 }

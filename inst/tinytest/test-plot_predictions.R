@@ -21,6 +21,7 @@ p2 <- predictions(
 )
 p2$am_fct <- as.numeric(as.character(p2$am_fct))
 data.table::setorder(p2, -am_fct, mpg)
+data.table::setorder(p1, -am_fct, mpg)
 expect_equivalent(p1$estimate, p2$estimate)
 
 p1$condition1 <- as.character(p1$am_fct)
@@ -48,6 +49,7 @@ p2 <- predictions(
 )
 p2$am_fct <- as.numeric(as.character(p2$am_fct))
 data.table::setorder(p2, -am_fct, mpg)
+data.table::setorder(p1, -am_fct, mpg)
 expect_equivalent(p1$estimate, p2$estimate)
 
 

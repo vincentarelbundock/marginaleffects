@@ -134,6 +134,7 @@ expect_equivalent(nrow(cmp), 1)
 
 
 # Issue #481: warning on missing by categories
+options(marginaleffects_safe = TRUE)
 mod <- nnet::multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
 by <- data.frame(
     by = c("4", "5"),
@@ -141,6 +142,7 @@ by <- data.frame(
 )
 expect_warning(comparisons(mod, variables = "mpg", newdata = "mean", by = by))
 expect_warning(predictions(mod, newdata = "mean", by = by))
+options(marginaleffects_safe = FALSE)
 
 
 # Issue #589: easy marginalization

@@ -5,8 +5,7 @@ get_by <- function(
     by,
     byfun = NULL,
     verbose = TRUE,
-    ...
-) {
+    ...) {
     if (is.null(by) || isFALSE(by)) {
         out <- estimates
         attr(out, "posterior_draws") <- draws

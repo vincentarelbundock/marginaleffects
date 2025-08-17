@@ -7,6 +7,11 @@ New functions:
 * `prune()` deletes internal information from a `marginaleffects` object to save memory space.
 * `components()` returns internal information from a `marginaleffects` object.
 
+New features:
+
+* `datagrid()` gains a new `grid_type = "dataframe"` option that binds columns element-wise rather than creating cross-products, requiring all explicit vectors to have the same length.
+* `datagrid()` gains a `FUN` argument to apply the same function to all variable types, overriding `grid_type` defaults but not specific `FUN_*` arguments.
+
 Misc:
 
 * Better error message for bayesian/bootstrap models when `hypotheses()` attempts to post-process a previous `marginaleffects` call.
