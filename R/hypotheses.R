@@ -43,7 +43,7 @@
 #'
 #' @template equivalence
 #' @examples
-#' library(marginaleffects)
+#' library("marginaleffects")
 #' mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
 #'
 #' hypotheses(mod)
