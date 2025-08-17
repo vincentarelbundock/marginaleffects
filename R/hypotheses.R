@@ -306,7 +306,8 @@ hypotheses <- function(
         out <- equivalence(
             out,
             df = mfx@df,
-            equivalence = equivalence
+            equivalence = equivalence,
+            draws = mfx@draws
         )
     }
 

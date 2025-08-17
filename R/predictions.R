@@ -414,7 +414,7 @@ predictions <- function(
     out <- sort_columns(out, mfx@newdata, by)
 
     # equivalence tests
-    out <- equivalence(out, equivalence = equivalence, df = mfx@df, ...)
+    out <- equivalence(out, equivalence = equivalence, df = mfx@df, draws = mfx@draws, ...)
 
     # after rename to estimate
     if (isTRUE(link_to_response)) {

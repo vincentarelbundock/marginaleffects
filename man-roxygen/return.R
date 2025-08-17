@@ -13,6 +13,8 @@
 #' * `conf.high`: upper bound of the confidence (or credible) interval defined by the `conf_level` argument.
 #' * `predicted_lo`: predicted outcome for the "low" value of the focal predictor in a counterfactual comparison.
 #' * `predicted_hi`: predicted outcome for the "high" value of the focal predictor in a counterfactual comparison.
+#' * `p.equivalence`: share of posterior draws in the interval specified by the `equivalence` argument. This is only available for Bayesian models.
+#' * `rope`: share of the posterior draws between `conf.low` and `conf.high` that are covered by the interval specified by the `equivalence` argument.
 #'
 #' See `?print.marginaleffects` for printing options.
 #'

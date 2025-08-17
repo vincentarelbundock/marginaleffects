@@ -11,6 +11,7 @@ New features:
 
 * `datagrid()` gains a new `grid_type = "dataframe"` option that binds columns element-wise rather than creating cross-products, requiring all explicit vectors to have the same length.
 * `datagrid()` gains a `FUN` argument to apply the same function to all variable types, overriding `grid_type` defaults but not specific `FUN_*` arguments.
+* `equivalence` argument is now supported for bayesian models. It returns the ROPE and posterior probability in the `equivalence` interval.
 
 Misc:
 

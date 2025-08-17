@@ -428,7 +428,7 @@ comparisons <- function(
     cmp <- sort_columns(cmp, mfx@newdata, by)
 
     # equivalence tests
-    cmp <- equivalence(cmp, equivalence = equivalence, df = mfx@df, ...)
+    cmp <- equivalence(cmp, equivalence = equivalence, df = mfx@df, draws = mfx@draws, ...)
 
     # after draws attribute
     cmp <- backtransform(cmp, transform, draws = mfx@draws)

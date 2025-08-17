@@ -1,10 +1,30 @@
-equivalence <- function(x, equivalence = NULL, df = Inf, ...) {
+equivalence <- function(x, equivalence = NULL, df = Inf, draws = NULL, ...) {
     if (is.null(equivalence)) {
         return(x)
     }
 
-    if (!is.null(equivalence) && !all(c("estimate", "std.error") %in% colnames(x))) {
-        msg <- "The `equivalence` argument is not supported with models for which `marginaleffects` does not estimate a standard error (e.g., bayesian)."
+    if (!is.null(draws)) {
+        # `draws` is an Parameters x Draws matrix.
+        # index of draws in the equivalence interval
+        idx_equiv <- draws > equivalence[1] & draws < equivalence[2]
+
+        # share of the posterior draws in the equivalence interval
+        x$p.equivalence <- apply(idx_equiv, 1, mean)
+
+        # index of draws in the credible interval
+        idx_ci <- draws > x$conf.low & draws < x$conf.high
+
+        # rope only considers draws in the credible interval
+        # we NA them before taking the mean
+        idx_rope <- idx_equiv
+        idx_rope[!idx_ci] <- FALSE
+        x$rope <- apply(idx_rope, 1, mean, na.rm = TRUE)
+
+        return(x)
+    }
+
+    if (!all(c("estimate", "std.error") %in% colnames(x))) {
+        msg <- "The `equivalence` argument is not supported with models for which `marginaleffects` does not estimate a standard error."
         stop_sprintf(msg)
     }
 
