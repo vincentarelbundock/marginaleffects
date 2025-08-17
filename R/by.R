@@ -5,8 +5,7 @@ get_by <- function(
     by,
     byfun = NULL,
     verbose = TRUE,
-    ...
-) {
+    ...) {
     if (is.null(by) || isFALSE(by)) {
         out <- estimates
         attr(out, "posterior_draws") <- draws
@@ -16,6 +15,7 @@ get_by <- function(
     missing <- setdiff(setdiff(colnames(by), "by"), colnames(estimates))
     if (length(missing) > 0) {
         idx <- intersect(c("rowid", "rowidcf", missing), colnames(newdata))
+        browser()
         estimates <- merge(estimates, newdata[, idx], sort = FALSE, all.x = TRUE)
     }
 

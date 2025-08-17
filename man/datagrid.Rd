@@ -11,6 +11,7 @@ datagrid(
   by = NULL,
   grid_type = "mean_or_mode",
   response = FALSE,
+  FUN = NULL,
   FUN_character = NULL,
   FUN_factor = NULL,
   FUN_logical = NULL,
@@ -42,6 +43,8 @@ datagrid(
 }}
 
 \item{response}{Logical should the response variable be included in the grid, even if it is not specified explicitly.}
+
+\item{FUN}{a function to be applied to all variables in the grid. This is useful when you want to apply the same function to all variables, such as \code{mean} or \code{median}. If you specify \code{FUN}, it will override the \code{grid_type} defaults, but not other \verb{FUN_*} arguments below.}
 
 \item{FUN_character}{the function to be applied to character variables.}
 
@@ -93,7 +96,7 @@ datagrid(model = mod, hp = c(100, 110))
 
 # Use in `marginaleffects` to compute "Typical Marginal Effects". When used
 # in `slopes()` or `predictions()` we do not need to specify the
-#`model` or `newdata` arguments.
+# `model` or `newdata` arguments.
 slopes(mod, newdata = datagrid(hp = c(100, 110)))
 
 # datagrid accepts functions
