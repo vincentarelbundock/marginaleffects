@@ -105,7 +105,7 @@ add_numeric_shortcuts <- function(predictors, mfx) {
     # string shortcuts for predictions only
     modeldata <- mfx@modeldata
     for (v in names(predictors)) {
-        if (check_variable_class(mfx, v, "numeric")) {
+        if (check_variable_class(mfx, v, "numeric") || check_variable_class(mfx, v, "integer")) {
             if (identical(predictors[[v]], "iqr")) {
                 predictors[[v]] <- stats::quantile(
                     modeldata[[v]],
@@ -151,7 +151,7 @@ add_default_values <- function(predictors, mfx) {
         if (is.null(predictors[[v]])) {
             if (check_variable_class(mfx, v, "binary")) {
                 predictors[[v]] <- 0:1
-            } else if (check_variable_class(mfx, v, "numeric")) {
+            } else if (check_variable_class(mfx, v, "numeric") || check_variable_class(mfx, v, "integer")) {
                 if (calling_function == "comparisons") {
                     predictors[[v]] <- 1
                 } else if (calling_function == "predictions") {
@@ -210,7 +210,7 @@ sanitize_predictor_specs <- function(predictors, mfx) {
                     stop_sprintf(msg)
                 }
             }
-        } else if (check_variable_class(mfx, v, "numeric")) {
+        } else if (check_variable_class(mfx, v, "numeric") || check_variable_class(mfx, v, "integer")) {
             if (calling_function == "comparisons") {
                 # For comparisons(), the string shortcuts are processed in contrast_data_* functions because we need fancy labels.
                 # Eventually it would be nice to consolidate, but that's a lot of work.
@@ -393,7 +393,7 @@ add_functions_and_labels <- function(predictors, comparison_config, mfx) {
 
     for (v in names(predictors)) {
         if (
-            check_variable_class(mfx, v, "numeric") &&
+            (check_variable_class(mfx, v, "numeric") || check_variable_class(mfx, v, "integer")) &&
                 !check_variable_class(mfx, v, "binary")
         ) {
             fun <- comparison_config$fun_numeric
@@ -545,12 +545,14 @@ detect_variable_class <- function(modeldata, model = NULL) {
         } else if (inherits(out[[col]], "Surv")) {
             # is numeric but breaks the %in% 0:1 check
             cl[col] <- "other"
-        } else if (is.numeric(out[[col]])) {
+        } else if (isTRUE(checkmate::check_integerish(out[[col]]))) {
             if (is_binary(out[[col]])) {
                 cl[col] <- "binary"
             } else {
-                cl[col] <- "numeric"
+                cl[col] <- "integer"
             }
+        } else if (is.numeric(out[[col]])) {
+            cl[col] <- "numeric"
         } else {
             cl[col] <- "other"
         }

@@ -27,6 +27,7 @@ unique_s <- function(x) sort(unique(x))
 #' @param grid_type character. Determines the functions to apply to each variable. The defaults can be overridden by defining individual variables explicitly in `...`, or by supplying a function to one of the `FUN_*` arguments.
 #'   * "mean_or_mode": Character, factor, logical, and binary variables are set to their modes. Numeric, integer, and other variables are set to their means.
 #'   * "balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use `grid_type="mean_or_mode"` and to specify the unique levels of a subset of named variables explicitly.
+#'   * "dataframe": Similar to "mean_or_mode" but creates a data frame by binding columns element-wise rather than taking the cross-product. All explicitly specified vectors must have the same length (or length 1), and the result has as many rows as the longest vector. This differs from other grid types which use `expand.grid()` or `data.table::CJ()` to create all combinations.
 #'   * "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in `...`. Variables not explicitly supplied to `datagrid()` are set to their observed values in the original dataset.
 #' @details
 #' If `datagrid` is used in a `predictions()`, `comparisons()`, or `slopes()` call as the
@@ -97,6 +98,7 @@ datagrid <- function(
         grid_type,
         choices = c("mean_or_mode", "balanced", "counterfactual", "dataframe")
     )
+    checkmate::assert_function(FUN, null.ok = TRUE)
     checkmate::assert_function(FUN_character, null.ok = TRUE)
     checkmate::assert_function(FUN_factor, null.ok = TRUE)
     checkmate::assert_function(FUN_logical, null.ok = TRUE)
@@ -156,7 +158,7 @@ datagrid <- function(
     if (ncol(idx) == 0) {
         newdata_split <- list(newdata)
     } else {
-        newdata_split <- split(newdata, idx)
+        newdata_split <- split(newdata, idx, drop = TRUE)
     }
 
     values_split <- lapply(newdata_split, function(x) {
@@ -351,7 +353,7 @@ sanitize_datagrid_factor <- function(values, newdata_col, variable_class, var_na
             )
             stop(msg, call. = FALSE)
         }
-        
+
         values <- factor(values, levels = levs)
     }
     return(values)
