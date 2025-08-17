@@ -54,12 +54,12 @@ expect_equivalent(mm$p.value, em$p.value)
 # simple marginal means
 mod <- lm(mpg ~ cyl + am + hp, dat)
 em <- broom::tidy(emmeans::emmeans(mod, "cyl"))
-me <- predictions(mod, newdata = datagrid(grid_type = "balanced"), by = "cyl") |>
+me <- predictions(mod, newdata = datagrid(grid_type = "balanced", FUN_integer = mean), by = "cyl") |>
     dplyr::arrange(cyl)
 expect_equivalent(me$estimate, em$estimate)
 expect_equivalent(me$std.error, em$std.error, tolerance = 1e-5)
 em <- broom::tidy(emmeans::emmeans(mod, "am"))
-me <- predictions(mod, newdata = datagrid(grid_type = "balanced"), by = "am") |>
+me <- predictions(mod, newdata = datagrid(grid_type = "balanced", FUN_integer = mean), by = "am") |>
     dplyr::arrange(am)
 expect_equivalent(me$estimate, em$estimate)
 expect_equivalent(me$std.error, em$std.error, tolerance = 1e-5)

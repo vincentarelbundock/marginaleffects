@@ -13,19 +13,26 @@ em <- emmeans(mod, "gear", df = Inf)
 e1 <- test(em, delta = delta, null = null, side = "noninferiority", df = Inf)
 e2 <- predictions(
     mod,
-    newdata = datagrid(gear = unique),
+    # emmeans treats integers as floats
+    newdata = datagrid(gear = unique, FUN_integer = mean),
     equivalence = c(19, 21)
-) |>
-    dplyr::arrange(gear)
+) |> dplyr::arrange(gear)
 expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.noninf)
 
+e2 <- predictions(
+    mod,
+    by = "gear",
+    newdata = datagrid(grid_type = "balanced"),
+    equivalence = c(19, 21)
+) |> dplyr::arrange(gear)
 
 # predictions() vs. {emmeans}: sup
 e1 <- test(em, delta = 1, null = 23, side = "nonsuperiority", df = Inf)
 e2 <- predictions(
     mod,
-    newdata = datagrid(gear = unique),
+    # emmeans treats integers as floats
+    newdata = datagrid(gear = unique, FUN_integer = mean),
     equivalence = c(22, 24)
 ) |>
     dplyr::arrange(gear)
@@ -37,7 +44,8 @@ expect_equivalent(e1$p.value, e2$p.value.nonsup)
 e1 <- test(em, delta = 1, null = 22, side = "equivalence", df = Inf)
 e2 <- predictions(
     mod,
-    newdata = datagrid(gear = unique),
+    # emmeans treats integers as floats
+    newdata = datagrid(gear = unique, FUN_integer = mean),
     equivalence = c(21, 23)
 ) |>
     dplyr::arrange(gear)
