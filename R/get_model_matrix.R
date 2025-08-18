@@ -83,10 +83,7 @@ add_model_matrix_attribute <- function(mfx, newdata = NULL) {
     }
 
     # subset variables for listwise deletion
-    vars <- unlist(
-        insight::find_predictors(model, verbose = FALSE),
-        use.names = FALSE
-    )
+    vars <- unlist(mfx@variable_names_predictors, use.names = FALSE)
     vars <- c(vars, unlist(mfx@variable_names_response, use.names = FALSE))
     vars <- intersect(vars, colnames(newdata))
 
