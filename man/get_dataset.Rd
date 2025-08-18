@@ -21,7 +21,6 @@ get_dataset(dataset = "thornton", package = NULL, docs = FALSE, search = NULL)
 }
 \value{
 A data frame containing the dataset.
-library(marginaleffects)
 }
 \description{
 Downloads a dataset from the \code{marginaleffects} or the Rdatasets archives, and return it as a data frame. Opens the documentation as an HTML page. Search available datasets.

@@ -96,7 +96,6 @@ Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani.
 
 \examples{
 \dontrun{
-library(marginaleffects)
 library(magrittr)
 set.seed(1024)
 mod <- lm(Sepal.Length ~ Sepal.Width * Species, data = iris)

@@ -12,7 +12,6 @@
 #' @param docs Logical. If TRUE open the documentation using `getOption("viewer")` or the Rstudio viewer.
 #' @param search Regular expression. Download the dataset index from Rdatasets; search the "Package", "Item", and "Title" columns; and return the matching rows.
 #' @return A data frame containing the dataset.
-#' library(marginaleffects)
 #' @examplesIf FALSE
 #' dat <- get_dataset("Titanic", "Stat2Data")
 #' head(dat)

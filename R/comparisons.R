@@ -98,8 +98,6 @@
 #' @template return
 #'
 #' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
-#' library("marginaleffects")
-#'
 #' # Linear model
 #' tmp <- mtcars
 #' tmp$am <- as.logical(tmp$am)
