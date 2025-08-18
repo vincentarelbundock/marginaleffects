@@ -37,19 +37,13 @@ get_comparisons <- function(
 
         both <- rbindlist(list(lo, hi))
 
-        pred_both <- myTryCatch(get_predict(
+        pred_both_result <- myTryCatch(get_predict(
             model,
             type = type,
             newdata = both,
             ...
         ))
-
-        # informative error in case of allow.new.levels level breakage
-        if (inherits(pred_both[["error"]], "simpleError")) {
-            stop_sprintf(pred_both[["error"]][["message"]])
-        } else {
-            pred_both <- pred_both[["value"]]
-        }
+        pred_both <- get_predict_error(pred_both_result)
 
         data.table::setDT(pred_both)
         pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
@@ -66,24 +60,15 @@ get_comparisons <- function(
         attr(pred_lo, "posterior_draws") <- draws_lo
         attr(pred_hi, "posterior_draws") <- draws_hi
     } else {
-        pred_lo <- myTryCatch(get_predict(
+        pred_lo_result <- myTryCatch(get_predict(
             model,
             type = type,
             newdata = lo,
             ...
         ))
+        pred_lo <- get_predict_error(pred_lo_result)
 
-        # tidymodels
-        if (
-            inherits(pred_lo$error, "rlang_error") &&
-                isTRUE(grepl("the object should be", pred_lo$error$message))
-        ) {
-            stop_sprintf(pred_lo$error$message)
-        } else {
-            pred_lo <- pred_lo[["value"]]
-        }
-
-        pred_hi <- myTryCatch(get_predict(
+        pred_hi_result <- myTryCatch(get_predict(
             model,
             type = type,
             newdata = hi,
@@ -91,10 +76,10 @@ get_comparisons <- function(
         ))
 
         # otherwise we keep the full error object instead of extracting the value
-        if (inherits(pred_hi$value, "data.frame")) {
-            pred_hi <- pred_hi$value
+        if (inherits(pred_hi_result$value, "data.frame")) {
+            pred_hi <- pred_hi_result$value
         } else {
-            pred_hi <- pred_hi$error
+            pred_hi <- pred_hi_result$error
         }
     }
 
@@ -117,12 +102,13 @@ get_comparisons <- function(
     }
     tmp <- Filter(fun, variables)
     if (!isTRUE(deltamethod) || length(tmp) > 0) {
-        pred_or <- myTryCatch(get_predict(
+        pred_or_result <- myTryCatch(get_predict(
             model,
             type = type,
             newdata = original,
             ...
-        ))[["value"]]
+        ))
+        pred_or <- get_predict_error(pred_or_result)
     } else {
         pred_or <- NULL
     }

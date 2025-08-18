@@ -124,3 +124,34 @@ get_predict.default <- function(
 
     return(out)
 }
+
+
+get_predict_error <- function(pred_result) {
+    if (inherits(pred_result$value, "data.frame")) {
+        return(pred_result$value)
+    } else {
+        if (
+            inherits(pred_result$error, "rlang_error") &&
+                isTRUE(grepl("the object should be", pred_result$error$message))
+        ) {
+            stop_sprintf(pred_result$error$message)
+        }
+
+        msg <- "Unable to compute predicted values with this model. This error can arise when `insight::get_data()` is unable to extract the dataset from the model object, or when the data frame was modified since fitting the model. You can try to supply a different dataset to the `newdata` argument."
+        if (!is.null(pred_result$error)) {
+            msg <- c(
+                msg,
+                "",
+                "In addition, this error message was raised:",
+                "",
+                pred_result$error$message
+            )
+        }
+        msg <- c(
+            msg,
+            "",
+            "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
+        )
+        stop_sprintf(msg)
+    }
+}

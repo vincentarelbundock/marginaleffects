@@ -15,43 +15,14 @@ get_predictions <- function(
     # sometimes we want the perturbed coefficients model supplied by get_se_delta().
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
 
-    out <- myTryCatch(get_predict(
+    out_result <- myTryCatch(get_predict(
         model,
         newdata = newdata,
         type = type,
         mfx = mfx,
         ...
     ))
-
-    if (inherits(out$value, "data.frame")) {
-        out <- out$value
-    } else {
-        # tidymodels
-        if (
-            inherits(out$error, "rlang_error") &&
-                isTRUE(grepl("the object should be", out$error$message))
-        ) {
-            stop_sprintf(out$error$message)
-        }
-
-        msg <- "Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument."
-        if (!is.null(out$error)) {
-            msg <- c(paste(msg, "This error was also raised:"), "", out$error$message)
-        }
-        if (inherits(out$value, "try-error")) {
-            msg <- c(
-                paste(msg, "", "This error was also raised:"),
-                "",
-                as.character(out$value)
-            )
-        }
-        msg <- c(
-            msg,
-            "",
-            "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
-        )
-        stop_sprintf(msg)
-    }
+    out <- get_predict_error(out_result)
 
     if (
         !"rowid" %in% colnames(out) &&
