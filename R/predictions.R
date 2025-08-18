@@ -290,6 +290,9 @@ predictions <- function(
         mfx@newdata[["rowid"]] <- seq_len(nrow(mfx@newdata))
     }
 
+    # Store unpadded newdata for degrees of freedom calculation
+    unpadded_newdata <- mfx@newdata
+
     mfx@newdata <- pad(model, mfx@newdata)
 
     ############### sanity checks are over
@@ -336,7 +339,10 @@ predictions <- function(
         tmp$rowid <- mfx@newdata$rowid
     }
 
-    # degrees of freedom
+    # degrees of freedom - use unpadded newdata
+    # Temporarily replace newdata with unpadded version for df calculation
+    original_newdata <- mfx@newdata
+    mfx@newdata <- unpadded_newdata
     mfx <- add_degrees_of_freedom(
         mfx = mfx,
         df = df,
@@ -344,6 +350,8 @@ predictions <- function(
         hypothesis = mfx@hypothesis,
         vcov = vcov
     )
+    # Restore padded newdata
+    mfx@newdata <- original_newdata
     if (!is.null(mfx@df) && is.numeric(mfx@df)) {
         tmp$df <- mfx@df
     }
