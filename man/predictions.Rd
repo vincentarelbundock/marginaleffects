@@ -247,6 +247,11 @@ Columns may include:
 \item \code{conf.high}: upper bound of the confidence (or credible) interval defined by the \code{conf_level} argument.
 \item \code{predicted_lo}: predicted outcome for the "low" value of the focal predictor in a counterfactual comparison.
 \item \code{predicted_hi}: predicted outcome for the "high" value of the focal predictor in a counterfactual comparison.
+\item \code{statistic.noninf}: test statistic for non-inferiority test (when \code{equivalence} argument is used).
+\item \code{statistic.nonsup}: test statistic for non-superiority test (when \code{equivalence} argument is used).
+\item \code{p.value.noninf}: p-value for non-inferiority test (when \code{equivalence} argument is used).
+\item \code{p.value.nonsup}: p-value for non-superiority test (when \code{equivalence} argument is used).
+\item \code{p.value.equiv}: p-value for equivalence test using Two One-Sided Tests (TOST) approach (when \code{equivalence} argument is used).
 }
 
 See \code{?print.marginaleffects} for printing options.

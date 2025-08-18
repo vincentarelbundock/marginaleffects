@@ -13,6 +13,11 @@
 #' * `conf.high`: upper bound of the confidence (or credible) interval defined by the `conf_level` argument.
 #' * `predicted_lo`: predicted outcome for the "low" value of the focal predictor in a counterfactual comparison.
 #' * `predicted_hi`: predicted outcome for the "high" value of the focal predictor in a counterfactual comparison.
+#' * `statistic.noninf`: test statistic for non-inferiority test (when `equivalence` argument is used).
+#' * `statistic.nonsup`: test statistic for non-superiority test (when `equivalence` argument is used).
+#' * `p.value.noninf`: p-value for non-inferiority test (when `equivalence` argument is used).
+#' * `p.value.nonsup`: p-value for non-superiority test (when `equivalence` argument is used).
+#' * `p.value.equiv`: p-value for equivalence test using Two One-Sided Tests (TOST) approach (when `equivalence` argument is used).
 #'
 #' See `?print.marginaleffects` for printing options.
 #'
