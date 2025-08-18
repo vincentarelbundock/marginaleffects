@@ -343,7 +343,8 @@ predictions <- function(
         }
     }
 
-    # issue #1105: hypothesis may change the meaning of rows, so we don't want to force-merge `newdata`
+    # issue #1105: hypothesis may change the meaning of rows, 
+    # so we don't want to force-merge `newdata`
     if (
         !"rowid" %in% colnames(tmp) &&
             nrow(tmp) == nrow(mfx@newdata) &&
@@ -399,9 +400,8 @@ predictions <- function(
     out <- data.table::data.table(tmp)
     data.table::setDT(mfx@newdata)
 
-    # expensive: only do this inside jacobian if necessary
-    if (!inherits(mfx@model, "mclogit")) {
-        # weird case. probably a cleaner way but lazy now...
+    # it does not make sense to merge original data into aggregated results
+    if (isFALSE(by) && !inherits(mfx@model, "mclogit")) {
         out <- merge_by_rowid(out, mfx@newdata)
     }
 

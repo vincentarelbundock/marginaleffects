@@ -393,7 +393,7 @@ comparisons <- function(
     }
 
     # merge original data back in
-    if ((is.null(by) || isFALSE(by)) && "rowid" %in% colnames(cmp)) {
+    if (isFALSE(by) && "rowid" %in% colnames(cmp)) {
         if ("rowid" %in% colnames(mfx@newdata)) {
             idx <- c(
                 "rowid",
