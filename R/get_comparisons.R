@@ -455,7 +455,7 @@ get_comparisons <- function(
         # useless duplicates.
         if (!all(idx)) {
             if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
-                out[, "rowid" := NULL]
+                if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
             }
             out <- out[idx, , drop = FALSE]
         }
@@ -495,7 +495,7 @@ get_comparisons <- function(
         # useless duplicates.
         if (anyNA(out$estimate)) {
             if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
-                out[, "rowid" := NULL]
+                if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
             }
         }
         out <- stats::na.omit(out, cols = "estimate")

@@ -4,8 +4,7 @@ get_predict.rq <- function(
     model,
     newdata = insight::get_data(model),
     type = NULL,
-    ...
-) {
+    ...) {
     # type argument of the method is used to specify confidence interval type
     insight::check_if_installed("quantreg")
     if (
@@ -26,11 +25,8 @@ get_predict.rq <- function(
         }
     }
     out <- quantreg::predict.rq(model, newdata = newdata, ...)
-    if (isTRUE(checkmate::check_numeric(out, len = nrow(newdata)))) {
-        out <- data.frame(rowid = newdata$rowid, estimate = out)
-    } else {
-        out <- data.frame(rowid = seq_len(length(out)), estimate = out)
-    }
+    out <- data.frame(estimate = out)
+    out <- add_rowid(out, newdata)
     return(out)
 }
 

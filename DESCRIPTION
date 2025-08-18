@@ -198,6 +198,7 @@ Suggests:
 Collate:
     'RcppExports.R'
     'add_hypothesis.R'
+    'add_rowid.R'
     'attributes.R'
     'backtransform.R'
     'broom.R'

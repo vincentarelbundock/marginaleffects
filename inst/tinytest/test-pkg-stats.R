@@ -189,10 +189,10 @@ expect_equivalent(nrow(tid), 4)
 
 # Issue #547: standardize column order
 mod <- lm(cbind(mpg, cyl) ~ disp + am, data = mtcars)
-expect_equivalent(colnames(get_predict(mod)), c("rowid", "group", "estimate"))
+expect_equivalent(colnames(get_predict(mod)), c("group", "estimate"))
 
 mod <- lm(mpg ~ disp + am, data = mtcars)
-expect_equivalent(colnames(get_predict(mod)), c("rowid", "estimate"))
+expect_equivalent(colnames(get_predict(mod)), c("estimate"))
 
 
 # Issue #833: Support nls() no validity

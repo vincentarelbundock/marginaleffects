@@ -7,7 +7,15 @@
 #' @inheritParams slopes
 #' @keywords internal
 #' @export
-get_predict <- function(model, newdata, type, mfx = NULL, newparams = NULL, ndraws = NULL, se.fit = NULL, ...) {
+get_predict <- function(
+    model,
+    newdata,
+    type,
+    mfx = NULL,
+    newparams = NULL,
+    ndraws = NULL,
+    se.fit = NULL,
+    ...) {
     UseMethod("get_predict", model)
 }
 
@@ -52,7 +60,7 @@ get_predict.default <- function(
     args <- c(list(model), dots)
 
     # `pred` is a secret argument called by `predict.lm` to turn a numeric vector into a data frame with correct `rowid`
-    if ("pred" %in% names(dots)) {
+    if ("pred" %in% ...names()) {
         pred <- dots[["pred"]]
     } else {
         fun <- stats::predict
@@ -83,20 +91,11 @@ get_predict.default <- function(
     # atomic vector
     if (isTRUE(checkmate::check_atomic_vector(pred))) {
         # strip weird attributes added by some methods (e.g., predict.svyglm)
-        if (length(pred) == nrow(newdata)) {
-            # as.numeric is slow with large objects and we can't use is.numeric
-            # to run it conditionally because objects of class "svystat" are
-            # already numeric
-            class(pred) <- "numeric"
-            if ("rowid" %in% colnames(newdata)) {
-                out <- list(
-                    rowid = newdata$rowid,
-                    estimate = pred
-                )
-            } else {
-                out <- list(rowid = seq_len(length(pred)), estimate = pred)
-            }
-        }
+        # as.numeric is slow with large objects and we can't use is.numeric
+        # to run it conditionally because objects of class "svystat" are
+        # already numeric
+        class(pred) <- "numeric"
+        out <- data.frame(estimate = pred)
 
         # matrix with outcome levels as columns
     } else if (is.matrix(pred)) {
@@ -104,19 +103,10 @@ get_predict.default <- function(
             colnames(pred) <- seq_len(ncol(pred))
         }
         # internal calls always includes "rowid" as a column in `newdata`
-        if ("rowid" %in% colnames(newdata)) {
-            out <- list(
-                rowid = rep(newdata[["rowid"]], times = ncol(pred)),
-                group = rep(colnames(pred), each = nrow(pred)),
-                estimate = c(pred)
-            )
-        } else {
-            out <- list(
-                rowid = rep(seq_len(nrow(pred)), times = ncol(pred)),
-                group = rep(colnames(pred), each = nrow(pred)),
-                estimate = c(pred)
-            )
-        }
+        out <- data.frame(
+            group = rep(colnames(pred), each = nrow(pred)),
+            estimate = c(pred)
+        )
         out$group <- group_to_factor(out$group, model)
     } else {
         stop(
@@ -129,6 +119,7 @@ get_predict.default <- function(
         )
     }
 
+    out <- add_rowid(out, newdata)
     data.table::setDF(out)
 
     return(out)

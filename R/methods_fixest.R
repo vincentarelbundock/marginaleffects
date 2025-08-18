@@ -45,17 +45,8 @@ get_predict.fixest <- function(
         return(pred)
     }
 
-    if ("rowid" %in% colnames(newdata)) {
-        out <- data.frame(
-            rowid = newdata$rowid,
-            estimate = as.numeric(pred)
-        )
-    } else {
-        out <- data.frame(
-            rowid = seq_len(nrow(newdata)),
-            estimate = as.numeric(pred)
-        )
-    }
+    out <- data.frame(estimate = as.numeric(pred))
+    out <- add_rowid(out, newdata)
 
     return(out)
 }

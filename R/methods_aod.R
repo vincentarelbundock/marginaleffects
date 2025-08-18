@@ -8,10 +8,8 @@ get_predict.glimML <- function(
     insight::check_if_installed("aod")
 
     out <- aod::predict(model, newdata = newdata, type = type, ...)
-    out <- data.frame(
-        rowid = seq_len(nrow(newdata)),
-        estimate = out
-    )
+    out <- data.frame(estimate = out)
+    out <- add_rowid(out, newdata)
 
     return(out)
 }

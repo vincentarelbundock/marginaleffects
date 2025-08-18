@@ -69,5 +69,5 @@ data <- tibble::tibble(
 f <- lrm(y ~ ., data = data)
 p <- suppressWarnings(get_predict(f))
 expect_inherits(p, "data.frame")
-expect_equal(dim(p), c(100, 2))
+expect_equal(dim(p), c(100, 1))
 expect_warning(get_predict(f), pattern = "Converting.*tibble")

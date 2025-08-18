@@ -29,7 +29,6 @@ get_predict.glmmTMB <- function(
         newparams = np,
         ...
     )
-
     return(out)
 }
 

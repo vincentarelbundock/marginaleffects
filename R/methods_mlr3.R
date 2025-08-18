@@ -8,7 +8,8 @@ get_predict.Learner <- function(model, newdata, type = NULL, ...) {
         stop_sprintf(msg)
     }
     out <- drop(stats::predict(model, newdata = newdata, predict_type = type))
-    out <- data.frame(rowid = seq_along(out), estimate = out)
+    out <- data.frame(estimate = out)
+    out <- add_rowid(out, newdata)
     return(out)
 }
 

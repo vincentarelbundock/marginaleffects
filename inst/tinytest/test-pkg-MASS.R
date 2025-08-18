@@ -108,7 +108,7 @@ expect_inherits(mfx, "marginaleffects")
 
 
 # marginaleffects vs. emmeans
-#skip_if_not_installed("emmeans", minimum_version = "1.7.1.9")
+# skip_if_not_installed("emmeans", minimum_version = "1.7.1.9")
 # Hess=TRUE otherwise breaks in the test environment via MASS:::vcov() -> update()
 dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 dat$y <- factor(dat$y)

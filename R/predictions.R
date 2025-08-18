@@ -284,8 +284,6 @@ predictions <- function(
             args[[v$name]] <- v$value
         }
         mfx@newdata <- do.call("datagrid", args)
-        # the original rowids are no longer valid after averaging et al.
-        mfx@newdata[["rowid"]] <- NULL
     }
 
     character_levels <- attr(mfx@newdata, "newdata_character_levels")
