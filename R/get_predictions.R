@@ -66,29 +66,9 @@ get_predictions <- function(
 
     data.table::setDT(out)
 
-    # unpad factors before averaging
-    # trust `newdata` rowid more than `out` because sometimes `get_predict()` will add a positive index even on padded data
-    # HACK: the padding indexing rowid code is still a mess
-    # Do not merge `newdata` with `hypothesis`, because it may have the same
-    # number of rows but represent different quantities
-    if (
-        "rowid" %in%
-            colnames(newdata) &&
-            nrow(newdata) == nrow(out) &&
-            is.null(hypothesis)
-    ) {
-        out$rowid <- newdata$rowid
-    }
-    # unpad
-    if ("rowid" %in% colnames(out)) {
-        draws <- draws[out$rowid > 0, , drop = FALSE]
-    }
-    if ("rowid" %in% colnames(out)) {
-        out <- out[out$rowid > 0, , drop = FALSE]
-    }
-    if ("rowid" %in% colnames(newdata)) {
-        newdata <- newdata[newdata$rowid > 0, , drop = FALSE]
-    }
+    # unpad factors before `by` and `hypothesis`
+    tmp <- unpad(out, draws)
+    list2env(tmp, envir = environment())
 
     # expensive: only do this inside the jacobian if necessary
     if (

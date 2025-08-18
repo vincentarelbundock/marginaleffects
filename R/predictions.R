@@ -286,26 +286,12 @@ predictions <- function(
         mfx@newdata <- do.call("datagrid", args)
     }
 
-    character_levels <- attr(mfx@newdata, "newdata_character_levels")
-
     # trust newdata$rowid
     if (!"rowid" %in% colnames(mfx@newdata)) {
         mfx@newdata[["rowid"]] <- seq_len(nrow(mfx@newdata))
     }
 
-    # pad factors: `model.matrix` breaks when factor levels are missing
-    # support `newdata` and assume no padding the `idx` column is necessary for
-    # `get_predict` but it breaks binding, so we can't remove it in
-    # sanity_newdata and we can't rbind it with padding
-    # pad factors: `model.matrix` breaks when factor levels are missing
-    if (inherits(model, "mlogit")) {
-        padding <- data.frame()
-    } else {
-        padding <- complete_levels(mfx@newdata, character_levels)
-        if (nrow(padding) > 0) {
-            mfx@newdata <- rbindlist(list(padding, mfx@newdata))
-        }
-    }
+    mfx@newdata <- pad(model, mfx@newdata)
 
     ############### sanity checks are over
 
