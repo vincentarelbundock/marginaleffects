@@ -27,7 +27,7 @@ get_predict.clm <- function(
     }
     pred <- tmp
 
-    out <- data.frame(
+    out <- data.table(
         group = rep(colnames(pred), each = nrow(pred)),
         estimate = c(pred)
     )

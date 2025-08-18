@@ -84,7 +84,7 @@ get_predict.brmsfit <- function(
     # 1d outcome
     if (length(dim(draws)) == 2) {
         med <- collapse::dapply(draws, MARGIN = 2, FUN = collapse::fmedian)
-        out <- data.frame(
+        out <- data.table(
             group = "main_marginaleffect",
             estimate = med
         )
@@ -98,7 +98,7 @@ get_predict.brmsfit <- function(
         } else {
             colnames(out) <- levnames
         }
-        out <- data.frame(
+        out <- data.table(
             group = rep(colnames(out), each = nrow(out)),
             estimate = c(out)
         )

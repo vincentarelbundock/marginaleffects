@@ -27,18 +27,18 @@ get_predict.flexsurvreg <- function(model, newdata, type, ...) {
                 x[, 2, drop = TRUE]
             }))
 
-            out <- data.frame(
+            out <- data.table(
                 group = as.vector(gp),
                 estimate = as.vector(val)
             )
             out$group <- group_to_factor(out$group, model)
             return(out)
         }
-        out <- data.frame(estimate = as.vector(preds[, 1, drop = TRUE]))
+        out <- data.table(estimate = as.vector(preds[, 1, drop = TRUE]))
         return(out)
     }
 
-    out <- data.frame(
+    out <- data.table(
         group = as.vector(preds[, 1, drop = TRUE]),
         estimate = as.vector(preds[, 2, drop = TRUE])
     )

@@ -99,7 +99,7 @@ get_predict.multinom <- function(
     }
 
     # matrix with outcome levels as columns
-    out <- data.frame(
+    out <- data.table(
         group = rep(colnames(pred), each = nrow(pred)),
         estimate = c(pred)
     )

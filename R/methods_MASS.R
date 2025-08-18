@@ -87,7 +87,7 @@ get_predict.glmmPQL <- function(
     mfx = NULL,
     ...) {
     out <- stats::predict(model, newdata = newdata, type = type, ...)
-    out <- data.frame(estimate = out)
+    out <- data.table(estimate = out)
     out <- add_rowid(out, newdata)
     return(out)
 }

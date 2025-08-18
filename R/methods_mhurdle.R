@@ -6,7 +6,7 @@ get_predict.mhurdle <- function(
     type = "response",
     ...) {
     out <- stats::predict(model, what = type, newdata = newdata)
-    out <- data.frame(estimate = out)
+    out <- data.table(estimate = out)
     out <- add_rowid(out, newdata)
     return(out)
 }

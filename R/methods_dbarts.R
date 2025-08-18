@@ -11,7 +11,7 @@ get_predict.bart <- function(model, newdata = NULL, ...) {
     )
     p <- do.call(stats::predict, args)
     p_med <- collapse::fmedian(p)
-    out <- data.frame(
+    out <- data.table(
         group = "main_marginaleffect",
         estimate = p_med)
     out <- add_rowid(out, newdata)

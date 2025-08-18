@@ -45,7 +45,7 @@ get_predict.fixest <- function(
         return(pred)
     }
 
-    out <- data.frame(estimate = as.numeric(pred))
+    out <- data.table(estimate = as.numeric(pred))
     out <- add_rowid(out, newdata)
 
     return(out)

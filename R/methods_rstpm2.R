@@ -48,7 +48,7 @@ get_predict.stpm2 <- function(model, newdata = NULL, ...) {
     pred <- rstpm2::predict(model, newdata = newdata, ...)
     sanity_predict_vector(pred = pred, model = model, newdata = newdata)
     sanity_predict_numeric(pred = pred, model = model, newdata = newdata)
-    out <- data.frame(estimate = pred)
+    out <- data.table(estimate = pred)
     out <- add_rowid(out, newdata)
     return(out)
 }

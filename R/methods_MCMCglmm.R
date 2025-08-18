@@ -24,7 +24,7 @@ get_predict.MCMCglmm <- function(
         function(i) stats::predict(model, newdata = nd, it = i, ...)
     )
     draws <- do.call("cbind", draws)
-    out <- data.frame(estimate = apply(draws, MARGIN = 1, FUN = stats::median))
+    out <- data.table(estimate = apply(draws, MARGIN = 1, FUN = stats::median))
     out <- add_rowid(out, newdata)
     attr(out, "posterior_draws") <- draws
     return(out)

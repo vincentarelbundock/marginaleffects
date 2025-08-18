@@ -39,9 +39,9 @@ get_predict.model_fit <- function(model, newdata, type = NULL, ...) {
 
     if (type == "numeric") {
         v <- intersect(c(".pred", ".pred_res"), colnames(out))[1]
-        out <- data.frame(estimate = out[[v]])
+        out <- data.table(estimate = out[[v]])
     } else if (type == "class") {
-        out <- data.frame(estimate = out[[".pred_class"]])
+        out <- data.table(estimate = out[[".pred_class"]])
     } else if (type == "prob") {
         colnames(out) <- substr(colnames(out), 7, nchar(colnames(out)))
         out$marginaleffects_internal_id <- seq_len(nrow(out))

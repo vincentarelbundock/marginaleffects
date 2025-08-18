@@ -34,7 +34,7 @@ get_predict.rlmerMod <- function(
     args <- args[setdiff(names(args), unused)]
     args[["object"]] <- model
     args[["newdata"]] <- newdata
-    out <- data.frame(estimate = do.call("predict", args))
+    out <- data.table(estimate = do.call("predict", args))
     out <- add_rowid(out, newdata)
     return(out)
 }

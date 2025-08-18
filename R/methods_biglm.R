@@ -14,7 +14,7 @@ get_predict.biglm <- function(
         type = type
     )
     out <- as.vector(out)
-    out <- data.frame(estimate = out)
+    out <- data.table(estimate = out)
     out <- add_rowid(out, newdata)
     return(out)
 }

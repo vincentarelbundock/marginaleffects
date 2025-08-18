@@ -22,7 +22,7 @@ get_predict.bife <- function(
         type = type
     )
 
-    out <- data.frame(estimate = pred)
+    out <- data.table(estimate = pred)
     out <- add_rowid(out, newdata)
 
     return(out)

@@ -22,7 +22,7 @@ set_coef.glmgee <- function(model, coefs, ...) {
 #' @export
 get_predict.glmgee <- function(model, newdata, ...) {
     Yhat <- stats::predict(model, newdata = newdata, type = "response")
-    out <- data.frame(estimate = as.vector(Yhat))
+    out <- data.table(estimate = as.vector(Yhat))
     out <- add_rowid(out, newdata)
     return(out)
 }
