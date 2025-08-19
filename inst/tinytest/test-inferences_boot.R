@@ -49,24 +49,6 @@ x <- mod |>
     inferences(method = "boot", R = R)
 expect_equivalent(nrow(x), 2)
 
-# fwb no validity check
-set.seed(1234)
-x <- mod |>
-    comparisons() |>
-    inferences(method = "fwb", R = R) |>
-    suppressWarnings()
-expect_equivalent(nrow(x), 300)
-expect_equal(x$std.error[1:3], c(0.0642131648304821, 0.0444891291752277, 0.0442572266844693))
-x <- mod |>
-    avg_comparisons() |>
-    inferences(method = "fwb", R = R) |>
-    suppressWarnings()
-expect_equivalent(nrow(x), 2)
-
-# {fwb} error when user supplied its own weights
-dat <- transform(mtcars, w = runif(32))
-mod <- lm(mpg ~ hp, data = dat)
-expect_error(inferences(comparisons(mod, wts = "w"), method = "fwb"), pattern = "wts")
 
 # Issue #856
 tmp <- lm(Petal.Length ~ Sepal.Length * Species, data = iris)

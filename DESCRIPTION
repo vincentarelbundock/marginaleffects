@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.28.0.11
+Version: 0.28.0.12
 Remotes: ngreifer/fwb
 Authors@R:
     c(person(given = "Vincent",
