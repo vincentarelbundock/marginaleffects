@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 requiet("mhurdle")
-exit_file("broken")
+exit_file("Insight Issue #1114")
 
 tol <- 0.001
 tol_se <- 0.001

@@ -329,16 +329,6 @@ predictions <- function(
         }
     }
 
-    # issue #1105: hypothesis may change the meaning of rows, 
-    # so we don't want to force-merge `newdata`
-    if (
-        !"rowid" %in% colnames(tmp) &&
-            nrow(tmp) == nrow(mfx@newdata) &&
-            is.null(mfx@hypothesis)
-    ) {
-        tmp$rowid <- mfx@newdata$rowid
-    }
-
     # degrees of freedom - use unpadded newdata
     # Temporarily replace newdata with unpadded version for df calculation
     original_newdata <- mfx@newdata
