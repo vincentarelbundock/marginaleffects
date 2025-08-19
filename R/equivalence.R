@@ -11,14 +11,14 @@ equivalence <- function(x, equivalence = NULL, df = Inf, draws = NULL, ...) {
         # share of the posterior draws in the equivalence interval
         x$p.equivalence <- apply(idx_equiv, 1, mean)
 
-        # index of draws in the credible interval
-        idx_ci <- draws > x$conf.low & draws < x$conf.high
-
-        # rope only considers draws in the credible interval
-        # we NA them before taking the mean
-        idx_rope <- idx_equiv
-        idx_rope[!idx_ci] <- FALSE
-        x$rope <- apply(idx_rope, 1, mean, na.rm = TRUE)
+        ## TODO: check this calculation
+        # # index of draws in the credible interval
+        # idx_ci <- draws > x$conf.low & draws < x$conf.high
+        # # rope only considers draws in the credible interval
+        # # we NA them before taking the mean
+        # idx_rope <- idx_equiv
+        # idx_rope[!idx_ci] <- FALSE
+        # x$rope <- apply(idx_rope, 1, mean, na.rm = TRUE)
 
         return(x)
     }
