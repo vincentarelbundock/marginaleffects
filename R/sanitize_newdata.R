@@ -293,11 +293,6 @@ dedup_newdata <- function(
         vclass <- vclass[names(vclass) != dv]
     }
 
-    # rowid is useless, except for intercept-only models, where we want to retain all rows
-    if ("rowid" %in% colnames(out) && ncol(out) > 1) {
-        out[, "rowid" := NULL]
-    }
-
     categ <- c("factor", "character", "logical", "strata", "cluster", "binary")
     if (!all(vclass %in% categ)) {
         return(newdata)

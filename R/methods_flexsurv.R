@@ -19,7 +19,7 @@ get_predict.flexsurvreg <- function(model, newdata, type, ...) {
     )
 
     if (ncol(preds) == 1L) {
-        if (names(preds) == '.pred') {
+        if (names(preds) == ".pred") {
             gp <- unlist(lapply(preds$.pred, function(x) {
                 x[, 1, drop = TRUE]
             }))
@@ -27,26 +27,22 @@ get_predict.flexsurvreg <- function(model, newdata, type, ...) {
                 x[, 2, drop = TRUE]
             }))
 
-            out <- data.frame(
-                rowid = seq_len(nrow(preds)),
+            out <- data.table(
                 group = as.vector(gp),
                 estimate = as.vector(val)
             )
             out$group <- group_to_factor(out$group, model)
             return(out)
         }
-        out <- data.frame(
-            rowid = seq_len(nrow(preds)),
-            estimate = as.vector(preds[, 1, drop = TRUE])
-        )
+        out <- data.table(estimate = as.vector(preds[, 1, drop = TRUE]))
         return(out)
     }
 
-    out <- data.frame(
-        rowid = seq_len(nrow(preds)),
+    out <- data.table(
         group = as.vector(preds[, 1, drop = TRUE]),
         estimate = as.vector(preds[, 2, drop = TRUE])
     )
+    out <- add_rowid(out, newdata)
     out$group <- group_to_factor(out$group, model)
     out
 }

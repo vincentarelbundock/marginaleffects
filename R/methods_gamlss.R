@@ -54,12 +54,8 @@ get_predict.gamlss <- function(
         )
     )
 
-    if ("rowid" %in% colnames(newdata)) {
-        out <- data.frame(rowid = newdata$rowid, estimate = out)
-    } else {
-        out <- data.frame(rowid = seq_along(out), estimate = out)
-    }
-
+    out <- data.table(estimate = out)
+    out <- add_rowid(out, newdata)
     return(out)
 }
 
@@ -133,7 +129,7 @@ predict_gamlss <- function(
             data <- unlist(tmp)
         }
         namelist <- factor(rep(names, len), levels = names)
-        return(data.frame(data, source = namelist))
+        return(data.table(data, source = namelist))
     }
     if (is.null(newdata)) {
         predictor <- gamlss::lpred(

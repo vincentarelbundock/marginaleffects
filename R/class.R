@@ -67,6 +67,7 @@ setClass(
         variables = "list",
         variable_class = "characterOrNULL",
         variable_names_datagrid = "characterOrNULL",
+        variable_names_predictors = "characterOrNULL",
         variable_names_response = "characterOrNULL",
         variable_names_by = "characterOrNULL",
         variable_names_by_hypothesis = "characterOrNULL",
@@ -132,6 +133,8 @@ new_marginaleffects_internal <- function(
 
     variable_names_wts <- hush(insight::find_weights(model))
 
+    variable_names_predictors <- hush(insight::find_predictors(model, flatten = TRUE, verbose = FALSE))
+
     # Extract calling function from call
     calling_function <- extract_calling_function(call)
 
@@ -162,6 +165,7 @@ new_marginaleffects_internal <- function(
         variable_names_by = variable_names_by,
         variable_names_by_hypothesis = variable_names_by_hypothesis,
         variable_names_datagrid = character(),
+        variable_names_predictors = variable_names_predictors,
         variable_names_response = variable_names_response,
         variable_names_wts = variable_names_wts,
         vcov_model = vcov_model,

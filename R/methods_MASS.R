@@ -44,24 +44,26 @@ get_predict.polr <- function(
     newdata = insight::get_data(model),
     type = "probs",
     mfx = NULL,
-    ...
-) {
+    ...) {
     calling_function <- if (!is.null(mfx)) mfx@calling_function else "predictions"
     type <- sanitize_type(model, type, calling_function = calling_function)
 
-    # hack: 1-row newdata returns a vector, so get_predict.default does not learn about groups
+    # hack: 1-row newdata returns a vector, so get_predict.default does
+    # not learn about groups
+    hack <- FALSE
     if (nrow(newdata) == 1) {
         hack <- TRUE
         newdata <- newdata[c(1, 1), , drop = FALSE]
-        newdata$rowid[1] <- -Inf
-    } else {
-        hack <- FALSE
     }
 
     out <- get_predict.default(model, newdata = newdata, type = type, ...)
 
-    # hack
-    out <- out[out$rowid != -Inf, ]
+    if (hack) {
+        out <- out[seq_len(nrow(out)) %% 2 == 1, , drop = FALSE]
+        newdata <- newdata[seq_len(nrow(newdata)) %% 2 == 1, , drop = FALSE]
+    }
+
+    out <- add_rowid(out, newdata)
 
     return(out)
 }
@@ -83,12 +85,9 @@ get_predict.glmmPQL <- function(
     newdata = insight::get_data(model),
     type = "response",
     mfx = NULL,
-    ...
-) {
+    ...) {
     out <- stats::predict(model, newdata = newdata, type = type, ...)
-    out <- data.frame(
-        rowid = seq_len(nrow(newdata)),
-        estimate = out
-    )
+    out <- data.table(estimate = out)
+    out <- add_rowid(out, newdata)
     return(out)
 }

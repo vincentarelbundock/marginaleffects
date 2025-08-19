@@ -3,20 +3,24 @@
 get_predict.mlogit <- function(model, newdata, ...) {
     mat <- stats::predict(model, newdata = as.data.frame(newdata))
     if (isTRUE(checkmate::check_atomic_vector(mat))) {
-        out <- data.table(rowid = seq_along(mat), group = names(mat), estimate = mat)
+        out <- data.table(group = names(mat), estimate = mat)
     } else {
         out <- data.table(
-            rowid = rep(seq_len(nrow(mat)), rep = ncol(mat)),
+            # only for sorting; delete after
+            marginaleffects_internal_rowid = rep(seq_len(nrow(mat)), rep = ncol(mat)),
             group = rep(colnames(mat), each = nrow(mat)),
             estimate = as.vector(mat)
         )
     }
-    setkey(out, rowid, group)
+    setkey(out, marginaleffects_internal_rowid, group)
+    # only for sorting; delete after
+    out[, marginaleffects_internal_rowid := NULL]
     if ("term" %in% colnames(newdata)) {
         out[, "term" := newdata[["term"]]]
     }
     # do not convert to factor because DV is often "yes" or "no" while the "group" is outcome levels.
     # out$group <- group_to_factor(out$group, model)
+    out <- add_rowid(out, newdata)
     return(out)
 }
 

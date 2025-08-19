@@ -9,6 +9,7 @@ utils::globalVariables(c(
     "..by",
     "..bycols",
     "..cl",
+    "marginaleffects_internal_rowid",
     "..col_newdata",
     "..col_x",
     "..cols",

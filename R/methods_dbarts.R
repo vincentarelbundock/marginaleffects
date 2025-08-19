@@ -11,19 +11,10 @@ get_predict.bart <- function(model, newdata = NULL, ...) {
     )
     p <- do.call(stats::predict, args)
     p_med <- collapse::fmedian(p)
-    if ("rowid" %in% colnames(newdata) && nrow(newdata) == length(p_med)) {
-        out <- data.frame(
-            rowid = newdata$rowid,
-            group = "main_marginaleffect",
-            estimate = p_med
-        )
-    } else {
-        out <- data.frame(
-            rowid = seq_along(length(p_med)),
-            group = "main_marginaleffect",
-            estimate = p_med
-        )
-    }
+    out <- data.table(
+        group = "main_marginaleffect",
+        estimate = p_med)
+    out <- add_rowid(out, newdata)
     attr(out, "posterior_draws") <- t(p)
     return(out)
 }

@@ -47,8 +47,7 @@ get_predict.multinom <- function(
     newdata = insight::get_data(model),
     type = "probs",
     mfx = NULL,
-    ...
-) {
+    ...) {
     calling_function <- if (!is.null(mfx)) mfx@calling_function else "predictions"
     type <- sanitize_type(model, type, calling_function = calling_function)
 
@@ -100,18 +99,12 @@ get_predict.multinom <- function(
     }
 
     # matrix with outcome levels as columns
-    out <- data.frame(
+    out <- data.table(
         group = rep(colnames(pred), each = nrow(pred)),
         estimate = c(pred)
     )
     out$group <- group_to_factor(out$group, model)
-
-    # usually when `newdata` is supplied by `comparisons`
-    if ("rowid" %in% colnames(newdata)) {
-        out$rowid <- rep(newdata$rowid, times = ncol(pred))
-    } else {
-        out$rowid <- rep(seq_len(nrow(pred)), times = ncol(pred))
-    }
+    out <- add_rowid(out, newdata)
 
     return(out)
 }

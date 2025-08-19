@@ -39,23 +39,22 @@ get_predict.model_fit <- function(model, newdata, type = NULL, ...) {
 
     if (type == "numeric") {
         v <- intersect(c(".pred", ".pred_res"), colnames(out))[1]
-        out <- data.frame(rowid = seq_len(nrow(out)), estimate = out[[v]])
+        out <- data.table(estimate = out[[v]])
     } else if (type == "class") {
-        out <- data.frame(
-            rowid = seq_len(nrow(out)),
-            estimate = out[[".pred_class"]]
-        )
+        out <- data.table(estimate = out[[".pred_class"]])
     } else if (type == "prob") {
         colnames(out) <- substr(colnames(out), 7, nchar(colnames(out)))
-        out$rowid <- seq_len(nrow(out))
+        out$marginaleffects_internal_id <- seq_len(nrow(out))
         data.table::setDT(out)
         out <- data.table::melt(
             out,
-            id.vars = "rowid",
+            id.vars = "marginaleffects_internal_id",
             variable.name = "group",
             value.name = "estimate"
         )
+        out$marginaleffects_internal_id <- NULL
     }
+    out <- add_rowid(out, newdata)
 
     return(out)
 }

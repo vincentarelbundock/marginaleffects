@@ -5,8 +5,7 @@ get_predict.biglm <- function(
     newdata = insight::get_data(model),
     type = "response",
     mfx = NULL,
-    ...
-) {
+    ...) {
     calling_function <- if (!is.null(mfx)) mfx@calling_function else "predictions"
     type <- sanitize_type(model, type, calling_function = calling_function)
     out <- stats::predict(
@@ -15,10 +14,8 @@ get_predict.biglm <- function(
         type = type
     )
     out <- as.vector(out)
-    out <- data.frame(
-        rowid = seq_along(out),
-        estimate = out
-    )
+    out <- data.table(estimate = out)
+    out <- add_rowid(out, newdata)
     return(out)
 }
 

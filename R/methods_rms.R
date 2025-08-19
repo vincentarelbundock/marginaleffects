@@ -29,7 +29,9 @@ get_predict.rms <- function(
     }
 
     # {rms} predict methods break on additional arguments
-    get_predict.default(model, newdata = newdata, type = type)
+    out <- get_predict.default(model, newdata = newdata, type = type)
+    out <- add_rowid(out, newdata)
+    return(out)
 }
 
 #' @rdname get_predict

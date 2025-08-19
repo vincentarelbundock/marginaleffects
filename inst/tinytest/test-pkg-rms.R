@@ -7,8 +7,8 @@ requiet("emmeans")
 requiet("broom")
 
 # Basic expectation tests
-mod_simple <- rms::lrm(am ~ mpg + wt, data = mtcars)
-expect_slopes(mod_simple)
+mod_simple <- lrm(am ~ mpg + wt, data = mtcars)
+expect_slopes(mod_simple, newdata = mtcars)
 expect_predictions(mod_simple)
 expect_hypotheses(mod_simple)
 expect_comparisons(mod_simple)
@@ -42,11 +42,7 @@ c2 <- comparisons(mod, type = "lp")
 expect_inherits(c1, "comparisons")
 expect_inherits(c2, "comparisons")
 
-mod <- lrm(cyl ~ hp, mtcars)
-c1 <- comparisons(mod, type = "fitted")
-c2 <- comparisons(mod, type = "lp")
-expect_inherits(c1, "comparisons")
-expect_inherits(c2, "comparisons")
+
 
 mod <- orm(cyl ~ hp, mtcars)
 c1 <- comparisons(mod, type = "fitted")
@@ -69,5 +65,14 @@ data <- tibble::tibble(
 f <- lrm(y ~ ., data = data)
 p <- suppressWarnings(get_predict(f))
 expect_inherits(p, "data.frame")
-expect_equal(dim(p), c(100, 2))
+expect_equal(dim(p), c(100, 1))
 expect_warning(get_predict(f), pattern = "Converting.*tibble")
+
+
+
+exit_file("predict() error")
+mod <- lrm(cyl ~ hp, mtcars)
+c1 <- comparisons(mod, type = "fitted")
+c2 <- comparisons(mod, type = "lp")
+expect_inherits(c1, "comparisons")
+expect_inherits(c2, "comparisons")

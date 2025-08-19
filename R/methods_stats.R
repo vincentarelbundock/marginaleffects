@@ -31,8 +31,7 @@ get_predict.lm <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
-    ...
-) {
+    ...) {
     MM <- attr(newdata, "marginaleffects_model_matrix")
     beta <- get_coef(model)
     if (!isTRUE(checkmate::check_matrix(MM)) || ncol(MM) != length(beta)) {
@@ -75,8 +74,7 @@ get_predict.glm <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
-    ...
-) {
+    ...) {
     out <- NULL
     MM <- attr(newdata, "marginaleffects_model_matrix")
     if (isTRUE(checkmate::check_matrix(MM))) {

@@ -58,7 +58,6 @@
 #' A `marginaleffects` object with simulation or bootstrap resamples and objects attached.
 #' @examples
 #' \dontrun{
-#' library(marginaleffects)
 #' library(magrittr)
 #' set.seed(1024)
 #' mod <- lm(Sepal.Length ~ Sepal.Width * Species, data = iris)

@@ -34,8 +34,7 @@ get_predict.brmsfit <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
-    ...
-) {
+    ...) {
     checkmate::assert_choice(
         type,
         choices = c("response", "link", "prediction", "average")
@@ -72,14 +71,6 @@ get_predict.brmsfit <- function(
         )
     }
 
-    if ("rowid_internal" %in% colnames(newdata)) {
-        idx <- newdata[["rowid_internal"]]
-    } else if ("rowid" %in% colnames(newdata)) {
-        idx <- newdata[["rowid"]]
-    } else {
-        idx <- seq_len(nrow(newdata))
-    }
-
     # resp_subset sometimes causes dimension mismatch
     if (length(dim(draws)) == 2 && nrow(newdata) != ncol(draws)) {
         msg <- sprintf(
@@ -93,8 +84,7 @@ get_predict.brmsfit <- function(
     # 1d outcome
     if (length(dim(draws)) == 2) {
         med <- collapse::dapply(draws, MARGIN = 2, FUN = collapse::fmedian)
-        out <- data.frame(
-            rowid = idx,
+        out <- data.table(
             group = "main_marginaleffect",
             estimate = med
         )
@@ -108,8 +98,7 @@ get_predict.brmsfit <- function(
         } else {
             colnames(out) <- levnames
         }
-        out <- data.frame(
-            rowid = rep(idx, times = ncol(out)),
+        out <- data.table(
             group = rep(colnames(out), each = nrow(out)),
             estimate = c(out)
         )
@@ -121,9 +110,11 @@ get_predict.brmsfit <- function(
         )
     }
 
+    out <- add_rowid(out, newdata)
+
     # group for multi-valued outcome
     if (length(dim(draws)) == 3) {
-        draws <- lapply(seq_len(dim(draws)[3]), function(i) draws[,, i])
+        draws <- lapply(seq_len(dim(draws)[3]), function(i) draws[, , i])
         draws <- do.call("cbind", draws)
     }
     attr(out, "posterior_draws") <- t(draws)

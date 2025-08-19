@@ -57,10 +57,8 @@ get_predict.betareg <- function(model, newdata, type = "response", ...) {
     )
     args[["at"]] <- dots[["at"]]
     out <- do.call(stats::predict, args)
-    out <- data.frame(
-        rowid = seq_len(nrow(newdata)),
-        estimate = out
-    )
+    out <- data.table(estimate = out)
+    out <- add_rowid(out, newdata)
     return(out)
 }
 

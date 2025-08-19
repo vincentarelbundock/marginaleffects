@@ -249,6 +249,11 @@ Columns may include:
 \item \code{predicted_hi}: predicted outcome for the "high" value of the focal predictor in a counterfactual comparison.
 \item \code{p.equivalence}: share of posterior draws in the interval specified by the \code{equivalence} argument. This is only available for Bayesian models.
 \item \code{rope}: share of the posterior draws between \code{conf.low} and \code{conf.high} that are covered by the interval specified by the \code{equivalence} argument.
+\item \code{statistic.noninf}: test statistic for non-inferiority test (when \code{equivalence} argument is used).
+\item \code{statistic.nonsup}: test statistic for non-superiority test (when \code{equivalence} argument is used).
+\item \code{p.value.noninf}: p-value for non-inferiority test (when \code{equivalence} argument is used).
+\item \code{p.value.nonsup}: p-value for non-superiority test (when \code{equivalence} argument is used).
+\item \code{p.value.equiv}: p-value for equivalence test using Two One-Sided Tests (TOST) approach (when \code{equivalence} argument is used).
 }
 
 See \code{?print.marginaleffects} for printing options.

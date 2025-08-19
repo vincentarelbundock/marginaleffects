@@ -30,7 +30,6 @@
 #' @return A `ggplot2` object
 #' @export
 #' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
-#' library(marginaleffects)
 #' mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 #'
 #' plot_slopes(mod, variables = "hp", condition = "drat")
@@ -67,8 +66,7 @@ plot_slopes <- function(
     rug = FALSE,
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
-    ...
-) {
+    ...) {
     if ("effect" %in% ...names()) {
         if (is.null(variables)) {
             variables <- ...elt(match("effect", ...names())[1L])

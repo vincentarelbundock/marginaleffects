@@ -6,8 +6,7 @@ get_predict.bife <- function(
     model,
     newdata = insight::get_data(model),
     type = "response",
-    ...
-) {
+    ...) {
     pred <- stats::predict(model, X_new = newdata, type = type, ...)
 
     sanity_predict_vector(
@@ -23,10 +22,8 @@ get_predict.bife <- function(
         type = type
     )
 
-    out <- data.frame(
-        rowid = seq_len(nrow(newdata)),
-        estimate = pred
-    )
+    out <- data.table(estimate = pred)
+    out <- add_rowid(out, newdata)
 
     return(out)
 }

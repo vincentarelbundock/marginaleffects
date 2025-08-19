@@ -2,8 +2,8 @@
 #' @rdname set_coef
 #' @export
 set_coef.survreg <- function(model, coefs, ...) {
-    #Reverse engineering insight::get_get_parameters.survreg(),
-    #which uses summary.survreg()
+    # Reverse engineering insight::get_get_parameters.survreg(),
+    # which uses summary.survreg()
 
     nvar0 <- length(model$coefficients)
     nvar <- nrow(model$var)
@@ -23,11 +23,10 @@ get_predict.coxph <- function(
     model,
     newdata = insight::get_data(model),
     type = "lp",
-    ...
-) {
+    ...) {
     out <- stats::predict(model, newdata = newdata, type = type, ...)
-
-    out <- data.frame(rowid = seq_len(nrow(newdata)), estimate = out)
+    out <- data.table(estimate = out)
+    out <- add_rowid(out, newdata)
     return(out)
 }
 

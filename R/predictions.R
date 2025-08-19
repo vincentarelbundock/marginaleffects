@@ -284,30 +284,17 @@ predictions <- function(
             args[[v$name]] <- v$value
         }
         mfx@newdata <- do.call("datagrid", args)
-        # the original rowids are no longer valid after averaging et al.
-        mfx@newdata[["rowid"]] <- NULL
     }
-
-    character_levels <- attr(mfx@newdata, "newdata_character_levels")
 
     # trust newdata$rowid
     if (!"rowid" %in% colnames(mfx@newdata)) {
         mfx@newdata[["rowid"]] <- seq_len(nrow(mfx@newdata))
     }
 
-    # pad factors: `model.matrix` breaks when factor levels are missing
-    # support `newdata` and assume no padding the `idx` column is necessary for
-    # `get_predict` but it breaks binding, so we can't remove it in
-    # sanity_newdata and we can't rbind it with padding
-    # pad factors: `model.matrix` breaks when factor levels are missing
-    if (inherits(model, "mlogit")) {
-        padding <- data.frame()
-    } else {
-        padding <- complete_levels(mfx@newdata, character_levels)
-        if (nrow(padding) > 0) {
-            mfx@newdata <- rbindlist(list(padding, mfx@newdata))
-        }
-    }
+    # Store unpadded newdata for degrees of freedom calculation
+    unpadded_newdata <- mfx@newdata
+
+    mfx@newdata <- pad(model, mfx@newdata)
 
     ############### sanity checks are over
 
@@ -343,16 +330,10 @@ predictions <- function(
         }
     }
 
-    # issue #1105: hypothesis may change the meaning of rows, so we don't want to force-merge `newdata`
-    if (
-        !"rowid" %in% colnames(tmp) &&
-            nrow(tmp) == nrow(mfx@newdata) &&
-            is.null(mfx@hypothesis)
-    ) {
-        tmp$rowid <- mfx@newdata$rowid
-    }
-
-    # degrees of freedom
+    # degrees of freedom - use unpadded newdata
+    # Temporarily replace newdata with unpadded version for df calculation
+    original_newdata <- mfx@newdata
+    mfx@newdata <- unpadded_newdata
     mfx <- add_degrees_of_freedom(
         mfx = mfx,
         df = df,
@@ -360,6 +341,8 @@ predictions <- function(
         hypothesis = mfx@hypothesis,
         vcov = vcov
     )
+    # Restore padded newdata
+    mfx@newdata <- original_newdata
     if (!is.null(mfx@df) && is.numeric(mfx@df)) {
         tmp$df <- mfx@df
     }
@@ -399,9 +382,8 @@ predictions <- function(
     out <- data.table::data.table(tmp)
     data.table::setDT(mfx@newdata)
 
-    # expensive: only do this inside jacobian if necessary
-    if (!inherits(mfx@model, "mclogit")) {
-        # weird case. probably a cleaner way but lazy now...
+    # it does not make sense to merge original data into aggregated results
+    if (isFALSE(by) && !inherits(mfx@model, "mclogit")) {
         out <- merge_by_rowid(out, mfx@newdata)
     }
 

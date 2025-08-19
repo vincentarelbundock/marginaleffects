@@ -8,8 +8,7 @@ get_predict.MCMCglmm <- function(
     newparams = NULL,
     ndraws = 1000,
     se.fit = NULL,
-    ...
-) {
+    ...) {
     ndraws_mod <- nrow(model$VCV)
     if (ndraws < ndraws_mod) {
         idx <- sample.int(ndraws_mod, ndraws)
@@ -25,10 +24,8 @@ get_predict.MCMCglmm <- function(
         function(i) stats::predict(model, newdata = nd, it = i, ...)
     )
     draws <- do.call("cbind", draws)
-    out <- data.frame(
-        rowid = seq_len(nrow(nd)),
-        estimate = apply(draws, MARGIN = 1, FUN = stats::median)
-    )
+    out <- data.table(estimate = apply(draws, MARGIN = 1, FUN = stats::median))
+    out <- add_rowid(out, newdata)
     attr(out, "posterior_draws") <- draws
     return(out)
 }

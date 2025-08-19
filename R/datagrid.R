@@ -37,7 +37,6 @@ unique_s <- function(x) sort(unique(x))
 #' **Warning about hierarchical grouping variables:** When using the default `grid_type = "mean_or_mode"` with hierarchical models (such as mixed models with nested grouping factors), `datagrid()` may create invalid combinations of grouping variables. For example, if you have students nested within schools, or countries nested within regions, the modal values of each grouping variable may not correspond to valid nested relationships in the data. This can cause prediction errors. To avoid this issue, explicitly specify valid combinations of hierarchical grouping variables in the `datagrid()` call, or use `grid_type = "counterfactual"` to preserve the original data structure.
 #'
 #' \preformatted{
-#' library(marginaleffects)
 #' mod <- lm(mpg ~ am + vs + factor(cyl) + hp, mtcars)
 #' datagrid_bal <- function(...) datagrid(..., grid_type = "balanced")
 #' predictions(model, newdata = datagrid_bal(cyl = 4))

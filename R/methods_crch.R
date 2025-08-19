@@ -37,10 +37,8 @@ get_predict.crch <- function(model, newdata = NULL, type = "location", ...) {
         newdata = newdata,
         type = type
     )
-    out <- data.frame(
-        rowid = seq_len(nrow(newdata)),
-        estimate = pred
-    )
+    out <- data.table(estimate = pred)
+    out <- add_rowid(out, newdata)
     return(out)
 }
 

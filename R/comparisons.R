@@ -98,8 +98,6 @@
 #' @template return
 #'
 #' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
-#' library("marginaleffects")
-#'
 #' # Linear model
 #' tmp <- mtcars
 #' tmp$am <- as.logical(tmp$am)
@@ -393,7 +391,7 @@ comparisons <- function(
     }
 
     # merge original data back in
-    if ((is.null(by) || isFALSE(by)) && "rowid" %in% colnames(cmp)) {
+    if (isFALSE(by) && "rowid" %in% colnames(cmp)) {
         if ("rowid" %in% colnames(mfx@newdata)) {
             idx <- c(
                 "rowid",
