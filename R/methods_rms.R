@@ -30,7 +30,6 @@ get_predict.rms <- function(
 
     # {rms} predict methods break on additional arguments
     out <- get_predict.default(model, newdata = newdata, type = type)
-    out <- data.table(estimate = out)
     out <- add_rowid(out, newdata)
     return(out)
 }
