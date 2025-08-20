@@ -54,7 +54,12 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     args <- list("data" = modeldata, "apparent" = TRUE)
     args[["times"]] <- R
     args <- c(args, list(...))
-    splits <- do.call(rsample::bootstraps, args)
+    if ("group" %in% ...names()) {
+        splits <- do.call(rsample::group_bootstraps, args)
+    } else {
+        splits <- do.call(rsample::bootstraps, args)
+    }
+
     if (isTRUE(getOption("marginaleffects_parallel_inferences", default = FALSE))) {
         insight::check_if_installed("future.apply")
         pkg <- getOption("marginaleffects_parallel_packages", default = NULL)

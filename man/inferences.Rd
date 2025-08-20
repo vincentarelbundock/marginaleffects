@@ -56,7 +56,7 @@ inferences(
 \item{...}{\itemize{
 \item If \code{method = "boot"}, additional arguments are passed to \code{boot::boot()}.
 \item If \code{method = "fwb"}, additional arguments are passed to \code{fwb::fwb()}.
-\item If \code{method = "rsample"}, additional arguments are passed to \code{rsample::bootstraps()}.
+\item If \code{method = "rsample"}, additional arguments are passed to \code{rsample::bootstraps()}, unless the user supplies a \code{group} argument, in which case all arguments are passed to \code{rsample::group_bootstraps()}.
 \item Additional arguments are ignored for all other methods.
 }}
 }

@@ -30,7 +30,7 @@
 #' @param ...
 #' + If `method = "boot"`, additional arguments are passed to `boot::boot()`.
 #' + If `method = "fwb"`, additional arguments are passed to `fwb::fwb()`.
-#' + If `method = "rsample"`, additional arguments are passed to `rsample::bootstraps()`.
+#' + If `method = "rsample"`, additional arguments are passed to `rsample::bootstraps()`, unless the user supplies a `group` argument, in which case all arguments are passed to `rsample::group_bootstraps()`.
 #' + Additional arguments are ignored for all other methods.
 #' @details
 #' When `method = "simulation"`, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
