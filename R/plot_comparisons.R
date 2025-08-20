@@ -60,6 +60,11 @@ plot_comparisons <- function(
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
     ...) {
+    if (inherits(model, c("mira", "amest"))) {
+        msg <- "This function does not support multiple imputation. Call `comparisons()` or `avg_comparisons()` instead. These functions return easy to plot data frames."
+        stop_sprintf(msg)
+    }
+
     # init
     call <- construct_call(model, "comparisons")
     model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)

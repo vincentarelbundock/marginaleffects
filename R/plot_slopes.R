@@ -77,6 +77,11 @@ plot_slopes <- function(
         }
     }
 
+    if (inherits(model, c("mira", "amest"))) {
+        msg <- "This function does not support multiple imputation. Call `slopes()` or `avg_slopes()` instead. These functions return easy to plot data frames."
+        stop_sprintf(msg)
+    }
+
     # init
     call <- construct_call(model, "comparisons")
     model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
