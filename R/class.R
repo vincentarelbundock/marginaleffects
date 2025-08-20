@@ -46,6 +46,7 @@ setClass(
         by = "ANY",
         byfun = "functionOrNULL",
         call = "ANY",
+        call_model = "ANY",
         calling_function = "character",
         comparison = "ANY",
         conf_level = "numeric",
@@ -138,11 +139,14 @@ new_marginaleffects_internal <- function(
     # Extract calling function from call
     calling_function <- extract_calling_function(call)
 
+    call_model <- tryCatch(insight::get_call(model), error = function(e) NULL)
+
     methods::new(
         "marginaleffects_internal",
         by = by,
         byfun = byfun,
         call = call,
+        call_model = call_model,
         calling_function = calling_function,
         comparison = comparison,
         conf_level = conf_level,

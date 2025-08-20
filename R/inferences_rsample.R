@@ -9,7 +9,8 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     modeldata <- mfx@modeldata
 
     # Ensure parameters are embedded in the call, not just references
-    if (!is.null(mfx@newdata)) {
+    # avoid two arguments called `newdata`
+    if (!is.null(mfx@newdata) && !"newdata" %in% ...names()) {
         call_mfx[["newdata"]] <- mfx@newdata
     }
     if (!is.null(mfx@comparison)) {

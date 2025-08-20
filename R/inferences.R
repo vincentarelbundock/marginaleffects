@@ -166,7 +166,8 @@ inferences <- function(
     # Update call with pre-evaluated newdata if available
     if (!is.null(call_mfx)) {
         nd <- mfx@newdata
-        if (inherits(nd, "data.frame")) {
+        # avoid error on two arguments matching `newdata`
+        if (inherits(nd, "data.frame") && !"newdata" %in% ...names()) {
             call_mfx[["newdata"]] <- nd
         }
 

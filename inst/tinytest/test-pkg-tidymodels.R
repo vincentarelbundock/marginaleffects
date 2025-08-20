@@ -4,7 +4,9 @@ requiet("tidymodels")
 if (ON_CRAN || ON_CI) exit_file("local only")
 
 # Basic expectation tests
-mod_simple <- parsnip::linear_reg() |> parsnip::set_engine("lm") |> parsnip::fit(mpg ~ wt + am, data = mtcars)
+mod_simple <- parsnip::linear_reg() |>
+    parsnip::set_engine("lm") |>
+    parsnip::fit(mpg ~ wt + am, data = mtcars)
 expect_slopes(mod_simple)
 expect_predictions(mod_simple)
 expect_hypotheses(mod_simple)
@@ -18,13 +20,9 @@ dat$large_penguin <- ifelse(
 )
 dat$large_penguin <- factor(dat$large_penguin, levels = c("yes", "no"))
 
-
 # class
 mod <- set_engine(logistic_reg(), "glm") |>
     fit(large_penguin ~ bill_length_mm + flipper_length_mm + species, data = dat)
-
-# inferences() does not support tidymodels
-expect_error(predictions(mod, type = "prob") |> inferences(method = "conformal_cv+"), "does not support")
 
 p <- predictions(mod, newdata = dat, type = "prob")
 expect_inherits(p, "predictions")
@@ -39,6 +37,20 @@ expect_inherits(mfx, "marginaleffects")
 expect_true(nrow(mfx) > 0)
 
 
+# conformal
+dat <- get_dataset("penguins", "palmerpenguins") |> na.omit()
+mod <- set_engine(linear_reg(), "lm") |>
+    fit(body_mass_g ~ bill_length_mm + flipper_length_mm + species,
+        data = na.omit(dat))
+p <- predictions(mod, newdata = dat) |>
+    inferences(
+        R = 3,
+        method = "conformal_cv+",
+        conformal_test = dat[1:100, ],
+        conformal_calibration = dat[101:nrow(dat), ]
+    )
+expect_inherits(p, "predictions")
+
 # workflow: engine supported
 data("bikes", package = "fmeffects")
 
@@ -50,6 +62,13 @@ p <- predictions(mod, newdata = bikes, type = "numeric") |>
     suppressWarnings()
 expect_inherits(p, "predictions")
 expect_true("std.error" %in% colnames(p))
+
+p <- predictions(mod, newdata = bikes) |>
+    inferences(
+        method = "conformal_split",
+        conformal_test = bikes[1:200, ],
+        conformal_calibration = bikes[201:nrow(bikes), ])
+expect_inherits(p, "predictions")
 
 mfx <- avg_slopes(mod, variables = c("temp", "season", "weather"), newdata = bikes, type = "numeric") |>
     suppressWarnings()

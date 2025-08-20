@@ -13,7 +13,7 @@ joint_test <- function(
     # Create mfx object if it doesn't exist (needed for joint tests on model objects)
     if (is.null(mfx) && !inherits(object, c("slopes", "comparisons", "predictions", "hypotheses"))) {
         call <- construct_call(object, "hypotheses")
-        object_sanitized <- sanitize_model(object, call = call, newdata = NULL, vcov = vcov)
+        object_sanitized <- sanitize_model(object, call = call, vcov = vcov)
         mfx <- new_marginaleffects_internal(
             call = call,
             model = object_sanitized
