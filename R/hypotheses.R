@@ -203,7 +203,8 @@ hypotheses <- function(
     if (inherits(model, "marginaleffects_internal")) {
         mfx <- model
     } else {
-        if (!inherits(model, internal_classes)) {
+        # hypotheses() supports raw data frames
+        if (!inherits(model, c(internal_classes, "data.frame"))) {
             model <- sanitize_model(model, call = call, wts = wts, vcov = vcov, by = by, ...)
         }
         mfx <- new_marginaleffects_internal(
