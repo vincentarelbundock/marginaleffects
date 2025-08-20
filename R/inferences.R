@@ -113,10 +113,6 @@ inferences <- function(
         mfx <- new_marginaleffects_internal(NULL, call("predictions"))
     }
 
-    if (inherits(mfx@model, c("model_fit", "workflow"))) {
-        msg <- "The `inferences()` function does not support `tidymodels` objects."
-        stop_sprintf(msg)
-    }
 
     x <- sanitize_estimator(x = x, estimator = estimator, method = method)
 
@@ -151,6 +147,17 @@ inferences <- function(
         checkmate::check_class(x, "slopes"),
         checkmate::check_class(x, "hypotheses")
     )
+
+    if (inherits(mfx@model, "Learner")) {
+        msg <- "The inferences() function does not support models of this class."
+        stop_sprintf(msg)
+    }
+    if (inherits(mfx@model, c("model_fit", "workflow"))) {
+        if (method %in% c("boot", "rsample", "simulation")) {
+            msg <- "Bootstrap and simulation-based inferences are not supported for models of this class."
+            stop_sprintf(msg)
+        }
+    }
 
     # Issue #1501: `newdata` should only use the pre-evaluated `newdata` instead of bootstrapping datagrid()
     mfx <- attr(x, "marginaleffects")
