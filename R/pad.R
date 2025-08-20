@@ -7,6 +7,7 @@
 #' @param model Model object to check for mlogit class
 #' @param newdata Data frame to pad
 #' @keywords internal
+#' @noRd
 pad <- function(model, newdata) {
     checkmate::assert_data_frame(newdata)
 
