@@ -233,7 +233,8 @@ Columns may include:
 \item \code{conf.high}: upper bound of the confidence (or credible) interval defined by the \code{conf_level} argument.
 \item \code{predicted_lo}: predicted outcome for the "low" value of the focal predictor in a counterfactual comparison.
 \item \code{predicted_hi}: predicted outcome for the "high" value of the focal predictor in a counterfactual comparison.
-\item \code{p.equivalence}: share of posterior draws in the interval specified by the \code{equivalence} argument. This is only available for Bayesian models.
+\item \code{p.rope.unconditional}: share of posterior draws in the interval specified by the \code{equivalence} argument. This is only available for Bayesian models.
+\item \code{p.rope.conditional}: share of posterior draws in the interval specified by the \code{equivalence} argument, among draws in the confidence interval. This is only available for Bayesian models.
 \item \code{rope}: share of the posterior draws between \code{conf.low} and \code{conf.high} that are covered by the interval specified by the \code{equivalence} argument.
 \item \code{statistic.noninf}: test statistic for non-inferiority test (when \code{equivalence} argument is used).
 \item \code{statistic.nonsup}: test statistic for non-superiority test (when \code{equivalence} argument is used).

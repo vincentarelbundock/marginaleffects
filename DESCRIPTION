@@ -52,6 +52,7 @@ Suggests:
     Amelia,
     afex,
     aod,
+    bayestestR,
     bench,
     betareg,
     BH,

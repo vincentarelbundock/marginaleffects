@@ -104,7 +104,8 @@ print.marginaleffects <- function(
     }
 
     # round and replace NAs
-    ps <- c("p.value", "p.value.nonsup", "p.value.noninf", "p.value.equiv", "p.equivalence", "rope")
+    ps <- c("p.value", "p.value.nonsup", "p.value.noninf", "p.value.equiv", 
+        "p.rope.conditional", "p.rope.unconditional")
 
     for (i in seq_along(out)) {
         if (colnames(out)[i] %in% ps) {
@@ -152,8 +153,8 @@ print.marginaleffects <- function(
         "pred.high" = sprintf("Pred. %.1f %%", 100 - alpha / 2),
         "pred.set" = sprintf("Pred Set %.1f %%", 100 - alpha / 2),
         "rope" = "ROPE",
-        "p.equivalence" = "Pr(Equivalence)",
-        "p.value.noninf" = "p (NonInf)",
+        "p.rope.conditional" = "Pr(ROPE|CI)",
+        "p.rope.unconditional" = "Pr(ROPE)",
         "p.value.nonsup" = "p (NonSup)",
         "p.value.equiv" = "p (Equiv)",
         "df" = "Df",
