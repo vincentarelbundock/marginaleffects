@@ -52,7 +52,7 @@ get_draws <- function(x, shape = "long") {
     if (shape == "rvar") {
         insight::check_if_installed("posterior")
         draws <- t(draws)
-        if (!is.null(mfx@draws_chains)) {
+        if (mfx@draws_chains > 0) {
             x[["rvar"]] <- posterior::rvar(draws, nchains = mfx@draws_chains)
         } else {
             x[["rvar"]] <- posterior::rvar(draws)
