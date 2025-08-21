@@ -15,7 +15,7 @@ post <- get_draws(p1, "DxP")
 p2 <- apply(post, 2, function(v) {
     mean(lo <= v & v <= hi)
 })
-p3 <- bayestestR::p_rope(p, range = c(lo, hi))$p_ROPE
+p3 <- bayestestR::p_rope(p1, range = c(lo, hi))$p_ROPE
 
 ## Option 2: $Pr(\theta \in ROPE | \theta \in CI)$ This is Kruschke's CI+ROPE rule.
 p4 <- apply(post, 2, function(v) {
@@ -27,7 +27,7 @@ p4 <- apply(post, 2, function(v) {
     # 3. What is the conditional probability that they are in ROPE:
     mean(lo <= v_CI & v_CI <= hi)
 })
-p5 <- rope(p, range = c(lo, hi), ci = 0.95, ci_method = "ETI")$ROPE_Percentage
+p5 <- rope(p1, range = c(lo, hi), ci = 0.95, ci_method = "ETI")$ROPE_Percentage
 
 expect_equivalent(p1$p.rope.unconditional, p2)
 expect_equivalent(p1$p.rope.unconditional, p3)
