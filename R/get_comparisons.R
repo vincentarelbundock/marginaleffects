@@ -1,9 +1,5 @@
-# Internal helper: get predictions for Bayesian models (brms, bart)
+# Important: lo and hi must be made simultaneously to for seed-related issues in random effects models
 get_predictions_bayesian <- function(model, type, lo, hi, ...) {
-    if (!"rowid" %in% colnames(lo)) {
-        lo$rowid <- hi$rowid <- seq_len(nrow(lo))
-    }
-    
     both <- rbindlist(list(lo, hi))
     
     pred_both <- get_predict_error(
@@ -31,8 +27,8 @@ get_predictions_bayesian <- function(model, type, lo, hi, ...) {
     list(pred_lo = pred_lo, pred_hi = pred_hi, draws_lo = draws_lo, draws_hi = draws_hi)
 }
 
-# Internal helper: get predictions for standard models
-get_predictions_standard <- function(model, type, lo, hi, ...) {
+
+get_predictions_frequentist <- function(model, type, lo, hi, ...) {
     pred_lo <- get_predict_error(
         model,
         type = type,
@@ -50,13 +46,11 @@ get_predictions_standard <- function(model, type, lo, hi, ...) {
     list(pred_lo = pred_lo, pred_hi = pred_hi, draws_lo = NULL, draws_hi = NULL)
 }
 
+
 # Internal helper: process elasticity variable values
 process_elasticity_variables <- function(variables, out, original, by) {
-    # Define elasticity types
-    elasticity_types <- c(
-        "eyex", "eydx", "dyex", "eyexavg", "eydxavg", "dyexavg"
-    )
-    
+    elasticity_types <- c("eyex", "eydx", "dyex", "eyexavg", "eydxavg", "dyexavg")
+
     # Filter variables that need elasticity values (x parameter)
     FUN <- function(z) {
         (is.character(z$comparison) && z$comparison %in% elasticity_types) ||
@@ -64,53 +58,54 @@ process_elasticity_variables <- function(variables, out, original, by) {
     }
     elasticity_vars <- Filter(FUN, variables)
     elasticity_vars <- lapply(elasticity_vars, function(x) x$name)
-    if (length(elasticity_vars) > 0) {
-        # assigning a subset of "original" to "idx1" takes time and memory
-        # better to do this here for most columns and add the "v" column only
-        # in the loop
-        if (!is.null(original)) {
-            idx1 <- c(
-                "rowid",
-                "rowidcf",
-                "term",
-                "group",
-                grep("^contrast", colnames(original), value = TRUE)
-            )
-            idx1 <- intersect(idx1, colnames(original))
-            idx1 <- original[, ..idx1]
-        }
-        
-        for (v in names(elasticity_vars)) {
-            idx2 <- unique(c(
-                "rowid",
-                "term",
-                "group",
-                by,
-                grep("^contrast", colnames(out), value = TRUE)
-            ))
-            idx2 <- intersect(idx2, colnames(out))
-            # discard other terms to get right length vector
-            idx2 <- out[term == v, ..idx2]
-            # original is NULL when cross=TRUE
-            if (!is.null(original)) {
-                # if not first iteration, need to remove previous "v" and "elast"
-                if (v %in% colnames(idx1)) {
-                    idx1[, (v) := NULL]
-                }
-                if ("elast" %in% colnames(idx1)) {
-                    idx1[, elast := NULL]
-                }
-                idx1[, (v) := original[[v]]]
-                setnames(idx1, old = v, new = "elast")
-                on_cols <- intersect(colnames(idx1), colnames(idx2))
-                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[,
-                    elast := elast
-                ])
-            }
-            elasticity_vars[[v]] <- idx2$elast
-        }
+
+    if (length(elasticity_vars) == 0) return(elasticity_vars)
+
+    # assigning a subset of "original" to "idx1" takes time and memory
+    # better to do this here for most columns and add the "v" column only
+    # in the loop
+    if (!is.null(original)) {
+        idx1 <- c(
+            "rowid",
+            "rowidcf",
+            "term",
+            "group",
+            grep("^contrast", colnames(original), value = TRUE)
+        )
+        idx1 <- intersect(idx1, colnames(original))
+        idx1 <- original[, ..idx1]
     }
-    
+
+    for (v in names(elasticity_vars)) {
+        idx2 <- unique(c(
+            "rowid",
+            "term",
+            "group",
+            by,
+            grep("^contrast", colnames(out), value = TRUE)
+        ))
+        idx2 <- intersect(idx2, colnames(out))
+        # discard other terms to get right length vector
+        idx2 <- out[term == v, ..idx2]
+        # original is NULL when cross=TRUE
+        if (!is.null(original)) {
+            # if not first iteration, need to remove previous "v" and "elast"
+            if (v %in% colnames(idx1)) {
+                idx1[, (v) := NULL]
+            }
+            if ("elast" %in% colnames(idx1)) {
+                idx1[, elast := NULL]
+            }
+            idx1[, (v) := original[[v]]]
+            setnames(idx1, old = v, new = "elast")
+            on_cols <- intersect(colnames(idx1), colnames(idx2))
+            idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[,
+                elast := elast
+                ])
+        }
+        elasticity_vars[[v]] <- idx2$elast
+    }
+
     return(elasticity_vars)
 }
 
@@ -136,8 +131,6 @@ get_comparisons <- function(
     # get_se_delta() needs perturbed coefficients model
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
     
-    settings_init()
-    
     # some predict() methods need data frames and will convert data.tables
     # internally, which can be very expensive if done many times. we do it once
     # here.
@@ -149,7 +142,7 @@ get_comparisons <- function(
     if (inherits(model, c("brmsfit", "bart"))) {
         pred_result <- get_predictions_bayesian(model, type, lo, hi, ...)
     } else {
-        pred_result <- get_predictions_standard(model, type, lo, hi, ...)
+        pred_result <- get_predictions_frequentist(model, type, lo, hi, ...)
     }
     
     pred_lo <- pred_result$pred_lo
@@ -160,32 +153,30 @@ get_comparisons <- function(
     # lots of indexing later requires a data.table
     data.table::setDT(original)
     
-    # Get pred_or for elasticity computation (simplified call)
-    # predict() takes up 2/3 of the wall time. This call is only useful when we
-    # compute elasticities, or for the main estimate, not for standard errors,
-    # so we probably save 1/3 of that 2/3.
-    elasticity_types <- c(
-        "eyex", "eydx", "dyex", "eyexavg", "eydxavg", "dyexavg"
-    )
+    elasticity_types <- c("eyex", "eydx", "dyex", "eyexavg", "eydxavg", "dyexavg")
     fun <- function(x) {
         out <- checkmate::check_choice(x$comparison, choices = elasticity_types)
         isTRUE(out)
     }
-    tmp <- Filter(fun, variables)
-    if (!isTRUE(deltamethod) || length(tmp) > 0) {
+    elasticity_vars_needed <- Filter(fun, variables)
+
+    # output data.frame
+    out <- pred_lo
+    data.table::setDT(out)
+
+    # Get pred_or is required for elasticity computation and it is expensive. do it once
+    if (!isTRUE(deltamethod) || length(elasticity_vars_needed) > 0) {
         pred_or <- get_predict_error(
             model,
             type = type,
             newdata = original,
             ...
         )
+        data.table::setDT(pred_or)
+        out[, predicted := pred_or[["estimate"]]]
     } else {
-        pred_or <- NULL
+        out[, predicted := NA_real_]
     }
-
-    # output data.frame
-    out <- pred_lo
-    data.table::setDT(out)
 
     # univariate outcome:
     # original is the "composite" data that we constructed by binding terms and
@@ -209,11 +200,11 @@ get_comparisons <- function(
     } else {
         out <- merge(out, newdata, by = "rowid", all.x = TRUE, sort = FALSE)
         if (isTRUE(nrow(out) == nrow(lo))) {
-            tmp <- data.table(lo)[,
+            contrast_cols <- data.table(lo)[,
                 .SD,
                 .SDcols = patterns("^contrast|marginaleffects_wts_internal")
             ]
-            out <- cbind(out, tmp)
+            out <- cbind(out, contrast_cols)
             idx <- c(
                 "rowid",
                 grep("^contrast", colnames(out), value = TRUE),
@@ -232,16 +223,16 @@ get_comparisons <- function(
     if (isTRUE(checkmate::check_data_frame(by))) {
         bycols <- "by"
         data.table::setDT(by)
-        tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
+        by_common_cols <- setdiff(intersect(colnames(out), colnames(by)), "by")
 
-        if (length(tmp) == 0) {
+        if (length(by_common_cols) == 0) {
             if (all(colnames(by) %in% c("by", colnames(newdata)))) {
                 nd <- c("rowid", "rowid_dedup", setdiff(colnames(by), "by"))
                 nd <- intersect(nd, colnames(newdata))
                 nd <- newdata[, ..nd, drop = FALSE]
                 bycol <- intersect(c("rowid", "rowid_dedup"), colnames(nd))
                 out <- merge(out, nd, by = bycol, sort = FALSE)
-                tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
+                by_common_cols <- setdiff(intersect(colnames(out), colnames(by)), "by")
             } else {
                 stop_sprintf(
                     "The column in `by` must be present in `newdata`."
@@ -257,7 +248,7 @@ get_comparisons <- function(
                 by[[v]] <- as.numeric(by[[v]])
             }
         }
-        out[by, by := by, on = tmp]
+        out[by, by := by, on = by_common_cols]
         by <- "by"
     } else if (isTRUE(by)) {
         regex <- "^term$|^contrast_?|^group$"
@@ -294,12 +285,6 @@ get_comparisons <- function(
     out[, predicted_lo := pred_lo[["estimate"]]]
     out[, predicted_hi := pred_hi[["estimate"]]]
 
-    if (!is.null(pred_or)) {
-        data.table::setDT(pred_or)
-        out[, predicted := pred_or[["estimate"]]]
-    } else {
-        out[, predicted := NA_real_]
-    }
 
     idx <- grep(
         "^contrast|^group$|^term$|^type$|^comparison_idx$",
@@ -314,10 +299,10 @@ get_comparisons <- function(
     # at the very end.
     # TODO: What is the UI for this? Doesn't make sense to have different functions.
     if (isTRUE(checkmate::check_character(by))) {
-        tmp <- intersect(colnames(newdata), c(by, colnames(out)))
-        if (length(tmp) > 1) {
-            tmp <- subset(newdata, select = tmp)
-            out <- merge(out, tmp, all.x = TRUE, sort = FALSE)
+        merge_cols <- intersect(colnames(newdata), c(by, colnames(out)))
+        if (length(merge_cols) > 1) {
+            newdata_subset <- subset(newdata, select = merge_cols)
+            out <- merge(out, newdata_subset, all.x = TRUE, sort = FALSE)
             idx <- unique(c(idx, by))
         }
     }
@@ -334,12 +319,14 @@ get_comparisons <- function(
     safefun <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata) {
         tn <- term[1]
         eps <- variables[[tn]]$eps
+
         # when cross=TRUE, sanitize_comparison enforces a single function
         if (isTRUE(cross)) {
             fun <- fun_list[[1]]
         } else {
             fun <- fun_list[[tn]]
         }
+
         args <- list(
             "hi" = hi,
             "lo" = lo,
@@ -355,28 +342,27 @@ get_comparisons <- function(
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
 
-        if (
-            !isTRUE(checkmate::check_numeric(con, len = n)) &&
-                !isTRUE(checkmate::check_numeric(con, len = 1))
-        ) {
+        # fmt: skip
+        flag1 <- !isTRUE(checkmate::check_numeric(con, len = n))
+        flag2 <- !isTRUE(checkmate::check_numeric(con, len = 1)
+        if (flat1 && flag2) {
             msg <- sprintf(
                 "The function supplied to the `comparison` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.",
-                n,
-                n
-            ) #nolint
+                n, n)
             stop_sprintf(msg)
         }
+        
+        # If function returns single value, pad with NAs  
         if (length(con) == 1) {
             con <- c(con, rep(NA_real_, length(hi) - 1))
-            settings_set("marginaleffects_safefun_return1", TRUE)
         }
         return(con)
     }
 
     # need a temp index for group-by operations when elasticities is a vector of length equal to full rows of `out`
-    tmp <- grep("^term$|^contrast|^group$", colnames(out), value = TRUE)
-    if (length(tmp) > 0) {
-        out[, tmp_idx := seq_len(.N), by = tmp]
+    grouping_cols <- grep("^term$|^contrast|^group$", colnames(out), value = TRUE)
+    if (length(grouping_cols) > 0) {
+        out[, tmp_idx := seq_len(.N), by = grouping_cols]
     } else {
         out[, tmp_idx := seq_len(.N)]
     }
@@ -427,9 +413,7 @@ get_comparisons <- function(
         # also means we don't want `rowid` otherwise we will merge and have
         # useless duplicates.
         if (!all(idx)) {
-            if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
-                if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
-            }
+            if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
             out <- out[idx, , drop = FALSE]
         }
 
@@ -467,9 +451,7 @@ get_comparisons <- function(
         # also means we don't want `rowid` otherwise we will merge and have
         # useless duplicates.
         if (anyNA(out$estimate)) {
-            if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
-                if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
-            }
+            if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
         }
         out <- stats::na.omit(out, cols = "estimate")
     }
@@ -525,9 +507,6 @@ get_comparisons <- function(
         newdata = original,
         draws = draws
     )
-
-    # reset settings
-    settings_rm("marginaleffects_safefun_return1")
 
     return(out)
 }
