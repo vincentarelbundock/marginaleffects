@@ -15,14 +15,13 @@ get_predictions <- function(
     # sometimes we want the perturbed coefficients model supplied by get_se_delta().
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
 
-    out_result <- myTryCatch(get_predict(
+    out <- get_predict_error(
         model,
         newdata = newdata,
         type = type,
         mfx = mfx,
         ...
-    ))
-    out <- get_predict_error(out_result)
+    )
 
     if (
         !"rowid" %in% colnames(out) &&

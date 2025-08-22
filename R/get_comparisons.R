@@ -37,13 +37,12 @@ get_comparisons <- function(
 
         both <- rbindlist(list(lo, hi))
 
-        pred_both_result <- myTryCatch(get_predict(
+        pred_both <- get_predict_error(
             model,
             type = type,
             newdata = both,
             ...
-        ))
-        pred_both <- get_predict_error(pred_both_result)
+        )
 
         data.table::setDT(pred_both)
         pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
@@ -60,13 +59,12 @@ get_comparisons <- function(
         attr(pred_lo, "posterior_draws") <- draws_lo
         attr(pred_hi, "posterior_draws") <- draws_hi
     } else {
-        pred_lo_result <- myTryCatch(get_predict(
+        pred_lo <- get_predict_error(
             model,
             type = type,
             newdata = lo,
             ...
-        ))
-        pred_lo <- get_predict_error(pred_lo_result)
+        )
 
         pred_hi_result <- myTryCatch(get_predict(
             model,
@@ -102,13 +100,12 @@ get_comparisons <- function(
     }
     tmp <- Filter(fun, variables)
     if (!isTRUE(deltamethod) || length(tmp) > 0) {
-        pred_or_result <- myTryCatch(get_predict(
+        pred_or <- get_predict_error(
             model,
             type = type,
             newdata = original,
             ...
-        ))
-        pred_or <- get_predict_error(pred_or_result)
+        )
     } else {
         pred_or <- NULL
     }
