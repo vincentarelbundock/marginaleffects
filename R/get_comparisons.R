@@ -97,22 +97,10 @@ get_comparisons <- function(
     # original is the "composite" data that we constructed by binding terms and
     # compute predictions. It includes a term column, which we need to
     # replicate for each group.
-    out[, "marginaleffects_wts_internal" := NA_real_] # default (probably almost always overwritten)
-    mult <- nrow(out) / nrow(original)
-    regex <- "^term$|rowid_dedup|^group$|^contrast|^marginaleffects_wts_internal$"
-    if (isTRUE(mult == 1)) {
-        for (v in grep(regex, colnames(original), value = TRUE)) {
-            out[, (v) := original[[v]]]
-        }
+    cols <- setdiff(colnames(original), colnames(out))
+    out <- cbind(out, original[, ..cols])
 
-        # group or multivariate outcomes
-    } else if (isTRUE(mult > 1)) {
-        for (v in grep(regex, colnames(original), value = TRUE)) {
-            out[, (v) := rep(original[[v]], times = mult)]
-        }
-
-        # cross-contrasts or weird cases
-    } else {
+    if (isTRUE(cross)) {
         out <- merge(out, newdata, by = "rowid", all.x = TRUE, sort = FALSE)
         if (isTRUE(nrow(out) == nrow(lo))) {
             tmp <- data.table(lo)[,
