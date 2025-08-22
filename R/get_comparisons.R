@@ -109,6 +109,55 @@ process_elasticity_variables <- function(variables, out, original, by) {
     return(elasticity_vars)
 }
 
+
+# safe version of comparison
+# unknown arguments
+# singleton vs vector
+# different terms use different functions
+compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, variables, fun_list, elasticity_vars) {
+    tn <- term[1]
+    eps <- variables[[tn]]$eps
+
+    # when cross=TRUE, sanitize_comparison enforces a single function
+    if (isTRUE(cross)) {
+        fun <- fun_list[[1]]
+    } else {
+        fun <- fun_list[[tn]]
+    }
+
+    args <- list(
+        "hi" = hi,
+        "lo" = lo,
+        "y" = y,
+        "eps" = eps,
+        "w" = wts,
+        "newdata" = newdata
+    )
+
+    # sometimes x is exactly the same length, but not always
+    args[["x"]] <- elasticity_vars[[tn]][tmp_idx]
+
+    args <- args[names(args) %in% names(formals(fun))]
+    con <- try(do.call("fun", args), silent = TRUE)
+
+    # fmt: skip
+    flag1 <- !isTRUE(checkmate::check_numeric(con, len = n))
+    flag2 <- !isTRUE(checkmate::check_numeric(con, len = 1))
+    if (flag1 && flag2) {
+        msg <- sprintf(
+            "The function supplied to the `comparison` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.",
+            n, n)
+        stop_sprintf(msg)
+    }
+
+    # If function returns single value, pad with NAs  
+    if (length(con) == 1) {
+        con <- c(con, rep(NA_real_, length(hi) - 1))
+    }
+    return(con)
+}
+
+
 get_comparisons <- function(
     mfx,
     type,
@@ -307,56 +356,9 @@ get_comparisons <- function(
         }
     }
 
-    # we feed these columns to safefun(), even if they are useless for categoricals
+    # we feed these columns to compare_hi_lo(), even if they are useless for categoricals
     if (!"marginaleffects_wts_internal" %in% colnames(out)) {
         out[, "marginaleffects_wts_internal" := NA]
-    }
-
-    # safe version of comparison
-    # unknown arguments
-    # singleton vs vector
-    # different terms use different functions
-    safefun <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata) {
-        tn <- term[1]
-        eps <- variables[[tn]]$eps
-
-        # when cross=TRUE, sanitize_comparison enforces a single function
-        if (isTRUE(cross)) {
-            fun <- fun_list[[1]]
-        } else {
-            fun <- fun_list[[tn]]
-        }
-
-        args <- list(
-            "hi" = hi,
-            "lo" = lo,
-            "y" = y,
-            "eps" = eps,
-            "w" = wts,
-            "newdata" = newdata
-        )
-
-        # sometimes x is exactly the same length, but not always
-        args[["x"]] <- elasticity_vars[[tn]][tmp_idx]
-
-        args <- args[names(args) %in% names(formals(fun))]
-        con <- try(do.call("fun", args), silent = TRUE)
-
-        # fmt: skip
-        flag1 <- !isTRUE(checkmate::check_numeric(con, len = n))
-        flag2 <- !isTRUE(checkmate::check_numeric(con, len = 1)
-        if (flat1 && flag2) {
-            msg <- sprintf(
-                "The function supplied to the `comparison` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.",
-                n, n)
-            stop_sprintf(msg)
-        }
-        
-        # If function returns single value, pad with NAs  
-        if (length(con) == 1) {
-            con <- c(con, rep(NA_real_, length(hi) - 1))
-        }
-        return(con)
     }
 
     # need a temp index for group-by operations when elasticities is a vector of length equal to full rows of `out`
@@ -391,7 +393,7 @@ get_comparisons <- function(
         for (tn in unique(by_idx)) {
             for (i in seq_len(ncol(draws))) {
                 idx <- by_idx == tn
-                draws[idx, i] <- safefun(
+                draws[idx, i] <- compare_hi_lo(
                     hi = draws_hi[idx, i],
                     lo = draws_lo[idx, i],
                     y = draws_or[idx, i],
@@ -400,7 +402,10 @@ get_comparisons <- function(
                     cross = cross,
                     wts = out$marginaleffects_wts_internal[idx],
                     tmp_idx = out$tmp_idx[idx],
-                    newdata = newdata
+                    newdata = newdata,
+                    variables = variables,
+                    fun_list = fun_list,
+                    elasticity_vars = elasticity_vars
                 )
             }
         }
@@ -428,11 +433,11 @@ get_comparisons <- function(
         out <- stats::na.omit(out, cols = "predicted_lo")
         # We want to write the "estimate" column in-place because it safer
         # than group-merge; there were several bugs related to this in the past.
-        # safefun() returns 1 value and NAs when the function retunrs a
+        # compare_hi_lo() returns 1 value and NAs when the function retunrs a
         # singleton.
         idx <- intersect(idx, colnames(out))
         out[,
-            "estimate" := safefun(
+            "estimate" := compare_hi_lo(
                 hi = predicted_hi,
                 lo = predicted_lo,
                 y = predicted,
@@ -441,7 +446,10 @@ get_comparisons <- function(
                 cross = cross,
                 wts = marginaleffects_wts_internal,
                 tmp_idx = tmp_idx,
-                newdata = newdata
+                newdata = newdata,
+                variables = variables,
+                fun_list = fun_list,
+                elasticity_vars = elasticity_vars
             ),
             keyby = idx
         ]
@@ -484,16 +492,6 @@ get_comparisons <- function(
             bycols <- paste(bycols, collapse = "|")
             bycols <- grep(bycols, colnames(out), value = TRUE)
         }
-    }
-
-    # issue #531: uncertainty estimates from get_predict() sometimes get retained, but they are not overwritten later by get_ci()
-    # drop by reference for speed
-    bad <- intersect(
-        colnames(out),
-        c("conf.low", "conf.high", "std.error", "statistic", "p.value")
-    )
-    if (length(bad) > 0) {
-        out[, (bad) := NULL]
     }
 
     # before get_hypothesis
