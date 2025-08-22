@@ -29,57 +29,9 @@ get_comparisons <- function(
     data.table::setDF(hi)
     data.table::setDF(original)
 
-    # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
-    if (inherits(model, c("brmsfit", "bart"))) {
-        if (!"rowid" %in% colnames(lo)) {
-            lo$rowid <- hi$rowid <- seq_len(nrow(lo))
-        }
-
-        both <- rbindlist(list(lo, hi))
-
-        pred_both <- get_predict_error(
-            model,
-            type = type,
-            newdata = both,
-            ...
-        )
-
-        data.table::setDT(pred_both)
-        pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
-
-        pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
-        pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
-        data.table::setDF(pred_lo)
-        data.table::setDF(pred_hi)
-
-        draws <- attr(pred_both, "posterior_draws")
-        draws_lo <- draws[pred_both$lo, , drop = FALSE]
-        draws_hi <- draws[!pred_both$lo, , drop = FALSE]
-
-        attr(pred_lo, "posterior_draws") <- draws_lo
-        attr(pred_hi, "posterior_draws") <- draws_hi
-    } else {
-        pred_lo <- get_predict_error(
-            model,
-            type = type,
-            newdata = lo,
-            ...
-        )
-
-        pred_hi_result <- myTryCatch(get_predict(
-            model,
-            type = type,
-            newdata = hi,
-            ...
-        ))
-
-        # otherwise we keep the full error object instead of extracting the value
-        if (inherits(pred_hi_result$value, "data.frame")) {
-            pred_hi <- pred_hi_result$value
-        } else {
-            pred_hi <- pred_hi_result$error
-        }
-    }
+    predictions <- predictions_hi_lo(model, lo, hi, type, ...)
+    pred_lo <- predictions$pred_lo
+    pred_hi <- predictions$pred_hi
 
     # predict() takes up 2/3 of the wall time. This call is only useful when we
     # compute elasticities, or for the main estimate, not for standard errors,
@@ -540,4 +492,61 @@ get_comparisons <- function(
     settings_rm("marginaleffects_safefun_return1")
 
     return(out)
+}
+
+
+predictions_hi_lo <- function(model, lo, hi, type, ...) {
+    # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
+    if (inherits(model, c("brmsfit", "bart"))) {
+        if (!"rowid" %in% colnames(lo)) {
+            lo$rowid <- hi$rowid <- seq_len(nrow(lo))
+        }
+
+        both <- rbindlist(list(lo, hi))
+
+        pred_both <- get_predict_error(
+            model,
+            type = type,
+            newdata = both,
+            ...
+        )
+
+        data.table::setDT(pred_both)
+        pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
+
+        pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+        pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+        data.table::setDF(pred_lo)
+        data.table::setDF(pred_hi)
+
+        draws <- attr(pred_both, "posterior_draws")
+        draws_lo <- draws[pred_both$lo, , drop = FALSE]
+        draws_hi <- draws[!pred_both$lo, , drop = FALSE]
+
+        attr(pred_lo, "posterior_draws") <- draws_lo
+        attr(pred_hi, "posterior_draws") <- draws_hi
+    } else {
+        pred_lo <- get_predict_error(
+            model,
+            type = type,
+            newdata = lo,
+            ...
+        )
+
+        pred_hi_result <- myTryCatch(get_predict(
+            model,
+            type = type,
+            newdata = hi,
+            ...
+        ))
+
+        # otherwise we keep the full error object instead of extracting the value
+        if (inherits(pred_hi_result$value, "data.frame")) {
+            pred_hi <- pred_hi_result$value
+        } else {
+            pred_hi <- pred_hi_result$error
+        }
+    }
+
+    return(list(pred_lo = pred_lo, pred_hi = pred_hi))
 }
