@@ -1,14 +1,15 @@
 source("helpers.R")
 using("marginaleffects")
 requiet("biglm")
-exit_file("no standard errors")
 
 # Basic expectation tests
 mod_simple <- biglm::biglm(mpg ~ wt + am, data = mtcars)
-expect_slopes(mod_simple)
-expect_predictions(mod_simple)
-expect_hypotheses(mod_simple)
-expect_comparisons(mod_simple)
+# expect_warning(avg_slopes(mod_simple), pattern = "vcov.*not supported")
+
+expect_slopes(mod_simple, se = FALSE)
+expect_predictions(mod_simple, se = FALSE)
+expect_hypotheses(mod_simple, se = FALSE)
+expect_comparisons(mod_simple, se = FALSE)
 
 N <- 1e4
 x1 <- rnorm(N)

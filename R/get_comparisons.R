@@ -124,60 +124,8 @@ get_comparisons <- function(
     # it should be the "correct" size
     # also need `x` when `x` is in the signature of the `comparison` custom function
 
-    FUN <- function(z) {
-        (is.character(z$comparison) && z$comparison %in% elasticities) ||
-            (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
-    }
-    elasticities <- Filter(FUN, variables)
-    elasticities <- lapply(elasticities, function(x) x$name)
+    elasticities <- prepare_elasticities(variables, original, out, by, elasticities)
 
-    if (length(elasticities) > 0) {
-        # assigning a subset of "original" to "idx1" takes time and memory
-        # better to do this here for most columns and add the "v" column only
-        # in the loop
-        if (!is.null(original)) {
-            idx1 <- c(
-                "rowid",
-                "rowidcf",
-                "term",
-                "group",
-                grep("^contrast", colnames(original), value = TRUE)
-            )
-            idx1 <- intersect(idx1, colnames(original))
-            idx1 <- original[, ..idx1]
-        }
-
-        for (v in names(elasticities)) {
-            idx2 <- unique(c(
-                "rowid",
-                "term",
-                "group",
-                by,
-                grep("^contrast", colnames(out), value = TRUE)
-            ))
-            idx2 <- intersect(idx2, colnames(out))
-            # discard other terms to get right length vector
-            idx2 <- out[term == v, ..idx2]
-            # original is NULL when cross=TRUE
-            if (!is.null(original)) {
-                # if not first iteration, need to remove previous "v" and "elast"
-                if (v %in% colnames(idx1)) {
-                    idx1[, (v) := NULL]
-                }
-                if ("elast" %in% colnames(idx1)) {
-                    idx1[, elast := NULL]
-                }
-                idx1[, (v) := original[[v]]]
-                setnames(idx1, old = v, new = "elast")
-                on_cols <- intersect(colnames(idx1), colnames(idx2))
-                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[
-                    ,
-                    elast := elast
-                ])
-            }
-            elasticities[[v]] <- idx2$elast
-        }
-    }
 
     draws <- attr(pred_lo, "posterior_draws")
     draws_lo <- attr(pred_lo, "posterior_draws")
@@ -498,4 +446,63 @@ compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, vari
         settings_set("marginaleffects_safefun_return1", TRUE)
     }
     return(con)
+}
+
+
+
+prepare_elasticities <- function(variables, original, out, by, elasticities) {
+    FUN <- function(z) {
+        (is.character(z$comparison) && z$comparison %in% elasticities) ||
+            (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
+    }
+    elasticities <- Filter(FUN, variables)
+
+    if (length(elasticities) > 0) {
+        # assigning a subset of "original" to "idx1" takes time and memory
+        # better to do this here for most columns and add the "v" column only
+        # in the loop
+        if (!is.null(original)) {
+            idx1 <- c(
+                "rowid",
+                "rowidcf",
+                "term",
+                "group",
+                grep("^contrast", colnames(original), value = TRUE)
+            )
+            idx1 <- intersect(idx1, colnames(original))
+            idx1 <- original[, ..idx1]
+        }
+
+        for (v in names(elasticities)) {
+            idx2 <- unique(c(
+                "rowid",
+                "term",
+                "group",
+                by,
+                grep("^contrast", colnames(out), value = TRUE)
+            ))
+            idx2 <- intersect(idx2, colnames(out))
+            # discard other terms to get right length vector
+            idx2 <- out[term == v, ..idx2]
+            # original is NULL when cross=TRUE
+            if (!is.null(original)) {
+                # if not first iteration, need to remove previous "v" and "elast"
+                if (v %in% colnames(idx1)) {
+                    idx1[, (v) := NULL]
+                }
+                if ("elast" %in% colnames(idx1)) {
+                    idx1[, elast := NULL]
+                }
+                idx1[, (v) := original[[v]]]
+                setnames(idx1, old = v, new = "elast")
+                on_cols <- intersect(colnames(idx1), colnames(idx2))
+                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[
+                    ,
+                    elast := elast
+                ])
+            }
+            elasticities[[v]] <- idx2$elast
+        }
+    }
+    return(elasticities)
 }

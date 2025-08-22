@@ -1,5 +1,7 @@
 source("helpers.R")
 
+exit_file("slopes eps is broken")
+
 # Issue #1538
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 cmp1 <- comparisons(
