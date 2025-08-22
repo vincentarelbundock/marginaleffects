@@ -289,8 +289,11 @@ comparisons <- function(
         inferences_method <- NULL
     }
 
-    # very early, before any use of newdata
     newdata <- mfx@newdata
+    data.table::setDT(newdata)
+    if (!is.null(mfx@modeldata)) {
+        data.table::setDT(mfx@modeldata)
+    }
 
     # misc
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
@@ -403,7 +406,6 @@ comparisons <- function(
             )
             idx <- intersect(idx, colnames(contrast_data$original))
             tmp <- contrast_data$original[, ..idx, drop = FALSE]
-            # contrast_data is duplicated to compute contrasts for different terms or pairs
             bycols <- intersect(colnames(tmp), colnames(cmp))
             idx <- duplicated(tmp, by = bycols)
             tmp <- tmp[!idx]

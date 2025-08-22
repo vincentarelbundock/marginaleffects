@@ -2,7 +2,6 @@
 get_comparison_predictions <- function(model, type, lo, hi, ...) {
     both <- data.table::rbindlist(list(lo, hi), idcol = "src")  # 1=lo, 2=hi
     pred <- get_predict_error(model, type = type, newdata = both, ...)
-    data.table::setDT(pred)
     
     # Handle case where get_predict_error changes row count
     if (nrow(pred) == nrow(both)) {
@@ -18,8 +17,6 @@ get_comparison_predictions <- function(model, type, lo, hi, ...) {
     cols <- intersect(c("rowid", "group", "estimate"), names(pred))
     pred_lo <- pred[src == 1L, ..cols]
     pred_hi <- pred[src == 2L, ..cols]
-    data.table::setDF(pred_lo)
-    data.table::setDF(pred_hi)
     
     draws_lo <- if (!is.null(draws)) draws[pred$src == 1L, , drop = FALSE] else NULL
     draws_hi <- if (!is.null(draws)) draws[pred$src == 2L, , drop = FALSE] else NULL
@@ -48,7 +45,7 @@ process_elasticity_variables <- function(variables, out, original, by, contrast_
     if (!is.null(original)) {
         base_cols <- intersect(c("rowid","rowidcf","term","group", contrast_cols),
                                names(original))
-        idx1 <- as.data.table(original[, ..base_cols, drop = FALSE])
+        idx1 <- original[, ..base_cols, drop = FALSE]
     }
 
     # columns we need from `out` once
@@ -56,7 +53,7 @@ process_elasticity_variables <- function(variables, out, original, by, contrast_
     out_keep <- intersect(out_keep, names(out))
 
     for (v in nms) {
-        idx2 <- as.data.table(out[term == v, ..out_keep])
+        idx2 <- out[term == v, ..out_keep]
         if (!is.null(original)) {
             idx1[, elast := original[[v]]]
             on_cols <- intersect(names(idx1), names(idx2))
@@ -115,15 +112,11 @@ compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, vari
     return(con)
 }
 
-# Clean up temporary columns
-clean_temp_columns <- function(data) {
-    temp_cols <- c("rowid_dedup", "tmp_idx")
-    for (col in temp_cols) {
-        if (col %in% colnames(data)) {
-            data[, (col) := NULL]
-        }
-    }
-    data
+# Clean up temporary columns in one pass
+clean_temp_columns <- function(dt) {
+    cols <- intersect(c("rowid_dedup","tmp_idx"), names(dt))
+    if (length(cols)) dt[, (cols) := NULL]
+    dt
 }
 
 
@@ -144,17 +137,9 @@ get_comparisons <- function(
     ...
 ) {
     newdata <- mfx@newdata
-    data.table::setDT(newdata)
     
     # get_se_delta() needs perturbed coefficients model
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
-    
-    # some predict() methods need data frames and will convert data.tables
-    # internally, which can be very expensive if done many times. we do it once
-    # here.
-    data.table::setDF(lo)
-    data.table::setDF(hi)
-    data.table::setDF(original)
     
     # Get predictions (unified function handles both Bayesian and frequentist models)
     pred_result <- get_comparison_predictions(model, type, lo, hi, ...)
@@ -164,8 +149,7 @@ get_comparisons <- function(
     draws_lo <- pred_result$draws_lo
     draws_hi <- pred_result$draws_hi
     
-    # lots of indexing later requires a data.table
-    data.table::setDT(original)
+    # original stays as data.frame for predict() methods, convert to DT only when needed for indexing
     
     elasticity_types <- c("eyex", "eydx", "dyex", "eyexavg", "eydxavg", "dyexavg")
     fun <- function(x) {
@@ -176,21 +160,22 @@ get_comparisons <- function(
 
     # output data.frame
     out <- pred_lo
-    data.table::setDT(out)
 
     # Precompute regex matches to avoid repeated pattern matching
     contrast_cols <- grep("^contrast", colnames(out), value = TRUE)
     base_grouping_regex <- "^term$|^group$|^type$|^comparison_idx$"
 
-    # Get pred_or is required for elasticity computation and it is expensive. do it once
-    if (!isTRUE(deltamethod) || length(elasticity_vars_needed) > 0) {
+    # Check if any variables actually need x values for elasticity computation
+    has_elasticity_vars <- length(elasticity_vars_needed) > 0
+    # Get pred_or only when needed (expensive operation)
+    need_pred_or <- !isTRUE(deltamethod) || has_elasticity_vars
+    if (need_pred_or) {
         pred_or <- get_predict_error(
             model,
             type = type,
             newdata = original,
             ...
         )
-        data.table::setDT(pred_or)
         out[, predicted := pred_or[["estimate"]]]
     } else {
         out[, predicted := NA_real_]
@@ -216,9 +201,8 @@ get_comparisons <- function(
 
         # cross-contrasts or weird cases
     } else {
-        # Use data.table join for better performance
+        # Use data.table join for better performance (newdata already DT from boundary)
         data.table::setkeyv(out, "rowid")
-        data.table::setDT(newdata)
         data.table::setkeyv(newdata, "rowid") 
         out <- newdata[out, on = "rowid"]
         if (isTRUE(nrow(out) == nrow(lo))) {
@@ -226,14 +210,20 @@ get_comparisons <- function(
                 .SD,
                 .SDcols = patterns("^contrast|marginaleffects_wts_internal")
             ]
-            out <- cbind(out, contrast_cols)
+            # Use data.table column binding to avoid conversion to data.frame
+            contrast_col_names <- names(contrast_cols)
+            for (col in contrast_col_names) {
+                out[[col]] <- contrast_cols[[col]]
+            }
             idx <- c(
                 "rowid",
-                grep("^contrast", colnames(out), value = TRUE),
+                contrast_cols,
                 colnames(out)
             )
             idx <- unique(idx)
-            out <- out[, ..idx]
+            # Remove unwanted columns in-place instead of copying
+            cols_to_remove <- setdiff(names(out), idx)
+            if (length(cols_to_remove)) out[, (cols_to_remove) := NULL]
         }
     }
 
@@ -241,7 +231,22 @@ get_comparisons <- function(
         out[, "term" := "cross"]
     }
 
-    # by
+    # Centralize by construction - normalize by into character vector once
+    by_cols <- character()
+    by_is_df <- isTRUE(checkmate::check_data_frame(by))
+    by_is_char <- isTRUE(checkmate::check_character(by))
+    
+    if (isTRUE(by)) {
+        by_cols <- grep("^term$|^contrast_?|^group$", colnames(out), value = TRUE)
+    } else if (by_is_char) {
+        regex <- "^term$|^contrast_?|^group$"
+        by_cols <- unique(c(by, grep(regex, colnames(out), value = TRUE)))
+    } else if (by_is_df) {
+        # For data.frame by, keep original processing but set by_cols to "by"
+        by_cols <- "by"
+    }
+
+    # by (original processing for data.frame case)
     if (isTRUE(checkmate::check_data_frame(by))) {
         bycols <- "by"
         data.table::setDT(by)
@@ -276,13 +281,9 @@ get_comparisons <- function(
         out[by, by := by, on = by_common_cols]
         by <- "by"
     } else if (isTRUE(by)) {
-        regex <- "^term$|^contrast_?|^group$"
-        by <- grep(regex, colnames(out), value = TRUE)
-        by <- unique(by)
-    } else if (isTRUE(checkmate::check_character(by))) {
-        regex <- "^term$|^contrast_?|^group$"
-        by <- c(by, grep(regex, colnames(out), value = TRUE))
-        by <- unique(by)
+        # by_cols already set above in centralized processing
+    } else if (by_is_char) {
+        # by_cols already set above in centralized processing  
     }
 
     # Build function list once with guaranteed cross entry
@@ -291,7 +292,7 @@ get_comparisons <- function(
     fun_list[["cross"]] <- fun_list[[1L]]
 
     # Process elasticity variables (filtering and values)
-    elasticity_vars <- process_elasticity_variables(variables, out, original, by, contrast_cols)
+    elasticity_vars <- process_elasticity_variables(variables, out, original, by_cols, contrast_cols)
 
     draws <- attr(pred_lo, "posterior_draws")
 
@@ -305,7 +306,7 @@ get_comparisons <- function(
         draws_or <- attr(pred_or, "posterior_draws")
     }
 
-    data.table::setDT(pred_hi)
+    # pred_hi already a data.frame, convert to DT for column operations
 
     # Assign all prediction estimates at once
     out[, `:=`(
@@ -326,16 +327,14 @@ get_comparisons <- function(
     # average them at the very end.  when `by` is a data frame, we do this only
     # at the very end.
     # TODO: What is the UI for this? Doesn't make sense to have different functions.
-    if (isTRUE(checkmate::check_character(by))) {
-        merge_cols <- intersect(colnames(newdata), c(by, colnames(out)))
+    if (by_is_char) {
+        merge_cols <- intersect(colnames(newdata), c(by_cols, colnames(out)))
         if (length(merge_cols) > 1) {
-            newdata_subset <- subset(newdata, select = merge_cols)
-            # Use data.table join for better performance
-            data.table::setDT(newdata_subset)
+            newdata_subset <- newdata[, ..merge_cols]
             data.table::setkeyv(out, merge_cols)
             data.table::setkeyv(newdata_subset, merge_cols)
             out <- newdata_subset[out, on = merge_cols]
-            idx <- unique(c(idx, by))
+            idx <- unique(c(idx, by_cols))
         }
     }
 
@@ -368,8 +367,8 @@ get_comparisons <- function(
         # indices that would allow us to align them back with `out`
         draws <- draws[idx_na, , drop = FALSE]
 
-        if (isTRUE(checkmate::check_character(by, min.len = 1))) {
-            by_idx <- out[, ..by]
+        if (by_is_char && length(by_cols) > 0) {
+            by_idx <- out[, ..by_cols]
             by_idx <- do.call(paste, c(by_idx, sep = "|"))
         } else {
             by_idx <- out$term
@@ -437,7 +436,7 @@ get_comparisons <- function(
                 fun_list = fun_list,
                 elasticity_vars = elasticity_vars
             ),
-            keyby = grouping_cols
+            by = grouping_cols
         ]
 
         # if comparison returns a single value, then we padded with NA. That

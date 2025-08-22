@@ -48,7 +48,8 @@ get_comparisons_data_factor <- function(
         # custom data frame or function
     } else if (
         isTRUE(checkmate::check_function(variable$value)) ||
-            isTRUE(checkmate::check_data_frame(variable$value))
+            isTRUE(checkmate::check_data_frame(variable$value)) ||
+            isTRUE(checkmate::check_data_table(variable$value))
     ) {
         out <- contrast_categories_custom(variable, newdata)
         return(out)
@@ -250,7 +251,10 @@ contrast_categories_custom <- function(variable, newdata) {
     } else if (isTRUE(checkmate::check_data_frame(variable$value))) {
         variables_df <- variable$value
     }
-    checkmate::assert_data_frame(variables_df, nrows = nrow(original))
+    checkmate::assert(
+        checkmate::check_data_frame(variables_df, nrows = nrow(original)),
+        checkmate::check_data_table(variables_df, nrows = nrow(original))
+    )
     if (all(c("low", "high") %in% colnames(variables_df))) {
         lo[[variable$name]] <- variables_df[["low"]]
         hi[[variable$name]] <- variables_df[["high"]]

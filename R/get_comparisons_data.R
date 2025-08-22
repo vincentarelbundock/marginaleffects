@@ -142,15 +142,22 @@ get_comparisons_data <- function(
                     setdiff(names(variables), names(original)[[i]])
                 )
             }
-            lo[[i]] <- data.table(lo[[i]])[, !..idx_lo]
-            hi[[i]] <- data.table(hi[[i]])[, !..idx_hi]
-            original[[i]] <- data.table(original[[i]])[, !..idx_or]
+            data.table::setDT(lo[[i]])
+            lo[[i]] <- lo[[i]][, !..idx_lo]
+            data.table::setDT(hi[[i]])
+            hi[[i]] <- hi[[i]][, !..idx_hi]
+            data.table::setDT(original[[i]])
+            original[[i]] <- original[[i]][, !..idx_or]
             lo[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
             hi[[i]][[paste0("contrast_", names(hi)[i])]] <- lab[[i]]
             original[[i]][[paste0("contrast_", names(original)[i])]] <- lab[[i]]
         }
 
-        fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE, sort = FALSE)
+        fun <- function(x, y) {
+            data.table::setDT(x)
+            data.table::setDT(y)
+            merge(x, y, all = TRUE, allow.cartesian = TRUE, sort = FALSE)
+        }
         lo <- Reduce("fun", lo)
         hi <- Reduce("fun", hi)
         original <- Reduce("fun", original)

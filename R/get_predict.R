@@ -126,11 +126,23 @@ get_predict.default <- function(
 }
 
 
-get_predict_error <- function(model, ...) {
+get_predict_error <- function(model, newdata = NULL, ...) {
+    if (inherits(newdata, c("data.frame", "data.table"))) {
+        pred_result <- myTryCatch(get_predict(
+            model,
+            newdata = as.data.frame(newdata, check.names = FALSE),
+            ...))
+    } else {
+        pred_result <- myTryCatch(get_predict(
+            model,
+            newdata = NULL,
+            ...))
+    }
+
     # Handle the entire prediction workflow: try, catch, extract, and error messaging
-    pred_result <- myTryCatch(get_predict(model, ...))
-    
+
     if (inherits(pred_result$value, "data.frame")) {
+        data.table::setDT(pred_result$value)
         return(pred_result$value)
     } else {
         if (

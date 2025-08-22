@@ -40,7 +40,8 @@ get_comparisons_data_numeric <- function(
     )
 
     # manual high
-    if (isTRUE(checkmate::check_data_frame(variable$value))) {
+    if (isTRUE(checkmate::check_data_frame(variable$value)) || 
+        isTRUE(checkmate::check_data_table(variable$value))) {
         if (all(c("low", "high") %in% colnames(variable$value))) {
             low <- variable$value$low
             high <- variable$value$high
