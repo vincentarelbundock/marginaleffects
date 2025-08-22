@@ -285,25 +285,15 @@ get_comparisons <- function(
     elasticity_vars <- process_elasticity_variables(variables, out, original, by_cols, contrast_cols)
 
     draws <- attr(pred_lo, "posterior_draws")
-
-    # frequentist
-    if (is.null(draws)) {
-        draws_lo <- draws_hi <- draws_or <- NULL
-    } else {
-        # bayes
-        draws_lo <- attr(pred_lo, "posterior_draws")
-        draws_hi <- attr(pred_hi, "posterior_draws")
-        draws_or <- attr(pred_or, "posterior_draws")
-    }
-
-    # pred_hi already a data.frame, convert to DT for column operations
+    draws_lo <- attr(pred_lo, "posterior_draws")
+    draws_hi <- attr(pred_hi, "posterior_draws")
+    draws_or <- attr(pred_or, "posterior_draws")
 
     # Assign all prediction estimates at once
     out[, `:=`(
         predicted_lo = pred_lo[["estimate"]],
         predicted_hi = pred_hi[["estimate"]]
     )]
-
 
     idx <- grep(
         "^contrast|^group$|^term$|^type$|^comparison_idx$",
@@ -406,9 +396,9 @@ get_comparisons <- function(
         # frequentist
     } else {
         out <- stats::na.omit(out, cols = "predicted_lo")
-        # We want to write the "estimate" column in-place because it safer
+        # We want to write the "estimate" column in-place because it is safer
         # than group-merge; there were several bugs related to this in the past.
-        # compare_hi_lo() returns 1 value and NAs when the function retunrs a
+        # compare_hi_lo() returns 1 value and NAs when the function returns a
         # singleton.
         grouping_cols <- intersect(idx, colnames(out))
         out[,
