@@ -1,3 +1,119 @@
+# Internal helper: get predictions for Bayesian models (brms, bart)
+get_predictions_bayesian <- function(model, type, lo, hi, ...) {
+    if (!"rowid" %in% colnames(lo)) {
+        lo$rowid <- hi$rowid <- seq_len(nrow(lo))
+    }
+    
+    both <- rbindlist(list(lo, hi))
+    
+    pred_both <- get_predict_error(
+        model,
+        type = type,
+        newdata = both,
+        ...
+    )
+    
+    data.table::setDT(pred_both)
+    pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
+    
+    pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+    pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+    data.table::setDF(pred_lo)
+    data.table::setDF(pred_hi)
+    
+    draws <- attr(pred_both, "posterior_draws")
+    draws_lo <- draws[pred_both$lo, , drop = FALSE]
+    draws_hi <- draws[!pred_both$lo, , drop = FALSE]
+    
+    attr(pred_lo, "posterior_draws") <- draws_lo
+    attr(pred_hi, "posterior_draws") <- draws_hi
+    
+    list(pred_lo = pred_lo, pred_hi = pred_hi, draws_lo = draws_lo, draws_hi = draws_hi)
+}
+
+# Internal helper: get predictions for standard models
+get_predictions_standard <- function(model, type, lo, hi, ...) {
+    pred_lo <- get_predict_error(
+        model,
+        type = type,
+        newdata = lo,
+        ...
+    )
+    
+    pred_hi <- get_predict_error(
+        model,
+        type = type,
+        newdata = hi,
+        ...
+    )
+    
+    list(pred_lo = pred_lo, pred_hi = pred_hi, draws_lo = NULL, draws_hi = NULL)
+}
+
+# Internal helper: process elasticity variable values
+process_elasticity_variables <- function(variables, out, original, by) {
+    # Define elasticity types
+    elasticity_types <- c(
+        "eyex", "eydx", "dyex", "eyexavg", "eydxavg", "dyexavg"
+    )
+    
+    # Filter variables that need elasticity values (x parameter)
+    FUN <- function(z) {
+        (is.character(z$comparison) && z$comparison %in% elasticity_types) ||
+            (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
+    }
+    elasticity_vars <- Filter(FUN, variables)
+    elasticity_vars <- lapply(elasticity_vars, function(x) x$name)
+    if (length(elasticity_vars) > 0) {
+        # assigning a subset of "original" to "idx1" takes time and memory
+        # better to do this here for most columns and add the "v" column only
+        # in the loop
+        if (!is.null(original)) {
+            idx1 <- c(
+                "rowid",
+                "rowidcf",
+                "term",
+                "group",
+                grep("^contrast", colnames(original), value = TRUE)
+            )
+            idx1 <- intersect(idx1, colnames(original))
+            idx1 <- original[, ..idx1]
+        }
+        
+        for (v in names(elasticity_vars)) {
+            idx2 <- unique(c(
+                "rowid",
+                "term",
+                "group",
+                by,
+                grep("^contrast", colnames(out), value = TRUE)
+            ))
+            idx2 <- intersect(idx2, colnames(out))
+            # discard other terms to get right length vector
+            idx2 <- out[term == v, ..idx2]
+            # original is NULL when cross=TRUE
+            if (!is.null(original)) {
+                # if not first iteration, need to remove previous "v" and "elast"
+                if (v %in% colnames(idx1)) {
+                    idx1[, (v) := NULL]
+                }
+                if ("elast" %in% colnames(idx1)) {
+                    idx1[, elast := NULL]
+                }
+                idx1[, (v) := original[[v]]]
+                setnames(idx1, old = v, new = "elast")
+                on_cols <- intersect(colnames(idx1), colnames(idx2))
+                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[,
+                    elast := elast
+                ])
+            }
+            elasticity_vars[[v]] <- idx2$elast
+        }
+    }
+    
+    return(elasticity_vars)
+}
+
 get_comparisons <- function(
     mfx,
     type,
@@ -16,128 +132,55 @@ get_comparisons <- function(
 ) {
     newdata <- mfx@newdata
     data.table::setDT(newdata)
-
+    
     # get_se_delta() needs perturbed coefficients model
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
-
+    
     settings_init()
-
+    
     # some predict() methods need data frames and will convert data.tables
     # internally, which can be very expensive if done many times. we do it once
     # here.
     data.table::setDF(lo)
     data.table::setDF(hi)
     data.table::setDF(original)
-
-    # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
+    
+    # Get predictions using appropriate strategy
     if (inherits(model, c("brmsfit", "bart"))) {
-        if (!"rowid" %in% colnames(lo)) {
-            lo$rowid <- hi$rowid <- seq_len(nrow(lo))
-        }
-
-        both <- rbindlist(list(lo, hi))
-
-        pred_both_result <- myTryCatch(get_predict(
-            model,
-            type = type,
-            newdata = both,
-            ...
-        ))
-        pred_both <- get_predict_error(pred_both_result)
-
-        data.table::setDT(pred_both)
-        pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
-
-        pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
-        pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
-        data.table::setDF(pred_lo)
-        data.table::setDF(pred_hi)
-
-        draws <- attr(pred_both, "posterior_draws")
-        draws_lo <- draws[pred_both$lo, , drop = FALSE]
-        draws_hi <- draws[!pred_both$lo, , drop = FALSE]
-
-        attr(pred_lo, "posterior_draws") <- draws_lo
-        attr(pred_hi, "posterior_draws") <- draws_hi
+        pred_result <- get_predictions_bayesian(model, type, lo, hi, ...)
     } else {
-        pred_lo_result <- myTryCatch(get_predict(
-            model,
-            type = type,
-            newdata = lo,
-            ...
-        ))
-        pred_lo <- get_predict_error(pred_lo_result)
-
-        pred_hi_result <- myTryCatch(get_predict(
-            model,
-            type = type,
-            newdata = hi,
-            ...
-        ))
-
-        # otherwise we keep the full error object instead of extracting the value
-        if (inherits(pred_hi_result$value, "data.frame")) {
-            pred_hi <- pred_hi_result$value
-        } else {
-            pred_hi <- pred_hi_result$error
-        }
+        pred_result <- get_predictions_standard(model, type, lo, hi, ...)
     }
-
+    
+    pred_lo <- pred_result$pred_lo
+    pred_hi <- pred_result$pred_hi
+    draws_lo <- pred_result$draws_lo
+    draws_hi <- pred_result$draws_hi
+    
+    # lots of indexing later requires a data.table
+    data.table::setDT(original)
+    
+    # Get pred_or for elasticity computation (simplified call)
     # predict() takes up 2/3 of the wall time. This call is only useful when we
     # compute elasticities, or for the main estimate, not for standard errors,
     # so we probably save 1/3 of that 2/3.
-    elasticities <- c(
-        # "dydx", # useless and expensive
-        "eyex",
-        "eydx",
-        "dyex",
-        # "dydxavg", # useless and expensive
-        "eyexavg",
-        "eydxavg",
-        "dyexavg"
+    elasticity_types <- c(
+        "eyex", "eydx", "dyex", "eyexavg", "eydxavg", "dyexavg"
     )
     fun <- function(x) {
-        out <- checkmate::check_choice(x$comparison, choices = elasticities)
+        out <- checkmate::check_choice(x$comparison, choices = elasticity_types)
         isTRUE(out)
     }
     tmp <- Filter(fun, variables)
     if (!isTRUE(deltamethod) || length(tmp) > 0) {
-        pred_or_result <- myTryCatch(get_predict(
+        pred_or <- get_predict_error(
             model,
             type = type,
             newdata = original,
             ...
-        ))
-        pred_or <- get_predict_error(pred_or_result)
+        )
     } else {
         pred_or <- NULL
-    }
-
-    # lots of indexing later requires a data.table
-    data.table::setDT(original)
-
-    if (
-        !inherits(pred_hi, "data.frame") ||
-            !inherits(pred_lo, "data.frame") ||
-            !inherits(pred_or, c("data.frame", "NULL")) ||
-            all(is.na(pred_lo$estimate))
-    ) {
-        msg <- "Unable to compute predicted values with this model. This error can arise when `insight::get_data()` is unable to extract the dataset from the model object, or when the data frame was modified since fitting the model. You can try to supply a different dataset to the `newdata` argument."
-        if (inherits(pred_hi, c("try-error", "error"))) {
-            msg <- c(
-                msg,
-                "",
-                "In addition, this error message was raised:",
-                "",
-                as.character(pred_hi)
-            )
-        }
-        msg <- c(
-            msg,
-            "",
-            "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
-        )
-        stop_sprintf(msg)
     }
 
     # output data.frame
@@ -231,64 +274,8 @@ get_comparisons <- function(
     fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
     fun_list[["cross"]] <- fun_list[[1]]
 
-    # elasticity requires the original (properly aligned) predictor values
-    # this will discard factor variables which are duplicated, so in principle
-    # it should be the "correct" size
-    # also need `x` when `x` is in the signature of the `comparison` custom function
-
-    FUN <- function(z) {
-        (is.character(z$comparison) && z$comparison %in% elasticities) ||
-            (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
-    }
-    elasticities <- Filter(FUN, variables)
-    elasticities <- lapply(elasticities, function(x) x$name)
-
-    if (length(elasticities) > 0) {
-        # assigning a subset of "original" to "idx1" takes time and memory
-        # better to do this here for most columns and add the "v" column only
-        # in the loop
-        if (!is.null(original)) {
-            idx1 <- c(
-                "rowid",
-                "rowidcf",
-                "term",
-                "group",
-                grep("^contrast", colnames(original), value = TRUE)
-            )
-            idx1 <- intersect(idx1, colnames(original))
-            idx1 <- original[, ..idx1]
-        }
-
-        for (v in names(elasticities)) {
-            idx2 <- unique(c(
-                "rowid",
-                "term",
-                "group",
-                by,
-                grep("^contrast", colnames(out), value = TRUE)
-            ))
-            idx2 <- intersect(idx2, colnames(out))
-            # discard other terms to get right length vector
-            idx2 <- out[term == v, ..idx2]
-            # original is NULL when cross=TRUE
-            if (!is.null(original)) {
-                # if not first iteration, need to remove previous "v" and "elast"
-                if (v %in% colnames(idx1)) {
-                    idx1[, (v) := NULL]
-                }
-                if ("elast" %in% colnames(idx1)) {
-                    idx1[, elast := NULL]
-                }
-                idx1[, (v) := original[[v]]]
-                setnames(idx1, old = v, new = "elast")
-                on_cols <- intersect(colnames(idx1), colnames(idx2))
-                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[,
-                    elast := elast
-                ])
-            }
-            elasticities[[v]] <- idx2$elast
-        }
-    }
+    # Process elasticity variables (filtering and values)
+    elasticity_vars <- process_elasticity_variables(variables, out, original, by)
 
     draws <- attr(pred_lo, "posterior_draws")
 
@@ -363,7 +350,7 @@ get_comparisons <- function(
         )
 
         # sometimes x is exactly the same length, but not always
-        args[["x"]] <- elasticities[[tn]][tmp_idx]
+        args[["x"]] <- elasticity_vars[[tn]][tmp_idx]
 
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
