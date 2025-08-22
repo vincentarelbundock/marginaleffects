@@ -4,7 +4,7 @@ requiet("bayestestR")
 
 
 dat <- transform(mtcars, cyl = factor(cyl))
-mod <- stan_glm(mpg ~ hp + cyl, data = mtcars)
+void <- capture.output(mod <- stan_glm(mpg ~ hp + cyl, data = mtcars))
 
 lo <- 21
 hi <- 26
