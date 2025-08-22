@@ -277,51 +277,6 @@ get_comparisons <- function(
         out[, "marginaleffects_wts_internal" := NA]
     }
 
-    # safe version of comparison
-    # unknown arguments
-    # singleton vs vector
-    # different terms use different functions
-    safefun <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata) {
-        tn <- term[1]
-        eps <- variables[[tn]]$eps
-        # when cross=TRUE, sanitize_comparison enforces a single function
-        if (isTRUE(cross)) {
-            fun <- fun_list[[1]]
-        } else {
-            fun <- fun_list[[tn]]
-        }
-        args <- list(
-            "hi" = hi,
-            "lo" = lo,
-            "y" = y,
-            "eps" = eps,
-            "w" = wts,
-            "newdata" = newdata
-        )
-
-        # sometimes x is exactly the same length, but not always
-        args[["x"]] <- elasticities[[tn]][tmp_idx]
-
-        args <- args[names(args) %in% names(formals(fun))]
-        con <- try(do.call("fun", args), silent = TRUE)
-
-        if (
-            !isTRUE(checkmate::check_numeric(con, len = n)) &&
-                !isTRUE(checkmate::check_numeric(con, len = 1))
-        ) {
-            msg <- sprintf(
-                "The function supplied to the `comparison` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.",
-                n,
-                n
-            ) #nolint
-            stop_sprintf(msg)
-        }
-        if (length(con) == 1) {
-            con <- c(con, rep(NA_real_, length(hi) - 1))
-            settings_set("marginaleffects_safefun_return1", TRUE)
-        }
-        return(con)
-    }
 
     # need a temp index for group-by operations when elasticities is a vector of length equal to full rows of `out`
     tmp <- grep("^term$|^contrast|^group$", colnames(out), value = TRUE)
@@ -331,97 +286,32 @@ get_comparisons <- function(
         out[, tmp_idx := seq_len(.N)]
     }
 
-    # bayesian
     if (!is.null(draws)) {
-        # drop missing otherwise get_averages() fails when trying to take a
-        # simple mean
-        idx_na <- !is.na(out$predicted_lo)
-        out <- stats::na.omit(out, cols = "predicted_lo")
-
-        # TODO: performance is probably terrrrrible here, but splitting is
-        # tricky because grouping rows are not always contiguous, and the order
-        # of rows is **extremely** important because draws don't have the
-        # indices that would allow us to align them back with `out`
-        draws <- draws[idx_na, , drop = FALSE]
-
-        if (isTRUE(checkmate::check_character(by, min.len = 1))) {
-            by_idx <- out[, ..by]
-            by_idx <- do.call(paste, c(by_idx, sep = "|"))
-        } else {
-            by_idx <- out$term
-        }
-
-        # loop over columns (draws) and term names because different terms could use different functions
-        for (tn in unique(by_idx)) {
-            for (i in seq_len(ncol(draws))) {
-                idx <- by_idx == tn
-                draws[idx, i] <- safefun(
-                    hi = draws_hi[idx, i],
-                    lo = draws_lo[idx, i],
-                    y = draws_or[idx, i],
-                    n = sum(idx),
-                    term = out$term[idx],
-                    cross = cross,
-                    wts = out$marginaleffects_wts_internal[idx],
-                    tmp_idx = out$tmp_idx[idx],
-                    newdata = newdata
-                )
-            }
-        }
-
-        # function returns unique value
-        idx <- !is.na(draws[, 1])
-        draws <- draws[idx, , drop = FALSE]
-
-        # if comparison returns a single value, then we padded with NA. That
-        # also means we don't want `rowid` otherwise we will merge and have
-        # useless duplicates.
-        if (!all(idx)) {
-            if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
-                if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
-            }
-            out <- out[idx, , drop = FALSE]
-        }
-
-        FUN_CENTER <- getOption(
-            "marginaleffects_posterior_center",
-            default = stats::median
+        result <- compare_hi_lo_bayesian(
+            out = out, 
+            draws = draws, 
+            draws_hi = draws_hi, 
+            draws_lo = draws_lo, 
+            draws_or = draws_or, 
+            by = by, 
+            cross = cross, 
+            variables = variables, 
+            fun_list = fun_list, 
+            elasticities = elasticities, 
+            newdata = newdata
         )
-        out[, "estimate" := apply(draws, 1, FUN_CENTER)]
-
-        # frequentist
+        out <- result$out
+        draws <- result$draws
     } else {
-        out <- stats::na.omit(out, cols = "predicted_lo")
-        # We want to write the "estimate" column in-place because it safer
-        # than group-merge; there were several bugs related to this in the past.
-        # safefun() returns 1 value and NAs when the function retunrs a
-        # singleton.
-        idx <- intersect(idx, colnames(out))
-        out[,
-            "estimate" := safefun(
-                hi = predicted_hi,
-                lo = predicted_lo,
-                y = predicted,
-                n = .N,
-                term = term,
-                cross = cross,
-                wts = marginaleffects_wts_internal,
-                tmp_idx = tmp_idx,
-                newdata = newdata
-            ),
-            keyby = idx
-        ]
-        out[, tmp_idx := NULL]
-
-        # if comparison returns a single value, then we padded with NA. That
-        # also means we don't want `rowid` otherwise we will merge and have
-        # useless duplicates.
-        if (anyNA(out$estimate)) {
-            if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
-                if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
-            }
-        }
-        out <- stats::na.omit(out, cols = "estimate")
+        out <- compare_hi_lo_frequentist(
+            out = out,
+            idx = idx,
+            cross = cross,
+            variables = variables,
+            fun_list = fun_list,
+            elasticities = elasticities,
+            newdata = newdata
+        )
     }
 
     # clean
@@ -537,4 +427,153 @@ predictions_hi_lo <- function(model, lo, hi, type, ...) {
     }
 
     return(list(pred_lo = pred_lo, pred_hi = pred_hi))
+}
+
+
+compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by, cross, variables, fun_list, elasticities, newdata) {
+
+    # drop missing otherwise get_averages() fails when trying to take a
+    # simple mean
+    idx_na <- !is.na(out$predicted_lo)
+    out <- stats::na.omit(out, cols = "predicted_lo")
+
+    # TODO: performance is probably terrrrrible here, but splitting is
+    # tricky because grouping rows are not always contiguous, and the order
+    # of rows is **extremely** important because draws don't have the
+    # indices that would allow us to align them back with `out`
+    draws <- draws[idx_na, , drop = FALSE]
+
+    if (isTRUE(checkmate::check_character(by, min.len = 1))) {
+        by_idx <- out[, ..by]
+        by_idx <- do.call(paste, c(by_idx, sep = "|"))
+    } else {
+        by_idx <- out$term
+    }
+
+    # loop over columns (draws) and term names because different terms could use different functions
+    for (tn in unique(by_idx)) {
+        for (i in seq_len(ncol(draws))) {
+            idx <- by_idx == tn
+            draws[idx, i] <- compare_hi_lo(
+                hi = draws_hi[idx, i],
+                lo = draws_lo[idx, i],
+                y = draws_or[idx, i],
+                n = sum(idx),
+                term = out$term[idx],
+                cross = cross,
+                wts = out$marginaleffects_wts_internal[idx],
+                tmp_idx = out$tmp_idx[idx],
+                newdata = newdata,
+                variables = variables,
+                fun_list = fun_list,
+                elasticities = elasticities
+            )
+        }
+    }
+
+    # function returns unique value
+    idx <- !is.na(draws[, 1])
+    draws <- draws[idx, , drop = FALSE]
+
+    # if comparison returns a single value, then we padded with NA. That
+    # also means we don't want `rowid` otherwise we will merge and have
+    # useless duplicates.
+    if (!all(idx)) {
+        if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
+            if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
+        }
+        out <- out[idx, , drop = FALSE]
+    }
+
+    FUN_CENTER <- getOption(
+        "marginaleffects_posterior_center",
+        default = stats::median
+    )
+    out[, "estimate" := apply(draws, 1, FUN_CENTER)]
+
+    return(list(out = out, draws = draws))
+}
+
+
+compare_hi_lo_frequentist <- function(out, idx, cross, variables, fun_list, elasticities, newdata) {
+
+    out <- stats::na.omit(out, cols = "predicted_lo")
+    # We want to write the "estimate" column in-place because it safer
+    # than group-merge; there were several bugs related to this in the past.
+    # safefun() returns 1 value and NAs when the function retunrs a
+    # singleton.
+    idx <- intersect(idx, colnames(out))
+    out[,
+        "estimate" := compare_hi_lo(
+            hi = predicted_hi,
+            lo = predicted_lo,
+            y = predicted,
+            n = .N,
+            term = term,
+            cross = cross,
+            wts = marginaleffects_wts_internal,
+            tmp_idx = tmp_idx,
+            newdata = newdata,
+            variables = variables,
+            fun_list = fun_list,
+            elasticities = elasticities
+        ),
+        keyby = idx
+    ]
+    out[, tmp_idx := NULL]
+
+    # if comparison returns a single value, then we padded with NA. That
+    # also means we don't want `rowid` otherwise we will merge and have
+    # useless duplicates.
+    if (anyNA(out$estimate)) {
+        if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
+            if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
+        }
+    }
+    out <- stats::na.omit(out, cols = "estimate")
+
+    return(out)
+}
+
+
+compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, variables, fun_list, elasticities) {
+    tn <- term[1]
+    eps <- variables[[tn]]$eps
+    # when cross=TRUE, sanitize_comparison enforces a single function
+    if (isTRUE(cross)) {
+        fun <- fun_list[[1]]
+    } else {
+        fun <- fun_list[[tn]]
+    }
+    args <- list(
+        "hi" = hi,
+        "lo" = lo,
+        "y" = y,
+        "eps" = eps,
+        "w" = wts,
+        "newdata" = newdata
+    )
+
+    # sometimes x is exactly the same length, but not always
+    args[["x"]] <- elasticities[[tn]][tmp_idx]
+
+    args <- args[names(args) %in% names(formals(fun))]
+    con <- try(do.call("fun", args), silent = TRUE)
+
+    if (
+        !isTRUE(checkmate::check_numeric(con, len = n)) &&
+            !isTRUE(checkmate::check_numeric(con, len = 1))
+    ) {
+        msg <- sprintf(
+            "The function supplied to the `comparison` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.",
+            n,
+            n
+        ) #nolint
+        stop_sprintf(msg)
+    }
+    if (length(con) == 1) {
+        con <- c(con, rep(NA_real_, length(hi) - 1))
+        settings_set("marginaleffects_safefun_return1", TRUE)
+    }
+    return(con)
 }
