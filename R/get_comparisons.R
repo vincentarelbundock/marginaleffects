@@ -233,24 +233,21 @@ get_comparisons <- function(
 
     # Centralize by construction - normalize by into character vector once
     by_cols <- character()
+    by_is_true <- isTRUE(by)
     by_is_df <- isTRUE(checkmate::check_data_frame(by))
     by_is_char <- isTRUE(checkmate::check_character(by))
     
-    if (isTRUE(by)) {
-        by_cols <- grep("^term$|^contrast_?|^group$", colnames(out), value = TRUE)
+    regex <- "^term$|^contrast_?|^group$"
+    if (by_is_true) {
+        by_cols <- grep(regex, colnames(out), value = TRUE)
     } else if (by_is_char) {
-        regex <- "^term$|^contrast_?|^group$"
         by_cols <- unique(c(by, grep(regex, colnames(out), value = TRUE)))
     } else if (by_is_df) {
-        # For data.frame by, keep original processing but set by_cols to "by"
-        by_cols <- "by"
-    }
-
-    # by (original processing for data.frame case)
-    if (isTRUE(checkmate::check_data_frame(by))) {
-        bycols <- "by"
         data.table::setDT(by)
-        by_common_cols <- setdiff(intersect(colnames(out), colnames(by)), "by")
+        by_cols <- "by"
+        by_common_cols <- setdiff(
+            intersect(colnames(out), colnames(by)), 
+            by_cols)
 
         if (length(by_common_cols) == 0) {
             if (all(colnames(by) %in% c("by", colnames(newdata)))) {
@@ -258,15 +255,12 @@ get_comparisons <- function(
                 nd <- intersect(nd, colnames(newdata))
                 nd <- newdata[, ..nd, drop = FALSE]
                 bycol <- intersect(c("rowid", "rowid_dedup"), colnames(nd))
-                # Use data.table join for better performance (inner join)
                 data.table::setkeyv(out, bycol)
                 data.table::setkeyv(nd, bycol)
                 out <- out[nd, on = bycol, nomatch = 0L]
                 by_common_cols <- setdiff(intersect(colnames(out), colnames(by)), "by")
             } else {
-                stop_sprintf(
-                    "The column in `by` must be present in `newdata`."
-                )
+                stop_sprintf("The column in `by` must be present in `newdata`.")
             }
         }
 
@@ -280,10 +274,6 @@ get_comparisons <- function(
         }
         out[by, by := by, on = by_common_cols]
         by <- "by"
-    } else if (isTRUE(by)) {
-        # by_cols already set above in centralized processing
-    } else if (by_is_char) {
-        # by_cols already set above in centralized processing  
     }
 
     # Build function list once with guaranteed cross entry
@@ -326,7 +316,6 @@ get_comparisons <- function(
     # convenient because some of the statistics are non-collapsible, so we can't
     # average them at the very end.  when `by` is a data frame, we do this only
     # at the very end.
-    # TODO: What is the UI for this? Doesn't make sense to have different functions.
     if (by_is_char) {
         merge_cols <- intersect(colnames(newdata), c(by_cols, colnames(out)))
         if (length(merge_cols) > 1) {
@@ -343,7 +332,8 @@ get_comparisons <- function(
         out[, "marginaleffects_wts_internal" := NA]
     }
 
-    # need a temp index for group-by operations when elasticities is a vector of length equal to full rows of `out`
+    # need a temp index for group-by operations when elasticities is a 
+    # vector of length equal to full rows of `out`
     grouping_cols <- c(
         grep(base_grouping_regex, colnames(out), value = TRUE),
         contrast_cols
@@ -454,26 +444,18 @@ get_comparisons <- function(
     # averaging by groups
     # sometimes this work is already done
     # if `by` is a column name, then we have merged-in a data frame earlier
-    auto_mean_fun_sub <- any(grepl("^mean\\(", unique(out$contrast)))
-    if (nrow(out) > 1) {
-        if (
-            !auto_mean_fun_sub &&
-                !(is.null(by) || isFALSE(by)) &&
-                any(grepl("^contrast[_]?", colnames(out)))
-        ) {
-            out <- get_by(
-                out,
-                draws = draws,
-                newdata = newdata,
-                by = by,
-                verbose = verbose
-            )
-            draws <- attr(out, "posterior_draws")
-        } else {
-            bycols <- c(by, "group", "term", "^contrast[_]?")
-            bycols <- paste(bycols, collapse = "|")
-            bycols <- grep(bycols, colnames(out), value = TRUE)
-        }
+    flag1 <- !any(grepl("^mean\\(", unique(out$contrast)))
+    flag2 <- !(is.null(by) || isFALSE(by))
+    flag3 <- any(grepl("^contrast[_]?", colnames(out)))
+    if (flag1 && flag2 && flag3) {
+        out <- get_by(
+            out,
+            draws = draws,
+            newdata = newdata,
+            by = by,
+            verbose = verbose
+        )
+        draws <- attr(out, "posterior_draws")
     }
 
     # before get_hypothesis
