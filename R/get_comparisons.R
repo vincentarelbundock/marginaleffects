@@ -116,9 +116,10 @@ get_comparisons <- function(
             idx <- unique(idx)
             out <- out[, ..idx]
         }
-        if (!"term" %in% colnames(out)) {
-            out[, "term" := "cross"]
-        }
+    }
+
+    if (!"term" %in% colnames(out)) {
+        out[, "term" := "cross"]
     }
 
     # by
@@ -230,6 +231,7 @@ get_comparisons <- function(
         colnames(out),
         value = TRUE
     )
+
 
     # when `by` is a character vector, we sometimes modify the comparison
     # function on the fly to use the `avg` version.  this is important and
