@@ -112,12 +112,6 @@ compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, vari
     return(con)
 }
 
-# Clean up temporary columns in one pass
-clean_temp_columns <- function(dt) {
-    cols <- intersect(c("rowid_dedup","tmp_idx"), names(dt))
-    if (length(cols)) dt[, (cols) := NULL]
-    dt
-}
 
 
 get_comparisons <- function(
@@ -201,9 +195,7 @@ get_comparisons <- function(
 
         # cross-contrasts or weird cases
     } else {
-        # Use data.table join for better performance (newdata already DT from boundary)
-        data.table::setkeyv(out, "rowid")
-        data.table::setkeyv(newdata, "rowid") 
+        # Use data.table join without sorting
         out <- newdata[out, on = "rowid"]
         if (isTRUE(nrow(out) == nrow(lo))) {
             contrast_cols <- data.table(lo)[,
@@ -255,8 +247,6 @@ get_comparisons <- function(
                 nd <- intersect(nd, colnames(newdata))
                 nd <- newdata[, ..nd, drop = FALSE]
                 bycol <- intersect(c("rowid", "rowid_dedup"), colnames(nd))
-                data.table::setkeyv(out, bycol)
-                data.table::setkeyv(nd, bycol)
                 out <- out[nd, on = bycol, nomatch = 0L]
                 by_common_cols <- setdiff(intersect(colnames(out), colnames(by)), "by")
             } else {
@@ -310,8 +300,6 @@ get_comparisons <- function(
         merge_cols <- intersect(colnames(newdata), c(by_cols, colnames(out)))
         if (length(merge_cols) > 1) {
             newdata_subset <- newdata[, ..merge_cols]
-            data.table::setkeyv(out, merge_cols)
-            data.table::setkeyv(newdata_subset, merge_cols)
             out <- newdata_subset[out, on = merge_cols]
             idx <- unique(c(idx, by_cols))
         }
@@ -429,7 +417,8 @@ get_comparisons <- function(
     }
 
     # clean up temporary columns
-    out <- clean_temp_columns(out)
+    bad_cols <- intersect(c("rowid_dedup","tmp_idx"), names(out))
+    out[, (bad_cols) := NULL]
 
     # averaging by groups
     # sometimes this work is already done

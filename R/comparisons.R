@@ -409,7 +409,8 @@ comparisons <- function(
             bycols <- intersect(colnames(tmp), colnames(cmp))
             idx <- duplicated(tmp, by = bycols)
             tmp <- tmp[!idx]
-            cmp <- merge(cmp, tmp, all.x = TRUE, by = bycols, sort = FALSE)
+            # Use data.table join without sorting
+            cmp <- tmp[cmp, on = bycols]
             # HACK: relies on NO sorting at ANY point
         } else {
             idx <- setdiff(colnames(contrast_data$original), colnames(cmp))

@@ -154,17 +154,11 @@ get_comparisons_data <- function(
         }
 
         fun <- function(x, y) {
-            data.table::setDT(x)
-            data.table::setDT(y)
             merge(x, y, all = TRUE, allow.cartesian = TRUE, sort = FALSE)
         }
         lo <- Reduce("fun", lo)
         hi <- Reduce("fun", hi)
         original <- Reduce("fun", original)
-
-        # faster to rbind, but creates massive datasets. need cartesian join on rowid
-        # lo <- cjdt(lo)
-        # hi <- cjdt(hi)
 
         # if there are fewer null_contrast_* columns, then there is at least
         # one always non-null variable type, so we keep everything
