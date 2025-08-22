@@ -106,7 +106,7 @@ get_comparisons <- function(
             tmp <- data.table(lo)[,
                 .SD,
                 .SDcols = patterns("^contrast|marginaleffects_wts_internal")
-            ]
+                ]
             out <- cbind(out, tmp)
             idx <- c(
                 "rowid",
@@ -116,51 +116,25 @@ get_comparisons <- function(
             idx <- unique(idx)
             out <- out[, ..idx]
         }
-    }
-
-    if (!"term" %in% colnames(out)) {
-        out[, "term" := "cross"]
+        if (!"term" %in% colnames(out)) {
+            out[, "term" := "cross"]
+        }
     }
 
     # by
     if (isTRUE(checkmate::check_data_frame(by))) {
-        bycols <- "by"
         data.table::setDT(by)
         tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
-
-        if (length(tmp) == 0) {
-            if (all(colnames(by) %in% c("by", colnames(newdata)))) {
-                nd <- c("rowid", "rowid_dedup", setdiff(colnames(by), "by"))
-                nd <- intersect(nd, colnames(newdata))
-                nd <- newdata[, ..nd, drop = FALSE]
-                bycol <- intersect(c("rowid", "rowid_dedup"), colnames(nd))
-                out <- merge(out, nd, by = bycol, sort = FALSE)
-                tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
-            } else {
-                stop_sprintf(
-                    "The column in `by` must be present in `newdata`."
-                )
-            }
-        }
-
-        # harmonize column types
-        for (v in colnames(by)) {
-            if (isTRUE(is.character(out[[v]])) && isTRUE(is.numeric(by[[v]]))) {
-                by[[v]] <- as.character(by[[v]])
-            } else if (isTRUE(is.numeric(out[[v]])) && isTRUE(is.character(by[[v]]))) {
-                by[[v]] <- as.numeric(by[[v]])
-            }
-        }
         out[by, by := by, on = tmp]
+        # only `by` because we give complete flexibility for user to aggregate across terms, groups, contrasts, etc.
+        # that requires more work when building the `by` data frame, but it's more flexible
         by <- "by"
     } else if (isTRUE(by)) {
         regex <- "^term$|^contrast_?|^group$"
-        by <- grep(regex, colnames(out), value = TRUE)
-        by <- unique(by)
+        by <- unique(grep(regex, colnames(out), value = TRUE))
     } else if (isTRUE(checkmate::check_character(by))) {
         regex <- "^term$|^contrast_?|^group$"
-        by <- c(by, grep(regex, colnames(out), value = TRUE))
-        by <- unique(by)
+        by <- unique(c(by, grep(regex, colnames(out), value = TRUE)))
     }
 
     # comparison function could be different for different terms
@@ -337,10 +311,6 @@ get_comparisons <- function(
                 verbose = verbose
             )
             draws <- attr(out, "posterior_draws")
-        } else {
-            bycols <- c(by, "group", "term", "^contrast[_]?")
-            bycols <- paste(bycols, collapse = "|")
-            bycols <- grep(bycols, colnames(out), value = TRUE)
         }
     }
 
