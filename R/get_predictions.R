@@ -11,6 +11,7 @@ get_predictions <- function(
     original = NULL, # sink hole
     ...) {
     newdata <- mfx@newdata
+    data.table::setDT(newdata)
 
     # sometimes we want the perturbed coefficients model supplied by get_se_delta().
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
@@ -31,10 +32,8 @@ get_predictions <- function(
         out$rowid <- mfx@newdata$rowid
     }
 
-    # extract attributes before setDT
+    # extract attributes before operations
     draws <- attr(out, "posterior_draws")
-
-    data.table::setDT(out)
 
     # unpad factors before `by` and `hypothesis`
     tmp <- unpad(out, draws)

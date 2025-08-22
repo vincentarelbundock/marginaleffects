@@ -293,6 +293,11 @@ predictions <- function(
 
     # Store unpadded newdata for degrees of freedom calculation
     unpadded_newdata <- mfx@newdata
+    
+    data.table::setDT(mfx@newdata)
+    if (!is.null(mfx@modeldata)) {
+        data.table::setDT(mfx@modeldata)
+    }
 
     mfx@newdata <- pad(model, mfx@newdata)
 
@@ -380,7 +385,6 @@ predictions <- function(
     }
 
     out <- data.table::data.table(tmp)
-    data.table::setDT(mfx@newdata)
 
     # it does not make sense to merge original data into aggregated results
     if (isFALSE(by) && !inherits(mfx@model, "mclogit")) {
