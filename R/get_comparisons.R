@@ -5,6 +5,7 @@ get_comparisons <- function(
     original,
     lo,
     hi,
+    pred_or,
     model_perturbed = NULL,
     by = NULL,
     byfun = NULL,
@@ -12,10 +13,15 @@ get_comparisons <- function(
     cross = FALSE,
     verbose = TRUE,
     deltamethod = FALSE,
-    ...
-) {
+    ...) {
     newdata <- mfx@newdata
     data.table::setDT(newdata)
+
+    # pred_or -> out backbone
+    out <- data.table::copy(pred_or)
+    out[, predicted := estimate]
+    out[, estimate := NULL]
+    # browser(skipCalls = 1000)
 
     # get_se_delta() needs perturbed coefficients model
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
@@ -89,9 +95,6 @@ get_comparisons <- function(
         stop_sprintf(msg)
     }
 
-    # output data.frame
-    out <- pred_lo
-    data.table::setDT(out)
 
     # univariate outcome:
     # original is the "composite" data that we constructed by binding terms and
@@ -106,7 +109,7 @@ get_comparisons <- function(
             tmp <- data.table(lo)[,
                 .SD,
                 .SDcols = patterns("^contrast|marginaleffects_wts_internal")
-                ]
+            ]
             out <- cbind(out, tmp)
             idx <- c(
                 "rowid",
@@ -126,6 +129,14 @@ get_comparisons <- function(
     if (isTRUE(checkmate::check_data_frame(by))) {
         data.table::setDT(by)
         tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
+        # harmonize column types
+        for (v in colnames(by)) {
+            if (isTRUE(is.character(out[[v]])) && isTRUE(is.numeric(by[[v]]))) {
+                by[[v]] <- as.character(by[[v]])
+            } else if (isTRUE(is.numeric(out[[v]])) && isTRUE(is.character(by[[v]]))) {
+                by[[v]] <- as.numeric(by[[v]])
+            }
+        }
         out[by, by := by, on = tmp]
         # only `by` because we give complete flexibility for user to aggregate across terms, groups, contrasts, etc.
         # that requires more work when building the `by` data frame, but it's more flexible
@@ -194,7 +205,8 @@ get_comparisons <- function(
                 idx1[, (v) := original[[v]]]
                 setnames(idx1, old = v, new = "elast")
                 on_cols <- intersect(colnames(idx1), colnames(idx2))
-                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[,
+                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[
+                    ,
                     elast := elast
                 ])
             }
@@ -264,16 +276,16 @@ get_comparisons <- function(
 
     if (!is.null(draws)) {
         result <- compare_hi_lo_bayesian(
-            out = out, 
-            draws = draws, 
-            draws_hi = draws_hi, 
-            draws_lo = draws_lo, 
-            draws_or = draws_or, 
-            by = by, 
-            cross = cross, 
-            variables = variables, 
-            fun_list = fun_list, 
-            elasticities = elasticities, 
+            out = out,
+            draws = draws,
+            draws_hi = draws_hi,
+            draws_lo = draws_lo,
+            draws_or = draws_or,
+            by = by,
+            cross = cross,
+            variables = variables,
+            fun_list = fun_list,
+            elasticities = elasticities,
             newdata = newdata
         )
         out <- result$out
@@ -299,21 +311,15 @@ get_comparisons <- function(
     # sometimes this work is already done
     # if `by` is a column name, then we have merged-in a data frame earlier
     auto_mean_fun_sub <- any(grepl("^mean\\(", unique(out$contrast)))
-    if (nrow(out) > 1) {
-        if (
-            !auto_mean_fun_sub &&
-                !(is.null(by) || isFALSE(by)) &&
-                any(grepl("^contrast[_]?", colnames(out)))
-        ) {
-            out <- get_by(
-                out,
-                draws = draws,
-                newdata = newdata,
-                by = by,
-                verbose = verbose
-            )
-            draws <- attr(out, "posterior_draws")
-        }
+    if (!auto_mean_fun_sub && any(grepl("^contrast[_]?", colnames(out)))) {
+        out <- get_by(
+            out,
+            draws = draws,
+            newdata = newdata,
+            by = by,
+            verbose = verbose
+        )
+        draws <- attr(out, "posterior_draws")
     }
 
     # issue #531: uncertainty estimates from get_predict() sometimes get retained, but they are not overwritten later by get_ci()
@@ -403,7 +409,6 @@ predictions_hi_lo <- function(model, lo, hi, type, ...) {
 
 
 compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by, cross, variables, fun_list, elasticities, newdata) {
-
     # drop missing otherwise get_averages() fails when trying to take a
     # simple mean
     idx_na <- !is.na(out$predicted_lo)
@@ -468,7 +473,6 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
 
 
 compare_hi_lo_frequentist <- function(out, idx, cross, variables, fun_list, elasticities, newdata) {
-
     out <- stats::na.omit(out, cols = "predicted_lo")
     # We want to write the "estimate" column in-place because it safer
     # than group-merge; there were several bugs related to this in the past.
@@ -540,7 +544,7 @@ compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, vari
             "The function supplied to the `comparison` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.",
             n,
             n
-        ) #nolint
+        ) # nolint
         stop_sprintf(msg)
     }
     if (length(con) == 1) {

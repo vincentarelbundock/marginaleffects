@@ -342,7 +342,15 @@ comparisons <- function(
     args <- utils::modifyList(args, dots)
     contrast_data <- do.call("get_comparisons_data", args)
 
+    pred_or <- get_predict_error(
+        mfx@model, 
+        type = mfx@type, 
+        newdata = contrast_data[["original"]],
+        ...)
+    data.table::setDT(pred_or)
+
     args <- list(
+        pred_or = pred_or,
         mfx = mfx,
         variables = predictors,
         type = mfx@type,
@@ -370,6 +378,7 @@ comparisons <- function(
             get_comparisons(..., verbose = FALSE)$estimate
         }
         args <- list(
+            pred_or = pred_or,
             mfx = mfx,
             model_perturbed = mfx@model,
             vcov = mfx@vcov_model,

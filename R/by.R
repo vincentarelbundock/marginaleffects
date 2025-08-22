@@ -6,7 +6,7 @@ get_by <- function(
     byfun = NULL,
     verbose = TRUE,
     ...) {
-    if (is.null(by) || isFALSE(by)) {
+    if (is.null(by) || isFALSE(by) || nrow(estimates) <= 1) {
         out <- estimates
         attr(out, "posterior_draws") <- draws
         return(out)
