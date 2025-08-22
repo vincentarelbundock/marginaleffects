@@ -1,25 +1,28 @@
-# Important: lo and hi must be made simultaneously to for seed-related issues in random effects models
-get_predictions_bayesian <- function(model, type, lo, hi, ...) {
-    both <- rbindlist(list(lo, hi))
+# Important: lo and hi must be made simultaneously for seed-related issues in random effects models
+get_comparison_predictions <- function(model, type, lo, hi, ...) {
+    both <- data.table::rbindlist(list(lo, hi), idcol = "src")  # 1=lo, 2=hi
+    pred <- get_predict_error(model, type = type, newdata = both, ...)
+    data.table::setDT(pred)
     
-    pred_both <- get_predict_error(
-        model,
-        type = type,
-        newdata = both,
-        ...
-    )
+    # Handle case where get_predict_error changes row count
+    if (nrow(pred) == nrow(both)) {
+        pred[, src := both$src]
+    } else {
+        # Fallback: use half-and-half split (original approach)
+        pred[, src := rep(1:2, each = .N/2)]
+    }
     
-    data.table::setDT(pred_both)
-    pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
+    draws <- attr(pred, "posterior_draws")
     
-    pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
-    pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+    # Select columns that exist (group may not always be present)
+    cols <- intersect(c("rowid", "group", "estimate"), names(pred))
+    pred_lo <- pred[src == 1L, ..cols]
+    pred_hi <- pred[src == 2L, ..cols]
     data.table::setDF(pred_lo)
     data.table::setDF(pred_hi)
     
-    draws <- attr(pred_both, "posterior_draws")
-    draws_lo <- draws[pred_both$lo, , drop = FALSE]
-    draws_hi <- draws[!pred_both$lo, , drop = FALSE]
+    draws_lo <- if (!is.null(draws)) draws[pred$src == 1L, , drop = FALSE] else NULL
+    draws_hi <- if (!is.null(draws)) draws[pred$src == 2L, , drop = FALSE] else NULL
     
     attr(pred_lo, "posterior_draws") <- draws_lo
     attr(pred_hi, "posterior_draws") <- draws_hi
@@ -28,85 +31,40 @@ get_predictions_bayesian <- function(model, type, lo, hi, ...) {
 }
 
 
-get_predictions_frequentist <- function(model, type, lo, hi, ...) {
-    pred_lo <- get_predict_error(
-        model,
-        type = type,
-        newdata = lo,
-        ...
-    )
-    
-    pred_hi <- get_predict_error(
-        model,
-        type = type,
-        newdata = hi,
-        ...
-    )
-    
-    list(pred_lo = pred_lo, pred_hi = pred_hi, draws_lo = NULL, draws_hi = NULL)
-}
 
 
 # Internal helper: process elasticity variable values
-process_elasticity_variables <- function(variables, out, original, by) {
-    elasticity_types <- c("eyex", "eydx", "dyex", "eyexavg", "eydxavg", "dyexavg")
+process_elasticity_variables <- function(variables, out, original, by, contrast_cols) {
+    types <- c("eyex","eydx","dyex","eyexavg","eydxavg","dyexavg")
+    needs <- vapply(variables, function(z)
+        is.character(z$comparison) && z$comparison %in% types ||
+        (is.function(z$comparison) && "x" %in% names(formals(z$comparison))),
+        logical(1))
+    nms <- names(variables)[needs]
+    if (!length(nms)) return(list())
 
-    # Filter variables that need elasticity values (x parameter)
-    FUN <- function(z) {
-        (is.character(z$comparison) && z$comparison %in% elasticity_types) ||
-            (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
-    }
-    elasticity_vars <- Filter(FUN, variables)
-    elasticity_vars <- lapply(elasticity_vars, function(x) x$name)
+    elast <- vector("list", length(nms)); names(elast) <- nms
 
-    if (length(elasticity_vars) == 0) return(elasticity_vars)
-
-    # assigning a subset of "original" to "idx1" takes time and memory
-    # better to do this here for most columns and add the "v" column only
-    # in the loop
     if (!is.null(original)) {
-        idx1 <- c(
-            "rowid",
-            "rowidcf",
-            "term",
-            "group",
-            grep("^contrast", colnames(original), value = TRUE)
-        )
-        idx1 <- intersect(idx1, colnames(original))
-        idx1 <- original[, ..idx1]
+        base_cols <- intersect(c("rowid","rowidcf","term","group", contrast_cols),
+                               names(original))
+        idx1 <- as.data.table(original[, ..base_cols, drop = FALSE])
     }
 
-    for (v in names(elasticity_vars)) {
-        idx2 <- unique(c(
-            "rowid",
-            "term",
-            "group",
-            by,
-            grep("^contrast", colnames(out), value = TRUE)
-        ))
-        idx2 <- intersect(idx2, colnames(out))
-        # discard other terms to get right length vector
-        idx2 <- out[term == v, ..idx2]
-        # original is NULL when cross=TRUE
+    # columns we need from `out` once
+    out_keep <- unique(c("rowid","term","group", by, contrast_cols))
+    out_keep <- intersect(out_keep, names(out))
+
+    for (v in nms) {
+        idx2 <- as.data.table(out[term == v, ..out_keep])
         if (!is.null(original)) {
-            # if not first iteration, need to remove previous "v" and "elast"
-            if (v %in% colnames(idx1)) {
-                idx1[, (v) := NULL]
-            }
-            if ("elast" %in% colnames(idx1)) {
-                idx1[, elast := NULL]
-            }
-            idx1[, (v) := original[[v]]]
-            setnames(idx1, old = v, new = "elast")
-            on_cols <- intersect(colnames(idx1), colnames(idx2))
-            idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[,
-                elast := elast
-                ])
+            idx1[, elast := original[[v]]]
+            on_cols <- intersect(names(idx1), names(idx2))
+            idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE))
         }
-        elasticity_vars[[v]] <- idx2$elast
+        elast[[v]] <- if (!is.null(original)) idx2$elast else NULL
     }
-
-    return(elasticity_vars)
+    elast
 }
 
 
@@ -198,12 +156,8 @@ get_comparisons <- function(
     data.table::setDF(hi)
     data.table::setDF(original)
     
-    # Get predictions using appropriate strategy
-    if (inherits(model, c("brmsfit", "bart"))) {
-        pred_result <- get_predictions_bayesian(model, type, lo, hi, ...)
-    } else {
-        pred_result <- get_predictions_frequentist(model, type, lo, hi, ...)
-    }
+    # Get predictions (unified function handles both Bayesian and frequentist models)
+    pred_result <- get_comparison_predictions(model, type, lo, hi, ...)
     
     pred_lo <- pred_result$pred_lo
     pred_hi <- pred_result$pred_hi
@@ -223,6 +177,10 @@ get_comparisons <- function(
     # output data.frame
     out <- pred_lo
     data.table::setDT(out)
+
+    # Precompute regex matches to avoid repeated pattern matching
+    contrast_cols <- grep("^contrast", colnames(out), value = TRUE)
+    base_grouping_regex <- "^term$|^group$|^type$|^comparison_idx$"
 
     # Get pred_or is required for elasticity computation and it is expensive. do it once
     if (!isTRUE(deltamethod) || length(elasticity_vars_needed) > 0) {
@@ -258,7 +216,11 @@ get_comparisons <- function(
 
         # cross-contrasts or weird cases
     } else {
-        out <- merge(out, newdata, by = "rowid", all.x = TRUE, sort = FALSE)
+        # Use data.table join for better performance
+        data.table::setkeyv(out, "rowid")
+        data.table::setDT(newdata)
+        data.table::setkeyv(newdata, "rowid") 
+        out <- newdata[out, on = "rowid"]
         if (isTRUE(nrow(out) == nrow(lo))) {
             contrast_cols <- data.table(lo)[,
                 .SD,
@@ -291,7 +253,10 @@ get_comparisons <- function(
                 nd <- intersect(nd, colnames(newdata))
                 nd <- newdata[, ..nd, drop = FALSE]
                 bycol <- intersect(c("rowid", "rowid_dedup"), colnames(nd))
-                out <- merge(out, nd, by = bycol, sort = FALSE)
+                # Use data.table join for better performance (inner join)
+                data.table::setkeyv(out, bycol)
+                data.table::setkeyv(nd, bycol)
+                out <- out[nd, on = bycol, nomatch = 0L]
                 by_common_cols <- setdiff(intersect(colnames(out), colnames(by)), "by")
             } else {
                 stop_sprintf(
@@ -320,13 +285,13 @@ get_comparisons <- function(
         by <- unique(by)
     }
 
-    # comparison function could be different for different terms
-    # sanitize_variables() ensures all functions are identical when there are cross
-    fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
-    fun_list[["cross"]] <- fun_list[[1]]
+    # Build function list once with guaranteed cross entry
+    fun_list <- lapply(variables, `[[`, "function")
+    if (!length(fun_list)) stop("No comparison function found.")
+    fun_list[["cross"]] <- fun_list[[1L]]
 
     # Process elasticity variables (filtering and values)
-    elasticity_vars <- process_elasticity_variables(variables, out, original, by)
+    elasticity_vars <- process_elasticity_variables(variables, out, original, by, contrast_cols)
 
     draws <- attr(pred_lo, "posterior_draws")
 
@@ -365,7 +330,11 @@ get_comparisons <- function(
         merge_cols <- intersect(colnames(newdata), c(by, colnames(out)))
         if (length(merge_cols) > 1) {
             newdata_subset <- subset(newdata, select = merge_cols)
-            out <- merge(out, newdata_subset, all.x = TRUE, sort = FALSE)
+            # Use data.table join for better performance
+            data.table::setDT(newdata_subset)
+            data.table::setkeyv(out, merge_cols)
+            data.table::setkeyv(newdata_subset, merge_cols)
+            out <- newdata_subset[out, on = merge_cols]
             idx <- unique(c(idx, by))
         }
     }
@@ -376,7 +345,10 @@ get_comparisons <- function(
     }
 
     # need a temp index for group-by operations when elasticities is a vector of length equal to full rows of `out`
-    grouping_cols <- grep("^term$|^contrast|^group$", colnames(out), value = TRUE)
+    grouping_cols <- c(
+        grep(base_grouping_regex, colnames(out), value = TRUE),
+        contrast_cols
+    )
     if (length(grouping_cols) > 0) {
         out[, tmp_idx := seq_len(.N), by = grouping_cols]
     } else {
