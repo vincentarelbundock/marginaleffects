@@ -157,6 +157,17 @@ compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, vari
     return(con)
 }
 
+# Clean up temporary columns
+clean_temp_columns <- function(data) {
+    temp_cols <- c("rowid_dedup", "tmp_idx")
+    for (col in temp_cols) {
+        if (col %in% colnames(data)) {
+            data[, (col) := NULL]
+        }
+    }
+    data
+}
+
 
 get_comparisons <- function(
     mfx,
@@ -331,8 +342,11 @@ get_comparisons <- function(
 
     data.table::setDT(pred_hi)
 
-    out[, predicted_lo := pred_lo[["estimate"]]]
-    out[, predicted_hi := pred_hi[["estimate"]]]
+    # Assign all prediction estimates at once
+    out[, `:=`(
+        predicted_lo = pred_lo[["estimate"]],
+        predicted_hi = pred_hi[["estimate"]]
+    )]
 
 
     idx <- grep(
@@ -435,7 +449,7 @@ get_comparisons <- function(
         # than group-merge; there were several bugs related to this in the past.
         # compare_hi_lo() returns 1 value and NAs when the function retunrs a
         # singleton.
-        idx <- intersect(idx, colnames(out))
+        grouping_cols <- intersect(idx, colnames(out))
         out[,
             "estimate" := compare_hi_lo(
                 hi = predicted_hi,
@@ -451,9 +465,8 @@ get_comparisons <- function(
                 fun_list = fun_list,
                 elasticity_vars = elasticity_vars
             ),
-            keyby = idx
+            keyby = grouping_cols
         ]
-        out[, tmp_idx := NULL]
 
         # if comparison returns a single value, then we padded with NA. That
         # also means we don't want `rowid` otherwise we will merge and have
@@ -464,10 +477,8 @@ get_comparisons <- function(
         out <- stats::na.omit(out, cols = "estimate")
     }
 
-    # clean
-    if ("rowid_dedup" %in% colnames(out)) {
-        out[, "rowid_dedup" := NULL]
-    }
+    # clean up temporary columns
+    out <- clean_temp_columns(out)
 
     # averaging by groups
     # sometimes this work is already done
