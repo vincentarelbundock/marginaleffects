@@ -12,32 +12,22 @@ get_comparisons <- function(
     hypothesis = NULL,
     cross = FALSE,
     verbose = TRUE,
-    deltamethod = FALSE,
     ...) {
     newdata <- mfx@newdata
     data.table::setDT(newdata)
 
     # pred_or -> out backbone
-    out <- data.table::copy(pred_or)
+    out <- as.data.table(pred_or)
     out[, predicted := estimate]
     out[, estimate := NULL]
-    # browser(skipCalls = 1000)
 
     # get_se_delta() needs perturbed coefficients model
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
 
     settings_init()
 
-    # some predict() methods need data frames and will convert data.tables
-    # internally, which can be very expensive if done many times. we do it once
-    # here.
-    data.table::setDF(lo)
-    data.table::setDF(hi)
-    data.table::setDF(original)
-
     predictions <- predictions_hi_lo(model, lo, hi, type, ...)
-    pred_lo <- predictions$pred_lo
-    pred_hi <- predictions$pred_hi
+    list2env(predictions, environment())
 
     # predict() takes up 2/3 of the wall time. This call is only useful when we
     # compute elasticities, or for the main estimate, not for standard errors,
@@ -57,44 +47,19 @@ get_comparisons <- function(
         isTRUE(out)
     }
     tmp <- Filter(fun, variables)
-    if (!isTRUE(deltamethod) || length(tmp) > 0) {
-        pred_or <- get_predict_error(
+    if (length(tmp) > 0) {
+        new <- get_predict_error(
             model,
             type = type,
             newdata = original,
             ...
         )
-    } else {
-        pred_or <- NULL
+        # no idea why we need to reassign because they should be the same
+        pred_or <- new
     }
 
     # lots of indexing later requires a data.table
     data.table::setDT(original)
-
-    if (
-        !inherits(pred_hi, "data.frame") ||
-            !inherits(pred_lo, "data.frame") ||
-            !inherits(pred_or, c("data.frame", "NULL")) ||
-            all(is.na(pred_lo$estimate))
-    ) {
-        msg <- "Unable to compute predicted values with this model. This error can arise when `insight::get_data()` is unable to extract the dataset from the model object, or when the data frame was modified since fitting the model. You can try to supply a different dataset to the `newdata` argument."
-        if (inherits(pred_hi, c("try-error", "error"))) {
-            msg <- c(
-                msg,
-                "",
-                "In addition, this error message was raised:",
-                "",
-                as.character(pred_hi)
-            )
-        }
-        msg <- c(
-            msg,
-            "",
-            "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
-        )
-        stop_sprintf(msg)
-    }
-
 
     # univariate outcome:
     # original is the "composite" data that we constructed by binding terms and
@@ -215,18 +180,9 @@ get_comparisons <- function(
     }
 
     draws <- attr(pred_lo, "posterior_draws")
-
-    # frequentist
-    if (is.null(draws)) {
-        draws_lo <- draws_hi <- draws_or <- NULL
-    } else {
-        # bayes
-        draws_lo <- attr(pred_lo, "posterior_draws")
-        draws_hi <- attr(pred_hi, "posterior_draws")
-        draws_or <- attr(pred_or, "posterior_draws")
-    }
-
-    data.table::setDT(pred_hi)
+    draws_lo <- attr(pred_lo, "posterior_draws")
+    draws_hi <- attr(pred_hi, "posterior_draws")
+    draws_or <- attr(pred_or, "posterior_draws")
 
     out[, predicted_lo := pred_lo[["estimate"]]]
     out[, predicted_hi := pred_hi[["estimate"]]]
@@ -320,16 +276,6 @@ get_comparisons <- function(
             verbose = verbose
         )
         draws <- attr(out, "posterior_draws")
-    }
-
-    # issue #531: uncertainty estimates from get_predict() sometimes get retained, but they are not overwritten later by get_ci()
-    # drop by reference for speed
-    bad <- intersect(
-        colnames(out),
-        c("conf.low", "conf.high", "std.error", "statistic", "p.value")
-    )
-    if (length(bad) > 0) {
-        out[, (bad) := NULL]
     }
 
     # before get_hypothesis

@@ -126,9 +126,13 @@ get_predict.default <- function(
 }
 
 
-get_predict_error <- function(model, ...) {
-    pred_result <- myTryCatch(get_predict(model, ...))
-    
+get_predict_error <- function(model, newdata, ...) {
+    if (is.null(newdata)) {
+        pred_result <- myTryCatch(get_predict(model, ...))
+    } else {
+        pred_result <- myTryCatch(get_predict(model, newdata = as.data.frame(newdata), ...))
+    }
+
     if (inherits(pred_result$value, "data.frame")) {
         return(pred_result$value)
     } else {

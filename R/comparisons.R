@@ -342,12 +342,13 @@ comparisons <- function(
     args <- utils::modifyList(args, dots)
     contrast_data <- do.call("get_comparisons_data", args)
 
+    # compute it once here so we don't need to do it repeatedly in get_comparisons()
+    # important for elasticities
     pred_or <- get_predict_error(
         mfx@model, 
         type = mfx@type, 
         newdata = contrast_data[["original"]],
         ...)
-    data.table::setDT(pred_or)
 
     args <- list(
         pred_or = pred_or,
