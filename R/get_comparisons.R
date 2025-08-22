@@ -5,7 +5,6 @@ get_comparisons <- function(
     original,
     lo,
     hi,
-    pred_or,
     model_perturbed = NULL,
     by = NULL,
     byfun = NULL,
@@ -14,12 +13,6 @@ get_comparisons <- function(
     verbose = TRUE,
     ...) {
     newdata <- mfx@newdata
-    data.table::setDT(newdata)
-
-    # pred_or -> out backbone
-    out <- as.data.table(pred_or)
-    out[, predicted := estimate]
-    out[, estimate := NULL]
 
     # get_se_delta() needs perturbed coefficients model
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
@@ -28,6 +21,8 @@ get_comparisons <- function(
 
     predictions <- predictions_hi_lo(model, lo, hi, type, ...)
     list2env(predictions, environment())
+
+    out <- copy(pred_lo)
 
     # predict() takes up 2/3 of the wall time. This call is only useful when we
     # compute elasticities, or for the main estimate, not for standard errors,
@@ -46,20 +41,19 @@ get_comparisons <- function(
         out <- checkmate::check_choice(x$comparison, choices = elasticities)
         isTRUE(out)
     }
-    tmp <- Filter(fun, variables)
-    if (length(tmp) > 0) {
-        new <- get_predict_error(
+    n_elasticities <- length(Filter(fun, variables))
+
+    # need y-hat for elasticities
+    # need to use the perturbed model, otherwise SEs are far from Stata
+    pred_or <- NULL
+    if (n_elasticities > 0) {
+        pred_or <- get_predict_error(
             model,
             type = type,
             newdata = original,
             ...
         )
-        # no idea why we need to reassign because they should be the same
-        pred_or <- new
     }
-
-    # lots of indexing later requires a data.table
-    data.table::setDT(original)
 
     # univariate outcome:
     # original is the "composite" data that we constructed by binding terms and
@@ -71,7 +65,7 @@ get_comparisons <- function(
     if (isTRUE(cross)) {
         out <- merge(out, newdata, by = "rowid", all.x = TRUE, sort = FALSE)
         if (isTRUE(nrow(out) == nrow(lo))) {
-            tmp <- data.table(lo)[,
+            tmp <- lo[,
                 .SD,
                 .SDcols = patterns("^contrast|marginaleffects_wts_internal")
             ]
@@ -92,7 +86,6 @@ get_comparisons <- function(
 
     # by
     if (isTRUE(checkmate::check_data_frame(by))) {
-        data.table::setDT(by)
         tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
         # harmonize column types
         for (v in colnames(by)) {
@@ -126,7 +119,6 @@ get_comparisons <- function(
 
     elasticities <- prepare_elasticities(variables, original, out, by, elasticities)
 
-
     draws <- attr(pred_lo, "posterior_draws")
     draws_lo <- attr(pred_lo, "posterior_draws")
     draws_hi <- attr(pred_hi, "posterior_draws")
@@ -136,7 +128,6 @@ get_comparisons <- function(
     out[, predicted_hi := pred_hi[["estimate"]]]
 
     if (!is.null(pred_or)) {
-        data.table::setDT(pred_or)
         out[, predicted := pred_or[["estimate"]]]
     } else {
         out[, predicted := NA_real_]
@@ -261,13 +252,10 @@ predictions_hi_lo <- function(model, lo, hi, type, ...) {
             ...
         )
 
-        data.table::setDT(pred_both)
         pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
 
         pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
         pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
-        data.table::setDF(pred_lo)
-        data.table::setDF(pred_hi)
 
         draws <- attr(pred_both, "posterior_draws")
         draws_lo <- draws[pred_both$lo, , drop = FALSE]

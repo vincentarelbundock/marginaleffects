@@ -134,7 +134,9 @@ get_predict_error <- function(model, newdata, ...) {
     }
 
     if (inherits(pred_result$value, "data.frame")) {
-        return(pred_result$value)
+        out <- pred_result$value
+        data.table::setDT(out)
+        return(out)
     } else {
         if (
             inherits(pred_result$error, "rlang_error") &&
