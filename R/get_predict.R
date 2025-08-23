@@ -120,7 +120,6 @@ get_predict.default <- function(
     }
 
     out <- add_rowid(out, newdata)
-    data.table::setDF(out)
 
     return(out)
 }
@@ -135,7 +134,6 @@ get_predict_error <- function(model, newdata, ...) {
 
     if (inherits(pred_result$value, "data.frame")) {
         out <- pred_result$value
-        data.table::setDT(out)
         return(out)
     } else {
         if (

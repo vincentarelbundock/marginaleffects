@@ -23,6 +23,9 @@ get_predictions <- function(
         ...
     )
 
+    # this needs to be a data.table
+    data.table::setDT(out)
+
     if (
         !"rowid" %in% colnames(out) &&
             "rowid" %in% colnames(mfx@newdata) &&
@@ -33,8 +36,6 @@ get_predictions <- function(
 
     # extract attributes before setDT
     draws <- attr(out, "posterior_draws")
-
-    data.table::setDT(out)
 
     # unpad factors before `by` and `hypothesis`
     tmp <- unpad(out, draws)

@@ -3,8 +3,7 @@ get_hypothesis <- function(
     hypothesis,
     by = NULL,
     newdata = NULL,
-    draws = NULL
-) {
+    draws = NULL) {
     deprecated <- c(
         "pairwise",
         "revpairwise",
@@ -28,7 +27,6 @@ get_hypothesis <- function(
     mat <- isTRUE(checkmate::check_matrix(hypothesis))
 
     if (is.null(hypothesis)) {
-        data.table::setDT(x)
         return(x)
     } else if (isTRUE(checkmate::check_formula(hypothesis))) {
         out <- hypothesis_formula(

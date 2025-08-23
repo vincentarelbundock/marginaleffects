@@ -45,9 +45,8 @@ get_predict.model_fit <- function(model, newdata, type = NULL, ...) {
     } else if (type == "prob") {
         colnames(out) <- substr(colnames(out), 7, nchar(colnames(out)))
         out$marginaleffects_internal_id <- seq_len(nrow(out))
-        data.table::setDT(out)
         out <- data.table::melt(
-            out,
+            as.data.table(out),
             id.vars = "marginaleffects_internal_id",
             variable.name = "group",
             value.name = "estimate"

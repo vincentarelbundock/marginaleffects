@@ -201,19 +201,11 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
     # default values
     draws <- attr(x, "posterior_draws")
 
-    if (inherits(x, "data.frame")) {
-        data.table::setDT(x)
-    }
-    if (inherits(newdata, "data.frame")) {
-        data.table::setDT(newdata)
-        if (nrow(newdata) != nrow(x)) {
-            newdata <- NULL
-        }
-    }
-
     form <- sanitize_hypothesis_formula(hypothesis)
 
     group <- form$group
+
+    x <- data.table::as.data.table(x)
 
     if (isTRUE(checkmate::check_character(by))) {
         bycols <- setdiff(by, group)

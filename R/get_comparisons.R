@@ -22,7 +22,8 @@ get_comparisons <- function(
     predictions <- predictions_hi_lo(model, lo, hi, type, ...)
     list2env(predictions, environment())
 
-    out <- copy(pred_lo)
+    # needs to be a data.table
+    out <- data.table(pred_lo)
 
     # predict() takes up 2/3 of the wall time. This call is only useful when we
     # compute elasticities, or for the main estimate, not for standard errors,

@@ -54,6 +54,5 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
         stop_sprintf(msg)
     }
 
-    data.table::setDT(out)
     return(out)
 }

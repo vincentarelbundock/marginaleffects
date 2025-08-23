@@ -42,8 +42,14 @@ get_hypotheses <- function(model_perturbed, hypothesis, hypothesis_is_formula, n
         out <- model_perturbed
     }
 
+
     tmp <- get_hypothesis(out, hypothesis = hypothesis)
+
+    # must be a data.table
+    data.table::setDT(tmp)
+
     out <- tmp$estimate
+
     hypothesis_function_by <- attr(tmp, "hypothesis_function_by")
 
     # labels
