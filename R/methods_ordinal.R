@@ -12,7 +12,8 @@ get_predict.clm <- function(
     resp <- insight::find_response(model)
 
     # otherwise `predict.clm` does not see some columns (mystery)
-    data.table::setDF(newdata)
+    # copy to avoid breakage in get_comparisons()
+    newdata <- as.data.frame(newdata)
 
     newdata <- newdata[, setdiff(colnames(newdata), resp), drop = FALSE]
 

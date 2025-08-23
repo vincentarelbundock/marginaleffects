@@ -41,7 +41,7 @@ get_predict.gamlss <- function(
     # predict.gamlss() breaks when `newdata` includes unknown variables
     origindata <- insight::get_data(model)
     originvars <- colnames(origindata)
-    data.table::setDF(newdata)
+    newdata <- as.data.frame(newdata)
     index <- which(colnames(newdata) %in% originvars)
     tmp <- newdata[, index]
     hush(
