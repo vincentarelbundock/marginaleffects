@@ -1,7 +1,10 @@
 source("helpers.R")
 using("marginaleffects")
 requiet("mhurdle")
-exit_file("Insight Issue #1114")
+
+if (packageVersion("insight") <= "1.4.0") {
+    exit_file("Insight Issue #1114")
+}
 
 tol <- 0.001
 tol_se <- 0.001

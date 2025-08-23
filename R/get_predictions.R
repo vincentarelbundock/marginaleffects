@@ -41,11 +41,10 @@ get_predictions <- function(
     list2env(tmp, envir = environment())
 
     # expensive: only do this inside the jacobian if necessary
-    if (
+    if (!is.null(by) ||
+        !is.logical(by) ||
         !is.null(mfx@wts) ||
-            !isTRUE(checkmate::check_flag(by, null.ok = TRUE)) ||
-            inherits(model, "mclogit")
-    ) {
+        inherits(model, "mclogit")) {
         # not sure why sorting is so finicky here
         out <- merge_by_rowid(out, newdata)
     }

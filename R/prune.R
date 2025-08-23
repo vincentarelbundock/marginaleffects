@@ -54,7 +54,11 @@ prune.marginaleffects <- function(tree, component = "all", ...) {
         # preserve order
         keepers <- unique(intersect(names(mfx@modeldata), unique(keepers)))
 
-        mfx@modeldata <- subset(mfx@modeldata, select = keepers)
+        if (inherits(mfx@modeldata, "data.table")) {
+            mfx@modeldata <- mfx@modeldata[, ..keepers, drop = FALSE]
+        } else {
+            mfx@modeldata <- mfx@modeldata[, keepers, drop = FALSE]
+        }
     }
 
     attr(tree, "marginaleffects") <- mfx

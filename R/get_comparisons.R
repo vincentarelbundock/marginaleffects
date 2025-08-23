@@ -59,8 +59,13 @@ get_comparisons <- function(
     # original is the "composite" data that we constructed by binding terms and
     # compute predictions. It includes a term column, which we need to
     # replicate for each group.
-    cols <- setdiff(colnames(original), colnames(out))
-    out <- cbind(out, original[, ..cols])
+    if (!is.null(by) ||
+        !is.logical(by) ||
+        !is.null(mfx@wts) ||
+        cross) {
+        cols <- setdiff(colnames(original), colnames(out))
+        out <- cbind(out, original[, ..cols])
+    }
 
     if (isTRUE(cross)) {
         out <- merge(out, newdata, by = "rowid", all.x = TRUE, sort = FALSE)
