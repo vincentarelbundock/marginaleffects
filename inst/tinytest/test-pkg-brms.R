@@ -751,8 +751,7 @@ expect_error(hypotheses(cmp), pattern = "posterior.*get_draws")
 
 
 # Issue #1392: type="link" doesn't work
-m <- brms_categorical_2_num) 
-p <- predictions(m, type = "link")
+p <- predictions(brms_categorical_2_num, type = "link")
 expect_false(anyNA(p$estimate))
 expect_false(anyNA(p$group))
 expect_false(anyNA(p$rowid))
