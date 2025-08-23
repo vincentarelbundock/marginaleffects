@@ -1,6 +1,16 @@
 source("helpers.R")
 
-exit_file("slopes eps is broken")
+# This should raise an error because we do not know *where* in the predictor
+# space the slope should be evaluated
+mod <- lm(mpg ~ wt + hp, data = mtcars)
+expect_error(
+    suppressWarnings(avg_slopes(mod, variables = "hp", newdata = data.frame(wt = 2))),
+    "no valid predictor")
+
+s <- avg_slopes(mod, variables = "hp", newdata = datagrid(wt = 2))
+expect_inherits(s, "slopes")
+
+exit_file("eps broken")
 
 # Issue #1538
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
