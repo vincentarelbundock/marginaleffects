@@ -5,7 +5,7 @@ requiet("Amelia")
 # Basic expectation tests
 dat_simple <- mtcars
 dat_simple$mpg[1:5] <- NA
-amelia_obj <- Amelia::amelia(dat_simple, m = 5, p2s = 0)
+amelia_obj <- suppressWarnings(Amelia::amelia(dat_simple, m = 5, p2s = 0))
 mod_simple <- with(amelia_obj, lm(mpg ~ wt + am))
 expect_slopes(mod_simple)
 expect_predictions(mod_simple)

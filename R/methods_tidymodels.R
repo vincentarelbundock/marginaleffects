@@ -71,7 +71,11 @@ get_predict.workflow <- get_predict.model_fit
 #' @rdname get_vcov
 #' @keywords internal
 #' @export
-get_vcov.model_fit <- function(model, type = NULL, ...) {
+get_vcov.model_fit <- function(model, vcov, type = NULL, ...) {
+    if (isFALSE(vcov)) {
+        return(FALSE)
+    }
+
     if (isTRUE(type == "class")) {
         return(FALSE)
     }

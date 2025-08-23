@@ -63,7 +63,7 @@ p <- predictions(mod, newdata = bikes, type = "numeric") |>
 expect_inherits(p, "predictions")
 expect_true("std.error" %in% colnames(p))
 
-p <- predictions(mod, newdata = bikes) |>
+p <- predictions(mod, newdata = bikes, vcov = FALSE) |>
     inferences(
         method = "conformal_split",
         conformal_test = bikes[1:200, ],
@@ -81,11 +81,15 @@ mod <- workflow(count ~ ., rand_forest(mode = "regression")) |>
     fit(data = bikes) |>
     suppressWarnings()
 
-p <- predictions(mod, newdata = bikes, type = "numeric")
+p <- predictions(mod, newdata = bikes, type = "numeric", vcov = FALSE)
 expect_inherits(p, "predictions")
 expect_false("std.error" %in% colnames(p))
 
-mfx <- slopes(mod, variables = c("temp", "season", "weather"), newdata = bikes, type = "numeric")
+mfx <- slopes(mod,
+    variables = c("temp", "season", "weather"),
+    newdata = bikes,
+    type = "numeric",
+    vcov = FALSE)
 expect_inherits(mfx, "slopes")
 expect_false("std.error" %in% colnames(mfx))
 

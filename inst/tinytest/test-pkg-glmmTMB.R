@@ -372,7 +372,7 @@ mod <- glmmTMB(Sepal.Length ~ Sepal.Width + (1 | Species), data = iris)
 expect_warning(avg_comparisons(mod, vcov = TRUE))
 expect_warning(avg_comparisons(mod))
 expect_false(ignore(expect_warning)(avg_comparisons(mod, vcov = FALSE)))
-options(marginaleffects_safe = NULL)
+options(marginaleffects_safe = FALSE)
 
 
 v_glmmTMB <- packageVersion("glmmTMB") >= "1.1.12"
