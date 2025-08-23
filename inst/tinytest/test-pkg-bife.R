@@ -1,5 +1,6 @@
 source("helpers.R")
-exit_file("deprecated pending more tests")
+# don't remember why, but at some point I had reasons to doubt numerical results
+exit_file("deprecated")
 using("marginaleffects")
 
 requiet("bife")

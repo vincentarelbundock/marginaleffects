@@ -1,6 +1,7 @@
 source("helpers.R")
-exit_file("logistf causes conflicts")
-require("logistf")
+# logistf breaks other tests
+exit_file("conflict")
+requiet("logistf")
 
 
 # logistf: no validity
@@ -29,3 +30,6 @@ cmp <- avg_comparisons(mod, variables = list(mpg = "sd"))
 expect_inherits(cmp, "comparisons")
 pre <- predictions(mod)
 expect_inherits(pre, "predictions")
+
+# important to avoid conflicts
+detach("package:logistf", unload = TRUE)
