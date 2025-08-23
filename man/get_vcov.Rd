@@ -46,7 +46,7 @@ get_vcov(model, ...)
 
 \method{get_vcov}{gamlss}(model, ...)
 
-\method{get_vcov}{glmmTMB}(model, ...)
+\method{get_vcov}{glmmTMB}(model, vcov, ...)
 
 \method{get_vcov}{mhurdle}(model, vcov = NULL, ...)
 

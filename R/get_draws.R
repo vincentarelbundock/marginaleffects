@@ -2,9 +2,9 @@
 #'
 #' @param x An object produced by a `marginaleffects` package function, such as `predictions()`, `avg_slopes()`, `hypotheses()`, etc.
 #' @param shape string indicating the shape of the output format:
-#' * "long": long format data frame
+#' * "long" (default): long format data frame
+#' * "PxD" (fastest): Matrix with parameters as rows and draws as columns
 #' * "DxP": Matrix with draws as rows and parameters as columns
-#' * "PxD": Matrix with draws as rows and parameters as columns
 #' * "rvar": Random variable datatype (see `posterior` package documentation).
 #' @return A data.frame with `drawid` and `draw` columns.
 #' @details

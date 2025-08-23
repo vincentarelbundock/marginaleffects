@@ -11,9 +11,9 @@ get_draws(x, shape = "long")
 
 \item{shape}{string indicating the shape of the output format:
 \itemize{
-\item "long": long format data frame
+\item "long" (default): long format data frame
+\item "PxD" (fastest): Matrix with parameters as rows and draws as columns
 \item "DxP": Matrix with draws as rows and parameters as columns
-\item "PxD": Matrix with draws as rows and parameters as columns
 \item "rvar": Random variable datatype (see \code{posterior} package documentation).
 }}
 }
