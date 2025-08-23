@@ -1,8 +1,9 @@
 # No validity test whatsoever
-
 source("helpers.R")
 using("marginaleffects")
-if (!requiet("DCchoice")) exit_file("DCchoice not available")
+if (!requiet("Icens")) exit_file("bioconductor")
+requiet("DCchoice")
+requiet("Icens")
 
 # Basic expectation tests
 data(oohbsyn)
