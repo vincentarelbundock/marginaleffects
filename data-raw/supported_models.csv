@@ -99,5 +99,6 @@ survey,svyolr,TRUE,TRUE,,,,,,
 survival,clogit,TRUE,TRUE,,,,,,
 survival,coxph,TRUE,TRUE,TRUE,TRUE,U,U,TRUE,TRUE
 survival,survreg,TRUE,TRUE,,,,,,
+systemfit,systemfit,TRUE,TRUE,,,U,U,U,U
 tobit1,tobit1,TRUE,TRUE,,,TRUE,TRUE,U,U
 truncreg,truncreg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
