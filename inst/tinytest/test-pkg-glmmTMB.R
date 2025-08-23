@@ -7,7 +7,7 @@ requiet("emmeans")
 requiet("broom")
 
 # Basic expectation tests
-mod_simple <- glmmTMB::glmmTMB(mpg ~ wt + am + (1|cyl), data = mtcars)
+mod_simple <- glmmTMB::glmmTMB(mpg ~ wt + am + (1 | cyl), data = mtcars)
 expect_slopes(mod_simple)
 expect_predictions(mod_simple)
 expect_hypotheses(mod_simple)
@@ -236,8 +236,7 @@ model_data <- dplyr::select(
         ),
         function(c) {
             factor(c, exclude = levels(c)[length(levels(c))])
-        }
-    ) |>
+        }) |>
     # need to make these ordered factors for BRMS
     transform(
         education = ordered(education),
@@ -369,8 +368,28 @@ expect_equal(nrow(p), 10)
 
 # Issue #1490: no warning when vcov=FALSE
 options(marginaleffects_safe = TRUE)
-mod <- glmmTMB(Sepal.Length ~ Sepal.Width + (1|Species), data = iris)
+mod <- glmmTMB(Sepal.Length ~ Sepal.Width + (1 | Species), data = iris)
 expect_warning(avg_comparisons(mod, vcov = TRUE))
 expect_warning(avg_comparisons(mod))
 expect_false(ignore(expect_warning)(avg_comparisons(mod, vcov = FALSE)))
 options(marginaleffects_safe = NULL)
+
+
+v_glmmTMB <- packageVersion("glmmTMB") >= "1.1.12"
+v_insight <- packageVersion("insight") > "1.4.0"
+if (!v_glmmTMB || !v_insight) {
+    exit_file("old glmmTMB or insight")
+}
+
+# Issue #1562: support HC0
+data("fish", package = "parameters")
+m1 <- suppressWarnings(glmmTMB::glmmTMB(
+    count ~ child + camper + (1 | persons),
+    ziformula = ~ child + camper + (1 | persons),
+    data = fish,
+    family = glmmTMB::truncated_poisson()
+))
+p0 <- avg_predictions(m1, by = "camper", vcov = "HC0")
+p1 <- avg_predictions(m1, by = "camper")
+expect_true(all(p0$std.error != p1$std.error))
+expect_error(avg_predictions(m1, by = "camper", vcov = "HC1"), "HC0")

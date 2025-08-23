@@ -25,6 +25,7 @@ Misc:
 * `get_dataset()` now delegates most of the work to the `Rdatasets` package (optional dependency).
 * Major internal refactoring to simplify the code base and make maintenance easier. We use fewer attributes and store internal information in a single S4 object stored as `attr(x, "marginaleffects")`.
 * More efficient `inferences()` by avoiding repeated calls to `get_modeldata()`
+* Support `vcov="HC0"` for `glmmTMB` models. Requires 1.1.12 of `glmmTMB` and >1.4.0 of `insight`. Thanks to @strengejacke for report #1562.
 
 Bugs:
 
