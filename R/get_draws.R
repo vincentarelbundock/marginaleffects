@@ -22,7 +22,7 @@ get_draws <- function(x, shape = "long") {
             "This object does not include draws. The `posterior_draws` function only supports bayesian models produced by the `marginaleffects` or `predictions` functions of the `marginaleffects` package.",
             call. = FALSE
         )
-        return(x)
+        return(invisible(NULL))
     }
 
     if (nrow(draws) != nrow(x)) {
