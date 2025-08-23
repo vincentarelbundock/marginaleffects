@@ -66,9 +66,9 @@ get_vcov(model, ...)
 
 \method{get_vcov}{systemfit}(model, ...)
 
-\method{get_vcov}{model_fit}(model, type = NULL, ...)
+\method{get_vcov}{model_fit}(model, vcov, type = NULL, ...)
 
-\method{get_vcov}{workflow}(model, type = NULL, ...)
+\method{get_vcov}{workflow}(model, vcov, type = NULL, ...)
 }
 \arguments{
 \item{model}{Model object}

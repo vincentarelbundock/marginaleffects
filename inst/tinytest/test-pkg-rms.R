@@ -69,8 +69,6 @@ expect_equal(dim(p), c(100, 1))
 expect_warning(get_predict(f), pattern = "Converting.*tibble")
 
 
-
-exit_file("predict() error")
 mod <- lrm(cyl ~ hp, mtcars)
 c1 <- comparisons(mod, type = "fitted")
 c2 <- comparisons(mod, type = "lp")
