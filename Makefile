@@ -14,16 +14,6 @@ runnersdown: ## unhack local files to not run tests
 	git restore .Rbuildignore
 	git restore tests/tinytest.R
 
-
-testthat:
-	Rscript -e "pkgload::load_all();devtools::test()"
-
-testall: document ## tinytest::build_install_test()
-	# Rscript -e "pkgload::load_all();cl <- parallel::makeCluster(5);tinytest::run_test_dir(cluster = cl)"
-	awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
-	Rscript -e "tinytest::build_install_test(ncpu = 7)"
-	git restore .Rbuildignore
-
 testone: ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
 	Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
 
@@ -31,6 +21,10 @@ testplot: ## test the plots
 	make testone testfile="inst/tinytest/test-plot_predictions.R"
 	make testone testfile="inst/tinytest/test-plot_comparisons.R"
 	make testone testfile="inst/tinytest/test-plot_slopes.R"
+
+test: install runnersup ## Build and test in parallel with 8 cores
+	Rscript -e "tinytest::build_install_test(ncpu = 10)"
+	$(MAKE) runnersdown
 
 document: ## altdoc::render_docs()
 	Rscript -e "devtools::document()"
@@ -73,9 +67,6 @@ clean: ## Clean the book directory
 setvar: ## Set the environment variable
 	export R_BUILD_DOC=true
 
-buildtest: install runnersup ## Build and test in parallel with 8 cores
-	Rscript -e "tinytest::build_install_test(ncpu = 10)"
-	$(MAKE) runnersdown
 
 website: setvar ## altdoc::render_docs(verbose = TRUE)
 	# Rscript -e "altdoc::render_docs(verbose = TRUE, freeze = TRUE)"
