@@ -40,7 +40,7 @@ get_vcov.glmmTMB <- function(model, vcov, ...) {
     vcov <- sanitize_vcov(model, vcov)
 
     # Extract the full covariance matrix
-    out <- insight::get_varcov(model, vcov = vcov, component = "all")
+    out <- insight::get_varcov(model, vcov = vcov, component = "full")
 
     # Extract the fixed-effect coefficient names from get_coef
     coef_names <- names(get_coef.glmmTMB(model))
