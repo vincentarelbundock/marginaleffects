@@ -51,6 +51,7 @@ brms_issue576 <- readRDS(testing_path("modelarchive/data/brms_issue576.rds"))
 brms_issue639 <- readRDS(testing_path("modelarchive/data/brms_issue639.rds"))
 brms_issue782 <- readRDS(testing_path("modelarchive/data/brms_issue782.rds"))
 brms_issue1006 <- readRDS(testing_path("modelarchive/data/brms_issue1006.rds"))
+brms_categorical_2_num <- readRDS(testing_path("modelarchive/data/brms_categorical_2_num.rds"))
 
 
 # average marginal effects brmsmargins
@@ -747,3 +748,12 @@ expect_equivalent(
 # Issue #1508: cannot post-process with `hypotheses()`. Issue #1508.
 cmp <- avg_comparisons(brms_factor, variables = list("cyl_fac" = "pairwise"))
 expect_error(hypotheses(cmp), pattern = "posterior.*get_draws")
+
+
+# Issue #1392: type="link" doesn't work
+m <- brms_categorical_2_num predictions(m, type = "link")
+p <- predictions(m, type = "link")
+expect_false(anyNA(p$estimate))
+expect_false(anyNA(p$group))
+expect_false(anyNA(p$rowid))
+
