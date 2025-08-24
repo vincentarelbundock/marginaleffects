@@ -46,15 +46,13 @@ get_comparisons <- function(
 
     # need y-hat for elasticities
     # need to use the perturbed model, otherwise SEs are far from Stata
-    pred_or <- NULL
-    if (n_elasticities > 0) {
-        pred_or <- get_predict_error(
-            model,
-            type = type,
-            newdata = original,
-            ...
-        )
-    }
+    # TODO: figure out when we can skip this. It is expensive, but could be necessary for custom user-supplied comparison functions.
+    pred_or <- get_predict_error(
+        model,
+        type = type,
+        newdata = original,
+        ...)
+    out[, predicted := pred_or[["estimate"]]]
 
     # univariate outcome:
     # original is the "composite" data that we constructed by binding terms and

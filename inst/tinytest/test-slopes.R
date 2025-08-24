@@ -10,21 +10,20 @@ expect_error(
 s <- avg_slopes(mod, variables = "hp", newdata = datagrid(wt = 2))
 expect_inherits(s, "slopes")
 
-exit_file("eps broken")
-
 # Issue #1538
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
+fun = function(hi, lo, y, x, eps) (hi - lo) / eps * (x / y)
 cmp1 <- comparisons(
     mod,
-    variables = list("hp" = 0.001),
+    variables = list("drat" = 0.001),
     eps = 0.001,
-    comparison = function(hi, lo, y, x, eps) (hi - lo) / eps * (x / y),
+    comparison = fun,
     numderiv = list("fdcenter", eps = 1e-5)
 )
 
 cmp2 <- comparisons(
     mod,
-    variables = "hp",
+    variables = "drat",
     eps = 0.001,
     comparison = "eyex",
     numderiv = list("fdcenter", eps = 1e-5)
