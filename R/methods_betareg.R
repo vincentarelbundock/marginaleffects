@@ -8,11 +8,29 @@ set_coef.betareg <- function(model, coefs, ...) {
     # are stored as two elements in a list, with precision coefs lacking the "(phi)_"
     # prefix, so we remove it.
     mu <- !grepl("\\(phi\\)|^Log\\(nu\\)", names(coefs))
-    model[["coefficients"]][["mu"]] <- coefs[mu]
+    if (length(mu) > 0) {
+        if ("mean" %in% names(model$coefficients)) {
+            model[["coefficients"]][["mean"]] <- coefs[mu]
+        } else if ("mu" %in% names(model$coefficients)) {
+            model[["coefficients"]][["mu"]] <- coefs[mu]
+        }
+    }
+
     phi <- startsWith(names(coefs), "(phi)")
-    model[["coefficients"]][["phi"]] <- coefs[phi]
+    if (length(phi) > 0) {
+        if ("precision" %in% names(model$coefficients)) {
+            model[["coefficients"]][["precision"]] <- coefs[phi]
+        } else if ("phi" %in% names(model$coefficients)) {
+            model[["coefficients"]][["phi"]] <- coefs[phi]
+        }
+    }
+
     nu <- startsWith(names(coefs), "Log(nu)")
     model[["coefficients"]][["nu"]] <- coefs[nu]
+    if (length(nu) > 0 && "nu" %in% names(model[["coefficients"]])) {
+        model[["coefficients"]][["nu"]] <- coefs[nu]
+    }
+
     return(model)
 }
 
