@@ -69,3 +69,13 @@ expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 mm_link <- predictions(mod, type = "link", by = "batch", newdata = datagrid(grid_type = "balanced")) |>
     dplyr::arrange(batch)
 expect_true(all(mm_link$estimate < mm$estimate))
+
+
+# Issue #1568: Log(nu) parameter
+dat <- get_dataset("LossAversion", "betareg")
+mod <- betareg(invest ~ grade * (arrangement + age) + male |
+    arrangement + male + grade, data = dat)
+p <- avg_predictions(mod, by = "grade")
+expect_inherits(p, "predictions")
+expect_false(anyNA(p$estimate))
+expect_false(anyNA(p$std.error))

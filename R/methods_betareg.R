@@ -7,41 +7,27 @@ set_coef.betareg <- function(model, coefs, ...) {
     # to match with get_varcov(., component = "all") output). In betareg object, these
     # are stored as two elements in a list, with precision coefs lacking the "(phi)_"
     # prefix, so we remove it.
-    mean_coefs <- coefs[
-        names(coefs) != "(phi)" & !startsWith(names(coefs), "(phi)_")
-    ]
-    precision_coefs <- coefs[
-        names(coefs) == "(phi)" | startsWith(names(coefs), "(phi)_")
-    ]
-    names(precision_coefs) <- sub(
-        "(phi)_",
-        "",
-        names(precision_coefs),
-        fixed = TRUE
-    )
-
-    if (length(mean_coefs) > 0) {
-        model[["coefficients"]]$mean[names(mean_coefs)] <- mean_coefs
-    }
-    model[["coefficients"]]$precision[names(precision_coefs)] <- precision_coefs
-
-    model
+    mu <- !grepl("\\(phi\\)|^Log\\(nu\\)", names(coefs))
+    model[["coefficients"]][["mu"]] <- coefs[mu]
+    phi <- startsWith(names(coefs), "(phi)")
+    model[["coefficients"]][["phi"]] <- coefs[phi]
+    nu <- startsWith(names(coefs), "Log(nu)")
+    model[["coefficients"]][["nu"]] <- coefs[nu]
+    return(model)
 }
 
 #' @include get_coef.R
 #' @rdname get_coef
 #' @export
 get_coef.betareg <- function(model, ...) {
-    mean_coefs <- model$coefficients$mean
-    precision_coefs <- model$coefficients$precision
-
-    # precision coefs have "(phi)_" appended to their names in covariance matrix; mean coefficients
-    # never have this, so no risk of duplicate names, and precision coefs are always determined.
-    # Mimicking coef.betareg(., "full").
-    if (!identical(names(precision_coefs), "(phi)")) {
-        names(precision_coefs) <- paste0("(phi)_", names(precision_coefs))
+    out <- model$coefficients
+    for (n in names(out)) {
+        if (n == "phi") {
+            names(out[[n]]) <- sprintf("(phi)_%s", names(out[[n]]))
+        }
     }
-    c(mean_coefs, precision_coefs)
+    out <- stats::setNames(unlist(out), unlist(lapply(out, names)))
+    return(out)
 }
 
 
