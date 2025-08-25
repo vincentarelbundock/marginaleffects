@@ -31,6 +31,7 @@ Misc:
 Bugs:
 
 * Fixed bug in `sampleSelection` models.
+* Fixed `betareg` models with Log(nu) parameter. Thanks to @strengejacke for report #1568.
  
 ## 0.28.0
 
