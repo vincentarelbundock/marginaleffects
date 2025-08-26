@@ -37,18 +37,18 @@ get_predictions <- function(
     # extract attributes before setDT
     draws <- attr(out, "posterior_draws")
 
+    # TODO: find a cheaper way to do this, but it's tricky
+    # variables can come from:
+    # - by: characters, data.frame, TRUE, groups
+    # - wts
+    # - hypothesis multi-part formulae
+    cols <- setdiff(colnames(newdata), colnames(out))
+    out <- cbind(out, subset(newdata, select = cols))
+
     # unpad factors before `by` and `hypothesis`
     tmp <- unpad(out, draws)
     list2env(tmp, envir = environment())
 
-    # expensive: only do this inside the jacobian if necessary
-    if (!is.null(by) ||
-        !is.logical(by) ||
-        !is.null(mfx@wts) ||
-        inherits(model, "mclogit")) {
-        # not sure why sorting is so finicky here
-        out <- merge_by_rowid(out, newdata)
-    }
 
     # by: auto group
     if (isTRUE(checkmate::check_character(by))) {

@@ -279,7 +279,8 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
         )
         if (inherits(labels, "data.frame") && nrow(labels) == nrow(estimates)) {
             data.table::setnames(labels, old = "estimate", "hypothesis")
-            estimates <- cbind(labels, estimates)
+            cols <- setdiff(colnames(estimates), colnames(labels))
+            estimates <- cbind(labels, subset(estimates, select = cols))
         }
     }
 

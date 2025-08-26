@@ -58,17 +58,13 @@ get_comparisons <- function(
         pred_or <- NULL
     }
 
-    # univariate outcome:
-    # original is the "composite" data that we constructed by binding terms and
-    # compute predictions. It includes a term column, which we need to
-    # replicate for each group.
-    if (!is.null(by) ||
-        !is.logical(by) ||
-        !is.null(mfx@wts) ||
-        cross) {
-        cols <- setdiff(colnames(original), colnames(out))
-        out <- cbind(out, original[, ..cols])
-    }
+    # TODO: find a cheaper way to do this, but it's tricky
+    # variables can come from:
+    # - by: characters, data.frame, TRUE, groups
+    # - wts
+    # - hypothesis multi-part formulae
+    cols <- setdiff(colnames(original), colnames(out))
+    out <- cbind(out, original[, ..cols])
 
     if (isTRUE(cross)) {
         out <- merge(out, newdata, by = "rowid", all.x = TRUE, sort = FALSE)
