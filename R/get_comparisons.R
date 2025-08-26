@@ -391,12 +391,15 @@ compare_hi_lo_frequentist <- function(out, idx, cross, variables, fun_list, elas
     ]
     out[, tmp_idx := NULL]
 
-    # if comparison returns a single value, then we padded with NA. That
-    # also means we don't want `rowid` otherwise we will merge and have
-    # useless duplicates.
+    # if comparison returns a single value, it means we are using a special shortcut comparison function.
+    # to do this, we padded with NA. That means we don't want `rowid` or covariates otherwise they will be misleading
+    # since misaligned. But we do need the marginaleffects internal columns and by
     if (anyNA(out$estimate)) {
         if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
-            if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
+            # important to avoid merging
+            idx <- c(idx, grep("^estimate$|^contrast|^group$|^term$|^marginaleffects_wts_internal$", colnames(out), value = TRUE))
+            idx <- unique(intersect(idx, colnames(out)))
+            out <- subset(out, select = idx)
         }
     }
     out <- stats::na.omit(out, cols = "estimate")
