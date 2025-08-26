@@ -1,5 +1,6 @@
 source("helpers.R")
 requiet("nnet")
+requiet("mgcv")
 
 mod <- lm(mpg ~ hp * am * factor(cyl), data = mtcars)
 
@@ -63,7 +64,7 @@ expect_false("vs" %in% colnames(pre))
 
 
 # categorical outcome model always has the "group" column
-mod <- multinom(factor(cyl) ~ mpg + hp + am, data = mtcars, trace = FALSE)
+mod <- nnet::multinom(factor(cyl) ~ mpg + hp + am, data = mtcars, trace = FALSE)
 bydf <- data.frame(group = c(4, 6, 8), by = c("small", "small", "large"))
 p1 <- predictions(mod)
 p2 <- avg_predictions(mod, by = TRUE)
@@ -75,4 +76,8 @@ expect_true("group" %in% colnames(p3))
 expect_false("group" %in% colnames(p4))
 expect_true("by" %in% colnames(p4))
 
-#
+
+# magic 1-length output functions should exclude covariates
+model <- mgcv::gam(Sepal.Width ~ s(Petal.Length, by = Species), data = iris)
+slo <- avg_slopes(model, variables = "Petal.Length")
+expect_false("Petal.Length" %in% colnames(slo))
