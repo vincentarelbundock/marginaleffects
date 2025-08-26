@@ -56,6 +56,11 @@ slo <- avg_slopes(m, variables = "mpg", by = "vs")
 expect_false("mpg" %in% colnames(slo))
 expect_true("vs" %in% colnames(slo))
 
+pre <- avg_predictions(m)
+expect_equal(nrow(pre), 1)
+expect_false("mpg" %in% colnames(pre))
+expect_false("vs" %in% colnames(pre))
+
 
 # categorical outcome model always has the "group" column
 mod <- multinom(factor(cyl) ~ mpg + hp + am, data = mtcars, trace = FALSE)
