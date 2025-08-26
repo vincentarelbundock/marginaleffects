@@ -47,6 +47,16 @@ expect_false("am" %in% colnames(cmp))
 expect_false("hp" %in% colnames(pre))
 expect_false("hp" %in% colnames(cmp))
 
+# bayesian by=TRUE -> no covariates except for `by`
+m <- readRDS(testing_path("modelarchive/data/brms_interaction.rds"))
+slo <- avg_slopes(m, variables = "mpg")
+expect_false("mpg" %in% colnames(slo))
+expect_false("vs" %in% colnames(slo))
+slo <- avg_slopes(m, variables = "mpg", by = "vs")
+expect_false("mpg" %in% colnames(slo))
+expect_true("vs" %in% colnames(slo))
+
+
 # categorical outcome model always has the "group" column
 mod <- multinom(factor(cyl) ~ mpg + hp + am, data = mtcars, trace = FALSE)
 bydf <- data.frame(group = c(4, 6, 8), by = c("small", "small", "large"))
@@ -59,3 +69,5 @@ expect_true("group" %in% colnames(p2))
 expect_true("group" %in% colnames(p3))
 expect_false("group" %in% colnames(p4))
 expect_true("by" %in% colnames(p4))
+
+#
