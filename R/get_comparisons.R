@@ -58,17 +58,13 @@ get_comparisons <- function(
         pred_or <- NULL
     }
 
-    # univariate outcome:
-    # original is the "composite" data that we constructed by binding terms and
-    # compute predictions. It includes a term column, which we need to
-    # replicate for each group.
-    if (!is.null(by) ||
-        !is.logical(by) ||
-        !is.null(mfx@wts) ||
-        cross) {
-        cols <- setdiff(colnames(original), colnames(out))
-        out <- cbind(out, original[, ..cols])
-    }
+    # TODO: find a cheaper way to do this, but it's tricky
+    # variables can come from:
+    # - by: characters, data.frame, TRUE, groups
+    # - wts
+    # - hypothesis multi-part formulae
+    cols <- setdiff(colnames(original), colnames(out))
+    out <- cbind(out, original[, ..cols])
 
     if (isTRUE(cross)) {
         out <- merge(out, newdata, by = "rowid", all.x = TRUE, sort = FALSE)
@@ -342,12 +338,18 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
     idx <- !is.na(draws[, 1])
     draws <- draws[idx, , drop = FALSE]
 
-    # if comparison returns a single value, then we padded with NA. That
-    # also means we don't want `rowid` otherwise we will merge and have
-    # useless duplicates.
+    # if comparison returns a single value, it means we are using a special shortcut comparison function.
+    # to do this, we padded with NA. That means we don't want `rowid` or covariates otherwise they will be misleading
+    # since misaligned. But we do need the marginaleffects internal columns and by
     if (!all(idx)) {
         if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
-            if ("rowid" %in% colnames(out)) out[, "rowid" := NULL]
+            cols <- grep("^estimate$|^group$|^term$|^contrast_?|^marginaleffects_wts_internal$|^by$",
+                colnames(out),
+                value = TRUE)
+            if (isTRUE(checkmate::check_character(by, min.len = 1))) {
+                cols <- unique(c(cols, by))
+            }
+            out <- subset(out, select = cols)
         }
         out <- out[idx, , drop = FALSE]
     }
@@ -356,6 +358,7 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
         "marginaleffects_posterior_center",
         default = stats::median
     )
+
     out[, "estimate" := apply(draws, 1, FUN_CENTER)]
 
     return(list(out = out, draws = draws))
