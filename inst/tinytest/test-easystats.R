@@ -10,3 +10,20 @@ p <- avg_predictions(
   hypothesis = ratio ~ pairwise | sex)
 expect_true("sex" %in% colnames(p))
 expect_false("sex.1" %in% colnames(p))
+
+
+# Issue #1575: changes in numeric results?
+data(efc, package = "modelbased")
+efc <- datawizard::to_factor(efc, c("c161sex", "c172code", "e16sex", "e42dep"))
+levels(efc$c172code) <- c("low", "mid", "high")
+m <- lm(neg_c_7 ~ c12hour + barthtot + e42dep + c161sex * c172code, data = efc)
+nd <- datagrid(model = m, grid_type = "balanced")
+nd$p <- predict(m, newdata = nd)
+manu <- aggregate(p ~ c161sex + c172code, data = nd, mean) |>
+    sort_by(~ c161sex + c172code)
+auto <- avg_predictions(
+    m,
+    newdata = "balanced",
+    by = c("c161sex", "c172code")) |>
+    sort_by(~ c161sex + c172code)
+expect_equal(auto$estimate, manu$p)
