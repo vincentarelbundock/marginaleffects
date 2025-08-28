@@ -168,6 +168,7 @@ svyglm,response
 svyglm,link
 svyolr,probs
 tobit,response
+tobit,link
 tobit1,expvalue
 tobit1,linpred
 tobit1,prob

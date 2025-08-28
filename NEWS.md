@@ -16,6 +16,7 @@ New features:
 
 Misc:
 
+* `AER::tobit()` can use `type="link"`
 * Support `systemfit` models.
 * `tidymodels()` can now do conformal prediction with `inferences()`.
 * Better error message for bayesian/bootstrap models when `hypotheses()` attempts to post-process a previous `marginaleffects` call.
