@@ -1,6 +1,6 @@
 # News {.unnumbered}
 
-## Development
+## 0.29.0
 
 New functions:
 

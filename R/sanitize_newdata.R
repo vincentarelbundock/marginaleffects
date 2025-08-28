@@ -136,7 +136,14 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
     newdata <- add_wts_column(wts, newdata, model)
 
     # Convert to data.table
-    data.table::setDT(newdata)
+    # setDT() raises warnings and breaks mergin with mlogit index columns
+    # but as.data.table() breaks a bunch of other models, for reasons I can't 
+    # quite figure out
+    if (inherits(model, "mlogit")) {
+        out <- as.data.table(newdata)
+    } else {
+        data.table::setDT(newdata)
+    }
 
     return(newdata)
 }

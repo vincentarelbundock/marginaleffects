@@ -43,7 +43,12 @@ get_predictions <- function(
     # - wts
     # - hypothesis multi-part formulae
     cols <- setdiff(colnames(newdata), colnames(out))
-    out <- cbind(out, subset(newdata, select = cols))
+    if (inherits(mfx@model, "mlogit")) {
+        out <- merge_by_rowid(out, newdata)
+    } else {
+        nd <- subset(newdata, select = cols)
+        out <- cbind(out, nd)
+    }
 
     # unpad factors before `by` and `hypothesis`
     tmp <- unpad(out, draws)
