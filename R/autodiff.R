@@ -1,21 +1,31 @@
 eval_fun_with_numpy_arrays <- function(FUN, ...) {
     dots <- list(...)
-    dots <- lapply(dots, mAD$array)
+    # Handle special cases for JAX indexing
+    for (i in seq_along(dots)) {
+        if (names(dots)[i] == "num_groups") {
+            # Keep num_groups as is (integer scalar)
+        } else if (names(dots)[i] == "groups") {
+            # Convert groups to integer array explicitly
+            dots[[i]] <- reticulate::np_array(dots[[i]], dtype = "int32")
+        } else {
+            dots[[i]] <- mAD$array(dots[[i]])
+        }
+    }
     J <- do.call(FUN, dots)
     J <- mAD$array(J)
     return(J)
 }
 
 
-jax_warning <- function(feature) {
-    msg <- "Automatic differentiation with JAX does not support %s. Reverting to `marginaleffects` with finite difference."
+autodiff_warning <- function(feature) {
+    msg <- "Automatic differentiation with JAX does not support %s. Reverting to finite difference."
     warning(sprintf(msg, feature), call. = FALSE)
 }
 
 
 sanity_jax_hypothesis <- function(mfx) {
     if (!is.null(mfx@hypothesis)) {
-        jax_warning("the `hypothesis` argument")
+        autodiff_warning("the `hypothesis` argument")
         return(FALSE)
     }
     return(TRUE)
@@ -24,7 +34,7 @@ sanity_jax_hypothesis <- function(mfx) {
 
 sanity_jax_type <- function(mfx) {
     if (!identical(mfx@type, "response")) {
-        jax_warning("`type` other than 'response'")
+        autodiff_warning("`type` other than 'response'")
         return(FALSE)
     }
     return(TRUE)
@@ -35,13 +45,9 @@ get_jax_function <- function(mfx) {
     if (mfx@calling_function == "predictions") {
         return("predictions")
     } else if (mfx@calling_function == "comparisons") {
-        if (length(mfx@variables) != 1) {
-            jax_warning("more than one focal variable")
-            return(NULL)
-        }
         return("comparisons")
     } else {
-        jax_warning("other functions than predictions() or comparisons()")
+        autodiff_warning("other functions than predictions() or comparisons()")
         return(NULL)
     }
 }
@@ -60,18 +66,26 @@ get_jax_model <- function(mfx) {
             return("poisson")
         }
     }
-    jax_warning(paste("models of class", class(model)[1]))
+    autodiff_warning(paste("models of class", class(model)[1]))
     return(NULL)
 }
 
 
-get_jax_by <- function(mfx) {
+get_jax_by <- function(mfx, hi = NULL) {
     if (isTRUE(mfx@by)) {
-        return("_byT")
+        if (!is.null(hi)) {
+            # comparisons() aggregates by `contrast`, `term`, etc.
+            return("_byG")
+        } else {
+            # predictions() gives global aggregation
+            return("_byT")
+        }
     } else if (isFALSE(mfx@by)) {
         return("")
+    } else if (is.character(mfx@by)) {
+        return("_byG")
     } else {
-        warning("JAX only supports by = TRUE or FALSE. Reverting to default marginaleffects finite difference.", call. = FALSE)
+        autodiff_warning("values of `by` other than TRUE, FALSE, or a character vector of grouping variable names.")
         return(NULL)
     }
     return(estimand)
@@ -88,7 +102,7 @@ get_jax_estimand <- function(mfx) {
             return("jacobian_ratio")
         }
     }
-    jax_warning("other functions than `predictions()` or `comparisons()`, with `comparisons='ifference'` or `'ratio'`")
+    autodiff_warning("other functions than `predictions()` or `comparisons()`, with `comparisons='ifference'` or `'ratio'`")
     return(NULL)
 }
 
@@ -96,10 +110,31 @@ get_jax_estimand <- function(mfx) {
 jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, ...) {
     message("\nJAX is fast!")
 
-    f <- get_jax_function(mfx)
-    m <- get_jax_model(mfx)
-    b <- get_jax_by(mfx)
-    e <- get_jax_estimand(mfx)
+    f <- get_jax_function(mfx = mfx)
+    m <- get_jax_model(mfx = mfx)
+    b <- get_jax_by(mfx = mfx, hi = hi)
+    e <- get_jax_estimand(mfx = mfx)
+
+    if (identical(b, "_byG")) {
+        bycols <- NULL
+        # comparisons aggregates by contrast
+        if (!is.null(hi)) {
+            bycols <- c(bycols, grep("^contrast|^term$|^group$", colnames(hi), value = TRUE))
+        }
+        if (is.character(mfx@by)) {
+            bycols <- c(bycols, mfx@by)
+        }
+        if (!is.null(hi)) {
+            groups <- hi[, ..bycols, drop = FALSE]
+        } else {
+            groups <- mfx@newdata[, ..bycols, drop = FALSE]
+        }
+        groups <- apply(groups, 1, function(x) paste0(x, collapse = "_"))
+        groups <- as.integer(as.factor(groups)) - 1L
+        num_groups <- as.integer(max(groups) + 1L)
+    } else {
+        groups <- num_groups <- NULL
+    }
 
     if (is.null(f)) {
         return(NULL)
@@ -125,7 +160,9 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, ...) {
         beta = coefs,
         X = attr(mfx@newdata, "marginaleffects_model_matrix"),
         X_hi = attr(hi, "marginaleffects_model_matrix"),
-        X_lo = attr(lo, "marginaleffects_model_matrix")
+        X_lo = attr(lo, "marginaleffects_model_matrix"),
+        groups = groups,
+        num_groups = num_groups
     )
     args <- Filter(function(x) !is.null(x), args)
     J <- do.call(eval_fun_with_numpy_arrays, args)
