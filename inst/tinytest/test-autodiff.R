@@ -41,7 +41,7 @@ expect_message(cmp2 <- avg_comparisons(mod))
 expect_equal(cmp1$estimate, cmp2$estimate)
 expect_equal(cmp1$std.error, cmp2$std.error, tol = 1e-5)
 
-# FAILURE: avg_comparisons(by=)
+# avg_comparisons(by=)
 mod <- lm(Sepal.Length ~ Sepal.Width * Petal.Length * Petal.Width * Species, iris)
 autodiff(FALSE)
 cmp1 <- avg_comparisons(mod, by = "Species")
