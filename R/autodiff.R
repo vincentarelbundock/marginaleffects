@@ -33,8 +33,8 @@ sanity_jax_hypothesis <- function(mfx) {
 
 
 sanity_jax_type <- function(mfx) {
-    if (!identical(mfx@type, "response")) {
-        autodiff_warning("`type` other than 'response'")
+    if (!mfx@type %in% c("response", "link")) {
+        autodiff_warning(sprintf("`type='%s'`", mfx@type))
         return(FALSE)
     }
     return(TRUE)
@@ -55,7 +55,13 @@ get_jax_function <- function(mfx) {
 
 get_jax_model <- function(mfx) {
     model <- mfx@model
-    if (class(model)[1] == "lm") {
+    supported <- c("lm", "glm")
+    if (!class(model)[1] %in% supported) {
+        autodiff_warning(paste("models of class", class(model)[1]))
+        return(NULL)
+    }
+
+    if (identical(class(model)[1], "lm") || identical(mfx@type, "link")) {
         return("linear")
     } else if (class(model)[1] == "glm") {
         if (model$family$family == "binomial" && model$family$link == "logit") {
@@ -64,9 +70,10 @@ get_jax_model <- function(mfx) {
             return("probit")
         } else if (model$family$family == "poisson" && model$family$link == "log") {
             return("poisson")
+        } else {
+            autodiff_warning("glm families other than binomial (logit/probit) and Poisson (log)")
         }
     }
-    autodiff_warning(paste("models of class", class(model)[1]))
     return(NULL)
 }
 
@@ -108,7 +115,9 @@ get_jax_estimand <- function(mfx) {
 
 
 jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, estimates = NULL, ...) {
-    message("\nJAX is fast!")
+    if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
+        message("\nJAX is fast!")
+    }
 
     f <- get_jax_function(mfx = mfx)
     m <- get_jax_model(mfx = mfx)
@@ -118,6 +127,11 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
     X <- attr(mfx@newdata, "marginaleffects_model_matrix")
     X_hi <- attr(hi, "marginaleffects_model_matrix")
     X_lo <- attr(lo, "marginaleffects_model_matrix")
+
+    # Check if we have the required matrices for the selected path
+    if (identical(b, "_byG") && (is.null(X_hi) || is.null(X_lo))) {
+        return(NULL) # Fall back to finite difference method
+    }
 
     if (identical(b, "_byG")) {
         bycols <- NULL
