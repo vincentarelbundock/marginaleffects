@@ -118,11 +118,12 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, ...)
     if (identical(b, "_byG")) {
         bycols <- NULL
         # comparisons aggregates by contrast
-        if (!is.null(original)) {
-            bycols <- c(bycols, grep("^contrast|^term$|^group$", colnames(original), value = TRUE))
-        }
+        # the order must match the order in marginaleffects::comparisons()
         if (is.character(mfx@by)) {
             bycols <- c(bycols, mfx@by)
+        }
+        if (!is.null(original)) {
+            bycols <- c(bycols, grep("^contrast|^term$|^group$", colnames(original), value = TRUE))
         }
         if (!is.null(original)) {
             groups <- original[, ..bycols, drop = FALSE]
