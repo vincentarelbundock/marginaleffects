@@ -107,13 +107,17 @@ get_jax_estimand <- function(mfx) {
 }
 
 
-jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, ...) {
+jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, estimates = NULL, ...) {
     message("\nJAX is fast!")
 
     f <- get_jax_function(mfx = mfx)
     m <- get_jax_model(mfx = mfx)
     b <- get_jax_by(mfx = mfx, original = original)
     e <- get_jax_estimand(mfx = mfx)
+
+    X <- attr(mfx@newdata, "marginaleffects_model_matrix")
+    X_hi <- attr(hi, "marginaleffects_model_matrix")
+    X_lo <- attr(lo, "marginaleffects_model_matrix")
 
     if (identical(b, "_byG")) {
         bycols <- NULL
@@ -125,14 +129,42 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, ...)
         if (!is.null(original)) {
             bycols <- c(bycols, grep("^contrast|^term$|^group$", colnames(original), value = TRUE))
         }
-        if (!is.null(original)) {
-            groups <- original[, ..bycols, drop = FALSE]
+
+        # Use the ordering from the final estimates object which has already been processed by get_by()
+        if (!is.null(estimates) && !is.null(original)) {
+            # Create a mapping from original data to final estimates groups
+            # The estimates object has the final groups in the correct order
+            if (length(bycols) > 0) {
+                # Get group info from estimates (final order)
+                estimates_groups <- estimates[, ..bycols, drop = FALSE]
+                estimates_combined <- apply(estimates_groups, 1, function(x) paste0(x, collapse = "_"))
+
+                # Get group info from original data (input order)
+                original_groups <- original[, ..bycols, drop = FALSE]
+                original_combined <- apply(original_groups, 1, function(x) paste0(x, collapse = "_"))
+
+                # Map original rows to estimates group indices
+                groups <- match(original_combined, estimates_combined) - 1L
+                num_groups <- length(estimates_combined)
+            } else {
+                groups <- num_groups <- NULL
+            }
         } else {
-            groups <- mfx@newdata[, ..bycols, drop = FALSE]
+            # Fallback to original logic if estimates not provided
+            if (!is.null(original)) {
+                groups <- original[, ..bycols, drop = FALSE]
+            } else {
+                groups <- mfx@newdata[, ..bycols, drop = FALSE]
+            }
+            idx <- do.call(order, groups)
+            groups <- groups[idx, , drop = FALSE]
+            if (!is.null(X)) X <- X[idx, , drop = FALSE]
+            if (!is.null(X_hi)) X_hi <- X_hi[idx, , drop = FALSE]
+            if (!is.null(X_lo)) X_lo <- X_lo[idx, , drop = FALSE]
+            groups <- apply(groups, 1, function(x) paste0(x, collapse = "_"))
+            groups <- as.integer(as.factor(groups)) - 1L
+            num_groups <- max(groups) + 1L
         }
-        groups <- apply(groups, 1, function(x) paste0(x, collapse = "_"))
-        groups <- as.integer(as.factor(groups)) - 1L
-        num_groups <- max(groups) + 1L
     } else {
         groups <- num_groups <- NULL
     }
@@ -159,9 +191,9 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, ...)
     args <- list(
         FUN = mAD[[m]][[f]][[paste0(e, b)]],
         beta = coefs,
-        X = attr(mfx@newdata, "marginaleffects_model_matrix"),
-        X_hi = attr(hi, "marginaleffects_model_matrix"),
-        X_lo = attr(lo, "marginaleffects_model_matrix"),
+        X = X,
+        X_hi = X_hi,
+        X_lo = X_lo,
         groups = groups,
         num_groups = num_groups
     )

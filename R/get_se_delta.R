@@ -51,6 +51,7 @@ get_se_delta <- function(
     hi = NULL,
     lo = NULL,
     original = NULL,
+    estimates = NULL,
     ...) {
     # Use mfx slots when available
     if (!is.null(mfx)) {
@@ -112,6 +113,7 @@ get_se_delta <- function(
             hi = hi,
             lo = lo,
             original = original,
+            estimates = estimates,
             comparison = comparison,
             calling_function = calling_function
         )

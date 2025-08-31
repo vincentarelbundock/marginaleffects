@@ -381,6 +381,7 @@ comparisons <- function(
             hi = contrast_data$hi,
             lo = contrast_data$lo,
             original = contrast_data$original,
+            estimates = cmp,
             numderiv = numderiv
         )
         args <- utils::modifyList(args, dots)
