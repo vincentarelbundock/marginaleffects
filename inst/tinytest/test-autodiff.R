@@ -1,7 +1,7 @@
 source("helpers.R")
 
 env <- Sys.getenv("marginaleffects_autodiff")
-# if (!isTRUE(env)) exit_file("marginaleffects_autodiff != TRUE")
+if (!isTRUE(env == "true")) exit_file("marginaleffects_autodiff != TRUE")
 
 penguins <- get_dataset("penguins", "palmerpenguins") |> na.omit()
 
