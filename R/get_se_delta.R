@@ -51,8 +51,7 @@ get_se_delta <- function(
     hi = NULL,
     lo = NULL,
     original = NULL,
-    ...
-) {
+    ...) {
     # Use mfx slots when available
     if (!is.null(mfx)) {
         eps <- if (is.null(eps)) mfx@eps else eps
@@ -86,7 +85,13 @@ get_se_delta <- function(
 
     # user-supplied jacobian machine (e.g. JAX)
     if (is.null(J)) {
-        fun <- getOption("marginaleffects_jacobian_function", default = function(...) NULL)
+        fun <- getOption("marginaleffects_jacobian_function", default = NULL)
+        if (is.null(fun)) {
+            fun <- settings_get("jacobian_function")
+        }
+        if (is.null(fun)) {
+            fun <- function(...) NULL
+        }
         if (!isTRUE(checkmate::check_function(fun))) {
             msg <- "The `marginaleffects_jacobian_function` option must be a function."
             stop_sprintf(msg)

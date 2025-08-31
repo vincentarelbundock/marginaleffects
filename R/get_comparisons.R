@@ -17,8 +17,6 @@ get_comparisons <- function(
     # get_se_delta() needs perturbed coefficients model
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
 
-    settings_init()
-
     predictions <- predictions_hi_lo(model, lo, hi, type, ...)
     list2env(predictions, environment())
 
