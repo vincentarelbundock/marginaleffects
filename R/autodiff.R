@@ -136,14 +136,14 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, ...) {
 }
 
 
-#' Enable Automatic Differentiation with JAX
+#' [EXPERIMENTAL] Enable Automatic Differentiation with JAX
 #'
-#' This function enables or disables automatic differentiation using the JAX 
-#' package in Python, which can considerably speed up and increase the accuracy 
+#' This function enables or disables automatic differentiation using the JAX
+#' package in Python, which can considerably speed up and increase the accuracy
 #' of standard errors when a model includes many parameters.
 #'
-#' @param autodiff Logical flag. If `TRUE`, enables automatic differentiation 
-#'   with JAX. If `FALSE` (default), disables automatic differentiation and 
+#' @param autodiff Logical flag. If `TRUE`, enables automatic differentiation
+#'   with JAX. If `FALSE` (default), disables automatic differentiation and
 #'   reverts to finite difference methods.
 #' @param install Logical flag. If `TRUE`, installs the `marginaleffectsAD`
 #'   Python package via `reticulate::py_install()`. Default is `FALSE`.
@@ -161,30 +161,30 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, ...) {
 #' - Only `type = "response"` predictions
 #' - `by = TRUE` or `by = FALSE` grouping
 #'
-#' For unsupported models or options, the function automatically falls back to 
+#' For unsupported models or options, the function automatically falls back to
 #' finite difference methods with a warning.
 #'
-#' @return No return value. Called for side effects of enabling/disabling 
+#' @return No return value. Called for side effects of enabling/disabling
 #'   automatic differentiation.
 #'
 #' @examples
 #' \dontrun{
 #' # Install the Python package (only needed once)
 #' autodiff(install = TRUE)
-#' 
+#'
 #' # Enable automatic differentiation
 #' autodiff(autodiff = TRUE)
-#' 
+#'
 #' # Fit a model and compute marginal effects
 #' mod <- glm(am ~ hp + wt, data = mtcars, family = binomial)
-#' slopes(mod)  # Will use JAX for faster computation
-#' 
+#' slopes(mod) # Will use JAX for faster computation
+#'
 #' # Disable automatic differentiation
 #' autodiff(autodiff = FALSE)
 #' }
 #'
 #' @seealso [settings_set()], [predictions()], [comparisons()]
-#' 
+#'
 #' @export
 autodiff <- function(autodiff = FALSE, install = FALSE) {
     checkmate::assert_flag(autodiff)

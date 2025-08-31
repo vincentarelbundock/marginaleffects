@@ -2,7 +2,7 @@
 % Please edit documentation in R/autodiff.R
 \name{autodiff}
 \alias{autodiff}
-\title{Enable Automatic Differentiation with JAX}
+\title{\link{EXPERIMENTAL} Enable Automatic Differentiation with JAX}
 \usage{
 autodiff(autodiff = FALSE, install = FALSE)
 }
@@ -53,7 +53,7 @@ autodiff(autodiff = TRUE)
 
 # Fit a model and compute marginal effects
 mod <- glm(am ~ hp + wt, data = mtcars, family = binomial)
-slopes(mod)  # Will use JAX for faster computation
+slopes(mod) # Will use JAX for faster computation
 
 # Disable automatic differentiation
 autodiff(autodiff = FALSE)
