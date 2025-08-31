@@ -1,0 +1,51 @@
+source("helpers.R")
+
+env <- Sys.getenv("marginaleffects_autodiff")
+# if (!isTRUE(env)) exit_file("marginaleffects_autodiff != TRUE")
+
+penguins <- get_dataset("penguins", "palmerpenguins") |> na.omit()
+
+dat <- transform(penguins, big = bill_length_mm > median(bill_length_mm))
+mod <- glm(big ~ bill_depth_mm + body_mass_g + flipper_length_mm + island,
+    family = binomial, data = dat)
+
+# predictions()
+autodiff(FALSE)
+pre1 <- predictions(mod, type = "response")
+autodiff(TRUE)
+expect_message(pre2 <- predictions(mod, type = "response"))
+expect_equal(pre1$estimate, pre2$estimate)
+expect_equal(pre1$std.error, pre2$std.error, tol = 1e-5)
+
+# avg_predictions()
+autodiff(FALSE)
+pre1 <- avg_predictions(mod, type = "response")
+autodiff(TRUE)
+expect_message(pre2 <- avg_predictions(mod, type = "response"))
+expect_equal(pre1$estimate, pre2$estimate)
+expect_equal(pre1$std.error, pre2$std.error, tol = 1e-5)
+
+# comparisons()
+autodiff(FALSE)
+pre1 <- predictions(mod)
+autodiff(TRUE)
+expect_message(pre2 <- predictions(mod))
+expect_equal(pre1$estimate, pre2$estimate)
+expect_equal(pre1$std.error, pre2$std.error, tol = 1e-6)
+
+# avg_comparisons()
+autodiff(FALSE)
+cmp1 <- avg_comparisons(mod)
+autodiff(TRUE)
+expect_message(cmp2 <- avg_comparisons(mod))
+expect_equal(cmp1$estimate, cmp2$estimate)
+expect_equal(cmp1$std.error, cmp2$std.error, tol = 1e-5)
+
+# FAILURE: avg_comparisons(by=)
+mod <- lm(Sepal.Length ~ Sepal.Width * Petal.Length * Petal.Width * Species, iris)
+autodiff(FALSE)
+cmp1 <- avg_comparisons(mod, by = "Species")
+autodiff(TRUE)
+expect_message(cmp2 <- avg_comparisons(mod, by = "Species"))
+expect_equal(cmp1$estimate, cmp2$estimate)
+expect_equal(cmp1$std.error, cmp2$std.error)

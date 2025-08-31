@@ -129,6 +129,7 @@ get_comparisons <- function(
     out[, predicted_lo := pred_lo[["estimate"]]]
     out[, predicted_hi := pred_hi[["estimate"]]]
 
+
     if (!is.null(pred_or)) {
         out[, predicted := pred_or[["estimate"]]]
     } else {

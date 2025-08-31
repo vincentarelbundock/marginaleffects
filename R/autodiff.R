@@ -71,9 +71,9 @@ get_jax_model <- function(mfx) {
 }
 
 
-get_jax_by <- function(mfx, hi = NULL) {
+get_jax_by <- function(mfx, original = NULL) {
     if (isTRUE(mfx@by)) {
-        if (!is.null(hi)) {
+        if (!is.null(original)) {
             # comparisons() aggregates by `contrast`, `term`, etc.
             return("_byG")
         } else {
@@ -107,31 +107,31 @@ get_jax_estimand <- function(mfx) {
 }
 
 
-jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, ...) {
+jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, ...) {
     message("\nJAX is fast!")
 
     f <- get_jax_function(mfx = mfx)
     m <- get_jax_model(mfx = mfx)
-    b <- get_jax_by(mfx = mfx, hi = hi)
+    b <- get_jax_by(mfx = mfx, original = original)
     e <- get_jax_estimand(mfx = mfx)
 
     if (identical(b, "_byG")) {
         bycols <- NULL
         # comparisons aggregates by contrast
-        if (!is.null(hi)) {
-            bycols <- c(bycols, grep("^contrast|^term$|^group$", colnames(hi), value = TRUE))
+        if (!is.null(original)) {
+            bycols <- c(bycols, grep("^contrast|^term$|^group$", colnames(original), value = TRUE))
         }
         if (is.character(mfx@by)) {
             bycols <- c(bycols, mfx@by)
         }
-        if (!is.null(hi)) {
-            groups <- hi[, ..bycols, drop = FALSE]
+        if (!is.null(original)) {
+            groups <- original[, ..bycols, drop = FALSE]
         } else {
             groups <- mfx@newdata[, ..bycols, drop = FALSE]
         }
         groups <- apply(groups, 1, function(x) paste0(x, collapse = "_"))
         groups <- as.integer(as.factor(groups)) - 1L
-        num_groups <- as.integer(max(groups) + 1L)
+        num_groups <- max(groups) + 1L
     } else {
         groups <- num_groups <- NULL
     }
