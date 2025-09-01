@@ -15,7 +15,11 @@ requiet("marginaleffects")
 requiet("tinytest")
 requiet("tinysnapshot")
 
-EXPENSIVE <- FALSE
+EXPENSIVE <- TRUE
+
+AUTODIFF <- FALSE
+autodiff(FALSE) # by default in every file
+options("marginaleffects_autodiff_message" = TRUE)
 
 options("tinysnapshot_os" = "Linux")
 options("tinysnapshot_device" = "svglite")

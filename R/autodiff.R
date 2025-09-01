@@ -2,8 +2,8 @@ eval_fun_with_numpy_arrays <- function(FUN, ...) {
     dots <- list(...)
     # Handle special cases for JAX indexing
     for (i in seq_along(dots)) {
-        if (names(dots)[i] == "num_groups") {
-            # Keep num_groups as is (integer scalar)
+        if (names(dots)[i] %in% c("num_groups", "link_type", "family_type")) {
+            # Keep num_groups, link_type, family_type as is (integer scalars)
         } else if (names(dots)[i] == "groups") {
             # Convert groups to integer array explicitly
             dots[[i]] <- reticulate::np_array(dots[[i]], dtype = "int32")
@@ -33,7 +33,7 @@ sanity_jax_hypothesis <- function(mfx) {
 
 
 sanity_jax_type <- function(mfx) {
-    if (!mfx@type %in% c("response", "link")) {
+    if (!mfx@type %in% c("response", "link", "invlink(link)")) {
         autodiff_warning(sprintf("`type='%s'`", mfx@type))
         return(FALSE)
     }
@@ -61,20 +61,56 @@ get_jax_model <- function(mfx) {
         return(NULL)
     }
 
-    if (identical(class(model)[1], "lm") || identical(mfx@type, "link")) {
+    if (identical(class(model)[1], "lm") || mfx@type %in% c("link", "invlink(link)")) {
         return("linear")
     } else if (class(model)[1] == "glm") {
-        if (model$family$family == "binomial" && model$family$link == "logit") {
-            return("logit")
-        } else if (model$family$family == "binomial" && model$family$link == "probit") {
-            return("probit")
-        } else if (model$family$family == "poisson" && model$family$link == "log") {
-            return("poisson")
+        # Check if the GLM family/link combination is supported
+        link_info <- get_jax_link_type(model)
+        if (!is.null(link_info)) {
+            return("glm")
         } else {
-            autodiff_warning("glm families other than binomial (logit/probit) and Poisson (log)")
+            autodiff_warning("unsupported GLM family/link combinations")
         }
     }
     return(NULL)
+}
+
+
+get_jax_link_type <- function(model) {
+    if (class(model)[1] != "glm") {
+        return(NULL)
+    }
+
+    # Import Family and Link enums from Python
+    Family <- mAD$glm$families$Family
+    Link <- mAD$glm$families$Link
+
+    # Family types using Python enum
+    family_type <- switch(model$family$family,
+        "gaussian" = Family$GAUSSIAN,
+        "binomial" = Family$BINOMIAL,
+        "poisson" = Family$POISSON,
+        "Gamma" = Family$GAMMA,
+        NULL
+    )
+
+    # Link types using Python enum
+    link_type <- switch(model$family$link,
+        "identity" = Link$IDENTITY,
+        "log" = Link$LOG,
+        "logit" = Link$LOGIT,
+        "probit" = Link$PROBIT,
+        "inverse" = Link$INVERSE,
+        "sqrt" = Link$SQRT,
+        "cloglog" = Link$CLOGLOG,
+        NULL
+    )
+
+    if (is.null(family_type) || is.null(link_type)) {
+        return(NULL)
+    }
+
+    return(list(family_type = family_type, link_type = link_type))
 }
 
 
@@ -202,14 +238,30 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
         return(NULL)
     }
 
+    # Get family_type and link_type for GLM models
+    family_type <- NULL
+    link_type <- NULL
+    if (m == "glm") {
+        link_info <- get_jax_link_type(mfx@model)
+        if (!is.null(link_info)) {
+            family_type <- link_info$family_type
+            link_type <- link_info$link_type
+        }
+    }
+
+    # Get the appropriate function based on model type
+    FUN <- mAD[[m]][[f]][[paste0(e, b)]]
+
     args <- list(
-        FUN = mAD[[m]][[f]][[paste0(e, b)]],
+        FUN = FUN,
         beta = coefs,
         X = X,
         X_hi = X_hi,
         X_lo = X_lo,
         groups = groups,
-        num_groups = num_groups
+        num_groups = num_groups,
+        family_type = family_type,
+        link_type = link_type
     )
     args <- Filter(function(x) !is.null(x), args)
     J <- do.call(eval_fun_with_numpy_arrays, args)

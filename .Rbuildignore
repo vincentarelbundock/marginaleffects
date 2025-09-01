@@ -37,3 +37,6 @@ uv.lock
 air.toml
 CLAUDE.md
 inst/tinytest
+pyproject.toml
+.python-version
+uv.lock
