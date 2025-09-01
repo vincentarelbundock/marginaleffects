@@ -61,6 +61,12 @@ get_jax_model <- function(mfx) {
         return(NULL)
     }
 
+    # Check if the model includes an offset
+    if (class(model)[1] %in% c("lm", "glm") && !is.null(model$offset)) {
+        autodiff_warning("models with offsets")
+        return(NULL)
+    }
+
     if (identical(class(model)[1], "lm") || mfx@type %in% c("link", "invlink(link)")) {
         return("linear")
     } else if (class(model)[1] == "glm") {
