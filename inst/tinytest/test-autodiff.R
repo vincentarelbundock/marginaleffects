@@ -161,26 +161,26 @@ for (combo in family_link_combos) {
 #
 # # Average Predictions
 # finite <- function() {
-#     autodiff(FALSE)
-#     predictions(mod, type = "response")
+#   autodiff(FALSE)
+#   predictions(mod, type = "response")
 # }
 #
 # auto <- function() {
-#     autodiff(TRUE)
-#     predictions(mod, type = "response")
+#   autodiff(TRUE)
+#   predictions(mod, type = "response")
 # }
 #
 # microbenchmark(finite(), auto(), times = 5)
 #
 # # Average Treatment Effect
 # finite <- function() {
-#     autodiff(FALSE)
-#     avg_comparisons(mod, variables = "Heating")
+#   autodiff(FALSE)
+#   avg_comparisons(mod, variables = "Heating")
 # }
 #
 # auto <- function() {
-#     autodiff(TRUE)
-#     avg_comparisons(mod, variables = "Heating")
+#   autodiff(TRUE)
+#   avg_comparisons(mod, variables = "Heating")
 # }
 #
 # microbenchmark(finite(), auto(), times = 5)

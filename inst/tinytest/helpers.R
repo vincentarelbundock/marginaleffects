@@ -17,7 +17,7 @@ requiet("tinysnapshot")
 
 EXPENSIVE <- FALSE
 
-AUTODIFF <- FALSE
+AUTODIFF <- TRUE
 autodiff(FALSE) # by default in every file
 options("marginaleffects_autodiff_message" = TRUE)
 

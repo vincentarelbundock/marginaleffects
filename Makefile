@@ -71,3 +71,11 @@ setvar: ## Set the environment variable
 website: setvar ## altdoc::render_docs(verbose = TRUE)
 	# Rscript -e "altdoc::render_docs(verbose = TRUE, freeze = TRUE)"
 	Rscript -e "reticulate::use_virtualenv('~/.virtualenvs/r-reticulate');altdoc::render_docs(verbose = TRUE, freeze = TRUE)"
+
+uv: ## Clean the uv environment
+	uv clean
+	rm -rf .venv
+	uv sync
+
+autodiff: uv ## Run autodiff tests
+	make testone testfile="inst/tinytest/test-autodiff.R"
