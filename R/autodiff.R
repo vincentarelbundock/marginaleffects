@@ -81,7 +81,6 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
         return(NULL)
     }
 
-    comparison_type <- NULL
     if (identical(mfx@calling_function, "comparisons")) {
         if (!is.character(mfx@comparison) || !mfx@comparison %in% c("difference", "ratio")) {
             autodiff_warning("`comparison` values other than 'difference' or 'ratio'")
@@ -91,6 +90,8 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
             difference = mAD$comparisons$ComparisonType$DIFFERENCE,
             ratio = mAD$comparisons$ComparisonType$RATIO
         )
+    } else {
+        comparison_type <- NULL
     }
 
     # Check arguments for specific models
