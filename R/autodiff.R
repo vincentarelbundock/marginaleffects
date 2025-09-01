@@ -43,34 +43,20 @@ get_jax_by <- function(mfx, original = NULL) {
     if (isTRUE(mfx@by)) {
         if (!is.null(original)) {
             # comparisons() aggregates by `contrast`, `term`, etc.
-            return("_byG")
+            out <- "jacobian_byG"
         } else {
             # predictions() gives global aggregation
-            return("_byT")
+            out <- "jacobian_byT"
         }
     } else if (isFALSE(mfx@by)) {
-        return("")
+        out <- "jacobian"
     } else if (is.character(mfx@by)) {
-        return("_byG")
+        out <- "jacobian_byG"
     } else {
         autodiff_warning("values of `by` other than TRUE, FALSE, or a character vector of grouping variable names.")
-        return(NULL)
+        out <- NULL
     }
-    return(estimand)
-}
-
-
-get_jax_estimand <- function(mfx) {
-    if (mfx@calling_function == "predictions") {
-        return("jacobian")
-    } else if (mfx@calling_function == "comparisons") {
-        if (mfx@comparison == "difference") {
-            return("jacobian_difference")
-        } else if (mfx@comparison == "ratio") {
-            return("jacobian_ratio")
-        }
-    }
-    return(NULL)
+    return(out)
 }
 
 
@@ -114,22 +100,22 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
     }
 
     # Extract information from autodiff_args
-    b <- get_jax_by(mfx = mfx, original = original)
-    e <- "jacobian"
-    if (is.null(b) || is.null(e)) {
-        return(NULL) # Fall back to finite difference method
+    jac_fun <- get_jax_by(mfx = mfx, original = original)
+    if (is.null(jac_fun)) {
+        return(NULL)
     }
 
     X <- attr(mfx@newdata, "marginaleffects_model_matrix")
     X_hi <- attr(hi, "marginaleffects_model_matrix")
     X_lo <- attr(lo, "marginaleffects_model_matrix")
 
-    # Check if we have the required matrices for the selected path
-    if (identical(b, "_byG") && (is.null(X_hi) || is.null(X_lo))) {
-        return(NULL) # Fall back to finite difference method
+    if (mfx@calling_function == "predictions" && is.null(X)) {
+        return(NULL)
+    } else if (mfx@calling_function == "comparisons" && is.null(X_hi)) {
+        return(NULL)
     }
 
-    if (identical(b, "_byG")) {
+    if (isTRUE(grepl("_byG", jac_fun))) {
         bycols <- NULL
         # comparisons aggregates by contrast
         # the order must match the order in marginaleffects::comparisons()
@@ -180,7 +166,7 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
     }
 
     # Get the appropriate function based on model type
-    FUN <- mAD[[autodiff_args$m]][[mfx@calling_function]][[paste0(e, b)]]
+    FUN <- mAD[[autodiff_args$model_type]][[mfx@calling_function]][[jac_fun]]
 
     args <- list(
         FUN = FUN,

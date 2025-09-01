@@ -134,7 +134,6 @@ get_autodiff_args.lm <- function(model, mfx) {
     # If all checks pass, return supported arguments
     return(list(
         model_type = "linear",
-        function_type = mfx@calling_function,
         type = mfx@type,
         comparison = if (mfx@calling_function == "comparisons") mfx@comparison else NULL
     ))
@@ -215,7 +214,6 @@ get_autodiff_args.glm <- function(model, mfx) {
     # If all checks pass, return supported arguments
     return(list(
         model_type = model_type,
-        function_type = mfx@calling_function,
         type = mfx@type,
         comparison = if (mfx@calling_function == "comparisons") mfx@comparison else NULL,
         family_type = family_type,
