@@ -23,7 +23,7 @@ testplot: ## test the plots
 	make testone testfile="inst/tinytest/test-plot_slopes.R"
 
 test: install runnersup ## Build and test in parallel with 8 cores
-	Rscript -e "tinytest::build_install_test(ncpu = 10)"
+	uv run Rscript -e "tinytest::build_install_test(ncpu = 10)"
 	$(MAKE) runnersdown
 
 document: ## altdoc::render_docs()

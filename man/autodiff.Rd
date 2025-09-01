@@ -4,7 +4,7 @@
 \alias{autodiff}
 \title{\link{EXPERIMENTAL} Enable Automatic Differentiation with JAX}
 \usage{
-autodiff(autodiff = FALSE, install = FALSE)
+autodiff(autodiff = NULL, install = FALSE)
 }
 \arguments{
 \item{autodiff}{Logical flag. If \code{TRUE}, enables automatic differentiation
