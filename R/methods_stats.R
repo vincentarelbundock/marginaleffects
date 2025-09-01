@@ -115,3 +115,111 @@ set_coef.nls <- function(model, coefs, ...) {
 get_coef.nls <- function(model, ...) {
     model$m$getPars()
 }
+
+
+#' @include autodiff.R
+#' @rdname get_autodiff_args
+#' @export
+get_autodiff_args.lm <- function(model, mfx) {
+    if (!is.null(model$offset)) {
+        autodiff_warning("models with offsets")
+        return(NULL)
+    }
+
+    # Check type support
+    if (!mfx@type %in% c("response", "link", "invlink(link)")) {
+        autodiff_warning(sprintf("`type='%s'`", mfx@type))
+        return(NULL)
+    }
+
+    # If all checks pass, return supported arguments
+    return(list(
+        model_type = "linear",
+        function_type = mfx@calling_function,
+        type = mfx@type,
+        comparison = if (mfx@calling_function == "comparisons") mfx@comparison else NULL
+    ))
+}
+
+
+#' @rdname get_autodiff_args
+#' @export
+get_autodiff_args.glm <- function(model, mfx) {
+    if (!is.null(model$offset)) {
+        autodiff_warning("models with offsets")
+        return(NULL)
+    }
+
+    # Check type support
+    if (!mfx@type %in% c("response", "link", "invlink(link)")) {
+        autodiff_warning(sprintf("`type='%s'`", mfx@type))
+        return(NULL)
+    }
+
+    # Check comparison type for comparisons function
+    if (mfx@calling_function == "comparisons" && !mfx@comparison %in% c("difference", "ratio")) {
+        autodiff_warning("other functions than `predictions()` or `comparisons()`, with `comparisons='difference'` or `'ratio'`")
+        return(NULL)
+    }
+
+    # For GLM, check if family/link combination is supported
+    family_name <- model$family$family
+    link_name <- model$family$link
+
+    # Supported family types
+    supported_families <- c("gaussian", "binomial", "poisson", "Gamma")
+    if (!family_name %in% supported_families) {
+        autodiff_warning("unsupported GLM family/link combinations")
+        return(NULL)
+    }
+
+    # Supported link types
+    supported_links <- c("identity", "log", "logit", "probit", "inverse", "sqrt", "cloglog")
+    if (!link_name %in% supported_links) {
+        autodiff_warning("unsupported GLM family/link combinations")
+        return(NULL)
+    }
+
+    # For link/invlink(link) type with GLM, use linear model approach
+    model_type <- if (mfx@type %in% c("link", "invlink(link)")) "linear" else "glm"
+
+    # Convert to Python enum values for GLM models
+    family_type <- NULL
+    link_type <- NULL
+    if (model_type == "glm") {
+        # Import Family and Link enums from Python
+        Family <- mAD$glm$families$Family
+        Link <- mAD$glm$families$Link
+        
+        # Family types using Python enum
+        family_type <- switch(family_name,
+            "gaussian" = Family$GAUSSIAN,
+            "binomial" = Family$BINOMIAL,
+            "poisson" = Family$POISSON,
+            "Gamma" = Family$GAMMA,
+            NULL
+        )
+        
+        # Link types using Python enum
+        link_type <- switch(link_name,
+            "identity" = Link$IDENTITY,
+            "log" = Link$LOG,
+            "logit" = Link$LOGIT,
+            "probit" = Link$PROBIT,
+            "inverse" = Link$INVERSE,
+            "sqrt" = Link$SQRT,
+            "cloglog" = Link$CLOGLOG,
+            NULL
+        )
+    }
+
+    # If all checks pass, return supported arguments
+    return(list(
+        model_type = model_type,
+        function_type = mfx@calling_function,
+        type = mfx@type,
+        comparison = if (mfx@calling_function == "comparisons") mfx@comparison else NULL,
+        family_type = family_type,
+        link_type = link_type
+    ))
+}

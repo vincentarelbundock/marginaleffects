@@ -23,100 +23,24 @@ autodiff_warning <- function(feature) {
 }
 
 
-sanity_jax_hypothesis <- function(mfx) {
-    if (!is.null(mfx@hypothesis)) {
-        autodiff_warning("the `hypothesis` argument")
-        return(FALSE)
-    }
-    return(TRUE)
+#' Check if automatic differentiation arguments are supported
+#'
+#' This is a generic S3 function that checks whether automatic differentiation
+#' is supported for a given model and mfx configuration.
+#'
+#' @param model A model object
+#' @param mfx An mfx object containing the configuration
+#' @return A list of arguments if supported, NULL otherwise
+#' @export
+get_autodiff_args <- function(model, mfx) {
+    UseMethod("get_autodiff_args")
 }
 
 
-sanity_jax_type <- function(mfx) {
-    if (!mfx@type %in% c("response", "link", "invlink(link)")) {
-        autodiff_warning(sprintf("`type='%s'`", mfx@type))
-        return(FALSE)
-    }
-    return(TRUE)
-}
-
-
-get_jax_function <- function(mfx) {
-    if (mfx@calling_function == "predictions") {
-        return("predictions")
-    } else if (mfx@calling_function == "comparisons") {
-        return("comparisons")
-    } else {
-        autodiff_warning("other functions than predictions() or comparisons()")
-        return(NULL)
-    }
-}
-
-
-get_jax_model <- function(mfx) {
-    model <- mfx@model
-    supported <- c("lm", "glm")
-    if (!class(model)[1] %in% supported) {
-        autodiff_warning(paste("models of class", class(model)[1]))
-        return(NULL)
-    }
-
-    # Check if the model includes an offset
-    if (class(model)[1] %in% c("lm", "glm") && !is.null(model$offset)) {
-        autodiff_warning("models with offsets")
-        return(NULL)
-    }
-
-    if (identical(class(model)[1], "lm") || mfx@type %in% c("link", "invlink(link)")) {
-        return("linear")
-    } else if (class(model)[1] == "glm") {
-        # Check if the GLM family/link combination is supported
-        link_info <- get_jax_link_type(model)
-        if (!is.null(link_info)) {
-            return("glm")
-        } else {
-            autodiff_warning("unsupported GLM family/link combinations")
-        }
-    }
+#' @rdname get_autodiff_args
+#' @export
+get_autodiff_args.default <- function(model, mfx) {
     return(NULL)
-}
-
-
-get_jax_link_type <- function(model) {
-    if (class(model)[1] != "glm") {
-        return(NULL)
-    }
-
-    # Import Family and Link enums from Python
-    Family <- mAD$glm$families$Family
-    Link <- mAD$glm$families$Link
-
-    # Family types using Python enum
-    family_type <- switch(model$family$family,
-        "gaussian" = Family$GAUSSIAN,
-        "binomial" = Family$BINOMIAL,
-        "poisson" = Family$POISSON,
-        "Gamma" = Family$GAMMA,
-        NULL
-    )
-
-    # Link types using Python enum
-    link_type <- switch(model$family$link,
-        "identity" = Link$IDENTITY,
-        "log" = Link$LOG,
-        "logit" = Link$LOGIT,
-        "probit" = Link$PROBIT,
-        "inverse" = Link$INVERSE,
-        "sqrt" = Link$SQRT,
-        "cloglog" = Link$CLOGLOG,
-        NULL
-    )
-
-    if (is.null(family_type) || is.null(link_type)) {
-        return(NULL)
-    }
-
-    return(list(family_type = family_type, link_type = link_type))
 }
 
 
@@ -161,10 +85,34 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
         message("\nJAX is fast!")
     }
 
-    f <- get_jax_function(mfx = mfx)
-    m <- get_jax_model(mfx = mfx)
+    # Check arguments not supported by any model
+    if (!isTRUE(mfx@by) && !isFALSE(mfx@by) && !is.character(mfx@by)) {
+        autodiff_warning("values of `by` other than TRUE, FALSE, or a character vector of grouping variable names.")
+        return(NULL)
+    }
+
+    if (!is.null(mfx@hypothesis)) {
+        autodiff_warning("the `hypothesis` argument")
+        return(NULL)
+    }
+
+    if (!mfx@calling_function %in% c("predictions", "comparisons")) {
+        autodiff_warning("other functions than predictions() or comparisons()")
+        return(NULL)
+    }
+
+    # Check arguments for specific models
+    autodiff_args <- get_autodiff_args(mfx@model, mfx)
+    if (is.null(autodiff_args)) {
+        return(NULL)
+    }
+
+    # Extract information from autodiff_args
     b <- get_jax_by(mfx = mfx, original = original)
     e <- get_jax_estimand(mfx = mfx)
+    if (is.null(b) || is.null(e)) {
+        return(NULL) # Fall back to finite difference method
+    }
 
     X <- attr(mfx@newdata, "marginaleffects_model_matrix")
     X_hi <- attr(hi, "marginaleffects_model_matrix")
@@ -225,27 +173,8 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
         groups <- num_groups <- NULL
     }
 
-    if (is.null(f) || is.null(m) || is.null(b) || is.null(e)) {
-        return(NULL)
-    }
-
-    if (isFALSE(sanity_jax_hypothesis(mfx)) || isFALSE(sanity_jax_type(mfx))) {
-        return(NULL)
-    }
-
-    # Get family_type and link_type for GLM models
-    family_type <- NULL
-    link_type <- NULL
-    if (m == "glm") {
-        link_info <- get_jax_link_type(mfx@model)
-        if (!is.null(link_info)) {
-            family_type <- link_info$family_type
-            link_type <- link_info$link_type
-        }
-    }
-
     # Get the appropriate function based on model type
-    FUN <- mAD[[m]][[f]][[paste0(e, b)]]
+    FUN <- mAD[[autodiff_args$m]][[mfx@calling_function]][[paste0(e, b)]]
 
     args <- list(
         FUN = FUN,
@@ -255,8 +184,8 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
         X_lo = X_lo,
         groups = groups,
         num_groups = num_groups,
-        family_type = family_type,
-        link_type = link_type
+        family_type = autodiff_args$family_type,
+        link_type = autodiff_args$link_type
     )
     args <- Filter(function(x) !is.null(x), args)
     J <- do.call(eval_fun_with_numpy_arrays, args)
