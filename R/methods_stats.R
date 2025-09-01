@@ -117,8 +117,7 @@ get_coef.nls <- function(model, ...) {
 }
 
 
-#' @include autodiff.R
-#' @rdname get_autodiff_args
+#' @keywords internal
 #' @export
 get_autodiff_args.lm <- function(model, mfx) {
     if (!is.null(model$offset)) {
@@ -142,7 +141,7 @@ get_autodiff_args.lm <- function(model, mfx) {
 }
 
 
-#' @rdname get_autodiff_args
+#' @keywords internal
 #' @export
 get_autodiff_args.glm <- function(model, mfx) {
     if (!is.null(model$offset)) {
@@ -190,7 +189,7 @@ get_autodiff_args.glm <- function(model, mfx) {
         # Import Family and Link enums from Python
         Family <- mAD$glm$families$Family
         Link <- mAD$glm$families$Link
-        
+
         # Family types using Python enum
         family_type <- switch(family_name,
             "gaussian" = Family$GAUSSIAN,
@@ -199,7 +198,7 @@ get_autodiff_args.glm <- function(model, mfx) {
             "Gamma" = Family$GAMMA,
             NULL
         )
-        
+
         # Link types using Python enum
         link_type <- switch(link_name,
             "identity" = Link$IDENTITY,

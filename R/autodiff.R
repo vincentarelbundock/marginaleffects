@@ -2,7 +2,7 @@ eval_fun_with_numpy_arrays <- function(FUN, ...) {
     dots <- list(...)
     # Handle special cases for JAX indexing
     for (i in seq_along(dots)) {
-        if (names(dots)[i] %in% c("num_groups", "link_type", "family_type")) {
+        if (names(dots)[i] %in% c("num_groups", "link_type", "family_type", "comparison_type")) {
             # Keep num_groups, link_type, family_type as is (integer scalars)
         } else if (names(dots)[i] == "groups") {
             # Convert groups to integer array explicitly
@@ -23,14 +23,8 @@ autodiff_warning <- function(feature) {
 }
 
 
-#' Check if automatic differentiation arguments are supported
-#'
-#' This is a generic S3 function that checks whether automatic differentiation
-#' is supported for a given model and mfx configuration.
-#'
-#' @param model A model object
-#' @param mfx An mfx object containing the configuration
-#' @return A list of arguments if supported, NULL otherwise
+#' @keywords internal
+#' @noRd
 #' @export
 get_autodiff_args <- function(model, mfx) {
     UseMethod("get_autodiff_args")
@@ -38,7 +32,8 @@ get_autodiff_args <- function(model, mfx) {
 
 
 #' @rdname get_autodiff_args
-#' @export
+#' @keywords internal
+#' @noRd
 get_autodiff_args.default <- function(model, mfx) {
     return(NULL)
 }
@@ -75,7 +70,6 @@ get_jax_estimand <- function(mfx) {
             return("jacobian_ratio")
         }
     }
-    autodiff_warning("other functions than `predictions()` or `comparisons()`, with `comparisons='ifference'` or `'ratio'`")
     return(NULL)
 }
 
@@ -101,6 +95,18 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
         return(NULL)
     }
 
+    comparison_type <- NULL
+    if (identical(mfx@calling_function, "comparisons")) {
+        if (!is.character(mfx@comparison) || !mfx@comparison %in% c("difference", "ratio")) {
+            autodiff_warning("`comparison` values other than 'difference' or 'ratio'")
+            return(NULL)
+        }
+        comparison_type <- switch(mfx@comparison,
+            difference = mAD$comparisons$ComparisonType$DIFFERENCE,
+            ratio = mAD$comparisons$ComparisonType$RATIO
+        )
+    }
+
     # Check arguments for specific models
     autodiff_args <- get_autodiff_args(mfx@model, mfx)
     if (is.null(autodiff_args)) {
@@ -109,7 +115,7 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
 
     # Extract information from autodiff_args
     b <- get_jax_by(mfx = mfx, original = original)
-    e <- get_jax_estimand(mfx = mfx)
+    e <- "jacobian"
     if (is.null(b) || is.null(e)) {
         return(NULL) # Fall back to finite difference method
     }
@@ -184,6 +190,7 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
         X_lo = X_lo,
         groups = groups,
         num_groups = num_groups,
+        comparison_type = comparison_type,
         family_type = autodiff_args$family_type,
         link_type = autodiff_args$link_type
     )

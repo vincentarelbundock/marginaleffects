@@ -15,7 +15,7 @@ runnersdown: ## unhack local files to not run tests
 	git restore tests/tinytest.R
 
 testone: ## make testone testfile="inst/tinytest/test-aaa-warn_once.R"
-	Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
+	uv run Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
 
 testplot: ## test the plots
 	make testone testfile="inst/tinytest/test-plot_predictions.R"
