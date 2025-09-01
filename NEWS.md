@@ -1,5 +1,9 @@
 # News {.unnumbered}
 
+Bug:
+
+* Binary variables treated as integers by `datagrid()` with `newdata=` instead of `model=`. Issue #1584.
+
 ## 0.29.0
 
 New functions:

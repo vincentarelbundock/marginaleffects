@@ -97,7 +97,8 @@ is_binary <- function(x) {
         null.ok = TRUE,
         upper = 1,
         lower = 0,
-        any.missing = FALSE
+        any.missing = TRUE,
+        all.missing = FALSE
     ))
 }
 
