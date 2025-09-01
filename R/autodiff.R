@@ -219,22 +219,11 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
         groups <- num_groups <- NULL
     }
 
-    if (is.null(f)) {
+    if (is.null(f) || is.null(m) || is.null(b) || is.null(e)) {
         return(NULL)
     }
-    if (is.null(m)) {
-        return(NULL)
-    }
-    if (is.null(b)) {
-        return(NULL)
-    }
-    if (is.null(e)) {
-        return(NULL)
-    }
-    if (isFALSE(sanity_jax_hypothesis(mfx))) {
-        return(NULL)
-    }
-    if (isFALSE(sanity_jax_type(mfx))) {
+
+    if (isFALSE(sanity_jax_hypothesis(mfx)) || isFALSE(sanity_jax_type(mfx))) {
         return(NULL)
     }
 
