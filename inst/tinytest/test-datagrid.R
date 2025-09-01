@@ -120,3 +120,13 @@ tmp$hp <- as.factor(tmp$hp)
 at1 <- attributes(datagrid(newdata = tmp, by = "cyl", hp = unique))
 at2 <- attributes(datagrid(newdata = tmp, cyl = unique, hp = unique))
 expect_true(all(names(at1) %in% names(at2)))
+
+
+# Issue #1584
+dat = get_dataset("thornton")
+mod = glm(outcome ~ incentive + agecat, data = dat, family = binomial)
+d1 <- datagrid(grid_type = "balanced", newdata = dat)
+d2 <- datagrid(grid_type = "balanced", model = mod)
+expect_true(all(0:1 %in% d1$incentive))
+expect_true(all(0:1 %in% d2$incentive))
+expect_true(all(0:1 %in% d1$incentive))

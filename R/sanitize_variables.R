@@ -522,11 +522,16 @@ detect_variable_class <- function(modeldata, model = NULL) {
     # this can be costly on large datasets, when only a portion of
     # variables are used in the model
     variables <- NULL
-    if (is.null(model)) {
+    if (!is.null(model)) {
         variables <- tryCatch(
             unlist(insight::find_variables(model, flatten = TRUE, verbose = FALSE), use.names = FALSE),
             error = function(e) NULL
         )
+        # Always include all columns that are actually present in modeldata
+        # This ensures that variables used in 'by' arguments get properly classified
+        if (!is.null(variables)) {
+            variables <- union(variables, colnames(modeldata))
+        }
     }
     if (is.null(variables)) variables <- colnames(modeldata)
 
