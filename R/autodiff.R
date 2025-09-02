@@ -60,6 +60,61 @@ get_jax_by <- function(mfx, original = NULL) {
 }
 
 
+jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) {
+    if (isTRUE(grepl("_byG", jac_fun))) {
+        bycols <- NULL
+        # comparisons aggregates by contrast
+        # the order must match the order in marginaleffects::comparisons()
+        if (is.character(mfx@by)) {
+            bycols <- c(bycols, mfx@by)
+        }
+        if (!is.null(original)) {
+            bycols <- c(bycols, grep("^contrast|^term$|^group$", colnames(original), value = TRUE))
+        }
+
+        # Use the ordering from the final estimates object which has already been processed by get_by()
+        if (!is.null(estimates) && !is.null(original)) {
+            # Create a mapping from original data to final estimates groups
+            # The estimates object has the final groups in the correct order
+            if (length(bycols) > 0) {
+                # Get group info from estimates (final order)
+                estimates_groups <- estimates[, ..bycols, drop = FALSE]
+                estimates_combined <- apply(estimates_groups, 1, function(x) paste0(x, collapse = "_"))
+
+                # Get group info from original data (input order)
+                original_groups <- original[, ..bycols, drop = FALSE]
+                original_combined <- apply(original_groups, 1, function(x) paste0(x, collapse = "_"))
+
+                # Map original rows to estimates group indices
+                groups <- match(original_combined, estimates_combined) - 1L
+                num_groups <- length(estimates_combined)
+            } else {
+                groups <- num_groups <- NULL
+            }
+        } else {
+            # Fallback to original logic if estimates not provided
+            if (!is.null(original)) {
+                groups <- original[, ..bycols, drop = FALSE]
+            } else {
+                groups <- mfx@newdata[, ..bycols, drop = FALSE]
+            }
+            idx <- do.call(order, groups)
+            groups <- groups[idx, , drop = FALSE]
+            if (!is.null(X)) X <- X[idx, , drop = FALSE]
+            if (!is.null(X_hi)) X_hi <- X_hi[idx, , drop = FALSE]
+            if (!is.null(X_lo)) X_lo <- X_lo[idx, , drop = FALSE]
+            groups <- apply(groups, 1, function(x) paste0(x, collapse = "_"))
+            groups <- as.integer(as.factor(groups)) - 1L
+            num_groups <- max(groups) + 1L
+        }
+    } else {
+        groups <- num_groups <- NULL
+    }
+    
+    return(list(groups = groups, num_groups = num_groups, X = X, X_hi = X_hi, X_lo = X_lo))
+}
+
+
 jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, estimates = NULL, ...) {
     if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
         message("\nJAX is fast!")
@@ -116,55 +171,13 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
         return(NULL)
     }
 
-    if (isTRUE(grepl("_byG", jac_fun))) {
-        bycols <- NULL
-        # comparisons aggregates by contrast
-        # the order must match the order in marginaleffects::comparisons()
-        if (is.character(mfx@by)) {
-            bycols <- c(bycols, mfx@by)
-        }
-        if (!is.null(original)) {
-            bycols <- c(bycols, grep("^contrast|^term$|^group$", colnames(original), value = TRUE))
-        }
-
-        # Use the ordering from the final estimates object which has already been processed by get_by()
-        if (!is.null(estimates) && !is.null(original)) {
-            # Create a mapping from original data to final estimates groups
-            # The estimates object has the final groups in the correct order
-            if (length(bycols) > 0) {
-                # Get group info from estimates (final order)
-                estimates_groups <- estimates[, ..bycols, drop = FALSE]
-                estimates_combined <- apply(estimates_groups, 1, function(x) paste0(x, collapse = "_"))
-
-                # Get group info from original data (input order)
-                original_groups <- original[, ..bycols, drop = FALSE]
-                original_combined <- apply(original_groups, 1, function(x) paste0(x, collapse = "_"))
-
-                # Map original rows to estimates group indices
-                groups <- match(original_combined, estimates_combined) - 1L
-                num_groups <- length(estimates_combined)
-            } else {
-                groups <- num_groups <- NULL
-            }
-        } else {
-            # Fallback to original logic if estimates not provided
-            if (!is.null(original)) {
-                groups <- original[, ..bycols, drop = FALSE]
-            } else {
-                groups <- mfx@newdata[, ..bycols, drop = FALSE]
-            }
-            idx <- do.call(order, groups)
-            groups <- groups[idx, , drop = FALSE]
-            if (!is.null(X)) X <- X[idx, , drop = FALSE]
-            if (!is.null(X_hi)) X_hi <- X_hi[idx, , drop = FALSE]
-            if (!is.null(X_lo)) X_lo <- X_lo[idx, , drop = FALSE]
-            groups <- apply(groups, 1, function(x) paste0(x, collapse = "_"))
-            groups <- as.integer(as.factor(groups)) - 1L
-            num_groups <- max(groups) + 1L
-        }
-    } else {
-        groups <- num_groups <- NULL
-    }
+    # Use the extracted function to handle group alignment
+    group_result <- jax_align_group_J(jac_fun, mfx, original, estimates, X, X_hi, X_lo)
+    groups <- group_result$groups
+    num_groups <- group_result$num_groups
+    X <- group_result$X
+    X_hi <- group_result$X_hi
+    X_lo <- group_result$X_lo
 
     # Get the appropriate function based on model type
     FUN <- mAD[[autodiff_args$model_type]][[mfx@calling_function]][[jac_fun]]
