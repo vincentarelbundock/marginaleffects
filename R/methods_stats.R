@@ -116,6 +116,11 @@ get_coef.nls <- function(model, ...) {
 #' @keywords internal
 #' @export
 get_autodiff_args.lm <- function(model, mfx) {
+    # no inheritance! Important to avoid breaking other models
+    if (!class(model)[1] == "glm") {
+        return(NULL)
+    }
+
     if (!is.null(model$offset)) {
         autodiff_warning("models with offsets")
         return(NULL)
@@ -136,6 +141,11 @@ get_autodiff_args.lm <- function(model, mfx) {
 #' @keywords internal
 #' @export
 get_autodiff_args.glm <- function(model, mfx) {
+    # no inheritance! Important to avoid breaking other models
+    if (!class(model)[1] == "glm") {
+        return(NULL)
+    }
+
     if (!is.null(model$offset)) {
         autodiff_warning("models with offsets")
         return(NULL)

@@ -1,5 +1,4 @@
 source("helpers.R")
-requiet("marginaleffects")
 
 op <- getOption("marginaleffects_safe", default = TRUE)
 options(marginaleffects_safe = TRUE)

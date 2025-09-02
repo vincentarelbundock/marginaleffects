@@ -26,6 +26,10 @@ test: install runnersup ## Build and test in parallel with 8 cores
 	uv run Rscript -e "tinytest::build_install_test(ncpu = 10)"
 	$(MAKE) runnersdown
 
+testseq: runnersup ## Build and test in parallel with 8 cores
+	uv run Rscript -e "pkgload::load_all();tinytest::run_test_dir()"
+	$(MAKE) runnersdown
+
 document: ## altdoc::render_docs()
 	Rscript -e "devtools::document()"
 

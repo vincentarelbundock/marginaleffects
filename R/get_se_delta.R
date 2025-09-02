@@ -112,6 +112,15 @@ get_se_delta <- function(
             calling_function = calling_function
         )
         checkmate::assert_matrix(J, mode = "numeric", ncols = length(coefs), null.ok = TRUE)
+
+        # Unpad Jacobian for autodiff jax_jacobian if newdata was padded
+        # JAX computes jacobian on padded newdata, but final results are unpadded
+        if (!is.null(J) && !is.null(mfx) && "rowid" %in% colnames(mfx@newdata)) {
+            idx <- mfx@newdata$rowid > 0
+            if (any(!idx) && nrow(J) == nrow(mfx@newdata)) {
+                J <- J[idx, , drop = FALSE]
+            }
+        }
     }
 
     # input: named vector of coefficients

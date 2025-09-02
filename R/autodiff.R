@@ -199,6 +199,9 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
     if (length(dim(J)) == 1) {
         J <- matrix(as.vector(J), nrow = 1)
     }
+    if (!is.null(names(coefs)) && length(coefs) == ncol(J)) {
+        colnames(J) <- names(coefs)
+    }
     return(J)
 }
 

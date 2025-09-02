@@ -1,6 +1,5 @@
 source("helpers.R")
 requiet("emmeans")
-requiet("marginaleffects")
 using("marginaleffects")
 
 # TODO: rename dat to df to make sure there's no clash with the internal keyword
