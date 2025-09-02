@@ -18,20 +18,20 @@ expect_true(ncol(mfx) > 0)
 nhefs <- get_dataset("nhefs", "causaldata")
 f <- wt82_71 ~
     qsmk +
-        sex +
-        race +
-        age +
-        I(age * age) +
-        factor(education) +
-        smokeintensity +
-        I(smokeintensity * smokeintensity) +
-        smokeyrs +
-        I(smokeyrs * smokeyrs) +
-        as.factor(exercise) +
-        as.factor(active) +
-        wt71 +
-        I(wt71 * wt71) +
-        I(qsmk * smokeintensity)
+    sex +
+    race +
+    age +
+    I(age * age) +
+    factor(education) +
+    smokeintensity +
+    I(smokeintensity * smokeintensity) +
+    smokeyrs +
+    I(smokeyrs * smokeyrs) +
+    as.factor(exercise) +
+    as.factor(active) +
+    wt71 +
+    I(wt71 * wt71) +
+    I(qsmk * smokeintensity)
 
 fit <- glm(f, data = nhefs)
 pre <- predictions(fit, newdata = nhefs)

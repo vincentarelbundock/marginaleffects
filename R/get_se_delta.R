@@ -4,7 +4,6 @@ align_jacobian_vcov <- function(J, V, object, ...) {
         # Issue #718: ordinal::clm in test-pkg-ordinal.R
         if (
             anyNA(beta) &&
-                anyDuplicated(names(beta)) &&
                 ncol(J) > ncol(V) &&
                 ncol(J) == length(beta) &&
                 length(stats::na.omit(beta)) == ncol(V)
@@ -86,13 +85,8 @@ get_se_delta <- function(
 
     # user-supplied jacobian machine (e.g. JAX)
     if (is.null(J)) {
-        fun <- getOption("marginaleffects_jacobian_function", default = NULL)
-        if (is.null(fun)) {
-            fun <- settings_get("jacobian_function")
-        }
-        if (is.null(fun)) {
-            fun <- function(...) NULL
-        }
+        fun <- getOption("marginaleffects_jacobian_function",
+            default = function(...) NULL)
         if (!isTRUE(checkmate::check_function(fun))) {
             msg <- "The `marginaleffects_jacobian_function` option must be a function."
             stop_sprintf(msg)

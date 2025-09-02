@@ -94,9 +94,9 @@ jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) 
         } else {
             # Fallback to original logic if estimates not provided
             if (!is.null(original)) {
-                groups <- original[, ..bycols, drop = FALSE]
+                groups <- subset(original, select = bycols)
             } else {
-                groups <- mfx@newdata[, ..bycols, drop = FALSE]
+                groups <- subset(mfx@newdata, select = bycols)
             }
             idx <- do.call(order, groups)
             groups <- groups[idx, , drop = FALSE]
@@ -110,7 +110,7 @@ jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) 
     } else {
         groups <- num_groups <- NULL
     }
-    
+
     return(list(groups = groups, num_groups = num_groups, X = X, X_hi = X_hi, X_lo = X_lo))
 }
 
@@ -261,9 +261,12 @@ autodiff <- function(autodiff = NULL, install = FALSE) {
     }
     if (isFALSE(autodiff)) {
         settings_set("jacobian_function", NULL)
+        options("marginaleffects_jacobian_function" = NULL)
+        settings_set("autodiff", FALSE)
     } else if (isTRUE(autodiff)) {
         insight::check_if_installed("reticulate")
         mAD <<- reticulate::import("marginaleffectsAD", delay_load = TRUE)
+        options("marginaleffects_jacobian_function" = jax_jacobian)
         settings_set("jacobian_function", jax_jacobian)
         settings_set("autodiff", TRUE)
     }
