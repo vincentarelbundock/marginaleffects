@@ -117,7 +117,7 @@ get_coef.nls <- function(model, ...) {
 #' @export
 get_autodiff_args.lm <- function(model, mfx) {
     # no inheritance! Important to avoid breaking other models
-    if (!class(model)[1] == "glm") {
+    if (!class(model)[1] == "lm") {
         return(NULL)
     }
 
