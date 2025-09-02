@@ -74,3 +74,22 @@ c1 <- comparisons(mod, type = "fitted")
 c2 <- comparisons(mod, type = "lp")
 expect_inherits(c1, "comparisons")
 expect_inherits(c2, "comparisons")
+
+
+# autodiff
+if (!AUTODIFF) exit_file("autodiff")
+mod <- ols(mpg ~ hp, mtcars)
+autodiff(TRUE)
+expect_message(cmp1 <- comparisons(mod))
+autodiff(FALSE)
+cmp2 <- comparisons(mod)
+expect_equivalent(cmp1$estimate, cmp2$estimate)
+expect_equivalent(cmp1$std.error, cmp2$std.error, tol = 1e-5)
+
+mod <- lrm(am ~ hp * wt, mtcars)
+autodiff(TRUE)
+expect_message(cmp1 <- comparisons(mod))
+autodiff(FALSE)
+cmp2 <- comparisons(mod)
+expect_equivalent(cmp1$estimate, cmp2$estimate)
+expect_equivalent(cmp1$std.error, cmp2$std.error, tol = 1e-5)
