@@ -259,6 +259,7 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
 autodiff <- function(autodiff = NULL, install = FALSE) {
     checkmate::assert_flag(autodiff, null.ok = TRUE)
     checkmate::assert_flag(install)
+    insight::check_if_installed("reticulate")
     if (isTRUE(install)) {
         reticulate::py_install("marginaleffectsAD")
     }
@@ -267,7 +268,6 @@ autodiff <- function(autodiff = NULL, install = FALSE) {
         options("marginaleffects_jacobian_function" = NULL)
         settings_set("autodiff", FALSE)
     } else if (isTRUE(autodiff)) {
-        insight::check_if_installed("reticulate")
         mAD <<- reticulate::import("marginaleffectsAD", delay_load = FALSE)
         options("marginaleffects_jacobian_function" = jax_jacobian)
         settings_set("jacobian_function", jax_jacobian)
