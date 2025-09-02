@@ -7,23 +7,21 @@ get_predict.rq <- function(
     ...) {
     # type argument of the method is used to specify confidence interval type
     insight::check_if_installed("quantreg")
-    if (isTRUE(getOption("marginaleffects_linalg", default = "RcppEigen") == "RcppEigen")) {
-        MM <- attr(newdata, "marginaleffects_model_matrix")
-        if (isTRUE(checkmate::check_matrix(MM))) {
-            beta <- get_coef(model)
-            out <- hush(eigenMatMult(MM, beta))
-            if (isTRUE(checkmate::check_numeric(out, len = nrow(newdata)))) {
-                out <- data.table(estimate = out)
-                out <- add_rowid(out, newdata)
-            } else {
-                out <- data.table(estimate = out)
-                out <- add_rowid(out, newdata)
-            }
-            return(out)
+
+    MM <- attr(newdata, "marginaleffects_model_matrix")
+    if (isTRUE(checkmate::check_matrix(MM))) {
+        beta <- get_coef(model)
+        out <- drop(MM %*% beta)
+        if (isTRUE(checkmate::check_numeric(out, len = nrow(newdata)))) {
+            out <- data.table(estimate = out)
+        } else {
+            out <- data.table(estimate = out)
         }
+    } else {
+        out <- quantreg::predict.rq(model, newdata = newdata, ...)
+        out <- data.table(estimate = out)
     }
-    out <- quantreg::predict.rq(model, newdata = newdata, ...)
-    out <- data.table(estimate = out)
+
     out <- add_rowid(out, newdata)
     return(out)
 }
