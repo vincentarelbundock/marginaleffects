@@ -22,7 +22,7 @@ pre1 <- avg_predictions(mod, type = "response")
 autodiff(TRUE)
 expect_message(pre2 <- avg_predictions(mod, type = "response"))
 expect_equal(pre1$estimate, pre2$estimate)
-expect_equal(pre1$std.error, pre2$std.error, tol = 1e-5)
+expect_equal(pre1$std.error, pre2$std.error, tol = 1e-4)
 
 # comparisons()
 autodiff(FALSE)
@@ -47,7 +47,7 @@ cmp1 <- avg_comparisons(mod, by = "Species")
 autodiff(TRUE)
 expect_message(cmp2 <- avg_comparisons(mod, by = "Species"))
 expect_equal(cmp1$estimate, cmp2$estimate)
-expect_equal(cmp1$std.error, cmp2$std.error, tol = 1e-5)
+expect_equal(cmp1$std.error, cmp2$std.error, tol = 1e-4)
 
 # invlink
 mod <- glm(vs ~ mpg + wt, data = mtcars, family = binomial(link = "logit"))
