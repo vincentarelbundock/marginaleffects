@@ -190,7 +190,11 @@ get_se_delta <- function(
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
-    se <- sqrt(rowSums(tcrossprod(J, V) * J))
+    if (isTRUE(settings_get("autodiff"))) {
+        se <- mAD$utils$standard_errors(J, V)
+    } else {
+        se <- sqrt(rowSums(tcrossprod(J, V) * J))
+    }
     se[se == 0] <- NA_real_
     attr(se, "jacobian") <- J
 
