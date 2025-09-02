@@ -268,7 +268,7 @@ autodiff <- function(autodiff = NULL, install = FALSE) {
         settings_set("autodiff", FALSE)
     } else if (isTRUE(autodiff)) {
         insight::check_if_installed("reticulate")
-        mAD <<- reticulate::import("marginaleffectsAD", delay_load = TRUE)
+        mAD <<- reticulate::import("marginaleffectsAD", delay_load = FALSE)
         options("marginaleffects_jacobian_function" = jax_jacobian)
         settings_set("jacobian_function", jax_jacobian)
         settings_set("autodiff", TRUE)
