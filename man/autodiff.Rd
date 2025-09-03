@@ -26,40 +26,59 @@ of standard errors when a model includes many parameters.
 \details{
 When \code{autodiff = TRUE}, this function:
 \itemize{
-\item Imports the \code{marginaleffectsAD} Python package via \code{reticulate}
+\item Imports the \code{marginaleffectsAD} Python package via \code{\link[reticulate:py_install]{reticulate::py_install()}}
 \item Sets the internal jacobian function to use JAX-based automatic differentiation
 \item Provides faster and more accurate gradient computation for supported models
+\item Falls back on the default finite difference method for unsupported models and calls.
 }
 
 Currently supports:
 \itemize{
-\item Model types: \code{lm}, \code{glm} with binomial (logit/probit) and Poisson families
-\item Functions: \code{predictions()} and \code{comparisons()}
-\item Comparison types: "difference" and "ratio"
-\item Only \code{type = "response"} predictions
-\item \code{by = TRUE} or \code{by = FALSE} grouping
+\item Model types: \code{lm}, \code{glm}, \code{ols}, \code{lrm}
+\item Functions: \code{\link[=predictions]{predictions()}} and \code{\link[=comparisons]{comparisons()}}, along with \code{avg_} and \code{plot_} variants.
+\item \code{type}: "response" or "link"
+\item \code{by}: \code{TRUE}, \code{FALSE}, or character vector.
+\item \code{comparison}: "difference" and "ratio"
 }
 
 For unsupported models or options, the function automatically falls back to
 finite difference methods with a warning.
 }
+\section{Python Configuration}{
+
+If you have already installed \code{marginaleffectsAD} in a virtual environment,
+you can use \code{reticulate} to specify which Python executable and virtual
+environment to use. By default, \code{reticulate} uses the Python version found
+on your PATH.
+
+To specify an alternate Python version:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(reticulate)
+use_python("/usr/local/bin/python")
+}\if{html}{\out{</div>}}
+
+To use a virtual environment:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{use_virtualenv("myenv")
+}\if{html}{\out{</div>}}
+
+These configuration commands should be called before calling \code{autodiff()}.
+}
+
 \examples{
 \dontrun{
 # Install the Python package (only needed once)
 autodiff(install = TRUE)
 
 # Enable automatic differentiation
-autodiff(autodiff = TRUE)
+autodiff(TRUE)
 
 # Fit a model and compute marginal effects
 mod <- glm(am ~ hp + wt, data = mtcars, family = binomial)
-slopes(mod) # Will use JAX for faster computation
+avg_comparisons(mod) # Will use JAX for faster computation
 
 # Disable automatic differentiation
 autodiff(autodiff = FALSE)
 }
 
-}
-\seealso{
-\code{\link[=settings_set]{settings_set()}}, \code{\link[=predictions]{predictions()}}, \code{\link[=comparisons]{comparisons()}}
 }

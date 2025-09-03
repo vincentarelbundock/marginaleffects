@@ -54,6 +54,7 @@
 #'
 #' Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. "Predictive Inference with the Jackknife+." arXiv. http://arxiv.org/abs/1905.02928.
 #'
+#' @template parallel
 #' @return
 #' A `marginaleffects` object with simulation or bootstrap resamples and objects attached.
 #' @examples

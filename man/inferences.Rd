@@ -94,6 +94,43 @@ Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to 
 Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. "Predictive Inference with the Jackknife+." arXiv. http://arxiv.org/abs/1905.02928.
 }
 
+\section{Parallel computation}{
+
+
+The \code{slopes()} and \code{comparisons()} functions can use parallelism to
+speed up computation. Operations are parallelized for the computation of
+standard errors, at the model coefficient level. There is always
+considerable overhead when using parallel computation, mainly involved
+in passing the whole dataset to the different processes. Thus, parallel
+computation is most likely to be useful when the model includes many parameters
+and the dataset is relatively small.
+
+Warning: In many cases, parallel processing will not be useful at all.
+
+To activate parallel computation, users must load the \code{future.apply} package,
+call \code{plan()} function, and set a global option.
+
+\code{options(marginaleffects_parallel = TRUE)}: parallelize delta method computation of standard errors.
+\code{options(marginaleffects_parallel_inferences = TRUE)}: parallelize \code{"rsample"} or \code{"fwb"} bootstrap computation in \code{inferences()}.
+\code{options(marginaleffects_parallel_packages = TRUE)}: vector of strings with the names of modeling packages used to fit the model, ex: c("survival", "splines")
+
+For example:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(future.apply)
+plan("multisession", workers = 4)
+options(marginaleffects_parallel = FALSE)
+options(marginaleffects_parallel_inferences = TRUE)
+options(marginaleffects_parallel_packages = c("survival", "splines"))
+
+slopes(model)
+}\if{html}{\out{</div>}}
+
+To disable parallelism in \code{marginaleffects} altogether, you can set a global option:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_parallel = FALSE)
+}\if{html}{\out{</div>}}
+}
+
 \examples{
 \dontrun{
 library(magrittr)

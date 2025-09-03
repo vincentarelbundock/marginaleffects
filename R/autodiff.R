@@ -220,19 +220,39 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
 #'
 #' @details
 #' When `autodiff = TRUE`, this function:
-#' - Imports the `marginaleffectsAD` Python package via `reticulate`
+#' - Imports the `marginaleffectsAD` Python package via [reticulate::py_install()]
 #' - Sets the internal jacobian function to use JAX-based automatic differentiation
 #' - Provides faster and more accurate gradient computation for supported models
+#' - Falls back on the default finite difference method for unsupported models and calls.
 #'
 #' Currently supports:
-#' - Model types: `lm`, `glm` with binomial (logit/probit) and Poisson families
-#' - Functions: `predictions()` and `comparisons()`
-#' - Comparison types: "difference" and "ratio"
-#' - Only `type = "response"` predictions
-#' - `by = TRUE` or `by = FALSE` grouping
+#' - Model types: `lm`, `glm`, `ols`, `lrm`
+#' - Functions: [predictions()] and [comparisons()], along with `avg_` and `plot_` variants.
+#' - `type`: "response" or "link"
+#' - `by`: `TRUE`, `FALSE`, or character vector.
+#' - `comparison`: "difference" and "ratio"
 #'
 #' For unsupported models or options, the function automatically falls back to
 #' finite difference methods with a warning.
+#'
+#' @section Python Configuration:
+#' If you have already installed `marginaleffectsAD` in a virtual environment,
+#' you can use `reticulate` to specify which Python executable and virtual
+#' environment to use. By default, `reticulate` uses the Python version found
+#' on your PATH.
+#'
+#' To specify an alternate Python version:
+#' ```r
+#' library(reticulate)
+#' use_python("/usr/local/bin/python")
+#' ```
+#'
+#' To use a virtual environment:
+#' ```r
+#' use_virtualenv("myenv")
+#' ```
+#'
+#' These configuration commands should be called before calling `autodiff()`.
 #'
 #' @return No return value. Called for side effects of enabling/disabling
 #'   automatic differentiation.
@@ -243,17 +263,15 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
 #' autodiff(install = TRUE)
 #'
 #' # Enable automatic differentiation
-#' autodiff(autodiff = TRUE)
+#' autodiff(TRUE)
 #'
 #' # Fit a model and compute marginal effects
 #' mod <- glm(am ~ hp + wt, data = mtcars, family = binomial)
-#' slopes(mod) # Will use JAX for faster computation
+#' avg_comparisons(mod) # Will use JAX for faster computation
 #'
 #' # Disable automatic differentiation
 #' autodiff(autodiff = FALSE)
 #' }
-#'
-#' @seealso [settings_set()], [predictions()], [comparisons()]
 #'
 #' @export
 autodiff <- function(autodiff = NULL, install = FALSE) {
