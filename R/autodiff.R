@@ -216,9 +216,11 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
 #'   with JAX. If `FALSE` (default), disables automatic differentiation and
 #'   reverts to finite difference methods.
 #' @param install Logical flag. If `TRUE`, installs the `marginaleffectsAD`
-#'   Python package via `reticulate::py_install()`. Default is `FALSE`.
+#'   Python package via `reticulate::py_install()`. Default is `FALSE`. This is
+#'   only necessary if you are self-managing a Python installation.
 #'
 #' @details
+#'
 #' When `autodiff = TRUE`, this function:
 #' - Imports the `marginaleffectsAD` Python package via [reticulate::py_install()]
 #' - Sets the internal jacobian function to use JAX-based automatic differentiation
@@ -235,11 +237,19 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
 #' For unsupported models or options, the function automatically falls back to
 #' finite difference methods with a warning.
 #'
-#' @section Python Configuration:
-#' If you have already installed `marginaleffectsAD` in a virtual environment,
-#' you can use `reticulate` to specify which Python executable and virtual
-#' environment to use. By default, `reticulate` uses the Python version found
-#' on your PATH.
+#' # Python Configuration
+#'
+#' By default, no manual configuration of Python should be necessary. On most
+#' machines, unless you have explicitly configured `reticulate`, reticulate
+#' defaults to an automatically managed ephemeral virtual environment with all
+#' Python requirements declared via `reticulate::py_require()`.
+#'
+#' If you prefer to use a manually managed Python installation, you can direct
+#' `reticulate` and specify which Python executable or environment to use.
+#' `reticulate` selects a Python installation using its [Order of
+#' Discovery](https://rstudio.github.io/reticulate/articles/versions.html#order-of-discovery).
+#' As a convenience `autodiff(install=TRUE)` will install `marginaleffectsAD` in
+#' a self-managed virtual environment.
 #'
 #' To specify an alternate Python version:
 #' ```r
