@@ -176,7 +176,7 @@ expect_true(nrow(p) > 1)
 # Issue #844
 df <- transform(mtcars, gear = as.integer(gear))
 
-mod <- gam(
+mod <- mgcv::gam(
     gear ~ s(hp) + cyl,
     data = df,
     family = ocat(R = 5)

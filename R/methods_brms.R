@@ -94,9 +94,12 @@ get_predict.brmsfit <- function(
         out <- apply(draws, c(2, 3), stats::median)
         levnames <- dimnames(draws)[[3]]
         if (is.null(levnames)) {
-            out <- tryCatch(levels(insight::get_response(m)), error = function(e) NULL)
-            if (is.null(out)) {
-                out <- seq_len(insight::n_unique(resp))
+            cols <- tryCatch(levels(insight::get_response(m)),
+                error = function(e) NULL)
+            if (is.null(cols)) {
+                colnames(out) <- seq_len(ncol(out))
+            } else {
+                colnames(out) <- cols
             }
         } else {
             colnames(out) <- levnames
