@@ -12,7 +12,8 @@ with JAX. If \code{FALSE} (default), disables automatic differentiation and
 reverts to finite difference methods.}
 
 \item{install}{Logical flag. If \code{TRUE}, installs the \code{marginaleffectsAD}
-Python package via \code{reticulate::py_install()}. Default is \code{FALSE}.}
+Python package via \code{reticulate::py_install()}. Default is \code{FALSE}. This is
+only necessary if you are self-managing a Python installation.}
 }
 \value{
 No return value. Called for side effects of enabling/disabling
@@ -45,11 +46,16 @@ For unsupported models or options, the function automatically falls back to
 finite difference methods with a warning.
 }
 \section{Python Configuration}{
+By default, no manual configuration of Python should be necessary. On most
+machines, unless you have explicitly configured \code{reticulate}, reticulate
+defaults to an automatically managed ephemeral virtual environment with all
+Python requirements declared via \code{reticulate::py_require()}.
 
-If you have already installed \code{marginaleffectsAD} in a virtual environment,
-you can use \code{reticulate} to specify which Python executable and virtual
-environment to use. By default, \code{reticulate} uses the Python version found
-on your PATH.
+If you prefer to use a manually managed Python installation, you can direct
+\code{reticulate} and specify which Python executable or environment to use.
+\code{reticulate} selects a Python installation using its \href{https://rstudio.github.io/reticulate/articles/versions.html#order-of-discovery}{Order of Discovery}.
+As a convenience \code{autodiff(install=TRUE)} will install \code{marginaleffectsAD} in
+a self-managed virtual environment.
 
 To specify an alternate Python version:
 

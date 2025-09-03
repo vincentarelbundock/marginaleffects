@@ -1,5 +1,9 @@
 # News {.unnumbered}
 
+New:
+
+* Automatic differentiation provides much faster and more accurate standard errors for several model types. Thanks to @t-kalinowski for improvements to `reticulate` handling and to @arcruz0 for `JAX` prediction functions.
+
 Bug:
 
 * Binary variables treated as integers by `datagrid()` with `newdata=` instead of `model=`. Issue #1584.
