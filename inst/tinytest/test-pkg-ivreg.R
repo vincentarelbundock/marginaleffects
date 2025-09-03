@@ -46,3 +46,17 @@ pred1 <- predictions(mod)
 pred2 <- predictions(mod, newdata = head(Kmenta))
 expect_predictions(mod, n_row = nrow(Kmenta))
 expect_predictions(mod, newdata = head(Kmenta), n_row = 6)
+
+
+
+
+
+
+if (!AUTODIFF) exit_file("autodiff")
+mod <- ivreg::ivreg(Q ~ P * D | D + F + A, data = Kmenta)
+autodiff(TRUE)
+expect_message(p1 <- predictions(mod))
+autodiff(FALSE)
+p2 <- predictions(mod)
+expect_equivalent(p1$estimate, p2$estimate)
+expect_equivalent(p1$std.error, p2$std.error, tolerance = 4e-3)

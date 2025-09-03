@@ -65,7 +65,7 @@ add_model_matrix_attribute <- function(mfx, newdata = NULL) {
     }
 
     # supported models (no inheritance)
-    supported <- c("lm", "glm", "rq", "ols", "lrm")
+    supported <- c("lm", "glm", "rq", "ols", "lrm", "ivreg")
     if (!isTRUE(class(model)[1] %in% supported)) {
         return(newdata)
     }
