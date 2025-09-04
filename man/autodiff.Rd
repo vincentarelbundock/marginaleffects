@@ -84,7 +84,7 @@ mod <- glm(am ~ hp + wt, data = mtcars, family = binomial)
 avg_comparisons(mod) # Will use JAX for faster computation
 
 # Disable automatic differentiation
-autodiff(autodiff = FALSE)
+autodiff(FALSE)
 }
 
 }

@@ -285,7 +285,7 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
 #' avg_comparisons(mod) # Will use JAX for faster computation
 #'
 #' # Disable automatic differentiation
-#' autodiff(autodiff = FALSE)
+#' autodiff(FALSE)
 #' }
 #'
 #' @export
