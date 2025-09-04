@@ -126,6 +126,11 @@ get_autodiff_args.lm <- function(model, mfx) {
         return(NULL)
     }
 
+    if (!is.null(model$weights)) {
+        autodiff_warning("models with weights")
+        return(NULL)
+    }
+
     # Check type support
     if (!mfx@type %in% c("response", "link", "invlink(link)")) {
         autodiff_warning(sprintf("`type='%s'`", mfx@type))
@@ -148,6 +153,11 @@ get_autodiff_args.glm <- function(model, mfx) {
 
     if (!is.null(model$offset)) {
         autodiff_warning("models with offsets")
+        return(NULL)
+    }
+
+    if (!is.null(model$weights)) {
+        autodiff_warning("models with weights")
         return(NULL)
     }
 
