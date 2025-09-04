@@ -32,7 +32,7 @@ components.marginaleffects <- function(object, component = NULL, ...) {
     }
 
     # Get all slot names from the S4 object
-    valid_components <- methods::slotNames(mfx)
+    valid_components <- sort(methods::slotNames(mfx))
 
     if (is.null(component)) {
         msg <- checkmate::check_choice(component, choices = valid_components)

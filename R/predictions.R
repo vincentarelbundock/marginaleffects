@@ -313,6 +313,11 @@ predictions <- function(
     args <- utils::modifyList(args, dots)
     tmp <- do.call(get_predictions, args)
 
+    # hypothesis formula names are attached in by() in get_predictions()
+    mfx@variable_names_by <- unique(c(
+        mfx@variable_names_by, 
+        attr(tmp, "hypothesis_function_by")))
+
     # two cases when tmp is a data.frame
     # get_predict gets us rowid with the original rows
     if (inherits(tmp, "data.frame")) {

@@ -33,6 +33,7 @@ expect_snapshot_print(
 expect_snapshot_print(
     comparisons(mod, variables = "am", newdata = datagrid(am = 0:1, hp = 120)),
     "print-comparisons_1focal_datagrid"
+
 )
 
 expect_snapshot_print(
@@ -45,3 +46,12 @@ mod_tmp <- lm(mpg ~ hp + am + factor(gear), data = mtcars)
 p_tmp <- predictions(mod_tmp, by = c("am", "gear"))
 result_tmp <- subset(p_tmp, am == 1)
 expect_snapshot_print(result_tmp, "print-predictions_by_am_gear_subset")
+
+# Issue #1579: y ~ x | z where z gets printed
+mod <- lm(mpg ~ hp, mtcars)
+expect_snapshot_print(
+    predictions(mod, hypothesis = ~ I(mean(x)) | cyl),
+    "print-issue1579_01")
+expect_snapshot_print(
+    comparisons(mod, hypothesis = ~ I(mean(x)) | cyl),
+    "print-issue1579_02")
