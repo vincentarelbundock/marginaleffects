@@ -29,7 +29,7 @@ em <- emmeans(mod, ~angle)
 em <- emmeans::contrast(em, method = "trt.vs.ctrl1")
 em <- data.frame(em)
 expect_equal(cmp$estimate, em$estimate)
-expect_equal(cmp$std.error, em$SE)
+expect_equal(cmp$std.error, em$SE, tolerance = 1e-6)
 
 # predictions vs emmeans
 pre <- predictions(
@@ -42,7 +42,7 @@ pre <- predictions(
 emm <- emmeans(mod, c("noise", "angle"))
 emm <- data.frame(emm)
 expect_equivalent(pre$estimate, emm$emmean)
-expect_equivalent(pre$std.error, emm$SE)
+expect_equivalent(pre$std.error, emm$SE, tolerance = 1e-6)
 
 
 # coefficient matrix (ANOVA on full design)

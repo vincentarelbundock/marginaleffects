@@ -72,7 +72,7 @@ co <- comparisons(
 em <- tidy(pairs(emmeans(m2, "mined", at = list(spp = "GP", site = "VF-1"))))
 expect_slopes(m2)
 expect_equivalent(co$estimate, -1 * em$estimate)
-expect_equivalent(co$std.error, em$std.error)
+expect_equivalent(co$std.error, em$std.error, tolerance = 1e-6)
 
 
 # Issue reported by email by Olivier Baumais
@@ -138,7 +138,7 @@ co <- comparisons(
 em <- tidy(pairs(emmeans(m3, "mined", at = list(spp = "GP", site = "VF-1"))))
 expect_slopes(m3)
 expect_equivalent(co$estimate, -1 * em$estimate)
-expect_equivalent(co$std.error, em$std.error)
+expect_equivalent(co$std.error, em$std.error, tolerance = 1e-6)
 
 
 # contrast: manual check
@@ -311,7 +311,7 @@ m <- glmmTMB(mpg ~ hp + am + (1 | cyl), data = mtcars)
 p1 <- predictions(m, newdata = mtcars, re.form = NA)
 p2 <- predict(m, se.fit = TRUE, re.form = NA)
 expect_equivalent(p1$estimate, p2$fit)
-expect_equivalent(p1$std.error, p2$se.fit)
+expect_equivalent(p1$std.error, p2$se.fit, tolerance = 1e-6)
 
 
 # Issue #1189

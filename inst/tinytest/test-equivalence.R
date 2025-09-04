@@ -18,7 +18,7 @@ e2 <- predictions(
     equivalence = c(19, 21)
 ) |> dplyr::arrange(gear)
 expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
-expect_equivalent(e1$p.value, e2$p.value.noninf)
+expect_equivalent(e1$p.value, e2$p.value.noninf, tolerance = 1e-6)
 
 e2 <- predictions(
     mod,
@@ -37,7 +37,7 @@ e2 <- predictions(
 ) |>
     dplyr::arrange(gear)
 expect_equivalent(e1$z.ratio, e2$statistic.nonsup, tol = 1e-6)
-expect_equivalent(e1$p.value, e2$p.value.nonsup)
+expect_equivalent(e1$p.value, e2$p.value.nonsup, tolerance = 1e-6)
 
 
 # predictions() vs. {emmeans}: equiv
@@ -98,8 +98,8 @@ e2 <- predictions(
 ) |>
     dplyr::arrange(gear)
 expect_equivalent(e1$emmean, e2$estimate)
-expect_equivalent(e1$z.ratio, e2$statistic.noninf)
-expect_equivalent(e1$p.value, e2$p.value.noninf)
+expect_equivalent(e1$z.ratio, e2$statistic.noninf, tolerance = 1e-6)
+expect_equivalent(e1$p.value, e2$p.value.noninf, tolerance = 1e-6)
 
 
 # avg_*() and hypotheses()

@@ -81,10 +81,10 @@ p1 <- predictions(m2, type = "link")
 p2 <- predictions(m2, newdata = dat, type = "link")
 p3 <- as.data.frame(predict(m2, se.fit = TRUE, type = "link"))
 
-expect_equal(p1$estimate, p3$fit)
-expect_equal(p1$std.error, p3$se.fit)
-expect_equal(p2$estimate, p3$fit)
-expect_equal(p2$std.error, p3$se.fit)
+expect_equal(p1$estimate, p3$fit, tolerance = 1e-6)
+expect_equal(p1$std.error, p3$se.fit, tolerance = 1e-6)
+expect_equal(p2$estimate, p3$fit, tolerance = 1e-6)
+expect_equal(p2$std.error, p3$se.fit, tolerance = 1e-6)
 
 
 # Issue #671

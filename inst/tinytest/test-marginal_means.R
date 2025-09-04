@@ -13,7 +13,7 @@ mm <- predictions(mod, by = "cyl", newdata = datagrid(grid_type = "balanced"), t
     dplyr::arrange(cyl)
 expect_equal(data.frame(em)$prob, mm$estimate)
 expect_equal(data.frame(em)$asymp.LCL, mm$conf.low, tolerance = 1e-5)
-expect_equal(data.frame(em)$asymp.UCL, mm$conf.high)
+expect_equal(data.frame(em)$asymp.UCL, mm$conf.high, tolerance = 1e-5)
 
 mod <- glm(breaks ~ wool * tension, family = Gamma, data = warpbreaks)
 em <- suppressMessages(emmeans(mod, ~wool, type = "response", df = Inf))

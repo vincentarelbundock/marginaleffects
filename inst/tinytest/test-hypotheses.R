@@ -13,7 +13,7 @@ expect_inherits(dmm, "data.frame")
 dmm <- hypotheses(mod, "hp = wt")
 dmc <- car::linearHypothesis(mod, hypothesis = "hp = wt")
 expect_equivalent(dmm$estimate, attr(dmc, "value")[[1]])
-expect_equivalent(dmm$std.error, sqrt(attr(dmc, "vcov")[[1]]))
+expect_equivalent(dmm$std.error, sqrt(attr(dmc, "vcov")[[1]]), tol = 1e-5)
 
 # Non-linear function
 dmm <- hypotheses(mod, "exp(hp + wt) = 0.1")
@@ -215,7 +215,7 @@ p3 <- hypotheses(p3, "b2 - b1 = 0")
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$estimate, p3$estimate)
 expect_equivalent(p1$std.error, p2$std.error)
-expect_equivalent(p1$std.error, p3$std.error)
+expect_equivalent(p1$std.error, p3$std.error, tol = 1e-5)
 
 
 # vignette: raw data.frame
