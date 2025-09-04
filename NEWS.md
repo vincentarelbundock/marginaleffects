@@ -8,6 +8,7 @@ Bug:
 
 * Binary variables treated as integers by `datagrid()` with `newdata=` instead of `model=`. Issue #1584.
 * Better labelling in some `brms` models with categorical outcomes. Thanks to @mattansb for a proposed solution and to @strengejacke for report #1392.
+* Improve printing of grouped hypotheses. Issue #1579.
 
 ## 0.29.0
 
