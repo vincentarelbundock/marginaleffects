@@ -98,6 +98,8 @@ expect_equivalent(nrow(p), 3)
 cmp <- comparisons(mod, type = "probs", by = "group")
 expect_equivalent(nrow(cmp), 9)
 
+# Important: we cannot deprecate `by` as data.frame because `group`
+# is not present in `newdata`, so we can't always merge beforehand.
 by <- data.frame(
     group = c("3", "4", "5"),
     by = c("(3,4)", "(3,4)", "(5)")
