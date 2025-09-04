@@ -297,14 +297,12 @@ autodiff <- function(autodiff = NULL, install = FALSE) {
         reticulate::py_install("marginaleffectsAD")
     }
     if (isFALSE(autodiff)) {
-        settings_set("jacobian_function", NULL)
-        options("marginaleffects_jacobian_function" = NULL)
         settings_set("autodiff", FALSE)
+        settings_set("jacobian_function", NULL)
     } else if (isTRUE(autodiff)) {
         mAD <- reticulate::import("marginaleffectsAD", delay_load = FALSE)
         settings_set("mAD", mAD)
-        options("marginaleffects_jacobian_function" = jax_jacobian)
-        settings_set("jacobian_function", jax_jacobian)
         settings_set("autodiff", TRUE)
+        settings_set("jacobian_function", jax_jacobian)
     }
 }

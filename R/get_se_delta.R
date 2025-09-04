@@ -85,11 +85,9 @@ get_se_delta <- function(
 
     # user-supplied jacobian machine (e.g. JAX)
     if (is.null(J)) {
-        fun <- getOption("marginaleffects_jacobian_function",
-            default = function(...) NULL)
-        if (!isTRUE(checkmate::check_function(fun))) {
-            msg <- "The `marginaleffects_jacobian_function` option must be a function."
-            stop_sprintf(msg)
+        fun <- settings_get("jacobian_function")
+        if (is.null(fun)) {
+            fun <- function(...) NULL
         }
         if (!"..." %in% names(formals(fun))) {
             msg <- "The `marginaleffects_jacobian_function` option must accept the ... argument."
