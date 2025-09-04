@@ -1,6 +1,10 @@
+# Global variable to avoid R CMD check note
+utils::globalVariables("mAD")
+
 eval_fun_with_numpy_arrays <- function(FUN, ...) {
     dots <- list(...)
     # Handle special cases for JAX indexing
+    mAD <- settings_get("mAD")
     for (i in seq_along(dots)) {
         if (names(dots)[i] %in% c("num_groups", "link_type", "family_type", "comparison_type")) {
             # Keep num_groups, link_type, family_type as is (integer scalars)
@@ -25,7 +29,6 @@ autodiff_warning <- function(feature) {
 
 #' @keywords internal
 #' @noRd
-#' @export
 get_autodiff_args <- function(model, mfx) {
     UseMethod("get_autodiff_args")
 }
@@ -116,6 +119,8 @@ jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) 
 
 
 jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, estimates = NULL, ...) {
+    mAD <- settings_get("mAD")
+
     if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
         message("\nJAX is fast!")
     }
@@ -206,7 +211,7 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
 }
 
 
-#' [EXPERIMENTAL] Enable Automatic Differentiation with JAX
+#' EXPERIMENTAL -- Enable Automatic Differentiation with JAX
 #'
 #' This function enables or disables automatic differentiation using the JAX
 #' package in Python, which can considerably speed up and increase the accuracy
@@ -296,7 +301,8 @@ autodiff <- function(autodiff = NULL, install = FALSE) {
         options("marginaleffects_jacobian_function" = NULL)
         settings_set("autodiff", FALSE)
     } else if (isTRUE(autodiff)) {
-        mAD <<- reticulate::import("marginaleffectsAD", delay_load = FALSE)
+        mAD <- reticulate::import("marginaleffectsAD", delay_load = FALSE)
+        settings_set("mAD", mAD)
         options("marginaleffects_jacobian_function" = jax_jacobian)
         settings_set("jacobian_function", jax_jacobian)
         settings_set("autodiff", TRUE)

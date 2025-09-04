@@ -189,6 +189,7 @@ get_autodiff_args.glm <- function(model, mfx) {
     link_type <- NULL
     if (model_type == "glm") {
         # Import Family and Link enums from Python
+        mAD <- settings_get("mAD")
         Family <- mAD$glm$families$Family
         Link <- mAD$glm$families$Link
 

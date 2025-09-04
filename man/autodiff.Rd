@@ -2,7 +2,7 @@
 % Please edit documentation in R/autodiff.R
 \name{autodiff}
 \alias{autodiff}
-\title{\link{EXPERIMENTAL} Enable Automatic Differentiation with JAX}
+\title{EXPERIMENTAL -- Enable Automatic Differentiation with JAX}
 \usage{
 autodiff(autodiff = NULL, install = FALSE)
 }

@@ -191,6 +191,7 @@ get_se_delta <- function(
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
     if (isTRUE(settings_get("autodiff"))) {
+        mAD <- settings_get("mAD")
         se <- mAD$utils$standard_errors(J, V)
     } else {
         se <- sqrt(rowSums(tcrossprod(J, V) * J))

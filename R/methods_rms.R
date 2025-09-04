@@ -105,6 +105,7 @@ get_autodiff_args.lrm <- function(model, mfx) {
     }
 
     # If all checks pass, return supported arguments
+    mAD <- settings_get("mAD")
     out <- list(
         model_type = "glm",
         family_type = mAD$glm$families$Family$BINOMIAL,
