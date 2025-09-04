@@ -3,6 +3,7 @@
 New:
 
 * Automatic differentiation provides much faster and more accurate standard errors for several model types. Thanks to @t-kalinowski for improvements to `reticulate` handling and to @arcruz0 for `JAX` prediction functions.
+* `sampleSelection` models with `type="conditional"` are now supported.
 
 Bug:
 
