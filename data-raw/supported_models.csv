@@ -1,6 +1,7 @@
 Package,Function
 AER,ivreg
 AER,tobit
+Amelia,amest
 DCchoice,oohbchoice
 MASS,glm.nb
 MASS,glmmPQL
@@ -14,9 +15,15 @@ REndo,latentIV
 REndo,multilevelIV
 Rchoice,hetprob
 Rchoice,ivpml
+WeightIt,coxph_weightit
+WeightIt,glm_weightit
+WeightIt,multinom_weightit
+WeightIt,ordinal_weightit
 afex,afex_aov
 aod,betabin
+aod,glimML
 betareg,betareg
+bife,bife
 bife,bife
 biglm,bigglm
 biglm,biglm
@@ -29,6 +36,7 @@ brglm2,brnb
 brms,brm
 crch,crch
 crch,hxlr
+dbarts,bart
 estimatr,iv_robust
 estimatr,lm_lin
 estimatr,lm_robust
@@ -38,6 +46,7 @@ fixest,feols
 fixest,fepois
 flexsurv,flexsurvreg
 flexsurv,flexsurvspline
+gam,Gam
 gam,gam
 gamlss,gamlss
 geepack,geeglm
@@ -60,6 +69,7 @@ mhurdle,mhurdle
 mlogit,mlogit
 mlr3,Learner
 mvgam,mvgam
+mvgam,mvgam
 nlme,gls
 nlme,lme
 nnet,multinom
@@ -68,6 +78,8 @@ ordinal,clm
 partykit,glmtree
 partykit,lmtree
 phylolm,phyloglm
+phylolm,phyloglm
+phylolm,phylolm
 phylolm,phylolm
 plm,plm
 pscl,hurdle
@@ -91,6 +103,8 @@ sampleSelection,heckit
 sampleSelection,selection
 scam,scam
 speedglm,speedglm
+speedglm,speedglm
+speedglm,speedlm
 speedglm,speedlm
 stats,glm
 stats,lm
