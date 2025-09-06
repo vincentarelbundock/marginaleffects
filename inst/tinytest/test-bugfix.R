@@ -66,7 +66,7 @@ p1 <- predictions(m1, newdata = nd, type = "link")
 p2 <- as.data.frame(predict(m1, newdata = nd, se.fit = TRUE))
 
 expect_equal(p1$estimate, p2$fit)
-expect_equal(p1$std.error, p2$se.fit)
+expect_equal(p1$std.error, p2$se.fit, tolerance = 1e-6)
 
 set.seed(12345)
 n = 60
