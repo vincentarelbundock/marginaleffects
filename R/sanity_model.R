@@ -88,6 +88,8 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
             "lmrob",
             "lmRob",
             "lm_robust",
+            "lmtree", # partykit
+            "glmtree", # partykit
             # "logitr",
             "loess",
             "logistf",
