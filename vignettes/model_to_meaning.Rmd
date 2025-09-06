@@ -18,7 +18,7 @@ The [marginaleffects.com](https://marginaleffects.com) website includes detailed
 
 It also includes a complete free version of this forthcoming book
 
-> *Model to Meaning: How to Interpret Statistical Results Using marginaleffects for R and Python.* Arel-Bundock, Vincent. CRC Chapman & Hall.
+> *Model to Meaning How to Interpret Statistical Models with R and Python.* Arel-Bundock, Vincent. 2026. CRC Chapman & Hall.
 
 In addition to full book chapters, [marginaleffects.com](https://marginaleffects.com) includes a lot of bonus content. In total, there are over 40 detailed vignettes and tutorials, including:
 
@@ -41,28 +41,36 @@ In addition to full book chapters, [marginaleffects.com](https://marginaleffects
    - [Multilevel regression with post-stratification](https://marginaleffects.com/chapters/mrp.html)
    - [Machine learning](https://marginaleffects.com/chapters/ml.html)
    - [Uncertainty](https://marginaleffects.com/chapters/uncertainty.html)
-1. Bonus Content
-   - [Help](https://marginaleffects.com/bonus/help.html)
-   - [FAQ](https://marginaleffects.com/bonus/faq.html)
+1. Tutorials
    - [Plots](https://marginaleffects.com/bonus/plot.html)
-   - [Alternative Software](https://marginaleffects.com/bonus/alternative_software.html)
    - [Bayes](https://marginaleffects.com/bonus/brms.html)
+   - [Bootstrap](https://marginaleffects.com/bonus/bootstrap.html)
+   - [Conjoint Experiments](https://marginaleffects.com/bonus/conjoint.html)
+   - [Data grids](https://marginaleffects.com/bonus/grids.html)
    - [Elasticity](https://marginaleffects.com/bonus/elasticity.html)
-   - [Extensions](https://marginaleffects.com/bonus/extensions.html)
    - [GAM](https://marginaleffects.com/bonus/gam.html)
    - [Heterogeneity](https://marginaleffects.com/bonus/heterogeneity.html)
+   - [Interrupted Times Series](https://marginaleffects.com/bonus/interrupted_time_series.html)
    - [Inverse Probability Weighting](https://marginaleffects.com/bonus/ipw.html)
    - [Links](https://marginaleffects.com/bonus/links.html)
    - [Logit](https://marginaleffects.com/bonus/logit.html)
-   - [Marginal Means](https://marginaleffects.com/bonus/marginalmeans.html)
    - [Matching](https://marginaleffects.com/bonus/matching.html)
-   - [Meme gallery](https://marginaleffects.com/bonus/meme.html)
-   - [NumPyro](https://marginaleffects.com/bonus/numpyro.html)
+   - [Missing Data](https://marginaleffects.com/bonus/multiple_imputation.html)
+   - [Mixed Effects](https://marginaleffects.com/bonus/lme4.html)
+   - [Multinomial Logit](https://marginaleffects.com/bonus/mlogit.html)
    - [Performance](https://marginaleffects.com/bonus/performance.html)
-   - [Supported Models](https://marginaleffects.com/bonus/supported_models.html)
+   - [Power Analysis](https://marginaleffects.com/bonus/power.html)
    - [S Values](https://marginaleffects.com/bonus/svalues.html)
+   - [Scikit-learn](https://marginaleffects.com/bonus/sklearn.html)
+   - [Survival Analysis](https://marginaleffects.com/bonus/survival.html)
+   - [Total Marginal Effects](https://marginaleffects.com/bonus/total_marginal_effect.html)
+1. Miscellaneous
+   - [Help](https://marginaleffects.com/bonus/help.html)
+   - [Alternative Software](https://marginaleffects.com/bonus/alternative_software.html)
+   - [Extensions](https://marginaleffects.com/bonus/extensions.html)
+   - [FAQ](https://marginaleffects.com/bonus/faq.html)
+   - [Meme gallery](https://marginaleffects.com/bonus/meme.html)
+   - [Supported Models](https://marginaleffects.com/bonus/supported_models.html)
    - [Tables](https://marginaleffects.com/bonus/tables.html)
-1. Back Matter
-   - [Bibliography](https://marginaleffects.com/chapters/bibliography.html)
 1. [Citation and License](https://marginaleffects.com/bonus/citation.html)
 
