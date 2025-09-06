@@ -112,6 +112,7 @@ survival,clogit
 survival,coxph
 survival,survreg
 systemfit,systemfit
+tidymodels,tidymodels
 tobit1,tobit1
 truncreg,truncreg
 WeightIt,coxph_weightit
