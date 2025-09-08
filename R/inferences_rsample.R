@@ -52,8 +52,18 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
         return(out)
     }
 
-    args <- list("data" = modeldata, "apparent" = TRUE)
+    args <- list("apparent" = TRUE)
     args[["times"]] <- R
+
+    # Sometimes modeldata is empty (ex: `tidymodels`)
+    if (nrow(modeldata) > 0) {
+        args[["data"]] <- modeldata
+    } else if (nrow(mfx@modeldata) > 0) {
+        args[["data"]] <- mfx@modeldata
+    } else {
+        args[["data"]] <- mfx@newdata
+    }
+
     args <- c(args, list(...))
     if ("group" %in% ...names()) {
         splits <- do.call(rsample::group_bootstraps, args)
