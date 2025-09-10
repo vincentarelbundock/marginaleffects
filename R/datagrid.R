@@ -191,13 +191,13 @@ datagrid <- function(
     if (grid_type %in% c("balanced", "mean_or_mode")) {
         out_split <- lapply(seq_along(values_split), function(i) {
             x <- c(values_split[[i]][[1]], values_split[[i]][[2]], use.names = TRUE)
-            len <- setdiff(unique(sapply(x, length)), 1)
+            len <- setdiff(unique(lengths(x)), 1)
             do.call(data.table::CJ, x)
         })
     } else if (grid_type == "dataframe") {
         out_split <- lapply(seq_along(values_split), function(i) {
             x <- c(values_split[[i]][[1]], values_split[[i]][[2]], use.names = TRUE)
-            len <- setdiff(unique(sapply(x, length)), 1)
+            len <- setdiff(unique(lengths(x)), 1)
             if (length(len) > 1) {
                 stop_sprintf('With `grid_type="dataframe"`, the length of each vector must be 1 or be the same for every variable.')
             }
