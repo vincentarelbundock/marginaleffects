@@ -148,6 +148,7 @@ datagrid <- function(
         variable_names <- c(
             hush(insight::find_variables(mfx@model, flatten = TRUE)),
             hush(insight::find_weights(mfx@model, flatten = TRUE)),
+            "marginaleffects_wts_internal",
             by)
         variable_names <- intersect(sort(unique(variable_names)), colnames(newdata))
         if (length(variable_names) > 0) {
@@ -267,7 +268,7 @@ datagrid_newdata_to_list <- function(
         ".FUN_other" = mean_na
     )
 
-    FUN_countefactual <- stats::setNames(
+    FUN_counterfactual <- stats::setNames(
         rep(list(identity), length(FUN_balanced)),
         names(FUN_balanced)
     )
@@ -279,7 +280,7 @@ datagrid_newdata_to_list <- function(
     } else if (grid_type == "dataframe") {
         FUN_list <- FUN_mean_or_mode
     } else if (grid_type == "counterfactual") {
-        FUN_list <- FUN_countefactual
+        FUN_list <- FUN_counterfactual
     }
 
     # FUN overrides defaults from grid_type but not manual specifications
@@ -301,7 +302,7 @@ datagrid_newdata_to_list <- function(
 
     explicit_values <- list()
     explicit <- list(...)
-    for (e in names(explicit)) {
+    for (e in setdiff(names(explicit), "marginaleffects_internal")) {
         if (is.function(explicit[[e]])) {
             if (!e %in% colnames(newdata)) {
                 warn_sprintf("The variable '%s' is not in the newdata.", e)
