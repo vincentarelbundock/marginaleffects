@@ -26,7 +26,6 @@ set_coef.betareg <- function(model, coefs, ...) {
     }
 
     nu <- startsWith(names(coefs), "Log(nu)")
-    model[["coefficients"]][["nu"]] <- coefs[nu]
     if (length(nu) > 0 && "nu" %in% names(model[["coefficients"]])) {
         model[["coefficients"]][["nu"]] <- coefs[nu]
     }
