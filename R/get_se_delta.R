@@ -115,7 +115,7 @@ get_se_delta <- function(
         # JAX computes jacobian on padded newdata, but final results are unpadded
         if (!is.null(J) && !is.null(mfx) && "rowid" %in% colnames(mfx@newdata)) {
             idx <- mfx@newdata$rowid > 0
-            if (any(!idx) && nrow(J) == nrow(mfx@newdata)) {
+            if (!all(idx) && nrow(J) == nrow(mfx@newdata)) {
                 J <- J[idx, , drop = FALSE]
             }
         }

@@ -8,13 +8,13 @@ equivalence <- function(x, equivalence = NULL, df = Inf, draws = NULL, ...) {
 
         # Pr(Equivalence)
         idx_equiv <- draws > equivalence[1] & draws < equivalence[2]
-        x$p.rope.unconditional <- apply(idx_equiv, 1, mean)
+        x$p.rope.unconditional <- rowMeans(idx_equiv)
 
         # Pr(Equivalence|CI)
         rope <- draws
         rope[rope < x$conf.low | rope > x$conf.high] <- NA
         rope <- rope > equivalence[1] & rope < equivalence[2]
-        x$p.rope.conditional <- apply(rope, 1, mean, na.rm = TRUE)
+        x$p.rope.conditional <- rowMeans(rope, na.rm = TRUE)
 
         return(x)
     }

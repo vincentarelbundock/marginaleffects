@@ -231,7 +231,7 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
     }
 
     if (!is.null(group)) {
-        if (any(!group %in% c(colnames(x), colnames(newdata)))) {
+        if (!all(group %in% c(colnames(x), colnames(newdata)))) {
             msg <- "Some `~ | groupid` variables were not found in `newdata`."
             stop(msg, call. = FALSE)
         }
