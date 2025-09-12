@@ -15,3 +15,9 @@ get_autodiff_args.ivreg <- function(model, mfx) {
     out <- list(model_type = "linear")
     return(out)
 }
+
+
+
+#' @keywords internal
+#' @export
+get_autodiff_args.ivreg <- get_autodiff_args.lm

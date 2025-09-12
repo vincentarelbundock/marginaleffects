@@ -117,7 +117,7 @@ get_coef.nls <- function(model, ...) {
 #' @export
 get_autodiff_args.lm <- function(model, mfx) {
     # no inheritance! Important to avoid breaking other models
-    if (!class(model)[1] == "lm") {
+    if (!class(model)[1] %in% c("lm", "ivreg")) {
         return(NULL)
     }
 
@@ -126,7 +126,7 @@ get_autodiff_args.lm <- function(model, mfx) {
         return(NULL)
     }
 
-    if (!is.null(model$weights)) {
+    if ("weights" %in% names(model$call)) {
         autodiff_warning("models with weights")
         return(NULL)
     }
@@ -156,7 +156,7 @@ get_autodiff_args.glm <- function(model, mfx) {
         return(NULL)
     }
 
-    if (!is.null(model$weights)) {
+    if ("weights" %in% names(model$call)) {
         autodiff_warning("models with weights")
         return(NULL)
     }

@@ -160,6 +160,7 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
         return(NULL)
     }
 
+
     # Extract information from autodiff_args
     jac_fun <- get_jax_by(mfx = mfx, original = original)
     if (is.null(jac_fun)) {
