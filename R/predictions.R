@@ -271,14 +271,15 @@ predictions <- function(
 
     # analogous to comparisons(variables=list(...))
     if (!is.null(variables)) {
-        args <- list(
-            model = mfx@model,
-            newdata = mfx@newdata,
-            grid_type = "counterfactual"
-        )
         mfx <- add_variables(
             variables = variables,
             mfx = mfx
+        )
+        args <- list(
+            model = mfx@model,
+            newdata = mfx@newdata,
+            grid_type = "counterfactual",
+            marginaleffects_internal = mfx
         )
         for (v in mfx@variables) {
             args[[v$name]] <- v$value

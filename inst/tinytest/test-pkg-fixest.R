@@ -49,7 +49,7 @@ expect_equivalent(nrow(mfx), 12)
 requiet("plm")
 data(EmplUK, package = "plm")
 stata <- readRDS(testing_path("stata/stata.rds"))$fixest_feols
-model <- feols(wage ~ capital * output | firm, EmplUK)
+model <- feols(wage ~ capital * output | firm, EmplUK, se = "cluster")
 mfx <- merge(avg_slopes(model), stata)
 expect_slopes(model)
 expect_equivalent(mfx$estimate, mfx$estimate)

@@ -164,6 +164,44 @@ expect_inherits(p1, "predictions")
 expect_false(any(p1$estimate == p2$estimate))
 
 
+
+# Issue #1596: wts + hypothesis formula
+# problem was that datagrid() did not retain marginaleffects_wts_internal column.
+mod1 <- glm(vs ~ mpg + factor(cyl), data = mtcars, family = binomial)
+p <- predict(mod1, type = "response")
+dat <- transform(mtcars, wts = ifelse(vs == 1, 1 / p, 1 / (1 - p)))
+mod2 <- lm(hp ~ vs * (wt + qsec + disp), data = dat, weights = wts)
+nd <- data.table::rbindlist(
+    list(
+        transform(dat, vs = 0),
+        transform(dat, vs = 1))
+)
+nd <- transform(nd, p = predict(mod2, newdata = nd))
+p1 <- nd[, .(p = weighted.mean(p, wts)), by = vs]
+p2 <- avg_predictions(mod2, variables = "vs", wts = "wts")
+expect_equivalent(p1$p, p2$estimate)
+expect_equivalent(
+    avg_predictions(mod2, variables = "vs", wts = "wts")$estimate,
+    c(95.484, 118.938),
+    tolerance = 1e-4)
+expect_equivalent(
+    avg_predictions(mod2, variables = "vs")$estimate,
+    c(100.34, 125.43),
+    tolerance = 1e-4)
+expect_equivalent(
+    avg_predictions(mod2, wts = "wts")$estimate,
+    130.191,
+    tolerance = 1e-4)
+expect_equivalent(
+    avg_predictions(mod2)$estimate,
+    145.2516,
+    tolerance = 1e-4)
+expect_equivalent(
+    avg_predictions(mod2, variables = "vs")$estimate,
+    c(100.34, 125.43),
+    tolerance = 1e-4)
+
+
 # brms
 set.seed(1024)
 mod <- marginaleffects:::modelarchive_model("brms_numeric2")
