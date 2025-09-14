@@ -80,6 +80,7 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
             "ivreg",
             "iv_robust",
             "ivpml",
+            "lda",
             "Learner",
             "lm",
             "lme",

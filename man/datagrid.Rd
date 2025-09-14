@@ -26,7 +26,7 @@ datagrid(
 \itemize{
 \item Functions are applied to the variable in the \code{model} dataset or \code{newdata}, and must return a vector of the appropriate type.
 \item Character vectors are automatically transformed to factors if necessary.
-+The output will include all combinations of these variables (see Examples below.)
+\item The output will include all combinations of these variables (see Examples below.)
 }}
 
 \item{model}{Model object}

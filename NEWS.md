@@ -1,5 +1,9 @@
 # News {.unnumbered}
 
+## Development
+
+* Add support `MASS::lda()` models for estimates but not standard errors. Thanks to @friendly for feature request #1598.
+
 ## 0.30.0
 
 New:

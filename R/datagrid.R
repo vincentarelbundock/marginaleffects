@@ -11,7 +11,7 @@ unique_s <- function(x) sort(unique(x))
 #' @param ... named arguments with vectors of values or functions for user-specified variables.
 #' + Functions are applied to the variable in the `model` dataset or `newdata`, and must return a vector of the appropriate type.
 #' + Character vectors are automatically transformed to factors if necessary.
-#' +The output will include all combinations of these variables (see Examples below.)
+#' + The output will include all combinations of these variables (see Examples below.)
 #' @param model Model object
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments can be used.)
 #' @param by character vector with grouping variables within which `FUN_*` functions are applied to create "sub-grids" with unspecified variables.

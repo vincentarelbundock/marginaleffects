@@ -91,3 +91,30 @@ get_predict.glmmPQL <- function(
     out <- add_rowid(out, newdata)
     return(out)
 }
+
+
+#' @rdname get_vcov
+#' @export
+get_vcov.lda <- function(model, ...) {
+    return(NULL)
+}
+
+
+
+#' @rdname get_predict
+#' @export
+get_predict.lda <- function(
+    model,
+    newdata = insight::get_data(model),
+    type = "class",
+    ...) {
+    out <- stats::predict(model, newdata = newdata)
+    if (type == "class") {
+        out <- data.table(estimate = out$class)
+    } else if (type == "posterior") {
+        out <- data.table::melt(data.table::data.table(out$posterior),
+            variable.name = "group", value.name = "estimate")
+    }
+    out <- add_rowid(out, newdata)
+    return(out)
+}

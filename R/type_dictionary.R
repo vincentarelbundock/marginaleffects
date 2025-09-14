@@ -68,7 +68,6 @@ hurdle,prob
 hurdle,count
 hurdle,zero
 iv_robust,response
-lm,response
 gam,response
 gam,link
 Gam,invlink(link)
@@ -102,6 +101,9 @@ glm_weightit,response
 glm_weightit,lp
 glm_weightit,link
 ivreg,response
+lda,class
+lda,posterior
+lm,response
 lmerMod,response
 lmerModLmerTest,response
 lmrob,response

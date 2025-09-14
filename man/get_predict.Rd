@@ -15,6 +15,7 @@
 \alias{get_predict.default}
 \alias{get_predict.polr}
 \alias{get_predict.glmmPQL}
+\alias{get_predict.lda}
 \alias{get_predict.MCMCglmm}
 \alias{get_predict.lm}
 \alias{get_predict.glm}
@@ -97,6 +98,8 @@ get_predict(
   mfx = NULL,
   ...
 )
+
+\method{get_predict}{lda}(model, newdata = insight::get_data(model), type = "class", ...)
 
 \method{get_predict}{MCMCglmm}(
   model,
