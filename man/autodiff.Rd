@@ -25,6 +25,8 @@ package in Python, which can considerably speed up and increase the accuracy
 of standard errors when a model includes many parameters.
 }
 \details{
+Automatic differentiation needs to be enabled once per session.
+
 When \code{autodiff = TRUE}, this function:
 \itemize{
 \item Imports the \code{marginaleffectsAD} Python package via \code{\link[reticulate:py_install]{reticulate::py_install()}}

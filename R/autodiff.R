@@ -227,6 +227,8 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
 #'
 #' @details
 #'
+#' Automatic differentiation needs to be enabled once per session.
+#'
 #' When `autodiff = TRUE`, this function:
 #' - Imports the `marginaleffectsAD` Python package via [reticulate::py_install()]
 #' - Sets the internal jacobian function to use JAX-based automatic differentiation
