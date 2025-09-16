@@ -79,7 +79,7 @@ expect_inherits(c2, "comparisons")
 # Issue 1600
 dat <- mtcars
 dat$gear_ord <- factor(dat$gear, ordered = TRUE)
-mod <- orm(mpg ~ gear_fac + hp * wt, data = dat, x = TRUE, y = TRUE)
+mod <- orm(mpg ~ gear_ord + hp * wt, data = dat, x = TRUE, y = TRUE)
 expect_warning(
     avg_comparisons(mod, variables = "gear_ord", type = "lp"),
     pattern = "Ordered factors sometimes cause issues with `rms` models")
