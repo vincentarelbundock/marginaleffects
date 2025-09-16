@@ -11,6 +11,33 @@ get_vcov.orm <- function(model, vcov = NULL, ...) {
 }
 
 
+#' @rdname sanitize_model_specific
+sanitize_model_specific.rms <- function(model, ...) {
+    # Issue #1600
+    md <- get_modeldata(model)
+    ord <- sapply(md, function(x) is.factor(x) & inherits(x, "ordered"))
+    if (any(ord)) {
+        msg <- "Ordered factors sometimes cause issues with `rms` models. Please convert them to unordered factors and refit the model."
+        warning(msg, call. = FALSE)
+    }
+    return(model)
+}
+
+#' @rdname sanitize_model_specific
+#' @export
+sanitize_model_specific.orm <- sanitize_model_specific.rms
+
+
+#' @rdname sanitize_model_specific
+#' @export
+sanitize_model_specific.lrm <- sanitize_model_specific.rms
+
+
+#' @rdname sanitize_model_specific
+#' @export
+sanitize_model_specific.ols <- sanitize_model_specific.rms
+
+
 #' @rdname get_predict
 #' @export
 get_predict.rms <- function(

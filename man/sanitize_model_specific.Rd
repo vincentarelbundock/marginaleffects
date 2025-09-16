@@ -3,7 +3,7 @@
 %   R/methods_biglm.R, R/sanity_model.R, R/methods_brms.R, R/methods_dbarts.R,
 %   R/methods_fixest.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
 %   R/methods_lme4.R, R/methods_mclogit.R, R/methods_mlogit.R, R/methods_mlr3.R,
-%   R/methods_ordinal.R, R/methods_plm.R, R/methods_quantreg.R,
+%   R/methods_ordinal.R, R/methods_plm.R, R/methods_quantreg.R, R/methods_rms.R,
 %   R/methods_survey.R, R/methods_survival.R
 \name{sanitize_model_specific.glimML}
 \alias{sanitize_model_specific.glimML}
@@ -23,6 +23,10 @@
 \alias{sanitize_model_specific.clm}
 \alias{sanitize_model_specific.plm}
 \alias{sanitize_model_specific.rqs}
+\alias{sanitize_model_specific.rms}
+\alias{sanitize_model_specific.orm}
+\alias{sanitize_model_specific.lrm}
+\alias{sanitize_model_specific.ols}
 \alias{sanitize_model_specific.svyolr}
 \alias{sanitize_model_specific.svyglm}
 \alias{sanitize_model_specific.coxph}
@@ -73,6 +77,14 @@ sanitize_model_specific(model, ...)
 \method{sanitize_model_specific}{plm}(model, ...)
 
 \method{sanitize_model_specific}{rqs}(model, ...)
+
+\method{sanitize_model_specific}{rms}(model, ...)
+
+\method{sanitize_model_specific}{orm}(model, ...)
+
+\method{sanitize_model_specific}{lrm}(model, ...)
+
+\method{sanitize_model_specific}{ols}(model, ...)
 
 \method{sanitize_model_specific}{svyolr}(model, wts = FALSE, by = FALSE, ...)
 
