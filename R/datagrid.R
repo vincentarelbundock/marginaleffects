@@ -20,7 +20,7 @@ unique_s <- function(x) sort(unique(x))
 #' @param FUN_character the function to be applied to character variables.
 #' @param FUN_factor the function to be applied to factor variables. This only applies if the variable in the original data is a factor. For variables converted to factor in a model-fitting formula, for example, `FUN_character` is used.
 #' @param FUN_logical the function to be applied to logical variables.
-#' @param FUN_integer the function to be applied to integer variables.
+#' @param FUN_integer the function to be applied to integer-ish variables (including columns without decimal places).
 #' @param FUN_binary the function to be applied to binary variables.
 #' @param FUN_numeric the function to be applied to numeric variables.
 #' @param FUN_other the function to be applied to other variable types.

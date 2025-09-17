@@ -18,6 +18,7 @@ Bug:
 * Binary variables treated as integers by `datagrid()` with `newdata=` instead of `model=`. Issue #1584.
 * Better labelling in some `brms` models with categorical outcomes. Thanks to @mattansb for a proposed solution and to @strengejacke for report #1392.
 * Improve printing of grouped hypotheses. Issue #1579.
+* In `datagrid()`, the `FUN_integer` argument also applies to integer-ish columns, including numeric columns without decimal places. Thanks to @strengejacke for report #1575. (Note that this bullet point was added retroactively after the release of version 0.30.0.)
 
 ## 0.29.0
 
