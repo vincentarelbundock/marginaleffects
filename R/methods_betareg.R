@@ -39,7 +39,7 @@ set_coef.betareg <- function(model, coefs, ...) {
 get_coef.betareg <- function(model, ...) {
     out <- model$coefficients
     for (n in names(out)) {
-        if (n == "phi") {
+        if (n %in% c("phi", "precision")) {
             names(out[[n]]) <- sprintf("(phi)_%s", names(out[[n]]))
         }
     }

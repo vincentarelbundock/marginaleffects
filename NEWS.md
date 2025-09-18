@@ -4,6 +4,10 @@
 
 * Add support `MASS::lda()` models for estimates but not standard errors. Thanks to @friendly for feature request #1598.
 
+Bugs:
+
+* Fix to `get_coef.betareg()` to extract `precision` parameter instead of just `phi`. This fixes a mismatch issue with names in the vcov. Thanks to @ngreifer for the report.
+
 ## 0.30.0
 
 New:
