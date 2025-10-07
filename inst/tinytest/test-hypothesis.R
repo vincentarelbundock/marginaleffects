@@ -458,3 +458,14 @@ h1 <- hypotheses(mod, hypothesis = ratio ~ sequential)
 h2 <- hypotheses(mod, hypothesis = c("b2 / b1 = 1", "b3 / b2 = 1"))
 expect_equivalent(h1$p.value, c(0.000243703399238325, 0.191786862518089))
 expect_equivalent(h2$p.value, c(0.000243703399238325, 0.191786862518089))
+
+
+# Custom functions in hypothesis formulas should capture parent environment (Issue #1608)
+# This tests that closures work correctly when passed via ~ I(custom_fun(x))
+mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
+custom_weights <- c(2, 1, 1)  # First comparison gets double weight
+custom_wmean <- function(x) weighted.mean(x, rep(custom_weights, length.out = length(x)))
+h1 <- avg_comparisons(mod, variables = list(cyl = "pairwise"), hypothesis = ~ I(mean(x)), vcov = FALSE)
+h2 <- avg_comparisons(mod, variables = list(cyl = "pairwise"), hypothesis = ~ I(custom_wmean(x)), vcov = FALSE)
+# Results should be different when different weights are used
+expect_true(abs(h1$estimate - h2$estimate) > 0.1)

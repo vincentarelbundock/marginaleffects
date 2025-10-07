@@ -217,8 +217,8 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
     if (isTRUE(form$lhs == "arbitrary_function")) {
         fun_comparison <- sprintf("function(x) %s", form$rhs)
         fun_label <- sprintf("function(x) suppressWarnings(names(%s))", form$rhs)
-        fun_comparison <- eval(parse(text = fun_comparison))
-        fun_label <- eval(parse(text = fun_label))
+        fun_comparison <- eval(parse(text = fun_comparison), envir = environment(hypothesis))
+        fun_label <- eval(parse(text = fun_label), envir = environment(hypothesis))
     } else {
         fun_label <- hypothesis_formula_list[[form$rhs]][[form$lhs]]$label
         fun_comparison <- hypothesis_formula_list[[form$rhs]][[form$lhs]]$comparison
