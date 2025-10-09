@@ -9,6 +9,10 @@ Bugs:
 * Custom functions in `hypothesis` formulas now correctly capture their parent environment, allowing them to access user-defined variables and weights. Thanks to @strengejacke for report #1608.
 * Fix to `get_coef.betareg()` to extract `precision` parameter instead of just `phi`. This fixes a mismatch issue with names in the vcov. Thanks to @ngreifer for the report.
 
+Misc:
+
+* Informative warning when reading persistent config file fails due to corruption. Thanks to @r2evans for issue #1609.
+
 ## 0.30.0
 
 New:

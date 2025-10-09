@@ -32,6 +32,8 @@ settings_init <- function(settings = NULL) {
     }
 }
 
+
+# https://stackoverflow.com/questions/79786610/solved-r-package-loading-error-onattach-failed-in-attachnamespace
 settings_read_persistent <- function() {
     dn <- tools::R_user_dir(package = "marginaleffects", which = "config")
     if (!dir.exists(dn)) dir.create(dn, recursive = TRUE)
@@ -39,10 +41,17 @@ settings_read_persistent <- function() {
     if (!file.exists(fn)) {
         config <- list()
     } else {
-        config <- readRDS(fn)
+        config <- tryCatch(readRDS(fn), error = function(err) {
+          warning("marginaleffects: loading persistence failed, this can happen when ",
+            sQuote(file.path(dn, "config.rds"), FALSE), " becomes corrupted.\n",
+            "  We suggest you delete this file and/or restore it from another location if able.\n",
+            "  The load failure: ", conditionMessage(err))
+          list()
+        })
     }
     return(invisible(config))
 }
+
 
 settings_get <- function(name) {
     # First check in-memory settings
