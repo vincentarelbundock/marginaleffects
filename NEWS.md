@@ -2,6 +2,12 @@
 
 ## Development
 
+New:
+
+* Add support for `ordinal::clmm2()` models (cumulative link mixed models).
+
+Misc:
+
 * Add support `MASS::lda()` models for estimates but not standard errors. Thanks to @friendly for feature request #1598.
 
 Bugs:

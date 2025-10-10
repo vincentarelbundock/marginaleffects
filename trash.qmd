@@ -1,0 +1,45 @@
+---
+title: "Comparing Inference Methods with clmm2 Models"
+format: gfm
+---
+
+Thanks for the nudge @carly-gray-19, I have added support for this model type. Note that the `inferences()` function can apply the same simulation-based inference as the `clarify` package, so we can compare different ways of computing uncertainty. Example:
+
+```{r}
+pkgload::load_all()
+library(ordinal)
+library(lme4)
+
+# Prepare data
+cbpp2 <- rbind(cbpp[,-(2:3)], cbpp[,-(2:3)])
+cbpp2 <- within(cbpp2, {
+    incidence <- as.factor(rep(0:1, each = nrow(cbpp)))
+    freq <- with(cbpp, c(incidence, size - incidence))
+})
+
+# Fit model
+m1 <- clmm2(
+    incidence ~ period,
+    random = herd,
+    weights = freq,
+    data = cbpp2,
+    Hess = 1
+)
+
+# Delta method (default)
+avg_predictions(m1, by = "period")
+
+# Bootstrap
+inferences(
+    avg_predictions(m1, by = "period"),
+    method = "boot",
+    R = 200
+)
+
+# Simulation (like clarify)
+inferences(
+    avg_predictions(m1, by = "period"),
+    method = "simulation",
+    R = 200
+)
+```

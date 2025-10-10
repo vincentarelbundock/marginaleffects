@@ -149,3 +149,32 @@ mfx4 <- slopes(mod, variables = "hp", slope = "dyex")
 expect_equivalent(mfx2$estimate, mfx1$estimate * (mfx1$hp / p$estimate))
 expect_equivalent(mfx3$estimate, mfx1$estimate / p$estimate)
 expect_equivalent(mfx4$estimate, mfx1$estimate * mfx1$hp)
+
+
+# clmm2: Basic tests with binomial mixed model
+requiet("lme4")
+cbpp2 <- rbind(lme4::cbpp[,-(2:3)], lme4::cbpp[,-(2:3)])
+cbpp2 <- within(cbpp2, {
+    incidence <- as.factor(rep(0:1, each = nrow(lme4::cbpp)))
+    freq <- with(lme4::cbpp, c(incidence, size - incidence))
+})
+mod_clmm2 <- clmm2(incidence ~ period, random = herd, weights = freq, data = cbpp2, Hess = 1)
+
+# Test basic functionality
+expect_predictions(mod_clmm2)
+expect_comparisons(mod_clmm2)
+expect_slopes(mod_clmm2)
+
+# Test that predictions return reasonable values
+pred <- predictions(mod_clmm2)
+expect_true(all(pred$estimate >= 0 & pred$estimate <= 1))
+expect_true(all(!is.na(pred$estimate)))
+expect_true(all(!is.na(pred$std.error)))
+
+# Test avg_predictions
+avg_pred <- avg_predictions(mod_clmm2)
+expect_inherits(avg_pred, "predictions")
+
+# Test avg_comparisons
+avg_comp <- avg_comparisons(mod_clmm2)
+expect_inherits(avg_comp, "comparisons")

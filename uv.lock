@@ -65,7 +65,7 @@ requires-dist = [{ name = "marginaleffectsad", directory = "../marginaleffectsAD
 
 [[package]]
 name = "marginaleffectsad"
-version = "0.0.3"
+version = "0.0.3.2"
 source = { directory = "../marginaleffectsAD" }
 dependencies = [
     { name = "jax" },

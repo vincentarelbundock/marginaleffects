@@ -42,6 +42,7 @@
 \alias{get_predict.mlogit}
 \alias{get_predict.Learner}
 \alias{get_predict.clm}
+\alias{get_predict.clmm2}
 \alias{get_predict.rq}
 \alias{get_predict.rms}
 \alias{get_predict.orm}
@@ -192,6 +193,8 @@ get_predict(
 \method{get_predict}{Learner}(model, newdata, type = NULL, ...)
 
 \method{get_predict}{clm}(model, newdata = insight::get_data(model), type = "prob", ...)
+
+\method{get_predict}{clmm2}(model, newdata = insight::get_data(model), type = "prob", ...)
 
 \method{get_predict}{rq}(model, newdata = insight::get_data(model), type = NULL, ...)
 

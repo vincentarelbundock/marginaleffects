@@ -59,3 +59,83 @@ sanitize_model_specific.clm <- function(model, ...) {
     }
     return(model)
 }
+
+
+#' @include set_coef.R
+#' @rdname set_coef
+#' @export
+set_coef.clmm2 <- function(model, coefs, ...) {
+    # clmm2 models store coefficients in multiple places:
+    # - model$beta: fixed effects only (named vector)
+    # - model$Alpha (also Theta, xi): threshold parameters (named vector)
+    # - model$coefficients: all parameters including thresholds, fixed effects, and random SD
+
+    # Update fixed effects (beta)
+    if (!is.null(model$beta)) {
+        idx <- match(names(model$beta), names(coefs))
+        idx <- idx[!is.na(idx)]
+        if (length(idx) > 0) {
+            model$beta[names(coefs[idx])] <- coefs[idx]
+        }
+    }
+
+    # Update threshold parameters (Alpha, Theta, xi are aliases)
+    if (!is.null(model$Alpha)) {
+        idx <- match(names(model$Alpha), names(coefs))
+        idx <- idx[!is.na(idx)]
+        if (length(idx) > 0) {
+            model$Alpha[names(coefs[idx])] <- coefs[idx]
+            model$Theta <- model$Alpha  # keep aliases in sync
+            model$xi <- model$Alpha
+        }
+    }
+
+    # Update combined coefficients vector
+    # Note: model$coefficients includes random effect SD (last element with empty name)
+    # We only update the named coefficients that match our coefs
+    if (!is.null(model$coefficients)) {
+        coef_names <- names(model$coefficients)
+        # Exclude empty names (random effect SD)
+        named_idx <- which(coef_names != "" & !is.na(coef_names))
+        for (i in named_idx) {
+            if (coef_names[i] %in% names(coefs)) {
+                model$coefficients[i] <- coefs[coef_names[i]]
+            }
+        }
+    }
+
+    return(model)
+}
+
+
+#' @include get_coef.R
+#' @rdname get_coef
+#' @export
+get_coef.clmm2 <- function(model, ...) {
+    # Use insight::get_parameters which excludes random effect parameters
+    out <- insight::get_parameters(model, component = "conditional")
+    out <- stats::setNames(out$Estimate, out$Parameter)
+    return(out)
+}
+
+
+#' @rdname get_predict
+#' @export
+get_predict.clmm2 <- function(
+    model,
+    newdata = insight::get_data(model),
+    type = "prob",
+    ...) {
+
+    # Unlike clm, clmm2 predict method requires the response variable to be present
+    # in newdata, even though the predictions don't depend on its value
+    newdata <- as.data.frame(newdata)
+
+    # clmm2 predict returns a single probability vector
+    pred <- stats::predict(model, newdata = newdata, ...)
+
+    out <- data.table::data.table(estimate = pred)
+    out <- add_rowid(out, newdata)
+
+    return(out)
+}
