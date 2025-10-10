@@ -129,25 +129,3 @@ get_coef.clmm2 <- function(model, ...) {
     out <- stats::setNames(out$Estimate, out$Parameter)
     return(out)
 }
-
-
-#' @rdname get_predict
-#' @export
-get_predict.clmm2 <- function(
-    model,
-    newdata = insight::get_data(model),
-    type = "prob",
-    ...) {
-
-    # Unlike clm, clmm2 predict method requires the response variable to be present
-    # in newdata, even though the predictions don't depend on its value
-    newdata <- as.data.frame(newdata)
-
-    # clmm2 predict returns a single probability vector
-    pred <- stats::predict(model, newdata = newdata, ...)
-
-    out <- data.table::data.table(estimate = pred)
-    out <- add_rowid(out, newdata)
-
-    return(out)
-}
