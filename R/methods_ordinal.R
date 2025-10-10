@@ -79,14 +79,26 @@ set_coef.clmm2 <- function(model, coefs, ...) {
         }
     }
 
-    # Update threshold parameters (Alpha, Theta, xi are aliases)
+    # Update threshold parameters (Alpha, Theta, xi)
     if (!is.null(model$Alpha)) {
         idx <- match(names(model$Alpha), names(coefs))
         idx <- idx[!is.na(idx)]
         if (length(idx) > 0) {
             model$Alpha[names(coefs[idx])] <- coefs[idx]
-            model$Theta <- model$Alpha  # keep aliases in sync
             model$xi <- model$Alpha
+
+            # Compute Theta from Alpha using the threshold transformation
+            # For non-flexible thresholds, Theta = Alpha %*% t(tJac)
+            if (!is.null(model$threshold) && model$threshold != "flexible") {
+                thresh_info <- ordinal:::makeThresholds(model$lev, model$threshold)
+                model$Theta <- c(model$Alpha %*% t(thresh_info$tJac))
+                names(model$Theta) <- paste(model$lev[-length(model$lev)],
+                                           model$lev[-1],
+                                           sep = "|")
+            } else {
+                # For flexible thresholds, Theta = Alpha
+                model$Theta <- model$Alpha
+            }
         }
     }
 

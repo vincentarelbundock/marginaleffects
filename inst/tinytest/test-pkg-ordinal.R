@@ -178,3 +178,48 @@ expect_inherits(avg_pred, "predictions")
 # Test avg_comparisons
 avg_comp <- avg_comparisons(mod_clmm2)
 expect_inherits(avg_comp, "comparisons")
+
+
+# clmm2: Soup data with symmetric threshold (tests set_coef fix)
+dat_soup <- get_dataset("soup", "ordinal")
+dat_soup <- subset(dat_soup, as.numeric(dat_soup$RESP) <= 24)
+# Ensure variables are factors
+dat_soup$SURENESS <- factor(dat_soup$SURENESS, ordered = TRUE)
+dat_soup$RESP <- factor(dat_soup$RESP)
+dat_soup$RESP <- dat_soup$RESP[drop = TRUE]  # Drop unused levels
+dat_soup$PROD <- factor(dat_soup$PROD)  # Ensure PROD is a factor
+mod_soup <- clmm2(SURENESS ~ PROD, random = RESP, data = dat_soup,
+                  link = "probit", Hess = TRUE, method = "ucminf",
+                  threshold = "symmetric")
+
+# Test that set_coef properly updates Theta from Alpha
+expect_predictions(mod_soup)
+expect_comparisons(mod_soup)
+expect_slopes(mod_soup)
+
+# Test predictions
+pred_soup <- predictions(mod_soup)
+expect_true(all(pred_soup$estimate >= 0 & pred_soup$estimate <= 1))
+expect_true(all(!is.na(pred_soup$estimate)))
+expect_true(all(!is.na(pred_soup$std.error)))
+
+# Test avg_predictions by group
+avg_pred_soup <- avg_predictions(mod_soup, by = "PROD")
+expect_inherits(avg_pred_soup, "predictions")
+expect_true(nrow(avg_pred_soup) == 2)  # Two levels of PROD
+
+# Test avg_slopes
+avg_slopes_soup <- avg_slopes(mod_soup)
+expect_inherits(avg_slopes_soup, "slopes")
+expect_true(nrow(avg_slopes_soup) == 1)  # One term (PROD)
+
+# Test hypotheses
+hyp_soup <- hypotheses(mod_soup)
+expect_inherits(hyp_soup, "hypotheses")
+expect_true(nrow(hyp_soup) == 4)  # 3 threshold params + 1 beta
+
+# Test different quadrature methods (with Hess=TRUE for vcov)
+mod_soup_agq <- update(mod_soup, Hess = TRUE, nAGQ = 3)
+pred_agq <- predictions(mod_soup_agq)
+expect_inherits(pred_agq, "predictions")
+expect_true(all(!is.na(pred_agq$estimate)))
