@@ -42,7 +42,7 @@ Imports:
     data.table (>= 1.16.4),
     generics,
     Formula,
-    insight (>= 1.3.0),
+    insight (>= 1.4.2),
     methods,
     rlang
 Suggests:
@@ -55,7 +55,6 @@ Suggests:
     bench,
     betareg,
     BH,
-    bife,
     biglm,
     blme,
     boot,
