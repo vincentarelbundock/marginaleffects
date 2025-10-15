@@ -62,6 +62,10 @@ plot_build <- function(
     dat$marginaleffects_term_index <- get_unique_index(dat, mfx)
     multi_variables <- isTRUE(length(unique(dat$marginaleffects_term_index)) > 1)
 
+    # Handle case where dv is a vector (e.g., binomial models with trials())
+    # Use the first element for plotting the raw data points
+    dv_plot <- if (length(dv) > 0) dv[1] else dv
+
     p <- ggplot2::ggplot(data = dat)
 
     if (
@@ -77,7 +81,7 @@ plot_build <- function(
                         alpha = points,
                         ggplot2::aes(
                             x = .data[[v_x]],
-                            y = .data[[dv]],
+                            y = .data[[dv_plot]],
                             shape = factor(.data[[v_color]])
                         )
                     )
@@ -88,7 +92,7 @@ plot_build <- function(
                         alpha = points,
                         ggplot2::aes(
                             x = .data[[v_x]],
-                            y = .data[[dv]],
+                            y = .data[[dv_plot]],
                             color = factor(.data[[v_color]])
                         )
                     )
@@ -98,16 +102,16 @@ plot_build <- function(
                 ggplot2::geom_point(
                     data = mfx@modeldata,
                     alpha = points,
-                    ggplot2::aes(x = .data[[v_x]], y = .data[[dv]])
+                    ggplot2::aes(x = .data[[v_x]], y = .data[[dv_plot]])
                 )
         }
     }
 
     if (isTRUE(rug)) {
         p <- p + ggplot2::geom_rug(data = mfx@modeldata, ggplot2::aes(x = .data[[v_x]]))
-        if (!is.null(dv)) {
+        if (!is.null(dv_plot)) {
             p <- p +
-                ggplot2::geom_rug(data = mfx@modeldata, ggplot2::aes(y = .data[[dv]]))
+                ggplot2::geom_rug(data = mfx@modeldata, ggplot2::aes(y = .data[[dv_plot]]))
         }
     }
 

@@ -756,3 +756,23 @@ expect_false(anyNA(p$estimate))
 expect_false(anyNA(p$group))
 expect_false(anyNA(p$rowid))
 
+
+# Issue #1615: binomial models with trials() syntax should plot with points
+# Tests that plot_predictions() handles multiple response variables correctly
+void <- capture.output({
+    df_bioassay <- data.frame(
+        dose = c(-0.86, -0.30, -0.05, 0.73),
+        batch_size = c(5, 5, 5, 5),
+        deaths = c(0, 1, 3, 5)
+    )
+    brms_binomial_trials <- brm(
+        deaths | trials(batch_size) ~ dose,
+        family = binomial(),
+        data = df_bioassay,
+        refresh = 0,
+        silent = 2
+    )
+})
+p <- plot_predictions(brms_binomial_trials, condition = "dose", points = 1)
+expect_snapshot_plot(p, "pkg-brms_issue1615")
+

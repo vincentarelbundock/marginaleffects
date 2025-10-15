@@ -642,7 +642,9 @@ check_variable_class <- function(newdata, variable = NULL, compare = NULL) {
     if (is.null(compare) && is.null(variable)) {
         out <- cl
     } else if (is.null(compare)) {
-        out <- if (variable %in% names(cl)) cl[variable] else NA
+        # Handle vector of variables
+        out <- cl[variable]
+        out[!names(out) %in% names(cl)] <- NA
     } else if (is.null(variable)) {
         if (isTRUE(compare == "categorical")) {
             out <- cl[
@@ -653,12 +655,14 @@ check_variable_class <- function(newdata, variable = NULL, compare = NULL) {
             out <- cl[cl %in% compare]
         }
     } else {
-        if (variable %in% names(cl)) {
+        # Handle vector of variables: use any() to check if ANY variable matches
+        vars_in_cl <- variable %in% names(cl)
+        if (any(vars_in_cl)) {
             if (isTRUE(compare == "categorical")) {
-                out <- cl[variable] %in%
-                    c("factor", "character", "logical", "strata", "cluster", "binary")
+                out <- any(cl[variable[vars_in_cl]] %in%
+                    c("factor", "character", "logical", "strata", "cluster", "binary"))
             } else {
-                out <- cl[variable] %in% compare
+                out <- any(cl[variable[vars_in_cl]] %in% compare)
             }
         } else {
             out <- FALSE
