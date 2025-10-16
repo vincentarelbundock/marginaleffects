@@ -59,3 +59,29 @@ sanitize_model_specific.clm <- function(model, ...) {
     }
     return(model)
 }
+
+
+#' @include set_coef.R
+#' @rdname set_coef
+#' @export
+set_coef.clmm2 <- function(model, coefs, ...) {
+    # clmm2 models store coefficients in multiple places:
+    # - model$beta: fixed effects only (named vector)
+    # - model$Alpha (also Theta, xi): threshold parameters (named vector)
+    # - model$coefficients: all parameters including thresholds, fixed effects, and random SD
+    idx_alpha <- seq_len(length(model$Alpha))
+    idx_beta <- seq_len(length(model$beta)) + length(model$Alpha)
+    model$coefficients[seq_len(length(coefs))] <- coefs
+    model$Alpha <- coefs[idx_alpha]
+    model$beta <- coefs[idx_beta]
+    return(model)
+}
+
+
+#' @include get_coef.R
+#' @rdname get_coef
+#' @export
+get_coef.clmm2 <- function(model, ...) {
+    out <- c(model$Alpha, model$beta)
+    return(out)
+}

@@ -64,6 +64,7 @@ nlme,lme
 nnet,multinom
 ordbetareg,ordbetareg
 ordinal,clm
+ordinal,clmm2
 partykit,glmtree
 partykit,lmtree
 phylolm,phyloglm
