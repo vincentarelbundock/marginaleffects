@@ -66,50 +66,59 @@ get_jax_by <- function(mfx, original = NULL) {
 
 jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) {
     if (isTRUE(grepl("_byG", jac_fun))) {
-        bycols <- NULL
-        # comparisons aggregates by contrast
-        # the order must match the order in marginaleffects::comparisons()
-        if (is.character(mfx@by)) {
-            bycols <- c(bycols, mfx@by)
-        }
-        if (!is.null(original)) {
-            bycols <- c(bycols, grep("^contrast|^term$|^group$", colnames(original), value = TRUE))
-        }
-
-        # Use the ordering from the final estimates object which has already been processed by get_by()
-        if (!is.null(estimates) && !is.null(original)) {
-            # Create a mapping from original data to final estimates groups
-            # The estimates object has the final groups in the correct order
-            if (length(bycols) > 0) {
-                # Get group info from estimates (final order)
-                estimates_groups <- estimates[, ..bycols, drop = FALSE]
-                estimates_combined <- apply(estimates_groups, 1, function(x) paste0(x, collapse = "_"))
-
-                # Get group info from original data (input order)
-                original_groups <- original[, ..bycols, drop = FALSE]
-                original_combined <- apply(original_groups, 1, function(x) paste0(x, collapse = "_"))
-
-                # Map original rows to estimates group indices
-                groups <- match(original_combined, estimates_combined) - 1L
-                num_groups <- length(estimates_combined)
-            } else {
-                groups <- num_groups <- NULL
-            }
-        } else {
-            # Fallback to original logic if estimates not provided
-            if (!is.null(original)) {
-                groups <- subset(original, select = bycols)
-            } else {
-                groups <- subset(mfx@newdata, select = bycols)
-            }
-            idx <- do.call(order, groups)
-            groups <- groups[idx, , drop = FALSE]
-            if (!is.null(X)) X <- X[idx, , drop = FALSE]
-            if (!is.null(X_hi)) X_hi <- X_hi[idx, , drop = FALSE]
-            if (!is.null(X_lo)) X_lo <- X_lo[idx, , drop = FALSE]
-            groups <- apply(groups, 1, function(x) paste0(x, collapse = "_"))
-            groups <- as.integer(as.factor(groups)) - 1L
+        # Check if we have the internal group ID column (for by=character case)
+        if (!is.null(original) && "marginaleffects_group_id" %in% colnames(original)) {
+            # Use the pre-assigned group IDs - they're already 1-indexed, convert to 0-indexed for Python
+            groups <- original$marginaleffects_group_id - 1L
             num_groups <- max(groups) + 1L
+            # No need to reorder X matrices - groups map each row to its group
+        } else {
+            # Original logic for other cases
+            bycols <- NULL
+            # comparisons aggregates by contrast
+            # the order must match the order in marginaleffects::comparisons()
+            if (is.character(mfx@by)) {
+                bycols <- c(bycols, mfx@by)
+            }
+            if (!is.null(original)) {
+                bycols <- c(bycols, grep("^contrast|^term$|^group$", colnames(original), value = TRUE))
+            }
+
+            # Use the ordering from the final estimates object which has already been processed by get_by()
+            if (!is.null(estimates) && !is.null(original)) {
+                # Create a mapping from original data to final estimates groups
+                # The estimates object has the final groups in the correct order
+                if (length(bycols) > 0) {
+                    # Get group info from estimates (final order)
+                    estimates_groups <- estimates[, ..bycols, drop = FALSE]
+                    estimates_combined <- apply(estimates_groups, 1, function(x) paste0(x, collapse = "_"))
+
+                    # Get group info from original data (input order)
+                    original_groups <- original[, ..bycols, drop = FALSE]
+                    original_combined <- apply(original_groups, 1, function(x) paste0(x, collapse = "_"))
+
+                    # Map original rows to estimates group indices
+                    groups <- match(original_combined, estimates_combined) - 1L
+                    num_groups <- length(estimates_combined)
+                } else {
+                    groups <- num_groups <- NULL
+                }
+            } else {
+                # Fallback to original logic if estimates not provided
+                if (!is.null(original)) {
+                    groups <- subset(original, select = bycols)
+                } else {
+                    groups <- subset(mfx@newdata, select = bycols)
+                }
+                idx <- do.call(order, groups)
+                groups <- groups[idx, , drop = FALSE]
+                if (!is.null(X)) X <- X[idx, , drop = FALSE]
+                if (!is.null(X_hi)) X_hi <- X_hi[idx, , drop = FALSE]
+                if (!is.null(X_lo)) X_lo <- X_lo[idx, , drop = FALSE]
+                groups <- apply(groups, 1, function(x) paste0(x, collapse = "_"))
+                groups <- as.integer(as.factor(groups)) - 1L
+                num_groups <- max(groups) + 1L
+            }
         }
     } else {
         groups <- num_groups <- NULL
@@ -119,98 +128,11 @@ jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) 
 }
 
 
-jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, estimates = NULL, ...) {
-    mAD <- settings_get("mAD")
-
-    if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
-        message("\nJAX is fast!")
-    }
-
-    # Check arguments not supported by any model
-    if (!isTRUE(mfx@by) && !isFALSE(mfx@by) && !is.character(mfx@by)) {
-        autodiff_warning("values of `by` other than TRUE, FALSE, or a character vector of grouping variable names.")
-        return(NULL)
-    }
-
-    if (!is.null(mfx@hypothesis)) {
-        autodiff_warning("the `hypothesis` argument")
-        return(NULL)
-    }
-
-    if (!mfx@calling_function %in% c("predictions", "comparisons")) {
-        autodiff_warning("other functions than predictions() or comparisons()")
-        return(NULL)
-    }
-
-    if (identical(mfx@calling_function, "comparisons")) {
-        if (!is.character(mfx@comparison) || !mfx@comparison %in% c("difference", "ratio")) {
-            autodiff_warning("`comparison` values other than 'difference' or 'ratio'")
-            return(NULL)
-        }
-        comparison_type <- switch(mfx@comparison,
-            difference = mAD$comparisons$ComparisonType$DIFFERENCE,
-            ratio = mAD$comparisons$ComparisonType$RATIO
-        )
-    } else {
-        comparison_type <- NULL
-    }
-
-    # Check arguments for specific models
-    autodiff_args <- get_autodiff_args(mfx@model, mfx)
-    if (is.null(autodiff_args)) {
-        return(NULL)
-    }
-
-
-    # Extract information from autodiff_args
-    jac_fun <- get_jax_by(mfx = mfx, original = original)
-    if (is.null(jac_fun)) {
-        return(NULL)
-    }
-
-    X <- attr(mfx@newdata, "marginaleffects_model_matrix")
-    X_hi <- attr(hi, "marginaleffects_model_matrix")
-    X_lo <- attr(lo, "marginaleffects_model_matrix")
-
-    if (mfx@calling_function == "predictions" && is.null(X)) {
-        return(NULL)
-    } else if (mfx@calling_function == "comparisons" && is.null(X_hi)) {
-        return(NULL)
-    }
-
-    # Use the extracted function to handle group alignment
-    group_result <- jax_align_group_J(jac_fun, mfx, original, estimates, X, X_hi, X_lo)
-    groups <- group_result$groups
-    num_groups <- group_result$num_groups
-    X <- group_result$X
-    X_hi <- group_result$X_hi
-    X_lo <- group_result$X_lo
-
-    # Get the appropriate function based on model type
-    FUN <- mAD[[autodiff_args$model_type]][[mfx@calling_function]][[jac_fun]]
-
-    args <- list(
-        FUN = FUN,
-        beta = coefs,
-        X = X,
-        X_hi = X_hi,
-        X_lo = X_lo,
-        groups = groups,
-        num_groups = num_groups,
-        comparison_type = comparison_type,
-        family_type = autodiff_args$family_type,
-        link_type = autodiff_args$link_type
-    )
-    args <- Filter(function(x) !is.null(x), args)
-    J <- do.call(eval_fun_with_numpy_arrays, args)
-    if (length(dim(J)) == 1) {
-        J <- matrix(as.vector(J), nrow = 1)
-    }
-    if (!is.null(names(coefs)) && length(coefs) == ncol(J)) {
-        colnames(J) <- names(coefs)
-    }
-    return(J)
-}
+# OBSOLETE: jax_jacobian is no longer used
+# The package now uses jax_predictions() and jax_comparisons() which compute
+# estimates + SE + jacobian in one call, or falls back to finite differences.
+# The jacobian-only path via settings_set("jacobian_function", jax_jacobian)
+# was never actually invoked in practice.
 
 
 #' Add model matrix attribute to a data frame
@@ -232,6 +154,10 @@ add_model_matrix_attribute_data <- function(mfx, data) {
 #' @noRd
 jax_predictions <- function(mfx, vcov_matrix, ...) {
     mAD <- settings_get("mAD")
+
+    if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
+        message("\nJAX is fast!")
+    }
 
     # Validate model support
     autodiff_args <- get_autodiff_args(mfx@model, mfx)
@@ -318,6 +244,10 @@ jax_predictions <- function(mfx, vcov_matrix, ...) {
 jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
     mAD <- settings_get("mAD")
 
+    if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
+        message("\nJAX is fast!")
+    }
+
     # Validate
     autodiff_args <- get_autodiff_args(mfx@model, mfx)
     if (is.null(autodiff_args)) return(NULL)
@@ -357,13 +287,11 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
         fun_name <- "comparisons"
         groups <- NULL
         num_groups <- NULL
-    } else if (isTRUE(mfx@by)) {
-        fun_name <- "comparisons_byT"
-        groups <- NULL
-        num_groups <- NULL
-    } else if (is.character(mfx@by)) {
+    } else {
+        # Both by=TRUE and by=character use comparisons_byG with grouping
+        # by=TRUE aggregates by term/contrast, by=character adds user-specified variables
         fun_name <- "comparisons_byG"
-        # Prepare group indices (includes contrast, term, etc.)
+        # Prepare group indices (includes contrast, term, and optionally user variables)
         group_result <- jax_align_group_J("jacobian_byG", mfx, original, NULL, NULL, X_hi, X_lo)
         groups <- group_result$groups
         num_groups <- group_result$num_groups
@@ -419,7 +347,7 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
 #' @param autodiff Logical flag. If `TRUE`, enables automatic differentiation
 #'   with JAX. If `FALSE` (default), disables automatic differentiation and
 #'   reverts to finite difference methods.
-#' @param install Logical flag. If `TRUE`, installs the `marginaleffectsAD`
+#' @param install Logical flag. If `TRUE`, installs the `marginaleffects`
 #'   Python package via `reticulate::py_install()`. Default is `FALSE`. This is
 #'   only necessary if you are self-managing a Python installation.
 #'
@@ -428,7 +356,7 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
 #' Automatic differentiation needs to be enabled once per session.
 #'
 #' When `autodiff = TRUE`, this function:
-#' - Imports the `marginaleffectsAD` Python package via [reticulate::py_install()]
+#' - Imports the `marginaleffects.autodiff` Python module via [reticulate::import()]
 #' - Sets the internal jacobian function to use JAX-based automatic differentiation
 #' - Provides faster and more accurate gradient computation for supported models
 #' - Falls back on the default finite difference method for unsupported models and calls.
@@ -454,8 +382,8 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
 #' `reticulate` and specify which Python executable or environment to use.
 #' `reticulate` selects a Python installation using its [Order of
 #' Discovery](https://rstudio.github.io/reticulate/articles/versions.html#order-of-discovery).
-#' As a convenience `autodiff(install=TRUE)` will install `marginaleffectsAD` in
-#' a self-managed virtual environment.
+#' As a convenience `autodiff(install=TRUE)` will install the `marginaleffects` Python
+#' package in a self-managed virtual environment.
 #'
 #' To specify an alternate Python version:
 #' ```r
@@ -495,15 +423,13 @@ autodiff <- function(autodiff = NULL, install = FALSE) {
     checkmate::assert_flag(install)
     insight::check_if_installed("reticulate")
     if (isTRUE(install)) {
-        reticulate::py_install("marginaleffectsAD")
+        reticulate::py_install("marginaleffects")
     }
     if (isFALSE(autodiff)) {
         settings_set("autodiff", FALSE)
-        settings_set("jacobian_function", NULL)
     } else if (isTRUE(autodiff)) {
-        mAD <- reticulate::import("marginaleffectsAD", delay_load = FALSE)
+        mAD <- reticulate::import("marginaleffects.autodiff", delay_load = FALSE)
         settings_set("mAD", mAD)
         settings_set("autodiff", TRUE)
-        settings_set("jacobian_function", jax_jacobian)
     }
 }

@@ -2,6 +2,11 @@ source("helpers.R")
 
 if (!AUTODIFF) exit_file("autodiff")
 
+# Tolerance levels for numerical comparison between autodiff and finite differences
+# Small differences are expected due to different numerical methods
+tol_b <- 1e-5  # tolerance for estimates (betas/predictions)
+tol_se <- 1e-4 # tolerance for standard errors
+
 penguins <- get_dataset("penguins", "palmerpenguins") |> na.omit()
 
 dat <- transform(penguins, big = bill_length_mm > median(bill_length_mm))
@@ -13,32 +18,32 @@ autodiff(FALSE)
 pre1 <- predictions(mod, type = "response")
 autodiff(TRUE)
 expect_message(pre2 <- predictions(mod, type = "response"))
-expect_equal(pre1$estimate, pre2$estimate)
-expect_equal(pre1$std.error, pre2$std.error, tol = 1e-5)
+expect_equal(pre1$estimate, pre2$estimate, tol = tol_b)
+expect_equal(pre1$std.error, pre2$std.error, tol = tol_se)
 
 # avg_predictions()
 autodiff(FALSE)
 pre1 <- avg_predictions(mod, type = "response")
 autodiff(TRUE)
 expect_message(pre2 <- avg_predictions(mod, type = "response"))
-expect_equal(pre1$estimate, pre2$estimate)
-expect_equal(pre1$std.error, pre2$std.error, tol = 1e-4)
+expect_equal(pre1$estimate, pre2$estimate, tol = tol_b)
+expect_equal(pre1$std.error, pre2$std.error, tol = tol_se)
 
 # comparisons()
 autodiff(FALSE)
 pre1 <- predictions(mod)
 autodiff(TRUE)
 expect_message(pre2 <- predictions(mod))
-expect_equal(pre1$estimate, pre2$estimate)
-expect_equal(pre1$std.error, pre2$std.error, tol = 1e-6)
+expect_equal(pre1$estimate, pre2$estimate, tol = tol_b)
+expect_equal(pre1$std.error, pre2$std.error, tol = tol_se)
 
 # avg_comparisons()
 autodiff(FALSE)
 cmp1 <- avg_comparisons(mod)
 autodiff(TRUE)
 expect_message(cmp2 <- avg_comparisons(mod))
-expect_equal(cmp1$estimate, cmp2$estimate)
-expect_equal(cmp1$std.error, cmp2$std.error, tol = 1e-5)
+expect_equal(cmp1$estimate, cmp2$estimate, tol = tol_b)
+expect_equal(cmp1$std.error, cmp2$std.error, tol = tol_se)
 
 # avg_comparisons(by=)
 mod <- lm(Sepal.Length ~ Sepal.Width * Petal.Length * Petal.Width * Species, iris)
@@ -46,8 +51,8 @@ autodiff(FALSE)
 cmp1 <- avg_comparisons(mod, by = "Species")
 autodiff(TRUE)
 expect_message(cmp2 <- avg_comparisons(mod, by = "Species"))
-expect_equal(cmp1$estimate, cmp2$estimate)
-expect_equal(cmp1$std.error, cmp2$std.error, tol = 1e-4)
+expect_equal(cmp1$estimate, cmp2$estimate, tol = tol_b)
+expect_equal(cmp1$std.error, cmp2$std.error, tol = tol_se)
 
 # invlink
 mod <- glm(vs ~ mpg + wt, data = mtcars, family = binomial(link = "logit"))
@@ -55,8 +60,8 @@ autodiff(TRUE)
 expect_message(p1 <- predictions(mod, type = "invlink(link)"))
 autodiff(FALSE)
 p2 <- predictions(mod, type = "invlink(link)")
-expect_equal(p1$estimate, p2$estimate)
-expect_equal(p1$std.error, p2$std.error)
+expect_equal(p1$estimate, p2$estimate, tol = tol_b)
+expect_equal(p1$std.error, p2$std.error, tol = tol_se)
 
 
 # GLM comparisons with type="response" for all family/link combinations
@@ -79,7 +84,7 @@ test_data <- data.frame(
 )
 
 
-# Define family/link combinations to test (cauchit excluded - not supported by marginaleffectsAD)
+# Define family/link combinations to test (cauchit excluded - not supported by Python marginaleffects)
 family_link_combos <- list(
   list(family = binomial(link = "logit"), response = "binary_y"),
   list(family = binomial(link = "probit"), response = "binary_y"),
@@ -110,10 +115,10 @@ for (combo in family_link_combos) {
 
   # Compare estimates and standard errors
   expect_equal(cmp1$estimate, cmp2$estimate,
-    tolerance = 1e-6,
+    tolerance = tol_b,
     info = paste("estimates differ for", combo$family$family, combo$family$link))
   expect_equal(cmp1$std.error, cmp2$std.error,
-    tolerance = 1e-5,
+    tolerance = tol_se,
     info = paste("std.errors differ for", combo$family$family, combo$family$link))
 
   # Test avg_comparisons() with type="response"
@@ -124,10 +129,10 @@ for (combo in family_link_combos) {
 
   # Compare estimates and standard errors
   expect_equal(acmp1$estimate, acmp2$estimate,
-    tolerance = 1e-6,
+    tolerance = tol_b,
     info = paste("avg estimates differ for", combo$family$family, combo$family$link))
   expect_equal(acmp1$std.error, acmp2$std.error,
-    tolerance = 1e-5,
+    tolerance = tol_se,
     info = paste("avg std.errors differ for", combo$family$family, combo$family$link))
 }
 

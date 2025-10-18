@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+NEVER CHANGE TESTS UNLESS I ASK YOU TO EXPLICITLY.
+
 ## Overview
 
 `marginaleffects` is an R package that provides a unified interface for computing and plotting predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, odds, etc.) for over 100 classes of statistical and machine learning models. The package supports both unit-level (conditional) and average (marginal) estimates with comprehensive uncertainty quantification.

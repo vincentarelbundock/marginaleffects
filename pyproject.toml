@@ -1,10 +1,7 @@
 [project]
-name = "marginaleffects"
+name = "marginaleffects-r"
 version = "0.1.0"
-description = "Add your description here"
+description = "Python dependencies for marginaleffects R package"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["marginaleffectsAD"]
-
-[tool.uv.sources]
-marginaleffectsAD = { path = "../marginaleffectsAD" }
+dependencies = ["marginaleffects", "jax", "numpy"]

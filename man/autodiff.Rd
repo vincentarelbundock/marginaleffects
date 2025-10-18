@@ -11,7 +11,7 @@ autodiff(autodiff = NULL, install = FALSE)
 with JAX. If \code{FALSE} (default), disables automatic differentiation and
 reverts to finite difference methods.}
 
-\item{install}{Logical flag. If \code{TRUE}, installs the \code{marginaleffectsAD}
+\item{install}{Logical flag. If \code{TRUE}, installs the \code{marginaleffects}
 Python package via \code{reticulate::py_install()}. Default is \code{FALSE}. This is
 only necessary if you are self-managing a Python installation.}
 }
@@ -29,7 +29,7 @@ Automatic differentiation needs to be enabled once per session.
 
 When \code{autodiff = TRUE}, this function:
 \itemize{
-\item Imports the \code{marginaleffectsAD} Python package via \code{\link[reticulate:py_install]{reticulate::py_install()}}
+\item Imports the \code{marginaleffects.autodiff} Python module via \code{\link[reticulate:import]{reticulate::import()}}
 \item Sets the internal jacobian function to use JAX-based automatic differentiation
 \item Provides faster and more accurate gradient computation for supported models
 \item Falls back on the default finite difference method for unsupported models and calls.
@@ -56,8 +56,8 @@ Python requirements declared via \code{reticulate::py_require()}.
 If you prefer to use a manually managed Python installation, you can direct
 \code{reticulate} and specify which Python executable or environment to use.
 \code{reticulate} selects a Python installation using its \href{https://rstudio.github.io/reticulate/articles/versions.html#order-of-discovery}{Order of Discovery}.
-As a convenience \code{autodiff(install=TRUE)} will install \code{marginaleffectsAD} in
-a self-managed virtual environment.
+As a convenience \code{autodiff(install=TRUE)} will install the \code{marginaleffects} Python
+package in a self-managed virtual environment.
 
 To specify an alternate Python version:
 

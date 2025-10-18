@@ -352,6 +352,31 @@ comparisons <- function(
         !isFALSE(vcov) &&
         isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
 
+        # Add internal group ID for robust matching with Python results
+        # This ensures we can merge results back correctly regardless of sort order
+        if (is.character(by)) {
+            bycols <- unique(c(by, "term", "contrast"))
+            bycols <- intersect(bycols, colnames(contrast_data$original))
+            if (length(bycols) > 0) {
+                # Create group IDs based on unique combinations, sorted to match finite diff output order
+                # Finite diff sorts by (term, user-specified variables, then contrast)
+                # So reorder bycols to put term first, then user variables, then contrast
+                bycols_sorted <- c("term", setdiff(bycols, c("term", "contrast")), "contrast")
+                bycols_sorted <- intersect(bycols_sorted, bycols)  # Keep only columns that exist
+                group_lookup <- unique(contrast_data$original[, bycols, with = FALSE])
+                # Sort by the reordered columns to match finite diff order
+                data.table::setorderv(group_lookup, bycols_sorted)
+                group_lookup[, marginaleffects_group_id := seq_len(.N)]
+                # Add group ID to original data
+                contrast_data$original <- merge(
+                    contrast_data$original,
+                    group_lookup,
+                    by = bycols,
+                    sort = FALSE
+                )
+            }
+        }
+
         autodiff_result <- jax_comparisons(
             mfx = mfx,
             vcov_matrix = mfx@vcov_model,
@@ -391,8 +416,25 @@ comparisons <- function(
                 bycols <- unique(c(mfx@by, "term", "contrast"))
                 bycols <- intersect(bycols, colnames(contrast_data$original))
                 if (length(bycols) > 0) {
-                    group_cols <- unique(contrast_data$original[, bycols, with = FALSE])
-                    cmp <- cbind(group_cols, cmp)
+                    # Create lookup table with group IDs, sorted to match finite diff output order
+                    # Finite diff sorts by (term, user-specified variables, then contrast)
+                    bycols_sorted <- c("term", setdiff(bycols, c("term", "contrast")), "contrast")
+                    bycols_sorted <- intersect(bycols_sorted, bycols)  # Keep only columns that exist
+                    group_lookup <- unique(contrast_data$original[, bycols, with = FALSE])
+                    data.table::setorderv(group_lookup, bycols_sorted)
+                    group_lookup[, marginaleffects_group_id := seq_len(.N)]
+
+                    # Python returns results in sorted order (by group_id which we passed)
+                    # So results are already in the correct order!
+                    cmp <- data.table::data.table(
+                        estimate = autodiff_result$estimate,
+                        std.error = autodiff_result$std.error
+                    )
+                    cmp[, marginaleffects_group_id := seq_len(.N)]
+
+                    # Merge to add back the grouping columns
+                    cmp <- merge(group_lookup, cmp, by = "marginaleffects_group_id", sort = FALSE)
+                    cmp[, marginaleffects_group_id := NULL]  # Remove internal ID
                 }
             }
         }
