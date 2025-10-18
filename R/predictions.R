@@ -441,7 +441,7 @@ predictions <- function(
     }
 
     # Confidence intervals (autodiff already has std.error)
-    if (!isFALSE(vcov) && "std.error" %in% colnames(tmp)) {
+    if (!isFALSE(vcov) && ("std.error" %in% colnames(tmp) || !is.null(mfx@draws))) {
         tmp <- get_ci(tmp, mfx)
     }
 
