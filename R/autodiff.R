@@ -43,26 +43,6 @@ get_autodiff_args.default <- function(model, mfx) {
 }
 
 
-get_jax_by <- function(mfx, original = NULL) {
-    if (isTRUE(mfx@by)) {
-        if (!is.null(original)) {
-            # comparisons() aggregates by `contrast`, `term`, etc.
-            out <- "jacobian_byG"
-        } else {
-            # predictions() gives global aggregation
-            out <- "jacobian_byT"
-        }
-    } else if (isFALSE(mfx@by)) {
-        out <- "jacobian"
-    } else if (is.character(mfx@by)) {
-        out <- "jacobian_byG"
-    } else {
-        autodiff_warning("values of `by` other than TRUE, FALSE, or a character vector of grouping variable names.")
-        out <- NULL
-    }
-    return(out)
-}
-
 
 jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) {
     if (isTRUE(grepl("_byG", jac_fun))) {
@@ -110,12 +90,6 @@ jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) 
 }
 
 
-# OBSOLETE: jax_jacobian is no longer used
-# The package now uses jax_predictions() and jax_comparisons() which compute
-# estimates + SE + jacobian in one call, or falls back to finite differences.
-# The jacobian-only path via settings_set("jacobian_function", jax_jacobian)
-# was never actually invoked in practice.
-
 
 #' Add model matrix attribute to a data frame
 #' @keywords internal
@@ -125,7 +99,6 @@ add_model_matrix_attribute_data <- function(mfx, data) {
     original_newdata <- mfx@newdata
     mfx@newdata <- data
     data_with_mm <- add_model_matrix_attribute(mfx)
-    mfx@newdata <- original_newdata
     return(data_with_mm)
 }
 
@@ -136,10 +109,6 @@ add_model_matrix_attribute_data <- function(mfx, data) {
 #' @noRd
 jax_predictions <- function(mfx, vcov_matrix, ...) {
     mAD <- settings_get("mAD")
-
-    if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
-        message("\nJAX is fast!")
-    }
 
     # Validate model support
     autodiff_args <- get_autodiff_args(mfx@model, mfx)
@@ -215,6 +184,10 @@ jax_predictions <- function(mfx, vcov_matrix, ...) {
         colnames(out$jacobian) <- names(coefs)
     }
 
+    if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
+        message("\nJAX is fast!")
+    }
+
     return(out)
 }
 
@@ -225,10 +198,6 @@ jax_predictions <- function(mfx, vcov_matrix, ...) {
 #' @noRd
 jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
     mAD <- settings_get("mAD")
-
-    if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
-        message("\nJAX is fast!")
-    }
 
     # Validate
     autodiff_args <- get_autodiff_args(mfx@model, mfx)
@@ -314,6 +283,10 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
 
     if (!is.null(names(coefs)) && ncol(out$jacobian) == length(coefs)) {
         colnames(out$jacobian) <- names(coefs)
+    }
+
+    if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
+        message("\nJAX is fast!")
     }
 
     return(out)

@@ -4,4 +4,9 @@ version = "0.1.0"
 description = "Python dependencies for marginaleffects R package"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["marginaleffects", "jax", "numpy"]
+dependencies = [
+  "marginaleffects>=0.2.0",
+  "jax>=0.8.0",
+  "numpy"
+]
+
