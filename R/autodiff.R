@@ -66,58 +66,40 @@ get_jax_by <- function(mfx, original = NULL) {
 
 jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) {
     if (isTRUE(grepl("_byG", jac_fun))) {
-        # Check if we have the internal group ID column (for by=character case)
+        # Case 1: comparisons with by=character uses pre-assigned group IDs
         if (!is.null(original) && "marginaleffects_group_id" %in% colnames(original)) {
-            # Use the pre-assigned group IDs - they're already 1-indexed, convert to 0-indexed for Python
-            groups <- original$marginaleffects_group_id - 1L
+            groups <- original$marginaleffects_group_id - 1L  # Convert to 0-indexed
             num_groups <- max(groups) + 1L
-            # No need to reorder X matrices - groups map each row to its group
         } else {
-            # Original logic for other cases
-            bycols <- NULL
-            # comparisons aggregates by contrast
-            # the order must match the order in marginaleffects::comparisons()
+            # Case 2: predictions with by=character, or comparisons with by=TRUE
+            # Need to create groups on the fly
+
+            # Determine grouping columns
             if (is.character(mfx@by)) {
-                bycols <- c(bycols, mfx@by)
-            }
-            if (!is.null(original)) {
-                bycols <- c(bycols, grep("^contrast|^term$|^group$", colnames(original), value = TRUE))
-            }
-
-            # Use the ordering from the final estimates object which has already been processed by get_by()
-            if (!is.null(estimates) && !is.null(original)) {
-                # Create a mapping from original data to final estimates groups
-                # The estimates object has the final groups in the correct order
-                if (length(bycols) > 0) {
-                    # Get group info from estimates (final order)
-                    estimates_groups <- estimates[, ..bycols, drop = FALSE]
-                    estimates_combined <- apply(estimates_groups, 1, function(x) paste0(x, collapse = "_"))
-
-                    # Get group info from original data (input order)
-                    original_groups <- original[, ..bycols, drop = FALSE]
-                    original_combined <- apply(original_groups, 1, function(x) paste0(x, collapse = "_"))
-
-                    # Map original rows to estimates group indices
-                    groups <- match(original_combined, estimates_combined) - 1L
-                    num_groups <- length(estimates_combined)
-                } else {
-                    groups <- num_groups <- NULL
-                }
+                # predictions with by=character: use user-specified columns from newdata
+                bycols <- mfx@by
+                groups_data <- subset(mfx@newdata, select = bycols)
+            } else if (!is.null(original)) {
+                # comparisons with by=TRUE: use term/contrast from original
+                bycols <- intersect(c("term", "contrast"), colnames(original))
+                groups_data <- subset(original, select = bycols)
             } else {
-                # Fallback to original logic if estimates not provided
-                if (!is.null(original)) {
-                    groups <- subset(original, select = bycols)
-                } else {
-                    groups <- subset(mfx@newdata, select = bycols)
-                }
-                idx <- do.call(order, groups)
-                groups <- groups[idx, , drop = FALSE]
+                bycols <- NULL
+            }
+
+            if (length(bycols) > 0) {
+                # Sort data by group columns to ensure consistent ordering
+                idx <- do.call(order, groups_data)
+                groups_data <- groups_data[idx, , drop = FALSE]
                 if (!is.null(X)) X <- X[idx, , drop = FALSE]
                 if (!is.null(X_hi)) X_hi <- X_hi[idx, , drop = FALSE]
                 if (!is.null(X_lo)) X_lo <- X_lo[idx, , drop = FALSE]
-                groups <- apply(groups, 1, function(x) paste0(x, collapse = "_"))
-                groups <- as.integer(as.factor(groups)) - 1L
+                # Create group IDs
+                groups_combined <- apply(groups_data, 1, function(x) paste0(x, collapse = "_"))
+                groups <- as.integer(as.factor(groups_combined)) - 1L
                 num_groups <- max(groups) + 1L
+            } else {
+                groups <- num_groups <- NULL
             }
         }
     } else {
