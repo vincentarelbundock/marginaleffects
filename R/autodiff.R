@@ -4,7 +4,6 @@ utils::globalVariables("mAD")
 eval_fun_with_numpy_arrays <- function(FUN, ...) {
     dots <- list(...)
     # Handle special cases for JAX indexing
-    mAD <- settings_get("mAD")
     for (i in seq_along(dots)) {
         if (names(dots)[i] %in% c("num_groups", "link_type", "family_type", "comparison_type")) {
             # Keep num_groups, link_type, family_type as is (integer scalars)
@@ -12,12 +11,14 @@ eval_fun_with_numpy_arrays <- function(FUN, ...) {
             # Convert groups to integer array explicitly
             dots[[i]] <- reticulate::np_array(dots[[i]], dtype = "int32")
         } else {
-            dots[[i]] <- mAD$array(dots[[i]])
+            # Convert to numpy array
+            dots[[i]] <- reticulate::np_array(dots[[i]])
         }
     }
-    J <- do.call(FUN, dots)
-    J <- mAD$array(J)
-    return(J)
+    # Call Python function - use reticulate's $ operator which handles Python callables
+    # Build the call dynamically
+    result <- rlang::exec(FUN, !!!dots)
+    return(result)
 }
 
 
@@ -209,6 +210,203 @@ jax_jacobian <- function(coefs, mfx, hi = NULL, lo = NULL, original = NULL, esti
         colnames(J) <- names(coefs)
     }
     return(J)
+}
+
+
+#' Add model matrix attribute to a data frame
+#' @keywords internal
+#' @noRd
+add_model_matrix_attribute_data <- function(mfx, data) {
+    # Temporarily set as newdata to get model matrix
+    original_newdata <- mfx@newdata
+    mfx@newdata <- data
+    data_with_mm <- add_model_matrix_attribute(mfx)
+    mfx@newdata <- original_newdata
+    return(data_with_mm)
+}
+
+
+#' Compute predictions with JAX autodiff (estimates, SE, jacobian)
+#' @return List with estimate, std.error, jacobian, or NULL if unsupported
+#' @keywords internal
+#' @noRd
+jax_predictions <- function(mfx, vcov_matrix, ...) {
+    mAD <- settings_get("mAD")
+
+    # Validate model support
+    autodiff_args <- get_autodiff_args(mfx@model, mfx)
+    if (is.null(autodiff_args)) return(NULL)
+
+    # Check for unsupported features
+    if (!is.null(mfx@hypothesis)) {
+        autodiff_warning("the `hypothesis` argument")
+        return(NULL)
+    }
+
+    if (!isTRUE(mfx@by) && !isFALSE(mfx@by) && !is.character(mfx@by)) {
+        autodiff_warning("values of `by` other than TRUE, FALSE, or a character vector")
+        return(NULL)
+    }
+
+    # Get model matrix
+    X <- attr(mfx@newdata, "marginaleffects_model_matrix")
+    if (is.null(X)) return(NULL)
+
+    # Get coefficients
+    coefs <- get_coef(mfx@model, ...)
+
+    # Determine aggregation function
+    if (isFALSE(mfx@by)) {
+        fun_name <- "predictions"
+        groups <- NULL
+        num_groups <- NULL
+    } else if (isTRUE(mfx@by)) {
+        fun_name <- "predictions_byT"
+        groups <- NULL
+        num_groups <- NULL
+    } else if (is.character(mfx@by)) {
+        fun_name <- "predictions_byG"
+        # Prepare group indices
+        group_result <- jax_align_group_J("jacobian_byG", mfx, NULL, NULL, X, NULL, NULL)
+        groups <- group_result$groups
+        num_groups <- group_result$num_groups
+        X <- group_result$X
+    }
+
+    # Select autodiff function
+    # e.g., mAD$linear$predictions is a module containing predictions(), predictions_byT(), predictions_byG()
+    # The base module name (predictions or comparisons)
+    base_module_name <- if (grepl("predictions", fun_name)) "predictions" else "comparisons"
+    module <- mAD[[autodiff_args$model_type]][[base_module_name]]
+    FUN <- module[[fun_name]]  # e.g., module$predictions or module$predictions_byT
+
+    # Build arguments (without FUN)
+    args <- list(
+        beta = coefs,
+        X = X,
+        vcov = vcov_matrix,
+        groups = groups,
+        num_groups = num_groups,
+        family_type = autodiff_args$family_type,
+        link_type = autodiff_args$link_type
+    )
+    args <- Filter(function(x) !is.null(x), args)
+
+    # Call Python function using eval_fun_with_numpy_arrays
+    result <- do.call(eval_fun_with_numpy_arrays, c(list(FUN = FUN), args))
+
+    # Convert to R objects
+    out <- list(
+        estimate = as.vector(result[["estimate"]]),
+        std.error = as.vector(result[["std_error"]]),
+        jacobian = as.matrix(result[["jacobian"]])
+    )
+
+    # Add column names to jacobian
+    if (!is.null(names(coefs)) && ncol(out$jacobian) == length(coefs)) {
+        colnames(out$jacobian) <- names(coefs)
+    }
+
+    return(out)
+}
+
+
+#' Compute comparisons with JAX autodiff (estimates, SE, jacobian)
+#' @return List with estimate, std.error, jacobian, or NULL if unsupported
+#' @keywords internal
+#' @noRd
+jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
+    mAD <- settings_get("mAD")
+
+    # Validate
+    autodiff_args <- get_autodiff_args(mfx@model, mfx)
+    if (is.null(autodiff_args)) return(NULL)
+
+    # Check unsupported features
+    if (!is.null(mfx@hypothesis)) {
+        autodiff_warning("the `hypothesis` argument")
+        return(NULL)
+    }
+
+    if (!is.character(mfx@comparison) || !mfx@comparison %in% c("difference", "ratio")) {
+        autodiff_warning(sprintf("`comparison='%s'` (only 'difference' and 'ratio' supported)", mfx@comparison))
+        return(NULL)
+    }
+
+    if (!isTRUE(mfx@by) && !isFALSE(mfx@by) && !is.character(mfx@by)) {
+        autodiff_warning("values of `by` other than TRUE, FALSE, or a character vector")
+        return(NULL)
+    }
+
+    # Get model matrices
+    X_hi <- attr(hi, "marginaleffects_model_matrix")
+    X_lo <- attr(lo, "marginaleffects_model_matrix")
+    if (is.null(X_hi) || is.null(X_lo)) return(NULL)
+
+    # Get coefficients
+    coefs <- get_coef(mfx@model, ...)
+
+    # Map comparison type
+    comparison_type <- switch(mfx@comparison,
+        difference = mAD$comparisons$ComparisonType$DIFFERENCE,
+        ratio = mAD$comparisons$ComparisonType$RATIO
+    )
+
+    # Determine aggregation function
+    if (isFALSE(mfx@by)) {
+        fun_name <- "comparisons"
+        groups <- NULL
+        num_groups <- NULL
+    } else if (isTRUE(mfx@by)) {
+        fun_name <- "comparisons_byT"
+        groups <- NULL
+        num_groups <- NULL
+    } else if (is.character(mfx@by)) {
+        fun_name <- "comparisons_byG"
+        # Prepare group indices (includes contrast, term, etc.)
+        group_result <- jax_align_group_J("jacobian_byG", mfx, original, NULL, NULL, X_hi, X_lo)
+        groups <- group_result$groups
+        num_groups <- group_result$num_groups
+        X_hi <- group_result$X_hi
+        X_lo <- group_result$X_lo
+    }
+
+    # Select autodiff function
+    # e.g., mAD$linear$comparisons is a module containing comparisons(), comparisons_byT(), comparisons_byG()
+    # The base module name (predictions or comparisons)
+    base_module_name <- if (grepl("predictions", fun_name)) "predictions" else "comparisons"
+    module <- mAD[[autodiff_args$model_type]][[base_module_name]]
+    FUN <- module[[fun_name]]  # e.g., module$comparisons or module$comparisons_byT
+
+    # Build arguments (without FUN)
+    args <- list(
+        beta = coefs,
+        X_hi = X_hi,
+        X_lo = X_lo,
+        vcov = vcov_matrix,
+        comparison_type = comparison_type,
+        groups = groups,
+        num_groups = num_groups,
+        family_type = autodiff_args$family_type,
+        link_type = autodiff_args$link_type
+    )
+    args <- Filter(function(x) !is.null(x), args)
+
+    # Call Python function using eval_fun_with_numpy_arrays
+    result <- do.call(eval_fun_with_numpy_arrays, c(list(FUN = FUN), args))
+
+    # Convert to R
+    out <- list(
+        estimate = as.vector(result[["estimate"]]),
+        std.error = as.vector(result[["std_error"]]),
+        jacobian = as.matrix(result[["jacobian"]])
+    )
+
+    if (!is.null(names(coefs)) && ncol(out$jacobian) == length(coefs)) {
+        colnames(out$jacobian) <- names(coefs)
+    }
+
+    return(out)
 }
 
 

@@ -342,59 +342,123 @@ comparisons <- function(
     args <- utils::modifyList(args, dots)
     contrast_data <- do.call("get_comparisons_data", args)
 
-    args <- list(
-        mfx = mfx,
-        variables = predictors,
-        type = mfx@type,
-        original = contrast_data[["original"]],
-        hi = contrast_data[["hi"]],
-        lo = contrast_data[["lo"]],
-        by = by,
-        cross = cross,
-        hypothesis = mfx@hypothesis
-    )
-    args <- utils::modifyList(args, dots)
-    cmp <- do.call("get_comparisons", args)
+    # Add model matrices to hi/lo data
+    contrast_data$hi <- add_model_matrix_attribute_data(mfx, contrast_data$hi)
+    contrast_data$lo <- add_model_matrix_attribute_data(mfx, contrast_data$lo)
 
-    # hypothesis formula names are attached in by() in get_predictions()
-    mfx@variable_names_by <- unique(c(
-        mfx@variable_names_by, 
-        attr(cmp, "hypothesis_function_by")))
-
-    # bayesian posterior
-    mfx@draws <- attr(cmp, "posterior_draws")
-
-    # standard errors via delta method
-    if (is.null(mfx@draws) && 
-        !isFALSE(vcov) && 
+    # Try autodiff early exit
+    autodiff_result <- NULL
+    if (isTRUE(settings_get("autodiff")) &&
+        !isFALSE(vcov) &&
         isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
 
-        idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
-        idx <- cmp[, (idx), drop = FALSE]
-        fun <- function(...) {
-            get_comparisons(..., verbose = FALSE)$estimate
-        }
-        args <- list(
+        autodiff_result <- jax_comparisons(
             mfx = mfx,
-            model_perturbed = mfx@model,
-            vcov = mfx@vcov_model,
-            type = mfx@type,
-            FUN = fun,
-            index = idx,
-            variables = predictors,
-            hypothesis = mfx@hypothesis,
+            vcov_matrix = mfx@vcov_model,
             hi = contrast_data$hi,
             lo = contrast_data$lo,
             original = contrast_data$original,
-            estimates = cmp,
-            numderiv = numderiv
+            ...
+        )
+    }
+
+    if (!is.null(autodiff_result)) {
+        # SUCCESS: Use autodiff results and skip computation pipeline
+
+        # Build result data.frame
+        if (isFALSE(mfx@by)) {
+            # Row-level results - merge with original data
+            cmp <- data.table::copy(contrast_data$original)
+            cmp[, estimate := autodiff_result$estimate]
+            cmp[, std.error := autodiff_result$std.error]
+        } else {
+            # Aggregated results
+            cmp <- data.table::data.table(
+                estimate = autodiff_result$estimate,
+                std.error = autodiff_result$std.error
+            )
+
+            # Add grouping columns
+            if (isTRUE(mfx@by)) {
+                # by=TRUE: aggregate by term/contrast
+                bycols <- intersect(c("term", "contrast"), colnames(contrast_data$original))
+                if (length(bycols) > 0) {
+                    group_cols <- unique(contrast_data$original[, bycols, with = FALSE])
+                    cmp <- cbind(group_cols, cmp)
+                }
+            } else if (is.character(mfx@by)) {
+                # by=character: aggregate by user-specified + term/contrast
+                bycols <- unique(c(mfx@by, "term", "contrast"))
+                bycols <- intersect(bycols, colnames(contrast_data$original))
+                if (length(bycols) > 0) {
+                    group_cols <- unique(contrast_data$original[, bycols, with = FALSE])
+                    cmp <- cbind(group_cols, cmp)
+                }
+            }
+        }
+
+        # Store jacobian
+        mfx@jacobian <- autodiff_result$jacobian
+
+    } else {
+        # FALLBACK: Use standard computation pipeline
+
+        args <- list(
+            mfx = mfx,
+            variables = predictors,
+            type = mfx@type,
+            original = contrast_data[["original"]],
+            hi = contrast_data[["hi"]],
+            lo = contrast_data[["lo"]],
+            by = by,
+            cross = cross,
+            hypothesis = mfx@hypothesis
         )
         args <- utils::modifyList(args, dots)
-        se <- do.call("get_se_delta", args)
-        mfx@jacobian <- attr(se, "jacobian")
-        cmp$std.error <- as.vector(as.numeric(se)) # drop attributes
-        mfx@draws <- NULL
+        cmp <- do.call("get_comparisons", args)
+
+        # hypothesis formula names are attached in by() in get_predictions()
+        mfx@variable_names_by <- unique(c(
+            mfx@variable_names_by,
+            attr(cmp, "hypothesis_function_by")))
+
+        # bayesian posterior
+        mfx@draws <- attr(cmp, "posterior_draws")
+
+        # standard errors via delta method
+        if (is.null(mfx@draws) &&
+            !isFALSE(vcov) &&
+            isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+
+            idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
+            idx <- cmp[, (idx), drop = FALSE]
+            fun <- function(...) {
+                get_comparisons(..., verbose = FALSE)$estimate
+            }
+            args <- list(
+                mfx = mfx,
+                model_perturbed = mfx@model,
+                vcov = mfx@vcov_model,
+                type = mfx@type,
+                FUN = fun,
+                index = idx,
+                variables = predictors,
+                hypothesis = mfx@hypothesis,
+                hi = contrast_data$hi,
+                lo = contrast_data$lo,
+                original = contrast_data$original,
+                estimates = cmp,
+                numderiv = numderiv
+            )
+            args <- utils::modifyList(args, dots)
+            se <- do.call("get_se_delta", args)
+            mfx@jacobian <- attr(se, "jacobian")
+            cmp$std.error <- as.vector(as.numeric(se)) # drop attributes
+            mfx@draws <- NULL
+        }
     }
+
+    # Common path for both autodiff and fallback
 
     # merge original data back in
     if (isFALSE(by) && "rowid" %in% colnames(cmp)) {
