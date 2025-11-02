@@ -188,10 +188,18 @@ jax_predictions <- function(mfx, vcov_matrix, ...) {
     result <- do.call(eval_fun_with_numpy_arrays, c(list(FUN = FUN), args))
 
     # Convert to R objects
+    J <- as.matrix(result[["jacobian"]])
+
+    # Ensure jacobian is (n_predictions x n_coefs), transpose if needed
+    # Only transpose if we have (n_coefs x 1) instead of (1 x n_coefs)
+    if (nrow(J) == length(coefs) && ncol(J) == 1) {
+        J <- t(J)
+    }
+
     out <- list(
         estimate = as.vector(result[["estimate"]]),
         std.error = as.vector(result[["std_error"]]),
-        jacobian = as.matrix(result[["jacobian"]])
+        jacobian = J
     )
 
     # Add column names to jacobian
@@ -308,10 +316,18 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
     result <- do.call(eval_fun_with_numpy_arrays, c(list(FUN = FUN), args))
 
     # Convert to R
+    J <- as.matrix(result[["jacobian"]])
+
+    # Ensure jacobian is (n_comparisons x n_coefs), transpose if needed
+    # Only transpose if we have (n_coefs x 1) instead of (1 x n_coefs)
+    if (nrow(J) == length(coefs) && ncol(J) == 1) {
+        J <- t(J)
+    }
+
     out <- list(
         estimate = as.vector(result[["estimate"]]),
         std.error = as.vector(result[["std_error"]]),
-        jacobian = as.matrix(result[["jacobian"]])
+        jacobian = J
     )
 
     if (!is.null(names(coefs)) && ncol(out$jacobian) == length(coefs)) {

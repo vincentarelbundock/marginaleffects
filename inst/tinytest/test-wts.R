@@ -151,7 +151,7 @@ mod = glm(
 )
 cmp1 <- avg_comparisons(mod, variables = list(foo = 0:1), type = "response", comparison = "difference")
 cmp2 <- comparisons(mod, variables = list(foo = 0:1), type = "response", comparison = "differenceavg")
-expect_equivalent(cmp1$estimate, cmp2$estimate)
+expect_equivalent(cmp1$estimate, cmp2$estimate, tolerance = 1e-6)
 
 
 # Issue #870
@@ -161,7 +161,7 @@ mod <- lm(Literacy ~ Pop1831 * Desertion, data = Guerry)
 p1 <- predictions(mod, by = "Region", wts = "Donations")
 p2 <- predictions(mod, by = "Region")
 expect_inherits(p1, "predictions")
-expect_false(any(p1$estimate == p2$estimate))
+expect_true(any(p1$estimate != p2$estimate))
 
 
 

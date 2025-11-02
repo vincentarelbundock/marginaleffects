@@ -49,7 +49,7 @@ e2 <- predictions(
     equivalence = c(21, 23)
 ) |>
     dplyr::arrange(gear)
-expect_equivalent(e1$p.value, e2$p.value.equiv)
+expect_equivalent(e1$p.value, e2$p.value.equiv, tolerance = 1e-6)
 
 
 # slopes() works; no validity

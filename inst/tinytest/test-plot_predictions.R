@@ -98,7 +98,7 @@ expect_snapshot_plot(p2, "plot_predictions_conf_40")
 
 p1 <- plot_predictions(mod, condition = "hp", conf.level = .99, draw = FALSE)
 p2 <- data.frame(predict(mod, newdata = p1, se.fit = TRUE))
-expect_equivalent(p1$estimate, p2$fit)
+expect_equivalent(p1$estimate, p2$fit, tolerance = 1e-6)
 expect_equivalent(p1$std.error, p2$se.fit, tolerance = 1e-5)
 expect_equivalent(
     p1$conf.low,

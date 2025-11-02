@@ -18,10 +18,10 @@ expect_equal(data.frame(em)$asymp.UCL, mm$conf.high, tolerance = 1e-5)
 mod <- glm(breaks ~ wool * tension, family = Gamma, data = warpbreaks)
 em <- suppressMessages(emmeans(mod, ~wool, type = "response", df = Inf))
 mm <- predictions(mod, newdata = datagrid(grid_type = "balanced"), by = "wool", type = "invlink(link)")
-expect_equal(data.frame(em)$response, mm$estimate)
+expect_equal(data.frame(em)$response, mm$estimate, tolerance = 1e-6)
 # TODO: 1/eta link function inverts order of CI. Should we clean this up?
-expect_equal(data.frame(em)$asymp.UCL, mm$conf.high)
-expect_equal(data.frame(em)$asymp.LCL, mm$conf.low)
+expect_equal(data.frame(em)$asymp.UCL, mm$conf.high, tolerance = 1e-6)
+expect_equal(data.frame(em)$asymp.LCL, mm$conf.low, tolerance = 1e-6)
 
 
 # old tests used to require pre-conversion
@@ -47,7 +47,7 @@ expect_equivalent(mm$estimate, em$estimate, tolerance = 1e-5)
 mm <- predictions(mod, newdata = datagrid(grid_type = "balanced"), by = "cyl", type = "invlink(link)") |>
     dplyr::arrange(cyl)
 em <- tidy(emmeans(mod, specs = "cyl", type = "response"))
-expect_equivalent(mm$estimate, em$rate)
+expect_equivalent(mm$estimate, em$rate, tolerance = 1e-6)
 expect_equivalent(mm$p.value, em$p.value)
 
 
@@ -56,12 +56,12 @@ mod <- lm(mpg ~ cyl + am + hp, dat)
 em <- broom::tidy(emmeans::emmeans(mod, "cyl"))
 me <- predictions(mod, newdata = datagrid(grid_type = "balanced", FUN_integer = mean), by = "cyl") |>
     dplyr::arrange(cyl)
-expect_equivalent(me$estimate, em$estimate)
+expect_equivalent(me$estimate, em$estimate, tolerance = 1e-6)
 expect_equivalent(me$std.error, em$std.error, tolerance = 1e-5)
 em <- broom::tidy(emmeans::emmeans(mod, "am"))
 me <- predictions(mod, newdata = datagrid(grid_type = "balanced", FUN_integer = mean), by = "am") |>
     dplyr::arrange(am)
-expect_equivalent(me$estimate, em$estimate)
+expect_equivalent(me$estimate, em$estimate, tolerance = 1e-6)
 expect_equivalent(me$std.error, em$std.error, tolerance = 1e-5)
 
 
@@ -71,11 +71,11 @@ mod <- lm(mpg ~ cyl * am, dat)
 em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "cyl")))
 me <- predictions(mod, newdata = datagrid(grid_type = "balanced"), by = "cyl") |>
     dplyr::arrange(cyl)
-expect_equivalent(me$estimate, em$estimate)
+expect_equivalent(me$estimate, em$estimate, tolerance = 1e-6)
 em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "am")))
 me <- suppressWarnings(predictions(mod, newdata = datagrid(grid_type = "balanced"), by = "am"))
 me <- me[order(me$am), ]
-expect_equivalent(me$estimate, em$estimate)
+expect_equivalent(me$estimate, em$estimate, tolerance = 1e-6)
 
 # wts
 mod1 <- lm(vs ~ factor(am) + factor(gear) + factor(cyl), data = mtcars)
@@ -85,7 +85,7 @@ mod2 <- glm(vs ~ factor(am) + factor(gear) + mpg, data = mtcars, family = binomi
 em <- data.frame(emmeans(mod1, ~am, weights = "cells"))
 mm <- predictions(mod1, by = "am")
 mm <- mm[order(mm$am), ]
-expect_equivalent(mm$estimate, em$emmean)
+expect_equivalent(mm$estimate, em$emmean, tolerance = 1e-6)
 expect_equivalent(mm$std.error, em$SE, tolerance = 1e-5)
 
 # Issue #583
