@@ -334,6 +334,8 @@ predictions <- function(
             if ("rowidcf" %in% colnames(mfx@newdata)) {
                 tmp[["rowidcf"]] <- mfx@newdata[["rowidcf"]]
             }
+            # Unpad: remove padding rows added for missing factor levels
+            tmp <- unpad(tmp, draws = NULL)$out
         } else {
             # Aggregated results (by=TRUE or by=character)
             tmp <- data.frame(
@@ -346,7 +348,11 @@ predictions <- function(
             if (is.character(mfx@by)) {
                 # Extract unique group combinations
                 bycols <- mfx@by
-                group_data <- unique(mfx@newdata[, bycols, drop = FALSE])
+                if (inherits(mfx@newdata, "data.table")) {
+                    group_data <- unique(mfx@newdata[, ..bycols])
+                } else {
+                    group_data <- unique(mfx@newdata[, bycols, drop = FALSE])
+                }
                 tmp <- cbind(group_data, tmp)
             }
         }

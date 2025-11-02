@@ -58,7 +58,11 @@ jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) 
             if (is.character(mfx@by)) {
                 # predictions with by=character: use user-specified columns from newdata
                 bycols <- mfx@by
-                groups_data <- subset(mfx@newdata, select = bycols)
+                if (inherits(mfx@newdata, "data.table")) {
+                    groups_data <- mfx@newdata[, ..bycols]
+                } else {
+                    groups_data <- mfx@newdata[, bycols, drop = FALSE]
+                }
             } else if (!is.null(original)) {
                 # comparisons with by=TRUE: use term/contrast from original
                 bycols <- intersect(c("term", "contrast"), colnames(original))
@@ -132,6 +136,12 @@ jax_predictions <- function(mfx, vcov_matrix, ...) {
     # Get coefficients
     coefs <- get_coef(mfx@model, ...)
 
+    # Check for NA coefficients (e.g., from aliased terms)
+    if (anyNA(coefs)) {
+        autodiff_warning("models with NA coefficients (aliased terms)")
+        return(NULL)
+    }
+
     # Determine aggregation function
     if (isFALSE(mfx@by)) {
         fun_name <- "predictions"
@@ -148,6 +158,11 @@ jax_predictions <- function(mfx, vcov_matrix, ...) {
         groups <- group_result$groups
         num_groups <- group_result$num_groups
         X <- group_result$X
+
+        # If groups couldn't be created, fall back to finite differences
+        if (is.null(groups) || is.null(num_groups)) {
+            return(NULL)
+        }
     }
 
     # Select autodiff function
@@ -210,7 +225,14 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
     }
 
     if (!is.character(mfx@comparison) || !mfx@comparison %in% c("difference", "ratio")) {
-        autodiff_warning(sprintf("`comparison='%s'` (only 'difference' and 'ratio' supported)", mfx@comparison))
+        comp_str <- if (is.character(mfx@comparison)) mfx@comparison else "custom function"
+        autodiff_warning(sprintf("`comparison='%s'` (only 'difference' and 'ratio' supported)", comp_str))
+        return(NULL)
+    }
+
+    # Ratio comparisons with by=TRUE compute ratio-then-average instead of average-then-ratio
+    if (isTRUE(mfx@by) && mfx@comparison == "ratio") {
+        autodiff_warning("`comparison='ratio'` with `by=TRUE` (averaging order differs from finite differences)")
         return(NULL)
     }
 
@@ -226,6 +248,12 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
 
     # Get coefficients
     coefs <- get_coef(mfx@model, ...)
+
+    # Check for NA coefficients (e.g., from aliased terms)
+    if (anyNA(coefs)) {
+        autodiff_warning("models with NA coefficients (aliased terms)")
+        return(NULL)
+    }
 
     # Map comparison type
     comparison_type <- switch(mfx@comparison,
@@ -248,6 +276,11 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
         num_groups <- group_result$num_groups
         X_hi <- group_result$X_hi
         X_lo <- group_result$X_lo
+
+        # If groups couldn't be created, fall back to finite differences
+        if (is.null(groups) || is.null(num_groups)) {
+            return(NULL)
+        }
     }
 
     # Select autodiff function
