@@ -57,7 +57,7 @@ get_ci_internal <- function(
         }
     }
 
-    p_overwrite <- !"p.value" %in% colnames(x) || hypothesis_null != 0 || hypothesis_direction != "="
+    p_overwrite <- !"p.value" %in% colnames(x) || hypothesis_null != 0 || any(hypothesis_direction != "=")
     z_overwrite <- !"statistic" %in% colnames(x) || hypothesis_null != 0 || p_overwrite
     ci_overwrite <- !"conf.low" %in% colnames(x) && "std.error" %in% colnames(x)
 
@@ -70,12 +70,33 @@ get_ci_internal <- function(
             }
         }
         x[["statistic"]] <- (x[["estimate"]] - hypothesis_null) / x[["std.error"]]
-        if (hypothesis_direction == "=") {
-            x[["p.value"]] <- 2 * cdf(-abs(x$statistic))
-        } else if (hypothesis_direction == "<=") {
-            x[["p.value"]] <- 1 - cdf(x$statistic)
-        } else if (hypothesis_direction == ">=") {
-            x[["p.value"]] <- cdf(x$statistic)
+
+        # Handle vectorized hypothesis_direction
+        if (length(hypothesis_direction) == 1) {
+            # Single direction: apply to all rows
+            if (hypothesis_direction == "=") {
+                x[["p.value"]] <- 2 * cdf(-abs(x$statistic))
+            } else if (hypothesis_direction == "<=") {
+                x[["p.value"]] <- 1 - cdf(x$statistic)
+            } else if (hypothesis_direction == ">=") {
+                x[["p.value"]] <- cdf(x$statistic)
+            }
+        } else {
+            # Multiple directions: apply row-wise
+            if (length(hypothesis_direction) != nrow(x)) {
+                stop_sprintf("Length of hypothesis_direction (%s) must equal number of rows (%s)",
+                           length(hypothesis_direction), nrow(x))
+            }
+            x[["p.value"]] <- numeric(nrow(x))
+            if (any(hypothesis_direction == "=")) {
+                x[["p.value"]][hypothesis_direction == "="] <- 2 * cdf(-abs(x$statistic))[hypothesis_direction == "="]
+            }
+            if (any(hypothesis_direction == "<=")) {
+                x[["p.value"]][hypothesis_direction == "<="] <- (1 - cdf(x$statistic))[hypothesis_direction == "<="]
+            }
+            if (any(hypothesis_direction == ">=")) {
+                x[["p.value"]][hypothesis_direction == ">="] <- cdf(x$statistic)[hypothesis_direction == ">="]
+            }
         }
     }
 

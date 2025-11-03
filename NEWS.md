@@ -6,6 +6,7 @@
 
 Bugs:
 
+* `hypotheses()` with multiple one-sided tests (e.g., `c("b1<=0", "b2<=0")`) incorrectly computed two-sided p-values instead of one-sided p-values. This occurred because `isTRUE(grepl("<=", vector))` returns `FALSE` when `grepl()` returns a vector of logical values. The bug is now fixed by handling vectorized hypothesis directions. Thanks to @raffaem for report #1624.
 * `plot_predictions(points=1)` errors with `y|trials(n)~` formulas. Thanks to @avehtari for report #1615.
 * Custom functions in `hypothesis` formulas now correctly capture their parent environment, allowing them to access user-defined variables and weights. Thanks to @strengejacke for report #1608.
 * Fix to `get_coef.betareg()` to extract `precision` parameter instead of just `phi`. This fixes a mismatch issue with names in the vcov. Thanks to @ngreifer for the report.

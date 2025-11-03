@@ -236,3 +236,20 @@ h <- hypotheses(
     hypothesis = "median = mean"
 )
 expect_inherits(h, "hypotheses")
+
+
+# Issue #1624: one-sided p-values should be consistent when testing hypotheses
+# together vs separately
+mod <- lm(Infant.Mortality ~ ., data = swiss)
+h1 <- hypotheses(mod, "b1<=0", df = mod$df)
+h2 <- hypotheses(mod, c("b1<=0", "b2<=0"), df = mod$df)
+h3 <- hypotheses(mod, "b2<=0", df = mod$df)
+# p-value for b1<=0 should be the same whether tested alone or with b2
+expect_equal(h1$p.value[1], h2$p.value[1], tolerance = 1e-6)
+# p-value for b2<=0 should be the same whether tested alone or with b1
+expect_equal(h3$p.value[1], h2$p.value[2], tolerance = 1e-6)
+# Test mixed operators work correctly
+h4 <- hypotheses(mod, c("b1<=0", "b2>=0"), df = mod$df)
+expect_equal(h1$p.value[1], h4$p.value[1], tolerance = 1e-6)
+# b2>=0 should give the complement p-value of b2<=0
+expect_equal(h3$p.value[1], 1 - h4$p.value[2], tolerance = 1e-6)

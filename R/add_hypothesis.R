@@ -19,10 +19,14 @@ add_hypothesis <- function(mfx, hypothesis) {
     }
 
     if (isTRUE(checkmate::check_character(hypothesis))) {
-        if (isTRUE(grepl("<=", hypothesis))) {
-            hypothesis_direction <- "<="
-        } else if (isTRUE(grepl(">=", hypothesis))) {
-            hypothesis_direction <- ">="
+        # Extract direction for each hypothesis string
+        hypothesis_direction <- rep("=", length(hypothesis))
+        hypothesis_direction[grepl("<=", hypothesis)] <- "<="
+        hypothesis_direction[grepl(">=", hypothesis)] <- ">="
+
+        # Collapse to single value if all are the same
+        if (length(unique(hypothesis_direction)) == 1) {
+            hypothesis_direction <- hypothesis_direction[1]
         }
 
         if (isTRUE(grepl("^=|^<=|^>=", hypothesis))) {
