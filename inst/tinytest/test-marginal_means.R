@@ -85,6 +85,7 @@ mod2 <- glm(vs ~ factor(am) + factor(gear) + mpg, data = mtcars, family = binomi
 em <- data.frame(emmeans(mod1, ~am, weights = "cells"))
 mm <- predictions(mod1, by = "am")
 mm <- mm[order(mm$am), ]
+em <- em[order(em$am), ]
 expect_equivalent(mm$estimate, em$emmean, tolerance = 1e-6)
 expect_equivalent(mm$std.error, em$SE, tolerance = 1e-5)
 

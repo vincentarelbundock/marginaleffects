@@ -80,7 +80,7 @@ jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) 
                 if (!is.null(X_lo)) X_lo <- X_lo[idx, , drop = FALSE]
                 # Create group IDs
                 groups_combined <- apply(groups_data, 1, function(x) paste0(x, collapse = "_"))
-                groups <- as.integer(as.factor(groups_combined)) - 1L
+                groups <- as.integer(factor(groups_combined, levels = unique(groups_combined))) - 1L
                 num_groups <- max(groups) + 1L
             } else {
                 groups <- num_groups <- NULL
