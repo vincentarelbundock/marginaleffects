@@ -310,6 +310,20 @@ predictions <- function(
         mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = if (link_to_response) "link" else mfx@type, ...)
 
         if (isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+            # Filter out padding rows before autodiff when using by=character
+            # Padding is only needed for model.matrix construction, which is already done
+            if (is.character(mfx@by) && "rowid" %in% colnames(mfx@newdata)) {
+                idx <- mfx@newdata$rowid > 0
+                if (!all(idx)) {
+                    # Filter newdata and model matrix
+                    mfx@newdata <- mfx@newdata[idx, , drop = FALSE]
+                    # Also filter the model matrix attribute
+                    MM <- attr(mfx@newdata, "marginaleffects_model_matrix")
+                    if (!is.null(MM)) {
+                        attr(mfx@newdata, "marginaleffects_model_matrix") <- MM[idx, , drop = FALSE]
+                    }
+                }
+            }
             # Try autodiff
             autodiff_result <- jax_predictions(
                 mfx = mfx,
@@ -334,6 +348,8 @@ predictions <- function(
             if ("rowidcf" %in% colnames(mfx@newdata)) {
                 tmp[["rowidcf"]] <- mfx@newdata[["rowidcf"]]
             }
+            # Unpad: remove padding rows added for missing factor levels
+            tmp <- unpad(tmp, draws = NULL)$out
         } else {
             # Aggregated results (by=TRUE or by=character)
             tmp <- data.frame(
@@ -346,7 +362,18 @@ predictions <- function(
             if (is.character(mfx@by)) {
                 # Extract unique group combinations
                 bycols <- mfx@by
-                group_data <- unique(mfx@newdata[, bycols, drop = FALSE])
+                if (inherits(mfx@newdata, "data.table")) {
+                    group_data <- unique(mfx@newdata[, ..bycols])
+                    data.table::setorderv(group_data, bycols)
+                    group_data <- as.data.frame(group_data)
+                } else {
+                    group_data <- unique(mfx@newdata[, bycols, drop = FALSE])
+                    if (nrow(group_data) > 1) {
+                        ord <- do.call(order, group_data)
+                        group_data <- group_data[ord, , drop = FALSE]
+                    }
+                }
+                rownames(group_data) <- NULL
                 tmp <- cbind(group_data, tmp)
             }
         }
