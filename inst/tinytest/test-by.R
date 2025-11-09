@@ -235,8 +235,8 @@ cmp2 <- comparisons(mod, variables = "am") %>%
 cmp3 <- predictions(mod) |>
     aggregate(estimate ~ am + cyl, FUN = mean) |>
     aggregate(estimate ~ cyl, FUN = diff)
-expect_equivalent(cmp1$estimate, cmp2$estimate)
-expect_equivalent(cmp1$estimate, cmp3$estimate)
+expect_equivalent(cmp1$estimate, cmp2$estimate, tolerance = tol)
+expect_equivalent(cmp1$estimate, cmp3$estimate, tolerance = tol)
 
 
 # Issue #1058

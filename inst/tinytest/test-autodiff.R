@@ -84,8 +84,8 @@ test_data <- data.frame(
 )
 
 
-# Define family/link combinations to test (cauchit excluded - not supported by Python marginaleffects)
-family_link_combos <- list(
+# Define SUPPORTED family/link combinations (autodiff with JAX)
+supported_combos <- list(
   list(family = binomial(link = "logit"), response = "binary_y"),
   list(family = binomial(link = "probit"), response = "binary_y"),
   list(family = binomial(link = "cloglog"), response = "binary_y"),
@@ -96,13 +96,11 @@ family_link_combos <- list(
   list(family = Gamma(link = "identity"), response = "gamma_y"),
   list(family = poisson(link = "log"), response = "count_y"),
   list(family = poisson(link = "identity"), response = "count_y"),
-  list(family = poisson(link = "sqrt"), response = "count_y"),
-  list(family = quasibinomial(link = "logit"), response = "binary_y"),
-  list(family = quasipoisson(link = "log"), response = "count_y")
+  list(family = poisson(link = "sqrt"), response = "count_y")
 )
 
-#  Test comparisons() with type="response" for each family/link combination
-for (combo in family_link_combos) {
+# Test SUPPORTED families - should use JAX and produce messages
+for (combo in supported_combos) {
   # Fit model
   formula_str <- paste(combo$response, "~ x1 + x2")
   mod <- glm(as.formula(formula_str), data = test_data, family = combo$family)
@@ -126,6 +124,47 @@ for (combo in family_link_combos) {
   acmp1 <- avg_comparisons(mod, type = "response")
   autodiff(TRUE)
   expect_message(acmp2 <- avg_comparisons(mod, type = "response"))
+
+  # Compare estimates and standard errors
+  expect_equal(acmp1$estimate, acmp2$estimate,
+    tolerance = tol_b,
+    info = paste("avg estimates differ for", combo$family$family, combo$family$link))
+  expect_equal(acmp1$std.error, acmp2$std.error,
+    tolerance = tol_se,
+    info = paste("avg std.errors differ for", combo$family$family, combo$family$link))
+}
+
+# Define UNSUPPORTED family/link combinations (quasi-families not in JAX)
+unsupported_combos <- list(
+  list(family = quasibinomial(link = "logit"), response = "binary_y"),
+  list(family = quasipoisson(link = "log"), response = "count_y")
+)
+
+# Test UNSUPPORTED families - should fall back to finite differences and produce warnings
+for (combo in unsupported_combos) {
+  # Fit model
+  formula_str <- paste(combo$response, "~ x1 + x2")
+  mod <- glm(as.formula(formula_str), data = test_data, family = combo$family)
+
+  # Test comparisons() with autodiff FALSE vs TRUE - should produce warning and fall back
+  autodiff(FALSE)
+  cmp1 <- comparisons(mod, type = "response")
+  autodiff(TRUE)
+  expect_warning(cmp2 <- comparisons(mod, type = "response"), pattern = "unsupported GLM family")
+
+  # Compare estimates and standard errors - should still match (via finite differences)
+  expect_equal(cmp1$estimate, cmp2$estimate,
+    tolerance = tol_b,
+    info = paste("estimates differ for", combo$family$family, combo$family$link))
+  expect_equal(cmp1$std.error, cmp2$std.error,
+    tolerance = tol_se,
+    info = paste("std.errors differ for", combo$family$family, combo$family$link))
+
+  # Test avg_comparisons() with type="response"
+  autodiff(FALSE)
+  acmp1 <- avg_comparisons(mod, type = "response")
+  autodiff(TRUE)
+  expect_warning(acmp2 <- avg_comparisons(mod, type = "response"), pattern = "unsupported GLM family")
 
   # Compare estimates and standard errors
   expect_equal(acmp1$estimate, acmp2$estimate,

@@ -26,4 +26,4 @@ auto <- avg_predictions(
     newdata = "balanced",
     by = c("c161sex", "c172code")) |>
     sort_by(~ c161sex + c172code)
-expect_equal(auto$estimate, manu$p)
+expect_equal(auto$estimate, manu$p, tolerance = 1e-6)

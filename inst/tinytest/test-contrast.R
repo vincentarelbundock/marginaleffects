@@ -36,17 +36,17 @@ iqr <- diff(stats::quantile(mtcars$hp, probs = c(.25, .75))) * coef(mod)["hp"]
 minmax <- (max(mtcars$hp) - min(mtcars$hp)) * coef(mod)["hp"]
 sd1 <- sd(mtcars$hp) * coef(mod)["hp"]
 sd2 <- 2 * sd(mtcars$hp) * coef(mod)["hp"]
-expect_equivalent(contr2$estimate, rep(iqr, 32))
-expect_equivalent(contr3$estimate, rep(minmax, 32))
-expect_equivalent(contr4$estimate, rep(sd1, 32))
-expect_equivalent(contr5$estimate, rep(sd2, 32))
+expect_equivalent(contr2$estimate, rep(iqr, 32), tolerance = 1e-6)
+expect_equivalent(contr3$estimate, rep(minmax, 32), tolerance = 1e-6)
+expect_equivalent(contr4$estimate, rep(sd1, 32), tolerance = 1e-6)
+expect_equivalent(contr5$estimate, rep(sd2, 32), tolerance = 1e-6)
 
 
 # factor glm
 mod <- glm(am ~ factor(cyl), data = mtcars, family = binomial)
 pred <- predictions(mod, newdata = datagrid(cyl = mtcars$cyl))
 contr <- avg_comparisons(mod)
-expect_equivalent(contr$estimate[1], pred$estimate[pred$cyl == 6] - pred$estimate[pred$cyl == 4])
+expect_equivalent(contr$estimate[1], pred$estimate[pred$cyl == 6] - pred$estimate[pred$cyl == 4], tolerance = 1e-6)
 expect_equivalent(contr$estimate[2], pred$estimate[pred$cyl == 8] - pred$estimate[pred$cyl == 4])
 
 

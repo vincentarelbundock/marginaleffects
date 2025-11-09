@@ -11,6 +11,11 @@ get_autodiff_args.ivreg <- function(model, mfx) {
         return(NULL)
     }
 
+    if (!is.null(mfx@wts)) {
+        autodiff_warning("the `wts` argument")
+        return(NULL)
+    }
+
     # If all checks pass, return supported arguments
     out <- list(model_type = "linear")
     return(out)

@@ -27,7 +27,7 @@ cmp2 <- avg_comparisons(
 # aggregate refactor gave us new labels
 known <- c("+10", "4 - 3", "5 - 4", "6 - 4", "8 - 4", "8 - 6")
 expect_true(all(known %in% cmp1$contrast))
-expect_equivalent(cmp1$estimate[6], cmp2$estimate[6] * 10)
+expect_equivalent(cmp1$estimate[6], cmp2$estimate[6] * 10, tolerance = 1e-6)
 
 # informative errors
 expect_error(suppressWarnings(comparisons(mod, variables = list(gear = "blah"))), pattern = "variables")

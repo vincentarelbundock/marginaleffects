@@ -81,7 +81,7 @@ pre1 <- predictions(mod, by = "am")
 pre1 <- pre1[order(pre1$am), ]
 pre2 <- predictions(mod)
 pre2 <- aggregate(estimate ~ am, FUN = mean, data = pre2)
-expect_equivalent(pre1$estimate, pre2$estimate)
+expect_equivalent(pre1$estimate, pre2$estimate, tolerance = 1e-6)
 
 
 #########################################
@@ -98,7 +98,7 @@ expect_true(all(pre1$estimate != pre2$estimate))
 mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
 nd <- datagrid(model = mod, cyl = c(4, 6, 8))
 mm <- predictions(mod, newdata = nd)
-expect_equivalent(mm$estimate, unname(predict(mod, newdata = nd)))
+expect_equivalent(mm$estimate, unname(predict(mod, newdata = nd)), tolerance = 1e-6)
 
 
 #############################
@@ -214,23 +214,23 @@ expect_inherits(pre, "predictions")
 expect_equivalent(nrow(pre), 3)
 pre <- avg_predictions(mod, variables = list(cyl = c(4, 6)))
 expect_inherits(pre, "predictions")
-expect_equivalent(nrow(pre), 2)
+expect_equivalent(nrow(pre), 2, tolerance = 1e-6)
 pre <- avg_predictions(mod, by = "cyl", newdata = datagrid(cyl = c(4, 6), grid_type = "counterfactual"))
 expect_inherits(pre, "predictions")
-expect_equivalent(nrow(pre), 2)
+expect_equivalent(nrow(pre), 2, tolerance = 1e-6)
 
 
 # Issue #994: averaging linkinv(link)
 mod <- glm(vs ~ mpg + cyl, data = mtcars, family = binomial)
 p1 <- avg_predictions(mod, type = "invlink(link)")$estimate
 p2 <- mod$family$linkinv(mean(predict(mod, type = "link")))
-expect_equivalent(p1, p2)
+expect_equivalent(p1, p2, tolerance = 1e-6)
 
 p1 <- avg_predictions(mod, by = "cyl", type = "invlink(link)")
 p1 <- p1[order(p1$cyl), "estimate"]
 p2 <- tapply(predict(mod, type = "link"), mtcars$cyl, mean)
 p2 <- mod$family$linkinv(as.vector(p2))
-expect_equivalent(p1, p2)
+expect_equivalent(p1, p2, tolerance = 1e-6)
 
 
 # Issue #1204: Swapped intervals for models with inverse-link

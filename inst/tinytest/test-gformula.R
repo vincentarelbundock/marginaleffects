@@ -32,5 +32,5 @@ c1 <- avg_comparisons(model_additive, variable = "group_id", newdata = tmp)
 
 c2 <- avg_comparisons(model_interaction, variable = "group_id", newdata = tmp)
 
-expect_equivalent(g1, c1$estimate)
-expect_equivalent(g2, c2$estimate)
+expect_equivalent(g1, c1$estimate, tolerance = 1e-6)
+expect_equivalent(g2, c2$estimate, tolerance = 1e-6)

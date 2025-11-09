@@ -77,66 +77,69 @@ get_predict.ols <- get_predict.rms
 
 
 
-#' @keywords internal
-#' @export
-get_autodiff_args.ols <- function(model, mfx) {
-    # no inheritance! Important to avoid breaking other models
-    if (!class(model)[1] == "ols") {
-        return(NULL)
-    }
+### AUTODIFF: 
+### DO NOT DO THIS BECAUSE get_model_matrix() doesn't work with these models
 
-    if (!is.null(model$offset)) {
-        autodiff_warning("models with offsets")
-        return(NULL)
-    }
-
-    if (!is.null(model$penalty)) {
-        autodiff_warning("models with offsets")
-        return(NULL)
-    }
-
-    # Check type support
-    if (!mfx@type %in% c("lp")) {
-        autodiff_warning(sprintf("`type='%s'`", mfx@type))
-        return(NULL)
-    }
-
-    # If all checks pass, return supported arguments
-    out <- list(model_type = "linear")
-    return(out)
-}
-
-
-#' @keywords internal
-#' @export
-get_autodiff_args.lrm <- function(model, mfx) {
-    # no inheritance! Important to avoid breaking other models
-    if (!class(model)[1] == "lrm") {
-        return(NULL)
-    }
-
-    if (!is.null(model$offset)) {
-        autodiff_warning("models with offsets")
-        return(NULL)
-    }
-
-    if (!is.null(model$penalty)) {
-        autodiff_warning("models with offsets")
-        return(NULL)
-    }
-
-    # Check type support
-    if (!mfx@type %in% c("fitted", "lp")) {
-        autodiff_warning(sprintf("`type='%s'`", mfx@type))
-        return(NULL)
-    }
-
-    # If all checks pass, return supported arguments
-    mAD <- settings_get("mAD")
-    out <- list(
-        model_type = "glm",
-        family_type = mAD$glm$families$Family$BINOMIAL,
-        link_type = mAD$glm$families$Link$LOGIT
-    )
-    return(out)
-}
+# #' @keywords internal
+# #' @export
+# get_autodiff_args.ols <- function(model, mfx) {
+#     # no inheritance! Important to avoid breaking other models
+#     if (!class(model)[1] == "ols") {
+#         return(NULL)
+#     }
+#
+#     if (!is.null(model$offset)) {
+#         autodiff_warning("models with offsets")
+#         return(NULL)
+#     }
+#
+#     if (!is.null(model$penalty)) {
+#         autodiff_warning("models with offsets")
+#         return(NULL)
+#     }
+#
+#     # Check type support
+#     if (!mfx@type %in% c("lp")) {
+#         autodiff_warning(sprintf("`type='%s'`", mfx@type))
+#         return(NULL)
+#     }
+#
+#     # If all checks pass, return supported arguments
+#     out <- list(model_type = "linear")
+#     return(out)
+# }
+#
+#
+# #' @keywords internal
+# #' @export
+# get_autodiff_args.lrm <- function(model, mfx) {
+#     # no inheritance! Important to avoid breaking other models
+#     if (!class(model)[1] == "lrm") {
+#         return(NULL)
+#     }
+#
+#     if (!is.null(model$offset)) {
+#         autodiff_warning("models with offsets")
+#         return(NULL)
+#     }
+#
+#     if (!is.null(model$penalty)) {
+#         autodiff_warning("models with offsets")
+#         return(NULL)
+#     }
+#
+#     # Check type support
+#     if (!mfx@type %in% c("fitted", "lp")) {
+#         autodiff_warning(sprintf("`type='%s'`", mfx@type))
+#         return(NULL)
+#     }
+#
+#     # If all checks pass, return supported arguments
+#     mAD <- settings_get("mAD")
+#     out <- list(
+#         model_type = "glm",
+#         family_type = mAD$glm$families$Family$BINOMIAL,
+#         link_type = mAD$glm$families$Link$LOGIT
+#     )
+#     return(out)
+# }

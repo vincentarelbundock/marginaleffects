@@ -127,6 +127,11 @@ get_autodiff_args.lm <- function(model, mfx) {
         return(NULL)
     }
 
+    if (!is.null(mfx@wts)) {
+        autodiff_warning("the `wts` argument")
+        return(NULL)
+    }
+
     # Check type support
     if (!mfx@type %in% c("response", "link", "invlink(link)")) {
         autodiff_warning(sprintf("`type='%s'`", mfx@type))
@@ -157,6 +162,11 @@ get_autodiff_args.glm <- function(model, mfx) {
         return(NULL)
     }
 
+    if (!is.null(mfx@wts)) {
+        autodiff_warning("the `wts` argument")
+        return(NULL)
+    }
+
     # Check type support
     if (!mfx@type %in% c("response", "link", "invlink(link)")) {
         autodiff_warning(sprintf("`type='%s'`", mfx@type))
@@ -164,8 +174,9 @@ get_autodiff_args.glm <- function(model, mfx) {
     }
 
     # Check comparison type for comparisons function
-    if (mfx@calling_function == "comparisons" && !mfx@comparison %in% c("difference", "ratio")) {
-        autodiff_warning("other functions than `predictions()` or `comparisons()`, with `comparisons='difference'` or `'ratio'`")
+    if (mfx@calling_function == "comparisons" && (!is.character(mfx@comparison) || !mfx@comparison %in% c("difference", "ratio"))) {
+        comp_str <- if (is.character(mfx@comparison)) mfx@comparison else "custom function"
+        autodiff_warning(sprintf("`comparison='%s'` (only 'difference' and 'ratio' supported)", comp_str))
         return(NULL)
     }
 

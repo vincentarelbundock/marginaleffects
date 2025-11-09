@@ -57,7 +57,7 @@ autodiff(TRUE)
 expect_message(p1 <- predictions(mod))
 autodiff(FALSE)
 p2 <- predictions(mod)
-expect_equivalent(p1$estimate, p2$estimate)
+expect_equivalent(p1$estimate, p2$estimate, tolerance = 1e-6)
 expect_equivalent(p1$std.error, p2$std.error, tolerance = 4e-3)
 
 

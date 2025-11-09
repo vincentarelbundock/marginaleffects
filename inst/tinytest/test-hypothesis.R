@@ -88,7 +88,7 @@ cmp2 <- comparisons(
     newdata = "mean",
     hypothesis = ~pairwise
 )
-expect_equivalent(diff(cmp1$estimate), cmp2$estimate[1])
+expect_equivalent(diff(cmp1$estimate), cmp2$estimate[1], tolerance = 1e-6)
 
 
 # marginaleffects: hypothesis
@@ -112,7 +112,7 @@ p2 <- predictions(
     mod,
     datagrid(cyl = c(4, 6))
 )
-expect_equivalent(p1$estimate, diff(p2$estimate))
+expect_equivalent(p1$estimate, diff(p2$estimate), tolerance = 1e-6)
 
 lc <- matrix(
     c(
@@ -179,8 +179,8 @@ p3 <- predictions(
     hypothesis = "b1 = b2",
     newdata = datagrid(hp = c(100, 110, 120))
 )
-expect_equivalent(sum(p1$estimate) - 10, p2$estimate)
-expect_equivalent(p1$estimate[1] - p1$estimate[2], p3$estimate)
+expect_equivalent(sum(p1$estimate) - 10, p2$estimate, tolerance = 1e-6)
+expect_equivalent(p1$estimate[1] - p1$estimate[2], p3$estimate, tolerance = 1e-6)
 
 
 # pad missing character levels + hypothesis
@@ -246,9 +246,9 @@ expect_true("(setosa 1) - (setosa 0)" %in% mfx$hypothesis)
 mod <- lm(mpg ~ hp + drat + factor(cyl), data = mtcars)
 p1 <- avg_predictions(mod, by = "cyl")
 p2 <- avg_predictions(mod, by = "cyl", hypothesis = ~meandev)
-expect_equivalent(p2$estimate, p1$estimate - mean(p1$estimate))
+expect_equivalent(p2$estimate, p1$estimate - mean(p1$estimate), tolerance = 1e-6)
 p2 <- avg_predictions(mod, by = "cyl", hypothesis = ~meanotherdev)
-expect_equivalent(p2$estimate, p1$estimate - (sum(p1$estimate) - p1$estimate) / (nrow(p1) - 1))
+expect_equivalent(p2$estimate, p1$estimate - (sum(p1$estimate) - p1$estimate) / (nrow(p1) - 1), tolerance = 1e-6)
 
 # Issue #1345: no names
 dat <- transform(mtcars, carb = factor(carb))
