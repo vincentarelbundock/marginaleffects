@@ -127,11 +127,6 @@ get_autodiff_args.lm <- function(model, mfx) {
         return(NULL)
     }
 
-    if (!is.null(mfx@wts)) {
-        autodiff_warning("the `wts` argument")
-        return(NULL)
-    }
-
     # Check type support
     if (!mfx@type %in% c("response", "link", "invlink(link)")) {
         autodiff_warning(sprintf("`type='%s'`", mfx@type))
@@ -159,11 +154,6 @@ get_autodiff_args.glm <- function(model, mfx) {
 
     if ("weights" %in% names(model$call)) {
         autodiff_warning("models with weights")
-        return(NULL)
-    }
-
-    if (!is.null(mfx@wts)) {
-        autodiff_warning("the `wts` argument")
         return(NULL)
     }
 

@@ -107,27 +107,56 @@ add_model_matrix_attribute_data <- function(mfx, data) {
 }
 
 
-#' Compute predictions with JAX autodiff (estimates, SE, jacobian)
-#' @return List with estimate, std.error, jacobian, or NULL if unsupported
+#' Sanitize mfx object for autodiff
+#'
+#' Check common requirements for autodiff support and return NULL if unsupported
+#' @param mfx marginaleffects object
+#' @return mfx object if all checks pass, NULL otherwise
 #' @keywords internal
 #' @noRd
-jax_predictions <- function(mfx, vcov_matrix, ...) {
-    mAD <- settings_get("mAD")
-
-    # Validate model support
+sanitize_autodiff_mfx <- function(mfx) {
+    # Check model support via get_autodiff_args
     autodiff_args <- get_autodiff_args(mfx@model, mfx)
-    if (is.null(autodiff_args)) return(NULL)
+    if (is.null(autodiff_args)) {
+        return(NULL)
+    }
 
-    # Check for unsupported features
+    # Check for unsupported wts argument
+    if (!is.null(mfx@wts)) {
+        autodiff_warning("the `wts` argument")
+        return(NULL)
+    }
+
+    # Check for unsupported hypothesis argument
     if (!is.null(mfx@hypothesis)) {
         autodiff_warning("the `hypothesis` argument")
         return(NULL)
     }
 
+    # Check for unsupported by argument values
     if (!isTRUE(mfx@by) && !isFALSE(mfx@by) && !is.character(mfx@by)) {
         autodiff_warning("values of `by` other than TRUE, FALSE, or a character vector")
         return(NULL)
     }
+
+    # All checks passed, return mfx
+    return(mfx)
+}
+
+
+#' Compute predictions with JAX autodiff (estimates, SE, jacobian)
+#' @return List with estimate, std.error, jacobian, or NULL if unsupported
+#' @keywords internal
+#' @noRd
+jax_predictions <- function(mfx, vcov_matrix, ...) {
+    # Validate mfx object for autodiff support
+    mfx <- sanitize_autodiff_mfx(mfx)
+    if (is.null(mfx)) return(NULL)
+
+    # Get autodiff args (already validated in sanitize_autodiff_mfx)
+    autodiff_args <- get_autodiff_args(mfx@model, mfx)
+
+    mAD <- settings_get("mAD")
 
     # Get model matrix
     X <- attr(mfx@newdata, "marginaleffects_model_matrix")
@@ -220,18 +249,14 @@ jax_predictions <- function(mfx, vcov_matrix, ...) {
 #' @keywords internal
 #' @noRd
 jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
-    mAD <- settings_get("mAD")
+    # Validate mfx object for autodiff support
+    mfx <- sanitize_autodiff_mfx(mfx)
+    if (is.null(mfx)) return(NULL)
 
-    # Validate
+    # Get autodiff args (already validated in sanitize_autodiff_mfx)
     autodiff_args <- get_autodiff_args(mfx@model, mfx)
-    if (is.null(autodiff_args)) return(NULL)
 
-    # Check unsupported features
-    if (!is.null(mfx@hypothesis)) {
-        autodiff_warning("the `hypothesis` argument")
-        return(NULL)
-    }
-
+    # Check comparison-specific requirements
     if (!is.character(mfx@comparison) || !mfx@comparison %in% c("difference", "ratio")) {
         comp_str <- if (is.character(mfx@comparison)) mfx@comparison else "custom function"
         autodiff_warning(sprintf("`comparison='%s'` (only 'difference' and 'ratio' supported)", comp_str))
@@ -244,10 +269,7 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
         return(NULL)
     }
 
-    if (!isTRUE(mfx@by) && !isFALSE(mfx@by) && !is.character(mfx@by)) {
-        autodiff_warning("values of `by` other than TRUE, FALSE, or a character vector")
-        return(NULL)
-    }
+    mAD <- settings_get("mAD")
 
     # Get model matrices
     X_hi <- attr(hi, "marginaleffects_model_matrix")
