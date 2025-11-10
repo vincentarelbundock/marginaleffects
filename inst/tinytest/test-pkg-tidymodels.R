@@ -42,11 +42,10 @@ dat <- get_dataset("penguins", "palmerpenguins") |> na.omit()
 mod <- set_engine(linear_reg(), "lm") |>
     fit(body_mass_g ~ bill_length_mm + flipper_length_mm + species,
         data = na.omit(dat))
-p <- predictions(mod, newdata = dat) |>
+p <- predictions(mod, newdata = dat[1:100, ]) |>
     inferences(
         R = 3,
         method = "conformal_cv+",
-        conformal_test = dat[1:100, ],
         conformal_calibration = dat[101:nrow(dat), ]
     )
 expect_inherits(p, "predictions")
@@ -63,10 +62,9 @@ p <- predictions(mod, newdata = bikes, type = "numeric") |>
 expect_inherits(p, "predictions")
 expect_true("std.error" %in% colnames(p))
 
-p <- predictions(mod, newdata = bikes, vcov = FALSE) |>
+p <- predictions(mod, newdata = bikes[1:200, ], vcov = FALSE) |>
     inferences(
         method = "conformal_split",
-        conformal_test = bikes[1:200, ],
         conformal_calibration = bikes[201:nrow(bikes), ])
 expect_inherits(p, "predictions")
 

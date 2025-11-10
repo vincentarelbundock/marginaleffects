@@ -32,6 +32,12 @@ prune.marginaleffects <- function(tree, component = "all", ...) {
         }
         attr(tree, "lean") <- TRUE
     } else if (component == "modeldata") {
+        # Do not prune modeldata for dbarts, mlr3, or tidymodels models
+        if (inherits(mfx@model, c("bart", "Learner", "model_fit", "workflow"))) {
+            attr(tree, "marginaleffects") <- mfx
+            return(tree)
+        }
+
         fml <- hush(insight::find_formula(mfx@model))
         fml <- unlist(lapply(fml, all.vars))
 

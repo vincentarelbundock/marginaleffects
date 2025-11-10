@@ -108,7 +108,7 @@ conformal_full <- function(x, test, score = "residual_abs", conf_level = 0.95,
         stop_sprintf(
             "Full conformal inference requires the original training data with predictors.
 For tidymodels workflows, pass the training data explicitly:
-  inferences(pred, method = 'conformal_full', conformal_test = test_data, conformal_train = train_data)"
+  predictions(mod, newdata = test_data) |> inferences(method = 'conformal_full', conformal_train = train_data)"
         )
     }
 

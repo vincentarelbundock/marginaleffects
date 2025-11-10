@@ -206,14 +206,30 @@ plot_predictions <- function(
         mfx = mfx
     )
 
-    p <- p +
-        ggplot2::labs(
-            x = v_x,
-            y = dv,
-            color = v_color,
-            fill = v_color,
-            linetype = v_color
-        )
+    # Only set labels for aesthetics that are actually used
+    labs_args <- list(x = v_x, y = dv)
+
+    if (!is.null(v_color)) {
+        x_is_discrete <- is.factor(datplot[[v_x]])
+        if (x_is_discrete) {
+            # Discrete x-axis uses shape (gray) or color (not gray)
+            if (gray) {
+                labs_args$shape <- v_color
+            } else {
+                labs_args$color <- v_color
+            }
+        } else {
+            # Continuous x-axis uses linetype (gray) or color/fill (not gray)
+            if (gray) {
+                labs_args$linetype <- v_color
+            } else {
+                labs_args$color <- v_color
+                labs_args$fill <- v_color
+            }
+        }
+    }
+
+    p <- p + do.call(ggplot2::labs, labs_args)
 
     return(p)
 }

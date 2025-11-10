@@ -11,21 +11,19 @@ train = dat$train
 calib = dat$calibration
 test = dat$test
 mod = lm(rank ~ grade + branch + gender + race, data = train)
-p = predictions(mod, conf_level = 0.9) |>
+p = predictions(mod, newdata = test, conf_level = 0.9) |>
     inferences(
         method = "conformal_split",
         conformal_calibration = calib,
-        conformal_score = "residual_abs",
-        conformal_test = test
+        conformal_score = "residual_abs"
     )
 coverage = mean(p$rank > p$pred.low & p$rank < p$pred.high)
 expect_equivalent(round(coverage, 2), .9)
-p = predictions(mod, conf_level = 0.9) |>
+p = predictions(mod, newdata = test, conf_level = 0.9) |>
     inferences(
         method = "conformal_split",
         conformal_calibration = calib,
-        conformal_score = "residual_sq",
-        conformal_test = test
+        conformal_score = "residual_sq"
     )
 coverage = mean(p$rank > p$pred.low & p$rank < p$pred.high)
 expect_equivalent(round(coverage, 2), .9)
