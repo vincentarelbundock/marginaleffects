@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.30.0.6
+Version: 0.30.0.7
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -33,7 +33,7 @@ Encoding: UTF-8
 URL: https://marginaleffects.com/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Depends:
     R (>= 3.6.0)
 Imports:
@@ -242,6 +242,9 @@ Collate:
     'inferences.R'
     'inferences_boot.R'
     'inferences_conformal.R'
+    'inferences_conformal_cv.R'
+    'inferences_conformal_full.R'
+    'inferences_conformal_split.R'
     'inferences_fwb.R'
     'inferences_rsample.R'
     'inferences_simulation.R'
@@ -311,6 +314,7 @@ Collate:
     'predictions.R'
     'print.R'
     'prune.R'
+    'refit.R'
     'sanitize_comparison.R'
     'sanitize_condition.R'
     'sanitize_conf_level.R'

@@ -484,7 +484,7 @@ Other options:
 }
 
 \examples{
-\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) withAutoprint(\{ # examplesIf}
 library("marginaleffects")
 # Unit-level (conditional) Marginal Effects
 mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)

@@ -15,14 +15,15 @@
 #' + "mi" multiple imputation for missing data
 #' + "conformal_split": prediction intervals using split conformal prediction (see Angelopoulos & Bates, 2022)
 #' + "conformal_cv+": prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)
+#' + "conformal_full": prediction intervals using full conformal prediction (see Lei et al., 2018). **Warning**: This method is computationally expensive and typically much slower than split or CV+ methods.
 #' @param R Number of resamples, simulations, or cross-validation folds.
 #' @param conf_type String: type of bootstrap interval to construct.
 #' + `boot`: "perc", "norm", "basic", or "bca"
 #' + `fwb`: "perc", "norm", "wald", "basic", "bc", or "bca"
 #' + `rsample`: "perc" or "bca"
 #' + `simulation`: "perc" or "wald"
-#' @param conformal_test Data frame of test data for conformal prediction.
 #' @param conformal_calibration Data frame of calibration data for split conformal prediction (`method="conformal_split`).
+#' @param conformal_train Data frame of training data for full conformal prediction (`method="conformal_full"`). Only required for models where the training data cannot be extracted (e.g., tidymodels workflows).
 #' @param conformal_score String. Warning: The `type` argument in `predictions()` must generate predictions which are on the same scale as the outcome variable. Typically, this means that `type` must be "response" or "probs".
 #'   + "residual_abs" or "residual_sq" for regression tasks (numeric outcome)
 #'   + "softmax" for classification tasks (when `predictions()` returns a `group` columns, such as multinomial or ordinal logit models.
@@ -53,6 +54,8 @@
 #' Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
 #'
 #' Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. "Predictive Inference with the Jackknife+." arXiv. http://arxiv.org/abs/1905.02928.
+#'
+#' Lei, Jing, Max G'Sell, Alessandro Rinaldo, Ryan J. Tibshirani, and Larry Wasserman. 2018. "Distribution-Free Predictive Inference for Regression." Journal of the American Statistical Association 113 (523): 1094–1111.
 #'
 #' @template parallel
 #' @return
@@ -102,8 +105,8 @@ inferences <- function(
     method,
     R = 1000,
     conf_type = "perc",
-    conformal_test = NULL,
     conformal_calibration = NULL,
+    conformal_train = NULL,
     conformal_score = "residual_abs",
     estimator = NULL,
     ...) {
@@ -138,7 +141,8 @@ inferences <- function(
             "rsample",
             "simulation",
             "conformal_split",
-            "conformal_cv+"
+            "conformal_cv+",
+            "conformal_full"
         )
     )
 
@@ -185,6 +189,9 @@ inferences <- function(
     if (method == "conformal_cv+") {
         conformal_fun <- conformal_cv_plus
     }
+    if (method == "conformal_full") {
+        conformal_fun <- conformal_full
+    }
 
     # default standard errors are Delta anyway
     if (method == "delta") {
@@ -208,12 +215,30 @@ inferences <- function(
     } else if (method == "simulation") {
         out <- inferences_simulation(x, R = R, conf_level = conf_level, conf_type = conf_type, mfx = mfx, ...)
     } else if (isTRUE(grepl("conformal", method))) {
+        # Deprecation warning for conformal_test if passed via ...
+        if ("conformal_test" %in% names(list(...))) {
+            insight::format_warning(
+                "The `conformal_test` argument is deprecated and will be ignored.
+Conformal methods now use the `newdata` supplied to `predictions()` automatically."
+            )
+        }
+
+        # Use newdata from predictions() as test set
+        test_data <- mfx@newdata
+        if (!inherits(test_data, "data.frame") || nrow(test_data) == 0) {
+            stop_sprintf(
+                "Conformal prediction requires a valid `newdata` argument in `predictions()`.
+Please call predictions(model, newdata = your_test_data) before using inferences()."
+            )
+        }
+
         out <- conformal_fun(
             x,
             R = R,
             conf_level = conf_level,
-            test = conformal_test,
+            test = test_data,
             calibration = conformal_calibration,
+            train = conformal_train,
             score = conformal_score,
             mfx = mfx
         )

@@ -9,8 +9,8 @@ inferences(
   method,
   R = 1000,
   conf_type = "perc",
-  conformal_test = NULL,
   conformal_calibration = NULL,
+  conformal_train = NULL,
   conformal_score = "residual_abs",
   estimator = NULL,
   ...
@@ -29,6 +29,7 @@ inferences(
 \item "mi" multiple imputation for missing data
 \item "conformal_split": prediction intervals using split conformal prediction (see Angelopoulos & Bates, 2022)
 \item "conformal_cv+": prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)
+\item "conformal_full": prediction intervals using full conformal prediction (see Lei et al., 2018). \strong{Warning}: This method is computationally expensive and typically much slower than split or CV+ methods.
 }}
 
 \item{R}{Number of resamples, simulations, or cross-validation folds.}
@@ -41,9 +42,9 @@ inferences(
 \item \code{simulation}: "perc" or "wald"
 }}
 
-\item{conformal_test}{Data frame of test data for conformal prediction.}
-
 \item{conformal_calibration}{Data frame of calibration data for split conformal prediction (\verb{method="conformal_split}).}
+
+\item{conformal_train}{Data frame of training data for full conformal prediction (\code{method="conformal_full"}). Only required for models where the training data cannot be extracted (e.g., tidymodels workflows).}
 
 \item{conformal_score}{String. Warning: The \code{type} argument in \code{predictions()} must generate predictions which are on the same scale as the outcome variable. Typically, this means that \code{type} must be "response" or "probs".
 \itemize{
@@ -92,6 +93,8 @@ Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standar
 Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
 
 Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. "Predictive Inference with the Jackknife+." arXiv. http://arxiv.org/abs/1905.02928.
+
+Lei, Jing, Max G'Sell, Alessandro Rinaldo, Ryan J. Tibshirani, and Larry Wasserman. 2018. "Distribution-Free Predictive Inference for Regression." Journal of the American Statistical Association 113 (523): 1094–1111.
 }
 
 \section{Parallel computation}{
