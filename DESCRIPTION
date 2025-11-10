@@ -145,9 +145,11 @@ Suggests:
     plm,
     polspline,
     posterior,
+    probably,
     pscl,
     purrr,
     quantreg,
+    quantregForest,
     Rchoice,
     REndo,
     rcmdcheck,
@@ -244,6 +246,7 @@ Collate:
     'inferences_conformal.R'
     'inferences_conformal_cv.R'
     'inferences_conformal_full.R'
+    'inferences_conformal_quantile.R'
     'inferences_conformal_split.R'
     'inferences_fwb.R'
     'inferences_rsample.R'

@@ -58,7 +58,14 @@ inferences(
 \item If \code{method = "boot"}, additional arguments are passed to \code{boot::boot()}.
 \item If \code{method = "fwb"}, additional arguments are passed to \code{fwb::fwb()}.
 \item If \code{method = "rsample"}, additional arguments are passed to \code{rsample::bootstraps()}, unless the user supplies a \code{group} argument, in which case all arguments are passed to \code{rsample::group_bootstraps()}.
-\item Additional arguments are ignored for all other methods.
+\item If \code{method = "conformal_full"}, additional arguments control the optimization process:
+\itemize{
+\item \code{var_multiplier}: multiplier for initial search bounds (default: 10)
+\item \code{max_iter}: maximum iterations for root finding (default: 100)
+\item \code{tolerance}: tolerance for root finding convergence (default: \code{.Machine$double.eps^0.25})
+}
+\item If \code{method = "conformal_quantile"}, additional arguments are passed to \code{quantregForest::quantregForest()} for fitting the quantile regression forest (e.g., \code{ntree}, \code{mtry}, \code{nodesize}, \code{nthreads}).
+\item Additional arguments are ignored for other conformal methods (\code{conformal_split}, \verb{conformal_cv+}).
 }}
 }
 \value{

@@ -32,7 +32,12 @@
 #' + If `method = "boot"`, additional arguments are passed to `boot::boot()`.
 #' + If `method = "fwb"`, additional arguments are passed to `fwb::fwb()`.
 #' + If `method = "rsample"`, additional arguments are passed to `rsample::bootstraps()`, unless the user supplies a `group` argument, in which case all arguments are passed to `rsample::group_bootstraps()`.
-#' + Additional arguments are ignored for all other methods.
+#' + If `method = "conformal_full"`, additional arguments control the optimization process:
+#'   - `var_multiplier`: multiplier for initial search bounds (default: 10)
+#'   - `max_iter`: maximum iterations for root finding (default: 100)
+#'   - `tolerance`: tolerance for root finding convergence (default: `.Machine$double.eps^0.25`)
+#' + If `method = "conformal_quantile"`, additional arguments are passed to `quantregForest::quantregForest()` for fitting the quantile regression forest (e.g., `ntree`, `mtry`, `nodesize`, `nthreads`).
+#' + Additional arguments are ignored for other conformal methods (`conformal_split`, `conformal_cv+`).
 #' @details
 #' When `method = "simulation"`, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
 #' 1. Draw `R` sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
@@ -142,6 +147,7 @@ inferences <- function(
             "simulation",
             "conformal_split",
             "conformal_cv+",
+            "conformal_quantile",
             "conformal_full"
         )
     )
@@ -189,6 +195,9 @@ inferences <- function(
     if (method == "conformal_cv+") {
         conformal_fun <- conformal_cv_plus
     }
+    if (method == "conformal_quantile") {
+        conformal_fun <- conformal_quantile
+    }
     if (method == "conformal_full") {
         conformal_fun <- conformal_full
     }
@@ -215,6 +224,13 @@ inferences <- function(
     } else if (method == "simulation") {
         out <- inferences_simulation(x, R = R, conf_level = conf_level, conf_type = conf_type, mfx = mfx, ...)
     } else if (isTRUE(grepl("conformal", method))) {
+        # Conformal prediction sanity checks
+        checkmate::assert_class(x, "predictions")
+        checkmate::assert_choice(
+            conformal_score,
+            choices = c("residual_abs", "residual_sq", "softmax")
+        )
+
         # Deprecation warning for conformal_test if passed via ...
         if ("conformal_test" %in% names(list(...))) {
             insight::format_warning(
@@ -232,6 +248,26 @@ Please call predictions(model, newdata = your_test_data) before using inferences
             )
         }
 
+        # Method-specific sanity checks
+        if (method == "conformal_split") {
+            checkmate::assert_data_frame(conformal_calibration, null.ok = FALSE)
+        }
+
+        if (method == "conformal_cv+") {
+            checkmate::assert_integerish(R, upper = 25)
+        }
+
+        if (method == "conformal_quantile") {
+            checkmate::assert_data_frame(conformal_calibration, null.ok = FALSE)
+        }
+
+        if (method == "conformal_full" && conformal_score == "softmax") {
+            stop_sprintf(
+                "The 'softmax' score is not supported for full conformal prediction.
+Use 'residual_abs' or 'residual_sq' for regression tasks."
+            )
+        }
+
         out <- conformal_fun(
             x,
             R = R,
@@ -240,7 +276,8 @@ Please call predictions(model, newdata = your_test_data) before using inferences
             calibration = conformal_calibration,
             train = conformal_train,
             score = conformal_score,
-            mfx = mfx
+            mfx = mfx,
+            ...
         )
     }
 

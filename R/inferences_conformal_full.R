@@ -4,6 +4,13 @@
 # for each combination of test observation and trial value. It is typically
 # several orders of magnitude slower than split or CV+ conformal methods.
 # Use sparingly on small test sets or consider conformal_split/conformal_cv+ instead.
+#
+# Reference implementation from the `probably` package (MIT License, 2025-11-10):
+# Copyright holders: Max Kuhn [aut, cre], Davis Vaughan [aut], Edgar Ruiz [aut],
+# Posit Software, PBC [cph, fnd] (ROR ID: https://ror.org/00cvxb145)
+# URL: https://github.com/tidymodels/probably
+#
+# The implementation here is adapted to fit the marginaleffects package API.
 
 # Helper function to estimate trial value bounds for optimization
 get_trial_bounds_conformal <- function(pred_value, train_residuals, multiplier = 10) {
@@ -79,15 +86,7 @@ conformity_test_full <- function(trial_y, x_test, model, train_data, response_na
 conformal_full <- function(x, test, score = "residual_abs", conf_level = 0.95,
                            var_multiplier = 10, max_iter = 100,
                            tolerance = .Machine$double.eps^0.25,
-                           parallel = FALSE, mfx = NULL, train = NULL, ...) {
-    # Assertions
-    checkmate::assert_class(x, "predictions")
-    checkmate::assert_choice(
-        score,
-        choices = c("residual_abs", "residual_sq")
-    )
-    checkmate::assert_data_frame(test, null.ok = FALSE)
-
+                           mfx = NULL, train = NULL, ...) {
     if (is.null(mfx)) {
         mfx <- attr(x, "marginaleffects")
     }
@@ -189,18 +188,17 @@ For tidymodels workflows, pass the training data explicitly:
     }
 
     # Compute bounds for all test observations
-    if (parallel) {
+    if (isTRUE(getOption("marginaleffects_parallel_inferences", default = FALSE))) {
         # Use future for parallelization if available
-        if (requireNamespace("furrr", quietly = TRUE)) {
-            results <- furrr::future_map(
-                seq_len(nrow(test)),
-                compute_bounds_single,
-                .options = furrr::furrr_options(seed = TRUE)
-            )
-        } else {
-            insight::format_warning("Package 'furrr' not available. Running sequentially.")
-            results <- lapply(seq_len(nrow(test)), compute_bounds_single)
-        }
+        insight::check_if_installed("future.apply")
+        pkg <- getOption("marginaleffects_parallel_packages", default = NULL)
+        pkg <- unique(c("marginaleffects", pkg))
+        results <- future.apply::future_lapply(
+            seq_len(nrow(test)),
+            compute_bounds_single,
+            future.seed = TRUE,
+            future.packages = pkg
+        )
     } else {
         results <- lapply(seq_len(nrow(test)), compute_bounds_single)
     }

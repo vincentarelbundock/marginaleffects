@@ -62,6 +62,7 @@ setClass(
         jacobian = "matrixOrNULL",
         model = "ANY",
         modeldata = "ANY", # TODO: lmerTest returns nfnGroupedData
+        modeldata_available = "logical",
         newdata = "ANY", # Changed from "data.frame" to handle mira deferred processing
         numderiv = "list",
         type = "characterOrNULL",
@@ -161,6 +162,7 @@ new_marginaleffects_internal <- function(
         jacobian = jacobian,
         model = model,
         modeldata = modeldata,
+        modeldata_available = TRUE,
         newdata = data.frame(),
         numderiv = numderiv,
         type = type,

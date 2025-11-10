@@ -11,12 +11,13 @@ refit <- function(object, ...) {
 #' @rdname refit
 #' @param data Optional data frame to refit the underlying model
 #' @param newdata Optional data frame to re-evaluate the marginaleffects call
+#' @param vcov Optional logical or variance-covariance matrix specification to pass to the marginaleffects call
 #' @details
 #' If `data` is supplied, the underlying model is refitted using that data.
 #' If `newdata` is supplied, the marginaleffects call is re-evaluated with the new data.
 #' Both can be supplied together to refit the model and make predictions on new data.
 #' @export
-refit.marginaleffects <- function(object, data = NULL, newdata = NULL, ...) {
+refit.marginaleffects <- function(object, data = NULL, newdata = NULL, vcov = NULL, ...) {
     # If both are NULL, return unchanged
     if (is.null(data) && is.null(newdata)) {
         return(object)
@@ -60,9 +61,9 @@ refit.marginaleffects <- function(object, data = NULL, newdata = NULL, ...) {
         call_new[["model"]] <- model
         call_new[["newdata"]] <- newdata
 
-        # Preserve vcov = FALSE if it was set
-        if (isFALSE(call_new[["vcov"]])) {
-            call_new[["vcov"]] <- FALSE
+        # Set vcov if provided
+        if (!is.null(vcov)) {
+            call_new[["vcov"]] <- vcov
         }
 
         result <- eval(call_new)

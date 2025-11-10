@@ -10,13 +10,13 @@
 \usage{
 refit(object, ...)
 
-\method{refit}{marginaleffects}(object, data = NULL, newdata = NULL, ...)
+\method{refit}{marginaleffects}(object, data = NULL, newdata = NULL, vcov = NULL, ...)
 
-\method{refit}{predictions}(object, data = NULL, newdata = NULL, ...)
+\method{refit}{predictions}(object, data = NULL, newdata = NULL, vcov = NULL, ...)
 
-\method{refit}{comparisons}(object, data = NULL, newdata = NULL, ...)
+\method{refit}{comparisons}(object, data = NULL, newdata = NULL, vcov = NULL, ...)
 
-\method{refit}{slopes}(object, data = NULL, newdata = NULL, ...)
+\method{refit}{slopes}(object, data = NULL, newdata = NULL, vcov = NULL, ...)
 }
 \arguments{
 \item{object}{A marginaleffects object (predictions, comparisons, or slopes)}
@@ -26,6 +26,8 @@ refit(object, ...)
 \item{data}{Optional data frame to refit the underlying model}
 
 \item{newdata}{Optional data frame to re-evaluate the marginaleffects call}
+
+\item{vcov}{Optional logical or variance-covariance matrix specification to pass to the marginaleffects call}
 }
 \value{
 A marginaleffects object

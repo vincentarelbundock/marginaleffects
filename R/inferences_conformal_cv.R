@@ -1,13 +1,4 @@
 conformal_cv_plus <- function(x, test, R, score, conf_level, mfx = NULL, ...) {
-    # assertions
-    checkmate::assert_class(x, "predictions")
-    checkmate::assert_choice(
-        score,
-        choices = c("residual_abs", "residual_sq", "softmax")
-    )
-    checkmate::assert_data_frame(test, null.ok = FALSE)
-    checkmate::assert_integerish(R, upper = 25)
-
     # cross-validation
     train <- mfx@modeldata
     idx <- sample.int(nrow(train), nrow(train))
@@ -39,9 +30,7 @@ conformal_cv_plus <- function(x, test, R, score, conf_level, mfx = NULL, ...) {
     }
 
     # test
-    out <- mfx@call
-    out[["newdata"]] <- test
-    out <- eval(out)
+    out <- refit(x, newdata = test)
 
     # bounds
     out <- get_conformal_bounds(out, score = scores, conf_level = conf_level, mfx = mfx)

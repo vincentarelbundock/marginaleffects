@@ -244,6 +244,7 @@ add_newdata <- function(
     flag2 <- isTRUE(checkmate::check_data_frame(newdata, min.rows = 1))
     if (!flag1 && flag2) {
         mfx@modeldata <- newdata
+        mfx@modeldata_available <- FALSE
         mfx@variable_class <- detect_variable_class(newdata, model = mfx@model)
     }
 
