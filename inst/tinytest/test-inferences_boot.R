@@ -8,6 +8,15 @@ set.seed(1024)
 R <- 25
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width, data = iris)
 
+# bootstrap intervals roughly match analytic ones
+set.seed(2024)
+ref <- avg_predictions(mod)
+set.seed(2024)
+boot_ci <- avg_predictions(mod) |>
+    inferences(method = "boot", R = 250)
+expect_equal(boot_ci$conf.low, ref$conf.low, tolerance = 0.05)
+expect_equal(boot_ci$conf.high, ref$conf.high, tolerance = 0.05)
+
 set.seed(1234)
 # {boot}
 x <- mod |>
@@ -75,4 +84,3 @@ p <- hypotheses(mod, hypothesis = "hp/cyl=1") |>
     inferences(method = "boot", R = 25) |>
     suppressWarnings()
 expect_inherits(p, "hypotheses")
-

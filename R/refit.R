@@ -55,25 +55,20 @@ refit.marginaleffects <- function(object, data = NULL, newdata = NULL, vcov = NU
         }
     }
 
-    # Step 2: Re-evaluate marginaleffects call if newdata is supplied
+    # Step 2: Re-evaluate marginaleffects call
+    call_new <- mfx@call
+    call_new[["model"]] <- model
+
     if (!is.null(newdata)) {
-        call_new <- mfx@call
-        call_new[["model"]] <- model
         call_new[["newdata"]] <- newdata
-
-        # Set vcov if provided
-        if (!is.null(vcov)) {
-            call_new[["vcov"]] <- vcov
-        }
-
-        result <- eval(call_new)
-        return(result)
     }
 
-    # If only data was supplied (no newdata), return the object with updated model
-    # This is useful for intermediate steps
-    attr(object, "marginaleffects")@model <- model
-    return(object)
+    if (!is.null(vcov)) {
+        call_new[["vcov"]] <- vcov
+    }
+
+    result <- eval(call_new)
+    return(result)
 }
 
 #' @rdname refit
@@ -87,3 +82,7 @@ refit.comparisons <- refit.marginaleffects
 #' @rdname refit
 #' @export
 refit.slopes <- refit.marginaleffects
+
+#' @rdname refit
+#' @export
+refit.hypotheses <- refit.marginaleffects

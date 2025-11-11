@@ -6,13 +6,23 @@ set.seed(1024)
 R <- 25
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width, data = iris)
 
+# rsample intervals roughly match analytic ones
+set.seed(404)
+ref <- avg_predictions(mod)
+set.seed(404)
+rs_ci <- avg_predictions(mod) |>
+    inferences(method = "rsample", R = 250) |>
+    suppressWarnings()
+expect_equal(rs_ci$conf.low, ref$conf.low, tolerance = 0.05)
+expect_equal(rs_ci$conf.high, ref$conf.high, tolerance = 0.05)
+
 # {rsample}
 set.seed(1234)
 x <- mod |>
     avg_predictions() |>
     inferences(method = "rsample", R = R) |>
     suppressWarnings()
-expect_equal(x$conf.low, 3.665, tolerance = 1e-3)
+expect_equal(x$conf.low, 3.554, tolerance = 1e-3)
 expect_inherits(x, "predictions")
 x <- mod |>
     slopes() |>
@@ -84,4 +94,3 @@ p <- predictions(model, type = "survival", by = c("dtime", "hormon", "grade"), n
 p <- inferences(p, method = "rsample", R = R) |> suppressWarnings()
 expect_true(all(p$estimate >= p$conf.low))
 expect_true(all(p$estimate <= p$conf.high))
-

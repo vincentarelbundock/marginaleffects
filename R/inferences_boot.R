@@ -2,8 +2,6 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
     insight::check_if_installed("boot")
 
     out <- x
-    call_mfx <- mfx@call
-    call_mfx[["vcov"]] <- FALSE
 
     if (!is.null(estimator)) {
         bootfun <- function(data, indices) {
@@ -14,13 +12,7 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
     } else {
         bootfun <- function(data, indices) {
             d <- data[indices, , drop = FALSE]
-            call_mod <- insight::get_call(mfx@model)
-            call_mod[["data"]] <- d
-            boot_mod <- eval.parent(call_mod)
-            call_mfx <- mfx@call
-            call_mfx[["modeldata"]] <- mfx@modeldata
-            call_mfx[["model"]] <- boot_mod
-            boot_mfx <- eval.parent(call_mfx)
+            boot_mfx <- refit(x, data = d, vcov = FALSE)
             return(boot_mfx$estimate)
         }
     }

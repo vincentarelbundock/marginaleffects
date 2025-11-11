@@ -2,20 +2,9 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     insight::check_if_installed("rsample")
 
     out <- x
-    call_mfx <- mfx@call
-    call_mfx[["vcov"]] <- FALSE
 
     # Get modeldata from mfx object
     modeldata <- mfx@modeldata
-
-    # Ensure parameters are embedded in the call, not just references
-    # avoid two arguments called `newdata`
-    if (!is.null(mfx@newdata) && !"newdata" %in% ...names()) {
-        call_mfx[["newdata"]] <- mfx@newdata
-    }
-    if (!is.null(mfx@comparison)) {
-        call_mfx[["comparison"]] <- mfx@comparison
-    }
 
     if (!is.null(estimator)) {
         bootfun <- function(split, ...) {
@@ -26,12 +15,7 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     } else {
         bootfun <- function(split, ...) {
             d <- rsample::analysis(split)
-            call_mod <- insight::get_call(mfx@model)
-            call_mod[["data"]] <- d
-            boot_mod <- eval.parent(call_mod)
-            call_mfx[["model"]] <- boot_mod
-            call_mfx[["modeldata"]] <- d
-            boot_mfx <- eval.parent(call_mfx)
+            boot_mfx <- refit(x, data = d, vcov = FALSE)
             out <- data.frame(boot_mfx)
             return(out)
         }
