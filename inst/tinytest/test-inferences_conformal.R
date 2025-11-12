@@ -18,7 +18,7 @@ mod = lm(rank ~ grade + branch + gender + race, data = dat$train)
 p = predictions(mod, newdata = dat$test, conf_level = 0.9) |>
     inferences(
         method = "conformal_split",
-        conformal_calibration = dat$calib,
+        data_calib = dat$calib,
         conformal_score = "residual_abs"
     )
 coverage = mean(p$rank > p$pred.low & p$rank < p$pred.high)
@@ -44,8 +44,8 @@ mod = lm(rank ~ grade + branch + gender + race, data = dat$train)
 p_mfx = predictions(mod, newdata = dat$test, conf_level = 0.8) |>
     inferences(
         method = "conformal_quantile",
-        conformal_train = dat$train,
-        conformal_calibration = dat$calibration,
+        data_train = dat$train,
+        data_calib = dat$calibration,
         nthreads = 1
     )
 coverage_mfx = mean(p_mfx$rank > p_mfx$pred.low & p_mfx$rank < p_mfx$pred.high)

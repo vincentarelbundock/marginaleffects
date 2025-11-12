@@ -4,11 +4,11 @@
 
 New:
 
-* `inferences(method = "conformal_full")` implements full conformal prediction for regression models. This provides distribution-free prediction intervals by refitting the model on augmented data for each test observation. Unlike split conformal or CV+, full conformal uses all training data without requiring a separate calibration set. It is computationally intensive but provides valid coverage guarantees. For tidymodels workflows, pass the training data explicitly via `conformal_train` argument.
+* `inferences(method = "conformal_full")` implements full conformal prediction for regression models. This provides distribution-free prediction intervals by refitting the model on augmented data for each test observation. Unlike split conformal or CV+, full conformal uses all training data without requiring a separate calibration set. It is computationally intensive but provides valid coverage guarantees. For tidymodels workflows, pass the training data explicitly via the `data_train` argument.
 
 Breaking changes:
 
-* `conformal_test` argument in `inferences()` is deprecated. Conformal methods now automatically use the `newdata` supplied to `predictions()` as the test set. This simplifies the interface and makes it more consistent.
+* The `conformal_calibration`, `conformal_train`, and `conformal_test` arguments in `inferences()` are deprecated. Use the new `data_calib`, `data_train`, and the automatically inferred `newdata` instead. This keeps all conformal methods on consistent argument names and removes the need to pass a separate test set.
 
 ## 0.30.1
 

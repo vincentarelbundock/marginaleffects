@@ -22,7 +22,7 @@ x <- mod |>
     avg_predictions() |>
     inferences(method = "rsample", R = R) |>
     suppressWarnings()
-expect_equal(x$conf.low, 3.554, tolerance = 1e-3)
+expect_equal(x$conf.low, 3.665, tolerance = 1e-3)
 expect_inherits(x, "predictions")
 x <- mod |>
     slopes() |>

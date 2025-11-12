@@ -86,7 +86,7 @@ conformity_test_full <- function(trial_y, x_test, model, train_data, response_na
 conformal_full <- function(x, test, score = "residual_abs", conf_level = 0.95,
                            var_multiplier = 10, max_iter = 100,
                            tolerance = .Machine$double.eps^0.25,
-                           mfx = NULL, train = NULL, ...) {
+                           mfx = NULL, data_train = NULL, ...) {
     if (is.null(mfx)) {
         mfx <- attr(x, "marginaleffects")
     }
@@ -96,10 +96,10 @@ conformal_full <- function(x, test, score = "residual_abs", conf_level = 0.95,
     response_name <- insight::find_response(model)
 
     # Get training data
-    if (is.null(train)) {
+    if (is.null(data_train)) {
         train_data <- mfx@modeldata
     } else {
-        train_data <- train
+        train_data <- data_train
     }
 
     # Check that training data has predictors (more than just response)
@@ -107,7 +107,7 @@ conformal_full <- function(x, test, score = "residual_abs", conf_level = 0.95,
         stop_sprintf(
             "Full conformal inference requires the original training data with predictors.
 For tidymodels workflows, pass the training data explicitly:
-  predictions(mod, newdata = test_data) |> inferences(method = 'conformal_full', conformal_train = train_data)"
+  predictions(mod, newdata = test_data) |> inferences(method = 'conformal_full', data_train = train_data)"
         )
     }
 

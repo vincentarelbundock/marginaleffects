@@ -46,7 +46,7 @@ p <- predictions(mod, newdata = dat[1:100, ]) |>
     inferences(
         R = 3,
         method = "conformal_cv+",
-        conformal_calibration = dat[101:nrow(dat), ]
+        data_calib = dat[101:nrow(dat), ]
     )
 expect_inherits(p, "predictions")
 
@@ -65,7 +65,7 @@ expect_true("std.error" %in% colnames(p))
 p <- predictions(mod, newdata = bikes[1:200, ], vcov = FALSE) |>
     inferences(
         method = "conformal_split",
-        conformal_calibration = bikes[201:nrow(bikes), ])
+        data_calib = bikes[201:nrow(bikes), ])
 expect_inherits(p, "predictions")
 
 mfx <- avg_slopes(mod, variables = c("temp", "season", "weather"), newdata = bikes, type = "numeric") |>

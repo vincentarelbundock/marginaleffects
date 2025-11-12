@@ -12,8 +12,8 @@
 # The implementation here is adapted to fit the marginaleffects package API and
 # uses quantreg::rq instead of quantregForest for quantile estimation.
 
-conformal_quantile <- function(x, test, train, calibration, conf_level = 0.95,
-                                mfx = NULL, ...) {
+conformal_quantile <- function(x, test, data_train, data_calib, conf_level = 0.95,
+                               mfx = NULL, ...) {
     if (is.null(mfx)) {
         mfx <- attr(x, "marginaleffects")
     }
@@ -22,50 +22,13 @@ conformal_quantile <- function(x, test, train, calibration, conf_level = 0.95,
     model <- mfx@model
     response_name <- insight::find_response(model)
 
-    # Get training data
-    if (is.null(train)) {
-        # Check if modeldata was a fallback from newdata
-        if (!isTRUE(mfx@modeldata_available)) {
-            stop_sprintf(
-                "Quantile conformal inference requires the original training data with predictors.
-The model's training data could not be extracted automatically, so you must pass it explicitly via `conformal_train`:
-  predictions(mod, newdata = test_data) |> inferences(method = 'conformal_quantile', conformal_train = train_data, conformal_calibration = calib_data)"
-            )
-        }
-
-        # Try to extract training data from the model
-        train_data <- tryCatch(
-            insight::get_data(model),
-            error = function(e) NULL
-        )
-
-        if (is.null(train_data) || ncol(train_data) <= 1) {
-            stop_sprintf(
-                "Quantile conformal inference requires the original training data with predictors.
-Please pass the training data explicitly:
-  predictions(mod, newdata = test_data) |> inferences(method = 'conformal_quantile', conformal_train = train_data, conformal_calibration = calib_data)"
-            )
-        }
-    } else {
-        train_data <- train
-    }
-
-    # Check that training data has predictors
-    if (ncol(train_data) <= 1) {
-        stop_sprintf(
-            "Quantile conformal inference requires the original training data with predictors.
-Please pass the training data explicitly:
-  predictions(mod, newdata = test_data) |> inferences(method = 'conformal_quantile', conformal_train = train_data, conformal_calibration = calib_data)"
-        )
-    }
-
     # Check response is numeric
     if (!is.numeric(train_data[[response_name]])) {
         stop_sprintf("Quantile conformal inference requires a numeric response variable.")
     }
 
     # Check calibration has response
-    if (!response_name %in% colnames(calibration)) {
+    if (!response_name %in% colnames(data_calib)) {
         stop_sprintf(
             "Calibration data must include the response variable '%s'.",
             response_name
@@ -100,21 +63,20 @@ Please pass the training data explicitly:
             quantregForest::quantregForest,
             c(list(x = x_train, y = y_train), dots)
         ),
-    error = function(e) {
-        stop_sprintf("Failed to fit quantile regression forest: %s", conditionMessage(e))
-        }
-    )
+        error = function(e) {
+            stop_sprintf("Failed to fit quantile regression forest: %s", conditionMessage(e))
+        })
 
     # Step 2: Get quantile predictions on calibration set
     # Use same predictor columns in same order as training
-    x_calib <- as.data.frame(calibration)[, predictor_cols, drop = FALSE]
+    x_calib <- as.data.frame(data_calib)[, predictor_cols, drop = FALSE]
     q_calib <- predict(qrf, newdata = x_calib, what = c(alpha / 2, 1 - alpha / 2))
     q_calib_low <- q_calib[, 1]
     q_calib_high <- q_calib[, 2]
 
     # Step 3: Compute conformity scores on calibration set
     # E_i = max(q_low(X_i) - Y_i, Y_i - q_high(X_i))
-    y_calib <- calibration[[response_name]]
+    y_calib <- data_calib[[response_name]]
     conformity_scores <- pmax(
         q_calib_low - y_calib,
         y_calib - q_calib_high

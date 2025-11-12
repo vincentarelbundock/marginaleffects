@@ -9,8 +9,8 @@ inferences(
   method,
   R = 1000,
   conf_type = "perc",
-  conformal_calibration = NULL,
-  conformal_train = NULL,
+  data_calib = NULL,
+  data_train = NULL,
   conformal_score = "residual_abs",
   estimator = NULL,
   ...
@@ -42,9 +42,9 @@ inferences(
 \item \code{simulation}: "perc" or "wald"
 }}
 
-\item{conformal_calibration}{Data frame of calibration data for split conformal prediction (\verb{method="conformal_split}).}
+\item{data_calib}{Data frame used for calibration in split conformal prediction.}
 
-\item{conformal_train}{Data frame of training data for full conformal prediction (\code{method="conformal_full"}). Only required for models where the training data cannot be extracted (e.g., tidymodels workflows).}
+\item{data_train}{Data frame of training data for full conformal prediction (\code{method="conformal_full"}). Only required for models where the training data cannot be extracted (e.g., tidymodels workflows). Test data are inferred directly from the \code{newdata} argument supplied to the original \code{marginaleffects} call.}
 
 \item{conformal_score}{String. Warning: The \code{type} argument in \code{predictions()} must generate predictions which are on the same scale as the outcome variable. Typically, this means that \code{type} must be "response" or "probs".
 \itemize{

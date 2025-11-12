@@ -22,8 +22,8 @@
 #' + `fwb`: "perc", "norm", "wald", "basic", "bc", or "bca"
 #' + `rsample`: "perc" or "bca"
 #' + `simulation`: "perc" or "wald"
-#' @param conformal_calibration Data frame of calibration data for split conformal prediction (`method="conformal_split`).
-#' @param conformal_train Data frame of training data for full conformal prediction (`method="conformal_full"`). Only required for models where the training data cannot be extracted (e.g., tidymodels workflows).
+#' @param data_train Data frame used to train/fit the model. If `NULL`, `marginaleffects` tries to extract the data from the original model object. Test data are inferred directly from the `newdata` supplied to the originating `marginaleffects` call (e.g., `predictions()`).
+#' @param data_calib Data frame used for calibration in split conformal prediction.
 #' @param conformal_score String. Warning: The `type` argument in `predictions()` must generate predictions which are on the same scale as the outcome variable. Typically, this means that `type` must be "response" or "probs".
 #'   + "residual_abs" or "residual_sq" for regression tasks (numeric outcome)
 #'   + "softmax" for classification tasks (when `predictions()` returns a `group` columns, such as multinomial or ordinal logit models.
@@ -110,11 +110,24 @@ inferences <- function(
     method,
     R = 1000,
     conf_type = "perc",
-    conformal_calibration = NULL,
-    conformal_train = NULL,
+    data_calib = NULL,
+    data_train = NULL,
     conformal_score = "residual_abs",
     estimator = NULL,
     ...) {
+    dots <- list(...)
+
+    # keep these alternative arguments forever because they are in the book
+    if ("conformal_calibration" %in% names(dots)) {
+        data_calib = dots[["conformal_calibration"]]
+    }
+    if ("conformal_train" %in% names(dots)) {
+        data_train = dots[["conformal_train"]]
+    }
+    if ("conformal_test" %in% names(dots)) {
+        data_test = dots[["conformal_test"]]
+    }
+
     mfx <- attr(x, "marginaleffects")
 
     # dummy mfx for `estimator` and no marginaleffects object
@@ -122,20 +135,24 @@ inferences <- function(
         mfx <- new_marginaleffects_internal(NULL, call("predictions"))
     }
 
-
-    x <- sanitize_estimator(x = x, estimator = estimator, method = method)
-
-    # we cannot support custom classes because they do not come with `update()` method.
-    if (
-        !inherits(x, c("hypotheses", "slopes", "comparisons", "predictions")) && !identical(class(x)[1], "data.frame")
-    ) {
-        sanity_model_supported_class(x, custom = FALSE)
+    # supported classes
+    supported_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
+    if (is.null(estimator)) {
+        has_supported_class <- any(vapply(
+            supported_classes,
+            function(cls) inherits(x, cls),
+            logical(1)
+        ))
+        if (!has_supported_class) {
+            msg <- "The `x` argument must be a `marginaleffects` object when supplying a function to the `estimator` argument."
+            stop_sprintf(msg)
+        }
+    } else {
+        x <- sanitize_estimator(x = x, estimator = estimator, method = method)
     }
 
     # inherit conf_level from the original object
     conf_level <- mfx@conf_level
-
-    checkmate::assert_number(conf_level, lower = 1e-10, upper = 1 - 1e-10)
     checkmate::assert_integerish(R, lower = 2)
     checkmate::assert_choice(
         method,
@@ -152,22 +169,20 @@ inferences <- function(
         )
     )
 
-    checkmate::assert(
-        checkmate::check_class(x, "predictions"),
-        checkmate::check_class(x, "comparisons"),
-        checkmate::check_class(x, "slopes"),
-        checkmate::check_class(x, "hypotheses")
-    )
-
-    if (inherits(mfx@model, "Learner")) {
-        msg <- "The inferences() function does not support models of this class."
-        stop_sprintf(msg)
+    if (is.null(data_train)) {
+        if (!isTRUE(mfx@modeldata_available)) {
+            assert_data_frame(data_train, null.ok = FALSE)
+        } else {
+            data_train <- mfx@modeldata
+        }
     }
-    if (inherits(mfx@model, c("model_fit", "workflow"))) {
-        if (method %in% c("boot", "rsample", "simulation")) {
-            msg <- "Bootstrap and simulation-based inferences are not supported for models of this class."
+
+    if (inherits(mfx@model, c("Learner", "model_fit", "workflow"))) {
+        if (method == "simulation") {
+            msg <- "Simulation-based inference is not supported for this class."
             stop_sprintf(msg)
         }
+        assert_data_frame(data_train, null.ok = FALSE)
     }
 
     # Issue #1501: `newdata` should only use the pre-evaluated `newdata` instead of bootstrapping datagrid()
@@ -185,125 +200,76 @@ inferences <- function(
         # Update mfx object if available
         if (!is.null(mfx) && inherits(nd, "data.frame")) {
             mfx@newdata <- nd
+            mfx@call <- call_mfx
             attr(x, "marginaleffects") <- mfx
         }
-    }
-
-    if (method == "conformal_split") {
-        conformal_fun <- conformal_split
-    }
-    if (method == "conformal_cv+") {
-        conformal_fun <- conformal_cv_plus
-    }
-    if (method == "conformal_quantile") {
-        conformal_fun <- conformal_quantile
-    }
-    if (method == "conformal_full") {
-        conformal_fun <- conformal_full
     }
 
     # default standard errors are Delta anyway
     if (method == "delta") {
         return(x)
-    }
-
-    if (method == "boot") {
-        out <- inferences_boot(x, R = R, conf_level = conf_level, conf_type = conf_type, estimator = estimator, mfx = mfx, ...)
+    } else if (method == "boot") {
+        out <- inferences_boot(x,
+            R = R,
+            conf_level = conf_level,
+            conf_type = conf_type,
+            estimator = estimator,
+            mfx = mfx,
+            ...)
     } else if (method == "fwb") {
-        if (
-            isTRUE("wts" %in% names(mfx@call)) &&
-                !isFALSE(mfx@call[["wts"]])
-        ) {
-            stop_sprintf(
-                "The `fwb` method is not supported with the `wts` argument."
-            )
+        if (isTRUE("wts" %in% names(mfx@call)) && !isFALSE(mfx@call[["wts"]])) {
+            stop_sprintf("The `fwb` method is not supported with the `wts` argument.")
         }
-        out <- inferences_fwb(x, R = R, conf_level = conf_level, conf_type = conf_type, mfx = mfx, ...)
+        out <- inferences_fwb(x,
+            R = R,
+            conf_level = conf_level,
+            conf_type = conf_type,
+            mfx = mfx,
+            ...)
     } else if (method == "rsample") {
-        out <- inferences_rsample(x, R = R, conf_level = conf_level, conf_type = conf_type, estimator = estimator, mfx = mfx, ...)
+        out <- inferences_rsample(x,
+            R = R,
+            conf_level = conf_level,
+            conf_type = conf_type,
+            estimator = estimator,
+            mfx = mfx,
+            ...)
     } else if (method == "simulation") {
-        out <- inferences_simulation(x, R = R, conf_level = conf_level, conf_type = conf_type, mfx = mfx, ...)
+        out <- inferences_simulation(x,
+            R = R,
+            conf_level = conf_level,
+            conf_type = conf_type,
+            mfx = mfx,
+            ...)
     } else if (isTRUE(grepl("conformal", method))) {
-        # Conformal prediction sanity checks
-        checkmate::assert_class(x, "predictions")
-        checkmate::assert_choice(
-            conformal_score,
-            choices = c("residual_abs", "residual_sq", "softmax")
+        data_test <- sanity_inferences_conformal(
+            mfx = mfx,
+            score = conformal_score,
+            method = method,
+            data_calib = data_calib,
+            data_test = data_test,
+            R = R
         )
 
-        # Deprecation warning for conformal_test if passed via ...
-        if ("conformal_test" %in% names(list(...))) {
-            insight::format_warning(
-                "The `conformal_test` argument is deprecated and will be ignored.
-Conformal methods now use the `newdata` supplied to `predictions()` automatically."
-            )
-        }
-
-        # Use newdata from predictions() as test set
-        test_data <- mfx@newdata
-        if (!inherits(test_data, "data.frame") || nrow(test_data) == 0) {
-            stop_sprintf(
-                "Conformal prediction requires a valid `newdata` argument in `predictions()`.
-Please call predictions(model, newdata = your_test_data) before using inferences()."
-            )
-        }
-
-        # Method-specific sanity checks
-        if (method == "conformal_split") {
-            checkmate::assert_data_frame(conformal_calibration, null.ok = FALSE)
-        }
-
-        if (method == "conformal_cv+") {
-            checkmate::assert_integerish(R, upper = 25)
-        }
-
-        if (method == "conformal_quantile") {
-            checkmate::assert_data_frame(conformal_calibration, null.ok = FALSE)
-        }
-
-        if (method == "conformal_full" && conformal_score == "softmax") {
-            stop_sprintf(
-                "The 'softmax' score is not supported for full conformal prediction.
-Use 'residual_abs' or 'residual_sq' for regression tasks."
-            )
-        }
+        conformal_fun <- switch(method,
+            "conformal_split" = conformal_split,
+            "conformal_cv+" = conformal_cv_plus,
+            "conformal_quantile" = conformal_quantile,
+            "conformal_full" = conformal_full,
+            NULL
+        )
 
         out <- conformal_fun(
             x,
             R = R,
             conf_level = conf_level,
-            test = test_data,
-            calibration = conformal_calibration,
-            train = conformal_train,
+            test = data_test,
+            data_calib = data_calib,
+            data_train = data_train,
             score = conformal_score,
             mfx = mfx,
             ...
         )
-    }
-
-    # Preserve specific attributes from the input object
-    attrs <- c(
-        "conf_level",
-        "by",
-        "lean",
-        "type",
-        "newdata",
-        "call",
-        "model_type",
-        "model",
-        "jacobian",
-        "vcov",
-        "weights",
-        "transform",
-        "nchains",
-        "vcov.type",
-        "variables",
-        "comparison"
-    )
-    for (n in attrs) {
-        if (n %in% names(attributes(x))) {
-            attr(out, n) <- attr(x, n)
-        }
     }
 
     return(out)

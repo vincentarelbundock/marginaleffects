@@ -1,7 +1,7 @@
-conformal_split <- function(x, test, calibration, score, conf_level, mfx = NULL, ...) {
+conformal_split <- function(x, test, data_calib, score, conf_level, mfx = NULL, ...) {
     # calibration
     # use original model---fitted on the training set---to make predictions in the calibration set
-    p_calib <- refit(x, newdata = calibration, vcov = FALSE)
+    p_calib <- refit(x, newdata = data_calib, vcov = FALSE)
     score <- get_conformal_score(p_calib, score = score, mfx = mfx)
 
     # test
