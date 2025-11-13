@@ -28,7 +28,7 @@ Downloads a dataset from the \code{marginaleffects} or the Rdatasets archives, a
 \url{https://vincentarelbundock.github.io/Rdatasets/}
 }
 \examples{
-\dontshow{if (FALSE) withAutoprint(\{ # examplesIf}
+\dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 dat <- get_dataset("Titanic", "Stat2Data")
 head(dat)
 

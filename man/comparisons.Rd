@@ -564,7 +564,7 @@ Other options:
 }
 
 \examples{
-\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) withAutoprint(\{ # examplesIf}
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Linear model
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)

@@ -6,6 +6,7 @@
 \alias{refit.predictions}
 \alias{refit.comparisons}
 \alias{refit.slopes}
+\alias{refit.hypotheses}
 \title{Refit a marginaleffects object with new data}
 \usage{
 refit(object, ...)
@@ -17,6 +18,8 @@ refit(object, ...)
 \method{refit}{comparisons}(object, data = NULL, newdata = NULL, vcov = NULL, ...)
 
 \method{refit}{slopes}(object, data = NULL, newdata = NULL, vcov = NULL, ...)
+
+\method{refit}{hypotheses}(object, data = NULL, newdata = NULL, vcov = NULL, ...)
 }
 \arguments{
 \item{object}{A marginaleffects object (predictions, comparisons, or slopes)}

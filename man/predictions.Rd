@@ -484,7 +484,7 @@ Other options:
 }
 
 \examples{
-\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) withAutoprint(\{ # examplesIf}
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library("marginaleffects")
 # Adjusted Prediction for every row of the original dataset
 mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
