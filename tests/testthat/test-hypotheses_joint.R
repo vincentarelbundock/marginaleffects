@@ -95,4 +95,3 @@ model <- lm(mpg ~ as.factor(cyl) * hp, data = mtcars)
 h <- hypotheses(model, joint = c("as.factor(cyl)6:hp", "as.factor(cyl)8:hp"))
 expect_true(inherits(h, "hypotheses"))
 expect_true(!is.null(attr(h, "marginaleffects")))
-}
