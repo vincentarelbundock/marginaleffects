@@ -16,6 +16,7 @@
 #' + "conformal_split": prediction intervals using split conformal prediction (see Angelopoulos & Bates, 2022)
 #' + "conformal_cv+": prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)
 #' + "conformal_full": prediction intervals using full conformal prediction (see Lei et al., 2018). **Warning**: This method is computationally expensive and typically much slower than split or CV+ methods.
+#' + "conformal_quantile": prediction intervals using full conformal prediction (see Romano et al., 2020).
 #' @param R Number of resamples, simulations, or cross-validation folds.
 #' @param conf_type String: type of bootstrap interval to construct.
 #' + `boot`: "perc", "norm", "basic", or "bca"
@@ -61,6 +62,8 @@
 #' Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. "Predictive Inference with the Jackknife+." arXiv. http://arxiv.org/abs/1905.02928.
 #'
 #' Lei, Jing, Max G'Sell, Alessandro Rinaldo, Ryan J. Tibshirani, and Larry Wasserman. 2018. "Distribution-Free Predictive Inference for Regression." Journal of the American Statistical Association 113 (523): 1094–1111.
+#'
+#' Romano, Yaniv, Evan Patterson, and Emmanuel Candes. 2020. "Conformalized quantile regression." Advances in neural information processing systems 32.
 #'
 #' @template parallel
 #' @return
