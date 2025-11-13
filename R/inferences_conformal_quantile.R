@@ -12,7 +12,7 @@
 # The implementation here is adapted to fit the marginaleffects package API and
 # uses quantreg::rq instead of quantregForest for quantile estimation.
 
-conformal_quantile <- function(x, test, data_train, data_calib, conf_level = 0.95,
+conformal_quantile <- function(x, data_test, data_train, data_calib, conf_level = 0.95,
                                mfx = NULL, ...) {
     if (is.null(mfx)) {
         mfx <- attr(x, "marginaleffects")
@@ -23,7 +23,7 @@ conformal_quantile <- function(x, test, data_train, data_calib, conf_level = 0.9
     response_name <- insight::find_response(model)
 
     # Check response is numeric
-    if (!is.numeric(train_data[[response_name]])) {
+    if (!is.numeric(data_train[[response_name]])) {
         stop_sprintf("Quantile conformal inference requires a numeric response variable.")
     }
 
@@ -45,12 +45,12 @@ conformal_quantile <- function(x, test, data_train, data_calib, conf_level = 0.9
 
     # Determine predictor columns (exclude response)
     # Use the order from training data consistently across all datasets
-    predictor_cols <- setdiff(colnames(train_data), response_name)
+    predictor_cols <- setdiff(colnames(data_train), response_name)
 
     # Prepare predictor matrix (exclude response)
     # Convert to data.frame to avoid data.table subsetting issues
-    x_train <- as.data.frame(train_data)[, predictor_cols, drop = FALSE]
-    y_train <- train_data[[response_name]]
+    x_train <- as.data.frame(data_train)[, predictor_cols, drop = FALSE]
+    y_train <- data_train[[response_name]]
 
     # Filter out arguments not relevant to quantregForest::quantregForest
     dots <- list(...)
@@ -95,14 +95,14 @@ conformal_quantile <- function(x, test, data_train, data_calib, conf_level = 0.9
 
     # Step 5: Get quantile predictions on test set
     # Use same predictor columns in same order as training
-    x_test <- as.data.frame(test)[, predictor_cols, drop = FALSE]
+    x_test <- as.data.frame(data_test)[, predictor_cols, drop = FALSE]
     q_test <- predict(qrf, newdata = x_test, what = c(alpha / 2, 1 - alpha / 2))
     q_test_low <- q_test[, 1]
     q_test_high <- q_test[, 2]
 
     # Step 6: Inflate the quantile predictions
     # C(x*) = [q_low(x*) - Q, q_high(x*) + Q]
-    out <- refit(x, newdata = test, vcov = FALSE)
+    out <- refit(x, newdata = data_test, vcov = FALSE)
 
     out$pred.low <- q_test_low - Q
     out$pred.high <- q_test_high + Q

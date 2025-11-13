@@ -12,57 +12,53 @@
 #
 # The implementation here is adapted to fit the marginaleffects package API.
 
-# Helper function to estimate trial value bounds for optimization
-get_trial_bounds_conformal <- function(pred_value, train_residuals, multiplier = 10) {
-    # Simple quantile-based approach for bounds
-    # Use range of training residuals as guide
-    resid_range <- max(abs(train_residuals))
-    bound <- multiplier * resid_range
-
-    return(c(pred_value - bound, pred_value + bound))
-}
-
-
 # Conformity test for a single trial value - returns difference for uniroot
-conformity_test_full <- function(trial_y, x_test, model, train_data, response_name,
-                                  conf_level, mfx) {
+conformity_test_full <- function(trial_y,
+                                 x_test,
+                                 model,
+                                 data_train,
+                                 response_name,
+                                 conf_level,
+                                 mfx) {
     # Augment training data with test point and trial outcome
     x_test[[response_name]] <- trial_y
 
-    # Ensure x_test has same columns as train_data in same order
-    # Reorder columns to match train_data
-    x_test <- x_test[, colnames(train_data), drop = FALSE]
+    # Ensure x_test has same columns as data_train in same order
+    # Reorder columns to match data_train
+    x_test <- x_test[, colnames(data_train), drop = FALSE]
 
-    # Ensure all column types in x_test match train_data before rbind
+    # Ensure all column types in x_test match data_train before rbind
     # This prevents type coercion issues with recipes/workflows
-    for (col in colnames(train_data)) {
-        target_class <- class(train_data[[col]])[1]
+    for (col in colnames(data_train)) {
+        target_class <- class(data_train[[col]])[1]
         current_class <- class(x_test[[col]])[1]
         if (target_class != current_class) {
             x_test[[col]] <- methods::as(x_test[[col]], target_class)
         }
     }
 
-    augmented_data <- rbind(train_data, x_test)
-    n <- nrow(train_data)
+    augmented_data <- rbind(data_train, x_test)
+    n <- nrow(data_train)
 
     # Refit model and get predictions using refit.predictions()
     # This handles workflows, stats::update, and call re-evaluation
-    pred_aug <- tryCatch({
-        # Create a minimal predictions object to use refit() on
-        # We need the mfx attribute for refit() to work
-        dummy_pred <- data.frame(estimate = 1)
-        class(dummy_pred) <- c("predictions", "data.frame")
-        attr(dummy_pred, "marginaleffects") <- mfx
+    pred_aug <- tryCatch(
+        {
+            # Create a minimal predictions object to use refit() on
+            # We need the mfx attribute for refit() to work
+            dummy_pred <- data.frame(estimate = 1)
+            class(dummy_pred) <- c("predictions", "data.frame")
+            attr(dummy_pred, "marginaleffects") <- mfx
 
-        # Use refit() to refit model and make predictions
-        refit.predictions(dummy_pred, data = augmented_data, newdata = augmented_data)
-    }, error = function(e) {
-        if (getOption("marginaleffects_conformal_debug", FALSE)) {
-            warning("Refit/prediction failed: ", conditionMessage(e))
-        }
-        NULL
-    })
+            # Use refit() to refit model and make predictions
+            refit.predictions(dummy_pred, data = augmented_data, newdata = augmented_data)
+        },
+        error = function(e) {
+            if (getOption("marginaleffects_conformal_debug", FALSE)) {
+                warning("Refit/prediction failed: ", conditionMessage(e))
+            }
+            NULL
+        })
 
     if (is.null(pred_aug) || !inherits(pred_aug, "predictions")) {
         return(NA_real_)
@@ -83,48 +79,52 @@ conformity_test_full <- function(trial_y, x_test, model, train_data, response_na
 }
 
 
-conformal_full <- function(x, test, score = "residual_abs", conf_level = 0.95,
-                           var_multiplier = 10, max_iter = 100,
+conformal_full <- function(x,
+                           data_test = NULL,
+                           data_train = NULL,
+                           conf_level = 0.95,
+                           var_multiplier = 10,
+                           max_iter = 100,
                            tolerance = .Machine$double.eps^0.25,
-                           mfx = NULL, data_train = NULL, ...) {
+                           mfx = NULL,
+                           ...) {
+    dots <- list(...)
+    if (is.null(data_test) && "test" %in% names(dots)) {
+        data_test <- dots$test
+    }
+
     if (is.null(mfx)) {
         mfx <- attr(x, "marginaleffects")
     }
+
+    checkmate::assert_data_frame(data_test, null.ok = FALSE)
+    checkmate::assert_data_frame(data_train, null.ok = FALSE)
 
     # Get model
     model <- mfx@model
     response_name <- insight::find_response(model)
 
-    # Get training data
-    if (is.null(data_train)) {
-        train_data <- mfx@modeldata
-    } else {
-        train_data <- data_train
-    }
-
     # Check that training data has predictors (more than just response)
-    if (ncol(train_data) <= 1) {
-        stop_sprintf(
-            "Full conformal inference requires the original training data with predictors.
-For tidymodels workflows, pass the training data explicitly:
-  predictions(mod, newdata = test_data) |> inferences(method = 'conformal_full', data_train = train_data)"
-        )
+    if (ncol(data_train) <= 1) {
+        msg <- "Full conformal inference requires the original training data with predictors. For tidymodels workflows, pass the training data explicitly: predictions(mod, newdata = data_test) |> inferences(method = 'conformal_full', data_train = data_train)"
+        stop_sprintf(msg)
     }
 
     # Check response is numeric
-    if (!is.numeric(train_data[[response_name]])) {
+    if (!is.numeric(data_train[[response_name]])) {
         stop_sprintf("Full conformal inference requires a numeric response variable.")
     }
 
     # Get initial predictions and training residuals (for bounds estimation)
-    pred_test <- predictions(model, newdata = test, vcov = FALSE)
-    pred_train <- predictions(model, newdata = train_data, vcov = FALSE)
-    train_residuals <- train_data[[response_name]] - pred_train$estimate
+    pred_test <- predictions(model, newdata = data_test, vcov = FALSE)
+    pred_train <- predictions(model, newdata = data_train, vcov = FALSE)
+    train_residuals <- data_train[[response_name]] - pred_train$estimate
+    trial_half_width <- var_multiplier * max(abs(train_residuals))
 
     # Function to compute bounds for a single test observation
     compute_bounds_single <- function(i) {
-        x_test <- test[i, , drop = FALSE]
-        data.table::setDF(x_test)  # Convert to data.frame for easier handling
+        x_test <- data_test[i, , drop = FALSE]
+        data.table::setDF(x_test) # Convert to data.frame for easier handling
         # Remove marginaleffects-added columns like rowid
         keep_cols <- !colnames(x_test) %in% c("rowid", "rowidcf")
         if (any(keep_cols)) {
@@ -133,7 +133,7 @@ For tidymodels workflows, pass the training data explicitly:
         pred_value <- pred_test$estimate[i]
 
         # Get trial bounds
-        bounds <- get_trial_bounds_conformal(pred_value, train_residuals, var_multiplier)
+        bounds <- c(pred_value - trial_half_width, pred_value + trial_half_width)
 
         # Find upper bound using uniroot
         upper <- tryCatch(
@@ -145,7 +145,7 @@ For tidymodels workflows, pass the training data explicitly:
                 extendInt = "upX",
                 x_test = x_test,
                 model = model,
-                train_data = train_data,
+                data_train = data_train,
                 response_name = response_name,
                 conf_level = conf_level,
                 mfx = mfx
@@ -155,8 +155,7 @@ For tidymodels workflows, pass the training data explicitly:
                     "Failed to find upper bound for observation %d: %s", i, conditionMessage(e)
                 ))
                 NULL
-            }
-        )
+            })
 
         # Find lower bound using uniroot
         lower <- tryCatch(
@@ -168,7 +167,7 @@ For tidymodels workflows, pass the training data explicitly:
                 extendInt = "downX",
                 x_test = x_test,
                 model = model,
-                train_data = train_data,
+                data_train = data_train,
                 response_name = response_name,
                 conf_level = conf_level,
                 mfx = mfx
@@ -178,8 +177,7 @@ For tidymodels workflows, pass the training data explicitly:
                     "Failed to find lower bound for observation %d: %s", i, conditionMessage(e)
                 ))
                 NULL
-            }
-        )
+            })
 
         pred_low <- if (!is.null(lower)) lower$root else NA_real_
         pred_high <- if (!is.null(upper)) upper$root else NA_real_
@@ -194,13 +192,12 @@ For tidymodels workflows, pass the training data explicitly:
         pkg <- getOption("marginaleffects_parallel_packages", default = NULL)
         pkg <- unique(c("marginaleffects", pkg))
         results <- future.apply::future_lapply(
-            seq_len(nrow(test)),
+            seq_len(nrow(data_test)),
             compute_bounds_single,
             future.seed = TRUE,
-            future.packages = pkg
-        )
+            future.packages = pkg)
     } else {
-        results <- lapply(seq_len(nrow(test)), compute_bounds_single)
+        results <- lapply(seq_len(nrow(data_test)), compute_bounds_single)
     }
 
     # Combine results

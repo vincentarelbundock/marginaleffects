@@ -113,8 +113,9 @@ inferences <- function(
     method,
     R = 1000,
     conf_type = "perc",
-    data_calib = NULL,
     data_train = NULL,
+    data_test = NULL,
+    data_calib = NULL,
     conformal_score = "residual_abs",
     estimator = NULL,
     ...) {
@@ -173,8 +174,8 @@ inferences <- function(
     )
 
     if (is.null(data_train)) {
-        if (!isTRUE(mfx@modeldata_available)) {
-            assert_data_frame(data_train, null.ok = FALSE)
+        if (!isTRUE(mfx@modeldata_available) && method != "conformal_split") {
+            checkmate::assert_data_frame(data_train, null.ok = FALSE)
         } else {
             data_train <- mfx@modeldata
         }
@@ -185,7 +186,7 @@ inferences <- function(
             msg <- "Simulation-based inference is not supported for this class."
             stop_sprintf(msg)
         }
-        assert_data_frame(data_train, null.ok = FALSE)
+        checkmate::assert_data_frame(data_train, null.ok = FALSE)
     }
 
     # Issue #1501: `newdata` should only use the pre-evaluated `newdata` instead of bootstrapping datagrid()
@@ -266,7 +267,7 @@ inferences <- function(
             x,
             R = R,
             conf_level = conf_level,
-            test = data_test,
+            data_test = data_test,
             data_calib = data_calib,
             data_train = data_train,
             score = conformal_score,

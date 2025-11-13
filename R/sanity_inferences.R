@@ -42,7 +42,7 @@ sanity_inferences_conformal <- function(mfx, score, method, data_calib, data_tes
     }
 
     # Only select arguments may differ from defaults
-    allowed_args <- c("model", "newdata", "conf_level", "...")
+    allowed_args <- c("model", "newdata", "conf_level", "vcov", "...")
     restricted <- setdiff(formal_names, allowed_args)
 
     for (arg in restricted) {
@@ -74,7 +74,7 @@ sanity_inferences_conformal <- function(mfx, score, method, data_calib, data_tes
         stop_sprintf(msg)
     }
 
-    return(test_data)
+    return(data_test)
 }
 
 

@@ -1,11 +1,17 @@
-conformal_cv_plus <- function(x, test, R, score, conf_level, mfx = NULL, ...) {
+conformal_cv_plus <- function(x,
+                              data_train,
+                              data_test,
+                              R,
+                              score,
+                              conf_level,
+                              mfx = NULL,
+                              ...) {
     # cross-validation
-    train <- mfx@modeldata
-    idx <- sample.int(nrow(train), nrow(train))
+    idx <- sample.int(nrow(data_train), nrow(data_train))
     idx <- split(idx, ceiling(seq_along(idx) / (length(idx) / R)))
     scores <- NULL
     for (i in idx) {
-        data_cv <- train[-i, ]
+        data_cv <- data_train[-i, ]
         # re-fit the original model on training sets withholding the CV fold
         model_cv <- tryCatch(stats::update(mfx@model, data = data_cv),
             error = function(e) NULL)
@@ -22,7 +28,7 @@ conformal_cv_plus <- function(x, test, R, score, conf_level, mfx = NULL, ...) {
         # call_cv is the `predictions()` call, which we re-evaluate in-fold: newdata=train[i,]
         call_cv <- mfx@call
         call_cv[["model"]] <- model_cv
-        call_cv[["newdata"]] <- train[i, ]
+        call_cv[["newdata"]] <- data_train[i, ]
         call_cv[["vcov"]] <- FALSE # faster
         pred_cv <- eval(call_cv)
         # save the scores form each fold
@@ -30,7 +36,7 @@ conformal_cv_plus <- function(x, test, R, score, conf_level, mfx = NULL, ...) {
     }
 
     # test
-    out <- refit(x, newdata = test)
+    out <- refit(x, newdata = data_test)
 
     # bounds
     out <- get_conformal_bounds(out, score = scores, conf_level = conf_level, mfx = mfx)

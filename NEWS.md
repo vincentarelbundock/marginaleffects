@@ -8,7 +8,7 @@ New:
 
 Breaking changes:
 
-* The `conformal_calibration`, `conformal_train`, and `conformal_test` arguments in `inferences()` are deprecated. Use the new `data_calib`, `data_train`, and the automatically inferred `newdata` instead. This keeps all conformal methods on consistent argument names and removes the need to pass a separate test set.
+* The `conformal_calibration`, `conformal_train`, and `conformal_test` arguments in `inferences()` are deprecated (but kept for backward compatibility). Use the new `data_calib`, `data_train`, and `data_test`.
 
 ## 0.30.1
 

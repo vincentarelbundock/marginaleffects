@@ -9,8 +9,9 @@ inferences(
   method,
   R = 1000,
   conf_type = "perc",
-  data_calib = NULL,
   data_train = NULL,
+  data_test = NULL,
+  data_calib = NULL,
   conformal_score = "residual_abs",
   estimator = NULL,
   ...
@@ -43,9 +44,9 @@ inferences(
 \item \code{simulation}: "perc" or "wald"
 }}
 
-\item{data_calib}{Data frame used for calibration in split conformal prediction.}
-
 \item{data_train}{Data frame used to train/fit the model. If \code{NULL}, \code{marginaleffects} tries to extract the data from the original model object. Test data are inferred directly from the \code{newdata} supplied to the originating \code{marginaleffects} call (e.g., \code{predictions()}).}
+
+\item{data_calib}{Data frame used for calibration in split conformal prediction.}
 
 \item{conformal_score}{String. Warning: The \code{type} argument in \code{predictions()} must generate predictions which are on the same scale as the outcome variable. Typically, this means that \code{type} must be "response" or "probs".
 \itemize{
