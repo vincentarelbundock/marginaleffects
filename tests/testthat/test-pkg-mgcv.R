@@ -7,12 +7,14 @@ testthat::skip_if_not_installed("emmeans")
 testthat::skip_if_not_installed("broom")
 testthat::skip_if_not_installed("tibble")
 testthat::skip_if_not_installed("tsModel")
+testthat::skip_if_not_installed("itsadug")
 
 requiet("mgcv")
 requiet("emmeans")
 requiet("broom")
 requiet("tibble")
 requiet("tsModel")
+requiet("itsadug")
 
 # Basic expectation tests
 mod_simple <- mgcv::gam(mpg ~ s(wt), data = mtcars)
@@ -102,3 +104,108 @@ test1 <- function(x, z, sx = 0.3, sz = 0.4) {
     (pi**sx * sz) *
         (1.2 * exp(-(x - 0.2)^2 / sx^2 - (z - 0.3)^2 / sz^2) + 0.8 * exp(-(x - 0.7)^2 / sx^2 - (z - 0.8)^2 / sz^2))
 }
+
+n <- 500
+x <- runif(n) / 20
+z <- runif(n)
+f <- test1(x, z)
+y <- f + rnorm(n) * 0.2
+df <- tibble::tibble(y, x, z)
+df <- dplyr::mutate(
+    df,
+    x_lags = drop(tsModel::Lag(x, 0:10)),
+    L = matrix(0:10, nrow = 1)
+)
+b <- mgcv::gam(y ~ s(z) + te(x_lags, L), data = df)
+mfx <- slopes(b, newdata = df) |> suppressWarnings()
+cmp <- comparisons(b, newdata = df) |> suppressWarnings()
+pre <- predictions(b, newdata = df) |> suppressWarnings()
+expect_s3_class(pre, "predictions")
+expect_s3_class(mfx, "marginaleffects")
+expect_s3_class(cmp, "comparisons")
+# only one regressor since others are matrix columns
+expect_true(all(mfx$term == "z"))
+expect_true(all(cmp$term == "z"))
+
+expect_error(suppressWarnings(slopes(b, variables = "L")), regexp = "no valid")
+expect_error(suppressWarnings(comparisons(b, variables = "L")), regexp = "no valid")
+expect_error(suppressWarnings(plot_slopes(b, variables = "L", condition = "z")))
+
+
+# Issue #365: exclude argument changes predictions
+void <- capture.output(
+    dat <- gamSim(1, n = 400, dist = "normal", scale = 2)
+)
+b <- bam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
+p1 <- predictions(b, newdata = dat)
+p2 <- predictions(b, exclude = "s(x3)", newdata = dat)
+expect_true(all(p1$estimate != p2$estimate))
+
+
+# exclude a smooth
+set.seed(1024)
+data(simdat, package = "itsadug")
+simdat$Subject <- as.factor(simdat$Subject)
+model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"), data = simdat)
+nd <- datagrid(
+    model = model,
+    Subject = "a01",
+    Group = "Adults"
+)
+
+expect_equal(
+    predictions(model, newdata = nd)$estimate,
+    predict(model, newdata = nd)[1],
+    ignore_attr = TRUE,
+    tolerance = 1e-8
+)
+
+expect_equal(
+    predictions(model, newdata = nd, exclude = "s(Subject)")$estimate,
+    predict(model, newdata = nd, exclude = "s(Subject)")[1],
+    ignore_attr = TRUE,
+    tolerance = 1e-8
+)
+
+
+mfx <- slopes(model, newdata = "mean", variables = "Time", type = "link")
+emt <- suppressMessages(data.frame(
+    emtrends(model, ~Time, "Time", at = list(Time = 1000, Subject = "a01", Group = "Adults"))
+))
+expect_equal(mfx$estimate, emt$Time.trend, tolerance = 1e-2, ignore_attr = TRUE)
+expect_equal(mfx$std.error, emt$SE, tolerance = 1e-3, ignore_attr = TRUE)
+
+# Issue #545
+p <- plot_slopes(model, variables = "Time", condition = "Time", draw = FALSE)
+expect_true(nrow(p) > 1)
+
+
+# Issue #844
+df <- transform(mtcars, gear = as.integer(gear))
+
+mod <- mgcv::gam(
+    gear ~ s(hp) + cyl,
+    data = df,
+    family = ocat(R = 5)
+)
+
+pre <- avg_predictions(model = mod)
+slo <- avg_slopes(mod)
+cmp <- comparisons(mod)
+expect_s3_class(pre, "predictions")
+expect_s3_class(slo, "slopes")
+expect_s3_class(cmp, "comparisons")
+
+
+# Issue #931
+simdat$Subject <- as.factor(simdat$Subject)
+model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"), data = simdat)
+
+low <- function(hi, lo, x) {
+    dydx <- (hi - lo) / 1e-6
+    dydx_min <- min(dydx)
+    x[dydx == dydx_min][1]
+}
+cmp <- comparisons(model, variables = list("Time" = 1e-6), vcov = FALSE, by = "Group", comparison = low)
+expect_s3_class(cmp, "comparisons")
+expect_equal(nrow(cmp), 2, ignore_attr = TRUE)

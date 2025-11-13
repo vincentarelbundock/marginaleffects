@@ -13,9 +13,9 @@ expect_comparisons2(mod, newdata = mtcars, se = FALSE)
 
 
 p <- avg_comparisons(mod, newdata = mtcars)
-expect_s3_class(p, "comparisons")
+expect_s3_class(p, c("comparisons", "marginaleffects"))
 expect_equal(nrow(p), 1, ignore_attr = TRUE)
 
 p <- avg_predictions(mod, by = "carb", newdata = mtcars)
-expect_s3_class(p, "predictions")
+expect_s3_class(p, c("predictions", "marginaleffects"))
 expect_equal(nrow(p), 6, ignore_attr = TRUE)

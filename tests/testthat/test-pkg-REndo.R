@@ -12,7 +12,7 @@ expect_comparisons2(mod_simple)
 data("dataLatentIV", package = "REndo")
 mod <- latentIV(y ~ P, data = dataLatentIV, verbose = FALSE)
 s <- avg_slopes(mod, type = "response")
-expect_s3_class(s, "slopes")
+expect_s3_class(s, c("slopes", "marginaleffects"))
 
 data("dataCopCont", package = "REndo")
 set.seed(1002)
@@ -24,4 +24,4 @@ mod <- copulaCorrection(
 ) |>
     suppressWarnings()
 s <- avg_slopes(mod)
-expect_s3_class(s, "slopes")
+expect_s3_class(s, c("slopes", "marginaleffects"))
