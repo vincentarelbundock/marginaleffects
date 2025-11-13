@@ -1,0 +1,255 @@
+testthat::skip_if_not_installed("tidyverse")
+testthat::skip_if_not_installed("survey")
+testthat::skip_if_not_installed("rstan")
+requiet("tidyverse")
+requiet("survey")
+requiet("rstan")
+
+# mtcars logit
+tmp_wts <- get_dataset("mtcars", "datasets")
+tmp_wts$weights <- tmp_wts$w <- 1:32
+dat_wts <- tmp_wts
+mod <- suppressWarnings(svyglm(
+    am ~ mpg + cyl,
+    design = svydesign(ids = ~1, weights = ~weights, data = dat_wts),
+    family = binomial
+))
+
+expect_warning(p1 <- avg_predictions(mod, newdata = dat_wts))
+p2 <- avg_predictions(mod, wts = "weights", newdata = dat_wts)
+p3 <- avg_predictions(mod, wts = "w", newdata = dat_wts)
+p4 <- avg_predictions(mod, wts = dat_wts$weights)
+expect_false(p1$estimate == p2$estimate)
+expect_false(p1$std.error == p2$std.error)
+expect_equal(p2, p3, ignore_attr = TRUE)
+expect_equal(p2, p4, ignore_attr = TRUE)
+
+
+# backward compatibility
+p1 <- avg_predictions(mod, wts = "weights", newdata = dat_wts)
+p2 <- suppressWarnings(avg_predictions(mod, wts = FALSE, newdata = dat_wts))
+expect_true(p1$estimate != p2$estimate)
+
+
+# by supports weights
+p1 <- avg_predictions(mod, wts = "weights", newdata = dat_wts)
+expect_s3_class(p1, "data.frame")
+m1 <- avg_slopes(mod, wts = "weights", newdata = dat_wts, by = "cyl")
+expect_s3_class(m1, "data.frame")
+c1 <- avg_comparisons(mod, wts = "weights", newdata = dat_wts, by = "cyl")
+expect_s3_class(c1, "data.frame")
+
+
+# wts + comparison="avg"
+set.seed(100)
+k <- get_dataset("lalonde", "MatchIt")
+k$w <- rchisq(614, 2)
+fit <- lm(re78 ~ treat * (age + educ + race + married + re74), data = k, weights = w)
+cmp1 <- comparisons(fit, variables = "treat", wts = "w")
+cmp2 <- comparisons(fit, variables = "treat", wts = "w", comparison = "differenceavg")
+expect_equal(cmp2$estimate, weighted.mean(cmp1$estimate, k$w), ignore_attr = TRUE)
+
+# wts = TRUE correctly extracts weights
+a1 <- avg_comparisons(fit, variables = "treat", wts = "w")
+a2 <- avg_comparisons(fit, variables = "treat", wts = TRUE)
+expect_equal(a1, a2, ignore_attr = TRUE)
+
+a1 <- avg_comparisons(fit, variables = "treat", by = "married", wts = k$w)
+a2 <- avg_comparisons(fit, variables = "treat", by = "married", wts = TRUE)
+expect_equal(a1, a2, ignore_attr = TRUE)
+
+a1 <- avg_predictions(fit, wts = "w")
+a2 <- avg_predictions(fit, wts = TRUE)
+expect_equal(a1, a2, ignore_attr = TRUE)
+
+a1 <- avg_predictions(fit, by = "married", wts = k$w)
+a2 <- avg_predictions(fit, by = "married", wts = TRUE)
+expect_equal(a1, a2, ignore_attr = TRUE)
+
+
+# sanity check
+expect_error(comparisons(mod, wts = "junk"), regexp = "explicitly")
+expect_error(slopes(mod, wts = "junk"), regexp = "explicitly")
+
+# vs. Stata (not clear what SE they use, so we give tolerance)
+mod <- suppressWarnings(svyglm(
+    am ~ mpg,
+    design = svydesign(ids = ~1, weights = ~weights, data = dat_wts),
+    family = binomial
+))
+tmp_wts2 <- mod$prior.weights
+stata <- c(.0441066, .0061046)
+mfx <- slopes(mod, wts = tmp_wts2, by = "term")
+expect_equal(mfx$estimate[1], stata[1], tolerance = .01, ignore_attr = TRUE)
+expect_equal(mfx$std.error, stata[2], tolerance = 0.002, ignore_attr = TRUE)
+
+
+# Issue #737
+# fmt: skip
+md <- tibble::tribble(
+    ~g, ~device, ~y, ~N, ~p,
+    "Control", "desktop", 12403, 103341L, 0.120020127538925,
+    "Control", "mobile", 1015, 16192L, 0.0626852766798419,
+    "Control", "tablet", 38, 401L, 0.0947630922693267,
+    "X", "desktop", 12474, 103063L, 0.121032766366203,
+    "X", "mobile", 1030, 16493L, 0.0624507366761656,
+    "X", "tablet", 47, 438L, 0.107305936073059,
+    "Z", "desktop", 12968, 102867L, 0.126065696481865,
+    "Z", "mobile", 973, 16145L, 0.0602663363270362,
+    "Z", "tablet", 34, 438L, 0.0776255707762557,
+    "W", "desktop", 12407, 103381L, 0.120012381385361,
+    "W", "mobile", 1007, 16589L, 0.060702875399361,
+    "W", "tablet", 30, 435L, 0.0689655172413793)
+tmp_wts3 <<- as.data.frame(md)
+tmp_wts4 <- as.data.frame(md)
+fit <- glm(cbind(y, N - y) ~ g * device, data = tmp_wts4, family = binomial())
+cmp1 <- avg_comparisons(
+    fit,
+    variables = list(g = c("Control", "Z")),
+    wts = "N",
+    newdata = tmp_wts4,
+    comparison = "lnratioavg",
+    transform = exp
+)
+cmp2 <- predictions(fit, variables = list(g = c("Control", "Z"))) |>
+    dplyr::group_by(g) |>
+    dplyr::summarise(estimate = weighted.mean(estimate, N)) |>
+    as.data.frame()
+expect_equal(
+    cmp1$estimate,
+    cmp2$estimate[cmp2$g == "Z"] / cmp2$estimate[cmp2$g == "Control"],
+    ignore_attr = TRUE
+)
+
+# wts shortcuts are internal-only
+expect_error(
+    avg_comparisons(fit, variables = "g", wts = "N", comparison = "lnratioavgwts", transform = exp),
+    regexp = "check_choice"
+)
+
+# lnratioavg = lnratio with `by`
+cmp1 <- avg_comparisons(fit, variables = "g", by = "device", wts = "N", comparison = "lnratioavg", transform = exp)
+cmp2 <- avg_comparisons(fit, variables = "g", by = "device", wts = "N", comparison = "lnratio", transform = exp)
+expect_equal(cmp1, cmp2, ignore_attr = TRUE)
+
+# lnratioavg + wts produces same results in this particular case, because there are only the g*device predictors
+cmp1 <- avg_comparisons(fit, variables = "g", by = "device", wts = "N", comparison = "lnratioavg", transform = exp)
+cmp2 <- avg_comparisons(fit, variables = "g", by = "device", wts = "N", comparison = "lnratioavg", transform = exp)
+expect_equal(cmp1, cmp2, ignore_attr = TRUE)
+
+
+# Issue #865
+# fmt: skip
+d = data.frame(
+    outcome = c(0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0),
+    foo = c(1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+    bar = c(1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1)
+)
+
+mod = glm(
+    outcome ~ foo + bar,
+    family = "binomial",
+    data = d
+)
+cmp1 <- avg_comparisons(mod, variables = list(foo = 0:1), type = "response", comparison = "difference")
+cmp2 <- comparisons(mod, variables = list(foo = 0:1), type = "response", comparison = "differenceavg")
+expect_equal(cmp1$estimate, cmp2$estimate, tolerance = 1e-6, ignore_attr = TRUE)
+
+
+# Issue #870
+Guerry <- get_dataset("Guerry", "HistData")
+Guerry <- Guerry[which(Guerry$Region != ""), ]
+mod <- lm(Literacy ~ Pop1831 * Desertion, data = Guerry)
+p1 <- predictions(mod, by = "Region", wts = "Donations")
+p2 <- predictions(mod, by = "Region")
+expect_s3_class(p1, "predictions")
+expect_true(any(p1$estimate != p2$estimate))
+
+
+
+# Issue #1596: wts + hypothesis formula
+# problem was that datagrid() did not retain marginaleffects_wts_internal column.
+mod1 <- glm(vs ~ mpg + factor(cyl), data = mtcars, family = binomial)
+p <- predict(mod1, type = "response")
+dat_wts2 <- transform(mtcars, wts = ifelse(vs == 1, 1 / p, 1 / (1 - p)))
+mod2 <- lm(hp ~ vs * (wt + qsec + disp), data = dat_wts2, weights = wts)
+nd <- data.table::rbindlist(
+    list(
+        transform(dat_wts2, vs = 0),
+        transform(dat_wts2, vs = 1))
+)
+nd <- transform(nd, p = predict(mod2, newdata = nd))
+p1 <- nd[, .(p = weighted.mean(p, wts)), by = vs]
+p2 <- avg_predictions(mod2, variables = "vs", wts = "wts")
+expect_equal(p1$p, p2$estimate, ignore_attr = TRUE)
+expect_equal(
+    avg_predictions(mod2, variables = "vs", wts = "wts")$estimate,
+    c(95.484, 118.938),
+    tolerance = 1e-4,
+    ignore_attr = TRUE)
+expect_equal(
+    avg_predictions(mod2, variables = "vs")$estimate,
+    c(100.34, 125.43),
+    tolerance = 1e-4,
+    ignore_attr = TRUE)
+expect_equal(
+    avg_predictions(mod2, wts = "wts")$estimate,
+    130.191,
+    tolerance = 1e-4,
+    ignore_attr = TRUE)
+expect_equal(
+    avg_predictions(mod2)$estimate,
+    145.2516,
+    tolerance = 1e-4,
+    ignore_attr = TRUE)
+expect_equal(
+    avg_predictions(mod2, variables = "vs")$estimate,
+    c(100.34, 125.43),
+    tolerance = 1e-4,
+    ignore_attr = TRUE)
+
+
+# brms
+testthat::skip_if(!EXPENSIVE, "EXPENSIVE")
+set.seed(1024)
+mod <- marginaleffects:::modelarchive_model("brms_numeric2")
+w <- runif(32)
+cmp1 <- comparisons(mod, comparison = "differenceavg")
+cmp2 <- comparisons(mod, wts = w, comparison = "differenceavg")
+expect_true(all(cmp1$estimate != cmp2$estimate))
+
+# . logit am mpg [pw=weights]
+#
+# Iteration 0:   log pseudolikelihood = -365.96656
+# Iteration 1:   log pseudolikelihood = -255.02961
+# Iteration 2:   log pseudolikelihood = -253.55843
+# Iteration 3:   log pseudolikelihood = -253.55251
+# Iteration 4:   log pseudolikelihood = -253.55251
+#
+# Logistic regression                                     Number of obs =     32
+#                                                         Wald chi2(1)  =   8.75
+#                                                         Prob > chi2   = 0.0031
+# Log pseudolikelihood = -253.55251                       Pseudo R2     = 0.3072
+#
+# ------------------------------------------------------------------------------
+#              |               Robust
+#           am | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+# -------------+----------------------------------------------------------------
+#          mpg |   .2789194   .0943021     2.96   0.003     .0940908    .4637481
+#        _cons |  -5.484059   2.066303    -2.65   0.008    -9.533938   -1.434179
+# ------------------------------------------------------------------------------
+#
+# . margins, dydx(mpg)
+#
+# Average marginal effects                                    Number of obs = 32
+# Model VCE: Robust
+#
+# Expression: Pr(am), predict()
+# dy/dx wrt:  mpg
+#
+# ------------------------------------------------------------------------------
+#              |            Delta-method
+#              |      dy/dx   std. err.      z    P>|z|     [95% conf. interval]
+# -------------+----------------------------------------------------------------
+#          mpg |   .0441066   .0061046     7.23   0.000     .0321419    .0560714
+# ------------------------------------------------------------------------------
