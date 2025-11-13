@@ -195,7 +195,8 @@ Suggests:
     xgboost,
     altdoc,
     knitr,
-    quarto
+    quarto,
+    testthat (>= 3.0.0)
 Collate:
     'add_hypothesis.R'
     'add_rowid.R'
@@ -344,3 +345,5 @@ Collate:
     'zzz.R'
 Language: en-US
 VignetteBuilder: knitr, quarto
+Config/testthat/edition: 3
+Config/testthat/parallel: true

@@ -1,4 +1,4 @@
-.PHONY: help testall testone document check install deploy deploydev html pdf news clean website
+.PHONY: help testall testone testthat document check install deploy deploydev html pdf news clean website
 
 BOOK_DIR := book
 
@@ -29,6 +29,9 @@ test: install runnersup ## Build and test in parallel with 8 cores
 testseq: runnersup ## Build and test in parallel with 8 cores
 	uv run Rscript -e "pkgload::load_all();tinytest::run_test_dir()"
 	$(MAKE) runnersdown
+
+testthat: ## Run testthat suite with parallel processing
+	uv run Rscript -e "testthat::test_local(reporter = 'progress', stop_on_failure = FALSE)"
 
 document: ## altdoc::render_docs()
 	Rscript -e "devtools::document()"
