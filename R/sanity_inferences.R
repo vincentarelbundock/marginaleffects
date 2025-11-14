@@ -1,4 +1,4 @@
-sanity_inferences_conformal <- function(mfx, score, method, data_calib, data_test, R) {
+sanity_inferences_conformal <- function(mfx, score, method, data_calib, R) {
     checkmate::assert_choice(
         score,
         choices = c("residual_abs", "residual_sq", "softmax")
@@ -56,11 +56,6 @@ sanity_inferences_conformal <- function(mfx, score, method, data_calib, data_tes
         }
     }
 
-    if (is.null(data_test)) {
-        checkmate::assert_data_frame(mfx@newdata)
-        data_test <- mfx@newdata
-    }
-
     if (method %in% c("conformal_split", "conformal_quantile")) {
         checkmate::assert_data_frame(data_calib, null.ok = FALSE)
     }
@@ -74,7 +69,7 @@ sanity_inferences_conformal <- function(mfx, score, method, data_calib, data_tes
         stop_sprintf(msg)
     }
 
-    return(data_test)
+    return(invisible(NULL))
 }
 
 

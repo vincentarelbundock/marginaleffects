@@ -40,7 +40,7 @@ x <- mod |>
     components("inferences") |>
     suppressWarnings()
 expect_inherits(x, "bootstraps")
-nd <<- datagrid(Sepal.Length = range, model = mod)
+nd <- datagrid(Sepal.Length = range, model = mod)
 x <- mod |>
     comparisons(variables = "Sepal.Width", newdata = nd) |>
     inferences(method = "rsample", R = R) |>
@@ -82,7 +82,7 @@ model <- coxph(
     Surv(dtime, death) ~ hormon * factor(grade) + ns(age, df = 2),
     data = rotterdam
 )
-nd <<- datagrid(
+nd <- datagrid(
     hormon = unique,
     grade = unique,
     dtime = seq(36, 7043, length.out = 25),

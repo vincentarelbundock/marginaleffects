@@ -30,28 +30,37 @@ refit.marginaleffects <- function(object, data = NULL, newdata = NULL, vcov = NU
 
     model <- mfx@model
 
+    fit_again <- function(model, data) {
+        # Try stats::update first
+        model <- tryCatch(
+            stats::update(model, data = data),
+            error = function(e) NULL
+        )
+        # Fallback: modify call and re-evaluate
+        if (is.null(model)) {
+            if (is.call(mfx@call_model) && "data" %in% names(mfx@call_model)) {
+                call_new <- mfx@call_model
+                call_new$data <- data
+                model <- try(eval(call_new), silent = TRUE)
+                if (inherits(model, "try-error")) {
+                    stop("Failed to refit the model.", call. = FALSE)
+                }
+            } else {
+                stop("Failed to refit model: no update method available", call. = FALSE)
+            }
+        }
+        return(model)
+    }
+
     # Step 1: Refit model if data is supplied
     if (!is.null(data)) {
         # For workflows, tidymodels provides its own fit.workflow method
         if (inherits(model, "workflow")) {
             model <- generics::fit(model, data = data)
+        } else if (inherits(model, "model_fit")) {
+            model <- fit_again(model[["fit"]], data = data)
         } else {
-            # Try stats::update first
-            model <- tryCatch(
-                stats::update(model, data = data),
-                error = function(e) NULL
-            )
-
-            # Fallback: modify call and re-evaluate
-            if (is.null(model)) {
-                if (is.call(mfx@call_model) && "data" %in% names(mfx@call_model)) {
-                    call_new <- mfx@call_model
-                    call_new$data <- data
-                    model <- eval(call_new)
-                } else {
-                    stop("Failed to refit model: no update method available")
-                }
-            }
+            model <- fit_again(model, data = data)
         }
     }
 

@@ -1,4 +1,4 @@
-inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, mfx = NULL, ...) {
+inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, data_train = NULL, mfx = NULL, ...) {
     insight::check_if_installed("boot")
 
     out <- x
@@ -17,7 +17,7 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
         }
     }
 
-    args <- list("data" = mfx@modeldata, "statistic" = bootfun, R = R)
+    args <- list("data" = data_train, "statistic" = bootfun, R = R)
     args <- c(args, list(...))
     B <- do.call(boot::boot, args)
 

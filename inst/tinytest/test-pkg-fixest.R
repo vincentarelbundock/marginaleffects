@@ -149,7 +149,7 @@ dt <- mtcars
 dt$cyl <- factor(dt$cyl)
 fit1 <- suppressMessages(feols(mpg ~ 0 | carb | vs ~ am, data = dt))
 fit2 <- suppressMessages(feols(mpg ~ cyl | carb | vs ~ am, data = dt))
-fit3 <- suppressMessages(feols(mpg ~ 0 | carb | vs:cyl ~ am:cyl, data = dt))
+fit3 <- suppressWarnings(feols(mpg ~ 0 | carb | vs:cyl ~ am:cyl, data = dt))
 mfx1 <- slopes(fit1)
 mfx2 <- slopes(fit2)
 mfx3 <- slopes(fit3)

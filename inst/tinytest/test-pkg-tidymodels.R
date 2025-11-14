@@ -38,7 +38,9 @@ expect_true(nrow(mfx) > 0)
 
 
 # conformal
+set.seed(48103)
 dat <- get_dataset("penguins", "palmerpenguins") |> na.omit()
+dat <- dat[sample(1:nrow(dat), nrow(dat)), ] # shuffle species
 mod <- set_engine(linear_reg(), "lm") |>
     fit(body_mass_g ~ bill_length_mm + flipper_length_mm + species,
         data = na.omit(dat))
@@ -46,6 +48,7 @@ p <- predictions(mod, newdata = dat[1:100, ]) |>
     inferences(
         R = 3,
         method = "conformal_cv+",
+        data_train = dat[1:100, ],
         data_calib = dat[101:nrow(dat), ]
     )
 expect_inherits(p, "predictions")
@@ -65,6 +68,7 @@ expect_true("std.error" %in% colnames(p))
 p <- predictions(mod, newdata = bikes[1:200, ], vcov = FALSE) |>
     inferences(
         method = "conformal_split",
+        data_train = bikes[1:200, ],
         data_calib = bikes[201:nrow(bikes), ])
 expect_inherits(p, "predictions")
 
@@ -123,3 +127,39 @@ lr_fit <- lr_wf |>
 mfx <- slopes(lr_fit, newdata = my_data, variable = "x")
 expect_equivalent(mfx$x, my_data$x)
 expect_equivalent(mfx$y, my_data$y)
+
+
+# Bootstrap
+set.seed(48103)
+nobs <- 50
+wf <- workflow() |>
+    add_model(boost_tree(mode = "regression")) |>
+    add_recipe(
+        recipe(Sepal.Length ~ ., data = iris) |>
+            # 1. Convert character predictors to factors (if any)
+            step_string2factor(all_nominal_predictors()) |>
+            # 2. Dummy-code all nominal predictors
+            step_dummy(all_nominal_predictors())
+    ) |>
+    fit(iris)
+mfx1 <- comparisons(wf, newdata = iris, variable = "Sepal.Width", vcov = FALSE)
+mfx2 <- inferences(mfx1, R = 100, method = "rsample", data_train = iris) |>
+    suppressWarnings()
+expect_false("conf.low" %in% colnames(mfx1))
+expect_true("conf.low" %in% colnames(mfx2))
+
+
+# Bootstrap for some supported models but not all
+z <- boost_tree("regression") |>
+    fit(hp ~ ., data = mtcars)
+comparisons(z, variables = "mpg", newdata = mtcars, vcov = FALSE) |>
+    inferences(R = 10, method = "boot", data_train = mtcars) |>
+    suppressWarnings() |>
+    expect_error(pattern = "Failed to refit")
+z <- linear_reg() |>
+    fit(hp ~ ., data = mtcars)
+cmp <- comparisons(z, variables = "mpg", newdata = mtcars, vcov = FALSE) |>
+    inferences(R = 10, method = "boot", data_train = mtcars) |>
+    suppressWarnings()
+expect_inherits(cmp, "comparisons")
+expect_true("conf.low" %in% colnames(cmp))

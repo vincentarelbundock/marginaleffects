@@ -137,6 +137,12 @@ inferences <- function(
     # dummy mfx for `estimator` and no marginaleffects object
     if (!inherits(mfx, "marginaleffects_internal")) {
         mfx <- new_marginaleffects_internal(NULL, call("predictions"))
+        if (isTRUE(checkmate::check_data_frame(x))) {
+            mfx@modeldata <- x
+            mfx@modeldata_available <- TRUE
+        } else {
+            mfx@modeldata_available <- FALSE
+        }
     }
 
     # supported classes
@@ -174,11 +180,16 @@ inferences <- function(
     )
 
     if (is.null(data_train)) {
-        if (!isTRUE(mfx@modeldata_available) && method != "conformal_split") {
+        if (!isTRUE(mfx@modeldata_available)) {
             checkmate::assert_data_frame(data_train, null.ok = FALSE)
         } else {
             data_train <- mfx@modeldata
         }
+    }
+
+    if (is.null(data_test)) {
+        checkmate::assert_data_frame(mfx@newdata)
+        data_test <- mfx@newdata
     }
 
     if (inherits(mfx@model, c("Learner", "model_fit", "workflow"))) {
@@ -218,6 +229,7 @@ inferences <- function(
             conf_level = conf_level,
             conf_type = conf_type,
             estimator = estimator,
+            data_train = data_train,
             mfx = mfx,
             ...)
     } else if (method == "fwb") {
@@ -236,6 +248,7 @@ inferences <- function(
             conf_level = conf_level,
             conf_type = conf_type,
             estimator = estimator,
+            data_train = data_train,
             mfx = mfx,
             ...)
     } else if (method == "simulation") {
@@ -246,12 +259,11 @@ inferences <- function(
             mfx = mfx,
             ...)
     } else if (isTRUE(grepl("conformal", method))) {
-        data_test <- sanity_inferences_conformal(
+        sanity_inferences_conformal(
             mfx = mfx,
             score = conformal_score,
             method = method,
             data_calib = data_calib,
-            data_test = data_test,
             R = R
         )
 

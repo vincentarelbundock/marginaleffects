@@ -1,10 +1,7 @@
-inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, mfx = NULL, ...) {
+inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, data_train = NULL, mfx = NULL, ...) {
     insight::check_if_installed("rsample")
 
     out <- x
-
-    # Get modeldata from mfx object
-    modeldata <- mfx@modeldata
 
     if (!is.null(estimator)) {
         bootfun <- function(split, ...) {
@@ -38,15 +35,7 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
 
     args <- list("apparent" = TRUE)
     args[["times"]] <- R
-
-    # Sometimes modeldata is empty (ex: `tidymodels`)
-    if (nrow(modeldata) > 0) {
-        args[["data"]] <- modeldata
-    } else if (nrow(mfx@modeldata) > 0) {
-        args[["data"]] <- mfx@modeldata
-    } else {
-        args[["data"]] <- mfx@newdata
-    }
+    args[["data"]] <- data_train
 
     args <- c(args, list(...))
     if ("group" %in% ...names()) {
