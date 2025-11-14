@@ -70,7 +70,7 @@ conformal_quantile <- function(x, data_test, data_train, data_calib, conf_level 
     # Step 2: Get quantile predictions on calibration set
     # Use same predictor columns in same order as training
     x_calib <- as.data.frame(data_calib)[, predictor_cols, drop = FALSE]
-    q_calib <- predict(qrf, newdata = x_calib, what = c(alpha / 2, 1 - alpha / 2))
+    q_calib <- stats::predict(qrf, newdata = x_calib, what = c(alpha / 2, 1 - alpha / 2))
     q_calib_low <- q_calib[, 1]
     q_calib_high <- q_calib[, 2]
 
@@ -96,7 +96,7 @@ conformal_quantile <- function(x, data_test, data_train, data_calib, conf_level 
     # Step 5: Get quantile predictions on test set
     # Use same predictor columns in same order as training
     x_test <- as.data.frame(data_test)[, predictor_cols, drop = FALSE]
-    q_test <- predict(qrf, newdata = x_test, what = c(alpha / 2, 1 - alpha / 2))
+    q_test <- stats::predict(qrf, newdata = x_test, what = c(alpha / 2, 1 - alpha / 2))
     q_test_low <- q_test[, 1]
     q_test_high <- q_test[, 2]
 

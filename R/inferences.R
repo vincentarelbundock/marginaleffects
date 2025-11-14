@@ -24,6 +24,7 @@
 #' + `rsample`: "perc" or "bca"
 #' + `simulation`: "perc" or "wald"
 #' @param data_train Data frame used to train/fit the model. If `NULL`, `marginaleffects` tries to extract the data from the original model object. Test data are inferred directly from the `newdata` supplied to the originating `marginaleffects` call (e.g., `predictions()`).
+#' @param data_test Data frame make out of sample prediction. Only used for conformal inference. If `NULL`, the data frame supplied to `newdata` in the original `marginaleffects` call is used.
 #' @param data_calib Data frame used for calibration in split conformal prediction.
 #' @param conformal_score String. Warning: The `type` argument in `predictions()` must generate predictions which are on the same scale as the outcome variable. Typically, this means that `type` must be "response" or "probs".
 #'   + "residual_abs" or "residual_sq" for regression tasks (numeric outcome)
