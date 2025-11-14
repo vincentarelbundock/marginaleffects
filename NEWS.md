@@ -1,17 +1,14 @@
 # News {.unnumbered}
 
-## 0.30.0.7
+## 0.31.0
+
+Deprecated:
+
+* The `conformal_calibration`, `conformal_train`, and `conformal_test` arguments in `inferences()` are deprecated (but kept for backward compatibility). Use the new `data_calib`, `data_train`, and `data_test`.
 
 New:
 
 * `inferences(method = "conformal_full")` implements full conformal prediction for regression models. This provides distribution-free prediction intervals by refitting the model on augmented data for each test observation. Unlike split conformal or CV+, full conformal uses all training data without requiring a separate calibration set. It is computationally intensive but provides valid coverage guarantees. For tidymodels workflows, pass the training data explicitly via the `data_train` argument.
-
-Breaking changes:
-
-* The `conformal_calibration`, `conformal_train`, and `conformal_test` arguments in `inferences()` are deprecated (but kept for backward compatibility). Use the new `data_calib`, `data_train`, and `data_test`.
-
-## 0.30.1
-
 * Add support `MASS::lda()` models for estimates but not standard errors. Thanks to @friendly for feature request #1598.
 
 Bugs:
