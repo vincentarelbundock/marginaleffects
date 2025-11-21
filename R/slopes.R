@@ -125,8 +125,8 @@
 #' are taking the derivative. Changing `eps` may be necessary to avoid
 #' numerical problems in certain models.
 #' @param numderiv string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
-#' + "fdforward": finite difference method with forward differences
-#' + "fdcenter": finite difference method with central differences (default)
+#' + "fdforward": finite difference method with forward differences (default)
+#' + "fdcenter": finite difference method with central differences
 #' + "richardson": Richardson extrapolation method
 #' + Extra arguments can be specified by passing a list to the `numDeriv` argument, with the name of the method first and named arguments following, ex: `numderiv=list("fdcenter", eps = 1e-5)`. When an unknown argument is used, `marginaleffects` prints the list of valid arguments for each method.
 #' @param ... Additional arguments are passed to the `predict()` method

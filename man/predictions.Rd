@@ -216,8 +216,8 @@ levels. See examples section.}
 
 \item{numderiv}{string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
 \itemize{
-\item "fdforward": finite difference method with forward differences
-\item "fdcenter": finite difference method with central differences (default)
+\item "fdforward": finite difference method with forward differences (default)
+\item "fdcenter": finite difference method with central differences
 \item "richardson": Richardson extrapolation method
 \item Extra arguments can be specified by passing a list to the \code{numDeriv} argument, with the name of the method first and named arguments following, ex: \code{numderiv=list("fdcenter", eps = 1e-5)}. When an unknown argument is used, \code{marginaleffects} prints the list of valid arguments for each method.
 }}
