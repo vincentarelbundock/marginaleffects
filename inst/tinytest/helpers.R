@@ -15,7 +15,7 @@ requiet("marginaleffects")
 requiet("tinytest")
 requiet("tinysnapshot")
 
-EXPENSIVE <- FALSE
+EXPENSIVE <- TRUE
 
 AUTODIFF <- FALSE
 autodiff(FALSE) # by default in every file
