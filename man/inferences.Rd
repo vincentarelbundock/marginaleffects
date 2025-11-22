@@ -27,7 +27,6 @@ inferences(
 \item "fwb": fractional weighted bootstrap
 \item "rsample" package
 \item "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
-\item "mi" multiple imputation for missing data
 \item "conformal_split": prediction intervals using split conformal prediction (see Angelopoulos & Bates, 2022)
 \item "conformal_cv+": prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)
 \item "conformal_full": prediction intervals using full conformal prediction (see Lei et al., 2018). \strong{Warning}: This method is computationally expensive and typically much slower than split or CV+ methods.
