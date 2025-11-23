@@ -145,6 +145,12 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
         data.table::setDT(newdata)
     }
 
+    safe <- isTRUE(getOption("marginaleffects_safe", default = TRUE))
+    nc <- ncol(newdata)
+    if (safe && isTRUE(nc > 100)) {
+        warn_sprintf("The `newdata` data frame has %s columns. This can slow down computation and increase memory costs. Please supply a data frame with fewer columns to the `newdata` argument, or set `options('marginaleffects_safe'=FALSE)` to silence this warning.", nc)
+    }
+
     return(newdata)
 }
 
