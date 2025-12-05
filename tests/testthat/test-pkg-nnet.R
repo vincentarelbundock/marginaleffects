@@ -1,0 +1,218 @@
+testthat::skip_if_not_installed("nnet")
+testthat::skip_if_not_installed("carData")
+testthat::skip_if_not_installed("prediction")
+requiet("nnet")
+requiet("carData")
+requiet("prediction")
+
+# Basic expectation tests
+mod_simple <- nnet::multinom(factor(cyl) ~ mpg + wt,
+    data = mtcars, trace = FALSE)
+expect_slopes2(mod_simple)
+expect_predictions2(mod_simple)
+expect_hypotheses2(mod_simple)
+expect_comparisons2(mod_simple)
+
+# multinom group estimates
+TitanicSurvival <- get_dataset("TitanicSurvival", "carData")
+TitanicSurvival$age3 <- cut(
+    TitanicSurvival$age,
+    include.lowest = TRUE,
+    right = FALSE,
+    dig.lab = 4,
+    breaks = c(0, 25, 50, 80)
+)
+m1 <- nnet::multinom(
+    passengerClass ~ sex * age3,
+    data = TitanicSurvival,
+    trace = FALSE
+)
+mfx <- slopes(
+    m1,
+    type = "probs",
+    variables = "sex",
+    by = "age3",
+    newdata = datagrid(
+        age3 = c("[0,25)", "[25,50)", "[50,80]"),
+        grid_type = "counterfactual"
+    )
+)
+expect_equal(nrow(mfx), 9, ignore_attr = TRUE)
+
+
+# multinom basic
+dat_nnet1 <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
+void <- capture.output(
+    mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat_nnet1, quiet = true)
+)
+expect_slopes2(mod, type = "probs")
+
+
+# marginaleffects summary
+dat_nnet2 <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
+void <- capture.output(
+    mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat_nnet2, quiet = true)
+)
+s <- avg_slopes(mod, type = "probs")
+expect_false(anyNA(s$estimate))
+expect_false(anyNA(s$std.error))
+
+
+# multinom vs. Stata
+stata <- readRDS(testing_path("stata/stata.rds"))$nnet_multinom_01
+dat_nnet3 <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
+dat_nnet3$y <- as.factor(dat_nnet3$y)
+void <- capture.output(
+    mod <- nnet::multinom(y ~ x1 + x2, data = dat_nnet3, quiet = true)
+)
+mfx <- avg_slopes(mod, type = "probs")
+mfx <- merge(mfx, stata, all = TRUE)
+mfx <- na.omit(mfx)
+expect_true(nrow(mfx) == 6) # na.omit doesn't trash everything
+# standard errors match now!!
+expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .001, ignore_attr = TRUE)
+expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001, ignore_attr = TRUE)
+
+
+# set_coef
+tmp_nnet <- mtcars
+tmp_nnet$cyl <- as.factor(tmp_nnet$cyl)
+void <- capture.output(
+    old <- nnet::multinom(cyl ~ hp + am + mpg, data = tmp_nnet, quiet = true)
+)
+b <- rep(0, length(coef(old)))
+new <- set_coef(old, b)
+expect_true(all(coef(new) == 0))
+b <- rep(1, length(coef(new)))
+new <- set_coef(old, b)
+expect_true(all(coef(new) == 1))
+
+
+# bugfix: nnet single row predictions
+dat_nnet4 <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
+void <- capture.output(
+    mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat_nnet4, quiet = true)
+)
+mfx <- slopes(mod, variables = "x1", newdata = datagrid(), type = "probs")
+expect_s3_class(mfx, "data.frame")
+expect_equal(nrow(mfx), 4, ignore_attr = TRUE)
+mfx <- slopes(mod, newdata = datagrid(), type = "probs")
+expect_s3_class(mfx, "data.frame")
+expect_equal(nrow(mfx), 8, ignore_attr = TRUE)
+
+
+# predictions with multinomial outcome
+set.seed(1839)
+n <- 1200
+x <- factor(sample(letters[1:3], n, TRUE))
+y <- vector(length = n)
+y[x == "a"] <- sample(letters[4:6], sum(x == "a"), TRUE)
+y[x == "b"] <- sample(letters[4:6], sum(x == "b"), TRUE, c(1 / 4, 2 / 4, 1 / 4))
+y[x == "c"] <- sample(letters[4:6], sum(x == "c"), TRUE, c(1 / 5, 3 / 5, 2 / 5))
+dat_nnet5 <- data.frame(x = x, y = factor(y))
+tmp_nnet2 <- as.data.frame(replicate(20, factor(sample(letters[7:9], n, TRUE))))
+dat_nnet5 <- cbind(dat_nnet5, tmp_nnet2)
+void <- capture.output({
+    m1 <- nnet::multinom(y ~ x, dat_nnet5)
+    m2 <- nnet::multinom(y ~ ., dat_nnet5)
+})
+
+# class outcome not supported
+expect_error(predictions(m1, type = "class"), regexp = "type")
+expect_error(slopes(m1, type = "class"), regexp = "type")
+
+# small predictions
+pred1 <- predictions(m1, type = "probs")
+pred2 <- predictions(m1, type = "probs", newdata = "balanced")
+expect_predictions2(m1, type = "probs", n_row = nrow(dat_nnet5) * 3)
+expect_predictions2(m1, type = "probs", newdata = "balanced", n_row = 9)
+
+# bugs stay dead #218
+set.seed(42)
+dat_nnet6 <- data.frame(
+    y = factor(sample(c(rep(4, 29), rep(3, 15), rep(2, 4), rep(1, 2)))),
+    x = factor(sample(c(rep(1, 17), rep(2, 12), rep(2, 12), rep(1, 9)))),
+    z1 = sample(1:2, 50, replace = TRUE),
+    z2 = runif(50, 16, 18)
+)
+void <- capture.output(
+    model <- nnet::multinom(
+        y ~ x + z1 + z2,
+        data = dat_nnet6,
+        verbose = FALSE,
+        hessian = TRUE
+    )
+)
+mfx <- slopes(model, type = "probs")
+expect_s3_class(mfx, "marginaleffects")
+
+
+# bug: single row newdata produces vector
+mod <- nnet::multinom(factor(gear) ~ mpg, data = mtcars, trace = FALSE)
+p <- predictions(mod, newdata = head(mtcars, 1), type = "latent")
+expect_equal(nrow(p), 3, ignore_attr = TRUE)
+
+
+# Issue #476: binary dependent variable
+x <- 1:1000
+n <- length(x)
+y1 <- rbinom(n, 10, prob = plogis(-10 + 0.02 * x))
+y2 <- 10 - y1
+dat_nnet7 <- data.frame(x, y1, y2)
+dat_long <- tidyr::pivot_longer(dat_nnet7, !x, names_to = "y", values_to = "count")
+dat_long <- transform(dat_long, y = factor(y, levels = c("y2", "y1")))
+fit_multinom <- nnet::multinom(
+    y ~ x,
+    weights = count,
+    data = dat_long,
+    trace = FALSE
+)
+p <- predictions(fit_multinom, newdata = datagrid(x = unique), type = "latent")
+expect_s3_class(p, "predictions")
+
+
+# Issue #482: sum of predicted probabilities
+mod <- nnet::multinom(factor(cyl) ~ mpg + am, data = mtcars, trace = FALSE)
+by <- data.frame(
+    by = c("4,6", "4,6", "8"),
+    group = as.character(c(4, 6, 8))
+)
+p1 <- predictions(mod, newdata = "mean")
+p2 <- predictions(mod, newdata = "mean", byfun = sum, by = by)
+p3 <- predictions(mod, newdata = "mean", byfun = mean, by = by)
+expect_equal(nrow(p1), 3, ignore_attr = TRUE)
+expect_equal(nrow(p2), 2, ignore_attr = TRUE)
+expect_equal(nrow(p3), 2, ignore_attr = TRUE)
+expect_equal(sum(p1$estimate[1:2]), p2$estimate[1], ignore_attr = TRUE)
+expect_equal(mean(p1$estimate[1:2]), p3$estimate[1], ignore_attr = TRUE)
+
+
+# Issue #788: match with {predictions::prediction}
+reg <- nnet::multinom(
+    poverty ~ religion + degree + gender,
+    family = multinomial(refLevel = 1),
+    trace = FALSE,
+    data = carData::WVS
+)
+p1 <- avg_predictions(
+    reg,
+    variables = list(religion = c("no"), gender = c("male"))
+)
+p1 <- p1$estimate
+p2 <- prediction::prediction(
+    reg,
+    at = list(religion = c("no"), gender = c("male"))
+)
+p2 <- colMeans(p2[, grep("^Pr", colnames(p2))])
+expect_equal(p1, p2, ignore_attr = TRUE)
+
+
+# Issue #1432: response names in coef name{
+mod <- nnet::multinom(
+    species ~ body_mass_g + sex,
+    data = palmerpenguins::penguins,
+    trace = FALSE
+)
+h <- hypotheses(mod, hypothesis = "Chinstrap_body_mass_g = Gentoo_body_mass_g")
+expect_equal(nrow(h), 1)
+expect_s3_class(h, "hypotheses")
