@@ -12,7 +12,7 @@
 #' ```{r, echo = FALSE, results = "asis"}
 #' k <- marginaleffects:::comparison_function_dict
 #' k <- sapply(k, deparse1, collapse = "")
-#' k <- gsub("^function ", "\\\\", k)
+#' #k <- gsub("^function ", "\\\\\\\\", k)
 #' k <- data.frame(
 #'     Shortcut = names(k),
 #'     Function = k)

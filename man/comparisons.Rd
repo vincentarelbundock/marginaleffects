@@ -385,26 +385,26 @@ contrast. \code{y} is a vector of adjusted predictions for the original data. \c
 is the predictor in the original data. \code{eps} is the step size to use to
 compute derivatives and elasticities.\tabular{ll}{
    Shortcut \tab Function \cr
-   difference \tab \(hi, lo) hi - lo \cr
-   differenceavg \tab \(hi, lo) mean(hi - lo) \cr
-   dydx \tab \(hi, lo, eps) (hi - lo)/eps \cr
-   eyex \tab \(hi, lo, eps, y, x) (hi - lo)/eps * (x/y) \cr
-   eydx \tab \(hi, lo, eps, y, x) ((hi - lo)/eps)/y \cr
-   dyex \tab \(hi, lo, eps, x) ((hi - lo)/eps) * x \cr
-   dydxavg \tab \(hi, lo, eps) mean((hi - lo)/eps) \cr
-   eyexavg \tab \(hi, lo, eps, y, x) mean((hi - lo)/eps * (x/y)) \cr
-   eydxavg \tab \(hi, lo, eps, y, x) mean(((hi - lo)/eps)/y) \cr
-   dyexavg \tab \(hi, lo, eps, x) mean(((hi - lo)/eps) * x) \cr
-   ratio \tab \(hi, lo) hi/lo \cr
-   ratioavg \tab \(hi, lo) mean(hi)/mean(lo) \cr
-   lnratio \tab \(hi, lo) log(hi/lo) \cr
-   lnratioavg \tab \(hi, lo) log(mean(hi)/mean(lo)) \cr
-   lnor \tab \(hi, lo) log((hi/(1 - hi))/(lo/(1 - lo))) \cr
-   lnoravg \tab \(hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) \cr
-   lift \tab \(hi, lo) (hi - lo)/lo \cr
-   liftavg \tab \(hi, lo) (mean(hi - lo))/mean(lo) \cr
-   expdydx \tab \(hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps \cr
-   expdydxavg \tab \(hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) \cr
+   difference \tab function (hi, lo) hi - lo \cr
+   differenceavg \tab function (hi, lo) mean(hi - lo) \cr
+   dydx \tab function (hi, lo, eps) (hi - lo)/eps \cr
+   eyex \tab function (hi, lo, eps, y, x) (hi - lo)/eps * (x/y) \cr
+   eydx \tab function (hi, lo, eps, y, x) ((hi - lo)/eps)/y \cr
+   dyex \tab function (hi, lo, eps, x) ((hi - lo)/eps) * x \cr
+   dydxavg \tab function (hi, lo, eps) mean((hi - lo)/eps) \cr
+   eyexavg \tab function (hi, lo, eps, y, x) mean((hi - lo)/eps * (x/y)) \cr
+   eydxavg \tab function (hi, lo, eps, y, x) mean(((hi - lo)/eps)/y) \cr
+   dyexavg \tab function (hi, lo, eps, x) mean(((hi - lo)/eps) * x) \cr
+   ratio \tab function (hi, lo) hi/lo \cr
+   ratioavg \tab function (hi, lo) mean(hi)/mean(lo) \cr
+   lnratio \tab function (hi, lo) log(hi/lo) \cr
+   lnratioavg \tab function (hi, lo) log(mean(hi)/mean(lo)) \cr
+   lnor \tab function (hi, lo) log((hi/(1 - hi))/(lo/(1 - lo))) \cr
+   lnoravg \tab function (hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) \cr
+   lift \tab function (hi, lo) (hi - lo)/lo \cr
+   liftavg \tab function (hi, lo) (mean(hi - lo))/mean(lo) \cr
+   expdydx \tab function (hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps \cr
+   expdydxavg \tab function (hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) \cr
 }
 }
 
