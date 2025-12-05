@@ -48,7 +48,7 @@ hypotheses(
 \item \code{reference}: differences between the estimates in each row and the estimate in the first row.
 \item \code{sequential}: difference between an estimate and the estimate in the next row.
 \item \code{meandev}: difference between an estimate and the mean of all estimates.
-\item `meanotherdev: difference between an estimate and the mean of all other estimates, excluding the current one.
+\item \code{meanotherdev}: difference between an estimate and the mean of all other estimates, excluding the current one.
 \item \code{poly}: polynomial contrasts, as computed by the \code{stats::contr.poly()} function.
 \item \code{helmert}: Helmert contrasts, as computed by the \code{stats::contr.helmert()} function. Contrast 2nd level to the first, 3rd to the average of the first two, and so on.
 \item \code{trt_vs_ctrl}: difference between the mean of estimates (except the first) and the first estimate.

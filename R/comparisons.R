@@ -91,11 +91,11 @@
 #' @template comparison_functions
 #' @template bayesian
 #' @template equivalence
-#' @template type
 #' @template order_of_operations
 #' @template parallel
 #' @template options
 #' @template return
+#' @template type
 #'
 #' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' # Linear model

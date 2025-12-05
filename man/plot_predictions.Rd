@@ -147,9 +147,77 @@ The \code{type} argument determines the scale of the predictions used to compute
 
 The \code{invlink(link)} is a special type defined by \code{marginaleffects}. It is available for some (but not all) models, and only for the \code{predictions()} function. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with \code{type="invlink(link)"} will not always be equivalent to the average of estimates with \code{type="response"}. This type is default when calling \code{predictions()}. It is available---but not default---when calling \code{avg_predictions()} or \code{predictions()} with the \code{by} argument.
 
-Some of the most common \code{type} values are:
-
-response, link, E, Ep, average, class, conditional, count, cum.prob, cumhaz, cumprob, density, detection, disp, ev, expected, expvalue, fitted, hazard, invlink(link), latent, latent_N, linear, linear.predictor, linpred, location, lp, mean, numeric, p, posterior, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, rmst, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+Some of the most common \code{type} values are:\tabular{ll}{
+   class \tab type \cr
+   Gam \tab invlink(link), response, link \cr
+   Gls \tab lp \cr
+   MCMCglmm \tab response \cr
+   bam \tab response, link \cr
+   bart \tab ev, ppd \cr
+   betareg \tab response, link, precision, quantile, variance \cr
+   bife \tab response, link \cr
+   bracl \tab probs \cr
+   brglmFit \tab response, link \cr
+   brmsfit \tab response, link, prediction, average \cr
+   brmultinom \tab probs, class \cr
+   clm \tab prob, cum.prob, linear.predictor \cr
+   clogit \tab expected, lp, risk, survival \cr
+   coxph \tab survival, expected, lp, risk \cr
+   coxph_weightit \tab survival, expected, lp, risk \cr
+   crch \tab response, location, scale, density \cr
+   fixest \tab invlink(link), response, link \cr
+   flexsurvreg \tab survival, response, mean, link, lp, linear, rmst, hazard, cumhaz \cr
+   gam \tab response, link \cr
+   geeglm \tab response, link \cr
+   glimML \tab response, link \cr
+   glm \tab invlink(link), response, link \cr
+   glm_weightit \tab invlink(link), probs, response, lp, link \cr
+   glmerMod \tab response, link \cr
+   glmgee \tab response \cr
+   glmmPQL \tab response, link \cr
+   glmmTMB \tab response, link, conditional, zprob, zlink, disp \cr
+   glmrob \tab response, link \cr
+   glmx \tab response \cr
+   hetprob \tab pr, xb \cr
+   hurdle \tab response, prob, count, zero \cr
+   hxlr \tab location, cumprob, scale, density \cr
+   iv_robust \tab response \cr
+   ivpml \tab pr, xb \cr
+   ivreg \tab response \cr
+   lda \tab class, posterior \cr
+   lm \tab response \cr
+   lm_robust \tab response \cr
+   lmerMod \tab response \cr
+   lmerModLmerTest \tab response \cr
+   lmrob \tab response \cr
+   lrm \tab fitted, lp, mean \cr
+   mblogit \tab response, latent, link \cr
+   mclogit \tab response, latent, link \cr
+   mhurdle \tab E, Ep, p \cr
+   model_fit \tab numeric, prob, class \cr
+   multinom \tab probs, latent \cr
+   multinom_weightit \tab probs, response, mean \cr
+   mvgam \tab response, link, expected, detection, latent_N \cr
+   negbin \tab invlink(link), response, link \cr
+   ols \tab lp \cr
+   oohbchoice \tab probability, utility \cr
+   ordinal_weightit \tab probs, response, link, lp, mean \cr
+   orm \tab fitted, mean, lp \cr
+   polr \tab probs \cr
+   rendo.base \tab response, link \cr
+   rlm \tab response \cr
+   selection \tab response, link, unconditional, conditional \cr
+   speedglm \tab response, link \cr
+   speedlm \tab response \cr
+   stanreg \tab response, link \cr
+   survreg \tab response, link, quantile \cr
+   svyglm \tab response, link \cr
+   svyolr \tab probs \cr
+   tobit \tab response, link \cr
+   tobit1 \tab expvalue, linpred, prob \cr
+   workflow \tab numeric, prob, class \cr
+   zeroinfl \tab response, prob, count, zero \cr
+}
 }
 
 \examples{

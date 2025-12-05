@@ -6,11 +6,11 @@
 #' 
 #' Some of the most common `type` values are:
 #' 
-#' 
 #' ```{r, echo = FALSE, results = "asis"}
-#' k <- marginaleffects:::type_dictionary$type
-#' k <- unique(c("response", "link", sort(k)))
-#' k <- paste(k, collapse = ", ")
-#' cat(k)
+#' library(tinytable)
+#' ty <- type_dictionary_build()
+#' ty <- aggregate(type ~ class, data = ty, FUN = function(x) paste(x, collapse = ", "))
+#' ty <- ty[order(ty$class), ]
+#' print(tt(ty) |> theme_markdown(style = "gfm"), "markdown")
 #' ```
-#' 
+#'

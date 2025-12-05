@@ -91,7 +91,7 @@
 #'     - `reference`: differences between the estimates in each row and the estimate in the first row.
 #'     - `sequential`: difference between an estimate and the estimate in the next row.
 #'     - `meandev`: difference between an estimate and the mean of all estimates.
-#'     - `meanotherdev: difference between an estimate and the mean of all other estimates, excluding the current one.
+#'     - `meanotherdev`: difference between an estimate and the mean of all other estimates, excluding the current one.
 #'     - `poly`: polynomial contrasts, as computed by the `stats::contr.poly()` function.
 #'     - `helmert`: Helmert contrasts, as computed by the `stats::contr.helmert()` function. Contrast 2nd level to the first, 3rd to the average of the first two, and so on.
 #'     - `trt_vs_ctrl`: difference between the mean of estimates (except the first) and the first estimate.
@@ -149,11 +149,11 @@
 #' @template model_specific_arguments
 #' @template bayesian
 #' @template equivalence
-#' @template type
 #' @template parallel
 #' @template order_of_operations
 #' @template options
 #' @template return
+#' @template type
 #' @examplesIf interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")
 #' library("marginaleffects")
 #' # Unit-level (conditional) Marginal Effects
