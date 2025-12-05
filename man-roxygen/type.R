@@ -1,4 +1,4 @@
-#' @section Prediction types:
+#' @section Types:
 #' 
 #' The `type` argument determines the scale of the predictions used to compute quantities of interest with functions from the `marginaleffects` package. Admissible values for `type` depend on the model object. When users specify an incorrect value for `type`, `marginaleffects` will raise an informative error with a list of valid `type` values for the specific model object. The first entry in the list in that error message is the default type.
 #' 

@@ -134,7 +134,7 @@ compute contrasts or slopes. This can differ based on the model
 type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
-first entry in the error message is used by default.}
+first entry in the error message is used by default. See the Type section in the documentation below.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
@@ -551,7 +551,7 @@ Other options:
 }
 }
 
-\section{Prediction types}{
+\section{Types}{
 
 
 The \code{type} argument determines the scale of the predictions used to compute quantities of interest with functions from the \code{marginaleffects} package. Admissible values for \code{type} depend on the model object. When users specify an incorrect value for \code{type}, \code{marginaleffects} will raise an informative error with a list of valid \code{type} values for the specific model object. The first entry in the list in that error message is the default type.

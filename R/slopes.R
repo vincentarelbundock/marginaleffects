@@ -59,7 +59,7 @@
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message. When `type` is `NULL`, the
-#' first entry in the error message is used by default.
+#' first entry in the error message is used by default. See the Type section in the documentation below.
 #' @param slope string indicates the type of slope or (semi-)elasticity to compute:
 #' - "dydx": dY/dX
 #' - "eyex": dY/dX * Y / X

@@ -58,7 +58,7 @@
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message. When `type` is `NULL`, the
-#' first entry in the error message is used by default.
+#' first entry in the error message is used by default. See the Type section in the documentation below.
 #' @param transform A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
 #'
 #' @template references
