@@ -118,15 +118,9 @@ avg_comparisons(
 
 \item{comparison}{How should pairs of predictions be compared? Difference, ratio, odds ratio, or user-defined functions.
 \itemize{
-\item string: shortcuts to common contrast functions.
-\itemize{
-\item Supported shortcuts strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, lift, liftavg, liftavgwts, expdydx, expdydxavg, expdydxavgwts
-\item See the Comparisons section below for definitions of each transformation.
-}
+\item string: shortcuts to common contrast functions. Supported shortcuts strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, lift, liftavg, liftavgwts, expdydx, expdydxavg, expdydxavgwts
 \item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
-\itemize{
-\item See the Transformations section below for examples of valid functions.
-}
+\item See the "Comparison functions" section below for a list of common transformations and the definitions of available shortcuts.
 }}
 
 \item{type}{string indicates the type (scale) of the predictions used to
@@ -374,16 +368,30 @@ https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
 }
 }
 
-\section{comparison argument functions}{
+\section{Comparison functions}{
 
 
-The following transformations can be applied by supplying one of the shortcut strings to the
-\code{comparison} argument.
-\code{hi} is a vector of adjusted predictions for the "high" side of the
-contrast. \code{lo} is a vector of adjusted predictions for the "low" side of the
-contrast. \code{y} is a vector of adjusted predictions for the original data. \code{x}
-is the predictor in the original data. \code{eps} is the step size to use to
-compute derivatives and elasticities.\tabular{ll}{
+Each of the quantities computed by \code{comparisons()} can be defined as a function of these quantities:
+\itemize{
+\item \code{hi}: vector of predictions for the "high" side of the contrast.
+\item \code{lo}: vector of predictions for the "low" side of the contrast.
+\item \code{y}: predictions for the original data.
+\item \code{x}: focal predictor in the original data.
+\item \code{w}: weights
+}
+
+For example, the "lift" of a binary predictor is a popular quantity of
+interest, defined as the difference between predictions when the focal
+predictor \eqn{X = 1}, and predictions when the focal predictor is
+\eqn{X = 0}, normalized by the starting point. Or:
+
+\eqn{\frac{\hat{Y}_{X=1} - \hat{Y}_{X=0}}{\hat{Y}_{X=0}}}
+
+When, the argument is set to \code{comparison="lift"}, \code{marginaleffects} will compute the quantity using this function:
+
+\code{function(hi, lo) { (hi - lo) / lo }}
+
+Users can supply custom functions to the \code{comparison} argument, or use one of the many shortcuts available for common quantities of interest:\tabular{ll}{
    Shortcut \tab Function \cr
    difference \tab function (hi, lo) hi - lo \cr
    differenceavg \tab function (hi, lo) mean(hi - lo) \cr

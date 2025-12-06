@@ -68,11 +68,9 @@
 #' + [subset()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = subset(treatment == 1)`
 #' + [dplyr::filter()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = filter(treatment == 1)`
 #' @param comparison How should pairs of predictions be compared? Difference, ratio, odds ratio, or user-defined functions.
-#' * string: shortcuts to common contrast functions.
-#'   - Supported shortcuts strings: `r toString(names(marginaleffects:::comparison_function_dict))`
-#'   - See the Comparisons section below for definitions of each transformation.
+#' * string: shortcuts to common contrast functions. Supported shortcuts strings: `r toString(names(marginaleffects:::comparison_function_dict))`
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
-#'   - See the Transformations section below for examples of valid functions.
+#' * See the "Comparison functions" section below for a list of common transformations and the definitions of available shortcuts.
 #' @param transform string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: "exp", "ln"
 #' @param equivalence Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. For bayesian models, this report the proportion of posterior draws in the interval and the ROPE. See Details section below.
 #' @param by Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
