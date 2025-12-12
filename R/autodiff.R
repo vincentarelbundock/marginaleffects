@@ -388,14 +388,14 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
 #' - Falls back on the default finite difference method for unsupported models and calls.
 #'
 #' Currently supports:
-#' - Model types: `lm`, `glm`, `ols`, `lrm`
+#' - Model types: `lm`, `glm`, `ols`
 #' - Functions: [predictions()] and [comparisons()], along with `avg_` and `plot_` variants.
 #' - `type`: "response" or "link"
 #' - `by`: `TRUE`, `FALSE`, or character vector.
 #' - `comparison`: "difference" and "ratio"
 #'
 #' For unsupported models or options, the function automatically falls back to
-#' finite difference methods with a warning.
+#' the default finite difference method.
 #'
 #' # Python Configuration
 #'

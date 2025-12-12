@@ -37,7 +37,7 @@ When \code{autodiff = TRUE}, this function:
 
 Currently supports:
 \itemize{
-\item Model types: \code{lm}, \code{glm}, \code{ols}, \code{lrm}
+\item Model types: \code{lm}, \code{glm}, \code{ols}
 \item Functions: \code{\link[=predictions]{predictions()}} and \code{\link[=comparisons]{comparisons()}}, along with \code{avg_} and \code{plot_} variants.
 \item \code{type}: "response" or "link"
 \item \code{by}: \code{TRUE}, \code{FALSE}, or character vector.
@@ -45,7 +45,7 @@ Currently supports:
 }
 
 For unsupported models or options, the function automatically falls back to
-finite difference methods with a warning.
+the default finite difference method.
 }
 \section{Python Configuration}{
 By default, no manual configuration of Python should be necessary. On most
