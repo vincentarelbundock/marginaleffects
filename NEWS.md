@@ -4,6 +4,10 @@
 
 * Raise a warning when `newdata` includes more than 100 columns, because this may lead to high memory use and computational load. We used to "prune" the internal datasets, but this let to many errors when `insight` did not fully support some models, or when using `by` and `hypothesis` in non-stardard ways. Thanks A.Tawfik for an email report.
 
+Bugs:
+
+* Error when merging the original data back into `comparisons()` when the data includes some list columns. The problem is that `data.table` does not support that column type. We now return the original data.table error as a warning, and do not merge the data back. Thanks to @raffaem for report #1638.
+
 ## 0.31.0
 
 Deprecated:

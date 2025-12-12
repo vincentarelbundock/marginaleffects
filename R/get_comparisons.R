@@ -153,7 +153,8 @@ get_comparisons <- function(
         tmp <- intersect(colnames(newdata), c(by, colnames(out)))
         if (length(tmp) > 1) {
             tmp <- subset(newdata, select = tmp)
-            out <- merge(out, tmp, all.x = TRUE, sort = FALSE)
+            # Issue #1638: unable to merge back some list columns
+            out <- tryCatch(merge(out, tmp, all.x = TRUE, sort = FALSE), error = function(e) {warning(e);out})
             idx <- unique(c(idx, by))
         }
     }
