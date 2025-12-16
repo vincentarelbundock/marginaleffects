@@ -16,7 +16,15 @@ set_coef.svyolr <- function(model, coefs, ...) {
     # in basic model classes coefficients are named vector
     idx <- match(names(model$coefficients), names(coefs))
     model[["coefficients"]] <- coefs[idx]
-    idx <- match(names(model$zeta), names(coefs))
+
+    # thresholds can be named either "1|2" or "Intercept: 1|2"
+    zeta_names <- names(model$zeta)
+    idx <- match(zeta_names, names(coefs))
+    if (anyNA(idx)) {
+        zeta_alt <- paste("Intercept:", zeta_names)
+        idx_alt <- match(zeta_alt, names(coefs))
+        idx <- ifelse(is.na(idx), idx_alt, idx)
+    }
     model[["zeta"]] <- coefs[idx]
     model
 }
