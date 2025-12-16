@@ -67,8 +67,8 @@ expect_equivalent(a1, a2)
 
 
 # sanity check
-expect_error(comparisons(mod, wts = "junk"), pattern = "explicitly")
-expect_error(slopes(mod, wts = "junk"), pattern = "explicitly")
+expect_error(comparisons(mod, wts = "junk"), pattern = "numeric vector")
+expect_error(slopes(mod, wts = "junk"), pattern = "numeric vector")
 
 # vs. Stata (not clear what SE they use, so we give tolerance)
 mod <- suppressWarnings(svyglm(
