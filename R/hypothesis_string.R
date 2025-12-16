@@ -35,7 +35,7 @@ mod <- lm(mpg ~ am * carb, data = mtcars)
 
 # assertion for safety
 p <- avg_predictions(mod, by = 'carb')
-stopifnot(p$carb[1] != 1 || p$carb[2] != 2)
+stopifnot(p$carb[1] == 1, p$carb[2] == 2)
 
 # hypothesis test
 avg_predictions(mod, by = 'carb', hypothesis = 'b1 - b2 = 0')
