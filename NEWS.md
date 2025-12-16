@@ -9,6 +9,7 @@ Bugs:
 * Error when merging the original data back into `comparisons()` when the data includes some list columns. The problem is that `data.table` does not support that column type. We now return the original data.table error as a warning, and do not merge the data back. Thanks to @raffaem for report #1638.
 * Improve warning message for hypothesis string order. Thanks to @zakarydraper for report #1640.
 * `comparisons()` with survey-weighted ordinal regressions failed because `stats::na.omit()` discarded every row when auxiliary columns were all `NA`, and the remaining objects fell out of alignment. We now filter using a shared index so hi/lo predictions, weights, and posterior draws stay synchronized.
+* `set_coef.svyolr()` did not recognize thresholds named like `"Intercept: 1|2"`, so delta-method perturbations replaced all cutpoints with `NA` and SEs vanished for `comparisons()`/`avg_*()` on survey ordinal models. Threshold names are now matched with or without the `"Intercept:"` prefix.
 
 ## 0.31.0
 

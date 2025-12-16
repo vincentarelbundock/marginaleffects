@@ -58,3 +58,23 @@ m <- suppressWarnings(svyglm(
 ))
 cmp <- avg_comparisons(m, variables = "education", by = c("ban", "gender"), wts = "weights", hypothesis = ~reference)
 expect_false(anyNA(cmp$estimate))
+
+# svyolr delta-method standard errors
+set.seed(1234)
+n <- 400
+z <- rbinom(n, 1, 0.5)
+x <- factor(sample(c("1", "2", "3"), n, replace = TRUE))
+beta_x <- c("1" = 0, "2" = 0.4, "3" = -0.3)
+beta_z <- 0.6
+eta <- beta_x[x] + beta_z * z + rlogis(n)
+cuts <- c(-1.5, -0.5, 0.5, 1.5)
+y <- cut(eta, breaks = c(-Inf, cuts, Inf), labels = 1:5, ordered_result = TRUE)
+weights <- rlnorm(n, meanlog = log(50000), sdlog = 1)
+design <- svydesign(ids = ~1, weights = ~weights, data = data.frame(y, x, z, weights))
+ord_svy <- svyolr(y ~ x + z, method = "logistic", design = design)
+cmp <- comparisons(ord_svy, wts = "(weights)")
+expect_true(any(!is.na(cmp$std.error)))
+avg_cmp <- avg_comparisons(ord_svy, wts = "(weights)")
+expect_true(any(!is.na(avg_cmp$std.error)))
+avg_pred <- avg_predictions(ord_svy, wts = "(weights)")
+expect_true(any(!is.na(avg_pred$std.error)))

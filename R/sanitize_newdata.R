@@ -184,7 +184,7 @@ add_wts_column <- function(wts, newdata, model) {
     flag2 <- isTRUE(checkmate::check_numeric(wts, len = nrow(newdata)))
     if (!flag1 && !flag2) {
         msg <- sprintf(
-            "The `wts` argument must be a numeric vector of length %s, or a string which matches a column name in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `wts` variable may not have been available. The easiest strategy is often to supply a data frame such as the original data to `newdata` explicitly, and to make sure that it includes an appropriate column of weights, identified by the `wts` argument.",
+            "The `wts` argument must be a numeric vector of length %s, or a string which matches one of the `colnames()` in the data frame that you supplied to the `newdata`, or in the `marginaleffects` objects.",
             nrow(newdata)
         )
         stop(msg, call. = FALSE)
