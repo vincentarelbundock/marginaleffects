@@ -298,7 +298,9 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
     # drop missing otherwise get_averages() fails when trying to take a
     # simple mean
     idx_na <- !is.na(out$predicted_lo)
-    out <- stats::na.omit(out, cols = "predicted_lo")
+    # Build a single index and reuse it so `out` and the posterior draws remain aligned
+    # while removing rows with missing `predicted_lo`.
+    out <- out[idx_na]
 
     # TODO: performance is probably terrrrrible here, but splitting is
     # tricky because grouping rows are not always contiguous, and the order
@@ -366,7 +368,11 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
 
 
 compare_hi_lo_frequentist <- function(out, idx, cross, variables, fun_list, elasticities, newdata) {
-    out <- stats::na.omit(out, cols = "predicted_lo")
+    # When survey weights add all-NA aux columns, stats::na.omit() (which ignores
+    # `cols`) was zeroing out `out`. Build one index and reuse it so downstream
+    # operations rely on the same filtered rows.
+    idx_pred <- !is.na(out$predicted_lo)
+    out <- out[idx_pred]
     # We want to write the "estimate" column in-place because it safer
     # than group-merge; there were several bugs related to this in the past.
     # safefun() returns 1 value and NAs when the function retunrs a
@@ -402,13 +408,16 @@ compare_hi_lo_frequentist <- function(out, idx, cross, variables, fun_list, elas
             out <- subset(out, select = idx)
         }
     }
-    out <- stats::na.omit(out, cols = "estimate")
+    out <- out[!is.na(estimate)]
 
     return(out)
 }
 
 
 compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, variables, fun_list, elasticities) {
+    if (n == 0 || length(hi) == 0) {
+        return(numeric(0))
+    }
     tn <- term[1]
     eps <- variables[[tn]]$eps
     # when cross=TRUE, sanitize_comparison enforces a single function
