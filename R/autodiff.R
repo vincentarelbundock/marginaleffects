@@ -371,8 +371,9 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
 #' of standard errors when a model includes many parameters.
 #'
 #' @param autodiff Logical flag. If `TRUE`, enables automatic differentiation
-#'   with JAX. If `FALSE` (default), disables automatic differentiation and
-#'   reverts to finite difference methods.
+#'   with JAX. If `FALSE`, disables automatic differentiation and
+#'   reverts to finite difference methods. If `NULL` (default), the function
+#'   simply returns the current autodiff setting without changing it.
 #' @param install Logical flag. If `TRUE`, installs the `marginaleffects`
 #'   Python package via `reticulate::py_install()`. Default is `FALSE`. This is
 #'   only necessary if you are self-managing a Python installation.
@@ -424,8 +425,9 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
 #'
 #' These configuration commands should be called before calling `autodiff()`.
 #'
-#' @return No return value. Called for side effects of enabling/disabling
-#'   automatic differentiation.
+#' @return When `autodiff` is `NULL`, returns `TRUE` if autodiff is enabled and
+#'   `FALSE` otherwise. Otherwise called for side effects of enabling or
+#'   disabling automatic differentiation or installing the Python package.
 #'
 #' @examples
 #' \dontrun{
@@ -447,9 +449,14 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
 autodiff <- function(autodiff = NULL, install = FALSE) {
     checkmate::assert_flag(autodiff, null.ok = TRUE)
     checkmate::assert_flag(install)
-    insight::check_if_installed("reticulate")
+    if (isTRUE(install) || isTRUE(autodiff)) {
+        insight::check_if_installed("reticulate")
+    }
     if (isTRUE(install)) {
         reticulate::py_install("marginaleffects")
+    }
+    if (is.null(autodiff)) {
+        return(isTRUE(settings_get("autodiff")))
     }
     if (isFALSE(autodiff)) {
         settings_set("autodiff", FALSE)
