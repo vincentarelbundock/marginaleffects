@@ -8,16 +8,18 @@ autodiff(autodiff = NULL, install = FALSE)
 }
 \arguments{
 \item{autodiff}{Logical flag. If \code{TRUE}, enables automatic differentiation
-with JAX. If \code{FALSE} (default), disables automatic differentiation and
-reverts to finite difference methods.}
+with JAX. If \code{FALSE}, disables automatic differentiation and
+reverts to finite difference methods. If \code{NULL} (default), the function
+simply returns the current autodiff setting without changing it.}
 
 \item{install}{Logical flag. If \code{TRUE}, installs the \code{marginaleffects}
 Python package via \code{reticulate::py_install()}. Default is \code{FALSE}. This is
 only necessary if you are self-managing a Python installation.}
 }
 \value{
-No return value. Called for side effects of enabling/disabling
-automatic differentiation.
+When \code{autodiff} is \code{NULL}, returns \code{TRUE} if autodiff is enabled and
+\code{FALSE} otherwise. Otherwise called for side effects of enabling or
+disabling automatic differentiation or installing the Python package.
 }
 \description{
 This function enables or disables automatic differentiation using the JAX
