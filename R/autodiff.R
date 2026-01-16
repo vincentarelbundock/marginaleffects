@@ -456,7 +456,13 @@ autodiff <- function(autodiff = NULL, install = FALSE) {
         reticulate::py_install("marginaleffects")
     }
     if (is.null(autodiff)) {
-        return(isTRUE(settings_get("autodiff")))
+        state <- isTRUE(settings_get("autodiff"))
+        if (state) {
+            cat("Autodiff is enabled.\n")
+        } else {
+            cat("Autodiff is disabled.\n")
+        }
+        return(invisible(state))
     }
     if (isFALSE(autodiff)) {
         settings_set("autodiff", FALSE)
