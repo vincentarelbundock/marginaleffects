@@ -221,7 +221,7 @@ Some of the most common \code{type} values are:\tabular{ll}{
 }
 
 \examples{
-\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive() || isTRUE(Sys.getenv("R_DOC_BUILD") == "true")) withAutoprint(\{ # examplesIf}
 mod <- lm(mpg ~ hp + wt, data = mtcars)
 plot_predictions(mod, condition = "wt")
 
