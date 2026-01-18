@@ -210,7 +210,7 @@ plot_predictions <- function(
     labs_args <- list(x = v_x, y = dv)
 
     if (!is.null(v_color)) {
-        x_is_discrete <- is.factor(datplot[[v_x]])
+        x_is_discrete <- check_variable_class(mfx, v_x, "categorical")
         if (x_is_discrete) {
             # Discrete x-axis uses shape (gray) or color (not gray)
             if (gray) {
