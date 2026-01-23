@@ -26,19 +26,6 @@ plot_preprocess <- function(
             dat[[v]] <- fun(dat[[v]], c("Q1", "Q2", "Q3"))
         }
     }
-    if (check_variable_class(mfx, v_x, "categorical")) {
-        dat[[v_x]] <- factor(dat[[v_x]])
-    }
-    # colors, linetypes, and facets are categorical attributes
-    if (isTRUE(v_color %in% colnames(dat))) {
-        dat[[v_color]] <- factor(dat[[v_color]])
-    }
-    if (isTRUE(v_facet_1 %in% colnames(dat))) {
-        dat[[v_facet_1]] <- factor(dat[[v_facet_1]])
-    }
-    if (isTRUE(v_facet_2 %in% colnames(dat))) {
-        dat[[v_facet_2]] <- factor(dat[[v_facet_2]])
-    }
     return(dat)
 }
 
@@ -130,7 +117,7 @@ plot_build <- function(
     aes_args_ribbon$color <- NULL
 
     # discrete x-axis
-    if (is.factor(dat[[v_x]])) {
+    if (check_variable_class(mfx, v_x, "categorical")) {
         if (!is.null(v_color)) {
             if (gray) {
                 aes_args$shape <- substitute(factor(.data[[v_color]]))
