@@ -480,6 +480,7 @@ The \code{invlink(link)} is a special type defined by \code{marginaleffects}. It
 
 Some of the most common \code{type} values are:\tabular{ll}{
    class \tab type \cr
+   DirichletRegModel \tab response \cr
    Gam \tab invlink(link), response, link \cr
    Gls \tab lp \cr
    MCMCglmm \tab response \cr

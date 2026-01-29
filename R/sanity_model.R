@@ -11,10 +11,11 @@ sanitize_model_specific <- function(model, ...) {
 
 #' @rdname sanitize_model_specific
 sanitize_model_specific.default <- function(
-    model,
-    vcov = NULL,
-    calling_function = "marginaleffects",
-    ...) {
+  model,
+  vcov = NULL,
+  calling_function = "marginaleffects",
+  ...
+) {
     return(model)
 }
 
@@ -55,6 +56,7 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
             "coxph",
             "coxph_weightit",
             "crch",
+            "DirichletRegModel",
             "flexsurvreg", # package: flexsurv
             "fixest",
             "flic",
