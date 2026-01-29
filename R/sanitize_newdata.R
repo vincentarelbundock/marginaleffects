@@ -239,6 +239,19 @@ add_newdata <- function(
     # Store processed newdata in the mfx object
     mfx@newdata <- newdata
 
+    # Merge variable class info from newdata to handle workflows that drop raw predictors
+    newdata_vclass <- detect_variable_class(newdata, model = mfx@model)
+    if (length(newdata_vclass) > 0) {
+        if (length(mfx@variable_class) == 0) {
+            mfx@variable_class <- newdata_vclass
+        } else {
+            missing <- setdiff(names(newdata_vclass), names(mfx@variable_class))
+            if (length(missing) > 0) {
+                mfx@variable_class[missing] <- newdata_vclass[missing]
+            }
+        }
+    }
+
     # Extract and store variable_names_datagrid attribute from newdata
     datagrid_vars <- attr(newdata, "variable_names_datagrid")
     if (!is.null(datagrid_vars)) {
