@@ -8,14 +8,15 @@
 #' @keywords internal
 #' @export
 get_predict <- function(
-    model,
-    newdata,
-    type,
-    mfx = NULL,
-    newparams = NULL,
-    ndraws = NULL,
-    se.fit = NULL,
-    ...) {
+  model,
+  newdata,
+  type,
+  mfx = NULL,
+  newparams = NULL,
+  ndraws = NULL,
+  se.fit = NULL,
+  ...
+) {
     UseMethod("get_predict", model)
 }
 
@@ -23,14 +24,15 @@ get_predict <- function(
 #' @rdname get_predict
 #' @export
 get_predict.default <- function(
-    model,
-    newdata = insight::get_data(model),
-    type = "response",
-    mfx = NULL,
-    newparams = NULL,
-    ndraws = NULL,
-    se.fit = NULL,
-    ...) {
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  mfx = NULL,
+  newparams = NULL,
+  ndraws = NULL,
+  se.fit = NULL,
+  ...
+) {
     dots <- list(...)
 
     if (is.null(type)) {
@@ -139,19 +141,19 @@ get_predict_error <- function(model, newdata = NULL, ...) {
             stop_sprintf(pred_result$error$message)
         }
 
-        msg <- "Unable to compute predicted values with this model. This error can arise when `insight::get_data()` is unable to extract the dataset from the model object, or when the data frame was modified since fitting the model. You can try to supply a different dataset to the `newdata` argument."
+        msg <- "Unable to compute predicted values with this model. This error can arise when `insight::get_data()` is unable to extract the dataset from the model object, or when the original data frame (usually in the global environment) was modified since fitting the model. Make sure the original data object is unchanged and/or try to supply a different dataset to the `newdata` argument."
         if (!is.null(pred_result$error)) {
             msg <- c(
                 msg,
-                "",
+                "\n\n",
                 "In addition, this error message was raised:",
-                "",
+                "\n",
                 pred_result$error$message
             )
         }
         msg <- c(
             msg,
-            "",
+            "\n\n",
             "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
         )
         stop_sprintf(msg)

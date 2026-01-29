@@ -147,17 +147,15 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
     }
     if (isFALSE(flag)) {
         support <- toString(sort(unique(sapply(supported, function(x) x[1]))))
-        msg <- c(
-            sprintf(
-                'Models of class "%s" are not supported. Supported model classes include:',
-                class(model)[1]
-            ),
-            "",
-            support,
-            "",
-            "New modeling packages can usually be supported by `marginaleffects` if they include a working `predict()` method. If you believe that this is the case, please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues"
-        )
-        msg <- insight::format_message(msg)
+        msg <- sprintf('Models of class "%s" are not supported. Supported model classes include:\n\n%s.\n\nRequest support for new models on the issue tracker: https://github.com/vincentarelbundock/marginaleffects', class(model)[1], paste(support, collapse = ", "))
+
+        # default length is 1000. We only want to override that if the user has not explicitly set a different value
+        op <- getOption("warning.length")
+        if (is.numeric(op) && op == 1000) {
+            on.exit(options(warning.length = op))
+            options(warning.length = 2000)
+        }
+
         stop(msg, call. = FALSE)
     }
 }

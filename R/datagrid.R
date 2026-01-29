@@ -171,11 +171,14 @@ datagrid <- function(
         newdata_split <- split(newdata, idx, drop = TRUE)
     }
 
+    modeldata_for_levels <- if (NROW(mfx@modeldata) > 0) mfx@modeldata else NULL
+
     values_split <- lapply(newdata_split, function(x) {
         datagrid_newdata_to_list(
             ...,
             newdata = x,
             model = model,
+            modeldata = modeldata_for_levels,
             variable_class = variable_class,
             grid_type = grid_type,
             FUN = FUN,
@@ -238,6 +241,7 @@ datagrid_newdata_to_list <- function(
     ...,
     newdata,
     model,
+    modeldata = NULL,
     variable_class,
     grid_type,
     FUN = NULL,
@@ -345,7 +349,17 @@ datagrid_newdata_to_list <- function(
 
     # Process factors in explicit values
     for (e in names(explicit_values)) {
-        explicit_values[[e]] <- sanitize_datagrid_factor(explicit_values[[e]], newdata[[e]], variable_class, e)
+        modeldata_col <- NULL
+        if (!is.null(modeldata) && e %in% colnames(modeldata)) {
+            modeldata_col <- modeldata[[e]]
+        }
+        explicit_values[[e]] <- sanitize_datagrid_factor(
+            explicit_values[[e]],
+            newdata[[e]],
+            variable_class,
+            e,
+            modeldata_col = modeldata_col
+        )
     }
 
     out <- list(implicit = implicit_values, explicit = explicit_values)
@@ -353,20 +367,25 @@ datagrid_newdata_to_list <- function(
 }
 
 
-sanitize_datagrid_factor <- function(values, newdata_col, variable_class, var_name) {
+sanitize_datagrid_factor <- function(values, newdata_col, variable_class, var_name, modeldata_col = NULL) {
     if (
         is.factor(newdata_col) ||
+            is.factor(modeldata_col) ||
             isTRUE(check_variable_class(variable_class, var_name, "factor"))
     ) {
-        if (is.factor(newdata_col)) {
-            levs <- levels(newdata_col)
+        level_source <- newdata_col
+        if (!is.null(modeldata_col) && length(modeldata_col) > 0) {
+            level_source <- modeldata_col
+        }
+        if (is.factor(level_source)) {
+            levs <- levels(level_source)
         } else {
-            levs <- as.character(sort(unique(newdata_col)))
+            levs <- as.character(sort(unique(level_source)))
         }
         values <- as.character(values)
         if (!all(values %in% c(levs, NA))) {
             msg <- sprintf(
-                'The "%s" element of the `at` list corresponds to a factor variable. The values entered in the `at` list must be one of the factor levels: %s.',
+                'The "%s" element corresponds to a factor variable. The values supplied must be one of the factor levels: %s.',
                 var_name,
                 toString(dQuote(levs, NULL))
             )

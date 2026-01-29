@@ -26,6 +26,28 @@ plot_preprocess <- function(
             dat[[v]] <- fun(dat[[v]], c("Q1", "Q2", "Q3"))
         }
     }
+    if (check_variable_class(mfx, v_x, "categorical")) {
+        dat[[v_x]] <- factor(dat[[v_x]])
+    }
+    # colors, linetypes, and facets are categorical attributes
+    if (isTRUE(v_color %in% colnames(dat))) {
+        dat[[v_color]] <- factor(dat[[v_color]])
+    }
+    if (isTRUE(v_facet_1 %in% colnames(dat))) {
+        dat[[v_facet_1]] <- factor(dat[[v_facet_1]])
+    }
+    if (isTRUE(v_facet_2 %in% colnames(dat))) {
+        dat[[v_facet_2]] <- factor(dat[[v_facet_2]])
+    }
+
+    if (!is.null(mfx) && !is.null(mfx@modeldata)) {
+        vars <- c(v_x, v_color, v_facet_1, v_facet_2)
+        for (v in vars) {
+            if (isTRUE(v %in% colnames(dat)) && isTRUE(v %in% colnames(mfx@modeldata))) {
+                attr(dat[[v]], "label") <- attr(mfx@modeldata[[v]], "label")
+            }
+        }
+    }
     return(dat)
 }
 
@@ -69,7 +91,7 @@ plot_build <- function(
                         ggplot2::aes(
                             x = .data[[v_x]],
                             y = .data[[dv_plot]],
-                            shape = factor(.data[[v_color]])
+                            shape = .data[[v_color]]
                         )
                     )
             } else {
@@ -80,7 +102,7 @@ plot_build <- function(
                         ggplot2::aes(
                             x = .data[[v_x]],
                             y = .data[[dv_plot]],
-                            color = factor(.data[[v_color]])
+                            color = .data[[v_color]]
                         )
                     )
             }
@@ -120,9 +142,9 @@ plot_build <- function(
     if (check_variable_class(mfx, v_x, "categorical")) {
         if (!is.null(v_color)) {
             if (gray) {
-                aes_args$shape <- substitute(factor(.data[[v_color]]))
+                aes_args$shape <- substitute(.data[[v_color]])
             } else {
-                aes_args$color <- substitute(factor(.data[[v_color]]))
+                aes_args$color <- substitute(.data[[v_color]])
             }
         }
         aes_obj <- do.call(ggplot2::aes, aes_args)
@@ -144,11 +166,11 @@ plot_build <- function(
     } else {
         if (!is.null(v_color)) {
             if (gray) {
-                aes_args$linetype <- substitute(factor(.data[[v_color]]))
-                aes_args_ribbon$linetype <- substitute(factor(.data[[v_color]]))
+                aes_args$linetype <- substitute(.data[[v_color]])
+                aes_args_ribbon$linetype <- substitute(.data[[v_color]])
             } else {
-                aes_args$color <- substitute(factor(.data[[v_color]]))
-                aes_args_ribbon$fill <- substitute(factor(.data[[v_color]]))
+                aes_args$color <- substitute(.data[[v_color]])
+                aes_args_ribbon$fill <- substitute(.data[[v_color]])
             }
         }
         aes_obj_ribbon <- do.call(ggplot2::aes, aes_args_ribbon)
