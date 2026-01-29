@@ -139,7 +139,7 @@ plot_build <- function(
     aes_args_ribbon$color <- NULL
 
     # discrete x-axis
-    if (is.factor(dat[[v_x]])) {
+    if (check_variable_class(mfx, v_x, "categorical")) {
         if (!is.null(v_color)) {
             if (gray) {
                 aes_args$shape <- substitute(.data[[v_color]])
