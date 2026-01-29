@@ -175,6 +175,7 @@ plot_comparisons <- function(
         condition = condition,
         mfx = mfx
     )
+    attr(datplot$estimate, "label") <- "Comparison"
 
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
@@ -183,7 +184,7 @@ plot_comparisons <- function(
     }
 
     # ggplot2
-    insight::check_if_installed("ggplot2")
+    insight::check_if_installed("ggplot2", minimum_version = "4.0.0")
     p <- plot_build(
         datplot,
         v_x = v_x,
@@ -194,7 +195,6 @@ plot_comparisons <- function(
         rug = rug,
         mfx = mfx
     )
-    p <- p + ggplot2::labs(x = v_x, y = sprintf("Comparison"))
 
     return(p)
 }

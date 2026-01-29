@@ -54,20 +54,21 @@
 #' )
 #'
 plot_predictions <- function(
-    model,
-    condition = NULL,
-    by = NULL,
-    newdata = NULL,
-    type = NULL,
-    vcov = NULL,
-    conf_level = 0.95,
-    wts = FALSE,
-    transform = NULL,
-    points = 0,
-    rug = FALSE,
-    gray = getOption("marginaleffects_plot_gray", default = FALSE),
-    draw = TRUE,
-    ...) {
+  model,
+  condition = NULL,
+  by = NULL,
+  newdata = NULL,
+  type = NULL,
+  vcov = NULL,
+  conf_level = 0.95,
+  wts = FALSE,
+  transform = NULL,
+  points = 0,
+  rug = FALSE,
+  gray = getOption("marginaleffects_plot_gray", default = FALSE),
+  draw = TRUE,
+  ...
+) {
     checkmate::assert_number(points, lower = 0, upper = 1)
 
     if (inherits(model, c("mira", "amest"))) {
@@ -174,7 +175,6 @@ plot_predictions <- function(
         v_facet_2 <- hush(by[[4]])
     }
 
-    dv <- mfx@variable_names_response
     datplot <- plot_preprocess(
         datplot,
         v_x = v_x,
@@ -185,6 +185,15 @@ plot_predictions <- function(
         mfx = mfx
     )
 
+    dv <- mfx@variable_names_response
+    dv_label <- dv
+    if (!is.null(mfx@modeldata) && length(dv) == 1 && dv %in% colnames(mfx@modeldata)) {
+        dv_label <- attr(mfx@modeldata[[dv]], "label")
+    } else {
+        dv_label <- "Prediction"
+    }
+    attr(datplot$estimate, "label") <- dv_label
+
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
         out <- as.data.frame(datplot)
@@ -192,7 +201,7 @@ plot_predictions <- function(
     }
 
     # ggplot2
-    insight::check_if_installed("ggplot2")
+    insight::check_if_installed("ggplot2", minimum_version = "4.0.0")
     p <- plot_build(
         datplot,
         v_x = v_x,
@@ -205,31 +214,6 @@ plot_predictions <- function(
         gray = gray,
         mfx = mfx
     )
-
-    # Only set labels for aesthetics that are actually used
-    labs_args <- list(x = v_x, y = dv)
-
-    if (!is.null(v_color)) {
-        x_is_discrete <- is.factor(datplot[[v_x]])
-        if (x_is_discrete) {
-            # Discrete x-axis uses shape (gray) or color (not gray)
-            if (gray) {
-                labs_args$shape <- v_color
-            } else {
-                labs_args$color <- v_color
-            }
-        } else {
-            # Continuous x-axis uses linetype (gray) or color/fill (not gray)
-            if (gray) {
-                labs_args$linetype <- v_color
-            } else {
-                labs_args$color <- v_color
-                labs_args$fill <- v_color
-            }
-        }
-    }
-
-    p <- p + do.call(ggplot2::labs, labs_args)
 
     return(p)
 }

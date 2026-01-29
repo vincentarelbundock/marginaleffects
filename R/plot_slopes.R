@@ -122,7 +122,7 @@ plot_slopes <- function(
     )
 
     if (inherits(out, "ggplot")) {
-        out <- out + ggplot2::labs(x = condition[1], y = "Slope")
+        attr(out$data$estimate, "label") <- "Slope"
     }
 
     return(out)
