@@ -30,6 +30,7 @@
 \alias{set_coef.gamlss}
 \alias{set_coef.glmmTMB}
 \alias{set_coef.glmgee}
+\alias{set_coef.gnm}
 \alias{set_coef.glmx}
 \alias{set_coef.merMod}
 \alias{set_coef.lmerModLmerTest}
@@ -93,6 +94,8 @@ set_coef(model, coefs, ...)
 \method{set_coef}{glmmTMB}(model, coefs, ...)
 
 \method{set_coef}{glmgee}(model, coefs, ...)
+
+\method{set_coef}{gnm}(model, coefs, ...)
 
 \method{set_coef}{glmx}(model, coefs, ...)
 

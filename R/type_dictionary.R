@@ -84,6 +84,9 @@ glm,link
 glmerMod,response
 glmerMod,link
 glmgee,response
+glmgee,link
+gnm,response
+gnm,link
 glmrob,response
 glmrob,link
 glmmTMB,response
