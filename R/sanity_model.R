@@ -103,6 +103,7 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
             "mira",
             "mlogit",
             "model_fit",
+            "multiLCA", # package: multilevLCA
             c("multinom", "nnet"),
             "multinom_weightit",
             "mvgam",
