@@ -391,7 +391,13 @@ When, the argument is set to \code{comparison="lift"}, \code{marginaleffects} wi
 
 \code{function(hi, lo) { (hi - lo) / lo }}
 
-Users can supply custom functions to the \code{comparison} argument, or use one of the many shortcuts available for common quantities of interest:\tabular{ll}{
+Users can supply custom functions to the \code{comparison} argument, or use one of the many shortcuts available for common quantities of interest:
+
+Note on automatic \code{avg} switching: when the \code{by} argument is used (including
+\code{by = TRUE} or a character vector), \code{marginaleffects} will automatically
+switch comparison shortcuts to their \code{avg} variants unless they already end
+with \code{avg}. For example, \code{comparison = "difference"} becomes
+\code{comparison = "differenceavg"} when aggregating over \code{by}.\tabular{ll}{
    Shortcut \tab Function \cr
    difference \tab function (hi, lo) hi - lo \cr
    differenceavg \tab function (hi, lo) mean(hi - lo) \cr
