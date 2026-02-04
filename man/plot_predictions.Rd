@@ -173,11 +173,12 @@ Some of the most common \code{type} values are:\tabular{ll}{
    glm \tab invlink(link), response, link \cr
    glm_weightit \tab invlink(link), probs, response, lp, link \cr
    glmerMod \tab response, link \cr
-   glmgee \tab response \cr
+   glmgee \tab response, link \cr
    glmmPQL \tab response, link \cr
    glmmTMB \tab response, link, conditional, zprob, zlink, disp \cr
    glmrob \tab response, link \cr
    glmx \tab response \cr
+   gnm \tab response, link \cr
    hetprob \tab pr, xb \cr
    hurdle \tab response, prob, count, zero \cr
    hxlr \tab location, cumprob, scale, density \cr
