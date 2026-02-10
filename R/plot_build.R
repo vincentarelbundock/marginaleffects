@@ -70,6 +70,7 @@ plot_build <- function(
     # create index before building ggplot to make sure it is available
     dat$marginaleffects_term_index <- get_unique_index(dat, mfx)
     multi_variables <- isTRUE(length(unique(dat$marginaleffects_term_index)) > 1)
+    x_is_discrete <- is.factor(dat[[v_x]]) || is.character(dat[[v_x]]) || check_variable_class(mfx, v_x, "categorical")
 
     # Handle case where dv is a vector (e.g., binomial models with trials())
     # Use the first element for plotting the raw data points
@@ -79,7 +80,7 @@ plot_build <- function(
 
     if (
         points > 0 &&
-            !check_variable_class(mfx, v_x, "categorical") &&
+            !x_is_discrete &&
             !check_variable_class(mfx, dv, "categorical")
     ) {
         if (!is.null(v_color) && check_variable_class(mfx, v_color, "categorical")) {
@@ -139,7 +140,7 @@ plot_build <- function(
     aes_args_ribbon$color <- NULL
 
     # discrete x-axis
-    if (check_variable_class(mfx, v_x, "categorical")) {
+    if (x_is_discrete) {
         if (!is.null(v_color)) {
             if (gray) {
                 aes_args$shape <- substitute(.data[[v_color]])
