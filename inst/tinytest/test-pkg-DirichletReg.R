@@ -15,9 +15,7 @@ mod1 <- DirichletReg::DirichReg(
 
 op <- getOption("marginaleffects_safe", default = TRUE)
 warn_op <- getOption("warn")
-options(marginaleffects_safe = TRUE, warn = 1)
-on.exit(options(marginaleffects_safe = op, warn = warn_op), add = TRUE)
-
+options(marginaleffects_safe = TRUE)
 expect_warning(
     predictions(mod1),
     pattern = "DirichletReg model support is experimental"
@@ -26,6 +24,7 @@ expect_warning(
     avg_slopes(mod1),
     pattern = "DirichletReg model support is experimental"
 )
+options(marginaleffects_safe = op)
 
 expect_predictions(mod1)
 expect_slopes(mod1)
