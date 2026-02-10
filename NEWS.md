@@ -14,6 +14,7 @@ Bugs:
 * `comparisons()` with survey-weighted ordinal regressions failed because `stats::na.omit()` discarded every row when auxiliary columns were all `NA`, and the remaining objects fell out of alignment. We now filter using a shared index so hi/lo predictions, weights, and posterior draws stay synchronized.
 * `set_coef.svyolr()` did not recognize thresholds named like `"Intercept: 1|2"`, so delta-method perturbations replaced all cutpoints with `NA` and SEs vanished for `comparisons()`/`avg_*()` on survey ordinal models. Threshold names are now matched with or without the `"Intercept:"` prefix.
 * `labs()` could not be used to modify plots returned by `plot_*()` functions. Thanks to @brueckmann for report #1628.
+* Should not always raise an error about uncertainty with `fixest` models and non-linear link. See issue #1487.
 
 ## 0.31.0
 

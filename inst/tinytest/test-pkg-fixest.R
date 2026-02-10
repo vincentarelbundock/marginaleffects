@@ -283,6 +283,8 @@ res <- suppressWarnings(inferences(avg_slopes(mod), method = "boot", R = 20))
 expect_inherits(res, "slopes") # should be slopes but can't figure out inferences dispatch
 
 # Issue #1487: uncertainty in fixed-effects parameters
+op <- getOption("marginaleffects_safe", default = TRUE)
+options(marginaleffects_safe = TRUE)
 m <- feols(Ozone ~ Wind | Month, airquality, vcov = "iid")
 expect_error(predictions(m), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
 expect_false(ignore(expect_error)(avg_comparisons(m)))
@@ -293,6 +295,8 @@ m <- fepois(Ozone ~ Wind | Month, airquality, vcov = "iid")
 expect_error(predictions(m), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
 expect_error(avg_comparisons(m), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
 expect_error(avg_slopes(m), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
+expect_warning(hypotheses(m, hypothesis = "b1 = 0"), pattern = "cannot take into account the uncertainty in fixed-effects parameters")
+options(marginaleffects_safe = op)
 
 # allow when there are no fixed effects
 mod <- feols(Sepal.Width ~ Sepal.Length + factor(Species), iris, vcov = "iid")
