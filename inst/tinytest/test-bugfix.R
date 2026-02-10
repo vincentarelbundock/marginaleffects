@@ -173,3 +173,11 @@ p <- avg_predictions(mod)
 expect_false(is.na(p$estimate))
 expect_error(avg_slopes(mod), "no valid predictor")
 expect_error(avg_comparisons(mod), "no valid predictor")
+
+
+# Issue #1660: avg_slopes() should not strip data.table class
+dt <- data.table::data.table(x = rnorm(1000))
+dt[, y := 4 + x + rnorm(1000)]
+mod <- lm(data = dt, y ~ x)
+avg_slopes(mod, variables = "x")
+expect_true(data.table::is.data.table(dt))
