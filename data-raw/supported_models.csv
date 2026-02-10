@@ -21,6 +21,7 @@ crch,crch
 crch,hxlr
 dbarts,bart
 DCchoice,oohbchoice
+DirichletReg,DirichletReg
 estimatr,iv_robust
 estimatr,lm_lin
 estimatr,lm_robust

@@ -43,6 +43,7 @@ crch,response
 crch,location
 crch,scale
 crch,density
+DirichletRegModel,response
 hetprob,pr
 hetprob,xb
 hxlr,location
