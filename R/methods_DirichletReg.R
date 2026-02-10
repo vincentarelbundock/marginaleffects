@@ -1,3 +1,4 @@
+#' @include sanity_model.R
 #' @include get_coef.R
 #' @rdname get_coef
 #' @export
@@ -41,4 +42,24 @@ get_predict.DirichletRegModel <- function(model, newdata, ...) {
     }
     out <- add_rowid(out, newdata)
     return(out)
+}
+
+#' @rdname sanitize_model_specific
+#' @export
+sanitize_model_specific.DirichletRegModel <- function(
+    model,
+    calling_function = "marginaleffects",
+    ...
+) {
+    if (isTRUE(getOption("marginaleffects_safe", default = TRUE))) {
+        warning(
+            paste(
+                "DirichletReg model support is experimental and numerical results",
+                "have not been tested extensively. Contribute test cases at:",
+                "https://github.com/vincentarelbundock/marginaleffects/issues/1636"
+            ),
+            call. = FALSE
+        )
+    }
+    return(model)
 }
