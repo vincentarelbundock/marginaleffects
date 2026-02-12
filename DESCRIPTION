@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.31.0.10
+Version: 0.31.0.11
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -52,6 +52,7 @@ Suggests:
     aod,
     arrow,
     bayestestR,
+    beeca,
     bench,
     betareg,
     BH,
@@ -232,6 +233,7 @@ Collate:
     'get_predictions.R'
     'get_se_delta.R'
     'get_vcov.R'
+    'get_vcov_unconditional.R'
     'github_issue.R'
     'hush.R'
     'hypotheses.R'

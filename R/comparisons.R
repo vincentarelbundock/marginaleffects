@@ -322,7 +322,7 @@ comparisons <- function(
     mfx <- add_degrees_of_freedom(mfx = mfx, df = df, by = by, hypothesis = hypothesis, vcov = vcov)
 
     mfx@vcov_type <- get_vcov_label(vcov)
-    mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
+    mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, mfx = mfx, ...)
 
     predictors <- mfx@variables
 

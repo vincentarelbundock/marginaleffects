@@ -102,6 +102,7 @@ avg_predictions(
 \item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
 \item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 \item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
+\item \code{"unconditional"}: Influence-function variance that accounts for both parameter estimation uncertainty and the variability of averaging, providing robustness to model misspecification. Only supported for \code{lm} and \code{glm} models in \code{avg_predictions()} and \code{avg_comparisons()}. See Hansen & Overgaard (2025, \emph{Metrika}).
 \item "rsample", "boot", "fwb", and "simulation" are passed to the \code{method} argument of the \code{inferences()} function. To customize the bootstrap or simulation process, call \code{inferences()} directly.
 }
 \item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
@@ -660,5 +661,6 @@ predictions(mod, newdata = "mean", byfun = sum, by = by)
 \item Arel-Bundock (2026). "Model to Meaning: How to interpret statistical models in R and Python." CRC Press. https://routledge.com/9781032908724
 \item Greenland S. 2019. "Valid P-Values Behave Exactly as They Should: Some Misleading Criticisms of P-Values and Their Resolution With S-Values." The American Statistician. 73(S1): 106–114.
 \item Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020. "Surprise!" American Journal of Epidemiology 190 (2): 191–93. \doi{10.1093/aje/kwaa136}
+\item Hansen SN, Overgaard M (2025). "Variance estimation for average treatment effects estimated by g-computation." \emph{Metrika}, \emph{88}, 419-443. \doi{10.1007/s00184-024-00964-2}
 }
 }

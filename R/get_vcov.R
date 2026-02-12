@@ -17,6 +17,12 @@ get_vcov.default <- function(model, vcov = NULL, ...) {
         return(NULL)
     }
 
+    # Unconditional: influence-function variance (Hansen & Overgaard, 2025)
+    if (identical(vcov, "unconditional")) {
+        mfx <- list(...)[["mfx"]]
+        return(get_vcov_unconditional(mfx))
+    }
+
     vcov <- sanitize_vcov(model = model, vcov = vcov)
     if (isTRUE(checkmate::check_matrix(vcov))) {
         return(vcov)

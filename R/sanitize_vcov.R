@@ -11,6 +11,7 @@ sanitize_vcov <- function(model, vcov) {
 
     # strings should be case-insensitive
     vcov_strings <- c(
+        "unconditional",
         "stata",
         "robust",
         "HC",
