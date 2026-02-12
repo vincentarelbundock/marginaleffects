@@ -15,22 +15,20 @@
 #' @keywords internal
 get_vcov_unconditional <- function(mfx = NULL) {
     if (is.null(mfx)) {
-        stop_sprintf('vcov = "unconditional" is not supported in this context. Use avg_predictions() or avg_comparisons().')
+        stop_sprintf(
+            'vcov = "unconditional" is not supported in this context. Use avg_predictions() or avg_comparisons().'
+        )
     }
 
     model <- mfx@model
 
     # --- Scope checks ---
-    if (!inherits(model, c("lm", "glm"))) {
-        stop_sprintf(
-            'vcov = "unconditional" is only supported for lm and glm models.'
-        )
+    if (!class(model)[1] %in% c("lm", "glm")) {
+        stop_sprintf('vcov = "unconditional" is only supported for lm and glm models.')
     }
 
     if (length(mfx@variables) == 0) {
-        stop_sprintf(
-            'vcov = "unconditional" requires the `variables` argument.'
-        )
+        stop_sprintf('vcov = "unconditional" requires the `variables` argument.')
     }
 
     if (!isTRUE(mfx@by) && !is.character(mfx@by)) {
@@ -43,17 +41,13 @@ get_vcov_unconditional <- function(mfx = NULL) {
     if (mfx@calling_function == "comparisons") {
         cmp <- mfx@comparison
         if (!is.null(cmp) && !identical(cmp, "difference") && !identical(cmp, "differenceavg")) {
-            stop_sprintf(
-                'vcov = "unconditional" only supports comparison = "difference".'
-            )
+            stop_sprintf('vcov = "unconditional" only supports comparison = "difference".')
         }
     }
 
     # sandwich is required
     if (!requireNamespace("sandwich", quietly = TRUE)) {
-        stop_sprintf(
-            'The "sandwich" package is required for vcov = "unconditional".'
-        )
+        insight::check_if_installed("sandwich")
     }
 
     # --- Retrieve training data ---
@@ -62,9 +56,7 @@ get_vcov_unconditional <- function(mfx = NULL) {
         modeldata <- get_modeldata(model)
     }
     if (is.null(modeldata) || nrow(modeldata) == 0) {
-        stop_sprintf(
-            'vcov = "unconditional" requires access to the original training data, but none could be found.'
-        )
+        stop_sprintf('vcov = "unconditional" requires access to the original training data, but none could be found.')
     }
 
     Y <- insight::get_response(model)
@@ -104,9 +96,11 @@ get_vcov_unconditional <- function(mfx = NULL) {
             error = function(e) {
                 stop_sprintf(
                     'vcov = "unconditional" failed to construct model matrix for intervention level "%s": %s',
-                    trt_levels[ell], e$message
+                    trt_levels[ell],
+                    e$message
                 )
-            })
+            }
+        )
 
         if (is.null(fam)) {
             # lm: identity link
