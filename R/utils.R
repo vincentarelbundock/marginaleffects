@@ -196,3 +196,24 @@ warn_sprintf <- function(msg, ...) {
     }
     warning(msg, call. = FALSE)
 }
+
+
+# Like do.call() but avoids inlining argument values into the call expression.
+# When do.call(fn, list(huge_model, huge_data)) errors, R stores the entire
+# inlined data in sys.calls(), and IDEs (RStudio/Positron) try to deparse it,
+# causing multi-minute hangs. This builds a call with symbol references instead.
+# See: https://github.com/vincentarelbundock/marginaleffects/issues/1663
+do_call <- function(what, args) {
+    call_env <- new.env(parent = parent.frame())
+    call_env[[".what"]] <- what
+    arg_names <- names(args) %||% rep("", length(args))
+    call_list <- vector("list", length(args) + 1L)
+    call_list[[1L]] <- as.symbol(".what")
+    for (i in seq_along(args)) {
+        sym_name <- sprintf(".arg%d", i)
+        call_env[[sym_name]] <- args[[i]]
+        call_list[[i + 1L]] <- as.symbol(sym_name)
+    }
+    names(call_list) <- c("", arg_names)
+    eval(as.call(call_list), call_env)
+}

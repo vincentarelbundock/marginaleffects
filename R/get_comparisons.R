@@ -439,7 +439,7 @@ compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, vari
     args[["x"]] <- elasticities[[tn]][tmp_idx]
 
     args <- args[names(args) %in% names(formals(fun))]
-    con <- try(do.call("fun", args), silent = TRUE)
+    con <- try(do_call(fun, args), silent = TRUE)
 
     if (
         !isTRUE(checkmate::check_numeric(con, len = n)) &&
