@@ -1,6 +1,6 @@
 # News {.unnumbered}
 
-## Development
+## 0.32.0
 
 * `autodiff()` now prints and returns the current state when called without arguments, so users can check whether autodiff is active without triggering any reticulate checks.
 * Raise a warning when `newdata` includes more than 100 columns, because this may lead to high memory use and computational load. We used to "prune" the internal datasets, but this let to many errors when `insight` did not fully support some models, or when using `by` and `hypothesis` in non-stardard ways. Thanks A.Tawfik for an email report.
