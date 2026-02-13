@@ -9,7 +9,7 @@ get_predict.bart <- function(model, newdata = NULL, ...) {
         ),
         list(...)
     )
-    p <- do.call(stats::predict, args)
+    p <- safe_do_call(stats::predict, args)
     p_med <- collapse::fmedian(p)
     out <- data.table(
         group = "main_marginaleffect",

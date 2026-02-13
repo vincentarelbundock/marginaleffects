@@ -162,7 +162,7 @@ get_se_delta <- function(
             args$newparams <- x
         }
 
-        g <- do.call("FUN", args)
+        g <- safe_do_call(FUN, args)
 
         return(g)
     }

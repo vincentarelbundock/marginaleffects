@@ -66,7 +66,7 @@ get_predict.default <- function(
         pred <- dots[["pred"]]
     } else {
         fun <- stats::predict
-        pred <- suppressWarnings(do.call(fun, args))
+        pred <- suppressWarnings(safe_do_call(fun, args))
     }
 
     # 1-d array to vector (e.g., {mgcv})

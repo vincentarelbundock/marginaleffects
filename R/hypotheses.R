@@ -268,7 +268,7 @@ hypotheses <- function(
         if (...length() > 0) {
             args <- utils::modifyList(args, list(...))
         }
-        se <- do.call("get_se_delta", args)
+        se <- safe_do_call(get_se_delta, args)
         J <- attr(se, "jacobian")
         mfx@jacobian <- J
         attr(se, "jacobian") <- NULL

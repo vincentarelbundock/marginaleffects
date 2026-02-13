@@ -572,7 +572,10 @@ The \code{type} argument determines the scale of the predictions used to compute
 
 The \code{invlink(link)} is a special type defined by \code{marginaleffects}. It is available for some (but not all) models, and only for the \code{predictions()} function. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with \code{type="invlink(link)"} will not always be equivalent to the average of estimates with \code{type="response"}. This type is default when calling \code{predictions()}. It is available---but not default---when calling \code{avg_predictions()} or \code{predictions()} with the \code{by} argument.
 
-Some of the most common \code{type} values are:\tabular{ll}{
+Some of the most common \code{type} values are:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{#> Warning: package 'tinytable' was built under R version 4.5.2
+}\if{html}{\out{</div>}}\tabular{ll}{
    class \tab type \cr
    DirichletRegModel \tab response \cr
    Gam \tab invlink(link), response, link \cr
