@@ -67,10 +67,23 @@ plot_build <- function(
     checkmate::assert_flag(rug)
     checkmate::assert_flag(gray)
 
+    is_discrete <- function(df, var, mfx = NULL) {
+        if (is.null(var) || !isTRUE(var %in% colnames(df))) {
+            return(FALSE)
+        }
+        out <- is.factor(df[[var]]) ||
+            is.character(df[[var]]) ||
+            is.logical(df[[var]])
+        if (!is.null(mfx)) {
+            out <- out || check_variable_class(mfx, var, "categorical")
+        }
+        return(out)
+    }
+
     # create index before building ggplot to make sure it is available
     dat$marginaleffects_term_index <- get_unique_index(dat, mfx)
     multi_variables <- isTRUE(length(unique(dat$marginaleffects_term_index)) > 1)
-    x_is_discrete <- is.factor(dat[[v_x]]) || is.character(dat[[v_x]]) || check_variable_class(mfx, v_x, "categorical")
+    x_is_discrete <- is_discrete(dat, v_x, mfx)
 
     # Handle case where dv is a vector (e.g., binomial models with trials())
     # Use the first element for plotting the raw data points
@@ -83,11 +96,20 @@ plot_build <- function(
             !x_is_discrete &&
             !check_variable_class(mfx, dv, "categorical")
     ) {
-        if (!is.null(v_color) && check_variable_class(mfx, v_color, "categorical")) {
+        dat_points <- mfx@modeldata
+        if (!is.null(dat_points)) {
+            if (is_discrete(dat_points, v_x, mfx)) {
+                dat_points[[v_x]] <- factor(dat_points[[v_x]])
+            }
+            if (is_discrete(dat_points, v_color, mfx)) {
+                dat_points[[v_color]] <- factor(dat_points[[v_color]])
+            }
+        }
+        if (is_discrete(dat_points, v_color, mfx)) {
             if (isTRUE(gray)) {
                 p <- p +
                     ggplot2::geom_point(
-                        data = mfx@modeldata,
+                        data = dat_points,
                         alpha = points,
                         ggplot2::aes(
                             x = .data[[v_x]],
@@ -98,7 +120,7 @@ plot_build <- function(
             } else {
                 p <- p +
                     ggplot2::geom_point(
-                        data = mfx@modeldata,
+                        data = dat_points,
                         alpha = points,
                         ggplot2::aes(
                             x = .data[[v_x]],
@@ -110,7 +132,7 @@ plot_build <- function(
         } else {
             p <- p +
                 ggplot2::geom_point(
-                    data = mfx@modeldata,
+                    data = dat_points,
                     alpha = points,
                     ggplot2::aes(x = .data[[v_x]], y = .data[[dv_plot]])
                 )

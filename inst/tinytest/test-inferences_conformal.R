@@ -60,7 +60,6 @@ p_mfx = predictions(mod, newdata = dat$test, conf_level = 0.8) |>
     )
 coverage_mfx = mean(p_mfx$rank > p_mfx$pred.low & p_mfx$rank < p_mfx$pred.high)
 
-exit_file("probably issue #198")
 # probably implementation
 lm_spec <- parsnip::linear_reg() |>
     parsnip::set_mode("regression") |>

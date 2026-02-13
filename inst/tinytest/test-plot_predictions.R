@@ -81,6 +81,16 @@ mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_predictions(mod, condition = c("hp", "wt"), gray = TRUE)
 expect_snapshot_plot(p, "plot_predictions-gray")
 
+# Issue: numeric binary moderator can trigger scale mismatch when points > 0
+dat <- data.frame(
+    Y = mtcars$mpg,
+    X = mtcars$hp,
+    M = mtcars$am
+)
+mod <- lm(Y ~ M * (X + I(X^2) + I(X^3)), data = dat)
+expect_silent(print(plot_predictions(mod, condition = c("X", "M"), points = 0.1, gray = TRUE)))
+expect_silent(print(plot_predictions(mod, condition = c("X", "M"), points = 0.1, gray = FALSE)))
+
 # continuous vs. categorical x-axis
 mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
 p <- plot_predictions(mod, condition = c("cyl", "wt"))
