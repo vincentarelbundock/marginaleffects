@@ -48,6 +48,7 @@
 #'    - Heteroskedasticity and autocorrelation consistent: `"HAC"`
 #'    - Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 #'    - Other: `"NeweyWest"`, `"KernHAC"`, `"OPG"`. See the `sandwich` package documentation.
+#'    - `"unconditional"`: Influence-function variance that accounts for both parameter estimation uncertainty and the variability of averaging, providing robustness to model misspecification. Only supported for `lm` and `glm` models in `avg_predictions()` and `avg_comparisons()`. See Hansen & Overgaard (2025, *Metrika*).
 #'    - "rsample", "boot", "fwb", and "simulation" are passed to the `method` argument of the `inferences()` function. To customize the bootstrap or simulation process, call `inferences()` directly.
 #'
 #'  * One-sided formula which indicates the name of cluster variables (e.g., `~unit_id`). This formula is passed to the `cluster` argument of the `sandwich::vcovCL` function.

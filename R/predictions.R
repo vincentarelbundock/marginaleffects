@@ -307,7 +307,7 @@ predictions <- function(
     if (isTRUE(settings_get("autodiff")) && !isFALSE(vcov)) {
         # Get vcov matrix first
         mfx@vcov_type <- get_vcov_label(vcov)
-        mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = if (link_to_response) "link" else mfx@type, ...)
+        mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = if (link_to_response) "link" else mfx@type, mfx = mfx, ...)
 
         if (isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
             # Filter out padding rows before autodiff when using by=character
@@ -423,7 +423,7 @@ predictions <- function(
 
         if (!isFALSE(vcov)) {
             mfx@vcov_type <- get_vcov_label(vcov)
-            mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
+            mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, mfx = mfx, ...)
 
             # Delta method for standard errors
             if (!"std.error" %in% colnames(tmp) && is.null(mfx@draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {

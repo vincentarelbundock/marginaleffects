@@ -52,6 +52,13 @@ get_se_delta <- function(
     original = NULL,
     estimates = NULL,
     ...) {
+    # Estimand-level vcov (e.g., unconditional): SEs are just sqrt(diag(V))
+    if (!is.null(mfx) && identical(mfx@vcov_type, "unconditional")) {
+        se <- sqrt(diag(vcov))
+        attr(se, "jacobian") <- NULL
+        return(se)
+    }
+
     # Use mfx slots when available
     if (!is.null(mfx)) {
         eps <- if (is.null(eps)) mfx@eps else eps

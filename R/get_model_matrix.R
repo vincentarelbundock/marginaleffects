@@ -32,7 +32,21 @@ get_model_matrix.default <- function(model, newdata, mfx = NULL) {
 
     # faster
     if (class(model)[1] %in% c("lm", "glm")) {
-        out <- stats::model.matrix(model, data = newdata)
+        # Fallback handles constant-factor counterfactuals where
+        # model.matrix(model, ...) can fail on contrasts.
+        out <- tryCatch(
+            stats::model.matrix(model, data = newdata),
+            error = function(e) {
+                tryCatch(
+                    stats::model.matrix(
+                        stats::delete.response(stats::terms(model)),
+                        data = newdata,
+                        xlev = model$xlevels
+                    ),
+                    error = function(e2) stop(e)
+                )
+            }
+        )
         # more general
     } else {
         out <- hush(insight::get_modelmatrix(model, data = newdata))
