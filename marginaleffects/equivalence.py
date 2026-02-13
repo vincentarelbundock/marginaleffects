@@ -2,7 +2,6 @@ from typing import Union
 
 import numpy as np
 import polars as pl
-from scipy.stats import norm, t
 
 
 def get_equivalence(
@@ -27,6 +26,8 @@ def get_equivalence(
     )
 
     if np.isinf(df):
+        from scipy.stats import norm
+
         x = x.with_columns(
             pl.col("statistic_noninf")
             .map_batches(lambda x: 1 - norm.cdf(x), return_dtype=pl.Float64)
@@ -36,6 +37,8 @@ def get_equivalence(
             .alias("p_value_nonsup"),
         )
     else:
+        from scipy.stats import t
+
         x = x.with_columns(
             pl.col("statistic_noninf")
             .map_batches(lambda x: 1 - t.cdf(x), return_dtype=pl.Float64)

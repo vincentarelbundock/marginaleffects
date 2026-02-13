@@ -1,8 +1,4 @@
-from .linearmodels import ModelLinearmodels
 from .model_abstract import ModelAbstract
-from .pyfixest import ModelPyfixest
-from .statsmodels import ModelStatsmodels
-from .sklearn import ModelSklearn
 
 
 def is_linearmodels(model):
@@ -26,22 +22,22 @@ def sanitize_model(model):
     if model is None:
         return model
 
-    if (
-        isinstance(model, ModelAbstract)
-        or isinstance(model, ModelStatsmodels)
-        or isinstance(model, ModelSklearn)
-        or isinstance(model, ModelLinearmodels)
-        or isinstance(model, ModelPyfixest)
-    ):
+    if isinstance(model, ModelAbstract):
         return model
 
     if is_linearmodels(model):
+        from .linearmodels import ModelLinearmodels
+
         return ModelLinearmodels(model)
 
     elif is_statsmodels(model):
+        from .statsmodels import ModelStatsmodels
+
         return ModelStatsmodels(model)
 
     elif is_pyfixest(model):
+        from .pyfixest import ModelPyfixest
+
         return ModelPyfixest(model)
 
     raise ValueError(

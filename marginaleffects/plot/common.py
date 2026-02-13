@@ -2,20 +2,6 @@ import numpy as np
 from ..datagrid import datagrid  # noqa
 from ..sanitize_model import sanitize_model
 import polars as pl
-from plotnine import (
-    aes,
-    facet_wrap,
-    facet_grid,
-    geom_pointrange,
-    geom_ribbon,
-    geom_line,
-    geom_point,
-    ggplot,
-    labs,
-    position_dodge,
-    scale_fill_grey,
-    scale_linetype_manual,
-)
 
 
 def dt_on_condition(model, condition):
@@ -145,6 +131,21 @@ def ordered_cat(dt, k, lab):
 
 
 def plot_common(model, dt, y_label, var_list, gray=False, points=0):
+    from plotnine import (
+        aes,
+        facet_wrap,
+        facet_grid,
+        geom_pointrange,
+        geom_ribbon,
+        geom_line,
+        geom_point,
+        ggplot,
+        labs,
+        position_dodge,
+        scale_fill_grey,
+        scale_linetype_manual,
+    )
+
     discrete = model.get_variable_type()[var_list[0]] not in ["numeric", "integer"]
     interval = "conf_low" in dt.columns
     # Keep a plain Polars view around for dtype checks when dt is a MarginaleffectsResult.

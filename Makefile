@@ -29,7 +29,7 @@ lint: ## run the lint checkers
 	uv run --all-extras ruff format tests
 
 install: ## install in poetry venv
-	uv pip install .
+	uv pip install -e .
 
 qmd: ## extract docstrings into quarto files
 	uv run marginaleffects/docs.py

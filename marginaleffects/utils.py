@@ -4,7 +4,6 @@ import polars as pl
 from typing import Callable, Optional, Protocol, runtime_checkable, Union, List
 from pydantic import ConfigDict, validate_call
 from functools import wraps
-import marginaleffects.formulaic_utils as fml
 from .equivalence import get_equivalence
 from .result import MarginaleffectsResult
 from .transform import get_transform
@@ -154,6 +153,8 @@ def get_type_dictionary(formula=None, modeldata=None):
     if formula is None or callable(formula):
         variables = modeldata.columns
     else:
+        from . import formulaic_utils as fml
+
         variables = fml.parse_variables(formula)
     for v in variables:
         t_i = [

@@ -2,9 +2,7 @@ import re
 from itertools import compress
 import numpy as np
 import polars as pl
-from .hypothesis_formula import eval_hypothesis_formula
 import numpy
-import scipy
 
 
 def eval_string_hypothesis(x: pl.DataFrame, hypothesis: str, lab: str) -> pl.DataFrame:
@@ -43,6 +41,8 @@ def eval_string_hypothesis(x: pl.DataFrame, hypothesis: str, lab: str) -> pl.Dat
         rowlabels = x["term"].to_list()
 
     def eval_string_function(vec, hypothesis, rowlabels):
+        import scipy
+
         env = {rowlabel: vec[i] for i, rowlabel in enumerate(rowlabels)}
         env["numpy"] = numpy
         env["scipy"] = scipy
@@ -72,6 +72,8 @@ def get_hypothesis(x, hypothesis, by=None):
         lab = [f"H{i + 1}" for i in range(out.shape[0])]
         out = out.with_columns(pl.Series(lab).alias("term"))
     elif isinstance(hypothesis, str) and "~" in hypothesis:
+        from .hypothesis_formula import eval_hypothesis_formula
+
         out = eval_hypothesis_formula(x, hypothesis, lab=lab)
     elif isinstance(hypothesis, str) and "=" in hypothesis:
         out = eval_string_hypothesis(x, hypothesis, lab=hypothesis)
@@ -85,6 +87,8 @@ def get_hypothesis(x, hypothesis, by=None):
                     "When `hypothesis` is a sequence, every element must be a string."
                 )
             if "~" in hyp:
+                from .hypothesis_formula import eval_hypothesis_formula
+
                 frames.append(eval_hypothesis_formula(x, hyp, lab=lab))
             elif "=" in hyp:
                 frames.append(eval_string_hypothesis(x, hyp, lab=hyp))

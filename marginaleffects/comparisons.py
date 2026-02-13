@@ -2,11 +2,9 @@ import re
 from functools import reduce
 
 import numpy as np
-import patsy
 import polars as pl
 
 from .estimands import estimands
-from .hypothesis import get_hypothesis
 from .sanitize_model import sanitize_model
 from .sanity import (
     sanitize_variables,
@@ -21,9 +19,6 @@ from .utils import (
     finalize_result,
     call_avg,
 )
-from .pyfixest import ModelPyfixest
-from .sklearn import ModelSklearn
-from .linearmodels import ModelLinearmodels
 from ._input_utils import prepare_base_inputs
 from .docs import (
     DocsDetails,
@@ -286,11 +281,19 @@ def _finalize_counterfactual_frames(
 
 
 def _prepare_design_matrices(model, nd, hi, lo, pad_rows):
-    if isinstance(model, (ModelPyfixest, ModelLinearmodels, ModelSklearn)):
+    package = model.get_package() if hasattr(model, "get_package") else None
+    typename = type(model).__name__.lower()
+    uses_native_design = package in {"pyfixest", "linearmodels", "sklearn"} or any(
+        x in typename for x in ("modelpyfixest", "modellinearmodels", "modelsklearn")
+    )
+
+    if uses_native_design:
         hi_X = hi
         lo_X = lo
         nd_X = nd
     else:
+        import patsy
+
         fml = re.sub(r".*~", "", model.get_formula())
         hi_X = patsy.dmatrix(fml, hi.to_pandas())
         lo_X = patsy.dmatrix(fml, lo.to_pandas())
@@ -463,6 +466,8 @@ def comparisons(
         )
 
     # === END JAX EARLY EXIT ===
+
+    from .hypothesis import get_hypothesis
 
     # inner() takes the `hi` and `lo` matrices, computes predictions, compares
     # them, and aggregates the results based on the `by` argument. This gives us
