@@ -130,7 +130,8 @@ expect_equivalent(cmp_by$estimate, cmp_by_delta$estimate, tolerance = 1e-10)
 # ---------------------------------------------------------------------------
 # Subgroup estimation: avg_predictions with by = c(trt, group)
 # ---------------------------------------------------------------------------
-pred_by <- avg_predictions(mod_by, variables = "am",
+pred_by <- avg_predictions(mod_by,
+    variables = "am",
     vcov = "unconditional", by = c("am", "vs"))
 expect_inherits(pred_by, "data.frame")
 expect_true(nrow(pred_by) == 4) # 2 am levels x 2 vs groups
@@ -150,7 +151,8 @@ dat_glm_by$cyl <- as.factor(dat_glm_by$cyl)
 mod_glm_by <- glm(vs ~ am + cyl + hp, family = binomial, data = dat_glm_by)
 
 # ATE of am by cyl group
-cmp_glm_by <- avg_comparisons(mod_glm_by, variables = "am",
+cmp_glm_by <- avg_comparisons(mod_glm_by,
+    variables = "am",
     vcov = "unconditional", by = "cyl")
 expect_inherits(cmp_glm_by, "data.frame")
 expect_true(nrow(cmp_glm_by) == 3) # 3 cyl levels
