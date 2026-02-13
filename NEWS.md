@@ -15,6 +15,7 @@ Bugs:
 * `set_coef.svyolr()` did not recognize thresholds named like `"Intercept: 1|2"`, so delta-method perturbations replaced all cutpoints with `NA` and SEs vanished for `comparisons()`/`avg_*()` on survey ordinal models. Threshold names are now matched with or without the `"Intercept:"` prefix.
 * `labs()` could not be used to modify plots returned by `plot_*()` functions. Thanks to @brueckmann for report #1628.
 * Should not always raise an error about uncertainty with `fixest` models and non-linear link. See issue #1487.
+* New internal `do_call()` helper prevents hanging in some IDEs when errors are triggered by large objects. Thanks to @rubenarslan for contribution #1665.
 
 ## 0.31.0
 

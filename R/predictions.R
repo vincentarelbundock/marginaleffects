@@ -394,7 +394,7 @@ predictions <- function(
         )
 
         args <- utils::modifyList(args, dots)
-        tmp <- do.call(get_predictions, args)
+        tmp <- do_call(get_predictions, args)
 
         # hypothesis formula names are attached in by() in get_predictions()
         mfx@variable_names_by <- unique(c(
@@ -439,7 +439,7 @@ predictions <- function(
                     hypothesis = mfx@hypothesis
                 )
                 args <- utils::modifyList(args, dots)
-                se <- do.call(get_se_delta, args)
+                se <- do_call(get_se_delta, args)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
                     mfx@jacobian <- attr(se, "jacobian")
                     tmp[["std.error"]] <- as.vector(se) # drop attribute
