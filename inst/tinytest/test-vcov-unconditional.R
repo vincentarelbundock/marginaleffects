@@ -103,6 +103,65 @@ expect_true(all(!is.na(pred3$std.error)))
 
 
 # ---------------------------------------------------------------------------
+# Subgroup estimation: avg_comparisons with by = "group_var"
+# ---------------------------------------------------------------------------
+dat_by <- mtcars
+dat_by$am <- as.factor(dat_by$am)
+dat_by$vs <- as.factor(dat_by$vs)
+mod_by <- glm(mpg ~ am + vs + hp, data = dat_by)
+
+# avg_comparisons with by = "vs": ATE of am within each vs group
+cmp_by <- avg_comparisons(mod_by, variables = "am", vcov = "unconditional", by = "vs")
+expect_inherits(cmp_by, "data.frame")
+expect_true(nrow(cmp_by) == 2)
+expect_true(all(!is.na(cmp_by$std.error)))
+
+# Compare to overall ATE (no by): different SEs
+cmp_overall <- avg_comparisons(mod_by, variables = "am", vcov = "unconditional")
+expect_true(nrow(cmp_overall) == 1)
+# The by-group SEs should not match the overall SE
+expect_true(all(cmp_by$std.error != cmp_overall$std.error))
+
+# Point estimates should match delta method
+cmp_by_delta <- avg_comparisons(mod_by, variables = "am", by = "vs")
+expect_equivalent(cmp_by$estimate, cmp_by_delta$estimate, tolerance = 1e-10)
+
+
+# ---------------------------------------------------------------------------
+# Subgroup estimation: avg_predictions with by = c(trt, group)
+# ---------------------------------------------------------------------------
+pred_by <- avg_predictions(mod_by, variables = "am",
+    vcov = "unconditional", by = c("am", "vs"))
+expect_inherits(pred_by, "data.frame")
+expect_true(nrow(pred_by) == 4) # 2 am levels x 2 vs groups
+expect_true(all(!is.na(pred_by$std.error)))
+
+# Point estimates match delta method
+pred_by_delta <- avg_predictions(mod_by, variables = "am", by = c("am", "vs"))
+expect_equivalent(pred_by$estimate, pred_by_delta$estimate, tolerance = 1e-10)
+
+
+# ---------------------------------------------------------------------------
+# Subgroup estimation: GLM (logistic) with by
+# ---------------------------------------------------------------------------
+dat_glm_by <- mtcars
+dat_glm_by$am <- as.factor(dat_glm_by$am)
+dat_glm_by$cyl <- as.factor(dat_glm_by$cyl)
+mod_glm_by <- glm(vs ~ am + cyl + hp, family = binomial, data = dat_glm_by)
+
+# ATE of am by cyl group
+cmp_glm_by <- avg_comparisons(mod_glm_by, variables = "am",
+    vcov = "unconditional", by = "cyl")
+expect_inherits(cmp_glm_by, "data.frame")
+expect_true(nrow(cmp_glm_by) == 3) # 3 cyl levels
+expect_true(all(!is.na(cmp_glm_by$std.error)))
+
+# Point estimates match delta method
+cmp_glm_by_delta <- avg_comparisons(mod_glm_by, variables = "am", by = "cyl")
+expect_equivalent(cmp_glm_by$estimate, cmp_glm_by_delta$estimate, tolerance = 1e-10)
+
+
+# ---------------------------------------------------------------------------
 # Informative errors: unsupported model class
 # ---------------------------------------------------------------------------
 if (requiet("survival")) {

@@ -5,9 +5,16 @@
 #' accounts for both parameter estimation uncertainty and the sampling
 #' variability of the averaging, providing robustness to model misspecification.
 #'
+#' Supports subgroup estimation via the `by` argument. When `by` specifies a
+#' grouping variable, the estimator computes group-specific influence functions
+#' with Hajek-style normalized weights, and returns the full covariance matrix
+#' (including cross-group terms) so that downstream hypothesis tests across
+#' groups are valid.
+#'
 #' @param mfx A `marginaleffects_internal` S4 object (fully built)
-#' @return A square covariance matrix (L×L for predictions, K×K for
-#'   comparisons).
+#' @return A square covariance matrix whose dimensions match the number of
+#'   output rows (L*G for predictions, K*G for comparisons, where G = number
+#'   of subgroups).
 #' @references
 #' Hansen SN, Overgaard M (2025). "Variance estimation for average treatment
 #' effects estimated by g-computation." Metrika, 88, 419--443.
@@ -78,6 +85,43 @@ get_vcov_unconditional <- function(mfx = NULL) {
     p <- length(beta)
     fam <- if (inherits(model, "glm")) family(model) else NULL
 
+    # --- Determine subgroups from `by` ---
+    if (isTRUE(mfx@by)) {
+        group_var <- NULL
+    } else {
+        group_var <- setdiff(mfx@by, trt_name)
+        if (length(group_var) == 0) group_var <- NULL
+    }
+
+    if (!is.null(group_var)) {
+        if (length(group_var) > 1) {
+            stop_sprintf(
+                'vcov = "unconditional" supports at most one grouping variable in `by`. Got: %s.',
+                paste(group_var, collapse = ", ")
+            )
+        }
+        # For predictions, the treatment variable must be in `by` so output
+        # has per-treatment-level rows
+        if (mfx@calling_function == "predictions" && !trt_name %in% mfx@by) {
+            stop_sprintf(
+                'vcov = "unconditional" for predictions with `by` requires the treatment variable "%s" in `by`, e.g., by = c("%s", "%s").',
+                trt_name, trt_name, group_var
+            )
+        }
+        by_vals <- modeldata[[group_var]]
+        if (is.null(by_vals)) {
+            stop_sprintf(
+                '`by` variable "%s" not found in the model data.',
+                group_var
+            )
+        }
+        group_levels <- sort(unique(by_vals))
+        num_groups <- length(group_levels)
+    } else {
+        group_levels <- NULL
+        num_groups <- 1
+    }
+
     # --- Compute predictions and gradients for each intervention ---
     M <- matrix(NA_real_, nrow = n, ncol = L)
     D_list <- vector("list", L)
@@ -113,7 +157,6 @@ get_vcov_unconditional <- function(mfx = NULL) {
             # handle offset
             offset <- stats::model.offset(stats::model.frame(model))
             if (!is.null(offset)) {
-                # Reconstruct offset for counterfactual data
                 off_cf <- tryCatch(
                     stats::model.offset(stats::model.frame(
                         stats::delete.response(stats::terms(model)),
@@ -132,35 +175,99 @@ get_vcov_unconditional <- function(mfx = NULL) {
         }
     }
 
-    # --- Compute weighted averages ---
-    w_tilde <- rep(1 / n, n)
-
-    Theta_hat <- colSums(w_tilde * M) # L-vector
-    G_hat <- do.call(rbind, lapply(D_list, function(D) colSums(w_tilde * D))) # L×p
-
-    # --- Compute influence function for beta_hat: IF_i = -M^{-1} psi_i ---
-    # For M-estimators, -M^{-1} = bread (sandwich notation).
+    # --- Influence function for beta_hat ---
+    # For M-estimators, IF_i = bread %*% psi_i.
     # Works for both lm and glm via sandwich::estfun/bread.
     psi <- sandwich::estfun(model)
     bread_mat <- sandwich::bread(model)
     B <- psi %*% bread_mat # n×p
 
-    # --- Assemble influence contributions Phi (n×L) ---
-    mean_part <- sweep(M, 2, Theta_hat, "-") * w_tilde # n×L
-    beta_part <- B %*% t(G_hat) # n×L
+    # --- Compute group-wise influence functions ---
+    # For each group g, the influence function for the averaged prediction is:
+    #   Phi_i(w_g) = w_tilde_g_i * (m_i - Theta_g) + G_hat_g %*% B_i
+    # where w_tilde_g_i = w_g_i / sum(w_g) is the Hajek weight.
+    # The mean part is nonzero only for observations in group g, but the
+    # beta-estimation part is nonzero for ALL observations.
 
-    Phi <- mean_part + beta_part
-
-    # --- Covariance ---
-    Gamma_hat <- crossprod(Phi) / n # L×L
-    V_pred <- Gamma_hat / n # L×L: Var(Theta_hat)
-
-    # --- Apply contrast matrix for comparisons ---
+    contrast_mat <- NULL
     if (mfx@calling_function == "comparisons") {
-        C <- build_contrast_matrix_unconditional(trt_levels, mfx)
-        V_out <- C %*% V_pred %*% t(C)
+        contrast_mat <- build_contrast_matrix_unconditional(trt_levels, mfx)
+    }
+
+    if (num_groups == 1) {
+        # --- No subgroups: uniform weights (original behavior) ---
+        w_tilde <- rep(1 / n, n)
+        Theta_hat <- colSums(w_tilde * M)
+        G_hat <- do.call(rbind, lapply(D_list, function(D) colSums(w_tilde * D)))
+
+        mean_part <- sweep(M, 2, Theta_hat, "-") * w_tilde
+        beta_part <- B %*% t(G_hat)
+        Phi <- mean_part + beta_part
+
+        if (!is.null(contrast_mat)) {
+            Phi <- Phi %*% t(contrast_mat)
+        }
+
+        Gamma_hat <- crossprod(Phi) / n
+        V_out <- Gamma_hat / n
     } else {
-        V_out <- V_pred
+        # --- Subgroup computation ---
+        Phi_list <- vector("list", num_groups)
+
+        for (g in seq_len(num_groups)) {
+            w <- as.numeric(by_vals == group_levels[g])
+            w_sum <- sum(w)
+            w_tilde <- w / w_sum
+
+            Theta_g <- colSums(w_tilde * M)
+            G_hat_g <- do.call(rbind, lapply(D_list, function(D) colSums(w_tilde * D)))
+
+            mean_part_g <- sweep(M, 2, Theta_g, "-") * w_tilde
+            beta_part_g <- B %*% t(G_hat_g)
+            Phi_g <- mean_part_g + beta_part_g # n×L
+
+            if (!is.null(contrast_mat)) {
+                Phi_g <- Phi_g %*% t(contrast_mat) # n×K
+            }
+
+            Phi_list[[g]] <- Phi_g
+        }
+
+        # Stack influence functions in the order matching the pipeline output.
+        # - Comparisons with by="sex": get_by() uses keyby = c("term", "sex"),
+        #   so output is sorted by group_var (for single term). Group-major.
+        # - Predictions with by=c("trt","sex"): keyby follows the order in `by`.
+        #   Treatment levels and groups are interleaved per that order.
+        ncol_each <- ncol(Phi_list[[1]])
+
+        if (mfx@calling_function == "comparisons") {
+            # Group-major: (g1_k1, ..., g1_kK, g2_k1, ..., g2_kK)
+            Phi_full <- do.call(cbind, Phi_list)
+        } else {
+            # Predictions: output sorted by keyby = by-columns (in user order).
+            # Treatment variable and group variable positions in `by` determine
+            # whether output is trt-major or group-major.
+            trt_pos <- match(trt_name, mfx@by)
+            grp_pos <- match(group_var, mfx@by)
+
+            if (!is.na(trt_pos) && !is.na(grp_pos) && trt_pos < grp_pos) {
+                # trt-major: (trt1/g1, trt1/g2, ..., trtL/g1, trtL/g2)
+                Phi_full <- matrix(0, nrow = n, ncol = ncol_each * num_groups)
+                col <- 0
+                for (ell in seq_len(ncol_each)) {
+                    for (g in seq_len(num_groups)) {
+                        col <- col + 1
+                        Phi_full[, col] <- Phi_list[[g]][, ell]
+                    }
+                }
+            } else {
+                # group-major: (g1/trt1, g1/trt2, ..., gG/trt1, gG/trt2)
+                Phi_full <- do.call(cbind, Phi_list)
+            }
+        }
+
+        Gamma_full <- crossprod(Phi_full) / n
+        V_out <- Gamma_full / n
     }
 
     return(V_out)
