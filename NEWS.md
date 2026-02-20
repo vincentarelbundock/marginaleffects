@@ -1,5 +1,11 @@
 # News {.unnumbered}
 
+## Development
+
+Bug fixes:
+
+* Avoid collapsing `contrast` rows when using `by` and `comparison="lift"`. The row labels were not unique. Thanks to @coughlanja for report #1669.
+
 ## 0.32.0
 
 * `autodiff()` now prints and returns the current state when called without arguments, so users can check whether autodiff is active without triggering any reticulate checks.
