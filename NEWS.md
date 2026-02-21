@@ -5,6 +5,7 @@
 Bug fixes:
 
 * Avoid collapsing `contrast` rows when using `by` and `comparison="lift"`. The row labels were not unique. Thanks to @coughlanja for report #1669.
+* Fix standard errors for `flexsurv` predictions by syncing transformed coefficients and delegating prediction SEs to `flexsurv::predict()` when `vcov=TRUE`. Thanks to @colinorourke for report #1670.
 
 ## 0.32.0
 
