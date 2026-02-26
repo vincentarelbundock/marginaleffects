@@ -1,38 +1,5 @@
 marginaleffects_settings <- new.env()
 
-settings_cache <- function(setti) {
-    out <- list()
-    for (s in setti) {
-        out[[s]] <- settings_get(s)
-    }
-    return(out)
-}
-
-settings_restore <- function(cache) {
-    for (n in names(cache)) {
-        settings_set(n, cache[[n]])
-    }
-}
-
-settings_init <- function(settings = NULL) {
-    settings_rm()
-
-    default_settings <- list(
-        marginaleffects_safefun_return1 = FALSE
-    )
-
-    checkmate::assert_list(settings, null.ok = TRUE, names = "unique")
-
-    if (!is.null(settings)) {
-        settings <- c(settings, default_settings)
-    }
-
-    for (i in seq_along(settings)) {
-        settings_set(names(settings)[i], settings[[i]])
-    }
-}
-
-
 # https://stackoverflow.com/questions/79786610/solved-r-package-loading-error-onattach-failed-in-attachnamespace
 settings_read_persistent <- function() {
     dn <- tools::R_user_dir(package = "marginaleffects", which = "config")
@@ -88,13 +55,6 @@ settings_rm <- function(name = NULL) {
     } else if (name %in% names(marginaleffects_settings)) {
         rm(list = name, envir = marginaleffects_settings)
     }
-}
-
-settings_delete <- function() {
-    dn <- tools::R_user_dir(package = "marginaleffects", which = "config")
-    fn <- file.path(dn, "config.rds")
-    if (file.exists(fn)) hush(unlink(fn))
-    message("`marginaleffects` returned to default settings.", call. = FALSE)
 }
 
 settings_equal <- function(name, comparison) {
