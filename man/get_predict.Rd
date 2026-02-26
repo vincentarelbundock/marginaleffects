@@ -35,6 +35,7 @@
 \alias{get_predict.gamlss}
 \alias{get_predict.glmmTMB}
 \alias{get_predict.glmgee}
+\alias{get_predict.gnm}
 \alias{get_predict.merMod}
 \alias{get_predict.lmerModLmerTest}
 \alias{get_predict.lmerMod}
@@ -178,7 +179,9 @@ get_predict(
   ...
 )
 
-\method{get_predict}{glmgee}(model, newdata, ...)
+\method{get_predict}{glmgee}(model, newdata, type = "response", ...)
+
+\method{get_predict}{gnm}(model, newdata, type = "response", ...)
 
 \method{get_predict}{merMod}(model, newdata = insight::get_data(model), type = "response", ...)
 

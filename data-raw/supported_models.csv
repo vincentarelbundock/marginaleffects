@@ -37,6 +37,7 @@ gamlss,gamlss
 geepack,geeglm
 glmmTMB,glmmTMB
 glmtoolbox,glmgee
+glmtoolbox,gnm
 glmx,glmx
 ivreg,ivreg
 lme4,glmer
