@@ -57,7 +57,7 @@ get_comparisons_data <- function(
             stop(msg, call. = FALSE)
         }
 
-        tmp <- do.call(fun, args)
+        tmp <- do_call(fun, args)
 
         lo[[v$name]] <- tmp$lo
         if (isTRUE(cross)) {

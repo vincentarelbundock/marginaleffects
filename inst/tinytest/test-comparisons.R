@@ -42,6 +42,22 @@ expect_equal(nrow(cmp2), 1)
 expect_error(comparisons(mod, comparison = "liftr"))
 
 
+# Issue #1669: unique lift labels to avoid collapsing `contrast` col with by
+dat <- mtcars
+dat$cyl <- factor(dat$cyl)
+dat$am <- factor(dat$am)
+mod <- lm(mpg ~ cyl * am, data = dat)
+cmp <- avg_comparisons(
+    mod,
+    variables = list(cyl = "reference"),
+    by = "am",
+    type = "response",
+    comparison = "lift"
+)
+expect_equal(nrow(cmp), 4)
+expect_equal(length(unique(cmp$contrast)), 2)
+
+
 # Issue #1120: avg comparison by default with avg_
 mod <- glm(vs ~ am + wt, data = mtcars, family = binomial)
 d0 <- transform(mtcars, am = 0)
@@ -67,32 +83,32 @@ requiet("tibble")
 requiet("dplyr")
 set.seed(0)
 d <- tibble::tribble(
-    ~device,         ~lang, ~pop_weight, ~exp_weight, ~p_control, ~p_treat,
-    "Desktop",     "English",         0.4,     0.8,        0.1,     0.15,
-    "Desktop", "Non-English",         0.2,     0.1,       0.04,     0.02,
-    "Mobile",     "English",         0.3,    0.05,       0.08,     0.03,
-    "Mobile", "Non-English",         0.1,    0.05,       0.01,     0.01
+    ~device, ~lang, ~pop_weight, ~exp_weight, ~p_control, ~p_treat,
+    "Desktop", "English", 0.4, 0.8, 0.1, 0.15,
+    "Desktop", "Non-English", 0.2, 0.1, 0.04, 0.02,
+    "Mobile", "English", 0.3, 0.05, 0.08, 0.03,
+    "Mobile", "Non-English", 0.1, 0.05, 0.01, 0.01
 )
 experiment_data <- d %>%
     sample_n(20000, weight = exp_weight, replace = T) %>%
     group_by(device, lang) %>%
     mutate(
-        treatment = sample(c('treatment', 'control'), size = n(), replace = T),
-        p = case_match(treatment, 'treatment' ~ p_treat, .default = p_control),
+        treatment = sample(c("treatment", "control"), size = n(), replace = T),
+        p = case_match(treatment, "treatment" ~ p_treat, .default = p_control),
         y = rbinom(n(), 1, p)
     ) %>%
-    ungroup
+    ungroup()
 
 model <- glm(y ~ treatment * device * lang, data = experiment_data, family = binomial())
 lift <- function(hi, lo) mean(hi - lo) / mean(lo)
 c1 <- avg_comparisons(
     model,
-    variables = 'treatment',
+    variables = "treatment",
     comparison = "lift"
 )
 c2 <- avg_comparisons(
     model,
-    variables = 'treatment',
+    variables = "treatment",
     comparison = lift
 )
 d_lo <- transform(experiment_data, treatment = "control")

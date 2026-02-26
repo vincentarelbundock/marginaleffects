@@ -26,6 +26,10 @@ unpack_matrix_cols <- function(x) {
 
 
 unpack_matrix_1col <- function(x) {
+    drop_dr <- vapply(x, inherits, logical(1), "DirichletRegData")
+    if (any(drop_dr)) {
+        x <- x[!drop_dr]
+    }
     for (i in seq_along(x)) {
         if (inherits(x[[i]], "matrix") && ncol(x[[i]]) == 1) {
             x[[i]] <- drop(x[[i]])

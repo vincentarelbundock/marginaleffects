@@ -41,29 +41,6 @@ cjdt <- function(dtlist) {
 }
 
 
-# recurse up. mostly useful for `tinytest`
-# this is dumb, but it's late and i don't feel like thinking about this
-evalup <- function(xcall) {
-    out <- myTryCatch(eval(xcall))
-    if (inherits(out$error, "simpleError")) {
-        msg <- out$error$message
-        out <- NULL
-    } else {
-        msg <- NULL
-        out <- out$value
-    }
-    for (i in 1:10) {
-        if (is.null(out)) {
-            out <- hush(eval(xcall, parent.frame(i)))
-        }
-    }
-    if (is.null(out) && !is.null(msg)) {
-        stop(msg)
-    }
-    return(out)
-}
-
-
 merge_by_rowid <- function(x, y) {
     # return data
     # very import to avoid sorting, otherwise bayesian draws won't fit predictions
@@ -195,4 +172,25 @@ warn_sprintf <- function(msg, ...) {
         msg <- sprintf(msg, ...)
     }
     warning(msg, call. = FALSE)
+}
+
+
+# Like do.call() but avoids inlining argument values into the call expression.
+# When do.call(fn, list(huge_model, huge_data)) errors, R stores the entire
+# inlined data in sys.calls(), and IDEs (RStudio/Positron) try to deparse it,
+# causing multi-minute hangs. This builds a call with symbol references instead.
+# See: https://github.com/vincentarelbundock/marginaleffects/issues/1663
+do_call <- function(what, args) {
+    call_env <- new.env(parent = parent.frame())
+    call_env[[".what"]] <- what
+    arg_names <- names(args) %||% rep("", length(args))
+    call_list <- vector("list", length(args) + 1L)
+    call_list[[1L]] <- as.symbol(".what")
+    for (i in seq_along(args)) {
+        sym_name <- sprintf(".arg%d", i)
+        call_env[[sym_name]] <- args[[i]]
+        call_list[[i + 1L]] <- as.symbol(sym_name)
+    }
+    names(call_list) <- c("", arg_names)
+    eval(as.call(call_list), call_env)
 }

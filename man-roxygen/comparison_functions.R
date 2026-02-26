@@ -21,6 +21,12 @@
 #'
 #' Users can supply custom functions to the `comparison` argument, or use one of the many shortcuts available for common quantities of interest:
 #'
+#' Note on automatic `avg` switching: when the `by` argument is used (including
+#' `by = TRUE` or a character vector), `marginaleffects` will automatically
+#' switch comparison shortcuts to their `avg` variants unless they already end
+#' with `avg`. For example, `comparison = "difference"` becomes
+#' `comparison = "differenceavg"` when aggregating over `by`.
+#'
 #' ```{r, echo = FALSE, results = "asis"}
 #' k <- marginaleffects:::comparison_function_dict
 #' k <- sapply(k, deparse1, collapse = "")

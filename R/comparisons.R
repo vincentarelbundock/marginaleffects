@@ -338,7 +338,7 @@ comparisons <- function(
     )
     dots[["modeldata"]] <- NULL # dont' pass twice
     args <- utils::modifyList(args, dots)
-    contrast_data <- do.call("get_comparisons_data", args)
+    contrast_data <- do_call(get_comparisons_data, args)
 
     # Add model matrices to hi/lo data
     contrast_data$hi <- add_model_matrix_attribute_data(mfx, contrast_data$hi)
@@ -455,7 +455,7 @@ comparisons <- function(
             hypothesis = mfx@hypothesis
         )
         args <- utils::modifyList(args, dots)
-        cmp <- do.call("get_comparisons", args)
+        cmp <- do_call(get_comparisons, args)
 
         # hypothesis formula names are attached in by() in get_predictions()
         mfx@variable_names_by <- unique(c(
@@ -491,7 +491,7 @@ comparisons <- function(
                 numderiv = numderiv
             )
             args <- utils::modifyList(args, dots)
-            se <- do.call("get_se_delta", args)
+            se <- do_call(get_se_delta, args)
             mfx@jacobian <- attr(se, "jacobian")
             cmp$std.error <- as.vector(as.numeric(se)) # drop attributes
             mfx@draws <- NULL

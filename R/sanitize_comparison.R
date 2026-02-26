@@ -54,17 +54,14 @@ comparison_label_dict <- list(
     "difference" = "%s - %s",
     "differenceavg" = "%s - %s",
     "differenceavgwts" = "%s - %s",
-
     "dydx" = "dY/dX",
     "eyex" = "eY/eX",
     "eydx" = "eY/dX",
     "dyex" = "dY/eX",
-
     "dydxavg" = "dY/dX",
     "eyexavg" = "eY/eX",
     "eydxavg" = "eY/dX",
     "dyexavg" = "dY/eX",
-
     "dydxavg" = "dY/dX",
     "eyexavg" = "eY/eX",
     "eydxavg" = "eY/dX",
@@ -73,23 +70,20 @@ comparison_label_dict <- list(
     "eyexavgwts" = "eY/eX",
     "eydxavgwts" = "eY/dX",
     "dyexavgwts" = "dY/eX",
-
     "ratio" = "%s / %s",
     "ratioavg" = "mean(%s) / mean(%s)",
     "ratioavgwts" = "mean(%s) / mean(%s)",
-
     "lnratio" = "ln(%s / %s)",
     "lnratioavg" = "ln(mean(%s) / mean(%s))",
     "lnratioavgwts" = "ln(mean(%s) / mean(%s))",
-
     "lnor" = "ln(odds(%s) / odds(%s))",
     "lnoravg" = "ln(odds(%s) / odds(%s))",
     "lnoravgwts" = "ln(odds(%s) / odds(%s))",
 
-    "lift" = "lift",
-    "liftavg" = "liftavg",
-    "liftavgwts" = "liftavgwts",
-
+    # Keep %s placeholders so categorical contrasts retain lo/hi labels.
+    "lift" = "lift(%s, %s)",
+    "liftavg" = "lift(%s, %s)",
+    "liftavgwts" = "lift(%s, %s)",
     "expdydx" = "exp(dY/dX)"
 )
 
