@@ -2,9 +2,19 @@
 #' @export
 set_coef.flexsurvreg <- function(model, coefs, ...) {
     out <- model
-    out$res[, 1] <- coefs
+
+    # 'coefs' are on transformed (real-line) scale, same as coef(out)
     out$coefficients <- coefs
-    return(out)
+    out$res.t[, "est"] <- coefs
+
+    # go back and set 'res' coefs on the parameters' "natural" scales
+    out$res[, "est"] <- coefs
+    for (j in seq_along(out$dlist$pars)) {
+        p <- out$dlist$pars[j]
+        out$res[p, "est"] <- out$dlist$inv.transforms[[j]](out$res.t[p, "est"])
+    }
+
+    out
 }
 
 
