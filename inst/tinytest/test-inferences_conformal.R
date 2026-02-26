@@ -60,22 +60,26 @@ p_mfx = predictions(mod, newdata = dat$test, conf_level = 0.8) |>
     )
 coverage_mfx = mean(p_mfx$rank > p_mfx$pred.low & p_mfx$rank < p_mfx$pred.high)
 
+exit_file("probably issue  #198")
 # probably implementation
-lm_spec <- parsnip::linear_reg() |>
-    parsnip::set_mode("regression") |>
-    parsnip::set_engine("lm")
-lm_wflow <- workflows::workflow() |>
-    workflows::add_model(lm_spec) |>
-    workflows::add_formula(rank ~ grade + branch + gender + race)
-lm_fit <- workflows::fit(lm_wflow, data = dat$train)
-conf_int <- probably::int_conformal_quantile(
-    lm_fit,
-    train_data = dat$train,
-    cal_data = dat$calibration,
-    level = 0.8,
-    nthreads = 1
-)
-preds_prob <- predict(conf_int, dat$test)
-coverage_prob = mean(dat$test$rank > preds_prob$.pred_lower &
-    dat$test$rank < preds_prob$.pred_upper)
-expect_equivalent(coverage_mfx, coverage_prob, tolerance = 1e-5)
+local({
+    select <- dplyr::select
+    lm_spec <- parsnip::linear_reg() |>
+        parsnip::set_mode("regression") |>
+        parsnip::set_engine("lm")
+    lm_wflow <- workflows::workflow() |>
+        workflows::add_model(lm_spec) |>
+        workflows::add_formula(rank ~ grade + branch + gender + race)
+    lm_fit <- workflows::fit(lm_wflow, data = dat$train)
+    conf_int <- probably::int_conformal_quantile(
+        lm_fit,
+        train_data = dat$train,
+        cal_data = dat$calibration,
+        level = 0.8,
+        nthreads = 1
+    )
+    preds_prob <- predict(conf_int, dat$test)
+    coverage_prob = mean(dat$test$rank > preds_prob$.pred_lower &
+        dat$test$rank < preds_prob$.pred_upper)
+    expect_equivalent(coverage_mfx, coverage_prob, tolerance = 1e-5)
+})

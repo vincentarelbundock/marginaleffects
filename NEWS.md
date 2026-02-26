@@ -2,6 +2,10 @@
 
 ## Development
 
+New:
+
+* Support for `glmtoolbox::glmgee()` and `glmtoolbox::gnm()` models. Thanks to @luifrancgom for report #1148.
+
 Bug fixes:
 
 * Avoid collapsing `contrast` rows when using `by` and `comparison="lift"`. The row labels were not unique. Thanks to @coughlanja for report #1669.

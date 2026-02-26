@@ -24,6 +24,7 @@
 \alias{get_coef.gamlss}
 \alias{get_coef.glmmTMB}
 \alias{get_coef.glmgee}
+\alias{get_coef.gnm}
 \alias{get_coef.merMod}
 \alias{get_coef.lmerModLmerTest}
 \alias{get_coef.lmerMod}
@@ -68,6 +69,8 @@ get_coef(model, ...)
 \method{get_coef}{glmmTMB}(model, ...)
 
 \method{get_coef}{glmgee}(model, ...)
+
+\method{get_coef}{gnm}(model, ...)
 
 \method{get_coef}{merMod}(model, ...)
 

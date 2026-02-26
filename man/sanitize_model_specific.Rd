@@ -78,8 +78,6 @@ sanitize_model_specific(model, ...)
 
 \method{sanitize_model_specific}{plm}(model, ...)
 
-\method{sanitize_model_specific}{plm}(model, ...)
-
 \method{sanitize_model_specific}{rqs}(model, ...)
 
 \method{sanitize_model_specific}{rms}(model, ...)

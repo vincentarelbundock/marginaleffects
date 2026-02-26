@@ -463,12 +463,6 @@ sanitize_internal_variables <- function(predictors, mfx, model, calling_function
     predictors
 }
 
-get_weight_variables <- function(mfx) {
-    w <- mfx@variable_names_wts
-    w <- intersect(w, colnames(mfx@newdata))
-    w
-}
-
 # input: character vector or named list
 # output: named list of lists where each element represents a variable with: name, value, function, label
 add_variables <- function(

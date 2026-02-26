@@ -173,26 +173,6 @@ contrast_categories_shortcuts <- function(levs, variable, interaction) {
 }
 
 
-contrast_categories_df <- function(variable) {
-    # manual data frame
-    if (all(c("low", "high") %in% colnames(variable$value))) {
-        low <- variable$value$low
-        high <- variable$value$high
-    } else if (all(c("lo", "hi") %in% colnames(variable$value))) {
-        low <- variable$value$low
-        high <- variable$value$high
-    } else {
-        low <- variable$value[[1]]
-        high <- variable$value[[2]]
-    }
-    levs_idx <- data.table::data.table(
-        lo = low,
-        hi = high
-    )
-    return(levs_idx)
-}
-
-
 contrast_categories_processing <- function(
     first_cross,
     levs_idx,

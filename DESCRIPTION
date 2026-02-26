@@ -232,7 +232,6 @@ Collate:
     'get_predictions.R'
     'get_se_delta.R'
     'get_vcov.R'
-    'github_issue.R'
     'hush.R'
     'hypotheses.R'
     'hypotheses_joint.R'
