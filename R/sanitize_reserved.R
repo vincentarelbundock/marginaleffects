@@ -24,7 +24,7 @@ sanity_reserved <- function(mfx) {
     bad <- unique(intersect(names(modeldata), reserved))
     if (length(bad) > 0) {
         msg <- c(
-            "These variable names are forbidden to avoid conflicts with the outputs of `marginaleffects`:",
+            "These variable names are forbidden (i.e., should not appear as columns in the dataset) to avoid conflicts with the outputs of `marginaleffects`:",
             toString(dQuote(bad, NULL)),
             "Please rename your variables before fitting the model."
         )
