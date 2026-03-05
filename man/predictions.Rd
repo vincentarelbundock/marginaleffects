@@ -532,6 +532,7 @@ Some of the most common \code{type} values are:\tabular{ll}{
    multinom_weightit \tab probs, response, mean \cr
    mvgam \tab response, link, expected, detection, latent_N \cr
    negbin \tab invlink(link), response, link \cr
+   nestedLogit \tab response, link \cr
    ols \tab lp \cr
    oohbchoice \tab probability, utility \cr
    ordinal_weightit \tab probs, response, link, lp, mean \cr

@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.32.0.1
+Version: 0.32.0.2
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -130,6 +130,7 @@ Suggests:
     mvtnorm,
     nanoparquet,
     nlme,
+    nestedLogit,
     nnet,
     numDeriv,
     nycflights13,
@@ -289,6 +290,7 @@ Collate:
     'methods_mlm.R'
     'methods_mlogit.R'
     'methods_mlr3.R'
+    'methods_nestedLogit.R'
     'methods_nlme.R'
     'methods_ordinal.R'
     'methods_plm.R'
