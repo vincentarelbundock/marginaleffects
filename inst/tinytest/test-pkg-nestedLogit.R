@@ -47,3 +47,12 @@ expect_false(any(is.na(as$std.error)))
 ac <- avg_comparisons(mod, type = "response")
 expect_inherits(ac, "comparisons")
 expect_false(any(is.na(ac$std.error)))
+
+# submodel argument: type="response" errors for dichotomies
+expect_error(avg_predictions(mod, by = "children", submodel = "dichotomies"),
+    pattern = "only.*type.*link")
+
+# submodel argument: type="link" works for dichotomies
+ap_sub <- avg_predictions(mod, by = "children", type = "link", submodel = "dichotomies")
+expect_inherits(ap_sub, "predictions")
+expect_false(any(is.na(ap_sub$std.error)))

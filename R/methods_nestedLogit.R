@@ -38,6 +38,14 @@ get_predict.nestedLogit <- function(
         "link" = "logit"
     )
 
+    if (!estimate_col %in% colnames(pred)) {
+        msg <- sprintf(
+            'The predicted values do not include a "%s" column. When using `submodel = "%s"`, only `type = "link"` is available.',
+            estimate_col, submodel
+        )
+        stop(msg, call. = FALSE)
+    }
+
     n_groups <- length(unique(pred$response))
     out <- data.table::data.table(
         group = pred$response,
