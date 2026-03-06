@@ -32,7 +32,7 @@ get_coef.brmsfit <- function(model, ...) {
 #' @export
 get_predict.brmsfit <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "response",
     ...) {
     checkmate::assert_choice(

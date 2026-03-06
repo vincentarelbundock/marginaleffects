@@ -2,7 +2,7 @@
 #' @export
 get_predict.rq <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = NULL,
     ...) {
     # type argument of the method is used to specify confidence interval type

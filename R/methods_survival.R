@@ -21,7 +21,7 @@ set_coef.survreg <- function(model, coefs, ...) {
 #' @export
 get_predict.coxph <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "lp",
     ...) {
     out <- stats::predict(model, newdata = newdata, type = type, ...)

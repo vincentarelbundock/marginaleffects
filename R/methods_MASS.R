@@ -41,7 +41,7 @@ get_group_names.polr <- function(model, ...) {
 #' @export
 get_predict.polr <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "probs",
     mfx = NULL,
     ...) {
@@ -82,7 +82,7 @@ set_coef.glmmPQL <- function(model, coefs, ...) {
 #' @export
 get_predict.glmmPQL <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "response",
     mfx = NULL,
     ...) {
@@ -105,7 +105,7 @@ get_vcov.lda <- function(model, ...) {
 #' @export
 get_predict.lda <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "class",
     ...) {
     out <- stats::predict(model, newdata = newdata)

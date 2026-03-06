@@ -20,7 +20,7 @@ sanitize_model_specific.mblogit <- function(
 ) {
     if (calling_function == "marginaleffects") {
         variables <- insight::find_variables(model, flatten = TRUE, verbose = FALSE)
-        dat <- insight::get_data(model)
+        dat <- get_modeldata(model)
         dat <- dat[, intersect(variables, colnames(dat))]
         flag <- any(sapply(dat, is.character))
         if (isTRUE(flag)) {
@@ -38,7 +38,7 @@ sanitize_model_specific.mblogit <- function(
 #' @export
 get_predict.mblogit <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "response",
     ...
 ) {

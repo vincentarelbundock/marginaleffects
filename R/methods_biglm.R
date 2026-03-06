@@ -2,7 +2,7 @@
 #' @export
 get_predict.biglm <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "response",
     mfx = NULL,
     ...) {

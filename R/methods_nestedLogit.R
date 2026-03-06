@@ -15,7 +15,7 @@ get_group_names.nestedLogit <- function(model, type, ...) {
 #' @export
 get_predict.nestedLogit <- function(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   submodel = NULL,
   ...
