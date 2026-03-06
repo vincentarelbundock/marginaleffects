@@ -31,10 +31,11 @@ get_coef.brmsfit <- function(model, ...) {
 #' @rdname get_predict
 #' @export
 get_predict.brmsfit <- function(
-    model,
-    newdata = insight::get_data(model),
-    type = "response",
-    ...) {
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  ...
+) {
     checkmate::assert_choice(
         type,
         choices = c("response", "link", "prediction", "average")
@@ -83,7 +84,10 @@ get_predict.brmsfit <- function(
 
     # 1d outcome
     if (length(dim(draws)) == 2) {
-        med <- collapse::dapply(draws, MARGIN = 2, FUN = collapse::fmedian)
+        # this vector is not used for anything, 
+        # but can be very long to compute on large datasets
+        med <- rep(0, ncol(draws))
+        # med <- collapse::dapply(draws, MARGIN = 2, FUN = collapse::fmedian)
         out <- data.table(
             group = "main_marginaleffect",
             estimate = med
