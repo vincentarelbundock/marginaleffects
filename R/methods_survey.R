@@ -47,7 +47,7 @@ get_group_names.svyolr <- function(model, ...) {
 #' @export
 get_predict.svyolr <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "probs",
     mfx = NULL,
     ...) {
@@ -79,7 +79,7 @@ get_predict.svyolr <- function(
 #' @export
 get_predict.svyglm <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "response",
     mfx = NULL,
     newparams = NULL,

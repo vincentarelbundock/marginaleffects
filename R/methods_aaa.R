@@ -25,7 +25,7 @@ set_coef.lm <- function(model, coefs, ...) {
 #' @export
 get_predict.lm <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "response",
     ...) {
     MM <- attr(newdata, "marginaleffects_model_matrix")
@@ -64,7 +64,7 @@ get_predict.lm <- function(
 #' @export
 get_predict.glm <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "response",
     ...) {
     out <- NULL

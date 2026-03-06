@@ -78,7 +78,7 @@ get_predict(
 
 \method{get_predict}{default}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   newparams = NULL,
@@ -91,7 +91,7 @@ get_predict(
 
 \method{get_predict}{polr}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "probs",
   mfx = NULL,
   ...
@@ -99,13 +99,13 @@ get_predict(
 
 \method{get_predict}{glmmPQL}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   ...
 )
 
-\method{get_predict}{lda}(model, newdata = insight::get_data(model), type = "class", ...)
+\method{get_predict}{lda}(model, newdata = get_modeldata(model), type = "class", ...)
 
 \method{get_predict}{MCMCglmm}(
   model,
@@ -118,21 +118,21 @@ get_predict(
   ...
 )
 
-\method{get_predict}{lm}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{lm}(model, newdata = get_modeldata(model), type = "response", ...)
 
-\method{get_predict}{glm}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{glm}(model, newdata = get_modeldata(model), type = "response", ...)
 
 \method{get_predict}{afex_aov}(model, newdata = NULL, ...)
 
-\method{get_predict}{glimML}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{glimML}(model, newdata = get_modeldata(model), type = "response", ...)
 
 \method{get_predict}{betareg}(model, newdata, type = "response", ...)
 
-\method{get_predict}{bife}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{bife}(model, newdata = get_modeldata(model), type = "response", ...)
 
 \method{get_predict}{biglm}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   ...
@@ -140,7 +140,7 @@ get_predict(
 
 \method{get_predict}{multinom}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "probs",
   mfx = NULL,
   ...
@@ -148,13 +148,13 @@ get_predict(
 
 \method{get_predict}{brmultinom}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "probs",
   mfx = NULL,
   ...
 )
 
-\method{get_predict}{brmsfit}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{brmsfit}(model, newdata = get_modeldata(model), type = "response", ...)
 
 \method{get_predict}{crch}(model, newdata = NULL, type = "location", ...)
 
@@ -162,7 +162,7 @@ get_predict(
 
 \method{get_predict}{fixest}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   ...
@@ -170,11 +170,11 @@ get_predict(
 
 \method{get_predict}{flexsurvreg}(model, newdata, type, ...)
 
-\method{get_predict}{gamlss}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{gamlss}(model, newdata = get_modeldata(model), type = "response", ...)
 
 \method{get_predict}{glmmTMB}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   newparams = NULL,
@@ -185,15 +185,15 @@ get_predict(
 
 \method{get_predict}{gnm}(model, newdata, type = "response", ...)
 
-\method{get_predict}{merMod}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{merMod}(model, newdata = get_modeldata(model), type = "response", ...)
 
-\method{get_predict}{lmerModLmerTest}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{lmerModLmerTest}(model, newdata = get_modeldata(model), type = "response", ...)
 
-\method{get_predict}{lmerMod}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{lmerMod}(model, newdata = get_modeldata(model), type = "response", ...)
 
-\method{get_predict}{mblogit}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{mblogit}(model, newdata = get_modeldata(model), type = "response", ...)
 
-\method{get_predict}{mhurdle}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{mhurdle}(model, newdata = get_modeldata(model), type = "response", ...)
 
 \method{get_predict}{mlogit}(model, newdata, ...)
 
@@ -201,19 +201,19 @@ get_predict(
 
 \method{get_predict}{nestedLogit}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   submodel = NULL,
   ...
 )
 
-\method{get_predict}{clm}(model, newdata = insight::get_data(model), type = "prob", ...)
+\method{get_predict}{clm}(model, newdata = get_modeldata(model), type = "prob", ...)
 
-\method{get_predict}{rq}(model, newdata = insight::get_data(model), type = NULL, ...)
+\method{get_predict}{rq}(model, newdata = get_modeldata(model), type = NULL, ...)
 
 \method{get_predict}{rms}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = NULL,
   mfx = NULL,
   ...
@@ -221,7 +221,7 @@ get_predict(
 
 \method{get_predict}{orm}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = NULL,
   mfx = NULL,
   ...
@@ -229,7 +229,7 @@ get_predict(
 
 \method{get_predict}{lrm}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = NULL,
   mfx = NULL,
   ...
@@ -237,7 +237,7 @@ get_predict(
 
 \method{get_predict}{ols}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = NULL,
   mfx = NULL,
   ...
@@ -245,13 +245,13 @@ get_predict(
 
 \method{get_predict}{rlmerMod}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   ...
 )
 
-\method{get_predict}{stanreg}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{stanreg}(model, newdata = get_modeldata(model), type = "response", ...)
 
 \method{get_predict}{stpm2}(model, newdata = NULL, ...)
 
@@ -263,7 +263,7 @@ get_predict(
 
 \method{get_predict}{svyolr}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "probs",
   mfx = NULL,
   ...
@@ -271,7 +271,7 @@ get_predict(
 
 \method{get_predict}{svyglm}(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   newparams = NULL,
@@ -280,13 +280,13 @@ get_predict(
   ...
 )
 
-\method{get_predict}{coxph}(model, newdata = insight::get_data(model), type = "lp", ...)
+\method{get_predict}{coxph}(model, newdata = get_modeldata(model), type = "lp", ...)
 
 \method{get_predict}{model_fit}(model, newdata, type = NULL, ...)
 
 \method{get_predict}{workflow}(model, newdata, type = NULL, ...)
 
-\method{get_predict}{tobit1}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{tobit1}(model, newdata = get_modeldata(model), type = "response", ...)
 }
 \arguments{
 \item{model}{Model object}
@@ -294,7 +294,7 @@ get_predict(
 \item{newdata}{Grid of predictor values at which we evaluate the slopes.
 \itemize{
 \item Warning: Please avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
-\item \code{NULL} (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[insight:get_data]{insight::get_data()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
+\item \code{NULL} (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[=get_modeldata]{get_modeldata()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.

@@ -24,7 +24,7 @@ get_coef.merMod <- function(model, ...) {
 #' @export
 get_predict.merMod <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "response",
     ...
 ) {

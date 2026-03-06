@@ -25,7 +25,7 @@ get_predict <- function(
 #' @export
 get_predict.default <- function(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   newparams = NULL,
@@ -141,7 +141,7 @@ get_predict_error <- function(model, newdata = NULL, ...) {
             stop_sprintf(pred_result$error$message)
         }
 
-        msg <- "Unable to compute predicted values with this model. This error can arise when `insight::get_data()` is unable to extract the dataset from the model object, or when the original data frame (usually in the global environment) was modified since fitting the model. Make sure the original data object is unchanged and/or try to supply a different dataset to the `newdata` argument."
+        msg <- "Unable to compute predicted values with this model. This error can arise when `get_modeldata()` is unable to extract the dataset from the model object, or when the original data frame (usually in the global environment) was modified since fitting the model. Make sure the original data object is unchanged and/or try to supply a different dataset to the `newdata` argument."
         if (!is.null(pred_result$error)) {
             msg <- c(
                 msg,

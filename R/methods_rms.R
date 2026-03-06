@@ -42,7 +42,7 @@ sanitize_model_specific.ols <- sanitize_model_specific.rms
 #' @export
 get_predict.rms <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = NULL,
     mfx = NULL,
     ...) {

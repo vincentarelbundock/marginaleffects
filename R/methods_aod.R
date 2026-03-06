@@ -2,7 +2,7 @@
 #' @export
 get_predict.glimML <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "response",
     ...) {
     insight::check_if_installed("aod")

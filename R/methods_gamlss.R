@@ -17,7 +17,7 @@ get_coef.gamlss <- function(model, ...) {
 #' @export
 get_predict.gamlss <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "response",
     ...
 ) {
@@ -39,7 +39,7 @@ get_predict.gamlss <- function(
     # }
 
     # predict.gamlss() breaks when `newdata` includes unknown variables
-    origindata <- insight::get_data(model)
+    origindata <- get_modeldata(model)
     originvars <- colnames(origindata)
     newdata <- as.data.frame(newdata)
     index <- which(colnames(newdata) %in% originvars)

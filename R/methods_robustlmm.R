@@ -10,7 +10,7 @@ set_coef.rlmerMod <- function(model, coefs, ...) {
 #' @export
 get_predict.rlmerMod <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "response",
     mfx = NULL,
     ...) {

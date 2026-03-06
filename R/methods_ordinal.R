@@ -2,7 +2,7 @@
 #' @export
 get_predict.clm <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "prob",
     ...) {
     # `predict.clm()` only makes predictions for the observed response group of

@@ -44,7 +44,7 @@ get_group_names.multinom <- function(model, ...) {
 #' @export
 get_predict.multinom <- function(
     model,
-    newdata = insight::get_data(model),
+    newdata = get_modeldata(model),
     type = "probs",
     mfx = NULL,
     ...) {
