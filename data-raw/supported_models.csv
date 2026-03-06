@@ -63,6 +63,7 @@ mvgam,mvgam
 mvgam,mvgam
 nlme,gls
 nlme,lme
+nestedLogit,nestedLogit
 nnet,multinom
 ordbetareg,ordbetareg
 ordinal,clm

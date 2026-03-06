@@ -141,6 +141,8 @@ mvgam,link
 mvgam,expected
 mvgam,detection
 mvgam,latent_N
+nestedLogit,response
+nestedLogit,link
 negbin,invlink(link)
 negbin,response
 negbin,link

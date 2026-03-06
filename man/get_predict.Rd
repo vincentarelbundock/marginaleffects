@@ -6,10 +6,11 @@
 %   R/methods_dbarts.R, R/methods_fixest.R, R/methods_flexsurv.R,
 %   R/methods_gamlss.R, R/methods_glmmTMB.R, R/methods_glmtoolbox.R,
 %   R/methods_lme4.R, R/methods_mclogit.R, R/methods_mhurdle.R,
-%   R/methods_mlogit.R, R/methods_mlr3.R, R/methods_ordinal.R,
-%   R/methods_quantreg.R, R/methods_rms.R, R/methods_robustlmm.R,
-%   R/methods_rstanarm.R, R/methods_rstpm2.R, R/methods_survey.R,
-%   R/methods_survival.R, R/methods_tidymodels.R, R/methods_tobit1.R
+%   R/methods_mlogit.R, R/methods_mlr3.R, R/methods_nestedLogit.R,
+%   R/methods_ordinal.R, R/methods_quantreg.R, R/methods_rms.R,
+%   R/methods_robustlmm.R, R/methods_rstanarm.R, R/methods_rstpm2.R,
+%   R/methods_survey.R, R/methods_survival.R, R/methods_tidymodels.R,
+%   R/methods_tobit1.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -43,6 +44,7 @@
 \alias{get_predict.mhurdle}
 \alias{get_predict.mlogit}
 \alias{get_predict.Learner}
+\alias{get_predict.nestedLogit}
 \alias{get_predict.clm}
 \alias{get_predict.rq}
 \alias{get_predict.rms}
@@ -196,6 +198,14 @@ get_predict(
 \method{get_predict}{mlogit}(model, newdata, ...)
 
 \method{get_predict}{Learner}(model, newdata, type = NULL, ...)
+
+\method{get_predict}{nestedLogit}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  submodel = NULL,
+  ...
+)
 
 \method{get_predict}{clm}(model, newdata = insight::get_data(model), type = "prob", ...)
 

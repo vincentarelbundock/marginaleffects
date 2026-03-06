@@ -47,6 +47,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["bife"]] <- c("alpha_new", "corrected") # nlme::lme
     valid[["process_error"]] <- c("times", "p", "start")
     valid[["flexsurvreg"]] <- c("times", "p", "start")
+    valid[["nestedLogit"]] <- c("submodel")
 
     # survival
     valid[["survreg"]] <- c("p")
