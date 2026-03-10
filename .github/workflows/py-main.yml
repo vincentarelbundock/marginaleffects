@@ -1,0 +1,19 @@
+name: Python CI
+
+on:
+  pull_request:
+    paths:
+      - 'python/**'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'python/**'
+
+jobs:
+  linting:
+    uses: ./.github/workflows/py-lint.yml
+  testing:
+    uses: ./.github/workflows/py-test.yml
+    needs: linting

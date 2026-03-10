@@ -36,7 +36,7 @@ jobs:
       # https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#workflow-runs
       - id: set-matrix
         run: |
-          package <- read.dcf("DESCRIPTION")[, "Package"][[1]]
+          package <- read.dcf("r/DESCRIPTION")[, "Package"][[1]]
           deps <- tools:::package_dependencies(package, reverse = TRUE, which = c("Depends", "Imports", "LinkingTo", "Suggests"))[[1]]
           json <- paste0(
             '{"package":[',
@@ -156,7 +156,7 @@ jobs:
 
       - name: Install local package
         run: |
-          remotes::install_local(".", force = TRUE)
+          remotes::install_local("r", force = TRUE)
         shell: Rscript {0}
 
       - name: Session info new

@@ -1,4 +1,4 @@
-name: CI Testing
+name: Python Testing
 
 on:
   workflow_dispatch:
@@ -17,6 +17,9 @@ jobs:
           - "3.13"
           - "3.14"
     runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: python
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

@@ -35,6 +35,10 @@ jobs:
       R_GH: true
       GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
+    defaults:
+      run:
+        working-directory: r
+
     steps:
       - uses: actions/checkout@v3
 
