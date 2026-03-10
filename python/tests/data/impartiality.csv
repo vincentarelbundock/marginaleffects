@@ -1,0 +1,167 @@
+country,continent,impartial,equal,democracy
+Mexico,Americas,TRUE,31.2,Democracy
+Suriname,Americas,TRUE,68.10000000000001,Democracy
+Sweden,Europe,TRUE,93.7,Democracy
+Switzerland,Europe,TRUE,96.6,Democracy
+Ghana,Africa,FALSE,53.300000000000004,Democracy
+South Africa,Africa,TRUE,38.6,Democracy
+Japan,Asia,TRUE,97.3,Democracy
+Burma/Myanmar,Asia,TRUE,23.1,Autocracy
+Russia,Europe,FALSE,73.3,Autocracy
+Albania,Europe,TRUE,69.69999999999999,Democracy
+Egypt,Africa,FALSE,12.7,Autocracy
+Yemen,Asia,FALSE,10.9,Autocracy
+Colombia,Americas,TRUE,36.7,Democracy
+Poland,Europe,TRUE,92.5,Democracy
+Brazil,Americas,TRUE,49.3,Democracy
+United States of America,Americas,TRUE,69.8,Democracy
+Portugal,Europe,TRUE,92.10000000000001,Democracy
+El Salvador,Americas,TRUE,28.4,Democracy
+Bangladesh,Asia,FALSE,18.5,Autocracy
+Bolivia,Americas,TRUE,35.3,Democracy
+Haiti,Americas,FALSE,13,Autocracy
+Honduras,Americas,TRUE,13.3,Autocracy
+Mali,Africa,FALSE,21.5,Democracy
+Pakistan,Asia,FALSE,12.7,Autocracy
+Peru,Americas,TRUE,39.300000000000004,Democracy
+Senegal,Africa,TRUE,56.8,Democracy
+South Sudan,Africa,FALSE,1.5,Autocracy
+Sudan,Africa,FALSE,8,Autocracy
+Vietnam,Asia,TRUE,77,Autocracy
+Afghanistan,Asia,FALSE,31.8,Autocracy
+Argentina,Americas,TRUE,69.69999999999999,Democracy
+Ethiopia,Africa,TRUE,37.4,Autocracy
+India,Asia,TRUE,35.8,Democracy
+Kenya,Africa,TRUE,47.699999999999996,Democracy
+North Korea,Asia,FALSE,58.599999999999994,Autocracy
+South Korea,Asia,TRUE,96.5,Democracy
+Lebanon,Asia,FALSE,49.5,Autocracy
+Nigeria,Africa,FALSE,25.1,Democracy
+Philippines,Asia,TRUE,32.1,Democracy
+Tanzania,Africa,TRUE,71.7,Autocracy
+Taiwan,Asia,TRUE,95.89999999999999,Democracy
+Thailand,Asia,FALSE,60.3,Autocracy
+Uganda,Africa,TRUE,33.4,Autocracy
+Venezuela,Americas,FALSE,22,Autocracy
+Benin,Africa,TRUE,62.4,Democracy
+Bhutan,Asia,TRUE,92.2,Democracy
+Burkina Faso,Africa,TRUE,28.599999999999998,Autocracy
+Cambodia,Asia,FALSE,17.4,Autocracy
+Indonesia,Asia,TRUE,49.1,Democracy
+Mozambique,Africa,TRUE,29.9,Autocracy
+Nepal,Asia,TRUE,30.599999999999998,Democracy
+Nicaragua,Americas,FALSE,28.999999999999996,Autocracy
+Niger,Africa,TRUE,30.9,Democracy
+Zambia,Africa,TRUE,32.800000000000004,Autocracy
+Zimbabwe,Africa,FALSE,45,Autocracy
+Guinea,Africa,FALSE,24.9,Autocracy
+Ivory Coast,Africa,TRUE,29.7,Autocracy
+Mauritania,Africa,FALSE,14.499999999999998,Autocracy
+Canada,Americas,TRUE,87.5,Democracy
+Botswana,Africa,TRUE,69.8,Democracy
+Burundi,Africa,FALSE,28.9,Autocracy
+Cape Verde,Africa,TRUE,74,Democracy
+Central African Republic,Africa,FALSE,27.3,Autocracy
+Chile,Americas,TRUE,62.7,Democracy
+Costa Rica,Americas,TRUE,91.9,Democracy
+Timor-Leste,Asia,TRUE,27.3,Democracy
+Ecuador,Americas,TRUE,66.8,Democracy
+France,Europe,TRUE,96.2,Democracy
+Germany,Europe,TRUE,94.5,Democracy
+Guatemala,Americas,TRUE,18.9,Democracy
+Iran,Asia,TRUE,79.3,Autocracy
+Iraq,Asia,FALSE,38,Autocracy
+Ireland,Europe,TRUE,83.7,Democracy
+Italy,Europe,TRUE,94.3,Democracy
+Jordan,Asia,TRUE,73.7,Autocracy
+Latvia,Europe,TRUE,89.1,Democracy
+Lesotho,Africa,TRUE,80.2,Democracy
+Liberia,Africa,TRUE,29.799999999999997,Democracy
+Malawi,Africa,TRUE,30.099999999999998,Democracy
+Maldives,Asia,FALSE,45.2,Autocracy
+Mongolia,Asia,TRUE,70.1,Democracy
+Morocco,Africa,TRUE,39,Autocracy
+Netherlands,Europe,TRUE,95.8,Democracy
+Panama,Americas,TRUE,62.6,Democracy
+Qatar,Asia,TRUE,95.3,Autocracy
+Sierra Leone,Africa,TRUE,41.699999999999996,Democracy
+Spain,Europe,TRUE,88.4,Democracy
+Syria,Asia,FALSE,12.1,Autocracy
+Tunisia,Africa,TRUE,69.5,Democracy
+Turkey,Asia,FALSE,68.2,Autocracy
+Ukraine,Europe,FALSE,79.3,Autocracy
+United Kingdom,Europe,TRUE,91.8,Democracy
+Uruguay,Americas,TRUE,91.3,Democracy
+Algeria,Africa,FALSE,75,Autocracy
+Angola,Africa,FALSE,17.7,Autocracy
+Armenia,Asia,TRUE,84.5,Autocracy
+Azerbaijan,Asia,FALSE,19.7,Autocracy
+Belarus,Europe,TRUE,90.5,Autocracy
+Cameroon,Africa,FALSE,33.4,Autocracy
+Chad,Africa,FALSE,21.7,Autocracy
+China,Asia,FALSE,41.8,Autocracy
+Democratic Republic of the Congo,Africa,FALSE,23.400000000000002,Autocracy
+Republic of the Congo,Africa,FALSE,32.6,Autocracy
+Djibouti,Africa,TRUE,29.5,Autocracy
+Dominican Republic,Americas,TRUE,26,Democracy
+Eritrea,Africa,FALSE,73.3,Autocracy
+Gabon,Africa,TRUE,67.30000000000001,Autocracy
+The Gambia,Africa,FALSE,45.4,Autocracy
+Georgia,Asia,TRUE,82.39999999999999,Democracy
+Guinea-Bissau,Africa,FALSE,29.4,Democracy
+Jamaica,Americas,TRUE,72.7,Democracy
+Kazakhstan,Asia,FALSE,69.8,Autocracy
+Kyrgyzstan,Asia,TRUE,64.5,Autocracy
+Laos,Asia,FALSE,44.1,Autocracy
+Libya,Africa,FALSE,41.699999999999996,Autocracy
+Madagascar,Africa,FALSE,15.8,Autocracy
+Moldova,Europe,TRUE,70,Democracy
+Namibia,Africa,TRUE,48.6,Democracy
+Rwanda,Africa,TRUE,81.8,Autocracy
+Somalia,Africa,FALSE,4.5,Autocracy
+Sri Lanka,Asia,TRUE,77.7,Democracy
+Tajikistan,Asia,FALSE,38.7,Autocracy
+Togo,Africa,TRUE,62.3,Democracy
+Trinidad and Tobago,Americas,TRUE,81,Democracy
+Turkmenistan,Asia,FALSE,43.3,Autocracy
+Uzbekistan,Asia,FALSE,58.599999999999994,Autocracy
+Austria,Europe,TRUE,93.8,Democracy
+Bahrain,Asia,FALSE,74.1,Autocracy
+Barbados,Americas,TRUE,94.1,Democracy
+Belgium,Europe,TRUE,94.89999999999999,Democracy
+Bosnia and Herzegovina,Europe,TRUE,68.30000000000001,Democracy
+Bulgaria,Europe,TRUE,74.7,Democracy
+Comoros,Africa,FALSE,41.099999999999994,Autocracy
+Croatia,Europe,TRUE,86.1,Democracy
+Cuba,Americas,FALSE,83.6,Autocracy
+Cyprus,Asia,TRUE,93.8,Democracy
+Czechia,Europe,TRUE,95.7,Democracy
+Denmark,Europe,TRUE,98.3,Democracy
+Equatorial Guinea,Africa,FALSE,29.4,Autocracy
+Estonia,Europe,TRUE,96,Democracy
+Finland,Europe,TRUE,95.6,Democracy
+Greece,Europe,TRUE,90.10000000000001,Democracy
+Guyana,Americas,TRUE,64.3,Democracy
+Iceland,Europe,TRUE,96.8,Democracy
+Israel,Asia,TRUE,86.4,Democracy
+Kuwait,Asia,TRUE,93.60000000000001,Autocracy
+Lithuania,Europe,TRUE,93.2,Democracy
+Luxembourg,Europe,TRUE,96.7,Democracy
+North Macedonia,Europe,TRUE,73.9,Autocracy
+Malaysia,Asia,TRUE,78.2,Autocracy
+Malta,Europe,TRUE,93.7,Democracy
+Mauritius,Africa,TRUE,92.5,Democracy
+Montenegro,Europe,TRUE,87.8,Autocracy
+Norway,Europe,TRUE,98.6,Democracy
+Oman,Asia,TRUE,81.89999999999999,Autocracy
+Paraguay,Americas,TRUE,14.899999999999999,Democracy
+Romania,Europe,TRUE,74.5,Democracy
+Sao Tome and Principe,Africa,TRUE,55.60000000000001,Democracy
+Saudi Arabia,Asia,TRUE,78.8,Autocracy
+Serbia,Europe,TRUE,82.39999999999999,Autocracy
+Seychelles,Africa,TRUE,89.4,Democracy
+Singapore,Asia,TRUE,93.89999999999999,Autocracy
+Slovakia,Europe,TRUE,82.8,Democracy
+Slovenia,Europe,TRUE,94.6,Democracy
+United Arab Emirates,Asia,TRUE,88.1,Autocracy
+Hungary,Europe,TRUE,72.2,Democracy

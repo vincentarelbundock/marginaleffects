@@ -1,0 +1,15 @@
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  linting:
+    uses: ./.github/workflows/lint.yml
+  testing:
+    uses: ./.github/workflows/test.yml
+    needs: linting

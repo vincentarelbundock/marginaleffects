@@ -1,0 +1,39 @@
+name: CI Testing
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  unit-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        python:
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup python v${{ matrix.python}}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        run: |
+          uv venv
+
+      - name: Run pytest
+        run: |
+          uv run --all-extras pytest
