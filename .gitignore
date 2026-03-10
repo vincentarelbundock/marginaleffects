@@ -28,3 +28,4 @@ src/*.so
 src/*.o
 _quarto/*
 **/.quarto/
+uv.lock
