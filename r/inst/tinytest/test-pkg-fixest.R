@@ -328,3 +328,10 @@ expect_inherits(p, "predictions")
 # dat <- trade
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
 # expect_slopes(mod, newdata = dat) # environment issue
+
+# Numeric fixed effects via `|` should be treated as categorical in datagrid
+dat <- mtcars
+dat$am2 <- ifelse(dat$am == 1, 2, dat$am)
+m <- feols(mpg ~ cyl | am2, dat)
+nd <- datagrid(cyl = unique(dat$cyl), model = m)
+expect_true(all(nd$am2 %in% dat$am2))

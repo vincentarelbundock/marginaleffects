@@ -516,11 +516,13 @@ detect_variable_class <- function(modeldata, model = NULL) {
     # this can be costly on large datasets, when only a portion of
     # variables are used in the model
     variables <- NULL
+    variables_list <- NULL
     if (!is.null(model)) {
-        variables <- tryCatch(
-            unlist(insight::find_variables(model, flatten = TRUE, verbose = FALSE), use.names = FALSE),
+        variables_list <- tryCatch(
+            insight::find_variables(model, flatten = FALSE, verbose = FALSE),
             error = function(e) NULL
         )
+        variables <- unlist(variables_list, use.names = FALSE)
         # Always include all columns that are actually present in modeldata
         # This ensures that variables used in 'by' arguments get properly classified
         if (!is.null(variables)) {
@@ -617,6 +619,11 @@ detect_variable_class <- function(modeldata, model = NULL) {
     # random effects groups
     re <- hush(insight::find_random(model, flatten = TRUE))
     cl[names(cl) %in% re] <- "cluster"
+
+    # cluster variables reported by insight (e.g., fixest fixed effects via `|`)
+    if (!is.null(variables_list[["cluster"]])) {
+        cl[names(cl) %in% variables_list[["cluster"]]] <- "cluster"
+    }
 
     return(cl)
 }

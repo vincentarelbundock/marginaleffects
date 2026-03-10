@@ -290,8 +290,9 @@ library(ggrepel)
 
 mt <- mtcars
 mt$label <- row.names(mt)
+mt$cyl <- factor(mt$cyl)
 
-mod <- lm(mpg ~ hp * factor(cyl), data = mt)
+mod <- lm(mpg ~ hp * cyl, data = mt)
 
 plot_predictions(mod, condition = c("hp", "cyl"), points = .5, rug = TRUE, vcov = FALSE) +
     geom_text_repel(aes(x = hp, y = mpg, label = label),
