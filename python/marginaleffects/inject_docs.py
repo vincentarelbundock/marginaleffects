@@ -93,10 +93,11 @@ def get_func_to_file():
             "module_name": func.__module__ + "." + func.__name__,
             "docs": func.__doc__,
         }
-        # the value of each item looks like: marginaleffects.comparisons.avg_comparisons
-        # we want to extract the file and the function name from the value
-        file_name = func_to_file[func]["module_name"].split(".")[-2]
-        func_name = func_to_file[func]["module_name"].split(".")[-1]
+        # Extract file path (relative to marginaleffects/) and function name
+        # e.g. "marginaleffects.plot.comparisons.plot_comparisons" -> "plot/comparisons"
+        parts = func_to_file[func]["module_name"].split(".")
+        func_name = parts[-1]
+        file_name = "/".join(parts[1:-1])
         func_to_file[func]["file_name"] = file_name
         func_to_file[func]["func_name"] = func_name
     return func_to_file

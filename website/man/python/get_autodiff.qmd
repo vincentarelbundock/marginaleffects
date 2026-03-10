@@ -1,1 +1,5 @@
 Backwards-compatible accessor that returns autodiff() state.
+
+For more information, visit the website: https://marginaleffects.com/
+
+Or type: `help(get_autodiff)`

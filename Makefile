@@ -11,7 +11,7 @@ help:  ## Display this help screen
 install: r-install py-install ## Both: install R and Python packages
 test: r-test py-test ## Both: run R and Python test suites
 autodiff: r-autodiff py-test-autodiff ## Both: run autodiff tests
-document: r-man py-man ## Both: generate docs and populate website/man
+document: r-document py-document ## Both: generate docs and populate website/man
 
 # ==============================================================================
 # R targets
@@ -31,12 +31,10 @@ r-install: r-document ## R: install package (dependencies=FALSE)
 r-dependencies: r-document ## R: install package with all dependencies
 	cd r && Rscript -e "devtools::install(dependencies = TRUE)"
 
-r-document: ## R: generate roxygen documentation
+r-document: ## R: generate roxygen docs and populate website/man/r
 	cd r && Rscript -e "devtools::document()"
-
-r-man: r-document ## R: build man pages and populate website/man/r
-	@mkdir -p r/altdoc && touch r/altdoc/quarto_website.yml
-	Rscript -e 'fns <- Sys.glob("r/man/*.Rd"); sapply(fns, altdoc:::.rd2qmd, "website/man/r", "r")'
+	@mkdir -p r/altdoc website/man/r && touch r/altdoc/quarto_website.yml
+	@Rscript -e 'invisible(sapply(Sys.glob("r/man/*.Rd"), altdoc:::.rd2qmd, "website/man/r", "r"))'
 	@rm -rf r/altdoc
 	cp -f r/NEWS.md website/bonus/NEWS_r.qmd
 
@@ -93,19 +91,18 @@ py-benchmark: py-install ## Py: run autodiff benchmark
 py-snapshot: ## Py: snapshot test
 	cd python && R CMD BATCH tests/r/run.R
 
-py-man: ## Py: extract docstrings and populate website/man/python
-	cd python && uv run marginaleffects/docs.py
-	cp -f python/qmd_files/* website/man/python/
+py-document: ## Py: inject docstrings and populate website/man/python
+	@if [ -n "$$(git status --porcelain python/)" ]; then echo "Error: uncommitted changes in python/. Commit or stash first." >&2; exit 1; fi
+	cd python && uv run marginaleffects/inject_docs.py
+	@mkdir -p website/man/python
+	cd python && uv run marginaleffects/docs.py ../website/man/python
+	cd python && git checkout -- marginaleffects/
 	@for file in website/man/python/*.qmd; do \
 		awk '/^#/ {print $$0 " {.unnumbered}"} !/^#/ {print}' "$$file" > "$$file.tmp" && mv "$$file.tmp" "$$file"; \
 	done
 
 py-coverage: ## Py: run tests with coverage
 	cd python && pytest --cov=marginaleffects --cov-report=term-missing --cov-report=html tests/
-
-py-inject-docs: ## Py: inject minimal docstrings and lint
-	cd python && uv run marginaleffects/inject_docs.py
-	$(MAKE) py-lint
 
 py-build: ## Py: build package
 	cd python && uv build

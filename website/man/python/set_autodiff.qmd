@@ -1,1 +1,5 @@
 Backwards-compatible wrapper around autodiff().
+
+For more information, visit the website: https://marginaleffects.com/
+
+Or type: `help(set_autodiff)`

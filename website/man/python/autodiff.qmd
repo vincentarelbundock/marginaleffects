@@ -1,22 +1,5 @@
 Configure or inspect JAX-based automatic differentiation.
 
-Parameters
-----------
-enabled : bool or None, optional
-    - True: Force JAX usage (error if JAX not installed)
-    - False: Disable JAX, always use finite differences
-    - None: Reset to auto-detect (use JAX if available and model compatible)
-    - Omitted: Return the current autodiff state without mutating it
+For more information, visit the website: https://marginaleffects.com/
 
-Returns
--------
-bool or None
-    The effective autodiff setting after applying the request.
-
-Examples
---------
->>> import marginaleffects as me
->>> me.autodiff(False)   # Disable JAX
->>> me.autodiff(True)    # Force JAX (raises if not installed)
->>> me.autodiff(None)    # Reset to auto-detect
->>> me.autodiff()        # Inspect current state
+Or type: `help(autodiff)`
