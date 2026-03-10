@@ -3,6 +3,9 @@ project:
   resources:
     - llms.txt
     - llms-full.txt
+    - assets/
+    - CNAME
+    - library.bib
 
 execute:
   cache: true
