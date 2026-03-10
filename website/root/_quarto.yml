@@ -3,7 +3,8 @@ project:
   resources:
     - llms.txt
     - llms-full.txt
-    - assets/
+    - assets
+    - data
     - CNAME
     - library.bib
 
