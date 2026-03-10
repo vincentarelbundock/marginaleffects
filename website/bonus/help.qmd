@@ -6,7 +6,7 @@ The `marginaleffects` package and [the online book that accompanies it](https://
 
 
 1. Make a donation to the [Native Women's Shelter of Montreal](https://www.nwsm.info/) and [the Against Malaria Foundation](https://www.againstmalaria.com/), and send me (Vincent) a quick note. You'll make my day.
-2. Submit bug reports, documentation improvements, or code contributions to the Github repositories of the [R version](https://github.com/vincentarelbundock/marginaleffects) or the [Python version](https://github.com/vincentarelbundock/pymarginaleffects) of the package.
+2. Submit bug reports, documentation improvements, or code contributions to the [Github repository](https://github.com/vincentarelbundock/marginaleffects).
 3. Create a new entry [for the Meme Gallery!](https://marginaleffects.com/bonus/meme.html)
 4. [Cite the `marginaleffects` package](https://marginaleffects.com/bonus/citation.html) in your work and tell your friends about it.
 
@@ -62,5 +62,4 @@ Finally, remember that the people who maintain, contribute, and answer questions
 
 To report bugs or feature requests, please visit the Github issue tracker here: 
 
-* [R bug tracker](https://github.com/vincentarelbundock/marginaleffects/issues)
-* [Python bug tracker](https://github.com/vincentarelbundock/pymarginaleffects/issues)
+* [Bug tracker](https://github.com/vincentarelbundock/marginaleffects/issues)

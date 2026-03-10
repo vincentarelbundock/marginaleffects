@@ -38,11 +38,7 @@ book:
         href: bonus/help.html
       - icon: github
         aria-label: marginaleffects GitHub
-        menu:
-          - text: R
-            href: https://github.com/vincentarelbundock/marginaleffects
-          - text: Python
-            href: https://github.com/vincentarelbundock/pymarginaleffects
+        href: https://github.com/vincentarelbundock/marginaleffects
       - text: "![](assets/bluesky.svg){height=1em}"
         href: https://bsky.app/profile/vincentab.bsky.social
       - icon: mastodon

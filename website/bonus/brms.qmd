@@ -220,7 +220,7 @@ library(ggdist)
 library(patchwork)
 library(marginaleffects)
 
-vdem_2015 <- read.csv("https://github.com/vincentarelbundock/marginaleffects/raw/main/data-raw/vdem_2015.csv")
+vdem_2015 <- read.csv("https://github.com/vincentarelbundock/marginaleffects/raw/main/website/data/raw/vdem_2015.csv")
 
 head(vdem_2015)
 ```

@@ -4,8 +4,7 @@
 
 The `marginaleffects` package for R and Python helps analysts interpret statistical and machine learning models by computing predictions, comparisons (contrasts, marginal effects, treatment effects), slopes (partial derivatives), and hypothesis tests. The companion book "Model to Meaning" by Vincent Arel-Bundock (2026, CRC Press) is freely available at https://marginaleffects.com.
 
-- Source (R): https://github.com/vincentarelbundock/marginaleffects
-- Source (Python): https://github.com/vincentarelbundock/pymarginaleffects
+- Source: https://github.com/vincentarelbundock/marginaleffects
 - Journal article: https://www.jstatsoft.org/article/view/v111i09
 - Print book: https://routledge.com/9781032908724
 - Table of contents: https://marginaleffects.com/llms.txt

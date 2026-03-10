@@ -78,7 +78,7 @@ brms_epi <- brm(count ~ zAge + zBase * Trt + (1 | patient), backend = "cmdstanr"
                 seed = 1024, iter = 1000, silent = 2)
 
 # vdem
-vdem_2015 <- read.csv("https://github.com/vincentarelbundock/marginaleffects/raw/main/data-raw/vdem_2015.csv")
+vdem_2015 <- read.csv("https://github.com/vincentarelbundock/marginaleffects/raw/main/website/data/raw/vdem_2015.csv")
 brms_vdem <- suppressWarnings(brm(
   bf(media_index ~ party_autonomy + civil_liberties + (1 | region),
      phi ~ (1 | region)),

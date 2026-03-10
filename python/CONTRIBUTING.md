@@ -13,8 +13,8 @@ We manage the development environment using [`uv`](https://docs.astral.sh/uv/gui
 Clone the repository
 
 ```bash
-git clone git@github.com:vincentarelbundock/pymarginaleffects.git
-cd pymarginaleffects
+git clone git@github.com:vincentarelbundock/marginaleffects.git
+cd marginaleffects
 ```
 
 Create and activate the virtual environment using `uv`:

@@ -6,7 +6,7 @@
 options(tinytable_html_engine = "tabulator")
 library("data.table")
 library("tinytable")
-dat <- fread("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/refs/heads/main/data-raw/supported_models.csv")
+dat <- fread("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/refs/heads/main/website/data/raw/supported_models.csv")
 dat <- dat[order(tolower(dat$Package), tolower(dat$Function)), ]
 ```
 
