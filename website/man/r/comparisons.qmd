@@ -777,10 +777,7 @@ https://github.com/vincentarelbundock/marginaleffects/issues
 </tr>
 <tr>
  <td style="text-align: left;">
-   <code>sampleSelection</code> </td><td style="text-align: left;"> <code>selection</code> </td><td style="text-align: left;"> <code>part</code> </td><td style="text-align: left;"> sampleSelection::predict.selection </td>
-</tr>
-<tr>
- <td style="text-align: left;">
+   <code>sampleSelection</code> </td><td style="text-align: left;"> <code>selection</code> </td><td style="text-align: left;"> <code>part</code> </td><td style="text-align: left;"> sampleSelection::predict.selection 
 </td>
 </tr>
 
@@ -912,10 +909,7 @@ with <code>avg</code>. For example, <code>comparison = "difference"</code> becom
 </tr>
 <tr>
  <td style="text-align: left;">
-   expdydxavg </td><td style="text-align: left;"> function (hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) </td>
-</tr>
-<tr>
- <td style="text-align: left;">
+   expdydxavg </td><td style="text-align: left;"> function (hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) 
 </td>
 </tr>
 
@@ -1413,10 +1407,7 @@ Some of the most common <code>type</code> values are:
 </tr>
 <tr>
  <td style="text-align: left;">
-   zeroinfl </td><td style="text-align: left;"> response, prob, count, zero </td>
-</tr>
-<tr>
- <td style="text-align: left;">
+   zeroinfl </td><td style="text-align: left;"> response, prob, count, zero 
 </td>
 </tr>
 

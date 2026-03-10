@@ -277,10 +277,7 @@ https://github.com/vincentarelbundock/marginaleffects/issues
 </tr>
 <tr>
  <td style="text-align: left;">
-   <code>sampleSelection</code> </td><td style="text-align: left;"> <code>selection</code> </td><td style="text-align: left;"> <code>part</code> </td><td style="text-align: left;"> sampleSelection::predict.selection </td>
-</tr>
-<tr>
- <td style="text-align: left;">
+   <code>sampleSelection</code> </td><td style="text-align: left;"> <code>selection</code> </td><td style="text-align: left;"> <code>part</code> </td><td style="text-align: left;"> sampleSelection::predict.selection 
 </td>
 </tr>
 
@@ -583,10 +580,7 @@ Some of the most common <code>type</code> values are:
 </tr>
 <tr>
  <td style="text-align: left;">
-   zeroinfl </td><td style="text-align: left;"> response, prob, count, zero </td>
-</tr>
-<tr>
- <td style="text-align: left;">
+   zeroinfl </td><td style="text-align: left;"> response, prob, count, zero 
 </td>
 </tr>
 

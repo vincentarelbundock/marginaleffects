@@ -39,8 +39,8 @@ test = [
     "xgboost",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
   "ipython",
   "patsy",
   "pytest >=8.1.1,<9",

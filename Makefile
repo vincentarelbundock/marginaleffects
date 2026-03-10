@@ -93,7 +93,7 @@ py-snapshot: ## Py: snapshot test
 
 py-document: ## Py: populate website/man/python from docstrings
 	@mkdir -p website/man/python
-	cd python && uv run marginaleffects/docs.py ../website/man/python
+	cd python && uv run --all-extras python -m marginaleffects.docs ../website/man/python
 	@for file in website/man/python/*.qmd; do \
 		awk '/^#/ {print $$0 " {.unnumbered}"} !/^#/ {print}' "$$file" > "$$file.tmp" && mv "$$file.tmp" "$$file"; \
 	done
