@@ -107,12 +107,12 @@ class ModelSklearn(ModelAbstract):
 # @validate_types
 def fit_sklearn(formula, data: pl.DataFrame, engine) -> ModelSklearn:
     """
-    Fit a sklearn model with output that is compatible with pymarginaleffects.
+Fit a sklearn model with output that is compatible with pymarginaleffects.
 
-    For more information, visit the website: https://marginaleffects.com/
+For more information, visit the website: https://marginaleffects.com/
 
-    Or type: `help(fit_sklearn)`
-    """
+Or type: `help(fit_sklearn)`
+"""
 
     d = listwise_deletion(formula, data=data)
 

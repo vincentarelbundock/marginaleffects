@@ -231,12 +231,12 @@ def fit_linearmodels(
     kwargs_fit: Dict[str, Any] = {},
 ) -> ModelLinearmodels:
     """
-    Fit a linearmodels model with output that is compatible with pymarginaleffects.
+Fit a linearmodels model with output that is compatible with pymarginaleffects.
 
-    For more information, visit the website: https://marginaleffects.com/
+For more information, visit the website: https://marginaleffects.com/
 
-    Or type: `help(fit_linearmodels)`
-    """
+Or type: `help(fit_linearmodels)`
+"""
     linearmodels_formula, effects = parse_linearmodels_formula(formula)
 
     d = listwise_deletion(linearmodels_formula, data=data)

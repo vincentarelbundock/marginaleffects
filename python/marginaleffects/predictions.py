@@ -219,12 +219,12 @@ def predictions(
     **kwargs,
 ):
     """
-    `predictions()` and `avg_predictions()` predict outcomes using a fitted model on a specified scale for given combinations of values of predictor variables, such as their observed values, means, or factor levels (reference grid).
+`predictions()` and `avg_predictions()` predict outcomes using a fitted model on a specified scale for given combinations of values of predictor variables, such as their observed values, means, or factor levels (reference grid).
 
-    For more information, visit the website: https://marginaleffects.com/
+For more information, visit the website: https://marginaleffects.com/
 
-    Or type: `help(predictions)`
-    """
+Or type: `help(predictions)`
+"""
     if "hypotheses" in kwargs:
         if hypothesis is not None:
             raise ValueError("Specify at most one of `hypothesis` or `hypotheses`.")
@@ -314,12 +314,12 @@ def avg_predictions(
     **kwargs,
 ):
     """
-    `predictions()` and `avg_predictions()` predict outcomes using a fitted model on a specified scale for given combinations of values of predictor variables, such as their observed values, means, or factor levels (reference grid).
+`predictions()` and `avg_predictions()` predict outcomes using a fitted model on a specified scale for given combinations of values of predictor variables, such as their observed values, means, or factor levels (reference grid).
 
-    For more information, visit the website: https://marginaleffects.com/
+For more information, visit the website: https://marginaleffects.com/
 
-    Or type: `help(avg_predictions)`
-    """
+Or type: `help(avg_predictions)`
+"""
     return call_avg(
         predictions,
         model=model,

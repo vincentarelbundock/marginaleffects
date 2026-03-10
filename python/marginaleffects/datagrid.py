@@ -25,12 +25,12 @@ def datagrid(
     **kwargs,
 ):
     """
-    Generate a data grid of user-specified values for use in the 'newdata' argument of the 'predictions()', 'comparisons()', and 'slopes()' functions.
+Generate a data grid of user-specified values for use in the 'newdata' argument of the 'predictions()', 'comparisons()', and 'slopes()' functions.
 
-    For more information, visit the website: https://marginaleffects.com/
+For more information, visit the website: https://marginaleffects.com/
 
-    Or type: `help(datagrid)`
-    """
+Or type: `help(datagrid)`
+"""
 
     # allow predictions() to pass `model` argument automatically
     if model is None and newdata is None:

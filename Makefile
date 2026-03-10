@@ -96,7 +96,6 @@ py-document: ## Py: inject docstrings and populate website/man/python
 	cd python && uv run marginaleffects/inject_docs.py
 	@mkdir -p website/man/python
 	cd python && uv run marginaleffects/docs.py ../website/man/python
-	cd python && git checkout -- marginaleffects/
 	@for file in website/man/python/*.qmd; do \
 		awk '/^#/ {print $$0 " {.unnumbered}"} !/^#/ {print}' "$$file" > "$$file.tmp" && mv "$$file.tmp" "$$file"; \
 	done

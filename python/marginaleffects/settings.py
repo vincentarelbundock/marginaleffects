@@ -14,29 +14,12 @@ _MISSING = object()
 
 def autodiff(enabled: Optional[bool] = _MISSING) -> Optional[bool]:
     """
-    Configure or inspect JAX-based automatic differentiation.
+Configure or inspect JAX-based automatic differentiation.
 
-    Parameters
-    ----------
-    enabled : bool or None, optional
-        - True: Force JAX usage (error if JAX not installed)
-        - False: Disable JAX, always use finite differences
-        - None: Reset to auto-detect (use JAX if available and model compatible)
-        - Omitted: Return the current autodiff state without mutating it
+For more information, visit the website: https://marginaleffects.com/
 
-    Returns
-    -------
-    bool or None
-        The effective autodiff setting after applying the request.
-
-    Examples
-    --------
-    >>> import marginaleffects as me
-    >>> me.autodiff(False)   # Disable JAX
-    >>> me.autodiff(True)    # Force JAX (raises if not installed)
-    >>> me.autodiff(None)    # Reset to auto-detect
-    >>> me.autodiff()        # Inspect current state
-    """
+Or type: `help(autodiff)`
+"""
     if enabled is _MISSING:
         return _get_autodiff()
 
@@ -50,15 +33,23 @@ def autodiff(enabled: Optional[bool] = _MISSING) -> Optional[bool]:
 
 def set_autodiff(enabled: Optional[bool]) -> None:
     """
-    Backwards-compatible wrapper around autodiff().
-    """
+Backwards-compatible wrapper around autodiff().
+
+For more information, visit the website: https://marginaleffects.com/
+
+Or type: `help(set_autodiff)`
+"""
     autodiff(enabled)
 
 
 def get_autodiff() -> Optional[bool]:
     """
-    Backwards-compatible accessor that returns autodiff() state.
-    """
+Backwards-compatible accessor that returns autodiff() state.
+
+For more information, visit the website: https://marginaleffects.com/
+
+Or type: `help(get_autodiff)`
+"""
     return autodiff()
 
 
