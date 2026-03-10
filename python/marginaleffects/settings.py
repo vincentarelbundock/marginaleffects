@@ -14,12 +14,12 @@ _MISSING = object()
 
 def autodiff(enabled: Optional[bool] = _MISSING) -> Optional[bool]:
     """
-Configure or inspect JAX-based automatic differentiation.
+    Configure or inspect JAX-based automatic differentiation.
 
-For more information, visit the website: https://marginaleffects.com/
+    For more information, visit the website: https://marginaleffects.com/
 
-Or type: `help(autodiff)`
-"""
+    Or type: `help(autodiff)`
+    """
     if enabled is _MISSING:
         return _get_autodiff()
 
@@ -33,23 +33,23 @@ Or type: `help(autodiff)`
 
 def set_autodiff(enabled: Optional[bool]) -> None:
     """
-Backwards-compatible wrapper around autodiff().
+    Backwards-compatible wrapper around autodiff().
 
-For more information, visit the website: https://marginaleffects.com/
+    For more information, visit the website: https://marginaleffects.com/
 
-Or type: `help(set_autodiff)`
-"""
+    Or type: `help(set_autodiff)`
+    """
     autodiff(enabled)
 
 
 def get_autodiff() -> Optional[bool]:
     """
-Backwards-compatible accessor that returns autodiff() state.
+    Backwards-compatible accessor that returns autodiff() state.
 
-For more information, visit the website: https://marginaleffects.com/
+    For more information, visit the website: https://marginaleffects.com/
 
-Or type: `help(get_autodiff)`
-"""
+    Or type: `help(get_autodiff)`
+    """
     return autodiff()
 
 

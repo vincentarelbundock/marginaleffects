@@ -117,31 +117,19 @@ This function streamlines the process of fitting sklearn models by:
 4. Fitting the model with specified options
 
 ## Parameters
+
 {models_formula}
-`data`: (pandas.DataFrame or polars.DataFrame) Dataframe with the response variable and predictors.
 
-**Important:** All categorical variables must be explicitly converted to `Categorical` or `Enum` dtype before fitting. String columns are not accepted in model formulas.
+- `data`: (pandas.DataFrame or polars.DataFrame) Dataframe with the response variable and predictors.
 
-For Polars DataFrames:
-```python
-import polars as pl
+{models_categorical_requirement}
 
-# Option 1: Cast to Categorical (simplest)
-df = df.with_columns(pl.col("region").cast(pl.Categorical))
+- `engine`: (callable) sklearn model class (e.g., LinearRegression, LogisticRegression).
 
-# Option 2: Cast to Enum with explicit category order (recommended for control)
-categories = ["<18", "18 to 35", ">35"]
-df = df.with_columns(pl.col("age_group").cast(pl.Enum(categories)))
-```
-
-For pandas DataFrames:
-```python
-df["region"] = df["region"].astype("category")
-```
-
-`engine`: (callable) sklearn model class (e.g., LinearRegression, LogisticRegression)
 {models_kwargs_engine}
+
 {models_fit_returns_Sklearn}
+
 ## Examples
 
 ```{{python}}
@@ -205,6 +193,7 @@ avg_predictions(mod, newdata=test, by="unit_type")
 
 avg_comparisons(mod, variables={{"bedrooms": 2}}, newdata=test)
 ```
+
 {models_notes_sklearn}""")
 def fit_sklearn(formula, data: pl.DataFrame, engine) -> ModelSklearn:
     d = listwise_deletion(formula, data=data)

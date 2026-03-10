@@ -9,8 +9,28 @@ import copy
 @doc("""
 # `plot_comparisons()`
 {param_plot_intro_comparisons}
+
 ## Parameters
-{param_model}{param_variables_plot_contrast}{param_newdata_plot_comparisons}{param_condition_comparisons}{param_by_plot_comparisons}{param_wts}{param_vcov}{param_transform}{param_draw}{param_gray}""")
+
+{param_model}
+
+{param_variables_plot_contrast}
+
+{param_newdata_plot_comparisons}
+
+{param_condition_comparisons}
+
+{param_by_plot_comparisons}
+
+{param_wts}
+
+{param_vcov}
+
+{param_transform}
+
+{param_draw}
+
+{param_gray}""")
 def plot_comparisons(
     model,
     condition=None,

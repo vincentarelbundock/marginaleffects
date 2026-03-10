@@ -199,35 +199,22 @@ This function streamlines the process of fitting statsmodels models by:
 4. Fitting the model with specified options
 
 ## Parameters
+
 {models_formula}
-`data`: (pandas.DataFrame or polars.DataFrame) Dataframe with the response variable and predictors.
 
-**Important:** All categorical variables must be explicitly converted to `Categorical` or `Enum` dtype before fitting. String columns are not accepted in model formulas.
+- `data`: (pandas.DataFrame or polars.DataFrame) Dataframe with the response variable and predictors.
 
-For Polars DataFrames:
-```python
-import polars as pl
+{models_categorical_requirement}
 
-# Option 1: Cast to Categorical (simplest)
-df = df.with_columns(pl.col("region").cast(pl.Categorical))
+- `engine`: (callable) statsmodels model class (e.g., OLS, Logit).
 
-# Option 2: Cast to Enum with explicit category order (recommended for control)
-categories = ["<18", "18 to 35", ">35"]
-df = df.with_columns(pl.col("age_group").cast(pl.Enum(categories)))
-```
-
-For pandas DataFrames:
-```python
-df["region"] = df["region"].astype("category")
-```
-
-`engine`: (callable) statsmodels model class (e.g., OLS, Logit)
 {models_kwargs_engine}
-`kwargs_fit`: (dict, default={{}}) Additional arguments passed to the model's fit method.
 
-* Example: `{{'cov_type': 'HC3'}}`
+- `kwargs_fit`: (dict, default={{}}) Additional arguments passed to the model's fit method.
+    - Example: `{{'cov_type': 'HC3'}}`
 
 {models_fit_returns_Statsmodels}
+
 ## Examples
 
 ```python
@@ -249,6 +236,7 @@ predictions(model_robust)
 slopes(model_robust)
 comparisons(model_robust)
 ```
+
 {models_notes_statsmodels}""")
 @validate_types
 def fit_statsmodels(

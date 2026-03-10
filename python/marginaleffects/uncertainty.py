@@ -67,7 +67,7 @@ def get_z_p_ci(df, model, conf_level, hypothesis_null=0):
     df = df.with_columns(
         pl.col("statistic")
         .map_batches(
-            lambda x: (2 * (1 - stats.t.cdf(np.abs(x), dof))), return_dtype=pl.Float64
+            lambda x: 2 * (1 - stats.t.cdf(np.abs(x), dof)), return_dtype=pl.Float64
         )
         .alias("p_value")
     )

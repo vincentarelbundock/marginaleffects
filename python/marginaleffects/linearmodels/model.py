@@ -236,45 +236,27 @@ This function streamlines the process of fitting linearmodels panel models by:
 
 ## Parameters
 
-`formula`: (str) Model formula with optional panel effects terms.
+- `formula`: (str) Model formula with optional panel effects terms.
+    - Supported effects are:
+        - EntityEffects: Entity-specific fixed effects
+        - TimeEffects: Time-specific fixed effects
+        - FixedEffects: Alias for EntityEffects
+    - Example: `"y ~ x1 + x2 + EntityEffects"`
 
-- Supported effects are:
-    - EntityEffects: Entity-specific fixed effects
-    - TimeEffects: Time-specific fixed effects
-    - FixedEffects: Alias for EntityEffects
-- Example: `"y ~ x1 + x2 + EntityEffects"`
+- `data` : (pandas.DataFrame or polars.DataFrame) Panel data with MultiIndex (entity, time) or regular DataFrame with entity and time columns.
 
-`data` : (pandas.DataFrame or polars.DataFrame) Panel data with MultiIndex (entity, time) or regular DataFrame with entity and time columns.
+{models_categorical_requirement}
 
-**Important:** All categorical variables must be explicitly converted to `Categorical` or `Enum` dtype before fitting. String columns are not accepted in model formulas.
+- `engine`: (callable) linearmodels model class (e.g., PanelOLS, BetweenOLS, FirstDifferenceOLS)
 
-For Polars DataFrames:
-```python
-import polars as pl
+- `kwargs_engine`: (dict, default={{}}) Additional arguments passed to the model initialization.
+    - Example: `{{'weights': weights_array}}`
 
-# Option 1: Cast to Categorical (simplest)
-df = df.with_columns(pl.col("region").cast(pl.Categorical))
+- `kwargs_fit`: (dict, default={{}}) Additional arguments passed to the model's fit method.
+    - Example: `{{'cov_type': 'robust'}}`
 
-# Option 2: Cast to Enum with explicit category order (recommended for control)
-categories = ["<18", "18 to 35", ">35"]
-df = df.with_columns(pl.col("age_group").cast(pl.Enum(categories)))
-```
-
-For pandas DataFrames:
-```python
-df["region"] = df["region"].astype("category")
-```
-
-`engine`: (callable) linearmodels model class (e.g., PanelOLS, BetweenOLS, FirstDifferenceOLS)
-
-`kwargs_engine`: (dict, default={{}}) Additional arguments passed to the model initialization.
-
-* Example: `{{'weights': weights_array}}`
-
-`kwargs_fit`: (dict, default={{}}) Additional arguments passed to the model's fit method.
-
-* Example: `{{'cov_type': 'robust'}}`
 {models_fit_returns_Linearmodels}
+
 ## Examples
 
 ```python
@@ -291,6 +273,7 @@ model_robust = fit_linearmodels(
 
 predictions(model_robust)
 ```
+
 {models_notes_linearmodels}""")
 def fit_linearmodels(
     formula: str,

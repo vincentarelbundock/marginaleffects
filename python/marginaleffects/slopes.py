@@ -7,8 +7,8 @@ from .comparisons import comparisons
 
 `slopes()` and `avg_slopes()` estimate unit-level (conditional) partial derivative of the regression equation with respect to a regressor of interest.
 
-* `slopes()`: unit-level (conditional) estimates.
-* `avg_slopes()`: average (marginal) estimates.
+- `slopes()`: unit-level (conditional) estimates.
+- `avg_slopes()`: average (marginal) estimates.
 
 The newdata argument and the `datagrid()` function can be used to control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.
 
@@ -19,11 +19,32 @@ See the package website and vignette for examples:
 
 ## Parameters
 {param_model}
-`variables`: (str, list, dictionary) Specifies what variables (columns) to vary in order to make the slopes.
+- `variables`: (str, list, dictionary) Specifies what variables (columns) to vary in order to make the slopes.
+    - str: Variable for which to compute the slopes for.
+    - NoneType: Slopes are computed for all regressors in the model object (can be slow)
 
-- str: Variable for which to compute the slopes for.
-- NoneType: Slopes are computed for all regressors in the model object (can be slow)
-{param_newdata_slope}{param_slope}{param_vcov}{param_conf_level}{param_by}{param_hypothesis}{param_equivalence}{param_wts}{param_eps}{param_eps_vcov}{returns}
+{param_newdata_slope}
+
+{param_slope}
+
+{param_vcov}
+
+{param_conf_level}
+
+{param_by}
+
+{param_hypothesis}
+
+{param_equivalence}
+
+{param_wts}
+
+{param_eps}
+
+{param_eps_vcov}
+
+{returns}
+
 ## Examples
 ```py
 from marginaleffects import *
@@ -56,7 +77,9 @@ avg_slopes(mod, variables = "distance")
 ```
 
 ## Details
-{details_tost}{details_order_of_operations}""")
+{details_tost}
+
+{details_order_of_operations}""")
 def slopes(
     model,
     variables=None,

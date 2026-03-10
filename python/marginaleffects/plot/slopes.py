@@ -8,8 +8,26 @@ from ..docs import doc
 @doc("""
 # `plot_slopes()`
 {param_plot_intro_slopes}
+
 ## Parameters
-{param_model}{param_variables_plot_slope}{param_condition_slopes}{param_by_plot_slopes}{param_draw}{param_newdata_plot_slopes}{param_wts}{param_vcov}{param_gray}""")
+
+{param_model}
+
+{param_variables_plot_slope}
+
+{param_condition_slopes}
+
+{param_by_plot_slopes}
+
+{param_draw}
+
+{param_newdata_plot_slopes}
+
+{param_wts}
+
+{param_vcov}
+
+{param_gray}""")
 def plot_slopes(
     model,
     condition=None,

@@ -8,8 +8,29 @@ import copy
 @doc("""
 # `plot_predictions()`
 {param_plot_intro_predictions}
+
 ## Parameters
-{param_model}{param_condition_predictions}{param_by_plot_predictions}{param_draw}{param_newdata_plot_predictions}{param_vcov}{param_wts}{param_transform}{param_points}{param_gray}
+
+{param_model}
+
+{param_condition_predictions}
+
+{param_by_plot_predictions}
+
+{param_draw}
+
+{param_newdata_plot_predictions}
+
+{param_vcov}
+
+{param_wts}
+
+{param_transform}
+
+{param_points}
+
+{param_gray}
+
 ## Examples
 ```py
 from marginaleffects import *

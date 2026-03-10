@@ -205,8 +205,8 @@ def _predictions_fd(
 
 `predictions()` and `avg_predictions()` predict outcomes using a fitted model on a specified scale for given combinations of values of predictor variables, such as their observed values, means, or factor levels (reference grid).
 
-* `predictions()`: unit-level (conditional) estimates.
-* `avg_predictions()`: average (marginal) estimates.
+- `predictions()`: unit-level (conditional) estimates.
+- `avg_predictions()`: average (marginal) estimates.
 
 See the package website and vignette for examples:
 
@@ -214,7 +214,31 @@ See the package website and vignette for examples:
 - https://marginaleffects.com
 
 ## Parameters
-{param_model}{param_variables_prediction}{param_newdata_prediction}{param_by}{param_transform}{param_hypothesis}{param_wts}{param_vcov}{param_equivalence}{param_conf_level}{param_eps_vcov}{returns}
+
+{param_model}
+
+{param_variables_prediction}
+
+{param_newdata_prediction}
+
+{param_by}
+
+{param_transform}
+
+{param_hypothesis}
+
+{param_wts}
+
+{param_vcov}
+
+{param_equivalence}
+
+{param_conf_level}
+
+{param_eps_vcov}
+
+{returns}
+
 ## Examples
 ```py
 from marginaleffects import *
@@ -239,7 +263,9 @@ avg_predictions(mod, hypothesis = 3)
 ```
 
 ## Details
-{details_tost}{details_order_of_operations}""")
+{details_tost}
+
+{details_order_of_operations}""")
 def predictions(
     model,
     variables=None,

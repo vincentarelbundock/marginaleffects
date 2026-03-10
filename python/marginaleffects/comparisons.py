@@ -321,22 +321,48 @@ def _collect_comparison_functions(variables):
 
 `comparisons()` and `avg_comparisons()` are functions for predicting the outcome variable at different regressor values and comparing those predictions by computing a difference, ratio, or some other function. These functions can return many quantities of interest, such as contrasts, differences, risk ratios, changes in log odds, lift, slopes, elasticities, average treatment effect (on the treated or untreated), etc.
 
-* `comparisons()`: unit-level (conditional) estimates.
-* `avg_comparisons()`: average (marginal) estimates.
+- `comparisons()`: unit-level (conditional) estimates.
+- `avg_comparisons()`: average (marginal) estimates.
 
 See the package website and vignette for examples:
 
-* https://marginaleffects.com/chapters/comparisons.html
-* https://marginaleffects.com
+- https://marginaleffects.com/chapters/comparisons.html
+- https://marginaleffects.com
 
 ## Parameters
-{param_model}{param_variables_comparison}{param_newdata_comparison}
-* `comparison`: (str or callable) String specifying how pairs of predictions should be compared, or a callable function to compute custom estimates. See the Comparisons section below for definitions of each transformation.
 
-  * Acceptable strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, lift, liftavg, liftavg, expdydx, expdydxavg, expdydxavgwts
+{param_model}
 
-  * Callable: A function that takes `hi`, `lo`, `eps`, `x`, `y`, and `w` as arguments and returns a numeric array. This allows computing custom comparisons like `lambda hi, lo, eps, x, y, w: hi / lo` for ratios or `lambda hi, lo, eps, x, y, w: (hi - lo) / lo * 100` for percent changes.
-{param_by}{param_transform}{param_hypothesis}{param_wts}{param_vcov}{param_equivalence}{param_cross}{param_conf_level}{param_eps}{param_eps_vcov}{returns}
+{param_variables_comparison}
+
+{param_newdata_comparison}
+
+- `comparison`: (str or callable) String specifying how pairs of predictions should be compared, or a callable function to compute custom estimates. See the Comparisons section below for definitions of each transformation.
+    - Acceptable strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, lift, liftavg, liftavg, expdydx, expdydxavg, expdydxavgwts
+    - Callable: A function that takes hi, lo, eps, x, y, and w as arguments and returns a numeric array. This allows computing custom comparisons like `lambda hi, lo, eps, x, y, w: hi / lo` for ratios or `lambda hi, lo, eps, x, y, w: (hi - lo) / lo * 100` for percent changes.
+
+{param_by}
+
+{param_transform}
+
+{param_hypothesis}
+
+{param_wts}
+
+{param_vcov}
+
+{param_equivalence}
+
+{param_cross}
+
+{param_conf_level}
+
+{param_eps}
+
+{param_eps_vcov}
+
+{returns}
+
 ## Examples
 ```py
 from marginaleffects import *
@@ -375,7 +401,9 @@ comparisons(model, variables="distance",
 ```
 
 ## Details
-{details_tost}{details_order_of_operations}""")
+{details_tost}
+
+{details_order_of_operations}""")
 def comparisons(
     model,
     variables=None,

@@ -53,9 +53,9 @@ def convert_to_categorical_pandas(df_pd, columns, numeric_order=True):
                 # Numeric ordering: sort as numbers then convert to strings
                 categories = sorted(
                     unique_vals,
-                    key=lambda x: float(x)
-                    if x.replace(".", "").replace("-", "").isdigit()
-                    else x,
+                    key=lambda x: (
+                        float(x) if x.replace(".", "").replace("-", "").isdigit() else x
+                    ),
                 )
             else:
                 # Lexical ordering: sort as strings
