@@ -93,7 +93,7 @@ Grid of predictor values at which we evaluate the comparisons.
 <li> Warning: Avoid modifying your dataset between fitting the model and calling a <code>marginaleffects</code> function. This can sometimes lead to unexpected results.
 
 </li>
-<li> <code>NULL</code> (default): Unit-level contrasts for each observed value in the dataset (empirical distribution). The dataset is retrieved using <code>insight::get_data()</code>, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
+<li> <code>NULL</code> (default): Unit-level contrasts for each observed value in the dataset (empirical distribution). The dataset is retrieved using <code>get_modeldata()</code>, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 
 </li>
 <li> data frame: Unit-level contrasts for each row of the <code>newdata</code> data frame.

@@ -23,7 +23,7 @@ Get predicted values from a model object (internal function)
 ## Default S3 method:
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   newparams = NULL,
@@ -38,7 +38,7 @@ get_predict(model, newdata, ...)
 ## S3 method for class 'polr'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "probs",
   mfx = NULL,
   ...
@@ -47,14 +47,14 @@ get_predict(
 ## S3 method for class 'glmmPQL'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   ...
 )
 
 ## S3 method for class 'lda'
-get_predict(model, newdata = insight::get_data(model), type = "class", ...)
+get_predict(model, newdata = get_modeldata(model), type = "class", ...)
 
 ## S3 method for class 'MCMCglmm'
 get_predict(
@@ -69,27 +69,27 @@ get_predict(
 )
 
 ## S3 method for class 'lm'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'glm'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'afex_aov'
 get_predict(model, newdata = NULL, ...)
 
 ## S3 method for class 'glimML'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'betareg'
 get_predict(model, newdata, type = "response", ...)
 
 ## S3 method for class 'bife'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'biglm'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   ...
@@ -98,7 +98,7 @@ get_predict(
 ## S3 method for class 'multinom'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "probs",
   mfx = NULL,
   ...
@@ -107,14 +107,14 @@ get_predict(
 ## S3 method for class 'brmultinom'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "probs",
   mfx = NULL,
   ...
 )
 
 ## S3 method for class 'brmsfit'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'crch'
 get_predict(model, newdata = NULL, type = "location", ...)
@@ -125,7 +125,7 @@ get_predict(model, newdata = NULL, ...)
 ## S3 method for class 'fixest'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   ...
@@ -135,12 +135,12 @@ get_predict(
 get_predict(model, newdata, type, ...)
 
 ## S3 method for class 'gamlss'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'glmmTMB'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   newparams = NULL,
@@ -154,19 +154,19 @@ get_predict(model, newdata, type = "response", ...)
 get_predict(model, newdata, type = "response", ...)
 
 ## S3 method for class 'merMod'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'lmerModLmerTest'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'lmerMod'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'mblogit'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'mhurdle'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'mlogit'
 get_predict(model, newdata, ...)
@@ -177,22 +177,22 @@ get_predict(model, newdata, type = NULL, ...)
 ## S3 method for class 'nestedLogit'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   submodel = NULL,
   ...
 )
 
 ## S3 method for class 'clm'
-get_predict(model, newdata = insight::get_data(model), type = "prob", ...)
+get_predict(model, newdata = get_modeldata(model), type = "prob", ...)
 
 ## S3 method for class 'rq'
-get_predict(model, newdata = insight::get_data(model), type = NULL, ...)
+get_predict(model, newdata = get_modeldata(model), type = NULL, ...)
 
 ## S3 method for class 'rms'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = NULL,
   mfx = NULL,
   ...
@@ -201,7 +201,7 @@ get_predict(
 ## S3 method for class 'orm'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = NULL,
   mfx = NULL,
   ...
@@ -210,7 +210,7 @@ get_predict(
 ## S3 method for class 'lrm'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = NULL,
   mfx = NULL,
   ...
@@ -219,7 +219,7 @@ get_predict(
 ## S3 method for class 'ols'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = NULL,
   mfx = NULL,
   ...
@@ -228,14 +228,14 @@ get_predict(
 ## S3 method for class 'rlmerMod'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   ...
 )
 
 ## S3 method for class 'stanreg'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 
 ## S3 method for class 'stpm2'
 get_predict(model, newdata = NULL, ...)
@@ -252,7 +252,7 @@ get_predict(model, newdata = NULL, ...)
 ## S3 method for class 'svyolr'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "probs",
   mfx = NULL,
   ...
@@ -261,7 +261,7 @@ get_predict(
 ## S3 method for class 'svyglm'
 get_predict(
   model,
-  newdata = insight::get_data(model),
+  newdata = get_modeldata(model),
   type = "response",
   mfx = NULL,
   newparams = NULL,
@@ -271,7 +271,7 @@ get_predict(
 )
 
 ## S3 method for class 'coxph'
-get_predict(model, newdata = insight::get_data(model), type = "lp", ...)
+get_predict(model, newdata = get_modeldata(model), type = "lp", ...)
 
 ## S3 method for class 'model_fit'
 get_predict(model, newdata, type = NULL, ...)
@@ -280,7 +280,7 @@ get_predict(model, newdata, type = NULL, ...)
 get_predict(model, newdata, type = NULL, ...)
 
 ## S3 method for class 'tobit1'
-get_predict(model, newdata = insight::get_data(model), type = "response", ...)
+get_predict(model, newdata = get_modeldata(model), type = "response", ...)
 </code></pre>
 
 
@@ -300,7 +300,7 @@ Grid of predictor values at which we evaluate the slopes.
 <li> Warning: Please avoid modifying your dataset between fitting the model and calling a <code>marginaleffects</code> function. This can sometimes lead to unexpected results.
 
 </li>
-<li> <code>NULL</code> (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using <code>insight::get_data()</code>, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
+<li> <code>NULL</code> (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using <code>get_modeldata()</code>, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 
 </li>
 <li> <code>datagrid()</code> call to specify a custom grid of regressors. For example:
