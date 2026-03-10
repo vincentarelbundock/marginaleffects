@@ -2,7 +2,7 @@
 
 <img src="https://marginaleffects.com/assets/zoo_header_m2m.png" alt="marginaleffects" width="70%">
 
-# [www.marginaleffects.com](https://www.marginaleffects.com)
+# [marginaleffects.com](https://www.marginaleffects.com)
 
 `marginaleffects` is a package for `R` and `Python` that makes it easy to interpret the results of statistical and machine learning models. Users can compute predictions, comparisons (contrasts, risk ratios, etc.), slopes (partial derivatives and marginal effects), and hypothesis tests for over 100 classes of statistical and machine learning models.
 
