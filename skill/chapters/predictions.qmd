@@ -1,0 +1,228 @@
+## Start Here: Manual Pages
+- R: open function help with `?predictions`, `?avg_predictions`, `?plot_predictions`, `?datagrid`; also see `?inferences` for resampling-based uncertainty.
+- Python: inspect docstrings with `help(predictions)`, `help(avg_predictions)`, `help(plot_predictions)`, `help(datagrid)` from the `marginaleffects` package.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+## Original Chapter Summary
+
+This chapter defined a "prediction" as the outcome expected by a fitted model for a given combination of predictor values. A prediction is a useful descriptive quantity. It is an expectation or best guess for different individuals, units, or subgroups of the population of interest.
+
+The `predictions()` function from the `marginaleffects` package computes predictions for a wide range of models. `avg_predictions()` aggregates unit-level predictions. `plot_predictions()` displays predictions visually.
+
+To clearly define predictions and attendant tests, analysts must make five decisions.
+
+First, the *Quantity*.
+
+- Predictions can be computed on different scales, depending on the type of statistical model. In generalized linear models (GLM), for example, one can make predictions on the "link" or "response" scales. In most cases, analysts should report predictions on the same scale as the outcome variable, since this is most natural for readers.
+- The scale of predictions is controlled by the `type` argument.
+
+Second, the *Predictors*.
+
+- Predictions are conditional quantities, that is, they depend on the values of all the predictors in a model.
+- Analysts can make predictions for different combinations of predictor values, or grids: empirical, interesting, representative, balanced, or counterfactual.
+- The predictor grid is defined by the `newdata` argument and the `datagrid()` function.
+
+Third, the *Aggregation*.
+
+- To simplify the presentation of results, it often makes sense to report average predictions. Analysts can choose between different aggregation schemes:
+    - Unit-level predictions (no aggregation)
+    - Average predictions
+    - Average predictions by subgroup
+    - Weighted average of predictions
+- Predictions can be aggregated using the `avg_predictions()` function and the `by` argument.
+
+Fourth, the *Uncertainty*.
+
+- In `marginaleffects`, the `vcov` argument allows analysts to report classical, robust, or clustered standard errors around predictions.
+- The `inferences()` function can compute uncertainty intervals via bootstrapping, simulation-based inference, or conformal prediction.
+
+Fifth, the *Test*.
+
+- A null hypothesis test aims to determine if a prediction (or a function of predictions) is different from a null hypothesis value. For example, an analyst may wish to check if two predictions are different from one another. Null hypothesis tests can be conducted using the `hypothesis` argument.
+- An equivalence test aims to determine if a prediction (or a function of predictions) is similar to a reference value. Equivalence tests can be conducted using the `equivalence` argument.
+
+# Predictions {#sec-predictions}
+- A prediction is the outcome expected by a fitted model for a given combination of predictor values. This is akin to a "fitted value," but not a "forecast" or "out-of-sample prediction."
+- Model-based predictions answer questions like: What is the expected probability that a 50-year-old smoker develops heart disease? What is the expected turnout in municipal elections?
+- Predictions are an intrinsically interesting descriptive quantity and a fundamental building block for comparisons and slopes.
+- Predictions can be computed on different scales (e.g., "link" or "response" in GLMs). Analysts should generally report on the response scale.
+- The scale of predictions is controlled by the `type` argument.
+- Predictions are conditional quantities: they depend on the values of all predictors in a model.
+- Analysts can make predictions for different grids of predictor values: empirical, interesting, representative, balanced, or counterfactual.
+- The chapter proceeds through the five components of the conceptual framework: quantity, predictors, aggregation, uncertainty, and tests.
+
+## Quantity {#sec-predictions_quantity}
+- The chapter illustrates predictions using a logistic regression model on the Thornton (2008) HIV dataset.
+- The model predicts the probability that a participant travels to a test center to learn their HIV status, as a function of monetary incentive and age category.
+- The logistic function $g(x) = \frac{1}{1 + e^{-x}}$ maps the linear predictor to the $[0,1]$ probability scale.
+- Link scale predictions (log odds) can be unintuitive; response scale predictions (probabilities) are easier to interpret and compare to observed outcomes.
+- The `predictions()` function from `marginaleffects` automates prediction across 100+ model classes.
+- To use `predictions()`, build a data frame (grid) of predictor values and pass it via the `newdata` argument.
+- The `type` argument controls whether predictions are on the link or response scale; the default is the response scale.
+- Manual computation of predictions is useful pedagogically but labor-intensive; `predictions()` is the recommended approach.
+
+## Predictors {#sec-predictions_predictors}
+- Predictions are conditional quantities: to compute a prediction, the analyst must fix all right-hand-side variables (choose a grid).
+- The choice of grid depends on the researcher's goals; profiles may correspond to observed data or hypothetical units.
+- Five grid types are discussed: empirical, interesting, representative, balanced, and counterfactual.
+- The `newdata` argument and `datagrid()` function are the primary tools for defining grids.
+- Different grids can produce substantially different results, so the choice of grid matters.
+
+### Empirical grid
+- By default, `predictions()` uses the full original dataset as a grid (the empirical distribution of predictors), computing fitted values for every row.
+- The returned object is a standard data frame with fitted values, confidence intervals, and test statistics.
+- By default, $p$ values in the output correspond to a test against a null of zero.
+- Standard data manipulation tools (subsetting, column extraction) can be applied to the output.
+- This is equivalent to computing classical "fitted values."
+
+### Interesting grid
+- Analysts can build a custom grid of predictor values with particular scientific or commercial interest.
+- The `datagrid()` function creates a grid with unspecified variables held at their means (numeric) or modes (categorical).
+- Functions can be passed to `datagrid()` to programmatically define variable values (e.g., `unique`, `max`).
+- When `datagrid()` is called inside a `marginaleffects` function, the `model` argument can be omitted.
+- The grid is passed to `predictions()` via the `newdata` argument.
+
+### Representative grid
+- A "Prediction at the Mean" computes a prediction for a hypothetical individual with mean numeric and modal categorical characteristics.
+- This is achieved via `datagrid()` with no specified variables, or the `newdata = "mean"` shortcut.
+- Representative grids can be useful, but the "average" individual may be fictional and the prediction may not be practically relevant.
+- Analysts should consider whether anyone in the sample actually resembles the representative profile.
+- This approach returns a single prediction for one representative unit.
+
+### Balanced grid
+- A balanced grid includes one row for each combination of unique values of categorical/binary predictors, with numeric variables at their means.
+- Created via `datagrid()` with `unique` for categoricals and `mean` for numerics, or the `newdata = "balanced"` shortcut.
+- Commonly used in experimental settings to give equal weight to each treatment combination.
+- Balanced grids are important for computing marginal means.
+- Results from a balanced grid can differ substantially from those on an empirical grid.
+
+### Counterfactual grid {#sec-predictions_grid_counterfactual}
+- A counterfactual grid duplicates the full dataset, fixing a focal variable to each of its possible values.
+- This allows answering: "What would the predicted outcomes be if everyone received treatment vs. control?"
+- Created via `datagrid()` with `grid_type="counterfactual"`, or via the `variables` argument of `predictions()`.
+- Each individual gets a prediction under each counterfactual scenario, enabling individual-level causal reasoning.
+- In the Thornton example, every participant's predicted probability increases when `incentive` is set to 1 vs. 0.
+
+## Aggregation {#sec-predictions_aggregation}
+- Unit-level predictions for large datasets can be unwieldy; aggregation simplifies results.
+- An "average prediction" is a two-step process: compute fitted values for each row, then average them.
+- `avg_predictions()` is a convenience wrapper that computes average predictions directly.
+- The `by` argument allows averaging within subgroups (e.g., by age category or treatment status).
+- "Marginal means" average predictions across a balanced grid, giving equal weight to each treatment combination; this is common in experimental analysis and is the default in packages like `emmeans`.
+- Results differ between empirical and balanced grids because unequal group sizes change the weighting.
+- Counterfactual aggregation uses the `variables` argument: duplicate the data under each treatment value and average predictions within each group.
+- The choice of aggregation grid (empirical, balanced, counterfactual) can substantially affect results.
+
+## Uncertainty {#sec-predictions_uncertainty}
+- The `conf_level` argument controls the confidence interval width (default: 95%).
+- The `vcov` argument specifies the type of standard errors: classical (default), heteroskedasticity-consistent (e.g., `"HC3"`), or clustered (e.g., `vcov = ~village`).
+- Classical standard errors assume errors are independently and identically distributed.
+- Robust standard errors (e.g., HC3) relax the homoskedasticity assumption.
+- Clustered standard errors account for within-group correlation in the data.
+- The `inferences()` function supports bootstrap, simulation-based inference, and conformal inference.
+- Different uncertainty methods yield slightly different intervals but generally remain in the same ballpark.
+
+## Test {#sec-predictions_test}
+- This section covers formal statistical comparison of predictions across subgroups.
+- The `hypothesis` argument is used for null hypothesis tests on predictions or functions of predictions.
+- String syntax like `"b3 - b2 = 0"` tests whether the difference between specific group predictions equals zero.
+- Formula syntax like `difference ~ sequential` compares each group to the preceding one; `difference ~ reference` compares each to the baseline group.
+- A vertical bar in the formula (e.g., `difference ~ sequential | incentive`) performs comparisons within subgroups.
+
+### Null hypothesis tests
+- Compare average predictions across subgroups using the `hypothesis` argument.
+- String-based hypotheses (e.g., `"b3 - b2 = 0"`) allow testing specific contrasts.
+- Formula-based hypotheses (e.g., `difference ~ sequential`) automate pairwise or sequential comparisons.
+- The `|` operator enables within-subgroup comparisons (e.g., sequential differences within each `incentive` group).
+- Multiple comparisons can be conducted simultaneously.
+
+### Equivalence tests
+- An equivalence test determines if a difference is small enough to be considered negligible.
+- The `equivalence` argument specifies an interval of practical equivalence (e.g., `c(-0.1, 0.1)`).
+- A small $p$ value in an equivalence test means we can reject the null that the difference is large or meaningful.
+- This flips the logic of a standard null hypothesis test: instead of testing "is this different from zero?" we test "is this close enough to zero?"
+- The interval of practical equivalence should be chosen based on domain-specific reasoning.
+
+## Visualization {#sec-predictions_visualization}
+- The `plot_predictions()` function visualizes predictions with a syntax paralleling other `marginaleffects` functions.
+- Three main strategies: unit-level distributions, marginal (averaged) predictions, and conditional predictions.
+- Output is a `ggplot2` object in R and a `plotnine` object in Python, making customization straightforward.
+- The `draw = FALSE` argument returns the raw data frame used for plotting, for fully custom visualizations.
+
+### Unit predictions
+- Histograms and ECDF plots display the full distribution of individual-level predictions.
+- The `predictions()` output is a standard data frame, compatible with any plotting library.
+- Displaying full distributions (rather than summaries) helps convey heterogeneity across predictor values.
+- Frank Harrell argues analysts should avoid one-number summaries and instead show the full distribution.
+- The `patchwork` package in R (or similar tools) can combine multiple plots.
+
+### Marginal predictions
+- The `by` argument in `plot_predictions()` computes and displays average predictions by subgroup.
+- This is equivalent to plotting the results of `avg_predictions()` with the `by` argument.
+- The `newdata` argument can be used to plot marginal means from a balanced grid.
+- Marginal prediction plots clearly show group-level differences (e.g., treatment vs. control).
+- Multiple `by` variables can be specified to display interaction patterns.
+
+### Conditional predictions
+- The `condition` argument builds a grid of representative values and plots predictions without averaging.
+- Numeric variables are spread over an equally spaced grid from min to max; categorical variables use all unique values.
+- Other predictors not in `condition` are held at their means or modes.
+- Multiple conditioning variables can be passed as a vector or list to create multi-panel or multi-line plots.
+- Specific values can be fixed via a named list (e.g., `condition = list("distance", "agecat" = ">35")`).
+
+### Customization
+- In R, `plot_predictions()` returns a `ggplot2` object; in Python, it returns a `plotnine` object.
+- Standard `ggplot2`/`plotnine` functions (themes, scales, labels, limits) can be applied to customize appearance.
+- The `rug = TRUE` argument adds a rug plot showing the distribution of predictor values.
+- Setting `draw = FALSE` returns a data frame, enabling fully custom plot construction with any graphics library.
+- This approach separates data generation from visualization, giving the analyst maximum flexibility.
+
+# Examples
+
+## Example 1: Predictions on a custom grid
+
+```r
+library(marginaleffects)
+dat <- get_dataset("thornton")
+mod <- glm(outcome ~ incentive + agecat + distance,
+  data = dat, family = binomial)
+
+predictions(mod,
+  newdata = datagrid(agecat = "18 to 35", incentive = c(0, 1)))
+```
+
+```python
+from marginaleffects import *
+from statsmodels.formula.api import logit
+
+dat = get_dataset("thornton").drop_nulls(subset=["incentive"])
+mod = logit("outcome ~ incentive + agecat + distance",
+  data=dat.to_pandas()).fit()
+
+predictions(mod,
+  newdata=datagrid(agecat="18 to 35", incentive=[0, 1]))
+```
+
+## Example 2: Average predictions by subgroup
+
+```r
+avg_predictions(mod, by = "agecat")
+```
+
+```python
+avg_predictions(mod, by="agecat")
+```
+
+## Example 3: Plotting conditional predictions
+
+```r
+plot_predictions(mod,
+  condition = c("distance", "incentive", "agecat"))
+```
+
+```python
+plot_predictions(mod,
+  condition={"distance": None, "incentive": None, "agecat": None}).show()
+```

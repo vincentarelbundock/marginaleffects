@@ -1,0 +1,188 @@
+---
+title: Conjoint Experiments
+bibliography: library.bib
+---
+
+A forced-choice conjoint experiment is a research methodology used in fields such as marketing and political science to understand how people make decisions between "profiles" characterized by multiple "attributes." Survey respondents are presented with a series of choices between different products, services, or scenarios. Each option is described by a set of attributes (e.g., price, quality, brand, features), and the levels of these attributes are varied randomly across the options presented.
+
+Consider an experiment where researchers ask survey respondents "to act as immigration officials and to decide which of a pair of immigrants they would choose for admission" [@HaiHopYam2014]. The researchers display a table with two columns that represent distinct immigrant profiles with randomized attributes. For example:
+
+```{r}
+#| include: false
+options(width=300)
+```
+
+
+```{r}
+#| echo: false
+#| tbl-cap: A forced-choice task in a conjoint experiment.
+library(tinytable)
+tmp <- data.frame(
+  "Attributes" = c("Language Skills", "Job"),
+  `Profile 1` = c("Fluent in English", "Construction worker"),
+  `Profile 2` = c("Broken English", "Nurse"),
+  check.names = FALSE
+)
+tt(tmp)
+```
+
+The survey respondent has the "task" of choosing one of the two profiles. Then, the researchers display a new task, including profiles with different randomized attributes, and the respondent chooses again. By analyzing the choices made by participants, researchers can estimate the relative importance of different attributes in the decision-making process.
+
+To illustrate, we use data published alongside the *Political Analysis* article by @HaiHopYam2014. In this experiment, each survey respondent $i$ receives several tasks $k$, in which they select one of two profiles $j$, characterized by attributes $l$. For simplicity, we consider a subset of the data with 5 tasks per respondent, 2 profiles per task, and 2 attributes per profile. 
+
+The data is structured in "long" format, with one respondent-task-profile combination per row. The dependent variable is `choice`, a binary variable which indicates if the profile in a given row was selected during a given task. The predictors are `language` skills and `job` type.
+
+Since there are 5 tasks per respondent, and two profiles per task, the dataset includes 10 rows per respondent.
+
+```{r}
+library(marginaleffects)
+dat <- get_dataset("immigration")
+dat[dat$respondent == 4, ]
+```
+
+To analyze this dataset, we estimate a linear regression model with `choice` as the outcome, and in which all predictors are interacted:
+
+```{r}
+mod <- lm(choice ~ job * language, data = dat)
+```
+
+## Marginal means
+
+A common strategy to interpret the results of a conjoint experiment is to compute marginal means. As described by @LeeHobTil2020, a "marginal mean describes the level of favorability toward profiles that have a particular feature level, ignoring all other features." 
+
+To compute marginal means, we proceed in two steps:
+
+1. Compute the predicted (i.e., fitted) values for each row in a balanced grid of predictors (see @sec-framework_grid_balanced).
+2. Marginalize (average) those predictions with respect to the variable of interest.
+
+This is easy to do with the `avg_predictions()` function. Note that we use the `vcov` argument to report clustered standard errors at the survey respondent-level.
+
+```{r}
+avg_predictions(mod, 
+  newdata = "balanced",
+  by = "language", 
+  vcov = ~respondent)
+```
+
+These results suggest that, ignoring (or averaging over) the `job` attribute, the "fluent" English speakers are chosen more often than profiles with other `language` values.
+
+To see if the average probability of selection is higher when a candidate is fluent in English, relative to when they require an interpreter, we use the `hypothesis` argument. 
+
+```{r}
+avg_predictions(mod, 
+  hypothesis = "b1 = b4",
+  newdata = "balanced",
+  by = "language", 
+  vcov = ~respondent)
+```
+```{r}
+#| echo: false
+cmp <- avg_predictions(mod, 
+  newdata = "balanced",
+  by = "language", 
+  vcov = ~respondent,
+  hypothesis = "b1 = b4")$estimate
+```
+
+This shows that the difference between estimates in those two categories is relatively large (`{r} sprintf("%.1f", cmp)` percentage points), and that this difference is statistically significant.
+
+## Average Marginal Component Effects
+
+Average Marginal Component Effects (AMCE) are defined and analyzed in @HaiHopYam2014. Roughly speaking, they can be viewed as the average effects of changing one attribute on choice, while holding all other attributes of the profile constant. To compute an AMCE, we use the `avg_comparisons()` function that we already explored in Chapters [-@sec-comparisons] and [-@sec-gcomputation].
+
+```{r}
+avg_comparisons(mod, vcov = ~respondent, newdata = "balanced")
+```
+
+```{r}
+#| include: false
+#| echo: false
+#| eval: false
+library(cjoint)
+amce_results <- amce(
+  choice ~ language * job,
+  data = dat,
+  cluster = TRUE,
+  respondent.id = "respondent")
+summary(amce_results)$amce
+```
+
+## Average Feature Choice Probability
+
+@Abr2024 introduce an alternative estimand for forced-choice conjoint experiments: the Average Feature Choice Probability (AFCP). The main difference between AMCE and AFCP lies in their approach to handling attribute comparisons.
+
+AMCE incorporates comparisons and averages over both direct and indirect attribute comparisons. For example, the estimated effect of "fluent" vs. "broken English" on choice depends not only on these two specific characteristics, but also on how they compare to "used interpreter" or "tried but unable". Thusly, @Abr2024 argue that the AMCE considers information about irrelevant attributes, and imposes a strong transitivity assumption. In some cases, AMCE can suggest positive effects even when, in direct comparisons, respondents are on average less likely to choose a profile with the feature of interest over the baseline. In contrast, AFCP focuses solely on direct comparisons between attributes, offering a more accurate representation of respondents' direct preferences without the influence of irrelevant attributes.
+
+To estimate AFCP, we first need to create new columns: `language.alt` and `job.alt`. These columns record the attributes of the alternative against which each profile was paired, in every task. We use `by()` to split the data frame into subgroups for each combination of `respondent` and `task`. Each subgroup has two rows, because there are two profiles. Then, we use `rev()` to create new variables with the opposite attributes.
+
+```{r}
+dat <- by(dat, ~ respondent + task, \(x) transform(x,
+  language.alt = rev(language),
+  job.alt = rev(job)
+))
+dat <- do.call(rbind, dat)
+```
+
+In respondent 4's first task, the first profile was "nurse" and the alternative profile was "child care provider". Thus, "nurse" appears in the first row as `job` and in the second row as `job.alt`.
+
+```{r}
+subset(dat, respondent == 4 & task == 1)
+```
+
+To estimate the AFCP, we once again fit a linear regression model. This time, the model is even more flexible. Specifically, the model allows the effect of language skills in the first profile to depend on the value of language skills in the second profile. Likewise, other attributes can influence the probability of selection differently based on attributes in the comparison profile. To achieve this, we interact `language` with `language.alt`, and `job` with `job.alt`. 
+
+```{r}
+mod <- lm(choice ~ language * language.alt + job * job.alt, data = dat)
+```
+
+As noted above, and detailed in @Abr2024, the AFCP is a choice pair-specific quantity. This means that we need to average predictions (fitted values) across covariates, within each unique pair of attributes of interest.
+
+Now we compute the AFCP by averaging fitted values by unique pairs of attributes for language (the combination of `language` and `alternative`). Since we are not interested in comparison pairs where both profiles have the same language skills, we use the `subset()` function with the `newdata` argument to select an appropriate grid.
+
+```{r}
+avg_predictions(mod, 
+  by = c("language", "language.alt"), 
+  newdata = subset(language.alt == "fluent"),
+  vcov = ~respondent)
+```
+
+```{r}
+#| warning: false
+#| message: false
+#| echo: false
+#| eval: false
+library(afcp)
+library(cjoint)
+amce_results <- amce(
+  choice ~ language * job,
+  data = dat,
+  cluster = TRUE,
+  respondent.id = "respondent")
+afcp_results <- afcp(
+  amce_results,
+  respondent.id = "respondent",
+  task.id = "task",
+  profile.id = "profile",
+  attribute = "language")
+afcp_results$afcp
+```
+
+A powerful feature of `marginaleffects` is that all its functions include a `hypothesis` argument which can be used to conduct hypothesis tests on arbitrary functions of estimates. This allows us to answer questions such as: Is the AFCP for "used intepreter vs. fluent" different from the AFCP for "broken vs. fluent"?
+
+```{r}
+avg_predictions(mod, 
+  by = c("language", "language.alt"), 
+  hypothesis = "b4 - b2 = 0",
+  newdata = subset(language.alt == "fluent"),
+  vcov = ~respondent)
+```
+```{r}
+#| echo: false
+p <- avg_predictions(mod, 
+  by = c("language", "language.alt"), 
+  hypothesis = "b4 - b2 = 0",
+  newdata = subset(language.alt == "fluent"),
+  vcov = ~respondent)
+```
+
+These findings suggest that the difference in selection probability between "interpreter" and "fluent" is smaller than the difference in selection probability between "broken" and "fluent": estimated gap of `{r} round(p$estimate, 3)`, with a $z$ statistic of `{r} round(p$statistic, 2)`. 

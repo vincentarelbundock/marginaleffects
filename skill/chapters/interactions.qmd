@@ -1,0 +1,108 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `avg_comparisons`, `comparisons`, `avg_predictions`, `predictions`, `avg_slopes`, `slopes`, `plot_predictions`, `plot_slopes`, `datagrid`, `glm`, `lm` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `avg_comparisons`, `comparisons`, `avg_predictions`, `predictions`, `avg_slopes`, `slopes`, `plot_predictions`, `plot_slopes`, `datagrid`, `logit`, `ols` for this chapter.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+# Interactions and polynomials {#sec-interactions}
+- This chapter applies the workflow, framework, and software from earlier parts of the book to interpret estimates from more complex model specifications.
+- The two main goals are addressing heterogeneity (when the association between $X$ and $Y$ varies by context or group) and increasing model flexibility (capturing non-linear relationships).
+- Heterogeneity, moderation, interaction, effect modification, and context-conditionality are used interchangeably to describe situations where the strength of association between two variables depends on a third variable (the moderator).
+- Two modeling strategies are covered: multiplicative interactions and polynomial regression.
+- Even for complex models, the same interpretive quantities -- predictions, counterfactual comparisons, and slopes -- remain the primary tools for understanding results.
+- Raw coefficient estimates from models with interactions or polynomials are typically difficult to interpret directly; the `marginaleffects` package provides functions to extract meaningful quantities instead.
+- The ideas and workflows in this chapter extend naturally to even more flexible models (e.g., GAMs, splines, machine learning), covered in later chapters.
+
+## Multiplicative interactions {#sec-interactions_multiplicative}
+- Heterogeneity means the strength of association between an explanator $X$ and an outcome $Y$ varies based on the value of a moderator $M$; the association can be stronger, weaker, or completely reversed for different values of $M$.
+- Multiplicative interactions are created by multiplying the explanator $X$ by the moderator $M$ and inserting the product as a predictor alongside the individual components.
+- A standard linear interaction model is: $Y = \beta_1 + \beta_2 X + \beta_3 M + \beta_4 X \cdot M + \varepsilon$.
+- In this model, when $M=0$ the effect of moving from $X=0$ to $X=1$ is $\beta_2$; when $M=1$ the effect is $\beta_2 + \beta_4$. The difference illustrates moderation.
+- In R, interactions are specified with `:` (e.g., `Y ~ X + M + X:M`) or the `*` shortcut (e.g., `Y ~ X * M`), which includes both main effects and their interaction.
+- In Python (statsmodels), the same `*` syntax works in model formulas: `logit("Y ~ X * M", data=df).fit()`.
+- Once models become non-linear or include multiple interactions, direct interpretation of coefficients becomes impractical; the focus should be on predictions, comparisons, and slopes.
+- The presentation strategy depends on whether $X$ and $M$ are categorical or continuous, leading to four sub-cases below.
+
+### Categorical-by-categorical
+- This sub-case addresses when both the explanator $X$ and the moderator $M$ are categorical (e.g., a binary treatment moderated by a three-level grouping variable).
+- **Marginal predictions:** Use `avg_predictions(mod, by = c("X", "M"))` to compute the average predicted outcome for each combination of $X$ and $M$. This is equivalent to computing fitted values for every row and averaging by subgroup.
+- **Visualizing predictions:** Use `plot_predictions(mod, by = c("M", "X"))` to see how predicted probabilities vary across subgroups. For instance, triangles (representing $X=1$) systematically above circles ($X=0$) indicate a positive effect of $X$.
+- **Does $X$ affect $Y$?** Use `avg_comparisons(mod, variables = "X")` to compute the average counterfactual effect of $X$ on $Y$. This modifies the dataset to fix $X=0$ and $X=1$ for all observations and averages the prediction differences.
+- **Is the effect moderated by $M$?** Add the `by` argument: `avg_comparisons(mod, variables = "X", by = "M")` to see whether the effect of $X$ differs across levels of $M$.
+- **Hypothesis testing for moderation:** Use the `hypothesis` argument to formally test whether effects differ across moderator levels, e.g., `avg_comparisons(mod, variables = "X", by = "M", hypothesis = "b3 - b1 = 0")` in R (0-indexed `"b2 - b0 = 0"` in Python).
+- A statistically significant difference (small $p$ value, large $z$ statistic) means we can reject the null hypothesis that $X$ has the same effect across sub-populations defined by $M$.
+
+### Categorical-by-continuous
+- This sub-case addresses when the explanator $X$ is categorical and the moderator $M$ is continuous.
+- **Conditional predictions:** When $M$ is continuous, reporting averages for every combination of $X$ and $M$ is impractical. Instead, use `predictions(mod, newdata = datagrid(X = c(0, 1), M = fivenum))` to evaluate predictions at Tukey's five-number summary of $M$ (minimum, lower-hinge, median, upper-hinge, maximum).
+- **Visualizing predictions:** `plot_predictions(mod, condition = c("M", "X"))` places the continuous moderator on the x-axis with separate lines for each value of $X$, revealing how the relationship changes over the range of $M$.
+- **Does $X$ affect $Y$?** Use `avg_comparisons(mod, variables = "X")` for the overall average effect.
+- **Is the effect moderated by $M$?** Use `comparisons(mod, variables = "X", newdata = datagrid(M = range))` to estimate the effect of $X$ at the minimum and maximum of $M$, then test their equality with `hypothesis = "b2 - b1 = 0"`.
+- If the difference is statistically significant, we reject the null that $M$ has no moderating effect on the relationship between $X$ and $Y$.
+
+### Continuous-by-continuous
+- This sub-case addresses when both $X$ and $M$ are continuous numeric variables.
+- **Conditional predictions:** Use `predictions(mod, newdata = datagrid(X = c(-2, 2), M = c(-1, 0, 1)))` to evaluate predicted outcomes at meaningful combinations of $X$ and $M$.
+- **Visualizing predictions:** `plot_predictions(mod, condition = c("X", "M"))` plots predicted outcomes with the focal variable on the x-axis and lines for different moderator values, revealing how the relationship can flip direction depending on $M$.
+- **Does $X$ affect $Y$?** Since both variables are continuous, the `slopes()` function is natural: `avg_slopes(mod, variables = "X")` gives the average partial derivative of $Y$ with respect to $X$ across all observed values of $M$.
+- **Slopes at specific moderator values:** `slopes(mod, variables = "X", newdata = datagrid(M = fivenum))` evaluates the slope at five summary values of $M$, showing where the slope is positive, negative, or near zero.
+- **Visualizing slopes:** `plot_slopes(mod, variables = "X", condition = "M")` shows how the slope of $Y$ with respect to $X$ varies continuously over the range of $M$. Adding `geom_hline(yintercept = 0)` highlights where the effect changes sign.
+- **Hypothesis testing for moderation:** Compare slopes at the minimum and maximum of $M$ using `slopes(mod, variables = "X", newdata = datagrid(M = range), hypothesis = "b2 - b1 = 0")`. A significant result confirms that $M$ moderates the $X$-$Y$ relationship.
+
+### Multiple interactions
+- When more than two variables are included in multiplicative interactions (e.g., `Y ~ X * M1 * M2`), the model captures complex patterns of moderation but has notable downsides: risk of overfitting and substantially increased sample size requirements.
+- Despite the complexity, the same `marginaleffects` functions and workflows apply directly.
+- **Marginal predictions:** `plot_predictions(mod, by = c("X", "M1", "M2"))` visualizes predicted outcomes across all predictor combinations; facets, point shapes, or colors represent different moderator values.
+- **Does $X$ affect $Y$?** `avg_comparisons(mod, variables = "X")` gives the overall average effect.
+- **First-order moderation (does $M_1$ moderate the effect of $X$?):** Use `avg_comparisons(mod, variables = "X", by = "M1")` and test with `hypothesis = "b2 - b1 = 0"`.
+- **Second-order moderation (does $M_2$ moderate the moderation effect of $M_1$?):** Compute comparisons by all moderator combinations with `avg_comparisons(mod, variables = "X", by = c("M2", "M1"))`, then use a difference-in-differences hypothesis: `hypothesis = "(b2 - b1) - (b4 - b3) = 0"`.
+- Second-order moderation tests may lack power; even if the point estimate suggests a moderating effect, the $p$ value may not cross conventional significance thresholds.
+
+## Polynomial regression {#sec-interactions_polynomials}
+- Polynomial regression models the relationship between $Y$ and $X$ as an nth-degree polynomial: $Y = \beta_0 + \beta_1 X + \beta_2 X^2 + \cdots + \beta_n X^n + \varepsilon$.
+- The model is linear in the coefficients but polynomial in $X$, making it a special case of multiplicative interactions where predictors are interacted with themselves.
+- Polynomial terms are specified directly in the model formula: `lm(Y ~ X + I(X^2) + I(X^3), data = dat)` in R and `ols("Y ~ X + I(X**2) + I(X**3)", data=df).fit()` in Python. It is important to use this approach rather than creating new variables in the dataset before fitting.
+- **Advantages:** Flexible; can capture curvilinear relationships that linear models miss; the degree of the polynomial is easily adjustable.
+- **Disadvantages:** Risk of overfitting at high degrees; unreliable extrapolation outside the observed range.
+- **Interpreting slopes:** Because the slope of $Y$ with respect to $X$ changes across the range of $X$, use `slopes(mod_cubic, variables = "X", newdata = datagrid(X = c(-2, 0, 2)))` to evaluate the marginal effect at specific points.
+- **Polynomial interactions with a moderator:** Interact the moderator with all polynomial terms using parentheses as a shortcut: `lm(Y ~ M * (X + I(X^2) + I(X^3)), data = dat)`. This captures curvilinear relationships that differ across levels of $M$.
+- The same `plot_predictions()`, `slopes()`, and `plot_slopes()` functions apply to polynomial models, allowing visualization and formal testing of how the $X$-$Y$ relationship varies across values of $X$ and $M$.
+
+# Examples
+- The examples below are drawn from the original chapter and illustrate representative workflows.
+
+## Example 1: Testing moderation in a categorical-by-categorical interaction
+```r
+# Fit logistic regression with interaction
+mod = glm(Y ~ X * M, data = dat, family = binomial)
+
+# Average predictions by subgroup
+avg_predictions(mod, by = c("X", "M"))
+
+# Average effect of X, moderated by M
+avg_comparisons(mod, variables = "X", by = "M")
+
+# Test whether effect differs between M categories
+avg_comparisons(mod, variables = "X", by = "M",
+  hypothesis = "b3 - b1 = 0")
+```
+
+## Example 2: Slopes with hypothesis testing in a continuous-by-continuous interaction
+```r
+# Compare slopes at min and max of moderator M
+slopes(mod, variables = "X",
+  newdata = datagrid(M = range),
+  hypothesis = "b2 - b1 = 0")
+```
+
+## Example 3: Polynomial regression with interaction and slope evaluation
+```r
+# Fit cubic polynomial interacted with moderator M
+mod_cubic_interaction = lm(
+  Y ~ M * (X + I(X^2) + I(X^3)), data = dat)
+
+# Evaluate slopes at five-number summary of X, for each M
+slopes(mod_cubic_interaction, variables = "X",
+  newdata = datagrid(M = c(0, 1), X = fivenum))
+```

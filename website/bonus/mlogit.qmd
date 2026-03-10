@@ -1,0 +1,109 @@
+# Multinomial Logit
+
+This vignette shows how to estimate and interpret **multinomial logit (mlogit)** models with the *marginaleffects* package. Multinomial logit models are useful when we wish to model choices among three or more unordered alternatives—for example, commuters selecting a mode of transport (car, bus, bicycle, walk). In these models the data are arranged in "long" format, with one row for every *unit–option* combination. Because this structure differs from the single‑row‑per‑unit layout used by most other models, current support in *marginaleffects* is limited to the `predictions()` and `avg_predictions()` functions. The examples below show that, by using the `hypothesis` argument, we can still obtain marginal effects and treatment effects that answer substantive questions about policy interventions.
+
+## Note on implementation
+
+This tutorial demonstrates how to work with multinomial logit models using `predictions()` together with custom hypothesis functions, rather than `comparisons()`. While `comparisons()` would be more complex to implement for multinomial models, the `predictions()` approach with custom hypotheses provides a flexible and powerful alternative. With minimal additional work, this approach can be extended to support more advanced analyses while maintaining the core functionality needed for most use‑cases.
+
+## Fit the model
+
+```{r}
+#| message: false
+#| warning: false
+library(dplyr)
+library(mlogit)
+library(marginaleffects)
+
+# Fishing mode‑choice data from mlogit
+ data(Fishing)
+ Fish <- dfidx(Fishing, varying = 2:9, shape = "wide", choice = "mode")
+
+ m <- mlogit(mode ~ price + catch | income, data = Fish)
+```
+
+## Contrast analysis
+
+Assume we want to know how a 100‑dollar increase in beach‐trip prices affects mode choice. We create two replicas of the original data: one with the observed prices (`lo`) and one with the higher beach price (`hi`). The `term` variable tags each scenario; later we will contrast them.
+
+```{r}
+# Prepare data for the two scenarios
+lo <- transform(as.data.frame(Fish), term = "lo")
+lo$id1 <- Fish$idx$id1
+lo$id2 <- Fish$idx$id2
+lo$idx <- NULL
+
+hi <- transform(lo,
+    price = ifelse(id2 == "beach", price + 100, price),
+    term = "hi")
+
+dat <- rbind(lo, hi)
+dat$term <- factor(dat$term, levels = c("lo", "hi"))
+```
+
+## Average predicted probabilities
+
+The call below obtains unit‑level fitted values and then averages them by choice *group* (the alternative) and *term* (scenario):
+
+```{r}
+#| warning: false
+predictions(m,
+    newdata = dat,
+    by = c("group", "term"))
+```
+
+## Alternative: custom hypothesis function
+
+The same result can be produced with a custom summary function supplied to the `hypothesis` argument. Custom functions offer considerable flexibility:
+
+```{r}
+#| warning: false
+h <- \(x) aggregate(estimate ~ term + group, data = x, FUN = mean)
+predictions(m, newdata = dat, hypothesis = h)
+```
+
+Instead of using the `aggregate()` function from base R, we can use the `dplyr` package to summarize the data.
+
+```{r}
+#| eval: false
+library(dplyr) 
+h <- function(x) {
+  x |> summarize(estimate = mean(estimate), .by = c("term", "group"))
+}
+predictions(m, newdata = dat, hypothesis = h)
+```
+
+## Average marginal effects (risk differences)
+
+Finally, we estimate the average effect of the price increase on the expected probability of each mode. We proceed in three steps inside a custom hypothesis function:
+
+1. Average the unit‑level fitted values within each *term* and *group*.
+2. Compute the difference between the `hi` and `lo` averages.
+3. Rename the grouping variable to `term`, as expected by *marginaleffects*.
+
+```{r}
+#| warning: false
+h <- function(x) {
+    x |>
+        aggregate(estimate ~ term + group, data = _, FUN = mean) |>
+        aggregate(estimate ~ group, data = _, FUN = diff) |>
+        setNames(c("term", "estimate"))
+}
+predictions(m, newdata = dat, hypothesis = h)
+```
+
+Interpretation: a 100‑dollar increase in beach‑trip prices lowers the probability of choosing the beach by roughly ten percentage points while modestly raising the probabilities of the other modes.
+
+Or the same results can be obtained using `dplyr`:
+
+```{r}
+#| eval: false
+h <- function(x) {
+  x |>
+    summarize(estimate = mean(estimate), .by = c("term", "group")) |>
+    summarize(estimate = diff(estimate), .by = "group") |>
+    rename(term = group)
+}
+predictions(m, newdata = dat, hypothesis = h)
+```
+

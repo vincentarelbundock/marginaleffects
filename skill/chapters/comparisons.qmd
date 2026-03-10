@@ -1,0 +1,180 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `comparisons`, `avg_comparisons`, `plot_comparisons`, `datagrid`, `inferences`, `predictions`, `avg_predictions` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `comparisons`, `avg_comparisons`, `plot_comparisons`, `datagrid`, `avg_predictions`, `get_dataset` for this chapter.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+## Summary
+
+This chapter defined a "counterfactual comparison" as a function of two or more model-based predictions made with different predictor values. These comparisons measure the strength of association between variables or, if appropriate identification assumptions are met, they quantify causal effects.
+
+The `comparisons()` function from the `marginaleffects` package computes counterfactual comparisons for a wide range of models, and `avg_comparisons()` aggregates them across units or groups. Analysts can visualize these comparisons with the `plot_comparisons()` function or standard visualization tools like `ggplot2`.
+
+To define, compute, and interpret counterfactual comparisons, analysts must make five decisions:
+
+- **Quantity**: Counterfactual comparisons are defined along two dimensions. What change in focal predictor are we interested in (e.g., 0 to 1, increase of 1 unit or 1 standard deviation, change between specific values)? This is specified by the `variables` argument. What function do we use to compare counterfactual predictions (difference, ratio, lift, etc.)? This is specified by the `comparison` argument.
+- **Predictors**: Counterfactual comparisons are conditional quantities that depend on the values of all predictors in a model. Analysts can evaluate comparisons for different predictor grids, including empirical, balanced, interesting, or counterfactual grids, defined by the `newdata` argument and the `datagrid()` function.
+- **Aggregation**: Analysts can report unit-level comparisons (specific to each observation) or aggregated comparisons (average effects across the population or subgroups, computed with `avg_comparisons()` and the `by` argument).
+- **Uncertainty**: The uncertainty around counterfactual comparisons can be estimated using classical or robust standard errors, bootstrap, or simulation-based inference. Standard errors and confidence intervals are handled by the `vcov` and `conf_level` arguments, or via the `inferences()` function.
+- **Test**: Hypothesis tests can check if counterfactual comparisons differ significantly from a null value or from one another, via the `hypothesis` argument. Equivalence tests can establish whether comparisons are practically equivalent using the `equivalence` argument.
+
+# Counterfactual comparisons {#sec-comparisons}
+- Many important research questions can be expressed as comparisons between hypothetical worlds: would outcomes differ if a treatment were applied or withheld?
+- A counterfactual comparison is a function of two or more model-based predictions, made with different predictor values.
+- When conditions for causal identification are satisfied, a counterfactual comparison can be interpreted as a causal effect of $X$ on $Y$.
+- When causal conditions are not met, counterfactual comparisons remain useful as descriptive measures of the strength of association between variables, holding other variables constant.
+- Counterfactual comparisons can be expressed on the scale of the outcome variable, avoiding complex functions like log-odds ratios.
+- Counterfactual comparisons map directly onto what many people mean by "the effect of a treatment": what change do we expect in the outcome when a predictor changes?
+- The `marginaleffects` package makes it easy to compute counterfactual comparisons in a model-agnostic fashion, applying similar post-estimation steps regardless of the model type.
+- The chapter uses a logistic regression model fitted to @Tho2008 HIV data as a running example: the outcome is whether a participant sought their HIV status, and the treatment is a monetary incentive, interacted with age category and distance from the test center.
+
+## Quantity {#sec-comparisons_quantity}
+- A counterfactual comparison is a function of two or more model-based predictions, made with different predictor values.
+- To operationalize this, analysts must make three decisions: (1) what is the focal predictor, (2) how does the focal predictor differ between counterfactual worlds, and (3) what function compares the predicted outcomes.
+- When the variable $X$ is set to value $x$, the model-based prediction is $\hat{Y}_{X=x}$.
+- The predicted outcome can change when $X$ increases by 1 unit, by one standard deviation, from minimum to maximum, or between two specific values.
+- A simple difference between predictions is often the best starting point because it is easy to grasp intuitively.
+- Alternatives to differences include the ratio ($\hat{Y}_{X=b}/\hat{Y}_{X=a}$) and lift ($(\hat{Y}_{X=b} - \hat{Y}_{X=a})/\hat{Y}_{X=a}$).
+- When the predicted outcome is a probability, $\hat{Y}_{X=b}-\hat{Y}_{X=a}$ is called a risk difference, $\hat{Y}_{X=b}/\hat{Y}_{X=a}$ a risk ratio, and the corresponding odds comparison an odds ratio.
+- The `marginaleffects` package computes all of these quantities using a consistent interface.
+
+### First steps: risk difference with a binary treatment {#sec-comparisons_first_steps}
+- The first estimand considered is the risk difference for a change in binary treatment: the expected change in outcome when `incentive` changes from 0 to 1.
+- Counterfactual comparisons are *conditional* quantities: except in the simplest cases, they depend on the values of all the predictors in the model.
+- Each individual in a dataset may be associated with a different counterfactual comparison.
+- When computing a comparison, the analyst must define values for the focal predictor and all other covariates.
+- The basic procedure is: create counterfactual grids (treatment vs. control), generate predictions for each, and take the difference.
+- The `comparisons()` function from `marginaleffects` automates this procedure and also returns standard errors and test statistics.
+- For example, for a participant aged 18-35 living at distance 2, moving from control to treatment increases the predicted probability of the outcome by several percentage points.
+- Interpreting a counterfactual comparison as a causal effect requires strong assumptions; without them, the comparison is a descriptive measure of the model's behavior. @sec-gcomputation discusses these assumptions.
+
+### Comparison functions {#sec-comparisons_functions}
+- By default, comparisons measure effects via differences in predicted outcomes.
+- The `comparison` argument in `comparisons()` allows alternative functions: `"ratio"`, `"lift"`, or custom functions.
+- Setting `comparison="ratio"` computes the ratio of predicted outcomes under treatment vs. control.
+- The `hypothesis` argument can be set (e.g., `hypothesis=1`) to test against a null hypothesis that the ratio equals 1.
+- Setting `comparison="lift"` computes the relative change: $(\hat{Y}_{hi} - \hat{Y}_{lo})/\hat{Y}_{lo}$.
+- The `comparison` argument also accepts arbitrary user-defined functions, taking `hi` (treatment) and `lo` (control) prediction vectors.
+- This allows fully customized comparisons, such as a log odds ratio based on average predictions.
+- Odds ratios are non-collapsible, so the chapter computes the log odds ratio of the averages rather than the average log odds ratio.
+
+## Predictors {#sec-comparisons_predictors}
+- Predictors divide into two categories: focal variables (whose effect we want to quantify) and adjustment (control) variables (included for flexibility, fit, or confounding).
+- The effect of an adjustment variable is not of inherent interest in a counterfactual analysis; interpreting adjustment variable parameters as effects is generally not recommended (Table 2 fallacy).
+- Counterfactual comparisons are conditional quantities that depend on the values of all predictors, so analysts must decide where in the predictor space to evaluate them.
+- The `variables` argument identifies the focal predictor(s), and the `newdata` argument (or `datagrid()`) defines the grid of covariate values.
+- Different predictor types (binary, categorical, numeric) require different specifications of the contrast.
+- Cross-comparisons allow assessing the joint effect of manipulating two or more predictors simultaneously using the `cross` argument.
+
+### Focal variables {#sec-comparisons_focal}
+- For binary predictors, `marginaleffects` returns the difference in predicted outcome for a change from 0 to 1 by default; the direction can be reversed using list syntax (e.g., `variables = list("incentive" = c(1, 0))`).
+- For categorical predictors with multiple levels, the default compares each level to the reference (first) category; the `variables` argument supports specific pairs (e.g., `c("18 to 35", ">35")`) or sequential comparisons.
+- For numeric predictors, the default is a 1-unit increase from the value in the predictor grid; other options include a specific number of units, `"sd"`, `"iqr"`, `"minmax"`, or two specific values.
+- Cross-comparisons assess the combined effect of changing two predictors simultaneously using `cross = TRUE`.
+- In a cross-comparison, the result shows the joint effect of, e.g., changing both `distance` by 1 unit and `incentive` from 0 to 1.
+- For pedagogical purposes, the chapter treats each predictor (`incentive`, `agecat`, `distance`) as focal in turn, though in practice only one or two focal predictors per model are typical.
+
+### Adjustment variables
+- The researcher is not interested in changes to adjustment variables themselves, but must still define their values because comparisons depend on the full predictor grid.
+- By default, `comparisons()` returns estimates for every row of the original dataset (empirical distribution).
+- If `variables` is not specified, `comparisons()` computes differences for all variables, yielding a large output.
+- Since the output is a data frame, unit-level risk differences can be plotted to reveal heterogeneity: for some individuals, the treatment effect may be much larger or smaller than for others.
+- Interesting grids: supply a data frame to `newdata` (or use `datagrid()`) to estimate comparisons for specific profiles of interest, e.g., `datagrid(agecat = unique, distance = mean)`.
+- Representative grids: using `newdata = "mean"` creates a synthetic "average" individual; this is fast but the interpretation is ambiguous since no real individual may be perfectly average on all dimensions.
+- A "comparison at the mean" can differ from an "average comparison."
+- Balanced grids (`newdata = "balanced"`) include all unique combinations of categorical variables while holding numeric variables at their means, useful in experimental contexts.
+
+## Aggregation {#sec-comparisons_aggregation}
+- The default behavior of `comparisons()` is to produce unit-level estimates; to marginalize across units, use `avg_comparisons()`.
+- The average treatment effect (ATE) is the expected difference in outcomes under treatment vs. control, with expectation taken over the distribution of adjustment variables: $E[Y_{X=1} - Y_{X=0}]$.
+- To compute an average comparison, the procedure is: (1) predict under treatment for all rows, (2) predict under control for all rows, (3) take differences, (4) average.
+- `avg_comparisons()` returns the same result as computing unit-level comparisons and taking the mean.
+- The `by` argument enables subgroup-specific average comparisons, e.g., average risk difference by age category.
+- The `newdata` argument can restrict the average to specific subsets, e.g., the treated group only, yielding an ATT-like quantity.
+- The chapter distinguishes three related quantities: average predictions, average counterfactual predictions, and average counterfactual comparisons, using a Palmer Penguins example.
+
+### Average predictions vs. average comparisons {#sec-comparisons_average_predictions_vs_comparisons}
+- Average predictions are calculated over the observed distribution of covariates within each subset; differences between groups reflect both the focal variable and covariate differences.
+- Average counterfactual predictions replicate the full dataset for each level of the focal variable, holding the covariate distribution identical across groups; they are *ceteris paribus* quantities.
+- Because counterfactual predictions hold covariates constant, the gaps between groups are typically smaller than the gaps between raw average predictions.
+- Average counterfactual comparisons measure the differences between counterfactual predictions, giving the estimated effect of the focal variable while controlling for covariates.
+- `avg_comparisons()` computes these directly, or they can be obtained as differences between `avg_predictions()` estimates with the `variables` and `by` arguments.
+- This illustrates how counterfactual comparisons enable "all else equal" analyses, controlling for the fact that groups may differ on covariates.
+
+## Uncertainty {#sec-comparisons_uncertainty}
+- Standard errors for contrasts are computed by default using the delta method and the classical variance-covariance matrix from the modeling software.
+- Robust standard errors (e.g., heteroskedasticity-consistent or clustered) can be obtained by setting the `vcov` argument (e.g., `vcov = "HC3"` or `vcov = ~village`).
+- The `inferences()` function supports bootstrap or simulation-based estimates of uncertainty.
+- The `modelsummary` package can display estimates with different uncertainty approaches side-by-side in a single table.
+- The `statistic` argument in `modelsummary` can switch from standard errors to confidence intervals.
+- The `fmt` argument controls the number of displayed digits, and `gof_omit` or `gof_map` controls goodness-of-fit statistics shown.
+
+## Test {#sec-comparisons_test}
+- Hypothesis tests on counterfactual comparisons allow comparing subgroup-specific estimates to one another.
+- The motivating question: does the incentive treatment have a bigger effect for older or younger participants?
+- Use `avg_comparisons()` with `by = "agecat"` to obtain subgroup-specific average risk differences.
+- Even when point estimates differ numerically between subgroups, the difference may not be statistically significant.
+- The `hypothesis` argument expresses the test as a string formula (e.g., `"b1 - b3 = 0"` in R, `"b0 - b2 = 0"` in Python) where `b1`/`b0` refer to row indices.
+- A large $p$ value means we cannot reject the null that the treatment effect is the same across age brackets; the subgroup estimates are not statistically distinguishable.
+- This approach generalizes to any linear or non-linear hypothesis about comparisons, as described in @sec-hypothesis.
+
+## Visualization {#sec-comparisons_visualization}
+- Data analysts can visualize counterfactual comparisons with `plot_comparisons()`, which uses the same arguments as `comparisons()` and `avg_comparisons()`.
+- Unit-level comparisons can be plotted as histograms to show the distribution of treatment effects across individuals.
+- `plot_comparisons()` can present marginal comparisons (average effects by subgroup) or conditional comparisons (effects as a function of a continuous predictor).
+
+### Marginal comparisons
+- Use `plot_comparisons()` with the `by` argument to visualize average treatment effects across subgroups (e.g., average risk difference by age category).
+- The resulting plot may show that point estimates differ across subgroups, but wide and overlapping confidence intervals suggest the differences are not statistically significant.
+- This provides a visual complement to the formal hypothesis tests in the Test section.
+- The syntax mirrors `avg_comparisons()` but produces a graphical output.
+- Labels and axes can be customized with standard `ggplot2` functions like `labs()`.
+
+### Conditional comparisons
+- When a predictor of interest is continuous or multiple predictors are involved, conditional comparisons improve interpretability.
+- The `condition` argument of `plot_comparisons()` specifies which predictors to display on the x-axis and which to hold at representative values or facet by.
+- For example, plotting the risk difference for `incentive` as a function of `distance` shows how treatment effects vary with distance from the test center.
+- Adding a second variable (e.g., `agecat`) to `condition` creates separate curves or facets for each subgroup.
+- These plots reveal that the estimated effect of incentive is smaller for individuals closest to the test center, and that older participants may react less strongly.
+- @sec-interactions shows how to design and interpret formal tests of treatment effect heterogeneity using interactions and polynomials.
+
+# Examples
+- The examples below are drawn from the original chapter and illustrate representative workflows.
+
+## Example 1: Risk difference for a specific individual
+```r
+library(marginaleffects)
+dat <- get_dataset("thornton")
+mod <- glm(outcome ~ incentive * (agecat + distance),
+    data = dat, family = binomial)
+
+# Define a profile of interest
+grid <- data.frame(distance = 2, agecat = "18 to 35", incentive = 1)
+
+# Compute the risk difference for this individual
+comparisons(mod, variables = "incentive", newdata = grid)
+```
+
+## Example 2: Average treatment effect by subgroup
+```r
+# Average risk difference for each age category
+avg_comparisons(mod, variables = "incentive", by = "agecat")
+
+# Hypothesis test: is the effect different for youngest vs. oldest?
+avg_comparisons(mod,
+  hypothesis = "b1 - b3 = 0",
+  variables = "incentive",
+  by = "agecat")
+```
+
+## Example 3: Conditional comparison plot
+```r
+library(ggplot2)
+
+# How does the treatment effect vary with distance?
+plot_comparisons(mod,
+  variables = "incentive",
+  condition = c("distance", "agecat")) +
+  labs(y = "Conditional risk difference")
+```

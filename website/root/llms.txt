@@ -1,0 +1,121 @@
+# marginaleffects: Model to Meaning
+
+> How to interpret statistical models with `marginaleffects` for R and Python.
+
+The `marginaleffects` package for R and Python helps analysts interpret statistical and machine learning models by computing predictions, comparisons (contrasts, marginal effects, treatment effects), slopes (partial derivatives), and hypothesis tests. The companion book "Model to Meaning" by Vincent Arel-Bundock (2026, CRC Press) is freely available at this website.
+
+- Source (R): https://github.com/vincentarelbundock/marginaleffects
+- Source (Python): https://github.com/vincentarelbundock/pymarginaleffects
+- Journal article: https://www.jstatsoft.org/article/view/v111i09
+- Print book: https://routledge.com/9781032908724
+
+## Core framework
+
+Every interpretation task decomposes into five questions:
+
+1. **Quantity**: What estimand? (predictions, comparisons, slopes, or tests)
+2. **Grid**: Where to evaluate? (observed values, counterfactual scenarios, balanced grids)
+3. **Aggregation**: Over whom? (unit-level, group means with `by=`, weighted averages)
+4. **Uncertainty**: Which inference method? (delta method, robust SE, bootstrap, Bayesian)
+5. **Test**: What hypothesis? (null tests, equivalence, pairwise contrasts)
+
+## Quick start
+
+- [Get started (R)](https://marginaleffects.com/bonus/get_started.html): Quick introduction to the package with R examples
+- [Get started (Python))](https://marginaleffects.com/chapters/python.html): Quick introduction to the package with Python examples
+
+## Book chapters
+
+### Part I: Interpretation
+
+- [Models and meaning](https://marginaleffects.com/chapters/challenge.html): Defines analysis goals (description, causal inference, prediction), estimands, and why model coefficients need transformation.
+- [Conceptual framework](https://marginaleffects.com/chapters/framework.html): The five-question framework for turning model parameters into intuitive quantities.
+
+### Part II: Quantities and tests
+
+- [Hypothesis and equivalence tests](https://marginaleffects.com/chapters/hypothesis.html): Null and equivalence tests for any quantity using the `hypothesis` and `equivalence` arguments.
+- [Predictions](https://marginaleffects.com/chapters/predictions.html): Predicted values and expected outcomes with `predictions()` and `avg_predictions()`.
+- [Comparisons](https://marginaleffects.com/chapters/comparisons.html): Counterfactual comparisons, ATE, ATT, risk ratios, odds ratios with `comparisons()` and `avg_comparisons()`.
+- [Slopes](https://marginaleffects.com/chapters/slopes.html): Marginal effects and partial derivatives with `slopes()` and `avg_slopes()`.
+
+### Part III: Case studies
+
+- [G-computation and causal inference](https://marginaleffects.com/chapters/gcomputation.html): G-computation for ATE/ATT/ATU/CATE with counterfactual prediction grids.
+- [Experiments](https://marginaleffects.com/chapters/experiments.html): ATE in randomized experiments and factorial designs.
+- [Interactions](https://marginaleffects.com/chapters/interactions.html): Interaction effects and effect modification with predictions, comparisons, and slopes.
+- [Categorical outcomes](https://marginaleffects.com/chapters/categorical.html): Framework applied to categorical and ordinal outcomes.
+- [MRP](https://marginaleffects.com/chapters/mrp.html): Multilevel regression and poststratification with mixed-effects models.
+- [Machine learning](https://marginaleffects.com/chapters/ml.html): Model auditing with predictions, comparisons, and slopes for ML frameworks.
+- [Uncertainty](https://marginaleffects.com/chapters/uncertainty.html): Delta method, bootstrap, simulation, conformal prediction, and robust/clustered standard errors.
+- [Python](https://marginaleffects.com/chapters/python.html): Python-specific examples using statsmodels, scikit-learn, and linearmodels.
+
+## Additional case studies (R)
+
+- [Plots](https://marginaleffects.com/bonus/plot.html): Visualization of predictions, comparisons, and slopes
+- [Bayesian models (brms)](https://marginaleffects.com/bonus/brms.html): Bayesian regression with brms
+- [Bootstrap](https://marginaleffects.com/bonus/bootstrap.html): Bootstrap inference
+- [Conjoint analysis](https://marginaleffects.com/bonus/conjoint.html): Conjoint experimental designs
+- [Elasticity](https://marginaleffects.com/bonus/elasticity.html): Elasticities and semi-elasticities
+- [GAMs](https://marginaleffects.com/bonus/gam.html): Generalized additive models
+- [Prediction grids](https://marginaleffects.com/bonus/grids.html): Custom prediction grids with `datagrid()`
+- [Heterogeneity](https://marginaleffects.com/bonus/heterogeneity.html): Treatment effect heterogeneity
+- [Hypothesis tests](https://marginaleffects.com/bonus/hypothesis.html): Advanced hypothesis testing
+- [Interrupted time series](https://marginaleffects.com/bonus/interrupted_time_series.html): Interrupted time series designs
+- [Inverse probability weighting](https://marginaleffects.com/bonus/ipw.html): IPW for causal inference
+- [Mixed-effects models (lme4)](https://marginaleffects.com/bonus/lme4.html): Random effects and multilevel models
+- [Logistic regression](https://marginaleffects.com/bonus/logit.html): Logit and probit models
+- [Matching](https://marginaleffects.com/bonus/matching.html): Propensity score matching
+- [Multinomial logit](https://marginaleffects.com/bonus/mlogit.html): Multinomial and conditional logit
+- [Multiple imputation](https://marginaleffects.com/bonus/multiple_imputation.html): Combining results across imputed datasets
+- [Power analysis](https://marginaleffects.com/bonus/power.html): Simulation-based power analysis
+- [Survival models](https://marginaleffects.com/bonus/survival.html): Survival and time-to-event analysis
+- [Total marginal effect](https://marginaleffects.com/bonus/total_marginal_effect.html): Total marginal effects
+- [Uncertainty (advanced)](https://marginaleffects.com/bonus/uncertainty.html): Advanced uncertainty quantification
+
+## Additional case studies (Python)
+
+- [scikit-learn](https://marginaleffects.com/bonus/sklearn.html): Model interpretation for scikit-learn models
+
+## Function reference (R)
+
+- [`predictions()`](https://marginaleffects.com/man/r/predictions.html): Predicted values for specified or observed covariate combinations
+- [`comparisons()`](https://marginaleffects.com/man/r/comparisons.html): Comparisons between counterfactual predictions (contrasts, marginal effects, risk differences, odds ratios)
+- [`slopes()`](https://marginaleffects.com/man/r/slopes.html): Partial derivatives (marginal effects) of the prediction function
+- [`hypotheses()`](https://marginaleffects.com/man/r/hypotheses.html): Hypothesis and equivalence tests on linear and nonlinear functions of model parameters or marginaleffects estimates
+- [`inferences()`](https://marginaleffects.com/man/r/inferences.html): Bootstrap, simulation, and other resampling-based inference
+- [`datagrid()`](https://marginaleffects.com/man/r/datagrid.html): Build grids of predictor values for counterfactual analysis
+- [`plot_predictions()`](https://marginaleffects.com/man/r/plot_predictions.html): Plot predicted values
+- [`plot_comparisons()`](https://marginaleffects.com/man/r/plot_comparisons.html): Plot comparisons
+- [`plot_slopes()`](https://marginaleffects.com/man/r/plot_slopes.html): Plot slopes (marginal effects)
+- [`autodiff()`](https://marginaleffects.com/man/r/autodiff.html): Automatic differentiation for marginal effects
+- [`get_dataset()`](https://marginaleffects.com/man/r/get_dataset.html): Load example datasets
+
+## Function reference (Python)
+
+- [`predictions()`](https://marginaleffects.com/man/python/predictions.html): Predicted values
+- [`avg_predictions()`](https://marginaleffects.com/man/python/avg_predictions.html): Average predictions
+- [`comparisons()`](https://marginaleffects.com/man/python/comparisons.html): Comparisons between counterfactual predictions
+- [`avg_comparisons()`](https://marginaleffects.com/man/python/avg_comparisons.html): Average comparisons
+- [`slopes()`](https://marginaleffects.com/man/python/slopes.html): Partial derivatives (marginal effects)
+- [`avg_slopes()`](https://marginaleffects.com/man/python/avg_slopes.html): Average slopes
+- [`hypotheses()`](https://marginaleffects.com/man/python/hypotheses.html): Hypothesis and equivalence tests
+- [`datagrid()`](https://marginaleffects.com/man/python/datagrid.html): Build grids of predictor values
+- [`plot_predictions()`](https://marginaleffects.com/man/python/plot_predictions.html): Plot predicted values
+- [`plot_comparisons()`](https://marginaleffects.com/man/python/plot_comparisons.html): Plot comparisons
+- [`plot_slopes()`](https://marginaleffects.com/man/python/plot_slopes.html): Plot slopes
+- [`fit_statsmodels()`](https://marginaleffects.com/man/python/fit_statsmodels.html): Fit statsmodels models
+- [`fit_sklearn()`](https://marginaleffects.com/man/python/fit_sklearn.html): Fit scikit-learn models
+- [`fit_linearmodels()`](https://marginaleffects.com/man/python/fit_linearmodels.html): Fit linearmodels models
+- [`get_dataset()`](https://marginaleffects.com/man/python/get_dataset.html): Load example datasets
+
+## Miscellaneous
+
+- [Help & FAQ](https://marginaleffects.com/bonus/help.html): How to get help and report issues
+- [FAQ](https://marginaleffects.com/bonus/faq.html): Frequently asked questions
+- [Alternative software](https://marginaleffects.com/bonus/alternative_software.html): Comparison with emmeans, margins, effects, and other packages
+- [Supported models](https://marginaleffects.com/bonus/supported_models.html): List of supported model classes
+- [Performance](https://marginaleffects.com/bonus/performance.html): Performance benchmarks and tips
+- [Extensions](https://marginaleffects.com/bonus/extensions.html): How to extend marginaleffects to new model classes
+- [Tables](https://marginaleffects.com/bonus/tables.html): Creating publication-ready tables with modelsummary
+- [Courses](https://marginaleffects.com/bonus/courses.html): Courses and workshops using marginaleffects
+- [Citation](https://marginaleffects.com/bonus/citation.html): How to cite the package and book

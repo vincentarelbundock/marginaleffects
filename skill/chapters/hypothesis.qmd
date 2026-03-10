@@ -1,0 +1,135 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `hypotheses`, `coef`, `summary`, `vcov`, `pnorm`, `aggregate`, `get_dataset`, `lm` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `hypotheses`, `ols`, `fit`, `to_pandas`, `group_by`, `agg`, `col`, `mean` for this chapter.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+## Summary
+
+This chapter introduced two classes of statistical testing procedures: null hypothesis and equivalence tests.
+
+A null hypothesis test allows us to determine if there is enough evidence to reject the hypothesis that a parameter (or function of parameters) is *equal* to a given value.
+
+Examples of statements that could be rejected by a null hypothesis test include:
+
+* The predicted wages of college and high school graduates are equal.
+* The effect of a new drug on a health outcome is zero.
+* A marketing campaign has the same effect on sales in rural or urban areas.
+
+When a null hypothesis test indicates that we can reject statements like these (small $p$ value), *we establish a difference.*
+
+An equivalence test allows us to determine if there is enough evidence to reject the hypothesis that a parameter (or function of parameters) is *meaningfully different* from a benchmark.
+
+Examples of statements that could be rejected by an equivalence test include:
+
+* The difference in wages between college and high school graduates is considerable.
+* The effect of a new drug on a health outcome is meaningfully different from the effect of an existing treatment.
+* The effect of a marketing campaign on consumption is much larger than zero.
+
+When an equivalence test indicates that we can reject statements like these (small $p$ value), *we establish a similarity.*
+
+All the main `marginaleffects` functions include `hypothesis` and `equivalence` arguments. These arguments make it easy to conduct null hypothesis and equivalence tests on any of the quantities estimated by the package---predictions, counterfactual comparisons, and slopes---as well as on arbitrary functions of those quantities.
+
+# Hypothesis and equivalence tests {#sec-hypothesis}
+- This chapter introduces two complementary statistical testing procedures: null hypothesis tests and equivalence tests.
+- A null hypothesis test assesses whether we can reject the possibility that a population parameter (or function of parameters) takes on a specific value, such as zero.
+- An equivalence test flips the logic: instead of establishing a difference, it makes a case for similarity by testing whether an estimate falls within a pre-defined interval of practical equivalence.
+- Null hypothesis tests answer questions like: Does cognitive-behavioral therapy have a non-zero effect on depression? Is the effect of a new drug different from the effect of an existing treatment?
+- Equivalence tests answer questions like: Is the effect of a generic drug equivalent to that of the branded version? Is the effect of a marketing campaign on consumption negligible?
+- Both types of tests can be applied to model parameters, predictions, counterfactual comparisons, and slopes -- any quantity of interest studied in this book.
+- An important distinction is between statistical significance (unlikely to occur by chance if the null hypothesis is true) and practical significance (important real-world implications). Many results are statistically significant without having much practical significance.
+- The main dataset used for illustration comes from Thornton (2008), a randomized controlled trial studying whether small monetary incentives encourage people to seek information about their HIV status.
+- The outcome variable is binary (`outcome` = 1 if the participant traveled to learn their test result), and predictors include `incentive` (treatment assignment), `distance` from the test center, `village`, and `agecat` (age in three categories: <18, 18 to 35, >35).
+- A linear probability model is estimated with `agecat` levels as predictors and no intercept, so that the coefficients equal subgroup means of the outcome variable.
+
+## Null hypothesis {#sec-hypothesis_null_hypothesis}
+- The null hypothesis test is a statistical method to determine if there is sufficient evidence to reject a presumed statement about a population parameter.
+- The null hypothesis $H_0$ represents a default claim, usually suggesting no effect or no difference. For example, $H_0$ might state that the mean of a population equals a specific value.
+- To conduct a null hypothesis test: (1) choose a null hypothesis $H_0$, (2) pick a test statistic with a known sampling distribution (e.g., $Z$ or $t$), (3) compute the test statistic from observed data, and (4) compare it to the assumed distribution under $H_0$.
+- The standard Wald approach constructs a $Z$ statistic: $Z = \frac{h(\hat{\theta}) - H_0}{\sqrt{\hat{V}[h(\hat{\theta})]}}$, where $h(\hat{\theta})$ is a quantity of interest and $\hat{V}$ is its estimated variance.
+- When $|Z|$ is large, the numerator (distance between estimate and null) is large relative to the denominator (uncertainty in the estimate), so we can reject $H_0$.
+- By default, R and Python `summary()` functions report null hypothesis tests against $H_0$: coefficient = 0. This default may not always be substantively meaningful.
+- For the Thornton data, testing whether the proportion of minors seeking HIV results equals zero is not interesting -- a more meaningful null hypothesis should be chosen.
+- The `marginaleffects` package makes it easy to construct alternative test statistics using the `hypotheses()` function.
+
+### Choice of null hypothesis
+- Instead of testing against zero, analysts should specify a null hypothesis that represents a meaningful benchmark for their research question.
+- The `hypotheses()` function with its `hypothesis` argument allows testing all model coefficients against any numeric null value (e.g., `hypothesis = 0.5` to test whether each coefficient differs from 0.5).
+- In the running example, testing $H_0$: coefficient = 0.5 asks whether the probability of retrieving one's HIV test result differs from a coin flip.
+- When the $Z$ statistics are large in absolute terms, we can reject the null hypotheses. If the true probability were 50/50, we would be very unlikely to observe data like these.
+- Wald-style $p$ values can also be computed manually: the two-tailed $p$ value measures the area under the tails of the normal distribution beyond $|Z|$.
+- In R, this is done with `pnorm(-abs(z)) * 2`; in Python, with `norm.cdf(-np.abs(z)) * 2`.
+
+### Linear and non-linear hypothesis tests
+- Analysts often wish to compare different quantities to one another rather than testing against a simple numeric null like 0 or 0.5.
+- The `hypothesis` argument accepts equation-style strings where terms start with `b` followed by the position of the estimate (e.g., `"b3 - b1 = 0"` in R, `"b2 - b0 = 0"` in Python due to 0-based indexing).
+- For example, testing $H_0: \beta_1 = \beta_3$ checks whether the probability of seeking HIV results is the same in the <18 and >35 age groups.
+- Whether to reject the null depends on the chosen significance threshold. If mistakenly rejecting the null has costly consequences, a more stringent threshold should be used.
+- Ratio tests are also supported: `"b3 / b1 = 1"` tests whether the ratio of two coefficients equals one, rather than testing whether their difference equals zero.
+- The `hypothesis` argument supports arbitrary (potentially non-linear) equations with multiple estimates, such as `"b2^2 * exp(b1) = 0"` or `"b1 - (b2 * b3) = 2"`.
+- A formula-based shortcut interface is available for common tests: `hypothesis = difference ~ reference` computes differences between every coefficient and the first estimate.
+- Other shortcuts include `ratio ~ sequential` to compute the ratio of each coefficient to the one that immediately precedes it.
+
+### Multiple comparisons and joint hypothesis tests
+- When multiple hypothesis tests are performed simultaneously, the likelihood of at least one Type I error (falsely rejecting a true null) increases. This is the multiple comparisons problem.
+- Statisticians have proposed correction procedures including Bonferroni, Holm, and Westfall corrections to adjust for multiple comparisons.
+- The `hypotheses()` function can apply these strategies via the `multcomp` argument (e.g., `multcomp = "holm"`), reporting corrected $p$ values and family-wise confidence intervals.
+- The `hypotheses()` function also supports joint hypothesis tests via the `joint` and `joint_test` arguments, testing whether several quantities of interest are jointly/simultaneously equal to zero.
+- Documentation and examples for joint hypothesis tests are available on the marginaleffects.com website.
+
+## Equivalence {#sec-hypothesis_equivalence}
+- An equivalence test determines if an estimate is "practically equivalent" to a benchmark, within a specified margin of equivalence.
+- Unlike traditional null hypothesis tests (which reject a point null), equivalence tests reject the null hypothesis that the estimand lies *outside* an interval of practical equivalence.
+- The Two One-Sided Test (TOST) is the standard equivalence testing procedure, conducted in six steps: (1) define and estimate a quantity of interest $\theta$; (2) choose a significance threshold $\alpha$; (3) define an interval of equivalence $[a, b]$ using subject-matter knowledge; (4) conduct a non-inferiority test ($H_0: \theta < a$); (5) conduct a non-superiority test ($H_0: \theta > b$); (6) check if the maximum of both $p$ values is below $\alpha$.
+- The definition of the equivalence interval is a substantive question, not a statistical one. It depends on the field, research question, costs, and domain expertise.
+- In the running example, the equivalence interval is $[-0.05, 0.05]$: if the difference in probability of seeking HIV results between age groups falls within this range, it is considered practically equivalent to zero.
+- To conduct a TOST, add the `equivalence` argument to `hypotheses()` (e.g., `equivalence = c(-0.05, 0.05)` in R or `equivalence=[-0.05, 0.05]` in Python).
+- In the example, non-inferiority is established (we can reject $\theta < -0.05$) but non-superiority is not (we cannot reject $\theta > 0.05$), so we cannot conclude equivalence overall.
+- The same TOST procedure can be applied to predictions, counterfactual comparisons, and slopes -- not just differences between coefficients. The equivalence interval can be centered anywhere, not just around zero.
+
+# Examples
+- The examples below are drawn from the original chapter and illustrate representative workflows.
+
+## Example 1: Testing coefficients against a custom null hypothesis
+```r
+library(marginaleffects)
+dat <- get_dataset("thornton")
+mod <- lm(outcome ~ agecat - 1, data = dat)
+# Test all coefficients against H0: coefficient = 0.5
+hypotheses(mod, hypothesis = 0.5)
+```
+
+```python
+from marginaleffects import *
+from statsmodels.formula.api import ols
+dat = get_dataset("thornton")
+mod = ols("outcome ~ agecat - 1", data=dat.to_pandas()).fit()
+hypotheses(mod, hypothesis=0.5)
+```
+
+## Example 2: Linear hypothesis test comparing two coefficients
+```r
+# Test H0: beta_3 - beta_1 = 0
+hypotheses(mod, hypothesis = "b3 - b1 = 0")
+```
+
+```python
+# Test H0: b2 - b0 = 0 (0-based indexing)
+hypotheses(mod, hypothesis = "b2 - b0 = 0")
+```
+
+## Example 3: Equivalence test using TOST
+```r
+# Test whether the difference between coefficients for
+# the 18-35 and >35 age groups falls within [-0.05, 0.05]
+hypotheses(mod,
+  hypothesis = "b3 - b2 = 0",
+  equivalence = c(-0.05, 0.05))
+```
+
+```python
+hypotheses(mod,
+  hypothesis="b2 - b1 = 0",
+  equivalence=[-0.05, 0.05])
+```

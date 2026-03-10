@@ -1,0 +1,69 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `predictions`, `avg_predictions`, `plot_predictions`, `comparisons`, `avg_comparisons`, `datagrid`, `polr` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `predictions`, `avg_predictions`, `comparisons`, `avg_comparisons`, `plot_predictions`, `datagrid` for this chapter.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+# Categorical and ordinal outcomes {#sec-categorical}
+- This chapter shows how the framework and tools introduced in Parts I and II help us give meaning to estimates obtained by fitting a categorical or ordinal outcome model.
+- A categorical outcome variable is discrete and involves a finite number of categories (e.g., choice of transportation: car, bus, bike, walk). A popular approach is to fit a multinomial logit model.
+- An ordinal outcome variable is discrete, involves a finite number of categories, and has a natural ordering (e.g., levels of satisfaction). A popular approach is to fit an ordered probit model.
+- In an ordered probit model, the probability of each outcome category $j$ is modeled as: $$P(Y = j) = F(\theta_j - \mathbf{X}\beta) - F(\theta_{j-1} - \mathbf{X}\beta)$$ where $\mathbf{X}$ is the vector of predictors, $\beta$ is the vector of coefficients, $\theta_j$ and $\theta_{j-1}$ are threshold parameters defining boundaries between categories, and $F$ is the standard normal CDF.
+- Models like the multinomial logit or ordered probit estimate different parameters for each level of the outcome, allowing predictions, comparisons, and slopes to be computed for each outcome level.
+- The chapter uses Fair's (1978) dataset of 601 survey responses on extramarital affairs, with demographic and marital predictors. The outcome variable records the self-reported frequency of affairs: 0, 1, 2, 3, 4--10, or >10.
+- An ordered probit model is fitted using `polr()` from the `MASS` package, with predictors: `children`, `yearsmarried`, and `gender`.
+- The raw coefficients of the ordered probit measure changes in a latent variable and lack a straightforward interpretation. Instead, we transform them into predictions, counterfactual comparisons, and slopes.
+
+## Predictions
+- The first step is to compute average predictions. In a categorical outcome model, predictions are expressed as probabilities, with one prediction for every level of the outcome variable.
+- To predict outcomes for a specific profile (e.g., a woman with children married for 10 years), use `datagrid()` to build a grid and `predictions()` to compute predicted probabilities for each outcome level.
+- Instead of individual-level predictions, `avg_predictions()` computes average predicted probabilities across all individuals in the dataset (marginal predictions).
+- The `avg_predictions()` function automatically returns one average predicted probability per outcome level. The group identifiers are in the `group` column of the output data frame.
+- Subgroup predictions can be computed using the `by` argument (e.g., `avg_predictions(mod, by = "children")`) to compare average predicted probabilities for respondents with and without children.
+- The `plot_predictions()` function visualizes average predicted probabilities by outcome level and subgroup, using the `by` argument to marginalize across combinations.
+- Outcome categories can be combined using a custom function passed to the `hypothesis` argument of `avg_predictions()`. For example, one can collapse all non-zero affair categories to estimate the probability of reporting at least one affair.
+- The custom `hypothesis` function accepts the same data frame returned by the base call (with `group`, `term`, and `estimate` columns) and returns a new data frame with `term` and `estimate` columns.
+
+## Counterfactual comparisons
+- After predictions, the chapter adopts a counterfactual perspective to quantify the strength of association between predictors and the outcome.
+- The `avg_comparisons()` function estimates what would happen to the reported number of affairs if a predictor changed while holding others constant. The shift in the focal predictor is defined using the `variables` argument.
+- For example, `avg_comparisons(mod, variables = list(yearsmarried = 5))` estimates the average effect of a 5-unit increase in years married on the predicted probability of each outcome level.
+- Increasing `yearsmarried` by 5 reduces the predicted probability that `affairs` equals zero and increases the predicted probability of higher affair counts; these effects are statistically significant.
+- In contrast, the counterfactual effect of `gender` yields small and statistically insignificant differences in predicted probabilities: we cannot reject the null that `gender` has no effect on `affairs`.
+- For each outcome level, `avg_comparisons()` returns a separate row of estimates, allowing detailed inspection of how a predictor affects the entire distribution of the categorical outcome.
+- The chapter concludes that transforming ordered probit parameters into predictions and comparisons yields interpretable, intuitive quantities that facilitate clear communication of findings.
+
+# Examples
+- The examples below are drawn from the original chapter and illustrate representative workflows.
+
+## Example 1: Predicted probabilities for a specific profile
+```{r}
+#| cache: false
+#| echo: false
+#| warning: false
+source("code/load.R")
+```
+
+```{r}
+library(MASS)
+library(marginaleffects)
+dat = get_dataset("affairs")
+mod = polr(
+  affairs ~ children + yearsmarried + gender,
+  method = "probit", data = dat, Hess = TRUE)
+predictions(mod, newdata = datagrid(
+  children = "yes",
+  yearsmarried = 10,
+  gender = "woman"))
+```
+
+## Example 2: Average predictions by subgroup
+```{r}
+avg_predictions(mod, by = "children")
+```
+
+## Example 3: Counterfactual comparisons for years married
+```{r}
+avg_comparisons(mod, variables = list(yearsmarried = 5))
+```

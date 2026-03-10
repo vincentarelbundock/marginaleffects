@@ -1,0 +1,130 @@
+<!DOCTYPE html><html><head><title>R: Fair's Extramarital Affairs Data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>Affairs</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Fair's Extramarital Affairs Data</h2>
+
+<h3>Description</h3>
+
+<p>Infidelity data, known as Fair's Affairs. Cross-section data from a survey
+conducted by Psychology Today in 1969.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>data("Affairs")</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame containing 601 observations on 9 variables.
+</p>
+
+<dl>
+<dt>affairs</dt><dd><p>numeric. How often engaged in extramarital sexual intercourse
+during the past year? <code>0</code> = none, <code>1</code> = once, <code>2</code> = twice,
+<code>3</code> = 3 times, <code>7</code> = 4&ndash;10 times, <code>12</code> = monthly,
+<code>12</code> = weekly, <code>12</code> = daily.</p>
+</dd>
+<dt>gender</dt><dd><p>factor indicating gender.</p>
+</dd>
+<dt>age</dt><dd><p>numeric variable coding age in years: <code>17.5</code> = under 20, <code>22</code> = 20&ndash;24,
+<code>27</code> = 25&ndash;29, <code>32</code> = 30&ndash;34, <code>37</code> = 35&ndash;39, <code>42</code> = 40&ndash;44,
+<code>47</code> = 45&ndash;49, <code>52</code> = 50&ndash;54, <code>57</code> = 55 or over.</p>
+</dd>
+<dt>yearsmarried</dt><dd><p>numeric variable coding number of years married: <code>0.125</code> = 3 months or less,
+<code>0.417</code> = 4&ndash;6 months, <code>0.75</code> = 6 months&ndash;1 year, <code>1.5</code> = 1&ndash;2 years,
+<code>4</code> = 3&ndash;5 years, <code>7</code> = 6&ndash;8 years, <code>10</code> = 9&ndash;11 years, <code>15</code> = 12 or more years.</p>
+</dd>
+<dt>children</dt><dd><p>factor. Are there children in the marriage?</p>
+</dd>
+<dt>religiousness</dt><dd><p>numeric variable coding religiousness: <code>1</code> = anti, <code>2</code> = not at all,
+<code>3</code> = slightly, <code>4</code> = somewhat, <code>5</code> = very.</p>
+</dd>
+<dt>education</dt><dd><p>numeric variable coding level of education: <code>9</code> = grade school,
+<code>12</code> = high school graduate, <code>14</code> = some college, <code>16</code> = college graduate,
+<code>17</code> = some graduate work, <code>18</code> = master's degree, <code>20</code> = Ph.D., M.D., or
+other advanced degree.</p>
+</dd>
+<dt>occupation</dt><dd><p>numeric variable coding occupation according to Hollingshead classification
+(reverse numbering).</p>
+</dd>
+<dt>rating</dt><dd><p>numeric variable coding self rating of marriage: <code>1</code> = very unhappy,
+<code>2</code> = somewhat unhappy, <code>3</code> = average, <code>4</code> = happier than average, 
+<code>5</code> = very happy.</p>
+</dd>
+</dl>
+
+
+
+<h3>Source</h3>
+
+<p>Online complements to Greene (2003). Table F22.2.
+</p>
+<p><a href="https://pages.stern.nyu.edu/~wgreene/Text/tables/tablelist5.htm">https://pages.stern.nyu.edu/~wgreene/Text/tables/tablelist5.htm</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Greene, W.H. (2003). <em>Econometric Analysis</em>, 5th edition. Upper Saddle River, NJ: Prentice Hall.
+</p>
+<p>Fair, R.C. (1978). A Theory of Extramarital Affairs. <em>Journal of Political Economy</em>,
+<b>86</b>, 45&ndash;61.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Greene2003</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>
+data("Affairs")
+
+## Greene (2003)
+## Tab. 22.3 and 22.4
+fm_ols &lt;- lm(affairs ~ age + yearsmarried + religiousness + occupation + rating,
+  data = Affairs)
+fm_probit &lt;- glm(I(affairs &gt; 0) ~ age + yearsmarried + religiousness + occupation + rating,
+  data = Affairs, family = binomial(link = "probit"))
+
+fm_tobit &lt;- tobit(affairs ~ age + yearsmarried + religiousness + occupation + rating,
+  data = Affairs)
+fm_tobit2 &lt;- tobit(affairs ~ age + yearsmarried + religiousness + occupation + rating,
+  right = 4, data = Affairs)
+
+fm_pois &lt;- glm(affairs ~ age + yearsmarried + religiousness + occupation + rating,
+  data = Affairs, family = poisson)
+
+library("MASS")
+fm_nb &lt;- glm.nb(affairs ~ age + yearsmarried + religiousness + occupation + rating,
+  data = Affairs)
+
+## Tab. 22.6
+library("pscl")
+fm_zip &lt;- zeroinfl(affairs ~ age + yearsmarried + religiousness + occupation + rating | age + 
+  yearsmarried + religiousness + occupation + rating, data = Affairs)
+</code></pre>
+
+</main>
+
+</div>
+</body></html>

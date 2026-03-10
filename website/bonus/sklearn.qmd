@@ -1,0 +1,93 @@
+# Scikit-learn {.unnumbered}
+
+This case study demonstrates how to use the `marginaleffects` package with Scikit-learn, to fit machine learning models. 
+
+The strategies illustrated here offers several major benefits. As we will see, `marginaleffects` can be used to improve the interpretability of opaque machine learning algorithms. `marginaleffects` also offers a formula API to fit Scikit-learn models.  This can streamline the analysis workflow, by obviating the need to build `X` and `y` matrices from data frames manually.
+
+The first code block imports necessary libraries and functions for the analysis.
+
+```{python}
+from marginaleffects import *
+from statsmodels.formula.api import ols
+import polars as pl
+import polars.selectors as cs
+from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.linear_model import LinearRegression
+from sklearn.compose import make_column_transformer
+from xgboost import XGBRegressor
+```
+
+The next code block uses the `fit_sklearn()` function to fit a linear regression model. We specify the dependent and independent variable using a simple formula interface, with a `~` symbol.^[Under the hood, the formula is parsed using the [Formulaic package.](https://matthewwardrop.github.io/formulaic/latest/)] The categorical predictor `branch` is wrapped in `C()` so that Formulaic encodes it as a set of indicator variables before handing the design matrix to Scikit-learn. A standalone script with just the imports, data loading, and this example lives in `bonus/sklearn_basic.py` for quick experimentation.
+
+The type of model we fit is determined by the `engine` argument. Here, we call `LinearRegression()` from Scikit-learn. The important requirement for `engine` is that it must be an object with a `fit()` method that accepts `y` and `X` as inputs. 
+
+The `avg_predictions()` function is then used to compute average predictions by the `branch` variable.
+
+```{python}
+military = get_dataset("military")
+military = military.with_columns(pl.col('branch').cast(pl.Categorical))
+
+mod_sk = fit_sklearn(
+    "rank ~ officer + hisp + C(branch)",
+    data=military,
+    engine=LinearRegression(),
+)
+```
+
+Finally, we can feed the resulting object to any `marginaleffects` function. For instance, this code computes average predicted rank for each branch of the military.
+
+```{python}
+avg_predictions(mod_sk, by="branch")
+```
+
+The following code block shows how to achieve equivalent results using `statsmodels` for fitting the linear regression model and computing average predictions.
+
+```{python}
+mod_sm = ols(
+    "rank ~ officer + hisp + branch",
+    data=military.to_pandas()).fit()
+avg_predictions(mod_sm, by="branch")
+```
+
+Now, we switch to using XGBoost to make predictions and counterfactual-comparisons in a test set. Instead of using the formula interface, we will define a Scikit-learn pipeline and define a custom selector function.
+
+To begin, we load a dataset on AirBnB rental properties, and split it into training and testing sets.
+
+```{python}
+airbnb = get_dataset("airbnb")
+# Convert all non-numeric columns to categorical
+catvar = airbnb.select(~cs.numeric()).columns
+airbnb = airbnb.with_columns([pl.col(c).cast(pl.Categorical) for c in catvar])
+
+train, test = train_test_split(airbnb)
+```
+
+The categorical variables need to be one-hot encoded, meaning they are transformed into a format suitable for machine learning algorithms. We create a Scikit-learn pipeline, which is a sequence of data processing steps that ends with a model fitting step.
+
+```{python}
+catvar = airbnb.select(~cs.numeric()).columns
+preprocessor = make_column_transformer(
+    (OneHotEncoder(), catvar),
+    remainder=FunctionTransformer(lambda x: x.to_numpy()),
+)
+pipeline = make_pipeline(preprocessor, XGBRegressor())
+```
+
+Scikit-learn pipelines expect data to be passed as two matrices `y` and `X`. In contrast, `marginaleffects` works with data frames. Therefore, we need a function that accepts a data frame and returns two matrices. This will be used internally to fit the model and make predictions on new data.
+
+```{python}
+def selector(data):
+    y = data.select(cs.by_name("price", require_all=False))
+    X = data.select(~cs.by_name("price", require_all=False))
+    return y, X
+
+mod = fit_sklearn(selector, data=train, engine=pipeline)
+
+avg_predictions(mod, newdata=test, by="unit_type")
+```
+
+```{python}
+avg_comparisons(mod, variables={"bedrooms": 2}, newdata=test)
+```

@@ -1,0 +1,179 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `slopes`, `avg_slopes`, `plot_slopes`, `datagrid`, `inferences` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `slopes`, `avg_slopes`, `plot_slopes`, `datagrid`, `inferences` for this chapter.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+## Summary
+
+This chapter defined a "slope" as the partial derivative of the regression equation with respect to a predictor of interest. It is a measure of association between two variables, or of the effect of one variable on another, holding other predictors constant. The `slopes()` function from the `marginaleffects` package computes slopes for a wide range of models. `avg_slopes()` aggregates slopes across units or groups. `plot_slopes()` displays slopes visually.
+
+To clearly define slopes and attendant tests, analysts must make five decisions.
+
+First, the *Quantity*.
+
+- A slope is always computed with respect to a focal predictor, whose effect on (or association with) the outcome we wish to estimate. In `marginaleffects` functions, the focal variable is specified using the `variables` argument.
+- A slope can roughly be interpreted as the effect of a one-unit change in the focal predictor on the predicted outcome. However, this interpretation is a linear approximation, valid only in a small neighborhood of the predictors.
+
+Second, the *Predictors*.
+
+- Slopes are conditional quantities, meaning that they will typically vary based on the values of all predictors in a model. Every row of a dataset has its own slope.
+- Analysts can compute slopes for different combinations of predictor values---or grids: empirical, interesting, representative, balanced, or counterfactual.
+- The predictor grid is defined by the `newdata` argument and the `datagrid()` function.
+
+Third, the *Aggregation*.
+
+- To simplify the presentation of results, analysts can report average slopes. Different aggregation schemes are available:
+    - Unit-level slopes (no aggregation)
+    - Average slopes
+    - Average slopes by subgroup
+    - Weighted average of slopes
+- Slopes can be aggregated using the `avg_slopes()` function and the `by` argument.
+
+Fourth, the *Uncertainty*.
+
+- In `marginaleffects`, the `vcov` argument allows analysts to report classical, robust, or clustered standard errors for slopes.
+- The `inferences()` function can compute uncertainty intervals via bootstrapping or simulation-based inference.
+
+Fifth, the *Test*.
+
+- A null hypothesis test evaluates whether a slope (or a function of slopes) is significantly different from a null value. For example, we may use a null hypothesis test to check if treatment effects are equal in subgroups of the sample. Null hypothesis tests are conducted using the `hypothesis` argument.
+- An equivalence test evaluates whether a slope (or a function of slopes) is similar to a reference value. Equivalence tests are conducted using the `equivalence` argument.
+
+# Slopes {#sec-slopes}
+- A slope measures how the predicted value of the outcome $Y$ responds to changes in a focal predictor $X$, when we hold other covariates at fixed values. It is often the main quantity of interest when a researcher wants to estimate an effect or the strength of association between two variables.
+- Slopes belong to the same toolbox as counterfactual comparisons: both help us answer what would happen to a predicted outcome if one of the predictors were slightly different.
+- In this book, "slope" and "marginal effect" are used interchangeably to mean: partial derivative of the regression equation with respect to a predictor of interest. Other terms used in the literature include "trend," "velocity," and "partial effect."
+- In a simple linear model $Y = \beta_0 + \beta_1 X + \varepsilon$, the slope with respect to $X$ is $\frac{\partial Y}{\partial X} = \beta_1$. This explains why some analysts refer to regression coefficients as slopes.
+- The interpretation of a slope as the effect of a one-unit change in $X$ is a linear approximation, valid only for small changes in $X$ in a small neighborhood of the predictors. The approximation may not be good when the regression function is non-linear.
+- Since slopes are defined as derivatives (infinitesimal changes), they can only be constructed for continuous numeric predictors. Analysts interested in the effect of a change in a categorical predictor should use counterfactual comparisons instead.
+- Slopes are conditional quantities: they typically depend on the value of $X$ and on the values of all other predictors in the model. Every row of a dataset or grid has its own slope.
+- The rest of the chapter proceeds through the five questions of the conceptual framework: (1) quantity, (2) predictors, (3) aggregation, (4) uncertainty, and (5) test.
+
+## Quantity
+- A slope characterizes the strength and direction of association between a predictor and an outcome, holding other covariates constant.
+- The slope of a curve tells us whether the curve is increasing, decreasing, or flat as we move along the x-axis.
+- By examining the values of derivatives at any given point, we can determine precisely where the corresponding functions are rising, falling, or flat.
+- In non-linear models (e.g., logistic regression), the slope is far from constant---it depends on the baseline value of the predictor.
+- The derivative of a function precisely characterizes both the strength and direction of association between a predictor and an outcome at any given point in the predictor space.
+- The `plot_predictions()` and `plot_slopes()` functions can be used to visualize the outcome function and its derivative side by side.
+
+### Slopes of simple functions
+- For the linear function $Y = -1 + 0.5X$, the derivative is constant: $\frac{\partial Y}{\partial X} = 0.5$. The association between $X$ and $Y$ is always positive and of constant magnitude.
+- For the quadratic function $Y = X^2$, the derivative is $\frac{\partial Y}{\partial X} = 2X$. When $X < 0$, the relationship is negative; when $X = 0$, the slope is zero; when $X > 0$, the relationship is positive. The sign and strength of the relationship depend on the baseline value of $X$.
+- For $Y = \cos(X)$, the derivative is $\frac{\partial Y}{\partial X} = -\sin(X)$. Whenever $-\sin(X)$ is negative, $\cos(X)$ points downward; when $-\sin(X) = 0$, the curve is flat; when $-\sin(X) > 0$, it points upward.
+- These three examples show that the derivative precisely characterizes both the strength and direction of association between a predictor and an outcome.
+- The sign of the derivative tells us if $Y$ is increasing or decreasing, and the magnitude tells us how fast.
+- The heterogeneity in slopes across the predictor space is a key insight for studying interactions and non-linearity in regression models.
+
+### Slope of a logistic function
+- Consider a logistic regression: $\Pr(Y=1) = g(\beta_1 + \beta_2 X)$, where $g$ is the logistic function. With true parameters $\beta_1 = -1$ and $\beta_2 = 0.5$, we can simulate data and fit a model with `glm()`.
+- The key insight is that the slope of the logistic function is far from constant. Increasing $X$ has a different effect on $\Pr(Y=1)$ depending on the baseline position on the horizontal axis.
+- When $X$ is small or large, the prediction curve is flat and the derivative is close to zero. At intermediate values, the curve is steep and the derivative is large and positive.
+- Taking the derivative of the logistic equation using the chain rule: $\frac{\partial \Pr(Y=1)}{\partial X} = \beta_2 \cdot g'(\beta_1 + \beta_2 X)$, where $g'$ is the logistic density function.
+- To evaluate a slope, one must explicitly state the baseline values of the predictors. The slope will differ at different values of $X$.
+- The `slopes()` function computes these derivatives. The `variables` argument specifies the focal predictor, and `newdata` specifies the predictor values at which to evaluate the slope.
+- The `plot_predictions()` and `plot_slopes()` functions visualize the outcome function and its derivative, and the `patchwork` package can combine them vertically.
+
+## Predictors {#sec-slopes_predictors}
+- Slopes answer: how does the predicted outcome $\hat{Y}$ change when the focal variable $X$ increases by a small amount and the adjustment variables $Z_1, Z_2, \ldots, Z_n$ are held at specific values?
+- Answering this requires selecting both the focal variable and the values of the adjustment variables where we want to evaluate the slope.
+- The focal variable is specified via the `variables` argument; the adjustment variables are set via the `newdata` argument and the `datagrid()` function.
+- Slopes are conditional quantities: every predictor profile (combination of predictor values) is associated with its own slope.
+- The `slopes()` function returns unit-level marginal effects by default---one slope per row in the dataset.
+- The `newdata="mean"` shortcut computes a "marginal effect at the mean" for an individual whose characteristics are exactly average or modal on all predictors.
+- Choosing to report slopes at the mean vs. at user-specified values can yield quite different results, emphasizing the crucial importance of grid definition.
+
+### Focal variable
+- The focal variable is the predictor of interest---the variable whose association with (or effect on) $Y$ we wish to estimate.
+- It is the predictor in the denominator of the partial derivative: $\frac{\partial Y}{\partial X}$.
+- The `slopes()` function accepts a `variables` argument to specify the focal predictor.
+- For example, `slopes(mod, variables = "distance")` estimates the partial derivative of the outcome with respect to `distance`.
+- A one-unit increase in the focal predictor is associated with a change in the predicted outcome equal to the slope, but this is a linear approximation valid only for small changes.
+
+### Adjustment variables
+- Slopes are conditional quantities: they typically depend on the values of all variables on the right-hand side of a regression equation.
+- Every predictor profile (combination of predictor values) is associated with its own slope; every row in a grid has its own slope.
+- The "interesting" or "user-specified" grid collects combinations of predictor values that hold particular scientific or domain-specific interest.
+- The `datagrid()` helper function specifies a grid of predictor values, which is passed to the `newdata` argument of `slopes()`.
+- The function then returns a "slope at user-specified values" or "marginal effect at interesting values."
+- Instead of manually specifying predictor values, `newdata="mean"` computes slopes for an individual with average or modal characteristics. But the "mean" individual may not be realistic or substantively interesting.
+- Analysts can also obtain unit-level marginal effects (one per observation) as the default output of `slopes()`.
+
+## Aggregation {#sec-slopes_aggregation}
+- A dataset with one marginal effect estimate per observation is unwieldy and difficult to interpret. Many analysts prefer to report the "average marginal effect" (or "average slope"), the average of all unit-level estimates.
+- The `avg_slopes()` function conveniently computes average slopes in one step.
+- There is a nuanced distinction between the "marginal effect at the mean" and the "average marginal effect." The former is based on a single individual with exactly average characteristics; the latter averages slopes across all observed data points.
+- These two options are not always equivalent; they can yield numerically and substantively different results.
+- The marginal effect at the mean may be useful under computational constraints. The average marginal effect is useful when the dataset represents the population distribution of predictors.
+- The `by` argument computes "conditional average marginal effects"---average slopes by subgroup---to explore heterogeneity in the association between predictors and the outcome.
+- For example, using `avg_slopes(mod, variables = "distance", by = "incentive")` reveals whether the association between `distance` and `outcome` differs by incentive group.
+
+## Uncertainty {#sec-slopes_uncertainty}
+- Uncertainty around slopes can be estimated using various strategies: classical or robust standard errors, bootstrapping, simulation-based inference, etc.
+- The `vcov` argument specifies the variance-covariance strategy (e.g., `vcov = ~village` for clustered standard errors).
+- The `conf_level` argument controls the size of confidence intervals.
+- The `inferences()` function provides bootstrapping and simulation-based inference (e.g., `inferences(method = "boot")`).
+- Different uncertainty quantification strategies yield the same point estimates but different confidence intervals.
+- For example, `avg_slopes(mod, variables = "distance", vcov = ~village)` clusters standard errors by village, while piping to `inferences(method = "boot")` applies a non-parametric bootstrap.
+
+## Test {#sec-slopes_test}
+- The hypothesis testing approach from earlier chapters is directly applicable to slopes, just as it was to model coefficients, predictions, and counterfactual comparisons.
+- The `hypothesis` argument accepts an equation-like string specifying the null hypothesis, e.g., `hypothesis = "b1 - b2 = 0"`.
+- In the running example, the average slope of `outcome` with respect to `distance` appears different across `incentive` subgroups: distance seems more discouraging to people who do not receive an incentive.
+- To formally test this, we compute `avg_slopes(mod, variables = "distance", by = "incentive", hypothesis = "b1 - b2 = 0")`.
+- If the p-value is large, we cannot reject the null hypothesis of homogeneity in the effect of distance across subgroups.
+- This framework generalizes: analysts can conduct linear or non-linear hypothesis tests on any slope or function of slopes.
+
+## Visualization {#sec-slopes_visualization}
+- Predictions give the level of an expected outcome for given predictor values; slopes capture how the expected outcome changes in response to a change in a focal variable, holding adjustment variables constant.
+- The top panel of a combined figure shows model-based predictions at different values of `distance`; the bottom panel shows the corresponding slope of the predicted outcome with respect to `distance`.
+- When the slope is negative, the prediction curve declines. When the slope is zero, the prediction curve is flat. This correspondence helps interpret the model.
+- The `plot_predictions()` and `plot_slopes()` functions draw these panels, and the `patchwork` `/` operator combines them vertically.
+- `plot_slopes()` can display slopes based on multiple conditions (e.g., `condition = c("distance", "incentive")`) to show how the association varies across subgroups.
+- The `by` argument in `plot_slopes()` computes marginal (average) slopes by subgroup, useful for visualizing the results explored in hypothesis tests.
+- In the running example, the negative association between `distance` and `outcome` seems weaker when `incentive=1`, but wide confidence intervals prevent rejecting the null of equal slopes.
+
+# Examples
+The examples below are drawn from the original chapter and illustrate representative workflows.
+
+## Example 1: Compute slopes at user-specified predictor values
+```r
+library(marginaleffects)
+dat <- get_dataset("thornton")
+mod <- glm(outcome ~ incentive * distance * I(distance^2),
+  data = dat, family = binomial)
+
+# Slope of outcome w.r.t. distance for a treated individual at distance=1
+slopes(mod,
+  variables = "distance",
+  newdata = datagrid(incentive = 1, distance = 1))
+```
+
+## Example 2: Average slopes by subgroup with hypothesis test
+```r
+# Average slope of outcome w.r.t. distance, by incentive group
+avg_slopes(mod, variables = "distance", by = "incentive")
+
+# Test whether the two subgroup slopes are statistically distinguishable
+avg_slopes(mod,
+  variables = "distance",
+  by = "incentive",
+  hypothesis = "b1 - b2 = 0")
+```
+
+## Example 3: Visualize predictions and slopes
+```r
+library(ggplot2)
+library(patchwork)
+
+p1 <- plot_predictions(mod, condition = "distance") +
+  labs(y = "Predicted Pr(Outcome=1)")
+
+p2 <- plot_slopes(mod, variables = "distance", condition = "distance") +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  labs(y = "dY/dX")
+
+p1 / p2
+```

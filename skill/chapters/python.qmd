@@ -1,0 +1,310 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `predictions`, `comparisons`, `slopes`, `avg_predictions`, `avg_comparisons`, `avg_slopes`, `plot_predictions`, `plot_comparisons`, `plot_slopes`, `datagrid`, `hypotheses`, `get_dataset` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `predictions`, `comparisons`, `slopes`, `avg_predictions`, `avg_comparisons`, `avg_slopes`, `plot_predictions`, `plot_comparisons`, `plot_slopes`, `datagrid`, `hypotheses`, `get_dataset`, `fit_sklearn` for this chapter.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+# Appendix II: Python {#sec-python .unnumbered .unlisted}
+- This appendix collects Python code equivalents for nearly all R commands shown throughout the book.
+- The same code, with full output, is available on the marginaleffects.com website.
+- By default, `marginaleffects` commands in Python return data frames in Polars format.
+- Polars objects can be converted to Pandas, Numpy, or other formats using `.to_pandas()`, `.to_numpy()`, and similar `.to_*()` methods.
+- Python uses 0-based indexing, whereas R uses 1-based indexing; this is important when translating examples.
+- The appendix imports `polars`, `numpy`, `marginaleffects`, `plotnine`, `scipy.stats`, and `statsmodels.formula.api` as the standard working environment.
+- The `get_dataset()` function retrieves built-in datasets, and optional arguments like `search` and `docs` help discover and document datasets.
+- Features not yet available in the Python version of `marginaleffects` are listed in the Roadmap at the end.
+
+## 1. Who is this book for? {.unnumbered}
+
+### Data {.unnumbered}
+- `get_dataset()` retrieves named datasets from R packages for use in Python; for example, `get_dataset("Titanic", "Stat2Data")` loads the Titanic dataset.
+- Subsetting rows and columns uses Polars bracket syntax, e.g., `dat[:6, ["Name", "Survived", "Age"]]`.
+- The `search` argument in `get_dataset()` lets users search for datasets by keyword.
+- The `docs` argument in `get_dataset()` returns documentation about the dataset.
+- These tools ensure Python users can reproduce every data example from the book.
+
+## 3. Conceptual framework {.unnumbered}
+
+### Predictor grids {.unnumbered}
+- The `datagrid()` function creates grids of predictor values for prediction and comparison.
+- An empirical grid uses the observed data directly.
+- An interesting grid lets users specify particular values for selected variables, e.g., `datagrid(Bin=[0,1], newdata=dat)`.
+- A representative grid sets all predictors to their mean or mode via `grid_type="mean_or_mode"`.
+- A balanced grid creates all unique combinations of predictors via `grid_type="balanced"`.
+- A counterfactual grid duplicates the entire dataset for each level of a focal variable via `grid_type="counterfactual"`.
+- The `rowidcf` column in counterfactual grids tracks which original row each duplicated row corresponds to.
+
+## 4. Hypothesis and equivalence tests {.unnumbered}
+
+### Null hypothesis {.unnumbered}
+- The `hypotheses()` function tests whether model parameters or functions of parameters equal a specified null value.
+- Setting `hypothesis=0.5` tests the null that a coefficient equals 0.5, rather than the default null of 0.
+- Linear hypothesis tests compare or combine coefficients, e.g., `hypothesis="b2 - b0 = 0"` tests whether two coefficients are equal.
+- Non-linear hypothesis tests are also supported, e.g., `hypothesis="b2 / b0 = 1"` tests a ratio, and arbitrary Python expressions like `b1**2 * np.exp(b0)` can be used.
+- Shortcut strings like `"difference ~ reference"` and `"ratio ~ sequential"` automate pairwise comparisons across all coefficients.
+
+### Equivalence tests {.unnumbered}
+- The `equivalence` argument defines a range (e.g., `[-0.05, 0.05]`) within which the effect is considered practically equivalent to zero.
+- Equivalence tests are complementary to standard null hypothesis tests: a standard test asks whether the effect differs from zero, while an equivalence test asks whether the effect is small enough to be negligible.
+- The result includes a `p_value_equiv` column for the equivalence test p-value.
+- Combining a standard hypothesis test with an equivalence test helps distinguish between "no evidence of an effect" and "evidence of no meaningful effect."
+- This approach directly mirrors the R workflow described in the main hypothesis chapter.
+
+## 5. Predictions {.unnumbered}
+
+### Quantity of interest {.unnumbered}
+- Predictions are model-based expected values of the outcome, computed for specific covariate profiles.
+- In logistic regression, the linear predictor is the sum of coefficient-times-predictor products; applying the logistic function converts this to a probability.
+- The `predictions()` function computes predictions with standard errors and confidence intervals, given a model and a `newdata` grid.
+- Predictions can be made on different scales (e.g., link vs. response) depending on the model type.
+- Predictions are conditional quantities: they depend on the values of all predictors in the model.
+
+### Predictor grids {.unnumbered}
+- An empirical grid (the default) computes predictions for every row in the original data, yielding one prediction per observation.
+- An interesting grid uses `datagrid()` to specify particular predictor values, e.g., `datagrid(agecat="18 to 35", incentive=[0,1])`.
+- A representative grid via `newdata="mean"` creates a single synthetic profile with all-mean/all-mode values.
+- A balanced grid via `newdata="balanced"` creates all combinations of categorical levels with numeric variables at their means.
+- A counterfactual grid via `variables={"incentive": [0, 1]}` duplicates the dataset for each specified value of the focal variable.
+- Counterfactual predictions can be visualized by plotting treatment vs. control predictions for each unit.
+
+### Aggregation {.unnumbered}
+- `avg_predictions()` computes the mean of unit-level predictions, yielding an average (marginal) predicted value.
+- The `by` argument groups the average by a categorical variable, e.g., `avg_predictions(mod, by="agecat")`.
+- `avg_predictions(mod, newdata="balanced", by="agecat")` averages over a balanced grid within each subgroup.
+- Combining `variables` and `by` arguments computes average counterfactual predictions per subgroup.
+- The result of `avg_predictions()` is equivalent to manually computing `predictions()` and taking the mean of the `estimate` column.
+
+### Hypothesis tests {.unnumbered}
+- The `hypothesis` argument in `avg_predictions()` tests whether average predictions differ across groups, e.g., `hypothesis="b2 - b1 = 0"`.
+- Shortcut strings like `"difference ~ sequential"` and `"difference ~ reference"` automate pairwise comparisons.
+- The pipe `|` syntax in hypothesis strings (e.g., `"difference ~ sequential | incentive"`) conducts pairwise tests within subgroups defined by another variable.
+- The `equivalence` argument adds equivalence testing to average predictions, supplementing standard null hypothesis tests.
+- These hypothesis and equivalence tests follow the same syntax as the `hypotheses()` function from the hypothesis chapter.
+
+### Visualization {.unnumbered}
+- Unit-level predictions can be plotted as histograms or empirical CDFs using `plotnine`, after casting variables to string types as needed.
+- `plot_predictions(mod, by="incentive")` produces a marginal prediction plot, averaging across other covariates.
+- Adding a second variable to `by` (e.g., `by=["incentive", "agecat"]`) creates grouped marginal plots.
+- `plot_predictions(mod, condition="distance")` produces a conditional prediction plot showing how predictions vary with a continuous predictor.
+- Multiple variables in the `condition` argument (up to three) create faceted or color-coded conditional plots.
+- The `draw=False` argument returns the underlying data frame instead of rendering the plot, enabling custom visualizations.
+
+## 6. Counterfactual comparisons {.unnumbered}
+
+### First steps {.unnumbered}
+- A counterfactual comparison estimates the change in predicted outcome when a focal predictor changes, holding other variables constant.
+- Manually: create two grids differing only in the focal variable, compute predictions for each, and take the difference.
+- The `comparisons()` function automates this, returning the difference along with standard errors and test statistics.
+- Comparisons are conditional quantities: each individual may have a different comparison depending on their covariate values.
+- The `newdata` argument specifies the covariate profile at which the comparison is evaluated.
+
+### Comparison functions {.unnumbered}
+- The `comparison` argument in `comparisons()` controls how counterfactual predictions are compared: `"difference"` (default), `"ratio"`, `"lift"`, and others.
+- Setting `comparison="ratio"` computes the ratio of predicted outcomes under treatment vs. control.
+- Setting `comparison="lift"` computes the relative change (treatment minus control, divided by control).
+- When using ratio or lift, set `hypothesis=1` to test against the null that the two predictions are identical.
+- Custom comparison functions can be passed to the `comparison` argument for fully flexible analyses.
+
+### Predictor grids {.unnumbered}
+- Focal variables: for binary predictors, comparisons default to a 0-to-1 change; explicit direction can be set via `variables={"incentive": [1, 0]}`.
+- For categorical predictors, `comparisons()` returns contrasts between each level and the reference level by default.
+- For numeric predictors, contrasts can be specified as a fixed increment (`5`), a standard deviation (`"sd"`), specific values (`[0, 3]`), interquartile range (`"iqr"`), or full range (`"minmax"`).
+- Cross-comparisons assess the joint effect of changing multiple predictors simultaneously via `cross=True`.
+- Adjustment variables: by default, comparisons are computed for every row of the original dataset; alternative grids (interesting, representative, balanced) can be set via `newdata`.
+
+### Aggregation {.unnumbered}
+- `avg_comparisons()` averages unit-level comparisons across the dataset, yielding an average marginal effect or average treatment effect.
+- The `by` argument computes subgroup-specific averages, e.g., `avg_comparisons(mod, variables="incentive", by="agecat")`.
+- Restricting `newdata` to treated units (e.g., `dat.filter(pl.col("incentive") == 1)`) computes an average treatment effect on the treated (ATT).
+- Average predictions, average counterfactual predictions, and average counterfactual comparisons are distinct quantities: the first uses observed covariates, the second replicates data under fixed focal values, and the third takes the difference of the second.
+- The `variables` argument with `"sequential"` computes sequential pairwise comparisons across ordered levels of a categorical variable.
+
+### Hypothesis tests {.unnumbered}
+- The `hypothesis` argument in `avg_comparisons()` tests whether subgroup-specific average comparisons differ from each other.
+- For example, `hypothesis="b0 - b2 = 0"` tests whether the average comparison in the first subgroup differs from the third.
+- A large p-value means the estimated treatment effects in different subgroups are not statistically distinguishable.
+- This workflow is useful for assessing treatment effect heterogeneity across subgroups.
+- The syntax mirrors the hypothesis testing framework introduced in the main hypothesis chapter.
+
+### Visualization {.unnumbered}
+- `plot_comparisons()` visualizes average or conditional comparisons as point estimates with confidence intervals.
+- The `by` argument creates marginal comparison plots across subgroups, e.g., `plot_comparisons(mod, variables="incentive", by="agecat")`.
+- The `condition` argument creates conditional comparison plots showing how the effect of a focal variable changes with a continuous predictor.
+- Multiple variables in `condition` produce faceted or color-coded plots, e.g., `condition=["distance", "agecat"]`.
+- These plots help assess whether treatment effects vary systematically across predictor values.
+
+## 7. Slopes {.unnumbered}
+
+### Predictor grids {.unnumbered}
+- The `slopes()` function computes partial derivatives (marginal effects) of the predicted outcome with respect to a focal predictor.
+- In logistic regression, the slope of the probability with respect to X varies across the predictor space because of the non-linear link function.
+- `slopes()` can compute slopes at specific points via `newdata=datagrid(...)`, at the mean via `newdata="mean"`, or for every observation (the default).
+- When the model includes polynomials or interactions (e.g., `incentive * distance * I(distance**2)`), slopes capture the combined marginal effect.
+- The result includes standard errors and confidence intervals computed via the delta method.
+
+### Aggregation {.unnumbered}
+- `avg_slopes()` averages unit-level slopes across the dataset, yielding an average marginal effect.
+- The `by` argument computes subgroup-specific average slopes, e.g., `avg_slopes(mod, variables="distance", by="incentive")`.
+- Average marginal effects summarize how a one-unit change in a predictor relates to the outcome on average.
+- These averages are computed over the empirical distribution of covariates, which accounts for heterogeneity in the population.
+- The result is a single-row (or few-row) data frame with estimate, standard error, and confidence interval.
+
+### Hypothesis tests {.unnumbered}
+- The `hypothesis` argument in `avg_slopes()` tests whether average slopes differ across subgroups.
+- For example, `hypothesis="b0 - b1 = 0"` tests whether the average slope of distance differs between incentive groups.
+- This tests treatment effect heterogeneity on the slope scale.
+- The syntax is identical to that used in `avg_predictions()` and `avg_comparisons()`.
+- A significant result suggests the relationship between the predictor and outcome differs across subgroups.
+
+### Visualization {.unnumbered}
+- `plot_predictions(mod, condition="distance")` shows the predicted outcome as a function of distance, giving context for interpreting slopes.
+- `plot_slopes(mod, variables="distance", condition="distance")` shows how the marginal effect of distance varies across its own range.
+- Adding a second variable to `condition` (e.g., `condition=["distance", "incentive"]`) facets or colors the slope plot by a grouping variable.
+- `plot_slopes()` with the `by` argument shows average slopes for each subgroup as point estimates with confidence intervals.
+- These visualizations complement numerical slope estimates by making non-linear patterns visible.
+
+## 8. Causal inference with G-computation {.unnumbered}
+
+### Treatment effects {.unnumbered}
+- G-computation estimates causal effects by fitting an outcome model with treatment and confounders, then comparing predictions under counterfactual treatment assignments.
+- The procedure: set treatment to 0 for all units, predict; set treatment to 1 for all units, predict; compare.
+- `avg_predictions(mod, variables="win_big", by="win_big")` computes average counterfactual predictions under each treatment level.
+- `avg_comparisons(mod, variables="win_big")` computes the average treatment effect (ATE) directly.
+- Restricting `newdata` to treated or control units yields the average treatment effect on the treated (ATT) or untreated (ATU), respectively.
+
+### Conditional average treatment effects {.unnumbered}
+- `avg_comparisons(mod, variables="win_big", by="work")` estimates the conditional average treatment effect (CATE) for subgroups defined by the `work` variable.
+- CATEs reveal treatment effect heterogeneity: the effect of treatment may differ across subgroups.
+- The `by` argument can be set to any categorical variable in the model to explore different sources of heterogeneity.
+- G-computation requires correct specification of the outcome model for valid causal inference.
+- The same `avg_comparisons()` workflow used for descriptive analysis extends directly to causal inference under appropriate assumptions.
+
+## 9. Experiments {.unnumbered}
+
+### Covariate adjustment {.unnumbered}
+- In a randomized experiment, a simple model like `outcome ~ incentive` estimates the treatment effect; `vcov="HC2"` provides heteroskedasticity-robust standard errors.
+- Adding covariates (e.g., `incentive * (age + distance + hiv2004)`) can improve precision without biasing the treatment effect estimate.
+- `avg_comparisons(mod, variables="incentive", vcov="HC2")` computes the average treatment effect with robust inference.
+- Covariate adjustment interacts treatment with covariates, allowing the treatment effect to vary across the population.
+- The `marginaleffects` workflow is the same whether or not covariates are included: fit the model, then call `avg_comparisons()`.
+
+### Factorial experiments {.unnumbered}
+- Factorial designs randomize multiple treatments simultaneously; the model includes main effects and interactions (e.g., `Y ~ Ta + Tb + Ta:Tb`).
+- `plot_predictions(mod, by=["Ta", "Tb"])` visualizes predicted outcomes across all treatment combinations.
+- `avg_comparisons(mod, variables="Ta", by="Tb")` estimates the effect of one treatment within levels of the other.
+- `avg_comparisons(mod, variables=["Ta", "Tb"], cross=True)` estimates the joint effect of changing both treatments simultaneously.
+- `hypothesis="b1 - b0 = 0"` tests whether the effect of one treatment differs across levels of the other, quantifying the interaction.
+
+## 10. Interactions and polynomials {.unnumbered}
+
+### Multiplicative interactions {.unnumbered}
+- Categorical-by-categorical: fit `Y ~ X * M`, then use `avg_comparisons(mod, variables="X", by="M")` to estimate the effect of X within each level of M.
+- Categorical-by-continuous: use `predictions()` at specific values of the continuous moderator, or `plot_predictions(mod, condition=["M", "X"])` to visualize.
+- Continuous-by-continuous: use `slopes()` to compute the marginal effect of X at specific values of M, or `plot_slopes(mod, variables="X", condition="M")` to visualize.
+- `hypothesis="b2 - b0 = 0"` or similar strings test whether the effect of X differs across levels or values of M.
+- Multiple interactions (e.g., `X * M1 * M2`) are handled by specifying `by=["M2", "M1"]` and using composite hypothesis strings like `"(b1 - b0) - (b3 - b2) = 0"` to test higher-order interactions.
+
+### Polynomials {.unnumbered}
+- Polynomial terms (e.g., `I(X**2)`, `I(X**3)`) capture non-linear relationships; `plot_predictions(mod, condition="X", points=0.05)` overlays the fitted curve on the data.
+- `slopes()` at specific values of X (e.g., `datagrid(X=[-2, 0, 2])`) reports the instantaneous marginal effect at each point.
+- Polynomials can be interacted with categorical or continuous moderators (e.g., `M * (X + I(X**2) + I(X**3))`).
+- `plot_predictions(mod, condition=["X", "M"], points=0.1)` visualizes how the polynomial curve differs across moderator levels.
+- `slopes()` with `newdata=datagrid(M=[0,1], X=fivenum)` reports marginal effects at the five-number summary of X, separately for each moderator level.
+
+## 13. Machine learning {.unnumbered}
+
+### Predictions {.unnumbered}
+- `fit_sklearn()` wraps a scikit-learn pipeline so it can be used with `marginaleffects` functions; it requires a function that splits data into X and y, the data, and the pipeline engine.
+- The pipeline typically includes a preprocessor (e.g., `OneHotEncoder` for categorical variables) and a model (e.g., `XGBRegressor`).
+- `avg_predictions(mod, by="unit_type", newdata=test)` computes average predictions by subgroup on held-out test data.
+- `plot_predictions(mod, by=["bedrooms", "unit_type"])` visualizes predicted outcomes across predictor combinations.
+- Counterfactual grids can be constructed with `datagrid(grid_type="counterfactual")` for machine learning models, just as for parametric models.
+
+### Comparisons {.unnumbered}
+- `avg_comparisons(mod, variables={"bedrooms": 2})` estimates the average effect of a 2-unit increase in bedrooms on predicted price.
+- Cross-comparisons with `cross=True` estimate the joint effect of changing multiple predictors simultaneously.
+- The `marginaleffects` workflow for machine learning models is identical to that for parametric models: fit, predict, compare, aggregate.
+- This model-agnostic approach means the same interpretation tools apply whether the underlying model is a logistic regression or a gradient-boosted tree.
+- Standard errors for machine learning models may require bootstrap or other resampling methods, as classical delta-method standard errors assume a parametric model.
+
+## Roadmap {#sec-python-roadmap}
+- Bayesian models.
+- Mixed effects models.
+- Categorical outcome models.
+- Functions in the `comparison` argument of `comparisons()`.
+- Rug plots in `plot_*()` functions.
+- Bootstrap, simulation-based inference, and conformal prediction.
+- Multiple comparison correction.
+- Clustered standard errors.
+- Robust standard errors and link scale predictions for logistic regression models with Statsmodels.
+
+# Examples
+
+## Example 1: Predictions on a counterfactual grid
+
+```python
+import polars as pl
+import numpy as np
+from marginaleffects import *
+from plotnine import *
+from statsmodels.formula.api import logit
+
+dat = get_dataset("thornton")
+dat = dat.drop_nulls(subset=["incentive"])
+mod = logit("outcome ~ incentive + agecat + distance",
+  data=dat.to_pandas()).fit()
+
+# Average predictions by age category
+avg_predictions(mod, by="agecat")
+
+# Average predictions on a balanced grid
+avg_predictions(mod, newdata="balanced", by="agecat")
+
+# Conditional prediction plot
+plot_predictions(mod, condition=["distance", "incentive"]).show()
+```
+
+## Example 2: Average comparisons with hypothesis test
+
+```python
+from marginaleffects import *
+from statsmodels.formula.api import logit
+
+dat = get_dataset("thornton")
+mod = logit("outcome ~ incentive * (agecat + distance)",
+  data=dat.to_pandas()).fit()
+
+# Average treatment effect of incentive
+avg_comparisons(mod, variables="incentive")
+
+# Average treatment effect by age subgroup
+avg_comparisons(mod, variables="incentive", by="agecat")
+
+# Test whether the effect differs between age subgroups
+avg_comparisons(mod, variables="incentive", by="agecat",
+  hypothesis="b0 - b2 = 0")
+```
+
+## Example 3: Slopes and visualization
+
+```python
+import numpy as np
+from marginaleffects import *
+from statsmodels.formula.api import logit
+
+dat = get_dataset("thornton")
+mod = logit(
+  "outcome ~ incentive * distance * I(distance**2)",
+  data=dat.to_pandas()).fit()
+
+# Average marginal effect of distance
+avg_slopes(mod, variables="distance")
+
+# Average slopes by incentive subgroup
+avg_slopes(mod, variables="distance", by="incentive")
+
+# Visualize how the slope of distance varies
+plot_slopes(mod, variables="distance",
+  condition=["distance", "incentive"]).show()
+```

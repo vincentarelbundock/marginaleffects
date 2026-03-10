@@ -1,0 +1,183 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `hypotheses`, `predictions`, `comparisons`, `slopes`, `avg_comparisons`, `avg_predictions`, `avg_slopes`, `inferences`, `vcov`, `vcovHC` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `predictions`, `comparisons`, `slopes`, `avg_predictions`, `avg_comparisons`, `avg_slopes`, `hypotheses` for this chapter.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+# Uncertainty {#sec-uncertainty}
+- This chapter introduces four approaches to quantify uncertainty around quantities of interest: the delta method, bootstrap, simulation-based inference, and conformal prediction.
+- The delta method approximates the variance of a function of random variables using a linear (Taylor series) approximation; it is fast but relies on asymptotic normality.
+- The bootstrap resamples the observed data with replacement, refits the model many times, and uses the resulting distribution to build confidence intervals.
+- Simulation-based inference draws parameter sets from a multivariate normal distribution centered on the estimated coefficients and covariance matrix, then computes the quantity of interest for each draw.
+- Conformal prediction constructs prediction intervals that are valid in finite samples, without distributional assumptions, and even under model misspecification, provided the data are exchangeable.
+- The `marginaleffects` package provides convenient implementations of all four approaches through its core functions and the `inferences()` wrapper.
+- The delta method is the default uncertainty quantification strategy in `marginaleffects`.
+- Readers unfamiliar with the basics of multivariable calculus may wish to skip this chapter and rely on the package defaults.
+
+## Delta method {#sec-uncertainty_delta_method}
+- The delta method is a statistical technique used to approximate the variance of a function of random variables.
+- Data analysts often want to compare regression coefficients or predicted probabilities by subtracting them from one another; such comparisons are functions of model parameters whose variances are hard to derive analytically.
+- The delta method provides a convenient way to approximate those variances, enabling uncertainty quantification around most quantities of interest in this book.
+- The technique is useful, versatile, and fast, but relies on a coarse linear approximation and the asymptotic normality of the estimator.
+- It is only valid when the function of parameters is continuously differentiable in a neighborhood of its parameters.
+- When analysts do not believe the delta method's conditions hold, they can turn to the bootstrap or simulation-based inference as alternatives.
+- The theoretical properties are discussed and proved in many textbooks; this chapter focuses on computation rather than proofs.
+- The rest of this section provides hands-on tutorials for the univariate case, the multivariate case, and the use of robust or clustered standard errors.
+
+### Univariate delta method
+- The univariate delta method computes the standard error of a function of one parameter, illustrated here with the natural logarithm of a single regression coefficient.
+- Consider a linear regression $Y = \beta_1 + \beta_2 X + \beta_3 Z + \varepsilon$; the goal is to find $\text{Var}\left[\log(\hat{\beta}_2)\right]$.
+- A first-order Taylor series expansion approximates $\log(\hat{\beta}_2) \approx \log(\beta_2) + \frac{1}{\beta_2}(\hat{\beta}_2 - \beta_2)$.
+- Inserting this approximation into the variance operator and using the scaling property of variances yields $\text{Var}\left[\log(\hat{\beta}_2)\right] \approx \frac{1}{\beta_2^2}\text{Var}\left[\hat{\beta}_2\right]$.
+- Since the true $\beta_2$ is unknown, we use the plug-in estimate $\hat{\beta}_2$ in practice.
+- The chapter demonstrates this formula by simulating data, fitting a linear model, and computing the standard error of $\log(\hat{\beta}_2)$ manually.
+- The result is verified against the `hypotheses()` function from `marginaleffects`, which computes arbitrary functions of model parameters along with delta method standard errors.
+- This shows that `hypotheses(mod, "log(b2) = 0")` produces the same estimate and standard error as the manual calculation.
+
+### Multivariate delta method
+- The univariate delta method generalizes to the multivariate case with a vector of input parameters $\mathcal{B}=\{\beta_1,\beta_2,\ldots,\beta_k\}$ and a vector-valued output $\Theta=\{\theta_1,\theta_2,\ldots,\theta_n\}$.
+- The multivariate delta method formula is $\operatorname{Var}\left(h(\mathcal{B})\right) = J^T \cdot \operatorname{Var}\left(\mathcal{B}\right) \cdot J$, where $J$ is the Jacobian matrix of partial derivatives.
+- The Jacobian $J$ has rows equal to the number of input parameters and columns equal to the number of output quantities; element $(i,j)$ is $\partial \theta_j / \partial \beta_i$.
+- The chapter illustrates this with $\theta = \beta_2 - \beta_3$ (the difference between two coefficients), for which the Jacobian is $J = [0, 1, -1]^T$.
+- The variance-covariance matrix $\operatorname{Var}(\mathcal{B})$ is extracted using the `vcov()` function in R.
+- The standard error is computed as $\sqrt{J^T \cdot V \cdot J}$ using matrix multiplication.
+- The manual result is verified to be identical to `hypotheses(mod, hypothesis = "b2 - b3 = 0")`.
+
+### Robust or clustered standard errors  {#sec-uncertainty_robust}
+- Classical variance-covariance estimates rely on strong assumptions that rule out autocorrelation, heteroskedasticity, and clustering.
+- Autocorrelation arises when prediction errors at time $t$ are correlated with errors at time $t+1$; clustering occurs when errors are similar within groups (e.g., classrooms, neighborhoods); heteroskedasticity means the variance of errors differs across observations.
+- Where such patterns occur, classical standard errors may inaccurately characterize uncertainty.
+- The classical OLS variance uses a "sandwich" formula: $\text{Var}(\hat{\beta}) = (X^TX)^{-1}(\sigma^2_\varepsilon X^TX)(X^TX)^{-1}$, where $\sigma^2_\varepsilon$ is a single constant.
+- Robust ("heteroskedasticity-consistent" or "Huber-White") standard errors replace the meat of the sandwich with a matrix using squared residuals on the diagonal, allowing the variance to differ across observations.
+- The `sandwich` package in R provides `vcovHC()` and related functions that support many models and estimators.
+- In `marginaleffects`, the `vcov` argument in all core functions allows users to specify robust or clustered standard errors (e.g., `vcov = "HC0"` or `vcov = ~ village`).
+- Combining the delta method with robust variance-covariance estimates lets analysts account for heteroskedasticity or clustering in all quantities of interest.
+
+## Bootstrap {#sec-framework_uncertainty_bootstrap}
+- The bootstrap, pioneered by Bradley Efron in the 1970s-1980s, uses resampling to approximate the sampling distribution of a statistic.
+- The algorithm has five steps: (1) sample rows with replacement, (2) fit the model to the resampled data, (3) compute the statistic, (4) repeat many times, (5) use quantiles of the bootstrap distribution to build a confidence interval.
+- The chapter demonstrates this by computing a confidence interval for the difference between two regression coefficients ($\beta_3 - \beta_2$) in a linear model fit to the Thornton (2008) data.
+- The `inferences()` function from `marginaleffects` provides a consistent interface to bootstrap packages (`boot`, `rsample`, `fwb`), making this workflow much easier.
+- The syntax pipes any core `marginaleffects` function output into `inferences(method = "boot")` to obtain bootstrap confidence intervals.
+- Bootstrapping is widely applicable even when the underlying distribution of quantities of interest is unknown.
+- However, bootstrapping can be computationally intensive, especially for large datasets or complex models, because it requires refitting the model many times.
+- Selecting an adequate resampling scheme can be challenging when the data-generating process is complex.
+
+## Simulation {#sec-framework_uncertainty_simulation}
+- Simulation-based inference is an alternative to the delta method and bootstrap, leveraging computational simulations to estimate variability.
+- The foundational assumption is that the regression estimator is asymptotically normal, allowing draws from a multivariate normal distribution.
+- The algorithm has three steps: (1) draw parameter sets from a multivariate normal with mean equal to the estimated coefficients and variance equal to the estimated covariance matrix, (2) compute the statistic for each draw, (3) build confidence intervals from quantiles of the simulated quantities.
+- Early applications include Krinsky and Robb (1986); King, Tomz, and Wittenberg (2000) popularized the approach with the `clarify` software.
+- As Rainey (2024) notes, this process can be thought of as an informal Bayesian posterior simulation.
+- The chapter demonstrates the approach by computing a confidence interval for $\beta_3 - \beta_2$ using `rmvnorm()` from the `mvtnorm` package.
+- In `marginaleffects`, the same result is obtained via `inferences(method = "simulation")`.
+- Simulation-based inference is usually faster than bootstrapping (no model refitting) but more computationally expensive than the delta method.
+
+## Conformal prediction {#sec-conformal}
+- Confidence intervals from `predictions()` characterize uncertainty about the expected value of the response; they are not designed to cover a specified share of unseen data points.
+- A common misunderstanding is that confidence intervals should cover future observations at their nominal rate; in fact, they typically cover far fewer out-of-sample points.
+- The chapter demonstrates this with a simulation: a 90% confidence interval covers the true mean about 90% of the time, but covers out-of-sample observations at a much lower rate.
+- To obtain intervals that cover a pre-specified share of new observations, analysts need prediction intervals rather than confidence intervals.
+- Conformal prediction is a paradigm for creating statistically rigorous prediction intervals that are valid in finite samples, without distributional or model assumptions, provided the data are exchangeable.
+- The main caveats are: (1) the algorithms require exchangeable data and do not apply to time series or spatial data with dependence; (2) coverage guarantees are marginal (averaged over random test points), not necessarily well-calibrated locally in different strata of predictors; (3) interval width depends on the quality of the prediction model and score function.
+- The `inferences()` function in `marginaleffects` supports conformal prediction with methods like `"conformal_split"` and `"conformal_cv+"`.
+- Two prediction tasks are illustrated: numeric outcomes (split conformal) and categorical outcomes (cross-validation conformal with softmax scores).
+
+### Numeric outcome {#sec-uncertainty_conformal_numeric}
+- The chapter uses a dataset of over 1 million US military members to predict rank from grade, branch, gender, and race using a linear model.
+- Split conformal prediction divides the data into three parts: training (to fit the model), calibration (to determine interval width), and test (to evaluate predictions).
+- The key assumption is that observations in the calibration set are exchangeable with those in the test set, so prediction errors should be similar across both.
+- The algorithm computes absolute residuals in the calibration set, finds the 95th quantile, and constructs prediction intervals as $\hat{Y}_i \pm d$, where $d$ is the smallest absolute residual above that quantile.
+- The resulting prediction intervals cover approximately 95% of out-of-sample observations in the test set, matching the target coverage rate.
+- The same result is obtained more conveniently using `predictions(mod) |> inferences(method = "conformal_split", conformal_calibration = dat$calib, conformal_test = dat$test)`.
+- Conformal prediction intervals are valid even if the model is misspecified, though they may not be well-calibrated locally across different regions of the predictor space.
+- Prediction intervals produced by conformal methods are typically much wider than confidence intervals, because they aim to cover individual observations rather than the expected mean.
+
+### Categorical outcome {#sec-uncertainty_conformal_categorical}
+- For classification tasks, conformal prediction produces a set of possible classes for each observation, rather than a single point prediction.
+- The chapter uses a multinomial logit model to predict branch of the military (air force, army, marine corps, navy) from gender and race.
+- The outcome is nominal rather than numeric, so instead of residuals, prediction quality is measured using a "softmax score" derived from the probability assigned to the true class.
+- Instead of a held-out calibration set, the chapter illustrates a cross-validation-based conformal algorithm (`conformal_cv+`), though split conformal would also work.
+- The `inferences()` function returns a data frame with a `pred.set` column containing the list of predicted classes for each test observation.
+- The chapter shows an example where the most likely point prediction ("army") is incorrect, but the conformal prediction set includes both the incorrect top prediction and the correct class ("air force").
+- Checking all test observations confirms that conformal prediction sets include the true class approximately 80% of the time, matching the requested `conf_level = .8`.
+- This demonstrates the value of prediction sets over point predictions for classification under uncertainty.
+
+# Examples
+- The examples below are drawn from the original chapter and illustrate representative workflows.
+
+## Example 1: Univariate delta method standard error
+```r
+# Simulate data and fit a linear model
+set.seed(48103)
+X <- rnorm(100)
+Z <- rnorm(100)
+Y <- 1 * X + 0.5 * Z + rnorm(100)
+dat <- data.frame(Y, X, Z)
+mod <- lm(Y ~ X + Z, data = dat)
+
+# Extract the coefficient and its variance
+b2 <- coef(mod)[2]
+v <- vcov(mod)[2, 2]
+
+# Delta method standard error for log(beta_2)
+se_log_b2 <- sqrt(v / b2^2)
+se_log_b2
+
+# Verify with marginaleffects
+library(marginaleffects)
+hypotheses(mod, "log(b2) = 0")
+```
+
+## Example 2: Bootstrap confidence interval
+```r
+library(marginaleffects)
+dat <- get_dataset("thornton")
+mod <- lm(outcome ~ agecat - 1, data = dat)
+
+# Define the quantity of interest: difference between coefficients
+statistic <- \(model) coef(model)[3] - coef(model)[2]
+statistic(mod)
+
+# Bootstrap by hand
+sample_fit_compute <- function() {
+  index <- sample(1:nrow(dat), size = nrow(dat), replace = TRUE)
+  resample <- dat[index, ]
+  mod_resample <- lm(outcome ~ agecat - 1, data = resample)
+  statistic(mod_resample)
+}
+set.seed(48103)
+boot_dist <- replicate(1000, sample_fit_compute())
+quantile(boot_dist, prob = c(0.025, 0.975))
+
+# Or use inferences() for convenience
+hypotheses(mod, "b3 - b2 = 0") |>
+  inferences(method = "boot", R = 1000)
+```
+
+## Example 3: Conformal prediction intervals
+```r
+library(marginaleffects)
+dat <- get_dataset("military")
+
+# Split data into training, calibration, and test sets
+set.seed(48103)
+idx <- sample(c("train", "calibration", "test"),
+              size = nrow(dat), replace = TRUE)
+dat <- split(dat, idx)
+
+# Fit model on training data
+mod <- lm(rank ~ grade + branch + gender + race, data = dat$train)
+
+# Conformal prediction intervals via inferences()
+p <- predictions(mod) |>
+  inferences(
+    method = "conformal_split",
+    conformal_calibration = dat$calib,
+    conformal_test = dat$test)
+
+# Check coverage
+covered <- p$rank > p$pred.low & p$rank < p$pred.high
+mean(covered)
+```

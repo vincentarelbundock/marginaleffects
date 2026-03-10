@@ -1,0 +1,300 @@
+# Power Analysis
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE)
+options(width = 200)
+library(future)
+library(DeclareDesign)
+plan(multisession)
+diagnose_design = function(...) {
+  DeclareDesign::diagnose_design(..., sims = 500, bootstrap_sims = 0)
+}
+```
+
+Power analysis is fundamental to good research design. It helps us determine whether our study is likely to detect an effect if one truly exists, and guides decisions about sample size and study design.
+
+This post demonstrates power analysis in the context of estimating quantities of interest with `marginaleffects`. We show that focusing on meaningful estimands—like average treatment effects computed using `avg_comparisons(model, variables = "treatment")`—does not unduly complicate the conduct of power analyses. We can use standard simulation-based approaches to execute them effectively.
+
+[`DeclareDesign` is an extremely powerful package](https://declaredesign.org/) for conducting simulations and assessing research design properties like power, bias, and RMSE. While the package offers impressive flexibility, this tutorial uses only its most basic functionality to provide a clear introduction to power analysis via simulation.
+
+Before jumping in, we load some `R` packages.
+
+```{r}
+#| warning: false
+#| message: false
+library(MASS)
+library(fabricatr)
+library(DeclareDesign)
+library(marginaleffects)
+```
+
+## What is Power Analysis?
+
+Statistical power is the probability that a statistical test will correctly reject a false null hypothesis. In other words, it's the probability of detecting an effect when it truly exists. Power depends on four key factors:
+
+1. Effect size: How large the true effect is
+2. Sample size: How many observations we collect  
+3. Significance level (α): Our threshold for rejecting the null (typically 0.05)
+4. Measurement error/noise: How much variability exists in our data
+
+The minimum effect of interest (MEI) is the smallest effect size that we consider practically meaningful. This is a substantive decision that should be made before data collection based on theory, prior research, or policy relevance.
+
+## Components of Power Analysis
+
+A simulation-based power analysis has four core components:
+
+1. Data Generating Process (DGP): How we simulate realistic data under different assumptions
+2. Estimand: The true quantity we want to estimate (e.g., average treatment effect)  
+3. Estimator: The statistical procedure we use to estimate the estimand (e.g., regression, difference-in-means)
+4. Simulation: Repeatedly applying the estimator to data generated randomly from the DGP to assess statistical properties like power, bias, and coverage
+
+## Example: Two-Arm Randomized Controlled Trial
+
+We now illustrate the four components of power analysis using a simple randomized controlled trial.
+
+##### 1. Data Generating Process (DGP)
+
+The first data generating process that we consider is an ultra-simple randomized experiment with binary treatment $D$, outcome $Y$, and noise $\varepsilon$.
+
+$$
+Y = \beta_0 + \beta_1 D + \varepsilon
+$$ {#eq-two-arm}
+
+To simulate data that conform to @eq-two-arm, we call the `declare_model()` function. `declare_model()` is a convenience wrapper around the `fabricate()` function from [the `fabricatr` package](https://declaredesign.org/r/fabricatr/). It allows researchers to simulate very complex datasets, with hierarchical structures, weird sampling strategies, and complex treatment assignment schemes (e.g., blocks and/or clusters). In our case, the DGP is so simple that the code below is self-explanatory.
+
+```{r}
+sample_size = 100
+treatment_effect = 0.2
+noise_sd = 1
+
+dgp = declare_model(
+  N = sample_size,
+
+  # standard normal noise
+  e = rnorm(N, mean = 0, sd = noise_sd),
+
+  # random dummy treatment with equal probability of treatment and control
+  D = rbinom(N, size = 1, prob = 0.5),
+
+  # intercept
+  b0 = 0,
+
+  # outcome equation
+  Y = b0 + treatment_effect * D + e
+)
+```
+
+::: {.callout-tip}
+Our ultimate goal is to study how the statistical power of the research design varies when the sample size and treatment effect change. In `DeclareDesign`, the parameters that we intend to vary---like the `sample_size` and `treatment_effect` variables---must be defined *before* and *outside* the `declare_model()` call. See the code block above for an example.
+:::
+
+
+`declare_model()` is what we call a "function factory": it is a function that returns another function. Indeed, the `dgp` object that we created above can be called repeatedly to simulate new datasets from the same DGP.
+
+Three rows from one simulation:
+
+```{r}
+d = dgp()
+head(d, 3)
+```
+
+Three different rows from another simulation:
+
+```{r}
+d = dgp()
+head(d, 3)
+```
+
+##### 2. Estimand
+
+Our estimand is the average treatment effect $\beta_1$. In the code above, we set `treatment_effect = 0.2`, so the true value of our estimand is 0.2. This is the true quantity we want to estimate and the parameter we will vary to understand how statistical power changes with effect size.
+
+##### 3. Estimator  
+
+Now, we define a `fit()` function to serve as our estimator:
+
+* Input: 
+  - Data frame called `data`
+* Output: 
+  - 1-row data frame with mandatory and optional columns.
+    - Mandatory: `term`, `estimate`
+    - Optional: `std.error`, `conf.low`, `conf.high`, `p.value`, `cost`, etc.
+
+The `fit()` function defined below accepts a data frame, fits a linear regression model, and return a 1-row data frame as results.
+
+```{r}
+fit = function(data) {
+  model = lm(Y ~ D, data = data)
+  out = data.frame(
+    "term" = "OLS",
+    "estimate" = coef(model)["D"]
+  )
+  return(out)
+}
+
+# simulate
+d = dgp()
+
+# estimate
+fit(d)
+```
+
+Instead of extracting the estimates from the `lm()` model manually, we can use the `avg_comparisons()` function from the `marginaleffects` package. In this simple model, the estimate produced by `avg_comparisons()` will identical to the coefficient estimated by OLS. In more complex models, with interactions or non-linear components, `avg_comparisons()` will be a convenient way to estimate the average treatment effect (ATE), and to return results in the "tidy" format required by `DeclareDesign`.
+
+```{r}
+fit = function(data) {
+  library(marginaleffects)
+  model = lm(Y ~ D, data = data)
+  out = avg_comparisons(model, variables = "D")
+  return(out)
+}
+
+fit(d)
+```
+
+Now, we use `DeclareDesign` to create an `R` object that represents a complete "research design". This object is created by "adding" or "chaining" together calls to different `DeclareDesign` functions, using the `+` operator. In particular, we will call three functions:
+
+
+1. `declare_model()`
+    - Data generating process
+2. `declare_inquiry()`
+    - True value of the quantity of interest
+3. `declare_estimator()`
+    - Estimation procedure
+
+##### 4. Simulation
+
+Finally, once we have defined the research design, we can call the `diagnose_design()` function to assess its properties. This function will run simulations, estimate the treatment effect, and compute power, bias, etc. The simulation repeatedly generates random data from our DGP, applies our estimator, and summarizes the results across many iterations.
+
+Putting it all together:
+
+```{r}
+library(DeclareDesign)
+library(marginaleffects)
+
+sample_size = 100
+treatment_effect = 0.2
+noise_sd = 1
+
+dgp = declare_model(
+  N = sample_size,
+  e = rnorm(N, mean = 0, sd = noise_sd),
+  D = rbinom(N, size = 1, prob = 0.5),
+  Y = treatment_effect * D + e
+)
+
+estimator = declare_estimator(handler = 
+  function(data) {
+    library(marginaleffects)
+    model = lm(Y ~ D, data = data)
+    out = avg_comparisons(model, variables = "D")
+    return(out)
+  }
+)
+
+truth = declare_inquiry(ATE = treatment_effect)
+
+design = dgp + estimator + truth
+
+d = diagnose_design(design)
+d
+```
+
+These simulation results show that our estimator yields unbiased estimates of the treatment effect. However, the statistical power is very low, around `{r} round(d$diagnosands_df$power * 100)`), meaning we would only detect the effect about that share of the time it truly existed.
+
+## Power vs. Sample Size and Effect Size
+
+To improve statistical power, we can increase the sample size, increase the treatment effect size, or reduce noise (i.e., improve measurement, etc.). The `redesign()` function lets us systematically vary these parameters and compare the resulting power across different scenarios.
+
+```{r}
+design_list = redesign(design,
+  sample_size = c(100, 500),
+  treatment_effect = c(0.2, 0.5)
+)
+
+diagnose_design(design_list)
+```
+
+As expected, larger effect sizes and sample sizes both increase statistical power. With a sample of 500 and an effect size of 0.5, power reaches nearly 100%.
+
+We can also vary the noise level to see how measurement precision affects power:
+
+```{r}
+noise_design_list = redesign(design,
+  noise_sd = c(0.5, 1, 2)
+)
+
+diagnose_design(noise_design_list)
+```
+
+Lower noise (better measurement precision) substantially increases power, while higher noise reduces power. This demonstrates why investing in better measurement instruments can be as valuable as collecting more data.
+
+## Comparing Estimators: Adjusted vs. Unadjusted
+
+Controlling for predictors can increase the precision of our estimates and produce smaller standard errors. Even in randomized experiments, it may thus be valuable to control for covariates/predictors. We follow @Lin2013 and estimate a model where the treatment is interacted with all covariates. The power analysis will compare the statistical properties of regression-adjusted and unadjusted estimators.
+
+The data generating process that we consider follows this equation:
+
+$$
+Y = \beta_0 + \beta_1 D + \beta_2 X_1 + \beta_3 X_3 + \varepsilon,
+$$
+
+where $Y$ is the outcome, $D$ a randomized binary treatment, $X_1$ and $X_2$ are covariates drawn from a multivariate normal distribution, and $\varepsilon$ is a standard normal noise term.
+
+```{r}
+sample_size = 100
+treatment_effect = 0.2
+noise_sd = 1
+
+dgp = declare_model(
+  N = sample_size,
+  e = rnorm(N, mean = 0, sd = noise_sd),
+  D = rbinom(N, size = 1, prob = 0.5),
+
+  # random normal covariates
+  fabricatr::draw_multivariate(c(X1, X2) ~ MASS::mvrnorm(
+    n = N,
+    mu = c(0, 0),
+    Sigma = matrix(c(1, 0.5, 0.5, 1), 2, 2)
+  )),
+
+  Y = 1 + treatment_effect * D + 1 * X1 + 1 * X2 + e
+)
+```
+
+```{r}
+fit = function(data) {
+  library(marginaleffects)
+  # Linear model with regression adjustement for covariates
+  adjusted =  lm(Y ~ D * (X1 + X2), data = data)
+  adjusted = avg_comparisons(adjusted, variables = "D", vcov = "HC3")
+
+  # Linear model with a single binary predictor
+  unadjusted =  lm(Y ~ D, data = data)
+  unadjusted = avg_comparisons(unadjusted, variables = "D", vcov = "HC3")
+
+  # Combine the results
+  out = rbind(adjusted, unadjusted)
+
+  # Label the results
+  out$term = c("Adjusted", "Unadjusted")
+  return(out)
+}
+```
+
+We can fit this model directly to the output of `dgp()`:
+
+```{r}
+dgp() |> fit()
+```
+
+And we can diagnose the research design as before:
+
+```{r}
+truth = declare_inquiry(ATE = treatment_effect)
+estimators = declare_estimator(handler = fit)
+design = dgp + truth + estimators
+diagnose_design(design)
+```
+
+Both estimators are unbiased, but the regression-adjusted estimator achieves higher power by reducing the standard error of the treatment effect estimate. This demonstrates how incorporating relevant covariates can improve statistical power even with the same sample size.

@@ -1,0 +1,122 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `avg_comparisons`, `avg_predictions`, `predictions`, `comparisons`, `transform`, `subset`, `inferences` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `avg_comparisons`, `avg_predictions`, `predictions`, `comparisons` for this chapter. Also see `polars` functions `with_columns`, `lit`, `alias`, `filter`, `select`.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+# Causal inference with G-computation {#sec-gcomputation}
+- Randomized experiments are the gold standard for causal inference because random assignment ensures groups have similar background characteristics on average.
+- When randomized experiments are impractical or unethical, analysts must rely on observational data, where confounding variables can bias treatment effect estimates.
+- G-computation (also called the Parametric G-Formula) is a method for drawing causal inference from observational data developed by Robins and colleagues.
+- The procedure has three steps: (1) fit a statistical model that controls for confounders, (2) use the model to impute (predict) outcomes under alternative treatment scenarios, and (3) compare counterfactual predictions to estimate the treatment effect.
+- G-computation estimates are equivalent to the counterfactual predictions and comparisons discussed in earlier chapters on predictions and comparisons.
+- G-computation is closely related to Inverse Probability Weighting (IPW): both impose similar identification assumptions, but G-computation models the outcome while IPW models the treatment assignment mechanism.
+- G-computation and IPW can be combined into a "doubly-robust" estimator with desirable statistical properties.
+- The chapter targets four estimands: the average treatment effect (ATE), average treatment effect on the treated (ATT), average treatment effect on the untreated (ATU), and conditional average treatment effect (CATE).
+
+## Treatment effects: ATE, ATT, ATU {#sec-gcomputation_treatment_effects}
+- The goal is to estimate the effect of a treatment $D$ on an outcome $Y$ using the potential outcomes framework.
+- $D_i=1$ indicates individual $i$ is assigned to treatment; $D_i=0$ indicates assignment to control.
+- Potential outcomes $Y_i^1$ and $Y_i^0$ represent the outcomes that would occur under treatment and control, respectively; only one can ever be observed for a given individual.
+- The Individual Treatment Effect (ITE) is $Y_i^1 - Y_i^0$, but it is impossible to compute because we observe only one potential outcome per individual -- this is the fundamental problem of causal inference.
+- To circumvent this, we focus on three aggregate estimands: ATE, ATT, and ATU, which are related but invite different interpretations and impose different assumptions.
+- The ATE, ATT, and ATU each answer distinct policy questions about whether a treatment should be implemented universally, continued for current recipients, or extended to non-recipients.
+
+### Interpretation
+- The three estimands are defined as: ATE = $E[Y_i^1 - Y_i^0]$, ATT = $E[Y_i^1 - Y_i^0 \mid D_i=1]$, ATU = $E[Y_i^1 - Y_i^0 \mid D_i=0]$.
+- The ATE estimates the average treatment effect across the entire study population and answers: should the treatment be implemented universally?
+- The ATT estimates the average treatment effect among those who actually received treatment and answers: should the treatment be withheld from current recipients?
+- The ATU estimates the average treatment effect among those who did not receive treatment and answers: should the treatment be extended to non-recipients?
+- These three quantities can differ substantially, underscoring the importance of clearly defining the target estimand before estimation.
+
+### Assumptions {#sec-gcomputation_assumptions}
+- Estimating the ATE, ATT, or ATU via G-computation requires four assumptions of varying stringency.
+- **Conditional exchangeability** (no unmeasured confounding): potential outcomes must be independent of treatment assignment, conditional on control variables $Z_i$, written as $Y_i^1, Y_i^0 \perp D_i \mid Z_i$. This is violated when treatment assignment depends on potential outcomes (e.g., self-selection into a training program or a doctor prescribing based on expected benefit).
+- For the ATE, conditional exchangeability must hold across the entire population. For the ATT, it can be relaxed: since $Y_i^1$ is observed for the treated, we only need assumptions about the unobserved $Y_i^0$. Analogously, the ATU requires exchangeability only in the treatment condition.
+- **Positivity**: every individual must have a non-zero probability of being in each treatment arm, $0 < P(D_i=1 \mid Z_i) < 1$. For the ATT, this relaxes to $P(D_i=1 \mid Z_i) < 1$; for the ATU, to $P(D_i=1 \mid Z_i) > 0$.
+- **Consistency**: the intervention must be well-defined with no ambiguity about what constitutes "treatment" and "control" (e.g., same drug, dosage, and conditions for all treated individuals).
+- **Non-interference** (part of SUTVA): potential outcomes for one participant must not be affected by the treatment assignments of other individuals -- no contagion or externalities across participants.
+- When all four assumptions hold, we can estimate treatment effects via G-computation using the three-step procedure: model, impute, and compare.
+
+### Model
+- The chapter illustrates G-computation using a study by Imbens, Rubin, and Sacerdote (2001) on the effect of winning large lottery prizes on labor earnings.
+- Treatment ($D$): binary indicator for winning a big lottery prize. Outcome ($Y$): average labor earnings over six subsequent years.
+- Winning numbers are random, but the probability of winning depends on the number of tickets purchased ($L$), and socio-demographic characteristics ($Z$) influence both ticket purchases and earnings.
+- The dataset includes 437 respondents; the analysis compares big-prize winners to non-winners (excluding small-prize winners).
+- The first G-computation step is to fit an outcome model that controls for confounders to satisfy conditional exchangeability.
+- To satisfy the backdoor criterion, the model must control for the number of tickets ($L$) purchased and/or the covariates ($Z$) linking treatment to outcome.
+- The model can be simple or flexible: linear, with interactions, polynomials, or splines; it can use a minimal or expanded set of controls.
+- In the example, a linear regression interacts `win_big` with `tickets`, gender, age, employment, education, college, year, and three years of pre-lottery earnings.
+
+### Impute
+- The second G-computation step is to impute (predict) the outcome for each individual under different hypothetical treatment regimes.
+- Two copies of the dataset are created: one with `win_big` set to 0 for all individuals, and one with `win_big` set to 1 for all individuals.
+- In R, counterfactual datasets are created using `transform(dat, win_big = 0)` and `transform(dat, win_big = 1)`.
+- In Python, counterfactual datasets are created using `dat.with_columns(pl.lit(0).alias('win_big'))` and the analogous expression for 1.
+- The `predictions()` function from `marginaleffects` generates predicted outcomes for each individual under both counterfactual scenarios.
+- Inspecting individual-level predictions shows that the model predicts different earnings for the same person depending on treatment status -- for example, lower earnings under the treatment (winning) scenario.
+
+### Compare
+- The third G-computation step is to aggregate individual-level counterfactual predictions to estimate the treatment effect.
+- The ATE is obtained by computing the difference in the mean predicted outcomes between the treatment and control counterfactual datasets.
+- The `avg_predictions()` function with the `variables` and `by` arguments provides the same estimates as manual calculation, but with standard errors and confidence intervals.
+- The `avg_comparisons()` function directly computes the ATE as the difference between counterfactual means, providing a single estimate with uncertainty measures.
+- The ATT is computed using the same approach but restricting `newdata` to the subset of treated individuals (e.g., `newdata = subset(win_big == 1)` in R or `newdata=dat.filter(pl.col('win_big') == 1)` in Python).
+- The ATU is computed analogously by restricting `newdata` to untreated individuals.
+- In the lottery example, the ATT is larger than the ATU, suggesting that people who buy more tickets (and are therefore more likely to win) experience a stronger decrease in labor earnings after winning.
+- This asymmetry underscores the importance of clearly defining one's estimand before estimation and interpretation.
+- Standard errors for G-computation estimates involve subtle issues: treating covariates as fixed rather than sampled may yield inadequate coverage. The bootstrap (e.g., via the `inferences()` function) is a common alternative; analytic unconditional variance expressions are also available.
+
+## Conditional treatment effects: CATE {#sec-gcomputation_cate}
+- The conditional average treatment effect (CATE) characterizes how the treatment effect varies across subgroups, defined as $E[Y_i^1 - Y_i^0 \mid X_i = x]$.
+- Unlike the ATE, which averages across the entire population, the CATE conditions on specific values of a covariate $X_i$ to reveal heterogeneity in treatment effects.
+- The conditioning variable can be any discrete variable such as education level or employment status.
+- In the lottery example, the CATE is estimated by employment status using `avg_comparisons(mod, variables = "win_big", by = "work")`.
+- For initially unemployed individuals (`work=0`), the estimated effect of winning on labor earnings is close to zero and not statistically significant.
+- For employed individuals (`work=1`), winning a big prize significantly reduces labor earnings, consistent with the theory that a wealth windfall reduces work incentives for those with labor market attachment.
+- CATEs can be estimated with additional conditioning variables by adding more categorical variables to the `by` argument of `avg_comparisons()`, though this reduces subgroup sample sizes.
+- G-computation provides a useful framework for estimating causal effects from observational data by modeling, imputing, and comparing potential outcomes to target the ATE, ATT, ATU, and CATE while accounting for confounders.
+
+# Examples
+- The examples below are drawn from the original chapter and illustrate representative workflows.
+
+## Example 1: Estimating the ATE with G-computation
+```r
+library(marginaleffects)
+dat = get_dataset("lottery")
+dat = subset(dat, win_big == 1 | win == 0)
+
+# Step 1: Model -- fit outcome regression controlling for confounders
+mod = lm(
+  earnings_post_avg ~ win_big * (
+    tickets + man + work + age + education + college + year +
+    earnings_pre_1 + earnings_pre_2 + earnings_pre_3),
+  data = dat)
+
+# Step 2: Impute -- predict under counterfactual treatment regimes
+d0 = transform(dat, win_big = 0)
+d1 = transform(dat, win_big = 1)
+p0 = predictions(mod, newdata = d0)
+p1 = predictions(mod, newdata = d1)
+
+# Step 3: Compare -- estimate the ATE
+avg_comparisons(mod, variables = "win_big", newdata = dat)
+```
+
+## Example 2: ATT and ATU using subset restrictions
+```r
+# ATT: restrict to treated individuals
+avg_comparisons(mod, variables = "win_big",
+  newdata = subset(win_big == 1))
+
+# ATU: restrict to untreated individuals
+avg_comparisons(mod, variables = "win_big",
+  newdata = subset(win_big == 0))
+```
+
+## Example 3: Conditional Average Treatment Effect (CATE)
+```r
+# CATE by employment status
+avg_comparisons(mod, variables = "win_big", by = "work")
+```

@@ -1,0 +1,107 @@
+---
+title: Interrupted Times Series
+bibliography: library.bib
+---
+
+Interrupted Time Series (ITS) analysis is a widely used research design that aims to infer the impact of a discrete intervention or event by examining changes in an outcome measure over time. It finds applications in various fields, including public health policies—such as evaluating the effect of vaccination campaigns—and educational settings—like assessing curriculum reform. The key motivation behind ITS is to leverage data already being collected, identify a clear “interruption” at a known point in time (e.g., when a policy was enacted), and then compare the behavior of the outcome measure before and after this interruption.
+
+Although ITS can be extremely useful, it also poses substantial methodological and practical challenges. Unlike experimental or quasi-experimental approaches, ITS relies on very strong assumptions about the continuity or predictability of the outcome’s pre-intervention trajectory. Unobserved confounding events and gradual policy rollouts can violate these assumptions, complicating efforts to attribute changes solely to the interruption. 
+
+ITS shares some similarities with the popular difference-in-differences (DiD) approach, in which outcomes in a treated group are contrasted with those in an untreated comparison group. Meeting the assumptions required for credible inference with DiD is extremely challenging, as is attested by recent methodological developments in this field [@RotSanBilPoe2023]. ITS is arguably even more difficult to get right, since it typically relies only on a single times series, and thus lacks a true control group.
+
+This article shows how to use the `marginaleffects` package to analyze a simple ITS setup. To illustrate, we consider a dataset simulated by this code:
+
+```{r}
+library(marginaleffects)
+library(tinyplot)
+tinytheme("ipsum")
+set.seed(48103)
+
+# number of days
+n <- 365
+
+# intervention at day
+intervention <- 200
+
+# time index from 1 to 365
+time <- c(1:n)
+
+# treatment variable: 0 before the intervention and 1 after
+treatment <- c(rep(0, intervention), rep(1, n - intervention))
+
+# outcome equation
+outcome <- 
+  10 +  # pre-intervention intercept
+  15 * time +  # pre-intervention slope (trend)
+  20 * treatment +  # post-intervention intercept (shift of 10)
+  5 * treatment * time + # steeper slope after the intervention
+  rnorm(n, mean = 0, sd = 100) # noise
+
+dat <- data.frame(outcome, time, treatment)
+```
+
+The data look like this:
+
+```{r}
+library(tinyplot)
+tinyplot(outcome ~ time | treatment, type = "p", palette = "okabeito",
+    data = transform(dat, treatment = factor(treatment)))
+```
+
+Often, analysts will model such data using a linear regression model with multiplicative interaction, and a specially constructured "time since intervention" variable:
+
+$$
+\text{Outcome} = \beta_0 + \beta_1 \text{Time} + \beta_2 \text{Treatment} + \beta_3 \text{Time since intervention} + \varepsilon
+$$
+
+With `marginaleffects`, we do not even need to construct this special variable.^[In fact, analysts should *not* construct this special variable. The problem is that the `time` and `time_since` variables are related, but when we hard-code them, `R` does not know the mathematical relationship between them.] All we have to do is fit this mathematically equivalent---and simpler---model:
+
+$$
+\text{Outcome} = \alpha_0 + \alpha_1 \text{Time} + \alpha_2 \text{Treatment} + \alpha_3 \text{Time} \times \text{Treatment} + \varepsilon
+$$
+
+```{r}
+mod <- lm(outcome ~ time * treatment, data = dat)
+summary(mod)
+```
+
+Then, we can use the `marginaleffects` package to answer a series of scientific questions. For example, what would be the predicted outcome at time 200 with or without intervention?
+
+```{r}
+p0 <- predictions(mod, newdata = datagrid(time = 199, treatment = 0))
+p1 <- predictions(mod, newdata = datagrid(time = 200, treatment = 1))
+
+p0
+
+p1
+```
+
+This suggests that the intervention would have increased the outcome by about `{r} p1$estimate - p0$estimate` units at time 200. Is the difference between those predictions statistically significant?
+
+```{r}
+comparisons(mod, variables = "treatment", newdata = datagrid(time = 200))
+```
+
+What is the average slope of the outcome equation with respect to time, before and after the intervention?
+
+```{r}
+avg_slopes(mod, variables = "time", by = "treatment")
+```
+
+This shows that the outcome increases more rapidly after the intervention.
+
+Many analysts like to visualize the results of an ITS analysis, by plotting the predicted outcome for the control group, knowing that these predictions are *counterfactual* after the intervention. This can be done by first make predictions for all combinations of `time` and `treatment`, dropping the observations we do not want to plot, and feeding the data to a plotting package like `ggplot2`.
+
+```{r}
+library(ggplot2)
+p <- predictions(mod, variables = c("time", "treatment"))
+p <- subset(p, time > intervention | treatment == 0)
+ggplot(p, aes(x = time, y = estimate, color = factor(treatment))) +
+  geom_line() +
+  labs(title = "Predicted outcome over time",
+       x = "Time",
+       y = "Outcome")
+```
+
+
+

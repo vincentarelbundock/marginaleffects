@@ -1,0 +1,1 @@
+Backwards-compatible accessor that returns autodiff() state.

@@ -1,0 +1,112 @@
+---
+format:
+  html: 
+    css: assets/suppress_title.css
+---
+
+# [Preface]{style="display: none;"} {.unnumbered .unlisted}
+
+<center>
+<a href = "https://marginaleffects.com" target = "_blank"><img src="assets/zoo_header_m2m.png" alt="model to meaning logo banner with cute animals" width = "80%"></a>
+<br>
+<center><h4>How to Interpret Statistical Models<br>With <code>marginaleffects</code> for <code>R</code> and <code>Python</code></h3></center>
+<br>
+<a href = "https://github.com/vincentarelbundock/marginaleffects/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
+<a href = "https://marginaleffects.com" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>
+<a href = "https://marginaleffects.com" target = "_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/marginaleffects"></a>
+<br><br>
+</center>
+
+Our world is complex. To make sense of it, data analysts routinely fit sophisticated statistical or machine learning models. Interpreting the results produced by such models can be challenging, and researchers often struggle to communicate their findings to colleagues and stakeholders. This page is designed to help you overcome these challenges. 
+
+The [marginaleffects.com](https://marginaleffects.com) website hosts the code and documentation for the open source `marginaleffects` package. This software empowers `R` and `Python` users to translate the outputs of statistical and machine learning models into accurate insights that are accessible to a wide audience. 
+
+## Reading material
+
+<div class="float-end ms-3 mb-2" style="max-width:40%; text-align:center;">
+  <a href="https://www.routledge.com/9781032908724" target="_blank">
+    <img src="assets/model_to_meaning_cover.png" 
+         alt="Model to Meaning cover" 
+         style="width:100%; height:auto;">
+        <a href="https://www.routledge.com/9781032908724" target="_blank">routledge.com/9781032908724</a>
+  </a>
+</div>
+
+Readers who seek a short introduction can read the [Quick Start vignette](bonus/get_started.html) or the `marginaleffects` [article in the Journal of Statistical Software](https://www.jstatsoft.org/article/view/v111i09) (open access).
+
+In addition, this website hosts a free HTML version of this book:
+
+> *Model to Meaning: How to interpret statistical models in R and Python.* Arel-Bundock, Vincent. 2026. CRC Press.
+
+The full R scripts to run the examples in the book [can be downloaded by clicking here.](data/model_to_meaning_r_scripts.zip) The full Python code [viewed here.](chapters/python.html)
+
+I (Vincent) pledge to give all author royalties from sales of this book to the [Native Women's Shelter of Montreal](https://www.nwsm.info/) and the [Against Malaria Foundation](https://www.againstmalaria.com/). If you choose to read the free version, please consider sending a donation to one of these organizations. And if you do that, send me a quick note; it'll make my day!
+
+## Software
+
+The book and article present a simple but powerful conceptual framework to help analysts make sense of complex models. They also offer detailed tutorials on `marginaleffects`, a free software library for `R` and `Python`. `marginaleffects` offers a single point of entry to easily interpret the results of [over 100 different types of statistical and machine learning models in `R` and `Python`.](bonus/supported_models.html)
+
+
+- *Powerful:* It can compute and plot predictions; comparisons (contrasts, risk ratios, etc.); slopes; and conduct hypothesis and equivalence tests for over 100 different classes of models in `R`.
+- *Simple:* All functions share a simple and unified interface.
+- *Documented*: Each function is thoroughly documented with abundant examples. The [marginaleffects.com](https://marginaleffects.com) website hosts a free textbook with several thousands of words of tutorials and case studies.
+- *Efficient:* [Some operations](https://marginaleffects.com/bonus/performance.html) can be up to 1000 times faster and use 30 times less memory than with the `margins` package.  
+- *Valid:* When possible, [numerical results are checked](https://marginaleffects.com/bonus/supported_models.html) against alternative software like `Stata` or other `R` packages.
+- *Thin:* The `R` package requires relatively few dependencies.
+- *Standards-compliant:* `marginaleffects` follows "tidy" principles and returns simple data frames that work with all standard `R` functions. The outputs are easy to program with and feed to other packages like [`ggplot2`](https://marginaleffects.com/bonus/plot.html) or [`modelsummary`.](https://marginaleffects.com/bonus/tables.html)
+- *Extensible:* Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit [feature requests on Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
+- *Active development*: Bugs are fixed promptly.
+
+## LLMs and `marginaleffects`
+
+LLMs can learn how to use `marginaleffects` too! Check out [the SKILL.md file and machine friendly documentation on Github.](https://github.com/vincentarelbundock/marginaleffects-SKILL)
+
+## Citation
+
+To cite `marginaleffects` in publications use:
+
+> Arel-Bundock V, Greifer N, Heiss A (2024). “How to Interpret Statistical Models Using marginaleffects for R and Python.” _Journal of Statistical Software_, *111*(9), 1-32. doi:10.18637/jss.v111.i09 <https://doi.org/10.18637/jss.v111.i09>.
+
+A BibTeX entry for LaTeX users is
+
+```latex
+@Article{,
+    title = {How to Interpret Statistical Models Using {marginaleffects} for {R} and {Python}},
+    author = {Vincent Arel-Bundock and Noah Greifer and Andrew Heiss},
+    journal = {Journal of Statistical Software},
+    year = {2024},
+    volume = {111},
+    number = {9},
+    pages = {1--32},
+    doi = {10.18637/jss.v111.i09},
+}
+```
+
+© 2025 Vincent Arel-Bundock. All Rights Reserved.
+<meta name="copyright" content="© 2025 Vincent Arel-Bundock. All Rights Reserved.">
+<script>
+    document.title = "Marginal effects";
+</script>
+<meta name="description" content="Learn how to interpret statistical and machine learning models using the marginaleffects package for R and Python. Compute marginal effects, marginal means, contrasts, odds ratios, hypothesis tests, equivalence tests, slopes, and more. Free software, book, tutorials, and documentation available.">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Book",
+    "name": "How to Interpret Statistical Models with marginaleffects for R and Python",
+    "author": {
+        "@type": "Person",
+        "name": "Vincent Arel-Bundock"
+    },
+    "url": "https://marginaleffects.com",
+    "description": "Learn how to interpret statistical and machine learning models using the marginaleffects package for R and Python. Free software, book, tutorials, and documentation available. Compute marginal effects, marginal means, contrasts, odds ratios, hypothesis tests, equivalence tests, slopes, derivatives, average treatment effects, CATE, ATE, ATT, ATU, G-Computation, multiple imputation, matching, categorical outcomes, GAM, Mixed-effects, multi-level, post-stratification, MrP, and more. ",
+    "image": "https://marginaleffects.com/assets/zoo_header_m2m.png",
+    "sameAs": [
+        "https://github.com/vincentarelbundock/marginaleffects",
+        "https://www.jstatsoft.org/article/view/v111i09",
+        "https://cran.r-project.org/package=marginaleffects",
+        "https://pypi.org/project/marginaleffects/"
+    ]
+}
+</script>
+

@@ -1,0 +1,97 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `predictions`, `avg_predictions`, `plot_predictions`, `avg_comparisons`, `comparisons`, `datagrid` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `predictions`, `comparisons`, `slopes`, `avg_predictions`, `avg_comparisons`, `avg_slopes` for this chapter.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+# Machine learning {#sec-ml}
+- The concepts and post-estimation tools introduced in earlier chapters---predictions, counterfactual comparisons, and slopes---are largely model-agnostic; they are applicable to both statistical and machine learning approaches.
+- These tools are especially effective for model description, a task that is very important in machine learning applications, where analysts need to audit and understand how models respond to different inputs.
+- Auditing and describing machine learning models is essential to ensure that predictions remain fair, and that they are driven by factors compatible with the substantive knowledge of domain experts.
+- For instance, in credit scoring systems, evaluating how variations in applicant characteristics---such as income, employment status, or ethnicity---influence creditworthiness assessments helps detect and mitigate potential biases.
+- Similarly, in hiring algorithms, how models weight different candidate attributes---like education level or years of experience---can help recruiters use models in decision-making.
+- Audits and model description are crucial to improve the transparency and interpretability of data analyses.
+- The `marginaleffects` package facilitates model description and auditing by allowing analysts to compute and visualize predictions, counterfactual comparisons, and slopes.
+- It integrates seamlessly with some of the most prominent machine learning frameworks in R (`tidymodels` and `mlr3`) and Python (Scikit Learn).
+
+## `tidymodels` and `mlr3`
+- `tidymodels` is a collection of packages in R designed for modeling and machine learning using `tidyverse` principles, offering a cohesive interface for data preprocessing, modeling, and validation.
+- `mlr3` is a modern, object-oriented framework in R that provides a comprehensive suite of tools for machine learning, including a wide array of algorithms, resampling methods, and performance measures.
+- By supporting both `tidymodels` and `mlr3`, `marginaleffects` enables users to interpret a wide variety of machine learning models.
+- Scikit Learn is a powerful Python library for machine learning that provides simple and efficient tools for data mining and data analysis.
+- A comprehensive introduction to machine learning in general, or to particular frameworks, lies outside the scope of this book. Instead, the chapter shows a very simple example to demonstrate that the workflow built up in previous chapters applies in straightforward fashion to this new context.
+- The chapter uses data on Airbnb rental properties in London, which includes information on over 50,000 units with features such as unit type, number of bedrooms, parking, and internet access; the primary outcome is the rental price.
+- The data is split into a training set for fitting the model and a test set for evaluating predictions.
+- The `boost_tree()` function specifies the model type (XGBoost boosted trees for regression), `recipe()` identifies the outcome variable and initiates data preprocessing, `step_dummy()` converts categorical predictors into dummy variables, and `workflow()` combines the model and recipe before calling `fit()`.
+- Users who prefer a different algorithm can swap `boost_tree()` for `linear_reg()`, `rand_forest()`, `bart()`, etc.
+
+## Predictions {#sec-ml_predictions}
+- With the fitted model in hand, the `predictions()` function generates predictions in the test set.
+- As usual, `predictions()` returns a simple data frame with the quantity of interest in the `estimate` column, and the original data in separate columns.
+- The quality of predictions can be checked by plotting predicted values (`estimate`) against observed values (`price`); points on the diagonal are correctly predicted.
+- There is considerable spread around the diagonal, which means the algorithm makes substantial prediction errors.
+- Most of the standard functions and arguments in `marginaleffects` are available for ML models.
+- For instance, `avg_predictions()` with the `by` argument can compute the average predicted price by unit type (e.g., private rooms vs. entire homes).
+- When `marginaleffects` functions are applied to models fitted by `tidymodels` or `mlr3`, standard errors are not available because ML models are not typically accompanied by a variance-covariance matrix; however, `tidymodels` has built-in support for some uncertainty quantification strategies like conformal prediction.
+
+### Partial dependence plot
+- A Partial Dependence Plot (PDP) is a strategy to visualize how predictions change with certain predictors, by computing predictions over a range of values for a predictor and averaging over other variables.
+- This is useful for understanding complex models.
+- The `plot_predictions()` function in `marginaleffects` simplifies the creation of these plots by computing average predicted outcomes for each combination of focal variables and plotting the results.
+- In the Airbnb example, the PDP shows that the price of a single private room does not really change as the total number of bedrooms increases, while the price of renting an entire unit does increase with the number of bedrooms.
+- In some contexts, analysts prefer partial dependence plots based on a counterfactual grid, which duplicates the dataset for every combination of focal variable values, ensuring the distribution of other covariates is identical across combinations.
+- Counterfactual-grid PDPs can be interpreted as illustrating "all else equal" predictions; they are constructed using `datagrid()` with `grid_type = "counterfactual"` and then passed to `plot_predictions()`.
+- When the dataset is very large, a random subset can be used to build the counterfactual grid to manage memory usage.
+
+## Counterfactual comparisons {#sec-ml_comparisons}
+- The `avg_comparisons()` function answers counterfactual queries such as: on average, how does the predicted price change when we increase the number of bedrooms by 2, holding all other variables constant?
+- The `variables` argument specifies which predictors to change and by how much (e.g., `list(bedrooms = 2)` increases bedrooms by 2).
+- In the Airbnb example, the model predicts that a unit with two extra bedrooms will command a meaningfully higher price.
+- To examine the combined effect of changing multiple predictors simultaneously---such as adding one bedroom and transitioning from no wireless internet to having it---the `cross` argument is used with `avg_comparisons()`.
+- In the Airbnb example, adding one bedroom and wireless internet access to a rental unit increases the expected price.
+- The integration of machine learning models with tools like `marginaleffects` allows for a deeper understanding and interpretation of complex models.
+- By leveraging predictions, counterfactual comparisons, and partial dependence plots, analysts can gain insights into model behavior and ensure that predictions align with domain knowledge.
+- This approach enhances model transparency and aids in making informed decisions based on model outputs.
+
+# Examples
+- The examples below are drawn from the original chapter and illustrate representative workflows.
+
+## Example 1: Fit an XGBoost model and generate predictions
+```r
+library(tidymodels)
+library(marginaleffects)
+set.seed(48103)
+airbnb <- get_dataset("airbnb")
+airbnb_split <- initial_split(airbnb)
+train <- training(airbnb_split)
+test <- testing(airbnb_split)
+
+xgb <- boost_tree(mode = "regression", engine = "xgboost")
+mod <- recipe(airbnb, price ~ .) |>
+  step_dummy(all_nominal_predictors()) |>
+  workflow(spec = xgb) |>
+  fit(train)
+
+predictions(mod, newdata = test)
+```
+
+## Example 2: Partial dependence plot
+```r
+plot_predictions(mod,
+  by = c("bedrooms", "unit_type"),
+  newdata = airbnb) +
+  labs(x = "# Bedrooms", y = "Predicted Price", linetype = "")
+```
+
+## Example 3: Counterfactual comparisons with the cross argument
+```r
+avg_comparisons(mod,
+  variables = list(bedrooms = 2),
+  newdata = airbnb)
+
+avg_comparisons(mod,
+  variables = c("bedrooms", "Wireless Internet"),
+  cross = TRUE,
+  newdata = airbnb)
+```

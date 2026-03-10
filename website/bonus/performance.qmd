@@ -1,0 +1,290 @@
+# Performance
+
+
+## Why is `marginaleffects` slow, sometimes?
+
+There are four primary reasons why some `marginaleffects` calls are slow:
+
+1. Slow `predict()` function.
+2. Too many comparisons.
+3. Large grid.
+4. Expensive standard errors.
+
+Let's consider each of these points in turn, along with potential solutions.
+
+```{r}
+library(marginaleffects)
+library(microbenchmark)
+library(tictoc)
+options(width = 300)
+
+dat <- get_dataset("airbnb")
+
+mod <- lm(
+    price ~ bathrooms * bedrooms * unit_type * Breakfast * Gym, 
+    data = dat)
+```
+
+## Slow `predict()` function
+
+To compute predictions, comparisons, and slopes, `marginaleffects` must call `predict()` repeatedly. This function is supplied by the package that implements the model object, and its speed can vary widely. 
+
+Unfortunately, since this function is not supplied by `marginaleffects` itself, there is not much that can be done to speed it up. Therefore, we move on directly to the other sources of sluggishness.
+
+## Too many comparisons
+
+When using the `slopes()` or `comparisons()` families of functions, the default is to compute the "effect" of all focal preditors one after the other. When there are many predictors, this can be expensive.
+
+### Solution: `variables` argument
+
+A simple solution is to specify the `variables` argument to only compute estimates for the predictors of interest. Compare:
+
+```{r}
+tic()
+cmp <- avg_comparisons(mod, variables = "bathrooms")
+toc()
+
+tic()
+cmp <- avg_comparisons(mod)
+toc()
+```
+
+## Large grid
+
+There are two main reasons why a grid might be large. 
+
+First, the dataset used to fit the model has many rows, and you have not specified a `newdata` argument. In the fitted example above, the `airbnb` dataset is large. Therefore, if we do not specify a `newdata` argument, `marginaleffects` will compute one estimate (and standard error) for each row in the dataset. This can be very costly.
+
+```{r}
+p <- predictions(mod)
+dim(p)
+```
+
+The second situation in which a grid can be large occurs when users have specified a grid in the `newdata` argument, perhaps using the `datagrid()` helper, and that grid is very large. 
+
+Consider a simple dataset with 4 categorical variables, each with 26 possible levels:
+
+```{r}
+let <- data.frame(
+    A = sample(letters, 1000, replace = TRUE),
+    B = sample(letters, 1000, replace = TRUE),
+    C = sample(letters, 1000, replace = TRUE),
+    D = sample(letters, 1000, replace = TRUE)
+)
+nrow(let)
+```
+
+This dataset has 1000 rows. However, if we use the `datagrid()` function to create a "balanced grid", we end up with 26^4^=456,976 rows:
+
+```{r}
+dg <- datagrid(newdata = let, grid_type = "balanced")
+nrow(dg)
+```
+
+### Solution A: Estimates at representative values
+
+Instead of compute predictions, comparisons, or slopes for every row of a large grid, it is much faster to compute just a few estimates. For example, you may want to compute predictions for an individual with average (or modal) characteristics, or for a unit with specific values of interest.
+
+```{r}
+predictions(mod, newdata = "mean")
+
+predictions(mod, newdata = datagrid(Gym = 1, bathrooms = 2, bedrooms = 6))
+```
+
+### Solution B: Random subset of the grid
+
+An alternative is to sample a subset of rows at random from the large grid. If the subset is large enough, the statistics we compute on that basis will often be very similar to the full-sample values.
+
+Here, we use `avg_comparisons()` to compute the "average effect" of `bathrooms` on `price`, and find that the estimates are reasonably close when we use the full grid or a subset.
+
+```{r}
+set.seed(48103)
+# random subset of the grid
+sub <- dat[sample(nrow(dat), 1000), ]
+avg_comparisons(mod, variables = "bathrooms", newdata = sub)
+
+# full grid
+avg_comparisons(mod, variables = "bathrooms")
+```
+
+### Solution C: Weighted grid
+
+When all the predictor variables are categorical, we can use a third approach: use a weighted grid of unique rows. Consider again our `airbnb` model. There are five categorical predictors in this model:
+
+```{r}
+pred <- insight::find_predictors(mod, flatten = TRUE)
+pred
+```
+
+What we can do is create a grid of unique rows, and assign weights to each row based on how many times it appears in the original dataset.
+
+```{r}
+#| message: false
+#| warning: false
+library(dplyr)
+grid <- dat |>
+    select(all_of(pred)) |>
+    summarise(weight = n(), .by = all_of(pred))
+```
+
+This grid is much smaller than the original dataset:
+
+```{r}
+nrow(dat)
+nrow(grid)
+```
+
+Now we can compute a quantity of interest with `marginaleffects`, using the `wts` argument to "expand" the grid and obtain the same result as if we had used the full dataset, but much faster.
+
+```{r}
+# full dataset
+tic()
+p_full <- avg_predictions(mod)
+toc()
+```
+
+```{r}
+# weighted grid
+tic()
+p_subset <- avg_predictions(mod, newdata = grid, wts = "weight")
+toc()
+```
+
+```{r}
+p_full
+p_subset
+```
+
+## Standard errors are expensive
+
+The final reason why some `marginaleffects` calls take time is that standard errors are expensive to compute. This is especially true when the fitted model includes many parameters (coefficients), because the default strategy to compute standard errors involves calling `predict()` at least once per coefficient.
+
+### Solution A: No standard errors
+
+It is always much faster to compute estimates without standard errors. If you do not need them, set `vcov=FALSE`.
+
+```{r}
+tic()
+p <- avg_predictions(mod, vcov = FALSE)
+toc()
+
+tic()
+p <- avg_predictions(mod)
+toc()
+```
+
+### Solution B: Automatic differentiation
+
+For some models, `marginaleffects` can compute standard errors using [automatic differentiation (AD)](https://en.wikipedia.org/wiki/Automatic_differentiation). This is often much faster (and sometimes more accurate) than the default finite difference approach.
+
+
+To enable AD, we need to install the `marginaleffectsAD` package for Python, and call it via the `reticulate` package. This sounds more complicated than it is. In most cases, all the user has to do is call the `autodiff()` function supplied by `marginaleffects`.
+
+```{r}
+#| eval: false
+install.packages("reticulate")
+library("marginaleffects")
+autodiff(install = TRUE)
+```
+
+After installing the dependencies, we can call `autodiff(TRUE)` to enable AD for the current R session, and we call the `microbenchmark` package to compare the performance of two similar calls. The AD approach is *much* faster in this example.
+
+```{r}
+#| warning: false
+automatic_differentiation <- function() {
+    autodiff(TRUE)
+    avg_predictions(mod)
+}
+finite_differences <- function() {
+    autodiff(FALSE)
+    avg_predictions(mod)
+}
+microbenchmark(
+    automatic_differentiation(),
+    finite_differences(),
+    times = 5
+)
+```
+
+### Solution C: Parallel processing
+
+For models and calls that are not supported by automatic differentiation, another option is to compute standard errors in parallel. 
+
+Parallel processing does not always speed up `marginaleffects` much, because of the overhead involved in passing large datasets between different cores or forked processes. This strategy is more likely to be useful when:
+
+1. The modelling package's `predict()` function is slow.
+2. There are *many* parameters in the model.
+3. The grid is not large enough to impose too much overhead.
+
+To use parallel processing, we call the `plan` function from [the `future` package](https://future.futureverse.org/) and we set some global options.
+
+:::{.callout-note}
+The global option for parallel processing is different for the `inferences()` function. See the documentation of that function for details.
+:::
+
+Here is an example with `nycflights13` data and a complex model with many parameters.
+
+```{r}
+#| warning: false
+library(mgcv) |> suppressPackageStartupMessages()
+library(tictoc)
+library(future)
+library(nycflights13)
+library(marginaleffects)
+data("flights")
+options(future.globals.maxSize = 8000 * 1024^2) # 8 GB memory
+packageVersion("marginaleffects")
+cores <- 8
+plan(multicore, workers = cores)
+
+flights <- flights |>
+    transform(date = as.Date(paste(year, month, day, sep = "/"))) |>
+    transform(date.num = as.numeric(date - min(date))) |>
+    transform(wday = as.POSIXlt(date)$wday) |>
+    transform(time = as.POSIXct(paste(hour, minute, sep = ":"), format = "%H:%M")) |>
+    transform(time.dt = difftime(time, as.POSIXct('00:00', format = '%H:%M'), units = 'min')) |>
+    transform(time.num = as.numeric(time.dt)) |>
+    transform(dep_delay = ifelse(dep_delay < 0, 0, dep_delay)) |>
+    transform(dep_delay = ifelse(is.na(dep_delay), 0, dep_delay)) |>
+    transform(carrier = factor(carrier)) |>
+    transform(dest = factor(dest)) |>
+    transform(origin = factor(origin))
+
+model <- bam(dep_delay ~ 
+    s(date.num, bs = "cr") +
+    s(wday, bs = "cc", k = 3) +
+    s(time.num, bs = "cr") +
+    s(carrier, bs = "re") +
+    origin +
+    s(distance, bs = "cr") + 
+    s(dest, bs = "re"),
+    data = flights,
+    family = poisson,
+    discrete = TRUE,
+    nthreads = cores)
+
+# there are many parameters
+length(coef(model))
+```
+
+Now, compare three calls to `predictions()`.
+
+```{r}
+# No standard errors is very fast:
+tic()
+p1 <- predictions(model, vcov = FALSE)
+toc()
+
+# Parallel standard errors is slower
+options("marginaleffects_parallel" = TRUE)
+tic()
+p1 <- predictions(model)
+toc()
+
+# Sequential standard errors is even slower
+options("marginaleffects_parallel" = FALSE)
+tic()
+p2 <- predictions(model)
+toc()
+```
+

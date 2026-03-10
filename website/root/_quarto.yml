@@ -1,0 +1,198 @@
+project:
+  type: book
+  resources:
+    - llms.txt
+    - llms-full.txt
+
+execute:
+  cache: true
+  freeze: auto # re-render only when source changes
+
+book:
+  favicon: assets/favicon.ico
+  title: "Model to Meaning"
+  subtitle: "How to interpret statistical models with `marginaleffects` for `R` and `Python`"
+  site-url: https://marginaleffects.com
+  sidebar:
+    collapse-level: 1
+
+  navbar:
+    background: "#eeeeee"
+    search: true
+    logo: assets/marginaleffects_logo.svg
+    logo-alt: "marginaleffects logo"
+    right:
+      - text: Quick start
+        href: bonus/get_started.html
+      - text: Book
+        menu:
+          - text: Paper & eBook
+            href: https://www.routledge.com/9781032908724
+          - text: Web (free)
+            href: https://marginaleffects.com/chapters/who.html
+      - text: Article
+        href: https://www.jstatsoft.org/article/view/v111i09
+      - text: Courses
+        href: bonus/courses.html
+      - text: Help
+        href: bonus/help.html
+      - icon: github
+        aria-label: marginaleffects GitHub
+        menu:
+          - text: R
+            href: https://github.com/vincentarelbundock/marginaleffects
+          - text: Python
+            href: https://github.com/vincentarelbundock/pymarginaleffects
+      - text: "![](assets/bluesky.svg){height=1em}"
+        href: https://bsky.app/profile/vincentab.bsky.social
+      - icon: mastodon
+        href: https://fosstodon.org/@vincentab
+      - icon: twitter
+        href: https://twitter.com/vincentab
+
+  chapters:
+    - text: "Home"
+      href: index.qmd
+    - chapters/who.qmd
+    - part: "I: Interpretation"
+      chapters:
+        - chapters/challenge.qmd
+        - chapters/framework.qmd
+    - part: "II: Quantities and tests"
+      chapters:
+        - chapters/hypothesis.qmd
+        - chapters/predictions.qmd
+        - chapters/comparisons.qmd
+        - chapters/slopes.qmd
+    - part: "III: Case studies"
+      chapters:
+        - chapters/gcomputation.qmd
+        - chapters/experiments.qmd
+        - chapters/interactions.qmd
+        - chapters/categorical.qmd
+        - chapters/mrp.qmd
+        - chapters/ml.qmd
+        - chapters/uncertainty.qmd
+        - chapters/python.qmd
+    - part: "IV: Case studies (R)"
+      chapters:
+        - bonus/get_started.qmd
+        - bonus/plot.qmd
+        - bonus/brms.qmd
+        - bonus/bootstrap.qmd
+        - bonus/conjoint.qmd
+        - bonus/elasticity.qmd
+        - bonus/gam.qmd
+        - bonus/grids.qmd
+        - bonus/heterogeneity.qmd
+        - bonus/hypothesis.qmd
+        - bonus/interrupted_time_series.qmd
+        - bonus/ipw.qmd
+        - bonus/lme4.qmd
+        - bonus/logit.qmd
+        - bonus/matching.qmd
+        - bonus/mlogit.qmd
+        - bonus/multiple_imputation.qmd
+        - bonus/power.qmd
+        - bonus/survival.qmd
+        - bonus/total_marginal_effect.qmd
+        - bonus/uncertainty.qmd
+    - part: "IV: Case studies (Python)"
+      chapters:
+        - bonus/get_started.qmd
+        - bonus/sklearn.qmd
+    - part: "V: Miscellaneous"
+      chapters:
+        - bonus/help.qmd
+        - bonus/alternative_software.qmd
+        - bonus/courses.qmd
+        - bonus/extensions.qmd
+        - bonus/faq.qmd
+        - bonus/links.qmd
+        - bonus/meme.qmd
+        - bonus/performance.qmd
+        - bonus/supported_models.qmd
+        - bonus/svalues.qmd
+        - bonus/tables.qmd
+        - chapters/bibliography.qmd
+    - part: "Functions (R)"
+      chapters:
+        - text: "`predictions`"
+          href: man/r/predictions.qmd
+        - text: "`comparisons`"
+          href: man/r/comparisons.qmd
+        - text: "`slopes`"
+          href: man/r/slopes.qmd
+        - text: "`hypotheses`"
+          href: man/r/hypotheses.qmd
+        - text: "`inferences`"
+          href: man/r/inferences.qmd
+        - text: "`datagrid`"
+          href: man/r/datagrid.qmd
+        - text: "`plot_predictions`"
+          href: man/r/plot_predictions.qmd
+        - text: "`plot_comparisons`"
+          href: man/r/plot_comparisons.qmd
+        - text: "`plot_slopes`"
+          href: man/r/plot_slopes.qmd
+        - text: "`autodiff`"
+          href: man/r/autodiff.qmd
+        - text: "`print.marginaleffects`"
+          href: man/r/print.marginaleffects.qmd
+        - text: "`get_dataset`"
+          href: man/r/get_dataset.qmd
+        - text: "`get_draws`"
+          href: man/r/get_draws.qmd
+        - text: "`get_coef`"
+          href: man/r/get_coef.qmd
+        - text: "`get_vcov`"
+          href: man/r/get_vcov.qmd
+        - text: "`components`"
+          href: man/r/components.marginaleffects.qmd
+        - text: "`prune`"
+          href: man/r/prune.marginaleffects.qmd
+    - part: "Functions (Python)"
+      chapters:
+        - text: "`predictions`"
+          href: man/python/predictions.qmd
+        - text: "`comparisons`"
+          href: man/python/comparisons.qmd
+        - text: "`slopes`"
+          href: man/python/slopes.qmd
+        - text: "`hypotheses`"
+          href: man/python/hypotheses.qmd
+        - text: "`datagrid`"
+          href: man/python/datagrid.qmd
+        - text: "`get_dataset`"
+          href: man/python/get_dataset.qmd
+        - text: "`plot_predictions`"
+          href: man/python/plot_predictions.qmd
+        - text: "`plot_comparisons`"
+          href: man/python/plot_comparisons.qmd
+        - text: "`plot_slopes`"
+          href: man/python/plot_slopes.qmd
+        - text: "`fit_linearmodels`"
+          href: man/python/fit_linearmodels.qmd
+        - text: "`fit_sklearn`"
+          href: man/python/fit_sklearn.qmd
+        - text: "`fit_statsmodels`"
+          href: man/python/fit_statsmodels.qmd
+    - text: "News (R)"
+      href: bonus/NEWS_r.qmd
+    - bonus/citation.qmd
+
+format:
+  html:
+    copyright: "Vincent Arel-Bundock, 2025"
+    reader-mode: true
+    theme:
+      - flatly
+      - custom.scss
+    top-level-division: chapter
+    citeproc: true
+    toc: true
+    highlight-style: atom-one
+    code-copy: true
+    code-link: true
+    code-overflow: scroll
+    bibliography: library.bib

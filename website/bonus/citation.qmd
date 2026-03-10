@@ -1,0 +1,27 @@
+# Citation and License {.unnumbered}
+
+To cite `marginaleffects` in publications, please use:
+
+> Arel-Bundock V, Greifer N, Heiss A (2024). “How to Interpret Statistical Models Using marginaleffects for R and Python.” _Journal of Statistical Software_, *111*(9), 1-32. doi:10.18637/jss.v111.i09 <https://doi.org/10.18637/jss.v111.i09>.
+
+A BibTeX entry for LaTeX users is:
+
+```latex
+@Article{,
+  title = {How to Interpret Statistical Models Using {marginaleffects} for {R} and {Python}},
+  author = {Vincent Arel-Bundock and Noah Greifer and Andrew Heiss},
+  journal = {Journal of Statistical Software},
+  year = {2024},
+  volume = {111},
+  number = {9},
+  pages = {1--32},
+  doi = {10.18637/jss.v111.i09},
+}
+```
+
+The `marginaleffects` software code is licenced under the [GPLv3.](https://www.gnu.org/licenses/gpl-3.0.en.html)
+
+The contents of this website and the *Model to Meaning* book are copyrighted and may not be reproduced without permission.
+
+© 2025 Vincent Arel-Bundock. All Rights Reserved.
+<meta name="copyright" content="© 2025 Vincent Arel-Bundock. All Rights Reserved.">

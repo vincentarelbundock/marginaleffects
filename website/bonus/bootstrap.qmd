@@ -1,0 +1,136 @@
+# Bootstrap
+
+This vignette demonstrates how to use bootstrap methods for inference with the `marginaleffects` package.
+
+## Parallelization
+
+The bootstrap is an incredibly powerful and flexible method to quantify the uncertainty around estimates. Unfortunately, it can be quite computationally expensive. In some cases, parallelization can significantly speed up the process. This is most beneficial when bootstrap sample size (`R`) is large (≥ 1000); model fitting is computationally expensive; you have multiple CPU cores available.
+
+Under the hood, `marginaleffects` uses the `future` framework to enable parallel processing. This requires calling the `plan()` function, and specifying a couple global options: 
+
+- `marginaleffects_parallel_inferences`: Set to `TRUE` to enable parallel processing
+- `marginaleffects_parallel_packages`: Character vector of package names used to fit the model.
+
+```{r}
+library(future)
+library(splines)
+library(marginaleffects)
+options(marginaleffects_parallel_inferences = TRUE)
+options(marginaleffects_parallel_packages = c("marginaleffects", "splines"))
+plan(multisession)
+```
+
+```{r}
+#| include: false
+options(width = 200)
+```
+
+
+
+## Simple example
+
+All the objects produced by the `marginaleffects` can be passed to the `inferences()` function to compute bootstrap confidence intervals. For example, fit a simple model to the `iris` dataset and compute average comparisons.
+
+```{r}
+mod <- lm(Sepal.Length ~ Sepal.Width + Species, data = iris)
+avg_comparisons(mod)
+```
+
+The default confidence intervals reported above were computed using the delta method. We can obtain bootstrap-based estimates by piping the command into `inferences()`:
+
+```{r}
+avg_comparisons(mod) |> inferences(method = "rsample")
+```
+
+This also works with other `marginaleffects` functions:
+
+```{r}
+avg_predictions(mod, by = "Species") |> inferences(method = "rsample")
+
+hypotheses(mod, hypothesis = ratio ~ sequential) |> inferences(method = "rsample")
+```
+
+The `inferences()` function supports multiple bootstrap methods, and includes arguments to control some aspects of the procedure, including `R` to determine the number of resamples. Additional (undocumented) arguments will be passed to the underlying bootstrap function, such as `rsample::bootstraps()`. This allows users to supply arguments such as `strata` or `pool`. See `?rsample::bootstraps` for details.
+
+## Custom Estimation Procedures
+
+Sometimes analysts need to use the bootstrap to compute uncertainy around more complex estimation procedures that go beyond the standard marginal effects workflow. For example, one may want to proceed in three steps: 
+
+1. Fit a logistic regression model to the treatment in order to estimate propensity scores.
+2. Fit a linear model to the outcome using the estimated propensity scores as weights.
+3. Compute the average treatment effect using G-computation and weights with the `avg_comparisons()` function.
+
+The bootstrap allows us to take into account the uncertainty in all stages of estimation. This can be useful in a variety of other scenarios, such as complex survey designs, or machine learning applications where analysts wish to bootstrap the entire ML pipeline.
+
+To implement a custom estimation procedure, we define an `estimator` argument in `inferences()` function. `estimator()` must 
+
+1. Take a data frame as input
+2. Return an object of class `hypotheses`, `predictions`, `slopes`, or `comparisons`  
+
+### Example: Bootstrap with Propensity Score Weighting
+
+```{r}
+library(marginaleffects)
+
+lalonde <- get_dataset("lalonde")
+
+# Define custom estimator function
+# input: data frame
+# output: marginaleffects object
+estimator <- function(data) {
+    # Step 1: Estimate propensity scores
+    fit1 <- glm(treat ~ age + educ + race, family = binomial, data = data)
+    ps <- predict(fit1, type = "response") 
+    
+    # Step 2: Fit weighted outcome model
+    m <- lm(re78 ~ treat * (re75 + age + educ + race),
+        data = data, weight = ps
+    )
+    
+    # Step 3: Compute average treatment effect by G-computation
+    avg_comparisons(m, variables = "treat", wts = ps, vcov = FALSE)
+}
+
+# Test the estimator on the full dataset
+estimator(lalonde)
+
+# Bootstrap the entire procedure
+cmp <- inferences(lalonde, method = "rsample", estimator = estimator)
+```
+
+The benefit of this approach is that it abstracts away from the mechanics of bootstrapping. We do not need to interact with the `rsample` or `boot` packages directly. We do not need to post-process or reshape the draws to obtain the format of interest. Indeed, the output is a standard `marginaleffects` object, that can be manipulated with all the standard tools, and comes with a nice pretty-print method:
+
+```{r}
+cmp
+```
+
+It also allows us to examine the bootstrap distribution easily, by extracting draws in a variety of convenient format using the `get_draws()` helper function from `marginaleffects`.
+
+```{r}
+d <- get_draws(cmp)$draw
+hist(d, 
+     main = "Bootstrap Distribution of Average Treatment Effect",
+     xlab = "")
+```
+
+### Estimator function with arguments
+
+The `estimator` argument only accepts a single function, and we cannot pass additional arguments to that function. However, we can use a function factory to create a custom estimator that accepts additional arguments.
+
+
+```{r}
+#| warning: false
+estimator_factory <- function(outcome = "Sepal.Width", predictor = "Sepal.Length") {
+  estimator_function <- function(data) {
+    f <- as.formula(sprintf("%s ~ %s * factor(Species)", outcome, predictor))
+    mod <- lm(f, data = data)
+    avg_slopes(mod, variables = predictor, by = "Species")
+  }
+}
+
+fun <- estimator_factory(outcome = "Petal.Width", predictor = "Sepal.Length")
+inferences(iris, estimator = fun, method = "rsample", R = 100)
+
+fun <- estimator_factory(outcome = "Petal.Width", predictor = "Petal.Length")
+inferences(iris, estimator = fun, method = "rsample", R = 100)
+```

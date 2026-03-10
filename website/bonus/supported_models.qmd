@@ -1,0 +1,22 @@
+
+# Supported Models
+
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+options(tinytable_html_engine = "tabulator")
+library("data.table")
+library("tinytable")
+dat <- fread("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/refs/heads/main/data-raw/supported_models.csv")
+dat <- dat[order(tolower(dat$Package), tolower(dat$Function)), ]
+```
+
+In `Python`, `marginaleffects` supports the `statsmodels`, `sklearn`, `pyfixest`, and `linearmodels` modelling packages. 
+
+In `R`, `marginaleffects` supports `r nrow(dat)` model types directly, and dozens more via the `tidymodels` and `mlr3` frameworks. This table shows the list of directly supported model types. 
+
+If you would like to use a model that is not in this list, please [file a request or submit code on Github.](https://github.com/vincentarelbundock/marginaleffects)
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+tt(dat) |> theme_html(engine = "tabulator", tabulator_search = "top")
+options(tinytable_html_engine = NULL)
+```

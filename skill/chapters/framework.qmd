@@ -1,0 +1,185 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `datagrid`, `predictions`, `comparisons`, `slopes`, `tt`, `source`, `options`, `subset` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `datagrid`, `predictions`, `comparisons`, `slopes`, `default_rng`, `DataFrame`, `normal`, `binomial` for this chapter.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+# Conceptual framework {#sec-framework}
+- This chapter introduces a conceptual framework to aid the interpretation of a wide variety of statistical and machine learning models.
+- Instead of focusing on fitted model parameters, analysts should convert those parameters into quantities that make more intuitive sense to readers and stakeholders.
+- By applying *post-hoc* transformations, researchers can go from model to meaning.
+- The workflow is both model-agnostic and consistent: every analysis starts from the same place by asking five critical questions.
+- *Quantity:* Do we wish to estimate the level of a variable, the association between two (or more) variables, or the effect of a cause?
+- *Predictors:* What predictor values are we interested in?
+- *Aggregation:* Do we care about unit-level or aggregated estimates?
+- *Uncertainty:* How do we quantify uncertainty about our estimates?
+- *Test:* Which hypothesis or equivalence tests are relevant?
+- These five questions lead to clear definitions of estimands and point to the specific software commands needed to run appropriate calculations.
+
+## Quantity
+- The parameters of a statistical model are often difficult to interpret, and they do not always shed direct light onto the research questions that interest us.
+- In many contexts, it helps to transform parameter estimates into quantities with a more natural and domain-relevant meaning.
+- For example, the analyst who fits a logistic regression model obtains coefficient estimates expressed as log odds ratios, a scale very difficult to reason about.
+- Instead of struggling with complex amalgams of probabilities, analysts should transform estimates into more intuitive quantities, like predicted probabilities or risk differences.
+- @sec-framework_quantity_theoretical_background exposes the theoretical underpinnings of *post hoc* transformations: the plug-in principle and the invariance property of maximum likelihood.
+- Empirically-minded readers who are less interested in statistical theory may skip that part of the text.
+- @sec-framework_three_quantities surveys the three classes of quantities of interest at the heart of this book: predictions, counterfactual comparisons, and slopes.
+- These quantities are introduced briefly here, but given chapter-length treatments in Part II.
+
+### Theoretical background {#sec-framework_quantity_theoretical_background}
+- There are two primary theoretical justifications for post-estimation transformations: the plug-in principle and the invariance property of maximum likelihood estimators (MLE).
+- The plug-in principle says that to infer some feature of a population, we can study the same feature in a sample, and plug in our sample estimate in lieu of the population value.
+- Formally, if $\theta = \psi(F)$ is a statistical functional of the probability distribution $F$, and mild regularity conditions are satisfied, we can estimate $\theta$ using the sample analogue $\hat{\theta} = \psi(\hat{F}_n)$.
+- As the number of observations increases, the empirical distribution function approximates the population distribution, and our estimate $\hat{\theta}$ tends to approach $\theta$.
+- The plug-in principle justifies the workflow: fit a model, apply a function to coefficient estimates, and interpret the results as sample analogues to population characteristics.
+- The invariance property of MLE states: if $\hat{\theta}$ is the MLE of $\theta$, then for any function $\psi(\theta)$, the MLE of $\psi(\theta)$ is $\psi(\hat{\theta})$.
+- This means the desirable properties of MLEs -- consistency, efficiency, and asymptotic normality -- are preserved under transformation.
+- In sum, post-estimation transformations are well-grounded in statistical theory, via the plug-in principle and the invariance property of MLE.
+
+### Predictions, counterfactual comparisons, and slopes {#sec-framework_three_quantities}
+- In this book, we target three broad classes of estimands: predictions, counterfactual comparisons, and slopes.
+- Part II dedicates a full chapter to each of them, with many concrete examples drawing on real-world datasets.
+- *A prediction* is the expected outcome of a fitted model for a given combination of predictor values.
+- For example, using a linear model of children's heights as a function of age and caloric intake, we can predict that an 11-year-old who eats 1800 calories per day would have an expected height of 149.5 cm.
+- *A counterfactual comparison* is a function of two predictions made with different predictor values; it measures the association between two variables, or the effect of one variable on another.
+- Counterfactual comparisons can be expressed as differences, ratios, lift, odds ratios, or other functions of two predictions.
+- When conditions for causal identification are satisfied, counterfactual comparisons can be interpreted as causal effects; otherwise they measure statistical association.
+- *A slope* is the partial derivative of the regression equation with respect to a focal predictor; it measures the rate at which predictions change when a focal predictor changes by a small amount.
+- In economics and political science, slopes are known as "marginal effects."
+
+## Predictors {#sec-framework_grid}
+- Predictions, counterfactual comparisons, and slopes are *conditional* quantities, which means that their values typically depend on all the predictors in a model.
+- Whenever an analyst reports one of these statistics, they must imperatively disclose where it was evaluated in the predictor space.
+- Answers to the question "for whom?" can be expressed in terms of profiles and grids.
+- A *profile* is a specific combination of values for a focal predictor $X$ and a vector of control variables $\mathbf{Z}$; it is the set of predictor values for one observed or hypothetical individual.
+- Profiles can be observed (actual data), synthetic (representative or interesting characteristics), or partially synthetic (an actual observation with a modified focal predictor).
+- A *grid* is a collection of one or more profiles; defining the grid is a crucial step in model interpretation.
+- The `datagrid()` function from the `marginaleffects` package constructs a variety of grids: empirical, interesting, representative, balanced, and counterfactual.
+- The code examples use a simulated dataset with 10 observations on three variables: numeric (`Num`), binary (`Bin`), and categorical (`Cat`).
+- R illustration code initializes simulated data using `library(marginaleffects)`, `library(tinytable)`, `set.seed(48103)`, `rnorm()`, `rbinom()`, and `sample()`.
+- Python illustration code initializes the same dataset using `numpy` (`default_rng`, `normal`, `binomial`, `choice`) and `polars` (`DataFrame`), with `from marginaleffects import *`.
+
+### Empirical grid {#sec-framework_grid_empirical}
+- The empirical distribution is simply the observed dataset -- a grid composed of all actually observed profiles in the sample.
+- Computing predictions on the empirical distribution is common practice, yielding one fitted value for each observation in the sample.
+- When estimating counterfactual comparisons or slopes, analysts often start with the empirical grid, manipulate one focal predictor, and see how predicted outcomes are affected.
+- Studying an empirical grid makes most sense when the observed sample is representative of the target population.
+- When working with convenience samples with very different characteristics from the population, it may make sense to use a different grid type or apply weights as described in @sec-mrp.
+- R illustration displays the simulated dataset using `dat |> tt()`.
+- Python illustration displays the simulated dataset by calling `dat` directly in Polars.
+
+### Interesting grid {#sec-framework_grid_interesting}
+- If the analyst cares about units with specific profiles, they can use `datagrid()` to create customized grids of "interesting" predictor values.
+- This is useful when one wants to compute a prediction or slope for an individual with given characteristics, such as a 50-year-old engineer from Belgium.
+- By default, `datagrid()` fixes all variables to their means or modes, except for those variables that the analyst has explicitly defined.
+- `datagrid()` also accepts functions to be applied to the variables in the original dataset (e.g., `range`, `mean`, `unique` in R).
+- In both R and Python, specifying multiple values for multiple variables produces a grid with all combinations (the Cartesian product).
+- R illustration creates an interesting grid with `datagrid(Bin = c(0, 1), newdata = dat)`, which fixes `Num` to its mean and `Cat` to its mode.
+- R illustration also shows `datagrid(Num = range, Bin = mean, Cat = unique, newdata = dat)` to produce $2 \times 1 \times 3 = 6$ rows.
+- Python illustration creates an interesting grid by passing lists and computed values: `datagrid(Bin=[0,1], newdata=dat)`.
+- Python illustration also uses computed column values (e.g., `dat["Num"].max()`, `dat["Bin"].mean()`, `dat["Cat"].unique()`).
+
+### Representative grid {#sec-framework_grid_representative}
+- A representative grid is one where predictors are fixed to representative values, such as means, medians, or modes.
+- This kind of grid is useful when the analyst wants to compute predictions, comparisons, or slopes for a typical or average individual.
+- Representative grids allow us to compute quantities such as "fitted value at the median" or "marginal effect at the mean."
+- Studying representative grids is useful for a measure of central tendency and for computational efficiency (one statistic for one profile).
+- On the downside, nobody in the population may be exactly average on all dimensions, so the interpretation can be somewhat ambiguous.
+- R illustration creates a representative grid with `datagrid(grid_type = "mean_or_mode", newdata = dat)`.
+- Python illustration creates a representative grid with `datagrid(grid_type = "mean_or_mode", newdata = dat)`.
+
+### Balanced grid {#sec-framework_grid_balanced}
+- A balanced grid is built from all unique combinations of categorical variables, with all numeric variables held at their means.
+- To create it, fix numeric variables at their means and create rows for each combination of categorical variable values (the Cartesian product).
+- In the example, `Num` is held at its mean, and rows show all combinations of unique `Bin` and `Cat`.
+- Balanced grids are often used to analyze the results of factorial experiments in convenience samples, where the empirical distribution is not representative of the target population.
+- Balanced grids are used by default in the `emmeans` post-estimation software, and we will see them in action in @sec-predictions_aggregation when computing marginal means.
+- R illustration creates a balanced grid with `datagrid(grid_type = "balanced", newdata = dat)`.
+- Python illustration creates a balanced grid with `datagrid(grid_type = "balanced", newdata = dat)`.
+
+### Counterfactual grid {#sec-framework_grid_counterfactual}
+- The last type of grid to consider is counterfactual: the entire dataset is duplicated, creating one copy for every combination of values that the analyst supplies.
+- In the example, `Bin` must take values 0 or 1, so two copies of the full dataset are created (one with `Bin=0`, one with `Bin=1`), for a total of 20 rows.
+- All other variables are held at their observed values.
+- Each original row has an exact duplicate that differs only in the counterfactual `Bin` variable; the `rowidcf` column holds row indices.
+- This kind of duplication is essential in chapters on counterfactual comparisons and G-computation, where we explore counterfactual analysis and causal inference.
+- R illustration creates a counterfactual grid with `datagrid(Bin = c(0, 1), grid_type = "counterfactual", newdata = dat)`.
+- R illustration inspects the first three rows of each counterfactual version with `subset(g, rowidcf %in% 1:3) |> tt()`.
+- Python illustration creates a counterfactual grid with `datagrid(Bin=[0,1], grid_type = "counterfactual", newdata = dat)`.
+- Python illustration inspects rows by filtering on the `rowidcf` column with `g.filter(pl.col("rowidcf") < 3)`.
+
+## Aggregation {#sec-framework_aggregation}
+- Predictions, counterfactual comparisons, and slopes are conditional quantities that depend on the values of all predictors; computing them over a grid yields one estimate per row.
+- If a grid has many rows, the large number of estimates can be unwieldy, so analysts may aggregate unit-level estimates into macro-level summaries.
+- No aggregation: Unit-level estimates.
+- Overall average: Average of unit-level estimates.
+- Subgroup averages: Average of unit-level estimates within subgroups of the data.
+- Weighted averages: Weighted average of unit-level estimates, where weights could be sampling weights or the inverse probability of treatment assignment.
+- Aggregated estimates are common: average predictions, marginal means, average counterfactual comparisons (ATE, ATT, ATU), and average slopes (average marginal effects).
+- Aggregated estimates tend to be easier to interpret and estimated with greater precision, but they can mask interesting variation across the sample (e.g., positive and negative effects cancelling out).
+
+## Uncertainty
+- Whenever we report quantities of interest derived from a statistical model, it is essential to provide estimates of our uncertainty.
+- Without standard errors or confidence intervals, readers cannot assess if reported values are genuine or the product of chance.
+- The `marginaleffects` package offers four primary methods for quantifying uncertainty: the delta method (default), bootstrap, simulation-based inference, and conformal prediction.
+- The delta method approximates the variance of a function of random variables; it is fast, flexible, and can be paired with robust variance estimates, but relies on a linear approximation and asymptotic normality.
+- The bootstrap generates empirical distributions by repeatedly resampling from the observed data; it is useful when the delta method's assumptions are not met.
+- Simulation-based inference draws simulated coefficients from an assumed distribution and computes quantities of interest repeatedly; it is effective for complex models and provides intuitive visualizations of uncertainty.
+- Conformal prediction provides valid *prediction* intervals (rather than *confidence* intervals) under minimal assumptions, using split-sample strategies.
+- @sec-uncertainty is entirely dedicated to uncertainty quantification with intuition, technical details, and hands-on demonstrations.
+
+## Test {#sec-framework_test}
+- Once we have computed a quantity of interest and its standard error, we can conduct a test to check if a hypothesis or conjecture is correct.
+- Null hypothesis tests determine if there is sufficient evidence to *reject* a presumed statement about a quantity of interest.
+- Examples of null hypothesis tests: the difference between two regression coefficients equals one; the predicted number of goals in a game is two; the effect of a medication on blood pressure is null; the association between education and income is zero.
+- Equivalence tests provide evidence that the difference between an estimate and some reference value is "negligible" or "unimportant."
+- Examples of equivalence tests: one regression coefficient is practically equivalent to another; the predicted probability is not meaningfully different from a target; two treatment effects are essentially the same.
+- Null hypothesis tests establish a difference; equivalence tests establish a similarity or practical equivalence.
+- The `marginaleffects` package computes null hypothesis and equivalence tests on raw parameter estimates, (non-)linear combinations of parameters, and on all estimated quantities: predictions, counterfactual comparisons, and slopes.
+- @sec-hypothesis is entirely dedicated to hypothesis and equivalence testing.
+
+## Summary
+- *Quantity:* Do we wish to estimate the level of a variable, the association between two (or more) variables, or the effect of a cause?
+- *Predictors:* What predictor values are we interested in?
+- *Aggregation:* Do we care about unit-level or aggregated estimates?
+- *Uncertainty:* How do we quantify uncertainty about our estimates?
+- *Test:* Which hypothesis or equivalence tests are relevant?
+- This chapter was written to address two problems: (a) the parameters of a statistical model are often difficult to interpret, and (b) analysts often fail to rigorously define the statistical quantities (estimands) and tests that can shed light on their research questions.
+- We solve these problems by transforming parameter estimates into quantities with a straightforward interpretation and a direct link to research goals.
+- The analysis workflow implied by these five questions is extremely flexible and can be operationalized via the consistent user interface of the `marginaleffects` package for R and Python.
+
+# Examples
+- The examples below are drawn from the original chapter and illustrate representative workflows.
+
+## Example 1: Creating an interesting grid
+```r
+library(marginaleffects)
+library(tinytable)
+
+set.seed(48103)
+N <- 10
+dat <- data.frame(
+  Num = rnorm(N),
+  Bin = rbinom(N, size = 1, prob = 0.5),
+  Cat = sample(c("A", "B", "C"), size = N, replace = TRUE)
+)
+
+# Create an interesting grid with Bin fixed to 0 and 1,
+# other variables at their means/modes
+datagrid(Bin = c(0, 1), newdata = dat) |> tt()
+```
+
+## Example 2: Creating a counterfactual grid
+```r
+# Duplicate the full dataset for each value of Bin
+g <- datagrid(
+  Bin = c(0, 1),
+  grid_type = "counterfactual",
+  newdata = dat
+)
+nrow(g) # 20 rows: 10 original x 2 counterfactual values
+
+# Inspect first three rows of each counterfactual copy
+subset(g, rowidcf %in% 1:3) |> tt()
+```

@@ -1,0 +1,16 @@
+# Courses
+
+I (Vincent) sometimes offer courses and tutorials on applied statistics and programming. Here is a list of past and/or future training activities.
+
+## Past Courses
+
+Online:
+
+* [Interpreting and Communicating Statistical Results with R: A Short Course](https://codehorizons.com/Seminars/interpreting-and-communicating-statistical-results-with-r/) (Code Horizons): March 27-28 2025.
+* [My First R package](https://codehorizons.com/Seminars/my-first-r-package/) (Code Horizons): July 22-23 2025.
+
+In person:
+
+* [From Model to Meaning: How to use the marginaleffects package to interpret results from statistical or machine learning models](https://user2025.r-project.org) (UseR! 2025, Durham North Carolina): August 8th 2025.
+
+

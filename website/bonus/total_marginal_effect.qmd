@@ -1,0 +1,172 @@
+# Total Marginal Effects
+
+@MizHan2025 recommend several strategies to summarize the effects of different levels of a categorical independent variable, or the effect of an independent variable across different levels of a categorical dependent variable. This notebook implements some of their strategies in `marginaleffects`. The quantities are simply defined and computed. Please refer to the original article in *Sociological Science* for motivation and intepretation.
+
+## Data and model
+
+To begin, we load the required libraries and data from the General Social Survey. We are interested in the effect of the variables `race4` and `woman` on the variable `conserv`. Since `conserv` is a binary variable, we fit a logit model.
+
+```{r}
+#| warning: false
+library(marginaleffects) # marginal effects
+library(modelsummary) # regression summaries
+library(nanoparquet) # read data
+library(nnet) # multinomial logit
+library(future.apply) # parallel bootstrap
+plan(multisession)
+options(marginaleffects_parallel_inferences = TRUE)
+options(width = 300)
+
+
+# download data
+gss <- read_parquet(url("https://marginaleffects.com/data/Mize_Han_GSS.parquet"))
+
+# fit binary logit model
+mod <- glm(conserv ~ woman + race4 + class, data = gss, family = binomial(link = "logit"))
+get_estimates(mod)
+```
+
+## Categorical Independent Variable
+
+### Average Marginal Effect Inequality
+
+@MizHan2025 define the "average marginal effect inequality" as the average of the absolute values of the marginal effects. Here, the expression "marginal effect," for a categorical predictor, refers to what @sec-comparisons referred to as "counterfactual comparisons." First, we compute the marginal effects for every level of the `race4` predictor.
+
+```{r}
+cmp <- avg_comparisons(mod,
+  variables = list(race4 = "pairwise"))
+cmp
+```
+
+These results suggest that moving from White to Black is associated with a decrease of `{r} sprintf("%.0f", abs(cmp$estimate[1]) * 100)` percentage points in the probability that `conserv` equals 1.
+
+The average absolute value of these marginal effects is the "average marginal effect inequality":
+
+```{r}
+abs(cmp$estimate)
+
+mean(abs(cmp$estimate))
+```
+
+We can compute this more easily---and with standard errors---using the `hypothesis` argument.
+
+```{r}
+avg_comparisons(mod,
+  variables = list(race4 = "pairwise"),
+  hypothesis = ~ I(mean(abs(x)))
+)
+```
+
+### Weighted Average Marginal Effect Inequality
+
+@MizHan2025 argue that the quantity computed in the previous section may be inappropriate when there are strong imbalances between the prevalence of different classes in the sample. Their proposed remedy is to weight each of the contrasts by their relative proportions in  the sample. First, we create a vector of weights based on sample proportions.
+
+```{r}
+weights <- prop.table(table(gss$race4))
+weights <- c(
+  (weights["Black"] + weights["White"]) / 3,
+  (weights["Hispanic"] + weights["Black"]) / 3,
+  (weights["Hispanic"] + weights["Other"]) / 3,
+  (weights["Hispanic"] + weights["White"]) / 3,
+  (weights["Other"] + weights["Black"]) / 3,
+  (weights["Other"] + weights["White"]) / 3
+)
+```
+
+Next, we define a `wmean()` function that computes the weighted mean, and we feed that function to the `hypothesis` argument.
+
+```{r}
+wmean <- function(x) weighted.mean(x, weights)
+avg_comparisons(mod,
+  variables = list(race4 = "pairwise"),
+  hypothesis = ~ I(wmean(abs(x)))
+)
+```
+
+### Comparing within a model
+
+@MizHan2025 also propose a strategy to compare the marginal effects of different categorical predictors. The idea is simple. First, we compute the average marginal effect inequality for each preditor. We do this by computing contrasts for the two predictors of interest (`race4` and `woman`) using the `variables` argument. Then, we compute the quantity of interest using the `hypothesis` argument, taking care to include `|term` on the right-hand side of the formula, to compute the quantity of interest separately for the two terms.
+
+```{r}
+cmp <- avg_comparisons(mod,
+  variables = list(race4 = "pairwise", woman = "pairwise"),
+  hypothesis = ~ I(mean(abs(x))) | term
+)
+cmp
+```
+
+We find that the estimate is larger for `race4` than for `woman`. Is this difference statistically significant? Are the two estimates distinguishable from one another? To check this, we pipe the previous command to the `hypotheses()` function.
+
+```{r}
+avg_comparisons(mod,
+  variables = list(race4 = "pairwise", woman = "pairwise"),
+  hypothesis = ~ I(mean(abs(x))) | term) |>
+  hypotheses(~pairwise)
+```
+
+No. While the two estimates *seem* different at first glance, we cannot reject the null hypothesis that they are equal.
+
+
+### Comparing across models
+
+Imagine that we wish to compare the marginal effect of the `woman` predictor in a model that controls for `race` to the marginaleffect effect of `woman` in a model that does not control for `race`. We can do this by fitting two models and then comparing the marginal effects. First, we define an `estimator` function that fits the models and returns a `marginaleffects` object with the difference of interest.^[We set `vcov=FALSE` for efficiency because we will bootstrap the full procedure.]
+
+```{r}
+estimator <- function(data) {
+  # fit the two models we wish to compare
+  mod1 <- glm(conserv ~ woman + class + race4, data = data, family = binomial(link = "logit"))
+  mod2 <- glm(conserv ~ woman + class, data = data, family = binomial(link = "logit"))
+  # compute the marginal effects in both models
+  mfx1 <- avg_comparisons(mod1, variables = "woman", vcov = FALSE)
+  mfx2 <- avg_comparisons(mod2, variables = "woman", vcov = FALSE)
+  # compare the two models and store the difference in the estimate column
+  # estimator() must return a marginaleffects object
+  mfx1$estimate <- mfx1$estimate - mfx2$estimate
+  return(mfx1)
+}
+
+estimator(gss)
+```
+
+Finally, we use the `inferences()` function to bootstrap the while procedure and obtain confidence intervals. 
+
+```{r}
+inferences(gss, method = "rsample", estimator = estimator)
+```
+
+The number reported in the `Estimate` column represents the *difference* between the marginal effect of `woman` in the first model and the marginal effect of `woman` in the second model. The confidence interval represents the uncertainty around this difference.
+
+
+
+## Categorical Dependent Variable
+
+To show how the concepts developed in the previous sections can be applied to a categorical dependent variable, we fit a multinomial logit model to the `health` variable. Our focal predictor is a binary variable called `college`.
+
+```{r}
+table(gss$college, gss$health)
+
+mod <- multinom(health ~ college + race4 + class + woman, data = gss, trace = FALSE)
+
+avg_comparisons(mod, variables = c("college", "woman"))
+```
+
+The results in the `Estimate` column show the estimate marginal effect of getting a college degree on the probability of belonging to each of the health categories. Clearly, having a college degree seems to increase the likelihood that individuals will report being in good or excellent health.
+
+We can compute the average marginal effect inequality for the `college` predictor and `woman` predictors as before, using the `hypothesis` argument.
+
+```{r}
+avg_comparisons(mod, 
+  variables = c("college", "woman"), 
+  hypothesis = ~ I(mean(abs(x))) | term)
+```
+
+And we can compare the two estimates by piping the previous command to the `hypotheses()` function.
+
+```{r}
+avg_comparisons(mod, 
+  variables = c("college", "woman"), 
+  hypothesis = ~ I(mean(abs(x))) | term) |>
+  hypotheses(~revpairwise)
+```
+
+It seems that `college` has a larger effect on `health`---on average across outcome levels---than `woman`.

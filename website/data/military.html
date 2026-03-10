@@ -1,0 +1,108 @@
+<!DOCTYPE html><html><head><title>R: US Military Demographics</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>military</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>US Military Demographics</h2>
+
+<h3>Description</h3>
+
+<p>This dataset contains demographic information on every member of the US
+armed forces including gender, race, and rank.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>military
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 1,414,593 observations on the following 6 variables.
+</p>
+
+<dl>
+<dt>grade</dt><dd><p>The status of the service member as <code>enlisted</code> <code>officer</code> or <code>warrant officer</code>.</p>
+</dd>
+<dt>branch</dt><dd><p>The branch of the armed forces: <code>air force</code>, <code>army</code>, <code>marine corps</code>, <code>navy</code>.</p>
+</dd>
+<dt>gender</dt><dd><p>Whether the service member is <code>female</code> or <code>male</code>.</p>
+</dd>
+<dt>race</dt><dd><p>The race identified by the service member: <code>ami/aln</code> (american indian/alaskan native), <code>asian</code>, <code>black</code>, <code>multi</code> (multi-ethnic), <code>p/i</code> (pacific islander), <code>unk</code> (unknown), or <code>white</code>.</p>
+</dd>
+<dt>hisp</dt><dd><p>Whether a service member identifies with being hispanic (<code>TRUE</code>) or not (<code>FALSE</code>).</p>
+</dd>
+<dt>rank</dt><dd><p>The numeric rank of the service member (higher number indicates higher rank).</p>
+</dd>
+</dl>
+
+
+
+<h3>Details</h3>
+
+<p>The branches covered by this dataset include the Army, Navy, Air Force, and
+Marine Corps. Demographic information on the Coast Guard is contained in
+the original dataset but has not been included here.
+</p>
+
+
+<h3>Source</h3>
+
+<p>Data provided by the Department of Defense and made available at
+<a href="https://catalog.data.gov/dataset/personnel-trends-by-gender-race">https://catalog.data.gov/dataset/personnel-trends-by-gender-race</a>,
+retrieved 2012-02-20.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>## Not run: 
+library(dplyr)
+library(ggplot2)
+library(forcats)
+
+# Proportion of females in military branches
+military |&gt;
+  ggplot(aes(x = branch, fill = gender)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Branch", y = "Proportion", fill = "Gender",
+    title = "Proportion of females in military branches"
+  )
+
+# Proportion of army officer females across ranks
+military |&gt;
+  filter(
+    grade == "officer",
+    branch == "army"
+  ) |&gt;
+  ggplot(aes(x = factor(rank), fill = fct_rev(gender))) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Rank", y = "Proportion", fill = "Gender",
+    title = "Proportion of army officer females across ranks"
+  )
+
+## End(Not run)
+
+</code></pre>
+
+</main>
+
+</div>
+</body></html>

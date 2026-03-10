@@ -1,0 +1,66 @@
+# Help {#sec-help}
+
+## Giving help
+
+The `marginaleffects` package and [the online book that accompanies it](https://marginaleffects.com) will always be free. If you like this project, you can contribute in four ways:
+
+
+1. Make a donation to the [Native Women's Shelter of Montreal](https://www.nwsm.info/) and [the Against Malaria Foundation](https://www.againstmalaria.com/), and send me (Vincent) a quick note. You'll make my day.
+2. Submit bug reports, documentation improvements, or code contributions to the Github repositories of the [R version](https://github.com/vincentarelbundock/marginaleffects) or the [Python version](https://github.com/vincentarelbundock/pymarginaleffects) of the package.
+3. Create a new entry [for the Meme Gallery!](https://marginaleffects.com/bonus/meme.html)
+4. [Cite the `marginaleffects` package](https://marginaleffects.com/bonus/citation.html) in your work and tell your friends about it.
+
+To cite marginaleffects in publications use:
+
+> Arel-Bundock V, Greifer N, Heiss A (2024). “How to Interpret Statistical Models Using marginaleffects for R and Python.” _Journal of Statistical Software_, *111*(9), 1-32. doi:10.18637/jss.v111.i09 <https://doi.org/10.18637/jss.v111.i09>.
+
+A BibTeX entry for LaTeX users is
+
+```latex
+@Article{,
+  title = {How to Interpret Statistical Models Using {marginaleffects} for {R} and {Python}},
+  author = {Vincent Arel-Bundock and Noah Greifer and Andrew Heiss},
+  journal = {Journal of Statistical Software},
+  year = {2024},
+  volume = {111},
+  number = {9},
+  pages = {1--32},
+  doi = {10.18637/jss.v111.i09},
+}
+```
+
+
+## Getting help
+
+If you need help with `marginaleffects`, there are several possible venues:
+
+* Statistical question: Ask on Cross Validated, [using the `marginal-effect` tag.](https://stats.stackexchange.com/questions/tagged/marginal-effect)
+* Programming question: Ask on Stack Overflow, [using the  `r-marginaleffects` tag.](https://stackoverflow.com/questions/tagged/r-marginaleffects?tab=Newest)
+* Post on [the `marginaleffects` discussions forum on Github.](https://github.com/vincentarelbundock/marginaleffects/discussions) Warning: Stack Overflow and Cross Validate have much more traffic than the forum. So you have a greater chance of getting an answer there.
+
+It is considered polite to avoid posting on multiple sites at once.
+
+When you ask for help, you will have a much better chance of obtaining useful answers if you provide an example with these characteristics:
+
+* _Public data:_
+    - Use a publicly available dataset like `mtcars` or a CSV from the [Rdatasets archive.](https://vincentarelbundock.github.io/Rdatasets/articles/data.html)
+* _Minimal_:
+    - Avoid loading irrelevant libraries and extra code. Only show the relevant bits.
+* _Errors & warnings_:
+    - Show the complete errors and warnings. They are usually informative.
+* _Cut & paste_:
+    - Make sure we can just copy your entire code and paste it directly into an `R` console to reproduce your problem. People are much less likely to take the time to investigate if they have to clean up your code before they can use it. For example, do not supply the console output with `+` at the start of each line. This output is not executable.
+* `sessionInfo()`
+    - Paste the output of this command at the bottom of your question so we know in what environment the code is run and what package versions are used.
+
+For more information about asking good questions about software, see this classic post on Stack Overflow: <https://stackoverflow.com/a/5963610/342331>
+
+Finally, remember that the people who maintain, contribute, and answer questions about `marginaleffects` do it for free, on nights and weekends. Please be patient. And please be forgiving if we do not find the time to answer your question at all.
+
+
+## Bugs and feature requests
+
+To report bugs or feature requests, please visit the Github issue tracker here: 
+
+* [R bug tracker](https://github.com/vincentarelbundock/marginaleffects/issues)
+* [Python bug tracker](https://github.com/vincentarelbundock/pymarginaleffects/issues)

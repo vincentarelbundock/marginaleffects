@@ -1,0 +1,77 @@
+<!DOCTYPE html><html><head><title>R: Data from HIV information experiment in Thornton (2008)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>thornton_hiv</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Data from HIV information experiment in Thornton (2008)</h2>
+
+<h3>Description</h3>
+
+<p><code>thornton_hiv</code> comes from an experiment in Malawi looking at whether cash incentives could encourage people to learn the results of their HIV tests.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>thornton_hiv
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 4820 rows and 7 variables
+</p>
+
+<dl>
+<dt>villnum</dt><dd><p>Village ID</p>
+</dd>
+<dt>got</dt><dd><p>Got HIV results</p>
+</dd>
+<dt>distvct</dt><dd><p>Distance in kilometers</p>
+</dd>
+<dt>tinc</dt><dd><p>Total incentive</p>
+</dd>
+<dt>any</dt><dd><p>Received any incentive</p>
+</dd>
+<dt>age</dt><dd><p>Age</p>
+</dd>
+<dt>hiv2004</dt><dd><p>HIV results</p>
+</dd>
+</dl>
+
+
+
+<h3>Details</h3>
+
+<p>This data is used in the Potential Outcomes Causal Model chapter of Causal Inference: The Mixtape by Cunningham.
+</p>
+
+
+<h3>Source</h3>
+
+<p>Thornton, Rebecca L. 2008. 'The Demand for, and Impact of, Learning Hiv Status.' American Economic Review 98 (5): 1829–63.
+</p>
+
+
+<h3>References</h3>
+
+<p>Cunningham. 2021. Causal Inference: The Mixtape. Yale Press. <a href="https://mixtape.scunning.com/index.html">https://mixtape.scunning.com/index.html</a>.
+</p>
+
+</main>
+
+</div>
+</body></html>

@@ -1,0 +1,34 @@
+---
+title: Meme gallery
+lightbox: auto
+---
+
+
+::: {layout-ncol=2}
+![](fig/meme_log_odds_ratios.jpg){group="elsewhere" description="meme a"}
+
+![](fig/meme_plot_comparisons.png){group="elsewhere" description="meme c"}
+
+![](fig/meme_raw_model_output.jpg){group="elsewhere" description="meme b"}
+
+![](fig/meme_full_bayesian_posterior.jpg){group="elsewhere" description="meme d"}
+
+![](fig/meme_pipe.jpg){group="elsewhere" description="Source: @dan_p_simpson"}
+
+![](fig/meme_party_hat.jpg){group="elsewhere" description="Source: @dingdingpeng.the100.ci"}
+
+![](fig/meme_not_real.png){group="elsewhere" description="Source: @conjugateprior.org"}
+
+![](fig/meme_zoolander_read_coefficients.png){group="elsewhere" description="Derek Zoolander center for kids who can't read coefficients good. Source: @vincentab.bluesky."}
+
+![](fig/meme_zoolander_coefficients.png){group="elsewhere" description="Mugatu reacts to coefficients. Source: @vincentab.bluesky."}
+
+![](fig/meme_zoolander_dont_think_for_themselves.png){group="elsewhere" description="Mugatu reacts to coefficients. Source: @vincentab.bluesky."}
+
+![](fig/meme_men_who_stare_at_coefficients.jpg){group="elsewhere" description="Men who stare at coefficients. Source: @dingdingpeng.the100.ci"}
+
+![](fig/meme_table2.jpg){group="elsewhere" description="No table 2 fallacy. Source: @mattansb.msbstats.info"}
+
+![](fig/meme_wrestling.jpg){group="elsewhere" description="Wrestlers arguing about parameters. Source: @stephenjwild."}
+:::
+

@@ -1,0 +1,76 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `predictions`, `comparisons`, `slopes`, `avg_predictions`, `avg_comparisons`, `avg_slopes` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `predictions`, `comparisons`, `slopes`, `avg_predictions`, `avg_comparisons`, `avg_slopes` for this chapter.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+# Models and meaning {#sec-goals}
+- The best way to start a data analysis project is to set clear goals.
+- This chapter explores four of the main objectives that data analysts pursue when they fit statistical models or deploy machine learning algorithms: model description, data description, causal inference, and out-of-sample prediction.
+- To achieve these goals, it is crucial to articulate well-defined research questions, and to explicitly specify the statistical quantities---the estimands---that can shed light on those questions.
+- Ideally, estimands should be expressed in the simplest form possible, on a scale that feels intuitive to stakeholders, colleagues, and domain experts.
+- This chapter concludes by discussing some of the challenges that arise when trying to make sense of complex models.
+- In many cases, the parameters of our models do not directly align with the estimands that actually interest us.
+- Often, we must transform parameter estimates into quantities that directly inform our research questions, and that our audience will readily understand.
+
+## Why fit a model? {#sec-challenge_goals}
+- The first challenge that all researchers must take on is to transparently state what they hope to achieve with an analysis.
+- The chapter surveys four goals an analyst can pursue: model description, data description, causal inference, and out-of-sample prediction.
+- Each goal imposes different assumptions and requires different strategies for estimation and interpretation.
+- Understanding which goal motivates an analysis helps determine the appropriate estimand and modeling approach.
+- These four goals are not mutually exclusive, but conflating them can lead to misleading conclusions.
+
+### Model description {#sec-challenge_model_description}
+- The primary aim of model description is to understand how a fitted model behaves in different scenarios.
+- The focus is on the internal workings of the model itself, rather than on making predictions or inferences about the sample or population.
+- The analyst peeks inside the "black-box" to audit, debug, or test how the model reacts to different inputs.
+- Model description aligns closely with the concepts of interpretability, explainability, and transparency in machine learning.
+- It can provide some measure of reassurance that a fitted model works as intended and is suitable for deployment.
+- To describe a model's behavior, the analyst might compute model-based predictions (expected values of the outcome for different subgroups).
+- The analyst may also conduct counterfactual analyses to see how predictions change when predictor values are altered.
+- For example, a financial analyst may compare what a model says about default risk for borrowers from different ethnic backgrounds, holding other predictors constant, to guard against algorithmic discrimination.
+
+### Data description {#sec-challenge_data_description}
+- Data description involves using statistical or machine learning models as tools to describe a sample, or to draw descriptive inference about a population.
+- The objective is to explore and understand the characteristics of the data, often by summarizing their (potentially joint) distribution.
+- Descriptive and exploratory data analysis can help analysts uncover new patterns, trends, and relationships.
+- It can stimulate the development of theory or raise new research questions.
+- Data description is arguably more demanding than model description, because it imposes additional assumptions.
+- If the sample used to fit a model is not representative of the target population, or if the estimator is biased, descriptive inference may be misleading.
+- To describe their data, an analyst might use a statistical model to compute the expected value of an outcome for different subgroups of the data.
+
+### Causal inference {#sec-challenge_causality}
+- In causal inference, the goal is to estimate the effect of an intervention (treatment, explanator, independent variable, or predictor) on some outcome (response or dependent variable).
+- Causal inference is one of the most ambitious and challenging tasks in data analysis, typically requiring careful experimental design or statistical models that adjust for all confounders.
+- The structural causal models approach (Judea Pearl) encodes causal relationships as equations, represented visually as directed acyclic graphs (DAGs), where nodes correspond to variables and arrows to causal effects.
+- The potential outcomes framework (Neyman-Rubin Causal Model) defines causal effects as comparisons between what would happen to the same individual under different treatment conditions; the "fundamental problem of causal inference" is that we can only observe one potential outcome at a time.
+- When conditions for causal identification are not met, some researchers replace causal language ("cause," "affect") with associational terms ("link," "correlation"), though others argue this introduces ambiguity about the researcher's actual goals.
+- Transparency is recommended: candidly state interest in a causal effect while acknowledging limitations of the research design and data.
+- The book presents estimands that can characterize either the "association" between two variables or the "effect" of one variable on another.
+
+### Out-of-sample prediction
+- Out-of-sample prediction and forecasting aim to predict future or unseen data points based on a model fit on existing data.
+- This is particularly challenging due to the need to ensure that the model does not overfit the data and generalizes well.
+- Out-of-sample prediction imposes additional requirements on the stability of the data distribution and the absence of changes in exogenous factors between the training sample and the target data.
+- For example, a model trained to predict loan default probability may no longer perform well after an economic crisis changes personal finances across the population.
+- Out-of-sample prediction is not the main focus of this book, but a case study on conformal prediction is presented later, covering a flexible strategy to make predictions and build intervals that cover a specified proportion of out-of-sample observations.
+
+## What is your estimand? {#sec-goals_estimand}
+- Once the overarching goal of an analysis is posed, the next step is to rigorously define the target of inquiry---the specific value that would shed light on the research question.
+- An *estimand* is the quantity or parameter that we seek to learn.
+- An *estimator* is the statistical method, algorithm, or mathematical formula applied to data to gain insight into the estimand.
+- An *estimate* is the numerical result obtained by applying an estimator to data; it is our best guess of the estimand's true value based on available information.
+- For example, if we want to know average adult height in a country (estimand), we might use the mean formula (estimator) to calculate 170cm from a random sample (estimate).
+- The "Table 2 Fallacy" warns that two similar-looking statistical quantities, estimated by a single regression model, can have very different substantive interpretations; coefficients on control variables should not be individually interpreted as causal effects.
+- The term "marginal effect" is ambiguous: in economics and political science it means a derivative (slope), while in other disciplines it means an average (integral) of unit-level estimates---two opposite mathematical operations.
+- One of the main goals of this book is to help researchers overcome terminological ambiguity and define estimands clearly through a conceptual framework based on five simple questions.
+
+## Making sense of parameter estimates {#sec-making_sense}
+- Even if a fitted model is relatively simple, the parameter estimates it generates may not map directly onto an estimand that could inform the research question.
+- For example, logistic regression coefficients are expressed as log odds ratios---the natural logarithm of a ratio-of-ratios-of-probabilities---which are very difficult to interpret substantively.
+- Even straightforward probabilities are notoriously challenging to grasp intuitively; research in psychology and behavioral economics documents biases that distort how individuals perceive and make decisions based on them.
+- The main contention of this book is that analysts should not focus on raw parameters but instead transform them into quantities that make more intuitive sense and shed light directly on the research question.
+- Instead of reporting log odds ratios, analysts who fit logistic regressions should transform coefficients into predicted probabilities and compare predictions made with different predictor values.
+- This transformation from logit coefficients to predicted probabilities is one example of a much more general, model-agnostic workflow applicable to over 100 different classes of statistical and machine learning models.
+- By learning one conceptual framework and one set of tools, analysts can make sense of an extraordinarily large array of modeling contexts.

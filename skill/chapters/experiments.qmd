@@ -1,0 +1,87 @@
+## Start Here: Manual Pages
+- R: open function help with `?function_name` or `help("function_name")`; prioritize `avg_comparisons`, `plot_predictions`, `get_dataset`, `lm`, `coef` for this chapter.
+- Python: inspect docstrings with `help(function_name)` and package docs; prioritize `avg_comparisons`, `ols`, `to_pandas`, `fit`, `get_dataset`, `plot_predictions` for this chapter.
+- Before replicating examples, confirm argument defaults, return objects, and uncertainty options in both languages.
+
+Citation: Model to Meaning: How to interpret statistical models in R and Python. Arel-Bundock, Vincent. 2026. CRC Press. routledge.com/9781032908724
+
+# Experiments {#sec-experiments}
+- The analysis of experiments is a common use case for the `marginaleffects` package, which provides a toolkit for estimating treatment effects, interpreting interactions, and visualizing results across experimental conditions.
+- This chapter discusses two applications: covariate adjustment in a two-arm experiment, and the interpretation of results from a 2-by-2 factorial experiment.
+- The marginaleffects.com website hosts additional tutorials for other experimental designs.
+- Both applications rely on the `avg_comparisons()` function to estimate average treatment effects using G-computation, producing results that are agnostic to the choice of model (e.g., LPM vs. GLM).
+- All code examples are shown in both R and Python, using the same workflow and function interface.
+- Data for the first application come from @Tho2008: a binary outcome recording whether individuals traveled to a clinic to learn their HIV status, with a randomized financial incentive as treatment.
+- Data for the second application use a simulated dataset with 32 observations, a numeric outcome $Y$, and two binary treatments $T_a$ and $T_b$.
+- The `marginaleffects` workflow handles uncertainty quantification, including heteroskedasticity-consistent and robust standard errors via the `vcov` argument.
+
+## Regression adjustment {#sec-experiments_adjustment}
+- The first application is a simple two-arm experiment where participants are randomly assigned to treatment or control.
+- The goal is to estimate the average treatment effect (ATE) -- the expected difference in outcomes between treatment and control -- while adjusting for covariates.
+- Since the incentive treatment was randomized, the ATE can be estimated via linear regression on the binary outcome, known as the linear probability model (LPM).
+- The coefficient on the `incentive` variable shows the difference in predicted probability of seeking test results between treatment and control groups.
+- The same result is obtained via G-computation using `avg_comparisons()`, which has the advantage of easily supporting robust standard errors through the `vcov` argument (e.g., `vcov = "HC2"`).
+- The `marginaleffects` package implements post-estimation transformations that are essentially agnostic with respect to the choice of model; the workflow would remain unchanged with a GLM instead of an LPM.
+- While covariate adjustment is not strictly necessary for an unbiased ATE when treatment is randomized, including control variables can improve precision by reducing unexplained variance.
+- However, @Fre2008 warns that naively inserting control variables in additive fashion can introduce small-sample bias and degrade asymptotic precision.
+- @Lin2013 recommends a simple solution: interact all covariates with the treatment indicator and report heteroskedasticity-robust standard errors.
+- Interpreting the coefficients of a model with multiple interactions is not straightforward, but calling `avg_comparisons()` produces the covariate-adjusted ATE directly without requiring de-meaned control variables.
+
+## Factorial experiments {#sec-experiments_factorial}
+- A factorial experiment is a study design that assesses the effects of two or more randomized treatments simultaneously, with each treatment having multiple levels.
+- A common example is the 2-by-2 design, where two binary variables are randomized simultaneously and independently, enabling evaluation of each treatment's effect and their interaction.
+- Factorial experiments are used in medicine (drug interactions), plant physiology (temperature and humidity effects on photosynthesis), and business (advertising strategies and price points).
+- The chapter uses a simulated dataset with 32 observations, a numeric outcome $Y$, and two binary treatments $T_a \in \{0,1\}$ and $T_b \in \{0,1\}$, fit with a linear model including a multiplicative interaction term.
+- Predictions for each combination of $T_a$ and $T_b$ can be visualized using `plot_predictions()`.
+- Treatment effects can be computed by hand as sums of coefficients (e.g., the effect of $T_a$ holding $T_b=0$ equals $\hat{\beta}_2$; the cross-contrast equals $\hat{\beta}_2 + \hat{\beta}_3 + \hat{\beta}_4$), but this becomes tedious and computing standard errors is non-trivial.
+- The `avg_comparisons()` function automates these calculations: use the `variables` argument to specify the treatment of interest, and `newdata = subset(Tb == 0)` (R) or `newdata = dat.filter(pl.col("Tb") == 0)` (Python) to condition on specific levels of the other treatment.
+- To estimate a cross-contrast (the effect of changing both $T_a$ and $T_b$ simultaneously from 0 to 1), set `cross = TRUE` in `avg_comparisons()`.
+- To assess whether treatments interact (i.e., whether the effect of $T_a$ depends on the value of $T_b$), estimate the effect of $T_a$ by subgroups of $T_b$ using the `by` argument, then use the `hypothesis` argument to test if the difference between subgroup estimates is significant.
+- In the example, the difference between the estimated effects of $T_a$ at different values of $T_b$ is not statistically significant, so we cannot reject the null hypothesis that the effect of $T_a$ is the same regardless of $T_b$.
+
+# Examples
+- The examples below are drawn from the original chapter and illustrate representative workflows.
+
+## Example 1: Covariate-adjusted ATE with robust standard errors
+```r
+library(marginaleffects)
+dat <- get_dataset("thornton")
+mod <- lm(outcome ~ incentive * (age + distance + hiv2004), data = dat)
+avg_comparisons(mod, variables = "incentive", vcov = "HC2")
+```
+
+```python
+from marginaleffects import *
+from statsmodels.formula.api import ols
+dat = get_dataset("thornton")
+mod = ols("outcome ~ incentive * (age + distance + hiv2004)",
+  data=dat.to_pandas()).fit()
+avg_comparisons(mod, variables = "incentive", vcov = "HC2")
+```
+
+## Example 2: Factorial cross-contrast
+```r
+library(marginaleffects)
+dat <- get_dataset("factorial_01")
+mod <- lm(Y ~ Ta + Tb + Ta:Tb, data = dat)
+avg_comparisons(mod, variables = c("Ta", "Tb"), cross = TRUE)
+```
+
+```python
+dat = get_dataset("factorial_01")
+mod = ols("Y ~ Ta + Tb + Ta:Tb", data=dat.to_pandas()).fit()
+avg_comparisons(mod, variables=["Ta", "Tb"], cross=True)
+```
+
+## Example 3: Testing treatment interaction in a factorial design
+```r
+avg_comparisons(mod,
+  variables = "Ta",
+  by = "Tb",
+  hypothesis = "b2 - b1 = 0")
+```
+
+```python
+avg_comparisons(mod, variables = "Ta", by = "Tb",
+  hypothesis = "b1 - b0 = 0")
+```

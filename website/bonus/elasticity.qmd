@@ -1,0 +1,88 @@
+# Elasticity
+
+
+```{r, include = FALSE}
+## this vignette is in .Rbuildignore because lme4 is not available on old CRAN
+## test machines.
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+::: {.callout-warning}
+Slopes and elasticities can only be calculated for continuous numeric variables. The `slopes()` functions will automatically revert to `comparisons()` for binary or categorical variables.
+:::
+
+In some contexts, it is useful to interpret the results of a regression model in terms of elasticity or semi-elasticity. One strategy to achieve that is to estimate a log-log or a semilog model, where the left and/or right-hand side variables are logged. Another approach is to note that $\frac{\partial ln(x)}{\partial x}=\frac{1}{x}$, and to post-process the marginal effects to transform them into elasticities or semi-elasticities.
+
+For example, say we estimate a linear model of this form:
+
+$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \varepsilon$$
+
+Let $\hat{y}$ be the adjusted prediction made by the model for some combination of covariates $x_1$ and $x_2$. The slope with respect to $x_1$ (or "marginal effect") is:
+
+$$\frac{\partial \hat{y}}{\partial x_1}$$
+
+We can estimate the slope ("dydx"), semi-elasticities ("dyex" and "eydx"), or elasticity ("eyex") with respect to $x_1$ as follows:
+
+$$\eta_1=\frac{\partial \hat{y}}{\partial x_1}$$
+$$\eta_2=\frac{\partial \hat{y}}{\partial x_1}\cdot x_1$$
+$$\eta_3=\frac{\partial \hat{y}}{\partial x_1}\cdot \frac{1}{\hat{y}}$$ 
+$$\eta_4=\frac{\partial \hat{y}}{\partial x_1}\cdot \frac{x_1}{\hat{y}}$$
+
+with interpretations roughly as follows:
+
+1. "dydx": Increasing the $x_1$ variable by 1 unit is associated with a change of $\eta_1$ units in $y$.
+2. "dyex": Increasing the $x_1$ variable by 100% of its baseline value is associated with a change of $\eta_2$ units in $y$.
+3. "eydx": Increasing the $x_1$ variable by 1 unit is associated with a change of $\eta_3$% of $y$'s baseline value.
+4. "eyex": Increasing $x_1$ by 1% of its baseline value is associated with a change of $\eta_4$% in the baseline value of $y$.
+
+
+With the `marginaleffects` package, these quantities are easy to compute with the `slopes()` function and the `slope` argument. 
+
+
+```{r}
+library(marginaleffects)
+dat <- transform(mtcars, y = mpg, x = wt)
+mod <- lm(y ~ x, data = dat)
+
+pct_change_x <- mean(dat$x) / 100
+p0 <- predict(mod)
+p1 <- predict(mod, newdata = transform(dat, x = x + pct_change_x))
+mean(p1 - p0)
+
+s <- avg_slopes(mod, slope = "dyex")
+s
+```
+
+Increasing the `x` variable by 100% of its baseline value is associated with a change of $\eta_1=`{r} s$estimate`$ units in $y$. Notice that the `slopes()` estimates are scaled differently than in the manual computation.
+
+```{r}
+yhat <- predict(mod)
+p0 <- predict(mod, newdata = dat)
+p1 <- predict(mod, newdata = transform(dat, x = x + 1))
+mean((p1 - p0) / yhat)
+
+s <- avg_slopes(mod, slope = "eydx")
+s
+```
+
+Increasing the `x` variable by 1 unit is associated with a change of $\eta_2=`{r} s$estimate`\%$ of $y$'s baseline value.
+
+```{r}
+pct_change_x <- 1 / dat$x
+pct_change_y <- (p1 - p0) / yhat
+mean(pct_change_y / pct_change_x)
+
+s <- avg_slopes(mod, slope = "eyex")
+s
+```
+
+Increasing `x` by 1% of its baseline value is associated with a change of $\eta_3=`{r} s$estimate`\%$ in the baseline value of $y$.
