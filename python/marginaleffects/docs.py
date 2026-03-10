@@ -338,4 +338,6 @@ def docstrings_to_qmd(output_dir: str):
 
 
 if __name__ == "__main__":
-    docstrings_to_qmd("qmd_files")
+    import sys
+    output_dir = sys.argv[1] if len(sys.argv) > 1 else "qmd_files"
+    docstrings_to_qmd(output_dir)
