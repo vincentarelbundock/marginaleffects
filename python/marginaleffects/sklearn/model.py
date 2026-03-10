@@ -1,7 +1,7 @@
 import numpy as np
 import warnings
 import polars as pl
-from ..docs import DocsModels
+from ..docs import doc
 from ..utils import ingest
 from ..formulaic_utils import listwise_deletion, model_matrices
 from ..model_abstract import ModelAbstract
@@ -104,58 +104,7 @@ class ModelSklearn(ModelAbstract):
         return p
 
 
-# @validate_types
-def fit_sklearn(formula, data: pl.DataFrame, engine) -> ModelSklearn:
-    """
-Fit a sklearn model with output that is compatible with pymarginaleffects.
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(fit_sklearn)`
-"""
-
-    d = listwise_deletion(formula, data=data)
-
-    # Store original data structure info for later restoration
-    original_columns = None
-    if hasattr(data, "columns"):
-        original_columns = list(data.columns)
-
-    if isinstance(formula, str):
-        d = listwise_deletion(formula, data=data)
-        y, X = model_matrices(formula, d)
-        # formulaic returns a matrix when the response is character or categorical
-        if y.ndim == 2:
-            response_var = formula.split("~")[0].strip()
-            y = d[response_var]
-        y = np.ravel(y)
-
-        # Store the model_spec to preserve categorical variable ordering
-        # This is crucial for sklearn models where feature names must match exactly
-        model_spec = getattr(X, "model_spec", None)
-
-    elif callable(formula):
-        y, X = formula(d)
-        model_spec = None
-
-    else:
-        raise ValueError("The formula must be a string or a callable function.")
-
-    engine_running = engine.fit(X=X, y=y)
-
-    vault = {
-        "formula": formula,
-        "modeldata": ingest(d),
-        "package": "sklearn",
-        "engine_running": engine_running,
-        "original_columns": original_columns,  # Store for index restoration
-        "model_spec": model_spec,  # Store for categorical ordering
-    }
-    return ModelSklearn(engine_running, vault)
-
-
-docs_sklearn = (
-    """
+@doc("""
 # `fit_sklearn()`
 
 Fit a sklearn model with output that is compatible with pymarginaleffects.
@@ -168,9 +117,7 @@ This function streamlines the process of fitting sklearn models by:
 4. Fitting the model with specified options
 
 ## Parameters
-"""
-    + DocsModels.docstring_formula
-    + """
+{models_formula}
 `data`: (pandas.DataFrame or polars.DataFrame) Dataframe with the response variable and predictors.
 
 **Important:** All categorical variables must be explicitly converted to `Categorical` or `Enum` dtype before fitting. String columns are not accepted in model formulas.
@@ -193,15 +140,11 @@ df["region"] = df["region"].astype("category")
 ```
 
 `engine`: (callable) sklearn model class (e.g., LinearRegression, LogisticRegression)
-"""
-    + DocsModels.docstring_kwargs_engine
-    + """
-"""
-    + DocsModels.docstring_fit_returns("Sklearn")
-    + """
+{models_kwargs_engine}
+{models_fit_returns_Sklearn}
 ## Examples
 
-```{python}
+```{{python}}
 from marginaleffects import *
 from statsmodels.formula.api import ols
 import polars as pl
@@ -260,10 +203,45 @@ mod = fit_sklearn(selector, data=train, engine=pipeline)
 
 avg_predictions(mod, newdata=test, by="unit_type")
 
-avg_comparisons(mod, variables={"bedrooms": 2}, newdata=test)
+avg_comparisons(mod, variables={{"bedrooms": 2}}, newdata=test)
 ```
-"""
-    + DocsModels.docstring_notes("sklearn")
-)
+{models_notes_sklearn}""")
+def fit_sklearn(formula, data: pl.DataFrame, engine) -> ModelSklearn:
+    d = listwise_deletion(formula, data=data)
 
-fit_sklearn.__doc__ = docs_sklearn
+    # Store original data structure info for later restoration
+    original_columns = None
+    if hasattr(data, "columns"):
+        original_columns = list(data.columns)
+
+    if isinstance(formula, str):
+        d = listwise_deletion(formula, data=data)
+        y, X = model_matrices(formula, d)
+        # formulaic returns a matrix when the response is character or categorical
+        if y.ndim == 2:
+            response_var = formula.split("~")[0].strip()
+            y = d[response_var]
+        y = np.ravel(y)
+
+        # Store the model_spec to preserve categorical variable ordering
+        # This is crucial for sklearn models where feature names must match exactly
+        model_spec = getattr(X, "model_spec", None)
+
+    elif callable(formula):
+        y, X = formula(d)
+        model_spec = None
+
+    else:
+        raise ValueError("The formula must be a string or a callable function.")
+
+    engine_running = engine.fit(X=X, y=y)
+
+    vault = {
+        "formula": formula,
+        "modeldata": ingest(d),
+        "package": "sklearn",
+        "engine_running": engine_running,
+        "original_columns": original_columns,  # Store for index restoration
+        "model_spec": model_spec,  # Store for categorical ordering
+    }
+    return ModelSklearn(engine_running, vault)

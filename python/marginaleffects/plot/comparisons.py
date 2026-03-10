@@ -1,4 +1,4 @@
-from ..docs import DocsParameters
+from ..docs import doc
 from ..comparisons import comparisons
 from .common import dt_on_condition, plot_common
 from ..sanitize_model import sanitize_model
@@ -6,6 +6,11 @@ from .common import plot_labels
 import copy
 
 
+@doc("""
+# `plot_comparisons()`
+{param_plot_intro_comparisons}
+## Parameters
+{param_model}{param_variables_plot_contrast}{param_newdata_plot_comparisons}{param_condition_comparisons}{param_by_plot_comparisons}{param_wts}{param_vcov}{param_transform}{param_draw}{param_gray}""")
 def plot_comparisons(
     model,
     condition=None,
@@ -23,13 +28,6 @@ def plot_comparisons(
     eps=1e-4,
     gray=False,
 ):
-    """
-Plot comparisons on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(plot_comparisons)`
-"""
     model = sanitize_model(model)
 
     assert not (not by and newdata is not None), (
@@ -97,24 +95,3 @@ Or type: `help(plot_comparisons)`
         return dt
 
     return plot_common(model, dt, "Comparison", var_list, gray=gray)
-
-
-plot_comparisons.__doc__ = (
-    """
-# `plot_comparisons()`
-"""
-    + DocsParameters.docstring_plot_intro("comparisons")
-    + """
-## Parameters
-"""
-    + DocsParameters.docstring_model
-    + DocsParameters.docstring_variables_plot("contrast")
-    + DocsParameters.docstring_newdata_plot("comparisons")
-    + DocsParameters.docstring_condition("comparisons")
-    + DocsParameters.docstring_by_plot("comparisons")
-    + DocsParameters.docstring_wts
-    + DocsParameters.docstring_vcov
-    + DocsParameters.docstring_transform
-    + DocsParameters.docstring_draw
-    + DocsParameters.docstring_gray
-)

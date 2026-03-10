@@ -2,7 +2,7 @@ from typing import Optional, Dict, Any
 import numpy as np
 import polars as pl
 import patsy
-from ..docs import DocsModels
+from ..docs import doc
 from ..model_abstract import ModelAbstract
 from .. import formulaic_utils as fml
 from ..utils import validate_types, ingest
@@ -187,33 +187,7 @@ class ModelStatsmodels(ModelAbstract):
         return None
 
 
-@validate_types
-def fit_statsmodels(
-    formula: str, data: pl.DataFrame, engine, kwargs_engine={}, kwargs_fit={}
-):
-    """
-Fit a statsmodels model with output that is compatible with pymarginaleffects.
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(fit_statsmodels)`
-"""
-    d = fml.listwise_deletion(formula, data=data)
-    y, X = fml.model_matrices(formula, d)
-    mod = engine(endog=y, exog=X, **kwargs_engine)
-    mod = mod.fit(**kwargs_fit)
-    mod.model.formula = formula
-    mod.model.data.frame = d
-    vault = {
-        "modeldata": d,
-        "formula": formula,
-        "package": "statsmodels",
-    }
-    return ModelStatsmodels(mod, vault)
-
-
-docs_statsmodels = (
-    """
+@doc("""
 # `fit_statsmodels()`
 
 Fit a statsmodels model with output that is compatible with pymarginaleffects.
@@ -225,9 +199,7 @@ This function streamlines the process of fitting statsmodels models by:
 4. Fitting the model with specified options
 
 ## Parameters
-"""
-    + DocsModels.docstring_formula
-    + """
+{models_formula}
 `data`: (pandas.DataFrame or polars.DataFrame) Dataframe with the response variable and predictors.
 
 **Important:** All categorical variables must be explicitly converted to `Categorical` or `Enum` dtype before fitting. String columns are not accepted in model formulas.
@@ -250,16 +222,12 @@ df["region"] = df["region"].astype("category")
 ```
 
 `engine`: (callable) statsmodels model class (e.g., OLS, Logit)
-"""
-    + DocsModels.docstring_kwargs_engine
-    + """
-`kwargs_fit`: (dict, default={}) Additional arguments passed to the model's fit method.
+{models_kwargs_engine}
+`kwargs_fit`: (dict, default={{}}) Additional arguments passed to the model's fit method.
 
-* Example: `{'cov_type': 'HC3'}`
+* Example: `{{'cov_type': 'HC3'}}`
 
-"""
-    + DocsModels.docstring_fit_returns("Statsmodels")
-    + """
+{models_fit_returns_Statsmodels}
 ## Examples
 
 ```python
@@ -274,15 +242,27 @@ model_robust = fit_statsmodels(
     formula="outcome ~ distance + incentive",
     data=data,
     engine=sm.OLS,
-    kwargs_fit={"cov_type": "HC3"}
+    kwargs_fit={{"cov_type": "HC3"}}
 )
 
 predictions(model_robust)
 slopes(model_robust)
 comparisons(model_robust)
 ```
-"""
-    + DocsModels.docstring_notes("statsmodels")
-)
-
-fit_statsmodels.__doc__ = docs_statsmodels
+{models_notes_statsmodels}""")
+@validate_types
+def fit_statsmodels(
+    formula: str, data: pl.DataFrame, engine, kwargs_engine={}, kwargs_fit={}
+):
+    d = fml.listwise_deletion(formula, data=data)
+    y, X = fml.model_matrices(formula, d)
+    mod = engine(endog=y, exog=X, **kwargs_engine)
+    mod = mod.fit(**kwargs_fit)
+    mod.model.formula = formula
+    mod.model.data.frame = d
+    vault = {
+        "modeldata": d,
+        "formula": formula,
+        "package": "statsmodels",
+    }
+    return ModelStatsmodels(mod, vault)

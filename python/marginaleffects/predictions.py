@@ -10,11 +10,7 @@ from .formulaic_utils import model_matrices
 from ._input_utils import prepare_base_inputs
 from .utils import finalize_result, call_avg
 from warnings import warn
-from .docs import (
-    DocsDetails,
-    DocsParameters,
-    docstring_returns,
-)
+from .docs import doc
 
 
 def _prepare_newdata(newdata, modeldata, variables):
@@ -204,6 +200,46 @@ def _predictions_fd(
     return out, J
 
 
+@doc("""
+# `predictions()`
+
+`predictions()` and `avg_predictions()` predict outcomes using a fitted model on a specified scale for given combinations of values of predictor variables, such as their observed values, means, or factor levels (reference grid).
+
+* `predictions()`: unit-level (conditional) estimates.
+* `avg_predictions()`: average (marginal) estimates.
+
+See the package website and vignette for examples:
+
+- https://marginaleffects.com/chapters/predictions.html
+- https://marginaleffects.com
+
+## Parameters
+{param_model}{param_variables_prediction}{param_newdata_prediction}{param_by}{param_transform}{param_hypothesis}{param_wts}{param_vcov}{param_equivalence}{param_conf_level}{param_eps_vcov}{returns}
+## Examples
+```py
+from marginaleffects import *
+
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+data = get_dataset("thornton")
+
+mod = smf.ols("outcome ~ incentive + distance", data).fit()
+
+predictions(mod)
+
+avg_predictions(mod)
+
+predictions(mod, by = "village")
+
+avg_predictions(mod, by = "village")
+
+predictions(mod, hypothesis = 3)
+
+avg_predictions(mod, hypothesis = 3)
+```
+
+## Details
+{details_tost}{details_order_of_operations}""")
 def predictions(
     model,
     variables=None,
@@ -218,13 +254,6 @@ def predictions(
     eps_vcov=None,
     **kwargs,
 ):
-    """
-`predictions()` and `avg_predictions()` predict outcomes using a fitted model on a specified scale for given combinations of values of predictor variables, such as their observed values, means, or factor levels (reference grid).
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(predictions)`
-"""
     if "hypotheses" in kwargs:
         if hypothesis is not None:
             raise ValueError("Specify at most one of `hypothesis` or `hypotheses`.")
@@ -313,13 +342,6 @@ def avg_predictions(
     wts=None,
     **kwargs,
 ):
-    """
-`predictions()` and `avg_predictions()` predict outcomes using a fitted model on a specified scale for given combinations of values of predictor variables, such as their observed values, means, or factor levels (reference grid).
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(avg_predictions)`
-"""
     return call_avg(
         predictions,
         model=model,
@@ -335,66 +357,5 @@ Or type: `help(avg_predictions)`
         **kwargs,
     )
 
-
-docs_predictions = (
-    """
-# `predictions()`
-
-`predictions()` and `avg_predictions()` predict outcomes using a fitted model on a specified scale for given combinations of values of predictor variables, such as their observed values, means, or factor levels (reference grid).
-    
-* `predictions()`: unit-level (conditional) estimates.
-* `avg_predictions()`: average (marginal) estimates.
-
-See the package website and vignette for examples:
-
-- https://marginaleffects.com/chapters/predictions.html
-- https://marginaleffects.com
-
-## Parameters
-"""
-    + DocsParameters.docstring_model
-    + DocsParameters.docstring_variables("prediction")
-    + DocsParameters.docstring_newdata("prediction")
-    + DocsParameters.docstring_by
-    + DocsParameters.docstring_transform
-    + DocsParameters.docstring_hypothesis
-    + DocsParameters.docstring_wts
-    + DocsParameters.docstring_vcov
-    + DocsParameters.docstring_equivalence
-    + DocsParameters.docstring_conf_level
-    + DocsParameters.docstring_eps_vcov
-    + docstring_returns
-    + """ 
-## Examples
-```py
-from marginaleffects import *
-
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-data = get_dataset("thornton")
-
-mod = smf.ols("outcome ~ incentive + distance", data).fit()
-
-predictions(mod)
-
-avg_predictions(mod)
-
-predictions(mod, by = "village")
-
-avg_predictions(mod, by = "village")
-
-predictions(mod, hypothesis = 3)
-
-avg_predictions(mod, hypothesis = 3)
-```
-
-## Details
-"""
-    + DocsDetails.docstring_tost
-    + DocsDetails.docstring_order_of_operations
-)
-
-
-predictions.__doc__ = docs_predictions
 
 avg_predictions.__doc__ = predictions.__doc__

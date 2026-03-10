@@ -1,6 +1,6 @@
 import polars as pl
 
-from .docs import DocsDetails, DocsParameters
+from .docs import doc
 
 from .result import MarginaleffectsResult
 from .equivalence import get_equivalence
@@ -12,58 +12,7 @@ from .utils import sort_columns
 from .hypotheses_joint import joint_hypotheses
 
 
-def hypotheses(
-    model,
-    hypothesis=None,
-    conf_level=0.95,
-    vcov=True,
-    equivalence=None,
-    eps_vcov=None,
-    joint=False,
-    joint_test="f",
-):
-    """
-(Non-)Linear Tests for Null Hypotheses, Joint Hypotheses, Equivalence, Non Superiority, and Non Inferiority.
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(hypotheses)`
-"""
-    model = sanitize_model(model)
-
-    if joint:
-        out = joint_hypotheses(
-            model, joint_index=joint, joint_test=joint_test, hypothesis=hypothesis
-        )
-        return out
-
-    hypothesis_null = sanitize_hypothesis_null(hypothesis)
-    V = sanitize_vcov(vcov, model)
-
-    # estimands
-    def fun(x):
-        out = pl.DataFrame({"term": model.get_coefnames(), "estimate": x})
-        out = get_hypothesis(out, hypothesis=hypothesis)
-        return out
-
-    out = fun(model.get_coef())
-    if vcov is not None:
-        J = get_jacobian(fun, model.get_coef(), eps_vcov=eps_vcov)
-        se = get_se(J, V)
-        out = out.with_columns(pl.Series(se).alias("std_error"))
-        out = get_z_p_ci(
-            out, model, conf_level=conf_level, hypothesis_null=hypothesis_null
-        )
-    else:
-        J = None
-    out = get_equivalence(out, equivalence=equivalence)
-    out = sort_columns(out, by=None)
-    out = MarginaleffectsResult(out, conf_level=conf_level, jacobian=J)
-    return out
-
-
-hypotheses.__doc__ = (
-    """
+@doc("""
 # `hypotheses()`
 
 (Non-)Linear Tests for Null Hypotheses, Joint Hypotheses, Equivalence, Non Superiority, and Non Inferiority.
@@ -79,22 +28,14 @@ To learn more, visit the package website: <https://marginaleffects.com/>
 ## Parameters
 * model : object
     Model object estimated by `statsmodels`
-"""
-    + DocsParameters.docstring_hypothesis
-    + DocsParameters.docstring_conf_level
-    + DocsParameters.docstring_vcov
-    + DocsParameters.docstring_equivalence
-    + DocsParameters.docstring_eps_vcov
-    # add joint param docstring
-    # add joint test param dosctring
-    + """
+{param_hypothesis}{param_conf_level}{param_vcov}{param_equivalence}{param_eps_vcov}
 * joint: (bool, str, List[str], default = `False`) Specifies the joint test of statistical significance. The null hypothesis value can be set using the hypothesis argument.
     - `False`: Hypothesis are not tested jointly
     - `True`: Hypothesis are tested jointly
     - str: A regular expression to match parameters to be tested jointly.
     - List[str]: Parameter names to be tested jointly as displayed by `mod.model.data.param_names`
     - List[int]: Parameter positions to test jointly where positions refer to the order specified by `mod.model.data.param_names`
-    
+
 * joint_test: (str, default=`"f"`) Chooses the type of test between `"f"` and `"chisq"`
 
 
@@ -144,6 +85,45 @@ hypotheses(model, joint="i$") # matches `incentive` and `distance` columns
 * Warning #3: The tests assume that the `hypothesis` expression is (approximately) normally distributed, which for non-linear functions of the parameters may not be realistic. More reliable confidence intervals can be obtained using the `inferences()` (in R only) function with `method = "boot"`
 
 ## Details
-"""
-    + DocsDetails.docstring_tost
-)
+{details_tost}""")
+def hypotheses(
+    model,
+    hypothesis=None,
+    conf_level=0.95,
+    vcov=True,
+    equivalence=None,
+    eps_vcov=None,
+    joint=False,
+    joint_test="f",
+):
+    model = sanitize_model(model)
+
+    if joint:
+        out = joint_hypotheses(
+            model, joint_index=joint, joint_test=joint_test, hypothesis=hypothesis
+        )
+        return out
+
+    hypothesis_null = sanitize_hypothesis_null(hypothesis)
+    V = sanitize_vcov(vcov, model)
+
+    # estimands
+    def fun(x):
+        out = pl.DataFrame({"term": model.get_coefnames(), "estimate": x})
+        out = get_hypothesis(out, hypothesis=hypothesis)
+        return out
+
+    out = fun(model.get_coef())
+    if vcov is not None:
+        J = get_jacobian(fun, model.get_coef(), eps_vcov=eps_vcov)
+        se = get_se(J, V)
+        out = out.with_columns(pl.Series(se).alias("std_error"))
+        out = get_z_p_ci(
+            out, model, conf_level=conf_level, hypothesis_null=hypothesis_null
+        )
+    else:
+        J = None
+    out = get_equivalence(out, equivalence=equivalence)
+    out = sort_columns(out, by=None)
+    out = MarginaleffectsResult(out, conf_level=conf_level, jacobian=J)
+    return out

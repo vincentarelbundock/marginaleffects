@@ -2,9 +2,14 @@ from .common import dt_on_condition, plot_labels, plot_common
 from ..slopes import slopes
 from ..sanitize_model import sanitize_model
 import copy
-from ..docs import DocsParameters
+from ..docs import doc
 
 
+@doc("""
+# `plot_slopes()`
+{param_plot_intro_slopes}
+## Parameters
+{param_model}{param_variables_plot_slope}{param_condition_slopes}{param_by_plot_slopes}{param_draw}{param_newdata_plot_slopes}{param_wts}{param_vcov}{param_gray}""")
 def plot_slopes(
     model,
     condition=None,
@@ -20,13 +25,6 @@ def plot_slopes(
     eps_vcov=None,
     gray=False,
 ):
-    """
-Plot slopes on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(plot_slopes)`
-"""
     model = sanitize_model(model)
 
     assert variables, "The `variables` argument must be supplied."
@@ -106,23 +104,3 @@ Or type: `help(plot_slopes)`
         return dt
 
     return plot_common(model, dt, "Slope", var_list, gray=gray)
-
-
-plot_slopes.__doc__ = (
-    """
-# `plot_slopes()`
-"""
-    + DocsParameters.docstring_plot_intro("slopes")
-    + """
-## Parameters
-"""
-    + DocsParameters.docstring_model
-    + DocsParameters.docstring_variables_plot("marginal effect (slope)")
-    + DocsParameters.docstring_condition("slopes")
-    + DocsParameters.docstring_by_plot("slopes")
-    + DocsParameters.docstring_draw
-    + DocsParameters.docstring_newdata_plot("slopes")
-    + DocsParameters.docstring_wts
-    + DocsParameters.docstring_vcov
-    + DocsParameters.docstring_gray
-)

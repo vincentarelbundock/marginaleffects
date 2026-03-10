@@ -91,9 +91,7 @@ py-benchmark: py-install ## Py: run autodiff benchmark
 py-snapshot: ## Py: snapshot test
 	cd python && R CMD BATCH tests/r/run.R
 
-py-document: ## Py: inject docstrings and populate website/man/python
-	@if [ -n "$$(git status --porcelain python/)" ]; then echo "Error: uncommitted changes in python/. Commit or stash first." >&2; exit 1; fi
-	cd python && uv run marginaleffects/inject_docs.py
+py-document: ## Py: populate website/man/python from docstrings
 	@mkdir -p website/man/python
 	cd python && uv run marginaleffects/docs.py ../website/man/python
 	@for file in website/man/python/*.qmd; do \

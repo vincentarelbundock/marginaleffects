@@ -4,7 +4,7 @@ import pandas as pd
 import narwhals as nw
 from typing import Any, Dict
 import polars as pl
-from ..docs import DocsModels
+from ..docs import doc
 from ..utils import ingest
 from formulaic.parser.algos.tokenize import tokenize
 from ..model_abstract import ModelAbstract
@@ -222,40 +222,7 @@ def parse_linearmodels_formula(formula: str):
     return cleaned_formula, effects_kwargs
 
 
-# @validate_types
-def fit_linearmodels(
-    formula: str,
-    data: pd.DataFrame,
-    engine: None,
-    kwargs_engine: Dict[str, Any] = {},
-    kwargs_fit: Dict[str, Any] = {},
-) -> ModelLinearmodels:
-    """
-Fit a linearmodels model with output that is compatible with pymarginaleffects.
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(fit_linearmodels)`
-"""
-    linearmodels_formula, effects = parse_linearmodels_formula(formula)
-
-    d = listwise_deletion(linearmodels_formula, data=data)
-    y, X = model_matrices(linearmodels_formula, d, formula_engine="linearmodels")
-    out = engine(dependent=y, exog=X, **kwargs_engine, **effects).fit(**kwargs_fit)
-
-    vault = {
-        "formula_engine": "linearmodels",
-        "multiindex": list(d.index.names),
-        "formula": linearmodels_formula,
-        "modeldata": ingest(d),
-        "package": "linearmodels",
-    }
-
-    return ModelLinearmodels(out, vault)
-
-
-docs_linearmodels = (
-    """
+@doc("""
 # `fit_linearmodels()`
 
 Fit a linearmodels model with output that is compatible with pymarginaleffects.
@@ -300,16 +267,14 @@ df["region"] = df["region"].astype("category")
 
 `engine`: (callable) linearmodels model class (e.g., PanelOLS, BetweenOLS, FirstDifferenceOLS)
 
-`kwargs_engine`: (dict, default={}) Additional arguments passed to the model initialization.
+`kwargs_engine`: (dict, default={{}}) Additional arguments passed to the model initialization.
 
-* Example: `{'weights': weights_array}`
+* Example: `{{'weights': weights_array}}`
 
-`kwargs_fit`: (dict, default={}) Additional arguments passed to the model's fit method.
+`kwargs_fit`: (dict, default={{}}) Additional arguments passed to the model's fit method.
 
-* Example: `{'cov_type': 'robust'}`
-"""
-    + DocsModels.docstring_fit_returns("Linearmodels")
-    + """
+* Example: `{{'cov_type': 'robust'}}`
+{models_fit_returns_Linearmodels}
 ## Examples
 
 ```python
@@ -321,13 +286,31 @@ model_robust = fit_linearmodels(
     formula="y ~ x1 + EntityEffects",
     data=data.data,
     engine=PanelOLS,
-    kwargs_fit={'cov_type': 'robust'}
+    kwargs_fit={{'cov_type': 'robust'}}
 )
 
 predictions(model_robust)
 ```
-"""
-    + DocsModels.docstring_notes("linearmodels")
-)
+{models_notes_linearmodels}""")
+def fit_linearmodels(
+    formula: str,
+    data: pd.DataFrame,
+    engine: None,
+    kwargs_engine: Dict[str, Any] = {},
+    kwargs_fit: Dict[str, Any] = {},
+) -> ModelLinearmodels:
+    linearmodels_formula, effects = parse_linearmodels_formula(formula)
 
-fit_linearmodels.__doc__ = docs_linearmodels
+    d = listwise_deletion(linearmodels_formula, data=data)
+    y, X = model_matrices(linearmodels_formula, d, formula_engine="linearmodels")
+    out = engine(dependent=y, exog=X, **kwargs_engine, **effects).fit(**kwargs_fit)
+
+    vault = {
+        "formula_engine": "linearmodels",
+        "multiindex": list(d.index.names),
+        "formula": linearmodels_formula,
+        "modeldata": ingest(d),
+        "package": "linearmodels",
+    }
+
+    return ModelLinearmodels(out, vault)

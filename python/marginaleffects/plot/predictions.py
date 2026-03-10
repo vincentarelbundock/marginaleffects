@@ -1,10 +1,28 @@
-from ..docs import DocsParameters
+from ..docs import doc
 from .common import dt_on_condition, plot_labels, plot_common
 from ..predictions import predictions
 from ..sanitize_model import sanitize_model
 import copy
 
 
+@doc("""
+# `plot_predictions()`
+{param_plot_intro_predictions}
+## Parameters
+{param_model}{param_condition_predictions}{param_by_plot_predictions}{param_draw}{param_newdata_plot_predictions}{param_vcov}{param_wts}{param_transform}{param_points}{param_gray}
+## Examples
+```py
+from marginaleffects import *
+
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+data = get_dataset("thornton")
+
+mod = smf.ols("outcome ~ incentive + distance", data).fit()
+
+plot_predictions(mod, condition = ["distance", "incentive"])
+```
+""")
 def plot_predictions(
     model,
     condition=None,
@@ -18,13 +36,6 @@ def plot_predictions(
     gray=False,
     points=0,
 ):
-    """
-Plot predictions on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(plot_predictions)`
-"""
     model = sanitize_model(model)
 
     if points is None:
@@ -97,38 +108,3 @@ Or type: `help(plot_predictions)`
         gray=gray,
         points=points,
     )
-
-
-plot_predictions.__doc__ = (
-    """
-# `plot_predictions()`
-"""
-    + DocsParameters.docstring_plot_intro("predictions")
-    + """
-## Parameters
-"""
-    + DocsParameters.docstring_model
-    + DocsParameters.docstring_condition("predictions")
-    + DocsParameters.docstring_by_plot("predictions")
-    + DocsParameters.docstring_draw
-    + DocsParameters.docstring_newdata_plot("predictions")
-    + DocsParameters.docstring_vcov
-    + DocsParameters.docstring_wts
-    + DocsParameters.docstring_transform
-    + DocsParameters.docstring_points
-    + DocsParameters.docstring_gray
-    + """
-## Examples
-```py
-from marginaleffects import *
-
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-data = get_dataset("thornton")
-
-mod = smf.ols("outcome ~ incentive + distance", data).fit()
-
-plot_predictions(mod, condition = ["distance", "incentive"])
-```
-"""
-)

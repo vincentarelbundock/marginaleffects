@@ -20,11 +20,7 @@ from .utils import (
     call_avg,
 )
 from ._input_utils import prepare_base_inputs
-from .docs import (
-    DocsDetails,
-    DocsParameters,
-    docstring_returns,
-)
+from .docs import doc
 
 
 def _cross_postprocess(cross):
@@ -319,6 +315,67 @@ def _collect_comparison_functions(variables):
     return comparison_functions
 
 
+@doc("""
+
+# `comparisons()`
+
+`comparisons()` and `avg_comparisons()` are functions for predicting the outcome variable at different regressor values and comparing those predictions by computing a difference, ratio, or some other function. These functions can return many quantities of interest, such as contrasts, differences, risk ratios, changes in log odds, lift, slopes, elasticities, average treatment effect (on the treated or untreated), etc.
+
+* `comparisons()`: unit-level (conditional) estimates.
+* `avg_comparisons()`: average (marginal) estimates.
+
+See the package website and vignette for examples:
+
+* https://marginaleffects.com/chapters/comparisons.html
+* https://marginaleffects.com
+
+## Parameters
+{param_model}{param_variables_comparison}{param_newdata_comparison}
+* `comparison`: (str or callable) String specifying how pairs of predictions should be compared, or a callable function to compute custom estimates. See the Comparisons section below for definitions of each transformation.
+
+  * Acceptable strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, lift, liftavg, liftavg, expdydx, expdydxavg, expdydxavgwts
+
+  * Callable: A function that takes `hi`, `lo`, `eps`, `x`, `y`, and `w` as arguments and returns a numeric array. This allows computing custom comparisons like `lambda hi, lo, eps, x, y, w: hi / lo` for ratios or `lambda hi, lo, eps, x, y, w: (hi - lo) / lo * 100` for percent changes.
+{param_by}{param_transform}{param_hypothesis}{param_wts}{param_vcov}{param_equivalence}{param_cross}{param_conf_level}{param_eps}{param_eps_vcov}{returns}
+## Examples
+```py
+from marginaleffects import *
+import numpy as np
+
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+data = get_dataset("thornton")
+model = smf.ols("outcome ~ distance + incentive", data=data).fit()
+
+# Basic comparisons
+comparisons(model)
+
+avg_comparisons(model)
+
+comparisons(model, hypothesis=0)
+
+avg_comparisons(model, hypothesis=0)
+
+comparisons(model, by="agecat")
+
+avg_comparisons(model, by="agecat")
+
+# Custom comparisons with lambda functions
+# Ratio comparison using lambda
+comparisons(model, variables="distance",
+            comparison=lambda hi, lo, eps, x, y, w: hi / lo)
+
+# Percent change using lambda
+comparisons(model, variables="distance",
+            comparison=lambda hi, lo, eps, x, y, w: (hi - lo) / lo * 100)
+
+# Log ratio using lambda
+comparisons(model, variables="distance",
+            comparison=lambda hi, lo, eps, x, y, w: np.log(hi / lo))
+```
+
+## Details
+{details_tost}{details_order_of_operations}""")
 def comparisons(
     model,
     variables=None,
@@ -336,13 +393,6 @@ def comparisons(
     eps_vcov=None,
     **kwargs,
 ):
-    """
-`comparisons()` and `avg_comparisons()` are functions for predicting the outcome variable at different regressor values and comparing those predictions by computing a difference, ratio, or some other function. These functions can return many quantities of interest, such as contrasts, differences, risk ratios, changes in log odds, lift, slopes, elasticities, average treatment effect (on the treated or untreated), etc.
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(comparisons)`
-"""
     hypothesis = handle_deprecated_hypotheses_argument(hypothesis, kwargs, stacklevel=2)
     if kwargs:
         unexpected = ", ".join(sorted(kwargs.keys()))
@@ -620,13 +670,6 @@ def avg_comparisons(
     eps=1e-4,
     **kwargs,
 ):
-    """
-`comparisons()` and `avg_comparisons()` are functions for predicting the outcome variable at different regressor values and comparing those predictions by computing a difference, ratio, or some other function. These functions can return many quantities of interest, such as contrasts, differences, risk ratios, changes in log odds, lift, slopes, elasticities, average treatment effect (on the treated or untreated), etc.
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(avg_comparisons)`
-"""
     return call_avg(
         comparisons,
         model=model,
@@ -645,91 +688,5 @@ Or type: `help(avg_comparisons)`
         **kwargs,
     )
 
-
-docs_comparisons = (
-    """
-
-# `comparisons()`
-
-`comparisons()` and `avg_comparisons()` are functions for predicting the outcome variable at different regressor values and comparing those predictions by computing a difference, ratio, or some other function. These functions can return many quantities of interest, such as contrasts, differences, risk ratios, changes in log odds, lift, slopes, elasticities, average treatment effect (on the treated or untreated), etc.
-
-* `comparisons()`: unit-level (conditional) estimates.
-* `avg_comparisons()`: average (marginal) estimates.
-
-See the package website and vignette for examples:
-
-* https://marginaleffects.com/chapters/comparisons.html
-* https://marginaleffects.com
-
-## Parameters
-"""
-    + DocsParameters.docstring_model
-    + DocsParameters.docstring_variables("comparison")
-    + DocsParameters.docstring_newdata("comparison")
-    + """
-* `comparison`: (str or callable) String specifying how pairs of predictions should be compared, or a callable function to compute custom estimates. See the Comparisons section below for definitions of each transformation.
-
-  * Acceptable strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, lift, liftavg, liftavg, expdydx, expdydxavg, expdydxavgwts
-
-  * Callable: A function that takes `hi`, `lo`, `eps`, `x`, `y`, and `w` as arguments and returns a numeric array. This allows computing custom comparisons like `lambda hi, lo, eps, x, y, w: hi / lo` for ratios or `lambda hi, lo, eps, x, y, w: (hi - lo) / lo * 100` for percent changes.
-"""
-    + DocsParameters.docstring_by
-    + DocsParameters.docstring_transform
-    + DocsParameters.docstring_hypothesis
-    + DocsParameters.docstring_wts
-    + DocsParameters.docstring_vcov
-    + DocsParameters.docstring_equivalence
-    + DocsParameters.docstring_cross
-    + DocsParameters.docstring_conf_level
-    + DocsParameters.docstring_eps
-    + DocsParameters.docstring_eps_vcov
-    + docstring_returns
-    + """
-## Examples
-```py
-from marginaleffects import *
-import numpy as np
-
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-data = get_dataset("thornton")
-model = smf.ols("outcome ~ distance + incentive", data=data).fit()
-
-# Basic comparisons
-comparisons(model)
-
-avg_comparisons(model)
-
-comparisons(model, hypothesis=0)
-
-avg_comparisons(model, hypothesis=0)
-
-comparisons(model, by="agecat")
-
-avg_comparisons(model, by="agecat")
-
-# Custom comparisons with lambda functions
-# Ratio comparison using lambda
-comparisons(model, variables="distance",
-            comparison=lambda hi, lo, eps, x, y, w: hi / lo)
-
-# Percent change using lambda
-comparisons(model, variables="distance",
-            comparison=lambda hi, lo, eps, x, y, w: (hi - lo) / lo * 100)
-
-# Log ratio using lambda
-comparisons(model, variables="distance",
-            comparison=lambda hi, lo, eps, x, y, w: np.log(hi / lo))
-```
-
-## Details
-"""
-    + DocsDetails.docstring_tost
-    + DocsDetails.docstring_order_of_operations
-    + ""  # add comparisons argument functions section as in R at https://marginaleffects.com/man/r/comparisons.html
-)
-
-
-comparisons.__doc__ = docs_comparisons
 
 avg_comparisons.__doc__ = comparisons.__doc__
