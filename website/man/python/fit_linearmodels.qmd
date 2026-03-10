@@ -11,15 +11,14 @@ This function streamlines the process of fitting linearmodels panel models by:
 
 ## Parameters {.unnumbered}
 
-`formula`: (str) Model formula with optional panel effects terms.
+- `formula`: (str) Model formula with optional panel effects terms.
+    - Supported effects are:
+        - EntityEffects: Entity-specific fixed effects
+        - TimeEffects: Time-specific fixed effects
+        - FixedEffects: Alias for EntityEffects
+    - Example: `"y ~ x1 + x2 + EntityEffects"`
 
-- Supported effects are:
-    - EntityEffects: Entity-specific fixed effects
-    - TimeEffects: Time-specific fixed effects
-    - FixedEffects: Alias for EntityEffects
-- Example: `"y ~ x1 + x2 + EntityEffects"`
-
-`data` : (pandas.DataFrame or polars.DataFrame) Panel data with MultiIndex (entity, time) or regular DataFrame with entity and time columns.
+- `data` : (pandas.DataFrame or polars.DataFrame) Panel data with MultiIndex (entity, time) or regular DataFrame with entity and time columns.
 
 **Important:** All categorical variables must be explicitly converted to `Categorical` or `Enum` dtype before fitting. String columns are not accepted in model formulas.
 
@@ -40,21 +39,17 @@ For pandas DataFrames:
 df["region"] = df["region"].astype("category")
 ```
 
-`engine`: (callable) linearmodels model class (e.g., PanelOLS, BetweenOLS, FirstDifferenceOLS)
+- `engine`: (callable) linearmodels model class (e.g., PanelOLS, BetweenOLS, FirstDifferenceOLS)
 
-`kwargs_engine`: (dict, default={}) Additional arguments passed to the model initialization.
+- `kwargs_engine`: (dict, default={}) Additional arguments passed to the model initialization.
+    - Example: `{'weights': weights_array}`
 
-* Example: `{'weights': weights_array}`
-
-`kwargs_fit`: (dict, default={}) Additional arguments passed to the model's fit method.
-
-* Example: `{'cov_type': 'robust'}`
+- `kwargs_fit`: (dict, default={}) Additional arguments passed to the model's fit method.
+    - Example: `{'cov_type': 'robust'}`
 
 ## Returns {.unnumbered}
 
-(ModelLinearmodels)
-    A fitted model wrapped in the ModelLinearmodels class for compatibility
-    with marginaleffects.
+(ModelLinearmodels) A fitted model wrapped in the ModelLinearmodels class for compatibility with marginaleffects.
 
 ## Examples {.unnumbered}
 
@@ -77,7 +72,7 @@ predictions(model_robust)
 
 The fitted model includes additional attributes:
 
-- `data`: The processed data after listwise deletion
-- `formula`: The original formula string
-- `formula_engine`: Set to "linearmodels"
-- `model`: The fitted linearmodels model object
+- data: The processed data after listwise deletion.
+- formula: The original formula string.
+- formula_engine: Set to "linearmodels".
+- model: The fitted linearmodels model object.

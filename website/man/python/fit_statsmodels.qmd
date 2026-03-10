@@ -10,12 +10,13 @@ This function streamlines the process of fitting statsmodels models by:
 
 ## Parameters {.unnumbered}
 
-`formula`: (str)
-    Model formula
+#### `formula`: (str) {.unnumbered}
 
-* Example: "outcome ~ distance + incentive"
+Model formula.
 
-`data`: (pandas.DataFrame or polars.DataFrame) Dataframe with the response variable and predictors.
+- Ex: "outcome ~ distance + incentive"
+
+- `data`: (pandas.DataFrame or polars.DataFrame) Dataframe with the response variable and predictors.
 
 **Important:** All categorical variables must be explicitly converted to `Categorical` or `Enum` dtype before fitting. String columns are not accepted in model formulas.
 
@@ -36,22 +37,20 @@ For pandas DataFrames:
 df["region"] = df["region"].astype("category")
 ```
 
-`engine`: (callable) statsmodels model class (e.g., OLS, Logit)
+- `engine`: (callable) statsmodels model class (e.g., OLS, Logit).
 
-`kwargs_engine`: (dict, default={}) Additional arguments passed to the model initialization.
+#### `kwargs_engine`: (dict, default={{}}) {.unnumbered}
 
-* Example: `{'weights': weights_array}`
+Additional arguments passed to the model initialization.
 
-`kwargs_fit`: (dict, default={}) Additional arguments passed to the model's fit method.
+- Ex: `{{'weights': weights_array}}`
 
-* Example: `{'cov_type': 'HC3'}`
-
+- `kwargs_fit`: (dict, default={}) Additional arguments passed to the model's fit method.
+    - Example: `{'cov_type': 'HC3'}`
 
 ## Returns {.unnumbered}
 
-(ModelStatsmodels)
-    A fitted model wrapped in the ModelStatsmodels class for compatibility
-    with marginaleffects.
+(ModelStatsmodels) A fitted model wrapped in the ModelStatsmodels class for compatibility with marginaleffects.
 
 ## Examples {.unnumbered}
 
@@ -79,7 +78,7 @@ comparisons(model_robust)
 
 The fitted model includes additional attributes:
 
-- `data`: The processed data after listwise deletion
-- `formula`: The original formula string
-- `formula_engine`: Set to "statsmodels"
-- `model`: The fitted statsmodels model object
+- data: The processed data after listwise deletion.
+- formula: The original formula string.
+- formula_engine: Set to "statsmodels".
+- model: The fitted statsmodels model object.

@@ -8,259 +8,342 @@ import marginaleffects
 # ---------------------------------------------------------------------------
 
 PARAM_SLOPE = """\
-- `slope`: (str) The type of slope or (semi-)elasticity to compute. Acceptable values are:
-    - "dydx": dY/dX
-    - "eyex": dY/dX * Y / X
-    - "eydx": dY/dX * Y
-    - "dyex": dY/dX / X"""
+#### `slope`: (str)
+
+The type of slope or (semi-)elasticity to compute. Acceptable values are:
+
+- "dydx": dY/dX
+- "eyex": dY/dX * Y / X
+- "eydx": dY/dX * Y
+- "dyex": dY/dX / X"""
 
 PARAM_HYPOTHESIS = """\
-- `hypothesis`: (str, int, float, list of str, numpy array) Specifies a hypothesis test or custom contrast.
-    - int, float: The null hypothesis used in the computation of Z and p-values (before applying transform).
-    - str:
-        - Equation specifying linear or non-linear hypothesis tests. Use the names of the model variables, or use `b0`, `b1` to identify the position of each parameter. The `b*` wildcard can be used to test hypotheses on all estimates. Examples:
-            - `hp = drat`
-            - `hp + drat = 12`
-            - `b0 + b1 + b2 = 0`
-            - `b* / b0 = 1`
-        - One of the following hypothesis test strings:
-            - `pairwise` and `revpairwise`: pairwise differences between estimates in each row.
-            - `reference` and `revreference`: differences between the estimates in each row and the estimate in the first row.
-            - `sequential` and `revsequential`: differences between an estimate and the estimate in the next row.
-        - Two-sided formula like "ratio ~ reference":
-            - Left-hand side: "ratio", "difference"
-            - Right-hand side: "reference", "sequential", "pairwise", "revreference", "revsequential", "revpairwise"
-    - list of strings: Multiple hypotheses evaluated in sequence, each processed as if passed individually. The resulting rows are stacked in the order supplied. Example: `["b1 - b0 = 0", "b2 = 1"]`.
-    - numpy.ndarray: Each column is a vector of weights. The output is the dot product between these vectors of weights and the vectors of estimates. e.g. `hypothesis=np.array([[1, 1, 2], [2, 2, 3]]).T`
-    - See the Examples section and the vignette: https://marginaleffects.com/chapters/hypothesis.html"""
+#### `hypothesis`: (str, int, float, list of str, numpy array) 
+
+Specifies a hypothesis test or custom contrast.
+
+- int, float: 
+    - The null hypothesis used in the computation of Z and p-values (before applying transform).
+- string:
+    - Equation specifying linear or non-linear hypothesis tests. Use the names of the model variables, or use `b0`, `b1` to identify the position of each parameter. The `b*` wildcard can be used to test hypotheses on all estimates. Ex:
+        - `hp = drat`
+        - `hp + drat = 12`
+        - `b0 + b1 + b2 = 0`
+        - `b* / b0 = 1`
+    - One of the following hypothesis test strings:
+        - `pairwise` and `revpairwise`: pairwise differences between estimates in each row.
+        - `reference` and `revreference`: differences between the estimates in each row and the estimate in the first row.
+        - `sequential` and `revsequential`: differences between an estimate and the estimate in the next row.
+    - Two-sided formula like "ratio ~ reference":
+        - Left-hand side: "ratio", "difference"
+        - Right-hand side: "reference", "sequential", "pairwise", "revreference", "revsequential", "revpairwise"
+- list of strings: 
+    - Multiple hypotheses evaluated in sequence, each processed as if passed individually. The resulting rows are stacked in the order supplied. Ex: `["b1 - b0 = 0", "b2 = 1"]`.
+- numpy.ndarray: 
+    - Each column is a vector of weights. The output is the dot product between these vectors of weights and the vectors of estimates. e.g. `hypothesis=np.array([[1, 1, 2], [2, 2, 3]]).T`docs
+- See the Examples section and the vignette: https://marginaleffects.com/chapters/hypothesis.html"""
 
 PARAM_BY = """\
-- `by`: (bool, List[str], optional) A logical value or a list of column names in `newdata`.
-    - True: estimate is aggregated across the whole dataset.
-    - list: estimates are aggregated for each unique combination of values in the columns."""
+#### `by`: (bool, List[str], optional)
+
+A logical value or a list of column names in `newdata`.
+
+- True: estimate is aggregated across the whole dataset.
+- list: estimates are aggregated for each unique combination of values in the columns."""
 
 PARAM_CONF_LEVEL = """\
-- `conf_level`: (float, default=0.95) Numeric value specifying the confidence level for the confidence intervals."""
+#### `conf_level`: (float, default=0.95)
+
+Numeric value specifying the confidence level for the confidence intervals."""
 
 PARAM_CROSS = """\
-- `cross`: False: contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant. True: contrasts represent the changes in adjusted predictions when all the predictors specified in the variables argument are manipulated simultaneously (a "cross-contrast")."""
+#### `cross`: (bool)
+
+- False: contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
+- True: contrasts represent the changes in adjusted predictions when all the predictors specified in the variables argument are manipulated simultaneously (a "cross-contrast")."""
 
 PARAM_DRAW = """\
-- `draw`: True returns a matplotlib plot. False returns a dataframe of the underlying data."""
+#### `draw`: (bool)
+
+- True: returns a matplotlib plot.
+- False: returns a dataframe of the underlying data."""
 
 PARAM_POINTS = """\
-- `points`: (float, default=0) Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points.
-    Warning: The points displayed are raw data, so the resulting plot is not a "partial residual plot.\""""
+#### `points`: (float, default=0)
+
+Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points.
+
+- Warning: The points displayed are raw data, so the resulting plot is not a "partial residual plot.\""""
 
 PARAM_GRAY = """\
-- `gray`: True returns a gray scale adapted plot. False returns a plot in color. For the second position of the list in the `condition` or `by` argument, the list can have at most 5 elements."""
+#### `gray`: (bool)
+
+- True: returns a gray scale adapted plot.
+- False: returns a plot in color.
+
+For the second position of the list in the `condition` or `by` argument, the list can have at most 5 elements."""
 
 PARAM_WTS = """\
-- `wts`: (str, optional) Column name of weights to use for marginalization. Must be a column in `newdata`."""
+#### `wts`: (str, optional)
+
+Column name of weights to use for marginalization. Must be a column in `newdata`."""
 
 PARAM_VCOV = """\
-- `vcov`: (bool, np.ndarray, default=True) Type of uncertainty estimates to report (e.g. for robust standard errors). Acceptable values are:
-    - True: Use the model's default covariance matrix.
-    - False: Do not compute standard errors.
-    - String: Literal indicating the kind of uncertainty estimates to return:
-        - Heteroskedasticity-consistent: "HC0", "HC1", "HC2", "HC3".
-    - np.ndarray: A custom square covariance matrix."""
+#### `vcov`: (bool, np.ndarray, default=True)
+
+Type of uncertainty estimates to report (e.g. for robust standard errors). Acceptable values are:
+
+- True: Use the model's default covariance matrix.
+- False: Do not compute standard errors.
+- String: Literal indicating the kind of uncertainty estimates to return:
+    - Heteroskedasticity-consistent: "HC0", "HC1", "HC2", "HC3".
+- np.ndarray: A custom square covariance matrix."""
 
 PARAM_EQUIVALENCE = """\
-- `equivalence`: (list, optional) List of 2 numeric float values specifying the bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See the Details section below."""
+#### `equivalence`: (list, optional)
+
+List of 2 numeric float values specifying the bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See the Details section below."""
 
 PARAM_TRANSFORM = """\
-- `transform`: (function) Function specifying a transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a full column (series) of a Polars data frame and return a corresponding series of the same length. Ex:
-    - `transform = numpy.exp`
-    - `transform = lambda x: x.exp()`
-    - `transform = lambda x: x.map_elements()`"""
+#### `transform`: (function)
+
+Function specifying a transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a full column (series) of a Polars data frame and return a corresponding series of the same length. Ex:
+
+- `transform = numpy.exp`
+- `transform = lambda x: x.exp()`
+- `transform = lambda x: x.map_elements()`"""
 
 PARAM_MODEL = """\
-- `model`: (model object) Object fitted using the `statsmodels` formula API."""
+#### `model`: (model object)
+
+Object fitted using the `statsmodels` formula API."""
 
 PARAM_EPS_VCOV = """\
-- `eps_vcov`: (float) optional custom value for the finite difference approximation of the jacobian matrix. By default, the function uses the square root of the machine epsilon."""
+#### `eps_vcov`: (float)
+
+Optional custom value for the finite difference approximation of the jacobian matrix. By default, the function uses the square root of the machine epsilon."""
 
 PARAM_EPS = """\
-- `eps`: (float, optional) step size to use when calculating numerical derivatives: (f(x+eps)-f(x))/eps. Default value is 1e-4 multiplied by the difference between the maximum and minimum values of the variable with respect to which we are taking the derivative. Changing eps may be necessary to avoid numerical problems in certain models."""
+#### `eps`: (float, optional)
+
+Step size to use when calculating numerical derivatives: (f(x+eps)-f(x))/eps. Default value is 1e-4 multiplied by the difference between the maximum and minimum values of the variable with respect to which we are taking the derivative. Changing eps may be necessary to avoid numerical problems in certain models."""
 
 PARAM_VARIABLES_PREDICTION = """
-- `variables`: (str, list, dictionary) Specifies what variables (columns) to vary in order to make the prediction.
-    - None: predictions are computed for all regressors in the model object (can be slow). Acceptable values depend on the variable type. See the examples below.
-    - List[str] or str: List of variable names to compute predictions for.
-    - Dictionary: keys identify the subset of variables of interest, and values define the type of contrast to compute. Acceptable values depend on the variable type:
-        - Categorical variables:
-            - "reference": Each factor level is compared to the factor reference (base) level
-            - "all": All combinations of observed levels
-            - "sequential": Each factor level is compared to the previous factor level
-            - "pairwise": Each factor level is compared to all other levels
-            - "minmax": The highest and lowest levels of a factor.
-            - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses.
-            - Vector of length 2 with the two values to compare.
-        - Boolean variables:
-            - None: contrast between True and False
-        - Numeric variables:
-            - Numeric of length 1: Contrast for a gap of x, computed at the observed value plus and minus x / 2.
-            - Numeric of length equal to the number of rows in newdata: Same as above, but the contrast can be customized for each row of newdata.
-            - Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the x vector.
-            - Data frame with the same number of rows as newdata, with two columns of "low" and "high" values to compare.
-            - Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare.
-            - "iqr": Contrast across the interquartile range of the regressor.
-            - "sd": Contrast across one standard deviation around the regressor mean.
-            - "2sd": Contrast across two standard deviations around the regressor mean.
-            - "minmax": Contrast between the maximum and the minimum values of the regressor.
-    - Examples:
-        - `variables = {"gear" : "pairwise", "hp" : 10}`
-        - `variables = {"gear" : "sequential", "hp" : [100, 120]}`
+#### `variables`: (str, list, dictionary) 
 
+Specifies what variables (columns) to vary in order to make the prediction.
+
+- None: predictions are computed for all regressors in the model object (can be slow). Acceptable values depend on the variable type. See the examples below.
+- List[str] or str: List of variable names to compute predictions for.
+- Dictionary: keys identify the subset of variables of interest, and values define the type of contrast to compute. Acceptable values depend on the variable type:
+    - Categorical variables:
+        - "reference": Each factor level is compared to the factor reference (base) level
+        - "all": All combinations of observed levels
+        - "sequential": Each factor level is compared to the previous factor level
+        - "pairwise": Each factor level is compared to all other levels
+        - "minmax": The highest and lowest levels of a factor.
+        - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses.
+        - Vector of length 2 with the two values to compare.
+    - Boolean variables:
+        - None: contrast between True and False
+    - Numeric variables:
+        - Numeric of length 1: Contrast for a gap of x, computed at the observed value plus and minus x / 2.
+        - Numeric of length equal to the number of rows in newdata: Same as above, but the contrast can be customized for each row of newdata.
+        - Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the x vector.
+        - Data frame with the same number of rows as newdata, with two columns of "low" and "high" values to compare.
+        - Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare.
+        - "iqr": Contrast across the interquartile range of the regressor.
+        - "sd": Contrast across one standard deviation around the regressor mean.
+        - "2sd": Contrast across two standard deviations around the regressor mean.
+        - "minmax": Contrast between the maximum and the minimum values of the regressor.
+- Ex:
+    - `variables = {"gear" : "pairwise", "hp" : 10}`
+    - `variables = {"gear" : "sequential", "hp" : [100, 120]}`
 """
 
-PARAM_VARIABLES_COMPARISON = """\
-- `variables`: (str, list, dictionary) Specifies what variables (columns) to vary in order to make the comparison.
-    - None: comparisons are computed for all regressors in the model object (can be slow). Acceptable values depend on the variable type. See the examples below.
-    - List[str] or str: List of variable names to compute comparisons for.
-    - Dictionary: keys identify the subset of variables of interest, and values define the type of contrast to compute. Acceptable values depend on the variable type:
-        - Categorical variables:
-            - "reference": Each factor level is compared to the factor reference (base) level
-            - "all": All combinations of observed levels
-            - "sequential": Each factor level is compared to the previous factor level
-            - "pairwise": Each factor level is compared to all other levels
-            - "minmax": The highest and lowest levels of a factor.
-            - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses.
-            - Vector of length 2 with the two values to compare.
-        - Boolean variables:
-            - None: contrast between True and False
-        - Numeric variables:
-            - Numeric of length 1: Contrast for a gap of x, computed at the observed value plus and minus x / 2.
-            - Numeric of length equal to the number of rows in newdata: Same as above, but the contrast can be customized for each row of newdata.
-            - Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the x vector.
-            - Data frame with the same number of rows as newdata, with two columns of "low" and "high" values to compare.
-            - Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare.
-            - "iqr": Contrast across the interquartile range of the regressor.
-            - "sd": Contrast across one standard deviation around the regressor mean.
-            - "2sd": Contrast across two standard deviations around the regressor mean.
-            - "minmax": Contrast between the maximum and the minimum values of the regressor.
-    - Examples:
-        - `variables = {{"gear" : "pairwise", "hp" : 10}}`
-        - `variables = {{"gear" : "sequential", "hp" : [100, 120]}}`"""
+PARAM_VARIABLES_COMPARISON = """
+#### `variables`: (str, list, dictionary)
+
+Specifies what variables (columns) to vary in order to make the comparison.
+
+- None: comparisons are computed for all regressors in the model object (can be slow). Acceptable values depend on the variable type. See the examples below.
+- List[str] or str: List of variable names to compute comparisons for.
+- Dictionary: keys identify the subset of variables of interest, and values define the type of contrast to compute. Acceptable values depend on the variable type:
+    - Categorical variables:
+        - "reference": Each factor level is compared to the factor reference (base) level
+        - "all": All combinations of observed levels
+        - "sequential": Each factor level is compared to the previous factor level
+        - "pairwise": Each factor level is compared to all other levels
+        - "minmax": The highest and lowest levels of a factor.
+        - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses.
+        - Vector of length 2 with the two values to compare.
+    - Boolean variables:
+        - None: contrast between True and False
+    - Numeric variables:
+        - Numeric of length 1: Contrast for a gap of x, computed at the observed value plus and minus x / 2.
+        - Numeric of length equal to the number of rows in newdata: Same as above, but the contrast can be customized for each row of newdata.
+        - Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the x vector.
+        - Data frame with the same number of rows as newdata, with two columns of "low" and "high" values to compare.
+        - Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare.
+        - "iqr": Contrast across the interquartile range of the regressor.
+        - "sd": Contrast across one standard deviation around the regressor mean.
+        - "2sd": Contrast across two standard deviations around the regressor mean.
+        - "minmax": Contrast between the maximum and the minimum values of the regressor.
+- Ex:
+    - `variables = {{"gear" : "pairwise", "hp" : 10}}`
+    - `variables = {{"gear" : "sequential", "hp" : [100, 120]}}`
+"""
 
 PARAM_NEWDATA_PREDICTION = """\
-- `newdata`: (None, DataFrame, str) Data frame or string specifying where statistics are evaluated in the predictor space.
-    - None: Compute predictions at each observed value in the original dataset (empirical distribution).
-    - Dataframe: should be created with datagrid() function.
-    - str:
-        - "mean": Compute predictions at the mean of the regressor.
-        - "median": Compute predictions at the median of the regressor.
-        - "balanced": Compute predictions on a balanced grid with every combination of categories and numeric variables held at their means."""
+#### `newdata`: (None, DataFrame, str)
+
+Data frame or string specifying where statistics are evaluated in the predictor space.
+
+- None: Compute predictions at each observed value in the original dataset (empirical distribution).
+- Dataframe: should be created with datagrid() function.
+- str:
+    - "mean": Compute predictions at the mean of the regressor.
+    - "median": Compute predictions at the median of the regressor.
+    - "balanced": Compute predictions on a balanced grid with every combination of categories and numeric variables held at their means."""
 
 PARAM_NEWDATA_COMPARISON = """\
-- `newdata`: (None, DataFrame, str) Data frame or string specifying where statistics are evaluated in the predictor space.
-    - None: Compute comparisons at each observed value in the original dataset (empirical distribution).
-    - Dataframe: should be created with datagrid() function.
-    - str:
-        - "mean": Compute comparisons at the mean of the regressor.
-        - "median": Compute comparisons at the median of the regressor.
-        - "balanced": Compute comparisons on a balanced grid with every combination of categories and numeric variables held at their means."""
+#### `newdata`: (None, DataFrame, str)
+
+Data frame or string specifying where statistics are evaluated in the predictor space.
+
+- None: Compute comparisons at each observed value in the original dataset (empirical distribution).
+- Dataframe: should be created with datagrid() function.
+- str:
+    - "mean": Compute comparisons at the mean of the regressor.
+    - "median": Compute comparisons at the median of the regressor.
+    - "balanced": Compute comparisons on a balanced grid with every combination of categories and numeric variables held at their means."""
 
 PARAM_NEWDATA_SLOPE = """\
-- `newdata`: (None, DataFrame, str) Data frame or string specifying where statistics are evaluated in the predictor space.
-    - None: Compute slopes at each observed value in the original dataset (empirical distribution).
-    - Dataframe: should be created with datagrid() function.
-    - str:
-        - "mean": Compute slopes at the mean of the regressor.
-        - "median": Compute slopes at the median of the regressor.
-        - "balanced": Compute slopes on a balanced grid with every combination of categories and numeric variables held at their means."""
+#### `newdata`: (None, DataFrame, str)
+
+Data frame or string specifying where statistics are evaluated in the predictor space.
+
+- None: Compute slopes at each observed value in the original dataset (empirical distribution).
+- Dataframe: should be created with datagrid() function.
+- str:
+    - "mean": Compute slopes at the mean of the regressor.
+    - "median": Compute slopes at the median of the regressor.
+    - "balanced": Compute slopes on a balanced grid with every combination of categories and numeric variables held at their means."""
 
 PARAM_CONDITION_PREDICTIONS = """\
-- `condition`: (str, list, dictionary) Conditional predictions.
-    - Position's representation:
-        1. x-axis.
-        2. color.
-        3. facet (wrap if no fourth variable, otherwise cols of grid).
-        4. facet (rows of grid).
-    - Argument types:
-        - list: Names of the predictors to display.
-            - Numeric variables in position 1 is summarized by 100 numbers.
-            - Numeric variables in positions 2, 3 and 4 are summarized by Tukey's five numbers.
-        - dictionary: Keys correspond to predictors. Values can be one of the two below depending on predictor's type:
-            - Series or list of the same type as the original variable.
-            - Numeric variables:
-                - String: "minmax", "threenum", "fivenum".
-        - string: Same as list of length 1."""
+#### `condition`: (str, list, dictionary)
+
+Conditional predictions.
+
+- Position's representation:
+    1. x-axis.
+    2. color.
+    3. facet (wrap if no fourth variable, otherwise cols of grid).
+    4. facet (rows of grid).
+- Argument types:
+    - list: Names of the predictors to display.
+        - Numeric variables in position 1 is summarized by 100 numbers.
+        - Numeric variables in positions 2, 3 and 4 are summarized by Tukey's five numbers.
+    - dictionary: Keys correspond to predictors. Values can be one of the two below depending on predictor's type:
+        - Series or list of the same type as the original variable.
+        - Numeric variables:
+            - String: "minmax", "threenum", "fivenum".
+    - string: Same as list of length 1."""
 
 PARAM_CONDITION_COMPARISONS = """\
-- `condition`: (str, list, dictionary) Conditional comparisons.
-    - Position's representation:
-        1. x-axis.
-        2. color.
-        3. facet (wrap if no fourth variable, otherwise cols of grid).
-        4. facet (rows of grid).
-    - Argument types:
-        - list: Names of the predictors to display.
-            - Numeric variables in position 1 is summarized by 100 numbers.
-            - Numeric variables in positions 2, 3 and 4 are summarized by Tukey's five numbers.
-        - dictionary: Keys correspond to predictors. Values can be one of the two below depending on predictor's type:
-            - Series or list of the same type as the original variable.
-            - Numeric variables:
-                - String: "minmax", "threenum", "fivenum".
-        - string: Same as list of length 1."""
+#### `condition`: (str, list, dictionary)
+
+Conditional comparisons.
+
+- Position's representation:
+    1. x-axis.
+    2. color.
+    3. facet (wrap if no fourth variable, otherwise cols of grid).
+    4. facet (rows of grid).
+- Argument types:
+    - list: Names of the predictors to display.
+        - Numeric variables in position 1 is summarized by 100 numbers.
+        - Numeric variables in positions 2, 3 and 4 are summarized by Tukey's five numbers.
+    - dictionary: Keys correspond to predictors. Values can be one of the two below depending on predictor's type:
+        - Series or list of the same type as the original variable.
+        - Numeric variables:
+            - String: "minmax", "threenum", "fivenum".
+    - string: Same as list of length 1."""
 
 PARAM_CONDITION_SLOPES = """\
-- `condition`: (str, list, dictionary) Conditional slopes.
-    - Position's representation:
-        1. x-axis.
-        2. color.
-        3. facet (wrap if no fourth variable, otherwise cols of grid).
-        4. facet (rows of grid).
-    - Argument types:
-        - list: Names of the predictors to display.
-            - Numeric variables in position 1 is summarized by 100 numbers.
-            - Numeric variables in positions 2, 3 and 4 are summarized by Tukey's five numbers.
-        - dictionary: Keys correspond to predictors. Values can be one of the two below depending on predictor's type:
-            - Series or list of the same type as the original variable.
-            - Numeric variables:
-                - String: "minmax", "threenum", "fivenum".
-        - string: Same as list of length 1."""
+#### `condition`: (str, list, dictionary)
+
+Conditional slopes.
+
+- Position's representation:
+    1. x-axis.
+    2. color.
+    3. facet (wrap if no fourth variable, otherwise cols of grid).
+    4. facet (rows of grid).
+- Argument types:
+    - list: Names of the predictors to display.
+        - Numeric variables in position 1 is summarized by 100 numbers.
+        - Numeric variables in positions 2, 3 and 4 are summarized by Tukey's five numbers.
+    - dictionary: Keys correspond to predictors. Values can be one of the two below depending on predictor's type:
+        - Series or list of the same type as the original variable.
+        - Numeric variables:
+            - String: "minmax", "threenum", "fivenum".
+    - string: Same as list of length 1."""
 
 PARAM_BY_PLOT_PREDICTIONS = """\
-- `by`: (bool, str, list) Marginal predictions.
+#### `by`: (bool, str, list)
 
-    Names of the categorical predictors to marginalize across. Max length of list is 4, with position meanings:
-    1. x-axis.
-    2. color.
-    3. facet (wrap if no fourth variable, otherwise columns of grid).
-    4. facet (rows of grid)"""
+Marginal predictions. Names of the categorical predictors to marginalize across. Max length of list is 4, with position meanings:
+
+1. x-axis.
+2. color.
+3. facet (wrap if no fourth variable, otherwise columns of grid).
+4. facet (rows of grid)"""
 
 PARAM_BY_PLOT_COMPARISONS = """\
-- `by`: (bool, str, list) Marginal comparisons.
-    Names of the categorical predictors to marginalize across. Max length of list is 4, with position meanings:
-    1. x-axis.
-    2. color.
-    3. facet (wrap if no fourth variable, otherwise columns of grid).
-    4. facet (rows of grid)"""
+#### `by`: (bool, str, list)
+
+Marginal comparisons. Names of the categorical predictors to marginalize across. Max length of list is 4, with position meanings:
+
+1. x-axis.
+2. color.
+3. facet (wrap if no fourth variable, otherwise columns of grid).
+4. facet (rows of grid)"""
 
 PARAM_BY_PLOT_SLOPES = """\
-- `by`: (bool, str, list) Marginal slopes.
-    Names of the categorical predictors to marginalize across. Max length of list is 4, with position meanings:
-    1. x-axis.
-    2. color.
-    3. facet (wrap if no fourth variable, otherwise columns of grid).
-    4. facet (rows of grid)"""
+#### `by`: (bool, str, list)
+
+Marginal slopes. Names of the categorical predictors to marginalize across. Max length of list is 4, with position meanings:
+
+1. x-axis.
+2. color.
+3. facet (wrap if no fourth variable, otherwise columns of grid).
+4. facet (rows of grid)"""
 
 PARAM_VARIABLES_PLOT_CONTRAST = """\
-- `variables`: (str, list, dictionary) Name of the variable whose contrast we want to plot on the y-axis. Refer to the `comparisons()` documentation."""
+#### `variables`: (str, list, dictionary)
+
+Name of the variable whose contrast we want to plot on the y-axis. Refer to the `comparisons()` documentation."""
 
 PARAM_VARIABLES_PLOT_SLOPE = """\
-- `variables`: (str, list, dictionary) Name of the variable whose marginal effect (slope) we want to plot on the y-axis. Refer to the `comparisons()` documentation."""
+#### `variables`: (str, list, dictionary)
+
+Name of the variable whose marginal effect (slope) we want to plot on the y-axis. Refer to the `comparisons()` documentation."""
 
 PARAM_NEWDATA_PLOT_PREDICTIONS = """\
-- `newdata`: (dataframe) When newdata is None, the grid is determined by the condition argument. When newdata is not None, the argument behaves in the same way as in the predictions() function."""
+#### `newdata`: (dataframe)
+
+When newdata is None, the grid is determined by the condition argument. When newdata is not None, the argument behaves in the same way as in the predictions() function."""
 
 PARAM_NEWDATA_PLOT_COMPARISONS = """\
-- `newdata`: (dataframe) When newdata is None, the grid is determined by the condition argument. When newdata is not None, the argument behaves in the same way as in the comparisons() function."""
+#### `newdata`: (dataframe)
+
+When newdata is None, the grid is determined by the condition argument. When newdata is not None, the argument behaves in the same way as in the comparisons() function."""
 
 PARAM_NEWDATA_PLOT_SLOPES = """\
-- `newdata`: (dataframe) When newdata is None, the grid is determined by the condition argument. When newdata is not None, the argument behaves in the same way as in the slopes() function."""
+#### `newdata`: (dataframe)
+
+When newdata is None, the grid is determined by the condition argument. When newdata is not None, the argument behaves in the same way as in the slopes() function."""
 
 PARAM_PLOT_INTRO_PREDICTIONS = """\
 Plot predictions on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
@@ -332,8 +415,11 @@ A Polars DataFrame with (some of) the following columns:
 - pred_high: the upper prediction interval bound."""
 
 MODELS_FORMULA = """\
-- `formula`: (str) Model formula.
-    - Example: "outcome ~ distance + incentive\""""
+#### `formula`: (str)
+
+Model formula.
+
+- Ex: "outcome ~ distance + incentive\""""
 
 MODELS_CATEGORICAL_REQUIREMENT = """\
 **Important:** All categorical variables must be explicitly converted to `Categorical` or `Enum` dtype before fitting. String columns are not accepted in model formulas.
@@ -356,8 +442,11 @@ df["region"] = df["region"].astype("category")
 ```"""
 
 MODELS_KWARGS_ENGINE = """\
-- `kwargs_engine`: (dict, default={{}}) Additional arguments passed to the model initialization.
-    - Example: `{{'weights': weights_array}}`"""
+#### `kwargs_engine`: (dict, default={{}})
+
+Additional arguments passed to the model initialization.
+
+- Ex: `{{'weights': weights_array}}`"""
 
 MODELS_FIT_RETURNS_STATSMODELS = """\
 ## Returns

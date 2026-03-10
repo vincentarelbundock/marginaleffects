@@ -45,7 +45,7 @@ datagrid(model = mod, village = [43, 11])
 nd = datagrid(mod, village = [43, 11])
 slopes(mod, newdata = nd)
 
-# The full dataset is duplicated with each observation given counterfactual values of 43 and 11 for the `village` variable.  {.unnumbered}
+# The full dataset is duplicated with each observation given counterfactual values of 43 and 11 for the `village` variable. {.unnumbered}
 # The original `thornton` includes 2884 rows, so the resulting dataset includes 5768 rows. {.unnumbered}
 dg = datagrid(newdata = data, village = [43, 11], grid_type = "counterfactual")
 dg.shape
