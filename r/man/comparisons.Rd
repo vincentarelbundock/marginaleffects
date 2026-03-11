@@ -578,6 +578,7 @@ Some of the most common \code{type} values are:\tabular{ll}{
    Gam \tab invlink(link), response, link \cr
    Gls \tab lp \cr
    MCMCglmm \tab response \cr
+   aft \tab surv, haz, cumhaz, density, odds, link \cr
    bam \tab response, link \cr
    bart \tab ev, ppd \cr
    betareg \tab response, link, precision, quantile, variance \cr

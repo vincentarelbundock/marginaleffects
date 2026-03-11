@@ -350,7 +350,46 @@ def test_callable_comparison():
     assert cmp_avg.shape[0] >= 1
 
 
-def test_issue230_variables_all():
+def test_callable_comparison_flexible_signature():
+    """Test that comparison= accepts functions with flexible signatures (issue #1688).
+
+    User functions should be able to accept any subset of (hi, lo, eps, x, y, w).
+    """
+    mod = smf.ols("am ~ hp", data=mtcars).fit()
+
+    # Function with only (hi, lo) arguments
+    def my_diff(hi, lo):
+        return hi - lo
+
+    cmp_custom = comparisons(mod, variables="hp", comparison=my_diff, vcov=False)
+    cmp_builtin = comparisons(mod, variables="hp", comparison="difference", vcov=False)
+    np.testing.assert_array_almost_equal(
+        cmp_custom["estimate"].to_numpy(), cmp_builtin["estimate"].to_numpy()
+    )
+
+    # Named function returning a scalar (aggregating)
+    def lnor(hi, lo):
+        hi = np.asarray(hi)
+        lo = np.asarray(lo)
+        return np.log((hi.mean() / (1 - hi.mean())) / (lo.mean() / (1 - lo.mean())))
+
+    cmp_lnor = avg_comparisons(mod, variables="hp", comparison=lnor, vcov=False, by=True)
+    assert isinstance(cmp_lnor, MarginaleffectsResult)
+    assert cmp_lnor.shape[0] >= 1
+
+    # Lambda with only (hi, lo)
+    cmp_ratio = comparisons(
+        mod, variables="hp", comparison=lambda hi, lo: hi / lo, vcov=False
+    )
+    cmp_builtin_ratio = comparisons(
+        mod, variables="hp", comparison="ratio", vcov=False
+    )
+    np.testing.assert_array_almost_equal(
+        cmp_ratio["estimate"].to_numpy(), cmp_builtin_ratio["estimate"].to_numpy()
+    )
+
+
+
     dat = pl.read_csv("tests/data/mtcars.csv").with_columns(
         pl.col("gear").cast(pl.String).cast(pl.Categorical)
     )

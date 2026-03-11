@@ -339,7 +339,7 @@ See the package website and vignette for examples:
 
 - `comparison`: (str or callable) String specifying how pairs of predictions should be compared, or a callable function to compute custom estimates. See the Comparisons section below for definitions of each transformation.
     - Acceptable strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, lift, liftavg, liftavg, expdydx, expdydxavg, expdydxavgwts
-    - Callable: A function that takes hi, lo, eps, x, y, and w as arguments and returns a numeric array. This allows computing custom comparisons like `lambda hi, lo, eps, x, y, w: hi / lo` for ratios or `lambda hi, lo, eps, x, y, w: (hi - lo) / lo * 100` for percent changes.
+    - Callable: A function that accepts any subset of the named arguments `hi`, `lo`, `eps`, `x`, `y`, and `w`, and returns a numeric value or array. For example: `lambda hi, lo: hi / lo` for ratios, `lambda hi, lo: (hi - lo) / lo * 100` for percent changes, or a named function like `def lnor(hi, lo): return np.log((hi.mean() / (1 - hi.mean())) / (lo.mean() / (1 - lo.mean())))`.
 
 {param_by}
 
@@ -386,18 +386,22 @@ comparisons(model, by="agecat")
 
 avg_comparisons(model, by="agecat")
 
-# Custom comparisons with lambda functions
+# Custom comparisons with functions
 # Ratio comparison using lambda
 comparisons(model, variables="distance",
-            comparison=lambda hi, lo, eps, x, y, w: hi / lo)
+            comparison=lambda hi, lo: hi / lo)
 
 # Percent change using lambda
 comparisons(model, variables="distance",
-            comparison=lambda hi, lo, eps, x, y, w: (hi - lo) / lo * 100)
+            comparison=lambda hi, lo: (hi - lo) / lo * 100)
 
-# Log ratio using lambda
-comparisons(model, variables="distance",
-            comparison=lambda hi, lo, eps, x, y, w: np.log(hi / lo))
+# Custom function with flexible signature
+def lnor(hi, lo):
+    hi = np.asarray(hi)
+    lo = np.asarray(lo)
+    return np.log((hi.mean() / (1 - hi.mean())) / (lo.mean() / (1 - lo.mean())))
+
+comparisons(model, variables="distance", comparison=lnor)
 ```
 
 ## Details

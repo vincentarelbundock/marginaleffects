@@ -1,3 +1,4 @@
+import inspect
 from collections import namedtuple
 from warnings import warn
 
@@ -222,10 +223,33 @@ def sanitize_newdata(model, newdata, wts, by=[]):
     return out
 
 
+def _wrap_comparison_function(fn):
+    """Wrap a user-supplied comparison function to accept the full (hi, lo, eps, x, y, w) signature."""
+    sig = inspect.signature(fn)
+    params = list(sig.parameters.keys())
+    full_params = ["hi", "lo", "eps", "x", "y", "w"]
+    if params == full_params:
+        return fn
+
+    def wrapper(hi, lo, eps, x, y, w):
+        kwargs = {"hi": hi, "lo": lo, "eps": eps, "x": x, "y": y, "w": w}
+        call_kwargs = {p: kwargs[p] for p in params if p in kwargs}
+        result = fn(**call_kwargs)
+        if isinstance(result, (float, int, np.integer, np.floating)):
+            return pl.Series([result])
+        elif isinstance(result, np.ndarray):
+            return pl.Series(result)
+        elif isinstance(result, list):
+            return pl.Series(result)
+        return result
+
+    return wrapper
+
+
 def sanitize_comparison(comparison, by, wts=None):
     # Handle callable comparison functions
     if callable(comparison):
-        return (comparison, "custom")
+        return (_wrap_comparison_function(comparison), "custom")
 
     out = comparison
     if by is not False:

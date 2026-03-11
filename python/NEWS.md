@@ -1,3 +1,9 @@
+# 0.3.2.1
+
+New:
+
+* The `comparison` argument in `comparisons()` now accepts user-defined functions with flexible signatures. Previously, custom functions had to accept all six arguments (`hi, lo, eps, x, y, w`). Now, functions can accept any subset of these named arguments, e.g., `def lnor(hi, lo): ...`. Issue #1688.
+
 # 0.3.0
 
 New:

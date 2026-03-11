@@ -6,6 +6,7 @@ New:
 
 * Support for `glmtoolbox::glmgee()` and `glmtoolbox::gnm()` models. Thanks to @luifrancgom for report #1148.
 * Support for `nestedLogit::nestedLogit()` models. Thanks to @strengejacke for report #1675.
+* Improved `type` error for `aft` models.
 
 Bug fixes:
 
