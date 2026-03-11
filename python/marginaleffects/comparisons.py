@@ -588,9 +588,18 @@ def comparisons(
 
         # group (categorical outcome models)
         elif "group" in tmp.columns:
+            # tmp has rowid 0..N-1 from get_predict, matching nd row positions.
+            # nd may already have a rowid column (from sanitize_newdata) with
+            # non-unique values across variables, so we create a unique
+            # positional index for the join.
+            nd = nd.with_columns(
+                pl.Series("_merge_id", range(nd.shape[0]), dtype=pl.Int32)
+            )
+            tmp = tmp.rename({"rowid": "_merge_id"})
             meta = nd.join(tmp.select("group").unique(), how="cross")
             cols = [x for x in meta.columns if x in tmp.columns]
             tmp = meta.join(tmp, on=cols, how="left")
+            tmp = tmp.drop("_merge_id")
 
         # not sure what happens here
         else:
@@ -603,6 +612,9 @@ def comparisons(
             by = ["term", "contrast"] + by
         else:
             by = ["term", "contrast"]
+
+        if "group" in tmp.columns and "group" not in by:
+            by = ["group"] + by
 
         by = by + [x for x in tmp.columns if x.startswith("contrast_")]
 

@@ -1,4 +1,10 @@
-# 0.3.2.1
+# Development
+
+Bug fixes:
+
+* Fixed `comparisons()` for multinomial logit models (`MNLogit`): estimates for different predictor variables were incorrectly identical. The bug was caused by a row-matching issue when joining predictions with metadata for multi-outcome models. Issue #1690.
+
+# 0.4.0
 
 New:
 

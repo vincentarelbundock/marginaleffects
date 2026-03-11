@@ -1,3 +1,4 @@
+import numpy as np
 import polars as pl
 import statsmodels.formula.api as smf
 from marginaleffects import *
@@ -12,12 +13,14 @@ dat = (
 )
 mod = smf.mnlogit("island ~ bill_length_mm + flipper_length_mm", dat.to_pandas()).fit()
 
+group_map = {"0": "Biscoe", "1": "Dream", "2": "Torgersen"}
+
 
 def test_avg_predictions_01():
     known = pl.read_csv("tests/r/test_statsmodels_mnlogit_avg_predictions_01.csv")
-    dict = {"0": "Biscoe", "1": "Dream", "2": "Torgersen"}
-    unknown = avg_predictions(mod)
-    unknown = unknown.with_columns(pl.col("group").replace_strict(dict))
+    unknown = avg_predictions(mod).with_columns(
+        pl.col("group").replace_strict(group_map)
+    )
     assert_series_equal(
         known["estimate"], unknown["estimate"], rel_tol=1e-2, check_names=False
     )
@@ -26,23 +29,37 @@ def test_avg_predictions_01():
     )
 
 
-# def test_avg_comparisons_01():
-#     r_code = """
-#     library(marginaleffects)
-#     library(nnet)
-#     dat = get_dataset("penguins", "palmerpenguins")
-#     dat = dat[complete.cases(dat[c("species", "island", "bill_length_mm", "flipper_length_mm")]), ]
-#     dat$island = factor(dat$island, levels = c("Biscoe", "Dream", "Torgersen"))
-#     mod = multinom(island ~ bill_length_mm + flipper_length_mm, data = dat, trace=FALSE)
-#     pred = avg_comparisons(mod)
-#     data.frame(pred)
-#     """
-#     r = r2pl(r_code)
-#     dict = {"0": "Biscoe", "1": "Dream", "2": "Torgersen"}
-#     py = avg_comparisons(mod)#.with_columns(pl.col("group").replace_strict(dict))
-#     assert_series_equal(r["estimate"], py["estimate"], rel_tol=1e-2, check_names=False)
+def test_avg_comparisons_01():
+    known = pl.read_csv("tests/r/test_statsmodels_mnlogit_avg_comparisons_01.csv")
+    unknown = avg_comparisons(mod).with_columns(
+        pl.col("group").replace_strict(group_map)
+    )
+    # Sort both by term + group for consistent comparison
+    known = known.sort(["term", "group"])
+    unknown = unknown.sort(["term", "group"])
+    # Point estimates: R uses nnet::multinom, Python uses statsmodels MNLogit.
+    # Models differ slightly, so we use atol for small values near zero.
+    np.testing.assert_allclose(
+        known["estimate"].to_numpy(),
+        unknown["estimate"].to_numpy(),
+        atol=1e-3,
+        rtol=0.1,
+    )
+    # Standard errors
+    np.testing.assert_allclose(
+        known["std.error"].to_numpy(),
+        unknown["std_error"].to_numpy(),
+        atol=1e-3,
+        rtol=0.1,
+    )
 
-# pytest.skip(reason="Skipping tests in this file", allow_module_level=True)
+
+def test_comparisons_terms_differ():
+    """Verify that comparisons for different terms produce different estimates."""
+    cmp = comparisons(mod, vcov=False)
+    bill = cmp.filter(pl.col("term") == "bill_length_mm")["estimate"]
+    flip = cmp.filter(pl.col("term") == "flipper_length_mm")["estimate"]
+    assert not np.allclose(bill.to_numpy(), flip.to_numpy())
 
 
 # def test_predictions_01():
