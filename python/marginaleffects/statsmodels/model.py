@@ -67,6 +67,9 @@ class ModelStatsmodels(ModelAbstract):
 
         return V
 
+    def _is_ordered_model(self):
+        return "OrderedModel" in type(self.model.model).__name__
+
     def get_predict(self, params, newdata: pl.DataFrame):
         if isinstance(newdata, np.ndarray):
             exog = newdata
@@ -75,6 +78,11 @@ class ModelStatsmodels(ModelAbstract):
         else:
             newdata = newdata.to_pandas()
             y, exog = patsy.dmatrices(self.get_formula(), newdata)
+        # OrderedModel uses thresholds instead of intercept, so strip the
+        # intercept column that patsy adds to the design matrix.
+        if self._is_ordered_model() and isinstance(exog, np.ndarray):
+            if exog.shape[1] == self.model.model.k_vars + 1:
+                exog = exog[:, 1:]
         p = self.model.model.predict(params, exog)
         if p.ndim == 1:
             p = pl.DataFrame({"rowid": range(newdata.shape[0]), "estimate": p})

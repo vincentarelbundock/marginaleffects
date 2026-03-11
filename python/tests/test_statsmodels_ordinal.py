@@ -1,0 +1,92 @@
+import numpy as np
+import polars as pl
+import pandas as pd
+from marginaleffects import *
+from polars.testing import assert_series_equal
+from statsmodels.miscmodels.ordinal_model import OrderedModel
+
+dat = get_dataset("affairs").to_pandas()
+dat["affairs"] = pd.Categorical(dat["affairs"], ordered=True)
+dat["children"] = pd.Categorical(dat["children"])
+dat["gender"] = pd.Categorical(dat["gender"])
+
+mod = OrderedModel.from_formula(
+    "affairs ~ children + yearsmarried + gender", data=dat, distr="logit"
+).fit(method="bfgs", disp=False)
+
+# Python groups are 0-5 indices; R uses category labels
+group_map = {"0": "0", "1": "1", "2": "2", "3": "3", "4": "4-10", "5": ">10"}
+
+
+def test_predictions_01():
+    known = pl.read_csv("tests/r/test_statsmodels_ordinal_predictions_01.csv")
+    nd = datagrid(children="yes", yearsmarried=10, gender="woman", model=mod)
+    unknown = predictions(mod, newdata=nd).with_columns(
+        pl.col("group").replace_strict(group_map)
+    )
+    known = known.sort("group")
+    unknown = unknown.sort("group")
+    np.testing.assert_allclose(
+        known["estimate"].to_numpy(),
+        unknown["estimate"].to_numpy(),
+        atol=1e-4,
+    )
+    np.testing.assert_allclose(
+        known["std.error"].to_numpy(),
+        unknown["std_error"].to_numpy(),
+        atol=0.01,
+    )
+
+
+def test_avg_predictions_01():
+    known = pl.read_csv("tests/r/test_statsmodels_ordinal_avg_predictions_01.csv")
+    unknown = avg_predictions(mod).with_columns(
+        pl.col("group").replace_strict(group_map)
+    )
+    known = known.sort("group")
+    unknown = unknown.sort("group")
+    assert_series_equal(
+        known["estimate"], unknown["estimate"], rel_tol=1e-3, check_names=False
+    )
+    assert_series_equal(
+        known["std.error"], unknown["std_error"], rel_tol=1e-2, check_names=False
+    )
+
+
+def test_slopes_01():
+    known = pl.read_csv("tests/r/test_statsmodels_ordinal_slopes_01.csv")
+    nd = datagrid(children="yes", yearsmarried=10, gender="woman", model=mod)
+    unknown = slopes(mod, newdata=nd).with_columns(
+        pl.col("group").replace_strict(group_map)
+    )
+    known = known.sort(["term", "group"])
+    unknown = unknown.sort(["term", "group"])
+    np.testing.assert_allclose(
+        known["estimate"].to_numpy(),
+        unknown["estimate"].to_numpy(),
+        atol=1e-3,
+    )
+    np.testing.assert_allclose(
+        known["std.error"].to_numpy(),
+        unknown["std_error"].to_numpy(),
+        atol=0.01,
+    )
+
+
+def test_avg_slopes_01():
+    known = pl.read_csv("tests/r/test_statsmodels_ordinal_avg_slopes_01.csv")
+    unknown = avg_slopes(mod).with_columns(
+        pl.col("group").replace_strict(group_map)
+    )
+    known = known.sort(["term", "group"])
+    unknown = unknown.sort(["term", "group"])
+    np.testing.assert_allclose(
+        known["estimate"].to_numpy(),
+        unknown["estimate"].to_numpy(),
+        atol=1e-3,
+    )
+    np.testing.assert_allclose(
+        known["std.error"].to_numpy(),
+        unknown["std_error"].to_numpy(),
+        atol=0.01,
+    )
