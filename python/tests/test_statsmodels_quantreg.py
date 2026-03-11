@@ -89,11 +89,17 @@ def test_comparisons_01():
 
 
 def test_comparisons_02():
-    unknown = comparisons(mod, by="Species").data.sort(["term", "Species"]).with_columns(
-        pl.col("term").str.replace("_", "."),
-        pl.col("Species").cast(pl.String),
+    unknown = (
+        comparisons(mod, by="Species")
+        .data.sort(["term", "Species"])
+        .with_columns(
+            pl.col("term").str.replace("_", "."),
+            pl.col("Species").cast(pl.String),
+        )
     )
     known = pl.read_csv("tests/r/test_statsmodels_quantreg_comparisons_02.csv").sort(
         ["term", "Species"]
     )
-    assert_series_equal(known["estimate"], unknown["estimate"], abs_tol=0.035, check_names=False)
+    assert_series_equal(
+        known["estimate"], unknown["estimate"], abs_tol=0.035, check_names=False
+    )

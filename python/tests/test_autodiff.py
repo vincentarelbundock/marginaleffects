@@ -410,7 +410,11 @@ class TestComparisonsByTrue:
 
     def test_glm_poisson_avg_comparisons_lnratio(self, glm_poisson_model):
         compare_autodiff_vs_finite_diff(
-            avg_comparisons, glm_poisson_model, variables="x1", comparison="lnratio", rtol=1e-3
+            avg_comparisons,
+            glm_poisson_model,
+            variables="x1",
+            comparison="lnratio",
+            rtol=1e-3,
         )
 
     def test_ols_avg_comparisons_lift(self, ols_model):

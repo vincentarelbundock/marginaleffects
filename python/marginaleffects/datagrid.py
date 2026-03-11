@@ -297,7 +297,8 @@ def _process_datagrid_group(
     # Process implicit variables (not specified in kwargs)
     implicit_values = {}
     implicit_cols = [
-        col for col in newdata.columns
+        col
+        for col in newdata.columns
         if col not in explicit_values and newdata[col].null_count() < newdata.height
     ]
 

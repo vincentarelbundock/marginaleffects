@@ -446,7 +446,6 @@ def _normalize_jax_result(jax_result, nd):
     return out
 
 
-
 @doc("""
 
 # `comparisons()`

@@ -41,7 +41,9 @@ def test_predictions(impartiality_model):
     assert p.shape[0] == 4
 
     p1 = avg_predictions(impartiality_model)
-    p2 = np.mean(impartiality_model.predict(sort_categories_pandas(dat.to_pandas())).to_numpy())
+    p2 = np.mean(
+        impartiality_model.predict(sort_categories_pandas(dat.to_pandas())).to_numpy()
+    )
     assert_is_result(p1)
     assert p1.shape[0] == 1
     assert p1["estimate"][0] == p2
