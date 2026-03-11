@@ -29,12 +29,12 @@ def test_predictions_01():
     np.testing.assert_allclose(
         known["estimate"].to_numpy(),
         unknown["estimate"].to_numpy(),
-        atol=1e-4,
+        rtol=1e-3,
     )
     np.testing.assert_allclose(
         known["std.error"].to_numpy(),
         unknown["std_error"].to_numpy(),
-        atol=0.01,
+        rtol=1e-2,
     )
 
 
@@ -45,11 +45,15 @@ def test_avg_predictions_01():
     )
     known = known.sort("group")
     unknown = unknown.sort("group")
-    assert_series_equal(
-        known["estimate"], unknown["estimate"], rel_tol=1e-3, check_names=False
+    np.testing.assert_allclose(
+        known["estimate"].to_numpy(),
+        unknown["estimate"].to_numpy(),
+        rtol=1e-3,
     )
-    assert_series_equal(
-        known["std.error"], unknown["std_error"], rel_tol=1e-2, check_names=False
+    np.testing.assert_allclose(
+        known["std.error"].to_numpy(),
+        unknown["std_error"].to_numpy(),
+        rtol=1e-2,
     )
 
 
@@ -64,12 +68,22 @@ def test_slopes_01():
     np.testing.assert_allclose(
         known["estimate"].to_numpy(),
         unknown["estimate"].to_numpy(),
-        atol=1e-3,
+        rtol=1e-3,
+    )
+    # Split SE checks: yearsmarried SEs use atol because R (polr) and Python
+    # (OrderedModel) compute Hessians differently, causing up to ~1e-4
+    # absolute divergence on the smallest SEs (~4e-4).
+    mask_ym = known["term"] == "yearsmarried"
+    mask_other = ~mask_ym
+    np.testing.assert_allclose(
+        known.filter(mask_other)["std.error"].to_numpy(),
+        unknown.filter(mask_other)["std_error"].to_numpy(),
+        rtol=1e-2,
     )
     np.testing.assert_allclose(
-        known["std.error"].to_numpy(),
-        unknown["std_error"].to_numpy(),
-        atol=0.01,
+        known.filter(mask_ym)["std.error"].to_numpy(),
+        unknown.filter(mask_ym)["std_error"].to_numpy(),
+        atol=1.1e-4,
     )
 
 
@@ -83,10 +97,17 @@ def test_avg_slopes_01():
     np.testing.assert_allclose(
         known["estimate"].to_numpy(),
         unknown["estimate"].to_numpy(),
-        atol=1e-3,
+        rtol=1e-3,
+    )
+    mask_ym = known["term"] == "yearsmarried"
+    mask_other = ~mask_ym
+    np.testing.assert_allclose(
+        known.filter(mask_other)["std.error"].to_numpy(),
+        unknown.filter(mask_other)["std_error"].to_numpy(),
+        rtol=1e-2,
     )
     np.testing.assert_allclose(
-        known["std.error"].to_numpy(),
-        unknown["std_error"].to_numpy(),
-        atol=0.01,
+        known.filter(mask_ym)["std.error"].to_numpy(),
+        unknown.filter(mask_ym)["std_error"].to_numpy(),
+        atol=1.1e-4,
     )

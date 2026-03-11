@@ -1,5 +1,9 @@
 # Development
 
+New:
+
+* Support `statsmodels` `OrderedModel` (ordinal logit/probit) for `predictions()`, `avg_predictions()`, `slopes()`, and `avg_slopes()`. Issue #1689.
+
 Bug fixes:
 
 * Fixed `comparisons()` for multinomial logit models (`MNLogit`): estimates for different predictor variables were incorrectly identical. The bug was caused by a row-matching issue when joining predictions with metadata for multi-outcome models. Issue #1690.
