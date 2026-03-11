@@ -283,10 +283,10 @@ class TestComparisonsByFalse:
             rtol=1e-3,  # ratio can have slightly larger differences
         )
 
-    def test_ols_lnratio(self, ols_model):
+    def test_glm_poisson_lnratio(self, glm_poisson_model):
         compare_autodiff_vs_finite_diff(
             comparisons,
-            ols_model,
+            glm_poisson_model,
             variables="x1",
             comparison="lnratio",
             by=False,
@@ -408,9 +408,9 @@ class TestComparisonsByTrue:
             avg_comparisons, ols_model, variables="x1", comparison="ratio", rtol=1e-3
         )
 
-    def test_ols_avg_comparisons_lnratio(self, ols_model):
+    def test_glm_poisson_avg_comparisons_lnratio(self, glm_poisson_model):
         compare_autodiff_vs_finite_diff(
-            avg_comparisons, ols_model, variables="x1", comparison="lnratio", rtol=1e-3
+            avg_comparisons, glm_poisson_model, variables="x1", comparison="lnratio", rtol=1e-3
         )
 
     def test_ols_avg_comparisons_lift(self, ols_model):
