@@ -34,45 +34,17 @@ def _cross_postprocess(cross):
     return add_term
 
 
-def _prepare_counterfactual_frames(
-    model,
-    modeldata,
-    newdata,
-    variables,
-    comparison,
-    eps,
-    by,
-    wts,
-    cross,
-):
-    if cross and variables is None:
-        raise ValueError(
-            "The `variables` argument must be specified when `cross=True`."
-        )
-
-    variables = sanitize_variables(
-        variables=variables,
-        model=model,
-        newdata=newdata,
-        comparison=comparison,
-        eps=eps,
-        by=by,
-        wts=wts,
-        cross=cross,
-    )
-
-    nd_frames, hi_frames, lo_frames = _build_comparison_frames(
-        newdata, variables, cross
-    )
-    pad_frames = _build_padding_frames(model, modeldata, newdata)
-    nd, hi, lo, pad_rows = _finalize_counterfactual_frames(
-        nd_frames,
-        hi_frames,
-        lo_frames,
-        pad_frames,
-        modeldata,
-    )
-    return variables, nd, hi, lo, pad_rows
+def _tag_frame(df, variable, lab, comparison, **extra_cols):
+    """Add term, contrast, marginaleffects_comparison columns to a frame."""
+    vcomp = "custom" if callable(comparison) else comparison
+    cols = {
+        "term": pl.lit(variable if not isinstance(variable, tuple) else variable[0]),
+        "marginaleffects_comparison": pl.lit(vcomp),
+    }
+    if lab is not None:
+        cols["contrast"] = pl.lit(lab)
+    cols.update({k: pl.lit(v) for k, v in extra_cols.items()})
+    return df.with_columns(**cols)
 
 
 def _build_comparison_frames(newdata, variables, cross):
@@ -169,19 +141,6 @@ def _build_comparison_frames(newdata, variables, cross):
                     pl.lit(vcomp).alias("marginaleffects_comparison"),
                 )
     return nd, hi, lo
-
-
-def _build_padding_frames(model, modeldata, newdata):
-    pads = []
-    vars = model.find_variables()
-    if vars is not None:
-        vars = [re.sub(r"\[.*", "", x) for x in vars]
-        vars = list(set(vars))
-        for v in vars:
-            if v in modeldata.columns:
-                if model.get_variable_type(v) not in ["numeric", "integer"]:
-                    pads.append(get_pad(newdata, v, modeldata[v].unique()))
-    return pads
 
 
 def _finalize_counterfactual_frames(
@@ -300,6 +259,237 @@ def _collect_comparison_functions(variables):
             key = f"{v.variable}_{v.lab}"
             comparison_functions[key] = v.comparison
     return comparison_functions
+
+
+def _assemble_prediction_table(model, coefs, nd, nd_X, hi_X, lo_X):
+    """
+    Compute predictions at nd/hi/lo counterfactuals and merge with metadata from nd.
+
+    Returns a DataFrame with columns: rowid, term, contrast, predicted,
+    predicted_hi, predicted_lo, plus all metadata columns from nd.
+
+    Handles two cases:
+    - Simple (1D predict): tmp rows == nd rows -> horizontal concat of metadata
+    - Grouped (2D predict, e.g. multinomial): "group" in tmp -> cross-join alignment
+    """
+    tmp = [
+        model.get_predict(params=coefs, newdata=nd_X).rename({"estimate": "predicted"}),
+        model.get_predict(params=coefs, newdata=lo_X)
+        .rename({"estimate": "predicted_lo"})
+        .select("predicted_lo"),
+        model.get_predict(params=coefs, newdata=hi_X)
+        .rename({"estimate": "predicted_hi"})
+        .select("predicted_hi"),
+    ]
+    tmp = reduce(lambda x, y: pl.concat([x, y], how="horizontal"), tmp)
+    if "rowid" in nd.columns and tmp.shape[0] == nd.shape[0]:
+        tmp = tmp.with_columns(nd["rowid"].alias("rowid"))
+
+    # no group
+    if tmp.shape[0] == nd.shape[0]:
+        cols = [x for x in nd.columns if x not in tmp.columns]
+        tmp = pl.concat([tmp, nd.select(cols)], how="horizontal")
+
+    # group (categorical outcome models)
+    elif "group" in tmp.columns:
+        # tmp has rowid 0..N-1 from get_predict, matching nd row positions.
+        # nd may already have a rowid column (from sanitize_newdata) with
+        # non-unique values across variables, so we create a unique
+        # positional index for the join.
+        nd_m = nd.with_columns(
+            pl.Series("_merge_id", range(nd.shape[0]), dtype=pl.Int32)
+        )
+        tmp = tmp.rename({"rowid": "_merge_id"})
+        meta = nd_m.join(tmp.select("group").unique(), how="cross")
+        cols = [x for x in meta.columns if x in tmp.columns]
+        tmp = meta.join(tmp, on=cols, how="left")
+        tmp = tmp.drop("_merge_id")
+
+    else:
+        raise ValueError("Something went wrong")
+
+    return tmp
+
+
+def _resolve_grouping_keys(by, tmp):
+    """
+    Normalize `by` into a list of grouping column names.
+
+    Always includes ["term", "contrast"]. Prepends "group" if present in tmp.
+    Appends any "contrast_*" columns. Filters to columns that exist in tmp.
+    """
+    if isinstance(by, str):
+        by = ["term", "contrast"] + [by]
+    elif isinstance(by, list):
+        by = ["term", "contrast"] + by
+    else:
+        by = ["term", "contrast"]
+
+    if "group" in tmp.columns and "group" not in by:
+        by = ["group"] + by
+
+    by = by + [x for x in tmp.columns if x.startswith("contrast_")]
+    by = [x for x in by if x in tmp.columns]
+    return by
+
+
+def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions):
+    """
+    Apply comparison functions to predicted_hi/predicted_lo within groups.
+
+    Uses group_by with maintain_order=True (critical for Jacobian alignment).
+    """
+
+    def applyfun(x, by, wts=None):
+        comp = x["marginaleffects_comparison"][0]
+        xvar = x[x["term"][0]]
+        if wts is not None:
+            xwts = x[wts]
+        else:
+            xwts = None
+
+        # Check if this is a custom callable comparison
+        term_val = x["term"][0] if "term" in x.columns else None
+        contrast_val = x["contrast"][0] if "contrast" in x.columns else None
+        key = f"{term_val}_{contrast_val}"
+
+        if comp == "custom" and key in comparison_functions:
+            estimand = comparison_functions[key]
+        else:
+            estimand = estimands[comp]
+
+        est = estimand(
+            hi=x["predicted_hi"],
+            lo=x["predicted_lo"],
+            eps=eps,
+            x=xvar,
+            y=x["predicted"],
+            w=xwts,
+        )
+        if est.shape[0] == 1:
+            est = est.item()
+            result = x.select(by).unique().with_columns(pl.lit(est).alias("estimate"))
+        else:
+            result = x.with_columns(pl.lit(est).alias("estimate"))
+        return result
+
+    # maintain_order is extremely important
+    tmp = tmp.group_by(*by, maintain_order=True).map_groups(
+        function=lambda x: applyfun(x, by=by, wts=wts)
+    )
+    return tmp
+
+
+def _compute_fd_estimates(
+    coefs,
+    *,
+    model,
+    nd,
+    nd_X,
+    hi_X,
+    lo_X,
+    by,
+    hypothesis,
+    wts,
+    eps,
+    comparison_functions,
+):
+    """
+    Full coefficient-to-estimate pipeline for finite differences.
+
+    Called once at true coefficients to get point estimates, then once per
+    perturbed coefficient by get_jacobian() to compute numerical derivatives.
+    """
+    from .test import get_hypothesis
+
+    if hasattr(coefs, "to_numpy"):
+        coefs = coefs.to_numpy()
+
+    tmp = _assemble_prediction_table(model, coefs, nd, nd_X, hi_X, lo_X)
+    by_keys = _resolve_grouping_keys(by, tmp)
+    tmp = _apply_comparison_estimands(tmp, by_keys, wts, eps, comparison_functions)
+    tmp = get_hypothesis(tmp, hypothesis=hypothesis, by=by_keys)
+    return tmp
+
+
+def _normalize_jax_result(jax_result, nd):
+    """
+    Convert JAX dispatch result dict into a DataFrame matching the FD output schema.
+    """
+    estimate = np.atleast_1d(jax_result["estimate"])
+    std_error = np.atleast_1d(jax_result["std_error"])
+    metadata = jax_result.get("metadata")
+
+    if metadata is not None:
+        out = metadata.with_columns(
+            pl.Series(estimate).alias("estimate"),
+            pl.Series(std_error).alias("std_error"),
+        )
+    else:
+        out = pl.DataFrame(
+            {
+                "rowid": nd["rowid"].to_list(),
+                "term": nd["term"].to_list(),
+                "contrast": nd["contrast"].to_list(),
+                "estimate": estimate,
+                "std_error": std_error,
+            }
+        )
+        cols = [
+            x
+            for x in nd.columns
+            if x not in out.columns and x != "marginaleffects_comparison"
+        ]
+        if cols:
+            out = pl.concat([out, nd.select(cols)], how="horizontal")
+
+    return out
+
+
+def _finalize_comparison_output(
+    out,
+    *,
+    model,
+    V,
+    J,
+    by,
+    transform,
+    equivalence,
+    newdata,
+    conf_level,
+    hypothesis_null,
+    postprocess_cross,
+):
+    """
+    Shared exit path for both JAX and FD: add z/p/CI, apply transforms, wrap result.
+    """
+    out = get_z_p_ci(out, model, conf_level=conf_level, hypothesis_null=hypothesis_null)
+    return finalize_result(
+        out,
+        model=model,
+        by=by,
+        transform=transform,
+        equivalence=equivalence,
+        newdata=newdata,
+        conf_level=conf_level,
+        J=J,
+        equivalence_df=np.inf,
+        postprocess=postprocess_cross,
+    )
+
+
+def _add_standard_errors(out, outer_fn, model, V, eps_vcov):
+    """
+    Compute Jacobian via finite differences and add std_error column.
+
+    Returns (DataFrame with std_error, Jacobian matrix or None).
+    """
+    if V is not None:
+        J = get_jacobian(func=outer_fn, coefs=model.get_coef(), eps_vcov=eps_vcov)
+        se = get_se(J, V)
+        out = out.with_columns(pl.Series(se).alias("std_error"))
+        return out, J
+    return out, None
 
 
 @doc("""
@@ -448,17 +638,15 @@ def comparisons(
     validate_string_columns(by, modeldata, context="the 'by' parameter")
     validate_string_columns(variables, modeldata, context="the 'variables' parameter")
 
-    (
-        variables,
-        nd,
-        hi,
-        lo,
-        pad_rows,
-    ) = _prepare_counterfactual_frames(
-        model=model,
-        modeldata=modeldata,
-        newdata=newdata,
+    if cross and variables is None:
+        raise ValueError(
+            "The `variables` argument must be specified when `cross=True`."
+        )
+
+    variables = sanitize_variables(
         variables=variables,
+        model=model,
+        newdata=newdata,
         comparison=comparison,
         eps=eps,
         by=by,
@@ -466,12 +654,30 @@ def comparisons(
         cross=cross,
     )
 
+    nd_frames, hi_frames, lo_frames = _build_comparison_frames(
+        newdata, variables, cross
+    )
+    pad_frames = []
+    model_vars = model.find_variables()
+    if model_vars is not None:
+        model_vars = list(set(re.sub(r"\[.*", "", x) for x in model_vars))
+        for v in model_vars:
+            if v in modeldata.columns:
+                if model.get_variable_type(v) not in ["numeric", "integer"]:
+                    pad_frames.append(get_pad(newdata, v, modeldata[v].unique()))
+    nd, hi, lo, pad_rows = _finalize_counterfactual_frames(
+        nd_frames,
+        hi_frames,
+        lo_frames,
+        pad_frames,
+        modeldata,
+    )
+
     nd, hi, lo, nd_X, hi_X, lo_X = _prepare_design_matrices(model, nd, hi, lo, pad_rows)
 
     comparison_functions = _collect_comparison_functions(variables)
 
-    # === TRY JAX EARLY EXIT ===
-    # Only attempt JAX if all contrasts use the same comparison type
+    # === JAX fast path ===
     from .autodiff.dispatch import try_jax_comparisons
 
     jax_result = try_jax_comparisons(
@@ -488,200 +694,56 @@ def comparisons(
     )
 
     if jax_result is not None:
-        # SUCCESS: Use JAX results
-        J = jax_result["jacobian"]
-
-        estimate = np.atleast_1d(jax_result["estimate"])
-        std_error = np.atleast_1d(jax_result["std_error"])
-        metadata = jax_result.get("metadata")
-
-        if metadata is not None:
-            out = metadata.with_columns(
-                pl.Series(estimate).alias("estimate"),
-                pl.Series(std_error).alias("std_error"),
-            )
-        else:
-            out = pl.DataFrame(
-                {
-                    "rowid": nd["rowid"].to_list(),
-                    "term": nd["term"].to_list(),
-                    "contrast": nd["contrast"].to_list(),
-                    "estimate": estimate,
-                    "std_error": std_error,
-                }
-            )
-            cols = [
-                x
-                for x in nd.columns
-                if x not in out.columns and x != "marginaleffects_comparison"
-            ]
-            if cols:
-                out = pl.concat([out, nd.select(cols)], how="horizontal")
-
-        out = get_z_p_ci(
-            out, model, conf_level=conf_level, hypothesis_null=hypothesis_null
-        )
-        return finalize_result(
+        out = _normalize_jax_result(jax_result, nd)
+        return _finalize_comparison_output(
             out,
             model=model,
+            V=V,
+            J=jax_result["jacobian"],
             by=by,
             transform=transform,
             equivalence=equivalence,
             newdata=newdata,
             conf_level=conf_level,
-            J=J,
-            equivalence_df=np.inf,
-            postprocess=postprocess_cross,
+            hypothesis_null=hypothesis_null,
+            postprocess_cross=postprocess_cross,
         )
 
-    # === END JAX EARLY EXIT ===
-
-    from .test import get_hypothesis
-
-    # inner() takes the `hi` and `lo` matrices, computes predictions, compares
-    # them, and aggregates the results based on the `by` argument. This gives us
-    # the final quantity of interest. We wrap this in a function because it will
-    # be called multiple times with slightly different values of the `coefs`.
-    # This is necessary to compute the numerical derivatives in the Jacobian
-    # that we use to compute standard errors, where individual entries are
-    # derivatives of a contrast with respect to one of the model coefficients.
-    def inner(coefs, by, hypothesis, wts, nd):
-        if hasattr(coefs, "to_numpy"):
-            coefs = coefs.to_numpy()
-
-        # main unit-level estimates
-        tmp = [
-            # fitted values
-            model.get_predict(params=coefs, newdata=nd_X).rename(
-                {"estimate": "predicted"}
-            ),
-            # predictions for the "lo" counterfactual
-            model.get_predict(params=coefs, newdata=lo_X)
-            .rename({"estimate": "predicted_lo"})
-            .select("predicted_lo"),
-            # predictions for the "hi" counterfactual
-            model.get_predict(params=coefs, newdata=hi_X)
-            .rename({"estimate": "predicted_hi"})
-            .select("predicted_hi"),
-        ]
-        tmp = reduce(lambda x, y: pl.concat([x, y], how="horizontal"), tmp)
-        if "rowid" in nd.columns and tmp.shape[0] == nd.shape[0]:
-            tmp = tmp.with_columns(nd["rowid"].alias("rowid"))
-
-        # no group
-        if tmp.shape[0] == nd.shape[0]:
-            cols = [x for x in nd.columns if x not in tmp.columns]
-            tmp = pl.concat([tmp, nd.select(cols)], how="horizontal")
-
-        # group (categorical outcome models)
-        elif "group" in tmp.columns:
-            # tmp has rowid 0..N-1 from get_predict, matching nd row positions.
-            # nd may already have a rowid column (from sanitize_newdata) with
-            # non-unique values across variables, so we create a unique
-            # positional index for the join.
-            nd = nd.with_columns(
-                pl.Series("_merge_id", range(nd.shape[0]), dtype=pl.Int32)
-            )
-            tmp = tmp.rename({"rowid": "_merge_id"})
-            meta = nd.join(tmp.select("group").unique(), how="cross")
-            cols = [x for x in meta.columns if x in tmp.columns]
-            tmp = meta.join(tmp, on=cols, how="left")
-            tmp = tmp.drop("_merge_id")
-
-        # not sure what happens here
-        else:
-            raise ValueError("Something went wrong")
-
-        # column names on which we will aggregate results
-        if isinstance(by, str):
-            by = ["term", "contrast"] + [by]
-        elif isinstance(by, list):
-            by = ["term", "contrast"] + by
-        else:
-            by = ["term", "contrast"]
-
-        if "group" in tmp.columns and "group" not in by:
-            by = ["group"] + by
-
-        by = by + [x for x in tmp.columns if x.startswith("contrast_")]
-
-        # apply a function to compare the predicted_hi and predicted_lo columns
-        # ex: hi-lo, mean(hi-lo), hi/lo, mean(hi)/mean(lo), etc.
-        def applyfun(x, by, wts=None):
-            comp = x["marginaleffects_comparison"][0]
-            xvar = x[x["term"][0]]
-            if wts is not None:
-                xwts = x[wts]
-            else:
-                xwts = None
-
-            # Check if this is a custom callable comparison
-            term_val = x["term"][0] if "term" in x.columns else None
-            contrast_val = x["contrast"][0] if "contrast" in x.columns else None
-            key = f"{term_val}_{contrast_val}"
-
-            if comp == "custom" and key in comparison_functions:
-                # Use the callable comparison function
-                estimand = comparison_functions[key]
-            else:
-                # Use the predefined estimand
-                estimand = estimands[comp]
-
-            est = estimand(
-                hi=x["predicted_hi"],
-                lo=x["predicted_lo"],
-                eps=eps,
-                x=xvar,
-                y=x["predicted"],
-                w=xwts,
-            )
-            if est.shape[0] == 1:
-                est = est.item()
-                tmp = x.select(by).unique().with_columns(pl.lit(est).alias("estimate"))
-            else:
-                tmp = x.with_columns(pl.lit(est).alias("estimate"))
-            return tmp
-
-        # maintain_order is extremely important
-        by = [x for x in by if x in tmp.columns]
-        tmp = tmp.group_by(*by, maintain_order=True).map_groups(
-            function=lambda x: applyfun(x, by=by, wts=wts)
-        )
-
-        tmp = get_hypothesis(tmp, hypothesis=hypothesis, by=by)
-
-        return tmp
-
-    # outer() is a wrapper with a single argument `x`, the model coefficients.
-    # Just for convenience when taking derivatives with respect to the
-    # coefficients.
+    # === Finite-difference path ===
     def outer(x):
-        return inner(x, by=by, hypothesis=hypothesis, wts=wts, nd=nd)
+        return _compute_fd_estimates(
+            x,
+            model=model,
+            nd=nd,
+            nd_X=nd_X,
+            hi_X=hi_X,
+            lo_X=lo_X,
+            by=by,
+            hypothesis=hypothesis,
+            wts=wts,
+            eps=eps,
+            comparison_functions=comparison_functions,
+        )
 
     out = outer(model.get_coef())
 
-    # Compute standard errors and confidence intervals
     if vcov is not None and vcov is not False and V is not None:
-        J = get_jacobian(func=outer, coefs=model.get_coef(), eps_vcov=eps_vcov)
-        se = get_se(J, V)
-        out = out.with_columns(pl.Series(se).alias("std_error"))
-        out = get_z_p_ci(
-            out, model, conf_level=conf_level, hypothesis_null=hypothesis_null
-        )
+        out, J = _add_standard_errors(out, outer, model, V, eps_vcov)
     else:
         J = None
 
-    return finalize_result(
+    return _finalize_comparison_output(
         out,
         model=model,
+        V=V,
+        J=J,
         by=by,
         transform=transform,
         equivalence=equivalence,
         newdata=newdata,
         conf_level=conf_level,
-        J=J,
-        equivalence_df=np.inf,
-        postprocess=postprocess_cross,
+        hypothesis_null=hypothesis_null,
+        postprocess_cross=postprocess_cross,
     )
 
 
