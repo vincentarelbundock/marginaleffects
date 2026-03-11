@@ -3,6 +3,7 @@
 New:
 
 * Support `statsmodels` `OrderedModel` (ordinal logit/probit) for `predictions()`, `avg_predictions()`, `slopes()`, and `avg_slopes()`. Issue #1689.
+* Support and test robust `vcov` for `statsmodels` and `pyfixest` models. Issue #1687.
 
 Bug fixes:
 

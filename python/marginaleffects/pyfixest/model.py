@@ -44,10 +44,23 @@ class ModelPyfixest(ModelAbstract):
         return np.array(self.model._coefnames)
 
     def get_vcov(self, vcov=True):
-        V = None
         if isinstance(vcov, bool):
             if vcov is True:
                 V = self.model._vcov
+            else:
+                V = None
+        elif isinstance(vcov, (str, dict)):
+            # pyfixest supports: "iid", "hetero", "HC1", "HC2", "HC3",
+            # {"CRV1": "clustervar"}, {"CRV3": "clustervar"}
+            self.model.vcov(vcov)
+            V = self.model._vcov
+        else:
+            raise ValueError(
+                '`vcov` must be a boolean, a string like "HC3" or "hetero", '
+                'or a dict like {"CRV1": "clustervar"}.'
+            )
+        if V is not None:
+            V = np.array(V)
         return V
 
     def find_predictors(self):

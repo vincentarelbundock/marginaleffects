@@ -48,21 +48,37 @@ class ModelStatsmodels(ModelAbstract):
             else:
                 V = None
         elif isinstance(vcov, str):
+            # OLS/WLS/GLS have cov_HC0..cov_HC3 attributes directly
             lab = f"cov_{vcov}"
             if hasattr(self.model, lab):
                 V = getattr(self.model, lab)
+            # For all other statsmodels (GLM, Logit, Probit, Poisson, etc.),
+            # robust vcov must be specified at fit time via cov_type=. If
+            # the model was already fit with that cov_type, cov_params()
+            # returns the robust matrix and vcov=True suffices.
+            elif hasattr(self.model, "get_robustcov_results"):
+                rob = self.model.get_robustcov_results(cov_type=vcov)
+                V = rob.cov_params()
             else:
-                raise ValueError(f"The model object has no {lab} attribute.")
+                raise ValueError(
+                    f"This model does not support vcov='{vcov}' post-hoc. "
+                    f"For non-linear statsmodels (GLM, Logit, Probit, etc.), "
+                    f"specify robust standard errors at fit time:\n"
+                    f"  model.fit(cov_type='{vcov}')\n"
+                    f"Then use vcov=True in marginaleffects functions."
+                )
         else:
             raise ValueError(
-                '`vcov` must be a boolean or a string like "HC3", which corresponds to an attribute of the `statsmodels` model object such as "cov_HC3".'
+                '`vcov` must be a boolean, a string like "HC3", or a numpy array.'
             )
 
         if V is not None:
             V = np.array(V)
-            if V.shape != (len(self.get_coef().ravel()), len(self.get_coef().ravel())):
+            n = len(self.get_coef().ravel())
+            if V.shape != (n, n):
                 raise ValueError(
-                    "vcov must be a square numpy array with dimensions equal to the length of self.coef"
+                    f"vcov must be a square numpy array with dimensions equal to "
+                    f"the number of coefficients ({n}). Got shape {V.shape}."
                 )
 
         return V
