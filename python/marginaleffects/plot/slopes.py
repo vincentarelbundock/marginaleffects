@@ -8,7 +8,7 @@ from .common import (
 from ..slopes import slopes
 from ..sanitize import sanitize_model
 import copy
-from ..docs import doc
+from ..docstrings import doc
 
 
 @doc("""

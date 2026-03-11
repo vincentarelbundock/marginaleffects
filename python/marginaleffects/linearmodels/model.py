@@ -4,7 +4,7 @@ import pandas as pd
 import narwhals as nw
 from typing import Any, Dict
 import polars as pl
-from ..docs import doc
+from ..docstrings import doc
 from ..utils import ingest
 from formulaic.parser.algos.tokenize import tokenize
 from ..classes import ModelAbstract, ModelVault

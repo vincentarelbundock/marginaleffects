@@ -1,4 +1,4 @@
-from ..docs import doc
+from ..docstrings import doc
 from .common import (
     dt_on_condition,
     plot_labels,

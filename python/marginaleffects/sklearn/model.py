@@ -1,7 +1,7 @@
 import numpy as np
 import warnings
 import polars as pl
-from ..docs import doc
+from ..docstrings import doc
 from ..utils import ingest
 from ..formula import listwise_deletion, model_matrices
 from ..classes import ModelAbstract, ModelVault

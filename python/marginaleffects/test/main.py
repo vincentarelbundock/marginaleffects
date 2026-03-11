@@ -1,6 +1,6 @@
 import polars as pl
 
-from ..docs import doc
+from ..docstrings import doc
 
 from ..classes import MarginaleffectsResult
 from .equivalence import get_equivalence

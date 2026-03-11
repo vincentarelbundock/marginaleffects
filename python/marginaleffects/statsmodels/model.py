@@ -2,7 +2,7 @@ from typing import Optional, Dict, Any
 import numpy as np
 import polars as pl
 import patsy
-from ..docs import doc
+from ..docstrings import doc
 from ..classes import ModelAbstract, ModelVault
 from .. import formula as fml
 from ..utils import ingest
