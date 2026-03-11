@@ -5,7 +5,7 @@ from tests.utilities import *
 from tests.helpers import *
 import statsmodels.formula.api as smf
 
-pytestmark = pytest.mark.skipif(True, reason="Plot tests skipped on all platforms")
+pytestmark = pytest.mark.plot
 
 FIGURES_FOLDER = "plot_comparisons"
 
@@ -156,10 +156,18 @@ def test_threenum(condition, expected_file, penguins_mod_add):
 
 
 def test_issue_171_02():
-    penguins = pl.read_csv(
-        "tests/data/penguins.csv",
-        null_values="NA",
-    ).drop_nulls()
+    penguins = (
+        pl.read_csv(
+            "tests/data/penguins.csv",
+            null_values="NA",
+        )
+        .drop_nulls()
+        .with_columns(
+            pl.col("species").cast(pl.Categorical),
+            pl.col("island").cast(pl.Categorical),
+            pl.col("sex").cast(pl.Categorical),
+        )
+    )
     mod = smf.ols(
         "body_mass_g ~ flipper_length_mm * species * bill_length_mm * island",
         penguins.to_pandas(),

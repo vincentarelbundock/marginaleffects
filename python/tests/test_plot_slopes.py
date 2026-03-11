@@ -4,7 +4,7 @@ from marginaleffects.plot.slopes import *
 from tests.utilities import *
 from tests.helpers import *
 
-pytestmark = pytest.mark.skipif(True, reason="Plot tests skipped on all platforms")
+pytestmark = pytest.mark.plot
 
 FIGURES_FOLDER = "plot_slopes"
 

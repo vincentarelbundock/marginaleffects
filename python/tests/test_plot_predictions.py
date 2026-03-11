@@ -5,7 +5,7 @@ from tests.utilities import *
 import pytest
 from tests.helpers import *
 
-pytestmark = pytest.mark.skipif(True, reason="Plot tests skipped on all platforms")
+pytestmark = pytest.mark.plot
 
 FIGURES_FOLDER = "plot_predictions"
 

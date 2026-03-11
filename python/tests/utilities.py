@@ -104,6 +104,16 @@ def compare_r_to_py(r_obj, py_obj, tolr=1e-3, tola=1e-3, msg=""):
             assert flag, f"{msg} trel: {gap_rel}. tabs: {gap_abs}"
 
 
+def _save_plot(fig, filename, height=5, width=10, dpi=100):
+    """Save a plotnine figure with deterministic size, bypassing display scaling."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    plt.rcParams["savefig.dpi"] = dpi
+    ggsave(fig, filename=filename, verbose=False, height=height, width=width, dpi=dpi)
+    plt.close("all")
+
+
 def assert_image(fig, label, folder, tolerance=5):
     known_path = f"./tests/images/{folder}/"
     unknown_path = f"./tests/images/.tmp_{folder}/"
@@ -116,12 +126,11 @@ def assert_image(fig, label, folder, tolerance=5):
     unknown = f"{unknown_path}{label}.png"
     known = f"{known_path}{label}.png"
     if not os.path.exists(known):
-        ggsave(fig, filename=known, verbose=False, height=5, width=10, dpi=100)
+        _save_plot(fig, known)
         warnings.warn(f"File {known} does not exist. Creating it now.")
         return None
-    ggsave(fig, filename=unknown, verbose=False, height=5, width=10, dpi=100)
+    _save_plot(fig, unknown)
     out = compare_images(known, unknown, tol=tolerance)
-    # os.remove(unknown)
     return out
 
 
