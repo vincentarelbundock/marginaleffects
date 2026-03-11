@@ -6,7 +6,7 @@ import pytest
 import numpy as np
 import polars as pl
 from marginaleffects import datagrid, get_dataset
-from marginaleffects.datagrid import _detect_variable_type, _check_variable_type
+from marginaleffects.datagrid import _detect_variable_type, _TYPE_TO_FUN_KEY
 import marginaleffects.utils as ut
 
 
@@ -51,21 +51,15 @@ class TestVariableTypeDetection:
             var_types["explicit_categorical"] == "categorical"
         )  # Explicit categorical with 3 values
 
-    def test_check_variable_type(self):
-        """Test variable type checking."""
-        var_types = {
-            "num_col": "numeric",
-            "cat_col": "categorical",
-            "bin_col": "binary",
-        }
-
-        assert _check_variable_type(var_types, "num_col", "numeric")
-        assert not _check_variable_type(var_types, "num_col", "categorical")
-        assert not _check_variable_type(var_types, "nonexistent", "numeric")
-
-        # Test factor/categorical aliasing
-        assert _check_variable_type(var_types, "cat_col", "factor")
-        assert _check_variable_type(var_types, "cat_col", "categorical")
+    def test_type_to_fun_key(self):
+        """Test variable type to function key mapping."""
+        assert _TYPE_TO_FUN_KEY["numeric"] == "numeric"
+        assert _TYPE_TO_FUN_KEY["categorical"] == "categorical"
+        assert _TYPE_TO_FUN_KEY["binary"] == "binary"
+        # factor maps to same function key as categorical
+        assert _TYPE_TO_FUN_KEY["factor"] == "categorical"
+        # integer maps to numeric
+        assert _TYPE_TO_FUN_KEY["integer"] == "numeric"
 
 
 class TestUtilityFunctions:
@@ -413,19 +407,6 @@ class TestPerformanceOptimization:
 
         var_types = _detect_variable_type(data)
 
-        # This should work without errors (internal function test)
-        from marginaleffects.datagrid import _compute_variable_type_mapping
-
-        type_mapping = _compute_variable_type_mapping(var_types, data.columns)
-
-        assert "num" in type_mapping
-        assert type_mapping["num"]["is_numeric"]
-        assert not type_mapping["num"]["is_character"]
-
-        assert "int" in type_mapping
-        assert type_mapping["int"]["is_integer"]
-        assert not type_mapping["int"]["is_numeric"]
-
-        assert "char" in type_mapping
-        assert type_mapping["char"]["is_character"]
-        assert not type_mapping["char"]["is_numeric"]
+        assert var_types["num"] == "numeric"
+        assert var_types["int"] == "integer"
+        assert var_types["char"] == "character"

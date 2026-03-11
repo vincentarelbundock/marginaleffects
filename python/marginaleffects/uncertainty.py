@@ -43,6 +43,20 @@ def get_se(J, V):
     return se
 
 
+def add_standard_errors(out, func, model, V, eps_vcov):
+    """
+    Compute Jacobian via finite differences and add std_error column.
+
+    Returns (DataFrame with std_error, Jacobian matrix or None).
+    """
+    if V is not None:
+        J = get_jacobian(func=func, coefs=model.get_coef(), eps_vcov=eps_vcov)
+        se = get_se(J, V)
+        out = out.with_columns(pl.Series(se).alias("std_error"))
+        return out, J
+    return out, None
+
+
 def get_z_p_ci(df, model, conf_level, hypothesis_null=0):
     if "std_error" not in df.columns:
         return df

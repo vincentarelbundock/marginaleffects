@@ -11,16 +11,16 @@ from .sanitize import (
     handle_deprecated_hypotheses_argument,
     handle_pyfixest_vcov_limitation,
 )
-from .uncertainty import get_jacobian, get_se, get_z_p_ci
 from .classes import MarginaleffectsResult
+from .uncertainty import add_standard_errors
 from .utils import (
     get_pad,
     upcast,
     validate_string_columns,
     finalize_result,
     call_avg,
+    prepare_base_inputs,
 )
-from .utils import prepare_base_inputs
 from .docstrings import doc
 
 
@@ -446,51 +446,6 @@ def _normalize_jax_result(jax_result, nd):
     return out
 
 
-def _finalize_comparison_output(
-    out,
-    *,
-    model,
-    V,
-    J,
-    by,
-    transform,
-    equivalence,
-    newdata,
-    conf_level,
-    hypothesis_null,
-    postprocess_cross,
-):
-    """
-    Shared exit path for both JAX and FD: add z/p/CI, apply transforms, wrap result.
-    """
-    out = get_z_p_ci(out, model, conf_level=conf_level, hypothesis_null=hypothesis_null)
-    return finalize_result(
-        out,
-        model=model,
-        by=by,
-        transform=transform,
-        equivalence=equivalence,
-        newdata=newdata,
-        conf_level=conf_level,
-        J=J,
-        equivalence_df=np.inf,
-        postprocess=postprocess_cross,
-    )
-
-
-def _add_standard_errors(out, outer_fn, model, V, eps_vcov):
-    """
-    Compute Jacobian via finite differences and add std_error column.
-
-    Returns (DataFrame with std_error, Jacobian matrix or None).
-    """
-    if V is not None:
-        J = get_jacobian(func=outer_fn, coefs=model.get_coef(), eps_vcov=eps_vcov)
-        se = get_se(J, V)
-        out = out.with_columns(pl.Series(se).alias("std_error"))
-        return out, J
-    return out, None
-
 
 @doc("""
 
@@ -695,18 +650,18 @@ def comparisons(
 
     if jax_result is not None:
         out = _normalize_jax_result(jax_result, nd)
-        return _finalize_comparison_output(
+        return finalize_result(
             out,
             model=model,
-            V=V,
-            J=jax_result["jacobian"],
             by=by,
             transform=transform,
             equivalence=equivalence,
             newdata=newdata,
             conf_level=conf_level,
+            J=jax_result["jacobian"],
             hypothesis_null=hypothesis_null,
-            postprocess_cross=postprocess_cross,
+            equivalence_df=np.inf,
+            postprocess=postprocess_cross,
         )
 
     # === Finite-difference path ===
@@ -728,22 +683,22 @@ def comparisons(
     out = outer(model.get_coef())
 
     if vcov is not None and vcov is not False and V is not None:
-        out, J = _add_standard_errors(out, outer, model, V, eps_vcov)
+        out, J = add_standard_errors(out, outer, model, V, eps_vcov)
     else:
         J = None
 
-    return _finalize_comparison_output(
+    return finalize_result(
         out,
         model=model,
-        V=V,
-        J=J,
         by=by,
         transform=transform,
         equivalence=equivalence,
         newdata=newdata,
         conf_level=conf_level,
+        J=J,
         hypothesis_null=hypothesis_null,
-        postprocess_cross=postprocess_cross,
+        equivalence_df=np.inf,
+        postprocess=postprocess_cross,
     )
 
 

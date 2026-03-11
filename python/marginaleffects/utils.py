@@ -257,16 +257,22 @@ def finalize_result(
     newdata,
     conf_level,
     J,
+    hypothesis_null=None,
     equivalence_df: Optional[float] = None,
     postprocess: Optional[Callable] = None,
 ):
     """
-    Shared helper to apply final transforms and wrap a MarginaleffectsResult.
+    Shared helper to add z/p/CI, apply final transforms, and wrap a MarginaleffectsResult.
     """
+    from .uncertainty import get_z_p_ci
     from .test.equivalence import get_equivalence
     from .classes import MarginaleffectsResult
     from .transform import get_transform
 
+    if "std_error" in out.columns:
+        out = get_z_p_ci(
+            out, model, conf_level=conf_level, hypothesis_null=hypothesis_null
+        )
     out = get_transform(out, transform=transform)
     if equivalence_df is None:
         out = get_equivalence(out, equivalence=equivalence)

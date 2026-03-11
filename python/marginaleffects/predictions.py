@@ -3,10 +3,10 @@ import polars as pl
 
 from .by import get_by, get_by_groups
 from .test import get_hypothesis
-from .uncertainty import get_jacobian, get_se, get_z_p_ci
+from .uncertainty import get_se, add_standard_errors
 from .classes import MarginaleffectsResult
 from .utils import prepare_base_inputs, finalize_result, call_avg
-from warnings import warn
+from .sanitize import handle_deprecated_hypotheses_argument
 from .docstrings import doc
 
 
@@ -64,10 +64,6 @@ def _prepare_newdata(newdata, modeldata, variables):
     return newdata, list(normalized.keys())
 
 
-def _prepare_exog(model, newdata):
-    return model.get_exog(newdata)
-
-
 def _predictions_jax(
     model,
     exog,
@@ -76,8 +72,6 @@ def _predictions_jax(
     wts,
     hypothesis,
     V,
-    conf_level,
-    hypothesis_null,
 ):
     from .autodiff.dispatch import try_jax_predictions
 
@@ -129,9 +123,6 @@ def _predictions_jax(
             se = get_se(J, V)
             out = grouped.with_columns(pl.Series(se).alias("std_error"))
 
-        out = get_z_p_ci(
-            out, model, conf_level=conf_level, hypothesis_null=hypothesis_null
-        )
         return out, J
     except Exception:
         return None, None
@@ -146,8 +137,6 @@ def _predictions_fd(
     hypothesis,
     V,
     eps_vcov,
-    conf_level,
-    hypothesis_null,
 ):
     def inner(x):
         out = model.get_predict(params=np.array(x), newdata=exog)
@@ -169,18 +158,7 @@ def _predictions_fd(
         return out
 
     out = inner(model.get_coef())
-
-    if V is not None:
-        J = get_jacobian(inner, model.get_coef(), eps_vcov=eps_vcov)
-        se = get_se(J, V)
-        out = out.with_columns(pl.Series(se).alias("std_error"))
-        out = get_z_p_ci(
-            out, model, conf_level=conf_level, hypothesis_null=hypothesis_null
-        )
-    else:
-        J = None
-
-    return out, J
+    return add_standard_errors(out, inner, model, V, eps_vcov)
 
 
 @doc("""
@@ -263,16 +241,7 @@ def predictions(
     eps_vcov=None,
     **kwargs,
 ) -> MarginaleffectsResult:
-    if "hypotheses" in kwargs:
-        if hypothesis is not None:
-            raise ValueError("Specify at most one of `hypothesis` or `hypotheses`.")
-        hypotheses = kwargs.pop("hypotheses")
-        warn(
-            "`hypotheses` is deprecated; use `hypothesis` instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        hypothesis = hypotheses
+    hypothesis = handle_deprecated_hypotheses_argument(hypothesis, kwargs, stacklevel=2)
     if kwargs:
         unexpected = ", ".join(sorted(kwargs.keys()))
         raise TypeError(
@@ -298,7 +267,7 @@ def predictions(
     if datagrid:
         newdata.datagrid_explicit = datagrid
 
-    exog = _prepare_exog(model, newdata)
+    exog = model.get_exog(newdata)
 
     out, J = _predictions_jax(
         model=model,
@@ -308,8 +277,6 @@ def predictions(
         wts=wts,
         hypothesis=hypothesis,
         V=V,
-        conf_level=conf_level,
-        hypothesis_null=hypothesis_null,
     )
 
     if out is None:
@@ -322,8 +289,6 @@ def predictions(
             hypothesis=hypothesis,
             V=V,
             eps_vcov=eps_vcov,
-            conf_level=conf_level,
-            hypothesis_null=hypothesis_null,
         )
 
     return finalize_result(
@@ -335,6 +300,7 @@ def predictions(
         newdata=newdata,
         conf_level=conf_level,
         J=J,
+        hypothesis_null=hypothesis_null,
     )
 
 

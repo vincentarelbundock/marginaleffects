@@ -1,6 +1,7 @@
 from .docstrings import doc
 from .comparisons import comparisons
 from .classes import MarginaleffectsResult
+from .utils import call_avg
 
 
 @doc("""
@@ -137,15 +138,11 @@ def avg_slopes(
     eps_vcov=None,
     **kwargs,
 ) -> MarginaleffectsResult:
-    if callable(newdata):
-        newdata = newdata(model)
-
-    if slope not in ["dydx", "eyex", "eydx", "dyex"]:
-        raise ValueError("slope must be one of 'dydx', 'eyex', 'eydx', 'dyex'")
-    out = slopes(
+    return call_avg(
+        slopes,
         model=model,
-        variables=variables,
         newdata=newdata,
+        variables=variables,
         slope=slope,
         vcov=vcov,
         conf_level=conf_level,
@@ -157,8 +154,6 @@ def avg_slopes(
         eps_vcov=eps_vcov,
         **kwargs,
     )
-
-    return out
 
 
 avg_slopes.__doc__ = slopes.__doc__
