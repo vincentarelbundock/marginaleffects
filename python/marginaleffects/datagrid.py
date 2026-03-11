@@ -3,7 +3,6 @@ from typing import Any, Dict, Union, List, Callable, Optional
 
 import polars as pl
 
-from .sanitize_model import sanitize_model
 import marginaleffects.utils as ut
 
 
@@ -160,6 +159,8 @@ def datagrid(
 
     if model is not None:
         # Validate and sanitize model - this will raise ValueError for unsupported types
+        from .sanitize.sanitize_model import sanitize_model
+
         model = sanitize_model(model)
 
     if newdata is None:
@@ -547,6 +548,8 @@ def _compute_variable_type_mapping(variable_type: dict, columns: list) -> dict:
 def _datagridcf(model=None, newdata=None, by=None, **kwargs):
     if model is None and newdata is None:
         raise ValueError("One of model or newdata must be specified")
+
+    from .sanitize.sanitize_model import sanitize_model
 
     model = sanitize_model(model)
 

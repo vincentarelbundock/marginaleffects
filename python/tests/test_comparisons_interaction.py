@@ -93,7 +93,7 @@ def test_variables_specified():
     # All variables used as numeric (no C() in formula)
     mod = smf.ols("mpg ~ am + cyl + wt + gear", data=mtcars.to_pandas()).fit()
     cmp = comparisons(mod, variables=["am", "cyl"], cross=True)
-    isinstance(cmp, marginaleffects.result.MarginaleffectsResult)
+    isinstance(cmp, marginaleffects.MarginaleffectsResult)
     with pytest.raises(Exception):
         comparisons(mod, cross=True)
 

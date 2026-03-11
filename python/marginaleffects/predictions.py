@@ -2,11 +2,10 @@ import numpy as np
 import polars as pl
 
 from .by import get_by, get_by_groups
-from .hypothesis import get_hypothesis
+from .test import get_hypothesis
 from .uncertainty import get_jacobian, get_se, get_z_p_ci
-from ._input_utils import prepare_base_inputs
-from .result import MarginaleffectsResult
-from .utils import finalize_result, call_avg
+from .classes import MarginaleffectsResult
+from .utils import prepare_base_inputs, finalize_result, call_avg
 from warnings import warn
 from .docs import doc
 
@@ -80,7 +79,7 @@ def _predictions_jax(
     conf_level,
     hypothesis_null,
 ):
-    from .jax_dispatch import try_jax_predictions
+    from .autodiff.dispatch import try_jax_predictions
 
     jax_result = try_jax_predictions(
         model=model,

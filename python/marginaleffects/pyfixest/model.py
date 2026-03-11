@@ -1,7 +1,7 @@
 import re
 import numpy as np
 import polars as pl
-from ..model_abstract import ModelAbstract, ModelVault
+from ..classes import ModelAbstract, ModelVault
 from ..utils import ingest
 
 

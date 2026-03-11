@@ -1,7 +1,13 @@
 from ..docs import doc
 from ..comparisons import comparisons
-from .common import dt_on_condition, plot_labels, plot_common, validate_plot_args, extract_var_list
-from ..sanitize_model import sanitize_model
+from .common import (
+    dt_on_condition,
+    plot_labels,
+    plot_common,
+    validate_plot_args,
+    extract_var_list,
+)
+from ..sanitize import sanitize_model
 import copy
 
 

@@ -1,6 +1,6 @@
 import numpy as np
 from ..datagrid import datagrid  # noqa
-from ..sanitize_model import sanitize_model
+from ..sanitize import sanitize_model
 import polars as pl
 
 

@@ -11,6 +11,7 @@ from .variables import (
     sanitize_variables,
 )
 from .vcov import sanitize_vcov
+from .sanitize_model import sanitize_model
 
 __all__ = [
     "handle_deprecated_hypotheses_argument",
@@ -19,6 +20,7 @@ __all__ = [
     "sanitize_by",
     "sanitize_comparison",
     "sanitize_hypothesis_null",
+    "sanitize_model",
     "sanitize_newdata",
     "sanitize_variables",
     "sanitize_vcov",

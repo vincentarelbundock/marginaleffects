@@ -1,6 +1,3 @@
-from .model_abstract import ModelAbstract
-
-
 def is_linearmodels(model):
     if hasattr(model, "fit_engine") and model.fit_engine == "linearmodels":
         return True
@@ -22,21 +19,23 @@ def sanitize_model(model):
     if model is None:
         return model
 
+    from ..classes.model import ModelAbstract
+
     if isinstance(model, ModelAbstract):
         return model
 
     if is_linearmodels(model):
-        from .linearmodels import ModelLinearmodels
+        from ..linearmodels import ModelLinearmodels
 
         return ModelLinearmodels(model)
 
     elif is_statsmodels(model):
-        from .statsmodels import ModelStatsmodels
+        from ..statsmodels import ModelStatsmodels
 
         return ModelStatsmodels(model)
 
     elif is_pyfixest(model):
-        from .pyfixest import ModelPyfixest
+        from ..pyfixest import ModelPyfixest
 
         return ModelPyfixest(model)
 

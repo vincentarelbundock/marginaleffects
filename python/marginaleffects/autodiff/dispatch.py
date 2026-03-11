@@ -46,7 +46,7 @@ def try_jax_predictions(
     - by is a list/complex aggregation (only False and True supported initially)
     - vcov is None (no SEs needed anyway)
     """
-    from .settings import is_autodiff_enabled
+    from ..settings import is_autodiff_enabled
 
     # Check global setting first
     if not is_autodiff_enabled():
@@ -83,7 +83,7 @@ def try_jax_predictions(
 
         # Select appropriate autodiff module based on model type
         if config["model_type"] == "linear":
-            from .autodiff import linear as ad_module
+            from . import linear as ad_module
 
             result = ad_module.predictions.predictions(
                 beta=beta,
@@ -92,7 +92,7 @@ def try_jax_predictions(
             )
 
         elif config["model_type"] == "glm":
-            from .autodiff import glm as ad_module
+            from . import glm as ad_module
 
             result = ad_module.predictions.predictions(
                 beta=beta,
@@ -147,7 +147,7 @@ def try_jax_comparisons(
     - comparison is not a supported string type
     - cross is True (cross comparisons not supported)
     """
-    from .settings import is_autodiff_enabled
+    from ..settings import is_autodiff_enabled
 
     # Check global setting first
     if not is_autodiff_enabled():
@@ -207,9 +207,9 @@ def try_jax_comparisons(
 
         # Select appropriate autodiff module based on model type
         if config["model_type"] == "linear":
-            from .autodiff import linear as ad_module
+            from . import linear as ad_module
         elif config["model_type"] == "glm":
-            from .autodiff import glm as ad_module
+            from . import glm as ad_module
         else:
             return None
 

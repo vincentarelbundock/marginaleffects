@@ -4,7 +4,7 @@ import scipy.stats as stats
 import polars as pl
 
 from ..sanitize import sanitize_hypothesis_null
-from ..result import MarginaleffectsResult
+from ..classes import MarginaleffectsResult
 
 
 def joint_hypotheses(obj, joint_index=None, joint_test="f", hypothesis=0):

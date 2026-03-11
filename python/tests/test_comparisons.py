@@ -373,7 +373,9 @@ def test_callable_comparison_flexible_signature():
         lo = np.asarray(lo)
         return np.log((hi.mean() / (1 - hi.mean())) / (lo.mean() / (1 - lo.mean())))
 
-    cmp_lnor = avg_comparisons(mod, variables="hp", comparison=lnor, vcov=False, by=True)
+    cmp_lnor = avg_comparisons(
+        mod, variables="hp", comparison=lnor, vcov=False, by=True
+    )
     assert isinstance(cmp_lnor, MarginaleffectsResult)
     assert cmp_lnor.shape[0] >= 1
 
@@ -381,14 +383,10 @@ def test_callable_comparison_flexible_signature():
     cmp_ratio = comparisons(
         mod, variables="hp", comparison=lambda hi, lo: hi / lo, vcov=False
     )
-    cmp_builtin_ratio = comparisons(
-        mod, variables="hp", comparison="ratio", vcov=False
-    )
+    cmp_builtin_ratio = comparisons(mod, variables="hp", comparison="ratio", vcov=False)
     np.testing.assert_array_almost_equal(
         cmp_ratio["estimate"].to_numpy(), cmp_builtin_ratio["estimate"].to_numpy()
     )
-
-
 
     dat = pl.read_csv("tests/data/mtcars.csv").with_columns(
         pl.col("gear").cast(pl.String).cast(pl.Categorical)

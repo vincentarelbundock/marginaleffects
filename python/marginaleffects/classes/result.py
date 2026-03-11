@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, Iterator, Optional
 
@@ -218,3 +219,14 @@ class MarginaleffectsResult:
     # Helpful explicit method for conversions
     def to_polars(self) -> pl.DataFrame:
         return self._data
+
+
+# Backwards compatibility alias
+class MarginaleffectsDataFrame(MarginaleffectsResult):
+    def __init__(self, *args, **kwargs):
+        warnings.warn(
+            "MarginaleffectsDataFrame is deprecated; use MarginaleffectsResult instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        super().__init__(*args, **kwargs)

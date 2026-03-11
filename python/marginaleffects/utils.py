@@ -2,12 +2,11 @@ import narwhals as nw
 import numpy as np
 import polars as pl
 from typing import Callable, Optional, Protocol, runtime_checkable, Union, List
-from pydantic import ConfigDict, validate_call
-from functools import wraps
-from .equivalence import get_equivalence
-from .result import MarginaleffectsResult
-from .transform import get_transform
-# from narwhals.typing import IntoFrame
+
+from .sanitize.utils import validate_string_columns  # noqa: F401
+from .sanitize.utils import get_type_dictionary  # noqa: F401
+from .sanitize.utils import validate_types  # noqa: F401
+from .sanitize.utils import sanitize_datagrid_factor  # noqa: F401
 
 
 @runtime_checkable
@@ -47,51 +46,6 @@ def ingest(df: ArrowStreamExportable):
         raise ValueError("Please install pandas to handle Pandas DataFrame as input.")
 
     return nw.from_arrow(df, backend=pl).to_native()
-
-
-def validate_string_columns(columns, modeldata, context=""):
-    """
-    Validate that specified columns are not String type.
-
-    Parameters
-    ----------
-    columns : list[str] or str or dict or bool
-        Column name(s) to validate
-    modeldata : pl.DataFrame
-        The model data containing the columns
-    context : str
-        Description of where validation is happening (for error messages)
-    """
-    # Handle different input types
-    if columns is None or columns is False:
-        return
-
-    if isinstance(columns, str):
-        columns = [columns]
-    elif isinstance(columns, dict):
-        columns = list(columns.keys())
-    elif isinstance(columns, bool):
-        return  # by=False or by=True shouldn't validate
-
-    # Validate each column
-    for col in columns:
-        if col in ["index", "rownames"]:
-            continue
-
-        if col not in modeldata.columns:
-            continue
-
-        if modeldata[col].dtype in [pl.Utf8, pl.String]:
-            msg = (
-                f"Column '{col}' has String type and is used in {context}. "
-                f"String columns are not allowed. "
-                f"Please convert to Categorical or Enum.\n\n"
-                f"For Polars DataFrames:\n"
-                f"  df = df.with_columns(pl.col('{col}').cast(pl.Categorical))\n\n"
-                f"For pandas DataFrames:\n"
-                f"  df['{col}'] = df['{col}'].astype('category')"
-            )
-            raise TypeError(msg)
 
 
 def sort_columns(df, by=None, newdata=None):
@@ -146,194 +100,6 @@ def get_pad(df, colname, uniqs):
     first = pl.concat(first)
     first = first.with_columns(uniqs.alias(colname))
     return first
-
-
-def get_type_dictionary(formula=None, modeldata=None):
-    out = dict()
-    if formula is None or callable(formula):
-        variables = modeldata.columns
-    else:
-        from . import formulaic_utils as fml
-
-        variables = fml.parse_variables(formula)
-    for v in variables:
-        t_i = [
-            pl.Int8,
-            pl.Int16,
-            pl.Int32,
-            pl.Int64,
-            pl.UInt8,
-            pl.UInt16,
-            pl.UInt32,
-            pl.UInt64,
-        ]
-        t_c = [pl.Utf8, pl.Categorical, pl.Enum]
-        t_n = [pl.Float32, pl.Float64]
-        t_b = [pl.Boolean]
-        if modeldata[v].dtype in t_i:
-            if modeldata[v].is_in([0, 1]).all():
-                out[v] = "binary"
-            else:
-                out[v] = "integer"
-        elif modeldata[v].dtype in t_n:
-            if modeldata[v].is_in([0, 1]).all():
-                out[v] = "binary"
-            else:
-                out[v] = "numeric"
-        elif modeldata[v].dtype in t_c:
-            out[v] = "character"
-        elif modeldata[v].dtype in t_b:
-            out[v] = "boolean"
-        else:
-            out[v] = "unknown"
-    return out
-
-
-def validate_types(func):
-    """Decorator that validates types with arbitrary types allowed"""
-    validator = validate_call(config=ConfigDict(arbitrary_types_allowed=True))(func)
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        return validator(*args, **kwargs)
-
-    return wrapper
-
-
-def get_dataset_search(search: str):
-    """Internal function to search available datasets"""
-    try:
-        index = pl.read_csv(
-            "https://vincentarelbundock.github.io/Rdatasets/datasets.csv"
-        )
-        index = index.filter(
-            index["Package"].str.contains(search)
-            | index["Item"].str.contains(search)
-            | index["Title"].str.contains(search)
-        )
-        return index.select(["Package", "Item", "Title", "Rows", "Cols", "CSV"])
-    except BaseException as e:
-        raise ValueError(f"Error searching dataset: {e}")
-
-
-def get_dataset(
-    dataset: str = "thornton",
-    package: str = None,
-    docs: bool = False,
-    search: str = None,
-):
-    """
-    # `get_dataset()`
-
-
-    Download and read a dataset as a Polars DataFrame from the `marginaleffects` or from the list at https://vincentarelbundock.github.io/Rdatasets/.
-    Returns documentation link if `docs` is True.
-
-    ## Parameters
-
-    `dataset`: (str) String. Name of the dataset to download.
-
-     - marginaleffects archive: affairs, airbnb, ces_demographics, ces_survey, immigration, lottery, military, thornton, factorial_01, interaction_01, interaction_02, interaction_03, interaction_04, polynomial_01, polynomial_02
-     - Rdatasets archive: The name of a dataset listed on the Rdatasets index. See the website or the search argument.
-
-    `package`: (str, optional) The package to download the dataset from.
-
-    `docs`: (bool, optional) If True, return the documentation URL instead of the dataset. Default is False.
-
-    `search`: (str, optional) The string is a regular expression. Download the dataset index from Rdatasets; search the "Package", "Item", and "Title" columns; and return the matching rows.
-
-    ## Returns
-    (Union[str, pl.DataFrame])
-    * A string representing the documentation URL if `docs` is True, or
-        a Polars DataFrame containing the dataset if `docs` is False.
-
-    ## Raises
-    ValueError
-    * If the dataset is not among the specified choices.
-
-    ## Examples
-    ```py
-    get_dataset()
-    get_dataset("Titanic", package="Stat2Data")
-    get_dataset(search = "(?i)titanic)
-    ```
-    """
-    if search:
-        return get_dataset_search(search)
-
-    datasets = {
-        "affairs": "https://marginaleffects.com/data/affairs",
-        "airbnb": "https://marginaleffects.com/data/airbnb",
-        "ces_demographics": "https://marginaleffects.com/data/ces_demographics",
-        "ces_survey": "https://marginaleffects.com/data/ces_survey",
-        "immigration": "https://marginaleffects.com/data/immigration",
-        "lottery": "https://marginaleffects.com/data/lottery",
-        "military": "https://marginaleffects.com/data/military",
-        "thornton": "https://marginaleffects.com/data/thornton",
-        "factorial_01": "https://marginaleffects.com/data/factorial_01",
-        "interaction_01": "https://marginaleffects.com/data/interaction_01",
-        "interaction_02": "https://marginaleffects.com/data/interaction_02",
-        "interaction_03": "https://marginaleffects.com/data/interaction_03",
-        "interaction_04": "https://marginaleffects.com/data/interaction_04",
-        "polynomial_01": "https://marginaleffects.com/data/polynomial_01",
-        "polynomial_02": "https://marginaleffects.com/data/polynomial_02",
-    }
-
-    # If package is None, try to guess the correct source
-    if package is None:
-        # First check if it's a marginaleffects dataset
-        if dataset in datasets:
-            package = "marginaleffects"
-        else:
-            # Try to find exact match in Rdatasets
-            matches = get_dataset_search(f"^{dataset}$")
-            if len(matches) == 1:
-                package = matches["Package"][0]
-                dataset = matches["Item"][0]
-            elif len(matches) > 1:
-                options = "\n".join(
-                    [
-                        f"  - {p}::{i}"
-                        for p, i in zip(matches["Package"], matches["Item"])
-                    ]
-                )
-                msg = f"Multiple matches found for dataset '{dataset}'. Please specify the package name.\nAvailable options:\n{options}"
-                raise ValueError(msg)
-            else:
-                msg = f"Dataset '{dataset}' not found. Please:\n1. Specify the package name, or\n2. Use get_dataset(search='...') to search available datasets"
-                raise ValueError(msg)
-
-    try:
-        if package == "marginaleffects":
-            if dataset not in datasets:
-                raise ValueError(
-                    f"Dataset '{dataset}' is not available in the 'marginaleffects' package."
-                )
-
-            base_url = datasets[dataset]
-            df = pl.read_parquet(f"{base_url}.parquet")
-            if (
-                "factorial" in dataset
-                or "interaction" in dataset
-                or "polynomial" in dataset
-            ):
-                doc_url = "https://marginaleffects.com/data/model_to_meaning_simulated_data.html"
-            elif dataset.startswith("ces"):
-                doc_url = "https://marginaleffects.com/data/ces.html"
-            else:
-                doc_url = f"{base_url}.html"
-        else:
-            parquet_url = f"https://vincentarelbundock.github.io/Rdatasets/parquet/{package}/{dataset}.parquet"
-            doc_url = f"https://vincentarelbundock.github.io/Rdatasets/doc/{package}/{dataset}.html"
-            df = pl.read_parquet(parquet_url)
-
-        if docs:
-            return doc_url
-
-        return df
-
-    except BaseException as e:
-        raise ValueError(f"Error reading dataset: {e}")
 
 
 def upcast(df, reference):
@@ -481,57 +247,6 @@ def unique_s(series: pl.Series) -> List:
     return unique_vals.to_list()
 
 
-def sanitize_datagrid_factor(
-    values: List, newdata_col: pl.Series, variable_type: dict, var_name: str
-):
-    """
-    Sanitize factor values for datagrid, similar to R's sanitize_datagrid_factor.
-
-    Parameters:
-    -----------
-    values : List
-        Values to validate
-    newdata_col : pl.Series
-        Original column from data
-    variable_type : dict
-        Dictionary mapping variable names to types
-    var_name : str
-        Name of the variable
-
-    Returns:
-    --------
-    List
-        Validated and converted values
-    """
-    # Check if this should be treated as a categorical/factor
-    if newdata_col.dtype == pl.Categorical or (
-        var_name in variable_type and variable_type[var_name] == "categorical"
-    ):
-        # Get the categories/levels
-        if newdata_col.dtype == pl.Categorical:
-            levels = newdata_col.cat.get_categories().to_list()
-        else:
-            # For character data treated as categorical, get sorted unique values
-            levels = sorted(newdata_col.unique().drop_nulls().to_list())
-
-        # Convert values to string for comparison
-        str_values = [str(v) for v in values if v is not None]
-
-        # Check if all values are valid levels
-        invalid_values = [v for v in str_values if v not in levels]
-        if invalid_values:
-            msg = f'The "{var_name}" element corresponds to a factor variable. The values entered must be one of the factor levels: {levels}.'
-            raise ValueError(msg)
-
-        # Return as categorical if original was categorical
-        if newdata_col.dtype == pl.Categorical:
-            return pl.Series(values).cast(pl.Categorical).to_list()
-        else:
-            return values
-
-    return values
-
-
 def finalize_result(
     out,
     *,
@@ -548,6 +263,10 @@ def finalize_result(
     """
     Shared helper to apply final transforms and wrap a MarginaleffectsResult.
     """
+    from .test.equivalence import get_equivalence
+    from .classes import MarginaleffectsResult
+    from .transform import get_transform
+
     out = get_transform(out, transform=transform)
     if equivalence_df is None:
         out = get_equivalence(out, equivalence=equivalence)
@@ -568,3 +287,66 @@ def call_avg(func, *, model, newdata=None, **kwargs):
     if callable(newdata):
         newdata = newdata(model)
     return func(model=model, newdata=newdata, **kwargs)
+
+
+def prepare_base_inputs(
+    model,
+    vcov,
+    by,
+    newdata,
+    wts,
+    hypothesis,
+    *,
+    enforce_pyfixest_warning: bool = True,
+):
+    """
+    Shared helper to sanitize model, newdata, by, and hypothesis inputs.
+    """
+    from warnings import warn
+    from .sanitize import sanitize_model
+    from .sanitize import (
+        sanitize_by,
+        sanitize_hypothesis_null,
+        sanitize_newdata,
+        sanitize_vcov,
+    )
+    from .pyfixest import ModelPyfixest
+
+    if callable(newdata):
+        newdata = newdata(model)
+
+    if not hasattr(model, "get_modeldata"):
+        model = sanitize_model(model)
+
+    if (
+        enforce_pyfixest_warning
+        and isinstance(model, ModelPyfixest)
+        and vcov is not False
+    ):
+        has_fixef = getattr(model.model, "_has_fixef", False)
+        if has_fixef:
+            warn(
+                "For this pyfixest model, marginaleffects cannot take into account the "
+                "uncertainty in fixed-effects parameters. Standard errors are disabled "
+                "and vcov=False is enforced.",
+                UserWarning,
+                stacklevel=2,
+            )
+        else:
+            warn(
+                "Standard errors are not available for predictions in pyfixest models. "
+                "Setting vcov=False automatically.",
+                UserWarning,
+                stacklevel=2,
+            )
+        vcov = False
+
+    by = sanitize_by(by)
+    V = sanitize_vcov(vcov, model)
+    newdata = sanitize_newdata(model, newdata, wts=wts, by=by)
+    hypothesis_null = sanitize_hypothesis_null(hypothesis)
+
+    modeldata = model.get_modeldata()
+    validate_string_columns(by, modeldata, context="the 'by' parameter")
+
+    return model, by, V, newdata, hypothesis_null, modeldata

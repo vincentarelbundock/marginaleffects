@@ -7,8 +7,8 @@ import polars as pl
 from ..docs import doc
 from ..utils import ingest
 from formulaic.parser.algos.tokenize import tokenize
-from ..model_abstract import ModelAbstract, ModelVault
-from ..formulaic_utils import (
+from ..classes import ModelAbstract, ModelVault
+from ..formula import (
     listwise_deletion,
     model_matrices,
 )

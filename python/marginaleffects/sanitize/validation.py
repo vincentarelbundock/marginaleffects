@@ -2,7 +2,7 @@ import numpy as np
 import polars as pl
 import warnings
 from .utils import get_type_dictionary, validate_string_columns
-from . import formulaic_utils as fml
+from .. import formula as fml
 
 
 class ModelValidation:

@@ -3,7 +3,7 @@ import polars as pl
 
 from ..datagrid import datagrid
 from ..utils import ingest, upcast
-from ..formulaic_utils import listwise_deletion
+from ..formula import listwise_deletion
 
 
 def sanitize_newdata(model, newdata, wts, by=[]):

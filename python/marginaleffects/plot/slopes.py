@@ -1,6 +1,12 @@
-from .common import dt_on_condition, plot_labels, plot_common, validate_plot_args, extract_var_list
+from .common import (
+    dt_on_condition,
+    plot_labels,
+    plot_common,
+    validate_plot_args,
+    extract_var_list,
+)
 from ..slopes import slopes
-from ..sanitize_model import sanitize_model
+from ..sanitize import sanitize_model
 import copy
 from ..docs import doc
 

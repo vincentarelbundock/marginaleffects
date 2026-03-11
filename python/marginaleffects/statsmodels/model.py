@@ -3,9 +3,10 @@ import numpy as np
 import polars as pl
 import patsy
 from ..docs import doc
-from ..model_abstract import ModelAbstract, ModelVault
-from .. import formulaic_utils as fml
-from ..utils import validate_types, ingest
+from ..classes import ModelAbstract, ModelVault
+from .. import formula as fml
+from ..utils import ingest
+from ..sanitize.utils import validate_types
 
 
 class ModelStatsmodels(ModelAbstract):
@@ -51,11 +52,16 @@ class ModelStatsmodels(ModelAbstract):
         if callable(f):
             _, exog = f(newdata)
         elif self.vault.formula_engine == "patsy":
-            fml_rhs = re.sub(r".*~", "", f if isinstance(f, str) else self.get_formula())
+            fml_rhs = re.sub(
+                r".*~", "", f if isinstance(f, str) else self.get_formula()
+            )
             exog = patsy.dmatrix(fml_rhs, newdata.to_pandas())
         else:
-            from ..formulaic_utils import model_matrices
-            _, exog = model_matrices(f, newdata, formula_engine=self.get_formula_engine())
+            from ..formula import model_matrices
+
+            _, exog = model_matrices(
+                f, newdata, formula_engine=self.get_formula_engine()
+            )
 
         return exog
 

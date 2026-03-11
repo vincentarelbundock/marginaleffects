@@ -5,14 +5,14 @@ import numpy as np
 import polars as pl
 
 from .estimands import estimands
-from .sanitize_model import sanitize_model
+from .sanitize import sanitize_model
 from .sanitize import (
     sanitize_variables,
     handle_deprecated_hypotheses_argument,
     handle_pyfixest_vcov_limitation,
 )
 from .uncertainty import get_jacobian, get_se, get_z_p_ci
-from .result import MarginaleffectsResult
+from .classes import MarginaleffectsResult
 from .utils import (
     get_pad,
     upcast,
@@ -20,7 +20,7 @@ from .utils import (
     finalize_result,
     call_avg,
 )
-from ._input_utils import prepare_base_inputs
+from .utils import prepare_base_inputs
 from .docs import doc
 
 
@@ -472,7 +472,7 @@ def comparisons(
 
     # === TRY JAX EARLY EXIT ===
     # Only attempt JAX if all contrasts use the same comparison type
-    from .jax_dispatch import try_jax_comparisons
+    from .autodiff.dispatch import try_jax_comparisons
 
     jax_result = try_jax_comparisons(
         model=model,
@@ -536,7 +536,7 @@ def comparisons(
 
     # === END JAX EARLY EXIT ===
 
-    from .hypothesis import get_hypothesis
+    from .test import get_hypothesis
 
     # inner() takes the `hi` and `lo` matrices, computes predictions, compares
     # them, and aggregates the results based on the `by` argument. This gives us

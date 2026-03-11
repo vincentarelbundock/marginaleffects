@@ -1,5 +1,5 @@
 import pytest
-from marginaleffects.formulaic_utils import parse_variables_categorical
+from marginaleffects.formula import parse_variables_categorical
 
 
 @pytest.mark.parametrize(

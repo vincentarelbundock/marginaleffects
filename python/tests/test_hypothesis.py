@@ -4,7 +4,7 @@ import statsmodels.formula.api as smf
 from polars.testing import assert_frame_equal, assert_series_equal
 
 from marginaleffects import *
-from marginaleffects.hypothesis import get_hypothesis
+from marginaleffects.test.core import get_hypothesis
 from tests.utilities import sort_categories_pandas
 
 mtcars = get_dataset("mtcars", "datasets")

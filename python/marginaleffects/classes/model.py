@@ -5,8 +5,8 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import polars as pl
 
-from .validation import ModelValidation
-from . import formulaic_utils as fml
+from ..sanitize.validation import ModelValidation
+from .. import formula as fml
 
 
 @dataclass
@@ -107,7 +107,7 @@ class ModelAbstract(ModelValidation, ABC):
         Subclasses may override this to handle model-specific formula engines.
         The default implementation uses the model's formula to build design matrices.
         """
-        from .formulaic_utils import model_matrices
+        from ..formula import model_matrices
 
         if self.vault.design_info_patsy is not None:
             f = self.vault.design_info_patsy

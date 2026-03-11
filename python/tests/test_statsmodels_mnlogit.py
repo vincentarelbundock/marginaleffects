@@ -55,9 +55,7 @@ def test_avg_comparisons_01():
 
 def test_predictions_01():
     known = pl.read_csv("tests/r/test_statsmodels_mnlogit_predictions_01.csv")
-    unknown = pl.DataFrame(
-        predictions(mod)
-    ).with_columns(
+    unknown = pl.DataFrame(predictions(mod)).with_columns(
         pl.col("group").replace_strict(group_map),
         (pl.col("rowid") + 1).alias("rowid"),
     )
@@ -101,9 +99,7 @@ def test_comparisons_01():
 
 def test_comparisons_02():
     known = pl.read_csv("tests/r/test_statsmodels_mnlogit_comparisons_02.csv")
-    unknown = pl.DataFrame(
-        comparisons(mod, by=["group", "species"])
-    ).with_columns(
+    unknown = pl.DataFrame(comparisons(mod, by=["group", "species"])).with_columns(
         pl.col("group").replace_strict(group_map),
         pl.col("species").cast(pl.String),
     )

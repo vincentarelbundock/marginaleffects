@@ -6,7 +6,7 @@ import pytest
 import numpy as np
 import polars as pl
 from marginaleffects import datagrid, get_dataset
-from marginaleffects.classes import _detect_variable_type, _check_variable_type
+from marginaleffects.datagrid import _detect_variable_type, _check_variable_type
 import marginaleffects.utils as ut
 
 

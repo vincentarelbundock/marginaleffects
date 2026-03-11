@@ -2,7 +2,8 @@ import pytest
 import pandas as pd
 import polars as pl
 import duckdb
-from marginaleffects.utils import ingest, get_dataset
+from marginaleffects.utils import ingest
+from marginaleffects.datasets import get_dataset
 
 
 def get_sample_data():

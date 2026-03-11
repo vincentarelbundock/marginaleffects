@@ -1,6 +1,6 @@
 from .docs import doc
 from .comparisons import comparisons
-from .result import MarginaleffectsResult
+from .classes import MarginaleffectsResult
 
 
 @doc("""

@@ -2,7 +2,6 @@ import numpy as np
 import polars as pl
 import pandas as pd
 from marginaleffects import *
-from polars.testing import assert_series_equal
 from statsmodels.miscmodels.ordinal_model import OrderedModel
 
 dat = get_dataset("affairs").to_pandas()
@@ -89,9 +88,7 @@ def test_slopes_01():
 
 def test_avg_slopes_01():
     known = pl.read_csv("tests/r/test_statsmodels_ordinal_avg_slopes_01.csv")
-    unknown = avg_slopes(mod).with_columns(
-        pl.col("group").replace_strict(group_map)
-    )
+    unknown = avg_slopes(mod).with_columns(pl.col("group").replace_strict(group_map))
     known = known.sort(["term", "group"])
     unknown = unknown.sort(["term", "group"])
     np.testing.assert_allclose(

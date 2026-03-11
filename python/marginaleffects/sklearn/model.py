@@ -3,8 +3,8 @@ import warnings
 import polars as pl
 from ..docs import doc
 from ..utils import ingest
-from ..formulaic_utils import listwise_deletion, model_matrices
-from ..model_abstract import ModelAbstract, ModelVault
+from ..formula import listwise_deletion, model_matrices
+from ..classes import ModelAbstract, ModelVault
 
 
 class ModelSklearn(ModelAbstract):
