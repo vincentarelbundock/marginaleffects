@@ -1,4 +1,4 @@
-from .docs import doc
+from .docstrings import doc
 from .comparisons import comparisons
 from .classes import MarginaleffectsResult
 

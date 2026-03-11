@@ -21,7 +21,7 @@ from .utils import (
     call_avg,
 )
 from .utils import prepare_base_inputs
-from .docs import doc
+from .docstrings import doc
 
 
 def _cross_postprocess(cross):

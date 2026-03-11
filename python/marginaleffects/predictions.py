@@ -7,7 +7,7 @@ from .uncertainty import get_jacobian, get_se, get_z_p_ci
 from .classes import MarginaleffectsResult
 from .utils import prepare_base_inputs, finalize_result, call_avg
 from warnings import warn
-from .docs import doc
+from .docstrings import doc
 
 
 def _prepare_newdata(newdata, modeldata, variables):
