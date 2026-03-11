@@ -31,6 +31,7 @@ test = [
     "linearmodels >=6.1",
     "pandas >=2.2.2",
     "pre-commit>=4.2.0",
+    "numba",
     "pyarrow >=17.0.0",
     "pyfixest >=0.28.0",
     "statsmodels >=0.14.0",

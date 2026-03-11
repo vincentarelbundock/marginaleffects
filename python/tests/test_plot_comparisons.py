@@ -1,3 +1,4 @@
+import sys
 import pytest
 from marginaleffects import *
 from marginaleffects.plot.comparisons import *
@@ -5,7 +6,9 @@ from tests.utilities import *
 from tests.helpers import *
 import statsmodels.formula.api as smf
 
-pytestmark = pytest.mark.plot
+pytestmark = pytest.mark.skipif(
+    sys.platform == "linux", reason="Plot image tests are platform-dependent (font rendering)"
+)
 
 FIGURES_FOLDER = "plot_comparisons"
 

@@ -1,10 +1,13 @@
+import sys
 import pytest
 from marginaleffects import *
 from marginaleffects.plot.slopes import *
 from tests.utilities import *
 from tests.helpers import *
 
-pytestmark = pytest.mark.plot
+pytestmark = pytest.mark.skipif(
+    sys.platform == "linux", reason="Plot image tests are platform-dependent (font rendering)"
+)
 
 FIGURES_FOLDER = "plot_slopes"
 

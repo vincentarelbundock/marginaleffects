@@ -1,3 +1,4 @@
+import sys
 import statsmodels.formula.api as smf
 from marginaleffects import *
 from marginaleffects.plot.predictions import *
@@ -5,7 +6,9 @@ from tests.utilities import *
 import pytest
 from tests.helpers import *
 
-pytestmark = pytest.mark.plot
+pytestmark = pytest.mark.skipif(
+    sys.platform == "linux", reason="Plot image tests are platform-dependent (font rendering)"
+)
 
 FIGURES_FOLDER = "plot_predictions"
 
