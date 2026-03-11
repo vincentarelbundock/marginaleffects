@@ -100,9 +100,10 @@ def sanitize_by(by):
     if by is True:
         by = ["group"]
     elif isinstance(by, str):
-        by = ["group", by]
+        by = ["group", by] if by != "group" else ["group"]
     elif isinstance(by, list):
-        by = ["group"] + by
+        if "group" not in by:
+            by = ["group"] + by
     elif by is False:
         by = False
     else:
