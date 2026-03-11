@@ -107,31 +107,30 @@ def compare_r_to_py(r_obj, py_obj, tolr=1e-3, tola=1e-3, msg=""):
 def _save_plot(fig, filename, height=5, width=10, dpi=100):
     """Save a plotnine figure with deterministic size, bypassing display scaling."""
     import matplotlib
-    matplotlib.use("Agg")
+    matplotlib.use("Agg", force=True)
     import matplotlib.pyplot as plt
     plt.rcParams["savefig.dpi"] = dpi
+    plt.rcParams["figure.dpi"] = dpi
     ggsave(fig, filename=filename, verbose=False, height=height, width=width, dpi=dpi)
     plt.close("all")
 
 
 def assert_image(fig, label, folder, tolerance=5):
-    known_path = f"./tests/images/{folder}/"
-    unknown_path = f"./tests/images/.tmp_{folder}/"
-    if os.path.isdir(unknown_path):
-        for root, dirs, files in os.walk(unknown_path):
-            for fname in files:
-                os.remove(os.path.join(root, fname))
-        os.rmdir(unknown_path)
-    os.mkdir(unknown_path)
-    unknown = f"{unknown_path}{label}.png"
-    known = f"{known_path}{label}.png"
+    import tempfile
+
+    known = f"./tests/images/{folder}/{label}.png"
+    os.makedirs(os.path.dirname(known), exist_ok=True)
     if not os.path.exists(known):
         _save_plot(fig, known)
         warnings.warn(f"File {known} does not exist. Creating it now.")
         return None
-    _save_plot(fig, unknown)
-    out = compare_images(known, unknown, tol=tolerance)
-    return out
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+        unknown = tmp.name
+    try:
+        _save_plot(fig, unknown)
+        return compare_images(known, unknown, tol=tolerance)
+    finally:
+        os.unlink(unknown)
 
 
 # for polars

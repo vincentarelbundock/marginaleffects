@@ -121,5 +121,5 @@ def penguins_mod_5var():
 
 @pytest.fixture(scope="session")
 def mtcars_mod():
-    mod = smf.ols("mpg ~ hp * wt * disp * cyl * qsec", data=mtcars).fit()
+    mod = smf.ols("mpg ~ hp * wt * disp * cyl + qsec", data=mtcars).fit()
     return mod

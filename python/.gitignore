@@ -16,7 +16,6 @@ build/
 /.venv/
 run.Rout
 
-tests/images/.tmp*
 
 objects.json
 
