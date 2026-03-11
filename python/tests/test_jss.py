@@ -5,7 +5,7 @@ from marginaleffects import *
 from marginaleffects import MarginaleffectsResult
 from tests.utilities import *
 import pytest
-from tests.helpers import impartiality_model  # noqa
+from tests.helpers import impartiality_model, impartiality_df, sort_categories_pandas  # noqa
 
 
 def assert_is_result(obj):
@@ -14,8 +14,9 @@ def assert_is_result(obj):
     return obj
 
 
-@pytest.mark.skip(reason="to be fixed")
 def test_predictions(impartiality_model):
+    dat = impartiality_df
+
     p = predictions(impartiality_model)
 
     assert_is_result(p)
@@ -40,7 +41,7 @@ def test_predictions(impartiality_model):
     assert p.shape[0] == 4
 
     p1 = avg_predictions(impartiality_model)
-    p2 = np.mean(impartiality_model.predict(dat.to_pandas()).to_numpy())
+    p2 = np.mean(impartiality_model.predict(sort_categories_pandas(dat.to_pandas())).to_numpy())
     assert_is_result(p1)
     assert p1.shape[0] == 1
     assert p1["estimate"][0] == p2
@@ -50,7 +51,7 @@ def test_predictions(impartiality_model):
     assert p.shape[0] == 2
 
     p = plot_predictions(impartiality_model, by=["democracy", "continent"])
-    assert assert_image(p, label="jss_01", file="jss") is None
+    assert assert_image(p, label="jss_01", folder="jss") is None
 
 
 def test_hypotheses(impartiality_model):

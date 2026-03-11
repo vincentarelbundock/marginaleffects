@@ -44,7 +44,7 @@ def test_bare_minimum():
     data = create_test_data()
 
     # test 1: no fixed effects
-    fit = feols("Y ~ X1 * X2 * Z1", data=data, ssc=ssc(fixef_k="none"))
+    fit = feols("Y ~ X1 * X2 * Z1", data=data, ssc=ssc(k_fixef="none"))
 
     with pytest.warns(
         UserWarning, match="Standard errors are not available for predictions"
