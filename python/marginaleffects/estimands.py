@@ -30,10 +30,10 @@ estimands = {
     "dydxavgwts": lambda hi, lo, eps, x, y, w: prep(
         (((hi - lo) / eps) * w).sum() / w.sum()
     ),
-    "eyexavgwts": lambda hi, lo, eps, y, x, w: prep(
+    "eyexavgwts": lambda hi, lo, eps, x, y, w: prep(
         (((hi - lo) / eps) * (x / y) * w).sum() / w.sum()
     ),
-    "eydxavgwts": lambda hi, lo, eps, y, x, w: prep(
+    "eydxavgwts": lambda hi, lo, eps, x, y, w: prep(
         ((((hi - lo) / eps) / y) * w).sum() / w.sum()
     ),
     "dyexavgwts": lambda hi, lo, eps, x, y, w: prep(

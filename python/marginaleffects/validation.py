@@ -11,8 +11,8 @@ class ModelValidation:
         self.validate_response_name()
         self.validate_formula()
         self.validate_modeldata()
-        self.vault.update(
-            variables_type=get_type_dictionary(self.get_formula(), self.get_modeldata())
+        self.vault.variables_type = get_type_dictionary(
+            self.get_formula(), self.get_modeldata()
         )
 
     def validate_coef(self):
@@ -52,7 +52,7 @@ class ModelValidation:
             )
 
         # TODO: deduplicate once we only use the vault
-        self.vault.update(formula=formula)
+        self.vault.formula = formula
         self.formula = formula
 
     def validate_modeldata(self):
@@ -97,7 +97,7 @@ class ModelValidation:
 
         # Get category orders from model metadata to preserve them
         # For sklearn models with formulaic
-        model_spec = self.vault.get("model_spec")
+        model_spec = self.vault.model_spec
         formulaic_categories = {}
         if model_spec and hasattr(model_spec, "encoder_state"):
             for var_name, (kind, state) in model_spec.encoder_state.items():
@@ -107,7 +107,7 @@ class ModelValidation:
                     formulaic_categories[actual_var] = state["categories"]
 
         # For statsmodels/patsy models, use pandas categorical orders
-        pandas_categorical_orders = self.vault.get("pandas_categorical_orders", {})
+        pandas_categorical_orders = self.vault.pandas_categorical_orders
 
         # Convert Categorical to Enum with appropriate ordering
         for c in modeldata.columns:
@@ -131,4 +131,4 @@ class ModelValidation:
 
                 modeldata = modeldata.with_columns(pl.col(c).cast(pl.Enum(catvals)))
 
-        self.vault.update(modeldata=modeldata)
+        self.vault.modeldata = modeldata

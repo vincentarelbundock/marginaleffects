@@ -7,7 +7,7 @@ import polars as pl
 from ..docs import doc
 from ..utils import ingest
 from formulaic.parser.algos.tokenize import tokenize
-from ..model_abstract import ModelAbstract
+from ..model_abstract import ModelAbstract, ModelVault
 from ..formulaic_utils import (
     listwise_deletion,
     model_matrices,
@@ -15,7 +15,9 @@ from ..formulaic_utils import (
 
 
 class ModelLinearmodels(ModelAbstract):
-    def __init__(self, model, vault={}):
+    def __init__(self, model, vault=None):
+        if vault is None:
+            vault = ModelVault()
         super().__init__(model, vault)
 
     def _to_pandas(self, df):
@@ -29,7 +31,7 @@ class ModelLinearmodels(ModelAbstract):
         ----------
         df : nw.IntoFrame
             DataFrame containing the original index variables as columns.
-            Must include all columns specified in self.vault['multiindex'].
+            Must include all columns specified in self.vault.multiindex.
 
         Returns
         -------
@@ -42,7 +44,7 @@ class ModelLinearmodels(ModelAbstract):
             If any of the required index columns are missing from the input DataFrame.
         """
 
-        multiindex = self.vault.get("multiindex")
+        multiindex = self.vault.multiindex
         if not set(multiindex).issubset(nw.from_native(df).columns):
             multiindex_str = ",".join(multiindex)
             raise ValueError(
@@ -50,6 +52,10 @@ class ModelLinearmodels(ModelAbstract):
             )
 
         return nw.from_native(df).to_pandas().set_index(multiindex)
+
+    def get_exog(self, newdata: pl.DataFrame):
+        """LinearModels uses native data passed through its own formula engine."""
+        return newdata
 
     def get_coef(self):
         return np.array(self.model.params)
@@ -288,12 +294,12 @@ def fit_linearmodels(
     y, X = model_matrices(linearmodels_formula, d, formula_engine="linearmodels")
     out = engine(dependent=y, exog=X, **kwargs_engine, **effects).fit(**kwargs_fit)
 
-    vault = {
-        "formula_engine": "linearmodels",
-        "multiindex": list(d.index.names),
-        "formula": linearmodels_formula,
-        "modeldata": ingest(d),
-        "package": "linearmodels",
-    }
+    vault = ModelVault(
+        formula_engine="linearmodels",
+        multiindex=list(d.index.names),
+        formula=linearmodels_formula,
+        modeldata=ingest(d),
+        package="linearmodels",
+    )
 
     return ModelLinearmodels(out, vault)

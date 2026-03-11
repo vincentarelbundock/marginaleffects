@@ -1,5 +1,5 @@
 from ..docs import doc
-from .common import dt_on_condition, plot_labels, plot_common
+from .common import dt_on_condition, plot_labels, plot_common, validate_plot_args, extract_var_list
 from ..predictions import predictions
 from ..sanitize_model import sanitize_model
 import copy
@@ -68,17 +68,7 @@ def plot_predictions(
     if points < 0 or points > 1:
         raise ValueError("`points` must be a numeric value between 0 and 1.")
 
-    assert not (not by and newdata is not None), (
-        "The `newdata` argument requires a `by` argument."
-    )
-
-    assert not (wts is not None and not by), (
-        "The `wts` argument requires a `by` argument."
-    )
-
-    assert not (condition is None and not by), (
-        "One of the `condition` and `by` arguments must be supplied, but not both."
-    )
+    validate_plot_args(condition, by, newdata, wts)
 
     # before dt_on_condition, which modifies in-place
     condition_input = copy.deepcopy(condition)
@@ -101,25 +91,7 @@ def plot_predictions(
     if not draw:
         return dt
 
-    if isinstance(condition, str):
-        var_list = [condition]
-    elif isinstance(condition, list):
-        var_list = condition
-    elif isinstance(condition, dict):
-        var_list = list(condition.keys())
-    elif isinstance(by, str):
-        var_list = [by]
-    elif isinstance(by, list):
-        var_list = by
-    elif isinstance(by, dict):
-        var_list = list(by.keys())
-
-    # not sure why these get appended
-    var_list = [x for x in var_list if x not in ["newdata", "model"]]
-
-    assert len(var_list) < 5, (
-        "The `condition` and `by` arguments can have a max length of 4."
-    )
+    var_list = extract_var_list(condition, by)
 
     return plot_common(
         model,

@@ -4,12 +4,18 @@ import polars as pl
 from ..docs import doc
 from ..utils import ingest
 from ..formulaic_utils import listwise_deletion, model_matrices
-from ..model_abstract import ModelAbstract
+from ..model_abstract import ModelAbstract, ModelVault
 
 
 class ModelSklearn(ModelAbstract):
-    def __init__(self, model, vault={}):
+    def __init__(self, model, vault=None):
+        if vault is None:
+            vault = ModelVault()
         super().__init__(model, vault)
+
+    def get_exog(self, newdata: pl.DataFrame):
+        """Sklearn uses native data; design matrix construction happens in get_predict."""
+        return newdata
 
     def get_predict(self, params, newdata):
         engine = self.get_engine_running()
@@ -33,7 +39,7 @@ class ModelSklearn(ModelAbstract):
 
                 # Check if we need to restore index structure for formulaic
                 # This happens when polars converted an indexed pandas DataFrame
-                original_columns = self.vault.get("original_columns")
+                original_columns = self.vault.original_columns
                 if original_columns is not None:
                     # Determine which columns were originally indices
                     modeldata_cols = set(newdata.columns)
@@ -225,12 +231,12 @@ def fit_sklearn(formula, data: pl.DataFrame, engine) -> ModelSklearn:
 
     engine_running = engine.fit(X=X, y=y)
 
-    vault = {
-        "formula": formula,
-        "modeldata": ingest(d),
-        "package": "sklearn",
-        "engine_running": engine_running,
-        "original_columns": original_columns,  # Store for index restoration
-        "model_spec": model_spec,  # Store for categorical ordering
-    }
+    vault = ModelVault(
+        formula=formula,
+        modeldata=ingest(d),
+        package="sklearn",
+        engine_running=engine_running,
+        original_columns=original_columns,
+        model_spec=model_spec,
+    )
     return ModelSklearn(engine_running, vault)

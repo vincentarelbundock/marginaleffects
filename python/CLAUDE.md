@@ -5,90 +5,77 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Quick Reference
 
 ```bash
-make test              # Run full test suite (parallel)
-make lint              # Run ruff check and format
-make install           # Install package with uv
+# From repo root (preferred — handles install before test):
+make py-test           # Install + run full test suite (parallel)
+make py-lint           # ruff check + format
+make py-install        # Install package (editable)
+
+# From python/ directory:
+uv run --all-extras pytest tests/test_predictions.py              # Single test file
+uv run --all-extras pytest tests/test_predictions.py::test_name -v  # Single test
+uv run --all-extras ruff check marginaleffects                    # Lint only
+uv run --all-extras ruff format marginaleffects tests             # Format only
 ```
 
-## Development Commands
+## Setup
 
-### Setup
 ```bash
 uv venv .venv
 source .venv/bin/activate
-uv pip install .
-```
-
-### Testing
-```bash
-# Full test suite (runs in parallel with -n auto)
-make test
-
-# Single test file
-uv run --all-extras pytest tests/test_predictions.py
-
-# Single test function
-uv run --all-extras pytest tests/test_predictions.py::test_function_name -v
-
-# With coverage
-make coverage
-```
-
-### Code Quality
-```bash
-make lint              # ruff check + format
-make precommit         # pre-commit on all files
-```
-
-### Documentation
-```bash
-make qmd               # Extract docstrings into Quarto files
-make inject_docs       # Inject minimal docstrings into source files
+uv pip install -e .          # Editable install
+uv pip install -e ".[test]"  # With test dependencies
 ```
 
 ## Architecture Overview
 
-Python package for statistical marginal effects analysis. Provides unified interfaces for predictions, comparisons, and slopes across multiple modeling frameworks. Documentation: https://marginaleffects.com/
+Python package for statistical marginal effects analysis. Unified interface for predictions, comparisons, and slopes across modeling frameworks. Docs: https://marginaleffects.com/
 
-### Core API Functions
+### Core Pipeline
 
-All exported from `marginaleffects/__init__.py`:
-- `predictions()` / `avg_predictions()` - Fitted values
-- `comparisons()` / `avg_comparisons()` - Contrasts and differences
-- `slopes()` / `avg_slopes()` - Marginal effects (partial derivatives)
-- `hypotheses()` - Hypothesis testing
-- `datagrid()` - Create reference grids
-- `plot_predictions()`, `plot_comparisons()`, `plot_slopes()` - Visualization
+The three main functions (`predictions()`, `comparisons()`, `slopes()`) share a common flow:
+
+1. **Input sanitization** (`_input_utils.py:prepare_base_inputs`) — wraps raw model via `sanitize_model()`, validates `newdata`/`by`/`vcov`/`hypothesis`
+2. **Counterfactual computation** — builds modified data grids and computes estimates
+3. **Uncertainty** (`uncertainty.py`) — Jacobian via forward finite differences, delta method for standard errors
+4. **Result wrapping** (`result.py:MarginaleffectsResult`) — dataclass wrapping a Polars DataFrame with metadata (conf_level, jacobian, column mapping, print formatting)
+
+`slopes()` delegates entirely to `comparisons()` with `slope`-specific parameters — it does not reimplement the logic.
 
 ### Model Adapters
 
-Files prefixed with `model_` implement the adapter pattern for different modeling libraries:
-- `model_abstract.py` - Abstract base class defining the interface
-- `model_statsmodels.py` - StatsModels via `fit_statsmodels()`
-- `model_sklearn.py` - Scikit-learn via `fit_sklearn()`
-- `model_linearmodels.py` - LinearModels via `fit_linearmodels()`
-- `model_pyfixest.py` - PyFixest integration
+Each supported modeling library lives in its own subdirectory with a `model.py`:
+- `statsmodels/` — auto-detected by class name; supports OLS, GLM, MixedLM, MNLogit, OrderedModel, QuantReg, etc.
+- `sklearn/` — requires explicit `fit_sklearn()` wrapper (needs formula + data stored in vault)
+- `linearmodels/` — requires explicit `fit_linearmodels()` wrapper
+- `pyfixest/` — auto-detected by class name
 
-To add support for a new modeling library, implement the abstract interface in `model_abstract.py`.
+Auto-detection happens in `sanitize_model.py`. Sklearn and linearmodels can't be auto-detected because they don't store formula/data, so they use `fit_*()` functions that create the adapter with a "vault" dict holding `coef`, `vcov`, `modeldata`, `formula`, `variables_type`, etc.
 
-### Key Design Patterns
+All adapters inherit from `ModelAbstract` (`model_abstract.py`), which provides the vault-based accessor interface (`get_coef()`, `get_vcov()`, `get_modeldata()`, `find_variables()`, etc.).
 
-1. **Adapter Pattern**: Model adapters provide unified interface across statsmodels, sklearn, etc.
+### Key Infrastructure
 
-2. **Polars-Based**: Uses Polars DataFrames throughout. `MarginaleffectsDataFrame` (in `classes.py`) extends Polars DataFrame with metadata.
+- `estimands.py` — defines comparison functions (difference, ratio, etc.)
+- `datagrid.py` — creates reference grids for evaluation points
+- `by.py` — grouping/stratification of results
+- `hypotheses.py` / `hypothesis.py` — hypothesis testing and transformations
+- `transform.py` — response transformations (log, logit, etc.)
+- `equivalence.py` — equivalence/non-inferiority tests
+- `classes.py` — variable type detection; `MarginaleffectsDataFrame` is a deprecated alias for `MarginaleffectsResult`
+- `docs.py` — docstring template system with `{param_*}` placeholders
 
-3. **Functional Composition**: `slopes()` composes `comparisons()` with different parameters rather than reimplementing.
+### Data Flow
 
-### Core Infrastructure
-
-- `uncertainty.py` - Standard errors, jacobians, confidence intervals
-- `sanitize_model.py` - Model wrapper/adapter logic
-- `by.py` - Grouping/stratification logic
-- `transform.py` - Transformations (log, logit, etc.)
+- Uses **Polars** DataFrames throughout internally
+- Accepts any Arrow-compatible input via `utils.py:ingest()` (uses `__arrow_c_stream__` protocol)
+- Input validation uses **pydantic** `@validate_call` decorators
+- Formula parsing via **formulaic** (default) or patsy
 
 ### Testing
 
-- Test files in `tests/` mirror source structure
-- Reference data from R implementation in `tests/r/`
-- Plot regression images in `tests/images/`
-- Plot tests are marked slow: `@pytest.mark.plot`
+- Tests in `tests/` correspond to source modules and model types
+- R reference data in `tests/r/` — Python results are compared against R `marginaleffects` output
+- `tests/helpers.py` and `tests/utilities.py` provide test comparison helpers
+- Plot tests use image regression: `@pytest.mark.plot`, images in `tests/images/`
+- Generate R snapshots: `make py-snapshot` (runs `tests/r/run.R`)
+- Autodiff tests: `make py-test-autodiff` (sets `MARGINALEFFECTS_AUTODIFF=1`)

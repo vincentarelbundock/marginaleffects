@@ -4,10 +4,8 @@ import polars as pl
 from .by import get_by, get_by_groups
 from .hypothesis import get_hypothesis
 from .uncertainty import get_jacobian, get_se, get_z_p_ci
-from .pyfixest import ModelPyfixest
-from .linearmodels import ModelLinearmodels
-from .formulaic_utils import model_matrices
 from ._input_utils import prepare_base_inputs
+from .result import MarginaleffectsResult
 from .utils import finalize_result, call_avg
 from warnings import warn
 from .docs import doc
@@ -68,21 +66,7 @@ def _prepare_newdata(newdata, modeldata, variables):
 
 
 def _prepare_exog(model, newdata):
-    if isinstance(model, ModelPyfixest):
-        return newdata.to_pandas()
-    if isinstance(model, ModelLinearmodels):
-        return newdata
-    if hasattr(model, "design_info_patsy"):
-        f = model.design_info_patsy
-    else:
-        f = model.get_formula()
-
-    if callable(f):
-        _, exog = f(newdata)
-    else:
-        _, exog = model_matrices(f, newdata, formula_engine=model.get_formula_engine())
-
-    return exog
+    return model.get_exog(newdata)
 
 
 def _predictions_jax(
@@ -279,7 +263,7 @@ def predictions(
     wts=None,
     eps_vcov=None,
     **kwargs,
-):
+) -> MarginaleffectsResult:
     if "hypotheses" in kwargs:
         if hypothesis is not None:
             raise ValueError("Specify at most one of `hypothesis` or `hypotheses`.")
@@ -367,7 +351,7 @@ def avg_predictions(
     transform=None,
     wts=None,
     **kwargs,
-):
+) -> MarginaleffectsResult:
     return call_avg(
         predictions,
         model=model,

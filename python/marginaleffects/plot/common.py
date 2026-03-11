@@ -130,6 +130,41 @@ def ordered_cat(dt, k, lab):
     return dt
 
 
+def validate_plot_args(condition, by, newdata, wts):
+    assert not (not by and newdata is not None), (
+        "The `newdata` argument requires a `by` argument."
+    )
+    assert not (wts is not None and not by), (
+        "The `wts` argument requires a `by` argument."
+    )
+    assert (condition is None and by) or (condition is not None and not by), (
+        "One of the `condition` and `by` arguments must be supplied, but not both."
+    )
+
+
+def extract_var_list(condition, by):
+    if isinstance(condition, str):
+        var_list = [condition]
+    elif isinstance(condition, list):
+        var_list = condition
+    elif isinstance(condition, dict):
+        var_list = list(condition.keys())
+    elif isinstance(by, str):
+        var_list = [by]
+    elif isinstance(by, list):
+        var_list = by
+    elif isinstance(by, dict):
+        var_list = list(by.keys())
+
+    var_list = [x for x in var_list if x not in ["newdata", "model"]]
+
+    assert len(var_list) < 5, (
+        "The `condition` and `by` arguments can have a max length of 4."
+    )
+
+    return var_list
+
+
 def plot_common(model, dt, y_label, var_list, gray=False, points=0):
     from plotnine import (
         aes,

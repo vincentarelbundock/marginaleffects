@@ -1,19 +1,18 @@
 import re
 import numpy as np
 import polars as pl
-from ..model_abstract import ModelAbstract
+from ..model_abstract import ModelAbstract, ModelVault
 from ..utils import ingest
 
 
 class ModelPyfixest(ModelAbstract):
-    def __init__(self, model, vault={}):
+    def __init__(self, model, vault=None):
+        if vault is None:
+            vault = ModelVault()
         formula = model._fml
         modeldata = ingest(model._data)
-        cache = {
-            "modeldata": modeldata,
-            "formula": formula,
-        }
-        vault.update(cache)
+        vault.modeldata = modeldata
+        vault.formula = formula
         super().__init__(model, vault)
 
         # after super init & validation
@@ -62,6 +61,10 @@ class ModelPyfixest(ModelAbstract):
         if V is not None:
             V = np.array(V)
         return V
+
+    def get_exog(self, newdata: pl.DataFrame):
+        """PyFixest uses raw data as input, converted to pandas."""
+        return newdata.to_pandas()
 
     def find_predictors(self):
         modeldata = self.get_modeldata()

@@ -6,12 +6,13 @@ import polars as pl
 
 from .estimands import estimands
 from .sanitize_model import sanitize_model
-from .sanity import (
+from .sanitize import (
     sanitize_variables,
     handle_deprecated_hypotheses_argument,
     handle_pyfixest_vcov_limitation,
 )
 from .uncertainty import get_jacobian, get_se, get_z_p_ci
+from .result import MarginaleffectsResult
 from .utils import (
     get_pad,
     upcast,
@@ -277,23 +278,9 @@ def _finalize_counterfactual_frames(
 
 
 def _prepare_design_matrices(model, nd, hi, lo, pad_rows):
-    package = model.get_package() if hasattr(model, "get_package") else None
-    typename = type(model).__name__.lower()
-    uses_native_design = package in {"pyfixest", "linearmodels", "sklearn"} or any(
-        x in typename for x in ("modelpyfixest", "modellinearmodels", "modelsklearn")
-    )
-
-    if uses_native_design:
-        hi_X = hi
-        lo_X = lo
-        nd_X = nd
-    else:
-        import patsy
-
-        fml = re.sub(r".*~", "", model.get_formula())
-        hi_X = patsy.dmatrix(fml, hi.to_pandas())
-        lo_X = patsy.dmatrix(fml, lo.to_pandas())
-        nd_X = patsy.dmatrix(fml, nd.to_pandas())
+    hi_X = model.get_exog(hi)
+    lo_X = model.get_exog(lo)
+    nd_X = model.get_exog(nd)
 
     if pad_rows >= 0:
         nd_X = nd_X[pad_rows:]
@@ -424,7 +411,7 @@ def comparisons(
     eps=1e-4,
     eps_vcov=None,
     **kwargs,
-):
+) -> MarginaleffectsResult:
     hypothesis = handle_deprecated_hypotheses_argument(hypothesis, kwargs, stacklevel=2)
     if kwargs:
         unexpected = ", ".join(sorted(kwargs.keys()))
@@ -713,7 +700,7 @@ def avg_comparisons(
     transform=None,
     eps=1e-4,
     **kwargs,
-):
+) -> MarginaleffectsResult:
     return call_avg(
         comparisons,
         model=model,

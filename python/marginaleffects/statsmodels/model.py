@@ -3,14 +3,15 @@ import numpy as np
 import polars as pl
 import patsy
 from ..docs import doc
-from ..model_abstract import ModelAbstract
+from ..model_abstract import ModelAbstract, ModelVault
 from .. import formulaic_utils as fml
 from ..utils import validate_types, ingest
 
 
 class ModelStatsmodels(ModelAbstract):
-    def __init__(self, model, vault={}):
-        # cache is useful because it obviates the need to call methods many times
+    def __init__(self, model, vault=None):
+        if vault is None:
+            vault = ModelVault()
 
         # Store pandas categorical orders before ingesting to preserve them
         pandas_categorical_orders = {}
@@ -24,22 +25,39 @@ class ModelStatsmodels(ModelAbstract):
                         col
                     ].cat.categories.tolist()
 
-        cache = {
-            "coef": np.array(model.params),  # multinomial models are 2d
-            "coefnames": np.array(model.params.index.to_numpy()),
-            "formula": model.model.formula,
-            "modeldata": ingest(model.model.data.frame),
-            "pandas_categorical_orders": pandas_categorical_orders,
-        }
-        cache["variable_names"] = [
+        vault.coef = np.array(model.params)  # multinomial models are 2d
+        vault.coefnames = np.array(model.params.index.to_numpy())
+        vault.formula = model.model.formula
+        vault.modeldata = ingest(model.model.data.frame)
+        vault.pandas_categorical_orders = pandas_categorical_orders
+        vault.variable_names = [
             model.model.endog_names
-        ] + fml.extract_patsy_variable_names(cache["formula"], cache["modeldata"])
+        ] + fml.extract_patsy_variable_names(vault.formula, vault.modeldata)
         if not hasattr(model, "formula"):
-            cache["formula_engine"] = "patsy"
+            vault.formula_engine = "patsy"
             if hasattr(model.model.data, "design_info"):
-                cache["design_info_patsy"] = model.model.data.design_info
-        vault.update(cache)
+                vault.design_info_patsy = model.model.data.design_info
         super().__init__(model, vault)
+
+    def get_exog(self, newdata: pl.DataFrame):
+        """Build design matrix using patsy for statsmodels models."""
+        import re
+
+        if self.vault.design_info_patsy is not None:
+            f = self.vault.design_info_patsy
+        else:
+            f = self.get_formula()
+
+        if callable(f):
+            _, exog = f(newdata)
+        elif self.vault.formula_engine == "patsy":
+            fml_rhs = re.sub(r".*~", "", f if isinstance(f, str) else self.get_formula())
+            exog = patsy.dmatrix(fml_rhs, newdata.to_pandas())
+        else:
+            from ..formulaic_utils import model_matrices
+            _, exog = model_matrices(f, newdata, formula_engine=self.get_formula_engine())
+
+        return exog
 
     def get_vcov(self, vcov=True):
         if isinstance(vcov, bool):
@@ -272,9 +290,9 @@ def fit_statsmodels(
     mod = mod.fit(**kwargs_fit)
     mod.model.formula = formula
     mod.model.data.frame = d
-    vault = {
-        "modeldata": d,
-        "formula": formula,
-        "package": "statsmodels",
-    }
+    vault = ModelVault(
+        modeldata=d,
+        formula=formula,
+        package="statsmodels",
+    )
     return ModelStatsmodels(mod, vault)

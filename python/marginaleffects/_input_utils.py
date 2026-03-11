@@ -2,7 +2,7 @@ from warnings import warn
 from typing import Tuple
 
 from .sanitize_model import sanitize_model
-from .sanity import (
+from .sanitize import (
     sanitize_by,
     sanitize_hypothesis_null,
     sanitize_newdata,
