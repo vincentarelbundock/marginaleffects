@@ -4,6 +4,12 @@
 type_dictionary_build <- function() {
     text <-
         'class,type
+aft,surv
+aft,haz
+aft,cumhaz
+aft,density
+aft,odds
+aft,link
 bam,response
 bam,link
 bart,ev
