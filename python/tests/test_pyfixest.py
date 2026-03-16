@@ -153,6 +153,37 @@ def test_bare_minimum():
     #
 
 
+def test_pyfixest_categorical_i_operator():
+    """Test that pyfixest models with i() categorical operator work. Issue #238."""
+    import pyfixest as pf
+
+    # Exact reproduction from Issue #238
+    data_pf = pf.get_data()
+    fit_pf = pf.feols("Y ~ i(f1)", data=data_pf)
+
+    # hypotheses() should work with b-index syntax
+    h = hypotheses(fit_pf, "b1 + b2 = 0")
+    assert h.shape[0] == 1
+    assert "estimate" in h.columns
+
+    # hypotheses() should work with Q() quoting for special coefficient names
+    h_q = hypotheses(
+        fit_pf,
+        f"Q({fit_pf._coefnames[1]}) + Q({fit_pf._coefnames[2]}) = 0",
+    )
+    assert h_q.shape[0] == 1
+    assert "estimate" in h_q.columns
+
+    # C() operator for categorical encoding (variable must be Categorical)
+    data = create_test_data().with_columns(
+        pl.col("f1").cast(pl.String).cast(pl.Categorical)
+    )
+    fit2 = feols("Y ~ C(f1)", data=data)
+    h2 = hypotheses(fit2, "b0 + b1 = 0")
+    assert h2.shape[0] == 1
+    assert "estimate" in h2.columns
+
+
 def test_pyfixest_standard_errors_across_models():
     data = create_test_data()
     poisson_data = data.with_columns(pl.col("Y").abs().round())

@@ -70,7 +70,15 @@ class ModelPyfixest(ModelAbstract):
         modeldata = self.get_modeldata()
         variables = self.model._coefnames
         variables = [re.sub(r"\[.*\]", "", x) for x in variables]
-        variables = [x for x in variables if x in modeldata.columns]
+        # Extract inner variable from C(...) or i(...) wrappers
+        extracted = []
+        for v in variables:
+            m = re.match(r"^[Ci]\((\w+)\)$", v)
+            if m:
+                extracted.append(m.group(1))
+            else:
+                extracted.append(v)
+        variables = [x for x in extracted if x in modeldata.columns]
         variables = pl.Series(variables).unique().to_list()
         return variables
 

@@ -8,6 +8,7 @@ New:
 Bug fixes:
 
 * Fixed `comparisons()` for multinomial logit models (`MNLogit`): estimates for different predictor variables were incorrectly identical. The bug was caused by a row-matching issue when joining predictions with metadata for multi-outcome models. Issue #1690.
+* Fixed `ColumnNotFoundError` when using `pyfixest` with categorical variable operators like `i(f1)` or `C(f1)` in formulas. The formula parser extracted operator names (e.g., `i`) as variables, causing a lookup failure in model data. Thanks to @donbowen for Issue #238 and @leostimpfle for the proposed fix.
 
 # 0.4.0
 

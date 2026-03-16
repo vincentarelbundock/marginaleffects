@@ -57,6 +57,7 @@ def get_type_dictionary(formula=None, modeldata=None):
         from .. import formula as fml
 
         variables = fml.parse_variables(formula)
+    variables = [v for v in variables if v in modeldata.columns]
     for v in variables:
         t_i = [
             pl.Int8,

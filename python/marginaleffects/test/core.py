@@ -43,7 +43,21 @@ def eval_string_hypothesis(x: pl.DataFrame, hypothesis: str, lab: str) -> pl.Dat
     def eval_string_function(vec, hypothesis, rowlabels):
         import scipy
 
-        env = {rowlabel: vec[i] for i, rowlabel in enumerate(rowlabels)}
+        # Quote Q() for safe `eval`: Q(C(f1)[T.1]) -> Q("C(f1)[T.1]")
+        hypothesis = re.sub(
+            r"Q\(([^()]*(?:\([^()]*\)[^()]*)*)\)", r'Q("\1")', hypothesis
+        )
+        term_values = {rowlabel: vec[i] for i, rowlabel in enumerate(rowlabels)}
+
+        def Q(name):
+            """Simple wrapper to map quoted variables to values"""
+            if name not in term_values:
+                msg = f"Term '{name}' used in Q() not found. Available terms: {list(term_values.keys())}"
+                raise ValueError(msg)
+            return term_values[name]
+
+        env = dict(term_values)
+        env["Q"] = Q
         env["numpy"] = numpy
         env["scipy"] = scipy
         env["np"] = numpy
