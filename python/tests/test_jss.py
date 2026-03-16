@@ -54,7 +54,10 @@ def test_predictions(impartiality_model):
     assert p.shape[0] == 2
 
 
-@pytest.mark.skipif(sys.platform == "linux", reason="Plot image tests are platform-dependent (font rendering)")
+@pytest.mark.skipif(
+    sys.platform == "linux",
+    reason="Plot image tests are platform-dependent (font rendering)",
+)
 def test_predictions_plot(impartiality_model):
     p = plot_predictions(impartiality_model, by=["democracy", "continent"])
     assert assert_image(p, label="jss_01", folder="jss") is None

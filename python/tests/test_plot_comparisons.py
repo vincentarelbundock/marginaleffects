@@ -7,7 +7,8 @@ from tests.helpers import *
 import statsmodels.formula.api as smf
 
 pytestmark = pytest.mark.skipif(
-    sys.platform == "linux", reason="Plot image tests are platform-dependent (font rendering)"
+    sys.platform == "linux",
+    reason="Plot image tests are platform-dependent (font rendering)",
 )
 
 FIGURES_FOLDER = "plot_comparisons"

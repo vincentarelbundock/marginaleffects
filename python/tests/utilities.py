@@ -107,8 +107,10 @@ def compare_r_to_py(r_obj, py_obj, tolr=1e-3, tola=1e-3, msg=""):
 def _save_plot(fig, filename, height=5, width=10, dpi=100):
     """Save a plotnine figure with deterministic size, bypassing display scaling."""
     import matplotlib
+
     matplotlib.use("Agg", force=True)
     import matplotlib.pyplot as plt
+
     plt.rcParams["savefig.dpi"] = dpi
     plt.rcParams["figure.dpi"] = dpi
     ggsave(fig, filename=filename, verbose=False, height=height, width=width, dpi=dpi)
