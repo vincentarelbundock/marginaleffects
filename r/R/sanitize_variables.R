@@ -19,7 +19,8 @@ get_predictors <- function(variables, mfx) {
     } else if (isTRUE(checkmate::check_character(variables))) {
         predictors <- stats::setNames(
             rep(list(NULL), length(variables)),
-            variables)
+            variables
+        )
     } else {
         # we don't want group ids in multi-level models and other weirdness
         predictors <- insight::find_predictors(mfx@model, component = "all")
@@ -38,7 +39,8 @@ get_predictors <- function(variables, mfx) {
         predictors <- setdiff(predictors, mfx@variable_names_response)
         predictors <- stats::setNames(
             rep(list(NULL), length(predictors)),
-            predictors)
+            predictors
+        )
     }
     stop_zero(predictors)
 
@@ -151,6 +153,12 @@ add_default_values <- function(predictors, mfx) {
         if (is.null(predictors[[v]])) {
             if (check_variable_class(mfx, v, "binary")) {
                 predictors[[v]] <- 0:1
+            } else if (check_variable_class(mfx, v, "factor")) {
+                if (calling_function == "comparisons") {
+                    predictors[[v]] <- "reference"
+                } else if (calling_function == "predictions") {
+                    predictors[[v]] <- as.factor(levels(mfx@modeldata[[v]]))
+                }
             } else if (check_variable_class(mfx, v, "numeric") || check_variable_class(mfx, v, "integer")) {
                 if (calling_function == "comparisons") {
                     predictors[[v]] <- 1
@@ -301,7 +309,7 @@ sanitize_predictor_specs <- function(predictors, mfx) {
                     stop_sprintf(msg)
                 }
             } else if (calling_function == "predictions") {
-                if (is.character(predictors[[v]]) || is.factor(predictors[[v]])) {
+                if (is.character(predictors[[v]])) {
                     if (
                         !all(
                             as.character(predictors[[v]]) %in% as.character(modeldata[[v]])
@@ -325,6 +333,12 @@ sanitize_predictor_specs <- function(predictors, mfx) {
                             msg <- "Some elements of the `variables` argument are not in their original data. Check this variable: %s"
                             msg <- sprintf(msg, v)
                         }
+                        stop_sprintf(msg)
+                    }
+                } else if (is.factor(predictors[[v]])) {
+                    if (!all(predictors[[v]] %in% levels(modeldata[[v]]))) {
+                        msg <- "Some elements of the `variables` argument are not in their original data. Check this variable: %s"
+                        msg <- sprintf(msg, v)
                         stop_sprintf(msg)
                     }
                 }
