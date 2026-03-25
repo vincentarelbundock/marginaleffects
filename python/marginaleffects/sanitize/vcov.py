@@ -14,5 +14,6 @@ def sanitize_vcov(vcov, model):
 
     V = model.get_vcov(vcov)
     if V is not None:
-        assert isinstance(V, np.ndarray), "vcov must be True or a square NumPy array"
+        if not isinstance(V, np.ndarray):
+            raise TypeError("vcov must be True or a square NumPy array")
     return V

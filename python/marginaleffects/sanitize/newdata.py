@@ -72,9 +72,8 @@ def sanitize_newdata(model, newdata, wts, by=[]):
         "contrast",
         "statistic",
     }
-    assert not (set(out.columns) & reserved_names), (
-        f"Input data contain reserved column name(s) : {set(out.columns).intersection(reserved_names)}"
-    )
+    if set(out.columns) & reserved_names:
+        raise ValueError(f"Input data contain reserved column name(s): {set(out.columns).intersection(reserved_names)}")
 
     datagrid_explicit = None
     if isinstance(newdata, pl.DataFrame) and hasattr(newdata, "datagrid_explicit"):

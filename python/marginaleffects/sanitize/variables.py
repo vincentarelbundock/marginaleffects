@@ -11,17 +11,11 @@ HiLo = namedtuple("HiLo", ["variable", "hi", "lo", "lab", "pad", "comparison"])
 
 
 def _clean_global(k, n):
-    if (
-        not isinstance(k, list)
-        and not isinstance(k, pl.Series)
-        and not isinstance(k, np.ndarray)
-    ):
-        out = [k]
+    if isinstance(k, (pl.Series, np.ndarray)):
+        return pl.Series(k) if len(k) > 1 else pl.Series(np.repeat(k[0], n))
     if not isinstance(k, list) or len(k) == 1:
-        out = pl.Series(np.repeat(k, n))
-    else:
-        out = pl.Series(k)
-    return out
+        return pl.Series(np.repeat(k, n))
+    return pl.Series(k)
 
 
 def _get_one_variable_hi_lo(
@@ -153,9 +147,8 @@ def _get_one_variable_hi_lo(
 
         elif callable(value):
             tmp = value(newdata[variable])
-            assert tmp.shape[1] == 2, (
-                f"The function passed to `variables` must return a DataFrame with two columns. Got {tmp.shape[1]}."
-            )
+            if tmp.shape[1] != 2:
+                raise ValueError(f"The function passed to `variables` must return a DataFrame with two columns. Got {tmp.shape[1]}.")
             lo = tmp[:, 0]
             hi = tmp[:, 1]
             lab = "custom"
@@ -225,9 +218,8 @@ def sanitize_variables(
             )
 
     elif isinstance(variables, dict):
-        for v in variables:
+        for v in list(variables.keys()):
             if v not in newdata.columns:
-                del variables[v]
                 warn(f"Variable {v} is not in newdata.")
             else:
                 out.append(

@@ -1,4 +1,5 @@
 import re
+import warnings
 from functools import reduce
 
 import numpy as np
@@ -118,28 +119,22 @@ def _build_comparison_frames(newdata, variables, cross):
                 hi.append(hi_row)
                 lo.append(lo_row)
         else:
-            hi.append(newdata)
-            lo.append(newdata)
-            nd.append(newdata)
+            nd_row = newdata.clone()
+            hi_row = newdata.clone()
+            lo_row = newdata.clone()
             for v in variables:
                 vcomp = "custom" if callable(v.comparison) else v.comparison
-                nd[0] = nd[0].with_columns(
+                shared = [
                     pl.lit(v.variable).alias("term"),
                     pl.lit(v.lab).alias(f"contrast_{v.variable}"),
                     pl.lit(vcomp).alias("marginaleffects_comparison"),
-                )
-                hi[0] = hi[0].with_columns(
-                    pl.lit(v.hi).alias(v.variable),
-                    pl.lit(v.variable).alias("term"),
-                    pl.lit(v.lab).alias(f"contrast_{v.variable}"),
-                    pl.lit(vcomp).alias("marginaleffects_comparison"),
-                )
-                lo[0] = lo[0].with_columns(
-                    pl.lit(v.lo).alias(v.variable),
-                    pl.lit(v.variable).alias("term"),
-                    pl.lit(v.lab).alias(f"contrast_{v.variable}"),
-                    pl.lit(vcomp).alias("marginaleffects_comparison"),
-                )
+                ]
+                nd_row = nd_row.with_columns(*shared)
+                hi_row = hi_row.with_columns(pl.lit(v.hi).alias(v.variable), *shared)
+                lo_row = lo_row.with_columns(pl.lit(v.lo).alias(v.variable), *shared)
+            nd.append(nd_row)
+            hi.append(hi_row)
+            lo.append(lo_row)
     return nd, hi, lo
 
 
@@ -166,9 +161,10 @@ def _finalize_counterfactual_frames(
     pad_df = upcast(pad_df, hi)
     nd = upcast(nd, hi)
 
-    dfs_to_align = [("nd", nd), ("hi", hi), ("lo", lo)]
+    dfs = {"nd": nd, "hi": hi, "lo": lo}
 
-    for df_name, df in dfs_to_align:
+    for df_name in dfs:
+        df = dfs[df_name]
         common_cols = set(pad_df.columns) & set(df.columns)
         for col in common_cols:
             pad_dtype = str(pad_df[col].dtype)
@@ -189,8 +185,8 @@ def _finalize_counterfactual_frames(
                                 .alias(col)
                             )
                     except Exception as e:
-                        print(
-                            f"Warning: Could not convert List column {col} to strings: {e}"
+                        warnings.warn(
+                            f"Could not convert List column {col} to strings: {e}"
                         )
                         try:
                             if col in pad_df.columns and pad_df.height > 0:
@@ -198,7 +194,7 @@ def _finalize_counterfactual_frames(
                             if col in df.columns and df.height > 0:
                                 df = df.explode(col)
                         except Exception as e2:
-                            print(f"Warning: Could not explode List column {col}: {e2}")
+                            warnings.warn(f"Could not explode List column {col}: {e2}")
                             if col in pad_df.columns:
                                 pad_df = pad_df.with_columns(
                                     pad_df[col].cast(pl.String).alias(col)
@@ -206,12 +202,9 @@ def _finalize_counterfactual_frames(
                             if col in df.columns:
                                 df = df.with_columns(df[col].cast(pl.String).alias(col))
 
-        if df_name == "nd":
-            nd = df
-        elif df_name == "hi":
-            hi = df
-        elif df_name == "lo":
-            lo = df
+        dfs[df_name] = df
+
+    nd, hi, lo = dfs["nd"], dfs["hi"], dfs["lo"]
 
     nd = pl.concat([pad_df, nd], how="diagonal")
     hi = pl.concat([pad_df, hi], how="diagonal")
@@ -221,9 +214,7 @@ def _finalize_counterfactual_frames(
     categorical_list_cols = []
     for col in list_cols:
         dtype_str = str(nd[col].dtype)
-        if (
-            "Enum(" in dtype_str or "String" in dtype_str or "UInt32" in dtype_str
-        ) and col in ["Region"]:
+        if "Enum(" in dtype_str or "String" in dtype_str or "UInt32" in dtype_str:
             categorical_list_cols.append(col)
 
     if categorical_list_cols:
@@ -241,7 +232,7 @@ def _prepare_design_matrices(model, nd, hi, lo, pad_rows):
     lo_X = model.get_exog(lo)
     nd_X = model.get_exog(nd)
 
-    if pad_rows >= 0:
+    if pad_rows > 0:
         nd_X = nd_X[pad_rows:]
         hi_X = hi_X[pad_rows:]
         lo_X = lo_X[pad_rows:]

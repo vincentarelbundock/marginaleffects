@@ -200,7 +200,7 @@ def test_lift():
     cmp2 = comparisons(mod, comparison="liftavg")
     assert cmp1.shape[0] == 32
     assert cmp2.shape[0] == 1
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError):
         comparisons(mod, comparison="liftr")
 
 

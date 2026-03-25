@@ -116,7 +116,7 @@ def upcast(df, reference):
         pl.Float64,
     ]
     for col in df.columns:
-        if col in df.columns and col in reference.columns:
+        if col in reference.columns:
             good = reference[col].dtype
             bad = df[col].dtype
             if good != bad:

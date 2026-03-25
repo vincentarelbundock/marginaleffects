@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 from ..datagrid import datagrid  # noqa
 from ..sanitize import sanitize_model
@@ -7,7 +9,7 @@ import polars as pl
 def dt_on_condition(model, condition):
     model = sanitize_model(model)
 
-    condition_new = condition  # two pointers to the same object? this looks like a bug
+    condition_new = copy.deepcopy(condition)
 
     # not sure why newdata gets added
     modeldata = model.get_modeldata()
@@ -19,28 +21,22 @@ def dt_on_condition(model, condition):
     first_key = ""  # special case when the first element is numeric
 
     if isinstance(condition_new, list):
-        assert all(ele in modeldata.columns for ele in condition_new), (
-            "All elements of condition must be columns of the model."
-        )
+        if not all(ele in modeldata.columns for ele in condition_new):
+            raise ValueError("All elements of condition must be columns of the model.")
         first_key = condition_new[0]
         to_datagrid = {key: None for key in condition_new}
 
     elif isinstance(condition_new, dict):
-        assert all(key in modeldata.columns for key in condition_new.keys()), (
-            "All keys of condition must be columns of the model."
-        )
+        if not all(key in modeldata.columns for key in condition_new.keys()):
+            raise ValueError("All keys of condition must be columns of the model.")
         first_key = next(iter(condition_new))
-        to_datagrid = (
-            condition_new  # third pointer to the same object? looks like a BUG
-        )
+        to_datagrid = condition_new
 
-    # not sure why `newdata` sometimes gets added
     if isinstance(condition_new, dict) and "newdata" in to_datagrid.keys():
         condition_new.pop("newdata", None)
 
-    assert 1 <= len(condition_new) <= 4, (
-        f"Lenght of condition must be inclusively between 1 and 4. Got : {len(condition_new)}."
-    )
+    if not (1 <= len(condition_new) <= 4):
+        raise ValueError(f"Length of condition must be inclusively between 1 and 4. Got: {len(condition_new)}.")
 
     for key, value in to_datagrid.items():
         variable_type = model.get_variable_type(key)
@@ -51,20 +47,15 @@ def dt_on_condition(model, condition):
             )
 
         elif variable_type in ["character"]:
-            # get specified names of the condition
-            # here is the BUG, we take the values of "species" back from the model
             to_datagrid[key] = (
                 to_datagrid[key]
                 if to_datagrid[key]
                 else modeldata[key].unique().sort().to_list()
             )
-            assert len(to_datagrid[key]) <= 10, (
-                f"Character type variables of more than 10 unique values are not supported. {key} variable has {len(to_datagrid[key])} unique values."
-            )
+            if len(to_datagrid[key]) > 10:
+                raise ValueError(f"Character type variables of more than 10 unique values are not supported. {key} variable has {len(to_datagrid[key])} unique values.")
 
         elif variable_type in ["boolean", "binary"]:
-            # get specified names of the condition
-            # here is the BUG, we take the values of "species" back from the model
             if to_datagrid[key] is None:
                 to_datagrid[key] = modeldata[key].unique().sort().to_list()
 
@@ -131,15 +122,12 @@ def ordered_cat(dt, k, lab):
 
 
 def validate_plot_args(condition, by, newdata, wts):
-    assert not (not by and newdata is not None), (
-        "The `newdata` argument requires a `by` argument."
-    )
-    assert not (wts is not None and not by), (
-        "The `wts` argument requires a `by` argument."
-    )
-    assert (condition is None and by) or (condition is not None and not by), (
-        "One of the `condition` and `by` arguments must be supplied, but not both."
-    )
+    if not by and newdata is not None:
+        raise ValueError("The `newdata` argument requires a `by` argument.")
+    if wts is not None and not by:
+        raise ValueError("The `wts` argument requires a `by` argument.")
+    if not ((condition is None and by) or (condition is not None and not by)):
+        raise ValueError("One of the `condition` and `by` arguments must be supplied, but not both.")
 
 
 def extract_var_list(condition, by):
@@ -158,9 +146,8 @@ def extract_var_list(condition, by):
 
     var_list = [x for x in var_list if x not in ["newdata", "model"]]
 
-    assert len(var_list) < 5, (
-        "The `condition` and `by` arguments can have a max length of 4."
-    )
+    if len(var_list) >= 5:
+        raise ValueError("The `condition` and `by` arguments can have a max length of 4.")
 
     return var_list
 
@@ -286,10 +273,10 @@ def plot_common(model, dt, y_label, var_list, gray=False, points=0):
         if len(var_list) > 1:
             if gray:
                 # get the number of unique values in the column "var_list[1]"
-                unique_values = dt[var_list[1]].unique().len()
-                if unique_values > 5:
+                unique_values = dt[var_list[1]].unique()
+                if unique_values.len() > 5:
                     raise ValueError(
-                        f"The number of elements in the second position of the `condition` or `by` argument (variable {var_list[1]}) cannot exceed 5. It has currently {len(unique_values)} elements, with values {unique_values}."
+                        f"The number of elements in the second position of the `condition` or `by` argument (variable {var_list[1]}) cannot exceed 5. It has currently {unique_values.len()} elements, with values {unique_values.to_list()}."
                     )
                 custom_line_types = [
                     "solid",

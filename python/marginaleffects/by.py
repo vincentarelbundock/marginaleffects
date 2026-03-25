@@ -1,5 +1,4 @@
 import polars as pl
-import numpy as np
 from typing import List, Optional, Tuple
 
 
@@ -66,8 +65,7 @@ def _get_by_internal(
     else:
         out = pl.DataFrame({"estimate": estimand["estimate"]})
 
-    by = [x for x in by if x in out.columns]
-    by = np.unique(by)
+    by = list(dict.fromkeys(x for x in by if x in out.columns))
 
     if isinstance(by, list) and len(by) == 0:
         if return_groups and "rowid" in out.columns:

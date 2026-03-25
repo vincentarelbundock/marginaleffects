@@ -6,36 +6,29 @@ import scipy.stats as stats
 
 
 def get_jacobian(func, coefs, eps_vcov=None):
-    # forward finite difference (faster)
+    original_shape = None
     if coefs.ndim == 2:
+        original_shape = coefs.shape
         if isinstance(coefs, np.ndarray):
             coefs_flat = coefs.flatten(order="F")
         else:
             coefs_flat = coefs.to_numpy().flatten(order="F")
-        baseline = func(coefs)["estimate"].to_numpy()
-        jac = np.empty((baseline.shape[0], len(coefs_flat)), dtype=np.float64)
-        for i, xi in enumerate(coefs_flat):
-            if eps_vcov is not None:
-                h = eps_vcov
-            else:
-                h = max(abs(xi) * np.sqrt(np.finfo(float).eps), 1e-10)
-            dx = np.copy(coefs_flat)
-            dx[i] = dx[i] + h
-            tmp = dx.reshape(coefs.shape, order="F")
-            jac[:, i] = (func(tmp)["estimate"].to_numpy() - baseline) / h
-        return jac
     else:
-        baseline = func(coefs)["estimate"].to_numpy()
-        jac = np.empty((baseline.shape[0], len(coefs)), dtype=np.float64)
-        for i, xi in enumerate(coefs):
-            if eps_vcov is not None:
-                h = eps_vcov
-            else:
-                h = max(abs(xi) * np.sqrt(np.finfo(float).eps), 1e-10)
-            dx = np.copy(coefs)
-            dx[i] = dx[i] + h
-            jac[:, i] = (func(dx)["estimate"].to_numpy() - baseline) / h
-        return jac
+        coefs_flat = np.asarray(coefs)
+
+    baseline = func(coefs)["estimate"].to_numpy()
+    jac = np.empty((baseline.shape[0], len(coefs_flat)), dtype=np.float64)
+    for i, xi in enumerate(coefs_flat):
+        if eps_vcov is not None:
+            h = eps_vcov
+        else:
+            h = max(abs(xi) * np.sqrt(np.finfo(float).eps), 1e-10)
+        dx = np.copy(coefs_flat)
+        dx[i] = dx[i] + h
+        if original_shape is not None:
+            dx = dx.reshape(original_shape, order="F")
+        jac[:, i] = (func(dx)["estimate"].to_numpy() - baseline) / h
+    return jac
 
 
 def get_se(J, V):
@@ -65,7 +58,7 @@ def get_z_p_ci(df, model, conf_level, hypothesis_null=0):
             "statistic"
         )
     )
-    if hasattr(model, "df_resid") and isinstance(model.df_resid, float):
+    if hasattr(model, "df_resid") and isinstance(model.df_resid, (int, float)):
         dof = model.df_resid
     else:
         dof = np.inf
@@ -93,6 +86,6 @@ def get_z_p_ci(df, model, conf_level, hypothesis_null=0):
                 .map_batches(lambda x: -np.log2(x), return_dtype=pl.Float64)
                 .alias("s_value")
             )
-        except Exception as e:
-            print(f"An exception occurred: {e}")
+        except Exception:
+            pass
     return df

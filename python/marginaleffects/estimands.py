@@ -42,12 +42,12 @@ estimands = {
     "ratio": lambda hi, lo, eps, x, y, w: prep(hi / lo),
     "ratioavg": lambda hi, lo, eps, x, y, w: prep(hi.mean() / lo.mean()),
     "ratioavgwts": lambda hi, lo, eps, x, y, w: prep(
-        (hi * w).sum() / w.sum() / (lo * w).sum() / w.sum()
+        ((hi * w).sum() / w.sum()) / ((lo * w).sum() / w.sum())
     ),
     "lnratio": lambda hi, lo, eps, x, y, w: prep(np.log(hi / lo)),
     "lnratioavg": lambda hi, lo, eps, x, y, w: prep(np.log(hi.mean() / lo.mean())),
     "lnratioavgwts": lambda hi, lo, eps, x, y, w: prep(
-        np.log((hi * w).sum() / w.sum() / (lo * w).sum() / w.sum())
+        np.log(((hi * w).sum() / w.sum()) / ((lo * w).sum() / w.sum()))
     ),
     "lnor": lambda hi, lo, eps, x, y, w: prep(
         np.log((hi / (1 - hi)) / (lo / (1 - lo)))
@@ -69,7 +69,7 @@ estimands = {
     "expdydxavg": lambda hi, lo, eps, x, y, w: prep(
         np.mean(((hi.exp() - lo.exp()) / np.exp(eps)) / eps)
     ),
-    "expdydxavgwts": lambda hi, lo, eps, x, y, w: (
-        prep((((np.exp(hi) - np.exp(lo)) / np.exp(eps)) / eps) * w).sum() / w.sum()
+    "expdydxavgwts": lambda hi, lo, eps, x, y, w: prep(
+        ((((np.exp(hi) - np.exp(lo)) / np.exp(eps)) / eps) * w).sum() / w.sum()
     ),
 }
