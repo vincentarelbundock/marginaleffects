@@ -12,43 +12,31 @@ import copy
 
 
 @doc("""
-# `plot_predictions()`
+Plot predicted values of the outcome variable.
+
 {param_plot_intro_predictions}
 
-## Parameters
-
+Parameters
+----------
 {param_model}
-
 {param_condition_predictions}
-
 {param_by_plot_predictions}
-
 {param_draw}
-
 {param_newdata_plot_predictions}
-
 {param_vcov}
-
 {param_wts}
-
 {param_transform}
-
 {param_points}
-
 {param_gray}
 
-## Examples
-```py
-from marginaleffects import *
-
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-data = get_dataset("thornton")
-
-mod = smf.ols("outcome ~ incentive + distance", data).fit()
-
-plot_predictions(mod, condition = ["distance", "incentive"])
-```
+Examples
+--------
+>>> from marginaleffects import *
+>>> import statsmodels.api as sm
+>>> import statsmodels.formula.api as smf
+>>> data = get_dataset("thornton")
+>>> mod = smf.ols("outcome ~ incentive + distance", data).fit()
+>>> plot_predictions(mod, condition = ["distance", "incentive"])
 """)
 def plot_predictions(
     model,

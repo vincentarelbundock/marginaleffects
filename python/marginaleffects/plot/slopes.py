@@ -12,28 +12,22 @@ from ..docstrings import doc
 
 
 @doc("""
-# `plot_slopes()`
+Plot slopes (partial derivatives) of the regression equation.
+
 {param_plot_intro_slopes}
 
-## Parameters
-
+Parameters
+----------
 {param_model}
-
 {param_variables_plot_slope}
-
 {param_condition_slopes}
-
 {param_by_plot_slopes}
-
 {param_draw}
-
 {param_newdata_plot_slopes}
-
 {param_wts}
-
 {param_vcov}
-
-{param_gray}""")
+{param_gray}
+""")
 def plot_slopes(
     model,
     condition=None,

@@ -111,94 +111,38 @@ class ModelSklearn(ModelAbstract):
 
 
 @doc("""
-# `fit_sklearn()`
-
-Fit a sklearn model with output that is compatible with pymarginaleffects.
+Fit a sklearn model with output compatible with marginaleffects.
 
 This function streamlines the process of fitting sklearn models by:
+parsing the formula, handling missing values, creating model matrices,
+and fitting the model with specified options.
 
-1. Parsing the formula
-2. Handling missing values
-3. Creating model matrices
-4. Fitting the model with specified options
-
-## Parameters
-
+Parameters
+----------
 {models_formula}
+data : pandas.DataFrame or polars.DataFrame
+    Dataframe with the response variable and predictors.
 
-- `data`: (pandas.DataFrame or polars.DataFrame) Dataframe with the response variable and predictors.
-
-{models_categorical_requirement}
-
-- `engine`: (callable) sklearn model class (e.g., LinearRegression, LogisticRegression).
-
+    {models_categorical_requirement}
+engine : callable
+    sklearn model class (e.g., LinearRegression, LogisticRegression).
 {models_kwargs_engine}
 
 {models_fit_returns_Sklearn}
 
-## Examples
-
-```{{python}}
-from marginaleffects import *
-from statsmodels.formula.api import ols
-import polars as pl
-import polars.selectors as cs
-from sklearn.pipeline import make_pipeline
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.linear_model import LinearRegression
-from sklearn.compose import make_column_transformer
-from xgboost import XGBRegressor
-
-
-# Linear regression: Scikit-learn
-military = get_dataset("military")
-
-# Convert categorical variables to proper dtypes
-military = military.with_columns(
-    pl.col("branch").cast(pl.Categorical)
-)
-
-mod_sk = fit_sklearn(
-    "rank ~ officer + hisp + branch",
-    data=military,
-    engine=LinearRegression(),
-)
-avg_predictions(mod_sk, by="branch")
-
-# Linear regression: Statsmodels
-mod_sm = ols("rank ~ officer + hisp + branch", data=military.to_pandas()).fit()
-avg_predictions(mod_sm, by="branch")
-
-# XGBoost: Scikit-learn
-airbnb = get_dataset("airbnb")
-
-# Convert categorical variables to proper dtypes
-catvar = airbnb.select(~cs.numeric()).columns
-airbnb = airbnb.with_columns(
-    [pl.col(c).cast(pl.Categorical) for c in catvar]
-)
-
-train, test = train_test_split(airbnb)
-
-def selector(data):
-    y = data.select(cs.by_name("price", require_all=False))
-    X = data.select(~cs.by_name("price", require_all=False))
-    return y, X
-
-
-preprocessor = make_column_transformer(
-    (OneHotEncoder(), catvar),
-    remainder=FunctionTransformer(lambda x: x.to_numpy()),
-)
-pipeline = make_pipeline(preprocessor, XGBRegressor())
-
-mod = fit_sklearn(selector, data=train, engine=pipeline)
-
-avg_predictions(mod, newdata=test, by="unit_type")
-
-avg_comparisons(mod, variables={{"bedrooms": 2}}, newdata=test)
-```
+Examples
+--------
+>>> from marginaleffects import *
+>>> from sklearn.linear_model import LinearRegression
+>>> import polars as pl
+>>> military = get_dataset("military")
+>>> military = military.with_columns(pl.col("branch").cast(pl.Categorical))
+>>> mod_sk = fit_sklearn(
+...     "rank ~ officer + hisp + branch",
+...     data=military,
+...     engine=LinearRegression(),
+... )
+>>> avg_predictions(mod_sk, by="branch")
 
 {models_notes_sklearn}""")
 def fit_sklearn(formula, data: pl.DataFrame, engine) -> ModelSklearn:

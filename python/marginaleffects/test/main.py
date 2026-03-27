@@ -13,89 +13,65 @@ from .joint import joint_hypotheses
 
 
 @doc("""
-# `hypotheses()`
-
-(Non-)Linear Tests for Null Hypotheses, Joint Hypotheses, Equivalence, Non Superiority, and Non Inferiority.
+(Non-)linear tests for null, joint, equivalence, non-superiority, and non-inferiority hypotheses.
 
 This function calculates uncertainty estimates as first-order approximate standard errors for linear or non-linear
 functions of a vector of random variables with known or estimated covariance matrix. It emulates the behavior of
-the excellent and well-established `car::deltaMethod` and `car::linearHypothesis` functions in R, but it supports
+the excellent and well-established ``car::deltaMethod`` and ``car::linearHypothesis`` functions in R, but it supports
 more models; requires fewer dependencies; expands the range of tests to equivalence and superiority/inferiority;
 and offers convenience features like robust standard errors.
 
-To learn more, visit the package website: <https://marginaleffects.com/>
+To learn more, visit the package website: https://marginaleffects.com/
 
-## Parameters
-
-- `model`: (object) Model object estimated by statsmodels.
-
+Parameters
+----------
+model : object
+    Model object estimated by statsmodels.
 {param_hypothesis}
-
 {param_conf_level}
-
 {param_vcov}
-
 {param_equivalence}
-
 {param_eps_vcov}
+joint : bool, str, or list of str, default False
+    Specifies the joint test of statistical significance. The null hypothesis value can be set using the hypothesis argument.
 
-- `joint`: (bool, str, List[str], default=False) Specifies the joint test of statistical significance. The null hypothesis value can be set using the hypothesis argument.
     - False: Hypothesis are not tested jointly.
     - True: Hypothesis are tested jointly.
     - str: A regular expression to match parameters to be tested jointly.
-    - List[str]: Parameter names to be tested jointly as displayed by `mod.model.data.param_names`.
-    - List[int]: Parameter positions to test jointly where positions refer to the order specified by `mod.model.data.param_names`.
+    - list of str: Parameter names to be tested jointly as displayed by ``mod.model.data.param_names``.
+    - list of int: Parameter positions to test jointly where positions refer to the order specified by ``mod.model.data.param_names``.
+joint_test : str, default "f"
+    Chooses the type of test between "f" and "chisq".
 
-- `joint_test`: (str, default="f") Chooses the type of test between "f" and "chisq".
+Returns
+-------
+MarginaleffectsResult
+    DataFrame containing the results of the hypothesis tests.
 
+Examples
+--------
+>>> from marginaleffects import *
+>>> import statsmodels.api as sm
+>>> import statsmodels.formula.api as smf
+>>> data = get_dataset("thornton")
+>>> model = smf.ols("outcome ~ distance + incentive", data=data).fit()
+>>> hypotheses(model)
+>>> hypotheses(model, hypothesis = 3)
+>>> hypotheses(model, hypothesis="distance = incentive")
+>>> hypotheses(model, hypothesis="(distance + incentive) = 0.1")
+>>> hypotheses(model, hypothesis="distance = incentive", vcov="HC3")
+>>> hypotheses(model, equivalence=(0.0, 10.0))
+>>> hypotheses(model, joint=["distance", "incentive"])
+>>> hypotheses(model, joint="distance|incentive")
 
-## Returns
-(MarginaleffectsResult)
-* DataFrame containing the results of the hypothesis tests.
+Warnings
+--------
+- Tests are conducted directly on the scale defined by the ``type`` argument. For some models, it can make sense to conduct hypothesis or equivalence tests on the "link" scale instead of the "response" scale which is often the default.
+- For hypothesis tests on objects produced by the marginaleffects package, it is safer to use the ``hypothesis`` argument of the original function.
+- The tests assume that the ``hypothesis`` expression is (approximately) normally distributed, which for non-linear functions of the parameters may not be realistic. More reliable confidence intervals can be obtained using the ``inferences()`` (in R only) function with ``method = "boot"``.
 
-## Examples
-```py
-from marginaleffects import *
-
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-data = get_dataset("thornton")
-model = smf.ols("outcome ~ distance + incentive", data=data).fit()
-
-# When `hypothesis` is `None`, `hypotheses()` returns a DataFrame of parameters
-hypotheses(model)
-
-# A different null hypothesis
-hypotheses(model, hypothesis = 3)
-
-# Test of equality between coefficients
-hypotheses(model, hypothesis="distance = incentive")
-
-# Non-linear function
-hypotheses(model, hypothesis="(distance + incentive) = 0.1")
-
-# Robust standard errors
-hypotheses(model, hypothesis="distance = incentive", vcov="HC3")
-
-# Equivalence, non-inferiority, and non-superiority tests
-hypotheses(model, equivalence=(0.0, 10.0))
-
-# Joint hypothesis tests
-hypotheses(model, joint=["distance", "incentive"])
-
-# Joint hypothesis tests with a regular expression
-hypotheses(model, joint="distance|incentive")
-
-# Joint hypothesis tests with a regular expression
-hypotheses(model, joint="i$") # matches `incentive` and `distance` columns
-```
-## Warnings
-
-- Warning #1: Tests are conducted directly on the scale defined by the `type` argument. For some models, it can make sense to conduct hypothesis or equivalence tests on the "link" scale instead of the "response" scale which is often the default.
-- Warning #2: For hypothesis tests on objects produced by the marginaleffects package, it is safer to use the `hypothesis` argument of the original function.
-- Warning #3: The tests assume that the `hypothesis` expression is (approximately) normally distributed, which for non-linear functions of the parameters may not be realistic. More reliable confidence intervals can be obtained using the `inferences()` (in R only) function with `method = "boot"`.
-
-## Details
+Notes
+-----
 {details_tost}""")
 def hypotheses(
     model,

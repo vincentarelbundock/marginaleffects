@@ -236,54 +236,41 @@ class ModelStatsmodels(ModelAbstract):
 
 
 @doc("""
-# `fit_statsmodels()`
-
-Fit a statsmodels model with output that is compatible with pymarginaleffects.
+Fit a statsmodels model with output compatible with marginaleffects.
 
 This function streamlines the process of fitting statsmodels models by:
-1. Parsing the formula
-2. Handling missing values
-3. Creating model matrices
-4. Fitting the model with specified options
+parsing the formula, handling missing values, creating model matrices,
+and fitting the model with specified options.
 
-## Parameters
-
+Parameters
+----------
 {models_formula}
+data : pandas.DataFrame or polars.DataFrame
+    Dataframe with the response variable and predictors.
 
-- `data`: (pandas.DataFrame or polars.DataFrame) Dataframe with the response variable and predictors.
-
-{models_categorical_requirement}
-
-- `engine`: (callable) statsmodels model class (e.g., OLS, Logit).
-
+    {models_categorical_requirement}
+engine : callable
+    statsmodels model class (e.g., OLS, Logit).
 {models_kwargs_engine}
+kwargs_fit : dict, default {{}}
+    Additional arguments passed to the model's fit method.
 
-- `kwargs_fit`: (dict, default={{}}) Additional arguments passed to the model's fit method.
-    - Example: `{{'cov_type': 'HC3'}}`
+    Example: ``{{'cov_type': 'HC3'}}``
 
 {models_fit_returns_Statsmodels}
 
-## Examples
-
-```python
-from marginaleffects import fit_statsmodels, get_dataset, predictions, slopes, comparisons
-
-import statsmodels.api as sm
-
-data = get_dataset("thornton")
-
-# Model with robust standard errors
-model_robust = fit_statsmodels(
-    formula="outcome ~ distance + incentive",
-    data=data,
-    engine=sm.OLS,
-    kwargs_fit={{"cov_type": "HC3"}}
-)
-
-predictions(model_robust)
-slopes(model_robust)
-comparisons(model_robust)
-```
+Examples
+--------
+>>> from marginaleffects import fit_statsmodels, get_dataset, predictions, slopes, comparisons
+>>> import statsmodels.api as sm
+>>> data = get_dataset("thornton")
+>>> model_robust = fit_statsmodels(
+...     formula="outcome ~ distance + incentive",
+...     data=data,
+...     engine=sm.OLS,
+...     kwargs_fit={{"cov_type": "HC3"}}
+... )
+>>> predictions(model_robust)
 
 {models_notes_statsmodels}""")
 @validate_types
