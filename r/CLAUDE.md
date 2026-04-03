@@ -10,29 +10,29 @@ NEVER CHANGE TESTS UNLESS I ASK YOU TO EXPLICITLY.
 
 ## Key Commands
 
+All commands run from the **repo root** (`/Users/vincent/repos/marginaleffects/`), not from `r/`.
+
 ### Development
-- `make install` - Install package with dependencies=FALSE using devtools
-- `make deps` - Install package with all dependencies using devtools
-- `make document` - Generate documentation using devtools::document()
-- `make check` - Run R CMD check (includes document step and test runner setup)
+- `make r-install` - Install package (dependencies=FALSE) via devtools (runs `r-document` first)
+- `make r-dependencies` - Install package with all dependencies
+- `make r-document` - Generate roxygen docs and populate website/man/r
+- `make r-check` - Run R CMD check (includes document step and test runner setup)
 
 ### Testing
-- `make testone testfile="path/to/test.R"` - Run a single test file (e.g., `make testone testfile="inst/tinytest/test-bugfix.R"`)
-- `make testseq` - Run all tests sequentially using pkgload::load_all()
-- `make test` - Build, install, and test with parallel processing (10 cores)
-- `make testplot` - Run plot-specific tests (predictions, comparisons, slopes)
-- `make autodiff` - Run automatic differentiation tests (requires uv environment)
+- `make r-testone testfile="inst/tinytest/test-bugfix.R"` - Run a single test file
+- `make r-testseq` - Run all tests sequentially using pkgload::load_all()
+- `make r-test` - Build, install, and test in parallel (10 cores)
+- `make r-testplot` - Run plot-specific tests (predictions, comparisons, slopes)
+- `make r-autodiff` - Run automatic differentiation tests (requires uv environment)
 
 ### Documentation & Website
-- `make website` - Render documentation website using altdoc (uses reticulate virtualenv)
-- `make html` - Render book to HTML using Quarto
-- `make htmldev` - Render book to HTML in development mode
-- `make pdf` - Render book to PDF using Quarto
-- `make news` - Download the latest changelog
+- `make document` - Generate docs for both R and Python, populate website
+- `make r-document` - Generate R docs only
 
 ### UV Environment (Python/JAX for Autodiff)
-- `make uv` - Clean and rebuild the uv virtual environment
+- `make r-uv` - Clean and rebuild the uv virtual environment
 - The package uses `uv` for Python dependency management in autodiff features
+- Test commands (`r-testone`, `r-testseq`, `r-test`) run via `uv run Rscript`
 
 ## Architecture
 
@@ -97,13 +97,57 @@ Tests are organized by:
 - Model packages (`test-pkg-brms.R`, `test-pkg-lme4.R`, etc.)
 - Special cases (`test-interaction.R`, `test-missing.R`, etc.)
 
-### Test Development Guidelines
-- All test files source `helpers.R` and use `using("marginaleffects")`
-- Use `requiet()` to quietly load optional packages
-- Model archive contains pre-fitted models to avoid expensive refitting during tests
-- Visual regression tests use `tinysnapshot` with SVG output format
-- `AUTODIFF` variable controls whether autodiff tests are enabled (default: FALSE in helpers.R)
-- Environment variables: `ON_LOCAL`, `ON_CRAN`, `ON_GH`, `ON_CI`, `ON_WINDOWS`, `ON_OSX` control test execution context
+## Test-Driven Development
+
+When implementing new features or bug fixes, follow this workflow:
+
+**1. Write the test first**
+
+Add a test to the appropriate file in `inst/tinytest/` before writing any implementation code. For a new feature, use the relevant functionality file (`test-predictions.R`, `test-slopes.R`, etc.) or create `test-pkg-[package].R` for new model support. For a bug fix, add the test to `test-bugfix.R`.
+
+**2. Verify the test fails**
+
+```bash
+make testone testfile="inst/tinytest/test-bugfix.R"
+```
+
+The test must fail before you write any implementation. If it passes immediately, the test is wrong or the feature already exists.
+
+**3. Implement the minimal fix**
+
+Write the smallest change that makes the test pass. Do not refactor or extend beyond what the test requires.
+
+**4. Verify the test passes**
+
+```bash
+make testone testfile="inst/tinytest/test-bugfix.R"
+```
+
+**5. Run the full test suite**
+
+```bash
+make testseq
+```
+
+Ensure no regressions before considering the work done.
+
+### Writing Good Tests
+
+- Always source helpers and load the package at the top:
+  ```r
+  source("helpers.R")
+  using("marginaleffects")
+  ```
+- Use `requiet()` for optional package dependencies, not `library()` or `require()`
+- Fit models inline using built-in R datasets (`mtcars`, `iris`, `sleep`) whenever possible. Fall back to pre-fitted models from `inst/tinytest/modelarchive/` only when the model class is too expensive to fit inline or requires optional packages that make inline fitting impractical.
+- Use the custom expectations when applicable: `expect_slopes()`, `expect_predictions()`, `expect_margins()`
+- For new model support, the test file `test-pkg-[package].R` should cover at minimum: `predictions()`, `comparisons()`, and `slopes()` on a simple model
+
+### What Not to Do
+
+- Do not modify existing tests unless explicitly asked
+- Do not fit complex models inline when an archived model will do
+- Do not write tests that only pass in one execution environment — use the `ON_LOCAL` / `ON_CI` / `ON_CRAN` flags to gate environment-specific behavior
 
 ## Model Method Development
 
