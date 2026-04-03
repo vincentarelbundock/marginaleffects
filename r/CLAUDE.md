@@ -131,6 +131,11 @@ make testseq
 
 Ensure no regressions before considering the work done.
 
+**6. Version bump and NEWS**
+
+- Increment the 4th digit of the version number in `DESCRIPTION` (e.g., `0.6.1.0001` → `0.6.1.0002`).
+- Add a bullet to `NEWS.md` with the GitHub issue number and thanks to the reporter.
+
 ### Writing Good Tests
 
 - Always source helpers and load the package at the top:

@@ -469,3 +469,19 @@ h1 <- avg_comparisons(mod, variables = list(cyl = "pairwise"), hypothesis = ~ I(
 h2 <- avg_comparisons(mod, variables = list(cyl = "pairwise"), hypothesis = ~ I(custom_wmean(x)), vcov = FALSE)
 # Results should be different when different weights are used
 expect_true(abs(h1$estimate - h2$estimate) > 0.1)
+
+
+# hypothesis formula with external variables should not raise scoping error (Issue #1707)
+mod <- lm(mpg ~ cyl * am, data = mtcars)
+www <- cbind(c1 = c(-1, -1, 0), c2 = c(-1, -1, 2))
+p1 <- avg_predictions(
+  mod,
+  variables = c("cyl", "am"),
+  hypothesis = ~ I(drop(t(cbind(c1 = c(-1, -1, 0), c2 = c(-1, -1, 2))) %*% x)) | am
+)
+p2 <- avg_predictions(
+  mod,
+  variables = c("cyl", "am"),
+  hypothesis = ~ I(drop(t(www) %*% x)) | am
+)
+expect_equivalent(p1, p2)

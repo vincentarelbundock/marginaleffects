@@ -10,6 +10,7 @@ New:
 
 Bug fixes:
 
+* `hypothesis` formula with external variables (e.g., `~ I(drop(t(www) %*% x)) | am`) no longer raises a scoping error. Thanks to @mattansb for report #1707.
 * `datagrid()` now correctly treats numeric fixed effects in `fixest` models (specified via `|`) as categorical variables instead of computing their mean. Thanks to @arcruz0 for report #1685.
 * Avoid collapsing `contrast` rows when using `by` and `comparison="lift"`. The row labels were not unique. Thanks to @coughlanja for report #1669.
 * Fix standard errors for `flexsurv` predictions by syncing transformed coefficients and delegating prediction SEs to `flexsurv::predict()` when `vcov=TRUE`. Thanks to @colinorourke for report #1670.
