@@ -110,3 +110,23 @@ p2 <- predictions(
 )
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$std.error, p2$std.error)
+
+
+# Issue #1703: avg_predictions with factor variable should use all levels, not just those in newdata
+df <- mtcars
+df$vs <- as.factor(df$vs)
+fit <- lm(mpg ~ hp + vs, data = df)
+df_subset <- df[df$vs == 1, ]
+rm(df)
+fit$model <- NULL
+p <- avg_predictions(model = fit, newdata = df_subset, variables = "vs")
+expect_inherits(p, "data.frame")
+expect_true(nrow(p) == 2)
+expect_true(all(c("0", "1") %in% as.character(p$vs)))
+
+# Issue #1703: factor-in-formula should not regress
+mod <- lm(mpg ~ factor(cyl), data = mtcars)
+p <- avg_predictions(mod, variables = "cyl")
+expect_inherits(p, "data.frame")
+expect_true(nrow(p) == 3)
+expect_true(all(c(4, 6, 8) %in% p$cyl))

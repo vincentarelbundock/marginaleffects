@@ -166,8 +166,11 @@ add_default_values <- function(predictors, mfx) {
                 if (calling_function == "comparisons") {
                     predictors[[v]] <- "reference"
                 } else if (calling_function == "predictions") {
-                    # TODO: warning when this is too large. Here or elsewhere?
-                    predictors[[v]] <- unique(mfx@modeldata[[v]])
+                    if (is.factor(mfx@modeldata[[v]]) && !is.null(levels(mfx@modeldata[[v]]))) {
+                        predictors[[v]] <- as.factor(levels(mfx@modeldata[[v]]))
+                    } else {
+                        predictors[[v]] <- unique(mfx@modeldata[[v]])
+                    }
                 }
             }
         }
@@ -302,9 +305,13 @@ sanitize_predictor_specs <- function(predictors, mfx) {
                 }
             } else if (calling_function == "predictions") {
                 if (is.character(predictors[[v]]) || is.factor(predictors[[v]])) {
+                    valid_values <- as.character(modeldata[[v]])
+                    if (is.factor(modeldata[[v]])) {
+                        valid_values <- union(valid_values, levels(modeldata[[v]]))
+                    }
                     if (
                         !all(
-                            as.character(predictors[[v]]) %in% as.character(modeldata[[v]])
+                            as.character(predictors[[v]]) %in% valid_values
                         )
                     ) {
                         invalid <- intersect(
