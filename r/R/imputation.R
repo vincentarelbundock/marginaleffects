@@ -41,10 +41,14 @@ process_imputation <- function(mfx) {
         # fail for with.mids() models (e.g., bs() gets expanded into basis columns).
         if (is.null(calltmp[["newdata"]]) && !is.null(micedata)) {
             nd <- micedata[[i]]
-            # Apply subset from the original model call if present
+            # Apply subset from the original model call if present.
+            # Use the formula environment as enclos so external variables
+            # (e.g., subset = year >= cutoff_year) resolve correctly.
+            # Use which() to drop NA rows, matching model.frame() behavior.
             subcall <- modellist[[i]]$call$subset
             if (!is.null(subcall)) {
-                nd <- nd[eval(subcall, envir = nd), , drop = FALSE]
+                enclos <- tryCatch(environment(stats::formula(modellist[[i]])), error = function(e) parent.frame())
+                nd <- nd[which(eval(subcall, envir = nd, enclos = enclos)), , drop = FALSE]
             }
             calltmp[["newdata"]] <- nd
         }

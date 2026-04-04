@@ -29,7 +29,10 @@ get_modeldata_mids <- function(model, envir = parent.frame()) {
             environment(),
             .GlobalEnv
         )
-        # Also search all frames on the call stack (e.g., tinytest evaluation env)
+        # Also search all frames on the call stack (e.g., tinytest evaluation env).
+        # Note: this could in theory match an unrelated mids object with the same
+        # name in a higher frame, but this is a pragmatic tradeoff to support
+        # non-standard evaluation contexts.
         envs <- c(envs, sys.frames())
 
         imp <- NULL
