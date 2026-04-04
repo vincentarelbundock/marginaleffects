@@ -47,7 +47,8 @@ process_imputation <- function(mfx) {
             # Use which() to drop NA rows, matching model.frame() behavior.
             subcall <- modellist[[i]]$call$subset
             if (!is.null(subcall)) {
-                enclos <- tryCatch(environment(stats::formula(modellist[[i]])), error = function(e) parent.frame())
+                fallback_env <- parent.frame()
+                enclos <- tryCatch(environment(stats::formula(modellist[[i]])), error = function(e) fallback_env)
                 nd <- nd[which(eval(subcall, envir = nd, enclos = enclos)), , drop = FALSE]
             }
             calltmp[["newdata"]] <- nd
