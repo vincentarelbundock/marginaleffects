@@ -162,6 +162,12 @@ add_default_values <- function(predictors, mfx) {
                         predictors[[v]] <- stats::fivenum(mfx@modeldata[[v]])
                     }
                 }
+            } else if (check_variable_class(mfx, v, "factor")) {
+                if (calling_function == "comparisons") {
+                    predictors[[v]] <- "reference"
+                } else if (calling_function == "predictions") {
+                    predictors[[v]] <- as.factor(levels(mfx@modeldata[[v]]))
+                }
             } else {
                 if (calling_function == "comparisons") {
                     predictors[[v]] <- "reference"
@@ -302,9 +308,13 @@ sanitize_predictor_specs <- function(predictors, mfx) {
                 }
             } else if (calling_function == "predictions") {
                 if (is.character(predictors[[v]]) || is.factor(predictors[[v]])) {
+                    valid_values <- as.character(modeldata[[v]])
+                    if (is.factor(modeldata[[v]])) {
+                        valid_values <- union(valid_values, levels(modeldata[[v]]))
+                    }
                     if (
                         !all(
-                            as.character(predictors[[v]]) %in% as.character(modeldata[[v]])
+                            as.character(predictors[[v]]) %in% valid_values
                         )
                     ) {
                         invalid <- intersect(
