@@ -94,7 +94,7 @@ experiment_data <- d %>%
     group_by(device, lang) %>%
     mutate(
         treatment = sample(c("treatment", "control"), size = n(), replace = T),
-        p = case_match(treatment, "treatment" ~ p_treat, .default = p_control),
+        p = ifelse(treatment == "treatment", p_treat, p_control),
         y = rbinom(n(), 1, p)
     ) %>%
     ungroup()
