@@ -146,6 +146,57 @@ h <- hypotheses(mod_mice, hypothesis = "Sepal.Length = 0", equivalence = c(-1, 1
 expect_false(anyNA(h$std.error))
 expect_false(anyNA(h$estimate))
 
+# Issue #1682: avg_comparisons() with mira + bs() + subset= gives wrong results
+requiet("splines")
+set.seed(42)
+n <- 400
+dat1682 <- data.frame(
+    age  = runif(n, 50, 90),
+    x1   = rbinom(n, 1, 0.5),
+    x2   = rnorm(n),
+    year = sample(2019:2024, n, replace = TRUE)
+)
+dat1682$y <- rgamma(n,
+    shape = 4,
+    rate  = 4 / exp(1.2 - 0.3 * dat1682$x1 + 0.005 * (dat1682$age - 70)^2 / 100 + 0.1 * dat1682$x2)
+)
+dat1682$x2[sample(n, 60)] <- NA
+dat1682$age[sample(n, 20)] <- NA
+imp1682 <- mice(
+    data.frame(y = dat1682$y, x1 = dat1682$x1, x2 = dat1682$x2, age = dat1682$age, year = dat1682$year),
+    m = 5, seed = 123, printFlag = FALSE
+)
+fit_mids1682 <- with(
+    imp1682,
+    glm(y ~ x1 + bs(age, 3) + x2,
+        family = Gamma(link = "log"),
+        subset = year >= 2022)
+)
+# without newdata (was buggy)
+res_auto <- avg_comparisons(fit_mids1682, variables = "x1", type = "response")
+# manual mira approach (known correct)
+fits_manual1682 <- lapply(1:5, function(i) {
+    d <- complete(imp1682, i)
+    d <- d[d$year >= 2022, ]
+    glm(y ~ x1 + bs(age, 3) + x2, family = Gamma(link = "log"), data = d)
+})
+fit_manual1682 <- mice::as.mira(fits_manual1682)
+res_manual <- avg_comparisons(fit_manual1682, variables = "x1", type = "response")
+# estimates should be close (not near-zero vs correct)
+expect_equivalent(res_auto$estimate, res_manual$estimate, tolerance = 0.1)
+
+
+# Issue #1682: warning when mids data cannot be recovered and newdata is NULL
+local({
+    fits_local <- lapply(1:3, function(i) lm(mpg ~ cyl + disp, data = mtcars))
+    mira_no_mids <- mice::as.mira(fits_local)
+    expect_warning(
+        avg_comparisons(mira_no_mids, variables = "cyl"),
+        pattern = "Could not recover"
+    )
+})
+
+
 exit_file("scoping")
 # Issue 1269: transforms must be apply after pooling
 data("lalonde_mis", package = "cobalt")

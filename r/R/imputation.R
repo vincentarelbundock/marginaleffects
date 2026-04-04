@@ -23,10 +23,31 @@ process_imputation <- function(mfx) {
         stop_sprintf("MI class not implemented yet.")
     }
 
+    # Issue #1682: Warn once if we can't recover the mids data and newdata is NULL
+    if (is.null(micedata) && is.null(mfxcall[["newdata"]])) {
+        warning("Could not recover the original data from the `mids` object. ",
+                "When the model formula contains in-formula transformations (e.g., `bs()`, `poly()`, `log()`), ",
+                "results may be incorrect. Please supply an explicit `newdata` argument.",
+                call. = FALSE)
+    }
+
     mfxlist <- vector("list", length(modellist))
     for (i in seq_along(modellist)) {
         calltmp <- mfxcall
         calltmp[["model"]] <- modellist[[i]]
+
+        # Issue #1682: When newdata is NULL, provide the correct completed dataset
+        # so individual models don't fall back on insight::get_data() which can
+        # fail for with.mids() models (e.g., bs() gets expanded into basis columns).
+        if (is.null(calltmp[["newdata"]]) && !is.null(micedata)) {
+            nd <- micedata[[i]]
+            # Apply subset from the original model call if present
+            subcall <- modellist[[i]]$call$subset
+            if (!is.null(subcall)) {
+                nd <- nd[eval(subcall, envir = nd), , drop = FALSE]
+            }
+            calltmp[["newdata"]] <- nd
+        }
 
         # Handle deferred newdata processing for calls like subset(treat == 1)
         if ("newdata" %in% names(calltmp) && rlang::is_call(calltmp[["newdata"]])) {

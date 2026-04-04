@@ -29,6 +29,8 @@ get_modeldata_mids <- function(model, envir = parent.frame()) {
             environment(),
             .GlobalEnv
         )
+        # Also search all frames on the call stack (e.g., tinytest evaluation env)
+        envs <- c(envs, sys.frames())
 
         imp <- NULL
         for (ev in envs) {

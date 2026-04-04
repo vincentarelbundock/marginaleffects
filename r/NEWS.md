@@ -13,6 +13,7 @@ Bug fixes:
 * `hypothesis` formula with external variables (e.g., `~ I(drop(t(www) %*% x)) | am`) no longer raises a scoping error. Thanks to @mattansb for report #1707.
 * `datagrid()` now correctly treats numeric fixed effects in `fixest` models (specified via `|`) as categorical variables instead of computing their mean. Thanks to @arcruz0 for report #1685.
 * Avoid collapsing `contrast` rows when using `by` and `comparison="lift"`. The row labels were not unique. Thanks to @coughlanja for report #1669.
+* `avg_comparisons()` (and related functions) no longer return silently incorrect results for `mira` objects when the formula contains in-formula transformations like `bs()` and `subset=` was used in the model call. Thanks to @dmongin for report #1682.
 * `avg_predictions()` with factor `variables` now uses all factor levels (not just those observed in `newdata`) when the original model data is unavailable. Thanks to @trose64 for report #1703.
 * Fix standard errors for `flexsurv` predictions by syncing transformed coefficients and delegating prediction SEs to `flexsurv::predict()` when `vcov=TRUE`. Thanks to @colinorourke for report #1670.
 
