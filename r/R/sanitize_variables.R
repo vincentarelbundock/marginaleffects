@@ -162,18 +162,15 @@ add_default_values <- function(predictors, mfx) {
                         predictors[[v]] <- stats::fivenum(mfx@modeldata[[v]])
                     }
                 }
-            } else if (check_variable_class(mfx, v, "factor")) {
-                if (calling_function == "comparisons") {
-                    predictors[[v]] <- "reference"
-                } else if (calling_function == "predictions") {
-                    predictors[[v]] <- as.factor(levels(mfx@modeldata[[v]]))
-                }
             } else {
                 if (calling_function == "comparisons") {
                     predictors[[v]] <- "reference"
                 } else if (calling_function == "predictions") {
-                    # TODO: warning when this is too large. Here or elsewhere?
-                    predictors[[v]] <- unique(mfx@modeldata[[v]])
+                    if (is.factor(mfx@modeldata[[v]]) && !is.null(levels(mfx@modeldata[[v]]))) {
+                        predictors[[v]] <- as.factor(levels(mfx@modeldata[[v]]))
+                    } else {
+                        predictors[[v]] <- unique(mfx@modeldata[[v]])
+                    }
                 }
             }
         }
