@@ -1,8 +1,6 @@
 inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, data_train = NULL, mfx = NULL, ...) {
     insight::check_if_installed("rsample")
 
-    out <- x
-
     if (!is.null(estimator)) {
         bootfun <- function(split, ...) {
             d <- rsample::analysis(split)
@@ -78,16 +76,6 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     ci$term <- as.numeric(ci$term)
     ci <- ci[order(ci$term), ]
 
-    out$conf.low <- ci$.lower
-    out$conf.high <- ci$.upper
-
-    cols <- setdiff(names(out), c("p.value", "std.error", "statistic", "s.value", "df"))
-    out <- out[, cols, drop = FALSE]
-
-    if (all(out$term == seq_len(nrow(out)))) {
-        out$term <- NULL
-    }
-
     draws <- lapply(
         splits$results,
         function(x) as.matrix(x[, "estimate", drop = FALSE])
@@ -96,10 +84,15 @@ inferences_rsample <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc
     draws <- do.call("cbind", draws)
     colnames(draws) <- NULL
 
-    mfx <- attr(x, "marginaleffects")
-    mfx@draws <- draws
-    mfx@inferences <- splits
-    attr(out, "marginaleffects") <- mfx
-
-    return(out)
+    list(
+        conf.low = ci$.lower,
+        conf.high = ci$.upper,
+        std.error = NULL,
+        p.value = NULL,
+        statistic = NULL,
+        s.value = NULL,
+        draws = draws,
+        inferences_object = splits,
+        rsample_term_cleanup = TRUE
+    )
 }

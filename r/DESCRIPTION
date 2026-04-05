@@ -333,6 +333,8 @@ Collate:
     'sanitize_reserved.R'
     'sanitize_type.R'
     'sanitize_variables.R'
+    'sanitize_variables_class.R'
+    'sanitize_variables_specs.R'
     'sanitize_vcov.R'
     'sanity.R'
     'sanity_by.R'

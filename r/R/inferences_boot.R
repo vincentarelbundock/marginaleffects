@@ -1,8 +1,6 @@
 inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", estimator = NULL, data_train = NULL, mfx = NULL, ...) {
     insight::check_if_installed("boot")
 
-    out <- x
-
     if (!is.null(estimator)) {
         bootfun <- function(data, indices) {
             d <- data[indices, , drop = FALSE]
@@ -45,21 +43,22 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
     ci <- lapply(ci_list, function(x) x[[pos]])
     ci <- do.call("rbind", ci)[, cols]
 
-    # add CI to original {marginaleffects} call
     if (is.matrix(ci)) {
-        out$conf.low <- ci[, 1]
-        out$conf.high <- ci[, 2]
+        conf_low <- ci[, 1]
+        conf_high <- ci[, 2]
     } else {
-        out$conf.low <- ci[1]
-        out$conf.high <- ci[2]
+        conf_low <- ci[1]
+        conf_high <- ci[2]
     }
 
-    cols <- setdiff(names(out), c("p.value", "std.error", "statistic", "s.value", "df"))
-    out <- out[, cols, drop = FALSE]
-
-    mfx@draws <- t(B$t)
-    mfx@inferences <- B
-    attr(out, "marginaleffects") <- mfx
-
-    return(out)
+    list(
+        conf.low = conf_low,
+        conf.high = conf_high,
+        std.error = NULL,
+        p.value = NULL,
+        statistic = NULL,
+        s.value = NULL,
+        draws = t(B$t),
+        inferences_object = B
+    )
 }

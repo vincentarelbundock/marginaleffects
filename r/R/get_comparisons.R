@@ -119,7 +119,18 @@ get_comparisons <- function(
     # it should be the "correct" size
     # also need `x` when `x` is in the signature of the `comparison` custom function
 
-    elasticities <- prepare_elasticities(variables, original, out, by, elasticities)
+    # Build elasticity map: original predictor values aligned with out rows
+    FUN_elast <- function(z) {
+        (is.character(z$comparison) && z$comparison %in% elasticities) ||
+            (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
+    }
+    elast_vars <- Filter(FUN_elast, variables)
+    if (length(elast_vars) > 0 && !is.null(original)) {
+        for (v in names(elast_vars)) {
+            elast_vars[[v]] <- original[[v]][out[term == v]$rowid]
+        }
+    }
+    elasticities <- elast_vars
 
     draws <- attr(pred_lo, "posterior_draws")
     draws_lo <- attr(pred_lo, "posterior_draws")
@@ -241,53 +252,41 @@ get_comparisons <- function(
 
 
 predictions_hi_lo <- function(model, lo, hi, type, ...) {
-    # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
-    if (inherits(model, c("brmsfit", "bart"))) {
-        if (!"rowid" %in% colnames(lo)) {
-            lo$rowid <- hi$rowid <- seq_len(nrow(lo))
-        }
+    # Batch lo+hi into a single predict call for all models.
+    # This halves the number of predict() calls per contrast.
+    if (!"rowid" %in% colnames(lo)) {
+        lo$rowid <- hi$rowid <- seq_len(nrow(lo))
+    }
 
-        both <- rbindlist(list(lo, hi))
+    both <- rbindlist(list(lo, hi))
 
-        pred_both <- get_predict_error(
-            model,
-            type = type,
-            newdata = both,
-            ...
-        )
+    pred_both <- get_predict_error(
+        model,
+        type = type,
+        newdata = both,
+        ...
+    )
 
-        pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
+    # Preserve posterior_draws before setDT conversion
+    draws_attr <- attr(pred_both, "posterior_draws")
+    data.table::setDT(pred_both)
 
-        pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
-        pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
-
-        draws <- attr(pred_both, "posterior_draws")
-        draws_lo <- draws[pred_both$lo, , drop = FALSE]
-        draws_hi <- draws[!pred_both$lo, , drop = FALSE]
-
-        attr(pred_lo, "posterior_draws") <- draws_lo
-        attr(pred_hi, "posterior_draws") <- draws_hi
+    # Split: first half = lo, second half = hi (per group if present)
+    if ("group" %in% colnames(pred_both)) {
+        pred_both[, "marginaleffects_is_lo" := seq_len(.N) <= .N / 2, by = "group"]
     } else {
-        pred_lo <- get_predict_error(
-            model,
-            type = type,
-            newdata = lo,
-            ...
-        )
+        pred_both[, "marginaleffects_is_lo" := seq_len(.N) <= .N / 2]
+    }
 
-        pred_hi_result <- myTryCatch(get_predict(
-            model,
-            type = type,
-            newdata = hi,
-            ...
-        ))
+    is_lo <- pred_both$marginaleffects_is_lo
+    select_cols <- intersect(c("rowid", "group", "estimate"), colnames(pred_both))
+    pred_lo <- pred_both[is_lo, select_cols, with = FALSE]
+    pred_hi <- pred_both[!is_lo, select_cols, with = FALSE]
 
-        # otherwise we keep the full error object instead of extracting the value
-        if (inherits(pred_hi_result$value, "data.frame")) {
-            pred_hi <- pred_hi_result$value
-        } else {
-            pred_hi <- pred_hi_result$error
-        }
+    # Split posterior draws if present (Bayesian models)
+    if (!is.null(draws_attr)) {
+        attr(pred_lo, "posterior_draws") <- draws_attr[is_lo, , drop = FALSE]
+        attr(pred_hi, "posterior_draws") <- draws_attr[!is_lo, , drop = FALSE]
     }
 
     return(list(pred_lo = pred_lo, pred_hi = pred_hi))
@@ -461,59 +460,3 @@ compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, vari
 
 
 
-prepare_elasticities <- function(variables, original, out, by, elasticities) {
-    FUN <- function(z) {
-        (is.character(z$comparison) && z$comparison %in% elasticities) ||
-            (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
-    }
-    elasticities <- Filter(FUN, variables)
-
-    if (length(elasticities) > 0) {
-        # assigning a subset of "original" to "idx1" takes time and memory
-        # better to do this here for most columns and add the "v" column only
-        # in the loop
-        if (!is.null(original)) {
-            idx1 <- c(
-                "rowid",
-                "rowidcf",
-                "term",
-                "group",
-                grep("^contrast", colnames(original), value = TRUE)
-            )
-            idx1 <- intersect(idx1, colnames(original))
-            idx1 <- original[, ..idx1]
-        }
-
-        for (v in names(elasticities)) {
-            idx2 <- unique(c(
-                "rowid",
-                "term",
-                "group",
-                by,
-                grep("^contrast", colnames(out), value = TRUE)
-            ))
-            idx2 <- intersect(idx2, colnames(out))
-            # discard other terms to get right length vector
-            idx2 <- out[term == v, ..idx2]
-            # original is NULL when cross=TRUE
-            if (!is.null(original)) {
-                # if not first iteration, need to remove previous "v" and "elast"
-                if (v %in% colnames(idx1)) {
-                    idx1[, (v) := NULL]
-                }
-                if ("elast" %in% colnames(idx1)) {
-                    idx1[, elast := NULL]
-                }
-                idx1[, (v) := original[[v]]]
-                setnames(idx1, old = v, new = "elast")
-                on_cols <- intersect(colnames(idx1), colnames(idx2))
-                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[
-                    ,
-                    elast := elast
-                ])
-            }
-            elasticities[[v]] <- idx2$elast
-        }
-    }
-    return(elasticities)
-}

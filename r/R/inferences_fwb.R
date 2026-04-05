@@ -1,7 +1,6 @@
 inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", mfx = NULL, ...) {
     insight::check_if_installed("fwb", minimum_version = "0.5.0")
 
-    out <- x
     call_mfx <- mfx@call
     call_mfx[["vcov"]] <- FALSE
 
@@ -55,30 +54,18 @@ inferences_fwb <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", m
     # Extract SEs and CIs
     fwb_summary <- tidy(summary(B, conf = conf_level, ci.type = conf_type, p.value = TRUE))
 
-    out$std.error <- fwb_summary$std.error
-    out$conf.low <- fwb_summary$conf.low
-    out$conf.high <- fwb_summary$conf.high
+    p_val <- if ("p.value" %in% names(fwb_summary)) fwb_summary$p.value else NULL
+    stat <- if ("statistic" %in% names(fwb_summary)) fwb_summary$statistic else NULL
+    s_val <- if (!is.null(p_val)) -log2(p_val) else NULL
 
-    cols <- setdiff(names(out), "df")
-
-    if ("p.value" %in% names(fwb_summary)) {
-        out$p.value <- fwb_summary$p.value
-        out$s.value <- -log2(out$p.value)
-    } else {
-        cols <- setdiff(cols, c("s.value", "p.value"))
-    }
-
-    if ("statistic" %in% names(fwb_summary)) {
-        out$statistic <- fwb_summary$statistic
-    } else {
-        cols <- setdiff(cols, "statistic")
-    }
-
-    out <- out[, cols, drop = FALSE]
-
-    mfx@draws <- t(B$t)
-    mfx@inferences <- B
-    attr(out, "marginaleffects") <- mfx
-
-    return(out)
+    list(
+        conf.low = fwb_summary$conf.low,
+        conf.high = fwb_summary$conf.high,
+        std.error = fwb_summary$std.error,
+        p.value = p_val,
+        statistic = stat,
+        s.value = s_val,
+        draws = t(B$t),
+        inferences_object = B
+    )
 }

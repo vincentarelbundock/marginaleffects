@@ -9,7 +9,6 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
         )
     )
 
-    out <- x
     model <- mfx@model
     call_mfx <- mfx@call
     call_mfx[["vcov"]] <- FALSE
@@ -45,34 +44,33 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
     draws <- lapply(seq_len(nrow(coefmat)), inner_fun)
     draws <- do.call("cbind", draws)
 
-    # Compute confidence intervals
-    out$std.error <- apply(draws, 1, stats::sd)
     alpha <- 1 - conf_level
 
     if (conf_type == "perc") {
-        out$conf.low <- apply(draws, 1, stats::quantile, probs = alpha / 2, names = FALSE)
-        out$conf.high <- apply(draws, 1, stats::quantile, probs = 1 - alpha / 2, names = FALSE)
-
-        cols <- setdiff(names(out), c("p.value", "std.error", "statistic", "s.value", "df"))
+        list(
+            conf.low = apply(draws, 1, stats::quantile, probs = alpha / 2, names = FALSE),
+            conf.high = apply(draws, 1, stats::quantile, probs = 1 - alpha / 2, names = FALSE),
+            std.error = NULL,
+            p.value = NULL,
+            statistic = NULL,
+            s.value = NULL,
+            draws = draws,
+            inferences_object = NULL
+        )
     } else if (conf_type == "wald") {
-        out$statistic <- out$estimate / out$std.error
-
+        std_error <- apply(draws, 1, stats::sd)
+        stat <- x$estimate / std_error
         critical <- abs(stats::qnorm(alpha / 2))
-
-        out$conf.low <- out$estimate - critical * out$std.error
-        out$conf.high <- out$estimate + critical * out$std.error
-
-        out$p.value <- 2 * stats::pnorm(-abs(out$statistic))
-        out$s.value <- -log2(out$p.value)
-
-        cols <- setdiff(names(out), "df")
+        p_val <- 2 * stats::pnorm(-abs(stat))
+        list(
+            conf.low = x$estimate - critical * std_error,
+            conf.high = x$estimate + critical * std_error,
+            std.error = std_error,
+            p.value = p_val,
+            statistic = stat,
+            s.value = -log2(p_val),
+            draws = draws,
+            inferences_object = NULL
+        )
     }
-
-    # Drop unnecessary columns
-    out <- out[, cols, drop = FALSE]
-
-    mfx@draws <- draws
-    attr(out, "marginaleffects") <- mfx
-
-    return(out)
 }

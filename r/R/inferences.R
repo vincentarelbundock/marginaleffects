@@ -223,42 +223,10 @@ inferences <- function(
     # default standard errors are Delta anyway
     if (method == "delta") {
         return(x)
-    } else if (method == "boot") {
-        out <- inferences_boot(x,
-            R = R,
-            conf_level = conf_level,
-            conf_type = conf_type,
-            estimator = estimator,
-            data_train = data_train,
-            mfx = mfx,
-            ...)
-    } else if (method == "fwb") {
-        if (isTRUE("wts" %in% names(mfx@call)) && !isFALSE(mfx@call[["wts"]])) {
-            stop_sprintf("The `fwb` method is not supported with the `wts` argument.")
-        }
-        out <- inferences_fwb(x,
-            R = R,
-            conf_level = conf_level,
-            conf_type = conf_type,
-            mfx = mfx,
-            ...)
-    } else if (method == "rsample") {
-        out <- inferences_rsample(x,
-            R = R,
-            conf_level = conf_level,
-            conf_type = conf_type,
-            estimator = estimator,
-            data_train = data_train,
-            mfx = mfx,
-            ...)
-    } else if (method == "simulation") {
-        out <- inferences_simulation(x,
-            R = R,
-            conf_level = conf_level,
-            conf_type = conf_type,
-            mfx = mfx,
-            ...)
-    } else if (isTRUE(grepl("conformal", method))) {
+    }
+
+    # Conformal methods return directly (different output structure)
+    if (isTRUE(grepl("conformal", method))) {
         sanity_inferences_conformal(
             mfx = mfx,
             score = conformal_score,
@@ -275,7 +243,7 @@ inferences <- function(
             NULL
         )
 
-        out <- conformal_fun(
+        return(conformal_fun(
             x,
             R = R,
             conf_level = conf_level,
@@ -285,8 +253,81 @@ inferences <- function(
             score = conformal_score,
             mfx = mfx,
             ...
-        )
+        ))
     }
+
+    # Dispatch to inference method — each returns a standardized list
+    if (method == "boot") {
+        result <- inferences_boot(x,
+            R = R,
+            conf_level = conf_level,
+            conf_type = conf_type,
+            estimator = estimator,
+            data_train = data_train,
+            mfx = mfx,
+            ...)
+    } else if (method == "fwb") {
+        if (isTRUE("wts" %in% names(mfx@call)) && !isFALSE(mfx@call[["wts"]])) {
+            stop_sprintf("The `fwb` method is not supported with the `wts` argument.")
+        }
+        result <- inferences_fwb(x,
+            R = R,
+            conf_level = conf_level,
+            conf_type = conf_type,
+            mfx = mfx,
+            ...)
+    } else if (method == "rsample") {
+        result <- inferences_rsample(x,
+            R = R,
+            conf_level = conf_level,
+            conf_type = conf_type,
+            estimator = estimator,
+            data_train = data_train,
+            mfx = mfx,
+            ...)
+    } else if (method == "simulation") {
+        result <- inferences_simulation(x,
+            R = R,
+            conf_level = conf_level,
+            conf_type = conf_type,
+            mfx = mfx,
+            ...)
+    }
+
+    # Uniform assembly from standardized list
+    out <- x
+    out$conf.low <- result$conf.low
+    out$conf.high <- result$conf.high
+
+    # Columns to always drop
+    drop_cols <- "df"
+
+    # Conditionally set or drop columns
+    for (col_name in c("std.error", "p.value", "statistic", "s.value")) {
+        if (is.null(result[[col_name]])) {
+            drop_cols <- c(drop_cols, col_name)
+        } else {
+            out[[col_name]] <- result[[col_name]]
+        }
+    }
+
+    out <- out[, setdiff(names(out), drop_cols), drop = FALSE]
+
+    # rsample term cleanup
+    if (isTRUE(result$rsample_term_cleanup) && "term" %in% names(out)) {
+        if (all(out$term == seq_len(nrow(out)))) {
+            out$term <- NULL
+        }
+    }
+
+    # Set mfx attributes
+    if (!is.null(result$draws)) {
+        mfx@draws <- result$draws
+    }
+    if (!is.null(result$inferences_object)) {
+        mfx@inferences <- result$inferences_object
+    }
+    attr(out, "marginaleffects") <- mfx
 
     return(out)
 }
