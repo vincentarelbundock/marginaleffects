@@ -252,41 +252,53 @@ get_comparisons <- function(
 
 
 predictions_hi_lo <- function(model, lo, hi, type, ...) {
-    # Batch lo+hi into a single predict call for all models.
-    # This halves the number of predict() calls per contrast.
-    if (!"rowid" %in% colnames(lo)) {
-        lo$rowid <- hi$rowid <- seq_len(nrow(lo))
-    }
+    # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
+    if (inherits(model, c("brmsfit", "bart"))) {
+        if (!"rowid" %in% colnames(lo)) {
+            lo$rowid <- hi$rowid <- seq_len(nrow(lo))
+        }
 
-    both <- rbindlist(list(lo, hi))
+        both <- rbindlist(list(lo, hi))
 
-    pred_both <- get_predict_error(
-        model,
-        type = type,
-        newdata = both,
-        ...
-    )
+        pred_both <- get_predict_error(
+            model,
+            type = type,
+            newdata = both,
+            ...
+        )
 
-    # Preserve posterior_draws before setDT conversion
-    draws_attr <- attr(pred_both, "posterior_draws")
-    data.table::setDT(pred_both)
+        pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
 
-    # Split: first half = lo, second half = hi (per group if present)
-    if ("group" %in% colnames(pred_both)) {
-        pred_both[, "marginaleffects_is_lo" := seq_len(.N) <= .N / 2, by = "group"]
+        pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+        pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+
+        draws <- attr(pred_both, "posterior_draws")
+        draws_lo <- draws[pred_both$lo, , drop = FALSE]
+        draws_hi <- draws[!pred_both$lo, , drop = FALSE]
+
+        attr(pred_lo, "posterior_draws") <- draws_lo
+        attr(pred_hi, "posterior_draws") <- draws_hi
     } else {
-        pred_both[, "marginaleffects_is_lo" := seq_len(.N) <= .N / 2]
-    }
+        pred_lo <- get_predict_error(
+            model,
+            type = type,
+            newdata = lo,
+            ...
+        )
 
-    is_lo <- pred_both$marginaleffects_is_lo
-    select_cols <- intersect(c("rowid", "group", "estimate"), colnames(pred_both))
-    pred_lo <- pred_both[is_lo, select_cols, with = FALSE]
-    pred_hi <- pred_both[!is_lo, select_cols, with = FALSE]
+        pred_hi_result <- myTryCatch(get_predict(
+            model,
+            type = type,
+            newdata = hi,
+            ...
+        ))
 
-    # Split posterior draws if present (Bayesian models)
-    if (!is.null(draws_attr)) {
-        attr(pred_lo, "posterior_draws") <- draws_attr[is_lo, , drop = FALSE]
-        attr(pred_hi, "posterior_draws") <- draws_attr[!is_lo, , drop = FALSE]
+        # otherwise we keep the full error object instead of extracting the value
+        if (inherits(pred_hi_result$value, "data.frame")) {
+            pred_hi <- pred_hi_result$value
+        } else {
+            pred_hi <- pred_hi_result$error
+        }
     }
 
     return(list(pred_lo = pred_lo, pred_hi = pred_hi))
