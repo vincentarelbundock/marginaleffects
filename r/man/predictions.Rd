@@ -46,8 +46,8 @@ avg_predictions(
 
 \item{newdata}{Grid of predictor values at which we evaluate predictions.
 \itemize{
-\item Warning: Please avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
-\item \code{NULL} (default): Unit-level predictions for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[=get_modeldata]{get_modeldata()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
+\item Warning: When \code{newdata} is \code{NULL}, the data is retrieved using \code{\link[=get_modeldata]{get_modeldata()}}, which may have to extract it from the modeling environment. This can produce unexpected results if the data has been modified, or when called inside \code{lapply()}, Shiny apps, or nested functions. To avoid potential issues, consider using \code{\link[=set_modeldata]{set_modeldata()}} to attach the training data to the model object explicitly.
+\item \code{NULL} (default): Unit-level predictions for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[=get_modeldata]{get_modeldata()}}.
 \item string:
 \itemize{
 \item "mean": Predictions evaluated when each predictor is held at its mean or mode.

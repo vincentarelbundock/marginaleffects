@@ -149,10 +149,10 @@ Grid of predictor values at which we evaluate the slopes.
 
 
 <ul>
-<li> Warning: Please avoid modifying your dataset between fitting the model and calling a <code>marginaleffects</code> function. This can sometimes lead to unexpected results.
+<li> Warning: When <code>newdata</code> is <code>NULL</code>, the data is retrieved using <code>get_modeldata()</code>, which may have to extract it from the modeling environment. This can produce unexpected results if the data has been modified, or when called inside <code>lapply()</code>, Shiny apps, or nested functions. To avoid potential issues, consider using <code>set_modeldata()</code> to attach the training data to the model object explicitly.
 
 </li>
-<li> <code>NULL</code> (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using <code>get_modeldata()</code>, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
+<li> <code>NULL</code> (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using <code>get_modeldata()</code>.
 
 </li>
 <li> <code>datagrid()</code> call to specify a custom grid of regressors. For example:

@@ -83,7 +83,9 @@ predictions(model, newdata = datagrid_bal(cyl = 4))
 }
 
 If users supply a model, the data used to fit that model is retrieved using
-the \code{insight::get_data} function.
+\code{\link[=get_modeldata]{get_modeldata()}}. Consider using \code{\link[=set_modeldata]{set_modeldata()}} to attach the training
+data explicitly when working in non-standard environments (e.g., \code{lapply()},
+Shiny, nested functions).
 }
 \examples{
 # The output only has 2 rows, and all the variables except `hp` are at their

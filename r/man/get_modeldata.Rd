@@ -2,9 +2,12 @@
 % Please edit documentation in R/get_modeldata.R
 \name{get_modeldata}
 \alias{get_modeldata}
-\title{Get the dataset used to fit a model}
+\alias{set_modeldata}
+\title{Get or set the dataset used to fit a model}
 \usage{
 get_modeldata(model, ...)
+
+set_modeldata(model, newdata)
 }
 \arguments{
 \item{model}{Model object}
@@ -17,10 +20,24 @@ model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
 \code{?slopes} documentation for a non-exhaustive list of available
 arguments.}
+
+\item{newdata}{A data frame to attach to the model object.}
 }
 \value{
-A data frame of the original data used to fit the model, or \code{NULL} if not available.
+\code{get_modeldata()} returns a data frame of the original data used to
+fit the model, or \code{NULL} if not available. \code{set_modeldata()} returns the
+model with the data attached as an attribute.
 }
 \description{
-Mostly for internal use, but can be useful because the output is consistent across model classes.
+\code{get_modeldata()} retrieves the data used to fit a model. If the data was
+previously attached via \code{set_modeldata()}, it is returned directly. Otherwise,
+the data is retrieved from the model object or the environment using
+\code{insight::get_data()}.
+}
+\details{
+\code{set_modeldata()} attaches a dataset to a model object as an attribute. This
+is useful when the training data may not be available in the environment where
+\code{marginaleffects} functions are called, such as inside \code{lapply()}, in Shiny
+apps, or in nested function calls. By attaching the data explicitly, you ensure
+that \code{marginaleffects} always uses the correct dataset.
 }

@@ -1,15 +1,20 @@
-## Get the dataset used to fit a model {.unnumbered}
+## Get or set the dataset used to fit a model {.unnumbered}
 
 
 ### Description
 
-Mostly for internal use, but can be useful because the output is consistent across model classes.
+<code>get_modeldata()</code> retrieves the data used to fit a model. If the data was
+previously attached via <code>set_modeldata()</code>, it is returned directly. Otherwise,
+the data is retrieved from the model object or the environment using
+<code>insight::get_data()</code>.
 
 
 
 ### Usage
 
 <pre><code class='language-R'>get_modeldata(model, ...)
+
+set_modeldata(model, newdata)
 </code></pre>
 
 
@@ -31,11 +36,27 @@ package. See the &quot;Model-Specific Arguments&quot; section of the
 <code>?slopes</code> documentation for a non-exhaustive list of available
 arguments.
 </td></tr>
+<tr><td style = "white-space: collapse; font-family: monospace; vertical-align: top"><code id="newdata">newdata</code></td>
+<td>
+A data frame to attach to the model object.
+</td></tr>
 </table>
+
+
+### Details
+
+<code>set_modeldata()</code> attaches a dataset to a model object as an attribute. This
+is useful when the training data may not be available in the environment where
+<code>marginaleffects</code> functions are called, such as inside <code>lapply()</code>, in Shiny
+apps, or in nested function calls. By attaching the data explicitly, you ensure
+that <code>marginaleffects</code> always uses the correct dataset.
+
 
 
 ### Value
 
-A data frame of the original data used to fit the model, or <code>NULL</code> if not available.
+<code>get_modeldata()</code> returns a data frame of the original data used to
+fit the model, or <code>NULL</code> if not available. <code>set_modeldata()</code> returns the
+model with the data attached as an attribute.
 
 

@@ -293,8 +293,8 @@ get_predict(
 
 \item{newdata}{Grid of predictor values at which we evaluate the slopes.
 \itemize{
-\item Warning: Please avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
-\item \code{NULL} (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[=get_modeldata]{get_modeldata()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
+\item Warning: When \code{newdata} is \code{NULL}, the data is retrieved using \code{\link[=get_modeldata]{get_modeldata()}}, which may have to extract it from the modeling environment. This can produce unexpected results if the data has been modified, or when called inside \code{lapply()}, Shiny apps, or nested functions. To avoid potential issues, consider using \code{\link[=set_modeldata]{set_modeldata()}} to attach the training data to the model object explicitly.
+\item \code{NULL} (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[=get_modeldata]{get_modeldata()}}.
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.

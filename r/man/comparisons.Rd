@@ -50,8 +50,8 @@ avg_comparisons(
 
 \item{newdata}{Grid of predictor values at which we evaluate the comparisons.
 \itemize{
-\item Warning: Avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
-\item \code{NULL} (default): Unit-level contrasts for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[=get_modeldata]{get_modeldata()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
+\item Warning: When \code{newdata} is \code{NULL}, the data is retrieved using \code{\link[=get_modeldata]{get_modeldata()}}, which may have to extract it from the modeling environment. This can produce unexpected results if the data has been modified, or when called inside \code{lapply()}, Shiny apps, or nested functions. To avoid potential issues, consider using \code{\link[=set_modeldata]{set_modeldata()}} to attach the training data to the model object explicitly.
+\item \code{NULL} (default): Unit-level contrasts for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[=get_modeldata]{get_modeldata()}}.
 \item data frame: Unit-level contrasts for each row of the \code{newdata} data frame.
 \item string:
 \itemize{

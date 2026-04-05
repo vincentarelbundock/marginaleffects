@@ -131,7 +131,9 @@ datagrid_bal &lt;- function(...) datagrid(..., grid_type = "balanced")
 predictions(model, newdata = datagrid_bal(cyl = 4))
 </pre>
 If users supply a model, the data used to fit that model is retrieved using
-the <code>insight::get_data</code> function.
+<code>get_modeldata()</code>. Consider using <code>set_modeldata()</code> to attach the training
+data explicitly when working in non-standard environments (e.g., <code>lapply()</code>,
+Shiny, nested functions).
 
 
 

@@ -44,7 +44,9 @@ unique_s <- function(x) sort(unique(x))
 #'
 #'
 #' If users supply a model, the data used to fit that model is retrieved using
-#' the `insight::get_data` function.
+#' [get_modeldata()]. Consider using [set_modeldata()] to attach the training
+#' data explicitly when working in non-standard environments (e.g., `lapply()`,
+#' Shiny, nested functions).
 #' @return
 #' A `data.frame` in which each row corresponds to one combination of the named
 #' predictors supplied by the user via the `...` dots. Variables which are not

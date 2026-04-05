@@ -4,6 +4,7 @@
 
 New:
 
+* New `set_modeldata()` function to attach training data to a model object explicitly. `get_modeldata()` now checks for this attribute first, and emits a once-per-session warning when `insight::get_data()` raises warnings about data retrieval. This is safer for `lapply()`, Shiny, and nested function workflows.
 * Support for `glmtoolbox::glmgee()` and `glmtoolbox::gnm()` models. Thanks to @luifrancgom for report #1148.
 * Support for `nestedLogit::nestedLogit()` models. Thanks to @strengejacke for report #1675.
 * Improved `type` error for `aft` models.
