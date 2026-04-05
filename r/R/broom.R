@@ -47,7 +47,7 @@ glance.slopes <- function(x, ...) {
     insight::check_if_installed("modelsummary")
     mfx <- attr(x, "marginaleffects")
     model <- tryCatch(mfx@model, error = function(e) NULL)
-    if (is.null(model) || isTRUE(checkmate::check_string(model))) {
+    if (is.null(model) || (is.character(model) && length(model) == 1)) {
         model <- tryCatch(mfx@call[["model"]], error = function(e) NULL)
     }
     gl <- suppressMessages(suppressWarnings(try(

@@ -259,7 +259,7 @@ sanitize_predictor_specs <- function(predictors, mfx) {
                     m <- mean(modeldata[[v]], na.rm = TRUE)
                     predictors[[v]] <- c(m - s, m, m + s)
                 } else if (identical(predictors[[v]], "fivenum")) {
-                    predictors[[v]] <- stats::fivenum
+                    predictors[[v]] <- stats::fivenum(modeldata[[v]])
                 } else if (is.character(predictors[[v]])) {
                     msg <- sprintf(
                         '%s is a numeric variable. The summary shortcuts supported by the variables argument are: "iqr", "minmax", "sd", "2sd", "threenum", "fivenum".',

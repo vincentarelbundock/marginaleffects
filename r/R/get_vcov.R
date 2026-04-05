@@ -103,7 +103,7 @@ get_varcov_args <- function(model, vcov) {
 
     if (
         isTRUE(checkmate::check_choice(vcov, "satterthwaite")) ||
-            isTRUE(checkmate::check_choice(vcov, "kewnard-roger"))
+            isTRUE(checkmate::check_choice(vcov, "kenward-roger"))
     ) {
         if (
             !isTRUE(inherits(model, "lmerMod")) &&

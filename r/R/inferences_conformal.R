@@ -29,6 +29,9 @@ get_conformal_score <- function(x, score, mfx = NULL) {
         } else if ("group" %in% colnames(x)) {
             # HACK: is this fragile? I think `group` should always be character.
             idx <- as.character(response) == as.character(x$group)
+            if (!any(idx)) {
+                stop_sprintf("No matching group found for conformal score computation.")
+            }
             out <- 1 - x$estimate[idx]
         } else {
             stop_sprintf("Failed to compute the conformity score.")

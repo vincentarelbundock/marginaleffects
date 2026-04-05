@@ -47,7 +47,7 @@ pad <- function(model, newdata) {
         gr <- do.call(data.table::CJ, vault)
         padding <- cjdt(list(padding, gr))
         to_keep <- colnames(newdata)
-        padding[, ..to_keep]
+        padding <- padding[, ..to_keep]
         setcolorder(padding, to_keep)
         data.table::setDF(padding)
 

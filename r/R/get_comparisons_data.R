@@ -151,9 +151,9 @@ get_comparisons_data <- function(
         }
 
         fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE, sort = FALSE)
-        lo <- Reduce("fun", lo)
-        hi <- Reduce("fun", hi)
-        original <- Reduce("fun", original)
+        lo <- Reduce(fun, lo)
+        hi <- Reduce(fun, hi)
+        original <- Reduce(fun, original)
 
         # faster to rbind, but creates massive datasets. need cartesian join on rowid
         # lo <- cjdt(lo)

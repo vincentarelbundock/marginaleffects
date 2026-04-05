@@ -78,7 +78,7 @@ plot_predictions <- function(
 
 
     # init
-    call <- construct_call(model, "comparisons")
+    call <- construct_call(model, "predictions")
     model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
     mfx <- new_marginaleffects_internal(
         call = call,

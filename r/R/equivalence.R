@@ -29,8 +29,6 @@ equivalence <- function(x, equivalence = NULL, df = Inf, draws = NULL, ...) {
         equivalence <- c(equivalence, equivalence)
     }
 
-    delta <- abs(diff(equivalence)) / 2
-
     # definitions from `emmeans`, with a different user interface based on symmetric "equivalence"
     x$statistic.noninf <- (x$estimate - equivalence[1]) / x$std.error
     x$statistic.nonsup <- (x$estimate - equivalence[2]) / x$std.error

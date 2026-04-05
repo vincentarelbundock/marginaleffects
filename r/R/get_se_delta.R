@@ -68,9 +68,8 @@ get_se_delta <- function(
 
     coefs <- get_coef(model_perturbed, ...)
 
-    # TODO: this is a terrible sanity check
     # some vcov methods return an unnamed matrix, some have duplicate names
-    flag <- anyDuplicated(colnames(vcov)) == 0 ||
+    flag <- anyDuplicated(colnames(vcov)) == 0 &&
         anyDuplicated(names(coefs)) == 0
     if (
         flag &&

@@ -71,7 +71,7 @@ sanitize_hypothesis_formula <- function(hypothesis) {
     if (rhs %in% c("poly", "helmert")) {
         if (length(lhs) == 1 && lhs != "dotproduct") {
             stop(
-                "The left-hand size of the `hypothesis` formula must be empty or `dotproduct`.",
+                "The left-hand side of the `hypothesis` formula must be empty or `dotproduct`.",
                 call. = FALSE
             )
         } else {
@@ -82,7 +82,7 @@ sanitize_hypothesis_formula <- function(hypothesis) {
     } else {
         if (length(lhs) == 1 && !lhs %in% c("difference", "ratio")) {
             stop(
-                "The left-hand size of the `hypothesis` formula must be empty, `difference`, or `ratio`.",
+                "The left-hand side of the `hypothesis` formula must be empty, `difference`, or `ratio`.",
                 call. = FALSE
             )
         } else if (length(lhs) == 0) {

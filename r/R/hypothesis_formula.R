@@ -80,16 +80,17 @@ hypothesis_formula_list <- list(
     revpairwise = list(
         ratio = list(
             comparison = function(x) {
-                out <- outer(x, x, "/")
-                diag(out) <- NA
-                out[lower.tri(out)] <- NA # Set lower triangle to NA
-                out <- as.vector(out)
-                out <- out[!is.na(out)] # Keep only non-NA values
                 safe_mode <- getOption("marginaleffects_safe", default = TRUE)
-                if (length(out) > 25 && isTRUE(safe_mode)) {
+                n_pairs <- length(x) * (length(x) - 1) / 2
+                if (n_pairs > 25 && isTRUE(safe_mode)) {
                     msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
                     stop(msg, call. = FALSE)
                 }
+                out <- outer(x, x, "/")
+                diag(out) <- NA
+                out[lower.tri(out)] <- NA
+                out <- as.vector(out)
+                out <- out[!is.na(out)]
                 out
             },
             label = function(x) {
@@ -103,16 +104,17 @@ hypothesis_formula_list <- list(
         ),
         difference = list(
             comparison = function(x) {
-                out <- outer(x, x, "-")
-                diag(out) <- NA
-                out[lower.tri(out)] <- NA # Set lower triangle to NA
-                out <- as.vector(out)
-                out <- out[!is.na(out)] # Keep only non-NA values
                 safe_mode <- getOption("marginaleffects_safe", default = TRUE)
-                if (length(out) > 25 && isTRUE(safe_mode)) {
+                n_pairs <- length(x) * (length(x) - 1) / 2
+                if (n_pairs > 25 && isTRUE(safe_mode)) {
                     msg <- "This command will generate many estimates. Set `options(marginaleffects_safe=FALSE)` to circumvent this guardrail."
                     stop(msg, call. = FALSE)
                 }
+                out <- outer(x, x, "-")
+                diag(out) <- NA
+                out[lower.tri(out)] <- NA
+                out <- as.vector(out)
+                out <- out[!is.na(out)]
                 out
             },
             label = function(x) {
