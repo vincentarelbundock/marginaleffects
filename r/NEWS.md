@@ -4,6 +4,7 @@
 
 New:
 
+* New `vcov_unconditional()` function computes standard errors using the influence-function approach of Hansen & Overgaard (2025, *Metrika*). This accounts for both parameter estimation uncertainty and the sampling variability of the averaging, providing robustness to model misspecification. Apply it to `avg_predictions()` or `avg_comparisons()` results. Supported for `lm` and `glm` models.
 * Support for `glmtoolbox::glmgee()` and `glmtoolbox::gnm()` models. Thanks to @luifrancgom for report #1148.
 * Support for `nestedLogit::nestedLogit()` models. Thanks to @strengejacke for report #1675.
 * Improved `type` error for `aft` models.
