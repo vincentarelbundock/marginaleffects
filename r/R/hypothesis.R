@@ -3,7 +3,8 @@ get_hypothesis <- function(
     hypothesis,
     by = NULL,
     newdata = NULL,
-    draws = NULL) {
+    draws = NULL,
+    mfx = NULL) {
     deprecated <- c(
         "pairwise",
         "revpairwise",
@@ -33,7 +34,8 @@ get_hypothesis <- function(
             x,
             newdata = newdata,
             hypothesis = hypothesis,
-            by = by
+            by = by,
+            mfx = mfx
         )
         return(out)
     } else if (isTRUE(checkmate::check_function(hypothesis))) {

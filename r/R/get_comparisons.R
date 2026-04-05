@@ -230,7 +230,8 @@ get_comparisons <- function(
         hypothesis,
         by = by,
         newdata = original,
-        draws = draws
+        draws = draws,
+        mfx = mfx
     )
 
     # reset settings

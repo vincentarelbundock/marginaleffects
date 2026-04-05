@@ -79,7 +79,8 @@ get_predictions <- function(
         hypothesis = hypothesis,
         by = by,
         newdata = newdata,
-        draws = draws
+        draws = draws,
+        mfx = mfx
     )
 
     return(out)

@@ -197,7 +197,7 @@ hypothesis_formula_list <- list(
 #'
 #' @noRd
 #' @keywords internal
-hypothesis_formula <- function(x, hypothesis, newdata, by) {
+hypothesis_formula <- function(x, hypothesis, newdata, by, mfx = NULL) {
     # default values
     draws <- attr(x, "posterior_draws")
 
@@ -211,6 +211,9 @@ hypothesis_formula <- function(x, hypothesis, newdata, by) {
         bycols <- setdiff(by, group)
     } else {
         bycols <- by
+    }
+    if (!isTRUE(checkmate::check_character(bycols)) && !is.null(mfx) && length(mfx@variable_names_datagrid) > 0) {
+        bycols <- intersect(mfx@variable_names_datagrid, colnames(x))
     }
     labels <- get_labels(x, by = bycols, hypothesis_by = group)
 

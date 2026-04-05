@@ -10,6 +10,7 @@ New:
 
 Bug fixes:
 
+* `hypothesis` formula now correctly groups by `datagrid()` variables when `by` is not explicitly specified in `comparisons()` and `predictions()`. Thanks to Matt Thomas for the suggestion in #1705.
 * `hypothesis` formula with external variables (e.g., `~ I(drop(t(www) %*% x)) | am`) no longer raises a scoping error. Thanks to @mattansb for report #1707.
 * `datagrid()` now correctly treats numeric fixed effects in `fixest` models (specified via `|`) as categorical variables instead of computing their mean. Thanks to @arcruz0 for report #1685.
 * Avoid collapsing `contrast` rows when using `by` and `comparison="lift"`. The row labels were not unique. Thanks to @coughlanja for report #1669.
