@@ -43,7 +43,7 @@ get_comparisons_data_factor <- function(
         )
     )
     if (isTRUE(flag)) {
-        levs_idx <- contrast_categories_shortcuts(levs, variable, interaction)
+        levs_idx <- contrast_categories_shortcuts(levs, variable)
 
         # custom data frame or function
     } else if (
@@ -129,27 +129,19 @@ get_comparisons_data_factor <- function(
 }
 
 
-contrast_categories_shortcuts <- function(levs, variable, interaction) {
+contrast_categories_shortcuts <- function(levs, variable) {
     # index contrast orders based on variable$value
     if (isTRUE(variable$value %in% c("reference", "revreference"))) {
-        # null contrasts are interesting with interactions
-        if (!isTRUE(interaction)) {
-            levs_idx <- data.table::data.table(
-                lo = levs[1],
-                hi = levs[2:length(levs)]
-            )
-        } else {
-            levs_idx <- data.table::data.table(lo = levs[1], hi = levs)
-        }
+        levs_idx <- data.table::data.table(
+            lo = levs[1],
+            hi = levs[2:length(levs)]
+        )
     } else if (isTRUE(variable$value %in% c("pairwise", "revpairwise"))) {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
-        # null contrasts are interesting with interactions
-        if (!isTRUE(interaction)) {
-            levs_idx <- levs_idx[levs_idx$hi != levs_idx$lo, ]
-            levs_idx <- levs_idx[
-                match(levs_idx$lo, levs) < match(levs_idx$hi, levs),
-            ]
-        }
+        levs_idx <- levs_idx[levs_idx$hi != levs_idx$lo, ]
+        levs_idx <- levs_idx[
+            match(levs_idx$lo, levs) < match(levs_idx$hi, levs),
+        ]
     } else if (isTRUE(variable$value %in% c("sequential", "revsequential"))) {
         levs_idx <- data.table::data.table(
             lo = levs[1:(length(levs) - 1)],
@@ -180,7 +172,7 @@ contrast_categories_processing <- function(
     variable,
     newdata) {
     # internal option applied to the first of several contrasts when
-    # interaction=TRUE to avoid duplication. when only the first contrast
+    # cross=TRUE to avoid duplication. when only the first contrast
     # flips, we get a negative sign, but if first increases and second
     # decreases, we get different total effects.
     if (isTRUE(first_cross)) {

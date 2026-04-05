@@ -91,7 +91,7 @@ print.marginaleffects <- function(
 
     nrows <- max(nrows, 2 * topn)
 
-    if ("group" %in% colnames(out) && all(out$group == "main_marginaleffects")) {
+    if ("group" %in% colnames(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
     }
 

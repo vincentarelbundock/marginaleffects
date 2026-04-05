@@ -17,8 +17,12 @@ get_predict.nestedLogit <- function(
   model,
   newdata = get_modeldata(model),
   type = "response",
-  submodel = NULL,
-  ...
+  mfx = NULL,
+  newparams = NULL,
+  ndraws = NULL,
+  se.fit = NULL,
+  ...,
+  submodel = NULL
 ) {
     type <- sanitize_type(model, type)
     if (is.null(submodel)) {

@@ -33,7 +33,7 @@ get_comparisons_data_character <- function(
         )
     )
     if (isTRUE(flag)) {
-        levs_idx <- contrast_categories_shortcuts(levs, variable, interaction)
+        levs_idx <- contrast_categories_shortcuts(levs, variable)
 
         # custom data frame or function
     } else if (

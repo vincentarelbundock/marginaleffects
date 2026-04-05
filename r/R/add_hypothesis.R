@@ -29,8 +29,8 @@ add_hypothesis <- function(mfx, hypothesis) {
             hypothesis_direction <- hypothesis_direction[1]
         }
 
-        if (isTRUE(grepl("^=|^<=|^>=", hypothesis))) {
-            hypothesis <- sub("^=|^<=|^>=", "", hypothesis)
+        if (isTRUE(grepl("^(=|<=|>=)", hypothesis))) {
+            hypothesis <- sub("^(=|<=|>=)", "", hypothesis)
             hypothesis <- trimws(hypothesis)
             hypothesis <- as.numeric(hypothesis)
         }

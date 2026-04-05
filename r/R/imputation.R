@@ -27,7 +27,7 @@ process_imputation <- function(mfx) {
     if (is.null(micedata) && is.null(mfxcall[["newdata"]])) {
         warning("Could not recover the original data from the `mids` object. ",
                 "When the model formula contains in-formula transformations (e.g., `bs()`, `poly()`, `log()`), ",
-                "results may be incorrect. Please supply an explicit `newdata` argument.",
+                "results may be incorrect. Please supply an explicit `newdata` argument or use `set_modeldata()` to attach the original data to the model.",
                 call. = FALSE)
     }
 

@@ -3,7 +3,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     stop_deprecate <- c()
     if ("p_adjust" %in% ...names()) stop_deprecate("p_adjust", "inferences()")
     if ("transform_post" %in% ...names()) stop_deprecate("transform_post", "transform")
-    if ("interaction" %in% ...names()) stop_deprecate("interaction", "cross")
+    if ("interaction" %in% ...names()) stop("The `interaction` argument has been removed. Use `cross` instead.", call. = FALSE)
 
     if (identical(calling_function, "slopes")) {
         if ("comparison" %in% ...names()) stop_deprecate("comparison")

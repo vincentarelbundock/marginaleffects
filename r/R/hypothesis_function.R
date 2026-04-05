@@ -44,9 +44,9 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
     } else if (isTRUE(checkmate::check_numeric(out))) {
         if (
             isTRUE(checkmate::check_data_frame(x, nrows = length(out))) &&
-                "term" %in% colnames(out)
+                "term" %in% colnames(x)
         ) {
-            out <- data.frame(term = out$term, estimate = out)
+            out <- data.frame(term = x$term, estimate = out)
         } else {
             out <- data.frame(term = seq_along(out), estimate = out)
         }

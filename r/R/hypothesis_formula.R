@@ -39,7 +39,7 @@ hypothesis_formula_list <- list(
                 }
                 out <- outer(x, x, "/")
                 diag(out) <- NA
-                out[upper.tri(out)] <- NA # Set lower triangle to NA
+                out[upper.tri(out)] <- NA # Set upper triangle to NA
                 out <- as.vector(out)
                 out <- out[!is.na(out)] # Keep only non-NA values
                 out
@@ -47,7 +47,7 @@ hypothesis_formula_list <- list(
             label = function(x) {
                 x <- sprintf("(%s)", x)
                 out <- outer(x, x, paste, sep = " / ")
-                out[upper.tri(out)] <- NA # Set lower triangle to NA
+                out[upper.tri(out)] <- NA # Set upper triangle to NA
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
@@ -62,7 +62,7 @@ hypothesis_formula_list <- list(
                 }
                 out <- outer(x, x, "-")
                 diag(out) <- NA
-                out[upper.tri(out)] <- NA # Set lower triangle to NA
+                out[upper.tri(out)] <- NA # Set upper triangle to NA
                 out <- as.vector(out)
                 out <- out[!is.na(out)] # Keep only non-NA values
                 out
@@ -70,7 +70,7 @@ hypothesis_formula_list <- list(
             label = function(x) {
                 x <- sprintf("(%s)", x)
                 out <- outer(x, x, paste, sep = " - ")
-                out[upper.tri(out)] <- NA # Set lower triangle to NA
+                out[upper.tri(out)] <- NA # Set upper triangle to NA
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
@@ -96,7 +96,7 @@ hypothesis_formula_list <- list(
             label = function(x) {
                 x <- sprintf("(%s)", x)
                 out <- outer(x, x, paste, sep = " / ")
-                out[lower.tri(out)] <- NA # Set lower triangle to NA
+                out[lower.tri(out)] <- NA # Set lower triangle to NA (keep upper)
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
@@ -120,7 +120,7 @@ hypothesis_formula_list <- list(
             label = function(x) {
                 x <- sprintf("(%s)", x)
                 out <- outer(x, x, paste, sep = " - ")
-                out[lower.tri(out)] <- NA # Set lower triangle to NA
+                out[lower.tri(out)] <- NA # Set lower triangle to NA (keep upper)
                 diag(out) <- NA
                 out <- as.vector(out)
                 out[!is.na(out)]
@@ -276,7 +276,7 @@ hypothesis_formula <- function(x, hypothesis, newdata, by, mfx = NULL) {
         estimates <- cbind(lab[, ..cols], estimates)
     }
 
-    if (!is.null(labels) && !inherits(lab, "data.frame") || nrow(lab) == 0) {
+    if (!is.null(labels) && (!inherits(lab, "data.frame") || nrow(lab) == 0)) {
         combined[, estimate := labels]
         labels <- tryCatch(
             combined[, lapply(.SD, fun_label), keyby = groupval],

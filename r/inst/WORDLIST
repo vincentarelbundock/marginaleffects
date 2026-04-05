@@ -160,6 +160,7 @@ glmrob
 glmx
 gnm
 grayscale
+haz
 hetprob
 hochberg
 holm
@@ -240,6 +241,7 @@ softmax
 speedglm
 speedlm
 stanreg
+surv
 survreg
 svyglm
 svyolr
