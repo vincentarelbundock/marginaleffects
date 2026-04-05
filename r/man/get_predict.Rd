@@ -203,8 +203,12 @@ get_predict(
   model,
   newdata = get_modeldata(model),
   type = "response",
-  submodel = NULL,
-  ...
+  mfx = NULL,
+  newparams = NULL,
+  ndraws = NULL,
+  se.fit = NULL,
+  ...,
+  submodel = NULL
 )
 
 \method{get_predict}{clm}(model, newdata = get_modeldata(model), type = "prob", ...)
