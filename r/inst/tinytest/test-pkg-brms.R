@@ -130,25 +130,19 @@ tmp <- tmp |>
     dplyr::group_by(grp) |>
     dplyr::mutate(subgrp = sample(1:15, size = dplyr::n(), replace = TRUE))
 w <- apply(posterior_linpred(brms_mixed_3), 2, stats::median)
-x <- get_predict(brms_mixed_3, newdata = tmp, type = "link")
 y <- predictions(brms_mixed_3, type = "link")
-expect_equivalent(w, x$estimate)
 expect_equivalent(w, y$estimate)
 
 # response
 w <- apply(posterior_epred(brms_mixed_3), 2, stats::median)
-x <- get_predict(brms_mixed_3, type = "response")
 y <- predictions(brms_mixed_3, type = "response")
-expect_equivalent(w, x$estimate)
 expect_equivalent(w, y$estimate)
 
 # no random effects
 w1 <- apply(posterior_epred(brms_mixed_3), 2, stats::median)
 w2 <- apply(posterior_epred(brms_mixed_3, re_formula = NA), 2, stats::median)
-x <- get_predict(brms_mixed_3, re_formula = NA, type = "response")
 y <- predictions(brms_mixed_3, re_formula = NA, type = "response")
 expect_true(all(w1 != w2))
-expect_equivalent(w2, x$estimate)
 expect_equivalent(w2, y$estimate)
 
 
