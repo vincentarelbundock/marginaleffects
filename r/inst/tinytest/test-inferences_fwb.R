@@ -1,5 +1,4 @@
 source("helpers.R")
-if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
 # Check fwb package version

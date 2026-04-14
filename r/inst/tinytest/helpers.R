@@ -15,8 +15,6 @@ requiet("marginaleffects")
 requiet("tinytest")
 requiet("tinysnapshot")
 
-EXPENSIVE <- FALSE
-
 AUTODIFF <- FALSE
 autodiff(FALSE) # by default in every file
 options("marginaleffects_autodiff_message" = TRUE)

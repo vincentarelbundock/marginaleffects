@@ -1,6 +1,5 @@
 # TODO: CI: See comment in last test for how the intervals are back transformed
 source("helpers.R")
-if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
 requiet("modelsummary")

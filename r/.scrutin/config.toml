@@ -1,0 +1,22 @@
+[filter]
+exclude = [
+    "test-inferences_boot*",
+    "test-inferences_conformal*",
+    "test-inferences_fwb*",
+    "test-inferences_rsample*",
+    "test-inferences_simulation*",
+    "test-pkg-MCMCglmm*",
+    "test-pkg-brms*",
+    "test-pkg-lme4*",
+    "test-pkg-mgcv*",
+    "test-pkg-mvgam*",
+    "test-pkg-ordinal*",
+    "test-transform_pre*",
+]
+
+[filter.groups.expensive]
+include = []
+exclude = []
+
+[run]
+fork_workers=false

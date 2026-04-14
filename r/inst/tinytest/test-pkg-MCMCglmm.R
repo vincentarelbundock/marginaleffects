@@ -1,7 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
 # https://stackoverflow.com/questions/72533745/loading-logistf-breaks-mcmcglmm
-if (!EXPENSIVE) exit_file("EXPENSIVE")
 requiet("MCMCglmm")
 
 # Basic expectation tests

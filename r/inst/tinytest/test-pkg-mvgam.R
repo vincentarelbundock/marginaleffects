@@ -1,7 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
 
-if (!EXPENSIVE) exit_file("EXPENSIVE")
 if (ON_WINDOWS) exit_file("on windows")
 if (!minver("base", "4.1.0")) exit_file("R 4.1.0")
 if (!requiet("mvgam")) exit_file("mvgam not installed")

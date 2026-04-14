@@ -1,6 +1,5 @@
 source("helpers.R")
 using("marginaleffects")
-if (!EXPENSIVE) exit_file("EXPENSIVE")
 
 requiet("MASS")
 requiet("ordinal")
