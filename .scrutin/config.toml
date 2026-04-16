@@ -1,0 +1,76 @@
+# scrutin configuration for the marginaleffects mono-repo.
+#
+# The R package lives in ./r and the Python package in ./python. Both suites
+# plus their linters are declared below so a single `scrutin` invocation at
+# the repo root exercises everything.
+#
+# The expensive R test files below replace the historical `EXPENSIVE` boolean
+# in r/inst/tinytest/helpers.R. Each one takes a long time (bootstrap,
+# conformal, MCMC samplers, brms, mgcv smooths, etc.) and is opted out of
+# the default CI run via the `cheap` filter group.
+#
+#     scrutin -r plain -s filter.group=cheap      # fast files only (CI default)
+#     scrutin -r plain -s filter.group=expensive  # the slow R files only
+#     scrutin -r plain                            # everything
+
+[[suite]]
+tool = "tinytest"
+root = "r"
+run  = ["inst/tinytest/test-*.R"]
+
+[[suite]]
+tool = "pytest"
+root = "python"
+run  = ["tests/test_*.py"]
+
+[[suite]]
+tool = "ruff"
+root = "python"
+
+[[suite]]
+tool = "jarl"
+root = "r"
+
+[run]
+fork_workers = false
+
+# Point scrutin at the uv-managed venv directly instead of going through
+# `uv run`. `uv run` revalidates the lockfile on every invocation and workers
+# serialize on a venv lock, which makes a fresh ruff-heavy run look hung.
+# Resolved against the suite root, so this picks up python/.venv/bin/python.
+# Run `make py-install` (or `cd python && uv sync --all-extras`) once before
+# invoking scrutin; CI does this in .github/workflows/py-check.yaml.
+[python]
+interpreter = "uv run --no-sync --all-extras python"
+
+[filter.groups.cheap]
+exclude = [
+    "test-inferences_boot*",
+    "test-inferences_conformal*",
+    "test-inferences_fwb*",
+    "test-inferences_rsample*",
+    "test-inferences_simulation*",
+    "test-pkg-MCMCglmm*",
+    "test-pkg-brms*",
+    "test-pkg-lme4*",
+    "test-pkg-mgcv*",
+    "test-pkg-mvgam*",
+    "test-pkg-ordinal*",
+    "test-transform_pre*",
+]
+
+[filter.groups.expensive]
+include = [
+    "test-inferences_boot*",
+    "test-inferences_conformal*",
+    "test-inferences_fwb*",
+    "test-inferences_rsample*",
+    "test-inferences_simulation*",
+    "test-pkg-MCMCglmm*",
+    "test-pkg-brms*",
+    "test-pkg-lme4*",
+    "test-pkg-mgcv*",
+    "test-pkg-mvgam*",
+    "test-pkg-ordinal*",
+    "test-transform_pre*",
+]
