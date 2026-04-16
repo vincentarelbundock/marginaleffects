@@ -83,3 +83,23 @@ p <- hypotheses(mod, hypothesis = "hp/cyl=1") |>
     inferences(method = "boot", R = 25) |>
     suppressWarnings()
 expect_inherits(p, "hypotheses")
+
+
+# Issue #1713: inferences(method = "boot") should not pick up a global `data`
+# variable with a `group` column during refit. Bug triggered when the formula
+# was stored in a variable and passed to nls(), because stats::update() stores
+# the symbol `data` (not its value) in the refitted model call, and insight
+# then looks up `data` in environment(formula) = R_GlobalEnv.
+# The test writes to globalenv to mirror the user's script-level usage.
+set.seed(0)
+assign("data", data.frame(x = 1:50, y = 1:50, group = "group1"), envir = globalenv())
+assign("df1713", data.frame(x = 1:50, y = 10 * exp(-0.05 * (1:50)) + stats::rnorm(50, 0, 1)), envir = globalenv())
+assign("formula1713", y ~ a * exp(-r * x), envir = globalenv())
+assign("mod1713", nls(get("formula1713", envir = globalenv()), get("df1713", envir = globalenv()), start = c(a = 5, r = 0.01)), envir = globalenv())
+ci1713 <- predictions(get("mod1713", envir = globalenv()), newdata = get("df1713", envir = globalenv())) |>
+    inferences(method = "boot", R = 5)
+expect_inherits(ci1713, "data.frame")
+expect_true("conf.low" %in% names(ci1713))
+expect_true("conf.high" %in% names(ci1713))
+rm("data", "df1713", "formula1713", "mod1713", envir = globalenv())
+rm(ci1713)

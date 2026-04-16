@@ -18,6 +18,7 @@ Bug fixes:
 * `avg_comparisons()` (and related functions) no longer return silently incorrect results for `mira` objects when the formula contains in-formula transformations like `bs()` and `subset=` was used in the model call. Thanks to @dmongin for report #1682.
 * `avg_predictions()` with factor `variables` now uses all factor levels (not just those observed in `newdata`) when the original model data is unavailable. Thanks to @trose64 for report #1703.
 * Fix standard errors for `flexsurv` predictions by syncing transformed coefficients and delegating prediction SEs to `flexsurv::predict()` when `vcov=TRUE`. Thanks to @colinorourke for report #1670.
+* `inferences(method = "boot")` no longer picks up an unrelated global `data` variable during refit. Previously, `stats::update()` stored the symbol `data` (not its value) in the refitted model's call, and subsequent data extraction via `insight::get_data()` could resolve that symbol against the calling environment. Thanks to @U8NWXD for report #1713.
 
 ## 0.32.0
 

@@ -62,6 +62,12 @@ refit.marginaleffects <- function(object, data = NULL, newdata = NULL, vcov = NU
         } else {
             model <- fit_again(model, data = data)
         }
+        # Issue #1713: stats::update() stores the symbol `data` (not its
+        # value) in the refitted model's call. Later data-extraction via
+        # insight::get_data() would resolve that symbol in the formula's
+        # environment and could pick up an unrelated global `data` variable.
+        # Attach the data explicitly so `get_modeldata()` bypasses insight.
+        model <- set_modeldata(model, data)
     }
 
     # Step 2: Re-evaluate marginaleffects call
