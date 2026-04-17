@@ -25,18 +25,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: astral-sh/setup-uv@v4
+      - uses: vincentarelbundock/scrutin/.github/actions/install_tools@main
         with:
-          enable-cache: true
+          tools: ruff
 
-      - name: Sync python deps (with all extras)
-        working-directory: python
-        run: uv sync --all-extras --python ${{ matrix.python-version }}
+      - uses: vincentarelbundock/scrutin/.github/actions/check_py@main
+        with:
+          python-version: ${{ matrix.python-version }}
+          working-directory: python
+          tool: pytest
 
-      - uses: vincentarelbundock/scrutin/.github/actions/install_scrutin@v0.0.11
-
-      - name: scrutin pytest
-        run: scrutin -r github --set run.tool=pytest
-
-      - name: scrutin ruff
-        run: scrutin -r github --set run.tool=ruff
+      - uses: vincentarelbundock/scrutin/.github/actions/check_py@main
+        with:
+          python-version: ${{ matrix.python-version }}
+          working-directory: python
+          sync: "false"
+          tool: ruff
