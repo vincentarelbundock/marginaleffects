@@ -31,7 +31,11 @@ jobs:
         with:
           working-directory: r
 
+      - uses: vincentarelbundock/scrutin/.github/actions/install_tools@main
+        with:
+          tools: jarl
+
       - uses: vincentarelbundock/scrutin/.github/actions/install_scrutin@main
 
-      - run: scrutin -r github -s filter.group=cheap
-        working-directory: r
+      - run: scrutin -r github -s filter.group=cheap -s run.tool=tinytest
+      - run: scrutin -r github -s run.tool=jarl
