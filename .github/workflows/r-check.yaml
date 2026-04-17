@@ -31,14 +31,16 @@ jobs:
 
       - uses: vincentarelbundock/scrutin/.github/actions/install_r@v0.0.11
 
+      - uses: r-lib/actions/setup-tinytex@v2
+
       - uses: vincentarelbundock/scrutin/.github/actions/install_scrutin@v0.0.11
 
       - name: R CMD check --no-tests --as-cran
         shell: bash
         working-directory: r
         run: |
-          R CMD build --no-build-vignettes --no-manual .
-          R CMD check --no-tests --no-manual --ignore-vignettes --as-cran *.tar.gz
+          R CMD build .
+          R CMD check --no-tests --as-cran *.tar.gz
 
       - name: scrutin (cheap group)
         shell: bash
