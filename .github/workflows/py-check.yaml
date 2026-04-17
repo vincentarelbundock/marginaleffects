@@ -25,19 +25,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: vincentarelbundock/scrutin/.github/actions/install_python@main
+        with:
+          python-version: ${{ matrix.python-version }}
+          sync: "true"
+          sync-args: "--all-extras"
+          working-directory: python
+
       - uses: vincentarelbundock/scrutin/.github/actions/install_tools@main
         with:
           tools: ruff
 
-      - uses: vincentarelbundock/scrutin/.github/actions/check_py@main
-        with:
-          python-version: ${{ matrix.python-version }}
-          working-directory: python
-          tool: pytest
+      - uses: vincentarelbundock/scrutin/.github/actions/install_scrutin@main
 
-      - uses: vincentarelbundock/scrutin/.github/actions/check_py@main
-        with:
-          python-version: ${{ matrix.python-version }}
-          working-directory: python
-          sync: "false"
-          tool: ruff
+      - run: scrutin -r github --set run.tool=pytest
+        working-directory: python
+
+      - run: scrutin -r github --set run.tool=ruff
+        working-directory: python

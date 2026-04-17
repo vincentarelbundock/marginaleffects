@@ -22,7 +22,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: vincentarelbundock/scrutin/.github/actions/install_r@main
+        with:
+          packages: any::rcmdcheck
+          working-directory: r
+
       - uses: vincentarelbundock/scrutin/.github/actions/check_r@main
         with:
           working-directory: r
-          scrutin-args: -s filter.group=cheap
+
+      - uses: vincentarelbundock/scrutin/.github/actions/install_scrutin@main
+
+      - run: scrutin -r github -s filter.group=cheap
+        working-directory: r
