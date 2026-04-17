@@ -29,3 +29,4 @@ src/*.o
 _quarto/*
 **/.quarto/
 uv.lock
+.scrutin/state.db

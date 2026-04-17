@@ -22,17 +22,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # check_r_pkg's nested install_r reads DESCRIPTION from the repo root,
-      # so hoist the R package contents up one level before invoking it.
-      # The root-level .scrutin/ directory is untouched by the copy.
+      # install_r reads DESCRIPTION from the repo root, so hoist r/ contents up.
       - name: Hoist R package to repo root
         shell: bash
         run: |
           shopt -s dotglob
           cp -r r/* .
 
-      - name: R CMD check + scrutin tinytest (cheap group)
-        uses: vincentarelbundock/scrutin/.github/actions/check_r_pkg@v0.0.11
-        with:
-          tool: tinytest
-          scrutin-args: -s filter.group=cheap
+      - uses: vincentarelbundock/scrutin/.github/actions/install_r@v0.0.11
+
+      - uses: vincentarelbundock/scrutin/.github/actions/install_scrutin@v0.0.11
+
+      - name: R CMD check --no-tests --as-cran
+        shell: bash
+        working-directory: r
+        run: |
+          R CMD build .
+          R CMD check --no-tests --as-cran *.tar.gz
+
+      - name: scrutin (cheap group)
+        shell: bash
+        working-directory: r
+        run: scrutin -r github -s filter.group=cheap
