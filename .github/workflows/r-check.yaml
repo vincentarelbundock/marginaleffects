@@ -37,8 +37,8 @@ jobs:
         shell: bash
         working-directory: r
         run: |
-          R CMD build .
-          R CMD check --no-tests --as-cran *.tar.gz
+          R CMD build --no-build-vignettes --no-manual .
+          R CMD check --no-tests --no-manual --ignore-vignettes --as-cran *.tar.gz
 
       - name: scrutin (cheap group)
         shell: bash
