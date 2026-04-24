@@ -178,7 +178,7 @@ toc()
 For some models, `marginaleffects` can compute standard errors using [automatic differentiation (AD)](https://en.wikipedia.org/wiki/Automatic_differentiation). This is often much faster (and sometimes more accurate) than the default finite difference approach.
 
 
-To enable AD, we need to install the `marginaleffectsAD` package for Python, and call it via the `reticulate` package. This sounds more complicated than it is. In most cases, all the user has to do is call the `autodiff()` function supplied by `marginaleffects`.
+To enable AD, we need to install the `marginaleffects` package for Python, and call it via the `reticulate` package. This sounds more complicated than it is. In most cases, all the user has to do is call the `autodiff()` function supplied by `marginaleffects`.
 
 ```{r}
 #| eval: false
