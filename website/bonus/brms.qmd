@@ -970,3 +970,8 @@ p <- p1 - p0
 cmp <- apply(p, 1, function(x) tapply(x, ChickWeight$Diet, mean))
 apply(cmp, 1, quantile, prob = .025)
 ```
+
+
+## Supporting custom models
+
+`Stan` and `JAGS` users can use the `marginaleffects` package to compute predictions, contrasts, and marginal effects from their models. To do so, they need to write a custom function to draw from the posterior distribution of their model, and then pass that function to `marginaleffects` via the `draw_posterior` argument. See the [Extensions](extensions.html) documentation for more details.
