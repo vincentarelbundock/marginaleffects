@@ -1,5 +1,5 @@
 
-# Extensions 
+# Extensions
 
 
 ```{r, include = FALSE}
@@ -22,42 +22,43 @@ It is very easy to add support for new models in `marginaleffects`.  All we need
 
 If you add support for a class of models produced by a CRAN package, please consider submitting your code for inclusion in the package: https://github.com/vincentarelbundock/marginaleffects
 
-If you add support for a class of models produced by a package hosted *elsewhere* than CRAN, you can submit it for inclusion in the *unsupported* user-submitted library of extensions: Currently 
+If you add support for a class of models produced by a package hosted *elsewhere* than CRAN, you can submit it for inclusion in the *unsupported* user-submitted library of extensions: Currently
 
 * [`countreg` package](https://github.com/vincentarelbundock/marginaleffects/blob/main/sandbox/methods_countreg.R). Thanks to Olivier Beaumais.
 * [`censreg` package](https://github.com/vincentarelbundock/marginaleffects/blob/main/sandbox/methods_censReg.R). Thanks to Oleg Komashko.
 
-The rest of this section illustrates how to add support for a very simple lm_manual model.
+The rest of this section will illustrate how to add support a model: first a frequentist model, and then a Bayesian model.
 
-### Fit function
+### A Frequentist Model
 
-To begin, we define a function which fits a model. Normally, this function will be supplied by a modeling package published on CRAN. Here, we create a function called `lm_manual()`, which estimates a linear regression model using simple linear algebra operators:
+To begin, we define a function which fits a model. Normally, this function will be supplied by a modeling package published on CRAN. Here, we create a function called `lm_manual()`, which estimates a linear regression model using simple linear algebra operators, and returns an object of class `lm_manual`:
 
 ```{r}
 lm_manual <- function(f, data, ...) {
-    # design matrix
-    X <- model.matrix(f, data = data)
-    # response matrix
-    Y <- data[[as.character(f[2])]]
-    # coefficients
-    b <- solve(crossprod(X)) %*% crossprod(X, Y)
-    Yhat <- X %*% b
-    # variance-covariance matrix
-    e <- Y - Yhat
-    df <- nrow(X) - ncol(X)
-    s2 <- sum(e^2) / df
-    V <- s2 * solve(crossprod(X))
-    # model object
-    out <- list(
-        d = data,
-        f = f,
-        X = X,
-        Y = Y,
-        V = V,
-        b = b)
-    # class name: lm_manual
-    class(out) <- c("lm_manual", "list")
-    return(out)
+  # design matrix
+  X <- model.matrix(f, data = data)
+  # response matrix
+  Y <- data[[as.character(f[2])]]
+  # coefficients
+  b <- solve(crossprod(X)) %*% crossprod(X, Y)
+  Yhat <- X %*% b
+  # variance-covariance matrix
+  e <- Y - Yhat
+  df <- nrow(X) - ncol(X)
+  s2 <- sum(e^2) / df
+  V <- s2 * solve(crossprod(X))
+  # model object
+  out <- list(
+    d = data,
+    f = f,
+    X = X,
+    Y = Y,
+    V = V,
+    b = b
+  )
+  # class name: lm_manual
+  class(out) <- c("lm_manual", "list")
+  return(out)
 }
 ```
 
@@ -72,8 +73,6 @@ model$b
 model_lm <- lm(mpg ~ hp + drat, data = mtcars)
 coef(model_lm)
 ```
-
-### `marginaleffects` extension
 
 To extend support in `marginaleffects`, the first step is to tell the package that our new class is supported. We do this by defining a global option:
 
@@ -105,28 +104,29 @@ Note that each of these methods will be named with the suffix `.lm_manual` to in
 
 ```{r}
 get_coef.lm_manual <- function(model, ...) {
-    b <- model$b
-    b <- setNames(as.vector(b), row.names(b))
-    return(b)
+  b <- model$b
+  b <- setNames(as.vector(b), row.names(b))
+  return(b)
 }
 
 set_coef.lm_manual <- function(model, coefs, ...) {
-    out <- model
-    out$b <- coefs
-    return(out)
+  out <- model
+  out$b <- coefs
+  return(out)
 }
 
 get_vcov.lm_manual <- function(model, ...) {
-    return(model$V)
+  return(model$V)
 }
 
 get_predict.lm_manual <- function(model, newdata, ...) {
-    newX <- model.matrix(model$f, data = newdata)
-    Yhat <- newX %*% model$b
-    out <- data.frame(
-        rowid = seq_len(nrow(Yhat)),
-        estimate = as.vector(Yhat))
-    return(out)
+  newX <- model.matrix(model$f, data = newdata)
+  Yhat <- newX %*% model$b
+  out <- data.frame(
+    rowid = seq_len(nrow(Yhat)),
+    estimate = as.vector(Yhat)
+  )
+  return(out)
 }
 ```
 
@@ -150,6 +150,125 @@ predictions(model, newdata = mtcars) |> head()
 
 Note that, for custom models, we typically have to supply values for the `newdata` and `variables` arguments explicitly.
 
+### A Bayesian Model
+
+Adding support for a Bayesian model is even easier!
+
+Bayesian models are typically estimated using MCMC methods, and so all of the inferential statistics are derived directly from the samples of the posterior distribution. Therefore, the only thing we need to do is to define a `get_predict()` method that returns posterior samples of predictions.
+
+Let's illustrate this with a simple example using the `rjags` package. First, let's estimate a simple logistic regression model:
+
+```{r}
+#| results: hide
+library(rjags)
+
+dat <- get_dataset("Titanic", "Stat2Data")
+dat <- dat[!is.na(dat$Age), ]
+
+model_string <- "
+model {
+  # Likelihood
+  for (i in 1:N) {
+    y[i] ~ dbern(p[i])
+    logit(p[i]) <- b0 + b1 * x1[i] + b2 * x2[i]
+  }
+
+  # Priors
+  b0 ~ dnorm(0, 0.001)
+  b1 ~ dnorm(0, 0.001)
+  b2 ~ dnorm(0, 0.001)
+}"
+
+data_list <- list(
+  y = dat$Survived,
+  x1 = dat$Age,
+  x2 = dat$SexCode,
+  N = nrow(dat)
+)
+
+model <- jags.model(
+  textConnection(model_string),
+  data = data_list,
+  n.chains = 3
+)
+
+update(model, 1000) # burn-in
+
+samples <- coda.samples(
+  model,
+  c("b0", "b1", "b2"),
+  n.iter = 1000
+)
+```
+
+The `samples` object contains posterior samples of the parameters. It's not a "model" in the traditional sense, but it contains all the information we need to compute predictions for new data.
+
+For example, the below code reutrns 3000 MCMC samples of the posterior distribution of the predicted probability of survival for a 36 year old male:
+
+```{r}
+#| eval: false
+Age <- 36
+SexCode <- 0
+
+lodds <- as.matrix(samples) %*% c(1, Age, SexCode)
+probs <- exp(lodds) / (1 + exp(lodds))
+```
+
+We can generalize this code to compute predictions for any new data frame.
+
+```{r}
+class(samples) <- c("jags_samples", class(samples))
+
+get_predict.jags_samples <- function(
+  model,
+  newdata,
+  type = c("response", "link"),
+  ...
+) {
+  type <- match.arg(type)
+
+  # Compute predictions for each row of newdata and each posterior draw
+  X <- cbind(1, newdata$Age, newdata$SexCode)
+  est <- as.matrix(model) %*% t(X) # log-odds predictions
+  if (type == "response") {
+    est <- exp(est) / (1 + exp(est)) # probability predictions
+  }
+
+  # Make an empty data frame with the right number of rows
+  out <- data.frame(
+    rowid = seq_len(nrow(newdata)),
+    estimate = 0
+  )
+
+  # Append the posterior draws as an attribute of the output data frame
+  attr(out, "posterior_draws") <- t(est)
+
+  return(out)
+}
+
+# Not strictly necessary, but defining this function silences a warning about
+# missing variance-covariance matrix.
+get_vcov.jags_samples <- function(model, vcov = NULL, ...) {
+  return(NULL)
+}
+```
+
+And... that's it!
+
+Let's see how it works within `marginaleffects`:
+
+```{r}
+# tell the package that we are adding support for a new class of models:
+options("marginaleffects_model_classes" = "jags_samples")
+
+avg_predictions(samples, variables = "SexCode", newdata = dat)
+
+avg_slopes(samples, variables = "Age", by = "SexCode", newdata = dat)
+
+# etc...
+```
+
+See what you can do with Bayesian models in `marginaleffects` in the [Bayes chapter](brms.html).
 
 ## Merge your extension into the main package
 
@@ -161,9 +280,9 @@ If you wrote a working extension, please consider contributing back to the commu
 
 ## Modify or extend supported models
 
-Let's say you want to estimate a model using the `mclogit::mblogit` function.  That package is already supported by `marginaleffects`, but you want to use a `type` (scale) of predictions that is not currently supported: a "centered link scale." 
+Let's say you want to estimate a model using the `mclogit::mblogit` function.  That package is already supported by `marginaleffects`, but you want to use a `type` (scale) of predictions that is not currently supported: a "centered link scale."
 
-To achieve this, we would need to override the `get_predict.mblogit()` method. However, it can be unsafe to reassign methods supplied by a package that we loaded with `library`. To be safe, we assign a new model class to our object ("customclass") which will inherit from `mblogit`. Then, we define a `get_predict.customclass` method to make our new kinds of predictions.  
+To achieve this, we would need to override the `get_predict.mblogit()` method. However, it can be unsafe to reassign methods supplied by a package that we loaded with `library`. To be safe, we assign a new model class to our object ("customclass") which will inherit from `mblogit`. Then, we define a `get_predict.customclass` method to make our new kinds of predictions.
 
 Load libraries, estimate a model:
 
@@ -172,9 +291,10 @@ library(mclogit)
 library(data.table)
 
 model <- mblogit(
-    factor(gear) ~ am + mpg,
-    data = mtcars,
-    trace = FALSE)
+  factor(gear) ~ am + mpg,
+  data = mtcars,
+  trace = FALSE
+)
 ```
 
 Tell `marginaleffects` that we are adding support for a new class model models, and assign a new inherited class name to a duplicate of the model object:
@@ -193,18 +313,19 @@ Our new `get_predict.customclass` method takes this matrix of predictions, modif
 
 ```{r}
 get_predict.customclass <- function(model, newdata, ...) {
-    out <- predict(model, newdata = newdata, type = "link")
-    out <- cbind(0, out)
-    colnames(out)[1] <- dimnames(model$D)[[1]][[1]]
-    out <- out - rowMeans(out)
-    out <- as.data.frame(out)
-    out$rowid <- seq_len(nrow(out))
-    out <- data.table(out)
-    out <- melt(
-        out,
-        id.vars = "rowid",
-        value.name = "estimate",
-        variable.name = "group")
+  out <- predict(model, newdata = newdata, type = "link")
+  out <- cbind(0, out)
+  colnames(out)[1] <- dimnames(model$D)[[1]][[1]]
+  out <- out - rowMeans(out)
+  out <- as.data.frame(out)
+  out$rowid <- seq_len(nrow(out))
+  out <- data.table(out)
+  out <- melt(
+    out,
+    id.vars = "rowid",
+    value.name = "estimate",
+    variable.name = "group"
+  )
 }
 ```
 
