@@ -1,6 +1,5 @@
 # Elasticity
 
-
 ```{r, include = FALSE}
 ## this vignette is in .Rbuildignore because lme4 is not available on old CRAN
 ## test machines.
@@ -15,6 +14,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
 
 ::: {.callout-warning}
 Slopes and elasticities can only be calculated for continuous numeric variables. The `slopes()` functions will automatically revert to `comparisons()` for binary or categorical variables.
@@ -47,7 +47,8 @@ with interpretations roughly as follows:
 
 With the `marginaleffects` package, these quantities are easy to compute with the `slopes()` function and the `slope` argument. 
 
-
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 library(marginaleffects)
 dat <- transform(mtcars, y = mpg, x = wt)
@@ -59,11 +60,41 @@ p1 <- predict(mod, newdata = transform(dat, x = x + pct_change_x))
 mean(p1 - p0)
 
 s <- avg_slopes(mod, slope = "dyex")
-s
+s$estimate
 ```
+### Python
+```{python}
+import numpy as np
+import statsmodels.formula.api as smf
+from marginaleffects import avg_slopes
+from statsmodels.datasets import get_rdataset
+
+mtcars = get_rdataset("mtcars").data
+
+dat = mtcars.assign(
+    y=mtcars["mpg"],
+    x=mtcars["wt"]
+)
+
+mod = smf.ols("y ~ x", data=dat).fit()
+
+pct_change_x = dat["x"].mean() / 100
+
+p0 = mod.predict(dat)
+p1 = mod.predict(dat.assign(x=dat["x"] + pct_change_x))
+
+print(np.mean(p1 - p0))
+
+s_dyex = avg_slopes(mod, slope="dyex")
+print(float(s_dyex["estimate"][0]))
+```
+:::
+
 
 Increasing the `x` variable by 100% of its baseline value is associated with a change of $\eta_1=`{r} s$estimate`$ units in $y$. Notice that the `slopes()` estimates are scaled differently than in the manual computation.
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 yhat <- predict(mod)
 p0 <- predict(mod, newdata = dat)
@@ -71,18 +102,45 @@ p1 <- predict(mod, newdata = transform(dat, x = x + 1))
 mean((p1 - p0) / yhat)
 
 s <- avg_slopes(mod, slope = "eydx")
-s
+s$estimate
 ```
+### Python
+```{python}
+yhat = mod.predict(dat)
+
+p0 = mod.predict(dat)
+p1 = mod.predict(dat.assign(x=dat["x"] + 1))
+
+print(np.mean((p1 - p0) / yhat))
+
+s_eydx = avg_slopes(mod, slope="eydx")
+print(float(s_eydx["estimate"][0]))
+```
+:::
 
 Increasing the `x` variable by 1 unit is associated with a change of $\eta_2=`{r} s$estimate`\%$ of $y$'s baseline value.
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 pct_change_x <- 1 / dat$x
 pct_change_y <- (p1 - p0) / yhat
 mean(pct_change_y / pct_change_x)
 
 s <- avg_slopes(mod, slope = "eyex")
-s
+s$estimate
 ```
+### Python
+```{python}
+pct_change_x = 1 / dat["x"]
+pct_change_y = (p1 - p0) / yhat
+
+print(np.mean(pct_change_y / pct_change_x))
+
+s_eyex = avg_slopes(mod, slope="eyex")
+print(float(s_eyex["estimate"][0]))
+```
+:::
+
 
 Increasing `x` by 1% of its baseline value is associated with a change of $\eta_3=`{r} s$estimate`\%$ in the baseline value of $y$.

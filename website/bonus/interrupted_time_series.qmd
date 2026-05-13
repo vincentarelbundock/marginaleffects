@@ -1,6 +1,12 @@
 ---
 title: Interrupted Times Series
 bibliography: library.bib
+execute:
+  execute-dir: project
+  warning: false
+  message: false
+  cache: false
+  freeze: false
 ---
 
 Interrupted Time Series (ITS) analysis is a widely used research design that aims to infer the impact of a discrete intervention or event by examining changes in an outcome measure over time. It finds applications in various fields, including public health policies—such as evaluating the effect of vaccination campaigns—and educational settings—like assessing curriculum reform. The key motivation behind ITS is to leverage data already being collected, identify a clear “interruption” at a known point in time (e.g., when a policy was enacted), and then compare the behavior of the outcome measure before and after this interruption.
@@ -11,6 +17,13 @@ ITS shares some similarities with the popular difference-in-differences (DiD) ap
 
 This article shows how to use the `marginaleffects` package to analyze a simple ITS setup. To illustrate, we consider a dataset simulated by this code:
 
+```{r, include = FALSE}
+venv <- if (dir.exists(".venv")) ".venv" else "../.venv"
+reticulate::use_virtualenv(normalizePath(venv), required = TRUE)
+```
+
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 library(marginaleffects)
 library(tinyplot)
@@ -40,13 +53,68 @@ outcome <-
 dat <- data.frame(outcome, time, treatment)
 ```
 
+### Python
+```{python}
+import numpy as np
+import pandas as pd
+import statsmodels.formula.api as smf
+from marginaleffects import avg_slopes, comparisons, predictions
+from plotnine import (
+    aes,
+    facet_wrap,
+    geom_line,
+    geom_point,
+    ggplot,
+    labs,
+    scale_color_manual,
+    theme_minimal,
+)
+
+dat = r.dat.copy()
+dat["time"] = dat["time"].astype(int)
+dat["treatment"] = dat["treatment"].astype(int)
+n = int(r.n)
+intervention = int(r.intervention)
+```
+:::
+
 The data look like this:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 library(tinyplot)
 tinyplot(outcome ~ time | treatment, type = "p", palette = "okabeito",
     data = transform(dat, treatment = factor(treatment)))
 ```
+
+### Python
+```{python}
+import pandas as pd
+from plotnine import aes, geom_point, ggplot, labs, scale_color_manual, theme_minimal
+
+dat = r.dat.copy()
+dat["time"] = dat["time"].astype(int)
+dat["treatment"] = dat["treatment"].astype(int)
+dat_plot = dat.copy()
+dat_plot["treatment"] = dat_plot["treatment"].astype(str)
+
+okabe_ito = [
+    "#E69F00", "#56B4E9", "#009E73",
+    "#F0E442", "#0072B2", "#D55E00",
+    "#CC79A7", "#999999"
+]
+
+plot = (
+    ggplot(dat_plot, aes(x="time", y="outcome", color="treatment"))
+    + geom_point()
+    + scale_color_manual(values=okabe_ito[:2])
+    + theme_minimal()
+    + labs(x="Time", y="Outcome", color="treatment")
+)
+plot.show()
+```
+:::
 
 Often, analysts will model such data using a linear regression model with multiplicative interaction, and a specially constructured "time since intervention" variable:
 
@@ -60,13 +128,29 @@ $$
 \text{Outcome} = \alpha_0 + \alpha_1 \text{Time} + \alpha_2 \text{Treatment} + \alpha_3 \text{Time} \times \text{Treatment} + \varepsilon
 $$
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 mod <- lm(outcome ~ time * treatment, data = dat)
 summary(mod)
 ```
 
+### Python
+```{python}
+import statsmodels.formula.api as smf
+
+dat = r.dat.copy()
+dat["time"] = dat["time"].astype(int)
+dat["treatment"] = dat["treatment"].astype(int)
+mod_py = smf.ols("outcome ~ time * treatment", data=dat).fit()
+print(mod_py.summary())
+```
+:::
+
 Then, we can use the `marginaleffects` package to answer a series of scientific questions. For example, what would be the predicted outcome at time 200 with or without intervention?
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 p0 <- predictions(mod, newdata = datagrid(time = 199, treatment = 0))
 p1 <- predictions(mod, newdata = datagrid(time = 200, treatment = 1))
@@ -76,22 +160,95 @@ p0
 p1
 ```
 
+### Python
+```{python}
+import pandas as pd
+import statsmodels.formula.api as smf
+from marginaleffects import predictions
+
+dat = r.dat.copy()
+dat["time"] = dat["time"].astype(int)
+dat["treatment"] = dat["treatment"].astype(int)
+mod_py = smf.ols("outcome ~ time * treatment", data=dat).fit()
+
+p0_py = predictions(
+    mod_py,
+    newdata=pd.DataFrame({"time": [199], "treatment": [0]}),
+    vcov=False
+)
+p1_py = predictions(
+    mod_py,
+    newdata=pd.DataFrame({"time": [200], "treatment": [1]}),
+    vcov=False
+)
+
+print(p0_py)
+print(p1_py)
+```
+:::
+
 This suggests that the intervention would have increased the outcome by about `{r} p1$estimate - p0$estimate` units at time 200. Is the difference between those predictions statistically significant?
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 comparisons(mod, variables = "treatment", newdata = datagrid(time = 200))
 ```
 
+### Python
+```{python}
+import pandas as pd
+import statsmodels.formula.api as smf
+from marginaleffects import comparisons
+
+dat = r.dat.copy()
+dat["time"] = dat["time"].astype(int)
+dat["treatment"] = dat["treatment"].astype(int)
+mod_py = smf.ols("outcome ~ time * treatment", data=dat).fit()
+
+comparisons(
+    mod_py,
+    variables="treatment",
+    newdata=pd.DataFrame({"time": [200], "treatment": [0]}),
+    vcov=False
+)
+```
+:::
+
 What is the average slope of the outcome equation with respect to time, before and after the intervention?
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 avg_slopes(mod, variables = "time", by = "treatment")
 ```
+
+### Python
+```{python}
+import statsmodels.formula.api as smf
+from marginaleffects import avg_slopes
+
+dat = r.dat.copy()
+dat["time"] = dat["time"].astype(int)
+dat["treatment"] = dat["treatment"].astype(int)
+mod_py = smf.ols("outcome ~ time * treatment", data=dat).fit()
+
+avg_slopes(
+    mod_py,
+    variables="time",
+    by="treatment",
+    eps=0.01,
+    vcov=False
+)
+```
+:::
 
 This shows that the outcome increases more rapidly after the intervention.
 
 Many analysts like to visualize the results of an ITS analysis, by plotting the predicted outcome for the control group, knowing that these predictions are *counterfactual* after the intervention. This can be done by first make predictions for all combinations of `time` and `treatment`, dropping the observations we do not want to plot, and feeding the data to a plotting package like `ggplot2`.
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 library(ggplot2)
 p <- predictions(mod, variables = c("time", "treatment"))
@@ -103,5 +260,38 @@ ggplot(p, aes(x = time, y = estimate, color = factor(treatment))) +
        y = "Outcome")
 ```
 
+### Python
+```{python}
+import numpy as np
+import pandas as pd
+import statsmodels.formula.api as smf
+from marginaleffects import predictions
+from plotnine import aes, geom_line, ggplot, labs
 
+dat = r.dat.copy()
+dat["time"] = dat["time"].astype(int)
+dat["treatment"] = dat["treatment"].astype(int)
+intervention = int(r.intervention)
+mod_py = smf.ols("outcome ~ time * treatment", data=dat).fit()
 
+time_vals = np.sort(dat["time"].unique())
+grid = pd.DataFrame(
+    [(t, tr) for tr in [0, 1] for t in time_vals],
+    columns=["time", "treatment"]
+)
+
+p_py = predictions(mod_py, newdata=grid, vcov=False).to_pandas()
+p_py = p_py[
+    (p_py["time"] > intervention) |
+    (p_py["treatment"] == 0)
+].copy()
+p_py["treatment"] = p_py["treatment"].astype(str)
+
+plot = (
+    ggplot(p_py, aes(x="time", y="estimate", color="treatment"))
+    + geom_line()
+    + labs(title="Predicted outcome over time", x="Time", y="Outcome")
+)
+plot.show()
+```
+:::
