@@ -88,9 +88,9 @@ sanitize_model_specific(model, ...)
 
 \method{sanitize_model_specific}{ols}(model, ...)
 
-\method{sanitize_model_specific}{svyolr}(model, wts = FALSE, by = FALSE, ...)
+\method{sanitize_model_specific}{svyolr}(model, calling_function = NULL, ...)
 
-\method{sanitize_model_specific}{svyglm}(model, wts = FALSE, by = FALSE, ...)
+\method{sanitize_model_specific}{svyglm}(model, calling_function = NULL, ...)
 
 \method{sanitize_model_specific}{coxph}(model, vcov, ...)
 }
@@ -121,24 +121,6 @@ arguments.}
 \item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
 \item Square covariance matrix
 \item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
-}}
-
-\item{wts}{logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not unit-level estimates. See \code{?weighted.mean}
-\itemize{
-\item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
-\item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
-\item FALSE: Equal weights.
-\item TRUE: Extract weights from the fitted object with \code{insight::find_weights()} and use them when taking weighted averages of estimates. Warning: \code{newdata=datagrid()} returns a single average weight, which is equivalent to using \code{wts=FALSE}
-}}
-
-\item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
-\itemize{
-\item \code{FALSE}: return the original unit-level estimates.
-\item \code{TRUE}: aggregate estimates for each term.
-\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
-\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
-\item See examples below.
-\item For more complex aggregations, you can use the \code{FUN} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
 }}
 }
 \value{

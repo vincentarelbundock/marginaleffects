@@ -103,9 +103,13 @@ get_predict.svyglm <- function(
 #' @export
 sanitize_model_specific.svyolr <- function(
     model,
-    wts = FALSE,
-    by = FALSE,
+    calling_function = NULL,
     ...) {
+    if (identical(calling_function, "hypotheses")) {
+        return(model)
+    }
+    wts <- ...get("wts", FALSE)
+    by <- ...get("by", FALSE)
     if (isFALSE(wts) && !isFALSE(by)) {
         warning(
             "With models of this class, it is normally good practice to specify weights using the `wts` argument. Otherwise, weights will be ignored in the computation of quantities of interest.",

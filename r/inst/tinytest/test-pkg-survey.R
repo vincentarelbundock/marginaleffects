@@ -25,6 +25,13 @@ svyd <- survey::svydesign(
     nest = TRUE
 )
 mod <- survey::svyglm(x ~ nh, design = svyd)
+f <- function(x) stats::coef(x)["nh"]
+h <- hypotheses(mod, hypothesis = f)
+expect_inherits(h, "hypotheses")
+expect_equivalent(h$estimate, stats::coef(mod)["nh"])
+h <- hypotheses(mod, hypothesis = f, wts = stats::weights(svyd))
+expect_inherits(h, "hypotheses")
+expect_equivalent(h$estimate, stats::coef(mod)["nh"])
 res <- slopes(mod, wts = "(weights)")
 mar <- suppressMessages(data.frame(margins(mod, unit_ses = TRUE)))
 expect_equivalent(res$estimate, as.numeric(mar$dydx_nh))
