@@ -59,7 +59,7 @@ Alternatively, you can install the development version for `R` from GitHub:
 
 ```r
 library(remotes)
-install_github("vincentarelbundock/marginaleffects")
+install_github("vincentarelbundock/marginaleffects/r")
 ```
 
 ::: {layout-ncol=2}
