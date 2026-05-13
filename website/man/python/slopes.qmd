@@ -61,11 +61,11 @@ A logical value or a list of column names in `newdata`.
 - True: estimate is aggregated across the whole dataset.
 - list: estimates are aggregated for each unique combination of values in the columns.
 
-#### `hypothesis`: (str, int, float, list of str, numpy array)  {.unnumbered}
+#### `hypothesis`: (str, int, float, list of str, numpy array) {.unnumbered}
 
 Specifies a hypothesis test or custom contrast.
 
-- int, float: 
+- int, float:
     - The null hypothesis used in the computation of Z and p-values (before applying transform).
 - string:
     - Equation specifying linear or non-linear hypothesis tests. Use the names of the model variables, or use `b0`, `b1` to identify the position of each parameter. The `b*` wildcard can be used to test hypotheses on all estimates. Ex:
@@ -80,9 +80,9 @@ Specifies a hypothesis test or custom contrast.
     - Two-sided formula like "ratio ~ reference":
         - Left-hand side: "ratio", "difference"
         - Right-hand side: "reference", "sequential", "pairwise", "revreference", "revsequential", "revpairwise"
-- list of strings: 
+- list of strings:
     - Multiple hypotheses evaluated in sequence, each processed as if passed individually. The resulting rows are stacked in the order supplied. Ex: `["b1 - b0 = 0", "b2 = 1"]`.
-- numpy.ndarray: 
+- numpy.ndarray:
     - Each column is a vector of weights. The output is the dot product between these vectors of weights and the vectors of estimates. e.g. `hypothesis=np.array([[1, 1, 2], [2, 2, 3]]).T`docs
 - See the Examples section and the vignette: https://marginaleffects.com/chapters/hypothesis.html
 
