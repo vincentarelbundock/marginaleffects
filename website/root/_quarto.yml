@@ -74,19 +74,21 @@ book:
         - chapters/ml.qmd
         - chapters/uncertainty.qmd
         - chapters/python.qmd
-    - part: "IV: Case studies (R)"
+    - part: "IV: Case studies (R+Python)"
       chapters:
         - bonus/get_started.qmd
         - bonus/plot.qmd
+        - bonus/elasticity.qmd
+        - bonus/interrupted_time_series.qmd
+    - part: "V: Case studies (R)"
+      chapters:
         - bonus/brms.qmd
         - bonus/bootstrap.qmd
         - bonus/conjoint.qmd
-        - bonus/elasticity.qmd
         - bonus/gam.qmd
         - bonus/grids.qmd
         - bonus/heterogeneity.qmd
         - bonus/hypothesis.qmd
-        - bonus/interrupted_time_series.qmd
         - bonus/ipw.qmd
         - bonus/lme4.qmd
         - bonus/logit.qmd
@@ -97,11 +99,11 @@ book:
         - bonus/survival.qmd
         - bonus/total_marginal_effect.qmd
         - bonus/uncertainty.qmd
-    - part: "IV: Case studies (Python)"
+    - part: "VI: Case studies (Python)"
       chapters:
         - bonus/get_started.qmd
         - bonus/sklearn.qmd
-    - part: "V: Miscellaneous"
+    - part: "VII: Miscellaneous"
       chapters:
         - bonus/help.qmd
         - bonus/alternative_software.qmd
