@@ -36,7 +36,9 @@ def dt_on_condition(model, condition):
         condition_new.pop("newdata", None)
 
     if not (1 <= len(condition_new) <= 4):
-        raise ValueError(f"Length of condition must be inclusively between 1 and 4. Got: {len(condition_new)}.")
+        raise ValueError(
+            f"Length of condition must be inclusively between 1 and 4. Got: {len(condition_new)}."
+        )
 
     for key, value in to_datagrid.items():
         variable_type = model.get_variable_type(key)
@@ -53,7 +55,9 @@ def dt_on_condition(model, condition):
                 else modeldata[key].unique().sort().to_list()
             )
             if len(to_datagrid[key]) > 10:
-                raise ValueError(f"Character type variables of more than 10 unique values are not supported. {key} variable has {len(to_datagrid[key])} unique values.")
+                raise ValueError(
+                    f"Character type variables of more than 10 unique values are not supported. {key} variable has {len(to_datagrid[key])} unique values."
+                )
 
         elif variable_type in ["boolean", "binary"]:
             if to_datagrid[key] is None:
@@ -127,7 +131,9 @@ def validate_plot_args(condition, by, newdata, wts):
     if wts is not None and not by:
         raise ValueError("The `wts` argument requires a `by` argument.")
     if not ((condition is None and by) or (condition is not None and not by)):
-        raise ValueError("One of the `condition` and `by` arguments must be supplied, but not both.")
+        raise ValueError(
+            "One of the `condition` and `by` arguments must be supplied, but not both."
+        )
 
 
 def extract_var_list(condition, by):
@@ -147,7 +153,9 @@ def extract_var_list(condition, by):
     var_list = [x for x in var_list if x not in ["newdata", "model"]]
 
     if len(var_list) >= 5:
-        raise ValueError("The `condition` and `by` arguments can have a max length of 4.")
+        raise ValueError(
+            "The `condition` and `by` arguments can have a max length of 4."
+        )
 
     return var_list
 

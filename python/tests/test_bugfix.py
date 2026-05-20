@@ -1,3 +1,6 @@
+import subprocess
+import sys
+
 import numpy as np
 import pandas as pd
 import polars as pl
@@ -22,3 +25,18 @@ def test_issue_226_np_context():
     out = predictions(mod, newdata=df)
     assert isinstance(out, MarginaleffectsResult)
     assert isinstance(out.data, pl.DataFrame)
+
+
+def test_issue_1724():
+    # Circular import when `datagrid` is the first symbol pulled from
+    # marginaleffects in a fresh interpreter. Must run in a subprocess —
+    # the in-process pytest run has already warmed the import graph.
+    result = subprocess.run(
+        [sys.executable, "-c", "from marginaleffects import datagrid"],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, (
+        f"Fresh-process import of `datagrid` failed.\n"
+        f"stdout: {result.stdout}\nstderr: {result.stderr}"
+    )

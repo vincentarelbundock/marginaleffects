@@ -1,12 +1,16 @@
 import numpy as np
 import polars as pl
 
-from ..datagrid import datagrid
-from ..utils import ingest, upcast
 from ..formula import listwise_deletion
 
 
 def sanitize_newdata(model, newdata, wts, by=[]):
+    # Lazy imports to break the `datagrid -> utils -> sanitize -> newdata -> ...`
+    # circular import that fires when `datagrid` is the first symbol pulled from
+    # marginaleffects in a fresh interpreter (see GH #1724).
+    from ..datagrid import datagrid
+    from ..utils import ingest, upcast
+
     modeldata = model.get_modeldata()
 
     if newdata is None:
@@ -73,7 +77,9 @@ def sanitize_newdata(model, newdata, wts, by=[]):
         "statistic",
     }
     if set(out.columns) & reserved_names:
-        raise ValueError(f"Input data contain reserved column name(s): {set(out.columns).intersection(reserved_names)}")
+        raise ValueError(
+            f"Input data contain reserved column name(s): {set(out.columns).intersection(reserved_names)}"
+        )
 
     datagrid_explicit = None
     if isinstance(newdata, pl.DataFrame) and hasattr(newdata, "datagrid_explicit"):

@@ -148,7 +148,9 @@ def _get_one_variable_hi_lo(
         elif callable(value):
             tmp = value(newdata[variable])
             if tmp.shape[1] != 2:
-                raise ValueError(f"The function passed to `variables` must return a DataFrame with two columns. Got {tmp.shape[1]}.")
+                raise ValueError(
+                    f"The function passed to `variables` must return a DataFrame with two columns. Got {tmp.shape[1]}."
+                )
             lo = tmp[:, 0]
             hi = tmp[:, 1]
             lab = "custom"
