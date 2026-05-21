@@ -1,3 +1,9 @@
+# 0.5.1
+
+Bugs:
+
+* Circular import. Thanks to @juanitorduz for code contribution #1725.
+
 # 0.5.0
 
 New:

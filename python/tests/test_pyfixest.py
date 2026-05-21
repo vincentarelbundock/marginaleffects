@@ -204,7 +204,7 @@ def test_pyfixest_standard_errors_across_models():
     fit_pois_fe = fepois("Y ~ X1 * X2 * Z1 | f1", data=poisson_data)
     with pytest.warns(
         UserWarning,
-        match="uncertainty in fixed-effects parameters when computing contrasts",
+        match="cannot take into account the uncertainty in fixed-effects",
     ):
         try:
             comp_pois_fe = comparisons(fit_pois_fe)
