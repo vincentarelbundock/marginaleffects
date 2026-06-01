@@ -5,7 +5,7 @@
 %   R/methods_glmmTMB.R, R/methods_lme4.R, R/methods_mclogit.R,
 %   R/methods_mlogit.R, R/methods_mlr3.R, R/methods_ordinal.R,
 %   R/methods_plm.R, R/methods_quantreg.R, R/methods_rms.R, R/methods_survey.R,
-%   R/methods_survival.R
+%   R/methods_survival.R, R/methods_svyVGAM.R
 \name{sanitize_model_specific}
 \alias{sanitize_model_specific}
 \alias{sanitize_model_specific.default}
@@ -32,6 +32,7 @@
 \alias{sanitize_model_specific.svyolr}
 \alias{sanitize_model_specific.svyglm}
 \alias{sanitize_model_specific.coxph}
+\alias{sanitize_model_specific.svy_vglm}
 \title{Method to raise model-specific warnings and errors}
 \usage{
 sanitize_model_specific(model, ...)
@@ -93,6 +94,8 @@ sanitize_model_specific(model, ...)
 \method{sanitize_model_specific}{svyglm}(model, calling_function = NULL, ...)
 
 \method{sanitize_model_specific}{coxph}(model, vcov, ...)
+
+\method{sanitize_model_specific}{svy_vglm}(model, calling_function = NULL, ...)
 }
 \arguments{
 \item{model}{Model object}

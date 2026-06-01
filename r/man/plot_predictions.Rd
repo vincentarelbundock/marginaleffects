@@ -215,6 +215,7 @@ Some of the most common \code{type} values are:\tabular{ll}{
    speedlm \tab response \cr
    stanreg \tab response, link \cr
    survreg \tab response, link, quantile \cr
+   svy_vglm \tab response, link \cr
    svyglm \tab response, link \cr
    svyolr \tab probs \cr
    tobit \tab response, link \cr

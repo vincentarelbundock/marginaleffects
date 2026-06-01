@@ -89,6 +89,9 @@ get_coef(model, ...)
 ## S3 method for class 'svyolr'
 get_coef(model, ...)
 
+## S3 method for class 'svy_vglm'
+get_coef(model, ...)
+
 ## S3 method for class 'systemfit'
 get_coef(model, ...)
 

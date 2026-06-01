@@ -1154,6 +1154,10 @@ Some of the most common <code>type</code> values are:
 </tr>
 <tr>
  <td style="text-align: left;">
+   svy_vglm </td><td style="text-align: left;"> response, link </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
    svyglm </td><td style="text-align: left;"> response, link </td>
 </tr>
 <tr>

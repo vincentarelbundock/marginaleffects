@@ -277,6 +277,18 @@ get_predict(
 ## S3 method for class 'coxph'
 get_predict(model, newdata = get_modeldata(model), type = "lp", ...)
 
+## S3 method for class 'svy_vglm'
+get_predict(
+  model,
+  newdata = get_modeldata(model),
+  type = "response",
+  mfx = NULL,
+  newparams = NULL,
+  ndraws = NULL,
+  se.fit = NULL,
+  ...
+)
+
 ## S3 method for class 'model_fit'
 get_predict(model, newdata, type = NULL, ...)
 

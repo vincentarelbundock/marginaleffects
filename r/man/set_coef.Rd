@@ -8,7 +8,7 @@
 %   R/methods_nestedLogit.R, R/methods_nlme.R, R/methods_pscl.R,
 %   R/methods_robustlmm.R, R/methods_rstpm2.R, R/methods_sampleSelection.R,
 %   R/methods_scam.R, R/methods_survey.R, R/methods_survival.R,
-%   R/methods_systemfit.R, R/methods_tidymodels.R
+%   R/methods_svyVGAM.R, R/methods_systemfit.R, R/methods_tidymodels.R
 \name{set_coef}
 \alias{set_coef}
 \alias{set_coef.default}
@@ -51,6 +51,7 @@
 \alias{set_coef.scam}
 \alias{set_coef.svyolr}
 \alias{set_coef.survreg}
+\alias{set_coef.svy_vglm}
 \alias{set_coef.systemfit}
 \alias{set_coef.model_fit}
 \alias{set_coef.workflow}
@@ -137,6 +138,8 @@ set_coef(model, coefs, ...)
 \method{set_coef}{svyolr}(model, coefs, ...)
 
 \method{set_coef}{survreg}(model, coefs, ...)
+
+\method{set_coef}{svy_vglm}(model, coefs, ...)
 
 \method{set_coef}{systemfit}(model, coefs, ...)
 

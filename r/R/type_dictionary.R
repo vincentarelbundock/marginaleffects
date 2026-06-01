@@ -182,6 +182,8 @@ survreg,quantile
 svyglm,response
 svyglm,link
 svyolr,probs
+svy_vglm,response
+svy_vglm,link
 tobit,response
 tobit,link
 tobit1,expvalue

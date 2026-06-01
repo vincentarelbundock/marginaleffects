@@ -9,8 +9,8 @@
 %   R/methods_mlogit.R, R/methods_mlr3.R, R/methods_nestedLogit.R,
 %   R/methods_ordinal.R, R/methods_quantreg.R, R/methods_rms.R,
 %   R/methods_robustlmm.R, R/methods_rstanarm.R, R/methods_rstpm2.R,
-%   R/methods_survey.R, R/methods_survival.R, R/methods_tidymodels.R,
-%   R/methods_tobit1.R
+%   R/methods_survey.R, R/methods_survival.R, R/methods_svyVGAM.R,
+%   R/methods_tidymodels.R, R/methods_tobit1.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -60,6 +60,7 @@
 \alias{get_predict.svyolr}
 \alias{get_predict.svyglm}
 \alias{get_predict.coxph}
+\alias{get_predict.svy_vglm}
 \alias{get_predict.model_fit}
 \alias{get_predict.workflow}
 \alias{get_predict.tobit1}
@@ -285,6 +286,17 @@ get_predict(
 )
 
 \method{get_predict}{coxph}(model, newdata = get_modeldata(model), type = "lp", ...)
+
+\method{get_predict}{svy_vglm}(
+  model,
+  newdata = get_modeldata(model),
+  type = "response",
+  mfx = NULL,
+  newparams = NULL,
+  ndraws = NULL,
+  se.fit = NULL,
+  ...
+)
 
 \method{get_predict}{model_fit}(model, newdata, type = NULL, ...)
 

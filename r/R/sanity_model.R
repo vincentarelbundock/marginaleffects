@@ -135,6 +135,7 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
             "stanreg",
             "survreg",
             "svyolr",
+            "svy_vglm",
             "systemfit",
             c("tobit", "survreg"),
             "tobit1",

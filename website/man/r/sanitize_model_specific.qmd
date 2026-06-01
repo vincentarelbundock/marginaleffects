@@ -92,6 +92,9 @@ sanitize_model_specific(model, calling_function = NULL, ...)
 
 ## S3 method for class 'coxph'
 sanitize_model_specific(model, vcov, ...)
+
+## S3 method for class 'svy_vglm'
+sanitize_model_specific(model, calling_function = NULL, ...)
 </code></pre>
 
 
