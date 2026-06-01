@@ -1,0 +1,13 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Statistical Modeling",
+      "description": "Skills for interpreting statistical and machine learning models with marginaleffects.",
+      "skills": [
+        "marginaleffects"
+      ]
+    }
+  ]
+}
