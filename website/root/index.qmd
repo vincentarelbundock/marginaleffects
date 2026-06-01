@@ -59,7 +59,13 @@ The book and article present a simple but powerful conceptual framework to help 
 
 ## LLMs and `marginaleffects`
 
-LLMs can learn how to use `marginaleffects` too! Check out [the SKILL.md file and machine friendly documentation on Github.](https://github.com/vincentarelbundock/marginaleffects-SKILL)
+LLMs can learn how to use `marginaleffects` too! Check out the [SKILL.md file and machine friendly documentation on Github.](https://github.com/vincentarelbundock/marginaleffects/tree/main/skills/marginaleffects)
+
+To install the skill, run:
+
+```sh
+npx skills add vincentarelbundock/marginaleffects
+```
 
 ## Citation
 
