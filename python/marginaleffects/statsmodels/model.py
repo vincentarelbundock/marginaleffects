@@ -10,6 +10,15 @@ from ..sanitize.utils import validate_types
 
 
 class ModelStatsmodels(ModelAbstract):
+    # A few statsmodels models store coefficients in an expanded multi-equation
+    # form whose own `predict` cannot consume an ordinary (n, k) design matrix.
+    # Map the model class name to a method that reconstructs predictions from
+    # the plain design; every other model delegates to its native `predict`.
+    _PREDICT_RECONSTRUCTORS = {
+        "NominalGEE": "_predict_nominal_gee",
+        "OrdinalGEE": "_predict_ordinal_gee",
+    }
+
     def __init__(self, model, vault=None):
         if vault is None:
             vault = ModelVault()
@@ -110,6 +119,76 @@ class ModelStatsmodels(ModelAbstract):
     def _is_ordered_model(self):
         return "OrderedModel" in type(self.model.model).__name__
 
+    def _predict_array(self, params, exog):
+        """Predicted values as a numpy array from a plain (n, k) design.
+
+        Delegates to the model's native ``predict`` unless the model class is
+        registered in ``_PREDICT_RECONSTRUCTORS`` (multi-equation models whose
+        native ``predict`` cannot consume an ordinary design matrix).
+        """
+        reconstruct = self._PREDICT_RECONSTRUCTORS.get(type(self.model.model).__name__)
+        if reconstruct is not None:
+            return getattr(self, reconstruct)(params, exog)
+        return self.model.model.predict(params, exog)
+
+    def _predict_nominal_gee(self, params, exog):
+        """Category probabilities for a NominalGEE from an (n, k) design.
+
+        statsmodels stores NominalGEE in an expanded (long) form: each
+        observation is replicated ``ncut = n_categories - 1`` times and the
+        design is Kronecker-expanded, so the flat coefficient vector has
+        length ``ncut * k``. The model's inherited GLM ``predict`` only works
+        on that expanded matrix, so we rebuild category probabilities from the
+        ordinary ``(n, k)`` design via the multinomial-logit inverse link.
+        """
+        ncut = self.model.model.ncut
+        beta = np.asarray(params).ravel().reshape(ncut, -1)  # (ncut, k)
+        eta = np.asarray(exog) @ beta.T  # (n, ncut) per-cut linear predictors
+        expo = np.exp(eta)
+        denom = 1.0 + expo.sum(axis=1, keepdims=True)
+        # Sorted-category order: the `ncut` non-reference categories followed
+        # by the reference (largest) category, matching MNLogit's group order.
+        return np.column_stack([expo / denom, 1.0 / denom])
+
+    def _predict_ordinal_gee(self, params, exog):
+        """Category probabilities for an OrdinalGEE from an (n, k) design.
+
+        OrdinalGEE fits a cumulative-logit model: ``ncut = n_categories - 1``
+        threshold intercepts plus covariate slopes shared across thresholds,
+        modelling the survival probabilities ``P(Y > c_j)``. statsmodels stores
+        this in an expanded form whose inherited GLM ``predict`` cannot consume
+        an ordinary ``(n, k)`` design, so we rebuild the cumulative
+        probabilities ourselves.
+        """
+        from scipy.special import expit
+
+        # A model intercept is collinear with the threshold intercepts, which
+        # produces a rank-deficient fit with ~1e15 coefficients and unstable
+        # predictions. statsmodels' own examples fit without an intercept.
+        if "Intercept" in [str(n) for n in self.get_coefnames()]:
+            raise ValueError(
+                "OrdinalGEE was fit with a model intercept that is collinear "
+                "with the cumulative-link thresholds, producing a rank-"
+                "deficient fit with unstable coefficients. Refit without an "
+                'intercept, e.g. `smf.ordinal_gee("y ~ 0 + x1 + x2", ...)`.'
+            )
+
+        ncut = len(self.model.model.endog_values) - 1
+        params = np.asarray(params).ravel()
+        alpha = params[:ncut]  # threshold intercepts (decreasing in j)
+        beta = params[ncut:]  # covariate slopes, shared across thresholds
+        # Survival probabilities P(Y > c_j) for the ncut ordered thresholds.
+        surv = expit(alpha[None, :] + (np.asarray(exog) @ beta)[:, None])
+        # Successive survival differences give category probabilities, in
+        # sorted-category order to match the group labelling used elsewhere.
+        n = surv.shape[0]
+        probs = np.empty((n, ncut + 1))
+        probs[:, 0] = 1.0 - surv[:, 0]
+        for k in range(1, ncut):
+            probs[:, k] = surv[:, k - 1] - surv[:, k]
+        probs[:, ncut] = surv[:, ncut - 1]
+        return probs
+
     def get_predict(self, params, newdata: pl.DataFrame):
         if isinstance(newdata, np.ndarray):
             exog = newdata
@@ -123,7 +202,7 @@ class ModelStatsmodels(ModelAbstract):
         if self._is_ordered_model() and isinstance(exog, np.ndarray):
             if exog.shape[1] == self.model.model.k_vars + 1:
                 exog = exog[:, 1:]
-        p = self.model.model.predict(params, exog)
+        p = self._predict_array(params, exog)
         if p.ndim == 1:
             p = pl.DataFrame({"rowid": range(newdata.shape[0]), "estimate": p})
         elif p.ndim == 2:
