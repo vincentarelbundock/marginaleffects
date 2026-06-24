@@ -98,6 +98,7 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
 }
 
 #' @rdname sanitize_model_specific
+#' @export
 sanitize_model_specific.glmmTMB <- function(model, vcov = TRUE, re.form, ...) {
     if (identical(vcov, "HC0")) {
         insight::check_if_installed("glmmTMB", minimum_version = "1.1.12")

@@ -3,8 +3,8 @@
 %   R/methods_aod.R, R/methods_betareg.R, R/methods_biglm.R, R/methods_brms.R,
 %   R/methods_dbarts.R, R/methods_fixest.R, R/methods_gamlss.R,
 %   R/methods_glmmTMB.R, R/methods_lme4.R, R/methods_mclogit.R,
-%   R/methods_mlogit.R, R/methods_mlr3.R, R/methods_ordinal.R,
-%   R/methods_plm.R, R/methods_quantreg.R, R/methods_rms.R, R/methods_survey.R,
+%   R/methods_mlogit.R, R/methods_mlr3.R, R/methods_ordinal.R, R/methods_plm.R,
+%   R/methods_quantreg.R, R/methods_rms.R, R/methods_survey.R,
 %   R/methods_survival.R, R/methods_svyVGAM.R
 \name{sanitize_model_specific}
 \alias{sanitize_model_specific}

@@ -67,6 +67,7 @@ get_predict.betareg <- function(model, newdata, type = "response", ...) {
 
 
 #' @rdname sanitize_model_specific
+#' @export
 sanitize_model_specific.betareg <- function(model, ...) {
     insight::check_if_installed("insight", minimum_version = "0.17.1")
     return(model)

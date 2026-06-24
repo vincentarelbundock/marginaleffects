@@ -37,6 +37,7 @@ get_vcov.glimML <- function(model, vcov = NULL, ...) {
 
 
 #' @rdname sanitize_model_specific
+#' @export
 sanitize_model_specific.glimML <- function(model, ...) {
     mdat <- get_modeldata(model)
     cl <- detect_variable_class(mdat, model = model)

@@ -28,6 +28,7 @@ get_predict.mlogit <- function(model, newdata, ...) {
 #' @include sanity_model.R
 #' @rdname sanitize_model_specific
 #' @keywords internal
+#' @export
 sanitize_model_specific.mlogit <- function(model, calling_function = NULL, ...) {
     if (!is.null(calling_function) && !identical(calling_function, "predictions")) {
         msg <- "`predictions()` and `avg_predictions()` are supported for `mlogit` models, but the other `marginaleffects` functions are not. The reason is that the data structure for these models is one observation-choice per row, which complicates internal handling by `marginaleffects`."

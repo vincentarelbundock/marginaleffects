@@ -46,6 +46,7 @@ get_group_names.clm <- get_group_names.polr
 #' @include sanity_model.R
 #' @rdname sanitize_model_specific
 #' @keywords internal
+#' @export
 sanitize_model_specific.clm <- function(model, ...) {
     # Corner case: The `predict.clm` method does not make predictions when the
     # response was transformed to a factor in the formula AND the response is

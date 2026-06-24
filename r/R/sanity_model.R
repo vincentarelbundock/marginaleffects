@@ -10,6 +10,7 @@ sanitize_model_specific <- function(model, ...) {
 
 
 #' @rdname sanitize_model_specific
+#' @export
 sanitize_model_specific.default <- function(
   model,
   vcov = NULL,
