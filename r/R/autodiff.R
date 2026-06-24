@@ -38,6 +38,7 @@ get_autodiff_args <- function(model, mfx) {
 #' @rdname get_autodiff_args
 #' @keywords internal
 #' @noRd
+#' @export
 get_autodiff_args.default <- function(model, mfx) {
     return(NULL)
 }

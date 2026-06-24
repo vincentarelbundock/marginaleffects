@@ -30,6 +30,7 @@ get_vcov.biglm <- function(model, vcov = NULL, ...) {
 
 
 #' @rdname sanitize_model_specific
+#' @export
 sanitize_model_specific.biglm <- function(model, vcov = NULL, ...) {
     if (!isFALSE(vcov)) {
         warn_sprintf(c(

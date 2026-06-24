@@ -53,6 +53,7 @@ get_predict.fixest <- function(
 
 
 #' @rdname sanitize_model_specific
+#' @export
 sanitize_model_specific.fixest <- function(model, vcov = TRUE, calling_function = "predictions", ...) {
     # issue #1487 is only a problem for standard errors
     if (isFALSE(vcov)) {

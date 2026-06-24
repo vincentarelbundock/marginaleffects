@@ -10,6 +10,7 @@ sanitize_model_specific <- function(model, ...) {
 
 
 #' @rdname sanitize_model_specific
+#' @export
 sanitize_model_specific.default <- function(
   model,
   vcov = NULL,
@@ -135,6 +136,7 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
             "stanreg",
             "survreg",
             "svyolr",
+            "svy_vglm",
             "systemfit",
             c("tobit", "survreg"),
             "tobit1",

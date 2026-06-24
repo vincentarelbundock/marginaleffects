@@ -131,6 +131,9 @@ set_coef(model, coefs, ...)
 ## S3 method for class 'survreg'
 set_coef(model, coefs, ...)
 
+## S3 method for class 'svy_vglm'
+set_coef(model, coefs, ...)
+
 ## S3 method for class 'systemfit'
 set_coef(model, coefs, ...)
 

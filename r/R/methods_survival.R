@@ -32,6 +32,7 @@ get_predict.coxph <- function(
 
 
 #' @rdname sanitize_model_specific
+#' @export
 sanitize_model_specific.coxph <- function(model, vcov, ...) {
     insight::check_if_installed("survival")
     flag1 <- !isFALSE(vcov)

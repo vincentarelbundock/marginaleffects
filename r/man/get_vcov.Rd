@@ -4,7 +4,8 @@
 %   R/methods_brms.R, R/methods_dbarts.R, R/methods_gamlss.R,
 %   R/methods_glmmTMB.R, R/methods_mhurdle.R, R/methods_mlr3.R,
 %   R/methods_nestedLogit.R, R/methods_rms.R, R/methods_rstpm2.R,
-%   R/methods_scam.R, R/methods_systemfit.R, R/methods_tidymodels.R
+%   R/methods_scam.R, R/methods_svyVGAM.R, R/methods_systemfit.R,
+%   R/methods_tidymodels.R
 \name{get_vcov}
 \alias{get_vcov}
 \alias{get_vcov.default}
@@ -26,6 +27,7 @@
 \alias{get_vcov.gsm}
 \alias{get_vcov.aft}
 \alias{get_vcov.scam}
+\alias{get_vcov.svy_vglm}
 \alias{get_vcov.systemfit}
 \alias{get_predict.systemfit}
 \alias{get_vcov.model_fit}
@@ -71,6 +73,8 @@ get_vcov(model, ...)
 \method{get_vcov}{aft}(model, ...)
 
 \method{get_vcov}{scam}(model, vcov = NULL, ...)
+
+\method{get_vcov}{svy_vglm}(model, vcov = NULL, ...)
 
 \method{get_vcov}{systemfit}(model, ...)
 

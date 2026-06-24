@@ -70,7 +70,7 @@ expect_inherits(mfx, "marginaleffects")
 # GLM not supported
 mod <- glmer(am ~ hp + (1 | cyl), family = binomial, data = dat)
 expect_error(comparisons(mod, vcov = "satterthwaite", re.form = NA), pattern = "(?i)unable.*satter")
-expect_error(predictions(mod, vcov = "kenward-roger", re.form = NA), pattern = "(?i)unable.*kenward")
+expect_error(predictions(mod, vcov = "kenward-roger", re.form = NA), pattern = "(?i)kenward-roger.*lmerMod")
 
 # type = "link"
 w <- predict(mod, type = "link")
