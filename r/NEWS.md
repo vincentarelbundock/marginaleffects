@@ -12,6 +12,7 @@ New:
 
 Bug fixes:
 
+* Bug: `vcov = "HC0"` could change response-scale point estimates for `glmmTMB` models with random effects by mutating the internal TMB state used for conditional predictions. The model state is now restored after robust covariance extraction. Thanks to @nremenyi for raising the issue.
 * `hypothesis` formula now correctly groups by `datagrid()` variables when `by` is not explicitly specified in `comparisons()` and `predictions()`. Thanks to Matt Thomas for the suggestion in #1705.
 * `hypothesis` formula with external variables (e.g., `~ I(drop(t(www) %*% x)) | am`) no longer raises a scoping error. Thanks to @mattansb for report #1707.
 * `datagrid()` now correctly treats numeric fixed effects in `fixest` models (specified via `|`) as categorical variables instead of computing their mean. Thanks to @arcruz0 for report #1685.

@@ -39,6 +39,18 @@ get_predict.glmmTMB <- function(
 get_vcov.glmmTMB <- function(model, vcov, ...) {
     vcov <- sanitize_vcov(model, vcov)
 
+    # glmmTMB's sandwich path can change the TMB environment state used by
+    # conditional predictions. Restore it after extracting the covariance matrix.
+    env <- model$obj$env
+    if (is.environment(env)) {
+        last_par <- if (exists("last.par", envir = env, inherits = FALSE)) env$last.par else NULL
+        last_par_best <- if (exists("last.par.best", envir = env, inherits = FALSE)) env$last.par.best else NULL
+        on.exit({
+            if (!is.null(last_par)) env$last.par <- last_par
+            if (!is.null(last_par_best)) env$last.par.best <- last_par_best
+        }, add = TRUE)
+    }
+
     # Extract the full covariance matrix
     out <- insight::get_varcov(model, vcov = vcov, component = "full")
 

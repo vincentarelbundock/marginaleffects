@@ -236,7 +236,8 @@ model_data <- dplyr::select(
         ),
         function(c) {
             factor(c, exclude = levels(c)[length(levels(c))])
-        }) |>
+        }
+    ) |>
     # need to make these ordered factors for BRMS
     transform(
         education = ordered(education),
@@ -393,3 +394,15 @@ p0 <- avg_predictions(m1, by = "camper", vcov = "HC0")
 p1 <- avg_predictions(m1, by = "camper")
 expect_true(all(p0$std.error != p1$std.error))
 expect_error(avg_predictions(m1, by = "camper", vcov = "HC1"), "HC0")
+
+# Issue #1731: HC0 should not mutate the conditional random effect state used for predictions
+m2 <- glmmTMB::glmmTMB(
+    count ~ mined + (1 | site),
+    data = Salamanders,
+    family = poisson
+)
+cmp_before <- avg_comparisons(m2, variables = "mined", type = "response", vcov = FALSE)
+cmp_hc0 <- avg_comparisons(m2, variables = "mined", type = "response", vcov = "HC0")
+cmp_after <- avg_comparisons(m2, variables = "mined", type = "response", vcov = FALSE)
+expect_equivalent(cmp_hc0$estimate, cmp_before$estimate)
+expect_equivalent(cmp_after$estimate, cmp_before$estimate)
