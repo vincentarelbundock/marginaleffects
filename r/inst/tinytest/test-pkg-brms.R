@@ -446,6 +446,92 @@ expect_equivalent(nrow(cmp2), 2)
 expect_equivalent(nrow(cmp3), 64)
 expect_equivalent(nrow(cmp4), 2)
 
+# Regression tests for Bayesian averaged comparisons. These values were
+# computed on main before optimizing the posterior draw aggregation path.
+check_brms_comparison_regression <- function(x, expected, term, contrast) {
+    expect_equivalent(x$term, term)
+    expect_equivalent(x$contrast, contrast)
+    expect_equivalent(
+        unname(as.matrix(x[, c("estimate", "conf.low", "conf.high")])),
+        matrix(expected, ncol = 3),
+        tolerance = 1e-8
+    )
+}
+
+check_brms_comparison_regression(
+    comparisons(brms_issue576, by = "cyl"),
+    c(
+        -0.06841954999999994, -0.068419550000000537, -0.068419549999999899,
+        -0.089506599999999992, -0.089506599999999992, -0.089506599999999992,
+        -0.047208200000000033, -0.047208200000000033, -0.047208199999999909
+    ),
+    term = c("hp", "hp", "hp"),
+    contrast = c("+1", "+1", "+1")
+)
+
+check_brms_comparison_regression(
+    avg_comparisons(brms_numeric2, newdata = mtcars, wts = mtcars$wt),
+    c(
+        0.0058527467039305777, 0.13740185036934568,
+        0.0027693462810649029, 0.085813134503648553,
+        0.0088513710061147461, 0.18469057950416035
+    ),
+    term = c("hp", "mpg"),
+    contrast = c("+1", "+1")
+)
+
+nd_shuffled <- mtcars[c(4, 1, 3, 6, 2, 11, 8, 21), ]
+cmp_shuffled <- avg_comparisons(
+    brms_numeric2,
+    variables = "hp",
+    newdata = nd_shuffled,
+    by = "cyl"
+)
+check_brms_comparison_regression(
+    cmp_shuffled,
+    c(
+        0.012848798387963545, 0.007414170738991129,
+        0.004281841878775876, 0.002367256575697206,
+        0.02294520338744693, 0.013786578823171
+    ),
+    term = c("hp", "hp"),
+    contrast = c("+1", "+1")
+)
+expect_equivalent(cmp_shuffled$cyl, c(4, 6))
+
+check_brms_comparison_regression(
+    comparisons(brms_issue576, by = "cyl", comparison = "ratio"),
+    c(
+        0.99685480406351279, 0.99720353692574948, 0.99567130756307776,
+        0.99595633357610025, 0.99649258955017572, 0.99377285562178441,
+        0.99781104376306029, 0.99796306532041068, 0.99730339794998535
+    ),
+    term = c("hp", "hp", "hp"),
+    contrast = c("mean(+1)", "mean(+1)", "mean(+1)")
+)
+
+check_brms_comparison_regression(
+    comparisons(brms_binomial, variables = "tx", comparison = "lnoravg"),
+    c(
+        0.018672928453592742,
+        0.0085234506383903251,
+        0.030454092423374116
+    ),
+    term = "tx",
+    contrast = "ln(odds(toci) / odds(control))"
+)
+
+check_brms_comparison_regression(
+    comparisons(brms_binomial, variables = "tx", comparison = "liftavg"),
+    c(
+        -0.29197529203446526,
+        -0.41903738654243777,
+        -0.15267755363215196
+    ),
+    term = "tx",
+    contrast = "lift(toci, control)"
+)
+
 # Issue #432: comparisons = conf.low = conf.high because mean() returns a
 # single number when applied to the draws matrix
 cmp <- comparisons(brms_binomial, variables = "tx", comparison = "lnoravg")
@@ -768,4 +854,3 @@ void <- capture.output({
 })
 p <- plot_predictions(brms_binomial_trials, condition = "dose", points = 1)
 expect_snapshot_plot(p, "pkg-brms_issue1615")
-
