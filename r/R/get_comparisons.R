@@ -316,6 +316,19 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
         by_idx <- out$term
     }
 
+    fast <- compare_hi_lo_bayesian_collapse(
+        out = out,
+        draws_hi = draws_hi,
+        draws_lo = draws_lo,
+        by = by,
+        by_idx = by_idx,
+        cross = cross,
+        fun_list = fun_list
+    )
+    if (!is.null(fast)) {
+        return(fast)
+    }
+
     # loop over columns (draws) and term names because different terms could use different functions
     for (tn in unique(by_idx)) {
         for (i in seq_len(ncol(draws))) {
@@ -362,6 +375,103 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
         default = stats::median
     )
 
+    out[, "estimate" := apply(draws, 1, FUN_CENTER)]
+
+    return(list(out = out, draws = draws))
+}
+
+compare_hi_lo_bayesian_collapse <- function(out, draws_hi, draws_lo, by, by_idx, cross, fun_list) {
+    if (nrow(out) == 0 || nrow(draws_hi) != nrow(out) || nrow(draws_lo) != nrow(out)) {
+        return(NULL)
+    }
+
+    get_fun <- function(tn) {
+        if (isTRUE(cross)) {
+            fun_list[[1]]
+        } else {
+            fun_list[[tn]]
+        }
+    }
+    fun <- lapply(unique(out$term), get_fun)
+    supported <- c(
+        "differenceavg",
+        "differenceavgwts",
+        "ratioavg",
+        "ratioavgwts",
+        "lnratioavg",
+        "lnratioavgwts",
+        "lnoravg",
+        "lnoravgwts",
+        "liftavg",
+        "liftavgwts"
+    )
+    fun_name <- vapply(fun, function(f) {
+        idx <- vapply(supported, function(nm) identical(f, comparison_function_dict[[nm]]), logical(1))
+        if (sum(idx) == 1) {
+            names(idx)[idx]
+        } else {
+            NA_character_
+        }
+    }, character(1))
+    if (anyNA(fun_name) || length(unique(fun_name)) != 1) {
+        return(NULL)
+    }
+    fun_name <- fun_name[[1]]
+    comparison <- sub("wts$", "", fun_name)
+
+    keep <- !duplicated(by_idx)
+    group_order <- by_idx[keep]
+    g <- collapse::GRP(data.frame(.by = by_idx), sort = FALSE)
+    w <- NULL
+    if (endsWith(fun_name, "wts")) {
+        w <- out[["marginaleffects_wts_internal"]]
+    }
+    mean_diff <- mean_hi <- mean_lo <- NULL
+    if (comparison %in% c("differenceavg", "liftavg")) {
+        mean_diff <- collapse::fmean(draws_hi - draws_lo, g = g, w = w, na.rm = FALSE, drop = FALSE)
+    }
+    if (comparison != "differenceavg") {
+        mean_hi <- collapse::fmean(draws_hi, g = g, w = w, na.rm = FALSE, drop = FALSE)
+        mean_lo <- collapse::fmean(draws_lo, g = g, w = w, na.rm = FALSE, drop = FALSE)
+    }
+    draws <- switch(
+        comparison,
+        "differenceavg" = mean_diff,
+        "ratioavg" = mean_hi / mean_lo,
+        "lnratioavg" = log(mean_hi / mean_lo),
+        "lnoravg" = log((mean_hi / (1 - mean_hi)) / (mean_lo / (1 - mean_lo))),
+        "liftavg" = mean_diff / mean_lo
+    )
+    idx <- match(group_order, as.character(g[["groups"]][[".by"]]))
+    if (length(idx) != nrow(draws) || anyNA(idx)) {
+        return(NULL)
+    }
+    draws <- draws[idx, , drop = FALSE]
+    dn <- dimnames(draws)
+    if (!is.null(dn)) {
+        dn[[1]] <- NULL
+        if (all(vapply(dn, is.null, logical(1)))) {
+            dn <- NULL
+        }
+        dimnames(draws) <- dn
+    }
+
+    out <- out[keep, , drop = FALSE]
+    settings_set("marginaleffects_safefun_return1", TRUE)
+    cols <- grep(
+        "^estimate$|^group$|^term$|^contrast_?|^marginaleffects_wts_internal$|^by$",
+        colnames(out),
+        value = TRUE
+    )
+    if (isTRUE(checkmate::check_character(by, min.len = 1))) {
+        cols <- unique(c(cols, by))
+    }
+    out <- subset(out, select = cols)
+
+    FUN_CENTER <- getOption(
+        "marginaleffects_posterior_center",
+        default = stats::median
+    )
     out[, "estimate" := apply(draws, 1, FUN_CENTER)]
 
     return(list(out = out, draws = draws))
