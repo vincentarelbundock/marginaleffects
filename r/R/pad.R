@@ -66,9 +66,5 @@ unpad <- function(out, draws) {
         return(out)
     }
     idx <- out$rowid > 0
-    out <- out[idx, , drop = FALSE]
-    if (!is.null(draws)) {
-        draws <- draws[idx, , drop = FALSE]
-    }
-    return(list(out = out, draws = draws))
+    return(rowplan_filter(out, draws, idx, "unpad"))
 }

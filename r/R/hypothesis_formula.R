@@ -300,7 +300,17 @@ hypothesis_formula <- function(x, hypothesis, newdata, by, mfx = NULL) {
     }
 
     if (!is.null(draws)) {
-        draws <- matrix_apply_column(draws, FUN = fun_comparison, by = groupval)
+        fast <- rowplan_hypothesis_formula_draws(
+            draws = draws,
+            form = form,
+            groupval = groupval,
+            fun_comparison = fun_comparison
+        )
+        draws <- if (is.null(fast)) {
+            matrix_apply_column(draws, FUN = fun_comparison, by = groupval)
+        } else {
+            fast
+        }
         if ("hypothesis" %in% colnames(out)) {
             row.names(draws) <- out$hypothesis
         }
@@ -308,6 +318,7 @@ hypothesis_formula <- function(x, hypothesis, newdata, by, mfx = NULL) {
 
     attr(out, "posterior_draws") <- draws
     attr(out, "hypothesis_function_by") <- form$group
+    rowplan_assert_draws(out, draws, "hypothesis_formula")
 
     return(out)
 }

@@ -6,16 +6,23 @@ get_by <- function(
     byfun = NULL,
     verbose = TRUE,
     ...) {
+    rowplan_assert_draws(estimates, draws, "by aggregation input")
+
     if (is.null(by) || isFALSE(by) || nrow(estimates) <= 1) {
         out <- estimates
         attr(out, "posterior_draws") <- draws
+        rowplan_assert_draws(out, draws, "by aggregation")
         return(out)
     }
 
     missing <- setdiff(setdiff(colnames(by), "by"), colnames(estimates))
     if (length(missing) > 0) {
         idx <- intersect(c("rowid", "rowidcf", missing), colnames(newdata))
+        before <- estimates
         estimates <- merge(estimates, newdata[, idx], sort = FALSE, all.x = TRUE)
+        if (!is.null(draws)) {
+            rowplan_assert_same_nrow(before, estimates, "by aggregation merge")
+        }
     }
 
     if (isTRUE(by)) {
@@ -43,8 +50,9 @@ get_by <- function(
         )
         if (isTRUE(verbose)) warning(msg, call. = FALSE)
         tmp <- !is.na(estimates[["by"]])
-        draws <- draws[tmp, drop = FALSE]
-        estimates <- estimates[tmp, drop = FALSE]
+        filtered <- rowplan_filter(estimates, draws, tmp, "by aggregation missing-group filter")
+        estimates <- filtered$out
+        draws <- filtered$draws
     }
 
     bycols <- intersect(unique(c("term", bycols)), colnames(estimates))
@@ -83,6 +91,8 @@ get_by <- function(
             ]
         }
     }
+
+    rowplan_assert_draws(estimates, attr(estimates, "posterior_draws"), "by aggregation")
 
     return(estimates)
 }

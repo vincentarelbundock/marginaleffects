@@ -22,40 +22,41 @@ get_hypothesis <- function(
 
     # otherwise setDT strips out the marginaleffects-specific classes
     x <- data.table::copy(x)
+    rowplan_assert_draws(x, attr(x, "posterior_draws"), "hypothesis input")
 
     vec <- isTRUE(checkmate::check_atomic_vector(hypothesis)) &&
         isTRUE(checkmate::check_numeric(hypothesis))
     mat <- isTRUE(checkmate::check_matrix(hypothesis))
 
-    if (is.null(hypothesis)) {
-        return(x)
+    out <- if (is.null(hypothesis)) {
+        x
     } else if (isTRUE(checkmate::check_formula(hypothesis))) {
-        out <- hypothesis_formula(
+        hypothesis_formula(
             x,
             newdata = newdata,
             hypothesis = hypothesis,
             by = by,
             mfx = mfx
         )
-        return(out)
     } else if (isTRUE(checkmate::check_function(hypothesis))) {
-        out <- hypothesis_function(
+        hypothesis_function(
             x,
             newdata = newdata,
             hypothesis = hypothesis,
             by = by
         )
-        return(out)
     } else if (vec || mat) {
-        out <- hypothesis_matrix(x, hypothesis = hypothesis)
-        return(out)
+        hypothesis_matrix(x, hypothesis = hypothesis)
     } else if (is.character(hypothesis)) {
-        out <- hypothesis_string(x, hypothesis = hypothesis)
-        return(out)
+        hypothesis_string(x, hypothesis = hypothesis)
+    } else {
+        stop(
+            "`hypothesis` is broken. Please report this bug with a reproducible example: https://github.com/vincentarelbundock/marginaleffects/issues.",
+            call. = FALSE
+        )
     }
 
-    stop(
-        "`hypothesis` is broken. Please report this bug with a reproducible example: https://github.com/vincentarelbundock/marginaleffects/issues.",
-        call. = FALSE
-    )
+    rowplan_assert_draws(out, attr(out, "posterior_draws"), "hypothesis")
+
+    return(out)
 }
