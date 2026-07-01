@@ -447,14 +447,7 @@ compare_hi_lo_bayesian_collapse <- function(out, draws_hi, draws_lo, by, by_idx,
         return(NULL)
     }
     draws <- draws[idx, , drop = FALSE]
-    dn <- dimnames(draws)
-    if (!is.null(dn)) {
-        dn[[1]] <- NULL
-        if (all(vapply(dn, is.null, logical(1)))) {
-            dn <- NULL
-        }
-        dimnames(draws) <- dn
-    }
+    colnames(draws) <- row.names(draws) <- NULL
 
     out <- out[keep, , drop = FALSE]
     settings_set("marginaleffects_safefun_return1", TRUE)
