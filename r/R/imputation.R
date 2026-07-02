@@ -98,12 +98,6 @@ process_imputation <- function(mfx) {
         }
     }
 
-    # Extract confidence level with fallback
-    conf_level <- mfxcall[["conf_level"]]
-    if (is.null(conf_level)) {
-        conf_level <- 0.95 # Default fallback
-    }
-
     out$df <- mipool$pooled$df
 
     # TODO: change this once we store the metadata in its final place
