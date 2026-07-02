@@ -70,6 +70,25 @@ draws_hi <- matrix(
     nrow = 5,
     ncol = 2
 )
+group_indices <- marginaleffects:::comparison_group_indices(out$g)
+scalar_result <- marginaleffects:::compare_hi_lo_bayesian_scalar(
+    out = out,
+    draws = draws,
+    draws_hi = draws_hi,
+    draws_lo = draws_lo,
+    draws_or = draws_or,
+    by = "g",
+    cross = FALSE,
+    variables = list(x = list(eps = 1)),
+    fun_list = list(x = marginaleffects:::comparison_function_dict[["differenceavg"]]),
+    elasticities = list(x = seq_len(nrow(out))),
+    newdata = data.frame(),
+    group_indices = group_indices
+)
+expected_draws <- matrix(c(20, 2, 5, 200, 3, 50), nrow = 3, ncol = 2)
+expect_equivalent(scalar_result$out$g, c("b", "a", "c"))
+expect_equivalent(unname(scalar_result$draws), expected_draws)
+
 result <- marginaleffects:::compare_hi_lo_bayesian(
     out = out,
     draws = draws,
@@ -83,7 +102,22 @@ result <- marginaleffects:::compare_hi_lo_bayesian(
     elasticities = list(x = seq_len(nrow(out))),
     newdata = data.frame()
 )
-expected_draws <- matrix(c(20, 2, 5, 200, 3, 50), nrow = 3, ncol = 2)
 expect_equivalent(result$out$g, c("b", "a", "c"))
 expect_equivalent(unname(result$draws), expected_draws)
 expect_equivalent(result$out$estimate, apply(expected_draws, 1, stats::median))
+
+vector_result <- marginaleffects:::compare_hi_lo_bayesian_scalar(
+    out = out,
+    draws = draws,
+    draws_hi = draws_hi,
+    draws_lo = draws_lo,
+    draws_or = draws_or,
+    by = "g",
+    cross = FALSE,
+    variables = list(x = list(eps = 1)),
+    fun_list = list(x = marginaleffects:::comparison_function_dict[["difference"]]),
+    elasticities = list(x = seq_len(nrow(out))),
+    newdata = data.frame(),
+    group_indices = group_indices
+)
+expect_null(vector_result)
