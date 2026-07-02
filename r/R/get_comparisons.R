@@ -354,6 +354,17 @@ predictions_hi_lo <- function(model, lo, hi, type, ...) {
 }
 
 
+comparison_group_indices <- function(by_idx) {
+    by_idx_unique <- unique(by_idx)
+    out <- vector("list", length(by_idx_unique))
+    for (i in seq_along(by_idx_unique)) {
+        out[[i]] <- which(by_idx == by_idx_unique[[i]])
+    }
+    names(out) <- as.character(by_idx_unique)
+    return(out)
+}
+
+
 compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by, cross, variables, fun_list, elasticities, newdata) {
     # drop missing otherwise get_averages() fails when trying to take a
     # simple mean
@@ -376,18 +387,22 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
     }
 
     # loop over columns (draws) and term names because different terms could use different functions
-    for (tn in unique(by_idx)) {
+    group_indices <- comparison_group_indices(by_idx)
+    for (idx in group_indices) {
+        n <- length(idx)
+        term <- out$term[idx]
+        wts <- out$marginaleffects_wts_internal[idx]
+        tmp_idx <- out$tmp_idx[idx]
         for (i in seq_len(ncol(draws))) {
-            idx <- by_idx == tn
             draws[idx, i] <- compare_hi_lo(
                 hi = draws_hi[idx, i],
                 lo = draws_lo[idx, i],
                 y = draws_or[idx, i],
-                n = sum(idx),
-                term = out$term[idx],
+                n = n,
+                term = term,
                 cross = cross,
-                wts = out$marginaleffects_wts_internal[idx],
-                tmp_idx = out$tmp_idx[idx],
+                wts = wts,
+                tmp_idx = tmp_idx,
                 newdata = newdata,
                 variables = variables,
                 fun_list = fun_list,
