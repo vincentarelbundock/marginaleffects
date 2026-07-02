@@ -205,7 +205,7 @@ hypotheses <- function(
     } else {
         # hypotheses() supports raw data frames
         if (!inherits(model, c(internal_classes, "data.frame"))) {
-            model <- sanitize_model(model, call = call, wts = wts, vcov = vcov, by = by, ...)
+            model <- sanitize_model(model, call = call, wts = FALSE, vcov = vcov, by = FALSE, ...)
         }
         mfx <- new_marginaleffects_internal(
             call = call,

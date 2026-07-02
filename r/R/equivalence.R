@@ -37,7 +37,7 @@ equivalence <- function(x, equivalence = NULL, df = Inf, draws = NULL, ...) {
     # x$statistic.inf <- (x$estimate - null + delta) / x$std.error
     # x$statistic.sup <- (x$estimate - null - delta) / x$std.error
 
-    if (is.infinite(df)) {
+    if (all(is.infinite(df))) {
         x$p.value.noninf <- stats::pnorm(x$statistic.noninf, lower.tail = FALSE)
         x$p.value.nonsup <- stats::pnorm(x$statistic.nonsup, lower.tail = TRUE)
     } else {

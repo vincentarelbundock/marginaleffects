@@ -147,6 +147,7 @@ inferences <- function(
 
     # supported classes
     supported_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
+    conf_level_mfx <- mfx
     if (is.null(estimator)) {
         has_supported_class <- any(vapply(
             supported_classes,
@@ -159,10 +160,11 @@ inferences <- function(
         }
     } else {
         x <- sanitize_estimator(x = x, estimator = estimator, method = method)
+        conf_level_mfx <- attr(x, "marginaleffects")
     }
 
     # inherit conf_level from the original object
-    conf_level <- mfx@conf_level
+    conf_level <- conf_level_mfx@conf_level
     checkmate::assert_integerish(R, lower = 2)
     checkmate::assert_choice(
         method,

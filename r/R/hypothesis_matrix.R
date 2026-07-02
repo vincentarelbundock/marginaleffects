@@ -17,7 +17,6 @@ hypothesis_matrix <- function(x, hypothesis) {
             tmp = apply(draws, 1, stats::median)
         )
         setnames(out, old = "tmp", new = "estimate")
-        attr(out, "posterior_draws") <- draws
 
         # frequentist
     } else {
@@ -28,6 +27,10 @@ hypothesis_matrix <- function(x, hypothesis) {
         setnames(out, old = "tmp", new = "estimate")
     }
 
-    out <- out[out$term != "1 - 1", , drop = FALSE]
+    keep <- out$term != "1 - 1"
+    out <- out[keep, , drop = FALSE]
+    if (!is.null(draws)) {
+        attr(out, "posterior_draws") <- draws[keep, , drop = FALSE]
+    }
     return(out)
 }

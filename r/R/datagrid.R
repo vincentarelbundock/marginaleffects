@@ -230,7 +230,10 @@ datagrid <- function(
         out <- cbind(data.frame(rowid = seq_len(nrow(out))), out)
     }
 
-    attr(out, "variable_names_datagrid") <- names(list(...))
+    attr(out, "variable_names_datagrid") <- setdiff(
+        names(list(...)),
+        "marginaleffects_internal"
+    )
 
 
     return(out)

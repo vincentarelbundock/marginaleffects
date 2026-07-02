@@ -81,7 +81,7 @@ plot_build <- function(
     }
 
     # create index before building ggplot to make sure it is available
-    dat$marginaleffects_term_index <- get_unique_index(dat, mfx)
+    dat$marginaleffects_term_index <- get_unique_index(dat)
     multi_variables <- isTRUE(length(unique(dat$marginaleffects_term_index)) > 1)
     x_is_discrete <- is_discrete(dat, v_x, mfx)
 
@@ -201,7 +201,6 @@ plot_build <- function(
         aes_obj <- do.call(ggplot2::aes, aes_args)
         if ("conf.low" %in% colnames(dat)) {
             p <- p + ggplot2::geom_ribbon(aes_obj_ribbon, alpha = 0.1)
-            p <- p + ggplot2::geom_line(aes_obj)
         }
         p <- p + ggplot2::geom_line(aes_obj)
     }

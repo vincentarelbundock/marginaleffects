@@ -192,6 +192,9 @@ plot_predictions <- function(
     } else {
         dv_label <- "Prediction"
     }
+    if (is.null(dv_label)) {
+        dv_label <- "Prediction"
+    }
     attr(datplot$estimate, "label") <- dv_label
 
     # return immediately if the user doesn't want a plot

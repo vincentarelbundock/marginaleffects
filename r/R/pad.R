@@ -63,7 +63,7 @@ pad <- function(model, newdata) {
 # unpad
 unpad <- function(out, draws) {
     if (!"rowid" %in% colnames(out)) {
-        return(out)
+        return(list(out = out, draws = draws))
     }
     idx <- out$rowid > 0
     out <- out[idx, , drop = FALSE]

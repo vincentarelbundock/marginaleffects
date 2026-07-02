@@ -10,6 +10,7 @@ conformal_cv_plus <- function(x,
     idx <- sample.int(nrow(data_train), nrow(data_train))
     idx <- split(idx, ceiling(seq_along(idx) / (length(idx) / R)))
     scores <- NULL
+    residual_abs <- NULL
     for (i in idx) {
         data_cv <- data_train[-i, ]
         # re-fit the original model on training sets withholding the CV fold
@@ -32,7 +33,12 @@ conformal_cv_plus <- function(x,
         call_cv[["vcov"]] <- FALSE # faster
         pred_cv <- eval(call_cv)
         # save the scores form each fold
-        scores <- c(scores, get_conformal_score(pred_cv, score = score, mfx = mfx))
+        score_i <- get_conformal_score(pred_cv, score = score, mfx = mfx)
+        scores <- c(scores, score_i)
+        residual_abs <- c(residual_abs, attr(score_i, "residual_abs"))
+    }
+    if (!is.null(residual_abs)) {
+        attr(scores, "residual_abs") <- residual_abs
     }
 
     # test

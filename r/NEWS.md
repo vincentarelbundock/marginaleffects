@@ -12,6 +12,25 @@ New:
 
 Bug fixes:
 
+* `by` aggregation with posterior or bootstrap draws no longer flattens the draws matrix when a `by` data frame omits some term/group combinations.
+* `predictions()` now assigns the correct `rowid`, `type`, and `estimate` column names when model predictions are returned as a bare vector.
+* `average_draws()` now supports `byfun` when no grouping columns are present.
+* `equivalence` tests now support vector-valued degrees of freedom.
+* `hypotheses()` no longer passes undefined `wts` and `by` promises to model sanitization methods.
+* `inferences(method = "conformal_cv+", conformal_score = "residual_sq")` now preserves absolute residuals used to compute prediction interval half-widths.
+* `get_predictions()` no longer has a self-referential `byfun` default.
+* Column ordering now recognizes the `variable_names_datagrid` attribute set by `datagrid()`.
+* `expect_margins()` now initializes its diagnostic message and reports missing standard error or variance columns correctly.
+* `expect_slopes()` now reports missing standard errors with the correct diagnostic message.
+* Matrix hypotheses with posterior or bootstrap draws now keep draws aligned when the internal `"1 - 1"` placeholder row is removed.
+* Hypothesis functions can now declare the documented optional `newdata` and `by` arguments.
+* `plot_predictions()` no longer adds duplicate line layers when confidence bands are present.
+* `plot_predictions()` now falls back to `"Prediction"` when the response variable has no `label` attribute.
+* Printing no longer errors when the `df` column includes `NA` values.
+* Bootstrap inference with a user-supplied `estimator` now uses the `conf_level` from the estimator result.
+* `predictions(variables = ...)` no longer records the internal `marginaleffects_internal` sentinel as a user-specified `datagrid()` variable.
+* Internal unpadding now returns the expected `out`/`draws` list even when predictions have no `rowid` column.
+* Deprecated-dot checks now call the real `stop_deprecate()` helper.
 * Bug: `vcov = "HC0"` could change response-scale point estimates for `glmmTMB` models with random effects by mutating the internal TMB state used for conditional predictions. The model state is now restored after robust covariance extraction. Thanks to @nremenyi for raising the issue.
 * `hypothesis` formula now correctly groups by `datagrid()` variables when `by` is not explicitly specified in `comparisons()` and `predictions()`. Thanks to Matt Thomas for the suggestion in #1705.
 * `hypothesis` formula with external variables (e.g., `~ I(drop(t(www) %*% x)) | am`) no longer raises a scoping error. Thanks to @mattansb for report #1707.

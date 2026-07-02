@@ -24,8 +24,8 @@ hypothesis_function <- function(x, newdata, hypothesis, by) {
             "The `hypothesis` function must accept an `x` argument."
         )
     }
-    if (!all(argnames %in% c("x", "draws"))) {
-        msg <- "The allowable arguments for the `hypothesis` function are: `x` and `draws`"
+    if (!all(argnames %in% c("x", "newdata", "by", "draws"))) {
+        msg <- "The allowable arguments for the `hypothesis` function are: `x`, `newdata`, `by`, and `draws`"
         stop_sprintf(msg)
     }
     args <- list(x = x, newdata = newdata, by = by, draws = draws)
