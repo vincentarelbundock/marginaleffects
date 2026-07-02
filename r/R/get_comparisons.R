@@ -317,18 +317,28 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
     }
 
     # loop over columns (draws) and term names because different terms could use different functions
+    # the row index and row subsets are invariant across draw columns, so we
+    # compute them once per term instead of once per (term x draw) pair
     for (tn in unique(by_idx)) {
+        idx <- by_idx == tn
+        n_idx <- sum(idx)
+        term_idx <- out$term[idx]
+        wts_idx <- out$marginaleffects_wts_internal[idx]
+        tmp_idx_idx <- out$tmp_idx[idx]
+        draws_hi_idx <- draws_hi[idx, , drop = FALSE]
+        draws_lo_idx <- draws_lo[idx, , drop = FALSE]
+        # draws_or is NULL unless we need elasticities or custom functions
+        draws_or_idx <- if (is.null(draws_or)) NULL else draws_or[idx, , drop = FALSE]
         for (i in seq_len(ncol(draws))) {
-            idx <- by_idx == tn
             draws[idx, i] <- compare_hi_lo(
-                hi = draws_hi[idx, i],
-                lo = draws_lo[idx, i],
-                y = draws_or[idx, i],
-                n = sum(idx),
-                term = out$term[idx],
+                hi = draws_hi_idx[, i],
+                lo = draws_lo_idx[, i],
+                y = draws_or_idx[, i],
+                n = n_idx,
+                term = term_idx,
                 cross = cross,
-                wts = out$marginaleffects_wts_internal[idx],
-                tmp_idx = out$tmp_idx[idx],
+                wts = wts_idx,
+                tmp_idx = tmp_idx_idx,
                 newdata = newdata,
                 variables = variables,
                 fun_list = fun_list,

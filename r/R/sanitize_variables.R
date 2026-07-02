@@ -95,10 +95,36 @@ add_prediction_functions <- function(predictors, modeldata) {
                 )
                 warn_sprintf(msg)
             }
-            predictors[[v]] <- hush(predictors[[v]](modeldata[[v]]))
+            predictors[[v]] <- tmp
         }
     }
     predictors
+}
+
+# string shortcuts for numeric variables in predictions()
+# returns NULL when `value` is not a known shortcut
+numeric_shortcut_values <- function(value, x) {
+    if (identical(value, "iqr")) {
+        stats::quantile(x, probs = c(0.25, 0.75), na.rm = TRUE)
+    } else if (identical(value, "minmax")) {
+        c(min(x, na.rm = TRUE), max(x, na.rm = TRUE))
+    } else if (identical(value, "sd")) {
+        s <- stats::sd(x, na.rm = TRUE)
+        m <- mean(x, na.rm = TRUE)
+        c(m - s / 2, m + s / 2)
+    } else if (identical(value, "2sd")) {
+        s <- stats::sd(x, na.rm = TRUE)
+        m <- mean(x, na.rm = TRUE)
+        c(m - s, m + s)
+    } else if (identical(value, "threenum")) {
+        s <- stats::sd(x, na.rm = TRUE)
+        m <- mean(x, na.rm = TRUE)
+        c(m - s, m, m + s)
+    } else if (identical(value, "fivenum")) {
+        stats::fivenum(x)
+    } else {
+        NULL
+    }
 }
 
 add_numeric_shortcuts <- function(predictors, mfx) {
@@ -106,31 +132,9 @@ add_numeric_shortcuts <- function(predictors, mfx) {
     modeldata <- mfx@modeldata
     for (v in names(predictors)) {
         if (check_variable_class(mfx, v, "numeric") || check_variable_class(mfx, v, "integer")) {
-            if (identical(predictors[[v]], "iqr")) {
-                predictors[[v]] <- stats::quantile(
-                    modeldata[[v]],
-                    probs = c(0.25, 0.75),
-                    na.rm = TRUE
-                )
-            } else if (identical(predictors[[v]], "minmax")) {
-                predictors[[v]] <- c(
-                    min(modeldata[[v]], na.rm = TRUE),
-                    max(modeldata[[v]], na.rm = TRUE)
-                )
-            } else if (identical(predictors[[v]], "sd")) {
-                s <- stats::sd(modeldata[[v]], na.rm = TRUE)
-                m <- mean(modeldata[[v]], na.rm = TRUE)
-                predictors[[v]] <- c(m - s / 2, m + s / 2)
-            } else if (identical(predictors[[v]], "2sd")) {
-                s <- stats::sd(modeldata[[v]], na.rm = TRUE)
-                m <- mean(modeldata[[v]], na.rm = TRUE)
-                predictors[[v]] <- c(m - s, m + s)
-            } else if (identical(predictors[[v]], "threenum")) {
-                s <- stats::sd(modeldata[[v]], na.rm = TRUE)
-                m <- mean(modeldata[[v]], na.rm = TRUE)
-                predictors[[v]] <- c(m - s, m, m + s)
-            } else if (identical(predictors[[v]], "fivenum")) {
-                predictors[[v]] <- stats::fivenum(modeldata[[v]])
+            tmp <- numeric_shortcut_values(predictors[[v]], modeldata[[v]])
+            if (!is.null(tmp)) {
+                predictors[[v]] <- tmp
             } else if (is.character(predictors[[v]])) {
                 msg <- sprintf(
                     '%s is a numeric variable. The summary shortcuts supported by the variables argument are: "iqr", "minmax", "sd", "2sd", "threenum", "fivenum".',
@@ -235,31 +239,9 @@ sanitize_predictor_specs <- function(predictors, mfx) {
                 }
             } else if (calling_function == "predictions") {
                 # string shortcuts
-                if (identical(predictors[[v]], "iqr")) {
-                    predictors[[v]] <- stats::quantile(
-                        modeldata[[v]],
-                        probs = c(0.25, 0.75),
-                        na.rm = TRUE
-                    )
-                } else if (identical(predictors[[v]], "minmax")) {
-                    predictors[[v]] <- c(
-                        min(modeldata[[v]], na.rm = TRUE),
-                        max(modeldata[[v]], na.rm = TRUE)
-                    )
-                } else if (identical(predictors[[v]], "sd")) {
-                    s <- stats::sd(modeldata[[v]], na.rm = TRUE)
-                    m <- mean(modeldata[[v]], na.rm = TRUE)
-                    predictors[[v]] <- c(m - s / 2, m + s / 2)
-                } else if (identical(predictors[[v]], "2sd")) {
-                    s <- stats::sd(modeldata[[v]], na.rm = TRUE)
-                    m <- mean(modeldata[[v]], na.rm = TRUE)
-                    predictors[[v]] <- c(m - s, m + s)
-                } else if (identical(predictors[[v]], "threenum")) {
-                    s <- stats::sd(modeldata[[v]], na.rm = TRUE)
-                    m <- mean(modeldata[[v]], na.rm = TRUE)
-                    predictors[[v]] <- c(m - s, m, m + s)
-                } else if (identical(predictors[[v]], "fivenum")) {
-                    predictors[[v]] <- stats::fivenum(modeldata[[v]])
+                tmp <- numeric_shortcut_values(predictors[[v]], modeldata[[v]])
+                if (!is.null(tmp)) {
+                    predictors[[v]] <- tmp
                 } else if (is.character(predictors[[v]])) {
                     msg <- sprintf(
                         '%s is a numeric variable. The summary shortcuts supported by the variables argument are: "iqr", "minmax", "sd", "2sd", "threenum", "fivenum".',

@@ -21,13 +21,6 @@ inferences_boot <- function(x, R = 1000, conf_level = 0.95, conf_type = "perc", 
     args <- c(args, list(...))
     B <- do.call(boot::boot, args)
 
-    # print.boot prints an ugly nested call
-    t <- matrix(B$t, nrow = nrow(B$t))
-    op <- cbind(
-        colMeans(t, na.rm = TRUE),
-        sqrt(apply(t, 2L, function(t.st) stats::var(t.st[!is.na(t.st)])))
-    )
-
     # extract from weird boot.ci() list (inspired from `broom::tidy.broom` under MIT)
     ci_list <- suppressWarnings(lapply(
         seq_along(B$t0),
