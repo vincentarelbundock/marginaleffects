@@ -56,15 +56,50 @@ get_comparisons <- function(
         pred_or <- NULL
     }
 
+    payload_cols <- character()
+
     # TODO: find a cheaper way to do this, but it's tricky
     # variables can come from:
     # - by: characters, data.frame, TRUE, groups
     # - wts
     # - hypothesis multi-part formulae
-    cols <- setdiff(colnames(original), colnames(out))
-    out <- cbind(out, original[, ..cols])
+    working_cols <- character()
+    working_cols <- c(
+        working_cols,
+        intersect(
+            c("rowidcf", "term", "group", "type", "comparison_idx"),
+            colnames(original)
+        ),
+        grep("^contrast", colnames(original), value = TRUE),
+        intersect("marginaleffects_wts_internal", colnames(original))
+    )
+    if (isTRUE(checkmate::check_data_frame(by))) {
+        working_cols <- c(
+            working_cols,
+            setdiff(intersect(colnames(original), colnames(by)), "by")
+        )
+    }
+    if (
+        isTRUE(checkmate::check_formula(hypothesis)) &&
+            length(mfx@variable_names_datagrid) > 0
+    ) {
+        working_cols <- c(
+            working_cols,
+            intersect(mfx@variable_names_datagrid, colnames(original))
+        )
+    }
+    working_cols <- setdiff(unique(working_cols), colnames(out))
+    if (length(working_cols) > 0) {
+        out <- cbind(out, original[, ..working_cols])
+    }
+    payload_cols <- setdiff(colnames(original), colnames(out))
 
     if (isTRUE(cross)) {
+        cols <- setdiff(payload_cols, colnames(out))
+        if (length(cols) > 0) {
+            out <- cbind(out, original[, ..cols])
+            payload_cols <- character()
+        }
         out <- merge(out, newdata, by = "rowid", all.x = TRUE, sort = FALSE)
         if (isTRUE(nrow(out) == nrow(lo))) {
             tmp <- lo[,
@@ -219,6 +254,30 @@ get_comparisons <- function(
             verbose = verbose
         )
         draws <- attr(out, "posterior_draws")
+    }
+
+    if (
+        is.null(hypothesis) &&
+            length(payload_cols) > 0 &&
+            "rowid" %in% colnames(out) &&
+            "rowid" %in% colnames(original)
+    ) {
+        cols <- setdiff(payload_cols, colnames(out))
+        idx <- match(out[["rowid"]], original[["rowid"]])
+        if (length(cols) > 0 && !anyNA(idx)) {
+            prediction_cols <- if (is.null(pred_or)) {
+                c("predicted_lo", "predicted_hi", "predicted")
+            } else {
+                c("predicted_lo", "predicted_hi")
+            }
+            prediction_cols <- intersect(prediction_cols, colnames(out))
+            out_cols <- setdiff(colnames(out), prediction_cols)
+            out <- cbind(
+                out[, ..out_cols],
+                original[idx, ..cols],
+                out[, ..prediction_cols]
+            )
+        }
     }
 
     # before get_hypothesis

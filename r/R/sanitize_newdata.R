@@ -117,6 +117,7 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
         msg <- sprintf(msg, class(model)[1])
         stop_sprintf(msg)
     }
+    newdata_vclass <- attr(newdata, "marginaleffects_variable_class")
 
     # Process matrix columns
     # Issue #1327: matrix columns with single column breaks rbindlist(). See `scale()`
@@ -149,6 +150,9 @@ sanitize_newdata <- function(mfx, newdata, by, wts) {
     nc <- ncol(newdata)
     if (safe && isTRUE(nc > 100)) {
         warn_sprintf("The `newdata` data frame has %s columns. This can slow down computation and increase memory costs. Please supply a data frame with fewer columns to the `newdata` argument, or set `options('marginaleffects_safe'=FALSE)` to silence this warning.", nc)
+    }
+    if (!is.null(newdata_vclass)) {
+        attr(newdata, "marginaleffects_variable_class") <- newdata_vclass
     }
 
     return(newdata)
@@ -240,7 +244,17 @@ add_newdata <- function(
     mfx@newdata <- newdata
 
     # Merge variable class info from newdata to handle workflows that drop raw predictors
-    newdata_vclass <- detect_variable_class(newdata, model = mfx@model)
+    newdata_vclass <- attr(newdata, "marginaleffects_variable_class")
+    if (is.null(newdata_vclass)) {
+        if (length(mfx@variable_class) == 0) {
+            newdata_vclass <- detect_variable_class(newdata, model = mfx@model)
+        } else {
+            missing <- setdiff(colnames(newdata), names(mfx@variable_class))
+            if (length(missing) > 0) {
+                newdata_vclass <- detect_variable_class(subset(newdata, select = missing))
+            }
+        }
+    }
     if (length(newdata_vclass) > 0) {
         if (length(mfx@variable_class) == 0) {
             mfx@variable_class <- newdata_vclass
@@ -264,7 +278,10 @@ add_newdata <- function(
     if (!flag1 && flag2) {
         mfx@modeldata <- newdata
         mfx@modeldata_available <- FALSE
-        mfx@variable_class <- detect_variable_class(newdata, model = mfx@model)
+        if (is.null(newdata_vclass)) {
+            newdata_vclass <- detect_variable_class(newdata, model = mfx@model)
+        }
+        mfx@variable_class <- newdata_vclass
     }
 
     # Return the updated mfx object

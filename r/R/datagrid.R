@@ -160,7 +160,11 @@ datagrid <- function(
         variable_names <- colnames(newdata)
     }
 
-    variable_class <- detect_variable_class(newdata, model = model)
+    variable_class <- mfx@variable_class
+    missing <- setdiff(colnames(newdata), names(variable_class))
+    if (length(missing) > 0) {
+        variable_class[missing] <- detect_variable_class(subset(newdata, select = missing))
+    }
 
     if (is.null(by)) {
         idx <- data.frame()
@@ -231,6 +235,7 @@ datagrid <- function(
     }
 
     attr(out, "variable_names_datagrid") <- names(list(...))
+    attr(out, "marginaleffects_variable_class") <- variable_class
 
 
     return(out)
