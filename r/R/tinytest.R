@@ -37,7 +37,7 @@ expect_slopes <- function(
 
     # unique
     if (isTRUE(se) && !"std.error" %in% colnames(object)) {
-        msg <- sprintf("Fewer than %s unique values.", n_unique)
+        msg <- "No standard error."
         diff <- c(diff, msg)
         fail_se <- TRUE
     } else {
@@ -143,6 +143,7 @@ expect_margins <- function(
     term_names <- unique(results$term)
 
     flag <- TRUE
+    diff <- ""
 
     # dydx
     for (tn in term_names) {
@@ -181,10 +182,14 @@ expect_margins <- function(
                 }
             } else {
                 flag <- FALSE
-                if (isTRUE(verbose)) print(sprintf("missing column: %s", lab))
+                msg <- sprintf("missing column: %s or %s", lab_se, lab_var)
+                diff <- c(diff, msg)
+                if (isTRUE(verbose)) print(msg)
             }
         }
     }
+
+    diff <- paste(diff, collapse = "\n")
 
     # tinytest object
     out <- tinytest::tinytest(

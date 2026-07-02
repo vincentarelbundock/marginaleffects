@@ -25,7 +25,7 @@ sort_columns <- function(x, newdata = data.frame(), by = NULL) {
         "s.value",
         "conf.low",
         "conf.high",
-        attr(newdata, "newdata_variables_datagrid"),
+        attr(newdata, "variable_names_datagrid"),
         "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE))
     )

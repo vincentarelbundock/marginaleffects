@@ -3,7 +3,7 @@ get_predictions <- function(
     type,
     model_perturbed = NULL, # important for perturbed model
     by = NULL,
-    byfun = byfun,
+    byfun = NULL,
     hypothesis = NULL,
     verbose = TRUE,
     hi = NULL, # sink hole for shared comparisons/predictions call

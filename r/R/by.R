@@ -43,7 +43,9 @@ get_by <- function(
         )
         if (isTRUE(verbose)) warning(msg, call. = FALSE)
         tmp <- !is.na(estimates[["by"]])
-        draws <- draws[tmp, drop = FALSE]
+        if (!is.null(draws)) {
+            draws <- draws[tmp, , drop = FALSE]
+        }
         estimates <- estimates[tmp, drop = FALSE]
     }
 

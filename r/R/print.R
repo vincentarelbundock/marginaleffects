@@ -122,7 +122,7 @@ print.marginaleffects <- function(
 
     hypotheses_joint_label <- attr(x, "hypotheses_joint_label")
     if (is.null(hypotheses_joint_label)) {
-        if (any(out[["df"]] < Inf)) {
+        if (any(out[["df"]] < Inf, na.rm = TRUE)) {
             hypotheses_joint_label <- "t"
         } else {
             hypotheses_joint_label <- "z"
@@ -332,4 +332,3 @@ knit_print.comparisons <- knit_print.marginaleffects
 #' @noRd
 #' @exportS3Method knitr::knit_print
 knit_print.slopes <- knit_print.marginaleffects
-

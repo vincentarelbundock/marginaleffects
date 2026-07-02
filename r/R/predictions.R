@@ -412,7 +412,7 @@ predictions <- function(
             )
         } else {
             tmp <- data.frame(mfx@newdata$rowid, mfx@type, tmp)
-            colnames(tmp) <- c("rowid", "estimate")
+            colnames(tmp) <- c("rowid", "type", "estimate")
             if ("rowidcf" %in% colnames(mfx@newdata)) {
                 tmp[["rowidcf"]] <- mfx@newdata[["rowidcf"]]
             }

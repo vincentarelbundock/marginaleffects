@@ -126,11 +126,10 @@ average_draws <- function(data, index, draws, byfun = NULL) {
                 drop = FALSE
             )
         } else {
-            draws <- collapse::BY(
-                draws,
-                g = g,
-                FUN = byfun,
-                drop = FALSE
+            draws <- matrix(
+                collapse::dapply(draws, MARGIN = 2, FUN = byfun),
+                nrow = 1,
+                dimnames = list(NULL, colnames(draws))
             )
         }
         out <- data.table(
