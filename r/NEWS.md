@@ -10,6 +10,12 @@ New:
 * Support for `nestedLogit::nestedLogit()` models. Thanks to @strengejacke for report #1675.
 * Improved `type` error for `aft` models.
 
+Performance:
+
+* Persistent settings are now cached in memory, avoiding repeated filesystem access in hot code paths (e.g., once per call for autodiff checks and once per estimate for internal comparison bookkeeping).
+* Bayesian comparisons: row indexing and subsetting are now computed once per term instead of once per posterior draw column, which speeds up `comparisons()` and `slopes()` for models with many draws.
+* Removed dead computations in `inferences(method = "boot")` that summarized the full bootstrap draw matrix without using the result.
+
 Bug fixes:
 
 * `by` aggregation with posterior or bootstrap draws no longer flattens the draws matrix when a `by` data frame omits some term/group combinations.

@@ -1,7 +1,14 @@
 marginaleffects_settings <- new.env()
 
 # https://stackoverflow.com/questions/79786610/solved-r-package-loading-error-onattach-failed-in-attachnamespace
+# The disk config is cached in memory: settings_get() is called in hot loops
+# (e.g., once per estimate for "autodiff" and "marginaleffects_safefun_return1"),
+# and reading the filesystem on every miss is expensive.
 settings_read_persistent <- function() {
+    cache <- marginaleffects_settings[[".persistent_config_cache"]]
+    if (!is.null(cache)) {
+        return(invisible(cache))
+    }
     dn <- tools::R_user_dir(package = "marginaleffects", which = "config")
     if (!dir.exists(dn)) dir.create(dn, recursive = TRUE)
     fn <- file.path(dn, "config.rds")
@@ -16,6 +23,7 @@ settings_read_persistent <- function() {
           list()
         })
     }
+    marginaleffects_settings[[".persistent_config_cache"]] <- config
     return(invisible(config))
 }
 
@@ -41,8 +49,10 @@ settings_set <- function(name, value, persistent = FALSE) {
         config <- settings_read_persistent()
         config[[name]] <- value
         dn <- tools::R_user_dir(package = "marginaleffects", which = "config")
+        if (!dir.exists(dn)) dir.create(dn, recursive = TRUE)
         fn <- file.path(dn, "config.rds")
         saveRDS(config, fn)
+        marginaleffects_settings[[".persistent_config_cache"]] <- config
     } else {
         # Save to in-memory storage
         assign(name, value = value, envir = marginaleffects_settings)

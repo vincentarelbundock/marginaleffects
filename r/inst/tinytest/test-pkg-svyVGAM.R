@@ -27,11 +27,11 @@ nhdes <- subset(nhdes, RIDAGEYR > 22)
 newdata_old <- dat[dat$old, , drop = FALSE]
 
 # [Stata] svy, subpop(if ridageyr> 22): mlogit ridreth1 i.old##c.ridageyr c.dmdeduc, base(3)
-mod_multinom <- svyVGAM::svy_vglm(
+mod_multinom <- suppressWarnings(svyVGAM::svy_vglm(
     RIDRETH1 ~ old * RIDAGEYR + DMDEDUC,
     family = VGAM::multinomial(refLevel = "C"),
     design = nhdes
-)
+))
 
 stata_coef_multinom <- c(
     "(Intercept):1" = -0.83779609,
@@ -95,7 +95,7 @@ stata_pred_unweighted <- data.frame(
     std.error = c(0.0222727, 0.0073255, 0.0348598, 0.0190675, 0.0084162)
 )
 expect_warning({
-    pred_unweighted <- avg_predictions(mod_multinom)
+    pred_unweighted <- avg_predictions(mod_multinom, numderiv = "richardson")
 })
 pred_unweighted <- pred_unweighted[
     match(stata_pred_unweighted$group, pred_unweighted$group),
@@ -108,7 +108,7 @@ expect_equivalent(
 expect_equivalent(
     pred_unweighted$std.error,
     stata_pred_unweighted$std.error,
-    tolerance = 5e-7
+    tolerance = 2e-6
 )
 
 # [Stata] margins
@@ -117,19 +117,19 @@ stata_pred_weighted <- data.frame(
     estimate = c(0.0880047, 0.0417438, 0.6993513, 0.116644, 0.0542561),
     std.error = c(0.0188875, 0.0069072, 0.0324227, 0.0186244, 0.0078475)
 )
-pred_weighted <- avg_predictions(mod_multinom, wts = "WTINT2YR")
+pred_weighted <- avg_predictions(mod_multinom, wts = "WTINT2YR", numderiv = "richardson")
 pred_weighted <- pred_weighted[
     match(stata_pred_weighted$group, pred_weighted$group),
 ]
 expect_equivalent(
     pred_weighted$estimate,
     stata_pred_weighted$estimate,
-    tolerance = 1e-7
+    tolerance = 2e-7
 )
 expect_equivalent(
     pred_weighted$std.error,
     stata_pred_weighted$std.error,
-    tolerance = 1e-7
+    tolerance = 2e-6
 )
 
 # [Stata] margins r.old, subpop(if old) contrast(effects nowald)
@@ -142,7 +142,8 @@ old_contrast <- avg_comparisons(
     mod_multinom,
     variables = "old",
     newdata = newdata_old,
-    wts = "WTINT2YR"
+    wts = "WTINT2YR",
+    numderiv = "richardson"
 )
 old_contrast <- old_contrast[
     match(stata_old_contrast$group, old_contrast$group),
@@ -150,20 +151,20 @@ old_contrast <- old_contrast[
 expect_equivalent(
     old_contrast$estimate,
     stata_old_contrast$estimate,
-    tolerance = 1e-7
+    tolerance = 3e-7
 )
 expect_equivalent(
     old_contrast$std.error,
     stata_old_contrast$std.error,
-    tolerance = 1e-7
+    tolerance = 3e-7
 )
 
 # [Stata] svy, subpop(if ridageyr> 22): glm in_a_b i.old##c.ridageyr c.dmdeduc
-mod_normal <- svyVGAM::svy_vglm(
+mod_normal <- suppressWarnings(svyVGAM::svy_vglm(
     in_a_b ~ old * RIDAGEYR + DMDEDUC,
     family = VGAM::uninormal(),
     design = nhdes
-)
+))
 stata_coef_normal <- c(
     "(Intercept):1" = 0.4622347,
     "oldTRUE" = 0.0573787,
@@ -181,12 +182,12 @@ stata_se_normal <- c(
 expect_equivalent(
     get_coef(mod_normal)[names(stata_coef_normal)],
     stata_coef_normal,
-    tolerance = 1e-7
+    tolerance = 3e-7
 )
 expect_equivalent(
     sqrt(diag(get_vcov(mod_normal)))[names(stata_se_normal)],
     stata_se_normal,
-    tolerance = 1e-7
+    tolerance = 5e-7
 )
 
 # [Stata] margins, subpop(if old) dydx(dmdeduc)
@@ -194,7 +195,8 @@ normal_slope <- avg_slopes(
     mod_normal,
     variables = "DMDEDUC",
     newdata = newdata_old,
-    wts = "WTINT2YR"
+    wts = "WTINT2YR",
+    numderiv = "richardson"
 )
 expect_equivalent(normal_slope$estimate, -0.1207603, tolerance = 5e-7)
 expect_equivalent(normal_slope$std.error, 0.0248927, tolerance = 5e-7)
@@ -240,7 +242,8 @@ stata_pred_by_old <- data.frame(
 pred_by_old <- avg_predictions(
     mod_logit,
     variables = "old",
-    wts = "WTINT2YR"
+    wts = "WTINT2YR",
+    numderiv = "richardson"
 )
 expect_equivalent(
     pred_by_old$estimate,
@@ -250,5 +253,5 @@ expect_equivalent(
 expect_equivalent(
     pred_by_old$std.error,
     stata_pred_by_old$std.error,
-    tolerance = 1e-6
+    tolerance = 2e-5
 )

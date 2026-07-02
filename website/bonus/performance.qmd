@@ -155,6 +155,19 @@ p_full
 p_subset
 ```
 
+## Bayesian analyses
+
+Bayesian analyses can require a lot of memory because `marginaleffects` often needs to store one prediction for every row of the grid and for every posterior draw. With `brms` models, the `ndraws` argument is passed forward to `posterior_epred()` and can be used to evaluate only a subset of the posterior draws. This makes the prediction matrices smaller and can make RAM requirements more reasonable in some applications.
+
+```{r}
+#| eval: false
+avg_comparisons(
+    mod,
+    variables = "treatment",
+    ndraws = 1000
+)
+```
+
 ## Standard errors are expensive
 
 The final reason why some `marginaleffects` calls take time is that standard errors are expensive to compute. This is especially true when the fitted model includes many parameters (coefficients), because the default strategy to compute standard errors involves calling `predict()` at least once per coefficient.
@@ -287,4 +300,3 @@ tic()
 p2 <- predictions(model)
 toc()
 ```
-

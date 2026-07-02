@@ -57,12 +57,13 @@ mfx <- slopes(
         x3 = 0,
         FUN_integer = mean
     ),
-    type = "link"
+    type = "link",
+    numderiv = "richardson"
 )
 em <- emtrends(m1, specs = ~x1, var = "x1", at = list(x1 = 0, x2 = 0, x3 = 0))
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$x1.trend)
-expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
+expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-5)
 
 
 # predictions: no validity

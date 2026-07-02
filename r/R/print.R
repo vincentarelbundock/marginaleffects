@@ -237,11 +237,8 @@ print.marginaleffects <- function(
     if (style %in% c("tinytable", "html", "latex", "typst", "markdown")) {
         insight::check_if_installed("tinytable")
 
+        # `out` was already truncated to head/tail rows when splitprint is TRUE
         tab <- as.data.frame(out)
-
-        if (isTRUE(splitprint)) {
-            tab <- rbind(utils::head(tab, topn), utils::tail(tab, topn))
-        }
 
         args <- list(x = tab)
         notes <- c(print_type_text, print_columns_text)

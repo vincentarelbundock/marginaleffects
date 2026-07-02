@@ -181,7 +181,7 @@ fits_manual1682 <- lapply(1:5, function(i) {
     glm(y ~ x1 + bs(age, 3) + x2, family = Gamma(link = "log"), data = d)
 })
 fit_manual1682 <- mice::as.mira(fits_manual1682)
-res_manual <- avg_comparisons(fit_manual1682, variables = "x1", type = "response")
+res_manual <- suppressWarnings(avg_comparisons(fit_manual1682, variables = "x1", type = "response"))
 # estimates should be close (not near-zero vs correct)
 expect_equivalent(res_auto$estimate, res_manual$estimate, tolerance = 0.1)
 
