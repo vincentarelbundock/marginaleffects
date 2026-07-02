@@ -97,6 +97,9 @@ get_predict.default <- function(
         # to run it conditionally because objects of class "svystat" are
         # already numeric
         class(pred) <- "numeric"
+        # names become row names in data.frame(), which triggers expensive
+        # duplicate checks on large character vectors
+        names(pred) <- NULL
         out <- data.frame(estimate = pred)
 
         # matrix with outcome levels as columns

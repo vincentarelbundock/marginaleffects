@@ -20,6 +20,10 @@ get_hypothesis <- function(
         stop(msg, call. = FALSE)
     }
 
+    if (is.null(hypothesis)) {
+        return(x)
+    }
+
     # otherwise setDT strips out the marginaleffects-specific classes
     x <- data.table::copy(x)
 
@@ -27,9 +31,7 @@ get_hypothesis <- function(
         isTRUE(checkmate::check_numeric(hypothesis))
     mat <- isTRUE(checkmate::check_matrix(hypothesis))
 
-    if (is.null(hypothesis)) {
-        return(x)
-    } else if (isTRUE(checkmate::check_formula(hypothesis))) {
+    if (isTRUE(checkmate::check_formula(hypothesis))) {
         out <- hypothesis_formula(
             x,
             newdata = newdata,

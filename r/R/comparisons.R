@@ -473,7 +473,7 @@ comparisons <- function(
             idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
             idx <- cmp[, (idx), drop = FALSE]
             fun <- function(...) {
-                get_comparisons(..., verbose = FALSE)$estimate
+                get_comparisons(..., verbose = FALSE, payload = FALSE)$estimate
             }
             args <- list(
                 mfx = mfx,

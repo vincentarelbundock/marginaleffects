@@ -11,6 +11,7 @@ get_comparisons <- function(
     hypothesis = NULL,
     cross = FALSE,
     verbose = TRUE,
+    payload = TRUE,
     ...) {
     newdata <- mfx@newdata
 
@@ -90,7 +91,20 @@ get_comparisons <- function(
     }
     working_cols <- setdiff(unique(working_cols), colnames(out))
     if (length(working_cols) > 0) {
-        out <- cbind(out, original[, ..working_cols])
+        # by-reference assignment avoids the deep copies made by cbind()
+        n_out <- nrow(out)
+        n_orig <- nrow(original)
+        if (n_orig > 0 && n_out %% n_orig == 0) {
+            for (col in working_cols) {
+                v <- original[[col]]
+                if (n_out != n_orig) {
+                    v <- rep(v, length.out = n_out)
+                }
+                out[, (col) := v]
+            }
+        } else {
+            out <- cbind(out, original[, ..working_cols])
+        }
     }
     payload_cols <- setdiff(colnames(original), colnames(out))
 
@@ -256,8 +270,11 @@ get_comparisons <- function(
         draws <- attr(out, "posterior_draws")
     }
 
+    # `payload=FALSE` is used by the standard error machinery, which only needs
+    # the `estimate` column; merging back covariates would be wasted work
     if (
-        is.null(hypothesis) &&
+        isTRUE(payload) &&
+            is.null(hypothesis) &&
             length(payload_cols) > 0 &&
             "rowid" %in% colnames(out) &&
             "rowid" %in% colnames(original)
@@ -549,8 +566,9 @@ compare_hi_lo_frequentist <- function(out, idx, cross, variables, fun_list, elas
     # When survey weights add all-NA aux columns, stats::na.omit() (which ignores
     # `cols`) was zeroing out `out`. Build one index and reuse it so downstream
     # operations rely on the same filtered rows.
-    idx_pred <- !is.na(out$predicted_lo)
-    out <- out[idx_pred]
+    if (anyNA(out$predicted_lo)) {
+        out <- out[!is.na(predicted_lo)]
+    }
     # We want to write the "estimate" column in-place because it safer
     # than group-merge; there were several bugs related to this in the past.
     # safefun() returns 1 value and NAs when the function retunrs a
@@ -585,8 +603,8 @@ compare_hi_lo_frequentist <- function(out, idx, cross, variables, fun_list, elas
             idx <- unique(intersect(idx, colnames(out)))
             out <- subset(out, select = idx)
         }
+        out <- out[!is.na(estimate)]
     }
-    out <- out[!is.na(estimate)]
 
     return(out)
 }
