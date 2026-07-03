@@ -57,7 +57,6 @@ utils::globalVariables(c(
     "marginaleffects_contrast_hi",
     "marginaleffects_contrast_lo",
     "marginaleffects_function",
-    "marginaleffects_group_id",
     "marginaleffects_internal_label",
     "marginaleffects_internal_rowid",
     "marginaleffects_lab",

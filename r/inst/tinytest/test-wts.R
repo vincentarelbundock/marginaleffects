@@ -2,7 +2,6 @@ source("helpers.R")
 using("marginaleffects")
 requiet("tidyverse")
 requiet("survey")
-requiet("rstan")
 
 # mtcars logit
 tmp <- get_dataset("mtcars", "datasets")
@@ -203,11 +202,13 @@ expect_equivalent(
 
 
 # brms
-set.seed(1024)
-mod <- marginaleffects:::modelarchive_model("brms_numeric2")
-w <- runif(32)
-cmp1 <- comparisons(mod, comparison = "differenceavg")
-cmp2 <- comparisons(mod, wts = w, comparison = "differenceavg")
+suppressPackageStartupMessages(suppressMessages({
+    set.seed(1024)
+    mod <- readRDS(testing_path("modelarchive/data/brms_numeric2.rds"))
+    w <- runif(32)
+    cmp1 <- comparisons(mod, comparison = "differenceavg")
+    cmp2 <- comparisons(mod, wts = w, comparison = "differenceavg")
+}))
 expect_true(all(cmp1$estimate != cmp2$estimate))
 
 # . logit am mpg [pw=weights]

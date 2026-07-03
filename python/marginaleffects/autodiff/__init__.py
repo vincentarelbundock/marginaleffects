@@ -29,18 +29,14 @@ if _JAX_AVAILABLE:
 
     jax.config.update("jax_enable_x64", True)
 
-    # Import submodules to make them accessible
-    from . import linear as linear
     from . import glm as glm
+    from . import pipeline as pipeline
 
-    # Re-export types for convenience
-    from .comparisons import ComparisonType as ComparisonType
     from .glm.families import Family as Family, Link as Link
 
     __all__ = [
-        "linear",
         "glm",
-        "ComparisonType",
+        "pipeline",
         "Family",
         "Link",
     ]
@@ -50,13 +46,8 @@ else:
         def __getattr__(self, name):
             _raise_jax_error()
 
-    linear = _DummyModule()
     glm = _DummyModule()
-
-    # Create dummy enums that raise errors
-    class ComparisonType:
-        def __getattribute__(self, name):
-            _raise_jax_error()
+    pipeline = _DummyModule()
 
     class Family:
         def __getattribute__(self, name):
@@ -66,4 +57,4 @@ else:
         def __getattribute__(self, name):
             _raise_jax_error()
 
-    __all__ = []
+    __all__ = ["glm", "pipeline", "Family", "Link"]

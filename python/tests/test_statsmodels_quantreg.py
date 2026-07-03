@@ -19,7 +19,6 @@
 # (rather than the usual rel_tol=1e-2) when comparing against R reference data.
 
 import polars as pl
-import pytest
 import statsmodels.formula.api as smf
 from polars.testing import assert_series_equal
 from marginaleffects import comparisons, predictions

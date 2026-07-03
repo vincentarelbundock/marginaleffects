@@ -1,10 +1,12 @@
 import numpy as np
 import polars as pl
 
-from .by import get_by, get_by_groups
-from .test import get_hypothesis
-from .uncertainty import get_se, add_standard_errors
+from .autodiff.lower import autodiff_try
+from .by import get_by_plan
+from .hypothesis_compile import hypothesis_compile
+from .uncertainty import get_jacobian, get_se
 from .classes import MarginaleffectsResult
+from .plan import PredictionPlan, prediction_plan_apply, prediction_plan_predict
 from .utils import prepare_base_inputs, finalize_result, call_avg
 from .sanitize import handle_deprecated_hypotheses_argument
 from .docstrings import doc
@@ -64,70 +66,6 @@ def _prepare_newdata(newdata, modeldata, variables):
     return newdata, list(normalized.keys())
 
 
-def _predictions_jax(
-    model,
-    exog,
-    newdata,
-    by,
-    wts,
-    hypothesis,
-    V,
-):
-    from .autodiff.dispatch import try_jax_predictions
-
-    jax_result = try_jax_predictions(
-        model=model,
-        exog=exog,
-        vcov=V,
-        by=by,
-        wts=wts,
-        hypothesis=hypothesis,
-    )
-
-    if jax_result is None:
-        return None, None
-
-    try:
-        base = pl.DataFrame(
-            {
-                "rowid": newdata["rowid"],
-                "estimate": jax_result["estimate"],
-            }
-        )
-        cols = [x for x in newdata.columns if x not in base.columns]
-        base = pl.concat([base, newdata.select(cols)], how="horizontal")
-
-        if by is False:
-            J = jax_result["jacobian"]
-            out = base.with_columns(
-                pl.Series(jax_result["std_error"]).alias("std_error")
-            )
-        else:
-            grouped, row_groups = get_by_groups(
-                model, base, newdata=newdata, by=by, wts=wts
-            )
-            if not row_groups:
-                raise ValueError("Failed to compute autodiff groups for `by`.")
-
-            rowid_lookup = {
-                int(rid): idx for idx, rid in enumerate(base["rowid"].to_list())
-            }
-            jac_rows = []
-            for group in row_groups:
-                idxs = [rowid_lookup[rid] for rid in group if rid in rowid_lookup]
-                if not idxs:
-                    raise ValueError("Mismatch between group rows and Jacobian rows.")
-                jac_rows.append(np.mean(jax_result["jacobian"][idxs], axis=0))
-
-            J = np.vstack(jac_rows)
-            se = get_se(J, V)
-            out = grouped.with_columns(pl.Series(se).alias("std_error"))
-
-        return out, J
-    except Exception:
-        return None, None
-
-
 def _predictions_fd(
     model,
     exog,
@@ -138,27 +76,79 @@ def _predictions_fd(
     V,
     eps_vcov,
 ):
-    def inner(x):
-        out = model.get_predict(params=np.array(x), newdata=exog)
+    out, plan = _predictions_build(
+        model=model,
+        exog=exog,
+        newdata=newdata,
+        by=by,
+        wts=wts,
+        hypothesis=hypothesis,
+    )
+    if V is None:
+        return out, None
 
-        if out.shape[0] == newdata.shape[0]:
-            cols = [x for x in newdata.columns if x not in out.columns]
-            out = pl.concat([out, newdata.select(cols)], how="horizontal")
+    J = get_jacobian(
+        lambda beta: prediction_plan_apply(
+            plan, prediction_plan_predict(plan, model, beta)
+        ),
+        model.get_coef(),
+        eps_vcov,
+    )
+    se = get_se(J, V)
+    return out.with_columns(pl.Series(se).alias("std_error")), J
 
-        elif "group" in out.columns:
-            meta = newdata.join(out.select("group").unique(), how="cross")
-            cols = [x for x in meta.columns if x in out.columns]
-            out = meta.join(out, on=cols, how="left")
 
-        else:
-            raise ValueError("Something went wrong")
+def _predictions_build(model, exog, newdata, by, wts, hypothesis):
+    raw = model.get_predict(params=np.asarray(model.get_coef()), newdata=exog)
+    n_pred = raw.shape[0]
+    align = None
 
-        out = get_by(model, out, newdata=newdata, by=by, wts=wts)
-        out = get_hypothesis(out, hypothesis=hypothesis, by=by)
-        return out
+    if raw.shape[0] == newdata.shape[0]:
+        cols = [x for x in newdata.columns if x not in raw.columns]
+        out = pl.concat([raw, newdata.select(cols)], how="horizontal_extend")
 
-    out = inner(model.get_coef())
-    return add_standard_errors(out, inner, model, V, eps_vcov)
+    elif "group" in raw.columns:
+        raw = raw.with_columns(
+            pl.Series("_pred_row", range(raw.height), dtype=pl.Int32)
+        )
+        meta = newdata.join(raw.select("group").unique(), how="cross")
+        cols = [x for x in meta.columns if x in raw.columns]
+        out = meta.join(raw, on=cols, how="left")
+        align = out["_pred_row"].fill_null(-1).cast(pl.Int64).to_numpy()
+        out = out.drop("_pred_row")
+
+    else:
+        raise ValueError("Something went wrong")
+
+    aligned_baseline = out["estimate"].to_numpy()
+    has_na = np.isnan(np.asarray(aligned_baseline, dtype=float)).any()
+
+    out, agg = get_by_plan(model, out, newdata=newdata, by=by, wts=wts)
+    out, hyp = hypothesis_compile(out, hypothesis=hypothesis, by=by)
+    plan = PredictionPlan(
+        n_pred=n_pred,
+        exog=exog,
+        align=align,
+        has_na=bool(has_na),
+        agg=agg,
+        hyp=hyp,
+        n_out=out.height,
+    )
+
+    replay = prediction_plan_apply(
+        plan, prediction_plan_predict(plan, model, model.get_coef())
+    )
+    if not np.allclose(
+        replay,
+        out["estimate"].to_numpy(),
+        rtol=1e-12,
+        atol=1e-12,
+        equal_nan=True,
+    ):
+        raise RuntimeError(
+            "marginaleffects internal error: prediction plan baseline check failed"
+        )
+    return out, plan
 
 
 @doc("""
@@ -269,27 +259,37 @@ def predictions(
 
     exog = model.get_exog(newdata)
 
-    out, J = _predictions_jax(
+    out, plan = _predictions_build(
         model=model,
         exog=exog,
         newdata=newdata,
         by=by,
         wts=wts,
         hypothesis=hypothesis,
-        V=V,
     )
 
-    if out is None:
-        out, J = _predictions_fd(
+    J = None
+    if V is not None:
+        ad = autodiff_try(
+            plan=plan,
             model=model,
-            exog=exog,
-            newdata=newdata,
-            by=by,
-            wts=wts,
-            hypothesis=hypothesis,
             V=V,
-            eps_vcov=eps_vcov,
+            estimate=out["estimate"].to_numpy(),
+            kind="predictions",
         )
+        if ad is not None:
+            J = ad.jacobian
+            out = out.with_columns(pl.Series(ad.std_error).alias("std_error"))
+        else:
+            J = get_jacobian(
+                lambda beta: prediction_plan_apply(
+                    plan, prediction_plan_predict(plan, model, beta)
+                ),
+                model.get_coef(),
+                eps_vcov,
+            )
+            se = get_se(J, V)
+            out = out.with_columns(pl.Series(se).alias("std_error"))
 
     return finalize_result(
         out,

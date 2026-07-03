@@ -242,11 +242,11 @@ comparisons <- function(
             modeldata <- NULL
         }
         call <- construct_call(model, "comparisons")
-        model <- sanitize_model(model, 
-            call = call, 
-            newdata = newdata, 
-            wts = wts, 
-            vcov = vcov, 
+        model <- sanitize_model(model,
+            call = call,
+            newdata = newdata,
+            wts = wts,
+            vcov = vcov,
             by = by, ...)
         mfx <- new_marginaleffects_internal(
             call = call,
@@ -260,12 +260,12 @@ comparisons <- function(
     }
 
     scall <- rlang::enquo(newdata)
-    mfx <- add_newdata(mfx, 
-        scall, 
-        newdata = newdata, 
-        by = by, 
-        wts = wts, 
-        cross = cross, 
+    mfx <- add_newdata(mfx,
+        scall,
+        newdata = newdata,
+        by = by,
+        wts = wts,
+        cross = cross,
         comparison = comparison)
 
     # sanity checks
@@ -344,105 +344,6 @@ comparisons <- function(
     contrast_data$hi <- add_model_matrix_attribute_data(mfx, contrast_data$hi)
     contrast_data$lo <- add_model_matrix_attribute_data(mfx, contrast_data$lo)
 
-    # Try autodiff early exit
-    autodiff_result <- NULL
-    if (isTRUE(settings_get("autodiff")) &&
-        !isFALSE(vcov) &&
-        isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
-
-        # Add internal group ID for robust matching with Python results
-        # This ensures we can merge results back correctly regardless of sort order
-        if (is.character(by)) {
-            bycols <- unique(c(by, "term", "contrast"))
-            bycols <- intersect(bycols, colnames(contrast_data$original))
-            if (length(bycols) > 0) {
-                # Create group IDs based on unique combinations, sorted to match finite diff output order
-                # Finite diff sorts by (term, user-specified variables, then contrast)
-                # So reorder bycols to put term first, then user variables, then contrast
-                bycols_sorted <- c("term", setdiff(bycols, c("term", "contrast")), "contrast")
-                bycols_sorted <- intersect(bycols_sorted, bycols)  # Keep only columns that exist
-                group_lookup <- unique(contrast_data$original[, bycols, with = FALSE])
-                # Sort by the reordered columns to match finite diff order
-                data.table::setorderv(group_lookup, bycols_sorted)
-                group_lookup[, marginaleffects_group_id := seq_len(.N)]
-                # Add group ID to original data
-                contrast_data$original <- merge(
-                    contrast_data$original,
-                    group_lookup,
-                    by = bycols,
-                    sort = FALSE
-                )
-            }
-        }
-
-        autodiff_result <- jax_comparisons(
-            mfx = mfx,
-            vcov_matrix = mfx@vcov_model,
-            hi = contrast_data$hi,
-            lo = contrast_data$lo,
-            original = contrast_data$original,
-            ...
-        )
-    }
-
-    if (!is.null(autodiff_result)) {
-        # SUCCESS: Use autodiff results and skip computation pipeline
-
-        # Build result data.frame
-        if (isFALSE(mfx@by)) {
-            # Row-level results - merge with original data
-            cmp <- data.table::copy(contrast_data$original)
-            cmp[, estimate := autodiff_result$estimate]
-            cmp[, std.error := autodiff_result$std.error]
-        } else {
-            # Aggregated results
-            cmp <- data.table::data.table(
-                estimate = autodiff_result$estimate,
-                std.error = autodiff_result$std.error
-            )
-
-            # Add grouping columns
-            if (isTRUE(mfx@by)) {
-                # by=TRUE: aggregate by term/contrast
-                bycols <- intersect(c("term", "contrast"), colnames(contrast_data$original))
-                if (length(bycols) > 0) {
-                    group_cols <- unique(contrast_data$original[, bycols, with = FALSE])
-                    cmp <- cbind(group_cols, cmp)
-                }
-            } else if (is.character(mfx@by)) {
-                # by=character: aggregate by user-specified + term/contrast
-                bycols <- unique(c(mfx@by, "term", "contrast"))
-                bycols <- intersect(bycols, colnames(contrast_data$original))
-                if (length(bycols) > 0) {
-                    # Create lookup table with group IDs, sorted to match finite diff output order
-                    # Finite diff sorts by (term, user-specified variables, then contrast)
-                    bycols_sorted <- c("term", setdiff(bycols, c("term", "contrast")), "contrast")
-                    bycols_sorted <- intersect(bycols_sorted, bycols)  # Keep only columns that exist
-                    group_lookup <- unique(contrast_data$original[, bycols, with = FALSE])
-                    data.table::setorderv(group_lookup, bycols_sorted)
-                    group_lookup[, marginaleffects_group_id := seq_len(.N)]
-
-                    # Python returns results in sorted order (by group_id which we passed)
-                    # So results are already in the correct order!
-                    cmp <- data.table::data.table(
-                        estimate = autodiff_result$estimate,
-                        std.error = autodiff_result$std.error
-                    )
-                    cmp[, marginaleffects_group_id := seq_len(.N)]
-
-                    # Merge to add back the grouping columns
-                    cmp <- merge(group_lookup, cmp, by = "marginaleffects_group_id", sort = FALSE)
-                    cmp[, marginaleffects_group_id := NULL]  # Remove internal ID
-                }
-            }
-        }
-
-        # Store jacobian
-        mfx@jacobian <- autodiff_result$jacobian
-
-    } else {
-        # FALLBACK: Use standard computation pipeline
-
         args <- list(
             mfx = mfx,
             variables = predictors,
@@ -473,32 +374,47 @@ comparisons <- function(
 
             idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
             idx <- cmp[, (idx), drop = FALSE]
-            fun <- function(model_perturbed, ...) {
-                preds <- comparison_plan_predict(built$plan, model_perturbed, ...)
-                comparison_plan_apply(built$plan, preds$hi, preds$lo, preds$or)
-            }
-            args <- list(
-                mfx = mfx,
-                model_perturbed = mfx@model,
-                vcov = mfx@vcov_model,
+            ad <- autodiff_try(
+                built$plan,
+                mfx,
+                kind = "comparisons",
                 type = mfx@type,
-                FUN = fun,
-                index = idx,
-                variables = predictors,
-                hypothesis = mfx@hypothesis,
+                vcov = mfx@vcov_model,
+                estimate = cmp$estimate,
                 hi = contrast_data$hi,
-                lo = contrast_data$lo,
-                original = contrast_data$original,
-                estimates = cmp,
-                numderiv = numderiv
+                lo = contrast_data$lo
             )
-            args <- utils::modifyList(args, dots)
-            se <- do_call(get_se_delta, args)
-            mfx@jacobian <- attr(se, "jacobian")
-            cmp$std.error <- as.vector(as.numeric(se)) # drop attributes
-            mfx@draws <- NULL
+            if (!is.null(ad)) {
+                mfx@jacobian <- ad$jacobian
+                cmp$std.error <- ad$std.error
+                mfx@draws <- NULL
+            } else {
+                fun <- function(model_perturbed, ...) {
+                    preds <- comparison_plan_predict(built$plan, model_perturbed, ...)
+                    comparison_plan_apply(built$plan, preds$hi, preds$lo, preds$or)
+                }
+                args <- list(
+                    mfx = mfx,
+                    model_perturbed = mfx@model,
+                    vcov = mfx@vcov_model,
+                    type = mfx@type,
+                    FUN = fun,
+                    index = idx,
+                    variables = predictors,
+                    hypothesis = mfx@hypothesis,
+                    hi = contrast_data$hi,
+                    lo = contrast_data$lo,
+                    original = contrast_data$original,
+                    estimates = cmp,
+                    numderiv = numderiv
+                )
+                args <- utils::modifyList(args, dots)
+                se <- do_call(get_se_delta, args)
+                mfx@jacobian <- attr(se, "jacobian")
+                cmp$std.error <- as.vector(as.numeric(se)) # drop attributes
+                mfx@draws <- NULL
+            }
         }
-    }
 
     # Common path for both autodiff and fallback
 
@@ -557,7 +473,7 @@ comparisons <- function(
     # before add_attributes()
     if (inherits(mfx@model, "brmsfit")) {
         insight::check_if_installed("brms")
-        mfx@draws_chains <- brms::nchains(mfx@model) 
+        mfx@draws_chains <- brms::nchains(mfx@model)
     }
 
     # class before prune

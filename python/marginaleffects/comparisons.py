@@ -5,7 +5,9 @@ from functools import reduce
 import numpy as np
 import polars as pl
 
+from .autodiff.lower import autodiff_try
 from .estimands import estimands
+from .hypothesis_compile import hypothesis_compile
 from .sanitize import sanitize_model
 from .sanitize import (
     sanitize_variables,
@@ -13,7 +15,13 @@ from .sanitize import (
     handle_pyfixest_vcov_limitation,
 )
 from .classes import MarginaleffectsResult
-from .uncertainty import add_standard_errors
+from .uncertainty import get_jacobian, get_se
+from .plan import (
+    CompGroup,
+    ComparisonPlan,
+    comparison_plan_apply,
+    comparison_plan_predict,
+)
 from .utils import (
     get_pad,
     upcast,
@@ -252,7 +260,20 @@ def _collect_comparison_functions(variables):
     return comparison_functions
 
 
-def _assemble_prediction_table(model, coefs, nd, nd_X, hi_X, lo_X):
+ELASTICITY_KEYS = {
+    "eyex",
+    "eydx",
+    "dyex",
+    "eyexavg",
+    "eydxavg",
+    "dyexavg",
+    "eyexavgwts",
+    "eydxavgwts",
+    "dyexavgwts",
+}
+
+
+def _assemble_prediction_table(model, coefs, nd, nd_X, hi_X, lo_X, capture_align=False):
     """
     Compute predictions at nd/hi/lo counterfactuals and merge with metadata from nd.
 
@@ -272,14 +293,15 @@ def _assemble_prediction_table(model, coefs, nd, nd_X, hi_X, lo_X):
         .rename({"estimate": "predicted_hi"})
         .select("predicted_hi"),
     ]
-    tmp = reduce(lambda x, y: pl.concat([x, y], how="horizontal"), tmp)
+    tmp = pl.concat(tmp, how="horizontal_extend")
+    align = None
     if "rowid" in nd.columns and tmp.shape[0] == nd.shape[0]:
         tmp = tmp.with_columns(nd["rowid"].alias("rowid"))
 
     # no group
     if tmp.shape[0] == nd.shape[0]:
         cols = [x for x in nd.columns if x not in tmp.columns]
-        tmp = pl.concat([tmp, nd.select(cols)], how="horizontal")
+        tmp = pl.concat([tmp, nd.select(cols)], how="horizontal_extend")
 
     # group (categorical outcome models)
     elif "group" in tmp.columns:
@@ -290,15 +312,24 @@ def _assemble_prediction_table(model, coefs, nd, nd_X, hi_X, lo_X):
         nd_m = nd.with_columns(
             pl.Series("_merge_id", range(nd.shape[0]), dtype=pl.Int32)
         )
+        if capture_align:
+            tmp = tmp.with_columns(
+                pl.Series("_pred_row", range(tmp.height), dtype=pl.Int32)
+            )
         tmp = tmp.rename({"rowid": "_merge_id"})
         meta = nd_m.join(tmp.select("group").unique(), how="cross")
         cols = [x for x in meta.columns if x in tmp.columns]
         tmp = meta.join(tmp, on=cols, how="left")
+        if capture_align:
+            align = tmp["_pred_row"].fill_null(-1).cast(pl.Int64).to_numpy()
+            tmp = tmp.drop("_pred_row")
         tmp = tmp.drop("_merge_id")
 
     else:
         raise ValueError("Something went wrong")
 
+    if capture_align:
+        return tmp, align
     return tmp
 
 
@@ -324,14 +355,19 @@ def _resolve_grouping_keys(by, tmp):
     return by
 
 
-def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions):
+def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions, capture=None):
     """
     Apply comparison functions to predicted_hi/predicted_lo within groups.
 
     Uses group_by with maintain_order=True (critical for Jacobian alignment).
     """
 
-    def applyfun(x, by, wts=None):
+    if capture is not None:
+        tmp = tmp.with_columns(
+            pl.Series("_plan_est_id", range(tmp.height), dtype=pl.Int32)
+        )
+
+    def applyfun(x, by, wts=None, capture=None):
         comp = x["marginaleffects_comparison"][0]
         xvar = x[x["term"][0]]
         if wts is not None:
@@ -357,16 +393,29 @@ def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions):
             y=x["predicted"],
             w=xwts,
         )
+        if capture is not None:
+            capture.append(
+                {
+                    "idx": x["_plan_est_id"].to_numpy(),
+                    "fun": estimand,
+                    "fun_key": None if comp == "custom" else comp,
+                    "x": xvar.to_numpy(),
+                    "w": None if xwts is None else xwts.to_numpy(),
+                    "scalar": est.shape[0] == 1,
+                }
+            )
         if est.shape[0] == 1:
             est = est.item()
             result = x.select(by).unique().with_columns(pl.lit(est).alias("estimate"))
         else:
             result = x.with_columns(pl.lit(est).alias("estimate"))
+        if "_plan_est_id" in result.columns:
+            result = result.drop("_plan_est_id")
         return result
 
     # maintain_order is extremely important
     tmp = tmp.group_by(*by, maintain_order=True).map_groups(
-        function=lambda x: applyfun(x, by=by, wts=wts)
+        function=lambda x: applyfun(x, by=by, wts=wts, capture=capture)
     )
     return tmp
 
@@ -403,38 +452,102 @@ def _compute_fd_estimates(
     return tmp
 
 
-def _normalize_jax_result(jax_result, nd):
-    """
-    Convert JAX dispatch result dict into a DataFrame matching the FD output schema.
-    """
-    estimate = np.atleast_1d(jax_result["estimate"])
-    std_error = np.atleast_1d(jax_result["std_error"])
-    metadata = jax_result.get("metadata")
+def _comparisons_build(
+    *,
+    model,
+    nd,
+    nd_X,
+    hi_X,
+    lo_X,
+    by,
+    hypothesis,
+    wts,
+    eps,
+    comparison_functions,
+):
+    coefs = model.get_coef()
+    tmp, align = _assemble_prediction_table(
+        model,
+        coefs,
+        nd,
+        nd_X,
+        hi_X,
+        lo_X,
+        capture_align=True,
+    )
+    has_na = any(
+        np.isnan(np.asarray(tmp[col].to_numpy(), dtype=float)).any()
+        for col in ["predicted", "predicted_hi", "predicted_lo"]
+        if col in tmp.columns
+    )
+    by_keys = _resolve_grouping_keys(by, tmp)
+    captured = []
+    tmp = _apply_comparison_estimands(
+        tmp,
+        by_keys,
+        wts,
+        eps,
+        comparison_functions,
+        capture=captured,
+    )
+    tmp, hyp = hypothesis_compile(tmp, hypothesis=hypothesis, by=by_keys)
 
-    if metadata is not None:
-        out = metadata.with_columns(
-            pl.Series(estimate).alias("estimate"),
-            pl.Series(std_error).alias("std_error"),
+    groups = []
+    start = 0
+    for item in captured:
+        n_out = 1 if item["scalar"] else len(item["idx"])
+        out_idx = np.arange(start, start + n_out, dtype=int)
+        groups.append(
+            CompGroup(
+                idx=np.asarray(item["idx"], dtype=int),
+                out_idx=out_idx,
+                scalar=bool(item["scalar"]),
+                fun=item["fun"],
+                fun_key=item["fun_key"],
+                x=None if item["x"] is None else np.asarray(item["x"]),
+                w=None if item["w"] is None else np.asarray(item["w"], dtype=float),
+            )
         )
-    else:
-        out = pl.DataFrame(
-            {
-                "rowid": nd["rowid"].to_list(),
-                "term": nd["term"].to_list(),
-                "contrast": nd["contrast"].to_list(),
-                "estimate": estimate,
-                "std_error": std_error,
-            }
-        )
-        cols = [
-            x
-            for x in nd.columns
-            if x not in out.columns and x != "marginaleffects_comparison"
-        ]
-        if cols:
-            out = pl.concat([out, nd.select(cols)], how="horizontal")
+        start += n_out
 
-    return out
+    if groups:
+        actual = np.concatenate([group.out_idx for group in groups])
+        expected = np.arange(start, dtype=int)
+        if not np.array_equal(actual, expected):
+            raise RuntimeError(
+                "marginaleffects internal error: comparison plan output order failed"
+            )
+
+    need_y = any(
+        group.fun_key is None or group.fun_key in ELASTICITY_KEYS for group in groups
+    )
+    plan = ComparisonPlan(
+        n_pred=hi_X.shape[0],
+        exog_hi=hi_X,
+        exog_lo=lo_X,
+        exog_nd=nd_X if need_y else None,
+        need_y=need_y,
+        align=align,
+        eps=eps,
+        groups=groups,
+        n_comp=start,
+        hyp=hyp,
+        has_na=bool(has_na),
+    )
+
+    hi, lo, y = comparison_plan_predict(plan, model, coefs)
+    replay = comparison_plan_apply(plan, hi, lo, y)
+    if not np.allclose(
+        replay,
+        tmp["estimate"].to_numpy(),
+        rtol=1e-12,
+        atol=1e-12,
+        equal_nan=True,
+    ):
+        raise RuntimeError(
+            "marginaleffects internal error: comparison plan baseline check failed"
+        )
+    return tmp, plan
 
 
 @doc("""
@@ -622,58 +735,38 @@ def comparisons(
 
     comparison_functions = _collect_comparison_functions(variables)
 
-    # === JAX fast path ===
-    from .autodiff.dispatch import try_jax_comparisons
-
-    jax_result = try_jax_comparisons(
+    out, plan = _comparisons_build(
         model=model,
+        nd=nd,
+        nd_X=nd_X,
         hi_X=hi_X,
         lo_X=lo_X,
-        vcov=V,
         by=by,
-        wts=wts,
         hypothesis=hypothesis,
-        comparison=comparison,
-        cross=cross,
-        nd=nd,
+        wts=wts,
+        eps=eps,
+        comparison_functions=comparison_functions,
     )
-
-    if jax_result is not None:
-        out = _normalize_jax_result(jax_result, nd)
-        return finalize_result(
-            out,
-            model=model,
-            by=by,
-            transform=transform,
-            equivalence=equivalence,
-            newdata=newdata,
-            conf_level=conf_level,
-            J=jax_result["jacobian"],
-            hypothesis_null=hypothesis_null,
-            equivalence_df=np.inf,
-            postprocess=postprocess_cross,
-        )
-
-    # === Finite-difference path ===
-    def outer(x):
-        return _compute_fd_estimates(
-            x,
-            model=model,
-            nd=nd,
-            nd_X=nd_X,
-            hi_X=hi_X,
-            lo_X=lo_X,
-            by=by,
-            hypothesis=hypothesis,
-            wts=wts,
-            eps=eps,
-            comparison_functions=comparison_functions,
-        )
-
-    out = outer(model.get_coef())
-
     if vcov is not None and vcov is not False and V is not None:
-        out, J = add_standard_errors(out, outer, model, V, eps_vcov)
+        ad = autodiff_try(
+            plan=plan,
+            model=model,
+            V=V,
+            estimate=out["estimate"].to_numpy(),
+            kind="comparisons",
+        )
+        if ad is not None:
+            J = ad.jacobian
+            out = out.with_columns(pl.Series(ad.std_error).alias("std_error"))
+        else:
+
+            def replay(beta):
+                hi_pred, lo_pred, y_pred = comparison_plan_predict(plan, model, beta)
+                return comparison_plan_apply(plan, hi_pred, lo_pred, y_pred)
+
+            J = get_jacobian(replay, model.get_coef(), eps_vcov)
+            se = get_se(J, V)
+            out = out.with_columns(pl.Series(se).alias("std_error"))
     else:
         J = None
 

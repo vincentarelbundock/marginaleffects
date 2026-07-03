@@ -1,4 +1,3 @@
-from typing import Optional, Dict, Any
 import numpy as np
 import polars as pl
 import patsy
@@ -146,90 +145,59 @@ class ModelStatsmodels(ModelAbstract):
     def get_df(self):
         return self.model.df_resid
 
-    def get_autodiff_config(self) -> Optional[Dict[str, Any]]:
-        """
-        Return autodiff configuration if this model is JAX-compatible.
-
-        Returns None if:
-        - JAX is not installed
-        - Model type unsupported (not OLS/GLM)
-        - GLM has offset or exposure
-        - Family/link combination unsupported
-
-        Returns dict with:
-        - model_type: "linear" or "glm"
-        - family_type: int (Family enum) or None
-        - link_type: int (Link enum) or None
-        """
-        # Check JAX availability
-        try:
-            from ..autodiff import Family, Link
-
-            # Check if JAX is actually available (not dummy module)
-            _ = int(Family.GAUSSIAN)
-        except (ImportError, TypeError):
-            return None
-
-        inner_model = self.model.model  # the unfitted statsmodels model
+    def get_autodiff_args(self):
+        inner_model = self.model.model
         model_class = type(inner_model).__name__
 
-        # === OLS (linear models) ===
         if model_class == "OLS":
-            return {"model_type": "linear", "family_type": None, "link_type": None}
+            return {"model_type": "linear", "family": None, "link": None}
 
-        # === GLM ===
         if model_class == "GLM":
-            # Reject if offset is used
             if hasattr(inner_model, "offset") and inner_model.offset is not None:
                 if not np.allclose(inner_model.offset, 0):
-                    return None
+                    return "models with offset or exposure"
 
-            # Reject if exposure is used
             if hasattr(inner_model, "exposure") and inner_model.exposure is not None:
                 if not np.allclose(inner_model.exposure, 0):
-                    return None
+                    return "models with offset or exposure"
 
-            # Map statsmodels family to our enum
             family_map = {
-                "Gaussian": Family.GAUSSIAN,
-                "Binomial": Family.BINOMIAL,
-                "Poisson": Family.POISSON,
-                "Gamma": Family.GAMMA,
-                "InverseGaussian": Family.INVERSE_GAUSSIAN,
+                "Gaussian": "gaussian",
+                "Binomial": "binomial",
+                "Poisson": "poisson",
+                "Gamma": "gamma",
             }
-
-            # Map statsmodels link to our enum
             link_map = {
-                "Identity": Link.IDENTITY,
-                "identity": Link.IDENTITY,
-                "Log": Link.LOG,
-                "log": Link.LOG,
-                "Logit": Link.LOGIT,
-                "logit": Link.LOGIT,
-                "Probit": Link.PROBIT,
-                "probit": Link.PROBIT,
-                "InversePower": Link.INVERSE,
-                "inverse_power": Link.INVERSE,
-                "InverseSquared": Link.INVERSE,
-                "inverse_squared": Link.INVERSE,
-                "Sqrt": Link.SQRT,
-                "sqrt": Link.SQRT,
-                "CLogLog": Link.CLOGLOG,
-                "cloglog": Link.CLOGLOG,
+                "Identity": "identity",
+                "identity": "identity",
+                "Log": "log",
+                "log": "log",
+                "Logit": "logit",
+                "logit": "logit",
+                "Probit": "probit",
+                "probit": "probit",
+                "InversePower": "inverse",
+                "inverse_power": "inverse",
+                "InverseSquared": "inverse",
+                "inverse_squared": "inverse",
+                "Sqrt": "sqrt",
+                "sqrt": "sqrt",
+                "CLogLog": "cloglog",
+                "cloglog": "cloglog",
             }
 
             family_name = inner_model.family.__class__.__name__
             link_name = inner_model.family.link.__class__.__name__
 
             if family_name not in family_map:
-                return None
+                return f"family '{family_name}'"
             if link_name not in link_map:
-                return None
+                return f"link '{link_name}'"
 
             return {
                 "model_type": "glm",
-                "family_type": int(family_map[family_name]),
-                "link_type": int(link_map[link_name]),
+                "family": family_map[family_name],
+                "link": link_map[link_name],
             }
 
         return None

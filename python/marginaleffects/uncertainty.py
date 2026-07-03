@@ -5,6 +5,12 @@ import polars as pl
 import scipy.stats as stats
 
 
+def _estimate_vector(x):
+    if isinstance(x, pl.DataFrame):
+        return x["estimate"].to_numpy()
+    return np.asarray(x, dtype=np.float64).reshape(-1)
+
+
 def get_jacobian(func, coefs, eps_vcov=None):
     original_shape = None
     if coefs.ndim == 2:
@@ -16,7 +22,7 @@ def get_jacobian(func, coefs, eps_vcov=None):
     else:
         coefs_flat = np.asarray(coefs)
 
-    baseline = func(coefs)["estimate"].to_numpy()
+    baseline = _estimate_vector(func(coefs))
     jac = np.empty((baseline.shape[0], len(coefs_flat)), dtype=np.float64)
     for i, xi in enumerate(coefs_flat):
         if eps_vcov is not None:
@@ -27,7 +33,7 @@ def get_jacobian(func, coefs, eps_vcov=None):
         dx[i] = dx[i] + h
         if original_shape is not None:
             dx = dx.reshape(original_shape, order="F")
-        jac[:, i] = (func(dx)["estimate"].to_numpy() - baseline) / h
+        jac[:, i] = (_estimate_vector(func(dx)) - baseline) / h
     return jac
 
 

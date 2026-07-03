@@ -1,3 +1,9 @@
+# 0.5.2
+
+Internal:
+
+* Refactored Python autodiff to capture reusable prediction/comparison plans, replay finite-difference Jacobians without rebuilding Polars pipelines, and lower supported plans through the shared composable JAX pipeline.
+
 # 0.5.1
 
 Bugs:

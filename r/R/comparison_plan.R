@@ -405,6 +405,7 @@ comparison_plan_build_frequentist <- function(
             out_idx = out_idx,
             scalar = length(con) == 1,
             uses_y = uses_y,
+            fun_key = if (isTRUE(cross)) variables[[1]][["fun_key"]] else variables[[tn]][["fun_key"]],
             fun = fun,
             args = args
         )

@@ -59,7 +59,9 @@ r-testplot: ## R: run plot tests
 	$(MAKE) r-testone testfile="inst/tinytest/test-plot_slopes.R"
 
 r-autodiff: r-uv ## R: run autodiff tests
-	$(MAKE) r-testone testfile="inst/tinytest/test-autodiff.R"
+	MARGINALEFFECTS_AUTODIFF=1 $(MAKE) r-testone testfile="inst/tinytest/test-autodiff.R"
+	MARGINALEFFECTS_AUTODIFF=1 $(MAKE) r-testone testfile="inst/tinytest/test-autodiff-pipeline.R"
+	MARGINALEFFECTS_AUTODIFF=1 $(MAKE) r-testseq
 
 r-uv: ## R: clean and rebuild uv environment
 	cd r && uv clean && rm -rf .venv && uv sync

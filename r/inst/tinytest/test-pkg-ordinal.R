@@ -107,7 +107,7 @@ expect_equivalent(subset(pre1, group == 4)$std.error, pre3$se.fit[, 1], tol = 1e
 dat <- transform(mtcars, cyl = factor(cyl))
 mod <- suppressWarnings(clm(cyl ~ vs + carb, scale = ~vs, nominal = ~carb, data = dat))
 dat$cyl <- NULL
-p1 <- predictions(mod)
+p1 <- suppressWarnings(predictions(mod))
 p2 <- suppressWarnings(predict(mod, newdata = dat, se.fit = TRUE))
 expect_equivalent(subset(p1, group == 4)$estimate, p2$fit[, 1])
 expect_equivalent(subset(p1, group == 4)$std.error, p2$se.fit[, 1], tol = 1e4)

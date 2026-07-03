@@ -123,7 +123,7 @@ hypothesis_compile_matrix <- function(hypothesis, cmp_skeleton) {
         term = terms[keep],
         estimate = apply(cmp_skeleton[["estimate"]])
     )
-    hyp <- list(kind = "matrix", apply = apply)
+    hyp <- list(kind = "matrix", apply = apply, H = H[, keep, drop = FALSE])
     list(cmp = cmp, hyp = hyp)
 }
 

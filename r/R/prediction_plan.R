@@ -85,6 +85,7 @@ prediction_plan_build <- function(
             keep = keep,
             agg = agg$agg,
             hyp = hyp$hyp,
+            has_na = anyNA(if (is.null(keep)) raw_estimate else raw_estimate[keep]),
             check = list(n_pred = length(raw_estimate))
         )
         baseline <- prediction_plan_apply(plan, raw_estimate)

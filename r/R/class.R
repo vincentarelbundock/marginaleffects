@@ -15,7 +15,6 @@ setClassUnion("characterOrNULL", c("character", "NULL"))
 #' @noRd
 setClassUnion("logicalOrNULL", c("logical", "NULL"))
 
-#' @keywords internal
 #' Internal S4 class for marginaleffects
 #'
 #' This S4 class is used internally to hold common arguments passed between
