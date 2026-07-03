@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.32.0.16
+Version: 0.32.0.17
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -210,6 +210,9 @@ Collate:
     'broom.R'
     'by.R'
     'class.R'
+    'estimate_plan.R'
+    'hypothesis_compile.R'
+    'comparison_plan.R'
     'comparisons.R'
     'components.R'
     'construct_call.R'
@@ -321,6 +324,7 @@ Collate:
     'plot_comparisons.R'
     'plot_predictions.R'
     'plot_slopes.R'
+    'prediction_plan.R'
     'predictions.R'
     'print.R'
     'prune.R'

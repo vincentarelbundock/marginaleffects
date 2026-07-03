@@ -47,12 +47,9 @@
 #'   - See the Examples section and the [datagrid()] documentation.
 #' + [subset()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = subset(treatment == 1)`
 #' + [dplyr::filter()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = filter(treatment == 1)`
-#' @param byfun A function such as `mean()` or `sum()` used to aggregate
-#' estimates within the subgroups defined by the `by` argument. `NULL` uses the
-#' `mean()` function. Must accept a numeric vector and return a single numeric
-#' value. This is sometimes used to take the sum or mean of predicted
-#' probabilities across outcome or predictor
-#' levels. See examples section.
+#' @param byfun Deprecated. A function such as `mean()` or `sum()` used to
+#' aggregate estimates within the subgroups defined by the `by` argument.
+#' Use the `hypothesis` argument for custom aggregations instead.
 #' @param type string indicates the type (scale) of the predictions used to
 #' compute contrasts or slopes. This can differ based on the model
 #' type, but will typically be a string such as: "response", "link", "probs",
@@ -169,7 +166,12 @@
 #' by <- data.frame(
 #'   by = c("4,6", "4,6", "8"),
 #'   group = as.character(c(4, 6, 8)))
-#' predictions(mod, newdata = "mean", byfun = sum, by = by)
+#' hyp <- function(x) {
+#'   out <- aggregate(estimate ~ by, merge(x, by, by = "group"), sum)
+#'   names(out)[1] <- "hypothesis"
+#'   out
+#' }
+#' predictions(mod, newdata = "mean", hypothesis = hyp)
 #'
 #' @inheritParams slopes
 #' @inheritParams comparisons
@@ -227,6 +229,11 @@ predictions <- function(
 
     dots <- list(...)
     sanity_dots(model = model, ...)
+
+    if (!is.null(byfun)) {
+        msg <- "`byfun` is deprecated and will be removed in a future release. Use the `hypothesis` argument for custom aggregations instead."
+        warn_once(msg, "marginaleffects_byfun_deprecated")
+    }
 
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {
@@ -394,7 +401,8 @@ predictions <- function(
         )
 
         args <- utils::modifyList(args, dots)
-        tmp <- do_call(get_predictions, args)
+        built <- do_call(prediction_plan_build, args)
+        tmp <- built$cmp
 
         # hypothesis formula names are attached in by() in get_predictions()
         mfx@variable_names_by <- unique(c(
@@ -427,8 +435,9 @@ predictions <- function(
 
             # Delta method for standard errors
             if (!"std.error" %in% colnames(tmp) && is.null(mfx@draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
-                fun <- function(...) {
-                    get_predictions(..., verbose = FALSE)$estimate
+                fun <- function(model_perturbed, ...) {
+                    pred <- prediction_plan_predict(built$plan, model_perturbed, ...)
+                    prediction_plan_apply(built$plan, pred)
                 }
                 args <- list(
                     mfx = mfx,

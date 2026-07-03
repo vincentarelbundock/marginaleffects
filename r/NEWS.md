@@ -12,6 +12,8 @@ New:
 
 Performance:
 
+* Delta-method standard errors for `comparisons()`, `avg_comparisons()`, `slopes()`, `avg_slopes()`, `predictions()`, and `avg_predictions()` now reuse a plan built from the baseline estimates instead of rebuilding loop-invariant result tables for every coefficient perturbation.
+* Grouped prediction standard errors may differ from previous development builds at about 1e-7 due to the new plan-based numeric aggregation kernel.
 * Large speedup (3x and more on large datasets) for `comparisons()` and `slopes()`: predictions returned as named vectors no longer trigger expensive row-name duplicate checks; several unnecessary full-table copies were removed from the internal comparison pipeline; and the standard error machinery no longer merges covariate columns back into intermediate results it only uses for the `estimate` column.
 * Persistent settings are now cached in memory, avoiding repeated filesystem access in hot code paths (e.g., once per call for autodiff checks and once per estimate for internal comparison bookkeeping).
 * Bayesian comparisons: row indexing and subsetting are now computed once per term instead of once per posterior draw column, which speeds up `comparisons()` and `slopes()` for models with many draws.
@@ -19,6 +21,7 @@ Performance:
 
 Bug fixes:
 
+* The `byfun` argument to `predictions()` and `avg_predictions()` is deprecated. Use `hypothesis` for custom aggregations.
 * `by` aggregation with posterior or bootstrap draws no longer flattens the draws matrix when a `by` data frame omits some term/group combinations.
 * `predictions()` now assigns the correct `rowid`, `type`, and `estimate` column names when model predictions are returned as a bare vector.
 * `average_draws()` now supports `byfun` when no grouping columns are present.

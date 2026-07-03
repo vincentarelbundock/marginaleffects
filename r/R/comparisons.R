@@ -455,7 +455,8 @@ comparisons <- function(
             hypothesis = mfx@hypothesis
         )
         args <- utils::modifyList(args, dots)
-        cmp <- do_call(get_comparisons, args)
+        built <- do_call(comparison_plan_build, args)
+        cmp <- built$cmp
 
         # hypothesis formula names are attached in by() in get_predictions()
         mfx@variable_names_by <- unique(c(
@@ -472,8 +473,9 @@ comparisons <- function(
 
             idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
             idx <- cmp[, (idx), drop = FALSE]
-            fun <- function(...) {
-                get_comparisons(..., verbose = FALSE, payload = FALSE)$estimate
+            fun <- function(model_perturbed, ...) {
+                preds <- comparison_plan_predict(built$plan, model_perturbed, ...)
+                comparison_plan_apply(built$plan, preds$hi, preds$lo, preds$or)
             }
             args <- list(
                 mfx = mfx,

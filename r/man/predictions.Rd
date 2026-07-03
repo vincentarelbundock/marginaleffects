@@ -128,12 +128,9 @@ first entry in the error message is used by default. See the Type section in the
 \item For more complex aggregations, you can use the \code{FUN} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
 }}
 
-\item{byfun}{A function such as \code{mean()} or \code{sum()} used to aggregate
-estimates within the subgroups defined by the \code{by} argument. \code{NULL} uses the
-\code{mean()} function. Must accept a numeric vector and return a single numeric
-value. This is sometimes used to take the sum or mean of predicted
-probabilities across outcome or predictor
-levels. See examples section.}
+\item{byfun}{Deprecated. A function such as \code{mean()} or \code{sum()} used to
+aggregate estimates within the subgroups defined by the \code{by} argument.
+Use the \code{hypothesis} argument for custom aggregations instead.}
 
 \item{wts}{logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not unit-level estimates. See \code{?weighted.mean}
 \itemize{
@@ -655,7 +652,12 @@ mod <- multinom(factor(cyl) ~ mpg + am, data = mtcars, trace = FALSE)
 by <- data.frame(
   by = c("4,6", "4,6", "8"),
   group = as.character(c(4, 6, 8)))
-predictions(mod, newdata = "mean", byfun = sum, by = by)
+hyp <- function(x) {
+  out <- aggregate(estimate ~ by, merge(x, by, by = "group"), sum)
+  names(out)[1] <- "hypothesis"
+  out
+}
+predictions(mod, newdata = "mean", hypothesis = hyp)
 \dontshow{\}) # examplesIf}
 }
 \references{

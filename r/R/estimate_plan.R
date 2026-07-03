@@ -1,0 +1,115 @@
+estimate_plan_predict_dots <- function(base, extra = list()) {
+    out <- utils::modifyList(base %||% list(), extra %||% list())
+    drop <- c(
+        "mfx", "model", "model_perturbed", "hypothesis", "hi", "lo",
+        "original", "by", "byfun", "variables", "cross", "estimates",
+        "vcov", "FUN", "index", "numderiv", "J", "newdata", "type",
+        "comparison", "calling_function"
+    )
+    out[setdiff(names(out), drop)]
+}
+
+estimate_plan_record_agg <- function(
+    estimates,
+    newdata,
+    by,
+    byfun = NULL,
+    verbose = TRUE,
+    ...) {
+    if (is.null(by) || isFALSE(by) || nrow(estimates) <= 1) {
+        return(list(out = estimates, agg = NULL))
+    }
+
+    estimates <- data.table::copy(estimates)
+    plan_id <- ".marginaleffects_plan_est_id"
+    while (plan_id %in% colnames(estimates)) {
+        plan_id <- paste0(".", plan_id)
+    }
+    estimates[, (plan_id) := seq_len(.N)]
+
+    missing <- setdiff(setdiff(colnames(by), "by"), colnames(estimates))
+    if (length(missing) > 0) {
+        idx <- intersect(c("rowid", "rowidcf", missing), colnames(newdata))
+        estimates <- merge(estimates, newdata[, idx], sort = FALSE, all.x = TRUE)
+    }
+
+    if (isTRUE(by)) {
+        regex <- "^term$|^group$|^contrast$|^contrast_"
+        bycols <- grep(regex, colnames(estimates), value = TRUE)
+    } else if (isTRUE(checkmate::check_character(by))) {
+        bycols <- by
+    } else if (isTRUE(checkmate::check_data_frame(by))) {
+        idx <- setdiff(intersect(colnames(estimates), colnames(by)), "by")
+        for (v in colnames(by)) {
+            if (isTRUE(is.character(estimates[[v]])) && isTRUE(is.numeric(by[[v]]))) {
+                by[[v]] <- as.character(by[[v]])
+            } else if (isTRUE(is.numeric(estimates[[v]])) && isTRUE(is.character(by[[v]]))) {
+                by[[v]] <- as.numeric(by[[v]])
+            }
+        }
+        estimates[by, by := by, on = idx]
+        bycols <- "by"
+    }
+
+    if ("by" %in% colnames(estimates) && anyNA(estimates[["by"]])) {
+        msg <- insight::format_message(
+            "The `by` data.frame does not cover all combinations of response levels and/or predictors. Some estimates will not be included in the aggregation."
+        )
+        if (isTRUE(verbose)) warning(msg, call. = FALSE)
+        estimates <- estimates[!is.na(by), drop = FALSE]
+    }
+
+    bycols <- intersect(unique(c("term", bycols)), colnames(estimates))
+    weighted <- "marginaleffects_wts_internal" %in% colnames(newdata)
+
+    if (!is.null(byfun)) {
+        out <- estimates[, .(estimate = byfun(estimate)), keyby = bycols]
+    } else if (isTRUE(weighted)) {
+        out <- estimates[,
+            .(estimate = stats::weighted.mean(
+                estimate,
+                marginaleffects_wts_internal,
+                na.rm = TRUE
+            )),
+            keyby = bycols
+        ]
+    } else {
+        out <- estimates[, .(estimate = mean(estimate, na.rm = TRUE)), keyby = bycols]
+    }
+
+    groups <- estimates[,
+        .(
+            idx = list(get(plan_id)),
+            w = list(if (isTRUE(weighted)) marginaleffects_wts_internal else NULL)
+        ),
+        keyby = bycols
+    ][["idx"]]
+
+    weights <- estimates[,
+        .(w = list(if (isTRUE(weighted)) marginaleffects_wts_internal else NULL)),
+        keyby = bycols
+    ][["w"]]
+
+    groups <- lapply(seq_along(groups), function(i) {
+        list(idx = groups[[i]], w = weights[[i]])
+    })
+
+    agg <- list(groups = groups, fun = byfun)
+    return(list(out = out, agg = agg))
+}
+
+estimate_plan_apply_agg <- function(agg, est) {
+    out <- numeric(length(agg$groups))
+    for (j in seq_along(agg$groups)) {
+        gr <- agg$groups[[j]]
+        e <- est[gr$idx]
+        out[j] <- if (!is.null(agg$fun)) {
+            agg$fun(e)
+        } else if (!is.null(gr$w)) {
+            stats::weighted.mean(e, gr$w, na.rm = TRUE)
+        } else {
+            mean(e, na.rm = TRUE)
+        }
+    }
+    out
+}
