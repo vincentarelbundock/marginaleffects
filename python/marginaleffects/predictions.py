@@ -80,25 +80,25 @@ def _predictions_jax(
     metadata = None
 
     if by is not False:
+        positional_newdata = newdata.with_columns(
+            pl.Series(range(newdata.height), dtype=pl.Int32).alias("rowid")
+        )
         dummy = pl.DataFrame(
             {
-                "rowid": newdata["rowid"],
+                "rowid": positional_newdata["rowid"],
                 "estimate": np.zeros(newdata.height),
             }
         )
         grouped, row_groups = get_by_groups(
-            model, dummy, newdata=newdata, by=by, wts=wts
+            model, dummy, newdata=positional_newdata, by=by, wts=wts
         )
         if not row_groups:
             return None, None
 
-        rowid_lookup = {
-            int(rid): idx for idx, rid in enumerate(newdata["rowid"].to_list())
-        }
         groups = np.empty(newdata.height, dtype=np.int32)
         for group_id, row_group in enumerate(row_groups):
             for rowid in row_group:
-                groups[rowid_lookup[int(rowid)]] = group_id
+                groups[int(rowid)] = group_id
         num_groups = len(row_groups)
         metadata = grouped.drop(
             [col for col in ("estimate", "std_error") if col in grouped.columns]
