@@ -178,8 +178,18 @@ by <- data.frame(
     group = as.character(c(4, 6, 8))
 )
 p1 <- predictions(mod, newdata = "mean")
-p2 <- predictions(mod, newdata = "mean", byfun = sum, by = by)
-p3 <- predictions(mod, newdata = "mean", byfun = mean, by = by)
+hyp_sum <- function(x) {
+    out <- aggregate(estimate ~ by, merge(x, by, by = "group"), sum)
+    names(out)[1] <- "hypothesis"
+    out
+}
+hyp_mean <- function(x) {
+    out <- aggregate(estimate ~ by, merge(x, by, by = "group"), mean)
+    names(out)[1] <- "hypothesis"
+    out
+}
+p2 <- predictions(mod, newdata = "mean", hypothesis = hyp_sum)
+p3 <- predictions(mod, newdata = "mean", hypothesis = hyp_mean)
 expect_equivalent(nrow(p1), 3)
 expect_equivalent(nrow(p2), 2)
 expect_equivalent(nrow(p3), 2)

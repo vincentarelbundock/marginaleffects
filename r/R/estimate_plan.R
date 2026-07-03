@@ -2,7 +2,7 @@ estimate_plan_predict_dots <- function(base, extra = list()) {
     out <- utils::modifyList(base %||% list(), extra %||% list())
     drop <- c(
         "mfx", "model", "model_perturbed", "hypothesis", "hi", "lo",
-        "original", "by", "byfun", "variables", "cross", "estimates",
+        "original", "by", "variables", "cross", "estimates",
         "vcov", "FUN", "index", "numderiv", "J", "newdata", "type",
         "comparison", "calling_function"
     )
@@ -13,7 +13,6 @@ estimate_plan_record_agg <- function(
     estimates,
     newdata,
     by,
-    byfun = NULL,
     verbose = TRUE,
     ...) {
     if (is.null(by) || isFALSE(by) || nrow(estimates) <= 1) {
@@ -62,9 +61,7 @@ estimate_plan_record_agg <- function(
     bycols <- intersect(unique(c("term", bycols)), colnames(estimates))
     weighted <- "marginaleffects_wts_internal" %in% colnames(newdata)
 
-    if (!is.null(byfun)) {
-        out <- estimates[, .(estimate = byfun(estimate)), keyby = bycols]
-    } else if (isTRUE(weighted)) {
+    if (isTRUE(weighted)) {
         out <- estimates[,
             .(estimate = stats::weighted.mean(
                 estimate,
@@ -94,7 +91,7 @@ estimate_plan_record_agg <- function(
         list(idx = groups[[i]], w = weights[[i]])
     })
 
-    agg <- list(groups = groups, fun = byfun)
+    agg <- list(groups = groups)
     return(list(out = out, agg = agg))
 }
 
@@ -103,9 +100,7 @@ estimate_plan_apply_agg <- function(agg, est) {
     for (j in seq_along(agg$groups)) {
         gr <- agg$groups[[j]]
         e <- est[gr$idx]
-        out[j] <- if (!is.null(agg$fun)) {
-            agg$fun(e)
-        } else if (!is.null(gr$w)) {
+        out[j] <- if (!is.null(gr$w)) {
             stats::weighted.mean(e, gr$w, na.rm = TRUE)
         } else {
             mean(e, na.rm = TRUE)

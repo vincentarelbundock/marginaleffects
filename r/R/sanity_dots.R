@@ -1,8 +1,8 @@
-# This function is very strict.
 sanity_dots <- function(model, calling_function = NULL, ...) {
     if ("p_adjust" %in% ...names()) stop_deprecate("p_adjust", "inferences()")
     if ("transform_post" %in% ...names()) stop_deprecate("transform_post", "transform")
     if ("interaction" %in% ...names()) stop("The `interaction` argument has been removed. Use `cross` instead.", call. = FALSE)
+    if ("byfun" %in% ...names()) stop_deprecate("byfun", "hypothesis")
 
     if (identical(calling_function, "slopes")) {
         if ("comparison" %in% ...names()) stop_deprecate("comparison")

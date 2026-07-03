@@ -3,7 +3,6 @@ get_by <- function(
     draws,
     newdata,
     by,
-    byfun = NULL,
     verbose = TRUE,
     ...) {
     if (is.null(by) || isFALSE(by) || nrow(estimates) <= 1) {
@@ -56,18 +55,12 @@ get_by <- function(
         estimates <- average_draws(
             data = estimates,
             index = bycols,
-            draws = draws,
-            byfun = byfun
+            draws = draws
         )
 
         # frequentist
     } else {
-        if (!is.null(byfun)) {
-            estimates <- estimates[,
-                .(estimate = byfun(estimate)),
-                keyby = bycols
-            ]
-        } else if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
+        if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
             estimates <- estimates[,
                 .(
                     estimate = stats::weighted.mean(

@@ -21,6 +21,64 @@ pred <- avg_predictions(
 expect_equal(nrow(pred), 1)
 expect_true("std.error" %in% colnames(pred))
 
+cmp_skeleton <- data.table::data.table(
+    term = "term",
+    group = letters[1:4],
+    segment = c("x", "x", "y", "y"),
+    estimate = c(1, 2, 4, 8)
+)
+
+form <- marginaleffects:::hypothesis_compile(~pairwise, cmp_skeleton)
+expect_equal(form$hyp$kind, "formula")
+expect_equivalent(
+    form$hyp$apply(c(2, 4, 8, 16)),
+    marginaleffects:::hypothesis_formula(
+        data.table::data.table(
+            term = "term",
+            group = letters[1:4],
+            estimate = c(2, 4, 8, 16)
+        ),
+        hypothesis = ~pairwise,
+        newdata = cmp_skeleton,
+        by = NULL
+    )$estimate
+)
+
+form <- marginaleffects:::hypothesis_compile(ratio ~ sequential | segment, cmp_skeleton, newdata = cmp_skeleton)
+expect_equal(form$hyp$kind, "formula")
+expect_equivalent(
+    form$hyp$apply(c(2, 4, 8, 16)),
+    marginaleffects:::hypothesis_formula(
+        data.table::data.table(
+            term = "term",
+            group = letters[1:4],
+            segment = c("x", "x", "y", "y"),
+            estimate = c(2, 4, 8, 16)
+        ),
+        hypothesis = ratio ~ sequential | segment,
+        newdata = cmp_skeleton,
+        by = NULL
+    )$estimate
+)
+
+custom_formula_fun <- function(x) c(first = x[1], total = sum(x))
+form <- marginaleffects:::hypothesis_compile(~ I(custom_formula_fun(x)) | segment, cmp_skeleton, newdata = cmp_skeleton)
+expect_equal(form$hyp$kind, "formula")
+expect_equivalent(
+    form$hyp$apply(c(2, 4, 8, 16)),
+    marginaleffects:::hypothesis_formula(
+        data.table::data.table(
+            term = "term",
+            group = letters[1:4],
+            segment = c("x", "x", "y", "y"),
+            estimate = c(2, 4, 8, 16)
+        ),
+        hypothesis = ~ I(custom_formula_fun(x)) | segment,
+        newdata = cmp_skeleton,
+        by = NULL
+    )$estimate
+)
+
 local({
     assign("prediction_plan_string_helper", function(x) x + 1, envir = .GlobalEnv)
     on.exit(rm("prediction_plan_string_helper", envir = .GlobalEnv), add = TRUE)
@@ -37,26 +95,14 @@ avg <- avg_predictions(mod, by = "cyl")
 expect_equal(nrow(avg), 3)
 expect_true("std.error" %in% colnames(avg))
 
-byfun_sum <- suppressWarnings(avg_predictions(mod, by = "cyl", byfun = sum))
-hyp_sum <- function(x) {
-    data.frame(
-        hypothesis = sort(unique(x$cyl)),
-        estimate = as.numeric(tapply(x$estimate, x$cyl, sum))
-    )
-}
-hyp_sum <- predictions(mod, hypothesis = hyp_sum)
-expect_equivalent(byfun_sum$estimate, hyp_sum$estimate)
-expect_equivalent(byfun_sum$std.error, hyp_sum$std.error, tolerance = 1e-7)
-
-options(
-    marginaleffects_byfun_deprecated = TRUE,
-    marginaleffects_safe = TRUE
+expect_error(
+    predictions(mod, by = "cyl", byfun = sum),
+    pattern = "`byfun`.*not supported.*`hypothesis`"
 )
-expect_warning(
+expect_error(
     avg_predictions(mod, by = "cyl", byfun = sum),
-    pattern = "`byfun` is deprecated"
+    pattern = "`byfun`.*not supported.*`hypothesis`"
 )
-options(marginaleffects_safe = FALSE)
 
 surv <- survival::survreg(
     survival::Surv(time, status) ~ ph.ecog + age + sex,

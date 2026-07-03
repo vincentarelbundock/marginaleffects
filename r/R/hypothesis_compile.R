@@ -20,6 +20,14 @@ hypothesis_compile <- function(hypothesis, cmp_skeleton, by = NULL, newdata = NU
         return(hypothesis_compile_string(hypothesis, cmp_skeleton))
     }
 
+    if (isTRUE(checkmate::check_formula(hypothesis))) {
+        form <- sanitize_hypothesis_formula(hypothesis)
+        if (isTRUE(form$lhs == "arbitrary_function")) {
+            return(hypothesis_compile_wrapper(hypothesis, cmp_skeleton, by, newdata, mfx))
+        }
+        return(hypothesis_compile_formula(hypothesis, cmp_skeleton, by, newdata, mfx))
+    }
+
     hypothesis_compile_wrapper(hypothesis, cmp_skeleton, by, newdata, mfx)
 }
 
@@ -38,10 +46,58 @@ hypothesis_compile_wrapper <- function(hypothesis, cmp_skeleton, by, newdata, mf
         )
     }
     cmp <- apply_df(skeleton[["estimate"]])
+    if (!isTRUE(checkmate::check_numeric(cmp[["estimate"]]))) {
+        msg <- "The `hypothesis` argument must produce numeric estimates."
+        stop(msg, call. = FALSE)
+    }
     hyp <- list(
         kind = "wrapper",
         apply = function(est) apply_df(est)[["estimate"]]
     )
+    attr(hyp, "hypothesis_function_by") <- attr(cmp, "hypothesis_function_by")
+    list(cmp = cmp, hyp = hyp)
+}
+
+hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mfx) {
+    form <- sanitize_hypothesis_formula(hypothesis)
+    if (isTRUE(form$lhs == "arbitrary_function")) {
+        return(hypothesis_compile_wrapper(hypothesis, cmp_skeleton, by, newdata, mfx))
+    }
+
+    cmp <- hypothesis_formula(
+        data.table::copy(cmp_skeleton),
+        hypothesis = hypothesis,
+        newdata = newdata,
+        by = by,
+        mfx = mfx
+    )
+
+    fun_comparison <- hypothesis_formula_list[[form$rhs]][[form$lhs]]$comparison
+
+    x <- data.table::as.data.table(data.table::copy(cmp_skeleton))
+    groupval <- hypothesis_formula_groups(x, newdata, form$group)
+
+    if (is.null(groupval)) {
+        groups <- list(seq_len(nrow(x)))
+    } else {
+        combined <- data.table::data.table(marginaleffects_formula_idx = seq_len(nrow(x)))
+        combined <- cbind(combined, groupval)
+        data.table::setDT(combined)
+        groups <- combined[
+            ,
+            .(idx = list(marginaleffects_formula_idx)),
+            keyby = groupval
+        ][["idx"]]
+    }
+
+    apply <- function(est) {
+        unlist(
+            lapply(groups, function(idx) fun_comparison(est[idx])),
+            use.names = FALSE
+        )
+    }
+
+    hyp <- list(kind = "formula", apply = apply)
     attr(hyp, "hypothesis_function_by") <- attr(cmp, "hypothesis_function_by")
     list(cmp = cmp, hyp = hyp)
 }

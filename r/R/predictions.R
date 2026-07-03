@@ -47,9 +47,6 @@
 #'   - See the Examples section and the [datagrid()] documentation.
 #' + [subset()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = subset(treatment == 1)`
 #' + [dplyr::filter()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = filter(treatment == 1)`
-#' @param byfun Deprecated. A function such as `mean()` or `sum()` used to
-#' aggregate estimates within the subgroups defined by the `by` argument.
-#' Use the `hypothesis` argument for custom aggregations instead.
 #' @param type string indicates the type (scale) of the predictions used to
 #' compute contrasts or slopes. This can differ based on the model
 #' type, but will typically be a string such as: "response", "link", "probs",
@@ -184,7 +181,6 @@ predictions <- function(
     conf_level = 0.95,
     type = NULL,
     by = FALSE,
-    byfun = NULL,
     wts = FALSE,
     transform = NULL,
     hypothesis = NULL,
@@ -209,14 +205,13 @@ predictions <- function(
             call = call,
             model = model,
             modeldata = modeldata,
-            by = by,
-            byfun = byfun
+            by = by
         )
     }
 
     # newdata
     scall <- rlang::enquo(newdata)
-    mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, byfun = byfun)
+    mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts)
 
     # inferences() dispatch
     methods <- c("rsample", "boot", "fwb", "simulation")
@@ -229,11 +224,6 @@ predictions <- function(
 
     dots <- list(...)
     sanity_dots(model = model, ...)
-
-    if (!is.null(byfun)) {
-        msg <- "`byfun` is deprecated and will be removed in a future release. Use the `hypothesis` argument for custom aggregations instead."
-        warn_once(msg, "marginaleffects_byfun_deprecated")
-    }
 
     # multiple imputation
     if (inherits(model, c("mira", "amest"))) {
@@ -396,8 +386,7 @@ predictions <- function(
             mfx = mfx,
             type = if (link_to_response) "link" else mfx@type,
             hypothesis = mfx@hypothesis,
-            by = by,
-            byfun = byfun
+            by = by
         )
 
         args <- utils::modifyList(args, dots)
@@ -549,7 +538,6 @@ avg_predictions <- function(
     conf_level = 0.95,
     type = NULL,
     by = TRUE,
-    byfun = NULL,
     wts = FALSE,
     transform = NULL,
     hypothesis = NULL,

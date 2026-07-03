@@ -3,7 +3,6 @@ prediction_plan_build <- function(
     type,
     model_perturbed = NULL,
     by = NULL,
-    byfun = NULL,
     hypothesis = NULL,
     verbose = TRUE,
     hi = NULL,
@@ -63,7 +62,6 @@ prediction_plan_build <- function(
             out,
             newdata = newdata,
             by = by,
-            byfun = byfun,
             verbose = verbose,
             ...
         )
@@ -99,7 +97,6 @@ prediction_plan_build <- function(
             draws = draws,
             newdata = newdata,
             by = by,
-            byfun = byfun,
             verbose = verbose,
             ...
         )

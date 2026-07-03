@@ -213,8 +213,7 @@ add_newdata <- function(
     by = FALSE,
     wts = FALSE,
     cross = NULL,
-    comparison = NULL,
-    byfun = NULL) {
+    comparison = NULL) {
     # For mice objects, defer all processing to process_imputation()
     if (inherits(mfx@model, c("mira", "amest"))) {
         # Store the raw newdata (could be a call) for later processing
@@ -295,8 +294,7 @@ dedup_newdata <- function(
     by,
     wts,
     comparison = "difference",
-    cross = FALSE,
-    byfun = NULL) {
+    cross = FALSE) {
     # init
     model <- mfx@model
 
@@ -319,7 +317,6 @@ dedup_newdata <- function(
         !flag &&
             (isFALSE(by) || # weights only make sense when we are marginalizing
                 !isFALSE(wts) ||
-                !is.null(byfun) ||
                 !isFALSE(cross) ||
                 isFALSE(getOption("marginaleffects_dedup", default = TRUE)))
     ) {

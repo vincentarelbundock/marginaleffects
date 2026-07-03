@@ -20,6 +20,23 @@ cmp <- comparisons(
 expect_equal(nrow(cmp), nrow(mtcars))
 expect_true("std.error" %in% colnames(cmp))
 
+expect_error(
+    comparisons(mod, byfun = sum),
+    pattern = "`byfun`.*not supported.*`hypothesis`"
+)
+expect_error(
+    avg_comparisons(mod, byfun = sum),
+    pattern = "`byfun`.*not supported.*`hypothesis`"
+)
+expect_error(
+    slopes(mod, byfun = sum),
+    pattern = "`byfun`.*not supported.*`hypothesis`"
+)
+expect_error(
+    avg_slopes(mod, byfun = sum),
+    pattern = "`byfun`.*not supported.*`hypothesis`"
+)
+
 cmp_string <- comparisons(
     mod,
     variables = c("hp", "wt"),

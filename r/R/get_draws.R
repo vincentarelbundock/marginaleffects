@@ -81,7 +81,7 @@ get_draws <- function(x, shape = "long") {
 }
 
 
-average_draws <- function(data, index, draws, byfun = NULL) {
+average_draws <- function(data, index, draws) {
     insight::check_if_installed("collapse", minimum_version = "2.0.18")
 
     w <- data[["marginaleffects_wts_internal"]]
@@ -99,39 +99,22 @@ average_draws <- function(data, index, draws, byfun = NULL) {
         }
         g <- collapse::GRP(data, by = index)
 
-        if (is.null(byfun)) {
-            draws <- collapse::fmean(
-                draws,
-                g = g,
-                w = w,
-                drop = FALSE
-            )
-        } else {
-            draws <- collapse::BY(
-                draws,
-                g = g,
-                FUN = byfun,
-                drop = FALSE
-            )
-        }
+        draws <- collapse::fmean(
+            draws,
+            g = g,
+            w = w,
+            drop = FALSE
+        )
         out <- data.table(
             g[["groups"]],
             average = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian)
         )
     } else {
-        if (is.null(byfun)) {
-            draws <- collapse::fmean(
-                draws,
-                w = w,
-                drop = FALSE
-            )
-        } else {
-            draws <- matrix(
-                collapse::dapply(draws, MARGIN = 2, FUN = byfun),
-                nrow = 1,
-                dimnames = list(NULL, colnames(draws))
-            )
-        }
+        draws <- collapse::fmean(
+            draws,
+            w = w,
+            drop = FALSE
+        )
         out <- data.table(
             average = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian)
         )

@@ -7,7 +7,6 @@ comparison_plan_build <- function(
     hi,
     model_perturbed = NULL,
     by = NULL,
-    byfun = NULL,
     hypothesis = NULL,
     cross = FALSE,
     verbose = TRUE,

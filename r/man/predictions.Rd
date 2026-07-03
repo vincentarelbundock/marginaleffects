@@ -13,7 +13,6 @@ predictions(
   conf_level = 0.95,
   type = NULL,
   by = FALSE,
-  byfun = NULL,
   wts = FALSE,
   transform = NULL,
   hypothesis = NULL,
@@ -31,7 +30,6 @@ avg_predictions(
   conf_level = 0.95,
   type = NULL,
   by = TRUE,
-  byfun = NULL,
   wts = FALSE,
   transform = NULL,
   hypothesis = NULL,
@@ -127,10 +125,6 @@ first entry in the error message is used by default. See the Type section in the
 \item See examples below.
 \item For more complex aggregations, you can use the \code{FUN} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
 }}
-
-\item{byfun}{Deprecated. A function such as \code{mean()} or \code{sum()} used to
-aggregate estimates within the subgroups defined by the \code{by} argument.
-Use the \code{hypothesis} argument for custom aggregations instead.}
 
 \item{wts}{logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not unit-level estimates. See \code{?weighted.mean}
 \itemize{

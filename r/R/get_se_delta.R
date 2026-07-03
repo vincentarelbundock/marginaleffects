@@ -46,7 +46,6 @@ get_se_delta <- function(
     calling_function = NULL,
     comparison = NULL,
     by = NULL,
-    byfun = NULL,
     hi = NULL,
     lo = NULL,
     original = NULL,
@@ -58,7 +57,6 @@ get_se_delta <- function(
         calling_function <- if (is.null(calling_function)) mfx@calling_function else calling_function
         comparison <- if (is.null(comparison)) mfx@comparison else comparison
         by <- if (is.null(by)) mfx@by else by
-        byfun <- if (is.null(byfun)) mfx@byfun else byfun
     }
     # delta method does not work for these models
     bad <- c("brmsfit", "stanreg", "bart")
@@ -100,7 +98,6 @@ get_se_delta <- function(
             hypothesis = hypothesis,
             type = type,
             by = by,
-            byfun = byfun,
             hi = hi,
             lo = lo,
             original = original,
@@ -134,8 +131,7 @@ get_se_delta <- function(
             hi = hi,
             lo = lo,
             original = original,
-            by = by,
-            byfun = byfun
+            by = by
         )
         args <- c(args, list(...))
         if (inherits(model_perturbed, "gamlss")) {
