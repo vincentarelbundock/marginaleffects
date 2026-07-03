@@ -1,3 +1,5 @@
+from collections import defaultdict, deque
+
 import numpy as np
 import polars as pl
 
@@ -25,6 +27,9 @@ def _prepare_newdata(newdata, modeldata, variables):
         normalized = variables
     else:
         raise TypeError("`variables` argument must be a dictionary")
+
+    if "rowid" in newdata.columns and "rowidcf" not in newdata.columns:
+        newdata = newdata.rename({"rowid": "rowidcf"})
 
     for variable, spec in normalized.items():
         if callable(spec):
@@ -61,7 +66,73 @@ def _prepare_newdata(newdata, modeldata, variables):
         newdata = newdata.join(pl.DataFrame({variable: val}), how="cross")
         newdata = newdata.sort(variable)
 
+    if "rowidcf" in newdata.columns:
+        newdata = newdata.with_columns(
+            pl.Series(range(newdata.height), dtype=pl.Int32).alias("rowid")
+        )
+
     return newdata, list(normalized.keys())
+
+
+def _prediction_group_info(newdata, by):
+    id_col = "rowidcf" if "rowidcf" in newdata.columns else "rowid"
+
+    if (
+        isinstance(by, list)
+        and len(by) == 1
+        and by[0] == "group"
+        and "group" not in newdata.columns
+    ):
+        return None, [tuple(newdata[id_col].to_list())], id_col
+
+    by_cols = list(by) if isinstance(by, list) else []
+    if "group" in newdata.columns and "group" not in by_cols:
+        by_cols = ["group"] + by_cols
+    by_cols = list(dict.fromkeys(col for col in by_cols if col in newdata.columns))
+
+    if not by_cols:
+        row_groups = [tuple([rid]) for rid in newdata[id_col].to_list()]
+        return newdata.drop("rowid"), row_groups, id_col
+
+    grouped = (
+        newdata.with_columns(pl.lit(0.0).alias("estimate"))
+        .group_by(by_cols, maintain_order=True)
+        .agg(
+            pl.col("estimate").mean().alias("estimate"),
+            pl.col(id_col).alias("_rowids"),
+        )
+    )
+
+    should_sort = any(
+        grouped[col].dtype == pl.Enum for col in by_cols if col in grouped.columns
+    )
+    if should_sort:
+        grouped = grouped.sort(by_cols)
+
+    row_groups = [
+        tuple(row_id for row_id in row_ids) for row_ids in grouped["_rowids"].to_list()
+    ]
+    metadata = grouped.drop(["estimate", "_rowids"])
+    return metadata, row_groups, id_col
+
+
+def _groups_from_row_groups(newdata, row_groups, id_col):
+    positions = defaultdict(deque)
+    for idx, row_id in enumerate(newdata[id_col].to_list()):
+        positions[int(row_id)].append(idx)
+
+    groups = np.full(newdata.height, -1, dtype=np.int32)
+    for group_id, row_group in enumerate(row_groups):
+        for row_id in row_group:
+            row_positions = positions[int(row_id)]
+            if not row_positions:
+                raise ValueError("Mismatch between group rows and prediction rows.")
+            groups[row_positions.popleft()] = group_id
+
+    if np.any(groups < 0):
+        raise ValueError("Failed to assign all prediction rows to groups.")
+
+    return groups
 
 
 def _predictions_jax(
@@ -80,29 +151,12 @@ def _predictions_jax(
     metadata = None
 
     if by is not False:
-        positional_newdata = newdata.with_columns(
-            pl.Series(range(newdata.height), dtype=pl.Int32).alias("rowid")
-        )
-        dummy = pl.DataFrame(
-            {
-                "rowid": positional_newdata["rowid"],
-                "estimate": np.zeros(newdata.height),
-            }
-        )
-        grouped, row_groups = get_by_groups(
-            model, dummy, newdata=positional_newdata, by=by, wts=wts
-        )
+        metadata, row_groups, id_col = _prediction_group_info(newdata, by)
         if not row_groups:
             return None, None
 
-        groups = np.empty(newdata.height, dtype=np.int32)
-        for group_id, row_group in enumerate(row_groups):
-            for rowid in row_group:
-                groups[int(rowid)] = group_id
+        groups = _groups_from_row_groups(newdata, row_groups, id_col)
         num_groups = len(row_groups)
-        metadata = grouped.drop(
-            [col for col in ("estimate", "std_error") if col in grouped.columns]
-        )
 
     jax_result = try_jax_predictions(
         model=model,
@@ -121,10 +175,15 @@ def _predictions_jax(
     try:
         if jax_result.get("aggregation") == "grouped":
             J = np.atleast_2d(jax_result["jacobian"])
-            out = metadata.with_columns(
-                pl.Series(np.atleast_1d(jax_result["estimate"])).alias("estimate"),
-                pl.Series(np.atleast_1d(jax_result["std_error"])).alias("std_error"),
-            )
+            estimate = np.atleast_1d(jax_result["estimate"])
+            std_error = np.atleast_1d(jax_result["std_error"])
+            if metadata is None:
+                out = pl.DataFrame({"estimate": estimate, "std_error": std_error})
+            else:
+                out = metadata.with_columns(
+                    pl.Series(estimate).alias("estimate"),
+                    pl.Series(std_error).alias("std_error"),
+                )
             return out, J
 
         base = pl.DataFrame(
