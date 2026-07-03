@@ -21,10 +21,6 @@ hypothesis_compile <- function(hypothesis, cmp_skeleton, by = NULL, newdata = NU
     }
 
     if (isTRUE(checkmate::check_formula(hypothesis))) {
-        form <- sanitize_hypothesis_formula(hypothesis)
-        if (isTRUE(form$lhs == "arbitrary_function")) {
-            return(hypothesis_compile_wrapper(hypothesis, cmp_skeleton, by, newdata, mfx))
-        }
         return(hypothesis_compile_formula(hypothesis, cmp_skeleton, by, newdata, mfx))
     }
 
@@ -60,9 +56,6 @@ hypothesis_compile_wrapper <- function(hypothesis, cmp_skeleton, by, newdata, mf
 
 hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mfx) {
     form <- sanitize_hypothesis_formula(hypothesis)
-    if (isTRUE(form$lhs == "arbitrary_function")) {
-        return(hypothesis_compile_wrapper(hypothesis, cmp_skeleton, by, newdata, mfx))
-    }
 
     cmp <- hypothesis_formula(
         data.table::copy(cmp_skeleton),
@@ -72,7 +65,17 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mf
         mfx = mfx
     )
 
-    fun_comparison <- hypothesis_formula_list[[form$rhs]][[form$lhs]]$comparison
+    if (!isTRUE(checkmate::check_numeric(cmp[["estimate"]]))) {
+        msg <- "The `hypothesis` argument must produce numeric estimates."
+        stop(msg, call. = FALSE)
+    }
+
+    if (isTRUE(form$lhs == "arbitrary_function")) {
+        fun_comparison <- sprintf("function(x) %s", form$rhs)
+        fun_comparison <- eval(parse(text = fun_comparison), envir = environment(hypothesis))
+    } else {
+        fun_comparison <- hypothesis_formula_list[[form$rhs]][[form$lhs]]$comparison
+    }
 
     x <- data.table::as.data.table(data.table::copy(cmp_skeleton))
     groupval <- hypothesis_formula_groups(x, newdata, form$group)
