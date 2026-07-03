@@ -1,3 +1,5 @@
+from functools import partial
+
 import jax.numpy as jnp
 import numpy as np
 from jax import jit, jacrev
@@ -21,16 +23,6 @@ def _comparison_core(
     return _compute_comparison(comparison_type, pred_hi, pred_lo)
 
 
-@jit
-def _comparison_byT(
-    beta: jnp.ndarray, X_hi: jnp.ndarray, X_lo: jnp.ndarray, comparison_type: int
-) -> jnp.ndarray:
-    """Averaged comparison: averages predictions first, then applies comparison."""
-    pred_hi = X_hi @ beta
-    pred_lo = X_lo @ beta
-    return _compute_comparison_scalar(comparison_type, pred_hi, pred_lo)
-
-
 def _comparison_byG(
     beta: jnp.ndarray,
     X_hi: jnp.ndarray,
@@ -39,8 +31,9 @@ def _comparison_byG(
     num_groups: int,
     comparison_type: int,
 ) -> jnp.ndarray:
-    comp = _comparison_core(beta, X_hi, X_lo, comparison_type)
-    return group_reducer(comp, groups, num_groups)
+    pred_hi = group_reducer(X_hi @ beta, groups, num_groups)
+    pred_lo = group_reducer(X_lo @ beta, groups, num_groups)
+    return _compute_comparison(comparison_type, pred_hi, pred_lo)
 
 
 @jit
@@ -87,31 +80,7 @@ def comparisons(
     }
 
 
-@jit
-def _comparisons_byT_core(
-    beta: jnp.ndarray, X_hi: jnp.ndarray, X_lo: jnp.ndarray, comparison_type: int
-) -> tuple[jnp.ndarray, jnp.ndarray]:
-    comp = _comparison_byT(beta, X_hi, X_lo, comparison_type)
-    jac = jacrev(lambda b: _comparison_byT(b, X_hi, X_lo, comparison_type))(beta)
-    return comp, jac
-
-
-def comparisons_byT(
-    beta: jnp.ndarray,
-    X_hi: jnp.ndarray,
-    X_lo: jnp.ndarray,
-    vcov: jnp.ndarray,
-    comparison_type: int,
-) -> dict[str, np.ndarray]:
-    comp, jac = _comparisons_byT_core(beta, X_hi, X_lo, comparison_type)
-    se = standard_errors(jac.reshape(1, -1), vcov)
-    return {
-        "estimate": np.array(comp),
-        "jacobian": np.array(jac),
-        "std_error": se[0],
-    }
-
-
+@partial(jit, static_argnames=("num_groups", "comparison_type"))
 def _comparisons_byG_core(
     beta: jnp.ndarray,
     X_hi: jnp.ndarray,
@@ -136,8 +105,9 @@ def comparisons_byG(
     num_groups: int,
     comparison_type: int,
 ) -> dict[str, np.ndarray]:
+    comparison_type = int(comparison_type)
     comp, jac = _comparisons_byG_core(
-        beta, X_hi, X_lo, groups, num_groups, comparison_type
+        beta, X_hi, X_lo, groups, int(num_groups), comparison_type
     )
     se = standard_errors(jac, vcov)
     return {

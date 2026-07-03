@@ -203,28 +203,57 @@ for (combo in unsupported_combos) {
 # dat <- get_dataset("airbnb")
 # mod <- glm(TV ~ ., data = dat, family = binomial)
 #
-# # Average Predictions
-# finite <- function() {
+# # Put this at the top of a script; first-call timings below exclude this startup cost.
+# autodiff(TRUE)
+#
+# time_once <- function(label, expr, envir) {
+#   gc()
+#   elapsed <- system.time(eval(expr, envir = envir))[["elapsed"]]
+#   cat(sprintf("%-28s %.3f sec\n", label, elapsed))
+#   invisible(elapsed)
+# }
+#
+# benchmark_autodiff <- function(label, expr, times = 5) {
+#   expr <- substitute(expr)
+#   envir <- parent.frame()
+#   cat("\n", label, "\n", sep = "")
+#
+#   cat("First calls\n")
 #   autodiff(FALSE)
-#   predictions(mod, type = "response")
-# }
-#
-# auto <- function() {
+#   time_once("finite difference", expr, envir)
 #   autodiff(TRUE)
+#   time_once("autodiff", expr, envir)
+#
+#   finite <- function() {
+#     autodiff(FALSE)
+#     eval(expr, envir = envir)
+#   }
+#
+#   auto <- function() {
+#     autodiff(TRUE)
+#     eval(expr, envir = envir)
+#   }
+#
+#   cat("Repeated calls\n")
+#   print(microbenchmark(finite(), auto(), times = times))
+# }
+#
+# benchmark_autodiff(
+#   "Predictions",
 #   predictions(mod, type = "response")
-# }
+# )
 #
-# microbenchmark(finite(), auto(), times = 5)
+# benchmark_autodiff(
+#   "Average predictions",
+#   avg_predictions(mod, type = "response")
+# )
 #
-# # Average Treatment Effect
-# finite <- function() {
-#   autodiff(FALSE)
+# benchmark_autodiff(
+#   "Average treatment effect",
 #   avg_comparisons(mod, variables = "Heating")
-# }
+# )
 #
-# auto <- function() {
-#   autodiff(TRUE)
-#   avg_comparisons(mod, variables = "Heating")
-# }
-#
-# microbenchmark(finite(), auto(), times = 5)
+# benchmark_autodiff(
+#   "Average treatment effect by actual groups",
+#   avg_comparisons(mod, variables = "Heating", by = "unit_type")
+# )

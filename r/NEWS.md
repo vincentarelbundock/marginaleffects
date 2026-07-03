@@ -12,6 +12,7 @@ New:
 
 Performance:
 
+* Automatic differentiation with JAX now uses a single compiled grouped path for grouped predictions and comparisons, avoiding repeated group-wise calls and improving performance for `by` workflows.
 * Large speedup (3x and more on large datasets) for `comparisons()` and `slopes()`: predictions returned as named vectors no longer trigger expensive row-name duplicate checks; several unnecessary full-table copies were removed from the internal comparison pipeline; and the standard error machinery no longer merges covariate columns back into intermediate results it only uses for the `estimate` column.
 * Persistent settings are now cached in memory, avoiding repeated filesystem access in hot code paths (e.g., once per call for autodiff checks and once per estimate for internal comparison bookkeeping).
 * Bayesian comparisons: row indexing and subsetting are now computed once per term instead of once per posterior draw column, which speeds up `comparisons()` and `slopes()` for models with many draws.

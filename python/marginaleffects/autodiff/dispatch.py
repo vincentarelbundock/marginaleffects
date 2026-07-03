@@ -28,6 +28,8 @@ def try_jax_predictions(
     by,
     wts,
     hypothesis,
+    groups: Optional[np.ndarray] = None,
+    num_groups: Optional[int] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Attempt JAX-based prediction with jacobian and standard errors.
@@ -43,7 +45,7 @@ def try_jax_predictions(
     - Model's autodiff config is None (unsupported model type)
     - wts argument is not None (weights not supported)
     - hypothesis is not None (hypothesis testing not supported in fast path)
-    - by is a list/complex aggregation (only False and True supported initially)
+    - by is unsupported (False, True, and grouped aggregation are supported)
     - vcov is None (no SEs needed anyway)
     """
     from ..settings import is_autodiff_enabled
@@ -65,6 +67,7 @@ def try_jax_predictions(
     # Only support False or sanitized list (any complexity handled upstream)
     is_by_false = by is False
     is_by_list = isinstance(by, list)
+    is_by_true = is_by_list and by == ["group"]
     if not is_by_false and not is_by_list:
         return None
 
@@ -80,27 +83,57 @@ def try_jax_predictions(
         beta = model.get_coef()
         X = np.asarray(exog)
         V = np.asarray(vcov)
+        use_groups = groups is not None and num_groups is not None
+
+        if is_by_true and not use_groups:
+            groups = np.zeros(X.shape[0], dtype=np.int32)
+            num_groups = 1
+            use_groups = True
+
+        if use_groups:
+            groups = np.asarray(groups, dtype=np.int32)
+            num_groups = int(num_groups)
 
         # Select appropriate autodiff module based on model type
         if config["model_type"] == "linear":
             from . import linear as ad_module
 
-            result = ad_module.predictions.predictions(
-                beta=beta,
-                X=X,
-                vcov=V,
-            )
+            if use_groups:
+                result = ad_module.predictions.predictions_byG(
+                    beta=beta,
+                    X=X,
+                    vcov=V,
+                    groups=groups,
+                    num_groups=num_groups,
+                )
+            else:
+                result = ad_module.predictions.predictions(
+                    beta=beta,
+                    X=X,
+                    vcov=V,
+                )
 
         elif config["model_type"] == "glm":
             from . import glm as ad_module
 
-            result = ad_module.predictions.predictions(
-                beta=beta,
-                X=X,
-                vcov=V,
-                family_type=config["family_type"],
-                link_type=config["link_type"],
-            )
+            if use_groups:
+                result = ad_module.predictions.predictions_byG(
+                    beta=beta,
+                    X=X,
+                    vcov=V,
+                    groups=groups,
+                    num_groups=num_groups,
+                    family_type=config["family_type"],
+                    link_type=config["link_type"],
+                )
+            else:
+                result = ad_module.predictions.predictions(
+                    beta=beta,
+                    X=X,
+                    vcov=V,
+                    family_type=config["family_type"],
+                    link_type=config["link_type"],
+                )
         else:
             return None
 
@@ -108,6 +141,7 @@ def try_jax_predictions(
             "estimate": result["estimate"],
             "jacobian": result["jacobian"],
             "std_error": result["std_error"],
+            "aggregation": "grouped" if use_groups else None,
         }
 
     except Exception:
@@ -264,44 +298,42 @@ def try_jax_comparisons(
                 pl.col("__idx__").alias("__idx__")
             )
 
-            estimates = []
-            std_errors = []
-            jacobians = []
-
-            for idx_list in grouped["__idx__"].to_list():
+            groups = np.empty(nd.height, dtype=np.int32)
+            for group_id, idx_list in enumerate(grouped["__idx__"].to_list()):
                 idx = np.asarray(idx_list, dtype=int)
-                X_hi_group = X_hi[idx]
-                X_lo_group = X_lo[idx]
+                groups[idx] = group_id
 
-                if config["model_type"] == "linear":
-                    result = ad_module.comparisons.comparisons_byT(
-                        beta=beta,
-                        X_hi=X_hi_group,
-                        X_lo=X_lo_group,
-                        vcov=V,
-                        comparison_type=comparison_type,
-                    )
-                else:
-                    result = ad_module.comparisons.comparisons_byT(
-                        beta=beta,
-                        X_hi=X_hi_group,
-                        X_lo=X_lo_group,
-                        vcov=V,
-                        comparison_type=comparison_type,
-                        family_type=config["family_type"],
-                        link_type=config["link_type"],
-                    )
+            num_groups = grouped.height
 
-                estimates.append(float(result["estimate"]))
-                std_errors.append(float(result["std_error"]))
-                jacobians.append(result["jacobian"])
+            if config["model_type"] == "linear":
+                result = ad_module.comparisons.comparisons_byG(
+                    beta=beta,
+                    X_hi=X_hi,
+                    X_lo=X_lo,
+                    vcov=V,
+                    groups=groups,
+                    num_groups=num_groups,
+                    comparison_type=comparison_type,
+                )
+            else:
+                result = ad_module.comparisons.comparisons_byG(
+                    beta=beta,
+                    X_hi=X_hi,
+                    X_lo=X_lo,
+                    vcov=V,
+                    groups=groups,
+                    num_groups=num_groups,
+                    comparison_type=comparison_type,
+                    family_type=config["family_type"],
+                    link_type=config["link_type"],
+                )
 
             metadata = grouped.drop("__idx__")
 
             return {
-                "estimate": np.array(estimates),
-                "jacobian": np.vstack(jacobians) if jacobians else np.array([]),
-                "std_error": np.array(std_errors),
+                "estimate": result["estimate"],
+                "jacobian": result["jacobian"],
+                "std_error": result["std_error"],
                 "metadata": metadata,
             }
 

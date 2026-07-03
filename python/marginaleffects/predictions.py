@@ -75,6 +75,35 @@ def _predictions_jax(
 ):
     from .autodiff.dispatch import try_jax_predictions
 
+    groups = None
+    num_groups = None
+    metadata = None
+
+    if by is not False:
+        dummy = pl.DataFrame(
+            {
+                "rowid": newdata["rowid"],
+                "estimate": np.zeros(newdata.height),
+            }
+        )
+        grouped, row_groups = get_by_groups(
+            model, dummy, newdata=newdata, by=by, wts=wts
+        )
+        if not row_groups:
+            return None, None
+
+        rowid_lookup = {
+            int(rid): idx for idx, rid in enumerate(newdata["rowid"].to_list())
+        }
+        groups = np.empty(newdata.height, dtype=np.int32)
+        for group_id, row_group in enumerate(row_groups):
+            for rowid in row_group:
+                groups[rowid_lookup[int(rowid)]] = group_id
+        num_groups = len(row_groups)
+        metadata = grouped.drop(
+            [col for col in ("estimate", "std_error") if col in grouped.columns]
+        )
+
     jax_result = try_jax_predictions(
         model=model,
         exog=exog,
@@ -82,12 +111,22 @@ def _predictions_jax(
         by=by,
         wts=wts,
         hypothesis=hypothesis,
+        groups=groups,
+        num_groups=num_groups,
     )
 
     if jax_result is None:
         return None, None
 
     try:
+        if jax_result.get("aggregation") == "grouped":
+            J = np.atleast_2d(jax_result["jacobian"])
+            out = metadata.with_columns(
+                pl.Series(np.atleast_1d(jax_result["estimate"])).alias("estimate"),
+                pl.Series(np.atleast_1d(jax_result["std_error"])).alias("std_error"),
+            )
+            return out, J
+
         base = pl.DataFrame(
             {
                 "rowid": newdata["rowid"],

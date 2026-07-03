@@ -1,6 +1,6 @@
 import jax
 import jax.numpy as jnp
-from jax import jit, lax
+from jax import jit
 import numpy as np
 
 
@@ -22,10 +22,8 @@ def group_reducer(
     num_groups: int,
 ) -> jnp.ndarray:
     """Group-based reducer function for averaging data by groups."""
-    # Use stop_gradient to ensure num_groups remains concrete during differentiation
-    num_groups_concrete = lax.stop_gradient(num_groups)
-    group_sums = jax.ops.segment_sum(data, groups, num_segments=num_groups_concrete)
-    group_counts = jnp.bincount(groups, length=num_groups_concrete)
+    group_sums = jax.ops.segment_sum(data, groups, num_segments=num_groups)
+    group_counts = jnp.bincount(groups, length=num_groups)
     # Reshape group_counts to allow broadcasting with 2D data
     group_counts = group_counts.reshape(-1, *([1] * (data.ndim - 1)))
     return group_sums / group_counts

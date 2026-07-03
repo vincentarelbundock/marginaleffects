@@ -1,3 +1,5 @@
+from functools import partial
+
 import jax.numpy as jnp
 import numpy as np
 from jax import jacfwd, jacrev, jit
@@ -21,14 +23,6 @@ def _predict(
     beta: jnp.ndarray, X: jnp.ndarray, family_type: int, link_type: int = None
 ) -> jnp.ndarray:
     return _predict_core(beta, X, family_type, link_type)
-
-
-@jit
-def _predict_byT(
-    beta: jnp.ndarray, X: jnp.ndarray, family_type: int, link_type: int = None
-) -> jnp.ndarray:
-    pred = _predict_core(beta, X, family_type, link_type)
-    return jnp.mean(pred)
 
 
 def _predict_byG(
@@ -69,32 +63,7 @@ def predictions(
     }
 
 
-@jit
-def _predictions_byT_core(
-    beta: jnp.ndarray, X: jnp.ndarray, family_type: int, link_type: int = None
-) -> tuple[jnp.ndarray, jnp.ndarray]:
-    pred = _predict_byT(beta, X, family_type, link_type)
-    jac = jacrev(_predict_byT, argnums=0)(beta, X, family_type, link_type)
-    return pred, jac
-
-
-def predictions_byT(
-    beta: jnp.ndarray,
-    X: jnp.ndarray,
-    vcov: jnp.ndarray,
-    family_type: int,
-    link_type: int = None,
-) -> dict[str, np.ndarray]:
-    link_type = resolve_link(family_type, link_type)
-    pred, jac = _predictions_byT_core(beta, X, family_type, link_type)
-    se = standard_errors(jac.reshape(1, -1), vcov)
-    return {
-        "estimate": np.array(pred),
-        "jacobian": np.array(jac),
-        "std_error": se[0],
-    }
-
-
+@partial(jit, static_argnames=("num_groups", "family_type", "link_type"))
 def _predictions_byG_core(
     beta: jnp.ndarray,
     X: jnp.ndarray,
@@ -121,7 +90,7 @@ def predictions_byG(
 ) -> dict[str, np.ndarray]:
     link_type = resolve_link(family_type, link_type)
     pred, jac = _predictions_byG_core(
-        beta, X, groups, num_groups, family_type, link_type
+        beta, X, groups, int(num_groups), family_type, link_type
     )
     se = standard_errors(jac, vcov)
     return {

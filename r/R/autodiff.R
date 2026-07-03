@@ -64,6 +64,16 @@ jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) 
                 } else {
                     groups_data <- mfx@newdata[, bycols, drop = FALSE]
                 }
+            } else if (isTRUE(mfx@by) && !is.null(X)) {
+                groups <- rep.int(0L, nrow(X))
+                num_groups <- 1L
+                return(list(
+                    groups = groups,
+                    num_groups = num_groups,
+                    X = X,
+                    X_hi = X_hi,
+                    X_lo = X_lo
+                ))
             } else if (!is.null(original)) {
                 # comparisons with by=TRUE: use term/contrast from original
                 bycols <- intersect(c("term", "contrast"), colnames(original))
@@ -93,7 +103,6 @@ jax_align_group_J <- function(jac_fun, mfx, original, estimates, X, X_hi, X_lo) 
 
     return(list(groups = groups, num_groups = num_groups, X = X, X_hi = X_hi, X_lo = X_lo))
 }
-
 
 
 #' Add model matrix attribute to a data frame
@@ -177,11 +186,7 @@ jax_predictions <- function(mfx, vcov_matrix, ...) {
         fun_name <- "predictions"
         groups <- NULL
         num_groups <- NULL
-    } else if (isTRUE(mfx@by)) {
-        fun_name <- "predictions_byT"
-        groups <- NULL
-        num_groups <- NULL
-    } else if (is.character(mfx@by)) {
+    } else if (isTRUE(mfx@by) || is.character(mfx@by)) {
         fun_name <- "predictions_byG"
         # Prepare group indices
         group_result <- jax_align_group_J("jacobian_byG", mfx, NULL, NULL, X, NULL, NULL)
@@ -196,11 +201,11 @@ jax_predictions <- function(mfx, vcov_matrix, ...) {
     }
 
     # Select autodiff function
-    # e.g., mAD$linear$predictions is a module containing predictions(), predictions_byT(), predictions_byG()
+    # e.g., mAD$linear$predictions is a module containing predictions() and predictions_byG()
     # The base module name (predictions or comparisons)
     base_module_name <- if (grepl("predictions", fun_name)) "predictions" else "comparisons"
     module <- mAD[[autodiff_args$model_type]][[base_module_name]]
-    FUN <- module[[fun_name]]  # e.g., module$predictions or module$predictions_byT
+    FUN <- module[[fun_name]]
 
     # Build arguments (without FUN)
     args <- list(
@@ -292,7 +297,6 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
         ratio = mAD$comparisons$ComparisonType$RATIO
     )
 
-    # Determine aggregation function
     if (isFALSE(mfx@by)) {
         fun_name <- "comparisons"
         groups <- NULL
@@ -315,11 +319,11 @@ jax_comparisons <- function(mfx, vcov_matrix, hi, lo, original, ...) {
     }
 
     # Select autodiff function
-    # e.g., mAD$linear$comparisons is a module containing comparisons(), comparisons_byT(), comparisons_byG()
+    # e.g., mAD$linear$comparisons is a module containing comparisons() and comparisons_byG()
     # The base module name (predictions or comparisons)
     base_module_name <- if (grepl("predictions", fun_name)) "predictions" else "comparisons"
     module <- mAD[[autodiff_args$model_type]][[base_module_name]]
-    FUN <- module[[fun_name]]  # e.g., module$comparisons or module$comparisons_byT
+    FUN <- module[[fun_name]]
 
     # Build arguments (without FUN)
     args <- list(
