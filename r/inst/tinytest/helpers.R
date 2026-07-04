@@ -15,8 +15,8 @@ requiet("marginaleffects")
 requiet("tinytest")
 requiet("tinysnapshot")
 
-AUTODIFF <- FALSE
-autodiff(FALSE) # by default in every file
+AUTODIFF <- tolower(Sys.getenv("MARGINALEFFECTS_AUTODIFF", "")) %in% c("1", "true", "yes", "on")
+autodiff(AUTODIFF)
 options("marginaleffects_autodiff_message" = TRUE)
 
 options("tinysnapshot_os" = "Linux")
