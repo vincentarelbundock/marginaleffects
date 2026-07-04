@@ -1,4 +1,3 @@
-import sys
 import statsmodels.formula.api as smf
 from marginaleffects import *
 from marginaleffects.plot.predictions import *
@@ -6,10 +5,7 @@ from tests.utilities import *
 import pytest
 from tests.helpers import *
 
-pytestmark = pytest.mark.skipif(
-    sys.platform != "linux",
-    reason="Plot image snapshots are generated on Linux",
-)
+pytestmark = plot_snapshot_skipif()
 
 FIGURES_FOLDER = "plot_predictions"
 

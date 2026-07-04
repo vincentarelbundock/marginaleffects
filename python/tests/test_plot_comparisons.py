@@ -1,4 +1,3 @@
-import sys
 import pytest
 from marginaleffects import *
 from marginaleffects.plot.comparisons import *
@@ -6,10 +5,7 @@ from tests.utilities import *
 from tests.helpers import *
 import statsmodels.formula.api as smf
 
-pytestmark = pytest.mark.skipif(
-    sys.platform != "linux",
-    reason="Plot image snapshots are generated on Linux",
-)
+pytestmark = plot_snapshot_skipif()
 
 FIGURES_FOLDER = "plot_comparisons"
 

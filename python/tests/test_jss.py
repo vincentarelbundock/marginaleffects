@@ -1,4 +1,3 @@
-import sys
 import numpy as np
 import polars as pl
 import statsmodels.formula.api as smf
@@ -55,10 +54,7 @@ def test_predictions(impartiality_model):
 
 
 @pytest.mark.plot
-@pytest.mark.skipif(
-    sys.platform != "linux",
-    reason="Plot image snapshots are generated on Linux",
-)
+@plot_snapshot_skipif()
 def test_predictions_plot(impartiality_model):
     p = plot_predictions(impartiality_model, by=["democracy", "continent"])
     assert assert_image(p, label="jss_01", folder="jss") is None
