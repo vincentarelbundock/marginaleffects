@@ -1,6 +1,6 @@
 # TODO: emtrends not clear what it computes for polr
-using("marginaleffects")
 source("helpers.R")
+using("marginaleffects")
 
 requiet("margins")
 requiet("MASS")
