@@ -29,7 +29,6 @@ align_jacobian_vcov <- function(J, V, object, ...) {
 #' @inheritParams slopes
 #' @param FUN a function which accepts a `model` and other inputs and returns a
 #'   vector of estimates (marginal effects, marginal means, etc.)
-#' @param index data.frame over which we aggregate J_mean (matches tidy() output)
 #' @return vector of standard errors
 #' @noRd
 get_se_delta <- function(
@@ -39,7 +38,6 @@ get_se_delta <- function(
     mfx = NULL,
     type = NULL,
     newdata = NULL,
-    index = NULL,
     eps = NULL,
     J = NULL,
     hypothesis = NULL,

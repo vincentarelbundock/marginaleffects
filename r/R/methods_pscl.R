@@ -38,7 +38,7 @@ get_group_names.hurdle <- function(model, type = "count", ...) {
     if (type == "prob") {
         out <- colnames(stats::predict(model, type = "prob"))
     } else {
-        out <- "main_marginaleffect"
+        out <- main_marginaleffect_group()
     }
     return(out)
 }

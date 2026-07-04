@@ -13,5 +13,5 @@ get_group_names <- function(model, ...) {
 #' @rdname get_group_names
 #' @export
 get_group_names.default <- function(model, ...) {
-    return("main_marginaleffect")
+    return(main_marginaleffect_group())
 }

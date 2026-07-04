@@ -190,43 +190,31 @@ predictions <- function(
     ...
 ) {
     # init
-    if (inherits(model, "marginaleffects_internal")) {
-        mfx <- model
-    } else {
-        # pass through ... to avoid calling `get_modeldata()` in inferences()
-        if ("modeldata" %in% ...names()) {
-            modeldata <- ...get("modeldata")
-        } else {
-            modeldata <- NULL
-        }
-        call <- construct_call(model, "predictions")
-        model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
-        mfx <- new_marginaleffects_internal(
-            call = call,
-            model = model,
-            modeldata = modeldata,
-            by = by
-        )
-    }
+    mfx <- marginaleffects_init(
+        model = model,
+        calling_function = "predictions",
+        newdata = newdata,
+        wts = wts,
+        vcov = vcov,
+        by = by,
+        env = environment(),
+        ...
+    )
 
     # newdata
     scall <- rlang::enquo(newdata)
     mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts)
 
     # inferences() dispatch
-    methods <- c("rsample", "boot", "fwb", "simulation")
-    if (isTRUE(checkmate::check_choice(vcov, methods))) {
-        inferences_method <- vcov
-        vcov <- FALSE
-    } else {
-        inferences_method <- NULL
-    }
+    inferences_dispatch <- sanitize_inferences_method(vcov)
+    vcov <- inferences_dispatch$vcov
+    inferences_method <- inferences_dispatch$method
 
     dots <- list(...)
-    sanity_dots(model = model, ...)
+    sanity_dots(model = mfx@model, ...)
 
     # multiple imputation
-    if (inherits(model, c("mira", "amest"))) {
+    if (inherits(mfx@model, c("mira", "amest"))) {
         out <- process_imputation(mfx)
         return(out)
     }
@@ -241,7 +229,7 @@ predictions <- function(
     # before add_hypothesis()
     link_to_response <- FALSE
     mfx@type <- sanitize_type(
-        model = model,
+        model = mfx@model,
         type = type,
         by = by,
         hypothesis = hypothesis,
@@ -284,7 +272,7 @@ predictions <- function(
         mfx@newdata <- do.call("datagrid", args)
     }
 
-    prepared <- prediction_prepare_newdata(mfx, model)
+    prepared <- prediction_prepare_newdata(mfx)
     mfx <- prepared$mfx
     unpadded_newdata <- prepared$unpadded_newdata
 
@@ -335,37 +323,15 @@ predictions <- function(
 
         # Delta method for standard errors
         if (!"std.error" %in% colnames(tmp) && is.null(mfx@draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
-            ad <- autodiff_try(
-                built$plan,
-                mfx,
-                kind = "predictions",
+            se <- plan_std_error(
+                built = built,
+                mfx = mfx,
+                estimates = tmp,
                 type = prediction_type,
-                vcov = mfx@vcov_model,
-                estimate = tmp$estimate
+                dots = dots
             )
-            if (!is.null(ad)) {
-                mfx@jacobian <- ad$jacobian
-                tmp[["std.error"]] <- ad$std.error
-            } else {
-                fun <- function(model_perturbed, ...) {
-                    pred <- prediction_plan_predict(built$plan, model_perturbed, ...)
-                    prediction_plan_apply(built$plan, pred)
-                }
-                args <- list(
-                    mfx = mfx,
-                    model_perturbed = mfx@model,
-                    vcov = mfx@vcov_model,
-                    type = prediction_type,
-                    FUN = fun,
-                    hypothesis = mfx@hypothesis
-                )
-                args <- utils::modifyList(args, dots)
-                se <- do_call(get_se_delta, args)
-                if (is.numeric(se) && length(se) == nrow(tmp)) {
-                    mfx@jacobian <- attr(se, "jacobian")
-                    tmp[["std.error"]] <- as.vector(se) # drop attribute
-                }
-            }
+            mfx <- se$mfx
+            tmp <- se$estimates
         }
     }
 
@@ -383,11 +349,6 @@ predictions <- function(
         tmp$df <- mfx@df
     }
 
-    # Confidence intervals (autodiff already has std.error)
-    if (!isFALSE(vcov) && ("std.error" %in% colnames(tmp) || !is.null(mfx@draws))) {
-        tmp <- get_ci(tmp, mfx)
-    }
-
     out <- data.table::data.table(tmp)
     data.table::setDT(mfx@newdata)
 
@@ -396,51 +357,25 @@ predictions <- function(
         out <- merge_by_rowid(out, mfx@newdata)
     }
 
-    # remove weights column (now handled by add_attributes)
-    out[["marginaleffects_wts_internal"]] <- NULL
-
-    # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
-    # applied in the middle, and it must already be sorted in the final order,
-    # otherwise, users cannot know for sure what is going to be the first and
-    # second rows, etc.
-    out <- sort_columns(out, mfx@newdata, by)
-
-    # equivalence tests
-    out <- equivalence(out, equivalence = equivalence, df = mfx@df, draws = mfx@draws, ...)
-
-    # after rename to estimate
-    if (isTRUE(link_to_response)) {
-        linv <- tryCatch(insight::link_inverse(mfx@model), error = function(e) identity)
-        out <- backtransform(out, transform = linv, draws = mfx@draws)
-    }
-    out <- backtransform(out, transform = transform, draws = mfx@draws)
-    new_draws <- attr(out, "posterior_draws") # important!
-    if (!is.null(new_draws)) mfx@draws <- new_draws
-
-    data.table::setDF(out)
-    class(out) <- c("predictions", class(out))
-
-    # before add_attributes()
-    if (inherits(mfx@model, "brmsfit")) {
-        insight::check_if_installed("brms")
-        mfx@draws_chains <- brms::nchains(mfx@model)
+    linv <- if (isTRUE(link_to_response)) {
+        tryCatch(insight::link_inverse(mfx@model), error = function(e) identity)
+    } else {
+        NULL
     }
 
-    # Add common attributes from mfx S4 slots
-    # class before prune
-    out <- add_attributes(out, mfx)
-    out <- prune_attributes(out)
-
-
-    if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
-        out$group <- NULL
-    }
-
-    if (!is.null(inferences_method)) {
-        out <- inferences(out, method = inferences_method)
-    }
-
-    return(out)
+    return(finalize_estimates(
+        out = out,
+        mfx = mfx,
+        by = by,
+        transform = transform,
+        equivalence = equivalence,
+        class_name = "predictions",
+        inferences_method = inferences_method,
+        drop_group = TRUE,
+        conf_int = !isFALSE(vcov) && ("std.error" %in% colnames(out) || !is.null(mfx@draws)),
+        pre_transform = linv,
+        ...
+    ))
 }
 
 

@@ -1,10 +1,10 @@
-prediction_prepare_newdata <- function(mfx, model) {
+prediction_prepare_newdata <- function(mfx) {
     if (!"rowid" %in% colnames(mfx@newdata)) {
         mfx@newdata[["rowid"]] <- seq_len(nrow(mfx@newdata))
     }
 
     unpadded_newdata <- mfx@newdata
-    mfx@newdata <- pad(model, mfx@newdata)
+    mfx@newdata <- pad(mfx@model, mfx@newdata)
     mfx@newdata <- add_model_matrix_attribute(mfx)
 
     list(mfx = mfx, unpadded_newdata = unpadded_newdata)
@@ -12,10 +12,10 @@ prediction_prepare_newdata <- function(mfx, model) {
 
 
 prediction_attach_newdata_and_unpad <- function(out, draws, newdata, mfx) {
-    cols <- setdiff(colnames(newdata), colnames(out))
     if (inherits(mfx@model, "mlogit")) {
         out <- merge_by_rowid(out, newdata)
     } else {
+        cols <- setdiff(colnames(newdata), colnames(out))
         nd <- subset(newdata, select = cols)
         out <- cbind(out, nd)
     }
@@ -48,9 +48,6 @@ prediction_plan_build <- function(
     by = NULL,
     hypothesis = NULL,
     verbose = TRUE,
-    hi = NULL,
-    lo = NULL,
-    original = NULL,
     ...) {
     dots <- list(...)
     newdata <- mfx@newdata
@@ -67,10 +64,10 @@ prediction_plan_build <- function(
 
     if (
         !"rowid" %in% colnames(out) &&
-            "rowid" %in% colnames(mfx@newdata) &&
-            nrow(out) == nrow(mfx@newdata)
+            "rowid" %in% colnames(newdata) &&
+            nrow(out) == nrow(newdata)
     ) {
-        out$rowid <- mfx@newdata$rowid
+        out$rowid <- newdata$rowid
     }
 
     draws <- attr(out, "posterior_draws")

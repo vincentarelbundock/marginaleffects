@@ -71,6 +71,13 @@ draws_hi <- matrix(
     ncol = 2
 )
 group_indices <- marginaleffects:::comparison_group_indices(out$g)
+context_differenceavg <- list(
+    cross = FALSE,
+    newdata = data.frame(),
+    variables = list(x = list(eps = 1)),
+    fun_list = list(x = marginaleffects:::comparison_function_dict[["differenceavg"]]),
+    elasticities = list(x = seq_len(nrow(out)))
+)
 scalar_result <- marginaleffects:::compare_hi_lo_bayesian_scalar(
     out = out,
     draws = draws,
@@ -78,11 +85,7 @@ scalar_result <- marginaleffects:::compare_hi_lo_bayesian_scalar(
     draws_lo = draws_lo,
     draws_or = draws_or,
     by = "g",
-    cross = FALSE,
-    variables = list(x = list(eps = 1)),
-    fun_list = list(x = marginaleffects:::comparison_function_dict[["differenceavg"]]),
-    elasticities = list(x = seq_len(nrow(out))),
-    newdata = data.frame(),
+    context = context_differenceavg,
     group_indices = group_indices
 )
 expected_draws <- matrix(c(20, 2, 5, 200, 3, 50), nrow = 3, ncol = 2)
@@ -96,11 +99,7 @@ result <- marginaleffects:::compare_hi_lo_bayesian(
     draws_lo = draws_lo,
     draws_or = draws_or,
     by = "g",
-    cross = FALSE,
-    variables = list(x = list(eps = 1)),
-    fun_list = list(x = marginaleffects:::comparison_function_dict[["differenceavg"]]),
-    elasticities = list(x = seq_len(nrow(out))),
-    newdata = data.frame()
+    context = context_differenceavg
 )
 expect_equivalent(result$out$g, c("b", "a", "c"))
 expect_equivalent(unname(result$draws), expected_draws)
@@ -113,11 +112,10 @@ vector_result <- marginaleffects:::compare_hi_lo_bayesian_scalar(
     draws_lo = draws_lo,
     draws_or = draws_or,
     by = "g",
-    cross = FALSE,
-    variables = list(x = list(eps = 1)),
-    fun_list = list(x = marginaleffects:::comparison_function_dict[["difference"]]),
-    elasticities = list(x = seq_len(nrow(out))),
-    newdata = data.frame(),
+    context = utils::modifyList(
+        context_differenceavg,
+        list(fun_list = list(x = marginaleffects:::comparison_function_dict[["difference"]]))
+    ),
     group_indices = group_indices
 )
 expect_null(vector_result)
@@ -138,15 +136,48 @@ comparison_result <- marginaleffects:::comparison_call(
     y = c(10, 20),
     n = 2,
     term = c("x", "x"),
-    cross = FALSE,
     wts = c(1, 2),
     tmp_idx = c(1, 2),
-    newdata = data.frame(a = 1:2),
-    variables = list(x = list(eps = 2, fun_key = "custom")),
-    fun_list = list(x = function(hi, lo, eps, x) (hi - lo) / eps + x),
-    elasticities = list(x = c(10, 20))
+    context = list(
+        cross = FALSE,
+        newdata = data.frame(a = 1:2),
+        variables = list(x = list(eps = 2, fun_key = "custom")),
+        fun_list = list(x = function(hi, lo, eps, x) (hi - lo) / eps + x),
+        elasticities = list(x = c(10, 20))
+    )
 )
 expect_equivalent(comparison_result$value, c(11, 21.5))
 expect_equivalent(names(comparison_result$args), c("eps", "x"))
 expect_false(comparison_result$uses_y)
 expect_true(is.function(comparison_result$fun))
+
+mod_finalize <- lm(mpg ~ hp, data = mtcars)
+mfx_finalize <- marginaleffects:::marginaleffects_init(
+    model = mod_finalize,
+    calling_function = "predictions",
+    newdata = NULL,
+    wts = FALSE,
+    vcov = TRUE,
+    by = FALSE
+)
+mfx_finalize <- marginaleffects:::add_hypothesis(mfx_finalize, NULL)
+mfx_finalize@newdata <- data.frame(rowid = 1:2, hp = c(100, 120))
+mfx_finalize@conf_level <- 0.95
+mfx_finalize@df <- Inf
+finalized <- marginaleffects:::finalize_estimates(
+    out = data.table::data.table(
+        rowid = 1:2,
+        estimate = c(1, 2),
+        std.error = c(0.1, 0.2),
+        marginaleffects_wts_internal = 1
+    ),
+    mfx = mfx_finalize,
+    by = FALSE,
+    transform = NULL,
+    equivalence = NULL,
+    class_name = "predictions",
+    inferences_method = NULL
+)
+expect_true(inherits(finalized, "predictions"))
+expect_true(all(c("conf.low", "conf.high") %in% colnames(finalized)))
+expect_false("marginaleffects_wts_internal" %in% colnames(finalized))

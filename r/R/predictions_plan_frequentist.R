@@ -27,6 +27,7 @@ prediction_plan_build_frequentist <- function(
     )
     out <- hyp$cmp
     plan <- list(
+        kind = "predictions",
         n_pred = length(raw_estimate),
         predict_args = list(
             type = type,

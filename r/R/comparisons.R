@@ -232,32 +232,21 @@ comparisons <- function(
     ...
 ) {
     # init
-    if (inherits(model, "marginaleffects_internal")) {
-        mfx <- model
-    } else {
-        # pass through ... to avoid calling `get_modeldata()` in inferences()
-        if ("modeldata" %in% ...names()) {
-            modeldata <- ...get("modeldata")
-        } else {
-            modeldata <- NULL
-        }
-        call <- construct_call(model, "comparisons")
-        model <- sanitize_model(model,
-            call = call,
-            newdata = newdata,
-            wts = wts,
-            vcov = vcov,
-            by = by, ...)
-        mfx <- new_marginaleffects_internal(
-            call = call,
-            model = model,
-            modeldata = modeldata,
-            by = by,
+    mfx <- marginaleffects_init(
+        model = model,
+        calling_function = "comparisons",
+        newdata = newdata,
+        wts = wts,
+        vcov = vcov,
+        by = by,
+        slots = list(
             comparison = comparison,
             cross = cross,
             eps = eps
-        )
-    }
+        ),
+        env = environment(),
+        ...
+    )
 
     scall <- rlang::enquo(newdata)
     mfx <- add_newdata(mfx,
@@ -279,16 +268,9 @@ comparisons <- function(
     }
 
     # inferences() dispatch
-    methods <- c("rsample", "boot", "fwb", "simulation")
-    if (isTRUE(checkmate::check_choice(vcov, methods))) {
-        inferences_method <- vcov
-        vcov <- FALSE
-    } else {
-        inferences_method <- NULL
-    }
-
-    # very early, before any use of newdata
-    newdata <- mfx@newdata
+    inferences_dispatch <- sanitize_inferences_method(vcov)
+    vcov <- inferences_dispatch$vcov
+    inferences_method <- inferences_dispatch$method
 
     # misc
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
@@ -372,48 +354,18 @@ comparisons <- function(
         !isFALSE(vcov) &&
         isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
 
-        idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
-        idx <- cmp[, (idx), drop = FALSE]
-        ad <- autodiff_try(
-            built$plan,
-            mfx,
-            kind = "comparisons",
+        se <- plan_std_error(
+            built = built,
+            mfx = mfx,
+            estimates = cmp,
             type = mfx@type,
-            vcov = mfx@vcov_model,
-            estimate = cmp$estimate,
-            hi = contrast_data$hi,
-            lo = contrast_data$lo
+            dots = dots,
+            contrast_data = contrast_data,
+            variables = predictors,
+            numderiv = numderiv
         )
-        if (!is.null(ad)) {
-            mfx@jacobian <- ad$jacobian
-            cmp$std.error <- ad$std.error
-            mfx@draws <- NULL
-        } else {
-            fun <- function(model_perturbed, ...) {
-                preds <- comparison_plan_predict(built$plan, model_perturbed, ...)
-                comparison_plan_apply(built$plan, preds$hi, preds$lo, preds$or)
-            }
-            args <- list(
-                mfx = mfx,
-                model_perturbed = mfx@model,
-                vcov = mfx@vcov_model,
-                type = mfx@type,
-                FUN = fun,
-                index = idx,
-                variables = predictors,
-                hypothesis = mfx@hypothesis,
-                hi = contrast_data$hi,
-                lo = contrast_data$lo,
-                original = contrast_data$original,
-                estimates = cmp,
-                numderiv = numderiv
-            )
-            args <- utils::modifyList(args, dots)
-            se <- do_call(get_se_delta, args)
-            mfx@jacobian <- attr(se, "jacobian")
-            cmp$std.error <- as.vector(as.numeric(se)) # drop attributes
-            mfx@draws <- NULL
-        }
+        mfx <- se$mfx
+        cmp <- se$estimates
     }
 
     # Common path for both autodiff and fallback
@@ -443,49 +395,16 @@ comparisons <- function(
         }
     }
 
-    # meta info
-    cmp <- get_ci(cmp, mfx)
-
-    # clean rows and columns
-    # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
-    # applied in the middle, and it must already be sorted in the final order,
-    # otherwise, users cannot know for sure what is going to be the first and
-    # second rows, etc.
-    cmp <- sort_columns(cmp, mfx@newdata, by)
-
-    # equivalence tests
-    cmp <- equivalence(cmp, equivalence = equivalence, df = mfx@df, draws = mfx@draws, ...)
-
-    # after draws attribute
-    cmp <- backtransform(cmp, transform, draws = mfx@draws)
-    new_draws <- attr(cmp, "posterior_draws") # important!
-    if (!is.null(new_draws)) mfx@draws <- new_draws
-
-    # remove weights column (now handled by add_attributes)
-    cmp[["marginaleffects_wts_internal"]] <- NULL
-
-    out <- cmp
-
-    data.table::setDF(out)
-
-    class(out) <- c("comparisons", class(out))
-
-    # before add_attributes()
-    if (inherits(mfx@model, "brmsfit")) {
-        insight::check_if_installed("brms")
-        mfx@draws_chains <- brms::nchains(mfx@model)
-    }
-
-    # class before prune
-    out <- add_attributes(out, mfx)
-    out <- prune_attributes(out)
-
-
-    if (!is.null(inferences_method)) {
-        out <- inferences(out, method = inferences_method)
-    }
-
-    return(out)
+    return(finalize_estimates(
+        out = cmp,
+        mfx = mfx,
+        by = by,
+        transform = transform,
+        equivalence = equivalence,
+        class_name = "comparisons",
+        inferences_method = inferences_method,
+        ...
+    ))
 }
 
 

@@ -112,3 +112,14 @@ surv <- survival::survreg(
 quant <- predictions(surv, type = "quantile", p = 0.5)
 expect_true("std.error" %in% colnames(quant))
 expect_false(anyNA(quant$std.error))
+
+expect_error(
+    marginaleffects:::plan_std_error(
+        built = list(plan = list(kind = "unknown")),
+        mfx = NULL,
+        estimates = data.frame(estimate = 1),
+        type = "response",
+        dots = list()
+    ),
+    pattern = "Unknown plan kind"
+)

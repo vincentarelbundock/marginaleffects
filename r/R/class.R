@@ -172,6 +172,50 @@ new_marginaleffects_internal <- function(
     )
 }
 
+marginaleffects_init <- function(
+    model,
+    calling_function,
+    newdata,
+    wts,
+    vcov,
+    by,
+    slots = list(),
+    env = parent.frame(),
+    ...) {
+    if (inherits(model, "marginaleffects_internal")) {
+        return(model)
+    }
+
+    # pass through ... to avoid calling `get_modeldata()` in inferences()
+    if ("modeldata" %in% ...names()) {
+        modeldata <- ...get("modeldata")
+    } else {
+        modeldata <- NULL
+    }
+
+    call <- construct_call(model, calling_function, env = env)
+    model <- sanitize_model(
+        model,
+        call = call,
+        newdata = newdata,
+        wts = wts,
+        vcov = vcov,
+        by = by,
+        ...
+    )
+
+    args <- c(
+        list(
+            call = call,
+            model = model,
+            modeldata = modeldata,
+            by = by
+        ),
+        slots
+    )
+    do_call(new_marginaleffects_internal, args)
+}
+
 #' Extract calling function name from call object
 #'
 #' @param call The call object from which to extract the function name

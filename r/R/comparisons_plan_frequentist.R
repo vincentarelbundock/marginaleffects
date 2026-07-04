@@ -5,20 +5,12 @@ predictions_hi_lo_frequentist <- function(model, lo, hi, type, ...) {
         newdata = lo,
         ...
     )
-
-    pred_hi_result <- myTryCatch(get_predict(
+    pred_hi <- get_predict_error(
         model,
         type = type,
         newdata = hi,
         ...
-    ))
-
-    # otherwise we keep the full error object instead of extracting the value
-    if (inherits(pred_hi_result$value, "data.frame")) {
-        pred_hi <- pred_hi_result$value
-    } else {
-        pred_hi <- pred_hi_result$error
-    }
+    )
 
     list(pred_lo = pred_lo, pred_hi = pred_hi)
 }
@@ -27,11 +19,7 @@ predictions_hi_lo_frequentist <- function(model, lo, hi, type, ...) {
 comparison_plan_build_frequentist <- function(
     out,
     idx,
-    cross,
-    variables,
-    fun_list,
-    elasticities,
-    newdata,
+    context,
     pred_hi,
     pred_lo,
     pred_or,
@@ -79,13 +67,9 @@ comparison_plan_build_frequentist <- function(
             y = out_sorted$predicted[rows],
             n = n,
             term = term,
-            cross = cross,
             wts = out_sorted$marginaleffects_wts_internal[rows],
             tmp_idx = out_sorted$tmp_idx[rows],
-            newdata = newdata,
-            variables = variables,
-            fun_list = fun_list,
-            elasticities = elasticities
+            context = context
         )
         con <- call$value
 
@@ -138,6 +122,7 @@ comparison_plan_build_frequentist <- function(
     }
 
     plan <- list(
+        kind = "comparisons",
         n_pred = n_pred,
         need_y = need_y,
         predict_args = list(
@@ -192,35 +177,21 @@ comparison_plan_apply <- function(plan, hi, lo, y = NULL) {
 
 comparison_plan_predict <- function(.plan, model_perturbed, ...) {
     dots <- sanitize_plan_predict_args(.plan$predict_args$dots, list(...))
-    args_hi <- c(
-        list(
-            model = model_perturbed,
-            type = .plan$predict_args$type,
-            newdata = .plan$predict_args$hi
-        ),
-        dots
-    )
-    args_lo <- c(
-        list(
-            model = model_perturbed,
-            type = .plan$predict_args$type,
-            newdata = .plan$predict_args$lo
-        ),
-        dots
-    )
-    pred_hi <- do_call(get_predict, args_hi)
-    pred_lo <- do_call(get_predict, args_lo)
-    pred_or <- NULL
-    if (isTRUE(.plan$need_y)) {
-        args_or <- c(
+    predict1 <- function(nd) {
+        do_call(get_predict, c(
             list(
                 model = model_perturbed,
                 type = .plan$predict_args$type,
-                newdata = .plan$predict_args$original
+                newdata = nd
             ),
             dots
-        )
-        pred_or <- do_call(get_predict, args_or)
+        ))
+    }
+    pred_hi <- predict1(.plan$predict_args$hi)
+    pred_lo <- predict1(.plan$predict_args$lo)
+    pred_or <- NULL
+    if (isTRUE(.plan$need_y)) {
+        pred_or <- predict1(.plan$predict_args$original)
         pred_or <- pred_or[["estimate"]]
     }
     list(

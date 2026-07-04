@@ -114,3 +114,84 @@ validate_plan_replay <- function(kind, baseline, expected) {
         stop_sprintf("Internal error: %s plan baseline check failed.", kind)
     }
 }
+
+plan_std_error <- function(
+    built,
+    mfx,
+    estimates,
+    type,
+    dots = list(),
+    contrast_data = NULL,
+    variables = NULL,
+    numderiv = NULL) {
+    plan <- built$plan
+    kind <- plan$kind
+    if (!isTRUE(kind %in% c("predictions", "comparisons"))) {
+        stop_sprintf("Unknown plan kind: %s", kind %||% "NULL")
+    }
+
+    ad_args <- list(
+        plan = plan,
+        mfx = mfx,
+        kind = kind,
+        type = type,
+        vcov = mfx@vcov_model,
+        estimate = estimates[["estimate"]]
+    )
+    if (identical(kind, "comparisons")) {
+        ad_args$hi <- contrast_data$hi
+        ad_args$lo <- contrast_data$lo
+    }
+    ad <- do_call(autodiff_try, ad_args)
+    if (!is.null(ad)) {
+        mfx@jacobian <- ad$jacobian
+        estimates[["std.error"]] <- ad$std.error
+        return(list(mfx = mfx, estimates = estimates))
+    }
+
+    if (identical(kind, "predictions")) {
+        fun <- function(model_perturbed, ...) {
+            pred <- prediction_plan_predict(plan, model_perturbed, ...)
+            prediction_plan_apply(plan, pred)
+        }
+        args <- list(
+            mfx = mfx,
+            model_perturbed = mfx@model,
+            vcov = mfx@vcov_model,
+            type = type,
+            FUN = fun,
+            hypothesis = mfx@hypothesis
+        )
+        args <- utils::modifyList(args, dots)
+        se <- do_call(get_se_delta, args)
+        if (is.numeric(se) && length(se) == nrow(estimates)) {
+            mfx@jacobian <- attr(se, "jacobian")
+            estimates[["std.error"]] <- as.vector(se)
+        }
+    } else {
+        fun <- function(model_perturbed, ...) {
+            preds <- comparison_plan_predict(plan, model_perturbed, ...)
+            comparison_plan_apply(plan, preds$hi, preds$lo, preds$or)
+        }
+        args <- list(
+            mfx = mfx,
+            model_perturbed = mfx@model,
+            vcov = mfx@vcov_model,
+            type = type,
+            FUN = fun,
+            variables = variables,
+            hypothesis = mfx@hypothesis,
+            hi = contrast_data$hi,
+            lo = contrast_data$lo,
+            original = contrast_data$original,
+            estimates = estimates,
+            numderiv = numderiv
+        )
+        args <- utils::modifyList(args, dots)
+        se <- do_call(get_se_delta, args)
+        mfx@jacobian <- attr(se, "jacobian")
+        estimates[["std.error"]] <- as.vector(as.numeric(se))
+    }
+
+    list(mfx = mfx, estimates = estimates)
+}

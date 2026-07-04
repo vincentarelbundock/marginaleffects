@@ -7,34 +7,25 @@ predictions_hi_lo <- function(model, lo, hi, type, ...) {
 }
 
 
-comparison_call_args <- function(term, cross, wts, tmp_idx, newdata, variables, fun_list, elasticities) {
+comparison_call_args <- function(term, wts, tmp_idx, context) {
     tn <- term[1]
-    fun <- if (isTRUE(cross)) {
-        fun_list[[1]]
-    } else {
-        fun_list[[tn]]
-    }
+    key <- if (isTRUE(context$cross)) 1L else tn
+    fun <- context$fun_list[[key]]
     fun_formals <- names(formals(fun))
 
     args <- list(
-        "eps" = variables[[tn]]$eps,
+        "eps" = context$variables[[tn]]$eps,
         "w" = wts,
-        "newdata" = newdata
+        "newdata" = context$newdata
     )
 
     # sometimes x is exactly the same length, but not always
-    args[["x"]] <- elasticities[[tn]][tmp_idx]
+    args[["x"]] <- context$elasticities[[tn]][tmp_idx]
     args <- args[names(args) %in% fun_formals]
-
-    fun_key <- if (isTRUE(cross)) {
-        variables[[1]][["fun_key"]]
-    } else {
-        variables[[tn]][["fun_key"]]
-    }
 
     list(
         fun = fun,
-        fun_key = fun_key,
+        fun_key = context$variables[[key]][["fun_key"]],
         args = args,
         uses_y = "y" %in% fun_formals
     )
@@ -43,8 +34,8 @@ comparison_call_args <- function(term, cross, wts, tmp_idx, newdata, variables, 
 
 comparison_validate_result <- function(con, n) {
     if (
-        !isTRUE(checkmate::check_numeric(con, len = n)) &&
-            !isTRUE(checkmate::check_numeric(con, len = 1))
+        !isTRUE(checkmate::check_numeric(con, len = n, any.missing = FALSE)) &&
+            !isTRUE(checkmate::check_numeric(con, len = 1, any.missing = FALSE))
     ) {
         msg <- sprintf(
             "The function supplied to the `comparison` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.",
@@ -56,7 +47,7 @@ comparison_validate_result <- function(con, n) {
 }
 
 
-comparison_call <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, variables, fun_list, elasticities) {
+comparison_call <- function(hi, lo, y, n, term, wts, tmp_idx, context) {
     if (n == 0 || length(hi) == 0) {
         return(list(
             value = numeric(0),
@@ -69,13 +60,9 @@ comparison_call <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, va
 
     call <- comparison_call_args(
         term = term,
-        cross = cross,
         wts = wts,
         tmp_idx = tmp_idx,
-        newdata = newdata,
-        variables = variables,
-        fun_list = fun_list,
-        elasticities = elasticities
+        context = context
     )
 
     value_args <- call$args
@@ -91,9 +78,9 @@ comparison_call <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, va
 }
 
 
-prepare_elasticities <- function(variables, original, out, by, elasticities) {
+prepare_elasticities <- function(variables, original, out, by, elasticity_names) {
     FUN <- function(z) {
-        (is.character(z$comparison) && z$comparison %in% elasticities) ||
+        (is.character(z$comparison) && z$comparison %in% elasticity_names) ||
             (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
     }
     elasticities <- Filter(FUN, variables)
@@ -137,10 +124,7 @@ prepare_elasticities <- function(variables, original, out, by, elasticities) {
                 idx1[, (v) := original[[v]]]
                 setnames(idx1, old = v, new = "elast")
                 on_cols <- intersect(colnames(idx1), colnames(idx2))
-                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[
-                    ,
-                    elast := elast
-                ])
+                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE))
             }
             elasticities[[v]] <- idx2$elast
         }
@@ -168,7 +152,8 @@ comparison_plan_build <- function(
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
 
     predictions <- predictions_hi_lo(model, lo, hi, type, ...)
-    list2env(predictions, environment())
+    pred_lo <- predictions$pred_lo
+    pred_hi <- predictions$pred_hi
     out <- data.table(pred_lo)
 
     elasticity_names <- c(
@@ -189,15 +174,11 @@ comparison_plan_build <- function(
             newdata = original,
             ...
         )
-        out[, predicted := pred_or[["estimate"]]]
     } else {
         pred_or <- NULL
     }
 
-    extra_cols <- character()
-    working_cols <- character()
     working_cols <- c(
-        working_cols,
         intersect(
             c("rowidcf", "term", "group", "type", "comparison_idx"),
             colnames(original)
@@ -266,22 +247,27 @@ comparison_plan_build <- function(
         out[, "term" := "cross"]
     }
 
+    by_regex <- "^term$|^contrast_?|^group$"
     if (isTRUE(checkmate::check_data_frame(by))) {
         tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
         by <- harmonize_by_types(out, by)
         out[by, by := by, on = tmp]
         by <- "by"
     } else if (isTRUE(by)) {
-        regex <- "^term$|^contrast_?|^group$"
-        by <- unique(grep(regex, colnames(out), value = TRUE))
+        by <- unique(grep(by_regex, colnames(out), value = TRUE))
     } else if (isTRUE(checkmate::check_character(by))) {
-        regex <- "^term$|^contrast_?|^group$"
-        by <- unique(c(by, grep(regex, colnames(out), value = TRUE)))
+        by <- unique(c(by, grep(by_regex, colnames(out), value = TRUE)))
     }
 
     fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
-    fun_list[["cross"]] <- fun_list[[1]]
     elasticities <- prepare_elasticities(variables, original, out, by, elasticity_names)
+    comparison_context <- list(
+        cross = cross,
+        newdata = newdata,
+        variables = variables,
+        fun_list = fun_list,
+        elasticities = elasticities
+    )
 
     draws_lo <- attr(pred_lo, "posterior_draws")
     draws_hi <- attr(pred_hi, "posterior_draws")
@@ -325,31 +311,23 @@ comparison_plan_build <- function(
     }
 
     if (!is.null(draws)) {
-        built <- comparison_plan_build_bayesian(
+        built <- compare_hi_lo_bayesian(
             out = out,
             draws = draws,
             draws_hi = draws_hi,
             draws_lo = draws_lo,
             draws_or = draws_or,
             by = by,
-            cross = cross,
-            variables = variables,
-            fun_list = fun_list,
-            elasticities = elasticities,
-            newdata = newdata
+            context = comparison_context
         )
         out <- built$out
         draws <- built$draws
-        plan <- built$plan
+        plan <- NULL
     } else {
         built <- comparison_plan_build_frequentist(
             out = out,
             idx = idx,
-            cross = cross,
-            variables = variables,
-            fun_list = fun_list,
-            elasticities = elasticities,
-            newdata = newdata,
+            context = comparison_context,
             pred_hi = pred_hi[["estimate"]],
             pred_lo = pred_lo[["estimate"]],
             pred_or = if (!is.null(pred_or)) pred_or[["estimate"]] else NULL,

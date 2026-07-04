@@ -30,6 +30,78 @@ warn_once <- function(msg, id) {
     options(opts)
 }
 
+main_marginaleffect_group <- function() {
+    "main_marginaleffect"
+}
+
+
+drop_trivial_group <- function(x) {
+    if ("group" %in% names(x) && all(x$group == main_marginaleffect_group())) {
+        x$group <- NULL
+    }
+    return(x)
+}
+
+
+sanitize_inferences_method <- function(vcov) {
+    methods <- c("rsample", "boot", "fwb", "simulation")
+    if (isTRUE(checkmate::check_choice(vcov, methods))) {
+        list(vcov = FALSE, method = vcov)
+    } else {
+        list(vcov = vcov, method = NULL)
+    }
+}
+
+
+finalize_estimates <- function(
+    out,
+    mfx,
+    by,
+    transform,
+    equivalence,
+    class_name,
+    inferences_method = NULL,
+    drop_group = FALSE,
+    conf_int = TRUE,
+    pre_transform = NULL,
+    ...) {
+    if (isTRUE(conf_int)) {
+        out <- get_ci(out, mfx)
+    }
+
+    out <- sort_columns(out, mfx@newdata, by)
+    out <- equivalence(out, equivalence = equivalence, df = mfx@df, draws = mfx@draws, ...)
+    out <- backtransform(out, transform = pre_transform, draws = mfx@draws)
+    out <- backtransform(out, transform = transform, draws = mfx@draws)
+
+    new_draws <- attr(out, "posterior_draws")
+    if (!is.null(new_draws)) {
+        mfx@draws <- new_draws
+    }
+
+    out[["marginaleffects_wts_internal"]] <- NULL
+    data.table::setDF(out)
+    class(out) <- c(class_name, class(out))
+
+    if (inherits(mfx@model, "brmsfit")) {
+        insight::check_if_installed("brms")
+        mfx@draws_chains <- brms::nchains(mfx@model)
+    }
+
+    out <- add_attributes(out, mfx)
+    out <- prune_attributes(out)
+
+    if (isTRUE(drop_group)) {
+        out <- drop_trivial_group(out)
+    }
+
+    if (!is.null(inferences_method)) {
+        out <- inferences(out, method = inferences_method)
+    }
+
+    return(out)
+}
+
 
 # Cross join a list of data tables
 # Source: https://github.com/Rdatatable/data.table/issues/1717#issuecomment-545758165
