@@ -13,7 +13,6 @@ Constructor for marginaleffects_internal class
   model,
   call,
   by = FALSE,
-  byfun = NULL,
   comparison = NULL,
   conf_level = 0.95,
   cross = FALSE,

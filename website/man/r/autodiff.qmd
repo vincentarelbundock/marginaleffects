@@ -68,10 +68,16 @@ Currently supports:
 <li> <code>type</code>: &quot;response&quot; or &quot;link&quot;
 
 </li>
-<li> <code>by</code>: <code>TRUE</code>, <code>FALSE</code>, or character vector.
+<li> <code>by</code>: <code>TRUE</code>, <code>FALSE</code>, character vector, or data frame.
 
 </li>
-<li> <code>comparison</code>: &quot;difference&quot; and &quot;ratio&quot;
+<li> <code>wts</code>: weights for averages and grouped estimates.
+
+</li>
+<li> <code>hypothesis</code>: numeric vectors and matrices.
+
+</li>
+<li> <code>comparison</code>: &quot;difference&quot; and &quot;ratio&quot;, including <code>comparison = "ratio"</code> with <code>by = TRUE</code>.
 
 </li></ul>
 
