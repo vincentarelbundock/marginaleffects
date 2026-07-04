@@ -1,6 +1,6 @@
 import jax
 import jax.numpy as jnp
-from jax import jit
+from jax import jacfwd, jacrev, jit
 import numpy as np
 
 
@@ -14,6 +14,12 @@ def _standard_errors(J, V) -> jnp.ndarray:
 def standard_errors(J, V) -> np.ndarray:
     se = _standard_errors(J, V)
     return np.array(se, dtype=np.float64)
+
+
+def jacobian(func, beta: jnp.ndarray, output: jnp.ndarray) -> jnp.ndarray:
+    if output.size > beta.size:
+        return jacfwd(func)(beta)
+    return jacrev(func)(beta)
 
 
 def group_reducer(

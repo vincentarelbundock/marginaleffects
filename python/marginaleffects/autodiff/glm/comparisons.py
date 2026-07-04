@@ -9,7 +9,7 @@ from ..comparisons import (
     _compute_comparison_scalar,
     ComparisonType,
 )
-from ..utils import group_reducer, standard_errors
+from ..utils import group_reducer, jacobian, standard_errors
 
 
 def _comparison_core(
@@ -53,11 +53,13 @@ def _comparisons_core(
     link_type: int = None,
 ) -> tuple[jnp.ndarray, jnp.ndarray]:
     comp = _comparison_core(beta, X_hi, X_lo, comparison_type, family_type, link_type)
-    jac = jacrev(
-        lambda b: _comparison_core(
+
+    def fun(b):
+        return _comparison_core(
             b, X_hi, X_lo, comparison_type, family_type, link_type
         )
-    )(beta)
+
+    jac = jacobian(fun, beta, comp)
     return comp, jac
 
 

@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
   "pip",
-  "marginaleffects>=0.3.0",
+  "marginaleffects",
   "jax>=0.8.0",
   "numpy"
 ]

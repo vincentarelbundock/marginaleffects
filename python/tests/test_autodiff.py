@@ -10,6 +10,9 @@ import numpy as np
 import polars as pl
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
+import subprocess
+import sys
+import textwrap
 
 from marginaleffects import (
     predictions,
@@ -266,6 +269,132 @@ class TestPredictionsGrouped:
 
 class TestComparisonsByFalse:
     """Test comparisons(by=False) with autodiff vs finite differences."""
+
+    def test_row_level_comparisons_use_forward_mode_for_many_outputs(self):
+        code = textwrap.dedent(
+            """
+            import importlib
+            import numpy as np
+            import jax
+
+            def forbidden_jacrev(*args, **kwargs):
+                raise RuntimeError("row-level comparisons should not call jacrev")
+
+            jax.jacrev = forbidden_jacrev
+
+            from marginaleffects.autodiff import comparisons as comparison_types
+            from marginaleffects.autodiff.linear import comparisons as linear_comparisons
+            from marginaleffects.autodiff.glm import comparisons as glm_comparisons
+            from marginaleffects.autodiff.glm import families
+
+            linear_comparisons = importlib.reload(linear_comparisons)
+            glm_comparisons = importlib.reload(glm_comparisons)
+
+            n = 500
+            p = 12
+            rng = np.random.default_rng(1024)
+            beta = rng.normal(size=p)
+            X_lo = rng.normal(size=(n, p))
+            X_lo[:, 0] = 1
+            X_hi = X_lo.copy()
+            X_hi[:, 1] += 1
+            vcov = np.eye(p) * 0.01
+
+            out = linear_comparisons.comparisons(
+                beta=beta,
+                X_hi=X_hi,
+                X_lo=X_lo,
+                vcov=vcov,
+                comparison_type=comparison_types.ComparisonType.DIFFERENCE,
+            )
+            assert out["jacobian"].shape == (n, p)
+            assert out["std_error"].shape == (n,)
+
+            out = glm_comparisons.comparisons(
+                beta=beta,
+                X_hi=X_hi,
+                X_lo=X_lo,
+                vcov=vcov,
+                comparison_type=comparison_types.ComparisonType.DIFFERENCE,
+                family_type=families.Family.BINOMIAL,
+                link_type=families.Link.LOGIT,
+            )
+
+            assert out["jacobian"].shape == (n, p)
+            assert out["std_error"].shape == (n,)
+            """
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", code],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        assert result.returncode == 0, result.stderr
+
+    def test_row_level_comparisons_use_reverse_mode_for_few_outputs(self):
+        code = textwrap.dedent(
+            """
+            import importlib
+            import numpy as np
+            import jax
+
+            def forbidden_jacfwd(*args, **kwargs):
+                raise RuntimeError("few-output comparisons should not call jacfwd")
+
+            jax.jacfwd = forbidden_jacfwd
+
+            from marginaleffects.autodiff import comparisons as comparison_types
+            from marginaleffects.autodiff.linear import comparisons as linear_comparisons
+            from marginaleffects.autodiff.glm import comparisons as glm_comparisons
+            from marginaleffects.autodiff.glm import families
+
+            linear_comparisons = importlib.reload(linear_comparisons)
+            glm_comparisons = importlib.reload(glm_comparisons)
+
+            n = 5
+            p = 20
+            rng = np.random.default_rng(1024)
+            beta = rng.normal(size=p)
+            X_lo = rng.normal(size=(n, p))
+            X_lo[:, 0] = 1
+            X_hi = X_lo.copy()
+            X_hi[:, 1] += 1
+            vcov = np.eye(p) * 0.01
+
+            out = linear_comparisons.comparisons(
+                beta=beta,
+                X_hi=X_hi,
+                X_lo=X_lo,
+                vcov=vcov,
+                comparison_type=comparison_types.ComparisonType.DIFFERENCE,
+            )
+            assert out["jacobian"].shape == (n, p)
+            assert out["std_error"].shape == (n,)
+
+            out = glm_comparisons.comparisons(
+                beta=beta,
+                X_hi=X_hi,
+                X_lo=X_lo,
+                vcov=vcov,
+                comparison_type=comparison_types.ComparisonType.DIFFERENCE,
+                family_type=families.Family.BINOMIAL,
+                link_type=families.Link.LOGIT,
+            )
+
+            assert out["jacobian"].shape == (n, p)
+            assert out["std_error"].shape == (n,)
+            """
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", code],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        assert result.returncode == 0, result.stderr
 
     # --- OLS model ---
     def test_ols_difference(self, ols_model):
