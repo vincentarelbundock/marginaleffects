@@ -359,7 +359,7 @@ comparisons <- function(
         built <- do_call(comparison_plan_build, args)
         cmp <- built$cmp
 
-        # hypothesis formula names are attached in by() in get_predictions()
+        # hypothesis formula names are attached in by()
         mfx@variable_names_by <- unique(c(
             mfx@variable_names_by,
             attr(cmp, "hypothesis_function_by")))

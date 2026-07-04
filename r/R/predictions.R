@@ -311,7 +311,7 @@ predictions <- function(
         built <- do_call(prediction_plan_build, args)
         tmp <- built$cmp
 
-        # hypothesis formula names are attached in by() in get_predictions()
+        # hypothesis formula names are attached in by()
         mfx@variable_names_by <- unique(c(
             mfx@variable_names_by,
             attr(tmp, "hypothesis_function_by")))

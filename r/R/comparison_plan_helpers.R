@@ -1,33 +1,3 @@
-get_comparisons <- function(
-    mfx,
-    type,
-    variables,
-    original,
-    lo,
-    hi,
-    model_perturbed = NULL,
-    by = NULL,
-    hypothesis = NULL,
-    cross = FALSE,
-    verbose = TRUE,
-    ...) {
-    comparison_plan_build(
-        mfx = mfx,
-        type = type,
-        variables = variables,
-        original = original,
-        lo = lo,
-        hi = hi,
-        model_perturbed = model_perturbed,
-        by = by,
-        hypothesis = hypothesis,
-        cross = cross,
-        verbose = verbose,
-        ...
-    )$cmp
-}
-
-
 predictions_hi_lo <- function(model, lo, hi, type, ...) {
     # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
     if (inherits(model, c("brmsfit", "bart"))) {
