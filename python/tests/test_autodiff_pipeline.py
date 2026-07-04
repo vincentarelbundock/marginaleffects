@@ -149,3 +149,39 @@ def test_pipeline_comparisons_ops_est_keep_and_hypothesis():
         rtol=1e-5,
         atol=1e-6,
     )
+
+
+def test_pipeline_uses_forward_mode_for_many_outputs(monkeypatch):
+    import jax
+
+    from marginaleffects.autodiff import pipeline
+
+    def forbidden_jacrev(*args, **kwargs):
+        raise RuntimeError("many-output pipeline should not call jacrev")
+
+    monkeypatch.setattr(jax, "jacrev", forbidden_jacrev)
+
+    beta = np.array([0.3, -0.2, 0.5])
+    X = np.arange(15, dtype=float).reshape(5, 3)
+
+    result = pipeline.compute(beta=beta, model_type="linear", X=X)
+
+    assert result["jacobian"].shape == (5, 3)
+
+
+def test_pipeline_uses_reverse_mode_for_few_outputs(monkeypatch):
+    import jax
+
+    from marginaleffects.autodiff import pipeline
+
+    def forbidden_jacfwd(*args, **kwargs):
+        raise RuntimeError("few-output pipeline should not call jacfwd")
+
+    monkeypatch.setattr(jax, "jacfwd", forbidden_jacfwd)
+
+    beta = np.array([0.3, -0.2, 0.5, 0.1, -0.4])
+    X = np.arange(10, dtype=float).reshape(2, 5)
+
+    result = pipeline.compute(beta=beta, model_type="linear", X=X)
+
+    assert result["jacobian"].shape == (2, 5)

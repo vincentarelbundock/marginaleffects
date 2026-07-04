@@ -16,7 +16,7 @@ requiet("tinytest")
 requiet("tinysnapshot")
 
 # Enable costly JAX-backed tests only when explicitly requested by the runner.
-AUTODIFF <- tolower(Sys.getenv("MARGINALEFFECTS_AUTODIFF")) %in% c("1", "true", "yes", "on")
+AUTODIFF <- tolower(Sys.getenv("MARGINALEFFECTS_AUTODIFF", "")) %in% c("1", "true", "yes", "on")
 autodiff(FALSE) # by default in every file
 options("marginaleffects_autodiff_message" = TRUE)
 

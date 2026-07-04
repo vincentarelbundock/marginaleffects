@@ -28,6 +28,9 @@ def _prepare_newdata(newdata, modeldata, variables):
     else:
         raise TypeError("`variables` argument must be a dictionary")
 
+    if "rowid" in newdata.columns and "rowidcf" not in newdata.columns:
+        newdata = newdata.rename({"rowid": "rowidcf"})
+
     for variable, spec in normalized.items():
         if callable(spec):
             val = spec()
@@ -62,6 +65,11 @@ def _prepare_newdata(newdata, modeldata, variables):
         newdata = newdata.drop(variable)
         newdata = newdata.join(pl.DataFrame({variable: val}), how="cross")
         newdata = newdata.sort(variable)
+
+    if "rowidcf" in newdata.columns:
+        newdata = newdata.with_columns(
+            pl.Series(range(newdata.height), dtype=pl.Int32).alias("rowid")
+        )
 
     return newdata, list(normalized.keys())
 
