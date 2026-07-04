@@ -1,3 +1,29 @@
+predictions_hi_lo_frequentist <- function(model, lo, hi, type, ...) {
+    pred_lo <- get_predict_error(
+        model,
+        type = type,
+        newdata = lo,
+        ...
+    )
+
+    pred_hi_result <- myTryCatch(get_predict(
+        model,
+        type = type,
+        newdata = hi,
+        ...
+    ))
+
+    # otherwise we keep the full error object instead of extracting the value
+    if (inherits(pred_hi_result$value, "data.frame")) {
+        pred_hi <- pred_hi_result$value
+    } else {
+        pred_hi <- pred_hi_result$error
+    }
+
+    list(pred_lo = pred_lo, pred_hi = pred_hi)
+}
+
+
 comparison_plan_build_frequentist <- function(
     out,
     idx,

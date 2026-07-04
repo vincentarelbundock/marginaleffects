@@ -1,3 +1,34 @@
+predictions_hi_lo_bayesian <- function(model, lo, hi, type, ...) {
+    # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
+    if (!"rowid" %in% colnames(lo)) {
+        lo$rowid <- hi$rowid <- seq_len(nrow(lo))
+    }
+
+    both <- rbindlist(list(lo, hi))
+
+    pred_both <- get_predict_error(
+        model,
+        type = type,
+        newdata = both,
+        ...
+    )
+
+    pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
+
+    pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+    pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+
+    draws <- attr(pred_both, "posterior_draws")
+    draws_lo <- draws[pred_both$lo, , drop = FALSE]
+    draws_hi <- draws[!pred_both$lo, , drop = FALSE]
+
+    attr(pred_lo, "posterior_draws") <- draws_lo
+    attr(pred_hi, "posterior_draws") <- draws_hi
+
+    list(pred_lo = pred_lo, pred_hi = pred_hi)
+}
+
+
 comparison_group_indices <- function(by_idx) {
     by_idx_unique <- unique(by_idx)
     out <- vector("list", length(by_idx_unique))
@@ -142,7 +173,7 @@ compare_hi_lo_bayesian_scalar <- function(out, draws, draws_hi, draws_lo, draws_
         term <- out$term[idx]
         wts <- out$marginaleffects_wts_internal[idx]
         tmp_idx <- out$tmp_idx[idx]
-        con <- compare_hi_lo_value(
+        con <- comparison_call(
             hi = draws_hi[idx, 1],
             lo = draws_lo[idx, 1],
             y = draws_or[idx, 1],
@@ -155,7 +186,7 @@ compare_hi_lo_bayesian_scalar <- function(out, draws, draws_hi, draws_lo, draws_
             variables = variables,
             fun_list = fun_list,
             elasticities = elasticities
-        )
+        )$value
         if (length(con) != 1) {
             return(NULL)
         }
@@ -177,7 +208,7 @@ compare_hi_lo_bayesian_scalar <- function(out, draws, draws_hi, draws_lo, draws_
         for (j in seq_along(group_data)) {
             data <- group_data[[j]]
             for (i in seq.int(2L, ncol(draws_scalar))) {
-                con <- compare_hi_lo_value(
+                con <- comparison_call(
                     hi = draws_hi[data$idx, i],
                     lo = draws_lo[data$idx, i],
                     y = draws_or[data$idx, i],
@@ -190,7 +221,7 @@ compare_hi_lo_bayesian_scalar <- function(out, draws, draws_hi, draws_lo, draws_
                     variables = variables,
                     fun_list = fun_list,
                     elasticities = elasticities
-                )
+                )$value
                 if (length(con) != 1) {
                     return(NULL)
                 }
@@ -208,7 +239,7 @@ compare_hi_lo_bayesian_scalar <- function(out, draws, draws_hi, draws_lo, draws_
 
 
 compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, variables, fun_list, elasticities) {
-    con <- compare_hi_lo_value(
+    con <- comparison_call(
         hi = hi,
         lo = lo,
         y = y,
@@ -221,7 +252,7 @@ compare_hi_lo <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, vari
         variables = variables,
         fun_list = fun_list,
         elasticities = elasticities
-    )
+    )$value
     if (length(con) == 1) {
         tmp <- rep(NA_real_, length(hi))
         tmp[[1]] <- con

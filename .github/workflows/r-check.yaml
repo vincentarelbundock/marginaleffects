@@ -31,9 +31,9 @@ jobs:
         with:
           working-directory: r
 
-      - uses: vincentarelbundock/scrutin/.github/actions/install_tools@main
-        with:
-          tools: jarl
+      # - uses: vincentarelbundock/scrutin/.github/actions/install_tools@main
+      #   with:
+      #     tools: jarl
 
       - uses: vincentarelbundock/scrutin/.github/actions/install_scrutin@main
 

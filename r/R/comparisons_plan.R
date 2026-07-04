@@ -1,54 +1,9 @@
 predictions_hi_lo <- function(model, lo, hi, type, ...) {
-    # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
     if (inherits(model, c("brmsfit", "bart"))) {
-        if (!"rowid" %in% colnames(lo)) {
-            lo$rowid <- hi$rowid <- seq_len(nrow(lo))
-        }
-
-        both <- rbindlist(list(lo, hi))
-
-        pred_both <- get_predict_error(
-            model,
-            type = type,
-            newdata = both,
-            ...
-        )
-
-        pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
-
-        pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
-        pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
-
-        draws <- attr(pred_both, "posterior_draws")
-        draws_lo <- draws[pred_both$lo, , drop = FALSE]
-        draws_hi <- draws[!pred_both$lo, , drop = FALSE]
-
-        attr(pred_lo, "posterior_draws") <- draws_lo
-        attr(pred_hi, "posterior_draws") <- draws_hi
+        predictions_hi_lo_bayesian(model, lo, hi, type, ...)
     } else {
-        pred_lo <- get_predict_error(
-            model,
-            type = type,
-            newdata = lo,
-            ...
-        )
-
-        pred_hi_result <- myTryCatch(get_predict(
-            model,
-            type = type,
-            newdata = hi,
-            ...
-        ))
-
-        # otherwise we keep the full error object instead of extracting the value
-        if (inherits(pred_hi_result$value, "data.frame")) {
-            pred_hi <- pred_hi_result$value
-        } else {
-            pred_hi <- pred_hi_result$error
-        }
+        predictions_hi_lo_frequentist(model, lo, hi, type, ...)
     }
-
-    return(list(pred_lo = pred_lo, pred_hi = pred_hi))
 }
 
 
@@ -133,24 +88,6 @@ comparison_call <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, va
     comparison_validate_result(con, n)
     call$value <- con
     call
-}
-
-
-compare_hi_lo_value <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, variables, fun_list, elasticities) {
-    comparison_call(
-        hi = hi,
-        lo = lo,
-        y = y,
-        n = n,
-        term = term,
-        cross = cross,
-        wts = wts,
-        tmp_idx = tmp_idx,
-        newdata = newdata,
-        variables = variables,
-        fun_list = fun_list,
-        elasticities = elasticities
-    )$value
 }
 
 
