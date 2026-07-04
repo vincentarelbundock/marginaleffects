@@ -19,7 +19,7 @@ dat <<- get_dataset("Affairs", "AER")
 
 # tobit: marginaleffects vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$aer_tobit
-mod1 <- tobit(
+mod1 <- AER::tobit(
     affairs ~ age + yearsmarried + religiousness + occupation + rating,
     data = dat
 )
@@ -29,7 +29,7 @@ expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .00001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = 1e-4)
 
 stata <- readRDS(testing_path("stata/stata.rds"))$aer_tobit_right
-mod2 <- tobit(
+mod2 <- AER::tobit(
     affairs ~ age + yearsmarried + religiousness + occupation + rating,
     right = 4,
     data = dat
@@ -41,7 +41,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .1)
 
 
 # marginaleffects vs. emtrends
-mod <- tobit(affairs ~ age + yearsmarried, data = dat)
+mod <- AER::tobit(affairs ~ age + yearsmarried, data = dat)
 mfx <- slopes(mod, newdata = datagrid(age = 30, yearsmarried = 5))
 em1 <- emmeans::emtrends(mod, ~age, "age", at = list(age = 30, yearsmarried = 5))
 em2 <- emmeans::emtrends(mod, ~yearsmarried, "yearsmarried", at = list(age = 30, yearsmarried = 5))
@@ -60,3 +60,4 @@ mod <- AER::tobit(
 )
 pred <- predictions(mod, newdata = dat)
 expect_predictions(mod, newdata = dat, n_row = nrow(dat))
+
