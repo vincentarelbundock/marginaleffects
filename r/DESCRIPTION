@@ -219,7 +219,7 @@ Collate:
     'construct_call.R'
     'datagrid.R'
     'equivalence.R'
-    'estimate_plan.R'
+    'plan_replay.R'
     'get_ci.R'
     'get_coef.R'
     'get_comparisons_data.R'

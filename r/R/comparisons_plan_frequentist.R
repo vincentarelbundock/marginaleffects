@@ -160,12 +160,12 @@ comparison_plan_apply <- function(plan, hi, lo, y = NULL) {
     if (!is.null(plan$est_keep)) {
         est <- est[plan$est_keep]
     }
-    estimate_plan_apply_post(est, plan$agg, plan$hyp)
+    apply_plan_aggregation_and_hypothesis(est, plan$agg, plan$hyp)
 }
 
 
 comparison_plan_predict <- function(.plan, model_perturbed, ...) {
-    dots <- estimate_plan_predict_dots(.plan$predict_args$dots, list(...))
+    dots <- sanitize_plan_predict_args(.plan$predict_args$dots, list(...))
     args_hi <- c(
         list(
             model = model_perturbed,

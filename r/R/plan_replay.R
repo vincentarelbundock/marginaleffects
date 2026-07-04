@@ -1,4 +1,4 @@
-estimate_plan_predict_dots <- function(base, extra = list()) {
+sanitize_plan_predict_args <- function(base, extra = list()) {
     out <- utils::modifyList(base %||% list(), extra %||% list())
     drop <- c(
         "mfx", "model", "model_perturbed", "hypothesis", "hi", "lo",
@@ -9,7 +9,7 @@ estimate_plan_predict_dots <- function(base, extra = list()) {
     out[setdiff(names(out), drop)]
 }
 
-estimate_plan_record_agg <- function(
+record_plan_aggregation <- function(
     estimates,
     newdata,
     by,
@@ -84,7 +84,7 @@ estimate_plan_record_agg <- function(
     return(list(out = out, agg = agg))
 }
 
-estimate_plan_apply_agg <- function(agg, est) {
+apply_plan_aggregation <- function(agg, est) {
     out <- numeric(length(agg$groups))
     for (j in seq_along(agg$groups)) {
         gr <- agg$groups[[j]]
@@ -98,9 +98,9 @@ estimate_plan_apply_agg <- function(agg, est) {
     out
 }
 
-estimate_plan_apply_post <- function(est, agg = NULL, hyp = NULL) {
+apply_plan_aggregation_and_hypothesis <- function(est, agg = NULL, hyp = NULL) {
     if (!is.null(agg)) {
-        est <- estimate_plan_apply_agg(agg, est)
+        est <- apply_plan_aggregation(agg, est)
     }
     if (!is.null(hyp)) {
         est <- hyp$apply(est)
@@ -108,7 +108,7 @@ estimate_plan_apply_post <- function(est, agg = NULL, hyp = NULL) {
     est
 }
 
-estimate_plan_check_baseline <- function(kind, baseline, expected) {
+validate_plan_replay <- function(kind, baseline, expected) {
     if (!isTRUE(all.equal(baseline, expected, tolerance = 1e-12, check.attributes = FALSE))) {
         stop_sprintf("Internal error: %s plan baseline check failed.", kind)
     }

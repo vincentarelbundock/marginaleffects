@@ -434,7 +434,7 @@ comparison_plan_build <- function(
     auto_mean_fun_sub <- any(grepl("^mean\\(", unique(out$contrast)))
     if (!auto_mean_fun_sub && any(grepl("^contrast[_]?", colnames(out)))) {
         if (is.null(draws) && !is.null(plan)) {
-            agg <- estimate_plan_record_agg(
+            agg <- record_plan_aggregation(
                 out,
                 draws = NULL,
                 newdata = newdata,
@@ -496,7 +496,7 @@ comparison_plan_build <- function(
             pred_lo[["estimate"]],
             if (!is.null(pred_or)) pred_or[["estimate"]] else NULL
         )
-        estimate_plan_check_baseline("comparison", baseline, out[["estimate"]])
+        validate_plan_replay("comparison", baseline, out[["estimate"]])
     } else {
         out <- get_hypothesis(
             out,

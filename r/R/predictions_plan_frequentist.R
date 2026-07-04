@@ -10,7 +10,7 @@ prediction_plan_build_frequentist <- function(
     hypothesis = NULL,
     verbose = TRUE,
     ...) {
-    agg <- estimate_plan_record_agg(
+    agg <- record_plan_aggregation(
         out,
         newdata = newdata,
         by = by,
@@ -40,7 +40,7 @@ prediction_plan_build_frequentist <- function(
         has_na = anyNA(if (is.null(keep)) raw_estimate else raw_estimate[keep])
     )
     baseline <- prediction_plan_apply(plan, raw_estimate)
-    estimate_plan_check_baseline("prediction", baseline, out[["estimate"]])
+    validate_plan_replay("prediction", baseline, out[["estimate"]])
 
     list(cmp = out, plan = plan)
 }
@@ -51,12 +51,12 @@ prediction_plan_apply <- function(plan, pred) {
     if (!is.null(plan$keep)) {
         pred <- pred[plan$keep]
     }
-    estimate_plan_apply_post(pred, plan$agg, plan$hyp)
+    apply_plan_aggregation_and_hypothesis(pred, plan$agg, plan$hyp)
 }
 
 
 prediction_plan_predict <- function(.plan, model_perturbed, ...) {
-    dots <- estimate_plan_predict_dots(.plan$predict_args$dots, list(...))
+    dots <- sanitize_plan_predict_args(.plan$predict_args$dots, list(...))
     args <- c(
         list(
             model = model_perturbed,
