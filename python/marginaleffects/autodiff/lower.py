@@ -5,7 +5,7 @@ import warnings
 
 import numpy as np
 
-from ..settings import is_autodiff_enabled
+from ..settings import is_autodiff_enabled, is_autodiff_forced
 from ..uncertainty import get_se
 from .ops import COMPARISON_OPS
 
@@ -176,13 +176,15 @@ def autodiff_try(plan, model, V, estimate, kind):
     if plan is None or V is None or not is_autodiff_enabled():
         return None
 
+    warn_on_fallback = is_autodiff_forced()
     lowered = (
         lower_predictions(plan, model)
         if kind == "predictions"
         else lower_comparisons(plan, model)
     )
     if not lowered.ok:
-        _warn_unsupported(lowered.reason)
+        if warn_on_fallback:
+            _warn_unsupported(lowered.reason)
         return None
 
     try:
@@ -190,22 +192,24 @@ def autodiff_try(plan, model, V, estimate, kind):
 
         result = pipeline.compute(beta=model.get_coef(), **lowered.kwargs)
     except Exception as exc:
-        warnings.warn(
-            "Automatic differentiation failed "
-            f"({exc}). Reverting to finite differences.",
-            UserWarning,
-            stacklevel=3,
-        )
+        if warn_on_fallback:
+            warnings.warn(
+                "Automatic differentiation failed "
+                f"({exc}). Reverting to finite differences.",
+                UserWarning,
+                stacklevel=3,
+            )
         return None
 
     estimate = np.asarray(estimate, dtype=float).reshape(-1)
     if not np.allclose(result["estimate"], estimate, rtol=1e-8, atol=1e-8):
-        warnings.warn(
-            "Automatic differentiation estimates did not match the standard "
-            "pipeline. Reverting to finite differences.",
-            UserWarning,
-            stacklevel=3,
-        )
+        if warn_on_fallback:
+            warnings.warn(
+                "Automatic differentiation estimates did not match the standard "
+                "pipeline. Reverting to finite differences.",
+                UserWarning,
+                stacklevel=3,
+            )
         return None
 
     # Coef/vcov positional alignment is guaranteed by each adapter vault.

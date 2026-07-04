@@ -109,7 +109,8 @@ apply_plan_aggregation_and_hypothesis <- function(est, agg = NULL, hyp = NULL) {
 }
 
 validate_plan_replay <- function(kind, baseline, expected) {
-    if (!isTRUE(all.equal(baseline, expected, tolerance = 1e-12, check.attributes = FALSE))) {
+    tolerance <- sqrt(.Machine$double.eps)
+    if (!isTRUE(all.equal(baseline, expected, tolerance = tolerance, check.attributes = FALSE))) {
         stop_sprintf("Internal error: %s plan baseline check failed.", kind)
     }
 }

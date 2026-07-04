@@ -69,3 +69,22 @@ cmp_formula <- comparisons(
 )
 expect_equal(nrow(cmp_formula), 1)
 expect_true("std.error" %in% colnames(cmp_formula))
+
+ok <- try(
+    marginaleffects:::validate_plan_replay(
+        "comparison",
+        c(1, 2, 3),
+        c(1, 2 + 1e-10, 3)
+    ),
+    silent = TRUE
+)
+expect_false(inherits(ok, "try-error"))
+
+expect_error(
+    marginaleffects:::validate_plan_replay(
+        "comparison",
+        c(1, 2, 3),
+        c(1, 2.01, 3)
+    ),
+    pattern = "comparison plan baseline check failed"
+)

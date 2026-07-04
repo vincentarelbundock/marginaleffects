@@ -10,6 +10,7 @@ import numpy as np
 import polars as pl
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
+import warnings
 
 from marginaleffects import (
     predictions,
@@ -153,7 +154,16 @@ def compare_autodiff_vs_finite_diff(func, model, rtol=1e-4, atol=1e-6, **kwargs)
     Asserts that estimates and standard errors match within tolerance.
     """
     autodiff(True)
-    result_jax = func(model, **kwargs)
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message=(
+                "Automatic differentiation does not support .* "
+                "Reverting to finite differences\\."
+            ),
+            category=UserWarning,
+        )
+        result_jax = func(model, **kwargs)
 
     autodiff(False)
     result_fd = func(model, **kwargs)
@@ -190,6 +200,30 @@ def compare_autodiff_vs_finite_diff(func, model, rtol=1e-4, atol=1e-6, **kwargs)
             atol=atol,
             err_msg=f"Standard errors don't match for {func.__name__}",
         )
+
+
+def test_autodiff_autodetect_unsupported_fallback_is_silent(ols_model):
+    try:
+        autodiff(None)
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            comparisons(ols_model, variables="x1", comparison="lift", by=False)
+
+        unsupported = [
+            w
+            for w in caught
+            if "Automatic differentiation does not support" in str(w.message)
+        ]
+        assert unsupported == []
+
+        autodiff(True)
+        with pytest.warns(
+            UserWarning,
+            match="Automatic differentiation does not support comparison='lift'",
+        ):
+            comparisons(ols_model, variables="x1", comparison="lift", by=False)
+    finally:
+        autodiff(None)
 
 
 # =============================================================================
