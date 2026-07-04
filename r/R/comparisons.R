@@ -344,77 +344,77 @@ comparisons <- function(
     contrast_data$hi <- add_model_matrix_attribute_data(mfx, contrast_data$hi)
     contrast_data$lo <- add_model_matrix_attribute_data(mfx, contrast_data$lo)
 
-        args <- list(
-            mfx = mfx,
-            variables = predictors,
+    args <- list(
+        mfx = mfx,
+        variables = predictors,
+        type = mfx@type,
+        original = contrast_data[["original"]],
+        hi = contrast_data[["hi"]],
+        lo = contrast_data[["lo"]],
+        by = by,
+        cross = cross,
+        hypothesis = mfx@hypothesis
+    )
+    args <- utils::modifyList(args, dots)
+    built <- do_call(comparison_plan_build, args)
+    cmp <- built$cmp
+
+    # hypothesis formula names are attached in by()
+    mfx@variable_names_by <- unique(c(
+        mfx@variable_names_by,
+        attr(cmp, "hypothesis_function_by")))
+
+    # bayesian posterior
+    mfx@draws <- attr(cmp, "posterior_draws")
+
+    # standard errors via delta method
+    if (is.null(mfx@draws) &&
+        !isFALSE(vcov) &&
+        isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+
+        idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
+        idx <- cmp[, (idx), drop = FALSE]
+        ad <- autodiff_try(
+            built$plan,
+            mfx,
+            kind = "comparisons",
             type = mfx@type,
-            original = contrast_data[["original"]],
-            hi = contrast_data[["hi"]],
-            lo = contrast_data[["lo"]],
-            by = by,
-            cross = cross,
-            hypothesis = mfx@hypothesis
+            vcov = mfx@vcov_model,
+            estimate = cmp$estimate,
+            hi = contrast_data$hi,
+            lo = contrast_data$lo
         )
-        args <- utils::modifyList(args, dots)
-        built <- do_call(comparison_plan_build, args)
-        cmp <- built$cmp
-
-        # hypothesis formula names are attached in by()
-        mfx@variable_names_by <- unique(c(
-            mfx@variable_names_by,
-            attr(cmp, "hypothesis_function_by")))
-
-        # bayesian posterior
-        mfx@draws <- attr(cmp, "posterior_draws")
-
-        # standard errors via delta method
-        if (is.null(mfx@draws) &&
-            !isFALSE(vcov) &&
-            isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
-
-            idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
-            idx <- cmp[, (idx), drop = FALSE]
-            ad <- autodiff_try(
-                built$plan,
-                mfx,
-                kind = "comparisons",
-                type = mfx@type,
-                vcov = mfx@vcov_model,
-                estimate = cmp$estimate,
-                hi = contrast_data$hi,
-                lo = contrast_data$lo
-            )
-            if (!is.null(ad)) {
-                mfx@jacobian <- ad$jacobian
-                cmp$std.error <- ad$std.error
-                mfx@draws <- NULL
-            } else {
-                fun <- function(model_perturbed, ...) {
-                    preds <- comparison_plan_predict(built$plan, model_perturbed, ...)
-                    comparison_plan_apply(built$plan, preds$hi, preds$lo, preds$or)
-                }
-                args <- list(
-                    mfx = mfx,
-                    model_perturbed = mfx@model,
-                    vcov = mfx@vcov_model,
-                    type = mfx@type,
-                    FUN = fun,
-                    index = idx,
-                    variables = predictors,
-                    hypothesis = mfx@hypothesis,
-                    hi = contrast_data$hi,
-                    lo = contrast_data$lo,
-                    original = contrast_data$original,
-                    estimates = cmp,
-                    numderiv = numderiv
-                )
-                args <- utils::modifyList(args, dots)
-                se <- do_call(get_se_delta, args)
-                mfx@jacobian <- attr(se, "jacobian")
-                cmp$std.error <- as.vector(as.numeric(se)) # drop attributes
-                mfx@draws <- NULL
+        if (!is.null(ad)) {
+            mfx@jacobian <- ad$jacobian
+            cmp$std.error <- ad$std.error
+            mfx@draws <- NULL
+        } else {
+            fun <- function(model_perturbed, ...) {
+                preds <- comparison_plan_predict(built$plan, model_perturbed, ...)
+                comparison_plan_apply(built$plan, preds$hi, preds$lo, preds$or)
             }
+            args <- list(
+                mfx = mfx,
+                model_perturbed = mfx@model,
+                vcov = mfx@vcov_model,
+                type = mfx@type,
+                FUN = fun,
+                index = idx,
+                variables = predictors,
+                hypothesis = mfx@hypothesis,
+                hi = contrast_data$hi,
+                lo = contrast_data$lo,
+                original = contrast_data$original,
+                estimates = cmp,
+                numderiv = numderiv
+            )
+            args <- utils::modifyList(args, dots)
+            se <- do_call(get_se_delta, args)
+            mfx@jacobian <- attr(se, "jacobian")
+            cmp$std.error <- as.vector(as.numeric(se)) # drop attributes
+            mfx@draws <- NULL
         }
+    }
 
     # Common path for both autodiff and fallback
 
