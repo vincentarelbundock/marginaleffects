@@ -39,7 +39,5 @@ jobs:
       - uses: vincentarelbundock/scrutin/.github/actions/install_scrutin@main
 
       - run: scrutin -r github --set run.tool=pytest
-        working-directory: python
 
       - run: scrutin -r github --set run.tool=ruff
-        working-directory: python
