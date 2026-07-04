@@ -1,3 +1,217 @@
+predictions_hi_lo <- function(model, lo, hi, type, ...) {
+    # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
+    if (inherits(model, c("brmsfit", "bart"))) {
+        if (!"rowid" %in% colnames(lo)) {
+            lo$rowid <- hi$rowid <- seq_len(nrow(lo))
+        }
+
+        both <- rbindlist(list(lo, hi))
+
+        pred_both <- get_predict_error(
+            model,
+            type = type,
+            newdata = both,
+            ...
+        )
+
+        pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
+
+        pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+        pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+
+        draws <- attr(pred_both, "posterior_draws")
+        draws_lo <- draws[pred_both$lo, , drop = FALSE]
+        draws_hi <- draws[!pred_both$lo, , drop = FALSE]
+
+        attr(pred_lo, "posterior_draws") <- draws_lo
+        attr(pred_hi, "posterior_draws") <- draws_hi
+    } else {
+        pred_lo <- get_predict_error(
+            model,
+            type = type,
+            newdata = lo,
+            ...
+        )
+
+        pred_hi_result <- myTryCatch(get_predict(
+            model,
+            type = type,
+            newdata = hi,
+            ...
+        ))
+
+        # otherwise we keep the full error object instead of extracting the value
+        if (inherits(pred_hi_result$value, "data.frame")) {
+            pred_hi <- pred_hi_result$value
+        } else {
+            pred_hi <- pred_hi_result$error
+        }
+    }
+
+    return(list(pred_lo = pred_lo, pred_hi = pred_hi))
+}
+
+
+comparison_call_args <- function(term, cross, wts, tmp_idx, newdata, variables, fun_list, elasticities) {
+    tn <- term[1]
+    fun <- if (isTRUE(cross)) {
+        fun_list[[1]]
+    } else {
+        fun_list[[tn]]
+    }
+    fun_formals <- names(formals(fun))
+
+    args <- list(
+        "eps" = variables[[tn]]$eps,
+        "w" = wts,
+        "newdata" = newdata
+    )
+
+    # sometimes x is exactly the same length, but not always
+    args[["x"]] <- elasticities[[tn]][tmp_idx]
+    args <- args[names(args) %in% fun_formals]
+
+    fun_key <- if (isTRUE(cross)) {
+        variables[[1]][["fun_key"]]
+    } else {
+        variables[[tn]][["fun_key"]]
+    }
+
+    list(
+        fun = fun,
+        fun_key = fun_key,
+        args = args,
+        uses_y = "y" %in% fun_formals
+    )
+}
+
+
+comparison_validate_result <- function(con, n) {
+    if (
+        !isTRUE(checkmate::check_numeric(con, len = n)) &&
+            !isTRUE(checkmate::check_numeric(con, len = 1))
+    ) {
+        msg <- sprintf(
+            "The function supplied to the `comparison` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.",
+            n,
+            n
+        ) # nolint
+        stop_sprintf(msg)
+    }
+}
+
+
+comparison_call <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, variables, fun_list, elasticities) {
+    if (n == 0 || length(hi) == 0) {
+        return(list(
+            value = numeric(0),
+            fun = NULL,
+            fun_key = NULL,
+            args = list(),
+            uses_y = FALSE
+        ))
+    }
+
+    call <- comparison_call_args(
+        term = term,
+        cross = cross,
+        wts = wts,
+        tmp_idx = tmp_idx,
+        newdata = newdata,
+        variables = variables,
+        fun_list = fun_list,
+        elasticities = elasticities
+    )
+
+    value_args <- call$args
+    value_args$hi <- hi
+    value_args$lo <- lo
+    if (isTRUE(call$uses_y)) {
+        value_args$y <- y
+    }
+    con <- try(do_call(call$fun, value_args), silent = TRUE)
+    comparison_validate_result(con, n)
+    call$value <- con
+    call
+}
+
+
+compare_hi_lo_value <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata, variables, fun_list, elasticities) {
+    comparison_call(
+        hi = hi,
+        lo = lo,
+        y = y,
+        n = n,
+        term = term,
+        cross = cross,
+        wts = wts,
+        tmp_idx = tmp_idx,
+        newdata = newdata,
+        variables = variables,
+        fun_list = fun_list,
+        elasticities = elasticities
+    )$value
+}
+
+
+prepare_elasticities <- function(variables, original, out, by, elasticities) {
+    FUN <- function(z) {
+        (is.character(z$comparison) && z$comparison %in% elasticities) ||
+            (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
+    }
+    elasticities <- Filter(FUN, variables)
+
+    if (length(elasticities) > 0) {
+        # assigning a subset of "original" to "idx1" takes time and memory
+        # better to do this here for most columns and add the "v" column only
+        # in the loop
+        if (!is.null(original)) {
+            idx1 <- c(
+                "rowid",
+                "rowidcf",
+                "term",
+                "group",
+                grep("^contrast", colnames(original), value = TRUE)
+            )
+            idx1 <- intersect(idx1, colnames(original))
+            idx1 <- original[, ..idx1]
+        }
+
+        for (v in names(elasticities)) {
+            idx2 <- unique(c(
+                "rowid",
+                "term",
+                "group",
+                by,
+                grep("^contrast", colnames(out), value = TRUE)
+            ))
+            idx2 <- intersect(idx2, colnames(out))
+            # discard other terms to get right length vector
+            idx2 <- out[term == v, ..idx2]
+            # original is NULL when cross=TRUE
+            if (!is.null(original)) {
+                # if not first iteration, need to remove previous "v" and "elast"
+                if (v %in% colnames(idx1)) {
+                    idx1[, (v) := NULL]
+                }
+                if ("elast" %in% colnames(idx1)) {
+                    idx1[, elast := NULL]
+                }
+                idx1[, (v) := original[[v]]]
+                setnames(idx1, old = v, new = "elast")
+                on_cols <- intersect(colnames(idx1), colnames(idx2))
+                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[
+                    ,
+                    elast := elast
+                ])
+            }
+            elasticities[[v]] <- idx2$elast
+        }
+    }
+    return(elasticities)
+}
+
+
 comparison_plan_build <- function(
     mfx,
     type,
@@ -12,6 +226,7 @@ comparison_plan_build <- function(
     verbose = TRUE,
     ...) {
     dots <- list(...)
+    on.exit(settings_rm("marginaleffects_safefun_return1"), add = TRUE)
     newdata <- mfx@newdata
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
 
@@ -173,7 +388,7 @@ comparison_plan_build <- function(
     }
 
     if (!is.null(draws)) {
-        result <- compare_hi_lo_bayesian(
+        built <- comparison_plan_build_bayesian(
             out = out,
             draws = draws,
             draws_hi = draws_hi,
@@ -186,9 +401,9 @@ comparison_plan_build <- function(
             elasticities = elasticities,
             newdata = newdata
         )
-        out <- result$out
-        draws <- result$draws
-        plan <- NULL
+        out <- built$out
+        draws <- built$draws
+        plan <- built$plan
     } else {
         built <- comparison_plan_build_frequentist(
             out = out,
@@ -281,9 +496,7 @@ comparison_plan_build <- function(
             pred_lo[["estimate"]],
             if (!is.null(pred_or)) pred_or[["estimate"]] else NULL
         )
-        if (!isTRUE(all.equal(baseline, out[["estimate"]], tolerance = 1e-12, check.attributes = FALSE))) {
-            stop_sprintf("Internal error: comparison plan baseline check failed.")
-        }
+        estimate_plan_check_baseline("comparison", baseline, out[["estimate"]])
     } else {
         out <- get_hypothesis(
             out,
@@ -295,233 +508,5 @@ comparison_plan_build <- function(
         )
     }
 
-    settings_rm("marginaleffects_safefun_return1")
     list(cmp = out, plan = plan)
-}
-
-comparison_plan_build_frequentist <- function(
-    out,
-    idx,
-    cross,
-    variables,
-    fun_list,
-    elasticities,
-    newdata,
-    pred_hi,
-    pred_lo,
-    pred_or,
-    type,
-    dots,
-    hi,
-    lo,
-    original,
-    need_y) {
-    n_pred <- length(pred_lo)
-    na_keep <- if (anyNA(out$predicted_lo)) which(!is.na(out$predicted_lo)) else NULL
-    if (!is.null(na_keep)) {
-        out <- out[na_keep]
-    }
-
-    idx <- intersect(idx, colnames(out))
-    out[, marginaleffects_plan_row_id := seq_len(.N)]
-    if (length(idx) > 0) {
-        groups_dt <- out[, .(rows = list(marginaleffects_plan_row_id)), keyby = idx]
-        perm <- unlist(groups_dt$rows, use.names = FALSE)
-    } else {
-        perm <- seq_len(nrow(out))
-    }
-    out_sorted <- out[perm]
-    perm_store <- if (identical(perm, seq_len(nrow(out)))) NULL else perm
-
-    if (length(idx) > 0) {
-        bounds <- out_sorted[, .(first = .I[1], last = .I[.N]), keyby = idx]
-    } else {
-        bounds <- data.table::data.table(first = 1L, last = nrow(out_sorted))
-    }
-
-    plan_groups <- vector("list", nrow(bounds))
-    out_parts <- vector("list", nrow(bounds))
-    n_comp <- 0L
-    any_scalar_aggregate <- FALSE
-
-    for (j in seq_len(nrow(bounds))) {
-        rows <- seq.int(bounds$first[[j]], bounds$last[[j]])
-        n <- length(rows)
-        term <- out_sorted$term[rows]
-        tn <- term[[1]]
-        if (isTRUE(cross)) {
-            fun <- fun_list[[1]]
-        } else {
-            fun <- fun_list[[tn]]
-        }
-        args <- list(
-            eps = variables[[tn]]$eps,
-            w = out_sorted$marginaleffects_wts_internal[rows],
-            newdata = newdata,
-            x = elasticities[[tn]][out_sorted$tmp_idx[rows]]
-        )
-        args <- args[names(args) %in% names(formals(fun))]
-        uses_y <- "y" %in% names(formals(fun))
-        value_args <- args
-        value_args$hi <- out_sorted$predicted_hi[rows]
-        value_args$lo <- out_sorted$predicted_lo[rows]
-        if (isTRUE(uses_y)) {
-            value_args$y <- out_sorted$predicted[rows]
-        }
-        con <- try(do_call(fun, value_args), silent = TRUE)
-        if (
-            !isTRUE(checkmate::check_numeric(con, len = n)) &&
-                !isTRUE(checkmate::check_numeric(con, len = 1))
-        ) {
-            msg <- sprintf(
-                "The function supplied to the `comparison` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.",
-                n,
-                n
-            )
-            stop_sprintf(msg)
-        }
-
-        if (length(con) == 1) {
-            if (n > 1) {
-                any_scalar_aggregate <- TRUE
-            }
-            out_idx <- n_comp + 1L
-            part <- out_sorted[rows[[1]], , drop = FALSE]
-            part[, estimate := con]
-            n_comp <- n_comp + 1L
-        } else {
-            out_idx <- seq.int(n_comp + 1L, n_comp + n)
-            part <- out_sorted[rows, , drop = FALSE]
-            part[, estimate := con]
-            n_comp <- n_comp + n
-        }
-        out_parts[[j]] <- part
-        plan_groups[[j]] <- list(
-            idx = rows,
-            out_idx = out_idx,
-            scalar = length(con) == 1,
-            uses_y = uses_y,
-            fun_key = if (isTRUE(cross)) variables[[1]][["fun_key"]] else variables[[tn]][["fun_key"]],
-            fun = fun,
-            args = args
-        )
-    }
-
-    out <- data.table::rbindlist(out_parts, fill = TRUE)
-    out[, tmp_idx := NULL]
-    out[, marginaleffects_plan_row_id := NULL]
-
-    if (isTRUE(any_scalar_aggregate)) {
-        keep_cols <- c(
-            idx,
-            grep(
-                "^estimate$|^contrast|^group$|^term$|^marginaleffects_wts_internal$",
-                colnames(out),
-                value = TRUE
-            )
-        )
-        keep_cols <- unique(intersect(keep_cols, colnames(out)))
-        out <- subset(out, select = keep_cols)
-    }
-
-    est_keep <- if (anyNA(out$estimate)) which(!is.na(out$estimate)) else NULL
-    if (!is.null(est_keep)) {
-        out <- out[est_keep, drop = FALSE]
-    }
-
-    plan <- list(
-        n_pred = n_pred,
-        need_y = need_y,
-        predict_args = list(
-            type = type,
-            hi = hi,
-            lo = lo,
-            original = original,
-            dots = dots
-        ),
-        na_keep = na_keep,
-        perm = perm_store,
-        groups = plan_groups,
-        n_comp = n_comp,
-        est_keep = est_keep,
-        agg = NULL,
-        hyp = NULL
-    )
-    list(out = out, plan = plan)
-}
-
-comparison_plan_apply <- function(plan, hi, lo, y = NULL) {
-    stopifnot(length(hi) == plan$n_pred)
-    stopifnot(length(lo) == plan$n_pred)
-    if (!is.null(plan$na_keep)) {
-        hi <- hi[plan$na_keep]
-        lo <- lo[plan$na_keep]
-        if (!is.null(y)) y <- y[plan$na_keep]
-    }
-    if (!is.null(plan$perm)) {
-        hi <- hi[plan$perm]
-        lo <- lo[plan$perm]
-        if (!is.null(y)) y <- y[plan$perm]
-    }
-
-    est <- numeric(plan$n_comp)
-    for (g in plan$groups) {
-        args <- g$args
-        args$hi <- hi[g$idx]
-        args$lo <- lo[g$idx]
-        if (isTRUE(g$uses_y)) {
-            args$y <- y[g$idx]
-        }
-        est[g$out_idx] <- do_call(g$fun, args)
-    }
-    if (!is.null(plan$est_keep)) {
-        est <- est[plan$est_keep]
-    }
-    if (!is.null(plan$agg)) {
-        est <- estimate_plan_apply_agg(plan$agg, est)
-    }
-    if (!is.null(plan$hyp)) {
-        est <- plan$hyp$apply(est)
-    }
-    est
-}
-
-comparison_plan_predict <- function(.plan, model_perturbed, ...) {
-    dots <- estimate_plan_predict_dots(.plan$predict_args$dots, list(...))
-    args_hi <- c(
-        list(
-            model = model_perturbed,
-            type = .plan$predict_args$type,
-            newdata = .plan$predict_args$hi
-        ),
-        dots
-    )
-    args_lo <- c(
-        list(
-            model = model_perturbed,
-            type = .plan$predict_args$type,
-            newdata = .plan$predict_args$lo
-        ),
-        dots
-    )
-    pred_hi <- do_call(get_predict, args_hi)
-    pred_lo <- do_call(get_predict, args_lo)
-    pred_or <- NULL
-    if (isTRUE(.plan$need_y)) {
-        args_or <- c(
-            list(
-                model = model_perturbed,
-                type = .plan$predict_args$type,
-                newdata = .plan$predict_args$original
-            ),
-            dots
-        )
-        pred_or <- do_call(get_predict, args_or)
-        pred_or <- pred_or[["estimate"]]
-    }
-    list(
-        hi = pred_hi[["estimate"]],
-        lo = pred_lo[["estimate"]],
-        or = pred_or
-    )
 }

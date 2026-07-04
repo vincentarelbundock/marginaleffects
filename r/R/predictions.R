@@ -284,113 +284,101 @@ predictions <- function(
         mfx@newdata <- do.call("datagrid", args)
     }
 
-    # trust newdata$rowid
-    if (!"rowid" %in% colnames(mfx@newdata)) {
-        mfx@newdata[["rowid"]] <- seq_len(nrow(mfx@newdata))
-    }
-
-    # Store unpadded newdata for degrees of freedom calculation
-    unpadded_newdata <- mfx@newdata
-
-    mfx@newdata <- pad(model, mfx@newdata)
+    prepared <- prediction_prepare_newdata(mfx, model)
+    mfx <- prepared$mfx
+    unpadded_newdata <- prepared$unpadded_newdata
 
     ############### sanity checks are over
 
-    # pre-building the model matrix can speed up repeated predictions
-    mfx@newdata <- add_model_matrix_attribute(mfx)
+    prediction_type <- if (link_to_response) "link" else mfx@type
 
-        # main estimation
-        args <- list(
-            mfx = mfx,
-            type = if (link_to_response) "link" else mfx@type,
-            hypothesis = mfx@hypothesis,
-            by = by
+    # main estimation
+    args <- list(
+        mfx = mfx,
+        type = prediction_type,
+        hypothesis = mfx@hypothesis,
+        by = by
+    )
+
+    args <- utils::modifyList(args, dots)
+    built <- do_call(prediction_plan_build, args)
+    tmp <- built$cmp
+
+    # hypothesis formula names are attached in by()
+    mfx@variable_names_by <- unique(c(
+        mfx@variable_names_by,
+        attr(tmp, "hypothesis_function_by")))
+
+    # two cases when tmp is a data.frame
+    # get_predict gets us rowid with the original rows
+    if (inherits(tmp, "data.frame")) {
+        setnames(
+            tmp,
+            old = c("Predicted", "SE", "CI_low", "CI_high"),
+            new = c("estimate", "std.error", "conf.low", "conf.high"),
+            skip_absent = TRUE
         )
-
-        args <- utils::modifyList(args, dots)
-        built <- do_call(prediction_plan_build, args)
-        tmp <- built$cmp
-
-        # hypothesis formula names are attached in by()
-        mfx@variable_names_by <- unique(c(
-            mfx@variable_names_by,
-            attr(tmp, "hypothesis_function_by")))
-
-        # two cases when tmp is a data.frame
-        # get_predict gets us rowid with the original rows
-        if (inherits(tmp, "data.frame")) {
-            setnames(
-                tmp,
-                old = c("Predicted", "SE", "CI_low", "CI_high"),
-                new = c("estimate", "std.error", "conf.low", "conf.high"),
-                skip_absent = TRUE
-            )
-        } else {
-            tmp <- data.frame(mfx@newdata$rowid, mfx@type, tmp)
-            colnames(tmp) <- c("rowid", "type", "estimate")
-            if ("rowidcf" %in% colnames(mfx@newdata)) {
-                tmp[["rowidcf"]] <- mfx@newdata[["rowidcf"]]
-            }
+    } else {
+        tmp <- data.frame(mfx@newdata$rowid, mfx@type, tmp)
+        colnames(tmp) <- c("rowid", "type", "estimate")
+        if ("rowidcf" %in% colnames(mfx@newdata)) {
+            tmp[["rowidcf"]] <- mfx@newdata[["rowidcf"]]
         }
+    }
 
-        # bayesian posterior draws
-        mfx@draws <- attr(tmp, "posterior_draws")
+    # bayesian posterior draws
+    mfx@draws <- attr(tmp, "posterior_draws")
 
-        if (!isFALSE(vcov)) {
-            mfx@vcov_type <- get_vcov_label(vcov)
-            mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = if (link_to_response) "link" else mfx@type, ...)
+    if (!isFALSE(vcov)) {
+        mfx@vcov_type <- get_vcov_label(vcov)
+        mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = prediction_type, ...)
 
-            # Delta method for standard errors
-            if (!"std.error" %in% colnames(tmp) && is.null(mfx@draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
-                ad <- autodiff_try(
-                    built$plan,
-                    mfx,
-                    kind = "predictions",
-                    type = if (link_to_response) "link" else mfx@type,
+        # Delta method for standard errors
+        if (!"std.error" %in% colnames(tmp) && is.null(mfx@draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+            ad <- autodiff_try(
+                built$plan,
+                mfx,
+                kind = "predictions",
+                type = prediction_type,
+                vcov = mfx@vcov_model,
+                estimate = tmp$estimate
+            )
+            if (!is.null(ad)) {
+                mfx@jacobian <- ad$jacobian
+                tmp[["std.error"]] <- ad$std.error
+            } else {
+                fun <- function(model_perturbed, ...) {
+                    pred <- prediction_plan_predict(built$plan, model_perturbed, ...)
+                    prediction_plan_apply(built$plan, pred)
+                }
+                args <- list(
+                    mfx = mfx,
+                    model_perturbed = mfx@model,
                     vcov = mfx@vcov_model,
-                    estimate = tmp$estimate
+                    type = prediction_type,
+                    FUN = fun,
+                    hypothesis = mfx@hypothesis
                 )
-                if (!is.null(ad)) {
-                    mfx@jacobian <- ad$jacobian
-                    tmp[["std.error"]] <- ad$std.error
-                } else {
-                    fun <- function(model_perturbed, ...) {
-                        pred <- prediction_plan_predict(built$plan, model_perturbed, ...)
-                        prediction_plan_apply(built$plan, pred)
-                    }
-                    args <- list(
-                        mfx = mfx,
-                        model_perturbed = mfx@model,
-                        vcov = mfx@vcov_model,
-                        type = if (link_to_response) "link" else mfx@type,
-                        FUN = fun,
-                        hypothesis = mfx@hypothesis
-                    )
-                    args <- utils::modifyList(args, dots)
-                    se <- do_call(get_se_delta, args)
-                    if (is.numeric(se) && length(se) == nrow(tmp)) {
-                        mfx@jacobian <- attr(se, "jacobian")
-                        tmp[["std.error"]] <- as.vector(se) # drop attribute
-                    }
+                args <- utils::modifyList(args, dots)
+                se <- do_call(get_se_delta, args)
+                if (is.numeric(se) && length(se) == nrow(tmp)) {
+                    mfx@jacobian <- attr(se, "jacobian")
+                    tmp[["std.error"]] <- as.vector(se) # drop attribute
                 }
             }
         }
+    }
 
     # Common path for both autodiff and fallback
 
-    # degrees of freedom - use unpadded newdata
-    # Temporarily replace newdata with unpadded version for df calculation
-    original_newdata <- mfx@newdata
-    mfx@newdata <- unpadded_newdata
     mfx <- add_degrees_of_freedom(
         mfx = mfx,
         df = df,
         by = by,
         hypothesis = mfx@hypothesis,
-        vcov = vcov
+        vcov = vcov,
+        newdata = unpadded_newdata
     )
-    # Restore padded newdata
-    mfx@newdata <- original_newdata
     if (!is.null(mfx@df) && is.numeric(mfx@df)) {
         tmp$df <- mfx@df
     }

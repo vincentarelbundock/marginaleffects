@@ -97,3 +97,19 @@ estimate_plan_apply_agg <- function(agg, est) {
     }
     out
 }
+
+estimate_plan_apply_post <- function(est, agg = NULL, hyp = NULL) {
+    if (!is.null(agg)) {
+        est <- estimate_plan_apply_agg(agg, est)
+    }
+    if (!is.null(hyp)) {
+        est <- hyp$apply(est)
+    }
+    est
+}
+
+estimate_plan_check_baseline <- function(kind, baseline, expected) {
+    if (!isTRUE(all.equal(baseline, expected, tolerance = 1e-12, check.attributes = FALSE))) {
+        stop_sprintf("Internal error: %s plan baseline check failed.", kind)
+    }
+}

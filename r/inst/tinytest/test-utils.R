@@ -121,3 +121,32 @@ vector_result <- marginaleffects:::compare_hi_lo_bayesian_scalar(
     group_indices = group_indices
 )
 expect_null(vector_result)
+
+marginaleffects:::settings_set("marginaleffects_safefun_return1", TRUE)
+expect_error(
+    marginaleffects:::comparison_plan_build(),
+    pattern = "argument \"mfx\" is missing"
+)
+expect_false(marginaleffects:::settings_equal(
+    "marginaleffects_safefun_return1",
+    TRUE
+))
+
+comparison_result <- marginaleffects:::comparison_call(
+    hi = c(3, 5),
+    lo = c(1, 2),
+    y = c(10, 20),
+    n = 2,
+    term = c("x", "x"),
+    cross = FALSE,
+    wts = c(1, 2),
+    tmp_idx = c(1, 2),
+    newdata = data.frame(a = 1:2),
+    variables = list(x = list(eps = 2, fun_key = "custom")),
+    fun_list = list(x = function(hi, lo, eps, x) (hi - lo) / eps + x),
+    elasticities = list(x = c(10, 20))
+)
+expect_equivalent(comparison_result$value, c(11, 21.5))
+expect_equivalent(names(comparison_result$args), c("eps", "x"))
+expect_false(comparison_result$uses_y)
+expect_true(is.function(comparison_result$fun))
