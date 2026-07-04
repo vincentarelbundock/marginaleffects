@@ -7,16 +7,7 @@ import numpy as np
 
 from ..settings import is_autodiff_enabled
 from ..uncertainty import get_se
-
-
-OP_REGISTRY = {
-    "difference": ("difference", False),
-    "ratio": ("ratio", False),
-    "differenceavg": ("differenceavg", False),
-    "ratioavg": ("ratioavg", False),
-    "differenceavgwts": ("differenceavg", True),
-    "ratioavgwts": ("ratioavg", True),
-}
+from .ops import COMPARISON_OPS
 
 
 @dataclass
@@ -129,13 +120,15 @@ def lower_comparisons(plan, model) -> Lowered:
         return failure
     if plan.align is not None:
         return _fail("models with grouped/multi-equation outcomes")
+    if plan.has_na:
+        return _fail("missing values in predictions")
 
     if any(group.fun_key is None for group in plan.groups):
         return _fail("custom comparison functions")
     if plan.need_y:
         return _fail("elasticities")
     for group in plan.groups:
-        if group.fun_key not in OP_REGISTRY:
+        if group.fun_key not in COMPARISON_OPS:
             return _fail(f"comparison='{group.fun_key}'")
 
     H, failure = _hypothesis_or_failure(plan)
@@ -151,13 +144,13 @@ def lower_comparisons(plan, model) -> Lowered:
 
     ops = []
     for group in plan.groups:
-        op, weighted = OP_REGISTRY[group.fun_key]
+        spec = COMPARISON_OPS[group.fun_key]
         w = None
-        if weighted:
+        if spec.weighted:
             if _has_nan(group.w):
                 return _fail("missing values in weights")
             w = None if group.w is None else np.asarray(group.w, dtype=float)
-        ops.append({"op": op, "n": len(group.idx), "w": w})
+        ops.append({"op": spec.pipeline_op, "n": len(group.idx), "w": w})
 
     kwargs = {
         **args,

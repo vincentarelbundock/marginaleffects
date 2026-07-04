@@ -1,5 +1,15 @@
 # 0.5.2
 
+Breaking changes:
+
+* The `marginaleffects.autodiff` helper API now exposes the shared `pipeline`
+  module instead of the previous implementation-specific modules. Imports such
+  as `marginaleffects.autodiff.dispatch`,
+  `marginaleffects.autodiff.comparisons`,
+  `marginaleffects.autodiff.linear.*`,
+  `marginaleffects.autodiff.glm.predictions`, and
+  `ComparisonType` are no longer supported.
+
 Internal:
 
 * Refactored Python autodiff to capture reusable prediction/comparison plans, replay finite-difference Jacobians without rebuilding Polars pipelines, and lower supported plans through the shared composable JAX pipeline.

@@ -1,3 +1,15 @@
+harmonize_by_types <- function(estimates, by) {
+    for (v in colnames(by)) {
+        if (isTRUE(is.character(estimates[[v]])) && isTRUE(is.numeric(by[[v]]))) {
+            by[[v]] <- as.character(by[[v]])
+        } else if (isTRUE(is.numeric(estimates[[v]])) && isTRUE(is.character(by[[v]]))) {
+            by[[v]] <- as.numeric(by[[v]])
+        }
+    }
+    return(by)
+}
+
+
 get_by <- function(
     estimates,
     draws,
@@ -24,14 +36,7 @@ get_by <- function(
         bycols <- by
     } else if (isTRUE(checkmate::check_data_frame(by))) {
         idx <- setdiff(intersect(colnames(estimates), colnames(by)), "by")
-        # harmonize column types
-        for (v in colnames(by)) {
-            if (isTRUE(is.character(estimates[[v]])) && isTRUE(is.numeric(by[[v]]))) {
-                by[[v]] <- as.character(by[[v]])
-            } else if (isTRUE(is.numeric(estimates[[v]])) && isTRUE(is.character(by[[v]]))) {
-                by[[v]] <- as.numeric(by[[v]])
-            }
-        }
+        by <- harmonize_by_types(estimates, by)
         estimates[by, by := by, on = idx]
         bycols <- "by"
     }

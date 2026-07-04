@@ -2,8 +2,19 @@ import numpy as np
 import polars as pl
 from polars.testing import assert_frame_equal
 
+import marginaleffects.hypothesis_compile as hypc
 from marginaleffects.hypothesis_compile import hypothesis_compile
 from marginaleffects.test.core import get_hypothesis
+
+
+def test_group_term_indices_preserves_first_occurrence_order():
+    group_terms = getattr(hypc, "_group_term_indices", None)
+    assert group_terms is not None
+
+    rowlabels, groups = group_terms(["b", "a", "b", "c", "a"])
+
+    assert rowlabels == ["b", "a", "c"]
+    assert groups == [[0, 2], [1, 4], [3]]
 
 
 def test_matrix_hypothesis_compiles_replay_function():

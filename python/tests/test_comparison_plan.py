@@ -15,6 +15,19 @@ from marginaleffects.sanitize import sanitize_variables
 from marginaleffects.utils import prepare_base_inputs
 
 
+class CountingModel:
+    def __init__(self, model):
+        self._model = model
+        self.predict_calls = 0
+
+    def __getattr__(self, name):
+        return getattr(self._model, name)
+
+    def get_predict(self, *args, **kwargs):
+        self.predict_calls += 1
+        return self._model.get_predict(*args, **kwargs)
+
+
 def _prepared(model, *, variables="hp", comparison="difference", by=False, wts=None):
     model, by, _V, newdata, _hypothesis_null, modeldata = prepare_base_inputs(
         model=model,
@@ -47,6 +60,33 @@ def _prepared(model, *, variables="hp", comparison="difference", by=False, wts=N
     )
     nd, hi, lo, nd_X, hi_X, lo_X = _prepare_design_matrices(model, nd, hi, lo, pad_rows)
     return model, by, nd, nd_X, hi_X, lo_X, _collect_comparison_functions(variables)
+
+
+def test_comparison_build_plan_check_reuses_baseline_predictions():
+    dat = get_dataset("mtcars", "datasets")
+    mod = smf.ols("mpg ~ hp + wt", dat.to_pandas()).fit()
+    model, by, nd, nd_X, hi_X, lo_X, comparison_functions = _prepared(
+        mod,
+        variables="hp",
+        comparison="difference",
+        by=False,
+    )
+    model = CountingModel(model)
+
+    _comparisons_build(
+        model=model,
+        nd=nd,
+        nd_X=nd_X,
+        hi_X=hi_X,
+        lo_X=lo_X,
+        by=by,
+        hypothesis=None,
+        wts=None,
+        eps=1e-4,
+        comparison_functions=comparison_functions,
+    )
+
+    assert model.predict_calls == 3
 
 
 def test_comparison_build_plan_replays_ratio_by_group():

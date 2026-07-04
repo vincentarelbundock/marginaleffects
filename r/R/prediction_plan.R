@@ -85,8 +85,7 @@ prediction_plan_build <- function(
             keep = keep,
             agg = agg$agg,
             hyp = hyp$hyp,
-            has_na = anyNA(if (is.null(keep)) raw_estimate else raw_estimate[keep]),
-            check = list(n_pred = length(raw_estimate))
+            has_na = anyNA(if (is.null(keep)) raw_estimate else raw_estimate[keep])
         )
         baseline <- prediction_plan_apply(plan, raw_estimate)
         if (!isTRUE(all.equal(baseline, out[["estimate"]], tolerance = 1e-12, check.attributes = FALSE))) {
@@ -116,7 +115,7 @@ prediction_plan_build <- function(
 }
 
 prediction_plan_apply <- function(plan, pred) {
-    stopifnot(length(pred) == plan$check$n_pred)
+    stopifnot(length(pred) == plan$n_pred)
     if (!is.null(plan$keep)) {
         pred <- pred[plan$keep]
     }

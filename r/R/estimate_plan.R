@@ -39,13 +39,7 @@ estimate_plan_record_agg <- function(
         bycols <- by
     } else if (isTRUE(checkmate::check_data_frame(by))) {
         idx <- setdiff(intersect(colnames(estimates), colnames(by)), "by")
-        for (v in colnames(by)) {
-            if (isTRUE(is.character(estimates[[v]])) && isTRUE(is.numeric(by[[v]]))) {
-                by[[v]] <- as.character(by[[v]])
-            } else if (isTRUE(is.numeric(estimates[[v]])) && isTRUE(is.character(by[[v]]))) {
-                by[[v]] <- as.numeric(by[[v]])
-            }
-        }
+        by <- harmonize_by_types(estimates, by)
         estimates[by, by := by, on = idx]
         bycols <- "by"
     }
@@ -74,21 +68,16 @@ estimate_plan_record_agg <- function(
         out <- estimates[, .(estimate = mean(estimate, na.rm = TRUE)), keyby = bycols]
     }
 
-    groups <- estimates[,
+    groups_dt <- estimates[,
         .(
             idx = list(get(plan_id)),
             w = list(if (isTRUE(weighted)) marginaleffects_wts_internal else NULL)
         ),
         keyby = bycols
-    ][["idx"]]
+    ]
 
-    weights <- estimates[,
-        .(w = list(if (isTRUE(weighted)) marginaleffects_wts_internal else NULL)),
-        keyby = bycols
-    ][["w"]]
-
-    groups <- lapply(seq_along(groups), function(i) {
-        list(idx = groups[[i]], w = weights[[i]])
+    groups <- lapply(seq_len(nrow(groups_dt)), function(i) {
+        list(idx = groups_dt[["idx"]][[i]], w = groups_dt[["w"]][[i]])
     })
 
     agg <- list(groups = groups)

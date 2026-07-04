@@ -35,7 +35,7 @@ autodiff_lower_model <- function(plan, mfx, type) {
 autodiff_check_matrix <- function(X, coefs, plan) {
     isTRUE(checkmate::check_matrix(X)) &&
         ncol(X) == length(coefs) &&
-        nrow(X) == plan$check$n_pred
+        nrow(X) == plan$n_pred
 }
 
 autodiff_build_agg <- function(agg, n_est) {

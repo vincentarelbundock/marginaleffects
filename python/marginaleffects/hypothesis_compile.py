@@ -9,6 +9,19 @@ import polars as pl
 from .plan import Hyp
 
 
+def _group_term_indices(terms):
+    groups_by_term = {}
+    has_duplicates = False
+    for i, term in enumerate(terms):
+        idx = groups_by_term.setdefault(term, [])
+        if idx:
+            has_duplicates = True
+        idx.append(i)
+    if not has_duplicates:
+        return terms, None
+    return list(groups_by_term), list(groups_by_term.values())
+
+
 def _eval_string_function(vec, hypothesis, rowlabels):
     import scipy
     import numpy
@@ -73,18 +86,7 @@ def _compile_string_hypothesis(x: pl.DataFrame, hypothesis: str, lab: str) -> Hy
             raise ValueError(msg)
 
         terms = x["term"].to_list()
-        if len(terms) != len(set(terms)):
-            seen = []
-            groups = []
-            for term in terms:
-                if term in seen:
-                    continue
-                seen.append(term)
-                groups.append([i for i, value in enumerate(terms) if value == term])
-            rowlabels = seen
-        else:
-            rowlabels = terms
-            groups = None
+        rowlabels, groups = _group_term_indices(terms)
 
     def apply(est):
         est = np.asarray(est, dtype=float).reshape(-1)

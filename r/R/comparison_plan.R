@@ -116,13 +116,7 @@ comparison_plan_build <- function(
 
     if (isTRUE(checkmate::check_data_frame(by))) {
         tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
-        for (v in colnames(by)) {
-            if (isTRUE(is.character(out[[v]])) && isTRUE(is.numeric(by[[v]]))) {
-                by[[v]] <- as.character(by[[v]])
-            } else if (isTRUE(is.numeric(out[[v]])) && isTRUE(is.character(by[[v]]))) {
-                by[[v]] <- as.numeric(by[[v]])
-            }
-        }
+        by <- harmonize_by_types(out, by)
         out[by, by := by, on = tmp]
         by <- "by"
     } else if (isTRUE(by)) {
@@ -137,10 +131,12 @@ comparison_plan_build <- function(
     fun_list[["cross"]] <- fun_list[[1]]
     elasticities <- prepare_elasticities(variables, original, out, by, elasticity_names)
 
-    draws <- attr(pred_lo, "posterior_draws")
     draws_lo <- attr(pred_lo, "posterior_draws")
     draws_hi <- attr(pred_hi, "posterior_draws")
     draws_or <- attr(pred_or, "posterior_draws")
+    # Scratch matrix overwritten with comparison draws; draws_lo stays unchanged
+    # as the low-prediction input to compare_hi_lo_bayesian().
+    draws <- draws_lo
 
     out[, predicted_lo := pred_lo[["estimate"]]]
     out[, predicted_hi := pred_hi[["estimate"]]]
@@ -449,15 +445,14 @@ comparison_plan_build_frequentist <- function(
         n_comp = n_comp,
         est_keep = est_keep,
         agg = NULL,
-        hyp = NULL,
-        check = list(n_pred = n_pred)
+        hyp = NULL
     )
     list(out = out, plan = plan)
 }
 
 comparison_plan_apply <- function(plan, hi, lo, y = NULL) {
-    stopifnot(length(hi) == plan$check$n_pred)
-    stopifnot(length(lo) == plan$check$n_pred)
+    stopifnot(length(hi) == plan$n_pred)
+    stopifnot(length(lo) == plan$n_pred)
     if (!is.null(plan$na_keep)) {
         hi <- hi[plan$na_keep]
         lo <- lo[plan$na_keep]

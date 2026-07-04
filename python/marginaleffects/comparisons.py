@@ -1,6 +1,5 @@
 import re
 import warnings
-from functools import reduce
 
 import numpy as np
 import polars as pl
@@ -284,15 +283,20 @@ def _assemble_prediction_table(model, coefs, nd, nd_X, hi_X, lo_X, capture_align
     - Simple (1D predict): tmp rows == nd rows -> horizontal concat of metadata
     - Grouped (2D predict, e.g. multinomial): "group" in tmp -> cross-join alignment
     """
-    tmp = [
-        model.get_predict(params=coefs, newdata=nd_X).rename({"estimate": "predicted"}),
+    pred = model.get_predict(params=coefs, newdata=nd_X).rename(
+        {"estimate": "predicted"}
+    )
+    pred_lo = (
         model.get_predict(params=coefs, newdata=lo_X)
         .rename({"estimate": "predicted_lo"})
-        .select("predicted_lo"),
+        .select("predicted_lo")
+    )
+    pred_hi = (
         model.get_predict(params=coefs, newdata=hi_X)
         .rename({"estimate": "predicted_hi"})
-        .select("predicted_hi"),
-    ]
+        .select("predicted_hi")
+    )
+    tmp = [pred, pred_lo, pred_hi]
     tmp = pl.concat(tmp, how="horizontal_extend")
     align = None
     if "rowid" in nd.columns and tmp.shape[0] == nd.shape[0]:
@@ -329,7 +333,12 @@ def _assemble_prediction_table(model, coefs, nd, nd_X, hi_X, lo_X, capture_align
         raise ValueError("Something went wrong")
 
     if capture_align:
-        return tmp, align
+        plan_predictions = (
+            np.asarray(pred_hi["predicted_hi"].to_numpy(), dtype=float).reshape(-1),
+            np.asarray(pred_lo["predicted_lo"].to_numpy(), dtype=float).reshape(-1),
+            np.asarray(pred["predicted"].to_numpy(), dtype=float).reshape(-1),
+        )
+        return tmp, align, plan_predictions
     return tmp
 
 
@@ -466,7 +475,7 @@ def _comparisons_build(
     comparison_functions,
 ):
     coefs = model.get_coef()
-    tmp, align = _assemble_prediction_table(
+    tmp, align, plan_predictions = _assemble_prediction_table(
         model,
         coefs,
         nd,
@@ -535,8 +544,8 @@ def _comparisons_build(
         has_na=bool(has_na),
     )
 
-    hi, lo, y = comparison_plan_predict(plan, model, coefs)
-    replay = comparison_plan_apply(plan, hi, lo, y)
+    hi, lo, y = plan_predictions
+    replay = comparison_plan_apply(plan, hi, lo, y if plan.need_y else None)
     if not np.allclose(
         replay,
         tmp["estimate"].to_numpy(),

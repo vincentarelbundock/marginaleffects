@@ -151,6 +151,59 @@ def test_pipeline_comparisons_ops_est_keep_and_hypothesis():
     )
 
 
+def test_pipeline_comparison_registry_covers_lowered_ops():
+    from marginaleffects.autodiff import pipeline
+    from marginaleffects.autodiff.ops import PIPELINE_OPS
+
+    beta = np.array([1.0, 0.25])
+    X_lo = np.array(
+        [
+            [1.0, 1.0],
+            [1.0, 2.0],
+            [1.0, 3.0],
+        ]
+    )
+    X_hi = X_lo.copy()
+    X_hi[:, 1] += 1.0
+    weights = np.array([1.0, 2.0, 3.0])
+    ops = [
+        {"op": name, "n": 3, "w": weights if spec.scalar else None}
+        for name, spec in PIPELINE_OPS.items()
+    ]
+
+    result = pipeline.compute(
+        beta=beta,
+        model_type="linear",
+        X_hi=np.tile(X_hi, (len(ops), 1)),
+        X_lo=np.tile(X_lo, (len(ops), 1)),
+        ops=ops,
+    )
+
+    mu_hi = np.tile(X_hi @ beta, len(ops))
+    mu_lo = np.tile(X_lo @ beta, len(ops))
+    expected = []
+    start = 0
+    for op in ops:
+        stop = start + op["n"]
+        hi = mu_hi[start:stop]
+        lo = mu_lo[start:stop]
+        if op["op"] == "difference":
+            expected.extend(hi - lo)
+        elif op["op"] == "ratio":
+            expected.extend(hi / lo)
+        elif op["op"] == "differenceavg":
+            expected.append(
+                np.average(hi, weights=op["w"]) - np.average(lo, weights=op["w"])
+            )
+        elif op["op"] == "ratioavg":
+            expected.append(
+                np.average(hi, weights=op["w"]) / np.average(lo, weights=op["w"])
+            )
+        start = stop
+
+    np.testing.assert_allclose(result["estimate"], np.asarray(expected))
+
+
 def test_pipeline_uses_forward_mode_for_many_outputs(monkeypatch):
     import jax
 

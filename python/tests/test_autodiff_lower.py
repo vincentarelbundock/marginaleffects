@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 import numpy as np
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
@@ -116,6 +118,26 @@ def test_lower_comparisons_serializes_ratioavg_ops():
     assert lowered.ok
     assert [op["op"] for op in lowered.kwargs["ops"]] == ["ratioavg"] * len(plan.groups)
     assert lowered.kwargs["X_hi"].shape[0] == sum(len(g.idx) for g in plan.groups)
+
+
+def test_autodiff_comparison_registry_targets_pipeline_ops():
+    from marginaleffects.autodiff.ops import COMPARISON_OPS, PIPELINE_OPS
+
+    lowered_ops = {spec.pipeline_op for spec in COMPARISON_OPS.values()}
+
+    assert lowered_ops == set(PIPELINE_OPS)
+
+
+def test_lower_comparisons_rejects_missing_prediction_values():
+    dat = get_dataset("mtcars", "datasets")
+    mod = smf.ols("mpg ~ hp + wt", dat.to_pandas()).fit()
+    model, plan = _comparison_plan(mod, variables="hp")
+    plan = replace(plan, has_na=True)
+
+    lowered = lower_comparisons(plan, model)
+
+    assert not lowered.ok
+    assert lowered.reason == "missing values in predictions"
 
 
 def test_lower_comparisons_rejects_custom_callable():
