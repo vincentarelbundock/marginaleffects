@@ -6,8 +6,8 @@ from tests.utilities import *
 from tests.helpers import *
 
 pytestmark = pytest.mark.skipif(
-    sys.platform == "linux",
-    reason="Plot image tests are platform-dependent (font rendering)",
+    sys.platform != "linux",
+    reason="Plot image snapshots are generated on Linux",
 )
 
 FIGURES_FOLDER = "plot_slopes"

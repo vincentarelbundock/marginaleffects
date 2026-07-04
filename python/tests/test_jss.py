@@ -54,9 +54,10 @@ def test_predictions(impartiality_model):
     assert p.shape[0] == 2
 
 
+@pytest.mark.plot
 @pytest.mark.skipif(
-    sys.platform == "linux",
-    reason="Plot image tests are platform-dependent (font rendering)",
+    sys.platform != "linux",
+    reason="Plot image snapshots are generated on Linux",
 )
 def test_predictions_plot(impartiality_model):
     p = plot_predictions(impartiality_model, by=["democracy", "continent"])
