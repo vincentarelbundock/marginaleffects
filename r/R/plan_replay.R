@@ -1,5 +1,11 @@
+# Replay plans support SE computation for transformed or aggregated results.
+# First pass: compute estimates and record row groups, weights, and hypotheses.
+# SE pass: perturb predictions, replay the recorded plan, then build Jacobians.
+# This avoids rerunning the full user-facing pipeline for every perturbation.
+
 sanitize_plan_predict_args <- function(base, extra = list()) {
     out <- utils::modifyList(base %||% list(), extra %||% list())
+    # Keep only model-specific predict arguments for replay.
     drop <- c(
         "mfx", "model", "model_perturbed", "hypothesis", "hi", "lo",
         "original", "by", "variables", "cross", "estimates",
@@ -15,21 +21,37 @@ record_plan_aggregation <- function(
     by,
     verbose = TRUE,
     ...) {
+    # Record aggregation once so SE replays do not regroup estimates.
+    # We use the same data.table `by` groups as the displayed aggregate,
+    # but store source row ids and weights for each aggregate row in a list column.
+    # Equal-length groups are stacked into matrix blocks for replay with
+    # colMeans()/colSums().
     if (is.null(by) || isFALSE(by) || nrow(estimates) <= 1) {
         return(list(out = estimates, agg = NULL))
     }
 
-    estimates <- data.table::copy(estimates)
-    plan_id <- ".marginaleffects_plan_est_id"
-    while (plan_id %in% colnames(estimates)) {
-        plan_id <- paste0(".", plan_id)
-    }
-    estimates[, (plan_id) := seq_len(.N)]
-
     missing <- setdiff(setdiff(colnames(by), "by"), colnames(estimates))
+    needs_source_id <- length(missing) > 0 || isTRUE(checkmate::check_data_frame(by))
+    if (isTRUE(needs_source_id)) {
+        estimates <- data.table::copy(estimates)
+        # Needed when joins or filters can change row positions.
+        plan_id <- ".marginaleffects_plan_est_id"
+        while (plan_id %in% colnames(estimates)) {
+            plan_id <- paste0(".", plan_id)
+        }
+        estimates[, (plan_id) := seq_len(.N)]
+    }
+    estimate_source <- estimates[["estimate"]]
+
     if (length(missing) > 0) {
-        idx <- intersect(c("rowid", "rowidcf", missing), colnames(newdata))
-        estimates <- merge(estimates, newdata[, idx], sort = FALSE, all.x = TRUE)
+        # Bring grouping columns back before computing aggregation groups.
+        estimates <- merge_original_data(
+            estimates,
+            newdata,
+            keys = c("rowid", "rowidcf"),
+            payload = missing,
+            unit_level_only = FALSE
+        )
     }
 
     if (isTRUE(by)) {
@@ -45,6 +67,7 @@ record_plan_aggregation <- function(
     }
 
     if ("by" %in% colnames(estimates) && anyNA(estimates[["by"]])) {
+        # User-supplied by data can intentionally cover only some rows.
         msg <- insight::format_message(
             "The `by` data.frame does not cover all combinations of response levels and/or predictors. Some estimates will not be included in the aggregation."
         )
@@ -55,50 +78,75 @@ record_plan_aggregation <- function(
     bycols <- intersect(unique(c("term", bycols)), colnames(estimates))
     weighted <- "marginaleffects_wts_internal" %in% colnames(newdata)
 
+    # Record replay indices with the same groups as the displayed aggregate.
     if (isTRUE(weighted)) {
-        out <- estimates[,
-            .(estimate = stats::weighted.mean(
-                estimate,
-                marginaleffects_wts_internal,
-                na.rm = TRUE
-            )),
+        groups_dt <- estimates[,
+            .(
+                idx = list(if (isTRUE(needs_source_id)) get(plan_id) else .I),
+                w = list(marginaleffects_wts_internal)
+            ),
             keyby = bycols
         ]
     } else {
-        out <- estimates[, .(estimate = mean(estimate, na.rm = TRUE)), keyby = bycols]
+        groups_dt <- estimates[,
+            .(idx = list(if (isTRUE(needs_source_id)) get(plan_id) else .I)),
+            keyby = bycols
+        ]
     }
 
-    groups_dt <- estimates[,
-        .(
-            idx = list(get(plan_id)),
-            w = list(if (isTRUE(weighted)) marginaleffects_wts_internal else NULL)
-        ),
-        keyby = bycols
-    ]
+    idx <- groups_dt[["idx"]]
+    w <- if (isTRUE(weighted)) groups_dt[["w"]] else NULL
+    n_groups <- length(idx)
+    group_len <- lengths(idx)
 
-    groups <- lapply(seq_len(nrow(groups_dt)), function(i) {
-        list(idx = groups_dt[["idx"]][[i]], w = groups_dt[["w"]][[i]])
-    })
+    # Equal-size blocks let replay use colSums without ragged padding.
+    make_block <- function(cols) {
+        n <- group_len[cols][1]
+        idx_mat <- matrix(unlist(idx[cols], use.names = FALSE), nrow = n)
+        w_mat <- NULL
+        if (isTRUE(weighted)) {
+            w_mat <- matrix(unlist(w[cols], use.names = FALSE), nrow = n)
+        }
+        list(cols = cols, idx = idx_mat, w = w_mat)
+    }
 
-    agg <- list(groups = groups)
+    if (length(unique(group_len)) == 1L) {
+        blocks <- list(make_block(seq_len(n_groups)))
+    } else {
+        blocks <- lapply(split(seq_len(n_groups), group_len), make_block)
+    }
+
+    agg <- list(blocks = blocks, n = n_groups, weighted = weighted)
+    out <- groups_dt[, ..bycols]
+    out[, estimate := apply_plan_aggregation(agg, estimate_source)]
     return(list(out = out, agg = agg))
 }
 
 apply_plan_aggregation <- function(agg, est) {
-    out <- numeric(length(agg$groups))
-    for (j in seq_along(agg$groups)) {
-        gr <- agg$groups[[j]]
-        e <- est[gr$idx]
-        out[j] <- if (!is.null(gr$w)) {
-            stats::weighted.mean(e, gr$w, na.rm = TRUE)
+    out <- numeric(agg$n)
+
+    for (block in agg$blocks) {
+        e <- est[block$idx]
+        dim(e) <- dim(block$idx)
+
+        if (isTRUE(agg$weighted)) {
+            w <- block$w
+            missing_estimate <- is.na(e)
+            e[missing_estimate] <- 0
+            w[missing_estimate] <- 0
+            zero_weight <- !is.na(w) & w == 0
+            e[zero_weight] <- 0
+            out[block$cols] <- colSums(e * w) / colSums(w)
         } else {
-            mean(e, na.rm = TRUE)
+            out[block$cols] <- colMeans(e, na.rm = TRUE)
         }
     }
+
     out
 }
 
 apply_plan_aggregation_and_hypothesis <- function(est, agg = NULL, hyp = NULL) {
+    # Preserve original pipeline order: aggregate, then transform/test.
     if (!is.null(agg)) {
         est <- apply_plan_aggregation(agg, est)
     }
@@ -109,6 +157,7 @@ apply_plan_aggregation_and_hypothesis <- function(est, agg = NULL, hyp = NULL) {
 }
 
 validate_plan_replay <- function(kind, baseline, expected) {
+    # Guard against stale or incomplete replay plans.
     tolerance <- sqrt(.Machine$double.eps)
     if (!isTRUE(all.equal(baseline, expected, tolerance = tolerance, check.attributes = FALSE))) {
         stop_sprintf("Internal error: %s plan baseline check failed.", kind)
@@ -124,12 +173,23 @@ plan_std_error <- function(
     contrast_data = NULL,
     variables = NULL,
     numderiv = NULL) {
+    if ("std.error" %in% colnames(estimates) ||
+        (!is.null(mfx) && !is.null(mfx@draws))) {
+        return(list(mfx = mfx, estimates = estimates))
+    }
+
     plan <- built$plan
     kind <- plan$kind
     if (!isTRUE(kind %in% c("predictions", "comparisons"))) {
         stop_sprintf("Unknown plan kind: %s", kind %||% "NULL")
     }
 
+    if (
+        !isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+        return(list(mfx = mfx, estimates = estimates))
+    }
+
+    # Try autodiff first; fall back to numerical delta method.
     ad_args <- list(
         plan = plan,
         mfx = mfx,
@@ -150,6 +210,7 @@ plan_std_error <- function(
     }
 
     if (identical(kind, "predictions")) {
+        # Delta method callback: predict, then replay prediction plan.
         fun <- function(model_perturbed, ...) {
             pred <- prediction_plan_predict(plan, model_perturbed, ...)
             prediction_plan_apply(plan, pred)
@@ -169,6 +230,7 @@ plan_std_error <- function(
             estimates[["std.error"]] <- as.vector(se)
         }
     } else {
+        # Delta method callback: predict hi/lo, then replay comparison plan.
         fun <- function(model_perturbed, ...) {
             preds <- comparison_plan_predict(plan, model_perturbed, ...)
             comparison_plan_apply(plan, preds$hi, preds$lo, preds$or)

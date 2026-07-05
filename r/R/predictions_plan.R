@@ -1,43 +1,27 @@
-prediction_prepare_newdata <- function(mfx) {
+prediction_prepare_newdata <- function(mfx, variables = NULL) {
+    # analogous to comparisons(variables=list(...))
+    if (!is.null(variables)) {
+        mfx <- add_variables(
+            variables = variables,
+            mfx = mfx
+        )
+        args <- list(
+            model = mfx@model,
+            newdata = mfx@newdata,
+            grid_type = "counterfactual",
+            marginaleffects_internal = mfx
+        )
+        for (v in mfx@variables) {
+            args[[v$name]] <- v$value
+        }
+        mfx@newdata <- do.call("datagrid", args)
+    }
+
     if (!"rowid" %in% colnames(mfx@newdata)) {
         mfx@newdata[["rowid"]] <- seq_len(nrow(mfx@newdata))
     }
 
-    unpadded_newdata <- mfx@newdata
-    mfx@newdata <- pad(mfx@model, mfx@newdata)
-    mfx@newdata <- add_model_matrix_attribute(mfx)
-
-    list(mfx = mfx, unpadded_newdata = unpadded_newdata)
-}
-
-
-prediction_attach_newdata_and_unpad <- function(out, draws, newdata, mfx) {
-    if (inherits(mfx@model, "mlogit")) {
-        out <- merge_by_rowid(out, newdata)
-    } else {
-        cols <- setdiff(colnames(newdata), colnames(out))
-        nd <- subset(newdata, select = cols)
-        out <- cbind(out, nd)
-    }
-
-    keep <- NULL
-    if ("rowid" %in% colnames(out)) {
-        idx_keep <- out$rowid > 0
-        if (!all(idx_keep)) {
-            keep <- which(idx_keep)
-        }
-    }
-
-    tmp <- unpad(out, draws)
-    list(out = tmp$out, draws = tmp$draws, keep = keep)
-}
-
-
-prediction_normalize_by <- function(by, out) {
-    if (isTRUE(checkmate::check_character(by))) {
-        by <- intersect(c("group", by), colnames(out))
-    }
-    by
+    mfx
 }
 
 
@@ -73,17 +57,41 @@ prediction_plan_build <- function(
     draws <- attr(out, "posterior_draws")
     raw_estimate <- out[["estimate"]]
 
-    prepared <- prediction_attach_newdata_and_unpad(
-        out = out,
-        draws = draws,
-        newdata = newdata,
-        mfx = mfx
-    )
-    out <- prepared$out
-    draws <- prepared$draws
-    keep <- prepared$keep
+    keep <- NULL
+    if ("rowid" %in% colnames(out)) {
+        idx_keep <- out$rowid > 0
+        if (!all(idx_keep)) {
+            keep <- which(idx_keep)
+        }
+    }
 
-    by <- prediction_normalize_by(by, out)
+    tmp <- unpad(out, draws)
+    out <- tmp$out
+    draws <- tmp$draws
+
+    payload <- NULL
+    if (!isTRUE(checkmate::check_function(hypothesis))) {
+        payload <- c("rowidcf", "marginaleffects_wts_internal")
+        if (isTRUE(checkmate::check_character(by))) {
+            payload <- c(payload, by)
+        } else if (isTRUE(checkmate::check_data_frame(by))) {
+            payload <- c(payload, setdiff(intersect(colnames(newdata), colnames(by)), "by"))
+        }
+        if (isTRUE(checkmate::check_formula(hypothesis))) {
+            form <- sanitize_hypothesis_formula(hypothesis)
+            payload <- c(payload, form$group, mfx@variable_names_datagrid)
+        }
+        payload <- unique(payload)
+    }
+
+    out <- merge_original_data(
+        out,
+        newdata,
+        payload = payload,
+        unit_level_only = FALSE
+    )
+
+    by <- sanitize_by(mfx, by, out = out, implicit = "group")
 
     if (is.null(draws)) {
         prediction_plan_build_frequentist(

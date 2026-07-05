@@ -57,6 +57,16 @@ expect_equivalent(
     c("b", "a", "c")
 )
 
+idx_na <- marginaleffects:::comparison_group_indices(c("b", NA, "b", "a", NA))
+expect_equivalent(
+    unname(idx_na),
+    list(c(1L, 3L), c(2L, 5L), 4L)
+)
+expect_equivalent(
+    names(idx_na),
+    c("b", NA, "a")
+)
+
 out <- data.table::data.table(
     predicted_lo = rep(0, 5),
     term = "x",
@@ -119,6 +129,140 @@ vector_result <- marginaleffects:::compare_hi_lo_bayesian_scalar(
     group_indices = group_indices
 )
 expect_null(vector_result)
+
+local({
+    assign("comparison_call_args_count", 0L, envir = .GlobalEnv)
+    suppressMessages(
+        invisible(
+            utils::capture.output(
+                trace(
+                    "comparison_call_args",
+                    where = asNamespace("marginaleffects"),
+                    tracer = quote({
+                        .GlobalEnv$comparison_call_args_count <- .GlobalEnv$comparison_call_args_count + 1L
+                    }),
+                    print = FALSE
+                )
+            )
+        )
+    )
+    on.exit(
+        suppressMessages(
+            invisible(utils::capture.output(untrace("comparison_call_args", where = asNamespace("marginaleffects"))))
+        ),
+        add = TRUE
+    )
+    on.exit(rm("comparison_call_args_count", envir = .GlobalEnv), add = TRUE)
+
+    cached_result <- marginaleffects:::compare_hi_lo_bayesian(
+        out = out,
+        draws = draws,
+        draws_hi = draws_hi,
+        draws_lo = draws_lo,
+        draws_or = draws_or,
+        by = "g",
+        context = utils::modifyList(
+            context_differenceavg,
+            list(fun_list = list(x = marginaleffects:::comparison_function_dict[["difference"]]))
+        )
+    )
+
+    expect_equivalent(.GlobalEnv$comparison_call_args_count, length(group_indices))
+    expect_equivalent(unname(cached_result$draws), draws_hi)
+})
+
+local({
+    context_fast <- function(fun_key) {
+        list(
+            cross = FALSE,
+            newdata = data.frame(),
+            variables = list(x = list(eps = 1, fun_key = fun_key)),
+            fun_list = list(x = marginaleffects:::comparison_function_dict[[fun_key]]),
+            elasticities = list(x = seq_len(nrow(out)))
+        )
+    }
+    expect_fast_path <- function(expr) {
+        assign("comparison_call_value_count", 0L, envir = .GlobalEnv)
+        result <- force(expr)
+        expect_equivalent(.GlobalEnv$comparison_call_value_count, 0L)
+        result
+    }
+
+    assign("comparison_call_value_count", 0L, envir = .GlobalEnv)
+    suppressMessages(
+        invisible(
+            utils::capture.output(
+                trace(
+                    "comparison_call_value",
+                    where = asNamespace("marginaleffects"),
+                    tracer = quote({
+                        .GlobalEnv$comparison_call_value_count <- .GlobalEnv$comparison_call_value_count + 1L
+                    }),
+                    print = FALSE
+                )
+            )
+        )
+    )
+    on.exit(
+        suppressMessages(
+            invisible(utils::capture.output(untrace("comparison_call_value", where = asNamespace("marginaleffects"))))
+        ),
+        add = TRUE
+    )
+    on.exit(rm("comparison_call_value_count", envir = .GlobalEnv), add = TRUE)
+
+    draws_lo_fast <- matrix(
+        c(5, 1, 10, 2, 3, 50, 2, 100, 25, 4),
+        nrow = 5,
+        ncol = 2
+    )
+    draws_hi_fast <- draws_lo_fast + draws_hi
+    expected_vector <- list(
+        difference = draws_hi_fast - draws_lo_fast,
+        ratio = draws_hi_fast / draws_lo_fast,
+        lnratio = log(draws_hi_fast / draws_lo_fast),
+        lift = (draws_hi_fast - draws_lo_fast) / draws_lo_fast
+    )
+    for (fun_key in names(expected_vector)) {
+        fast_result <- expect_fast_path(marginaleffects:::compare_hi_lo_bayesian(
+            out = out,
+            draws = draws,
+            draws_hi = draws_hi_fast,
+            draws_lo = draws_lo_fast,
+            draws_or = draws_or,
+            by = "g",
+            context = context_fast(fun_key)
+        ))
+        expect_equivalent(unname(fast_result$draws), expected_vector[[fun_key]])
+    }
+
+    expected_scalar <- list(
+        differenceavg = function(hi, lo) colMeans(hi - lo),
+        ratioavg = function(hi, lo) colMeans(hi) / colMeans(lo),
+        lnratioavg = function(hi, lo) log(colMeans(hi) / colMeans(lo)),
+        liftavg = function(hi, lo) colMeans(hi - lo) / colMeans(lo)
+    )
+    for (fun_key in names(expected_scalar)) {
+        expected <- t(vapply(
+            group_indices,
+            function(idx) expected_scalar[[fun_key]](
+                draws_hi_fast[idx, , drop = FALSE],
+                draws_lo_fast[idx, , drop = FALSE]
+            ),
+            numeric(ncol(draws_hi_fast))
+        ))
+        fast_result <- expect_fast_path(marginaleffects:::compare_hi_lo_bayesian(
+            out = out,
+            draws = draws,
+            draws_hi = draws_hi_fast,
+            draws_lo = draws_lo_fast,
+            draws_or = draws_or,
+            by = "g",
+            context = context_fast(fun_key)
+        ))
+        expect_equivalent(unname(fast_result$draws), expected)
+    }
+})
 
 marginaleffects:::settings_set("marginaleffects_safefun_return1", TRUE)
 expect_error(

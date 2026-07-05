@@ -20,6 +20,7 @@ from .plan import (
     ComparisonPlan,
     comparison_plan_apply,
     comparison_plan_predict,
+    plan_values_allclose,
 )
 from .utils import (
     get_pad,
@@ -546,12 +547,9 @@ def _comparisons_build(
 
     hi, lo, y = plan_predictions
     replay = comparison_plan_apply(plan, hi, lo, y if plan.need_y else None)
-    if not np.allclose(
+    if not plan_values_allclose(
         replay,
         tmp["estimate"].to_numpy(),
-        rtol=1e-12,
-        atol=1e-12,
-        equal_nan=True,
     ):
         raise RuntimeError(
             "marginaleffects internal error: comparison plan baseline check failed"

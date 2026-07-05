@@ -98,6 +98,19 @@ def _estimand_to_numpy(x) -> np.ndarray:
     return _as_float_array(x)
 
 
+def plan_values_allclose(replay, target) -> bool:
+    """Compare plan replay values to baseline values at backend precision."""
+    replay = np.asarray(replay)
+    target = np.asarray(target)
+    tol = 1e-12
+    if any(
+        np.issubdtype(x.dtype, np.floating) and x.dtype.itemsize <= 4
+        for x in (replay, target)
+    ):
+        tol = 1e-6
+    return np.allclose(replay, target, rtol=tol, atol=tol, equal_nan=True)
+
+
 def prediction_plan_predict(plan: PredictionPlan, model, coefs) -> np.ndarray:
     out = model.get_predict(params=np.asarray(coefs), newdata=plan.exog)
     return _as_float_array(out["estimate"].to_numpy())

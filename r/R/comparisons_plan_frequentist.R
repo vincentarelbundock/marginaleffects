@@ -20,40 +20,39 @@ comparison_plan_build_frequentist <- function(
     out,
     idx,
     context,
-    pred_hi,
-    pred_lo,
-    pred_or,
+    n_pred,
     type,
     dots,
     hi,
     lo,
     original,
     need_y) {
-    n_pred <- length(pred_lo)
     na_keep <- if (anyNA(out$predicted_lo)) which(!is.na(out$predicted_lo)) else NULL
     if (!is.null(na_keep)) {
         out <- out[na_keep]
     }
 
     idx <- intersect(idx, colnames(out))
-    out[, marginaleffects_plan_row_id := seq_len(.N)]
+    n_out <- nrow(out)
     if (length(idx) > 0) {
-        groups_dt <- out[, .(rows = list(marginaleffects_plan_row_id)), keyby = idx]
+        groups_dt <- out[, .(rows = list(.I)), keyby = idx]
         perm <- unlist(groups_dt$rows, use.names = FALSE)
+        group_len <- lengths(groups_dt$rows)
+        last <- cumsum(group_len)
+        bounds <- data.table::data.table(
+            first = last - group_len + 1L,
+            last = last
+        )
     } else {
-        perm <- seq_len(nrow(out))
+        perm <- seq_len(n_out)
+        bounds <- data.table::data.table(first = 1L, last = n_out)
     }
     out_sorted <- out[perm]
-    perm_store <- if (identical(perm, seq_len(nrow(out)))) NULL else perm
-
-    if (length(idx) > 0) {
-        bounds <- out_sorted[, .(first = .I[1], last = .I[.N]), keyby = idx]
-    } else {
-        bounds <- data.table::data.table(first = 1L, last = nrow(out_sorted))
-    }
+    perm_store <- if (identical(perm, seq_len(n_out))) NULL else perm
 
     plan_groups <- vector("list", nrow(bounds))
-    out_parts <- vector("list", nrow(bounds))
+    out_rows <- vector("list", nrow(bounds))
+    estimates <- vector("list", nrow(bounds))
     n_comp <- 0L
     any_scalar_aggregate <- FALSE
 
@@ -78,16 +77,15 @@ comparison_plan_build_frequentist <- function(
                 any_scalar_aggregate <- TRUE
             }
             out_idx <- n_comp + 1L
-            part <- out_sorted[rows[[1]], , drop = FALSE]
-            part[, estimate := con]
+            out_rows[[j]] <- rows[[1]]
+            estimates[[j]] <- con
             n_comp <- n_comp + 1L
         } else {
             out_idx <- seq.int(n_comp + 1L, n_comp + n)
-            part <- out_sorted[rows, , drop = FALSE]
-            part[, estimate := con]
+            out_rows[[j]] <- rows
+            estimates[[j]] <- con
             n_comp <- n_comp + n
         }
-        out_parts[[j]] <- part
         plan_groups[[j]] <- list(
             idx = rows,
             out_idx = out_idx,
@@ -99,9 +97,13 @@ comparison_plan_build_frequentist <- function(
         )
     }
 
-    out <- data.table::rbindlist(out_parts, fill = TRUE)
+    if (isTRUE(any_scalar_aggregate)) {
+        out <- out_sorted[unlist(out_rows, use.names = FALSE)]
+    } else {
+        out <- out_sorted
+    }
+    out[, estimate := unlist(estimates, use.names = FALSE)]
     out[, tmp_idx := NULL]
-    out[, marginaleffects_plan_row_id := NULL]
 
     if (isTRUE(any_scalar_aggregate)) {
         keep_cols <- c(
@@ -166,7 +168,11 @@ comparison_plan_apply <- function(plan, hi, lo, y = NULL) {
         if (isTRUE(g$uses_y)) {
             args$y <- y[g$idx]
         }
-        est[g$out_idx] <- do_call(g$fun, args)
+        con <- do_call(g$fun, args)
+        if (length(con) != length(g$out_idx)) {
+            stop_sprintf("Internal error: comparison plan group changed shape.")
+        }
+        est[g$out_idx] <- con
     }
     if (!is.null(plan$est_keep)) {
         est <- est[plan$est_keep]
@@ -177,21 +183,22 @@ comparison_plan_apply <- function(plan, hi, lo, y = NULL) {
 
 comparison_plan_predict <- function(.plan, model_perturbed, ...) {
     dots <- sanitize_plan_predict_args(.plan$predict_args$dots, list(...))
-    predict1 <- function(nd) {
-        do_call(get_predict, c(
-            list(
-                model = model_perturbed,
-                type = .plan$predict_args$type,
-                newdata = nd
-            ),
-            dots
-        ))
-    }
-    pred_hi <- predict1(.plan$predict_args$hi)
-    pred_lo <- predict1(.plan$predict_args$lo)
+    args <- c(
+        list(
+            model = model_perturbed,
+            type = .plan$predict_args$type,
+            newdata = NULL
+        ),
+        dots
+    )
+    args$newdata <- .plan$predict_args$hi
+    pred_hi <- do_call(get_predict, args)
+    args$newdata <- .plan$predict_args$lo
+    pred_lo <- do_call(get_predict, args)
     pred_or <- NULL
     if (isTRUE(.plan$need_y)) {
-        pred_or <- predict1(.plan$predict_args$original)
+        args$newdata <- .plan$predict_args$original
+        pred_or <- do_call(get_predict, args)
         pred_or <- pred_or[["estimate"]]
     }
     list(

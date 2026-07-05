@@ -25,8 +25,13 @@ get_by <- function(
 
     missing <- setdiff(setdiff(colnames(by), "by"), colnames(estimates))
     if (length(missing) > 0) {
-        idx <- intersect(c("rowid", "rowidcf", missing), colnames(newdata))
-        estimates <- merge(estimates, newdata[, idx], sort = FALSE, all.x = TRUE)
+        estimates <- merge_original_data(
+            estimates,
+            newdata,
+            keys = c("rowid", "rowidcf"),
+            payload = missing,
+            unit_level_only = FALSE
+        )
     }
 
     if (isTRUE(by)) {

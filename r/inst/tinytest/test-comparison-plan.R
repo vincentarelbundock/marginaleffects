@@ -111,6 +111,34 @@ expect_error(
     pattern = "no missing value"
 )
 
+bad_replay_plan <- list(
+    kind = "comparisons",
+    n_pred = 2L,
+    need_y = FALSE,
+    na_keep = NULL,
+    perm = NULL,
+    groups = list(list(
+        idx = 1:2,
+        out_idx = 1:2,
+        scalar = FALSE,
+        uses_y = FALSE,
+        fun = function(hi, lo) hi[[1]] - lo[[1]],
+        args = list()
+    )),
+    n_comp = 2L,
+    est_keep = NULL,
+    agg = NULL,
+    hyp = NULL
+)
+expect_error(
+    marginaleffects:::comparison_plan_apply(
+        bad_replay_plan,
+        hi = c(2, 4),
+        lo = c(1, 1)
+    ),
+    pattern = "changed shape"
+)
+
 out_bayes <- data.table::data.table(
     term = rep("hp", 4),
     group = rep(c("a", "b"), each = 2),

@@ -123,3 +123,18 @@ expect_error(
     ),
     pattern = "Unknown plan kind"
 )
+
+mfx_draws <- marginaleffects:::new_marginaleffects_internal(
+    model = mod,
+    call = quote(predictions(mod)),
+    draws = matrix(1, nrow = 1, ncol = 2),
+    vcov_model = stats::vcov(mod)
+)
+out <- marginaleffects:::plan_std_error(
+    built = list(plan = NULL),
+    mfx = mfx_draws,
+    estimates = data.frame(estimate = 1),
+    type = "response",
+    dots = list()
+)
+expect_equal(out$estimates$estimate, 1)

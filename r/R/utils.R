@@ -113,30 +113,53 @@ cjdt <- function(dtlist) {
 }
 
 
-merge_by_rowid <- function(x, y) {
-    # return data
-    # very import to avoid sorting, otherwise bayesian draws won't fit predictions
-    # merge only with rowid; not available for hypothesis
-    mergein <- setdiff(colnames(y), colnames(x))
-    if ("rowid" %in% colnames(x) && "rowid" %in% colnames(y) && length(mergein) > 0) {
-        idx <- c("rowid", mergein)
-        if (!data.table::is.data.table(y)) {
-            data.table::setDT(y)
-            tmp <- y[, ..idx]
-        } else {
-            tmp <- y[, ..idx]
-        }
-        # TODO: this breaks in mclogit. maybe there's a more robust merge
-        # solution for weird grouped data. But it seems fine because
-        # `predictions()` output does include the original predictors.
-        out <- tryCatch(
-            merge(x, tmp, by = "rowid", sort = FALSE),
-            error = function(e) x
-        )
-    } else {
-        out <- x
+merge_original_data <- function(
+    out,
+    original,
+    by = FALSE,
+    keys = "rowid",
+    payload = NULL,
+    deduplicate = FALSE,
+    unit_level_only = TRUE) {
+    # Aggregated results do not map one-to-one to the original data.
+    if (isTRUE(unit_level_only) && !isFALSE(by)) {
+        return(out)
     }
-    return(out)
+
+    if (is.null(payload)) {
+        payload <- setdiff(colnames(original), colnames(out))
+    } else {
+        payload <- setdiff(payload, colnames(out))
+    }
+    payload <- intersect(payload, colnames(original))
+    if (length(payload) == 0) {
+        return(out)
+    }
+
+    cols <- intersect(unique(c(keys, payload)), colnames(original))
+    tmp <- data.table::as.data.table(original)[, ..cols]
+    bycols <- intersect(colnames(tmp), colnames(out))
+    if (!"rowid" %in% bycols || length(bycols) == 0) {
+        return(out)
+    }
+
+    if (isTRUE(deduplicate)) {
+        idx <- duplicated(tmp, by = bycols)
+        tmp <- tmp[!idx]
+    } else if (any(duplicated(tmp, by = bycols))) {
+        if ("rowid" %in% bycols && nrow(tmp) != nrow(out)) {
+            tmp <- tmp[rowid %in% data.table::as.data.table(out)[["rowid"]]]
+        }
+        outkeys <- data.table::as.data.table(out)[, ..bycols]
+        tmpkeys <- tmp[, ..bycols]
+        if (nrow(outkeys) == nrow(tmpkeys) &&
+            isTRUE(all.equal(outkeys, tmpkeys, check.attributes = FALSE))) {
+            return(cbind(out, tmp[, ..payload]))
+        }
+        return(out)
+    }
+
+    merge(out, tmp, all.x = TRUE, by = bycols, sort = FALSE)
 }
 
 # faster than all(x %in% 0:1)

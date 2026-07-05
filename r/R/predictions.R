@@ -254,27 +254,10 @@ predictions <- function(
 
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
 
-    # analogous to comparisons(variables=list(...))
-    if (!is.null(variables)) {
-        mfx <- add_variables(
-            variables = variables,
-            mfx = mfx
-        )
-        args <- list(
-            model = mfx@model,
-            newdata = mfx@newdata,
-            grid_type = "counterfactual",
-            marginaleffects_internal = mfx
-        )
-        for (v in mfx@variables) {
-            args[[v$name]] <- v$value
-        }
-        mfx@newdata <- do.call("datagrid", args)
-    }
-
-    prepared <- prediction_prepare_newdata(mfx)
-    mfx <- prepared$mfx
-    unpadded_newdata <- prepared$unpadded_newdata
+    mfx <- prediction_prepare_newdata(mfx, variables = variables)
+    unpadded_newdata <- mfx@newdata # for degrees of freedom
+    mfx@newdata <- pad(mfx@model, mfx@newdata)
+    mfx@newdata <- add_model_matrix_attribute(mfx)
 
     ############### sanity checks are over
 
@@ -320,20 +303,18 @@ predictions <- function(
     if (!isFALSE(vcov)) {
         mfx@vcov_type <- get_vcov_label(vcov)
         mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = prediction_type, ...)
-
-        # Delta method for standard errors
-        if (!"std.error" %in% colnames(tmp) && is.null(mfx@draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
-            se <- plan_std_error(
-                built = built,
-                mfx = mfx,
-                estimates = tmp,
-                type = prediction_type,
-                dots = dots
-            )
-            mfx <- se$mfx
-            tmp <- se$estimates
-        }
     }
+
+    # Delta method for standard errors
+    se <- plan_std_error(
+        built = built,
+        mfx = mfx,
+        estimates = tmp,
+        type = prediction_type,
+        dots = dots
+    )
+    mfx <- se$mfx
+    tmp <- se$estimates
 
     # Common path for both autodiff and fallback
 
@@ -352,10 +333,7 @@ predictions <- function(
     out <- data.table::data.table(tmp)
     data.table::setDT(mfx@newdata)
 
-    # it does not make sense to merge original data into aggregated results
-    if (isFALSE(by) && !inherits(mfx@model, "mclogit")) {
-        out <- merge_by_rowid(out, mfx@newdata)
-    }
+    out <- merge_original_data(out, mfx@newdata, by = by)
 
     linv <- if (isTRUE(link_to_response)) {
         tryCatch(insight::link_inverse(mfx@model), error = function(e) identity)

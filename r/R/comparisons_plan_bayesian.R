@@ -31,12 +31,89 @@ predictions_hi_lo_bayesian <- function(model, lo, hi, type, ...) {
 
 comparison_group_indices <- function(by_idx) {
     by_idx_unique <- unique(by_idx)
-    out <- vector("list", length(by_idx_unique))
-    for (i in seq_along(by_idx_unique)) {
-        out[[i]] <- which(by_idx == by_idx_unique[[i]])
+    if (length(by_idx_unique) == 0L) {
+        return(list())
     }
+
+    group <- match(by_idx, by_idx_unique)
+    out <- unname(split(seq_along(by_idx), group))
     names(out) <- as.character(by_idx_unique)
     return(out)
+}
+
+
+comparison_group_calls <- function(out, group_indices, context) {
+    lapply(group_indices, function(idx) {
+        term <- out$term[idx]
+        wts <- out$marginaleffects_wts_internal[idx]
+        tmp_idx <- out$tmp_idx[idx]
+        call <- comparison_call_args(
+            term = term,
+            wts = wts,
+            tmp_idx = tmp_idx,
+            context = context
+        )
+        call$idx <- idx
+        call$n <- length(idx)
+        call
+    })
+}
+
+
+comparison_call_value <- function(call, hi, lo, y) {
+    if (call$n == 0 || length(hi) == 0) {
+        return(numeric(0))
+    }
+
+    value_args <- call$args
+    value_args$hi <- hi
+    value_args$lo <- lo
+    if (isTRUE(call$uses_y)) {
+        value_args$y <- y
+    }
+    con <- try(do_call(call$fun, value_args), silent = TRUE)
+    comparison_validate_result(con, call$n)
+    con
+}
+
+
+comparison_fast_path_vector_key <- function(call) {
+    isTRUE(call$fun_key %in% c("difference", "ratio", "lnratio", "lift"))
+}
+
+
+comparison_fast_path_vector <- function(call, hi, lo) {
+    if (!comparison_fast_path_vector_key(call)) return(NULL)
+    out <- switch(
+        call$fun_key,
+        "difference" = hi - lo,
+        "ratio" = hi / lo,
+        "lnratio" = log(hi / lo),
+        "lift" = (hi - lo) / lo
+    )
+    if (anyNA(out)) {
+        idx <- which(colSums(is.na(out)) > 0L)[[1]]
+        comparison_validate_result(out[, idx], call$n)
+    }
+    out
+}
+
+
+comparison_fast_path_scalar <- function(call, hi, lo) {
+    if (!isTRUE(call$fun_key %in% c("differenceavg", "ratioavg", "lnratioavg", "liftavg"))) {
+        return(NULL)
+    }
+    out <- switch(
+        call$fun_key,
+        "differenceavg" = colMeans(hi - lo),
+        "ratioavg" = colMeans(hi) / colMeans(lo),
+        "lnratioavg" = log(colMeans(hi) / colMeans(lo)),
+        "liftavg" = colMeans(hi - lo) / colMeans(lo)
+    )
+    if (anyNA(out)) {
+        comparison_validate_result(out[[which(is.na(out))[[1]]]], call$n)
+    }
+    out
 }
 
 
@@ -83,6 +160,7 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
 
     # loop over columns (draws) and term names because different terms could use different functions
     group_indices <- comparison_group_indices(by_idx)
+    group_calls <- comparison_group_calls(out, group_indices, context)
     scalar_result <- compare_hi_lo_bayesian_scalar(
         out = out,
         draws = draws,
@@ -91,28 +169,31 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
         draws_or = draws_or,
         by = by,
         context = context,
-        group_indices = group_indices
+        group_indices = group_indices,
+        group_calls = group_calls
     )
     if (!is.null(scalar_result)) {
         return(scalar_result)
     }
 
-    for (idx in group_indices) {
-        n <- length(idx)
-        term <- out$term[idx]
-        wts <- out$marginaleffects_wts_internal[idx]
-        tmp_idx <- out$tmp_idx[idx]
-        for (i in seq_len(ncol(draws))) {
-            draws[idx, i] <- compare_hi_lo(
-                hi = draws_hi[idx, i],
-                lo = draws_lo[idx, i],
-                y = draws_or[idx, i],
-                n = n,
-                term = term,
-                wts = wts,
-                tmp_idx = tmp_idx,
-                context = context
-            )
+    for (call in group_calls) {
+        idx <- call$idx
+        fast <- comparison_fast_path_vector(
+            call = call,
+            hi = draws_hi[idx, , drop = FALSE],
+            lo = draws_lo[idx, , drop = FALSE]
+        )
+        if (is.null(fast)) {
+            for (i in seq_len(ncol(draws))) {
+                draws[idx, i] <- compare_hi_lo(
+                    call = call,
+                    hi = draws_hi[idx, i],
+                    lo = draws_lo[idx, i],
+                    y = draws_or[idx, i]
+                )
+            }
+        } else {
+            draws[idx, ] <- fast
         }
     }
 
@@ -136,27 +217,44 @@ compare_hi_lo_bayesian <- function(out, draws, draws_hi, draws_lo, draws_or, by,
 }
 
 
-compare_hi_lo_bayesian_scalar <- function(out, draws, draws_hi, draws_lo, draws_or, by, context, group_indices) {
-    draws_scalar <- matrix(NA_real_, nrow = length(group_indices), ncol = ncol(draws))
+compare_hi_lo_bayesian_scalar <- function(
+    out,
+    draws,
+    draws_hi,
+    draws_lo,
+    draws_or,
+    by,
+    context,
+    group_indices,
+    group_calls = NULL) {
+    if (is.null(group_calls)) {
+        group_calls <- comparison_group_calls(out, group_indices, context)
+    }
+    draws_scalar <- matrix(NA_real_, nrow = length(group_calls), ncol = ncol(draws))
 
-    for (j in seq_along(group_indices)) {
-        idx <- group_indices[[j]]
-        n <- length(idx)
-        term <- out$term[idx]
-        wts <- out$marginaleffects_wts_internal[idx]
-        tmp_idx <- out$tmp_idx[idx]
+    for (j in seq_along(group_calls)) {
+        call <- group_calls[[j]]
+        idx <- call$idx
+        fast <- comparison_fast_path_scalar(
+            call = call,
+            hi = draws_hi[idx, , drop = FALSE],
+            lo = draws_lo[idx, , drop = FALSE]
+        )
+        if (!is.null(fast)) {
+            draws_scalar[j, ] <- fast
+            next
+        }
+        if (comparison_fast_path_vector_key(call)) {
+            return(NULL)
+        }
 
         for (i in seq_len(ncol(draws))) {
-            con <- comparison_call(
+            con <- comparison_call_value(
+                call = call,
                 hi = draws_hi[idx, i],
                 lo = draws_lo[idx, i],
-                y = draws_or[idx, i],
-                n = n,
-                term = term,
-                wts = wts,
-                tmp_idx = tmp_idx,
-                context = context
-            )$value
+                y = draws_or[idx, i]
+            )
             if (length(con) != 1) {
                 return(NULL)
             }
@@ -173,17 +271,13 @@ compare_hi_lo_bayesian_scalar <- function(out, draws, draws_hi, draws_lo, draws_
 }
 
 
-compare_hi_lo <- function(hi, lo, y, n, term, wts, tmp_idx, context) {
-    con <- comparison_call(
+compare_hi_lo <- function(call, hi, lo, y) {
+    con <- comparison_call_value(
+        call = call,
         hi = hi,
         lo = lo,
-        y = y,
-        n = n,
-        term = term,
-        wts = wts,
-        tmp_idx = tmp_idx,
-        context = context
-    )$value
+        y = y
+    )
     if (length(con) == 1) {
         tmp <- rep(NA_real_, length(hi))
         tmp[[1]] <- con

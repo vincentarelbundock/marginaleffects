@@ -6,7 +6,12 @@ from .by import get_by_plan
 from .hypothesis_compile import hypothesis_compile
 from .uncertainty import get_jacobian, get_se
 from .classes import MarginaleffectsResult
-from .plan import PredictionPlan, prediction_plan_apply, prediction_plan_predict
+from .plan import (
+    PredictionPlan,
+    plan_values_allclose,
+    prediction_plan_apply,
+    prediction_plan_predict,
+)
 from .utils import prepare_base_inputs, finalize_result, call_avg
 from .sanitize import handle_deprecated_hypotheses_argument
 from .docstrings import doc
@@ -146,12 +151,9 @@ def _predictions_build(model, exog, newdata, by, wts, hypothesis):
     replay = prediction_plan_apply(
         plan, prediction_plan_predict(plan, model, model.get_coef())
     )
-    if not np.allclose(
+    if not plan_values_allclose(
         replay,
         out["estimate"].to_numpy(),
-        rtol=1e-12,
-        atol=1e-12,
-        equal_nan=True,
     ):
         raise RuntimeError(
             "marginaleffects internal error: prediction plan baseline check failed"

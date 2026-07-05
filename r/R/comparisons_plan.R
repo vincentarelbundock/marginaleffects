@@ -79,55 +79,57 @@ comparison_call <- function(hi, lo, y, n, term, wts, tmp_idx, context) {
 
 
 prepare_elasticities <- function(variables, original, out, by, elasticity_names) {
-    FUN <- function(z) {
-        (is.character(z$comparison) && z$comparison %in% elasticity_names) ||
-            (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
+    needs_x <- function(variable) {
+        (is.character(variable$comparison) && variable$comparison %in% elasticity_names) ||
+            (is.function(variable$comparison) && "x" %in% names(formals(variable$comparison)))
     }
-    elasticities <- Filter(FUN, variables)
+    elasticities <- Filter(needs_x, variables)
 
-    if (length(elasticities) > 0) {
-        # assigning a subset of "original" to "idx1" takes time and memory
-        # better to do this here for most columns and add the "v" column only
-        # in the loop
+    if (length(elasticities) == 0) {
+        return(elasticities)
+    }
+
+    # Reuse stable columns from `original`; add the current variable in the loop.
+    if (!is.null(original)) {
+        original_cols <- c(
+            "rowid",
+            "rowidcf",
+            "term",
+            "group",
+            grep("^contrast", colnames(original), value = TRUE)
+        )
+        original_cols <- intersect(original_cols, colnames(original))
+        original_index <- original[, ..original_cols]
+    }
+
+    for (v in names(elasticities)) {
+        out_cols <- unique(c(
+            "rowid",
+            "term",
+            "group",
+            by,
+            grep("^contrast", colnames(out), value = TRUE)
+        ))
+        out_cols <- intersect(out_cols, colnames(out))
+
+        # Keep only the current term so the elasticity vector has the right length.
+        out_index <- out[term == v, ..out_cols]
+
+        # `original` is NULL when cross=TRUE.
         if (!is.null(original)) {
-            idx1 <- c(
-                "rowid",
-                "rowidcf",
-                "term",
-                "group",
-                grep("^contrast", colnames(original), value = TRUE)
-            )
-            idx1 <- intersect(idx1, colnames(original))
-            idx1 <- original[, ..idx1]
-        }
-
-        for (v in names(elasticities)) {
-            idx2 <- unique(c(
-                "rowid",
-                "term",
-                "group",
-                by,
-                grep("^contrast", colnames(out), value = TRUE)
-            ))
-            idx2 <- intersect(idx2, colnames(out))
-            # discard other terms to get right length vector
-            idx2 <- out[term == v, ..idx2]
-            # original is NULL when cross=TRUE
-            if (!is.null(original)) {
-                # if not first iteration, need to remove previous "v" and "elast"
-                if (v %in% colnames(idx1)) {
-                    idx1[, (v) := NULL]
-                }
-                if ("elast" %in% colnames(idx1)) {
-                    idx1[, elast := NULL]
-                }
-                idx1[, (v) := original[[v]]]
-                setnames(idx1, old = v, new = "elast")
-                on_cols <- intersect(colnames(idx1), colnames(idx2))
-                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE))
+            # Remove columns left over from the previous loop iteration.
+            if (v %in% colnames(original_index)) {
+                original_index[, (v) := NULL]
             }
-            elasticities[[v]] <- idx2$elast
+            if ("elast" %in% colnames(original_index)) {
+                original_index[, elast := NULL]
+            }
+            original_index[, (v) := original[[v]]]
+            setnames(original_index, old = v, new = "elast")
+            on_cols <- intersect(colnames(original_index), colnames(out_index))
+            out_index <- unique(merge(out_index, original_index, by = on_cols, sort = FALSE))
         }
+        elasticities[[v]] <- out_index$elast
     }
     return(elasticities)
 }
@@ -225,7 +227,6 @@ comparison_plan_build <- function(
             out <- cbind(out, original[, ..cols])
             extra_cols <- character()
         }
-        out <- merge(out, newdata, by = "rowid", all.x = TRUE, sort = FALSE)
         if (isTRUE(nrow(out) == nrow(lo))) {
             tmp <- lo[
                 ,
@@ -248,15 +249,21 @@ comparison_plan_build <- function(
     }
 
     by_regex <- "^term$|^contrast_?|^group$"
+    implicit_by <- unique(grep(by_regex, colnames(out), value = TRUE))
     if (isTRUE(checkmate::check_data_frame(by))) {
         tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
         by <- harmonize_by_types(out, by)
         out[by, by := by, on = tmp]
         by <- "by"
-    } else if (isTRUE(by)) {
-        by <- unique(grep(by_regex, colnames(out), value = TRUE))
-    } else if (isTRUE(checkmate::check_character(by))) {
-        by <- unique(c(by, grep(by_regex, colnames(out), value = TRUE)))
+    } else {
+        by <- sanitize_by(
+            mfx,
+            by,
+            out = out,
+            implicit = implicit_by,
+            implicit_first = FALSE,
+            prune = FALSE
+        )
     }
 
     fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
@@ -328,9 +335,7 @@ comparison_plan_build <- function(
             out = out,
             idx = idx,
             context = comparison_context,
-            pred_hi = pred_hi[["estimate"]],
-            pred_lo = pred_lo[["estimate"]],
-            pred_or = if (!is.null(pred_or)) pred_or[["estimate"]] else NULL,
+            n_pred = length(pred_lo[["estimate"]]),
             type = type,
             dots = dots,
             hi = hi,

@@ -350,50 +350,28 @@ comparisons <- function(
     mfx@draws <- attr(cmp, "posterior_draws")
 
     # standard errors via delta method
-    if (is.null(mfx@draws) &&
-        !isFALSE(vcov) &&
-        isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
-
-        se <- plan_std_error(
-            built = built,
-            mfx = mfx,
-            estimates = cmp,
-            type = mfx@type,
-            dots = dots,
-            contrast_data = contrast_data,
-            variables = predictors,
-            numderiv = numderiv
-        )
-        mfx <- se$mfx
-        cmp <- se$estimates
-    }
+    se <- plan_std_error(
+        built = built,
+        mfx = mfx,
+        estimates = cmp,
+        type = mfx@type,
+        dots = dots,
+        contrast_data = contrast_data,
+        variables = predictors,
+        numderiv = numderiv
+    )
+    mfx <- se$mfx
+    cmp <- se$estimates
 
     # Common path for both autodiff and fallback
 
-    # merge original data back in
-    if (isFALSE(by) && "rowid" %in% colnames(cmp)) {
-        if ("rowid" %in% colnames(mfx@newdata)) {
-            idx <- c(
-                "rowid",
-                "rowidcf",
-                "term",
-                "contrast",
-                "by",
-                setdiff(colnames(contrast_data$original), colnames(cmp))
-            )
-            idx <- intersect(idx, colnames(contrast_data$original))
-            tmp <- contrast_data$original[, ..idx, drop = FALSE]
-            # contrast_data is duplicated to compute contrasts for different terms or pairs
-            bycols <- intersect(colnames(tmp), colnames(cmp))
-            idx <- duplicated(tmp, by = bycols)
-            tmp <- tmp[!idx]
-            cmp <- merge(cmp, tmp, all.x = TRUE, by = bycols, sort = FALSE)
-            # HACK: relies on NO sorting at ANY point
-        } else {
-            idx <- setdiff(colnames(contrast_data$original), colnames(cmp))
-            cmp <- data.table(cmp, contrast_data$original[, ..idx])
-        }
-    }
+    cmp <- merge_original_data(
+        cmp,
+        contrast_data$original,
+        by = by,
+        keys = c("rowid", "rowidcf", "term", "contrast", "by"),
+        deduplicate = TRUE
+    )
 
     return(finalize_estimates(
         out = cmp,

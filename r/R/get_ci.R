@@ -46,7 +46,12 @@ get_ci_internal <- function(
             rowids <- unique(x$rowid)
             if (length(rowids) == length(df)) {
                 rowids <- data.table(rowid = rowids, df = df)
-                x <- merge(x, rowids, all.x = TRUE, by = "rowid", sort = FALSE)
+                x <- merge_original_data(
+                    x,
+                    rowids,
+                    payload = "df",
+                    unit_level_only = FALSE
+                )
             } else {
                 stop_sprintf("The degrees of freedom argument was ignored.")
             }
