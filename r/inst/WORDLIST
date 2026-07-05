@@ -45,6 +45,7 @@ Kirill
 Krinsky
 Lenth
 Lüdecke
+MB
 MCMCglmm
 Marcio
 MrJerryTAO
@@ -143,6 +144,7 @@ eyexavgwts
 fdcenter
 fdforward
 fdr
+filesystem
 fivenum
 fixest
 flexsurvreg
@@ -235,6 +237,7 @@ routledge
 rowid
 rsample
 rvar
+sanitization
 satterthwaite
 sd
 softmax
@@ -243,6 +246,7 @@ speedlm
 stanreg
 surv
 survreg
+svy
 svyglm
 svyolr
 threenum
@@ -253,8 +257,10 @@ tinytable
 tobit
 tukey
 unadvisable
+unpadding
 vcov
 vectorized
+vglm
 vincentarelbundock
 wald
 weightit

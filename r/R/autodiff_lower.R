@@ -38,39 +38,75 @@ autodiff_check_matrix <- function(X, coefs, plan) {
         nrow(X) == plan$n_pred
 }
 
-autodiff_build_agg <- function(agg, n_est) {
-    if (is.null(agg)) {
-        return(list(ok = TRUE, agg = NULL))
-    }
-
-    idx <- unlist(lapply(agg$groups, function(g) g$idx), use.names = FALSE)
+autodiff_build_agg_blocks <- function(agg, n_est) {
     if (
-        length(idx) == 0 ||
-            anyDuplicated(idx) ||
-            !identical(sort(idx), seq_len(n_est))
+        !is.list(agg$blocks) ||
+            !isTRUE(checkmate::check_integerish(agg$n, len = 1, lower = 1))
     ) {
         return(autodiff_lower_fail("this form of the `by` argument"))
     }
 
     segments <- integer(n_est)
-    weights <- rep(NA_real_, n_est)
-    use_weights <- FALSE
+    seen <- integer(n_est)
+    seen_segments <- integer(agg$n)
+    weights <- if (isTRUE(agg$weighted)) rep(NA_real_, n_est) else NULL
 
-    for (j in seq_along(agg$groups)) {
-        gr <- agg$groups[[j]]
-        segments[gr$idx] <- j
-        if (!is.null(gr$w)) {
-            if (anyNA(gr$w)) {
+    for (block in agg$blocks) {
+        idx <- block$idx
+        if (is.null(idx)) {
+            return(autodiff_lower_fail("this form of the `by` argument"))
+        }
+        if (is.null(dim(idx))) {
+            idx <- matrix(idx, ncol = 1)
+        }
+        cols <- block$cols
+        if (
+            !isTRUE(checkmate::check_matrix(idx)) ||
+                !isTRUE(checkmate::check_integerish(cols, lower = 1, upper = agg$n)) ||
+                ncol(idx) != length(cols)
+        ) {
+            return(autodiff_lower_fail("this form of the `by` argument"))
+        }
+
+        w <- NULL
+        if (isTRUE(agg$weighted)) {
+            w <- block$w
+            if (is.null(w)) {
                 return(autodiff_lower_fail("missing values in weights"))
             }
-            use_weights <- TRUE
-            weights[gr$idx] <- gr$w
+            if (is.null(dim(w))) {
+                w <- matrix(w, ncol = 1)
+            }
+            if (!identical(dim(w), dim(idx)) || anyNA(w)) {
+                return(autodiff_lower_fail("missing values in weights"))
+            }
+        }
+
+        for (j in seq_len(ncol(idx))) {
+            idx_j <- idx[, j]
+            col_j <- cols[[j]]
+            if (
+                !isTRUE(checkmate::check_integerish(idx_j, lower = 1, upper = n_est)) ||
+                    anyDuplicated(idx_j)
+            ) {
+                return(autodiff_lower_fail("this form of the `by` argument"))
+            }
+            segments[idx_j] <- col_j
+            seen[idx_j] <- seen[idx_j] + 1L
+            seen_segments[col_j] <- seen_segments[col_j] + 1L
+            if (isTRUE(agg$weighted)) {
+                weights[idx_j] <- w[, j]
+            }
         }
     }
 
-    if (!isTRUE(use_weights)) {
-        weights <- NULL
-    } else if (anyNA(weights)) {
+    if (!identical(seen, rep(1L, n_est))) {
+        return(autodiff_lower_fail("this form of the `by` argument"))
+    }
+    if (!identical(seen_segments, rep(1L, agg$n))) {
+        return(autodiff_lower_fail("this form of the `by` argument"))
+    }
+    if (isTRUE(agg$weighted) && anyNA(weights)) {
         return(autodiff_lower_fail("missing values in weights"))
     }
 
@@ -78,10 +114,20 @@ autodiff_build_agg <- function(agg, n_est) {
         ok = TRUE,
         agg = list(
             segments = segments,
-            num_segments = length(agg$groups),
+            num_segments = agg$n,
             weights = weights
         )
     )
+}
+
+autodiff_build_agg <- function(agg, n_est) {
+    if (is.null(agg)) {
+        return(list(ok = TRUE, agg = NULL))
+    }
+    if (!is.null(agg$blocks)) {
+        return(autodiff_build_agg_blocks(agg, n_est))
+    }
+    autodiff_lower_fail("this form of the `by` argument")
 }
 
 autodiff_lower_hyp <- function(hyp) {

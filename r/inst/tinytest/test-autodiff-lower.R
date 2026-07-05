@@ -55,7 +55,12 @@ expect_false(low$ok)
 expect_equal(low$reason, "missing values in predictions")
 
 bad <- avg$plan
-bad$agg$groups[[1]]$w <- c(1, NA, 1)
+bad$agg$weighted <- TRUE
+bad$agg$blocks[[1]]$w <- matrix(
+    NA_real_,
+    nrow = nrow(bad$agg$blocks[[1]]$idx),
+    ncol = ncol(bad$agg$blocks[[1]]$idx)
+)
 low <- marginaleffects:::autodiff_lower_predictions(bad, avg$mfx, "response")
 expect_false(low$ok)
 expect_equal(low$reason, "missing values in weights")
