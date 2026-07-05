@@ -14,8 +14,6 @@ functions to simplify the function signatures and reduce redundant argument pass
 <dl>
 <dt><code>by</code></dt><dd>Aggregation/grouping specification
 </dd>
-<dt><code>byfun</code></dt><dd>Function for aggregation when using by
-</dd>
 <dt><code>call</code></dt><dd>The original function call
 </dd>
 <dt><code>calling_function</code></dt><dd>The name of the calling function (comparisons, predictions, hypotheses)

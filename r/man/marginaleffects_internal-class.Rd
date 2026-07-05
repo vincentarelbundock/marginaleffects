@@ -13,8 +13,6 @@ functions to simplify the function signatures and reduce redundant argument pass
 \describe{
 \item{\code{by}}{Aggregation/grouping specification}
 
-\item{\code{byfun}}{Function for aggregation when using by}
-
 \item{\code{call}}{The original function call}
 
 \item{\code{calling_function}}{The name of the calling function (comparisons, predictions, hypotheses)}

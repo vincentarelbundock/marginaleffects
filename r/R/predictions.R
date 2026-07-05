@@ -47,12 +47,6 @@
 #'   - See the Examples section and the [datagrid()] documentation.
 #' + [subset()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = subset(treatment == 1)`
 #' + [dplyr::filter()] call with a single argument to select a subset of the dataset used to fit the model, ex: `newdata = filter(treatment == 1)`
-#' @param byfun A function such as `mean()` or `sum()` used to aggregate
-#' estimates within the subgroups defined by the `by` argument. `NULL` uses the
-#' `mean()` function. Must accept a numeric vector and return a single numeric
-#' value. This is sometimes used to take the sum or mean of predicted
-#' probabilities across outcome or predictor
-#' levels. See examples section.
 #' @param type string indicates the type (scale) of the predictions used to
 #' compute contrasts or slopes. This can differ based on the model
 #' type, but will typically be a string such as: "response", "link", "probs",
@@ -169,7 +163,12 @@
 #' by <- data.frame(
 #'   by = c("4,6", "4,6", "8"),
 #'   group = as.character(c(4, 6, 8)))
-#' predictions(mod, newdata = "mean", byfun = sum, by = by)
+#' hyp <- function(x) {
+#'   out <- aggregate(estimate ~ by, merge(x, by, by = "group"), sum)
+#'   names(out)[1] <- "hypothesis"
+#'   out
+#' }
+#' predictions(mod, newdata = "mean", hypothesis = hyp)
 #'
 #' @inheritParams slopes
 #' @inheritParams comparisons
@@ -182,7 +181,6 @@ predictions <- function(
     conf_level = 0.95,
     type = NULL,
     by = FALSE,
-    byfun = NULL,
     wts = FALSE,
     transform = NULL,
     hypothesis = NULL,
@@ -192,44 +190,31 @@ predictions <- function(
     ...
 ) {
     # init
-    if (inherits(model, "marginaleffects_internal")) {
-        mfx <- model
-    } else {
-        # pass through ... to avoid calling `get_modeldata()` in inferences()
-        if ("modeldata" %in% ...names()) {
-            modeldata <- ...get("modeldata")
-        } else {
-            modeldata <- NULL
-        }
-        call <- construct_call(model, "predictions")
-        model <- sanitize_model(model, call = call, newdata = newdata, wts = wts, vcov = vcov, by = by, ...)
-        mfx <- new_marginaleffects_internal(
-            call = call,
-            model = model,
-            modeldata = modeldata,
-            by = by,
-            byfun = byfun
-        )
-    }
+    mfx <- marginaleffects_init(
+        model = model,
+        calling_function = "predictions",
+        newdata = newdata,
+        wts = wts,
+        vcov = vcov,
+        by = by,
+        env = environment(),
+        ...
+    )
 
     # newdata
     scall <- rlang::enquo(newdata)
-    mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts, byfun = byfun)
+    mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts)
 
     # inferences() dispatch
-    methods <- c("rsample", "boot", "fwb", "simulation")
-    if (isTRUE(checkmate::check_choice(vcov, methods))) {
-        inferences_method <- vcov
-        vcov <- FALSE
-    } else {
-        inferences_method <- NULL
-    }
+    inferences_dispatch <- sanitize_inferences_method(vcov)
+    vcov <- inferences_dispatch$vcov
+    inferences_method <- inferences_dispatch$method
 
     dots <- list(...)
-    sanity_dots(model = model, ...)
+    sanity_dots(model = mfx@model, ...)
 
     # multiple imputation
-    if (inherits(model, c("mira", "amest"))) {
+    if (inherits(mfx@model, c("mira", "amest"))) {
         out <- process_imputation(mfx)
         return(out)
     }
@@ -244,7 +229,7 @@ predictions <- function(
     # before add_hypothesis()
     link_to_response <- FALSE
     mfx@type <- sanitize_type(
-        model = model,
+        model = mfx@model,
         type = type,
         by = by,
         hypothesis = hypothesis,
@@ -269,262 +254,106 @@ predictions <- function(
 
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
 
-    # analogous to comparisons(variables=list(...))
-    if (!is.null(variables)) {
-        mfx <- add_variables(
-            variables = variables,
-            mfx = mfx
-        )
-        args <- list(
-            model = mfx@model,
-            newdata = mfx@newdata,
-            grid_type = "counterfactual",
-            marginaleffects_internal = mfx
-        )
-        for (v in mfx@variables) {
-            args[[v$name]] <- v$value
-        }
-        mfx@newdata <- do.call("datagrid", args)
-    }
-
-    # trust newdata$rowid
-    if (!"rowid" %in% colnames(mfx@newdata)) {
-        mfx@newdata[["rowid"]] <- seq_len(nrow(mfx@newdata))
-    }
-
-    # Store unpadded newdata for degrees of freedom calculation
-    unpadded_newdata <- mfx@newdata
-
-    mfx@newdata <- pad(model, mfx@newdata)
+    mfx <- prediction_prepare_newdata(mfx, variables = variables)
+    unpadded_newdata <- mfx@newdata # for degrees of freedom
+    mfx@newdata <- pad(mfx@model, mfx@newdata)
+    mfx@newdata <- add_model_matrix_attribute(mfx)
 
     ############### sanity checks are over
 
-    # pre-building the model matrix can speed up repeated predictions
-    mfx@newdata <- add_model_matrix_attribute(mfx)
+    prediction_type <- if (link_to_response) "link" else mfx@type
 
-    # Try autodiff early exit
-    autodiff_result <- NULL
-    if (isTRUE(settings_get("autodiff")) && !isFALSE(vcov)) {
-        # Get vcov matrix first
-        mfx@vcov_type <- get_vcov_label(vcov)
-        mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = if (link_to_response) "link" else mfx@type, ...)
+    # main estimation
+    args <- list(
+        mfx = mfx,
+        type = prediction_type,
+        hypothesis = mfx@hypothesis,
+        by = by
+    )
 
-        if (isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
-            # Filter out padding rows before autodiff when using by=character
-            # Padding is only needed for model.matrix construction, which is already done
-            if (is.character(mfx@by) && "rowid" %in% colnames(mfx@newdata)) {
-                idx <- mfx@newdata$rowid > 0
-                if (!all(idx)) {
-                    # Filter newdata and model matrix
-                    mfx@newdata <- mfx@newdata[idx, , drop = FALSE]
-                    # Also filter the model matrix attribute
-                    MM <- attr(mfx@newdata, "marginaleffects_model_matrix")
-                    if (!is.null(MM)) {
-                        attr(mfx@newdata, "marginaleffects_model_matrix") <- MM[idx, , drop = FALSE]
-                    }
-                }
-            }
-            # Try autodiff
-            autodiff_result <- jax_predictions(
-                mfx = mfx,
-                vcov_matrix = mfx@vcov_model,
-                ...
-            )
-        }
-    }
+    args <- utils::modifyList(args, dots)
+    built <- do_call(prediction_plan_build, args)
+    tmp <- built$cmp
 
-    if (!is.null(autodiff_result)) {
-        # SUCCESS: Use autodiff results and skip computation pipeline
+    # hypothesis formula names are attached in by()
+    mfx@variable_names_by <- unique(c(
+        mfx@variable_names_by,
+        attr(tmp, "hypothesis_function_by")))
 
-        # Build result data.frame
-        if (isFALSE(mfx@by)) {
-            # Row-level results
-            tmp <- data.frame(
-                rowid = mfx@newdata$rowid,
-                type = mfx@type,
-                estimate = autodiff_result$estimate,
-                std.error = autodiff_result$std.error
-            )
-            if ("rowidcf" %in% colnames(mfx@newdata)) {
-                tmp[["rowidcf"]] <- mfx@newdata[["rowidcf"]]
-            }
-            # Unpad: remove padding rows added for missing factor levels
-            tmp <- unpad(tmp, draws = NULL)$out
-        } else {
-            # Aggregated results (by=TRUE or by=character)
-            tmp <- data.frame(
-                type = mfx@type,
-                estimate = autodiff_result$estimate,
-                std.error = autodiff_result$std.error
-            )
-
-            # Add grouping columns for by=character
-            if (is.character(mfx@by)) {
-                # Extract unique group combinations
-                bycols <- mfx@by
-                if (inherits(mfx@newdata, "data.table")) {
-                    group_data <- unique(mfx@newdata[, ..bycols])
-                    data.table::setorderv(group_data, bycols)
-                    group_data <- as.data.frame(group_data)
-                } else {
-                    group_data <- unique(mfx@newdata[, bycols, drop = FALSE])
-                    if (nrow(group_data) > 1) {
-                        ord <- do.call(order, group_data)
-                        group_data <- group_data[ord, , drop = FALSE]
-                    }
-                }
-                rownames(group_data) <- NULL
-                tmp <- cbind(group_data, tmp)
-            }
-        }
-
-        # Store jacobian
-        mfx@jacobian <- autodiff_result$jacobian
-
-    } else {
-        # FALLBACK: Use standard computation pipeline
-
-        # main estimation
-        args <- list(
-            mfx = mfx,
-            type = if (link_to_response) "link" else mfx@type,
-            hypothesis = mfx@hypothesis,
-            by = by,
-            byfun = byfun
+    # two cases when tmp is a data.frame
+    # get_predict gets us rowid with the original rows
+    if (inherits(tmp, "data.frame")) {
+        setnames(
+            tmp,
+            old = c("Predicted", "SE", "CI_low", "CI_high"),
+            new = c("estimate", "std.error", "conf.low", "conf.high"),
+            skip_absent = TRUE
         )
-
-        args <- utils::modifyList(args, dots)
-        tmp <- do_call(get_predictions, args)
-
-        # hypothesis formula names are attached in by() in get_predictions()
-        mfx@variable_names_by <- unique(c(
-            mfx@variable_names_by,
-            attr(tmp, "hypothesis_function_by")))
-
-        # two cases when tmp is a data.frame
-        # get_predict gets us rowid with the original rows
-        if (inherits(tmp, "data.frame")) {
-            setnames(
-                tmp,
-                old = c("Predicted", "SE", "CI_low", "CI_high"),
-                new = c("estimate", "std.error", "conf.low", "conf.high"),
-                skip_absent = TRUE
-            )
-        } else {
-            tmp <- data.frame(mfx@newdata$rowid, mfx@type, tmp)
-            colnames(tmp) <- c("rowid", "type", "estimate")
-            if ("rowidcf" %in% colnames(mfx@newdata)) {
-                tmp[["rowidcf"]] <- mfx@newdata[["rowidcf"]]
-            }
-        }
-
-        # bayesian posterior draws
-        mfx@draws <- attr(tmp, "posterior_draws")
-
-        if (!isFALSE(vcov)) {
-            mfx@vcov_type <- get_vcov_label(vcov)
-            mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
-
-            # Delta method for standard errors
-            if (!"std.error" %in% colnames(tmp) && is.null(mfx@draws) && isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
-                fun <- function(...) {
-                    get_predictions(..., verbose = FALSE)$estimate
-                }
-                args <- list(
-                    mfx = mfx,
-                    model_perturbed = mfx@model,
-                    vcov = mfx@vcov_model,
-                    type = if (link_to_response) "link" else mfx@type,
-                    FUN = fun,
-                    hypothesis = mfx@hypothesis
-                )
-                args <- utils::modifyList(args, dots)
-                se <- do_call(get_se_delta, args)
-                if (is.numeric(se) && length(se) == nrow(tmp)) {
-                    mfx@jacobian <- attr(se, "jacobian")
-                    tmp[["std.error"]] <- as.vector(se) # drop attribute
-                }
-            }
+    } else {
+        tmp <- data.frame(mfx@newdata$rowid, mfx@type, tmp)
+        colnames(tmp) <- c("rowid", "type", "estimate")
+        if ("rowidcf" %in% colnames(mfx@newdata)) {
+            tmp[["rowidcf"]] <- mfx@newdata[["rowidcf"]]
         }
     }
+
+    # bayesian posterior draws
+    mfx@draws <- attr(tmp, "posterior_draws")
+
+    if (!isFALSE(vcov)) {
+        mfx@vcov_type <- get_vcov_label(vcov)
+        mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = prediction_type, ...)
+    }
+
+    # Delta method for standard errors
+    se <- plan_std_error(
+        built = built,
+        mfx = mfx,
+        estimates = tmp,
+        type = prediction_type,
+        dots = dots
+    )
+    mfx <- se$mfx
+    tmp <- se$estimates
 
     # Common path for both autodiff and fallback
 
-    # degrees of freedom - use unpadded newdata
-    # Temporarily replace newdata with unpadded version for df calculation
-    original_newdata <- mfx@newdata
-    mfx@newdata <- unpadded_newdata
     mfx <- add_degrees_of_freedom(
         mfx = mfx,
         df = df,
         by = by,
         hypothesis = mfx@hypothesis,
-        vcov = vcov
+        vcov = vcov,
+        newdata = unpadded_newdata
     )
-    # Restore padded newdata
-    mfx@newdata <- original_newdata
     if (!is.null(mfx@df) && is.numeric(mfx@df)) {
         tmp$df <- mfx@df
-    }
-
-    # Confidence intervals (autodiff already has std.error)
-    if (!isFALSE(vcov) && ("std.error" %in% colnames(tmp) || !is.null(mfx@draws))) {
-        tmp <- get_ci(tmp, mfx)
     }
 
     out <- data.table::data.table(tmp)
     data.table::setDT(mfx@newdata)
 
-    # it does not make sense to merge original data into aggregated results
-    if (isFALSE(by) && !inherits(mfx@model, "mclogit")) {
-        out <- merge_by_rowid(out, mfx@newdata)
+    out <- merge_original_data(out, mfx@newdata, by = by)
+
+    linv <- if (isTRUE(link_to_response)) {
+        tryCatch(insight::link_inverse(mfx@model), error = function(e) identity)
+    } else {
+        NULL
     }
 
-    # remove weights column (now handled by add_attributes)
-    out[["marginaleffects_wts_internal"]] <- NULL
-
-    # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
-    # applied in the middle, and it must already be sorted in the final order,
-    # otherwise, users cannot know for sure what is going to be the first and
-    # second rows, etc.
-    out <- sort_columns(out, mfx@newdata, by)
-
-    # equivalence tests
-    out <- equivalence(out, equivalence = equivalence, df = mfx@df, draws = mfx@draws, ...)
-
-    # after rename to estimate
-    if (isTRUE(link_to_response)) {
-        linv <- tryCatch(insight::link_inverse(mfx@model), error = function(e) identity)
-        out <- backtransform(out, transform = linv, draws = mfx@draws)
-    }
-    out <- backtransform(out, transform = transform, draws = mfx@draws)
-    new_draws <- attr(out, "posterior_draws") # important!
-    if (!is.null(new_draws)) mfx@draws <- new_draws
-
-    data.table::setDF(out)
-    class(out) <- c("predictions", class(out))
-
-    # before add_attributes()
-    if (inherits(mfx@model, "brmsfit")) {
-        insight::check_if_installed("brms")
-        mfx@draws_chains <- brms::nchains(mfx@model)
-    }
-
-    # Add common attributes from mfx S4 slots
-    # class before prune
-    out <- add_attributes(out, mfx)
-    out <- prune_attributes(out)
-
-
-    if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
-        out$group <- NULL
-    }
-
-    if (!is.null(inferences_method)) {
-        out <- inferences(out, method = inferences_method)
-    }
-
-    return(out)
+    return(finalize_estimates(
+        out = out,
+        mfx = mfx,
+        by = by,
+        transform = transform,
+        equivalence = equivalence,
+        class_name = "predictions",
+        inferences_method = inferences_method,
+        drop_group = TRUE,
+        conf_int = !isFALSE(vcov) && ("std.error" %in% colnames(out) || !is.null(mfx@draws)),
+        pre_transform = linv,
+        ...
+    ))
 }
 
 
@@ -540,7 +369,6 @@ avg_predictions <- function(
     conf_level = 0.95,
     type = NULL,
     by = TRUE,
-    byfun = NULL,
     wts = FALSE,
     transform = NULL,
     hypothesis = NULL,

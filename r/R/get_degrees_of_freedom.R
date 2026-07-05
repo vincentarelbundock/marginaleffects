@@ -1,8 +1,10 @@
 # Combined function that sanitizes and computes degrees of freedom from mfx object
-# Stores the result in mfx@df and returns the numeric df for backward compatibility
-add_degrees_of_freedom <- function(mfx, df = Inf, by = NULL, hypothesis = NULL, vcov = NULL) {
+# Stores the result in mfx@df and returns the updated mfx object.
+add_degrees_of_freedom <- function(mfx, df = Inf, by = NULL, hypothesis = NULL, vcov = NULL, newdata = NULL) {
     model <- mfx@model
-    newdata <- mfx@newdata
+    if (is.null(newdata)) {
+        newdata <- mfx@newdata
+    }
 
     # K-W changes both the vcov and the df
     # Satterthwaite changes the df but not the vcov

@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 from matplotlib.testing.compare import compare_images
 from plotnine import ggsave
 import warnings
@@ -115,6 +116,18 @@ def _save_plot(fig, filename, height=5, width=10, dpi=100):
     plt.rcParams["figure.dpi"] = dpi
     ggsave(fig, filename=filename, verbose=False, height=height, width=width, dpi=dpi)
     plt.close("all")
+
+
+def plot_snapshot_skipif():
+    import matplotlib
+    import pytest
+
+    version = re.match(r"^(\d+)\.(\d+)", matplotlib.__version__)
+    matplotlib_version = tuple(int(x) for x in version.groups()) if version else (0, 0)
+    return pytest.mark.skipif(
+        sys.platform != "linux" or matplotlib_version < (3, 11),
+        reason="Plot image snapshots are generated on Linux with matplotlib >= 3.11",
+    )
 
 
 def assert_image(fig, label, folder, tolerance=5):

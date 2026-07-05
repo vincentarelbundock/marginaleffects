@@ -80,7 +80,8 @@ expect_equal(length(unique(round(cmp$statistic, 5))), 1)
 # Issue 953: Custom functions or data frames for factors/logical columns
 requiet("ordinal")
 
-dat <- wine |>
+ordinal_wine <- ordinal::wine
+dat <- ordinal_wine |>
     transform(
         rating = ordered(ifelse(rating == 5, 1, rating)),
         temp = as.character(temp)

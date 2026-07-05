@@ -15,17 +15,12 @@ setClassUnion("characterOrNULL", c("character", "NULL"))
 #' @noRd
 setClassUnion("logicalOrNULL", c("logical", "NULL"))
 
-#' @keywords internal
-#' @noRd
-setClassUnion("functionOrNULL", c("function", "NULL"))
-
 #' Internal S4 class for marginaleffects
 #'
 #' This S4 class is used internally to hold common arguments passed between
 #' functions to simplify the function signatures and reduce redundant argument passing.
 #'
 #' @slot by Aggregation/grouping specification
-#' @slot byfun Function for aggregation when using by
 #' @slot call The original function call
 #' @slot calling_function The name of the calling function (comparisons, predictions, hypotheses)
 #' @slot comparison Comparison function specification
@@ -44,7 +39,6 @@ setClass(
     "marginaleffects_internal",
     slots = c(
         by = "ANY",
-        byfun = "functionOrNULL",
         call = "ANY",
         call_model = "ANY",
         calling_function = "character",
@@ -94,7 +88,6 @@ new_marginaleffects_internal <- function(
     model,
     call,
     by = FALSE,
-    byfun = NULL,
     comparison = NULL,
     conf_level = 0.95,
     cross = FALSE,
@@ -145,7 +138,6 @@ new_marginaleffects_internal <- function(
     methods::new(
         "marginaleffects_internal",
         by = by,
-        byfun = byfun,
         call = call,
         call_model = call_model,
         calling_function = calling_function,
@@ -178,6 +170,50 @@ new_marginaleffects_internal <- function(
         vcov_type = vcov_type,
         wts = wts
     )
+}
+
+marginaleffects_init <- function(
+    model,
+    calling_function,
+    newdata,
+    wts,
+    vcov,
+    by,
+    slots = list(),
+    env = parent.frame(),
+    ...) {
+    if (inherits(model, "marginaleffects_internal")) {
+        return(model)
+    }
+
+    # pass through ... to avoid calling `get_modeldata()` in inferences()
+    if ("modeldata" %in% ...names()) {
+        modeldata <- ...get("modeldata")
+    } else {
+        modeldata <- NULL
+    }
+
+    call <- construct_call(model, calling_function, env = env)
+    model <- sanitize_model(
+        model,
+        call = call,
+        newdata = newdata,
+        wts = wts,
+        vcov = vcov,
+        by = by,
+        ...
+    )
+
+    args <- c(
+        list(
+            call = call,
+            model = model,
+            modeldata = modeldata,
+            by = by
+        ),
+        slots
+    )
+    do_call(new_marginaleffects_internal, args)
 }
 
 #' Extract calling function name from call object

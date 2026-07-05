@@ -127,6 +127,9 @@ class ModelAbstract(ModelValidation, ABC):
     def get_predict(self, params: np.ndarray, newdata) -> pl.DataFrame:
         pass
 
+    def get_autodiff_args(self):
+        return None
+
     def __getattr__(self, name: str) -> Any:
         """Forward attribute access to the underlying fitted model."""
         try:

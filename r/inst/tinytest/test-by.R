@@ -48,6 +48,50 @@ expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 # input sanity check
 expect_error(slopes(mod, slope = "bad"), pattern = "eyexavg")
 
+mod_by <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+mfx_by <- marginaleffects:::new_marginaleffects_internal(
+    mod_by,
+    call = quote(predictions(mod_by))
+)
+mfx_by@newdata <- mtcars
+out_by <- data.frame(
+    rowid = 1:2,
+    estimate = c(0.1, 0.2),
+    group = c("a", "b"),
+    term = "hp",
+    contrast_1 = "hi",
+    cyl = c(4, 6)
+)
+expect_equal(marginaleffects:::sanitize_by(mfx_by, "cyl"), "cyl")
+expect_equal(
+    marginaleffects:::sanitize_by(mfx_by, "cyl", out = out_by, implicit = "group"),
+    c("group", "cyl")
+)
+implicit_by <- grep("^term$|^contrast_?|^group$", colnames(out_by), value = TRUE)
+expect_equal(
+    marginaleffects:::sanitize_by(
+        mfx_by,
+        "cyl",
+        out = out_by,
+        implicit = implicit_by,
+        implicit_first = FALSE
+    ),
+    c("cyl", "group", "term", "contrast_1")
+)
+out_by_missing <- subset(out_by, select = -cyl)
+implicit_by <- grep("^term$|^contrast_?|^group$", colnames(out_by_missing), value = TRUE)
+expect_equal(
+    marginaleffects:::sanitize_by(
+        mfx_by,
+        "cyl",
+        out = out_by_missing,
+        implicit = implicit_by,
+        implicit_first = FALSE,
+        prune = FALSE
+    ),
+    c("cyl", "group", "term", "contrast_1")
+)
+
 ##### aggregate() refactor makes this possible again
 # by is deprecated in `summary()` and `tidy()`
 # expect_error(summary(comparisons(mod), by = "am"), pattern = "instead")

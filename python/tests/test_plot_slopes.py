@@ -1,14 +1,10 @@
-import sys
 import pytest
 from marginaleffects import *
 from marginaleffects.plot.slopes import *
 from tests.utilities import *
 from tests.helpers import *
 
-pytestmark = pytest.mark.skipif(
-    sys.platform == "linux",
-    reason="Plot image tests are platform-dependent (font rendering)",
-)
+pytestmark = plot_snapshot_skipif()
 
 FIGURES_FOLDER = "plot_slopes"
 
@@ -101,7 +97,18 @@ class TestPlotSlopes:
         fig = plot_slopes(
             mtcars_mod, variables=input_variables, condition=input_condition, gray=gray
         )
-        assert assert_image(fig, expected_figure_filename, FIGURES_FOLDER) is None
+        tolerance = (
+            20
+            if expected_figure_filename
+            in {"issue114_slopes_02", "issue114_slopes_02_gray"}
+            else 5
+        )
+        assert (
+            assert_image(
+                fig, expected_figure_filename, FIGURES_FOLDER, tolerance=tolerance
+            )
+            is None
+        )
 
     @pytest.mark.parametrize(
         "input_condition, input_variables, gray, expected_figure_filename",

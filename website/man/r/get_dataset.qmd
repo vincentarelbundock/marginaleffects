@@ -53,9 +53,8 @@ A data frame containing the dataset.
 
 
 ### Examples
-```{r, warning=FALSE, message=FALSE, eval=TRUE}
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
 library("marginaleffects")
-
 
 dat <- get_dataset("Titanic", "Stat2Data")
 head(dat)

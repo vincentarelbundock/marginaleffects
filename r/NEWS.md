@@ -10,9 +10,16 @@ New:
 * Support for `nestedLogit::nestedLogit()` models. Thanks to @strengejacke for report #1675.
 * Improved `type` error for `aft` models.
 
+Breaking changes:
+
+* The `byfun` argument is no longer supported. Use `hypothesis` for custom aggregations.
+
 Performance:
 
-* Automatic differentiation with JAX now uses a single compiled grouped path for grouped predictions and comparisons, avoiding repeated group-wise calls and improving performance for `by` workflows.
+* Automatic differentiation now lowers recorded prediction/comparison plans to a single JAX pipeline, including grouped predictions and comparisons, and uses the normal R result pipeline for estimates, labels, and row ordering. This removes duplicated group/order reconstruction and adds autodiff support for `wts`, `by` data frames, matrix/vector hypotheses, and `comparison = "ratio"` with grouped averages.
+* Formula hypotheses such as `~ pairwise` and grouped variants now reuse compiled contrast plans during delta-method standard error calculations.
+* Delta-method standard errors for `comparisons()`, `avg_comparisons()`, `slopes()`, `avg_slopes()`, `predictions()`, and `avg_predictions()` now reuse a plan built from the baseline estimates instead of rebuilding loop-invariant result tables for every coefficient perturbation.
+* Grouped prediction standard errors may differ from previous development builds at about 1e-7 due to the new plan-based numeric aggregation kernel.
 * Large speedup (3x and more on large datasets) for `comparisons()` and `slopes()`: predictions returned as named vectors no longer trigger expensive row-name duplicate checks; several unnecessary full-table copies were removed from the internal comparison pipeline; and the standard error machinery no longer merges covariate columns back into intermediate results it only uses for the `estimate` column.
 * Persistent settings are now cached in memory, avoiding repeated filesystem access in hot code paths (e.g., once per call for autodiff checks and once per estimate for internal comparison bookkeeping).
 * Bayesian comparisons: row indexing and subsetting are now computed once per term instead of once per posterior draw column, which speeds up `comparisons()` and `slopes()` for models with many draws.
@@ -22,11 +29,9 @@ Bug fixes:
 
 * `by` aggregation with posterior or bootstrap draws no longer flattens the draws matrix when a `by` data frame omits some term/group combinations.
 * `predictions()` now assigns the correct `rowid`, `type`, and `estimate` column names when model predictions are returned as a bare vector.
-* `average_draws()` now supports `byfun` when no grouping columns are present.
 * `equivalence` tests now support vector-valued degrees of freedom.
 * `hypotheses()` no longer passes undefined `wts` and `by` promises to model sanitization methods.
 * `inferences(method = "conformal_cv+", conformal_score = "residual_sq")` now preserves absolute residuals used to compute prediction interval half-widths.
-* `get_predictions()` no longer has a self-referential `byfun` default.
 * Column ordering now recognizes the `variable_names_datagrid` attribute set by `datagrid()`.
 * `expect_margins()` now initializes its diagnostic message and reports missing standard error or variance columns correctly.
 * `expect_slopes()` now reports missing standard errors with the correct diagnostic message.

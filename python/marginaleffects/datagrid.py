@@ -369,7 +369,7 @@ def _process_datagrid_group(
             else:
                 expanded_dfs.append(df)
 
-        return pl.concat(expanded_dfs, how="horizontal")
+        return pl.concat(expanded_dfs, how="horizontal_extend")
     else:
         # Cross-product for balanced and mean_or_mode
         return reduce(lambda x, y: x.join(y, how="cross"), all_values.values())

@@ -334,9 +334,11 @@ get_comparison_functions <- function(mfx) {
     if (is.null(comparison)) {
         fun_numeric <- fun_categorical <- comparison_function_dict[["difference"]]
         lab_numeric <- lab_categorical <- comparison_label_dict[["difference"]]
+        key_numeric <- key_categorical <- "difference"
     } else if (is.function(comparison)) {
         fun_numeric <- fun_categorical <- comparison
         lab_numeric <- lab_categorical <- "custom"
+        key_numeric <- key_categorical <- NA_character_
     } else if (is.character(comparison)) {
         # switch to the avg version when there is a `by` function
         if (
@@ -356,15 +358,19 @@ get_comparison_functions <- function(mfx) {
 
         fun_numeric <- fun_categorical <- comparison_function_dict[[comparison]]
         lab_numeric <- lab_categorical <- comparison_label_dict[[comparison]]
+        key_numeric <- key_categorical <- comparison
         if (isTRUE(grepl("dydxavgwts|eyexavgwts|dyexavgwts|eydxavgwts", comparison))) {
             fun_categorical <- comparison_function_dict[["differenceavgwts"]]
             lab_categorical <- comparison_label_dict[["differenceavgwts"]]
+            key_categorical <- "differenceavgwts"
         } else if (isTRUE(grepl("dydxavg|eyexavg|dyexavg|eydxavg", comparison))) {
             fun_categorical <- comparison_function_dict[["differenceavg"]]
             lab_categorical <- comparison_label_dict[["differenceavg"]]
+            key_categorical <- "differenceavg"
         } else if (isTRUE(grepl("dydx$|eyex$|dyex$|eydx$", comparison))) {
             fun_categorical <- comparison_function_dict[["difference"]]
             lab_categorical <- comparison_label_dict[["difference"]]
+            key_categorical <- "difference"
         }
     }
 
@@ -373,6 +379,8 @@ get_comparison_functions <- function(mfx) {
         fun_categorical = fun_categorical,
         lab_numeric = lab_numeric,
         lab_categorical = lab_categorical,
+        key_numeric = key_numeric,
+        key_categorical = key_categorical,
         comparison = comparison
     )
 }
@@ -387,16 +395,19 @@ add_functions_and_labels <- function(predictors, comparison_config, mfx) {
         ) {
             fun <- comparison_config$fun_numeric
             lab <- comparison_config$lab_numeric
+            key <- comparison_config$key_numeric
         } else {
             fun <- comparison_config$fun_categorical
             lab <- comparison_config$lab_categorical
+            key <- comparison_config$key_categorical
         }
         predictors[[v]] <- list(
             "name" = v,
             "function" = fun,
             "label" = lab,
             "value" = predictors[[v]],
-            "comparison" = comparison_config$comparison
+            "comparison" = comparison_config$comparison,
+            "fun_key" = key
         )
     }
     predictors

@@ -8,7 +8,6 @@ new_marginaleffects_internal(
   model,
   call,
   by = FALSE,
-  byfun = NULL,
   comparison = NULL,
   conf_level = 0.95,
   cross = FALSE,

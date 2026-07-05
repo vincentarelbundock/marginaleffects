@@ -232,40 +232,29 @@ comparisons <- function(
     ...
 ) {
     # init
-    if (inherits(model, "marginaleffects_internal")) {
-        mfx <- model
-    } else {
-        # pass through ... to avoid calling `get_modeldata()` in inferences()
-        if ("modeldata" %in% ...names()) {
-            modeldata <- ...get("modeldata")
-        } else {
-            modeldata <- NULL
-        }
-        call <- construct_call(model, "comparisons")
-        model <- sanitize_model(model, 
-            call = call, 
-            newdata = newdata, 
-            wts = wts, 
-            vcov = vcov, 
-            by = by, ...)
-        mfx <- new_marginaleffects_internal(
-            call = call,
-            model = model,
-            modeldata = modeldata,
-            by = by,
+    mfx <- marginaleffects_init(
+        model = model,
+        calling_function = "comparisons",
+        newdata = newdata,
+        wts = wts,
+        vcov = vcov,
+        by = by,
+        slots = list(
             comparison = comparison,
             cross = cross,
             eps = eps
-        )
-    }
+        ),
+        env = environment(),
+        ...
+    )
 
     scall <- rlang::enquo(newdata)
-    mfx <- add_newdata(mfx, 
-        scall, 
-        newdata = newdata, 
-        by = by, 
-        wts = wts, 
-        cross = cross, 
+    mfx <- add_newdata(mfx,
+        scall,
+        newdata = newdata,
+        by = by,
+        wts = wts,
+        cross = cross,
         comparison = comparison)
 
     # sanity checks
@@ -279,16 +268,9 @@ comparisons <- function(
     }
 
     # inferences() dispatch
-    methods <- c("rsample", "boot", "fwb", "simulation")
-    if (isTRUE(checkmate::check_choice(vcov, methods))) {
-        inferences_method <- vcov
-        vcov <- FALSE
-    } else {
-        inferences_method <- NULL
-    }
-
-    # very early, before any use of newdata
-    newdata <- mfx@newdata
+    inferences_dispatch <- sanitize_inferences_method(vcov)
+    vcov <- inferences_dispatch$vcov
+    inferences_method <- inferences_dispatch$method
 
     # misc
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
@@ -344,230 +326,63 @@ comparisons <- function(
     contrast_data$hi <- add_model_matrix_attribute_data(mfx, contrast_data$hi)
     contrast_data$lo <- add_model_matrix_attribute_data(mfx, contrast_data$lo)
 
-    # Try autodiff early exit
-    autodiff_result <- NULL
-    if (isTRUE(settings_get("autodiff")) &&
-        !isFALSE(vcov) &&
-        isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+    args <- list(
+        mfx = mfx,
+        variables = predictors,
+        type = mfx@type,
+        original = contrast_data[["original"]],
+        hi = contrast_data[["hi"]],
+        lo = contrast_data[["lo"]],
+        by = by,
+        cross = cross,
+        hypothesis = mfx@hypothesis
+    )
+    args <- utils::modifyList(args, dots)
+    built <- do_call(comparison_plan_build, args)
+    cmp <- built$cmp
 
-        # Add internal group ID for robust matching with Python results
-        # This ensures we can merge results back correctly regardless of sort order
-        if (is.character(by)) {
-            bycols <- unique(c(by, "term", "contrast"))
-            bycols <- intersect(bycols, colnames(contrast_data$original))
-            if (length(bycols) > 0) {
-                # Create group IDs based on unique combinations, sorted to match finite diff output order
-                # Finite diff sorts by (term, user-specified variables, then contrast)
-                # So reorder bycols to put term first, then user variables, then contrast
-                bycols_sorted <- c("term", setdiff(bycols, c("term", "contrast")), "contrast")
-                bycols_sorted <- intersect(bycols_sorted, bycols)  # Keep only columns that exist
-                group_lookup <- unique(contrast_data$original[, bycols, with = FALSE])
-                # Sort by the reordered columns to match finite diff order
-                data.table::setorderv(group_lookup, bycols_sorted)
-                group_lookup[, marginaleffects_group_id := seq_len(.N)]
-                # Add group ID to original data
-                contrast_data$original <- merge(
-                    contrast_data$original,
-                    group_lookup,
-                    by = bycols,
-                    sort = FALSE
-                )
-            }
-        }
+    # hypothesis formula names are attached in by()
+    mfx@variable_names_by <- unique(c(
+        mfx@variable_names_by,
+        attr(cmp, "hypothesis_function_by")))
 
-        autodiff_result <- jax_comparisons(
-            mfx = mfx,
-            vcov_matrix = mfx@vcov_model,
-            hi = contrast_data$hi,
-            lo = contrast_data$lo,
-            original = contrast_data$original,
-            ...
-        )
-    }
+    # bayesian posterior
+    mfx@draws <- attr(cmp, "posterior_draws")
 
-    if (!is.null(autodiff_result)) {
-        # SUCCESS: Use autodiff results and skip computation pipeline
-
-        # Build result data.frame
-        if (isFALSE(mfx@by)) {
-            # Row-level results - merge with original data
-            cmp <- data.table::copy(contrast_data$original)
-            cmp[, estimate := autodiff_result$estimate]
-            cmp[, std.error := autodiff_result$std.error]
-        } else {
-            # Aggregated results
-            cmp <- data.table::data.table(
-                estimate = autodiff_result$estimate,
-                std.error = autodiff_result$std.error
-            )
-
-            # Add grouping columns
-            if (isTRUE(mfx@by)) {
-                # by=TRUE: aggregate by term/contrast
-                bycols <- intersect(c("term", "contrast"), colnames(contrast_data$original))
-                if (length(bycols) > 0) {
-                    group_cols <- unique(contrast_data$original[, bycols, with = FALSE])
-                    cmp <- cbind(group_cols, cmp)
-                }
-            } else if (is.character(mfx@by)) {
-                # by=character: aggregate by user-specified + term/contrast
-                bycols <- unique(c(mfx@by, "term", "contrast"))
-                bycols <- intersect(bycols, colnames(contrast_data$original))
-                if (length(bycols) > 0) {
-                    # Create lookup table with group IDs, sorted to match finite diff output order
-                    # Finite diff sorts by (term, user-specified variables, then contrast)
-                    bycols_sorted <- c("term", setdiff(bycols, c("term", "contrast")), "contrast")
-                    bycols_sorted <- intersect(bycols_sorted, bycols)  # Keep only columns that exist
-                    group_lookup <- unique(contrast_data$original[, bycols, with = FALSE])
-                    data.table::setorderv(group_lookup, bycols_sorted)
-                    group_lookup[, marginaleffects_group_id := seq_len(.N)]
-
-                    # Python returns results in sorted order (by group_id which we passed)
-                    # So results are already in the correct order!
-                    cmp <- data.table::data.table(
-                        estimate = autodiff_result$estimate,
-                        std.error = autodiff_result$std.error
-                    )
-                    cmp[, marginaleffects_group_id := seq_len(.N)]
-
-                    # Merge to add back the grouping columns
-                    cmp <- merge(group_lookup, cmp, by = "marginaleffects_group_id", sort = FALSE)
-                    cmp[, marginaleffects_group_id := NULL]  # Remove internal ID
-                }
-            }
-        }
-
-        # Store jacobian
-        mfx@jacobian <- autodiff_result$jacobian
-
-    } else {
-        # FALLBACK: Use standard computation pipeline
-
-        args <- list(
-            mfx = mfx,
-            variables = predictors,
-            type = mfx@type,
-            original = contrast_data[["original"]],
-            hi = contrast_data[["hi"]],
-            lo = contrast_data[["lo"]],
-            by = by,
-            cross = cross,
-            hypothesis = mfx@hypothesis
-        )
-        args <- utils::modifyList(args, dots)
-        cmp <- do_call(get_comparisons, args)
-
-        # hypothesis formula names are attached in by() in get_predictions()
-        mfx@variable_names_by <- unique(c(
-            mfx@variable_names_by,
-            attr(cmp, "hypothesis_function_by")))
-
-        # bayesian posterior
-        mfx@draws <- attr(cmp, "posterior_draws")
-
-        # standard errors via delta method
-        if (is.null(mfx@draws) &&
-            !isFALSE(vcov) &&
-            isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
-
-            idx <- intersect(colnames(cmp), c("group", "term", "contrast"))
-            idx <- cmp[, (idx), drop = FALSE]
-            fun <- function(...) {
-                get_comparisons(..., verbose = FALSE, payload = FALSE)$estimate
-            }
-            args <- list(
-                mfx = mfx,
-                model_perturbed = mfx@model,
-                vcov = mfx@vcov_model,
-                type = mfx@type,
-                FUN = fun,
-                index = idx,
-                variables = predictors,
-                hypothesis = mfx@hypothesis,
-                hi = contrast_data$hi,
-                lo = contrast_data$lo,
-                original = contrast_data$original,
-                estimates = cmp,
-                numderiv = numderiv
-            )
-            args <- utils::modifyList(args, dots)
-            se <- do_call(get_se_delta, args)
-            mfx@jacobian <- attr(se, "jacobian")
-            cmp$std.error <- as.vector(as.numeric(se)) # drop attributes
-            mfx@draws <- NULL
-        }
-    }
+    # standard errors via delta method
+    se <- plan_std_error(
+        built = built,
+        mfx = mfx,
+        estimates = cmp,
+        type = mfx@type,
+        dots = dots,
+        contrast_data = contrast_data,
+        variables = predictors,
+        numderiv = numderiv
+    )
+    mfx <- se$mfx
+    cmp <- se$estimates
 
     # Common path for both autodiff and fallback
 
-    # merge original data back in
-    if (isFALSE(by) && "rowid" %in% colnames(cmp)) {
-        if ("rowid" %in% colnames(mfx@newdata)) {
-            idx <- c(
-                "rowid",
-                "rowidcf",
-                "term",
-                "contrast",
-                "by",
-                setdiff(colnames(contrast_data$original), colnames(cmp))
-            )
-            idx <- intersect(idx, colnames(contrast_data$original))
-            tmp <- contrast_data$original[, ..idx, drop = FALSE]
-            # contrast_data is duplicated to compute contrasts for different terms or pairs
-            bycols <- intersect(colnames(tmp), colnames(cmp))
-            idx <- duplicated(tmp, by = bycols)
-            tmp <- tmp[!idx]
-            cmp <- merge(cmp, tmp, all.x = TRUE, by = bycols, sort = FALSE)
-            # HACK: relies on NO sorting at ANY point
-        } else {
-            idx <- setdiff(colnames(contrast_data$original), colnames(cmp))
-            cmp <- data.table(cmp, contrast_data$original[, ..idx])
-        }
-    }
+    cmp <- merge_original_data(
+        cmp,
+        contrast_data$original,
+        by = by,
+        keys = c("rowid", "rowidcf", "term", "contrast", "by"),
+        deduplicate = TRUE
+    )
 
-    # meta info
-    cmp <- get_ci(cmp, mfx)
-
-    # clean rows and columns
-    # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
-    # applied in the middle, and it must already be sorted in the final order,
-    # otherwise, users cannot know for sure what is going to be the first and
-    # second rows, etc.
-    cmp <- sort_columns(cmp, mfx@newdata, by)
-
-    # equivalence tests
-    cmp <- equivalence(cmp, equivalence = equivalence, df = mfx@df, draws = mfx@draws, ...)
-
-    # after draws attribute
-    cmp <- backtransform(cmp, transform, draws = mfx@draws)
-    new_draws <- attr(cmp, "posterior_draws") # important!
-    if (!is.null(new_draws)) mfx@draws <- new_draws
-
-    # remove weights column (now handled by add_attributes)
-    cmp[["marginaleffects_wts_internal"]] <- NULL
-
-    out <- cmp
-
-    data.table::setDF(out)
-
-    class(out) <- c("comparisons", class(out))
-
-    # before add_attributes()
-    if (inherits(mfx@model, "brmsfit")) {
-        insight::check_if_installed("brms")
-        mfx@draws_chains <- brms::nchains(mfx@model) 
-    }
-
-    # class before prune
-    out <- add_attributes(out, mfx)
-    out <- prune_attributes(out)
-
-
-    if (!is.null(inferences_method)) {
-        out <- inferences(out, method = inferences_method)
-    }
-
-    return(out)
+    return(finalize_estimates(
+        out = cmp,
+        mfx = mfx,
+        by = by,
+        transform = transform,
+        equivalence = equivalence,
+        class_name = "comparisons",
+        inferences_method = inferences_method,
+        ...
+    ))
 }
 
 

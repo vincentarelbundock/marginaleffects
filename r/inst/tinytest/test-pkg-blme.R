@@ -23,7 +23,7 @@ fm6 <- blmer(
     cov.prior = NULL,
     fixef.prior = normal
 )
-mod <- bglmer(vs ~ mpg + (1 | gear), data = mtcars, family = binomial)
+mod <- suppressMessages(bglmer(vs ~ mpg + (1 | gear), data = mtcars, family = binomial))
 
 expect_slopes(fm5)
 expect_slopes(fm6)

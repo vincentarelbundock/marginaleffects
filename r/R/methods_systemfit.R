@@ -18,7 +18,7 @@ get_vcov.systemfit <- function(model, ...) {
 get_predict.systemfit <- function(model, newdata = NULL, type = NULL, ...) {
     out <- stats::predict(model, newdata = newdata, ...)
     colnames(out) <- sub("\\.pred$", "", colnames(out))
-    out <- melt(data.table(out), variable.name = "group", value.name = "estimate")
+    out <- melt(data.table(out), measure.vars = colnames(out), variable.name = "group", value.name = "estimate")
     data.table::setDF(out)
     out <- add_rowid(out, newdata)
     return(out)

@@ -110,3 +110,10 @@ def is_autodiff_enabled() -> bool:
         return _JAX_AVAILABLE
     except ImportError:
         return False
+
+
+def is_autodiff_forced() -> bool:
+    """
+    Check if JAX autodiff was explicitly enabled by the user.
+    """
+    return _get_autodiff() is True

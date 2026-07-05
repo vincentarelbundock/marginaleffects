@@ -5,7 +5,7 @@ get_group_names.nestedLogit <- function(model, type, ...) {
     if ("group" %in% colnames(out)) {
         out <- unique(out$group)
     } else {
-        out <- "main_marginaleffects"
+        out <- main_marginaleffect_group()
     }
     return(out)
 }

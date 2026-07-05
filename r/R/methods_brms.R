@@ -88,7 +88,7 @@ get_predict.brmsfit <- function(
         med <- rep(0, ncol(draws))
         # med <- collapse::dapply(draws, MARGIN = 2, FUN = collapse::fmedian)
         out <- data.table(
-            group = "main_marginaleffect",
+            group = main_marginaleffect_group(),
             estimate = med
         )
 
@@ -139,7 +139,7 @@ get_group_names.brmsfit <- function(model, ...) {
     if (!is.null(model$family) && "cumulative" %in% model$family) {
         out <- unique(insight::get_response(model))
     } else {
-        out <- "main_marginaleffect"
+        out <- main_marginaleffect_group()
     }
     return(out)
 }

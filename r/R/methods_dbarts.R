@@ -12,7 +12,7 @@ get_predict.bart <- function(model, newdata = NULL, ...) {
     p <- do_call(stats::predict, args)
     p_med <- collapse::fmedian(p)
     out <- data.table(
-        group = "main_marginaleffect",
+        group = main_marginaleffect_group(),
         estimate = p_med)
     out <- add_rowid(out, newdata)
     attr(out, "posterior_draws") <- t(p)

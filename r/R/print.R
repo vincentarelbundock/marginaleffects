@@ -91,9 +91,7 @@ print.marginaleffects <- function(
 
     nrows <- max(nrows, 2 * topn)
 
-    if ("group" %in% colnames(out) && all(out$group == "main_marginaleffect")) {
-        out$group <- NULL
-    }
+    out <- drop_trivial_group(out)
 
     # subset before rounding so that digits match top and bottom rows
     if (nrow(out) > nrows) {

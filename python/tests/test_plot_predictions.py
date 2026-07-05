@@ -1,4 +1,3 @@
-import sys
 import statsmodels.formula.api as smf
 from marginaleffects import *
 from marginaleffects.plot.predictions import *
@@ -6,10 +5,7 @@ from tests.utilities import *
 import pytest
 from tests.helpers import *
 
-pytestmark = pytest.mark.skipif(
-    sys.platform == "linux",
-    reason="Plot image tests are platform-dependent (font rendering)",
-)
+pytestmark = plot_snapshot_skipif()
 
 FIGURES_FOLDER = "plot_predictions"
 
@@ -189,6 +185,7 @@ class TestPlotPredictions:
         assert assert_image(fig, expected_figure_filename, FIGURES_FOLDER) is None
 
 
+@pytest.mark.plot
 def test_issue_171():
     dat = get_dataset("thornton")
     mod = smf.logit(
@@ -199,6 +196,7 @@ def test_issue_171():
     assert assert_image(fig, "issue_171", FIGURES_FOLDER) is None
 
 
+@pytest.mark.plot
 def test_points_adds_raw_layer():
     mod = smf.ols("mpg ~ wt", data=mtcars.to_pandas()).fit()
     fig_points = plot_predictions(mod, condition=["wt"], points=0.4)

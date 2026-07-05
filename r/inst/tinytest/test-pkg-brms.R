@@ -656,18 +656,19 @@ expect_equivalent(exp(p1$conf.high), p2$conf.high)
 expect_equivalent(exp(components(p1, "draws")), components(p2, "draws"))
 
 
-# byfun
+# removed byfun argument
 by <- data.frame(
     by = c("1,2", "1,2", "3,4", "3,4"),
     group = 1:4
 )
 p1 <- predictions(brms_cumulative_random, newdata = "mean")
 p2 <- predictions(brms_cumulative_random, newdata = "mean", by = by)
-p3 <- predictions(brms_cumulative_random, newdata = "mean", by = by, byfun = sum)
 expect_equivalent(mean(p1$estimate[1:2]), p2$estimate[1], tolerance = 0.1)
 expect_equivalent(mean(p1$estimate[3:4]), p2$estimate[2], tolerance = 0.1)
-expect_equivalent(sum(p1$estimate[1:2]), p3$estimate[1], tolerance = 0.1)
-expect_equivalent(sum(p1$estimate[3:4]), p3$estimate[2], tolerance = 0.1)
+expect_error(
+    predictions(brms_cumulative_random, newdata = "mean", by = by, byfun = sum),
+    pattern = "`byfun`.*not supported.*`hypothesis`"
+)
 
 
 # Issue #500

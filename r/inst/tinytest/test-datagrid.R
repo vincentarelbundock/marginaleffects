@@ -47,7 +47,7 @@ requiet("haven")
 m <- marginaleffects:::hush(read_dta(testing_path("modelarchive/data/margex.dta")))
 if (inherits(m, "data.frame")) {
     m <- data.frame(m)
-    m$sex <- as.factor(m$sex)
+    m$sex <- factor(as.vector(m$sex))
     mod <- lm(y ~ sex + age + distance, data = m)
     expect_error(
         predictions(mod, newdata = datagrid(sex = c("male", "female"))),

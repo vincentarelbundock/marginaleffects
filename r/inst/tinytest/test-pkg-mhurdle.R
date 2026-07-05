@@ -9,24 +9,47 @@ if (packageVersion("insight") <= "1.4.0") {
 tol <- 0.001
 tol_se <- 0.001
 
+quiet_mhurdle_fit <- function(expr) {
+    withCallingHandlers(
+        force(expr),
+        warning = function(w) {
+            msg <- conditionMessage(w)
+            noisy <- c(
+                "subscript out of bounds, not all 'rhs' available",
+                "NaNs produced"
+            )
+            if (isTRUE(msg %in% noisy)) {
+                invokeRestart("muffleWarning")
+            }
+        }
+    )
+}
+
 # Basic expectation tests
 data("Interview", package = "mhurdle")
-mod_simple <- mhurdle(shows ~ educ + size | linc,
-    data = Interview, h2 = TRUE, dist = "n", method = "bhhh")
+mod_simple <- quiet_mhurdle_fit(
+    mhurdle(shows ~ educ + size | linc,
+        data = Interview, h2 = TRUE, dist = "n", method = "bhhh")
+)
 expect_slopes(mod_simple)
 expect_predictions(mod_simple)
 expect_hypotheses(mod_simple)
 expect_comparisons(mod_simple)
 
 data("Interview", package = "mhurdle")
-m1 <- mhurdle(shows ~ 0 | linc + smsa + age + educ + size, data = Interview, h2 = TRUE, dist = "n", method = "bhhh")
-m2 <- mhurdle(
-    shows ~ educ + size | linc | smsa + age,
-    data = Interview,
-    h2 = FALSE,
-    method = "bhhh",
-    corr = TRUE,
-    finalHessian = TRUE
+m1 <- quiet_mhurdle_fit(
+    mhurdle(shows ~ 0 | linc + smsa + age + educ + size,
+        data = Interview, h2 = TRUE, dist = "n", method = "bhhh")
+)
+m2 <- quiet_mhurdle_fit(
+    mhurdle(
+        shows ~ educ + size | linc | smsa + age,
+        data = Interview,
+        h2 = FALSE,
+        method = "bhhh",
+        corr = TRUE,
+        finalHessian = TRUE
+    )
 )
 
 # marginaleffects vs. margins (unit-level SEs)

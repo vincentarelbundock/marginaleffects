@@ -1,4 +1,10 @@
-sanity_by <- function(mfx, by) {
+sanitize_by <- function(
+    mfx,
+    by,
+    out = NULL,
+    implicit = NULL,
+    implicit_first = TRUE,
+    prune = TRUE) {
     checkmate::assert(
         checkmate::check_flag(by),
         checkmate::check_data_frame(by, min.cols = 1, min.rows = 1),
@@ -51,10 +57,28 @@ sanity_by <- function(mfx, by) {
         )
         stop(insight::format_message(msg), call. = FALSE)
     }
+
+    if (!is.null(out)) {
+        implicit <- intersect(implicit %||% character(), colnames(out))
+        if (isTRUE(by)) {
+            by <- implicit
+        } else if (isTRUE(checkmate::check_character(by))) {
+            if (isTRUE(implicit_first)) {
+                by <- unique(c(implicit, by))
+            } else {
+                by <- unique(c(by, implicit))
+            }
+            if (isTRUE(prune)) {
+                by <- intersect(by, colnames(out))
+            }
+        }
+    }
+
+    return(by)
 }
 
 add_by <- function(mfx, by) {
-    sanity_by(mfx, by)
+    by <- sanitize_by(mfx, by)
 
     if (isTRUE(checkmate::check_data_frame(by))) {
         mfx@variable_names_by <- colnames(by)

@@ -32,8 +32,5 @@ sort_columns <- function(x, newdata = data.frame(), by = NULL) {
     cols <- intersect(stubcols, colnames(x))
     cols <- unique(c(cols, colnames(x)))
     x <- x[, ..cols]
-    if ("group" %in% names(x) && all(x$group == "main_marginaleffect")) {
-        x$group <- NULL
-    }
-    return(x)
+    return(drop_trivial_group(x))
 }

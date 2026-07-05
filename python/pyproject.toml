@@ -1,10 +1,10 @@
 [project]
 name = "marginaleffects"
-version = "0.5.1"
+version = "0.6.1"
 license = "GPL-3.0-or-later"
 description = "Predictions, counterfactual comparisons, slopes, and hypothesis tests for statistical models."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "formulaic >=1.0.2",
     "jax >=0.4.0",

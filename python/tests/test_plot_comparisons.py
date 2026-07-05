@@ -1,4 +1,3 @@
-import sys
 import pytest
 from marginaleffects import *
 from marginaleffects.plot.comparisons import *
@@ -6,10 +5,7 @@ from tests.utilities import *
 from tests.helpers import *
 import statsmodels.formula.api as smf
 
-pytestmark = pytest.mark.skipif(
-    sys.platform == "linux",
-    reason="Plot image tests are platform-dependent (font rendering)",
-)
+pytestmark = plot_snapshot_skipif()
 
 FIGURES_FOLDER = "plot_comparisons"
 
@@ -159,6 +155,7 @@ def test_threenum(condition, expected_file, penguins_mod_add):
         assert assert_image(fig, expected_file, FIGURES_FOLDER) is None
 
 
+@pytest.mark.plot
 def test_issue_171_02():
     penguins = (
         pl.read_csv(

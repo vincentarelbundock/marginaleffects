@@ -29,7 +29,6 @@ align_jacobian_vcov <- function(J, V, object, ...) {
 #' @inheritParams slopes
 #' @param FUN a function which accepts a `model` and other inputs and returns a
 #'   vector of estimates (marginal effects, marginal means, etc.)
-#' @param index data.frame over which we aggregate J_mean (matches tidy() output)
 #' @return vector of standard errors
 #' @noRd
 get_se_delta <- function(
@@ -39,14 +38,12 @@ get_se_delta <- function(
     mfx = NULL,
     type = NULL,
     newdata = NULL,
-    index = NULL,
     eps = NULL,
     J = NULL,
     hypothesis = NULL,
     calling_function = NULL,
     comparison = NULL,
     by = NULL,
-    byfun = NULL,
     hi = NULL,
     lo = NULL,
     original = NULL,
@@ -58,7 +55,6 @@ get_se_delta <- function(
         calling_function <- if (is.null(calling_function)) mfx@calling_function else calling_function
         comparison <- if (is.null(comparison)) mfx@comparison else comparison
         by <- if (is.null(by)) mfx@by else by
-        byfun <- if (is.null(byfun)) mfx@byfun else byfun
     }
     # delta method does not work for these models
     bad <- c("brmsfit", "stanreg", "bart")
@@ -100,7 +96,6 @@ get_se_delta <- function(
             hypothesis = hypothesis,
             type = type,
             by = by,
-            byfun = byfun,
             hi = hi,
             lo = lo,
             original = original,
@@ -134,8 +129,7 @@ get_se_delta <- function(
             hi = hi,
             lo = lo,
             original = original,
-            by = by,
-            byfun = byfun
+            by = by
         )
         args <- c(args, list(...))
         if (inherits(model_perturbed, "gamlss")) {
@@ -187,12 +181,7 @@ get_se_delta <- function(
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
-    if (isTRUE(settings_get("autodiff"))) {
-        mAD <- settings_get("mAD")
-        se <- mAD$utils$standard_errors(J, V)
-    } else {
-        se <- sqrt(rowSums(tcrossprod(J, V) * J))
-    }
+    se <- sqrt(rowSums(tcrossprod(J, V) * J))
     se[se == 0] <- NA_real_
     attr(se, "jacobian") <- J
 

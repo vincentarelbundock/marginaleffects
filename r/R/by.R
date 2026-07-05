@@ -1,9 +1,20 @@
+harmonize_by_types <- function(estimates, by) {
+    for (v in colnames(by)) {
+        if (isTRUE(is.character(estimates[[v]])) && isTRUE(is.numeric(by[[v]]))) {
+            by[[v]] <- as.character(by[[v]])
+        } else if (isTRUE(is.numeric(estimates[[v]])) && isTRUE(is.character(by[[v]]))) {
+            by[[v]] <- as.numeric(by[[v]])
+        }
+    }
+    return(by)
+}
+
+
 get_by <- function(
     estimates,
     draws,
     newdata,
     by,
-    byfun = NULL,
     verbose = TRUE,
     ...) {
     if (is.null(by) || isFALSE(by) || nrow(estimates) <= 1) {
@@ -14,8 +25,13 @@ get_by <- function(
 
     missing <- setdiff(setdiff(colnames(by), "by"), colnames(estimates))
     if (length(missing) > 0) {
-        idx <- intersect(c("rowid", "rowidcf", missing), colnames(newdata))
-        estimates <- merge(estimates, newdata[, idx], sort = FALSE, all.x = TRUE)
+        estimates <- merge_original_data(
+            estimates,
+            newdata,
+            keys = c("rowid", "rowidcf"),
+            payload = missing,
+            unit_level_only = FALSE
+        )
     }
 
     if (isTRUE(by)) {
@@ -25,14 +41,7 @@ get_by <- function(
         bycols <- by
     } else if (isTRUE(checkmate::check_data_frame(by))) {
         idx <- setdiff(intersect(colnames(estimates), colnames(by)), "by")
-        # harmonize column types
-        for (v in colnames(by)) {
-            if (isTRUE(is.character(estimates[[v]])) && isTRUE(is.numeric(by[[v]]))) {
-                by[[v]] <- as.character(by[[v]])
-            } else if (isTRUE(is.numeric(estimates[[v]])) && isTRUE(is.character(by[[v]]))) {
-                by[[v]] <- as.numeric(by[[v]])
-            }
-        }
+        by <- harmonize_by_types(estimates, by)
         estimates[by, by := by, on = idx]
         bycols <- "by"
     }
@@ -56,18 +65,12 @@ get_by <- function(
         estimates <- average_draws(
             data = estimates,
             index = bycols,
-            draws = draws,
-            byfun = byfun
+            draws = draws
         )
 
         # frequentist
     } else {
-        if (!is.null(byfun)) {
-            estimates <- estimates[,
-                .(estimate = byfun(estimate)),
-                keyby = bycols
-            ]
-        } else if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
+        if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
             estimates <- estimates[,
                 .(
                     estimate = stats::weighted.mean(

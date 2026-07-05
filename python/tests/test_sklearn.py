@@ -146,3 +146,46 @@ def test_categorical_formula_equivalence():
     branch_categorical = pred_categorical["branch"].to_list()
     branch_direct = pred_direct["branch"].to_list()
     assert branch_categorical == branch_direct
+
+
+def test_callable_selector_xgboost_float32_predictions_by():
+    """Callable sklearn selectors can replay float32 predictions with by groups."""
+    import polars.selectors as cs
+    from sklearn.compose import make_column_transformer
+    from sklearn.pipeline import make_pipeline
+    from sklearn.preprocessing import FunctionTransformer, OneHotEncoder
+    from xgboost import XGBRegressor
+
+    rng = np.random.default_rng(1)
+    data = pl.DataFrame(
+        {
+            "price": rng.normal(size=80),
+            "unit_type": np.where(np.arange(80) % 2 == 0, "a", "b"),
+            "neighborhood": np.where(np.arange(80) % 3 == 0, "n1", "n2"),
+            "bedrooms": rng.integers(1, 4, size=80),
+            "x": rng.normal(size=80),
+        }
+    )
+    catvar = data.select(~cs.numeric()).columns
+    data = data.with_columns([pl.col(c).cast(pl.Categorical) for c in catvar])
+
+    preprocessor = make_column_transformer(
+        (OneHotEncoder(), catvar),
+        remainder=FunctionTransformer(lambda x: x.to_numpy()),
+    )
+    pipeline = make_pipeline(
+        preprocessor,
+        XGBRegressor(n_estimators=10, max_depth=2, random_state=1),
+    )
+
+    def selector(data):
+        y = data.select(cs.by_name("price", require_all=False))
+        X = data.select(~cs.by_name("price", require_all=False))
+        return y, X
+
+    mod = me.fit_sklearn(selector, data=data[:60], engine=pipeline)
+    out = me.avg_predictions(mod, newdata=data[60:], by="unit_type")
+
+    assert isinstance(out, MarginaleffectsResult)
+    assert out.height == 2
+    assert set(out["unit_type"].to_list()) == {"a", "b"}

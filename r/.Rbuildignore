@@ -1,4 +1,5 @@
 _extensions
+.claude
 Makefile
 ^\.covrignore$
 ^\.github$
@@ -36,7 +37,6 @@ uv.lock
 ^vignettes/*_files$
 air.toml
 CLAUDE.md
-inst/tinytest
 pyproject.toml
 .python-version
 uv.lock

@@ -30,6 +30,78 @@ warn_once <- function(msg, id) {
     options(opts)
 }
 
+main_marginaleffect_group <- function() {
+    "main_marginaleffect"
+}
+
+
+drop_trivial_group <- function(x) {
+    if ("group" %in% names(x) && all(x$group == main_marginaleffect_group())) {
+        x$group <- NULL
+    }
+    return(x)
+}
+
+
+sanitize_inferences_method <- function(vcov) {
+    methods <- c("rsample", "boot", "fwb", "simulation")
+    if (isTRUE(checkmate::check_choice(vcov, methods))) {
+        list(vcov = FALSE, method = vcov)
+    } else {
+        list(vcov = vcov, method = NULL)
+    }
+}
+
+
+finalize_estimates <- function(
+    out,
+    mfx,
+    by,
+    transform,
+    equivalence,
+    class_name,
+    inferences_method = NULL,
+    drop_group = FALSE,
+    conf_int = TRUE,
+    pre_transform = NULL,
+    ...) {
+    if (isTRUE(conf_int)) {
+        out <- get_ci(out, mfx)
+    }
+
+    out <- sort_columns(out, mfx@newdata, by)
+    out <- equivalence(out, equivalence = equivalence, df = mfx@df, draws = mfx@draws, ...)
+    out <- backtransform(out, transform = pre_transform, draws = mfx@draws)
+    out <- backtransform(out, transform = transform, draws = mfx@draws)
+
+    new_draws <- attr(out, "posterior_draws")
+    if (!is.null(new_draws)) {
+        mfx@draws <- new_draws
+    }
+
+    out[["marginaleffects_wts_internal"]] <- NULL
+    data.table::setDF(out)
+    class(out) <- c(class_name, class(out))
+
+    if (inherits(mfx@model, "brmsfit")) {
+        insight::check_if_installed("brms")
+        mfx@draws_chains <- brms::nchains(mfx@model)
+    }
+
+    out <- add_attributes(out, mfx)
+    out <- prune_attributes(out)
+
+    if (isTRUE(drop_group)) {
+        out <- drop_trivial_group(out)
+    }
+
+    if (!is.null(inferences_method)) {
+        out <- inferences(out, method = inferences_method)
+    }
+
+    return(out)
+}
+
 
 # Cross join a list of data tables
 # Source: https://github.com/Rdatatable/data.table/issues/1717#issuecomment-545758165
@@ -41,30 +113,53 @@ cjdt <- function(dtlist) {
 }
 
 
-merge_by_rowid <- function(x, y) {
-    # return data
-    # very import to avoid sorting, otherwise bayesian draws won't fit predictions
-    # merge only with rowid; not available for hypothesis
-    mergein <- setdiff(colnames(y), colnames(x))
-    if ("rowid" %in% colnames(x) && "rowid" %in% colnames(y) && length(mergein) > 0) {
-        idx <- c("rowid", mergein)
-        if (!data.table::is.data.table(y)) {
-            data.table::setDT(y)
-            tmp <- y[, ..idx]
-        } else {
-            tmp <- y[, ..idx]
-        }
-        # TODO: this breaks in mclogit. maybe there's a more robust merge
-        # solution for weird grouped data. But it seems fine because
-        # `predictions()` output does include the original predictors.
-        out <- tryCatch(
-            merge(x, tmp, by = "rowid", sort = FALSE),
-            error = function(e) x
-        )
-    } else {
-        out <- x
+merge_original_data <- function(
+    out,
+    original,
+    by = FALSE,
+    keys = "rowid",
+    payload = NULL,
+    deduplicate = FALSE,
+    unit_level_only = TRUE) {
+    # Aggregated results do not map one-to-one to the original data.
+    if (isTRUE(unit_level_only) && !isFALSE(by)) {
+        return(out)
     }
-    return(out)
+
+    if (is.null(payload)) {
+        payload <- setdiff(colnames(original), colnames(out))
+    } else {
+        payload <- setdiff(payload, colnames(out))
+    }
+    payload <- intersect(payload, colnames(original))
+    if (length(payload) == 0) {
+        return(out)
+    }
+
+    cols <- intersect(unique(c(keys, payload)), colnames(original))
+    tmp <- data.table::as.data.table(original)[, ..cols]
+    bycols <- intersect(colnames(tmp), colnames(out))
+    if (!"rowid" %in% bycols || length(bycols) == 0) {
+        return(out)
+    }
+
+    if (isTRUE(deduplicate)) {
+        idx <- duplicated(tmp, by = bycols)
+        tmp <- tmp[!idx]
+    } else if (any(duplicated(tmp, by = bycols))) {
+        if ("rowid" %in% bycols && nrow(tmp) != nrow(out)) {
+            tmp <- tmp[rowid %in% data.table::as.data.table(out)[["rowid"]]]
+        }
+        outkeys <- data.table::as.data.table(out)[, ..bycols]
+        tmpkeys <- tmp[, ..bycols]
+        if (nrow(outkeys) == nrow(tmpkeys) &&
+            isTRUE(all.equal(outkeys, tmpkeys, check.attributes = FALSE))) {
+            return(cbind(out, tmp[, ..payload]))
+        }
+        return(out)
+    }
+
+    merge(out, tmp, all.x = TRUE, by = bycols, sort = FALSE)
 }
 
 # faster than all(x %in% 0:1)

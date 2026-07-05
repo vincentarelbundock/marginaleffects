@@ -11,3 +11,5 @@ dependencies = [
   "numpy"
 ]
 
+[tool.uv.sources]
+marginaleffects = { path = "../python", editable = true }

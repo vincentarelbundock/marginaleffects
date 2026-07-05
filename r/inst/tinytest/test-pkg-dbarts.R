@@ -3,6 +3,8 @@ using("marginaleffects")
 requiet("dbarts")
 requiet("modeldata")
 
+set.seed(1024)
+
 # Basic expectation tests
 mod_simple <- dbarts::bart2(
     mpg ~ .,

@@ -42,8 +42,10 @@ Currently supports:
 \item Model types: \code{lm}, \code{glm}, \code{ols}
 \item Functions: \code{\link[=predictions]{predictions()}} and \code{\link[=comparisons]{comparisons()}}, along with \code{avg_} and \code{plot_} variants.
 \item \code{type}: "response" or "link"
-\item \code{by}: \code{TRUE}, \code{FALSE}, or character vector.
-\item \code{comparison}: "difference" and "ratio"
+\item \code{by}: \code{TRUE}, \code{FALSE}, character vector, or data frame.
+\item \code{wts}: weights for averages and grouped estimates.
+\item \code{hypothesis}: numeric vectors and matrices.
+\item \code{comparison}: "difference" and "ratio", including \code{comparison = "ratio"} with \code{by = TRUE}.
 }
 
 For unsupported models or options, the function automatically falls back to

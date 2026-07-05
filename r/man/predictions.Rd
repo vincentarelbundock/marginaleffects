@@ -13,7 +13,6 @@ predictions(
   conf_level = 0.95,
   type = NULL,
   by = FALSE,
-  byfun = NULL,
   wts = FALSE,
   transform = NULL,
   hypothesis = NULL,
@@ -31,7 +30,6 @@ avg_predictions(
   conf_level = 0.95,
   type = NULL,
   by = TRUE,
-  byfun = NULL,
   wts = FALSE,
   transform = NULL,
   hypothesis = NULL,
@@ -127,13 +125,6 @@ first entry in the error message is used by default. See the Type section in the
 \item See examples below.
 \item For more complex aggregations, you can use the \code{FUN} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
 }}
-
-\item{byfun}{A function such as \code{mean()} or \code{sum()} used to aggregate
-estimates within the subgroups defined by the \code{by} argument. \code{NULL} uses the
-\code{mean()} function. Must accept a numeric vector and return a single numeric
-value. This is sometimes used to take the sum or mean of predicted
-probabilities across outcome or predictor
-levels. See examples section.}
 
 \item{wts}{logical, string or numeric: weights to use when computing average predictions, contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not unit-level estimates. See \code{?weighted.mean}
 \itemize{
@@ -312,19 +303,19 @@ the table below.
 
 https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
    Package \tab Class \tab Argument \tab Documentation \cr
-   \code{brms} \tab \code{brmsfit} \tab \code{ndraws} \tab \link[brms:posterior_predict]{brms::posterior_predict} \cr
-    \tab  \tab \code{re_formula} \tab \link[brms:posterior_predict]{brms::posterior_predict} \cr
-   \code{lme4} \tab \code{merMod} \tab \code{re.form} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
-    \tab  \tab \code{allow.new.levels} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
-   \code{glmmTMB} \tab \code{glmmTMB} \tab \code{re.form} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
-    \tab  \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
-    \tab  \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
-   \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
-    \tab \code{gam} \tab \code{exclude} \tab \link[mgcv:predict.gam]{mgcv::predict.gam} \cr
-   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
-    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
+   \code{brms} \tab \code{brmsfit} \tab \code{ndraws} \tab \code{brms::posterior_predict()} \cr
+    \tab  \tab \code{re_formula} \tab \code{brms::posterior_predict()} \cr
+   \code{lme4} \tab \code{merMod} \tab \code{re.form} \tab \code{lme4::predict.merMod()} \cr
+    \tab  \tab \code{allow.new.levels} \tab \code{lme4::predict.merMod()} \cr
+   \code{glmmTMB} \tab \code{glmmTMB} \tab \code{re.form} \tab \code{glmmTMB::predict.glmmTMB()} \cr
+    \tab  \tab \code{allow.new.levels} \tab \code{glmmTMB::predict.glmmTMB()} \cr
+    \tab  \tab \code{zitype} \tab \code{glmmTMB::predict.glmmTMB()} \cr
+   \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \code{mgcv::predict.bam()} \cr
+    \tab \code{gam} \tab \code{exclude} \tab \code{mgcv::predict.gam()} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \code{robustlmm::predict.rlmerMod()} \cr
+    \tab  \tab \code{allow.new.levels} \tab \code{robustlmm::predict.rlmerMod()} \cr
    \code{MCMCglmm} \tab \code{MCMCglmm} \tab \code{ndraws} \tab  \cr
-   \code{sampleSelection} \tab \code{selection} \tab \code{part} \tab \link[sampleSelection:predict.selection]{sampleSelection::predict.selection} \cr
+   \code{sampleSelection} \tab \code{selection} \tab \code{part} \tab \code{sampleSelection::predict.selection()} \cr
 }
 }
 
@@ -655,7 +646,12 @@ mod <- multinom(factor(cyl) ~ mpg + am, data = mtcars, trace = FALSE)
 by <- data.frame(
   by = c("4,6", "4,6", "8"),
   group = as.character(c(4, 6, 8)))
-predictions(mod, newdata = "mean", byfun = sum, by = by)
+hyp <- function(x) {
+  out <- aggregate(estimate ~ by, merge(x, by, by = "group"), sum)
+  names(out)[1] <- "hypothesis"
+  out
+}
+predictions(mod, newdata = "mean", hypothesis = hyp)
 \dontshow{\}) # examplesIf}
 }
 \references{

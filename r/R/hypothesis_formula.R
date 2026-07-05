@@ -199,6 +199,33 @@ hypothesis_formula_list <- list(
 #'
 #' @noRd
 #' @keywords internal
+hypothesis_formula_groups <- function(x, newdata, group) {
+    if (!is.null(group)) {
+        if (!all(group %in% c(colnames(x), colnames(newdata)))) {
+            msg <- "Some `~ | groupid` variables were not found in `newdata`."
+            stop(msg, call. = FALSE)
+        }
+        col_x <- intersect(group, colnames(x))
+        col_newdata <- intersect(group, colnames(newdata))
+        groupval <- list()
+        if (length(col_x) > 0) {
+            groupval <- c(groupval, list(x[, ..col_x, drop = FALSE]))
+        } else if (length(col_newdata) > 0) {
+            groupval <- c(groupval, list(newdata[, ..col_newdata, drop = FALSE]))
+        }
+        groupval <- do.call(cbind, Filter(is.data.frame, groupval))
+    } else {
+        groupval <- NULL
+    }
+
+    return(groupval)
+}
+
+
+#' Internal function
+#'
+#' @noRd
+#' @keywords internal
 hypothesis_formula <- function(x, hypothesis, newdata, by, mfx = NULL) {
     # default values
     draws <- attr(x, "posterior_draws")
@@ -235,23 +262,7 @@ hypothesis_formula <- function(x, hypothesis, newdata, by, mfx = NULL) {
         labels <- paste("Row", seq_len(nrow(x)))
     }
 
-    if (!is.null(group)) {
-        if (!all(group %in% c(colnames(x), colnames(newdata)))) {
-            msg <- "Some `~ | groupid` variables were not found in `newdata`."
-            stop(msg, call. = FALSE)
-        }
-        col_x <- intersect(group, colnames(x))
-        col_newdata <- intersect(group, colnames(newdata))
-        groupval <- list()
-        if (length(col_x) > 0) {
-            groupval <- c(groupval, list(x[, ..col_x, drop = FALSE]))
-        } else if (length(col_newdata) > 0) {
-            groupval <- c(groupval, list(newdata[, ..col_newdata, drop = FALSE]))
-        }
-        groupval <- do.call(cbind, Filter(is.data.frame, groupval))
-    } else {
-        groupval <- NULL
-    }
+    groupval <- hypothesis_formula_groups(x, newdata, group)
 
     combined <- list(x[, "estimate", drop = FALSE], groupval)
     combined <- Filter(function(x) inherits(x, "data.frame"), combined)

@@ -301,6 +301,6 @@ def eval_hypothesis_formula(x, hypothesis, lab):
             pl.col("estimate").map_batches(hyp_fun),
             pl.col("term").map_batches(lambda x: pl.Series(lab_fun(x))),
         )
-        out = out.explode(["estimate", "term"])
+        out = out.explode(["estimate", "term"], empty_as_null=True)
 
     return out
