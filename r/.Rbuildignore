@@ -40,3 +40,4 @@ CLAUDE.md
 pyproject.toml
 .python-version
 uv.lock
+inst/tinytest
