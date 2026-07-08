@@ -355,6 +355,7 @@ Collate:
     'type_dictionary.R'
     'unpack_matrix_cols.R'
     'utils.R'
+    'vcov_unconditional_sanitization.R'
     'vcov_unconditional.R'
     'zzz.R'
 Language: en-US
