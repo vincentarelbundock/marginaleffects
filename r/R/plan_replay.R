@@ -169,12 +169,12 @@ plan_std_error <- function(
     mfx,
     estimates,
     type,
+    vcov = NULL,
     dots = list(),
     contrast_data = NULL,
     variables = NULL,
-    numderiv = NULL,
-    unconditional = NULL) {
-    if (!is.null(unconditional)) {
+    numderiv = NULL) {
+    if (is_unconditional_vcov(vcov)) {
         return(plan_unconditional_se(
             built = built,
             mfx = mfx,
@@ -184,7 +184,7 @@ plan_std_error <- function(
             contrast_data = contrast_data,
             variables = variables,
             numderiv = numderiv,
-            unconditional = unconditional
+            unconditional = vcov
         ))
     }
 

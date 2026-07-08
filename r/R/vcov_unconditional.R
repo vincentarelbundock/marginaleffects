@@ -184,7 +184,7 @@ update_unconditional_vcov_transform <- function(mfx, estimate, transform) {
 
 sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual") {
     if (!is_unconditional_vcov(vcov)) {
-        return(NULL)
+        return(vcov)
     }
 
     validate_unconditional_request(
@@ -205,7 +205,10 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual") {
     vcov_info <- sanitize_unconditional_vcov_arg(vc, modeldata, auxdata)
     df_value <- sanitize_unconditional_df(df, mfx@model, vcov_info)
 
-    list(vcov = vcov_info, df = df_value)
+    structure(
+        list(vcov = vcov_info, df = df_value),
+        class = "marginaleffects_vcov_unconditional"
+    )
 }
 
 

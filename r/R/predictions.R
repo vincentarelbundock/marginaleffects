@@ -210,7 +210,8 @@ predictions <- function(
     vcov <- inferences_dispatch$vcov
     inferences_method <- inferences_dispatch$method
     unconditional_df <- if (missing(df)) "residual" else df
-    unconditional_vcov <- sanitize_unconditional_vcov_request(vcov, mfx, df = unconditional_df)
+    vcov <- sanitize_unconditional_vcov_request(vcov, mfx, df = unconditional_df)
+    unconditional <- is_unconditional_vcov(vcov)
 
     dots <- list(...)
     sanity_dots(model = mfx@model, ...)
@@ -302,7 +303,7 @@ predictions <- function(
     # bayesian posterior draws
     mfx@draws <- attr(tmp, "posterior_draws")
 
-    if (is.null(unconditional_vcov) && !isFALSE(vcov)) {
+    if (!unconditional && !isFALSE(vcov)) {
         mfx@vcov_type <- get_vcov_label(vcov)
         mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = prediction_type, ...)
     }
@@ -312,9 +313,9 @@ predictions <- function(
         mfx = mfx,
         estimates = tmp,
         type = prediction_type,
+        vcov = vcov,
         dots = dots,
-        variables = mfx@variables,
-        unconditional = unconditional_vcov
+        variables = mfx@variables
     )
     mfx <- se$mfx
     tmp <- se$estimates
@@ -323,16 +324,16 @@ predictions <- function(
 
     mfx <- add_degrees_of_freedom(
         mfx = mfx,
-        df = if (is.null(unconditional_vcov)) df else Inf,
+        df = if (unconditional) Inf else df,
         by = by,
         hypothesis = mfx@hypothesis,
         vcov = vcov,
         newdata = unpadded_newdata
     )
-    if (!is.null(unconditional_vcov)) {
-        mfx@df <- unconditional_vcov$df
+    if (unconditional) {
+        mfx@df <- vcov$df
     }
-    if (!is.null(unconditional_vcov) && unconditional_df_all_infinite(unconditional_vcov$df)) {
+    if (unconditional && unconditional_df_all_infinite(vcov$df)) {
         if ("df" %in% colnames(tmp)) {
             tmp$df <- NULL
         }
@@ -351,7 +352,7 @@ predictions <- function(
         NULL
     }
 
-    conf_int <- (!isFALSE(vcov) || !is.null(unconditional_vcov)) &&
+    conf_int <- (!isFALSE(vcov) || unconditional) &&
         ("std.error" %in% colnames(out) || !is.null(mfx@draws))
 
     return(finalize_estimates(
