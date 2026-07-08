@@ -206,8 +206,8 @@ inferences <- function(
     mfx <- attr(x, "marginaleffects")
     call_mfx <- mfx@call
     if (!is.null(call_mfx)) {
-        validate_unconditional_request(
-            call_mfx[["vcov"]],
+        stop_unconditional(
+            vcov = call_mfx[["vcov"]],
             model = mfx@model,
             command = "inferences"
         )

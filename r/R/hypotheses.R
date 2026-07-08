@@ -175,7 +175,7 @@ hypotheses <- function(
         )
         stop_sprintf(msg)
     }
-    validate_unconditional_request(vcov, model = model, command = "hypotheses")
+    stop_unconditional(vcov = vcov, model = model, command = "hypotheses")
 
     # Early returns for special cases - removed mice check, moved later
 

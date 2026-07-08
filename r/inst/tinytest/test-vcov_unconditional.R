@@ -266,6 +266,7 @@ expect_error(
     avg_predictions(mod_lm, variables = "amf", vcov = unconditional("HC2")),
     pattern = "requires `vcov`"
 )
+expect_false(marginaleffects:::is_unconditional_vcov(NA_character_))
 dat_saturated <- data.frame(y = c(1, 2, 3, 4), x = factor(1:4))
 mod_saturated <- lm(y ~ x, data = dat_saturated)
 expect_error(
@@ -288,8 +289,20 @@ expect_error(
 mod_mlm <- lm(cbind(mpg, disp) ~ hp + wt, data = dat)
 expect_error(
     avg_predictions(mod_mlm, vcov = "unconditional"),
-    pattern = "multi-equation"
+    pattern = "not currently supported"
 )
+
+phi_numderiv <- marginaleffects:::apply_unconditional_hypothesis_phi(
+    phi = matrix(1, nrow = 1, ncol = 1),
+    plan = list(agg = NULL, hyp = list(apply = function(x) x^2)),
+    pre_hypothesis_estimate = 2,
+    numderiv = list("fdcenter", eps = 0.2))
+expect_equivalent(phi_numderiv, matrix(4, nrow = 1, ncol = 1), tolerance = 1e-10)
+expect_error(
+    marginaleffects:::resolve_unconditional_rowid(
+        data.frame(rowidcf = 1:64),
+        n = nrow(dat)),
+    pattern = "map to the original model data")
 
 if (requiet("MASS")) {
     dat_polr <- dat
@@ -312,7 +325,7 @@ if (requiet("survey")) {
     mod_svy <- survey::svyglm(api00 ~ ell + meals + sch.wide, design = design_svy)
     expect_error(
         suppressWarnings(avg_predictions(mod_svy, vcov = "unconditional")),
-        pattern = "survey-design"
+        pattern = "not currently supported"
     )
 }
 
@@ -367,6 +380,19 @@ if (requiet("fixest")) {
         avg_predictions(mod_fixest_fe, vcov = "unconditional"),
         pattern = "fixed effects"
     )
+    fixest_fe_inputs <- list(
+        model = mod_fixest_fe,
+        n = mod_fixest_fe$nobs,
+        vcov = list(type = "HC1", cluster = NULL, cluster_var = NULL))
+    expect_equivalent(
+        marginaleffects:::get_unconditional_correction(fixest_fe_inputs),
+        mod_fixest_fe$nobs / stats::df.residual(mod_fixest_fe))
+    fixest_fe_cluster <- fixest_fe_inputs
+    fixest_fe_cluster$vcov <- list(type = "cluster", cluster = dat$cylid, cluster_var = "cylid")
+    expect_equivalent(
+        marginaleffects:::get_unconditional_correction(fixest_fe_cluster),
+        (length(unique(dat$cylid)) / (length(unique(dat$cylid)) - 1)) *
+            ((mod_fixest_fe$nobs - 1) / stats::df.residual(mod_fixest_fe)))
     s_fixest_fe <- avg_slopes(mod_fixest_fe, variables = "amf", vcov = unconditional(~cylid))
     expect_unconditional(s_fixest_fe)
 }

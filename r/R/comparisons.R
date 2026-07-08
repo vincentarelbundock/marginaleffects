@@ -263,7 +263,7 @@ comparisons <- function(
 
     # multiple imputation
     if (inherits(mfx@model, c("mira", "amest"))) {
-        validate_unconditional_request(vcov, model = mfx@model, command = "comparisons")
+        stop_unconditional(vcov = vcov, model = mfx@model, command = "comparisons")
         out <- process_imputation(mfx)
         return(out)
     }

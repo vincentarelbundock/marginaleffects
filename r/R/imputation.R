@@ -8,7 +8,7 @@ process_imputation <- function(mfx) {
         is_unconditional_vcov(mfxcall[["vcov"]]) ||
             is_unconditional_vcov_call(mfxcall[["vcov"]])
     ) {
-        stop_unconditional_imputation()
+        stop_unconditional("imputation")
     }
 
     micedata <- tryCatch(get_modeldata_mids(model), error = function(e) NULL)
