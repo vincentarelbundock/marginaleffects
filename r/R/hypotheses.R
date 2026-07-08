@@ -166,9 +166,6 @@ hypotheses <- function(
     if (is.null(model)) stop_sprintf("`model` is missing.")
     sanity_multcomp(multcomp, hypothesis, joint)
     internal_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
-    if (inherits(model, c("mira", "amest")) && is_unconditional_vcov(vcov)) {
-        stop_unconditional_imputation()
-    }
     if (inherits(model, internal_classes) && !isTRUE(checkmate::check_flag(vcov))) {
         msg <- paste0(
             "The `vcov` argument is not available when `model` is a ",
@@ -178,9 +175,7 @@ hypotheses <- function(
         )
         stop_sprintf(msg)
     }
-    if (is_unconditional_vcov(vcov)) {
-        stop_unconditional_hypotheses()
-    }
+    validate_unconditional_request(vcov, model = model, command = "hypotheses")
 
     # Early returns for special cases - removed mice check, moved later
 

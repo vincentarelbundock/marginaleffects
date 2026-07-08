@@ -205,6 +205,13 @@ inferences <- function(
     # Issue #1501: `newdata` should only use the pre-evaluated `newdata` instead of bootstrapping datagrid()
     mfx <- attr(x, "marginaleffects")
     call_mfx <- mfx@call
+    if (!is.null(call_mfx)) {
+        validate_unconditional_request(
+            call_mfx[["vcov"]],
+            model = mfx@model,
+            command = "inferences"
+        )
+    }
 
     # Update call with pre-evaluated newdata if available
     if (!is.null(call_mfx)) {

@@ -307,26 +307,15 @@ predictions <- function(
         mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = prediction_type, ...)
     }
 
-    # Delta method for standard errors
-    if (is.null(unconditional_vcov)) {
-        se <- plan_std_error(
-            built = built,
-            mfx = mfx,
-            estimates = tmp,
-            type = prediction_type,
-            dots = dots
-        )
-    } else {
-        se <- plan_unconditional_se(
-            built = built,
-            mfx = mfx,
-            estimates = tmp,
-            type = prediction_type,
-            dots = dots,
-            variables = mfx@variables,
-            unconditional = unconditional_vcov
-        )
-    }
+    se <- plan_std_error(
+        built = built,
+        mfx = mfx,
+        estimates = tmp,
+        type = prediction_type,
+        dots = dots,
+        variables = mfx@variables,
+        unconditional = unconditional_vcov
+    )
     mfx <- se$mfx
     tmp <- se$estimates
 

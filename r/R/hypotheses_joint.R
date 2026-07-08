@@ -20,9 +20,7 @@ joint_test <- function(
         )
         stop_sprintf(msg)
     }
-    if (is_unconditional_vcov(vcov)) {
-        stop_unconditional_hypotheses()
-    }
+    validate_unconditional_request(vcov, model = object, command = "joint_test")
 
     # Create mfx object if it doesn't exist (needed for joint tests on model objects)
     if (is.null(mfx) && !inherits(object, c("slopes", "comparisons", "predictions", "hypotheses"))) {

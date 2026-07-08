@@ -263,9 +263,7 @@ comparisons <- function(
 
     # multiple imputation
     if (inherits(mfx@model, c("mira", "amest"))) {
-        if (is_unconditional_vcov(vcov)) {
-            stop_unconditional_imputation()
-        }
+        validate_unconditional_request(vcov, model = mfx@model, command = "comparisons")
         out <- process_imputation(mfx)
         return(out)
     }
@@ -361,31 +359,17 @@ comparisons <- function(
     # bayesian posterior
     mfx@draws <- attr(cmp, "posterior_draws")
 
-    # standard errors
-    if (is.null(unconditional_vcov)) {
-        se <- plan_std_error(
-            built = built,
-            mfx = mfx,
-            estimates = cmp,
-            type = mfx@type,
-            dots = dots,
-            contrast_data = contrast_data,
-            variables = predictors,
-            numderiv = numderiv
-        )
-    } else {
-        se <- plan_unconditional_se(
-            built = built,
-            mfx = mfx,
-            estimates = cmp,
-            type = mfx@type,
-            dots = dots,
-            contrast_data = contrast_data,
-            variables = predictors,
-            numderiv = numderiv,
-            unconditional = unconditional_vcov
-        )
-    }
+    se <- plan_std_error(
+        built = built,
+        mfx = mfx,
+        estimates = cmp,
+        type = mfx@type,
+        dots = dots,
+        contrast_data = contrast_data,
+        variables = predictors,
+        numderiv = numderiv,
+        unconditional = unconditional_vcov
+    )
     mfx <- se$mfx
     cmp <- se$estimates
 

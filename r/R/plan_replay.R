@@ -172,7 +172,22 @@ plan_std_error <- function(
     dots = list(),
     contrast_data = NULL,
     variables = NULL,
-    numderiv = NULL) {
+    numderiv = NULL,
+    unconditional = NULL) {
+    if (!is.null(unconditional)) {
+        return(plan_unconditional_se(
+            built = built,
+            mfx = mfx,
+            estimates = estimates,
+            type = type,
+            dots = dots,
+            contrast_data = contrast_data,
+            variables = variables,
+            numderiv = numderiv,
+            unconditional = unconditional
+        ))
+    }
+
     if ("std.error" %in% colnames(estimates) ||
         (!is.null(mfx) && !is.null(mfx@draws))) {
         return(list(mfx = mfx, estimates = estimates))

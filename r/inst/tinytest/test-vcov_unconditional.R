@@ -281,11 +281,26 @@ expect_error(
     hypotheses(p_lm, joint = TRUE, vcov = "unconditional"),
     pattern = "initial `marginaleffects` call"
 )
+expect_error(
+    inferences(p_lm, method = "boot", R = 2),
+    pattern = "not available"
+)
 mod_mlm <- lm(cbind(mpg, disp) ~ hp + wt, data = dat)
 expect_error(
     avg_predictions(mod_mlm, vcov = "unconditional"),
     pattern = "multi-equation"
 )
+
+if (requiet("MASS")) {
+    dat_polr <- dat
+    dat_polr$mpg3 <- ordered(cut(dat_polr$mpg, breaks = 3, labels = c("low", "mid", "high")))
+    mod_polr <- MASS::polr(mpg3 ~ hp + wt, data = dat_polr, Hess = TRUE)
+    expect_inherits(avg_predictions(mod_polr, vcov = FALSE), "predictions")
+    expect_error(
+        avg_predictions(mod_polr, vcov = "unconditional"),
+        pattern = "not currently supported"
+    )
+}
 
 if (requiet("survey")) {
     data("api", package = "survey")

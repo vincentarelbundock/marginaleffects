@@ -74,6 +74,42 @@ stop_unconditional_hypotheses <- function() {
 }
 
 
+stop_unconditional_inferences <- function() {
+    msg <- paste0(
+        "`inferences()` is not available for objects computed with ",
+        "`vcov = \"unconditional\"`. Use the unconditional standard errors ",
+        "from the original `avg_*()` call, or refit the original call with ",
+        "`vcov = FALSE` before applying `inferences()`."
+    )
+    stop_sprintf(msg)
+}
+
+
+validate_unconditional_request <- function(vcov, model = NULL, command = NULL, kind = NULL, type = NULL) {
+    if (!is_unconditional_vcov(vcov) && !is_unconditional_vcov_call(vcov)) {
+        return(invisible(TRUE))
+    }
+
+    if (!is.null(model) && inherits(model, c("mira", "amest"))) {
+        stop_unconditional_imputation()
+    }
+
+    if (isTRUE(command %in% c("hypotheses", "joint_test"))) {
+        stop_unconditional_hypotheses()
+    }
+
+    if (identical(command, "inferences")) {
+        stop_unconditional_inferences()
+    }
+
+    if (!is.null(model) && !is.null(kind)) {
+        validate_unconditional_model_support(model, kind = kind, type = type)
+    }
+
+    invisible(TRUE)
+}
+
+
 update_unconditional_vcov_transform <- function(mfx, estimate, transform) {
     vcov_type <- tryCatch(mfx@vcov_type, error = function(e) "")
     if (!isTRUE(grepl("^Unconditional", vcov_type))) {
@@ -151,9 +187,11 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual") {
         return(NULL)
     }
 
-    if (inherits(mfx@model, c("mira", "amest"))) {
-        stop_unconditional_imputation()
-    }
+    validate_unconditional_request(
+        vcov,
+        model = mfx@model,
+        kind = tryCatch(mfx@calling_function, error = function(e) NULL)
+    )
 
     if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
         vc <- vcov$vcov
@@ -292,6 +330,27 @@ plan_unconditional_se <- function(
 
 
 validate_unconditional_model_support <- function(model, kind, type = NULL) {
+    if (is_unconditional_model_supported(model, kind = kind, type = type)) {
+        return(invisible(TRUE))
+    }
+
+    if (inherits(model, "coxph") && isTRUE(type %in% c("survival", "expected"))) {
+        msg <- paste0(
+            "`vcov = \"unconditional\"` is not supported for `coxph` ",
+            "predictions with `type = \"%s\"` because uncertainty in the ",
+            "baseline hazard is not represented. Use `type = \"lp\"`, ",
+            "`type = \"risk\"`, or a bootstrap method."
+        )
+        stop_sprintf(
+            msg,
+            type
+        )
+    }
+
+    if (inherits(model, "fixest")) {
+        stop_unconditional_unsupported_fixest(model, kind)
+    }
+
     if (inherits(model, c("svyglm", "svyolr", "svy_vglm"))) {
         msg <- paste0(
             "`vcov = \"unconditional\"` is not supported for survey-design ",
@@ -325,43 +384,71 @@ validate_unconditional_model_support <- function(model, kind, type = NULL) {
         )
     }
 
-    if (inherits(model, "coxph") && isTRUE(type %in% c("survival", "expected"))) {
-        msg <- paste0(
-            "`vcov = \"unconditional\"` is not supported for `coxph` ",
-            "predictions with `type = \"%s\"` because uncertainty in the ",
-            "baseline hazard is not represented. Use `type = \"lp\"`, ",
-            "`type = \"risk\"`, or a bootstrap method."
-        )
-        stop_sprintf(
-            msg,
-            type
-        )
-    }
-
-    if (inherits(model, "fixest") && !is.null(model[["fixef_vars"]])) {
-        if (identical(kind, "predictions")) {
-            msg <- paste0(
-                "`vcov = \"unconditional\"` is not supported for average ",
-                "predictions from `fixest` models with fixed effects because ",
-                "fixed-effect uncertainty is not represented."
-            )
-            stop_sprintf(msg)
-        }
-        if (!identical(model[["method_type"]], "feols")) {
-            msg <- paste0(
-                "`vcov = \"unconditional\"` is not supported for nonlinear ",
-                "`fixest` models with fixed effects because fixed-effect ",
-                "uncertainty is not represented."
-            )
-            stop_sprintf(msg)
-        }
-    }
-
-    invisible(TRUE)
+    stop_unconditional_unsupported_model(model)
 }
 
 
-stop_unconditional_unsupported_model <- function(model, reason) {
+is_unconditional_model_supported <- function(model, kind, type = NULL) {
+    cls <- class(model)[1]
+    if (isTRUE(cls %in% c("lm", "glm", "survreg", "tobit"))) {
+        return(TRUE)
+    }
+
+    if (inherits(model, "fixest")) {
+        return(is_unconditional_fixest_supported(model, kind))
+    }
+
+    if (inherits(model, "coxph")) {
+        return(is.null(type) || isTRUE(type %in% c("lp", "risk")))
+    }
+
+    if (inherits(model, c("survreg", "tobit"))) {
+        return(TRUE)
+    }
+
+    FALSE
+}
+
+
+is_unconditional_fixest_supported <- function(model, kind) {
+    if (is.null(model[["fixef_vars"]])) {
+        return(TRUE)
+    }
+    !identical(kind, "predictions") && identical(model[["method_type"]], "feols")
+}
+
+
+stop_unconditional_unsupported_fixest <- function(model, kind) {
+    if (!is.null(model[["fixef_vars"]]) && identical(kind, "predictions")) {
+        msg <- paste0(
+            "`vcov = \"unconditional\"` is not supported for average ",
+            "predictions from `fixest` models with fixed effects because ",
+            "fixed-effect uncertainty is not represented."
+        )
+        stop_sprintf(msg)
+    }
+
+    if (!is.null(model[["fixef_vars"]]) && !identical(model[["method_type"]], "feols")) {
+        msg <- paste0(
+            "`vcov = \"unconditional\"` is not supported for nonlinear ",
+            "`fixest` models with fixed effects because fixed-effect ",
+            "uncertainty is not represented."
+        )
+        stop_sprintf(msg)
+    }
+
+    stop_unconditional_unsupported_model(model)
+}
+
+
+stop_unconditional_unsupported_model <- function(model, reason = NULL) {
+    if (is.null(reason)) {
+        reason <- paste0(
+            "only explicitly validated model classes are supported. ",
+            "Currently supported classes include `lm`, `glm`, selected ",
+            "`fixest`, selected survival models, and `tobit` models"
+        )
+    }
     msg <- paste0(
         "`vcov = \"unconditional\"` is not currently supported for models ",
         "of class \"%s\": %s. Use a bootstrap method instead."
