@@ -182,7 +182,7 @@ update_unconditional_vcov_transform <- function(mfx, estimate, transform) {
 }
 
 
-sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual") {
+sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual", df_supplied = FALSE) {
     if (!is_unconditional_vcov(vcov)) {
         return(vcov)
     }
@@ -198,6 +198,10 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual") {
         df <- vcov$df
     } else {
         vc <- "HC1"
+        warn_unconditional_df_switch(
+            df_supplied = df_supplied,
+            calling_function = tryCatch(mfx@calling_function, error = function(e) NULL)
+        )
     }
 
     modeldata <- data.table::as.data.table(mfx@modeldata)
@@ -209,6 +213,24 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual") {
         list(vcov = vcov_info, df = df_value),
         class = "marginaleffects_vcov_unconditional"
     )
+}
+
+
+warn_unconditional_df_switch <- function(df_supplied, calling_function = NULL) {
+    if (!isTRUE(df_supplied)) {
+        return(invisible())
+    }
+
+    fun <- if (is.null(calling_function)) "this function" else sprintf("`%s()`", calling_function)
+    msg <- paste0(
+        "The top-level `df` argument was supplied to ",
+        sprintf("%s with `vcov = \"unconditional\"`. ", fun),
+        "You can also set degrees of freedom directly with ",
+        "`vcov = unconditional(df = ...)`."
+    )
+
+    warn_once(msg, "marginaleffects_unconditional_df_switch")
+    invisible()
 }
 
 

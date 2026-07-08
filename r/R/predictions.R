@@ -210,7 +210,12 @@ predictions <- function(
     vcov <- inferences_dispatch$vcov
     inferences_method <- inferences_dispatch$method
     unconditional_df <- if (missing(df)) "residual" else df
-    vcov <- sanitize_unconditional_vcov_request(vcov, mfx, df = unconditional_df)
+    vcov <- sanitize_unconditional_vcov_request(
+        vcov,
+        mfx,
+        df = unconditional_df,
+        df_supplied = !missing(df)
+    )
     unconditional <- is_unconditional_vcov(vcov)
 
     dots <- list(...)
