@@ -46,6 +46,11 @@
 #'  * String which indicates the kind of uncertainty estimates to return.
 #'    - Heteroskedasticity-consistent: `"HC"`, `"HC0"`, `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, `"HC4m"`, `"HC5"`. See `?sandwich::vcovHC`
 #'    - Heteroskedasticity and autocorrelation consistent: `"HAC"`
+#'    - Unconditional: `"unconditional"` accounts for sampling variation in
+#'      the empirical covariate distribution for averaged or aggregated
+#'      predictions, comparisons, and slopes. Hypotheses applied directly to
+#'      unit-level effects are rejected. Use `unconditional(~cluster)` for
+#'      one-way clustered unconditional inference.
 #'    - Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 #'    - Other: `"NeweyWest"`, `"KernHAC"`, `"OPG"`. See the `sandwich` package documentation.
 #'    - "rsample", "boot", "fwb", and "simulation" are passed to the `method` argument of the `inferences()` function. To customize the bootstrap or simulation process, call `inferences()` directly.
@@ -274,6 +279,9 @@ slopes <- function(
     call_attr_c[["cross"]] <- FALSE
     call_attr_c[["internal_call"]] <- TRUE
     call_attr_c[["slope"]] <- NULL
+    if (missing(df)) {
+        call_attr_c[["df"]] <- NULL
+    }
 
     out <- eval.parent(call_attr_c)
 
@@ -306,6 +314,9 @@ avg_slopes <- function(
     numderiv = "fdforward",
     ...) {
     call_attr <- construct_call(model, "slopes")
+    if (missing(df)) {
+        call_attr[["df"]] <- NULL
+    }
     out <- eval.parent(call_attr)
     return(out)
 }

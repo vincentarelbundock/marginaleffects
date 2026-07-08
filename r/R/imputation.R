@@ -4,6 +4,13 @@ process_imputation <- function(mfx) {
     model <- mfx@model
     mfxcall <- mfx@call
 
+    if (
+        is_unconditional_vcov(mfxcall[["vcov"]]) ||
+            is_unconditional_vcov_call(mfxcall[["vcov"]])
+    ) {
+        stop_unconditional_imputation()
+    }
+
     micedata <- tryCatch(get_modeldata_mids(model), error = function(e) NULL)
 
     # issue #1269: transforms must be applied after pooling

@@ -263,6 +263,9 @@ comparisons <- function(
 
     # multiple imputation
     if (inherits(mfx@model, c("mira", "amest"))) {
+        if (is_unconditional_vcov(vcov)) {
+            stop_unconditional_imputation()
+        }
         out <- process_imputation(mfx)
         return(out)
     }
@@ -271,6 +274,8 @@ comparisons <- function(
     inferences_dispatch <- sanitize_inferences_method(vcov)
     vcov <- inferences_dispatch$vcov
     inferences_method <- inferences_dispatch$method
+    unconditional_df <- if (missing(df)) "residual" else df
+    unconditional_vcov <- sanitize_unconditional_vcov_request(vcov, mfx, df = unconditional_df)
 
     # misc
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
@@ -301,10 +306,17 @@ comparisons <- function(
     # get dof before transforming the vcov arg
     # add_degrees_of_freedom() produces a weird warning on non lmerMod. We can skip them
     # because get_vcov() will produce an informative error later.
-    mfx <- add_degrees_of_freedom(mfx = mfx, df = df, by = by, hypothesis = hypothesis, vcov = vcov)
+    mfx <- add_degrees_of_freedom(
+        mfx = mfx,
+        df = if (is.null(unconditional_vcov)) df else Inf,
+        by = by,
+        hypothesis = hypothesis,
+        vcov = vcov)
 
-    mfx@vcov_type <- get_vcov_label(vcov)
-    mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
+    if (is.null(unconditional_vcov)) {
+        mfx@vcov_type <- get_vcov_label(vcov)
+        mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
+    }
 
     predictors <- mfx@variables
 
@@ -349,17 +361,31 @@ comparisons <- function(
     # bayesian posterior
     mfx@draws <- attr(cmp, "posterior_draws")
 
-    # standard errors via delta method
-    se <- plan_std_error(
-        built = built,
-        mfx = mfx,
-        estimates = cmp,
-        type = mfx@type,
-        dots = dots,
-        contrast_data = contrast_data,
-        variables = predictors,
-        numderiv = numderiv
-    )
+    # standard errors
+    if (is.null(unconditional_vcov)) {
+        se <- plan_std_error(
+            built = built,
+            mfx = mfx,
+            estimates = cmp,
+            type = mfx@type,
+            dots = dots,
+            contrast_data = contrast_data,
+            variables = predictors,
+            numderiv = numderiv
+        )
+    } else {
+        se <- plan_unconditional_se(
+            built = built,
+            mfx = mfx,
+            estimates = cmp,
+            type = mfx@type,
+            dots = dots,
+            contrast_data = contrast_data,
+            variables = predictors,
+            numderiv = numderiv,
+            unconditional = unconditional_vcov
+        )
+    }
     mfx <- se$mfx
     cmp <- se$estimates
 
@@ -410,6 +436,9 @@ avg_comparisons <- function(
     ...
 ) {
     call_attr <- construct_call(model, "comparisons")
+    if (missing(df)) {
+        call_attr[["df"]] <- NULL
+    }
 
     out <- eval.parent(call_attr)
 

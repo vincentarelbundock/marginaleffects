@@ -4,6 +4,13 @@
 
 New:
 
+* New `vcov = "unconditional"` and `vcov = unconditional(~cluster)` options
+  compute unconditional standard errors for average predictions, comparisons,
+  and slopes by accounting for sampling variation in the empirical covariate
+  distribution.
+* `vcov = "unconditional"` now throws informative errors for unsupported
+  multiple-imputation, survey-design, `hypotheses()`, and fixed-effect `fixest`
+  cases.
 * Support for `svyVGAM::svy_vglm()` models. Thanks to @kkranker for Issue #1730.
 * New `set_modeldata()` function to attach training data to a model object explicitly. `get_modeldata()` now checks for this attribute first, and emits a once-per-session warning when `insight::get_data()` raises warnings about data retrieval. This is safer for `lapply()`, Shiny, and nested function workflows.
 * Support for `glmtoolbox::glmgee()` and `glmtoolbox::gnm()` models. Thanks to @luifrancgom for report #1148.
