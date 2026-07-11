@@ -39,12 +39,10 @@ unconditional <- function(vcov = "HC1", df = "residual") {
 
 
 is_unconditional_vcov <- function(vcov) {
-    inherits(vcov, "marginaleffects_vcov_unconditional") ||
-        (is.character(vcov) && length(vcov) == 1 && isTRUE(tolower(vcov) == "unconditional"))
-}
-
-
-is_unconditional_vcov_call <- function(vcov) {
+    if (inherits(vcov, "marginaleffects_vcov_unconditional") ||
+        (is.character(vcov) && length(vcov) == 1L && isTRUE(tolower(vcov) == "unconditional"))) {
+        return(TRUE)
+    }
     if (!is.call(vcov)) {
         return(FALSE)
     }
@@ -162,8 +160,15 @@ plan_unconditional_se <- function(
     n <- nrow(modeldata)
     allow_mismatch <- get_unconditional_allow_mismatch(mfx, variables)
     numderiv <- tryCatch(mfx@numderiv, error = function(e) numderiv) %||% list("fdforward")
-    validate_unconditional_plan_source(plan, modeldata, n, allow_mismatch = allow_mismatch)
-    validate_unconditional_plan_target(plan)
+
+    rowid <- sanitize_unconditional_plan(
+        plan = plan,
+        modeldata = modeldata,
+        n = n,
+        df = unconditional$df,
+        n_estimates = nrow(estimates),
+        allow_mismatch = allow_mismatch
+    )
 
     # Unconditional variance adds two influence components:
     # sampling variation in the empirical covariate distribution, and
@@ -205,9 +210,8 @@ plan_unconditional_se <- function(
     empirical_phi <- get_unconditional_plan_empirical_phi(
         plan = plan,
         model = model,
-        modeldata = modeldata,
         n = n,
-        allow_mismatch = allow_mismatch,
+        rowid = rowid,
         numderiv = numderiv
     )
 
@@ -228,7 +232,6 @@ plan_unconditional_se <- function(
     se <- sqrt(diag(V))
     se[se == 0] <- NA_real_
 
-    validate_unconditional_df_length(unconditional$df, nrow(estimates))
     estimates$std.error <- as.vector(se)
     if (unconditional_df_has_finite(unconditional$df)) {
         estimates$df <- unconditional$df
@@ -309,26 +312,23 @@ get_unconditional_plan_jacobian <- function(
 get_unconditional_plan_empirical_phi <- function(
     plan,
     model,
-    modeldata,
     n,
-    allow_mismatch = character(),
+    rowid,
     numderiv = list("fdforward")) {
 
     if (identical(plan$kind, "predictions")) {
         return(get_unconditional_prediction_plan_phi(
             plan,
             model,
-            modeldata,
             n,
-            allow_mismatch = allow_mismatch,
+            rowid = rowid,
             numderiv = numderiv))
     }
     get_unconditional_comparison_plan_phi(
         plan,
         model,
-        modeldata,
         n,
-        allow_mismatch = allow_mismatch,
+        rowid = rowid,
         numderiv = numderiv)
 }
 
@@ -336,22 +336,14 @@ get_unconditional_plan_empirical_phi <- function(
 get_unconditional_prediction_plan_phi <- function(
     plan,
     model,
-    modeldata,
     n,
-    allow_mismatch = character(),
+    rowid,
     numderiv = list("fdforward")) {
 
     pred <- prediction_plan_predict(plan, model)
-    source <- plan$predict_args$newdata
     if (!is.null(plan$keep)) {
         pred <- pred[plan$keep]
-        source <- source[plan$keep, , drop = FALSE]
     }
-    rowid <- resolve_unconditional_rowid(
-        source,
-        n,
-        modeldata = modeldata,
-        allow_mismatch = allow_mismatch)
 
     phi <- get_unconditional_aggregate_phi(
         agg = plan$agg,
@@ -367,12 +359,11 @@ get_unconditional_prediction_plan_phi <- function(
 get_unconditional_comparison_plan_phi <- function(
     plan,
     model,
-    modeldata,
     n,
-    allow_mismatch = character(),
+    rowid,
     numderiv = list("fdforward")) {
 
-    base <- get_unconditional_comparison_base(plan, model, modeldata, n, allow_mismatch = allow_mismatch)
+    base <- get_unconditional_comparison_base(plan, model, rowid, n)
 
     phi <- get_unconditional_aggregate_phi(
         agg = plan$agg,
@@ -386,16 +377,11 @@ get_unconditional_comparison_plan_phi <- function(
 }
 
 
-get_unconditional_comparison_base <- function(plan, model, modeldata, n, allow_mismatch = character()) {
+get_unconditional_comparison_base <- function(plan, model, rowid, n) {
     preds <- comparison_plan_predict(plan, model)
     hi <- preds$hi
     lo <- preds$lo
     y <- preds$or
-    rowid <- resolve_unconditional_rowid(
-        plan$predict_args$original,
-        n,
-        modeldata = modeldata,
-        allow_mismatch = allow_mismatch)
 
     if (!is.null(plan$na_keep)) {
         hi <- hi[plan$na_keep]
@@ -702,10 +688,7 @@ get_unconditional_correction <- function(inputs) {
 
     model <- inputs$model
     n <- inputs$n
-    is_glm <- inherits(model, "glm")
-    is_fixest <- inherits(model, "fixest")
-    is_feols <- is_fixest && identical(model$method_type, "feols")
-    is_linear <- (inherits(model, "lm") && !is_glm) || is_feols
+    is_linear <- is_unconditional_linear_model(model)
     df_residual <- tryCatch(stats::df.residual(model), error = function(e) NA_real_)
     if (length(df_residual) != 1L || !is.finite(df_residual)) {
         df_residual <- n - length(get_unconditional_coef(model))

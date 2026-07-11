@@ -355,8 +355,8 @@ Collate:
     'type_dictionary.R'
     'unpack_matrix_cols.R'
     'utils.R'
-    'vcov_unconditional_sanitization.R'
     'vcov_unconditional.R'
+    'vcov_unconditional_sanitization.R'
     'zzz.R'
 Language: en-US
 VignetteBuilder: knitr, quarto

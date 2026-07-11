@@ -246,6 +246,10 @@ expect_error(
     pattern = "one-way"
 )
 expect_error(
+    avg_predictions(mod_lm, variables = "amf", vcov = unconditional(cylid ~ 1)),
+    pattern = "one-sided"
+)
+expect_error(
     avg_predictions(mod_lm, variables = "amf", vcov = unconditional(~missing_cluster)),
     pattern = "not found"
 )
@@ -266,7 +270,12 @@ expect_error(
     avg_predictions(mod_lm, variables = "amf", vcov = unconditional("HC2")),
     pattern = "requires `vcov`"
 )
+expect_error(
+    avg_predictions(mod_lm, variables = "amf", vcov = unconditional(df = c(1, 2, 3))),
+    pattern = "length 1"
+)
 expect_false(marginaleffects:::is_unconditional_vcov(NA_character_))
+expect_true(marginaleffects:::is_unconditional_vcov(quote(unconditional())))
 dat_saturated <- data.frame(y = c(1, 2, 3, 4), x = factor(1:4))
 mod_saturated <- lm(y ~ x, data = dat_saturated)
 expect_error(

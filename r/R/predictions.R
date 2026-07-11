@@ -338,7 +338,7 @@ predictions <- function(
     if (unconditional) {
         mfx@df <- vcov$df
     }
-    if (unconditional && unconditional_df_all_infinite(vcov$df)) {
+    if (unconditional && !unconditional_df_has_finite(vcov$df)) {
         if ("df" %in% colnames(tmp)) {
             tmp$df <- NULL
         }

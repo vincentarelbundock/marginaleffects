@@ -208,8 +208,7 @@ inferences <- function(
     if (!is.null(call_mfx)) {
         stop_unconditional(
             vcov = call_mfx[["vcov"]],
-            model = mfx@model,
-            command = "inferences"
+            reason = "inferences"
         )
     }
 

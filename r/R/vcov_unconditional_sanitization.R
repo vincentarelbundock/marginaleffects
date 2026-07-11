@@ -1,27 +1,8 @@
 stop_unconditional <- function(
-    reason = NULL,
-    vcov = NULL,
-    model = NULL,
-    command = NULL,
-    kind = NULL,
-    type = NULL) {
+    vcov,
+    reason) {
 
-    if (is.null(reason)) {
-        if (!is_unconditional_vcov(vcov) && !is_unconditional_vcov_call(vcov)) {
-            return(invisible(TRUE))
-        } else if (!is.null(model) && inherits(model, c("mira", "amest"))) {
-            reason <- "imputation"
-        } else if (isTRUE(command %in% c("hypotheses", "joint_test"))) {
-            reason <- "hypotheses"
-        } else if (identical(command, "inferences")) {
-            reason <- "inferences"
-        }
-    }
-
-    if (is.null(reason)) {
-        if (!is.null(model) && !is.null(kind)) {
-            validate_unconditional_model_support(model, kind = kind, type = type)
-        }
+    if (!is_unconditional_vcov(vcov)) {
         return(invisible(TRUE))
     }
 
@@ -57,19 +38,15 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual", df_s
         return(vcov)
     }
 
-    stop_unconditional(
-        vcov = vcov,
-        model = mfx@model,
-        kind = tryCatch(mfx@calling_function, error = function(e) NULL)
-    )
+    calling_function <- tryCatch(mfx@calling_function, error = function(e) NULL)
+    validate_unconditional_model_support(mfx@model, kind = calling_function)
 
     if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
-        vc <- vcov$vcov
+        vcov_spec <- vcov$vcov
         df <- vcov$df
     } else {
-        vc <- "HC1"
+        vcov_spec <- "HC1"
         if (isTRUE(df_supplied)) {
-            calling_function <- tryCatch(mfx@calling_function, error = function(e) NULL)
             fun <- if (is.null(calling_function)) "this function" else sprintf("`%s()`", calling_function)
             msg <- paste0(
                 "The top-level `df` argument was supplied to ",
@@ -82,8 +59,10 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual", df_s
     }
 
     modeldata <- data.table::as.data.table(mfx@modeldata)
-    auxdata <- get_unconditional_auxdata(mfx, nrow(modeldata))
-    vcov_info <- sanitize_unconditional_vcov_arg(vc, modeldata, auxdata)
+    auxdata <- if (inherits(vcov_spec, "formula")) {
+        get_unconditional_auxdata(mfx, nrow(modeldata))
+    }
+    vcov_info <- sanitize_unconditional_vcov_arg(vcov_spec, modeldata, auxdata)
     df_value <- sanitize_unconditional_df(df, mfx@model, vcov_info)
 
     structure(
@@ -94,8 +73,14 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual", df_s
 
 
 validate_unconditional_model_support <- function(model, kind, type = NULL) {
-    cls <- class(model)[1]
-    if (isTRUE(cls %in% c("lm", "glm", "survreg", "tobit"))) {
+    if (inherits(model, c("mira", "amest"))) {
+        stop_unconditional("unconditional", "imputation")
+    }
+
+    # Deliberately inspect the primary class to reject unvalidated subclasses
+    # such as `mlm`, even when they also inherit from a supported class.
+    primary_class <- class(model)[1]
+    if (isTRUE(primary_class %in% c("lm", "glm", "survreg", "tobit"))) {
         return(invisible(TRUE))
     }
 
@@ -138,18 +123,11 @@ validate_unconditional_model_support <- function(model, kind, type = NULL) {
         }
     }
 
-    stop_unconditional_unsupported_model(model)
-}
-
-
-stop_unconditional_unsupported_model <- function(model, reason = NULL) {
-    if (is.null(reason)) {
-        reason <- paste0(
-            "only explicitly validated model classes are supported. ",
-            "Currently supported classes include `lm`, `glm`, selected ",
-            "`fixest`, selected survival models, and `tobit` models"
-        )
-    }
+    reason <- paste0(
+        "only explicitly validated model classes are supported. ",
+        "Currently supported classes include `lm`, `glm`, selected ",
+        "`fixest`, selected survival models, and `tobit` models"
+    )
     msg <- paste0(
         "`vcov = \"unconditional\"` is not currently supported for models ",
         "of class \"%s\": %s. Use a bootstrap method instead."
@@ -162,28 +140,17 @@ stop_unconditional_unsupported_model <- function(model, reason = NULL) {
 }
 
 
-has_unconditional_scalar_comparison <- function(plan) {
-    if (!identical(plan$kind, "comparisons")) {
-        return(FALSE)
-    }
-    scalar_group <- vapply(plan$groups, function(g) {
-        isTRUE(g$scalar) && length(g$idx) > 1L
-    }, logical(1))
-    any(scalar_group)
-}
-
-
 validate_unconditional_plan_target <- function(plan) {
-    scalar_comparison <- has_unconditional_scalar_comparison(plan)
+    scalar_comparison <- identical(plan$kind, "comparisons") &&
+        any(vapply(plan$groups, function(group) {
+            isTRUE(group$scalar) && length(group$idx) > 1L
+        }, logical(1)))
 
-    if (!is.null(plan$agg)) {
+    if (!is.null(plan$agg) || scalar_comparison) {
         return(invisible(TRUE))
     }
 
     if (!is.null(plan$hyp)) {
-        if (isTRUE(scalar_comparison)) {
-            return(invisible(TRUE))
-        }
         msg <- paste0(
             "`vcov = \"unconditional\"` does not support `hypothesis` ",
             "applied directly to unit-level effects. Use an `avg_*()` ",
@@ -191,10 +158,6 @@ validate_unconditional_plan_target <- function(plan) {
             "`hypothesis`."
         )
         stop_sprintf(msg)
-    }
-
-    if (isTRUE(scalar_comparison)) {
-        return(invisible(TRUE))
     }
 
     msg <- paste0(
@@ -206,7 +169,14 @@ validate_unconditional_plan_target <- function(plan) {
 }
 
 
-validate_unconditional_plan_source <- function(plan, modeldata, n, allow_mismatch = character()) {
+sanitize_unconditional_plan <- function(
+    plan,
+    modeldata,
+    n,
+    df,
+    n_estimates,
+    allow_mismatch = character()) {
+
     source <- if (identical(plan$kind, "predictions")) {
         plan$predict_args$newdata
     } else {
@@ -221,13 +191,25 @@ validate_unconditional_plan_source <- function(plan, modeldata, n, allow_mismatc
         "original model-data rows, a subset of original rows with valid ",
         "row IDs, or a full counterfactual grid that preserves `rowidcf`."
     )
-    resolve_unconditional_rowid(
+    rowid <- resolve_unconditional_rowid(
         source,
         n,
         modeldata = modeldata,
         allow_mismatch = allow_mismatch,
-        message = msg)
-    invisible(TRUE)
+        message = msg
+    )
+
+    validate_unconditional_plan_target(plan)
+
+    if (is.numeric(df) && !length(df) %in% c(1L, n_estimates)) {
+        stop_sprintf(
+            "The `df` argument must have length 1 or match the number of estimates (%d). Got length %d.",
+            n_estimates,
+            length(df)
+        )
+    }
+
+    rowid
 }
 
 
@@ -259,6 +241,18 @@ resolve_unconditional_rowid <- function(
     }
     out <- NULL
 
+    common <- character()
+    if (!is.null(modeldata)) {
+        ignored <- c(
+            "rowid",
+            "rowidcf",
+            "marginaleffects_wts_internal",
+            "rowid_dedup"
+        )
+        common <- intersect(colnames(x), colnames(modeldata))
+        common <- setdiff(common, c(ignored, allow_mismatch))
+    }
+
     rowid_cols <- intersect(c("rowidcf", "rowid"), colnames(x))
     for (rowid_col in rowid_cols) {
         candidate <- as.integer(x[[rowid_col]])
@@ -273,12 +267,14 @@ resolve_unconditional_rowid <- function(
         if (is.null(modeldata)) {
             out <- candidate
         } else {
-            matches <- isTRUE(unconditional_source_matches_modeldata(
-                x,
-                modeldata,
-                candidate,
-                allow_mismatch = allow_mismatch))
-            if (isTRUE(matches)) {
+            matches <- vapply(common, function(column) {
+                isTRUE(all.equal(
+                    x[[column]],
+                    modeldata[[column]][candidate],
+                    check.attributes = FALSE
+                ))
+            }, logical(1))
+            if (all(matches)) {
                 out <- candidate
             }
         }
@@ -291,7 +287,7 @@ resolve_unconditional_rowid <- function(
         matched <- match_unconditional_source_modeldata(
             x,
             modeldata,
-            allow_mismatch = allow_mismatch)
+            common = common)
         if (!is.null(matched)) {
             out <- matched
         }
@@ -304,53 +300,20 @@ resolve_unconditional_rowid <- function(
 }
 
 
-unconditional_source_matches_modeldata <- function(source, modeldata, rowid, allow_mismatch = character()) {
-    common <- intersect(colnames(source), colnames(modeldata))
-    common <- setdiff(common, c(
-        "rowid",
-        "rowidcf",
-        "marginaleffects_wts_internal",
-        "rowid_dedup"
-    ))
-    common <- setdiff(common, allow_mismatch)
-    if (length(common) == 0) {
-        return(TRUE)
-    }
-
-    rowid <- as.integer(rowid)
-    for (col in common) {
-        lhs <- source[[col]]
-        rhs <- modeldata[[col]][rowid]
-        if (!isTRUE(all.equal(lhs, rhs, check.attributes = FALSE))) {
-            return(FALSE)
-        }
-    }
-    TRUE
-}
-
-
-match_unconditional_source_modeldata <- function(source, modeldata, allow_mismatch = character()) {
+match_unconditional_source_modeldata <- function(source, modeldata, common) {
     source <- data.table::as.data.table(source)
     modeldata <- data.table::as.data.table(modeldata)
-    common <- intersect(colnames(source), colnames(modeldata))
-    common <- setdiff(common, c(
-        "rowid",
-        "rowidcf",
-        "marginaleffects_wts_internal",
-        "rowid_dedup"
-    ))
-    common <- setdiff(common, allow_mismatch)
     if (length(common) == 0) {
         return(NULL)
     }
 
-    md <- data.table::copy(modeldata[, common, with = FALSE])
-    if (any(duplicated(md, by = common))) {
+    model_keys <- data.table::copy(modeldata[, common, with = FALSE])
+    if (any(duplicated(model_keys, by = common))) {
         return(NULL)
     }
-    md[, ".marginaleffects_unconditional_rowid" := seq_len(.N)]
-    src <- source[, common, with = FALSE]
-    out <- md[src, on = common][[".marginaleffects_unconditional_rowid"]]
+    model_keys[, ".marginaleffects_unconditional_rowid" := seq_len(.N)]
+    source_keys <- source[, common, with = FALSE]
+    out <- model_keys[source_keys, on = common][[".marginaleffects_unconditional_rowid"]]
     if (length(out) != nrow(source) || anyNA(out)) {
         return(NULL)
     }
@@ -361,8 +324,11 @@ match_unconditional_source_modeldata <- function(source, modeldata, allow_mismat
 sanitize_unconditional_vcov_arg <- function(vcov, modeldata, auxdata) {
     if (isTRUE(checkmate::check_formula(vcov))) {
         cluster_var <- all.vars(vcov)
-        if (length(cluster_var) != 1) {
-            msg <- "Unconditional variance currently supports one-way clustered inference only."
+        if (length(vcov) != 2L || length(cluster_var) != 1L) {
+            msg <- paste0(
+                "Unconditional variance currently supports a one-sided ",
+                "formula for one-way clustered inference only."
+            )
             stop_sprintf(msg)
         }
         if (cluster_var %in% colnames(modeldata)) {
@@ -392,19 +358,15 @@ sanitize_unconditional_vcov_arg <- function(vcov, modeldata, auxdata) {
         return(list(type = "cluster", cluster = cluster, cluster_var = cluster_var))
     }
 
+    msg <- paste0(
+        "Unconditional variance requires `vcov` to be one of ",
+        "\"HC1\", \"robust\", \"HC0\", or a one-sided cluster formula."
+    )
     if (!isTRUE(checkmate::check_character(vcov, len = 1))) {
-        msg <- paste0(
-            "Unconditional variance requires `vcov` to be one of ",
-            "\"HC1\", \"robust\", \"HC0\", or a one-sided cluster formula."
-        )
         stop_sprintf(msg)
     }
     vcov_lower <- tolower(vcov)
     if (!vcov_lower %in% c("robust", "hc1", "hc0")) {
-        msg <- paste0(
-            "Unconditional variance requires `vcov` to be one of ",
-            "\"HC1\", \"robust\", \"HC0\", or a one-sided cluster formula."
-        )
         stop_sprintf(msg)
     }
     if (vcov_lower == "hc0") {
@@ -416,26 +378,32 @@ sanitize_unconditional_vcov_arg <- function(vcov, modeldata, auxdata) {
 
 
 get_unconditional_auxdata <- function(mfx, n) {
-    nd <- data.table::as.data.table(mfx@newdata)
-    if ("rowid" %in% colnames(nd)) {
-        nd <- nd[!duplicated(rowid)]
-    } else if (nrow(nd) > n) {
-        nd <- nd[seq_len(n)]
+    auxdata <- data.table::as.data.table(mfx@newdata)
+    if ("rowid" %in% colnames(auxdata)) {
+        auxdata <- auxdata[!duplicated(rowid)]
+    } else if (nrow(auxdata) > n) {
+        auxdata <- auxdata[seq_len(n)]
     }
-    if (nrow(nd) != n) {
-        nd <- data.table::as.data.table(mfx@modeldata)
+    if (nrow(auxdata) != n) {
+        auxdata <- data.table::as.data.table(mfx@modeldata)
     }
-    extra <- tryCatch(
+    additional_data <- tryCatch(
         data.table::as.data.table(get_modeldata(mfx@model, additional_variables = TRUE)),
         error = function(e) NULL
     )
-    if (!is.null(extra) && nrow(extra) == n) {
-        add <- setdiff(colnames(extra), colnames(nd))
-        if (length(add) > 0) {
-            nd <- cbind(nd, extra[, add, with = FALSE])
+    if (!is.null(additional_data) && nrow(additional_data) == n) {
+        additional_columns <- setdiff(colnames(additional_data), colnames(auxdata))
+        if (length(additional_columns) > 0) {
+            auxdata <- cbind(auxdata, additional_data[, additional_columns, with = FALSE])
         }
     }
-    nd
+    auxdata
+}
+
+
+is_unconditional_linear_model <- function(model) {
+    (inherits(model, "lm") && !inherits(model, "glm")) ||
+        (inherits(model, "fixest") && identical(model[["method_type"]], "feols"))
 }
 
 
@@ -446,46 +414,26 @@ sanitize_unconditional_df <- function(df, model, vcov_info) {
     }
     checkmate::assert_choice(df, "residual")
 
-    is_glm <- inherits(model, "glm")
-    is_fixest <- inherits(model, "fixest")
-    is_feols <- is_fixest && identical(model$method_type, "feols")
-
-    if (vcov_info$type == "cluster" && (inherits(model, "lm") && !is_glm || is_feols)) {
+    if (!is_unconditional_linear_model(model)) {
+        return(Inf)
+    }
+    if (vcov_info$type == "cluster") {
         return(length(unique(vcov_info$cluster)) - 1)
     }
-    if (vcov_info$type != "cluster" && (inherits(model, "lm") && !is_glm || is_feols)) {
-        out <- tryCatch(stats::df.residual(model), error = function(e) Inf)
-        if (is.finite(out) && out < 1) {
-            msg <- paste0(
-                "`df = \"residual\"` requires positive residual degrees of ",
-                "freedom for linear models. Specify a numeric `df`, such as ",
-                "`unconditional(\"HC0\", df = Inf)`, to override this default."
-            )
-            stop_sprintf(msg)
-        }
-        return(out)
+
+    out <- tryCatch(stats::df.residual(model), error = function(e) Inf)
+    if (is.finite(out) && out < 1) {
+        msg <- paste0(
+            "`df = \"residual\"` requires positive residual degrees of ",
+            "freedom for linear models. Specify a numeric `df`, such as ",
+            "`unconditional(\"HC0\", df = Inf)`, to override this default."
+        )
+        stop_sprintf(msg)
     }
-    Inf
+    out
 }
 
 
 unconditional_df_has_finite <- function(df) {
     is.numeric(df) && any(is.finite(df))
-}
-
-
-unconditional_df_all_infinite <- function(df) {
-    is.numeric(df) && all(!is.finite(df))
-}
-
-
-validate_unconditional_df_length <- function(df, n) {
-    if (is.numeric(df) && !length(df) %in% c(1L, n)) {
-        stop_sprintf(
-            "The `df` argument must have length 1 or match the number of estimates (%d). Got length %d.",
-            n,
-            length(df)
-        )
-    }
-    invisible(TRUE)
 }
