@@ -29,7 +29,7 @@ If you do not like `marginaleffects`, you may want to consider one of the altern
 
 The [`emmeans` package](https://cran.r-project.org/web/packages/emmeans/index.html) is developed by Russell V. Lenth and colleagues. `emmeans` is a truly incredible piece of software, and a trailblazer in the `R` ecosystem. It is an *extremely* powerful package whose functionality overlaps `marginaleffects` to a significant degree: marginal means, contrasts, and slopes. Even if the two packages can compute many of the same quantities, `emmeans` and `marginaleffects` have pretty different philosophies with respect to user interface and computation. 
 
-An `emmeans` analysis typically starts by computing ["marginal means"](marginalmeans.html) by holding all numeric covariates at their means, and by averaging across a balanced grid of categorical predictors. Then, users can use the `contrast()` function to estimate the difference between marginal means.
+An `emmeans` analysis typically starts by computing "marginal means", holding all numeric covariates at their means, and by averaging across a balanced grid of categorical predictors. Then, users can use the `contrast()` function to estimate the difference between marginal means.
 
 The `marginaleffects` package supplies a `predictions` function which can replicate most `emmeans` analyses by computing marginal means. However, the typical analysis is more squarely centered on predicted/fitted values. This is a useful starting point because, in many cases, analysts will find it easy and intuitive to express their scientific queries in terms of changes in predicted values. For example, 
 
@@ -52,7 +52,7 @@ comparisons(
 )
 ```
 
-As [the vignettes show,](marginalmeans.html) `marginaleffects` can also compute contrasts on marginal means. It can also compute various quantities of interest like raw fitted values, slopes (partial derivatives), and contrasts between marginal means. It also offers a flexible mechanism to run (non-)linear hypothesis tests using the delta method, and it offers fully customizable strategy to compute quantities like odds ratios (or completely arbitrary functions of predicted outcome).
+As this vignette shows `marginaleffects` can also compute contrasts on marginal means. It can also compute various quantities of interest like raw fitted values, slopes (partial derivatives), and contrasts between marginal means. It also offers a flexible mechanism to run (non-)linear hypothesis tests using the delta method, and it offers fully customizable strategy to compute quantities like odds ratios (or completely arbitrary functions of predicted outcome).
 
 Thus, in my (Vincent's) biased opinion, the main benefits of `marginaleffects` over `emmeans` are:
 
@@ -69,8 +69,6 @@ To be fair, many of the `marginaleffects` advantages listed above come down to s
 The main advantages of `emmeans` over `marginaleffects` arise when users are specifically interested in marginal means, where `emmeans` tends to be much faster and to have a lot of functionality to handle backtransformations. `emmeans` also has better functionality for effect sizes; notably, the `eff_size()` function can return effect size estimates that account for uncertainty in both estimated effects and the population SD.
 
 Please let me know if you find other features in `emmeans` so I can add them to this list.
-
-The [Marginal Means Vignette](marginalmeans.html) includes side-by-side comparisons of `emmeans` and `marginaleffects` to compute marginal means. The rest of this section compares the syntax for contrasts and marginaleffects.
 
 ### Contrasts
 
@@ -874,7 +872,7 @@ Second, `fmeffects` also implements a non-linearity measure. At the moment, ther
 The [`effects` package](https://cran.r-project.org/package=effects) was created by John Fox and colleagues.
 
 + `marginaleffects` supports 30+ more model types than `effects`.
-+ `effects` focuses on the computation of ["adjusted predictions."](predictions.html) The plots it produces are roughly equivalent to the ones produced by the `plot_predictions` and `predictions` functions in `marginaleffects`.
++ `effects` focuses on the computation of ["adjusted predictions."](/chapters/predictions.html) The plots it produces are roughly equivalent to the ones produced by the `plot_predictions` and `predictions` functions in `marginaleffects`.
 + `effects` does not appear support marginal effects (slopes), marginal means, or contrasts 
 + `effects` uses Base graphics whereas `marginaleffects` uses `ggplot2`
 + `effects` includes *a lot* of very powerful options to customize plots. In contrast, `marginaleffects` produces objects which can be customized by chaining `ggplot2` functions. Users can also call `plot_predictions(model, draw=FALSE)` to create a prediction grid, and then work the raw data directly to create the plot they need

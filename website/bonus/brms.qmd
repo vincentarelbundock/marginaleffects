@@ -271,7 +271,7 @@ ggplot(pred, aes(x = draw, fill = party_autonomy)) +
 
 ### Marginal effects and contrasts
 
-As noted in the [Marginal Effects vignette](slopes.html), there should be one distinct marginal effect for each combination of regressor values. Here, we consider only one combination of regressor values, where `region` is "Middle East and North Africa", and `civil_liberties` is 0.5. Then, we calculate the mean of the posterior distribution of marginal effects:
+As noted in the [Marginal Effects vignette](/chapters/slopes.html), there should be one distinct marginal effect for each combination of regressor values. Here, we consider only one combination of regressor values, where `region` is "Middle East and North Africa", and `civil_liberties` is 0.5. Then, we calculate the mean of the posterior distribution of marginal effects:
 
 ```{r}
 mfx <- slopes(mod,

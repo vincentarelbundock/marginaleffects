@@ -158,7 +158,7 @@ avg_slopes(mod)
 
 ## More plot customization
 
-As [described in the Plot vignette,](plots.html) there are currently three ways to customize plots in `marginaleffects`:
+As [described in the Plot vignette,](plot.html) there are currently three ways to customize plots in `marginaleffects`:
 
 1. Using the arguments provided by `plot_*()` functions in the `marginaleffects` package.
 2. Modifying the plot objects using `ggplot2` or an extension package like `ggExtra`.
