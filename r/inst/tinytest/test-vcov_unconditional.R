@@ -39,40 +39,40 @@ expect_unconditional <- function(x) {
 
 mod_lm <- lm(mpg ~ amf + hp + wt, data = dat)
 
-p_lm <- avg_predictions(mod_lm, variables = "amf", vcov = "unconditional")
+p_lm <- avg_predictions(mod_lm, variables = "amf", vcov = "unconditional", df = "residual")
 expect_equivalent(p_lm$estimate, c(19.244117748653977, 21.327827876469591), tolerance = 1e-6)
 expect_equivalent(p_lm$std.error, c(1.1261627856912979, 1.3306015850782165), tolerance = 1e-6)
 expect_equivalent(p_lm$df, c(28, 28))
 expect_unconditional(p_lm)
 
-p_lm_robust <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional("robust"))
-p_lm_hc1 <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional("HC1"))
-p_lm_hc0 <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional("hc0", df = Inf))
+p_lm_robust <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional("robust"), df = "residual")
+p_lm_hc1 <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional("HC1"), df = "residual")
+p_lm_hc0 <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional("hc0"), df = Inf)
 expect_equivalent(p_lm_robust$std.error, p_lm$std.error, tolerance = 1e-8)
 expect_equivalent(p_lm_hc1$std.error, p_lm$std.error, tolerance = 1e-8)
 expect_false("df" %in% names(p_lm_hc0))
 expect_unconditional(p_lm_hc0)
 
-c_lm <- avg_comparisons(mod_lm, variables = "amf", vcov = "unconditional")
+c_lm <- avg_comparisons(mod_lm, variables = "amf", vcov = "unconditional", df = "residual")
 expect_equivalent(c_lm$estimate, 2.0837101278156140, tolerance = 1e-6)
 expect_equivalent(c_lm$std.error, 1.3478880284881209, tolerance = 1e-6)
 expect_unconditional(c_lm)
 
-s_lm <- avg_slopes(mod_lm, variables = "amf", vcov = "unconditional")
+s_lm <- avg_slopes(mod_lm, variables = "amf", vcov = "unconditional", df = "residual")
 expect_equivalent(s_lm$estimate, 2.0837101278156140, tolerance = 1e-6)
 expect_equivalent(s_lm$std.error, 1.3478880284881209, tolerance = 1e-6)
 expect_equivalent(s_lm$conf.low, -0.6773133, tolerance = 1e-6)
 expect_unconditional(s_lm)
 
-p_lm_cl <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional(~cylid))
+p_lm_cl <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional(~cylid), df = 2)
 expect_equivalent(p_lm_cl$std.error, c(3.9317960917077559, 3.3200283031968727), tolerance = 1e-6)
 expect_equivalent(p_lm_cl$df, c(2, 2))
 expect_unconditional(p_lm_cl)
 expect_equivalent(
-    avg_predictions(mod_lm, variables = "amf", vcov = unconditional(~cylid, df = 7))$df,
+    avg_predictions(mod_lm, variables = "amf", vcov = unconditional(~cylid), df = 7)$df,
     c(7, 7))
 
-s_lm_cl <- avg_slopes(mod_lm, variables = "amf", vcov = unconditional(~cylid))
+s_lm_cl <- avg_slopes(mod_lm, variables = "amf", vcov = unconditional(~cylid), df = 2)
 expect_equivalent(s_lm_cl$std.error, 1.4857262433009455, tolerance = 1e-6)
 expect_equivalent(s_lm_cl$df, 2)
 expect_unconditional(s_lm_cl)
@@ -158,7 +158,7 @@ stress <- list(
     avg_predictions_offset = avg_predictions(mod_stress_offset, variables = "amf", vcov = "unconditional"),
     avg_predictions_naomit = avg_predictions(mod_stress_na, variables = "amf", vcov = "unconditional"),
     avg_predictions_cluster = avg_predictions(mod_stress, variables = "amf", vcov = unconditional(~cylid)),
-    avg_predictions_hc0 = avg_predictions(mod_stress, variables = "amf", vcov = unconditional("HC0", df = Inf)),
+    avg_predictions_hc0 = avg_predictions(mod_stress, variables = "amf", vcov = unconditional("HC0"), df = Inf),
     avg_comparisons_multi = avg_comparisons(mod_stress, variables = c("amf", "cylf"), vcov = "unconditional"),
     avg_comparisons_pairwise = avg_comparisons(
         mod_stress,
@@ -271,7 +271,7 @@ expect_error(
     pattern = "requires `vcov`"
 )
 expect_error(
-    avg_predictions(mod_lm, variables = "amf", vcov = unconditional(df = c(1, 2, 3))),
+    avg_predictions(mod_lm, variables = "amf", vcov = unconditional(), df = c(1, 2, 3)),
     pattern = "length 1"
 )
 expect_false(marginaleffects:::is_unconditional_vcov(NA_character_))
@@ -279,10 +279,10 @@ expect_true(marginaleffects:::is_unconditional_vcov(quote(unconditional())))
 dat_saturated <- data.frame(y = c(1, 2, 3, 4), x = factor(1:4))
 mod_saturated <- lm(y ~ x, data = dat_saturated)
 expect_error(
-    avg_predictions(mod_saturated, vcov = "unconditional"),
-    pattern = "positive residual degrees"
+    avg_predictions(mod_saturated, vcov = "unconditional", df = "residual"),
+    pattern = "more observations than estimated coefficients"
 )
-expect_unconditional(avg_predictions(mod_saturated, vcov = unconditional("HC0", df = Inf)))
+expect_unconditional(avg_predictions(mod_saturated, vcov = unconditional("HC0"), df = Inf))
 expect_error(
     hypotheses(mod_lm, vcov = "unconditional"),
     pattern = "avg_predictions"

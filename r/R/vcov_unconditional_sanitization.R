@@ -33,7 +33,7 @@ stop_unconditional <- function(
 }
 
 
-sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual", df_supplied = FALSE) {
+sanitize_unconditional_vcov_request <- function(vcov, mfx) {
     if (!is_unconditional_vcov(vcov)) {
         return(vcov)
     }
@@ -43,19 +43,8 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual", df_s
 
     if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
         vcov_spec <- vcov$vcov
-        df <- vcov$df
     } else {
         vcov_spec <- "HC1"
-        if (isTRUE(df_supplied)) {
-            fun <- if (is.null(calling_function)) "this function" else sprintf("`%s()`", calling_function)
-            msg <- paste0(
-                "The top-level `df` argument was supplied to ",
-                sprintf("%s with `vcov = \"unconditional\"`. ", fun),
-                "You can also set degrees of freedom directly with ",
-                "`vcov = unconditional(df = ...)`."
-            )
-            warn_once(msg, "marginaleffects_unconditional_df_switch")
-        }
     }
 
     modeldata <- data.table::as.data.table(mfx@modeldata)
@@ -63,10 +52,8 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx, df = "residual", df_s
         get_unconditional_auxdata(mfx, nrow(modeldata))
     }
     vcov_info <- sanitize_unconditional_vcov_arg(vcov_spec, modeldata, auxdata)
-    df_value <- sanitize_unconditional_df(df, mfx@model, vcov_info)
-
     structure(
-        list(vcov = vcov_info, df = df_value),
+        list(vcov = vcov_info),
         class = "marginaleffects_vcov_unconditional"
     )
 }
@@ -173,7 +160,6 @@ sanitize_unconditional_plan <- function(
     plan,
     modeldata,
     n,
-    df,
     n_estimates,
     allow_mismatch = character()) {
 
@@ -200,14 +186,6 @@ sanitize_unconditional_plan <- function(
     )
 
     validate_unconditional_plan_target(plan)
-
-    if (is.numeric(df) && !length(df) %in% c(1L, n_estimates)) {
-        stop_sprintf(
-            "The `df` argument must have length 1 or match the number of estimates (%d). Got length %d.",
-            n_estimates,
-            length(df)
-        )
-    }
 
     rowid
 }
@@ -404,36 +382,4 @@ get_unconditional_auxdata <- function(mfx, n) {
 is_unconditional_linear_model <- function(model) {
     (inherits(model, "lm") && !inherits(model, "glm")) ||
         (inherits(model, "fixest") && identical(model[["method_type"]], "feols"))
-}
-
-
-sanitize_unconditional_df <- function(df, model, vcov_info) {
-    if (is.numeric(df)) {
-        checkmate::assert_numeric(df, lower = 1, any.missing = FALSE, min.len = 1)
-        return(df)
-    }
-    checkmate::assert_choice(df, "residual")
-
-    if (!is_unconditional_linear_model(model)) {
-        return(Inf)
-    }
-    if (vcov_info$type == "cluster") {
-        return(length(unique(vcov_info$cluster)) - 1)
-    }
-
-    out <- tryCatch(stats::df.residual(model), error = function(e) Inf)
-    if (is.finite(out) && out < 1) {
-        msg <- paste0(
-            "`df = \"residual\"` requires positive residual degrees of ",
-            "freedom for linear models. Specify a numeric `df`, such as ",
-            "`unconditional(\"HC0\", df = Inf)`, to override this default."
-        )
-        stop_sprintf(msg)
-    }
-    out
-}
-
-
-unconditional_df_has_finite <- function(df) {
-    is.numeric(df) && any(is.finite(df))
 }

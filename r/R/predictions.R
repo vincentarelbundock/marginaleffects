@@ -209,13 +209,7 @@ predictions <- function(
     inferences_dispatch <- sanitize_inferences_method(vcov)
     vcov <- inferences_dispatch$vcov
     inferences_method <- inferences_dispatch$method
-    unconditional_df <- if (missing(df)) "residual" else df
-    vcov <- sanitize_unconditional_vcov_request(
-        vcov,
-        mfx,
-        df = unconditional_df,
-        df_supplied = !missing(df)
-    )
+    vcov <- sanitize_unconditional_vcov_request(vcov, mfx)
     unconditional <- is_unconditional_vcov(vcov)
 
     dots <- list(...)
@@ -329,16 +323,13 @@ predictions <- function(
 
     mfx <- add_degrees_of_freedom(
         mfx = mfx,
-        df = if (unconditional) Inf else df,
+        df = df,
         by = by,
         hypothesis = mfx@hypothesis,
         vcov = vcov,
         newdata = unpadded_newdata
     )
-    if (unconditional) {
-        mfx@df <- vcov$df
-    }
-    if (unconditional && !unconditional_df_has_finite(vcov$df)) {
+    if (unconditional && !unconditional_df_has_finite(mfx@df)) {
         if ("df" %in% colnames(tmp)) {
             tmp$df <- NULL
         }

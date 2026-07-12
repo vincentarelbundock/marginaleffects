@@ -271,13 +271,7 @@ comparisons <- function(
     inferences_dispatch <- sanitize_inferences_method(vcov)
     vcov <- inferences_dispatch$vcov
     inferences_method <- inferences_dispatch$method
-    unconditional_df <- if (missing(df)) "residual" else df
-    vcov <- sanitize_unconditional_vcov_request(
-        vcov,
-        mfx,
-        df = unconditional_df,
-        df_supplied = !missing(df)
-    )
+    vcov <- sanitize_unconditional_vcov_request(vcov, mfx)
     unconditional <- is_unconditional_vcov(vcov)
 
     # misc
@@ -311,7 +305,7 @@ comparisons <- function(
     # because get_vcov() will produce an informative error later.
     mfx <- add_degrees_of_freedom(
         mfx = mfx,
-        df = if (unconditional) Inf else df,
+        df = df,
         by = by,
         hypothesis = hypothesis,
         vcov = vcov)

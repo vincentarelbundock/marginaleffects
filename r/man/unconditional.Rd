@@ -4,16 +4,12 @@
 \alias{unconditional}
 \title{Request unconditional variance in marginaleffects calls}
 \usage{
-unconditional(vcov = "HC1", df = "residual")
+unconditional(vcov = "HC1")
 }
 \arguments{
 \item{vcov}{Variance estimator for the linearized scores. Supported values
 are \code{"HC1"}, \code{"robust"}, \code{"HC0"}, or a one-sided formula such
 as \code{~id} for one-way clustered inference.}
-
-\item{df}{Degrees of freedom. \code{"residual"} uses residual degrees of freedom
-for linear robust models, cluster count minus one for linear clustered
-models, and normal inference for GLMs.}
 }
 \value{
 An object which can be supplied to the \code{vcov} argument of
@@ -34,10 +30,10 @@ such as \code{newdata = "mean"} are rejected because the current implementation
 cannot generally infer how those grid values vary with the empirical
 covariate distribution. Models must provide compatible score and bread
 matrices through \code{sandwich::estfun()}/\code{sandwich::bread()} or model-specific
-equivalents. Multiple-imputation objects, posterior-draw models,
-survey-design models, mixed-effects models, multi-equation and multinomial
-choice models, baseline-hazard dependent \code{coxph} predictions such as
-\code{type = "survival"} or \code{type = "expected"}, average predictions from
-\code{fixest} models with fixed effects, and nonlinear \code{fixest} models with fixed
-effects are rejected explicitly.
+equivalents. Supported model classes are validated through an allow-list.
+Multiple-imputation objects, prediction methods that return posterior draws,
+baseline-hazard dependent \code{coxph} predictions such as \code{type = "survival"} or
+\code{type = "expected"}, average predictions from \code{fixest} models with fixed
+effects, and nonlinear \code{fixest} models with fixed effects are rejected
+explicitly.
 }

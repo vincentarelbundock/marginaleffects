@@ -3,9 +3,6 @@
 #' @param vcov Variance estimator for the linearized scores. Supported values
 #'   are `"HC1"`, `"robust"`, `"HC0"`, or a one-sided formula such
 #'   as `~id` for one-way clustered inference.
-#' @param df Degrees of freedom. `"residual"` uses residual degrees of freedom
-#'   for linear robust models, cluster count minus one for linear clustered
-#'   models, and normal inference for GLMs.
 #'
 #' @return An object which can be supplied to the `vcov` argument of
 #'   [avg_predictions()], [avg_comparisons()], or [avg_slopes()].
@@ -30,9 +27,9 @@
 #' explicitly.
 #'
 #' @export
-unconditional <- function(vcov = "HC1", df = "residual") {
+unconditional <- function(vcov = "HC1") {
     structure(
-        list(vcov = vcov, df = df),
+        list(vcov = vcov),
         class = "marginaleffects_vcov_unconditional"
     )
 }
@@ -165,7 +162,6 @@ plan_unconditional_se <- function(
         plan = plan,
         modeldata = modeldata,
         n = n,
-        df = unconditional$df,
         n_estimates = nrow(estimates),
         allow_mismatch = allow_mismatch
     )
@@ -233,8 +229,8 @@ plan_unconditional_se <- function(
     se[se == 0] <- NA_real_
 
     estimates$std.error <- as.vector(se)
-    if (unconditional_df_has_finite(unconditional$df)) {
-        estimates$df <- unconditional$df
+    if (unconditional_df_has_finite(mfx@df)) {
+        estimates$df <- mfx@df
     }
 
     mfx@vcov_model <- V
@@ -243,7 +239,6 @@ plan_unconditional_se <- function(
     } else {
         "Unconditional"
     }
-    mfx@df <- unconditional$df
     mfx@jacobian <- diag(nrow(V))
 
     list(mfx = mfx, estimates = estimates)
@@ -682,10 +677,7 @@ get_unconditional_vcov <- function(Phi, inputs) {
 
 
 get_unconditional_correction <- function(inputs) {
-    if (inputs$vcov$type == "HC0") {
-        return(1)
-    }
-
+    if (inputs$vcov$type == "HC0") return(1)
     model <- inputs$model
     n <- inputs$n
     is_linear <- is_unconditional_linear_model(model)
@@ -693,47 +685,24 @@ get_unconditional_correction <- function(inputs) {
     if (length(df_residual) != 1L || !is.finite(df_residual)) {
         df_residual <- n - length(get_unconditional_coef(model))
     }
-
     if (inputs$vcov$type == "cluster") {
         G <- length(unique(inputs$vcov$cluster))
-        if (G < 2) {
-            stop_sprintf("Cluster-robust unconditional variance requires at least two clusters.")
-        }
+        if (G < 2) stop_sprintf("Cluster-robust unconditional variance requires at least two clusters.")
         if (isTRUE(is_linear)) {
-            if (df_residual < 1) {
-                msg <- paste0(
-                    "`vcov = \"unconditional\"` requires more observations ",
-                    "than estimated coefficients for finite-sample corrected ",
-                    "linear inference. Use `unconditional(\"HC0\", df = Inf)` ",
-                    "to omit the finite-sample correction."
-                )
-                stop_sprintf(msg)
-            }
+            if (df_residual < 1) stop_sprintf("`vcov = \"unconditional\"` requires more observations than estimated coefficients for finite-sample corrected linear inference. Use `unconditional(\"HC0\")` with `df = Inf` to omit the finite-sample correction.")
             return((G / (G - 1)) * ((n - 1) / df_residual))
         }
         return(G / (G - 1))
     }
-
     if (isTRUE(is_linear)) {
-        if (df_residual < 1) {
-            msg <- paste0(
-                "`vcov = \"unconditional\"` requires more observations ",
-                "than estimated coefficients for finite-sample corrected ",
-                "linear inference. Use `unconditional(\"HC0\", df = Inf)` ",
-                "to omit the finite-sample correction."
-            )
-            stop_sprintf(msg)
-        }
+        if (df_residual < 1) stop_sprintf("`vcov = \"unconditional\"` requires more observations than estimated coefficients for finite-sample corrected linear inference. Use `unconditional(\"HC0\")` with `df = Inf` to omit the finite-sample correction.")
         return(n / df_residual)
     }
-    if (n <= 1) {
-        msg <- paste0(
-            "`vcov = \"unconditional\"` requires at least two observations ",
-            "for finite-sample corrected inference. Use ",
-            "`unconditional(\"HC0\", df = Inf)` to omit the finite-sample ",
-            "correction."
-        )
-        stop_sprintf(msg)
-    }
+    if (n <= 1) stop_sprintf("`vcov = \"unconditional\"` requires at least two observations for finite-sample corrected inference. Use `unconditional(\"HC0\")` with `df = Inf` to omit the finite-sample correction.")
     n / (n - 1)
+}
+
+
+unconditional_df_has_finite <- function(df) {
+    is.numeric(df) && any(is.finite(df))
 }
