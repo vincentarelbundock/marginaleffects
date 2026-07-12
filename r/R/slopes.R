@@ -247,6 +247,7 @@ slopes <- function(
     eps = NULL,
     numderiv = "fdforward",
     ...) {
+    vcov <- sanitize_vcov_request(vcov)
     call_attr <- construct_call(model, "slopes")
 
     # slopes() does not support a named list of variables like comparisons()

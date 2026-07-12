@@ -174,7 +174,7 @@ plan_std_error <- function(
     contrast_data = NULL,
     variables = NULL,
     numderiv = NULL) {
-    if (is_unconditional_vcov(vcov)) {
+    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
         return(plan_unconditional_se(
             built = built,
             mfx = mfx,

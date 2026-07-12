@@ -159,6 +159,7 @@ hypotheses <- function(
     multcomp = FALSE,
     numderiv = "fdforward",
     ...) {
+    vcov <- sanitize_vcov_request(vcov)
     call <- construct_call(model, "hypotheses")
 
     # Early validation and setup
@@ -176,7 +177,9 @@ hypotheses <- function(
         stop_sprintf(msg)
     }
     unconditional_reason <- if (inherits(model, c("mira", "amest"))) "imputation" else "hypotheses"
-    stop_unconditional(vcov, unconditional_reason)
+    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
+        stop_unconditional(unconditional_reason)
+    }
 
     # Early returns for special cases - removed mice check, moved later
 

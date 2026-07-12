@@ -99,6 +99,110 @@ s_glm_cl <- avg_slopes(mod_glm, variables = "amf", vcov = unconditional(~cylid))
 expect_equivalent(s_glm_cl$std.error, 0.228694962491621, tolerance = 1e-6)
 expect_unconditional(s_glm_cl)
 
+# Hansen and Overgaard (2024): equations (8), (14), and (17), and Corollary 9.
+# HC0 isolates the paper's plug-in covariance from finite-sample corrections.
+paper_counterfactual <- function(value, rows = seq_len(nrow(dat))) {
+    newdata <- dat[rows, , drop = FALSE]
+    newdata$amf <- factor(value, levels = levels(dat$amf))
+    eta <- stats::predict(mod_glm, newdata = newdata, type = "link")
+    X <- stats::model.matrix(
+        stats::delete.response(stats::terms(mod_glm)),
+        newdata,
+        contrasts.arg = mod_glm$contrasts,
+        xlev = mod_glm$xlevels
+    )
+    list(
+        estimate = stats::predict(mod_glm, newdata = newdata, type = "response"),
+        derivative = X * as.numeric(mod_glm$family$mu.eta(eta))
+    )
+}
+
+n_paper <- nrow(dat)
+beta_dot_paper <- marginaleffects:::get_unconditional_beta_dot(mod_glm)
+paper_0 <- paper_counterfactual(0)
+paper_1 <- paper_counterfactual(1)
+theta_paper <- c(mean(paper_0$estimate), mean(paper_1$estimate))
+J_paper <- rbind(
+    colMeans(paper_0$derivative),
+    colMeans(paper_1$derivative)
+)
+empirical_paper <- cbind(
+    paper_0$estimate - theta_paper[[1]],
+    paper_1$estimate - theta_paper[[2]]
+)
+Phi_paper <- empirical_paper + beta_dot_paper %*% t(J_paper)
+V_paper <- crossprod(Phi_paper) / n_paper^2
+
+means_paper <- avg_predictions(
+    mod_glm,
+    variables = "amf",
+    vcov = unconditional("HC0")
+)
+expect_equivalent(means_paper$estimate, theta_paper, tolerance = 1e-8)
+expect_equivalent(vcov(means_paper), V_paper, tolerance = 1e-7)
+
+ate_paper <- avg_comparisons(
+    mod_glm,
+    variables = "amf",
+    vcov = unconditional("HC0")
+)
+Phi_ate_paper <- Phi_paper[, 2] - Phi_paper[, 1]
+expect_equivalent(ate_paper$estimate, diff(theta_paper), tolerance = 1e-8)
+expect_equivalent(
+    ate_paper$std.error,
+    as.numeric(sqrt(crossprod(Phi_ate_paper) / n_paper^2)),
+    tolerance = 1e-7
+)
+
+log_rte_paper <- avg_comparisons(
+    mod_glm,
+    variables = "amf",
+    comparison = "lnratioavg",
+    vcov = unconditional("HC0")
+)
+Phi_log_rte_paper <-
+    paper_1$estimate / theta_paper[[2]] -
+    paper_0$estimate / theta_paper[[1]] +
+    beta_dot_paper %*% (
+        J_paper[2, ] / theta_paper[[2]] -
+        J_paper[1, ] / theta_paper[[1]]
+    )
+expect_equivalent(log_rte_paper$estimate, log(theta_paper[[2]] / theta_paper[[1]]), tolerance = 1e-8)
+expect_equivalent(
+    log_rte_paper$std.error,
+    as.numeric(sqrt(crossprod(Phi_log_rte_paper) / n_paper^2)),
+    tolerance = 1e-7
+)
+
+treated <- which(dat$amf == "1")
+paper_treated_0 <- paper_counterfactual(0, treated)
+paper_treated_1 <- paper_counterfactual(1, treated)
+theta_treated <- c(mean(paper_treated_0$estimate), mean(paper_treated_1$estimate))
+J_treated <- rbind(
+    colMeans(paper_treated_0$derivative),
+    colMeans(paper_treated_1$derivative)
+)
+empirical_treated <- matrix(0, nrow = n_paper, ncol = 2)
+empirical_treated[treated, ] <- n_paper / length(treated) * cbind(
+    paper_treated_0$estimate - theta_treated[[1]],
+    paper_treated_1$estimate - theta_treated[[2]]
+)
+Phi_treated <- empirical_treated + beta_dot_paper %*% t(J_treated)
+treated_grid <- datagrid(
+    model = mod_glm,
+    amf = c("0", "1"),
+    grid_type = "counterfactual"
+)
+treated_grid <- treated_grid[treated_grid$rowidcf %in% treated, ]
+means_treated <- avg_predictions(
+    mod_glm,
+    newdata = treated_grid,
+    by = "amf",
+    vcov = unconditional("HC0")
+)
+expect_equivalent(means_treated$estimate, theta_treated, tolerance = 1e-8)
+expect_equivalent(vcov(means_treated), crossprod(Phi_treated) / n_paper^2, tolerance = 1e-7)
+
 dat$cylf <- factor(dat$cyl)
 mod_stress <- lm(mpg ~ amf + hp * wt + cylf, data = dat)
 mod_stress_glm <- glm(vsb ~ amf + hp + wt, family = binomial, data = dat)
@@ -274,8 +378,11 @@ expect_error(
     avg_predictions(mod_lm, variables = "amf", vcov = unconditional(), df = c(1, 2, 3)),
     pattern = "length 1"
 )
-expect_false(marginaleffects:::is_unconditional_vcov(NA_character_))
-expect_true(marginaleffects:::is_unconditional_vcov(quote(unconditional())))
+expect_inherits(
+    marginaleffects:::sanitize_vcov_request("UnConDiTiOnAl"),
+    "marginaleffects_vcov_unconditional"
+)
+expect_identical(marginaleffects:::sanitize_vcov_request("HC1"), "HC1")
 dat_saturated <- data.frame(y = c(1, 2, 3, 4), x = factor(1:4))
 mod_saturated <- lm(y ~ x, data = dat_saturated)
 expect_error(

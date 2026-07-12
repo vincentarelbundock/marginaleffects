@@ -1,11 +1,4 @@
-stop_unconditional <- function(
-    vcov,
-    reason) {
-
-    if (!is_unconditional_vcov(vcov)) {
-        return(invisible(TRUE))
-    }
-
+stop_unconditional <- function(reason) {
     msg <- switch(
         reason,
         "imputation" = paste0(
@@ -34,18 +27,14 @@ stop_unconditional <- function(
 
 
 sanitize_unconditional_vcov_request <- function(vcov, mfx) {
-    if (!is_unconditional_vcov(vcov)) {
-        return(vcov)
+    if (!inherits(vcov, "marginaleffects_vcov_unconditional")) {
+        stop_sprintf("Internal error: unconditional vcov sanitization requires an `unconditional()` object.")
     }
 
     calling_function <- tryCatch(mfx@calling_function, error = function(e) NULL)
     validate_unconditional_model_support(mfx@model, kind = calling_function)
 
-    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
-        vcov_spec <- vcov$vcov
-    } else {
-        vcov_spec <- "HC1"
-    }
+    vcov_spec <- vcov$vcov
 
     modeldata <- data.table::as.data.table(mfx@modeldata)
     auxdata <- if (inherits(vcov_spec, "formula")) {
@@ -61,7 +50,7 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx) {
 
 validate_unconditional_model_support <- function(model, kind, type = NULL) {
     if (inherits(model, c("mira", "amest"))) {
-        stop_unconditional("unconditional", "imputation")
+        stop_unconditional("imputation")
     }
 
     # Deliberately inspect the primary class to reject unvalidated subclasses

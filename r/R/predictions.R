@@ -189,6 +189,8 @@ predictions <- function(
     numderiv = "fdforward",
     ...
 ) {
+    vcov <- sanitize_vcov_request(vcov)
+
     # init
     mfx <- marginaleffects_init(
         model = model,
@@ -209,8 +211,10 @@ predictions <- function(
     inferences_dispatch <- sanitize_inferences_method(vcov)
     vcov <- inferences_dispatch$vcov
     inferences_method <- inferences_dispatch$method
-    vcov <- sanitize_unconditional_vcov_request(vcov, mfx)
-    unconditional <- is_unconditional_vcov(vcov)
+    unconditional <- inherits(vcov, "marginaleffects_vcov_unconditional")
+    if (unconditional) {
+        vcov <- sanitize_unconditional_vcov_request(vcov, mfx)
+    }
 
     dots <- list(...)
     sanity_dots(model = mfx@model, ...)

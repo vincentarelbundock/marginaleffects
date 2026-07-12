@@ -172,7 +172,7 @@ sanitize_model <- function(model, call, newdata = NULL, vcov = NULL, by = FALSE,
     # Extract calling_function from mfx@call
     calling_function <- extract_calling_function(call)
 
-    if (is_unconditional_vcov(vcov)) {
+    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
         validate_unconditional_model_support(model, kind = calling_function)
     }
 

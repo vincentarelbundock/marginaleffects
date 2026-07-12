@@ -5,6 +5,7 @@ joint_test <- function(
     joint_test = "f",
     df = NULL,
     vcov = TRUE) {
+    vcov <- sanitize_vcov_request(vcov)
     checkmate::assert_choice(joint_test, c("f", "chisq"))
 
     # do not use components() because this may be a model object
@@ -21,7 +22,9 @@ joint_test <- function(
         stop_sprintf(msg)
     }
     unconditional_reason <- if (inherits(object, c("mira", "amest"))) "imputation" else "hypotheses"
-    stop_unconditional(vcov, unconditional_reason)
+    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
+        stop_unconditional(unconditional_reason)
+    }
 
     # Create mfx object if it doesn't exist (needed for joint tests on model objects)
     if (is.null(mfx) && !inherits(object, c("slopes", "comparisons", "predictions", "hypotheses"))) {

@@ -1,3 +1,18 @@
+# Normalize special user-facing shorthands before model validation and
+# covariance dispatch. Ordinary vcov specifications pass through unchanged.
+sanitize_vcov_request <- function(vcov) {
+    if (
+        is.character(vcov) &&
+        length(vcov) == 1L &&
+        !is.na(vcov) &&
+        identical(tolower(vcov), "unconditional")
+    ) {
+        return(unconditional())
+    }
+    vcov
+}
+
+
 sanitize_vcov <- function(model, vcov) {
     # TRUE generates a warning in `insight::get_varcov` for some models
     if (isTRUE(checkmate::check_flag(vcov))) {
