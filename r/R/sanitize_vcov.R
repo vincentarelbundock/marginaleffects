@@ -1,3 +1,25 @@
+# Normalize special user-facing shorthands before model validation and
+# covariance dispatch. Ordinary vcov specifications pass through unchanged.
+sanitize_vcov_request <- function(vcov) {
+    # Most functions supplied to `vcov` are covariance estimators and are
+    # called with the model later. `vcovUnconditional` is instead a request
+    # constructor, so normalize its bare-function form before generic function
+    # dispatch tries to call it with the model as its `type` argument.
+    if (is.function(vcov) && identical(vcov, vcovUnconditional)) {
+        return(vcovUnconditional())
+    }
+    if (
+        is.character(vcov) &&
+        length(vcov) == 1L &&
+        !is.na(vcov) &&
+        identical(tolower(vcov), "unconditional")
+    ) {
+        return(vcovUnconditional())
+    }
+    vcov
+}
+
+
 sanitize_vcov <- function(model, vcov) {
     # TRUE generates a warning in `insight::get_varcov` for some models
     if (isTRUE(checkmate::check_flag(vcov))) {

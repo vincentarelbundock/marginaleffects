@@ -169,10 +169,25 @@ plan_std_error <- function(
     mfx,
     estimates,
     type,
+    vcov = NULL,
     dots = list(),
     contrast_data = NULL,
     variables = NULL,
     numderiv = NULL) {
+    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
+        return(plan_unconditional_se(
+            built = built,
+            mfx = mfx,
+            estimates = estimates,
+            type = type,
+            dots = dots,
+            contrast_data = contrast_data,
+            variables = variables,
+            numderiv = numderiv,
+            unconditional = vcov
+        ))
+    }
+
     if ("std.error" %in% colnames(estimates) ||
         (!is.null(mfx) && !is.null(mfx@draws))) {
         return(list(mfx = mfx, estimates = estimates))

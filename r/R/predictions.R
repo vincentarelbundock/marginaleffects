@@ -189,6 +189,8 @@ predictions <- function(
     numderiv = "fdforward",
     ...
 ) {
+    vcov <- sanitize_vcov_request(vcov)
+
     # init
     mfx <- marginaleffects_init(
         model = model,
@@ -205,20 +207,23 @@ predictions <- function(
     scall <- rlang::enquo(newdata)
     mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts)
 
-    # inferences() dispatch
-    inferences_dispatch <- sanitize_inferences_method(vcov)
-    vcov <- inferences_dispatch$vcov
-    inferences_method <- inferences_dispatch$method
-
-    dots <- list(...)
-    sanity_dots(model = mfx@model, ...)
-
     # multiple imputation
     if (inherits(mfx@model, c("mira", "amest"))) {
         out <- process_imputation(mfx)
         return(out)
     }
 
+    # inferences() dispatch
+    inferences_dispatch <- sanitize_inferences_method(vcov)
+    vcov <- inferences_dispatch$vcov
+    inferences_method <- inferences_dispatch$method
+    unconditional <- inherits(vcov, "marginaleffects_vcov_unconditional")
+    if (unconditional) {
+        vcov <- sanitize_unconditional_vcov_request(vcov, mfx)
+    }
+
+    dots <- list(...)
+    sanity_dots(model = mfx@model, ...)
 
     # sanity checks
     mfx <- add_numderiv(mfx, numderiv)
@@ -300,18 +305,19 @@ predictions <- function(
     # bayesian posterior draws
     mfx@draws <- attr(tmp, "posterior_draws")
 
-    if (!isFALSE(vcov)) {
+    if (!unconditional && !isFALSE(vcov)) {
         mfx@vcov_type <- get_vcov_label(vcov)
         mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = prediction_type, ...)
     }
 
-    # Delta method for standard errors
     se <- plan_std_error(
         built = built,
         mfx = mfx,
         estimates = tmp,
         type = prediction_type,
-        dots = dots
+        vcov = vcov,
+        dots = dots,
+        variables = mfx@variables
     )
     mfx <- se$mfx
     tmp <- se$estimates
@@ -326,7 +332,11 @@ predictions <- function(
         vcov = vcov,
         newdata = unpadded_newdata
     )
-    if (!is.null(mfx@df) && is.numeric(mfx@df)) {
+    if (unconditional && !unconditional_df_has_finite(mfx@df)) {
+        if ("df" %in% colnames(tmp)) {
+            tmp$df <- NULL
+        }
+    } else if (!is.null(mfx@df) && is.numeric(mfx@df)) {
         tmp$df <- mfx@df
     }
 
@@ -341,6 +351,9 @@ predictions <- function(
         NULL
     }
 
+    conf_int <- (!isFALSE(vcov) || unconditional) &&
+        ("std.error" %in% colnames(out) || !is.null(mfx@draws))
+
     return(finalize_estimates(
         out = out,
         mfx = mfx,
@@ -350,7 +363,7 @@ predictions <- function(
         class_name = "predictions",
         inferences_method = inferences_method,
         drop_group = TRUE,
-        conf_int = !isFALSE(vcov) && ("std.error" %in% colnames(out) || !is.null(mfx@draws)),
+        conf_int = conf_int,
         pre_transform = linv,
         ...
     ))
@@ -392,6 +405,9 @@ avg_predictions <- function(
     #Construct predictions() call
     call_attr <- construct_call(model, "predictions")
     call_attr[["by"]] <- by
+    if (missing(df)) {
+        call_attr[["df"]] <- NULL
+    }
 
     out <- eval.parent(call_attr)
 

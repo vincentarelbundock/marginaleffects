@@ -96,6 +96,12 @@ first entry in the error message is used by default. See the Type section in the
 \itemize{
 \item Heteroskedasticity-consistent: \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, \code{"HC4m"}, \code{"HC5"}. See \code{?sandwich::vcovHC}
 \item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
+\item Unconditional: \code{"unconditional"} accounts for sampling variation in
+the empirical covariate distribution for averaged or aggregated
+predictions, comparisons, and slopes. Hypotheses applied directly to
+unit-level effects are rejected. Use
+\code{vcovUnconditional(cluster = ~cluster)} for
+one-way clustered unconditional inference.
 \item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 \item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
 \item "rsample", "boot", "fwb", and "simulation" are passed to the \code{method} argument of the \code{inferences()} function. To customize the bootstrap or simulation process, call \code{inferences()} directly.
@@ -635,5 +641,6 @@ slopes(
 \item Arel-Bundock (2026). "Model to Meaning: How to interpret statistical models in R and Python." CRC Press. https://routledge.com/9781032908724
 \item Greenland S. 2019. "Valid P-Values Behave Exactly as They Should: Some Misleading Criticisms of P-Values and Their Resolution With S-Values." The American Statistician. 73(S1): 106–114.
 \item Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020. "Surprise!" American Journal of Epidemiology 190 (2): 191–93. \doi{10.1093/aje/kwaa136}
+\item Hansen SN, Overgaard M (2025). “Variance Estimation for Average Treatment Effects Estimated by G-Computation.” \emph{Metrika}, \emph{88}(4), 419–443. \doi{10.1007/s00184-024-00962-4}
 }
 }

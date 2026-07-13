@@ -181,7 +181,14 @@ get_se_delta <- function(
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
-    se <- sqrt(rowSums(tcrossprod(J, V) * J))
+    variances <- rowSums(tcrossprod(J, V) * J)
+    scale <- suppressWarnings(max(abs(variances), na.rm = TRUE))
+    if (!is.finite(scale)) {
+        scale <- 0
+    }
+    tol <- sqrt(.Machine$double.eps) * max(1, scale)
+    variances[variances < 0 & variances > -tol] <- 0
+    se <- sqrt(variances)
     se[se == 0] <- NA_real_
     attr(se, "jacobian") <- J
 

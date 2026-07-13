@@ -4,6 +4,39 @@
 
 New:
 
+* New `vcov = "unconditional"`, `vcovUnconditional(type = "HC1")`, and
+  `vcovUnconditional(cluster = ~cluster)` options compute unconditional
+  standard errors for average predictions, comparisons, and slopes by
+  accounting for sampling variation in the empirical covariate distribution.
+  `vcovUnconditional()` defaults to the Hansen--Overgaard HC0 plug-in estimator
+  and supports conventional `sandwich`-style HC1 adjustments with optional
+  one-way clustering. Clustered estimates include the usual `G / (G - 1)`
+  adjustment. HC1 is a finite-sample convention for the complete unconditional
+  influence function, not a correction derived by Hansen--Overgaard. HC2
+  through HC5 are excluded because regression-leverage
+  corrections are not defined for the combined unconditional influence
+  function. Analytic empirical influence functions match
+  Hansen–Overgaard for unweighted differences and positive-mean log ratios,
+  with delta-method extensions for other built-in contrasts and separate
+  extensions to weighted targets. Robustness to conditional-mean
+  misspecification also depends on the model's score and bread methods.
+* `vcov = "unconditional"` now supports survey-weighted linear and generalized
+  linear models fitted by `survey::svyglm()`, using their observation-level
+  coefficient influence functions. Thanks to @ngreifer for the `svyglm` code.
+* `vcov = "unconditional"` now throws informative errors for unsupported
+  multiple-imputation, `hypotheses()`, and fixed-effect `fixest`
+  cases. Fixed-effect `feols` models remain available for additive differences
+  and `dydx`/`dyex` slopes when the fixed-effect and varying-slope variables are
+  unchanged between counterfactual predictions. The bare
+  `vcov = vcovUnconditional` form is equivalent to
+  `vcov = vcovUnconditional()`.
+* Unconditional inference is limited to `lm`, `glm`, `svyglm`, and validated
+  `fixest` cases. Tobit, `survreg`, and `coxph` models now direct users to
+  bootstrap inference because censored and survival models are outside the
+  currently validated conditional-mean setup.
+* Custom comparison functions which accept `newdata` now receive rows aligned
+  with each comparison group and delete-one sample. The fallback jackknife
+  linearization is centered at the mean delete-one estimate.
 * Support for `svyVGAM::svy_vglm()` models. Thanks to @kkranker for Issue #1730.
 * New `set_modeldata()` function to attach training data to a model object explicitly. `get_modeldata()` now checks for this attribute first, and emits a once-per-session warning when `insight::get_data()` raises warnings about data retrieval. This is safer for `lapply()`, Shiny, and nested function workflows.
 * Support for `glmtoolbox::glmgee()` and `glmtoolbox::gnm()` models. Thanks to @luifrancgom for report #1148.
@@ -27,6 +60,9 @@ Performance:
 
 Bug fixes:
 
+* Unconditional inference now rejects non-finite scalar comparison results,
+  uses the analytic log-ratio influence function when both means are negative,
+  and permits clustered HC0 inference for saturated linear models.
 * `by` aggregation with posterior or bootstrap draws no longer flattens the draws matrix when a `by` data frame omits some term/group combinations.
 * `predictions()` now assigns the correct `rowid`, `type`, and `estimate` column names when model predictions are returned as a bare vector.
 * `equivalence` tests now support vector-valued degrees of freedom.

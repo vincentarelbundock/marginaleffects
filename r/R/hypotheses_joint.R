@@ -5,10 +5,25 @@ joint_test <- function(
     joint_test = "f",
     df = NULL,
     vcov = TRUE) {
+    vcov <- sanitize_vcov_request(vcov)
     checkmate::assert_choice(joint_test, c("f", "chisq"))
 
     # do not use components() because this may be a model object
     mfx <- attr(object, "marginaleffects")
+    internal_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
+
+    if (inherits(object, internal_classes) && !isTRUE(vcov)) {
+        msg <- paste0(
+            "The `vcov` argument is not available when `object` is a ",
+            "`predictions`, `comparisons`, `slopes`, or `hypotheses` object. ",
+            "Please specify the type of standard errors in the initial ",
+            "`marginaleffects` call."
+        )
+        stop_sprintf(msg)
+    }
+    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
+        stop_unconditional("hypotheses")
+    }
 
     # Create mfx object if it doesn't exist (needed for joint tests on model objects)
     if (is.null(mfx) && !inherits(object, c("slopes", "comparisons", "predictions", "hypotheses"))) {

@@ -231,6 +231,8 @@ comparisons <- function(
     numderiv = "fdforward",
     ...
 ) {
+    vcov <- sanitize_vcov_request(vcov)
+
     # init
     mfx <- marginaleffects_init(
         model = model,
@@ -271,6 +273,10 @@ comparisons <- function(
     inferences_dispatch <- sanitize_inferences_method(vcov)
     vcov <- inferences_dispatch$vcov
     inferences_method <- inferences_dispatch$method
+    unconditional <- inherits(vcov, "marginaleffects_vcov_unconditional")
+    if (unconditional) {
+        vcov <- sanitize_unconditional_vcov_request(vcov, mfx)
+    }
 
     # misc
     mfx@conf_level <- sanitize_conf_level(conf_level, ...)
@@ -301,10 +307,17 @@ comparisons <- function(
     # get dof before transforming the vcov arg
     # add_degrees_of_freedom() produces a weird warning on non lmerMod. We can skip them
     # because get_vcov() will produce an informative error later.
-    mfx <- add_degrees_of_freedom(mfx = mfx, df = df, by = by, hypothesis = hypothesis, vcov = vcov)
+    mfx <- add_degrees_of_freedom(
+        mfx = mfx,
+        df = df,
+        by = by,
+        hypothesis = hypothesis,
+        vcov = vcov)
 
-    mfx@vcov_type <- get_vcov_label(vcov)
-    mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
+    if (!unconditional) {
+        mfx@vcov_type <- get_vcov_label(vcov)
+        mfx@vcov_model <- get_vcov(mfx@model, vcov = vcov, type = mfx@type, ...)
+    }
 
     predictors <- mfx@variables
 
@@ -349,12 +362,12 @@ comparisons <- function(
     # bayesian posterior
     mfx@draws <- attr(cmp, "posterior_draws")
 
-    # standard errors via delta method
     se <- plan_std_error(
         built = built,
         mfx = mfx,
         estimates = cmp,
         type = mfx@type,
+        vcov = vcov,
         dots = dots,
         contrast_data = contrast_data,
         variables = predictors,
@@ -410,6 +423,9 @@ avg_comparisons <- function(
     ...
 ) {
     call_attr <- construct_call(model, "comparisons")
+    if (missing(df)) {
+        call_attr[["df"]] <- NULL
+    }
 
     out <- eval.parent(call_attr)
 
