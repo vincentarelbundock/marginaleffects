@@ -49,6 +49,7 @@ Suggests:
     Amelia,
     afex,
     aod,
+    adrftools,
     arrow,
     bayestestR,
     bench,
