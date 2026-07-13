@@ -383,6 +383,30 @@ expect_error(
     avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = "cylid")),
     pattern = "one-sided formula"
 )
+for (type_cluster in c("HC2", "HC3", "HC4", "HC4m", "HC5")) {
+    expect_error(
+        avg_predictions(
+            mod_lm,
+            variables = "amf",
+            vcov = vcovUnconditional(type = type_cluster, cluster = ~cylid)
+        ),
+        pattern = "does not currently support.*with `cluster`"
+    )
+}
+expect_unconditional(
+    avg_predictions(
+        mod_lm,
+        variables = "amf",
+        vcov = vcovUnconditional(type = "HC0", cluster = ~cylid)
+    )
+)
+expect_unconditional(
+    avg_predictions(
+        mod_lm,
+        variables = "amf",
+        vcov = vcovUnconditional(type = "HC1", cluster = ~cylid)
+    )
+)
 expect_error(
     avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(), df = c(1, 2, 3)),
     pattern = "length 1"
@@ -520,6 +544,95 @@ if (requiet("fixest")) {
             ((mod_fixest_fe$nobs - 1) / stats::df.residual(mod_fixest_fe)))
     s_fixest_fe <- avg_slopes(mod_fixest_fe, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid))
     expect_unconditional(s_fixest_fe)
+
+    # Absorbed fixed effects cancel from additive differences and from slopes
+    # which only rescale hi - lo, provided the fixed-effect variables do not
+    # change between the counterfactual predictions.
+    expect_unconditional(
+        avg_comparisons(mod_fixest_fe, variables = "amf", vcov = "unconditional")
+    )
+    expect_unconditional(
+        avg_comparisons(
+            mod_fixest_fe,
+            variables = "amf",
+            wts = "w",
+            vcov = "unconditional"
+        )
+    )
+    expect_unconditional(
+        avg_slopes(
+            mod_fixest_fe,
+            variables = "hp",
+            slope = "dyex",
+            vcov = "unconditional"
+        )
+    )
+
+    expect_error(
+        avg_comparisons(
+            mod_fixest_fe,
+            variables = "amf",
+            comparison = "ratio",
+            vcov = "unconditional"
+        ),
+        pattern = "only for additive differences"
+    )
+    expect_error(
+        avg_slopes(
+            mod_fixest_fe,
+            variables = "hp",
+            slope = "eyex",
+            vcov = "unconditional"
+        ),
+        pattern = "only for additive differences"
+    )
+    expect_error(
+        avg_comparisons(
+            mod_fixest_fe,
+            variables = "amf",
+            comparison = function(hi, lo) mean(hi - lo),
+            vcov = "unconditional"
+        ),
+        pattern = "custom function"
+    )
+    expect_error(
+        avg_comparisons(mod_fixest_fe, variables = "cylid", vcov = "unconditional"),
+        pattern = "cannot vary fixed-effect or varying-slope variables.*`cylid`"
+    )
+
+    mod_fixest_vs <- fixest::feols(mpg ~ amf + wt | cylid[hp], data = dat)
+    expect_unconditional(
+        avg_comparisons(mod_fixest_vs, variables = "amf", vcov = "unconditional")
+    )
+    expect_error(
+        avg_slopes(mod_fixest_vs, variables = "hp", vcov = "unconditional"),
+        pattern = "cannot vary fixed-effect or varying-slope variables.*`hp`"
+    )
+
+    # `fixef_vars` stores this as the single string "cylid^gear". The
+    # validator must parse the fixed-effect formula and detect `gear` itself.
+    mod_fixest_combined <- fixest::feols(mpg ~ amf + hp + wt | cylid^gear, data = dat)
+    combined_hi <- dat
+    combined_lo <- dat
+    combined_hi$gear <- combined_hi$gear + 1
+    combined_plan <- list(
+        kind = "comparisons",
+        groups = list(list(fun_key = "difference")),
+        predict_args = list(hi = combined_hi, lo = combined_lo)
+    )
+    expect_error(
+        marginaleffects:::validate_unconditional_fixest_plan(
+            mod_fixest_combined,
+            combined_plan
+        ),
+        pattern = "cannot vary fixed-effect or varying-slope variables.*`gear`"
+    )
+
+    mod_fixest_nonlinear <- fixest::fepois(am ~ hp + wt | cylid, data = dat)
+    expect_error(
+        avg_slopes(mod_fixest_nonlinear, variables = "hp", vcov = "unconditional"),
+        pattern = "nonlinear.*fixed effects"
+    )
 }
 
 if (requiet("etwfe")) {

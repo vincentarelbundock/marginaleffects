@@ -29,7 +29,8 @@
 #'   `"HC4"`, `"HC4m"`, and `"HC5"`. `"HC"` is an alias for `"HC0"`, and
 #'   `"robust"` is an alias for `"HC1"`.
 #' @param cluster An optional one-sided formula such as `~id` identifying the
-#'   variable used for one-way clustered inference.
+#'   variable used for one-way clustered inference. Clustered inference is
+#'   currently available with `type = "HC0"` or `type = "HC1"` only.
 #'
 #' @return An object which can be supplied to the `vcov` argument of
 #'   [avg_predictions()], [avg_comparisons()], or [avg_slopes()].
@@ -51,8 +52,17 @@
 #' baseline-hazard dependent `coxph` predictions such as `type = "survival"` or
 #' `type = "expected"`, average predictions from `fixest` models with fixed
 #' effects, and nonlinear `fixest` models with fixed effects are rejected
-#' explicitly. HC2 through HC5 adjustments require the model to provide
-#' leverage values through [stats::hatvalues()].
+#' explicitly. For `feols` models with fixed effects, unconditional inference is
+#' available for additive differences and `dydx`/`dyex` slopes when the
+#' counterfactual data leave every fixed-effect and varying-slope variable
+#' unchanged. Without clustering, HC2 through HC5 adjustments require the model
+#' to provide leverage values through [stats::hatvalues()]. The combined
+#' influence function retains the covariance between coefficient estimation and
+#' the empirical covariate distribution, which is one ingredient of robustness
+#' to conditional-mean misspecification. That robustness also requires the
+#' model's score and bread methods to represent the derivative of its full
+#' estimating equations; this is not guaranteed for every supported model and
+#' link under misspecification.
 #'
 #' @export
 vcovUnconditional <- function(type = "HC1", cluster = NULL) {
@@ -72,8 +82,10 @@ vcovUnconditional <- function(type = "HC1", cluster = NULL) {
 #   IF_i(theta) = empirical_i(theta) + J_beta(theta) IF_i(beta).
 #
 # The helpers below construct the two terms separately. Keeping them at the
-# observation level until the end retains their covariance, which is the term
-# needed for robustness to conditional-mean model misspecification.
+# observation level until the end retains their covariance, which is one term
+# needed for robustness to conditional-mean model misspecification. Full
+# robustness also depends on the supplied score and bread representing the
+# derivative of the model's estimating equations.
 plan_unconditional_se <- function(
     built,
     mfx,
@@ -114,6 +126,7 @@ plan_unconditional_se <- function(
 
     rowid <- sanitize_unconditional_plan(
         plan = plan,
+        model = model,
         modeldata = modeldata,
         n = n,
         n_estimates = nrow(estimates),
@@ -380,14 +393,16 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
 }
 
 
-# Linearize a scalar comparison over one group. Known smooth contrasts use the
-# exact plug-in expressions from the paper. Arbitrary user functions fall back
+# Linearize a scalar comparison over one group. Known smooth contrasts use
+# analytic empirical influence functions. Arbitrary user functions fall back
 # to delete-one jackknife pseudo-values, which provide a generic first-order
 # approximation when no analytic empirical influence function is available.
 get_unconditional_scalar_comparison_phi <- function(group, hi, lo, y, rowid, n, theta) {
-    # Equations (17) and Corollary 9 in Hansen and Overgaard (2024)
-    # give exact plug-in influence functions for differences and relative
-    # effects. Prefer those to delete-one approximations for known contrasts.
+    # For unweighted targets, differences and positive-mean log ratios match
+    # Hansen–Overgaard (2024), equation (17) and Corollary 9. Ratios follow
+    # from their multivariate result by the delta method; log odds ratios,
+    # lifts, and weighted targets are extensions. Prefer these analytic forms
+    # to delete-one approximations for known contrasts.
     out <- get_unconditional_known_scalar_comparison_phi(
         group = group,
         hi = hi,

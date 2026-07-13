@@ -148,8 +148,98 @@ validate_unconditional_plan_target <- function(plan) {
 }
 
 
+validate_unconditional_fixest_plan <- function(model, plan) {
+    if (
+        !inherits(model, "fixest") ||
+            is.null(model[["fixef_vars"]]) ||
+            !identical(plan$kind, "comparisons")
+    ) {
+        return(invisible(TRUE))
+    }
+
+    # `fixest::estfun()` and `fixest::bread()` do not expose the individual
+    # absorbed fixed-effect coefficients. For linear `feols` models this is
+    # harmless when the estimand depends only on hi - lo: the same additive
+    # fixed effect appears in both predictions and cancels exactly. dydx and
+    # dyex are rescalings of that difference and inherit the same invariance.
+    # Ratios, prediction-level elasticities, expdydx, and arbitrary functions
+    # can depend on the prediction levels, so fixed-effect uncertainty need not
+    # cancel and those comparisons are rejected conservatively.
+    allowed <- c(
+        "difference", "differenceavg", "differenceavgwts",
+        "dydx", "dydxavg", "dydxavgwts",
+        "dyex", "dyexavg", "dyexavgwts"
+    )
+    fun_keys <- vapply(plan$groups, function(group) {
+        key <- group$fun_key
+        if (length(key) != 1L || is.na(key)) NA_character_ else key
+    }, character(1))
+    invalid <- unique(fun_keys[is.na(fun_keys) | !fun_keys %in% allowed])
+    if (length(invalid) > 0L) {
+        labels <- ifelse(is.na(invalid), "custom function", sprintf("`%s`", invalid))
+        stop_sprintf(
+            paste0(
+                "`vcov = \"unconditional\"` supports `feols` models with fixed effects only for ",
+                "additive differences and `dydx` or `dyex` slopes, where the fixed effects cancel. ",
+                "Unsupported comparison: %s. Use a supported comparison or a bootstrap method."
+            ),
+            toString(labels)
+        )
+    }
+
+    # Use the parsed fixed-effect formula rather than `fixef_vars`: the latter
+    # stores combined effects such as `id^time` as one string. `all.vars()` also
+    # extracts the slope variable from varying-slope terms such as `id[x]`.
+    fixef_formula <- tryCatch(model[["fml_all"]][["fixef"]], error = function(e) NULL)
+    fixef_variables <- tryCatch(all.vars(fixef_formula), error = function(e) character())
+    if (length(fixef_variables) == 0L) {
+        stop_sprintf(
+            paste0(
+                "`vcov = \"unconditional\"` could not identify the fixed-effect variables in this ",
+                "`feols` model, so it cannot verify that fixed effects cancel. Use a bootstrap method."
+            )
+        )
+    }
+
+    hi <- plan$predict_args$hi
+    lo <- plan$predict_args$lo
+    missing <- setdiff(fixef_variables, intersect(colnames(hi), colnames(lo)))
+    if (length(missing) > 0L) {
+        stop_sprintf(
+            paste0(
+                "`vcov = \"unconditional\"` could not verify these fixed-effect or varying-slope ",
+                "variables in the counterfactual data: %s. Use a bootstrap method."
+            ),
+            toString(sprintf("`%s`", missing))
+        )
+    }
+
+    # Exact equality is intentional. A varying-slope variable can change by a
+    # very small finite-difference step, which a tolerance-based comparison
+    # could incorrectly treat as unchanged.
+    changed <- fixef_variables[vapply(
+        fixef_variables,
+        function(variable) !identical(hi[[variable]], lo[[variable]]),
+        logical(1)
+    )]
+    if (length(changed) > 0L) {
+        stop_sprintf(
+            paste0(
+                "`vcov = \"unconditional\"` cannot vary fixed-effect or varying-slope variables ",
+                "because their uncertainty does not cancel: %s. Use a different focal variable or ",
+                "a bootstrap method."
+            ),
+            toString(sprintf("`%s`", changed))
+        )
+    }
+
+    invisible(TRUE)
+}
+
+
 sanitize_unconditional_plan <- function(
     plan,
+    model,
     modeldata,
     n,
     n_estimates,
@@ -178,6 +268,7 @@ sanitize_unconditional_plan <- function(
     )
 
     validate_unconditional_plan_target(plan)
+    validate_unconditional_fixest_plan(model, plan)
 
     rowid
 }
@@ -312,6 +403,13 @@ sanitize_unconditional_vcov_arg <- function(type, cluster, modeldata, auxdata) {
         if (type == "HC") {
             type <- "HC0"
         }
+    }
+
+    if (!is.null(cluster) && type %in% c("HC2", "HC3", "HC4", "HC4m", "HC5")) {
+        stop_sprintf(
+            "`vcovUnconditional()` does not currently support `type = \"%s\"` with `cluster`. Use `type = \"HC0\"` or `type = \"HC1\"` for clustered inference.",
+            type
+        )
     }
 
     cluster_var <- NULL
