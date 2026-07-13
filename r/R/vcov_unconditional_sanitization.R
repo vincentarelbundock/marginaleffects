@@ -1,10 +1,6 @@
 stop_unconditional <- function(reason) {
     msg <- switch(
         reason,
-        "imputation" = paste0(
-            "`vcov = \"unconditional\"` is not supported for ",
-            "multiple-imputation model objects or pooled multiple-imputation results."
-        ),
         "hypotheses" = paste0(
             "`vcov = \"unconditional\"` is only available for predictions, ",
             "comparisons, and slopes computed by `marginaleffects`. Use ",
@@ -51,10 +47,6 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx) {
 
 
 validate_unconditional_model_support <- function(model, kind) {
-    if (inherits(model, c("mira", "amest"))) {
-        stop_unconditional("imputation")
-    }
-
     # Deliberately inspect the primary class to reject unvalidated subclasses
     # such as `mlm`, even when they also inherit from a supported class.
     primary_class <- class(model)[1]

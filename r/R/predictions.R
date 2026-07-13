@@ -207,6 +207,12 @@ predictions <- function(
     scall <- rlang::enquo(newdata)
     mfx <- add_newdata(mfx, scall, newdata = newdata, by = by, wts = wts)
 
+    # multiple imputation
+    if (inherits(mfx@model, c("mira", "amest"))) {
+        out <- process_imputation(mfx)
+        return(out)
+    }
+
     # inferences() dispatch
     inferences_dispatch <- sanitize_inferences_method(vcov)
     vcov <- inferences_dispatch$vcov
@@ -218,13 +224,6 @@ predictions <- function(
 
     dots <- list(...)
     sanity_dots(model = mfx@model, ...)
-
-    # multiple imputation
-    if (inherits(mfx@model, c("mira", "amest"))) {
-        out <- process_imputation(mfx)
-        return(out)
-    }
-
 
     # sanity checks
     mfx <- add_numderiv(mfx, numderiv)

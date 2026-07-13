@@ -176,9 +176,8 @@ hypotheses <- function(
         )
         stop_sprintf(msg)
     }
-    unconditional_reason <- if (inherits(model, c("mira", "amest"))) "imputation" else "hypotheses"
     if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
-        stop_unconditional(unconditional_reason)
+        stop_unconditional("hypotheses")
     }
 
     # Early returns for special cases - removed mice check, moved later

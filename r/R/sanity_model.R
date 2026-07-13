@@ -172,7 +172,10 @@ sanitize_model <- function(model, call, newdata = NULL, vcov = NULL, by = FALSE,
     # Extract calling_function from mfx@call
     calling_function <- extract_calling_function(call)
 
-    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
+    if (
+        inherits(vcov, "marginaleffects_vcov_unconditional") &&
+        !inherits(model, c("mira", "amest"))
+    ) {
         validate_unconditional_model_support(model, kind = calling_function)
     }
 

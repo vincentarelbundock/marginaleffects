@@ -72,8 +72,10 @@
 #' covariate distribution. Models must provide compatible score and bread
 #' matrices through `sandwich::estfun()`/`sandwich::bread()` or model-specific
 #' equivalents. Supported model classes are validated through an allow-list.
-#' Multiple-imputation objects, prediction methods that return posterior draws,
-#' censored and survival models such as `tobit`, `survreg`, and `coxph`, average
+#' For multiple-imputation objects, unconditional variance is estimated in each
+#' completed dataset and the results are pooled using Rubin's rules. Prediction
+#' methods that return posterior draws, censored and survival models such as
+#' `tobit`, `survreg`, and `coxph`, average
 #' predictions from `fixest` models with fixed effects, and nonlinear `fixest`
 #' models with fixed effects are rejected explicitly. For `feols` models with
 #' fixed effects, unconditional inference is available for additive differences

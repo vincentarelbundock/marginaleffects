@@ -667,13 +667,24 @@ if (requiet("mice")) {
     dat_mi$hp[c(1, 4, 7)] <- NA
     imp <- mice::mice(dat_mi, m = 2, maxit = 1, printFlag = FALSE)
     mod_mi <- with(imp, lm(mpg ~ hp + wt + am))
-    expect_error(
-        avg_predictions(mod_mi, vcov = "unconditional"),
-        pattern = "multiple-imputation"
-    )
+    individual <- lapply(seq_along(mod_mi$analyses), function(i) {
+        avg_predictions(
+            mod_mi$analyses[[i]],
+            newdata = mice::complete(imp, i),
+            variables = "am",
+            vcov = vcovUnconditional(type = "HC0"))
+    })
+    estimate <- vapply(individual, function(x) x$estimate, numeric(2))
+    variance <- vapply(individual, function(x) x$std.error^2, numeric(2))
+    se <- sqrt(rowMeans(variance) + (1 + 1 / length(individual)) * apply(estimate, 1, stats::var))
+    pooled <- avg_predictions(mod_mi, variables = "am", vcov = vcovUnconditional(type = "HC0"))
+    expect_equivalent(pooled$estimate, rowMeans(estimate), tolerance = 1e-6)
+    expect_equivalent(pooled$std.error, se, tolerance = 1e-6)
+    expect_true(all(is.finite(avg_comparisons(mod_mi, variables = "am", vcov = "unconditional")$std.error)))
+    expect_true(all(is.finite(avg_slopes(mod_mi, variables = "am", vcov = "unconditional")$std.error)))
     expect_error(
         hypotheses(mod_mi, hypothesis = "hp = 0", vcov = vcovUnconditional()),
-        pattern = "multiple-imputation"
+        pattern = "only available for predictions"
     )
 }
 

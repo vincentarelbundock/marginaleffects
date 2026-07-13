@@ -21,9 +21,8 @@ joint_test <- function(
         )
         stop_sprintf(msg)
     }
-    unconditional_reason <- if (inherits(object, c("mira", "amest"))) "imputation" else "hypotheses"
     if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
-        stop_unconditional(unconditional_reason)
+        stop_unconditional("hypotheses")
     }
 
     # Create mfx object if it doesn't exist (needed for joint tests on model objects)
