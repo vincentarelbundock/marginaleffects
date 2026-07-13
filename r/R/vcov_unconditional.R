@@ -29,9 +29,10 @@
 #'   covariance, while `"HC1"` applies the conventional model degrees-of-freedom
 #'   adjustment used by the `sandwich` package.
 #' @param cluster An optional one-sided formula such as `~id` identifying the
-#'   variable used for one-way clustered inference. As in the default behavior
-#'   of [sandwich::vcovCL()], clustered estimates include the cluster-count
-#'   adjustment `G / (G - 1)`.
+#'   variable used for one-way clustered inference. The right-hand side must be
+#'   a bare variable name; transformations and multiple variables are not
+#'   supported. As in the default behavior of [sandwich::vcovCL()], clustered
+#'   estimates include the cluster-count adjustment `G / (G - 1)`.
 #'
 #' @return An object which can be supplied to the `vcov` argument of
 #'   [avg_predictions()], [avg_comparisons()], or [avg_slopes()].
@@ -731,6 +732,14 @@ get_unconditional_beta_dot <- function(model) {
                 )
             }
         )
+        # For noncanonical GLMs, sandwich::bread.glm() uses the Fisher/IRLS
+        # sensitivity and omits the residual-dependent derivative term in
+        # Hansen--Overgaard equation (21). The resulting unconditional
+        # variance is asymptotically justified when the conditional mean is
+        # correctly specified, but is not fully robust to mean
+        # misspecification. Supporting that case would require an empirical
+        # Jacobian of the actual GLM score equations, including offsets, prior
+        # weights, and dispersion conventions.
         bread <- tryCatch(
             sandwich::bread(model),
             error = function(e) {

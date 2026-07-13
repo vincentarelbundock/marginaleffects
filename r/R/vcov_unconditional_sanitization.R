@@ -406,17 +406,22 @@ sanitize_unconditional_vcov_arg <- function(type, cluster, modeldata, auxdata) {
     cluster_var <- NULL
     cluster_values <- NULL
     if (!is.null(cluster)) {
-        if (!isTRUE(checkmate::check_formula(cluster))) {
-            stop_sprintf("`cluster` must be NULL or a one-sided formula such as `~id`.")
+        cluster_message <- paste0(
+            "`cluster` must be NULL or a one-sided formula with one bare variable name, ",
+            "such as `~id`, for one-way clustered inference. Transformations and ",
+            "multiple variables are not supported."
+        )
+        if (
+            !isTRUE(checkmate::check_formula(cluster)) ||
+                length(cluster) != 2L ||
+                !is.symbol(cluster[[2L]])
+        ) {
+            stop_sprintf(cluster_message)
         }
-        cluster_var <- all.vars(cluster)
-        if (length(cluster) != 2L || length(cluster_var) != 1L) {
-            msg <- paste0(
-                "Unconditional variance currently supports a one-sided ",
-                "formula for one-way clustered inference only."
-            )
-            stop_sprintf(msg)
-        }
+        # Do not use `all.vars()` here: it would accept expressions such as
+        # `~floor(id / 10)` and then silently extract the untransformed `id`.
+        # Requiring a symbol makes the formula an unambiguous column reference.
+        cluster_var <- as.character(cluster[[2L]])
         if (cluster_var %in% colnames(modeldata)) {
             cluster_values <- modeldata[[cluster_var]]
         } else if (cluster_var %in% colnames(auxdata)) {

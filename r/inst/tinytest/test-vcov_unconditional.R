@@ -499,6 +499,14 @@ expect_error(
     pattern = "one-way"
 )
 expect_error(
+    avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = ~I(cylid > 4))),
+    pattern = "bare variable name"
+)
+expect_error(
+    avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = ~factor(cylid))),
+    pattern = "bare variable name"
+)
+expect_error(
     avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = cylid ~ 1)),
     pattern = "one-sided"
 )

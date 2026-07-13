@@ -13,9 +13,10 @@ covariance, while \code{"HC1"} applies the conventional model degrees-of-freedom
 adjustment used by the \code{sandwich} package.}
 
 \item{cluster}{An optional one-sided formula such as \code{~id} identifying the
-variable used for one-way clustered inference. As in the default behavior
-of \code{\link[sandwich:vcovCL]{sandwich::vcovCL()}}, clustered estimates include the cluster-count
-adjustment \code{G / (G - 1)}.}
+variable used for one-way clustered inference. The right-hand side must be
+a bare variable name; transformations and multiple variables are not
+supported. As in the default behavior of \code{\link[sandwich:vcovCL]{sandwich::vcovCL()}}, clustered
+estimates include the cluster-count adjustment \code{G / (G - 1)}.}
 }
 \value{
 An object which can be supplied to the \code{vcov} argument of
