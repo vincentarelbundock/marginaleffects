@@ -25,9 +25,13 @@
 #' Request unconditional variance in marginaleffects calls
 #'
 #' @param type Character string specifying the finite-sample adjustment. The
-#'   available types are `"HC0"` and `"HC1"`.
+#'   available types are `"HC0"` and `"HC1"`. `"HC0"` uses the raw plug-in
+#'   covariance, while `"HC1"` applies the conventional model degrees-of-freedom
+#'   adjustment used by the `sandwich` package.
 #' @param cluster An optional one-sided formula such as `~id` identifying the
-#'   variable used for one-way clustered inference.
+#'   variable used for one-way clustered inference. As in the default behavior
+#'   of [sandwich::vcovCL()], clustered estimates include the cluster-count
+#'   adjustment `G / (G - 1)`.
 #'
 #' @return An object which can be supplied to the `vcov` argument of
 #'   [avg_predictions()], [avg_comparisons()], or [avg_slopes()].
@@ -35,6 +39,18 @@
 #' @details
 #' The bare function form `vcov = vcovUnconditional` is equivalent to
 #' `vcov = vcovUnconditional()`.
+#'
+#' Without clustering, HC0 applies no finite-sample multiplier and HC1 applies
+#' `n / (n - k)`. With clustering, HC0 applies `G / (G - 1)` and HC1 applies
+#' `G / (G - 1) * (n - 1) / (n - k)`, where `k` is the dimension of the model's
+#' estimating-function system and `G` is the number of clusters. These
+#' conventions match the corresponding `sandwich` adjustments. HC0 is the
+#' plug-in estimator derived by Hansen and Overgaard. HC1 is a conventional
+#' finite-sample adjustment; applying it to the complete unconditional
+#' influence function is not derived in that paper and is not generally an
+#' unbiased finite-sample correction. The `df` argument of the calling
+#' `marginaleffects` function controls the reference distribution for inference
+#' separately and does not determine these covariance multipliers.
 #'
 #' Unconditional variance is available for effects evaluated over original
 #' model-data rows, valid subsets of those rows, or counterfactual grids that
@@ -66,7 +82,7 @@
 #' function.
 #'
 #' @export
-vcovUnconditional <- function(type = "HC1", cluster = NULL) {
+vcovUnconditional <- function(type = "HC0", cluster = NULL) {
     structure(
         list(type = type, cluster = cluster),
         class = "marginaleffects_vcov_unconditional"
@@ -194,8 +210,8 @@ plan_unconditional_se <- function(
     # equation (18); the result corresponds to the complete estimator in (17).
     Phi <- empirical_phi + beta_phi
     inputs <- list(
-        model = model,
         n = n,
+        k = attr(beta_dot, "score_dimension", exact = TRUE),
         vcov = unconditional$vcov
     )
     # Phi contains influence values, not per-estimate score contributions.
@@ -741,6 +757,11 @@ get_unconditional_beta_dot <- function(model) {
             "`vcov = \"unconditional\"` could not extract a valid score matrix for this model."
         )
     }
+    # `sandwich::meatCL()` defines k as the number of estimating-function
+    # columns. Preserve that dimension before selecting the coefficients used
+    # by the target Jacobian. This is intentionally distinct from the `df`
+    # value used for t or normal inference in the calling function.
+    score_dimension <- ncol(scores)
     if (!isTRUE(checkmate::check_matrix(bread, nrows = ncol(scores), ncols = ncol(scores)))) {
         stop_sprintf(
             "`vcov = \"unconditional\"` could not extract a valid bread matrix for this model."
@@ -771,7 +792,9 @@ get_unconditional_beta_dot <- function(model) {
 
     scores <- scores[, cols, drop = FALSE]
     bread <- bread[cols, cols, drop = FALSE]
-    scores %*% bread
+    out <- scores %*% bread
+    attr(out, "score_dimension") <- score_dimension
+    out
 }
 
 
@@ -792,38 +815,41 @@ get_unconditional_vcov <- function(Phi, inputs) {
 }
 
 
-# Apply optional finite-sample corrections after constructing the asymptotic
-# plug-in covariance. HC0 is the uncorrected estimator closest to the paper's
-# formulas; HC1 uses a conventional degrees-of-freedom multiplier, and all
-# clustered requests use a cluster-count multiplier.
+# Apply the conventional sandwich-style finite-sample corrections after
+# constructing the asymptotic plug-in covariance. The model correction and
+# cluster-count correction are separate: HC0 omits the former, while clustered
+# HC0 still follows sandwich::vcovCL()'s default `cadjust = TRUE` behavior.
+# These multipliers are API conventions for the complete target influence
+# function, not finite-sample corrections derived by Hansen and Overgaard.
 get_unconditional_correction <- function(inputs) {
     clustered <- !is.null(inputs$vcov$cluster)
-    if (!clustered && inputs$vcov$type != "HC1") return(1)
-    model <- inputs$model
     n <- inputs$n
-    is_linear <- is_unconditional_linear_model(model)
-    df_residual <- tryCatch(stats::df.residual(model), error = function(e) NA_real_)
-    if (length(df_residual) != 1L || !is.finite(df_residual)) {
-        df_residual <- n - length(get_unconditional_coef(model))
-    }
+    cluster_adjustment <- 1
     if (clustered) {
         G <- length(unique(inputs$vcov$cluster))
         if (G < 2) stop_sprintf("Cluster-robust unconditional variance requires at least two clusters.")
-        if (isTRUE(is_linear)) {
-            if (inputs$vcov$type == "HC1") {
-                if (df_residual < 1) stop_sprintf("`vcov = \"unconditional\"` requires more observations than estimated coefficients for finite-sample corrected linear inference. Use `vcovUnconditional(type = \"HC0\")` with `df = Inf` to omit the finite-sample correction.")
-                return((G / (G - 1)) * ((n - 1) / df_residual))
-            }
-            return(G / (G - 1))
-        }
-        return(G / (G - 1))
+        cluster_adjustment <- G / (G - 1)
     }
-    if (isTRUE(is_linear)) {
-        if (df_residual < 1) stop_sprintf("`vcov = \"unconditional\"` requires more observations than estimated coefficients for finite-sample corrected linear inference. Use `vcovUnconditional(type = \"HC0\")` with `df = Inf` to omit the finite-sample correction.")
-        return(n / df_residual)
+    if (inputs$vcov$type == "HC0") {
+        return(cluster_adjustment)
     }
-    if (n <= 1) stop_sprintf("`vcov = \"unconditional\"` requires at least two observations for finite-sample corrected inference. Use `vcovUnconditional(type = \"HC0\")` with `df = Inf` to omit the finite-sample correction.")
-    n / (n - 1)
+    k <- inputs$k
+    if (
+        length(k) != 1L ||
+            !is.numeric(k) ||
+            !is.finite(k) ||
+            k < 1 ||
+            k != as.integer(k)
+    ) {
+        stop_sprintf("`vcov = \"unconditional\"` could not determine the dimension of the model estimating-function system required for `type = \"HC1\"`.")
+    }
+    if (n <= k) {
+        stop_sprintf("`vcov = \"unconditional\"` requires more observations than model estimating functions for `type = \"HC1\"`. Use `vcovUnconditional(type = \"HC0\")` to omit the model degrees-of-freedom correction.")
+    }
+    if (clustered) {
+        return(cluster_adjustment * ((n - 1) / (n - k)))
+    }
+    n / (n - k)
 }
 
 

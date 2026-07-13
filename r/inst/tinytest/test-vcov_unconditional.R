@@ -7,6 +7,7 @@ dat <- mtcars
 dat$amf <- factor(dat$am)
 dat$vsb <- dat$vs
 dat$cylid <- dat$cyl
+dat$obsid <- seq_len(nrow(dat))
 dat$w <- dat$wt + 0.5
 dat$off <- log(dat$wt + 1)
 
@@ -39,7 +40,14 @@ expect_unconditional <- function(x) {
 
 mod_lm <- lm(mpg ~ amf + hp + wt, data = dat)
 
-p_lm <- avg_predictions(mod_lm, variables = "amf", vcov = "unconditional", df = "residual")
+# Stata's `regress, vce(robust)` uses the conventional n / (n - k)
+# correction, represented explicitly by HC1 in the sandwich-style API.
+p_lm <- avg_predictions(
+    mod_lm,
+    variables = "amf",
+    vcov = vcovUnconditional(type = "HC1"),
+    df = "residual"
+)
 expect_equivalent(p_lm$estimate, c(19.244117748653977, 21.327827876469591), tolerance = 1e-6)
 expect_equivalent(p_lm$std.error, c(1.1261627856912979, 1.3306015850782165), tolerance = 1e-6)
 expect_equivalent(p_lm$df, c(28, 28))
@@ -51,49 +59,93 @@ expect_equivalent(p_lm_hc1$std.error, p_lm$std.error, tolerance = 1e-8)
 expect_false("df" %in% names(p_lm_hc0))
 expect_unconditional(p_lm_hc0)
 
-c_lm <- avg_comparisons(mod_lm, variables = "amf", vcov = "unconditional", df = "residual")
+c_lm <- avg_comparisons(
+    mod_lm,
+    variables = "amf",
+    vcov = vcovUnconditional(type = "HC1"),
+    df = "residual"
+)
 expect_equivalent(c_lm$estimate, 2.0837101278156140, tolerance = 1e-6)
 expect_equivalent(c_lm$std.error, 1.3478880284881209, tolerance = 1e-6)
 expect_unconditional(c_lm)
 
-s_lm <- avg_slopes(mod_lm, variables = "amf", vcov = "unconditional", df = "residual")
+s_lm <- avg_slopes(
+    mod_lm,
+    variables = "amf",
+    vcov = vcovUnconditional(type = "HC1"),
+    df = "residual"
+)
 expect_equivalent(s_lm$estimate, 2.0837101278156140, tolerance = 1e-6)
 expect_equivalent(s_lm$std.error, 1.3478880284881209, tolerance = 1e-6)
 expect_equivalent(s_lm$conf.low, -0.6773133, tolerance = 1e-6)
 expect_unconditional(s_lm)
 
-p_lm_cl <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid), df = 2)
+p_lm_cl <- avg_predictions(
+    mod_lm,
+    variables = "amf",
+    vcov = vcovUnconditional(type = "HC1", cluster = ~cylid),
+    df = 2
+)
 expect_equivalent(p_lm_cl$std.error, c(3.9317960917077559, 3.3200283031968727), tolerance = 1e-6)
 expect_equivalent(p_lm_cl$df, c(2, 2))
 expect_unconditional(p_lm_cl)
 expect_equivalent(
-    avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid), df = 7)$df,
+    avg_predictions(
+        mod_lm,
+        variables = "amf",
+        vcov = vcovUnconditional(type = "HC1", cluster = ~cylid),
+        df = 7
+    )$df,
     c(7, 7))
 
-s_lm_cl <- avg_slopes(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid), df = 2)
+s_lm_cl <- avg_slopes(
+    mod_lm,
+    variables = "amf",
+    vcov = vcovUnconditional(type = "HC1", cluster = ~cylid),
+    df = 2
+)
 expect_equivalent(s_lm_cl$std.error, 1.4857262433009455, tolerance = 1e-6)
 expect_equivalent(s_lm_cl$df, 2)
 expect_unconditional(s_lm_cl)
 
 mod_glm <- glm(vsb ~ amf + hp + wt, family = binomial, data = dat)
 
-p_glm <- avg_predictions(mod_glm, variables = "amf", vcov = "unconditional")
+# Stata's ML robust path uses n / (n - 1). With one cluster per observation,
+# clustered HC0 leaves the score cross-products unchanged and applies exactly
+# that factor through the default G / (G - 1) cluster adjustment.
+p_glm <- avg_predictions(
+    mod_glm,
+    variables = "amf",
+    vcov = vcovUnconditional(type = "HC0", cluster = ~obsid)
+)
 expect_equivalent(p_glm$estimate, c(0.531230955273909, 0.292614213581851), tolerance = 1e-6)
 expect_equivalent(p_glm$std.error, c(0.089913330206317, 0.099846347930332), tolerance = 1e-6)
 expect_false("df" %in% names(p_glm))
 expect_unconditional(p_glm)
 
-s_glm <- avg_slopes(mod_glm, variables = "amf", vcov = "unconditional")
+s_glm <- avg_slopes(
+    mod_glm,
+    variables = "amf",
+    vcov = vcovUnconditional(type = "HC0", cluster = ~obsid)
+)
 expect_equivalent(s_glm$estimate, -0.238616741692058, tolerance = 1e-6)
 expect_equivalent(s_glm$std.error, 0.098439935777850, tolerance = 1e-6)
 expect_unconditional(s_glm)
 
-p_glm_cl <- avg_predictions(mod_glm, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid))
+p_glm_cl <- avg_predictions(
+    mod_glm,
+    variables = "amf",
+    vcov = vcovUnconditional(type = "HC0", cluster = ~cylid)
+)
 expect_equivalent(p_glm_cl$std.error, c(0.359245073856309, 0.299787890193848), tolerance = 1e-6)
 expect_false("df" %in% names(p_glm_cl))
 expect_unconditional(p_glm_cl)
 
-s_glm_cl <- avg_slopes(mod_glm, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid))
+s_glm_cl <- avg_slopes(
+    mod_glm,
+    variables = "amf",
+    vcov = vcovUnconditional(type = "HC0", cluster = ~cylid)
+)
 expect_equivalent(s_glm_cl$std.error, 0.228694962491621, tolerance = 1e-6)
 expect_unconditional(s_glm_cl)
 
@@ -516,13 +568,17 @@ expect_identical(
 expect_identical(marginaleffects:::sanitize_vcov_request("HC1"), "HC1")
 bare_vcov <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional)
 expect_equivalent(bare_vcov$estimate, p_lm$estimate, tolerance = 1e-8)
-expect_equivalent(bare_vcov$std.error, p_lm$std.error, tolerance = 1e-8)
+expect_equivalent(bare_vcov$std.error, p_lm_hc0$std.error, tolerance = 1e-8)
 expect_unconditional(bare_vcov)
 dat_saturated <- data.frame(y = c(1, 2, 3, 4), x = factor(1:4))
 mod_saturated <- lm(y ~ x, data = dat_saturated)
 expect_error(
-    avg_predictions(mod_saturated, vcov = "unconditional", df = "residual"),
-    pattern = "more observations than estimated coefficients"
+    avg_predictions(
+        mod_saturated,
+        vcov = vcovUnconditional(type = "HC1"),
+        df = Inf
+    ),
+    pattern = "more observations than model estimating functions"
 )
 expect_unconditional(avg_predictions(mod_saturated, vcov = vcovUnconditional(type = "HC0"), df = Inf))
 dat_saturated$cluster <- seq_len(nrow(dat_saturated))
@@ -540,7 +596,7 @@ expect_error(
         vcov = vcovUnconditional(type = "HC1", cluster = ~cluster),
         df = Inf
     ),
-    pattern = "more observations than estimated coefficients"
+    pattern = "more observations than model estimating functions"
 )
 expect_error(
     hypotheses(mod_lm, vcov = "unconditional"),
@@ -646,7 +702,11 @@ if (requiet("survival")) {
 
 if (requiet("fixest")) {
     mod_fixest <- fixest::feols(mpg ~ amf + hp + wt, data = dat)
-    s_fixest <- avg_slopes(mod_fixest, variables = "amf", vcov = "unconditional")
+    s_fixest <- avg_slopes(
+        mod_fixest,
+        variables = "amf",
+        vcov = vcovUnconditional(type = "HC1")
+    )
     expect_equivalent(s_fixest$estimate, s_lm$estimate, tolerance = 1e-6)
     expect_equivalent(s_fixest$std.error, s_lm$std.error, tolerance = 1e-6)
 
@@ -656,18 +716,18 @@ if (requiet("fixest")) {
         pattern = "fixed effects"
     )
     fixest_fe_inputs <- list(
-        model = mod_fixest_fe,
         n = mod_fixest_fe$nobs,
+        k = ncol(mod_fixest_fe$scores),
         vcov = list(type = "HC1", cluster = NULL, cluster_var = NULL))
     expect_equivalent(
         marginaleffects:::get_unconditional_correction(fixest_fe_inputs),
-        mod_fixest_fe$nobs / stats::df.residual(mod_fixest_fe))
+        mod_fixest_fe$nobs / (mod_fixest_fe$nobs - ncol(mod_fixest_fe$scores)))
     fixest_fe_cluster <- fixest_fe_inputs
     fixest_fe_cluster$vcov <- list(type = "HC1", cluster = dat$cylid, cluster_var = "cylid")
     expect_equivalent(
         marginaleffects:::get_unconditional_correction(fixest_fe_cluster),
         (length(unique(dat$cylid)) / (length(unique(dat$cylid)) - 1)) *
-            ((mod_fixest_fe$nobs - 1) / stats::df.residual(mod_fixest_fe)))
+            ((mod_fixest_fe$nobs - 1) / (mod_fixest_fe$nobs - ncol(mod_fixest_fe$scores))))
     s_fixest_fe <- avg_slopes(mod_fixest_fe, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid))
     expect_unconditional(s_fixest_fe)
 

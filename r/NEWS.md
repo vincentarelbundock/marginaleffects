@@ -8,8 +8,12 @@ New:
   `vcovUnconditional(cluster = ~cluster)` options compute unconditional
   standard errors for average predictions, comparisons, and slopes by
   accounting for sampling variation in the empirical covariate distribution.
-  `vcovUnconditional()` supports HC0 and HC1 adjustments with optional one-way
-  clustering. HC2 through HC5 are excluded because regression-leverage
+  `vcovUnconditional()` defaults to the Hansen--Overgaard HC0 plug-in estimator
+  and supports conventional `sandwich`-style HC1 adjustments with optional
+  one-way clustering. Clustered estimates include the usual `G / (G - 1)`
+  adjustment. HC1 is a finite-sample convention for the complete unconditional
+  influence function, not a correction derived by Hansen--Overgaard. HC2
+  through HC5 are excluded because regression-leverage
   corrections are not defined for the combined unconditional influence
   function. Analytic empirical influence functions match
   Hansen–Overgaard for unweighted differences and positive-mean log ratios,

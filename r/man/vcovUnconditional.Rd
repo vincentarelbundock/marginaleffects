@@ -4,14 +4,18 @@
 \alias{vcovUnconditional}
 \title{Request unconditional variance in marginaleffects calls}
 \usage{
-vcovUnconditional(type = "HC1", cluster = NULL)
+vcovUnconditional(type = "HC0", cluster = NULL)
 }
 \arguments{
 \item{type}{Character string specifying the finite-sample adjustment. The
-available types are \code{"HC0"} and \code{"HC1"}.}
+available types are \code{"HC0"} and \code{"HC1"}. \code{"HC0"} uses the raw plug-in
+covariance, while \code{"HC1"} applies the conventional model degrees-of-freedom
+adjustment used by the \code{sandwich} package.}
 
 \item{cluster}{An optional one-sided formula such as \code{~id} identifying the
-variable used for one-way clustered inference.}
+variable used for one-way clustered inference. As in the default behavior
+of \code{\link[sandwich:vcovCL]{sandwich::vcovCL()}}, clustered estimates include the cluster-count
+adjustment \code{G / (G - 1)}.}
 }
 \value{
 An object which can be supplied to the \code{vcov} argument of
@@ -23,6 +27,18 @@ Request unconditional variance in marginaleffects calls
 \details{
 The bare function form \code{vcov = vcovUnconditional} is equivalent to
 \code{vcov = vcovUnconditional()}.
+
+Without clustering, HC0 applies no finite-sample multiplier and HC1 applies
+\code{n / (n - k)}. With clustering, HC0 applies \code{G / (G - 1)} and HC1 applies
+\code{G / (G - 1) * (n - 1) / (n - k)}, where \code{k} is the dimension of the model's
+estimating-function system and \code{G} is the number of clusters. These
+conventions match the corresponding \code{sandwich} adjustments. HC0 is the
+plug-in estimator derived by Hansen and Overgaard. HC1 is a conventional
+finite-sample adjustment; applying it to the complete unconditional
+influence function is not derived in that paper and is not generally an
+unbiased finite-sample correction. The \code{df} argument of the calling
+\code{marginaleffects} function controls the reference distribution for inference
+separately and does not determine these covariance multipliers.
 
 Unconditional variance is available for effects evaluated over original
 model-data rows, valid subsets of those rows, or counterfactual grids that

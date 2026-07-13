@@ -25,7 +25,6 @@ stop_unconditional <- function(reason) {
     stop_sprintf(msg)
 }
 
-
 sanitize_unconditional_vcov_request <- function(vcov, mfx) {
     if (!inherits(vcov, "marginaleffects_vcov_unconditional")) {
         stop_sprintf("Internal error: unconditional vcov sanitization requires a `vcovUnconditional()` object.")
@@ -469,10 +468,4 @@ get_unconditional_auxdata <- function(mfx, n) {
         }
     }
     auxdata
-}
-
-
-is_unconditional_linear_model <- function(model) {
-    (inherits(model, "lm") && !inherits(model, "glm")) ||
-        (inherits(model, "fixest") && identical(model[["method_type"]], "feols"))
 }
