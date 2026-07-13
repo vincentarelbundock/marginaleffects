@@ -13,7 +13,7 @@
 #    combines the two components after aggregation and hypotheses; and
 # 5. forms a robust or one-way cluster-robust covariance matrix from their sum.
 #
-# `unconditional()` creates the user-facing variance request. The
+# `vcovUnconditional()` creates the user-facing variance request. The
 # `plan_unconditional_se()` path coordinates the calculation; the remaining
 # helpers linearize predictions, comparisons, transformations, and model
 # coefficients. Request validation and row-to-model-data matching live in
@@ -24,9 +24,12 @@
 
 #' Request unconditional variance in marginaleffects calls
 #'
-#' @param vcov Variance estimator for the linearized scores. Supported values
-#'   are `"HC1"`, `"robust"`, `"HC0"`, or a one-sided formula such
-#'   as `~id` for one-way clustered inference.
+#' @param type Character string specifying the finite-sample adjustment. The
+#'   available types are `"HC"`, `"HC0"`, `"HC1"`, `"HC2"`, `"HC3"`,
+#'   `"HC4"`, `"HC4m"`, and `"HC5"`. `"HC"` is an alias for `"HC0"`, and
+#'   `"robust"` is an alias for `"HC1"`.
+#' @param cluster An optional one-sided formula such as `~id` identifying the
+#'   variable used for one-way clustered inference.
 #'
 #' @return An object which can be supplied to the `vcov` argument of
 #'   [avg_predictions()], [avg_comparisons()], or [avg_slopes()].
@@ -48,12 +51,13 @@
 #' baseline-hazard dependent `coxph` predictions such as `type = "survival"` or
 #' `type = "expected"`, average predictions from `fixest` models with fixed
 #' effects, and nonlinear `fixest` models with fixed effects are rejected
-#' explicitly.
+#' explicitly. HC2 through HC5 adjustments require the model to provide
+#' leverage values through [stats::hatvalues()].
 #'
 #' @export
-unconditional <- function(vcov = "HC1") {
+vcovUnconditional <- function(type = "HC1", cluster = NULL) {
     structure(
-        list(vcov = vcov),
+        list(type = type, cluster = cluster),
         class = "marginaleffects_vcov_unconditional"
     )
 }
@@ -193,7 +197,7 @@ plan_unconditional_se <- function(
     }
 
     mfx@vcov_model <- V
-    mfx@vcov_type <- if (unconditional$vcov$type == "cluster") {
+    mfx@vcov_type <- if (!is.null(unconditional$vcov$cluster)) {
         sprintf("Unconditional (clustered by %s)", unconditional$vcov$cluster_var)
     } else {
         "Unconditional"
@@ -723,8 +727,9 @@ get_unconditional_beta_dot <- function(model) {
 # dependence before taking the cross-product.
 get_unconditional_vcov <- function(Phi, inputs) {
     n <- inputs$n
+    Phi <- adjust_unconditional_influence(Phi, inputs)
     correction <- get_unconditional_correction(inputs)
-    if (inputs$vcov$type == "cluster") {
+    if (!is.null(inputs$vcov$cluster)) {
         S <- rowsum(Phi, inputs$vcov$cluster, reorder = FALSE)
         return(crossprod(S) / n^2 * correction)
     }
@@ -732,12 +737,53 @@ get_unconditional_vcov <- function(Phi, inputs) {
 }
 
 
+# HC2--HC5 adjust each observation's influence using the same leverage-based
+# factors as sandwich::vcovHC(). HC0 and HC1 leave the influence values intact;
+# their difference is the scalar finite-sample correction below.
+adjust_unconditional_influence <- function(Phi, inputs) {
+    type <- inputs$vcov$type
+    if (type %in% c("HC0", "HC1")) {
+        return(Phi)
+    }
+
+    h <- tryCatch(
+        as.numeric(stats::hatvalues(inputs$model)),
+        error = function(e) NULL
+    )
+    if (is.null(h) || length(h) != nrow(Phi) || anyNA(h)) {
+        stop_sprintf(
+            "`vcovUnconditional(type = \"%s\")` requires model leverage values from `hatvalues()`.",
+            type
+        )
+    }
+    if (any(h > 1 - sqrt(.Machine$double.eps))) {
+        stop_sprintf(
+            "`vcovUnconditional(type = \"%s\")` is undefined when leverage values are equal or close to 1.",
+            type
+        )
+    }
+
+    n <- length(h)
+    p <- as.integer(round(sum(h), digits = 0))
+    exponent <- switch(
+        type,
+        "HC2" = 1,
+        "HC3" = 2,
+        "HC4" = pmin(4, n * h / p),
+        "HC4m" = pmin(1, n * h / p) + pmin(1.5, n * h / p),
+        "HC5" = 0.5 * pmin(n * h / p, pmax(4, n * 0.7 * max(h) / p))
+    )
+    Phi / (1 - h)^(exponent / 2)
+}
+
+
 # Apply optional finite-sample corrections after constructing the asymptotic
 # plug-in covariance. HC0 is the uncorrected estimator closest to the paper's
-# formulas; HC1 and clustered requests use conventional degrees-of-freedom and
-# cluster-count multipliers without altering the influence functions.
+# formulas; HC1 uses a conventional degrees-of-freedom multiplier, and all
+# clustered requests use a cluster-count multiplier.
 get_unconditional_correction <- function(inputs) {
-    if (inputs$vcov$type == "HC0") return(1)
+    clustered <- !is.null(inputs$vcov$cluster)
+    if (!clustered && inputs$vcov$type != "HC1") return(1)
     model <- inputs$model
     n <- inputs$n
     is_linear <- is_unconditional_linear_model(model)
@@ -745,20 +791,23 @@ get_unconditional_correction <- function(inputs) {
     if (length(df_residual) != 1L || !is.finite(df_residual)) {
         df_residual <- n - length(get_unconditional_coef(model))
     }
-    if (inputs$vcov$type == "cluster") {
+    if (clustered) {
         G <- length(unique(inputs$vcov$cluster))
         if (G < 2) stop_sprintf("Cluster-robust unconditional variance requires at least two clusters.")
         if (isTRUE(is_linear)) {
-            if (df_residual < 1) stop_sprintf("`vcov = \"unconditional\"` requires more observations than estimated coefficients for finite-sample corrected linear inference. Use `unconditional(\"HC0\")` with `df = Inf` to omit the finite-sample correction.")
-            return((G / (G - 1)) * ((n - 1) / df_residual))
+            if (df_residual < 1) stop_sprintf("`vcov = \"unconditional\"` requires more observations than estimated coefficients for finite-sample corrected linear inference. Use `vcovUnconditional(type = \"HC0\")` with `df = Inf` to omit the finite-sample correction.")
+            if (inputs$vcov$type == "HC1") {
+                return((G / (G - 1)) * ((n - 1) / df_residual))
+            }
+            return(G / (G - 1))
         }
         return(G / (G - 1))
     }
     if (isTRUE(is_linear)) {
-        if (df_residual < 1) stop_sprintf("`vcov = \"unconditional\"` requires more observations than estimated coefficients for finite-sample corrected linear inference. Use `unconditional(\"HC0\")` with `df = Inf` to omit the finite-sample correction.")
+        if (df_residual < 1) stop_sprintf("`vcov = \"unconditional\"` requires more observations than estimated coefficients for finite-sample corrected linear inference. Use `vcovUnconditional(type = \"HC0\")` with `df = Inf` to omit the finite-sample correction.")
         return(n / df_residual)
     }
-    if (n <= 1) stop_sprintf("`vcov = \"unconditional\"` requires at least two observations for finite-sample corrected inference. Use `unconditional(\"HC0\")` with `df = Inf` to omit the finite-sample correction.")
+    if (n <= 1) stop_sprintf("`vcov = \"unconditional\"` requires at least two observations for finite-sample corrected inference. Use `vcovUnconditional(type = \"HC0\")` with `df = Inf` to omit the finite-sample correction.")
     n / (n - 1)
 }
 

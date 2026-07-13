@@ -28,19 +28,22 @@ stop_unconditional <- function(reason) {
 
 sanitize_unconditional_vcov_request <- function(vcov, mfx) {
     if (!inherits(vcov, "marginaleffects_vcov_unconditional")) {
-        stop_sprintf("Internal error: unconditional vcov sanitization requires an `unconditional()` object.")
+        stop_sprintf("Internal error: unconditional vcov sanitization requires a `vcovUnconditional()` object.")
     }
 
     calling_function <- tryCatch(mfx@calling_function, error = function(e) NULL)
     validate_unconditional_model_support(mfx@model, kind = calling_function)
 
-    vcov_spec <- vcov$vcov
-
     modeldata <- data.table::as.data.table(mfx@modeldata)
-    auxdata <- if (inherits(vcov_spec, "formula")) {
+    auxdata <- if (inherits(vcov$cluster, "formula")) {
         get_unconditional_auxdata(mfx, nrow(modeldata))
     }
-    vcov_info <- sanitize_unconditional_vcov_arg(vcov_spec, modeldata, auxdata)
+    vcov_info <- sanitize_unconditional_vcov_arg(
+        type = vcov$type,
+        cluster = vcov$cluster,
+        modeldata = modeldata,
+        auxdata = auxdata
+    )
     structure(
         list(vcov = vcov_info),
         class = "marginaleffects_vcov_unconditional"
@@ -288,10 +291,37 @@ match_unconditional_source_modeldata <- function(source, modeldata, common) {
 }
 
 
-sanitize_unconditional_vcov_arg <- function(vcov, modeldata, auxdata) {
-    if (isTRUE(checkmate::check_formula(vcov))) {
-        cluster_var <- all.vars(vcov)
-        if (length(vcov) != 2L || length(cluster_var) != 1L) {
+sanitize_unconditional_vcov_arg <- function(type, cluster, modeldata, auxdata) {
+    type_choices <- c("HC", "HC0", "HC1", "HC2", "HC3", "HC4", "HC4m", "HC5")
+    type_message <- paste0(
+        "`type` must be one of ",
+        paste(sprintf("\"%s\"", type_choices), collapse = ", "),
+        ", or \"robust\"."
+    )
+    if (!isTRUE(checkmate::check_character(type, len = 1, any.missing = FALSE))) {
+        stop_sprintf(type_message)
+    }
+    if (tolower(type) == "robust") {
+        type <- "HC1"
+    } else {
+        idx <- match(tolower(type), tolower(type_choices))
+        if (is.na(idx)) {
+            stop_sprintf(type_message)
+        }
+        type <- type_choices[idx]
+        if (type == "HC") {
+            type <- "HC0"
+        }
+    }
+
+    cluster_var <- NULL
+    cluster_values <- NULL
+    if (!is.null(cluster)) {
+        if (!isTRUE(checkmate::check_formula(cluster))) {
+            stop_sprintf("`cluster` must be NULL or a one-sided formula such as `~id`.")
+        }
+        cluster_var <- all.vars(cluster)
+        if (length(cluster) != 2L || length(cluster_var) != 1L) {
             msg <- paste0(
                 "Unconditional variance currently supports a one-sided ",
                 "formula for one-way clustered inference only."
@@ -299,48 +329,32 @@ sanitize_unconditional_vcov_arg <- function(vcov, modeldata, auxdata) {
             stop_sprintf(msg)
         }
         if (cluster_var %in% colnames(modeldata)) {
-            cluster <- modeldata[[cluster_var]]
+            cluster_values <- modeldata[[cluster_var]]
         } else if (cluster_var %in% colnames(auxdata)) {
-            cluster <- auxdata[[cluster_var]]
+            cluster_values <- auxdata[[cluster_var]]
         } else {
             stop_sprintf(
                 "Cluster variable \"%s\" was not found in the model data.",
                 cluster_var
             )
         }
-        if (length(cluster) != nrow(modeldata)) {
+        if (length(cluster_values) != nrow(modeldata)) {
             stop_sprintf(
                 "Cluster variable \"%s\" has length %d, but the model data have %d rows.",
                 cluster_var,
-                length(cluster),
+                length(cluster_values),
                 nrow(modeldata)
             )
         }
-        if (anyNA(cluster)) {
+        if (anyNA(cluster_values)) {
             stop_sprintf("Cluster variable \"%s\" contains missing values.", cluster_var)
         }
-        if (length(unique(cluster)) < 2) {
+        if (length(unique(cluster_values)) < 2) {
             stop_sprintf("Cluster-robust unconditional variance requires at least two clusters.")
         }
-        return(list(type = "cluster", cluster = cluster, cluster_var = cluster_var))
     }
 
-    msg <- paste0(
-        "Unconditional variance requires `vcov` to be one of ",
-        "\"HC1\", \"robust\", \"HC0\", or a one-sided cluster formula."
-    )
-    if (!isTRUE(checkmate::check_character(vcov, len = 1))) {
-        stop_sprintf(msg)
-    }
-    vcov_lower <- tolower(vcov)
-    if (!vcov_lower %in% c("robust", "hc1", "hc0")) {
-        stop_sprintf(msg)
-    }
-    if (vcov_lower == "hc0") {
-        list(type = "HC0", cluster = NULL, cluster_var = NULL)
-    } else {
-        list(type = "HC1", cluster = NULL, cluster_var = NULL)
-    }
+    list(type = type, cluster = cluster_values, cluster_var = cluster_var)
 }
 
 

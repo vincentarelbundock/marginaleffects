@@ -4,10 +4,11 @@
 
 New:
 
-* New `vcov = "unconditional"` and `vcov = unconditional(~cluster)` options
-  compute unconditional standard errors for average predictions, comparisons,
-  and slopes by accounting for sampling variation in the empirical covariate
-  distribution.
+* New `vcov = "unconditional"` and `vcovUnconditional(type = "HC3", cluster = ~cluster)`
+  options compute unconditional standard errors for average predictions,
+  comparisons, and slopes by accounting for sampling variation in the empirical
+  covariate distribution. `vcovUnconditional()` supports HC0--HC5 adjustments
+  and an optional one-way cluster formula.
 * `vcov = "unconditional"` now throws informative errors for unsupported
   multiple-imputation, survey-design, `hypotheses()`, and fixed-effect `fixest`
   cases.

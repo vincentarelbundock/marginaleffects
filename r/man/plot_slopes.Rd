@@ -69,7 +69,8 @@ first entry in the error message is used by default. See the Type section in the
 \item Unconditional: \code{"unconditional"} accounts for sampling variation in
 the empirical covariate distribution for averaged or aggregated
 predictions, comparisons, and slopes. Hypotheses applied directly to
-unit-level effects are rejected. Use \code{unconditional(~cluster)} for
+unit-level effects are rejected. Use
+\code{vcovUnconditional(cluster = ~cluster)} for
 one-way clustered unconditional inference.
 \item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 \item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.

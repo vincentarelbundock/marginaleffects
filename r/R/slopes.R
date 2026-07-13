@@ -49,7 +49,8 @@
 #'    - Unconditional: `"unconditional"` accounts for sampling variation in
 #'      the empirical covariate distribution for averaged or aggregated
 #'      predictions, comparisons, and slopes. Hypotheses applied directly to
-#'      unit-level effects are rejected. Use `unconditional(~cluster)` for
+#'      unit-level effects are rejected. Use
+#'      `vcovUnconditional(cluster = ~cluster)` for
 #'      one-way clustered unconditional inference.
 #'    - Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 #'    - Other: `"NeweyWest"`, `"KernHAC"`, `"OPG"`. See the `sandwich` package documentation.

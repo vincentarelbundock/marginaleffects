@@ -45,13 +45,18 @@ expect_equivalent(p_lm$std.error, c(1.1261627856912979, 1.3306015850782165), tol
 expect_equivalent(p_lm$df, c(28, 28))
 expect_unconditional(p_lm)
 
-p_lm_robust <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional("robust"), df = "residual")
-p_lm_hc1 <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional("HC1"), df = "residual")
-p_lm_hc0 <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional("hc0"), df = Inf)
+p_lm_robust <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "robust"), df = "residual")
+p_lm_hc1 <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "HC1"), df = "residual")
+p_lm_hc0 <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "hc0"), df = Inf)
+p_lm_hc2 <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "HC2"))
+p_lm_hc3 <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "HC3"))
 expect_equivalent(p_lm_robust$std.error, p_lm$std.error, tolerance = 1e-8)
 expect_equivalent(p_lm_hc1$std.error, p_lm$std.error, tolerance = 1e-8)
 expect_false("df" %in% names(p_lm_hc0))
 expect_unconditional(p_lm_hc0)
+expect_unconditional(p_lm_hc2)
+expect_unconditional(p_lm_hc3)
+expect_true(all(p_lm_hc3$std.error >= p_lm_hc2$std.error))
 
 c_lm <- avg_comparisons(mod_lm, variables = "amf", vcov = "unconditional", df = "residual")
 expect_equivalent(c_lm$estimate, 2.0837101278156140, tolerance = 1e-6)
@@ -64,15 +69,15 @@ expect_equivalent(s_lm$std.error, 1.3478880284881209, tolerance = 1e-6)
 expect_equivalent(s_lm$conf.low, -0.6773133, tolerance = 1e-6)
 expect_unconditional(s_lm)
 
-p_lm_cl <- avg_predictions(mod_lm, variables = "amf", vcov = unconditional(~cylid), df = 2)
+p_lm_cl <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid), df = 2)
 expect_equivalent(p_lm_cl$std.error, c(3.9317960917077559, 3.3200283031968727), tolerance = 1e-6)
 expect_equivalent(p_lm_cl$df, c(2, 2))
 expect_unconditional(p_lm_cl)
 expect_equivalent(
-    avg_predictions(mod_lm, variables = "amf", vcov = unconditional(~cylid), df = 7)$df,
+    avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid), df = 7)$df,
     c(7, 7))
 
-s_lm_cl <- avg_slopes(mod_lm, variables = "amf", vcov = unconditional(~cylid), df = 2)
+s_lm_cl <- avg_slopes(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid), df = 2)
 expect_equivalent(s_lm_cl$std.error, 1.4857262433009455, tolerance = 1e-6)
 expect_equivalent(s_lm_cl$df, 2)
 expect_unconditional(s_lm_cl)
@@ -90,12 +95,12 @@ expect_equivalent(s_glm$estimate, -0.238616741692058, tolerance = 1e-6)
 expect_equivalent(s_glm$std.error, 0.098439935777850, tolerance = 1e-6)
 expect_unconditional(s_glm)
 
-p_glm_cl <- avg_predictions(mod_glm, variables = "amf", vcov = unconditional(~cylid))
+p_glm_cl <- avg_predictions(mod_glm, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid))
 expect_equivalent(p_glm_cl$std.error, c(0.359245073856309, 0.299787890193848), tolerance = 1e-6)
 expect_false("df" %in% names(p_glm_cl))
 expect_unconditional(p_glm_cl)
 
-s_glm_cl <- avg_slopes(mod_glm, variables = "amf", vcov = unconditional(~cylid))
+s_glm_cl <- avg_slopes(mod_glm, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid))
 expect_equivalent(s_glm_cl$std.error, 0.228694962491621, tolerance = 1e-6)
 expect_unconditional(s_glm_cl)
 
@@ -136,7 +141,7 @@ V_paper <- crossprod(Phi_paper) / n_paper^2
 means_paper <- avg_predictions(
     mod_glm,
     variables = "amf",
-    vcov = unconditional("HC0")
+    vcov = vcovUnconditional(type = "HC0")
 )
 expect_equivalent(means_paper$estimate, theta_paper, tolerance = 1e-8)
 expect_equivalent(vcov(means_paper), V_paper, tolerance = 1e-7)
@@ -144,7 +149,7 @@ expect_equivalent(vcov(means_paper), V_paper, tolerance = 1e-7)
 ate_paper <- avg_comparisons(
     mod_glm,
     variables = "amf",
-    vcov = unconditional("HC0")
+    vcov = vcovUnconditional(type = "HC0")
 )
 Phi_ate_paper <- Phi_paper[, 2] - Phi_paper[, 1]
 expect_equivalent(ate_paper$estimate, diff(theta_paper), tolerance = 1e-8)
@@ -158,7 +163,7 @@ log_rte_paper <- avg_comparisons(
     mod_glm,
     variables = "amf",
     comparison = "lnratioavg",
-    vcov = unconditional("HC0")
+    vcov = vcovUnconditional(type = "HC0")
 )
 Phi_log_rte_paper <-
     paper_1$estimate / theta_paper[[2]] -
@@ -198,7 +203,7 @@ means_treated <- avg_predictions(
     mod_glm,
     newdata = treated_grid,
     by = "amf",
-    vcov = unconditional("HC0")
+    vcov = vcovUnconditional(type = "HC0")
 )
 expect_equivalent(means_treated$estimate, theta_treated, tolerance = 1e-8)
 expect_equivalent(vcov(means_treated), crossprod(Phi_treated) / n_paper^2, tolerance = 1e-7)
@@ -261,8 +266,8 @@ stress <- list(
     avg_predictions_subset = avg_predictions(mod_stress, newdata = dat[10:20, ], vcov = "unconditional"),
     avg_predictions_offset = avg_predictions(mod_stress_offset, variables = "amf", vcov = "unconditional"),
     avg_predictions_naomit = avg_predictions(mod_stress_na, variables = "amf", vcov = "unconditional"),
-    avg_predictions_cluster = avg_predictions(mod_stress, variables = "amf", vcov = unconditional(~cylid)),
-    avg_predictions_hc0 = avg_predictions(mod_stress, variables = "amf", vcov = unconditional("HC0"), df = Inf),
+    avg_predictions_cluster = avg_predictions(mod_stress, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid)),
+    avg_predictions_hc0 = avg_predictions(mod_stress, variables = "amf", vcov = vcovUnconditional(type = "HC0"), df = Inf),
     avg_comparisons_multi = avg_comparisons(mod_stress, variables = c("amf", "cylf"), vcov = "unconditional"),
     avg_comparisons_pairwise = avg_comparisons(
         mod_stress,
@@ -330,7 +335,7 @@ wide_formula <- stats::reformulate(c("trt", paste0("x", 1:20)), response = "y")
 mod_wide <- lm(wide_formula, data = wide)
 wide_results <- list(
     predictions = avg_predictions(mod_wide, variables = "trt", vcov = "unconditional"),
-    comparisons = avg_comparisons(mod_wide, variables = "trt", vcov = unconditional(~cluster)),
+    comparisons = avg_comparisons(mod_wide, variables = "trt", vcov = vcovUnconditional(cluster = ~cluster)),
     slopes = avg_slopes(mod_wide, variables = paste0("x", 1:5), vcov = "unconditional")
 )
 expect_true(all(vapply(wide_results, finite_unconditional_se, logical(1))))
@@ -346,36 +351,40 @@ expect_error(
     pattern = "row IDs"
 )
 expect_error(
-    avg_predictions(mod_lm, variables = "amf", vcov = unconditional(~cylid + amf)),
+    avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid + amf)),
     pattern = "one-way"
 )
 expect_error(
-    avg_predictions(mod_lm, variables = "amf", vcov = unconditional(cylid ~ 1)),
+    avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = cylid ~ 1)),
     pattern = "one-sided"
 )
 expect_error(
-    avg_predictions(mod_lm, variables = "amf", vcov = unconditional(~missing_cluster)),
+    avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = ~missing_cluster)),
     pattern = "not found"
 )
 dat$c_bad <- dat$cylid
 dat$c_bad[1] <- NA
 mod_cluster_na <- lm(mpg ~ amf + hp + wt, data = dat)
 expect_error(
-    avg_predictions(mod_cluster_na, variables = "amf", vcov = unconditional(~c_bad)),
+    avg_predictions(mod_cluster_na, variables = "amf", vcov = vcovUnconditional(cluster = ~c_bad)),
     pattern = "missing"
 )
 dat$c_one <- 1
 mod_one_cluster <- lm(mpg ~ amf + hp + wt, data = dat)
 expect_error(
-    avg_predictions(mod_one_cluster, variables = "amf", vcov = unconditional(~c_one)),
+    avg_predictions(mod_one_cluster, variables = "amf", vcov = vcovUnconditional(cluster = ~c_one)),
     pattern = "at least two clusters"
 )
 expect_error(
-    avg_predictions(mod_lm, variables = "amf", vcov = unconditional("HC2")),
-    pattern = "requires `vcov`"
+    avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "HC9")),
+    pattern = "`type` must be one of"
 )
 expect_error(
-    avg_predictions(mod_lm, variables = "amf", vcov = unconditional(), df = c(1, 2, 3)),
+    avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = "cylid")),
+    pattern = "one-sided formula"
+)
+expect_error(
+    avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(), df = c(1, 2, 3)),
     pattern = "length 1"
 )
 expect_inherits(
@@ -389,7 +398,7 @@ expect_error(
     avg_predictions(mod_saturated, vcov = "unconditional", df = "residual"),
     pattern = "more observations than estimated coefficients"
 )
-expect_unconditional(avg_predictions(mod_saturated, vcov = unconditional("HC0"), df = Inf))
+expect_unconditional(avg_predictions(mod_saturated, vcov = vcovUnconditional(type = "HC0"), df = Inf))
 expect_error(
     hypotheses(mod_lm, vcov = "unconditional"),
     pattern = "avg_predictions"
@@ -456,7 +465,7 @@ if (requiet("mice")) {
         pattern = "multiple-imputation"
     )
     expect_error(
-        hypotheses(mod_mi, hypothesis = "hp = 0", vcov = unconditional()),
+        hypotheses(mod_mi, hypothesis = "hp = 0", vcov = vcovUnconditional()),
         pattern = "multiple-imputation"
     )
 }
@@ -504,12 +513,12 @@ if (requiet("fixest")) {
         marginaleffects:::get_unconditional_correction(fixest_fe_inputs),
         mod_fixest_fe$nobs / stats::df.residual(mod_fixest_fe))
     fixest_fe_cluster <- fixest_fe_inputs
-    fixest_fe_cluster$vcov <- list(type = "cluster", cluster = dat$cylid, cluster_var = "cylid")
+    fixest_fe_cluster$vcov <- list(type = "HC1", cluster = dat$cylid, cluster_var = "cylid")
     expect_equivalent(
         marginaleffects:::get_unconditional_correction(fixest_fe_cluster),
         (length(unique(dat$cylid)) / (length(unique(dat$cylid)) - 1)) *
             ((mod_fixest_fe$nobs - 1) / stats::df.residual(mod_fixest_fe)))
-    s_fixest_fe <- avg_slopes(mod_fixest_fe, variables = "amf", vcov = unconditional(~cylid))
+    s_fixest_fe <- avg_slopes(mod_fixest_fe, variables = "amf", vcov = vcovUnconditional(cluster = ~cylid))
     expect_unconditional(s_fixest_fe)
 }
 
@@ -535,7 +544,7 @@ if (requiet("etwfe")) {
         ivar = id,
         data = dat_etwfe)
     emfx_robust <- etwfe::emfx(mod_etwfe, vcov = "unconditional")
-    emfx_cluster <- etwfe::emfx(mod_etwfe, vcov = unconditional(~id))
+    emfx_cluster <- etwfe::emfx(mod_etwfe, vcov = vcovUnconditional(cluster = ~id))
     expect_unconditional(emfx_robust)
     expect_unconditional(emfx_cluster)
 }

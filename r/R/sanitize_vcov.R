@@ -7,7 +7,7 @@ sanitize_vcov_request <- function(vcov) {
         !is.na(vcov) &&
         identical(tolower(vcov), "unconditional")
     ) {
-        return(unconditional())
+        return(vcovUnconditional())
     }
     vcov
 }
