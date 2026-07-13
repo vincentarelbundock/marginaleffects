@@ -9,8 +9,9 @@ vcovUnconditional(type = "HC0", cluster = NULL)
 \arguments{
 \item{type}{Character string specifying the finite-sample adjustment. The
 available types are \code{"HC0"} and \code{"HC1"}. \code{"HC0"} uses the raw plug-in
-covariance, while \code{"HC1"} applies the conventional model degrees-of-freedom
-adjustment used by the \code{sandwich} package.}
+covariance, while \code{"HC1"} multiplies the complete unconditional covariance
+by a conventional model degrees-of-freedom factor analogous to the one
+used by the \code{sandwich} package.}
 
 \item{cluster}{An optional one-sided formula such as \code{~id} identifying the
 variable used for one-way clustered inference. The right-hand side must be
@@ -33,11 +34,17 @@ Without clustering, HC0 applies no finite-sample multiplier and HC1 applies
 \code{n / (n - k)}. With clustering, HC0 applies \code{G / (G - 1)} and HC1 applies
 \code{G / (G - 1) * (n - 1) / (n - k)}, where \code{k} is the dimension of the model's
 estimating-function system and \code{G} is the number of clusters. These
-conventions match the corresponding \code{sandwich} adjustments. HC0 is the
-plug-in estimator derived by Hansen and Overgaard. HC1 is a conventional
-finite-sample adjustment; applying it to the complete unconditional
-influence function is not derived in that paper and is not generally an
-unbiased finite-sample correction. The \code{df} argument of the calling
+multipliers match the corresponding \code{sandwich} adjustments. They are applied
+after the coefficient-estimation and empirical-distribution influence
+components have been combined. HC1 therefore scales the variance of both
+components and their cross-covariance; it does not correct only the
+first-stage model-score contribution. HC0 is the plug-in estimator derived by
+Hansen and Overgaard. Applying the HC1 multiplier to the complete
+unconditional influence function is a documented convention, not a
+target-level correction derived in that paper, and it is not generally an
+unbiased finite-sample correction. Because its factor depends on \code{k}, HC1 can
+differ across model specifications even when they produce the same averaged
+estimand. The \code{df} argument of the calling
 \code{marginaleffects} function controls the reference distribution for inference
 separately and does not determine these covariance multipliers.
 
