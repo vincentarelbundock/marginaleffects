@@ -51,7 +51,7 @@ sanitize_unconditional_vcov_request <- function(vcov, mfx) {
 }
 
 
-validate_unconditional_model_support <- function(model, kind, type = NULL) {
+validate_unconditional_model_support <- function(model, kind) {
     if (inherits(model, c("mira", "amest"))) {
         stop_unconditional("imputation")
     }
@@ -59,7 +59,22 @@ validate_unconditional_model_support <- function(model, kind, type = NULL) {
     # Deliberately inspect the primary class to reject unvalidated subclasses
     # such as `mlm`, even when they also inherit from a supported class.
     primary_class <- class(model)[1]
-    if (isTRUE(primary_class %in% c("lm", "glm", "survreg", "tobit"))) {
+
+    # Hansen–Overgaard do not explicitly validate censored or survival models.
+    # Their estimating systems can also contain nuisance parameters whose
+    # influence is not represented by the current coefficient-only Jacobian.
+    if (inherits(model, c("tobit", "survreg", "coxph"))) {
+        msg <- paste0(
+            "`vcov = \"unconditional\"` is not supported for censored or ",
+            "survival models of class \"%s\". These models are outside the ",
+            "currently validated conditional-mean setup and can require ",
+            "additional nuisance-parameter influence functions. Use a ",
+            "bootstrap method instead."
+        )
+        stop_sprintf(msg, primary_class)
+    }
+
+    if (isTRUE(primary_class %in% c("lm", "glm"))) {
         return(invisible(TRUE))
     }
 
@@ -87,25 +102,10 @@ validate_unconditional_model_support <- function(model, kind, type = NULL) {
         return(invisible(TRUE))
     }
 
-    if (inherits(model, "coxph")) {
-        if (is.null(type) || isTRUE(type %in% c("lp", "risk"))) {
-            return(invisible(TRUE))
-        }
-        if (isTRUE(type %in% c("survival", "expected"))) {
-            msg <- paste0(
-                "`vcov = \"unconditional\"` is not supported for `coxph` ",
-                "predictions with `type = \"%s\"` because uncertainty in the ",
-                "baseline hazard is not represented. Use `type = \"lp\"`, ",
-                "`type = \"risk\"`, or a bootstrap method."
-            )
-            stop_sprintf(msg, type)
-        }
-    }
-
     reason <- paste0(
         "only explicitly validated model classes are supported. ",
-        "Currently supported classes include `lm`, `glm`, selected ",
-        "`fixest`, selected survival models, and `tobit` models"
+        "Currently supported classes include `lm`, `glm`, and selected ",
+        "`fixest` models"
     )
     msg <- paste0(
         "`vcov = \"unconditional\"` is not currently supported for models ",

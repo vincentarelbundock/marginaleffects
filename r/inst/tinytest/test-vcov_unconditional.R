@@ -223,6 +223,10 @@ cfgrid_cylf_w <- cfgrid_cylf
 cfgrid_cylf_w$w <- dat$w[as.integer(cfgrid_cylf_w$rowidcf)]
 custom_hyp <- function(x) data.frame(term = "custom mean", estimate = mean(x$estimate))
 custom_cmp_scalar <- function(hi, lo) mean(hi - lo)
+custom_cmp_newdata <- function(hi, lo, newdata) {
+    stopifnot(length(hi) == nrow(newdata))
+    mean((hi - lo) * newdata$hp)
+}
 
 stress <- list(
     avg_predictions_base = avg_predictions(mod_stress, vcov = "unconditional"),
@@ -279,6 +283,17 @@ stress <- list(
         variables = "amf",
         comparison = custom_cmp_scalar,
         vcov = "unconditional"),
+    avg_comparisons_custom_newdata = avg_comparisons(
+        mod_stress,
+        variables = "amf",
+        comparison = custom_cmp_newdata,
+        vcov = "unconditional"),
+    avg_comparisons_custom_newdata_by = avg_comparisons(
+        mod_stress,
+        variables = "amf",
+        comparison = custom_cmp_newdata,
+        by = "cylf",
+        vcov = "unconditional"),
     avg_comparisons_ratio = avg_comparisons(
         mod_stress_glm,
         variables = "amf",
@@ -317,6 +332,90 @@ expect_true(nrow(stress$avg_comparisons_pairwise) == 3)
 expect_true(all(is.finite(hypotheses(p_lm, hypothesis = "b1 = b2")$std.error)))
 expect_true(all(is.finite(hypotheses(p_lm, joint = TRUE)$statistic)))
 expect_true(all(is.finite(hypotheses(stress$avg_comparisons_pairwise, hypothesis = ~pairwise)$std.error)))
+
+# The fallback must delete the matching row from `newdata` and center the
+# delete-one values at their own mean.
+jack_hi <- c(2, 4, 8, 16)
+jack_lo <- c(1, 1, 2, 3)
+jack_newdata <- data.frame(z = c(1, 3, 2, 5), q = letters[1:4])
+jack_fun <- function(hi, lo, newdata) mean((hi - lo) * newdata$z)
+jack_minus <- vapply(seq_along(jack_hi), function(i) {
+    keep <- seq_along(jack_hi) != i
+    jack_fun(jack_hi[keep], jack_lo[keep], jack_newdata[keep, , drop = FALSE])
+}, numeric(1))
+jack_reference <- (length(jack_hi) - 1) * (mean(jack_minus) - jack_minus)
+jack_group <- list(
+    idx = seq_along(jack_hi),
+    fun_key = NA_character_,
+    fun = jack_fun,
+    args = list(newdata = jack_newdata),
+    uses_y = FALSE
+)
+jack_phi <- marginaleffects:::get_unconditional_scalar_comparison_phi(
+    group = jack_group,
+    hi = jack_hi,
+    lo = jack_lo,
+    y = NULL,
+    rowid = seq_along(jack_hi),
+    n = length(jack_hi)
+)
+expect_equivalent(jack_phi, jack_reference, tolerance = 1e-12)
+expect_equivalent(sum(jack_phi), 0, tolerance = 1e-12)
+
+# Analytic log-ratio influence values are valid whenever both means are finite
+# and nonzero and their ratio is positive, including when both means are
+# negative. Other domains must fall back or fail before inference is computed.
+lnratio_group <- list(
+    idx = 1:3,
+    fun_key = "lnratioavg",
+    args = list()
+)
+lnratio_phi <- function(hi, lo) {
+    marginaleffects:::get_unconditional_known_scalar_comparison_phi(
+        group = lnratio_group,
+        hi = hi,
+        lo = lo,
+        rowid = 1:3,
+        n = 3
+    )
+}
+lnratio_hi <- c(2, 4, 6)
+lnratio_lo <- c(1, 2, 3)
+lnratio_hi_negative <- -lnratio_hi
+lnratio_lo_negative <- -lnratio_lo
+expect_equivalent(
+    lnratio_phi(lnratio_hi, lnratio_lo),
+    (lnratio_hi - mean(lnratio_hi)) / mean(lnratio_hi) -
+        (lnratio_lo - mean(lnratio_lo)) / mean(lnratio_lo),
+    tolerance = 1e-12
+)
+expect_equivalent(
+    lnratio_phi(lnratio_hi_negative, lnratio_lo_negative),
+    (lnratio_hi_negative - mean(lnratio_hi_negative)) / mean(lnratio_hi_negative) -
+        (lnratio_lo_negative - mean(lnratio_lo_negative)) / mean(lnratio_lo_negative),
+    tolerance = 1e-12
+)
+expect_null(lnratio_phi(lnratio_hi, -lnratio_lo))
+expect_null(lnratio_phi(lnratio_hi, c(-1, 0, 1)))
+expect_null(lnratio_phi(c(Inf, 2, 3), lnratio_lo))
+expect_error(
+    avg_comparisons(
+        mod_lm,
+        variables = "amf",
+        comparison = function(hi, lo) Inf,
+        vcov = "unconditional"
+    ),
+    pattern = "scalar comparison functions to return a finite value"
+)
+expect_error(
+    avg_comparisons(
+        mod_lm,
+        variables = "amf",
+        comparison = function(hi, lo) mean(hi) / (mean(lo) - mean(lo)),
+        vcov = "unconditional"
+    ),
+    pattern = "scalar comparison functions to return a finite value"
+)
 
 set.seed(42)
 n_wide <- 180
@@ -415,7 +514,15 @@ expect_inherits(
     marginaleffects:::sanitize_vcov_request("UnConDiTiOnAl"),
     "marginaleffects_vcov_unconditional"
 )
+expect_identical(
+    marginaleffects:::sanitize_vcov_request(vcovUnconditional),
+    vcovUnconditional()
+)
 expect_identical(marginaleffects:::sanitize_vcov_request("HC1"), "HC1")
+bare_vcov <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional)
+expect_equivalent(bare_vcov$estimate, p_lm$estimate, tolerance = 1e-8)
+expect_equivalent(bare_vcov$std.error, p_lm$std.error, tolerance = 1e-8)
+expect_unconditional(bare_vcov)
 dat_saturated <- data.frame(y = c(1, 2, 3, 4), x = factor(1:4))
 mod_saturated <- lm(y ~ x, data = dat_saturated)
 expect_error(
@@ -423,6 +530,23 @@ expect_error(
     pattern = "more observations than estimated coefficients"
 )
 expect_unconditional(avg_predictions(mod_saturated, vcov = vcovUnconditional(type = "HC0"), df = Inf))
+dat_saturated$cluster <- seq_len(nrow(dat_saturated))
+mod_saturated_cluster <- lm(y ~ x, data = dat_saturated)
+expect_unconditional(
+    avg_predictions(
+        mod_saturated_cluster,
+        vcov = vcovUnconditional(type = "HC0", cluster = ~cluster),
+        df = Inf
+    )
+)
+expect_error(
+    avg_predictions(
+        mod_saturated_cluster,
+        vcov = vcovUnconditional(type = "HC1", cluster = ~cluster),
+        df = Inf
+    ),
+    pattern = "more observations than estimated coefficients"
+)
 expect_error(
     hypotheses(mod_lm, vcov = "unconditional"),
     pattern = "avg_predictions"
@@ -495,26 +619,33 @@ if (requiet("mice")) {
 }
 
 if (requiet("AER")) {
-    mod_tobit <- AER::tobit(mpg ~ amf + hp + wt, left = 10, data = dat)
-    tobit_results <- list(
-        predictions = avg_predictions(mod_tobit, variables = "amf", vcov = "unconditional"),
-        comparisons = avg_comparisons(mod_tobit, variables = "amf", vcov = "unconditional"),
-        slopes = avg_slopes(mod_tobit, variables = "hp", vcov = "unconditional")
+    mod_tobit <- AER::tobit(mpg ~ amf + hp + wt, left = 20, data = dat)
+    expect_error(
+        avg_predictions(mod_tobit, vcov = "unconditional"),
+        pattern = "not supported for censored or survival models.*tobit"
     )
-    expect_true(all(vapply(tobit_results, finite_unconditional_se, logical(1))))
-    expect_true(all(vapply(tobit_results, finite_unconditional_vcov, logical(1))))
-    expect_true(all(vapply(tobit_results, unconditional_se_matches_vcov, logical(1))))
 }
 
 if (requiet("survival")) {
     lung <- survival::lung
     lung$status2 <- as.integer(lung$status == 2)
     mod_cox <- survival::coxph(survival::Surv(time, status2) ~ age + sex, data = lung)
-    cox_risk <- avg_slopes(mod_cox, variables = "age", type = "risk", vcov = "unconditional")
-    expect_unconditional(cox_risk)
+    expect_error(
+        avg_slopes(mod_cox, variables = "age", type = "risk", vcov = "unconditional"),
+        pattern = "not supported for censored or survival models.*coxph"
+    )
     expect_error(
         avg_predictions(mod_cox, type = "survival", vcov = "unconditional"),
-        pattern = "baseline hazard"
+        pattern = "not supported for censored or survival models.*coxph"
+    )
+
+    mod_survreg <- survival::survreg(
+        survival::Surv(time, status2) ~ age + sex,
+        data = lung
+    )
+    expect_error(
+        avg_predictions(mod_survreg, vcov = "unconditional"),
+        pattern = "not supported for censored or survival models.*survreg"
     )
 }
 

@@ -18,7 +18,16 @@ New:
   multiple-imputation, survey-design, `hypotheses()`, and fixed-effect `fixest`
   cases. Fixed-effect `feols` models remain available for additive differences
   and `dydx`/`dyex` slopes when the fixed-effect and varying-slope variables are
-  unchanged between counterfactual predictions.
+  unchanged between counterfactual predictions. The bare
+  `vcov = vcovUnconditional` form is equivalent to
+  `vcov = vcovUnconditional()`.
+* Unconditional inference is limited to `lm`, `glm`, and validated `fixest`
+  cases. Tobit, `survreg`, and `coxph` models now direct users to bootstrap
+  inference because censored and survival models are outside the currently
+  validated conditional-mean setup.
+* Custom comparison functions which accept `newdata` now receive rows aligned
+  with each comparison group and delete-one sample. The fallback jackknife
+  linearization is centered at the mean delete-one estimate.
 * Support for `svyVGAM::svy_vglm()` models. Thanks to @kkranker for Issue #1730.
 * New `set_modeldata()` function to attach training data to a model object explicitly. `get_modeldata()` now checks for this attribute first, and emits a once-per-session warning when `insight::get_data()` raises warnings about data retrieval. This is safer for `lapply()`, Shiny, and nested function workflows.
 * Support for `glmtoolbox::glmgee()` and `glmtoolbox::gnm()` models. Thanks to @luifrancgom for report #1148.
@@ -42,6 +51,9 @@ Performance:
 
 Bug fixes:
 
+* Unconditional inference now rejects non-finite scalar comparison results,
+  uses the analytic log-ratio influence function when both means are negative,
+  and permits clustered HC0 inference for saturated linear models.
 * `by` aggregation with posterior or bootstrap draws no longer flattens the draws matrix when a `by` data frame omits some term/group combinations.
 * `predictions()` now assigns the correct `rowid`, `type`, and `estimate` column names when model predictions are returned as a bare vector.
 * `equivalence` tests now support vector-valued degrees of freedom.

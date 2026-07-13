@@ -36,6 +36,9 @@
 #'   [avg_predictions()], [avg_comparisons()], or [avg_slopes()].
 #'
 #' @details
+#' The bare function form `vcov = vcovUnconditional` is equivalent to
+#' `vcov = vcovUnconditional()`.
+#'
 #' Unconditional variance is available for effects evaluated over original
 #' model-data rows, valid subsets of those rows, or counterfactual grids that
 #' preserve a valid `rowid`/`rowidcf` mapping to original model-data rows. The
@@ -49,11 +52,11 @@
 #' matrices through `sandwich::estfun()`/`sandwich::bread()` or model-specific
 #' equivalents. Supported model classes are validated through an allow-list.
 #' Multiple-imputation objects, prediction methods that return posterior draws,
-#' baseline-hazard dependent `coxph` predictions such as `type = "survival"` or
-#' `type = "expected"`, average predictions from `fixest` models with fixed
-#' effects, and nonlinear `fixest` models with fixed effects are rejected
-#' explicitly. For `feols` models with fixed effects, unconditional inference is
-#' available for additive differences and `dydx`/`dyex` slopes when the
+#' censored and survival models such as `tobit`, `survreg`, and `coxph`, average
+#' predictions from `fixest` models with fixed effects, and nonlinear `fixest`
+#' models with fixed effects are rejected explicitly. For `feols` models with
+#' fixed effects, unconditional inference is available for additive differences
+#' and `dydx`/`dyex` slopes when the
 #' counterfactual data leave every fixed-effect and varying-slope variable
 #' unchanged. Without clustering, HC2 through HC5 adjustments require the model
 #' to provide leverage values through [stats::hatvalues()]. The combined
@@ -118,7 +121,7 @@ plan_unconditional_se <- function(
     }
 
     model <- mfx@model
-    validate_unconditional_model_support(model, kind, type = type)
+    validate_unconditional_model_support(model, kind)
     modeldata <- data.table::as.data.table(mfx@modeldata)
     n <- nrow(modeldata)
     allow_mismatch <- get_unconditional_allow_mismatch(mfx, variables)
@@ -366,6 +369,11 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
         if (length(con) != length(g$out_idx)) {
             stop_sprintf("Internal error: comparison plan group changed shape.")
         }
+        if (length(con) == 1L && !is.finite(con)) {
+            stop_sprintf(
+                "`vcov = \"unconditional\"` requires scalar comparison functions to return a finite value."
+            )
+        }
 
         est[g$out_idx] <- con
         if (length(con) == length(g$idx)) {
@@ -377,8 +385,7 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
                 lo = lo,
                 y = y,
                 rowid = rowid,
-                n = n,
-                theta = con
+                n = n
             )
         }
     }
@@ -397,12 +404,30 @@ get_unconditional_comparison_base <- function(plan, model, rowid, n) {
 # analytic empirical influence functions. Arbitrary user functions fall back
 # to delete-one jackknife pseudo-values, which provide a generic first-order
 # approximation when no analytic empirical influence function is available.
-get_unconditional_scalar_comparison_phi <- function(group, hi, lo, y, rowid, n, theta) {
+subset_unconditional_delete_one_arg <- function(x, keep, n) {
+    # Observation-level tabular arguments such as `newdata` must be subset by
+    # row. `length(data.frame)` counts columns and can therefore leave newdata
+    # untouched—or accidentally delete columns—inside a delete-one loop.
+    if (is.data.frame(x) || is.matrix(x)) {
+        if (nrow(x) == n) {
+            return(x[keep, , drop = FALSE])
+        }
+        return(x)
+    }
+    if (is.atomic(x) && length(x) == n) {
+        return(x[keep])
+    }
+    x
+}
+
+
+get_unconditional_scalar_comparison_phi <- function(group, hi, lo, y, rowid, n) {
     # For unweighted targets, differences and positive-mean log ratios match
     # Hansen–Overgaard (2024), equation (17) and Corollary 9. Ratios follow
-    # from their multivariate result by the delta method; log odds ratios,
-    # lifts, and weighted targets are extensions. Prefer these analytic forms
-    # to delete-one approximations for known contrasts.
+    # from their multivariate result by the delta method; negative-mean log
+    # ratios, log odds ratios, lifts, and weighted targets are extensions.
+    # Prefer these analytic forms to delete-one approximations for known
+    # contrasts.
     out <- get_unconditional_known_scalar_comparison_phi(
         group = group,
         hi = hi,
@@ -421,31 +446,39 @@ get_unconditional_scalar_comparison_phi <- function(group, hi, lo, y, rowid, n, 
         return(out)
     }
 
+    theta_minus <- numeric(ng)
     for (j in seq_along(idx)) {
         keep <- seq_along(idx) != j
         args <- group$args
-        args <- lapply(args, function(x) {
-            if (length(x) == ng) {
-                return(x[keep])
-            }
-            x
-        })
+        args <- lapply(
+            args,
+            subset_unconditional_delete_one_arg,
+            keep = keep,
+            n = ng
+        )
         args$hi <- hi[idx][keep]
         args$lo <- lo[idx][keep]
         if (isTRUE(group$uses_y)) {
             args$y <- y[idx][keep]
         }
-        theta_minus <- do_call(group$fun, args)
-        if (length(theta_minus) != 1L || anyNA(theta_minus)) {
+        value <- do_call(group$fun, args)
+        if (length(value) != 1L || !is.finite(value)) {
             stop_sprintf(
-                "`vcov = \"unconditional\"` could not linearize a scalar comparison function."
+                "`vcov = \"unconditional\"` could not linearize a scalar comparison function because a delete-one estimate was not finite."
             )
         }
-        # (ng - 1) * (theta - theta_minus) is the delete-one pseudo-value
-        # centered at theta. n/ng converts a group-average contribution to an
-        # influence value on the full-sample n^-1 sum scale used throughout.
+        theta_minus[[j]] <- value
+    }
+
+    # Center at the mean delete-one estimate. For a nonlinear statistic, the
+    # full-sample estimate need not equal that mean; centering at `theta` would
+    # produce empirical influence values which do not sum to zero.
+    theta_minus_mean <- mean(theta_minus)
+    for (j in seq_along(idx)) {
+        # n/ng converts a group-average contribution to an influence value on
+        # the full-sample n^-1 sum scale used throughout.
         out[rowid[idx[j]]] <- out[rowid[idx[j]]] +
-            (n / ng) * (ng - 1) * (theta - theta_minus)
+            (n / ng) * (ng - 1) * (theta_minus_mean - theta_minus[[j]])
     }
     out
 }
@@ -453,9 +486,10 @@ get_unconditional_scalar_comparison_phi <- function(group, hi, lo, y, rowid, n, 
 
 # Exact empirical influence functions for built-in scalar averages. These are
 # applications of the delta method to group means. In particular,
-# `lnratioavg` implements Corollary 9, and `differenceavg` implements the
-# empirical part of equation (17). Weighted variants target the corresponding
-# weighted empirical distribution.
+# `lnratioavg` matches Corollary 9 on its positive-mean domain and extends the
+# same algebra to two negative means; `differenceavg` implements the empirical
+# part of equation (17). Weighted variants target the corresponding weighted
+# empirical distribution.
 get_unconditional_known_scalar_comparison_phi <- function(
     group,
     hi,
@@ -498,7 +532,14 @@ get_unconditional_known_scalar_comparison_phi <- function(
                 mean_hi * (lo - mean_lo) / mean_lo^2
         },
         lnratioavg = {
-            if (mean_hi <= 0 || mean_lo <= 0) return(NULL)
+            ratio <- mean_hi / mean_lo
+            if (
+                !is.finite(mean_hi) || !is.finite(mean_lo) ||
+                    mean_hi == 0 || mean_lo == 0 ||
+                    !is.finite(ratio) || ratio <= 0
+            ) {
+                return(NULL)
+            }
             (hi - mean_hi) / mean_hi - (lo - mean_lo) / mean_lo
         },
         lnoravg = {
@@ -640,6 +681,8 @@ get_unconditional_coef <- function(model) {
 # estfun() supplies estimating-function contributions and bread() supplies the
 # inverse derivative matrix, so scores %*% bread is the plug-in version of
 # equation (22)/(25). Model-specific branches normalize this same contract.
+# Supporting models with nuisance parameters requires retaining their full
+# score/bread system and, when relevant, including them in the estimand Jacobian.
 get_unconditional_beta_dot <- function(model) {
     insight::check_if_installed("sandwich")
     if (inherits(model, "fixest")) {
@@ -810,8 +853,8 @@ get_unconditional_correction <- function(inputs) {
         G <- length(unique(inputs$vcov$cluster))
         if (G < 2) stop_sprintf("Cluster-robust unconditional variance requires at least two clusters.")
         if (isTRUE(is_linear)) {
-            if (df_residual < 1) stop_sprintf("`vcov = \"unconditional\"` requires more observations than estimated coefficients for finite-sample corrected linear inference. Use `vcovUnconditional(type = \"HC0\")` with `df = Inf` to omit the finite-sample correction.")
             if (inputs$vcov$type == "HC1") {
+                if (df_residual < 1) stop_sprintf("`vcov = \"unconditional\"` requires more observations than estimated coefficients for finite-sample corrected linear inference. Use `vcovUnconditional(type = \"HC0\")` with `df = Inf` to omit the finite-sample correction.")
                 return((G / (G - 1)) * ((n - 1) / df_residual))
             }
             return(G / (G - 1))
