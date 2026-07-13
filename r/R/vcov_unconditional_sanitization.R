@@ -65,7 +65,7 @@ validate_unconditional_model_support <- function(model, kind) {
         stop_sprintf(msg, primary_class)
     }
 
-    if (isTRUE(primary_class %in% c("lm", "glm"))) {
+    if (isTRUE(primary_class %in% c("lm", "glm", "svyglm"))) {
         return(invisible(TRUE))
     }
 
@@ -95,7 +95,7 @@ validate_unconditional_model_support <- function(model, kind) {
 
     reason <- paste0(
         "only explicitly validated model classes are supported. ",
-        "Currently supported classes include `lm`, `glm`, and selected ",
+        "Currently supported classes include `lm`, `glm`, `svyglm`, and selected ",
         "`fixest` models"
     )
     msg <- paste0(

@@ -2,6 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 requiet("sandwich")
+requiet("survey")
 
 dat <- mtcars
 dat$amf <- factor(dat$am)
@@ -647,19 +648,31 @@ if (requiet("MASS")) {
     )
 }
 
-if (requiet("survey")) {
-    data("api", package = "survey")
-    design_svy <- survey::svydesign(
-        id = ~dnum,
-        weights = ~pw,
-        data = apiclus1,
-        fpc = ~fpc)
-    mod_svy <- survey::svyglm(api00 ~ ell + meals + sch.wide, design = design_svy)
-    expect_error(
-        suppressWarnings(avg_predictions(mod_svy, vcov = "unconditional")),
-        pattern = "not currently supported"
-    )
-}
+data("api", package = "survey")
+design_svy <- survey::svydesign(
+    id = ~dnum,
+    weights = ~pw,
+    data = apiclus1,
+    fpc = ~fpc)
+mod_svy <- survey::svyglm(api00 ~ ell + meals + sch.wide, design = design_svy)
+mod_svy_influence <- survey::svyglm(
+    api00 ~ ell + meals + sch.wide,
+    design = design_svy,
+    influence = TRUE
+)
+beta_dot_svy <- marginaleffects:::get_unconditional_beta_dot(mod_svy)
+beta_dot_svy_influence <- marginaleffects:::get_unconditional_beta_dot(mod_svy_influence)
+expect_equivalent(beta_dot_svy, beta_dot_svy_influence, tolerance = 1e-12)
+expect_identical(attr(beta_dot_svy, "score_dimension"), 4L)
+
+p_svy <- suppressWarnings(avg_predictions(mod_svy, vcov = "unconditional"))
+c_svy <- suppressWarnings(avg_comparisons(
+    mod_svy,
+    variables = "ell",
+    vcov = "unconditional"
+))
+expect_unconditional(p_svy)
+expect_unconditional(c_svy)
 
 if (requiet("mice")) {
     set.seed(2048)

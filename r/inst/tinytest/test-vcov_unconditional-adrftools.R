@@ -2,6 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 if (!requiet("adrftools")) exit_file("adrftools not installed")
+requiet("survey")
 
 values <- c(2, 4)
 
@@ -29,3 +30,23 @@ adrf <- adrftools::adrf(mod, "Petal.Width", by = "Species", range = c(.5, 2), n 
 adr <- summary(adrf(Petal.Width = value), simultaneous = FALSE, transform = FALSE)
 mfx <- avg_predictions(mod, variables = list(Petal.Width = value), by = "Species", vcov = vcovUnconditional("HC0"))
 expect_equivalent(mfx$std.error, adr$std.error, tolerance = 1e-6)
+
+data("api", package = "survey")
+design <- survey::svydesign(
+    id = ~dnum,
+    weights = ~pw,
+    data = apiclus1,
+    fpc = ~fpc
+)
+mod <- survey::svyglm(api00 ~ ell + meals + sch.wide, design = design)
+values <- c(10, 30)
+adrf <- adrftools::adrf(mod, "ell", range = values, n = 2)
+adr <- summary(adrf(ell = values), simultaneous = FALSE, transform = FALSE)
+mfx <- avg_predictions(
+    mod,
+    variables = list(ell = values),
+    wts = "(weights)",
+    vcov = vcovUnconditional("HC0")
+)
+expect_equivalent(mfx$estimate, adr$estimate, tolerance = 1e-6)
+expect_equivalent(mfx$std.error, adr$std.error, tolerance = 1e-5)

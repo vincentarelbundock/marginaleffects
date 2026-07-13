@@ -20,17 +20,20 @@ New:
   with delta-method extensions for other built-in contrasts and separate
   extensions to weighted targets. Robustness to conditional-mean
   misspecification also depends on the model's score and bread methods.
+* `vcov = "unconditional"` now supports survey-weighted linear and generalized
+  linear models fitted by `survey::svyglm()`, using their observation-level
+  coefficient influence functions. Thanks to @ngreifer for the `svyglm` code.
 * `vcov = "unconditional"` now throws informative errors for unsupported
-  multiple-imputation, survey-design, `hypotheses()`, and fixed-effect `fixest`
+  multiple-imputation, `hypotheses()`, and fixed-effect `fixest`
   cases. Fixed-effect `feols` models remain available for additive differences
   and `dydx`/`dyex` slopes when the fixed-effect and varying-slope variables are
   unchanged between counterfactual predictions. The bare
   `vcov = vcovUnconditional` form is equivalent to
   `vcov = vcovUnconditional()`.
-* Unconditional inference is limited to `lm`, `glm`, and validated `fixest`
-  cases. Tobit, `survreg`, and `coxph` models now direct users to bootstrap
-  inference because censored and survival models are outside the currently
-  validated conditional-mean setup.
+* Unconditional inference is limited to `lm`, `glm`, `svyglm`, and validated
+  `fixest` cases. Tobit, `survreg`, and `coxph` models now direct users to
+  bootstrap inference because censored and survival models are outside the
+  currently validated conditional-mean setup.
 * Custom comparison functions which accept `newdata` now receive rows aligned
   with each comparison group and delete-one sample. The fallback jackknife
   linearization is centered at the mean delete-one estimate.

@@ -60,6 +60,9 @@ cannot generally infer how those grid values vary with the empirical
 covariate distribution. Models must provide compatible score and bread
 matrices through \code{sandwich::estfun()}/\code{sandwich::bread()} or model-specific
 equivalents. Supported model classes are validated through an allow-list.
+Survey-weighted linear and generalized linear models fitted by
+\code{survey::svyglm()} are supported using their observation-level coefficient
+influence functions.
 Multiple-imputation objects, prediction methods that return posterior draws,
 censored and survival models such as \code{tobit}, \code{survreg}, and \code{coxph}, average
 predictions from \code{fixest} models with fixed effects, and nonlinear \code{fixest}

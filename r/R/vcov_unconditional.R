@@ -72,6 +72,9 @@
 #' covariate distribution. Models must provide compatible score and bread
 #' matrices through `sandwich::estfun()`/`sandwich::bread()` or model-specific
 #' equivalents. Supported model classes are validated through an allow-list.
+#' Survey-weighted linear and generalized linear models fitted by
+#' [survey::svyglm()] are supported using their observation-level coefficient
+#' influence functions.
 #' For multiple-imputation objects, unconditional variance is estimated in each
 #' completed dataset and the results are pooled using Rubin's rules. Prediction
 #' methods that return posterior draws, censored and survival models such as
@@ -709,7 +712,27 @@ get_unconditional_coef <- function(model) {
 # score/bread system and, when relevant, including them in the estimand Jacobian.
 get_unconditional_beta_dot <- function(model) {
     insight::check_if_installed("sandwich")
-    if (inherits(model, "fixest")) {
+    if (inherits(model, "svyglm")) {
+        # Inspired by Noah Greifer's implementation in the adrftools package.
+        # survey::svyglm() can save the observation-level coefficient
+        # influence function when called with influence = TRUE. Reconstruct
+        # the same matrix when it was not saved (the default). The factor n
+        # converts survey's per-observation representation to the influence
+        # convention used by the unconditional covariance calculation below.
+        n <- nrow(stats::model.frame(model))
+        scores <- attr(model, "influence", exact = TRUE)
+        if (is.null(scores)) {
+            scores <- tcrossprod(
+                stats::model.matrix(model) *
+                    stats::residuals(model, type = "working") *
+                    model$weights,
+                model$naive.cov
+            )
+        }
+        scores <- n * scores
+        bread <- diag(ncol(scores))
+        dimnames(bread) <- list(colnames(scores), colnames(scores))
+    } else if (inherits(model, "fixest")) {
         insight::check_if_installed("fixest")
         scores <- model$scores
         bread <- tryCatch(
