@@ -4,12 +4,14 @@
 
 New:
 
-* New `vcov = "unconditional"`, `vcovUnconditional(type = "HC3")`, and
+* New `vcov = "unconditional"`, `vcovUnconditional(type = "HC1")`, and
   `vcovUnconditional(cluster = ~cluster)` options compute unconditional
   standard errors for average predictions, comparisons, and slopes by
   accounting for sampling variation in the empirical covariate distribution.
-  `vcovUnconditional()` supports unclustered HC0--HC5 adjustments and one-way
-  clustered HC0/HC1 inference. Analytic empirical influence functions match
+  `vcovUnconditional()` supports HC0 and HC1 adjustments with optional one-way
+  clustering. HC2 through HC5 are excluded because regression-leverage
+  corrections are not defined for the combined unconditional influence
+  function. Analytic empirical influence functions match
   Hansen–Overgaard for unweighted differences and positive-mean log ratios,
   with delta-method extensions for other built-in contrasts and separate
   extensions to weighted targets. Robustness to conditional-mean

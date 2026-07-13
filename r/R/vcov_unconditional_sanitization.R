@@ -383,34 +383,26 @@ match_unconditional_source_modeldata <- function(source, modeldata, common) {
 
 
 sanitize_unconditional_vcov_arg <- function(type, cluster, modeldata, auxdata) {
-    type_choices <- c("HC", "HC0", "HC1", "HC2", "HC3", "HC4", "HC4m", "HC5")
+    type_choices <- c("HC0", "HC1")
     type_message <- paste0(
         "`type` must be one of ",
         paste(sprintf("\"%s\"", type_choices), collapse = ", "),
-        ", or \"robust\"."
+        "."
     )
     if (!isTRUE(checkmate::check_character(type, len = 1, any.missing = FALSE))) {
         stop_sprintf(type_message)
     }
-    if (tolower(type) == "robust") {
-        type <- "HC1"
-    } else {
-        idx <- match(tolower(type), tolower(type_choices))
-        if (is.na(idx)) {
-            stop_sprintf(type_message)
-        }
-        type <- type_choices[idx]
-        if (type == "HC") {
-            type <- "HC0"
-        }
-    }
-
-    if (!is.null(cluster) && type %in% c("HC2", "HC3", "HC4", "HC4m", "HC5")) {
+    if (toupper(type) %in% c("HC2", "HC3", "HC4", "HC4M", "HC5")) {
         stop_sprintf(
-            "`vcovUnconditional()` does not currently support `type = \"%s\"` with `cluster`. Use `type = \"HC0\"` or `type = \"HC1\"` for clustered inference.",
+            "`type = \"%s\"` is not available for unconditional inference because regression-leverage adjustments are not defined for the combined influence function. Use `type = \"HC0\"` or `type = \"HC1\"`.",
             type
         )
     }
+    idx <- match(tolower(type), tolower(type_choices))
+    if (is.na(idx)) {
+        stop_sprintf(type_message)
+    }
+    type <- type_choices[idx]
 
     cluster_var <- NULL
     cluster_values <- NULL

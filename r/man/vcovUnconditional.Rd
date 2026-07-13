@@ -8,9 +8,7 @@ vcovUnconditional(type = "HC1", cluster = NULL)
 }
 \arguments{
 \item{type}{Character string specifying the finite-sample adjustment. The
-available types are \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"},
-\code{"HC4"}, \code{"HC4m"}, and \code{"HC5"}. \code{"HC"} is an alias for \code{"HC0"}, and
-\code{"robust"} is an alias for \code{"HC1"}.}
+available types are \code{"HC0"} and \code{"HC1"}.}
 
 \item{cluster}{An optional one-sided formula such as \code{~id} identifying the
 variable used for one-way clustered inference.}
@@ -23,6 +21,9 @@ An object which can be supplied to the \code{vcov} argument of
 Request unconditional variance in marginaleffects calls
 }
 \details{
+The bare function form \code{vcov = vcovUnconditional} is equivalent to
+\code{vcov = vcovUnconditional()}.
+
 Unconditional variance is available for effects evaluated over original
 model-data rows, valid subsets of those rows, or counterfactual grids that
 preserve a valid \code{rowid}/\code{rowidcf} mapping to original model-data rows. The
@@ -36,9 +37,19 @@ covariate distribution. Models must provide compatible score and bread
 matrices through \code{sandwich::estfun()}/\code{sandwich::bread()} or model-specific
 equivalents. Supported model classes are validated through an allow-list.
 Multiple-imputation objects, prediction methods that return posterior draws,
-baseline-hazard dependent \code{coxph} predictions such as \code{type = "survival"} or
-\code{type = "expected"}, average predictions from \code{fixest} models with fixed
-effects, and nonlinear \code{fixest} models with fixed effects are rejected
-explicitly. HC2 through HC5 adjustments require the model to provide
-leverage values through \code{\link[stats:hatvalues]{stats::hatvalues()}}.
+censored and survival models such as \code{tobit}, \code{survreg}, and \code{coxph}, average
+predictions from \code{fixest} models with fixed effects, and nonlinear \code{fixest}
+models with fixed effects are rejected explicitly. For \code{feols} models with
+fixed effects, unconditional inference is available for additive differences
+and \code{dydx}/\code{dyex} slopes when the
+counterfactual data leave every fixed-effect and varying-slope variable
+unchanged. The combined influence function retains the covariance between
+coefficient estimation and
+the empirical covariate distribution, which is one ingredient of robustness
+to conditional-mean misspecification. That robustness also requires the
+model's score and bread methods to represent the derivative of its full
+estimating equations; this is not guaranteed for every supported model and
+link under misspecification. HC2 through HC5 are not available because their
+regression-leverage adjustments are not defined for this combined influence
+function.
 }

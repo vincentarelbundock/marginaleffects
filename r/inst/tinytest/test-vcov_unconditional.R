@@ -45,18 +45,11 @@ expect_equivalent(p_lm$std.error, c(1.1261627856912979, 1.3306015850782165), tol
 expect_equivalent(p_lm$df, c(28, 28))
 expect_unconditional(p_lm)
 
-p_lm_robust <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "robust"), df = "residual")
 p_lm_hc1 <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "HC1"), df = "residual")
 p_lm_hc0 <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "hc0"), df = Inf)
-p_lm_hc2 <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "HC2"))
-p_lm_hc3 <- avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "HC3"))
-expect_equivalent(p_lm_robust$std.error, p_lm$std.error, tolerance = 1e-8)
 expect_equivalent(p_lm_hc1$std.error, p_lm$std.error, tolerance = 1e-8)
 expect_false("df" %in% names(p_lm_hc0))
 expect_unconditional(p_lm_hc0)
-expect_unconditional(p_lm_hc2)
-expect_unconditional(p_lm_hc3)
-expect_true(all(p_lm_hc3$std.error >= p_lm_hc2$std.error))
 
 c_lm <- avg_comparisons(mod_lm, variables = "amf", vcov = "unconditional", df = "residual")
 expect_equivalent(c_lm$estimate, 2.0837101278156140, tolerance = 1e-6)
@@ -478,20 +471,22 @@ expect_error(
     avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = "HC9")),
     pattern = "`type` must be one of"
 )
+for (type in c("HC", "robust")) {
+    expect_error(
+        avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = type)),
+        pattern = "`type` must be one of"
+    )
+}
+for (type in c("HC2", "HC3", "HC4", "HC4m", "HC5")) {
+    expect_error(
+        avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(type = type)),
+        pattern = "not available.*combined influence function"
+    )
+}
 expect_error(
     avg_predictions(mod_lm, variables = "amf", vcov = vcovUnconditional(cluster = "cylid")),
     pattern = "one-sided formula"
 )
-for (type_cluster in c("HC2", "HC3", "HC4", "HC4m", "HC5")) {
-    expect_error(
-        avg_predictions(
-            mod_lm,
-            variables = "amf",
-            vcov = vcovUnconditional(type = type_cluster, cluster = ~cylid)
-        ),
-        pattern = "does not currently support.*with `cluster`"
-    )
-}
 expect_unconditional(
     avg_predictions(
         mod_lm,

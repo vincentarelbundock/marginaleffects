@@ -25,12 +25,9 @@
 #' Request unconditional variance in marginaleffects calls
 #'
 #' @param type Character string specifying the finite-sample adjustment. The
-#'   available types are `"HC"`, `"HC0"`, `"HC1"`, `"HC2"`, `"HC3"`,
-#'   `"HC4"`, `"HC4m"`, and `"HC5"`. `"HC"` is an alias for `"HC0"`, and
-#'   `"robust"` is an alias for `"HC1"`.
+#'   available types are `"HC0"` and `"HC1"`.
 #' @param cluster An optional one-sided formula such as `~id` identifying the
-#'   variable used for one-way clustered inference. Clustered inference is
-#'   currently available with `type = "HC0"` or `type = "HC1"` only.
+#'   variable used for one-way clustered inference.
 #'
 #' @return An object which can be supplied to the `vcov` argument of
 #'   [avg_predictions()], [avg_comparisons()], or [avg_slopes()].
@@ -58,14 +55,15 @@
 #' fixed effects, unconditional inference is available for additive differences
 #' and `dydx`/`dyex` slopes when the
 #' counterfactual data leave every fixed-effect and varying-slope variable
-#' unchanged. Without clustering, HC2 through HC5 adjustments require the model
-#' to provide leverage values through [stats::hatvalues()]. The combined
-#' influence function retains the covariance between coefficient estimation and
+#' unchanged. The combined influence function retains the covariance between
+#' coefficient estimation and
 #' the empirical covariate distribution, which is one ingredient of robustness
 #' to conditional-mean misspecification. That robustness also requires the
 #' model's score and bread methods to represent the derivative of its full
 #' estimating equations; this is not guaranteed for every supported model and
-#' link under misspecification.
+#' link under misspecification. HC2 through HC5 are not available because their
+#' regression-leverage adjustments are not defined for this combined influence
+#' function.
 #'
 #' @export
 vcovUnconditional <- function(type = "HC1", cluster = NULL) {
@@ -785,53 +783,12 @@ get_unconditional_beta_dot <- function(model) {
 # dependence before taking the cross-product.
 get_unconditional_vcov <- function(Phi, inputs) {
     n <- inputs$n
-    Phi <- adjust_unconditional_influence(Phi, inputs)
     correction <- get_unconditional_correction(inputs)
     if (!is.null(inputs$vcov$cluster)) {
         S <- rowsum(Phi, inputs$vcov$cluster, reorder = FALSE)
         return(crossprod(S) / n^2 * correction)
     }
     crossprod(Phi) / n^2 * correction
-}
-
-
-# HC2--HC5 adjust each observation's influence using the same leverage-based
-# factors as sandwich::vcovHC(). HC0 and HC1 leave the influence values intact;
-# their difference is the scalar finite-sample correction below.
-adjust_unconditional_influence <- function(Phi, inputs) {
-    type <- inputs$vcov$type
-    if (type %in% c("HC0", "HC1")) {
-        return(Phi)
-    }
-
-    h <- tryCatch(
-        as.numeric(stats::hatvalues(inputs$model)),
-        error = function(e) NULL
-    )
-    if (is.null(h) || length(h) != nrow(Phi) || anyNA(h)) {
-        stop_sprintf(
-            "`vcovUnconditional(type = \"%s\")` requires model leverage values from `hatvalues()`.",
-            type
-        )
-    }
-    if (any(h > 1 - sqrt(.Machine$double.eps))) {
-        stop_sprintf(
-            "`vcovUnconditional(type = \"%s\")` is undefined when leverage values are equal or close to 1.",
-            type
-        )
-    }
-
-    n <- length(h)
-    p <- as.integer(round(sum(h), digits = 0))
-    exponent <- switch(
-        type,
-        "HC2" = 1,
-        "HC3" = 2,
-        "HC4" = pmin(4, n * h / p),
-        "HC4m" = pmin(1, n * h / p) + pmin(1.5, n * h / p),
-        "HC5" = 0.5 * pmin(n * h / p, pmax(4, n * 0.7 * max(h) / p))
-    )
-    Phi / (1 - h)^(exponent / 2)
 }
 
 
