@@ -1,3 +1,71 @@
+hypothesis_string_compile_expression <- function(
+    hypothesis,
+    rowlabels = NULL,
+    n_estimates = NULL,
+    positional = FALSE,
+    eval_parent = .GlobalEnv) {
+    if (isTRUE(positional)) {
+        hypothesis <- gsub(
+            "\\bb([0-9]+)\\b",
+            "marginaleffects__\\1",
+            hypothesis,
+            perl = TRUE
+        )
+    }
+
+    expr <- parse(text = hypothesis)
+    dynamic_functions <- c(
+        "assign", "do.call", "eval", "eval.parent", "eval_tidy", "evalq",
+        "exists", "get", "get0", "local", "ls", "match.fun", "mget",
+        "objects", "parse", "substitute", "with", "within"
+    )
+    dynamic <- any(all.names(expr, functions = TRUE) %in% dynamic_functions)
+
+    if (isTRUE(positional)) {
+        if (isTRUE(dynamic)) {
+            idx <- seq_len(n_estimates)
+            labels <- paste0("marginaleffects__", idx)
+        } else {
+            labels <- grep(
+                "^marginaleffects__[0-9]+$",
+                all.vars(expr),
+                value = TRUE
+            )
+            idx <- as.integer(sub("^marginaleffects__", "", labels))
+            keep <- !is.na(idx) & idx >= 1L & idx <= n_estimates
+            idx <- idx[keep]
+            labels <- labels[keep]
+        }
+    } else if (isTRUE(dynamic)) {
+        idx <- seq_along(rowlabels)
+        labels <- rowlabels
+    } else {
+        labels <- intersect(all.vars(expr), rowlabels)
+        idx <- match(labels, rowlabels)
+    }
+
+    list(
+        expr = expr,
+        idx = idx,
+        labels = labels,
+        eval_parent = eval_parent
+    )
+}
+
+
+hypothesis_string_eval_compiled <- function(vec, compiled) {
+    envir <- new.env(parent = compiled$eval_parent)
+    for (j in seq_along(compiled$idx)) {
+        assign(
+            compiled$labels[[j]],
+            vec[[compiled$idx[[j]]]],
+            envir = envir
+        )
+    }
+    eval(compiled$expr, envir = envir)
+}
+
+
 hypothesis_string <- function(x, hypothesis) {
     out_list <- draws_list <- list()
     lab <- attr(hypothesis, "label")
@@ -56,11 +124,8 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
             msg <- sprintf(msg, paste0("b", bmax), nrow(x))
             stop_sprintf(msg)
         }
-        for (i in seq_len(nrow(x))) {
-            tmp <- paste0("marginaleffects__", i)
-            hypothesis <- gsub(paste0("b", i), tmp, hypothesis)
-        }
-        rowlabels <- paste0("marginaleffects__", seq_len(nrow(x)))
+        positional <- TRUE
+        rowlabels <- NULL
 
         # term names
     } else {
@@ -75,20 +140,17 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
             )
             stop_sprintf(msg)
         }
+        positional <- FALSE
         rowlabels <- x$term
     }
 
-    eval_string_function <- function(vec, hypothesis, rowlabels) {
-        envir <- parent.frame()
-        void <- sapply(
-            seq_along(vec),
-            function(i) {
-                assign(rowlabels[i], vec[i], envir = envir)
-            }
-        )
-        out <- eval(parse(text = hypothesis), envir = envir)
-        return(out)
-    }
+    compiled <- hypothesis_string_compile_expression(
+        hypothesis,
+        rowlabels = rowlabels,
+        n_estimates = nrow(x),
+        positional = positional,
+        eval_parent = environment()
+    )
 
     if (!is.null(attr(lab, "names"))) {
         lab <- attr(lab, "names")
@@ -102,9 +164,8 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
         tmp <- apply(
             draws,
             MARGIN = 2,
-            FUN = eval_string_function,
-            hypothesis = hypothesis,
-            rowlabels = rowlabels
+            FUN = hypothesis_string_eval_compiled,
+            compiled = compiled
         )
         draws <- matrix(tmp, ncol = ncol(draws))
         out <- data.table(
@@ -112,10 +173,9 @@ Disable this warning with: `options(marginaleffects_safe = FALSE)`
             tmp = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian)
         )
     } else {
-        out <- eval_string_function(
+        out <- hypothesis_string_eval_compiled(
             x[["estimate"]],
-            hypothesis = hypothesis,
-            rowlabels = rowlabels
+            compiled = compiled
         )
         out <- data.table(
             hypothesis = lab,

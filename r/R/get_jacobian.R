@@ -31,8 +31,9 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
     # we pre-chunk because future does not cache datasets in nodes, which means we
     # must pass every worker the full data and model for every future.
     inner_loop <- function(chunk, ...) {
-        out <- list()
-        for (i in chunk) {
+        out <- vector("list", length(chunk))
+        for (j in seq_along(chunk)) {
+            i <- chunk[[j]]
             if (is.null(eps)) {
                 h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
             } else {
@@ -40,7 +41,7 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
             }
             dx <- x
             dx[i] <- dx[i] + h
-            out <- c(out, list((func(dx) - baseline) / h))
+            out[[j]] <- (func(dx) - baseline) / h
         }
         out <- do.call(cbind, out)
         return(out)
@@ -58,9 +59,7 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
         )
         df <- do.call("cbind", df)
     } else {
-        chunks <- seq_along(x)
-        df <- lapply(chunks, inner_loop)
-        df <- do.call("cbind", df)
+        df <- inner_loop(seq_along(x))
     }
 
     return(df)
@@ -68,12 +67,12 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
 
 
 get_jacobian_fdcenter <- function(func, x, eps = NULL) {
-    baseline <- func(x)
     # we pre-chunk because future does not cache datasets in nodes, which means we
     # must pass every worker the full data and model for every future.
     inner_loop <- function(chunk, ...) {
-        out <- list()
-        for (i in chunk) {
+        out <- vector("list", length(chunk))
+        for (j in seq_along(chunk)) {
+            i <- chunk[[j]]
             if (is.null(eps)) {
                 h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
             } else {
@@ -82,7 +81,7 @@ get_jacobian_fdcenter <- function(func, x, eps = NULL) {
             dx_hi <- dx_lo <- x
             dx_hi[i] <- dx_hi[i] + h / 2
             dx_lo[i] <- dx_lo[i] - h / 2
-            out <- c(out, list((func(dx_hi) - func(dx_lo)) / h))
+            out[[j]] <- (func(dx_hi) - func(dx_lo)) / h
         }
         out <- do.call(cbind, out)
         return(out)
@@ -100,9 +99,7 @@ get_jacobian_fdcenter <- function(func, x, eps = NULL) {
         )
         df <- do.call("cbind", df)
     } else {
-        chunks <- seq_along(x)
-        df <- lapply(chunks, inner_loop)
-        df <- do.call("cbind", df)
+        df <- inner_loop(seq_along(x))
     }
     return(df)
 }

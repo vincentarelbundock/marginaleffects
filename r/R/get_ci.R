@@ -1,3 +1,28 @@
+posterior_draws_center <- function(draws, FUN_CENTER = stats::median) {
+    use_collapse <- requireNamespace("collapse", quietly = TRUE)
+
+    if (use_collapse && (identical(FUN_CENTER, stats::median) || identical(FUN_CENTER, "median"))) {
+        out <- collapse::dapply(
+            draws,
+            MARGIN = 1,
+            FUN = collapse::fmedian,
+            na.rm = FALSE
+        )
+    } else if (use_collapse && (identical(FUN_CENTER, base::mean) || identical(FUN_CENTER, "mean"))) {
+        out <- collapse::dapply(
+            draws,
+            MARGIN = 1,
+            FUN = collapse::fmean,
+            na.rm = FALSE
+        )
+    } else {
+        out <- apply(draws, 1, FUN_CENTER)
+    }
+
+    as.vector(out)
+}
+
+
 get_ci <- function(x, mfx) {
     get_ci_internal(
         x = x,
@@ -67,11 +92,11 @@ get_ci_internal <- function(
     ci_overwrite <- !"conf.low" %in% colnames(x) && "std.error" %in% colnames(x)
 
     if (z_overwrite) {
-        cdf <- function(k) {
+        cdf <- function(k, df = x[["df"]]) {
             if (normal) {
                 stats::pnorm(k)
             } else {
-                stats::pt(k, df = x[["df"]])
+                stats::pt(k, df = df)
             }
         }
         x[["statistic"]] <- (x[["estimate"]] - hypothesis_null) / x[["std.error"]]
@@ -93,14 +118,17 @@ get_ci_internal <- function(
                            length(hypothesis_direction), nrow(x))
             }
             x[["p.value"]] <- numeric(nrow(x))
-            if (any(hypothesis_direction == "=")) {
-                x[["p.value"]][hypothesis_direction == "="] <- 2 * cdf(-abs(x$statistic))[hypothesis_direction == "="]
+            idx <- hypothesis_direction == "="
+            if (any(idx)) {
+                x[["p.value"]][idx] <- 2 * cdf(-abs(x$statistic[idx]), df = x[["df"]][idx])
             }
-            if (any(hypothesis_direction == "<=")) {
-                x[["p.value"]][hypothesis_direction == "<="] <- (1 - cdf(x$statistic))[hypothesis_direction == "<="]
+            idx <- hypothesis_direction == "<="
+            if (any(idx)) {
+                x[["p.value"]][idx] <- 1 - cdf(x$statistic[idx], df = x[["df"]][idx])
             }
-            if (any(hypothesis_direction == ">=")) {
-                x[["p.value"]][hypothesis_direction == ">="] <- cdf(x$statistic)[hypothesis_direction == ">="]
+            idx <- hypothesis_direction == ">="
+            if (any(idx)) {
+                x[["p.value"]][idx] <- cdf(x$statistic[idx], df = x[["df"]][idx])
             }
         }
     }

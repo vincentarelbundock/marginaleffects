@@ -139,35 +139,24 @@ hypothesis_compile_string <- function(hypothesis, cmp_skeleton) {
     hyps <- expanded[[1]]
     labs <- expanded[[2]]
 
-    parsed <- vector("list", length(hyps))
-    rowlabels <- vector("list", length(hyps))
+    compiled <- vector("list", length(hyps))
     for (i in seq_along(hyps)) {
         hyp <- hyps[[i]]
-        if (
+        positional <-
             isTRUE(grepl("\\bb\\d+\\b", hyp)) &&
                 !any(grepl("\\bb\\d+\\b", cmp_skeleton[["term"]]))
-        ) {
-            for (j in seq_len(nrow(cmp_skeleton))) {
-                tmp <- paste0("marginaleffects__", j)
-                hyp <- gsub(paste0("b", j), tmp, hyp)
-            }
-            rowlabels[[i]] <- paste0("marginaleffects__", seq_len(nrow(cmp_skeleton)))
-        } else {
-            rowlabels[[i]] <- cmp_skeleton$term
-        }
-        parsed[[i]] <- parse(text = hyp)
+        compiled[[i]] <- hypothesis_string_compile_expression(
+            hyp,
+            rowlabels = if (isTRUE(positional)) NULL else cmp_skeleton$term,
+            n_estimates = nrow(cmp_skeleton),
+            positional = positional,
+            eval_parent = eval_parent
+        )
     }
 
-    apply_one <- function(est, expr, labels) {
-        env <- new.env(parent = eval_parent)
-        for (j in seq_along(est)) {
-            assign(labels[[j]], est[[j]], envir = env)
-        }
-        eval(expr, envir = env)
-    }
     apply <- function(est) {
-        unlist(lapply(seq_along(parsed), function(i) {
-            apply_one(est, parsed[[i]], rowlabels[[i]])
+        unlist(lapply(compiled, function(expr) {
+            hypothesis_string_eval_compiled(est, expr)
         }), use.names = FALSE)
     }
 

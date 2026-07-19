@@ -3,6 +3,34 @@ using("marginaleffects")
 
 mod <- lm(mpg ~ hp * wt + factor(cyl), data = mtcars)
 
+assign("model_matrix_count", 0L, envir = .GlobalEnv)
+suppressMessages(invisible(utils::capture.output(
+    trace(
+        "get_model_matrix.default",
+        where = asNamespace("marginaleffects"),
+        tracer = quote({
+            .GlobalEnv$model_matrix_count <- .GlobalEnv$model_matrix_count + 1L
+        }),
+        print = FALSE
+    )
+)))
+tryCatch(
+    {
+        comparisons(mod, variables = "hp", vcov = FALSE)
+        expect_equal(.GlobalEnv$model_matrix_count, 0L)
+
+        .GlobalEnv$model_matrix_count <- 0L
+        slopes(mod, variables = "hp", slope = "eyex", vcov = FALSE)
+        expect_equal(.GlobalEnv$model_matrix_count, 0L)
+    },
+    finally = {
+        suppressMessages(invisible(utils::capture.output(
+            untrace("get_model_matrix.default", where = asNamespace("marginaleffects"))
+        )))
+        rm("model_matrix_count", envir = .GlobalEnv)
+    }
+)
+
 cmp <- avg_comparisons(
     mod,
     variables = "hp",
@@ -175,3 +203,18 @@ marginaleffects:::settings_rm("marginaleffects_safefun_return1")
 expect_equal(dim(scalar_bayes$draws), c(2, 3))
 expect_equivalent(scalar_bayes$draws, matrix(1, nrow = 2, ncol = 3))
 expect_equivalent(scalar_bayes$out$estimate, c(1, 1))
+
+
+fdcenter_calls <- 0L
+fdcenter_func <- function(x) {
+    fdcenter_calls <<- fdcenter_calls + 1L
+    c(sum(x), prod(x))
+}
+fdcenter_x <- c(1, 2, 3)
+fdcenter_J <- marginaleffects:::get_jacobian_fdcenter(
+    fdcenter_func,
+    fdcenter_x,
+    eps = 1e-5
+)
+expect_equal(fdcenter_calls, 2L * length(fdcenter_x))
+expect_equal(dim(fdcenter_J), c(2L, 3L))

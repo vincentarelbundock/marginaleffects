@@ -31,6 +31,7 @@ mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
 
 pred <- make_prediction_lowering(mod)
 expect_true(pred$low$ok)
+expect_equal(pred$low$coefs, get_coef(mod))
 expect_equal(pred$low$spec$kind, "predictions")
 expect_equal(nrow(pred$low$spec$X), nrow(mtcars))
 expect_null(pred$low$spec$agg)

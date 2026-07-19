@@ -170,6 +170,9 @@ comparison_plan_build <- function(
     need_y <- n_elasticities > 0 || custom_fun
 
     if (isTRUE(need_y)) {
+        if (isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+            original <- add_model_matrix_attribute_data(mfx, original)
+        }
         pred_or <- get_predict_error(
             model,
             type = type,
