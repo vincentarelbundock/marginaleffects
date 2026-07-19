@@ -11,8 +11,8 @@ autodiff_lower_fail <- function(reason = "") {
     list(ok = FALSE, spec = NULL, reason = reason)
 }
 
-autodiff_lower_ok <- function(spec) {
-    list(ok = TRUE, spec = spec, reason = "")
+autodiff_lower_ok <- function(spec, coefs) {
+    list(ok = TRUE, spec = spec, coefs = coefs, reason = "")
 }
 
 autodiff_lower_model <- function(plan, mfx, type) {
@@ -182,7 +182,7 @@ autodiff_lower_predictions <- function(plan, mfx, type) {
         agg = agg$agg,
         hyp = hyp$hyp,
         n_out = n_out
-    ))
+    ), coefs = model$coefs)
 }
 
 autodiff_validate_comparison_groups <- function(plan) {
@@ -292,7 +292,7 @@ autodiff_lower_comparisons <- function(plan, mfx, type, hi, lo) {
         agg = agg$agg,
         hyp = hyp$hyp,
         n_out = n_out
-    ))
+    ), coefs = model$coefs)
 }
 
 autodiff_try <- function(plan, mfx, kind, type, vcov, estimate, hi = NULL, lo = NULL) {
@@ -318,7 +318,7 @@ autodiff_try <- function(plan, mfx, kind, type, vcov, estimate, hi = NULL, lo = 
         return(NULL)
     }
 
-    coefs <- get_coef(mfx@model)
+    coefs <- low$coefs
     result <- tryCatch(
         autodiff_pipeline_call(low$spec, coefs),
         error = function(e) {

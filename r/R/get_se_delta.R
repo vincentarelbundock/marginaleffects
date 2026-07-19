@@ -167,7 +167,7 @@ get_se_delta <- function(
             numderiv = mfx@numderiv
         )
         J <- do.call("get_jacobian", args)
-        colnames(J) <- names(get_coef(model_perturbed, ...))
+        colnames(J) <- names(coefs)
     }
 
     # align J and V: This might be a problematic hack, but I have not found examples yet.

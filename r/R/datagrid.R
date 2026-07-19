@@ -214,13 +214,13 @@ datagrid <- function(
     } else if (grid_type == "counterfactual") {
         out_split <- lapply(seq_along(values_split), function(i) {
             explicit <- do.call(data.table::CJ, values_split[[i]]$explicit)
-            implicit <- newdata_split[[i]]
-            data.table::setDF(implicit)
-            data.table::setDF(explicit)
-            implicit <- implicit[, setdiff(names(implicit), names(explicit)),
-                drop = FALSE]
-            implicit <- cbind(data.frame(rowidcf = seq_len(nrow(implicit))), implicit)
-            merge(implicit, explicit, all = NULL, sort = FALSE)
+            implicit <- data.table::as.data.table(newdata_split[[i]])
+            implicit <- implicit[, setdiff(names(implicit), names(explicit)), with = FALSE]
+            implicit <- cbind(
+                data.table::data.table(rowidcf = seq_len(nrow(implicit))),
+                implicit
+            )
+            cjdt(list(implicit, explicit))
         })
     } else {
         stop_sprintf("Unknown grid_type '%s'.", grid_type)

@@ -13,7 +13,7 @@ get_unique_index <- function(x, term_only = FALSE) {
             out[[i]] <- NULL
         }
     }
-    out <- apply(out, 1, toString)
+    out <- do.call(paste, c(as.list(out), sep = ", "))
     return(out)
 }
 
@@ -141,6 +141,16 @@ merge_original_data <- function(
     bycols <- intersect(colnames(tmp), colnames(out))
     if (!"rowid" %in% bycols || length(bycols) == 0) {
         return(out)
+    }
+
+    # Unit-level predictions usually preserve exact key order. Avoid a full
+    # duplicate scan and join when the payload can be attached positionally.
+    if (
+        !isTRUE(deduplicate) &&
+            nrow(out) == nrow(tmp) &&
+            all(vapply(bycols, function(col) identical(out[[col]], tmp[[col]]), logical(1)))
+    ) {
+        return(cbind(out, tmp[, ..payload]))
     }
 
     if (isTRUE(deduplicate)) {

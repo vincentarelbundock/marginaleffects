@@ -6,11 +6,6 @@ get_comparisons_data_numeric <- function(
     ...) {
     h <- variable[["eps"]]
 
-    s <- m <- NA
-    if (is.numeric(modeldata[[variable$name]])) {
-        s <- stats::sd(modeldata[[variable$name]], na.rm = TRUE)
-        m <- mean(modeldata[[variable$name]], na.rm = TRUE)
-    }
     x <- newdata[[variable$name]]
     xmd <- modeldata[[variable$name]]
 
@@ -92,6 +87,11 @@ get_comparisons_data_numeric <- function(
 
         # character contrasts
     } else if (identical(variable$value, "sd")) {
+        s <- m <- NA
+        if (is.numeric(xmd)) {
+            s <- stats::sd(xmd, na.rm = TRUE)
+            m <- mean(xmd, na.rm = TRUE)
+        }
         low <- m - s / 2
         high <- m + s / 2
         lab <- c("x + sd/2", "x - sd/2")
@@ -100,6 +100,11 @@ get_comparisons_data_numeric <- function(
         }
         lab <- make_label(variable$label, lab)
     } else if (identical(variable$value, "2sd")) {
+        s <- m <- NA
+        if (is.numeric(xmd)) {
+            s <- stats::sd(xmd, na.rm = TRUE)
+            m <- mean(xmd, na.rm = TRUE)
+        }
         low <- m - s
         high <- m + s
         lab <- c("x + sd", "x - sd")

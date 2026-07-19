@@ -322,10 +322,6 @@ comparisons <- function(
     args <- utils::modifyList(args, dots)
     contrast_data <- do_call(get_comparisons_data, args)
 
-    # Add model matrices to hi/lo data
-    contrast_data$hi <- add_model_matrix_attribute_data(mfx, contrast_data$hi)
-    contrast_data$lo <- add_model_matrix_attribute_data(mfx, contrast_data$lo)
-
     args <- list(
         mfx = mfx,
         variables = predictors,
@@ -371,6 +367,15 @@ comparisons <- function(
         by = by,
         keys = c("rowid", "rowidcf", "term", "contrast", "by"),
         deduplicate = TRUE
+    )
+
+    capture_replay <- identical(inferences_method, "simulation") ||
+        settings_equal("marginaleffects_capture_simulation_replay", TRUE)
+    mfx <- simulation_replay_store(
+        mfx,
+        built$plan,
+        transforms = list(transform),
+        enabled = capture_replay
     )
 
     return(finalize_estimates(
