@@ -2,12 +2,8 @@
 
 ## Native exact Jacobian extensions
 
-- [ ] Evaluate a pure-matrix aggregation operator for `by = TRUE`, `by = FALSE`,
-  and fixed weights. Do not add a coefficient-column replay loop.
-- [ ] Evaluate matrix hypotheses only if they compose cleanly with the aggregation
-  operator.
-- [ ] Evaluate predictions and response-scale GLMs separately; the latter require
-  multiplying each model-matrix row by `family(model)$mu.eta(eta)`.
+- [ ] Evaluate response-scale GLMs separately. These require multiplying each
+  model-matrix row by `family(model)$mu.eta(eta)`.
 - [ ] Benchmark any extension independently and retain the numerical fallback for
   nonlinear transformations and custom functions.
 

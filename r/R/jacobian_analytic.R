@@ -1,3 +1,94 @@
+jacobian_analytic_comparison_groups <- function(J, plan) {
+  out <- matrix(NA_real_, nrow = plan$n_comp, ncol = ncol(J))
+
+  for (g in plan$groups) {
+    block <- J[g$idx, , drop = FALSE]
+    value <- switch(g$fun_key,
+      difference = block,
+      differenceavg = matrix(colMeans(block), nrow = 1L),
+      differenceavgwts = {
+        w <- g$args$w
+        if (
+          !is.numeric(w) || length(w) != nrow(block) ||
+            any(!is.finite(w)) || sum(w) == 0
+        ) {
+          return(NULL)
+        }
+        matrix(colSums(block * w) / sum(w), nrow = 1L)
+      },
+      return(NULL)
+    )
+    if (nrow(value) != length(g$out_idx)) {
+      return(NULL)
+    }
+    out[g$out_idx, ] <- value
+  }
+
+  out
+}
+
+
+jacobian_analytic_aggregate <- function(J, agg) {
+  if (is.null(agg)) {
+    return(J)
+  }
+  out <- matrix(NA_real_, nrow = agg$n, ncol = ncol(J))
+
+  # Each block stores equal-size groups as columns of an index matrix. Flatten
+  # once, then rowsum() every Jacobian column simultaneously by recorded group.
+  for (block in agg$blocks) {
+    idx <- block$idx
+    if (
+      !is.matrix(idx) || nrow(idx) == 0L ||
+        any(idx < 1L | idx > nrow(J))
+    ) {
+      return(NULL)
+    }
+    group <- rep(seq_len(ncol(idx)), each = nrow(idx))
+    value <- J[as.vector(idx), , drop = FALSE]
+
+    if (isTRUE(agg$weighted)) {
+      w <- block$w
+      if (
+        !is.numeric(w) || !identical(dim(w), dim(idx)) ||
+          any(!is.finite(w))
+      ) {
+        return(NULL)
+      }
+      denominator <- colSums(w)
+      if (any(denominator == 0)) {
+        return(NULL)
+      }
+      value <- rowsum(value * as.vector(w), group, reorder = FALSE)
+      value <- value / denominator
+    } else {
+      value <- rowsum(value, group, reorder = FALSE) / nrow(idx)
+    }
+    out[block$cols, ] <- value
+  }
+
+  out
+}
+
+
+jacobian_analytic_hypothesis <- function(J, hyp) {
+  if (is.null(hyp)) {
+    return(J)
+  }
+  H <- hyp$H
+  if (
+    !identical(hyp$kind, "matrix") || is.null(H) ||
+      nrow(H) != nrow(J) || any(!is.finite(H))
+  ) {
+    return(NULL)
+  }
+
+  # Linear hypotheses map estimates with crossprod(H, estimate), so the same
+  # multiplication maps every coefficient column of the Jacobian at once.
+  as.matrix(Matrix::crossprod(H, J))
+}
+
+
 get_jacobian_analytic <- function(
   plan,
   mfx,
@@ -37,15 +128,10 @@ get_jacobian_analytic <- function(
         return(NULL)
       }
 
-      # Start with the case where the complete estimand is a row-wise linear map.
-      # Aggregation and hypotheses remain on the established fallback until a
-      # matrix-native implementation shows a measurable end-to-end benefit.
       if (
-        !identical(kind, "comparisons") ||
-          !identical(plan$kind, "comparisons") ||
-          !is.null(plan$agg) || !is.null(plan$hyp) ||
-          is.null(contrast_data) || isTRUE(plan$need_y) ||
-          length(plan$groups) == 0L
+        !kind %in% c("comparisons", "predictions") ||
+          !identical(plan$kind, kind) ||
+          (!is.null(plan$hyp) && !identical(plan$hyp$kind, "matrix"))
       ) {
         return(NULL)
       }
@@ -71,30 +157,48 @@ get_jacobian_analytic <- function(
         }
       }
 
-      group_ok <- vapply(plan$groups, function(g) {
-        identical(g$fun_key, "difference") &&
-          !isTRUE(g$uses_y) &&
-          length(g$idx) == length(g$out_idx)
-      }, logical(1))
-      if (!all(group_ok)) {
-        return(NULL)
+      if (identical(kind, "comparisons")) {
+        if (
+          is.null(contrast_data) || isTRUE(plan$need_y) ||
+            length(plan$groups) == 0L
+        ) {
+          return(NULL)
+        }
+        group_ok <- vapply(plan$groups, function(g) {
+          g$fun_key %in% c("difference", "differenceavg", "differenceavgwts") &&
+            !isTRUE(g$uses_y)
+        }, logical(1))
+        if (!all(group_ok)) {
+          return(NULL)
+        }
+        X_hi <- align_matrix(attr(
+          contrast_data$hi,
+          "marginaleffects_model_matrix"
+        ))
+        X_lo <- align_matrix(attr(
+          contrast_data$lo,
+          "marginaleffects_model_matrix"
+        ))
+        if (is.null(X_hi) || is.null(X_lo) || !identical(dim(X_hi), dim(X_lo))) {
+          return(NULL)
+        }
+
+        # Form the complete raw derivative once. Recorded groups and aggregation
+        # then operate on all coefficient columns, never one column at a time.
+        J <- X_hi - X_lo
+        raw_difference <- drop(J %*% beta)
+        replay <- comparison_plan_apply(plan, raw_difference, numeric(nrow(J)))
+      } else {
+        X <- align_matrix(attr(
+          plan$predict_args$newdata,
+          "marginaleffects_model_matrix"
+        ))
+        if (is.null(X)) {
+          return(NULL)
+        }
+        J <- X
+        replay <- prediction_plan_apply(plan, drop(X %*% beta))
       }
-      X_hi <- align_matrix(attr(
-        contrast_data$hi,
-        "marginaleffects_model_matrix"
-      ))
-      X_lo <- align_matrix(attr(
-        contrast_data$lo,
-        "marginaleffects_model_matrix"
-      ))
-      if (is.null(X_hi) || is.null(X_lo) || !identical(dim(X_hi), dim(X_lo))) {
-        return(NULL)
-      }
-      # Apply the recorded row operations to the whole Jacobian. This is the core
-      # optimization: X_hi - X_lo is formed once, with no replay per coefficient.
-      J <- X_hi - X_lo
-      raw_difference <- drop(J %*% beta)
-      replay <- comparison_plan_apply(plan, raw_difference, numeric(nrow(J)))
 
       # This is a fail-closed correctness guard, not a debugging assertion. It
       # rejects stale matrices, offsets, prediction arguments, and future semantic
@@ -108,23 +212,31 @@ get_jacobian_analytic <- function(
         return(NULL)
       }
 
-      if (!is.null(plan$na_keep)) {
-        J <- J[plan$na_keep, , drop = FALSE]
-      }
-      if (!is.null(plan$perm)) {
-        J <- J[plan$perm, , drop = FALSE]
+      if (identical(kind, "comparisons")) {
+        if (!is.null(plan$na_keep)) {
+          J <- J[plan$na_keep, , drop = FALSE]
+        }
+        if (!is.null(plan$perm)) {
+          J <- J[plan$perm, , drop = FALSE]
+        }
+        J <- jacobian_analytic_comparison_groups(J, plan)
+        if (is.null(J)) {
+          return(NULL)
+        }
+        if (!is.null(plan$est_keep)) {
+          J <- J[plan$est_keep, , drop = FALSE]
+        }
+      } else if (!is.null(plan$keep)) {
+        J <- J[plan$keep, , drop = FALSE]
       }
 
-      idx <- unlist(lapply(plan$groups, function(g) g$idx), use.names = FALSE)
-      out_idx <- unlist(lapply(plan$groups, function(g) g$out_idx), use.names = FALSE)
-      if (
-        !identical(idx, seq_len(nrow(J))) ||
-          !identical(out_idx, seq_len(plan$n_comp))
-      ) {
+      J <- jacobian_analytic_aggregate(J, plan$agg)
+      if (is.null(J)) {
         return(NULL)
       }
-      if (!is.null(plan$est_keep)) {
-        J <- J[plan$est_keep, , drop = FALSE]
+      J <- jacobian_analytic_hypothesis(J, plan$hyp)
+      if (is.null(J)) {
+        return(NULL)
       }
 
       if (nrow(J) != length(estimate)) {

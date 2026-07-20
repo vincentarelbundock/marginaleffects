@@ -56,6 +56,127 @@ cmp_reversed <- comparisons(
 )
 expect_equivalent(cmp_reversed$std.error, cmp_lm$std.error)
 
+# Linear matrix hypotheses transform every Jacobian column in one operation.
+cmp_hypothesis <- comparisons(
+    mod_lm,
+    variables = list(hp = c(100, 110), wt = c(2, 3)),
+    newdata = "mean",
+    hypothesis = matrix(c(1, -1), ncol = 1)
+)
+expect_identical(
+    components(cmp_hypothesis, "jacobian"),
+    matrix(c(0, 10, -1), nrow = 1,
+        dimnames = list(NULL, names(coef(mod_lm))))
+)
+
+# Average differences operate on the complete Jacobian matrix. The interaction
+# makes the derivative vary by row, so these checks exercise the actual means.
+mod_interaction <- lm(mpg ~ hp * wt, data = mtcars)
+avg <- avg_comparisons(
+    mod_interaction,
+    variables = list(hp = c(100, 110))
+)
+expect_equivalent(
+    components(avg, "jacobian"),
+    matrix(c(0, 10, 0, 10 * mean(mtcars$wt)), nrow = 1,
+        dimnames = list(NULL, names(coef(mod_interaction))))
+)
+
+avg_weighted <- avg_comparisons(
+    mod_interaction,
+    variables = list(hp = c(100, 110)),
+    wts = "cyl"
+)
+expect_equivalent(
+    components(avg_weighted, "jacobian"),
+    matrix(c(0, 10, 0, 10 * weighted.mean(mtcars$wt, mtcars$cyl)), nrow = 1,
+        dimnames = list(NULL, names(coef(mod_interaction))))
+)
+
+avg_by <- avg_comparisons(
+    mod_interaction,
+    variables = list(hp = c(100, 110)),
+    by = "am"
+)
+expected_by <- vapply(split(mtcars$wt, mtcars$am), mean, numeric(1))
+expected_by <- cbind(0, 10, 0, 10 * expected_by)
+colnames(expected_by) <- names(coef(mod_interaction))
+rownames(expected_by) <- NULL
+expect_equivalent(components(avg_by, "jacobian"), expected_by)
+
+avg_hypothesis <- avg_comparisons(
+    mod_interaction,
+    variables = list(hp = c(100, 110)),
+    by = "am",
+    hypothesis = matrix(c(1, -1), ncol = 1)
+)
+expect_equivalent(
+    components(avg_hypothesis, "jacobian"),
+    matrix(expected_by[1, ] - expected_by[2, ], nrow = 1,
+        dimnames = list(NULL, names(coef(mod_interaction))))
+)
+
+avg_formula_hypothesis <- avg_comparisons(
+    mod_interaction,
+    variables = list(hp = c(100, 110)),
+    by = "am",
+    hypothesis = ~ sequential
+)
+expect_equivalent(
+    components(avg_formula_hypothesis, "jacobian"),
+    matrix(expected_by[2, ] - expected_by[1, ], nrow = 1,
+        dimnames = list(NULL, names(coef(mod_interaction))))
+)
+
+# Linear predictions have J = X before applying the same aggregation and
+# hypothesis operators used for comparisons.
+newdata <- mtcars[1:4, , drop = FALSE]
+pred_lm <- predictions(mod_lm, newdata = newdata)
+X_lm <- model.matrix(mod_lm, data = newdata)
+attributes(X_lm) <- list(
+    dim = dim(X_lm),
+    dimnames = list(NULL, colnames(X_lm))
+)
+expect_identical(components(pred_lm, "jacobian"), X_lm)
+
+pred_hypothesis <- predictions(
+    mod_lm,
+    newdata = newdata,
+    hypothesis = matrix(c(1, -1, 0, 0), ncol = 1)
+)
+expect_identical(
+    components(pred_hypothesis, "jacobian"),
+    matrix(X_lm[1, ] - X_lm[2, ], nrow = 1,
+        dimnames = list(NULL, names(coef(mod_lm))))
+)
+
+avg_pred_weighted <- avg_predictions(mod_lm, by = "am", wts = "cyl")
+X_all <- model.matrix(mod_lm, data = mtcars)
+expected_pred_weighted <- vapply(split(seq_len(nrow(mtcars)), mtcars$am), function(i) {
+    colSums(X_all[i, , drop = FALSE] * mtcars$cyl[i]) / sum(mtcars$cyl[i])
+}, numeric(ncol(X_all)))
+expected_pred_weighted <- t(expected_pred_weighted)
+rownames(expected_pred_weighted) <- NULL
+expect_equivalent(
+    components(avg_pred_weighted, "jacobian"),
+    expected_pred_weighted
+)
+
+pred_glm <- predictions(mod_glm, newdata = newdata, type = "link")
+X_glm <- model.matrix(mod_glm, data = newdata)
+attributes(X_glm) <- list(
+    dim = dim(X_glm),
+    dimnames = list(NULL, colnames(X_glm))
+)
+expect_identical(components(pred_glm, "jacobian"), X_glm)
+
+pred_invlink <- predictions(
+    mod_glm,
+    newdata = newdata,
+    type = "invlink(link)"
+)
+expect_identical(components(pred_invlink, "jacobian"), X_glm)
+
 # Unsupported estimands use finite differences. Instrumentation is always
 # removed in `finally` so a failed assertion cannot contaminate later tests.
 assign("analytic_fd_calls", 0L, envir = .GlobalEnv)
@@ -84,7 +205,7 @@ tryCatch(
             newdata = mtcars[1:5, , drop = FALSE],
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 0L)
 
         comparisons(
             mod_lm,
@@ -93,14 +214,14 @@ tryCatch(
             comparison = "ratio",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 2L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
 
         avg_comparisons(
             mod_lm,
             variables = list(hp = c(100, 110)),
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 3L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
 
         comparisons(
             mod_lm,
@@ -109,7 +230,7 @@ tryCatch(
             hypothesis = c(1, -1),
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 4L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
 
         comparisons(
             mod_lm,
@@ -118,7 +239,7 @@ tryCatch(
             comparison = function(hi, lo) hi - lo,
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 2L)
 
         mod_offset <- lm(mpg ~ hp + offset(wt), data = mtcars)
         comparisons(
@@ -127,7 +248,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 6L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 3L)
 
         mod_rank_deficient <- lm(mpg ~ hp + I(hp), data = mtcars)
         suppressWarnings(comparisons(
@@ -136,7 +257,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         ))
-        expect_equal(.GlobalEnv$analytic_fd_calls, 7L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 4L)
 
         mod_subclass <- mod_lm
         class(mod_subclass) <- c("analytic_audit_lm", class(mod_subclass))
@@ -146,7 +267,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 8L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
 
         comparisons(
             mod_glm,
@@ -155,7 +276,7 @@ tryCatch(
             type = "response",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 9L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 6L)
     },
     finally = {
         suppressMessages(invisible(utils::capture.output(
