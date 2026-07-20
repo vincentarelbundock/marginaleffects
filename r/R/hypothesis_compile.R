@@ -77,7 +77,12 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mf
         fun_comparison <- hypothesis_formula_list[[form$rhs]][[form$lhs]]$comparison
     }
 
-    x <- data.table::as.data.table(data.table::copy(cmp_skeleton))
+    if (is.null(form$group)) {
+        x <- cmp_skeleton
+    } else {
+        group_cols <- intersect(form$group, colnames(cmp_skeleton))
+        x <- as_data_table_select(cmp_skeleton, group_cols)
+    }
     groupval <- hypothesis_formula_groups(x, newdata, form$group)
 
     if (is.null(groupval)) {

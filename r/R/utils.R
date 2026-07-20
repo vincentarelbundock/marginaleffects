@@ -113,6 +113,15 @@ cjdt <- function(dtlist) {
 }
 
 
+as_data_table_select <- function(x, cols) {
+    if (data.table::is.data.table(x)) {
+        x[, ..cols]
+    } else {
+        data.table::as.data.table(x[, cols, drop = FALSE])
+    }
+}
+
+
 merge_original_data <- function(
     out,
     original,
@@ -137,7 +146,7 @@ merge_original_data <- function(
     }
 
     cols <- intersect(unique(c(keys, payload)), colnames(original))
-    tmp <- data.table::as.data.table(original)[, ..cols]
+    tmp <- as_data_table_select(original, cols)
     bycols <- intersect(colnames(tmp), colnames(out))
     if (!"rowid" %in% bycols || length(bycols) == 0) {
         return(out)
@@ -158,9 +167,9 @@ merge_original_data <- function(
         tmp <- tmp[!idx]
     } else if (any(duplicated(tmp, by = bycols))) {
         if ("rowid" %in% bycols && nrow(tmp) != nrow(out)) {
-            tmp <- tmp[rowid %in% data.table::as.data.table(out)[["rowid"]]]
+            tmp <- tmp[rowid %in% out[["rowid"]]]
         }
-        outkeys <- data.table::as.data.table(out)[, ..bycols]
+        outkeys <- as_data_table_select(out, bycols)
         tmpkeys <- tmp[, ..bycols]
         if (nrow(outkeys) == nrow(tmpkeys) &&
             isTRUE(all.equal(outkeys, tmpkeys, check.attributes = FALSE))) {

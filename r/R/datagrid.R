@@ -214,8 +214,8 @@ datagrid <- function(
     } else if (grid_type == "counterfactual") {
         out_split <- lapply(seq_along(values_split), function(i) {
             explicit <- do.call(data.table::CJ, values_split[[i]]$explicit)
-            implicit <- data.table::as.data.table(newdata_split[[i]])
-            implicit <- implicit[, setdiff(names(implicit), names(explicit)), with = FALSE]
+            implicit_cols <- setdiff(names(newdata_split[[i]]), names(explicit))
+            implicit <- as_data_table_select(newdata_split[[i]], implicit_cols)
             implicit <- cbind(
                 data.table::data.table(rowidcf = seq_len(nrow(implicit))),
                 implicit
