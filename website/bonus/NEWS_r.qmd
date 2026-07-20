@@ -16,6 +16,7 @@ Breaking changes:
 
 Performance:
 
+* Eligible unaggregated built-in difference comparisons for `lm` models and link-scale `glm` models now use exact analytic Jacobians. The narrow matrix-native path avoids repeated coefficient perturbation and prediction while unsupported comparisons retain the existing autodiff and numerical fallbacks.
 * Automatic differentiation now lowers recorded prediction/comparison plans to a single JAX pipeline, including grouped predictions and comparisons, and uses the normal R result pipeline for estimates, labels, and row ordering. This removes duplicated group/order reconstruction and adds autodiff support for `wts`, `by` data frames, matrix/vector hypotheses, and `comparison = "ratio"` with grouped averages.
 * Formula hypotheses such as `~ pairwise` and grouped variants now reuse compiled contrast plans during delta-method standard error calculations.
 * Delta-method standard errors for `comparisons()`, `avg_comparisons()`, `slopes()`, `avg_slopes()`, `predictions()`, and `avg_predictions()` now reuse a plan built from the baseline estimates instead of rebuilding loop-invariant result tables for every coefficient perturbation.

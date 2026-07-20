@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.32.0.9992
+Version: 0.32.0.9993
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -259,6 +259,7 @@ Collate:
     'inferences_fwb.R'
     'inferences_rsample.R'
     'inferences_simulation.R'
+    'jacobian_analytic.R'
     'matrix_apply.R'
     'mean_or_mode.R'
     'methods.R'

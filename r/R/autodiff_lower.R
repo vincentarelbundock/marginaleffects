@@ -349,13 +349,20 @@ autodiff_try <- function(plan, mfx, kind, type, vcov, estimate, hi = NULL, lo = 
         return(NULL)
     }
 
-    se <- autodiff_se_from_jacobian(result$jacobian, vcov, coefs, mfx@model)
-    if (is.null(se)) {
+    propagated <- tryCatch(
+        std_error_from_jacobian(result$jacobian, vcov, mfx@model),
+        error = function(e) NULL
+    )
+    if (is.null(propagated)) {
         return(NULL)
     }
 
     if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
         message("\nJAX is fast!")
     }
-    list(estimate = result$estimate, std.error = se, jacobian = result$jacobian)
+    list(
+        estimate = result$estimate,
+        std.error = propagated$std.error,
+        jacobian = propagated$jacobian
+    )
 }

@@ -24,6 +24,31 @@ align_jacobian_vcov <- function(J, V, object, ...) {
 }
 
 
+std_error_from_jacobian <- function(J, V, object, ...) {
+    # Covariance propagation is shared algebra. Eligibility for analytic and
+    # autodiff Jacobians remains independent of this helper.
+    jnames <- colnames(J)
+    vnames <- colnames(V)
+    if (
+        !is.null(jnames) && !is.null(vnames) &&
+            anyDuplicated(jnames) == 0L && anyDuplicated(vnames) == 0L &&
+            setequal(jnames, vnames)
+    ) {
+        V <- V[jnames, jnames, drop = FALSE]
+    }
+    if (!isTRUE(ncol(J) == ncol(V))) {
+        aligned <- align_jacobian_vcov(J, V, object, ...)
+        J <- aligned$J
+        V <- aligned$V
+    }
+
+    # Avoid constructing the full J V J' matrix when only its diagonal is used.
+    se <- sqrt(rowSums(tcrossprod(J, V) * J))
+    se[se == 0] <- NA_real_
+    list(std.error = se, jacobian = J)
+}
+
+
 #' Compute standard errors using the delta method
 #'
 #' @inheritParams slopes
@@ -170,20 +195,9 @@ get_se_delta <- function(
         colnames(J) <- names(coefs)
     }
 
-    # align J and V: This might be a problematic hack, but I have not found examples yet.
-    V <- vcov
-    if (!isTRUE(ncol(J) == ncol(V))) {
-        aligned <- align_jacobian_vcov(J, V, model_perturbed, ...)
-        J <- aligned$J
-        V <- aligned$V
-    }
-
-    # Var(dydx) = J Var(beta) J'
-    # computing the full matrix is memory-expensive, and we only need the diagonal
-    # algebra trick: https://stackoverflow.com/a/42569902/342331
-    se <- sqrt(rowSums(tcrossprod(J, V) * J))
-    se[se == 0] <- NA_real_
-    attr(se, "jacobian") <- J
+    propagated <- std_error_from_jacobian(J, vcov, model_perturbed, ...)
+    se <- propagated$std.error
+    attr(se, "jacobian") <- propagated$jacobian
 
     return(se)
 }

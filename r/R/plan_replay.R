@@ -274,7 +274,32 @@ plan_std_error <- function(
         return(list(mfx = mfx, estimates = estimates))
     }
 
-    # Try autodiff first; fall back to numerical delta method.
+    # Explicit user Jacobians retain priority. Otherwise, use a validated exact
+    # analytic derivative before trying autodiff and numerical differentiation.
+    custom_jacobian <- settings_get("jacobian_function")
+    if (is.null(custom_jacobian)) {
+        J <- get_jacobian_analytic(
+            plan = plan,
+            mfx = mfx,
+            kind = kind,
+            type = type,
+            estimate = estimates[["estimate"]],
+            contrast_data = contrast_data
+        )
+        if (!is.null(J)) {
+            propagated <- tryCatch(
+                std_error_from_jacobian(J, mfx@vcov_model, mfx@model),
+                error = function(e) NULL
+            )
+            if (!is.null(propagated)) {
+                mfx@jacobian <- propagated$jacobian
+                estimates[["std.error"]] <- propagated$std.error
+                return(list(mfx = mfx, estimates = estimates))
+            }
+        }
+    }
+
+    # Try autodiff next; fall back to numerical delta method.
     ad_args <- list(
         plan = plan,
         mfx = mfx,
@@ -287,7 +312,7 @@ plan_std_error <- function(
         ad_args$hi <- contrast_data$hi
         ad_args$lo <- contrast_data$lo
     }
-    ad <- do_call(autodiff_try, ad_args)
+    ad <- if (is.null(custom_jacobian)) do_call(autodiff_try, ad_args) else NULL
     if (!is.null(ad)) {
         mfx@jacobian <- ad$jacobian
         estimates[["std.error"]] <- ad$std.error
