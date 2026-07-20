@@ -29,7 +29,8 @@ cmp_skeleton <- data.table::data.table(
 )
 
 form <- marginaleffects:::hypothesis_compile(~pairwise, cmp_skeleton)
-expect_equal(form$hyp$kind, "formula")
+expect_equal(form$hyp$kind, "matrix")
+expect_inherits(form$hyp$H, "sparseMatrix")
 expect_equivalent(
     form$hyp$apply(c(2, 4, 8, 16)),
     marginaleffects:::hypothesis_formula(
@@ -43,6 +44,87 @@ expect_equivalent(
         by = NULL
     )$estimate
 )
+
+linear_forms <- list(
+    ~reference,
+    ~revreference,
+    ~sequential,
+    ~pairwise,
+    ~revpairwise,
+    ~meandev,
+    ~meanotherdev,
+    ~trt_vs_ctrl,
+    ~poly,
+    ~helmert,
+    difference ~ pairwise | segment
+)
+for (hypothesis in linear_forms) {
+    form <- marginaleffects:::hypothesis_compile(
+        hypothesis,
+        cmp_skeleton,
+        newdata = cmp_skeleton
+    )
+    expect_equal(form$hyp$kind, "matrix")
+    expect_inherits(form$hyp$H, "sparseMatrix")
+    expected <- marginaleffects:::hypothesis_formula(
+        data.table::copy(cmp_skeleton),
+        hypothesis = hypothesis,
+        newdata = cmp_skeleton,
+        by = NULL
+    )
+    expect_equivalent(
+        form$hyp$apply(cmp_skeleton$estimate * 2),
+        marginaleffects:::hypothesis_formula(
+            data.table::data.table(
+                term = cmp_skeleton$term,
+                group = cmp_skeleton$group,
+                segment = cmp_skeleton$segment,
+                estimate = cmp_skeleton$estimate * 2
+            ),
+            hypothesis = hypothesis,
+            newdata = cmp_skeleton,
+            by = NULL
+        )$estimate
+    )
+    expect_equivalent(form$cmp$estimate, expected$estimate)
+}
+
+cmp_missing <- data.table::data.table(
+    term = "term",
+    segment = rep(c("x", "y"), each = 3),
+    estimate = c(1, NA, 3, 4, 5, 6)
+)
+form <- marginaleffects:::hypothesis_compile(
+    difference ~ reference | segment,
+    cmp_missing,
+    newdata = cmp_missing
+)
+expected <- marginaleffects:::hypothesis_formula(
+    data.table::copy(cmp_missing),
+    hypothesis = difference ~ reference | segment,
+    newdata = cmp_missing,
+    by = NULL
+)
+expect_equivalent(form$hyp$apply(cmp_missing$estimate), expected$estimate)
+
+cmp_interleaved <- data.table::data.table(
+    term = "term",
+    segment = c("y", "x", "y", "x", "y"),
+    estimate = seq_len(5)
+)
+form <- marginaleffects:::hypothesis_compile(
+    difference ~ pairwise | segment,
+    cmp_interleaved,
+    newdata = cmp_interleaved
+)
+expected <- marginaleffects:::hypothesis_formula(
+    data.table::copy(cmp_interleaved),
+    hypothesis = difference ~ pairwise | segment,
+    newdata = cmp_interleaved,
+    by = NULL
+)
+expect_equal(form$hyp$kind, "matrix")
+expect_equivalent(form$hyp$apply(cmp_interleaved$estimate), expected$estimate)
 
 form <- marginaleffects:::hypothesis_compile(ratio ~ sequential | segment, cmp_skeleton, newdata = cmp_skeleton)
 expect_equal(form$hyp$kind, "formula")

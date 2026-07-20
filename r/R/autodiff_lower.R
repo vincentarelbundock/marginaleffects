@@ -137,6 +137,9 @@ autodiff_lower_hyp <- function(hyp) {
     if (identical(hyp$kind, "matrix") && isTRUE(checkmate::check_matrix(hyp$H))) {
         return(list(ok = TRUE, hyp = hyp$H))
     }
+    if (identical(hyp$kind, "matrix") && inherits(hyp$H, "Matrix")) {
+        return(list(ok = TRUE, hyp = as.matrix(hyp$H)))
+    }
     autodiff_lower_fail("this form of the `hypothesis` argument")
 }
 

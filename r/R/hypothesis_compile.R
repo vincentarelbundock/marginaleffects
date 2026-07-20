@@ -88,7 +88,9 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mf
     if (is.null(groupval)) {
         groups <- list(seq_len(nrow(x)))
     } else {
-        combined <- data.table::data.table(marginaleffects_formula_idx = seq_len(nrow(x)))
+        combined <- data.table::data.table(
+            marginaleffects_formula_idx = seq_len(nrow(cmp_skeleton))
+        )
         combined <- cbind(combined, groupval)
         data.table::setDT(combined)
         groups <- combined[
@@ -105,9 +107,118 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mf
         )
     }
 
-    hyp <- list(kind = "formula", apply = apply)
+    H <- hypothesis_compile_formula_matrix(form, groups)
+    if (!is.null(H) && ncol(H) == nrow(cmp)) {
+        apply <- function(est) as.vector(Matrix::crossprod(H, est))
+        hyp <- list(kind = "matrix", apply = apply, H = H)
+    } else {
+        hyp <- list(kind = "formula", apply = apply)
+    }
     attr(hyp, "hypothesis_function_by") <- attr(cmp, "hypothesis_function_by")
     list(cmp = cmp, hyp = hyp)
+}
+
+hypothesis_compile_formula_matrix <- function(form, groups) {
+    if (!isTRUE(form$lhs %in% c("difference", "dotproduct"))) {
+        return(NULL)
+    }
+
+    group_sizes <- lengths(groups)
+    unique_sizes <- unique(group_sizes)
+    block_cache <- tryCatch(
+        lapply(unique_sizes, function(n) {
+            hypothesis_compile_formula_matrix_block(form$rhs, n)
+        }),
+        error = function(e) NULL
+    )
+    if (is.null(block_cache) || any(vapply(block_cache, is.null, logical(1)))) {
+        return(NULL)
+    }
+
+    blocks <- block_cache[match(group_sizes, unique_sizes)]
+    H <- Matrix::bdiag(blocks)
+    row_order <- unlist(groups, use.names = FALSE)
+    H[match(seq_along(row_order), row_order), , drop = FALSE]
+}
+
+hypothesis_compile_formula_matrix_block <- function(shortcut, n) {
+    if (shortcut %in% c("reference", "revreference")) {
+        if (n < 2L) {
+            return(NULL)
+        }
+        s <- if (shortcut == "reference") 1 else -1
+        return(Matrix::sparseMatrix(
+            i = c(seq.int(2L, n), rep.int(1L, n - 1L)),
+            j = rep.int(seq_len(n - 1L), 2L),
+            x = c(rep.int(s, n - 1L), rep.int(-s, n - 1L)),
+            dims = c(n, n - 1L)
+        ))
+    }
+
+    if (shortcut == "sequential") {
+        if (n < 2L) {
+            return(NULL)
+        }
+        return(Matrix::sparseMatrix(
+            i = c(seq.int(2L, n), seq_len(n - 1L)),
+            j = rep.int(seq_len(n - 1L), 2L),
+            x = rep(c(1, -1), each = n - 1L),
+            dims = c(n, n - 1L)
+        ))
+    }
+
+    if (shortcut %in% c("pairwise", "revpairwise")) {
+        if (shortcut == "pairwise") {
+            pairs <- which(lower.tri(matrix(FALSE, n, n)), arr.ind = TRUE)
+        } else {
+            pairs <- which(upper.tri(matrix(FALSE, n, n)), arr.ind = TRUE)
+        }
+        npairs <- nrow(pairs)
+        return(Matrix::sparseMatrix(
+            i = c(pairs[, 1L], pairs[, 2L]),
+            j = rep.int(seq_len(npairs), 2L),
+            x = rep(c(1, -1), each = npairs),
+            dims = c(n, npairs)
+        ))
+    }
+
+    if (shortcut == "trt_vs_ctrl") {
+        if (n < 2L) {
+            return(NULL)
+        }
+        return(Matrix::sparseMatrix(
+            i = seq_len(n),
+            j = rep.int(1L, n),
+            x = c(-1, rep.int(1 / (n - 1L), n - 1L)),
+            dims = c(n, 1L)
+        ))
+    }
+
+    if (shortcut == "meandev") {
+        H <- diag(n) - matrix(1 / n, nrow = n, ncol = n)
+        return(Matrix::Matrix(H, sparse = TRUE))
+    }
+
+    if (shortcut == "meanotherdev") {
+        if (n < 2L) {
+            return(NULL)
+        }
+        H <- diag(n) - matrix(1 / (n - 1L), nrow = n, ncol = n)
+        diag(H) <- 1
+        return(Matrix::Matrix(H, sparse = TRUE))
+    }
+
+    if (shortcut == "poly") {
+        H <- stats::contr.poly(n)
+        H <- H[, seq_len(min(5L, ncol(H))), drop = FALSE]
+        return(Matrix::Matrix(H, sparse = TRUE))
+    }
+
+    if (shortcut == "helmert") {
+        return(Matrix::Matrix(stats::contr.helmert(n), sparse = TRUE))
+    }
+
+    NULL
 }
 
 hypothesis_compile_matrix <- function(hypothesis, cmp_skeleton) {

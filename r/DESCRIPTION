@@ -42,6 +42,7 @@ Imports:
     generics,
     Formula,
     insight (>= 1.3.0),
+    Matrix,
     methods,
     rlang
 Suggests:

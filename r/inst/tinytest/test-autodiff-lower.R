@@ -49,6 +49,13 @@ expect_true(hyp$low$ok)
 expect_true(is.matrix(hyp$low$spec$hyp))
 expect_equal(ncol(hyp$low$spec$hyp), 1L)
 
+hyp <- make_prediction_lowering(mod, by = "cyl", hypothesis = ~pairwise)
+expect_true(hyp$low$ok)
+expect_equal(hyp$plan$hyp$kind, "matrix")
+expect_inherits(hyp$plan$hyp$H, "sparseMatrix")
+expect_true(is.matrix(hyp$low$spec$hyp))
+expect_equal(dim(hyp$low$spec$hyp), c(3L, 3L))
+
 bad <- pred$plan
 bad$has_na <- TRUE
 low <- marginaleffects:::autodiff_lower_predictions(bad, pred$mfx, "response")
