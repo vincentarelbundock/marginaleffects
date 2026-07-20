@@ -13,6 +13,92 @@ expect_predictions(mod_simple)
 expect_hypotheses(mod_simple)
 expect_comparisons(mod_simple)
 
+# predictrms(type = "x") handles RMS transformations but omits intercepts.
+# The package method restores them and aligns columns with the coefficients.
+dat_analytic <- mtcars
+dat_analytic$cyl <- factor(dat_analytic$cyl)
+
+mod_ols_analytic <- rms::ols(
+    mpg ~ rms::rcs(wt, 4) + cyl,
+    data = dat_analytic,
+    x = TRUE,
+    y = TRUE
+)
+newdata <- dat_analytic[1:12, , drop = FALSE]
+X <- marginaleffects:::get_model_matrix(mod_ols_analytic, newdata)
+expect_equivalent(
+    drop(X %*% coef(mod_ols_analytic)),
+    as.numeric(predict(mod_ols_analytic, newdata = newdata, type = "lp"))
+)
+
+mod_lrm_analytic <- rms::lrm(
+    am ~ rms::rcs(wt, 4) + cyl,
+    data = dat_analytic,
+    x = TRUE,
+    y = TRUE
+)
+X <- marginaleffects:::get_model_matrix(mod_lrm_analytic, newdata)
+expect_equivalent(
+    drop(X %*% coef(mod_lrm_analytic)),
+    as.numeric(predict(mod_lrm_analytic, newdata = newdata, type = "lp"))
+)
+cmp_analytic <- avg_comparisons(
+    mod_lrm_analytic,
+    variables = "wt",
+    type = "fitted"
+)
+old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+cmp_fallback <- avg_comparisons(
+    mod_lrm_analytic,
+    variables = "wt",
+    type = "fitted"
+)
+options(old_option)
+expect_equivalent(cmp_analytic$estimate, cmp_fallback$estimate)
+expect_equivalent(
+    components(cmp_analytic, "jacobian"),
+    components(cmp_fallback, "jacobian"),
+    tolerance = 1e-5
+)
+
+# Ordinal lrm() has several intercepts. Link-scale prediction selects the RMS
+# reference intercept and remains linear; fitted probabilities are multi-output
+# and must remain on the fallback path.
+dat_ordinal <- dat_analytic
+dat_ordinal$gear <- ordered(dat_ordinal$gear)
+mod_lrm_ordinal <- rms::lrm(
+    gear ~ rms::rcs(wt, 4) + cyl,
+    data = dat_ordinal,
+    x = TRUE,
+    y = TRUE
+)
+X_ordinal <- marginaleffects:::get_model_matrix(mod_lrm_ordinal, newdata)
+expect_equivalent(
+    drop(X_ordinal %*% coef(mod_lrm_ordinal)),
+    as.numeric(predict(mod_lrm_ordinal, newdata = newdata, type = "lp"))
+)
+cmp_ordinal_analytic <- suppressWarnings(avg_comparisons(
+    mod_lrm_ordinal,
+    variables = "wt",
+    type = "lp"
+))
+old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+cmp_ordinal_fallback <- suppressWarnings(avg_comparisons(
+    mod_lrm_ordinal,
+    variables = "wt",
+    type = "lp"
+))
+options(old_option)
+expect_equivalent(
+    components(cmp_ordinal_analytic, "jacobian"),
+    components(cmp_ordinal_fallback, "jacobian"),
+    tolerance = 1e-5
+)
+expect_null(marginaleffects:::get_jacobian_analytic(
+    mod_lrm_ordinal,
+    type = "fitted"
+))
+
 # lmr: marginaleffects vs emtrends
 model <- rms::lrm(am ~ mpg, mtcars)
 expect_slopes(model, type = "lp", n_unique = 1)
@@ -83,4 +169,3 @@ mod <- orm(mpg ~ gear_ord + hp * wt, data = dat, x = TRUE, y = TRUE)
 expect_warning(
     avg_comparisons(mod, variables = "gear_ord", type = "lp"),
     pattern = "Ordered factors sometimes cause issues with `rms` models")
-

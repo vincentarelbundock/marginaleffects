@@ -76,9 +76,101 @@ get_predict.lrm <- get_predict.rms
 get_predict.ols <- get_predict.rms
 
 
+get_model_matrix_rms <- function(model, newdata) {
+    # predictrms(type = "x") is the authoritative RMS design construction,
+    # including restricted splines and Design metadata. It omits intercepts.
+    X <- stats::predict(model, newdata = newdata, type = "x")
+    X <- as.matrix(X)
+    beta <- get_coef(model)
+    n_intercepts <- model$non.slopes
+    if (
+        length(n_intercepts) != 1L || !is.numeric(n_intercepts) ||
+            n_intercepts < 1L ||
+            ncol(X) != length(beta) - n_intercepts
+    ) {
+        return(NULL)
+    }
+
+    intercept_ref <- model$interceptRef
+    if (length(intercept_ref) == 0L) {
+        intercept_ref <- 1L
+    }
+    if (
+        length(intercept_ref) != 1L || intercept_ref < 1L ||
+            intercept_ref > n_intercepts
+    ) {
+        return(NULL)
+    }
+
+    intercepts <- matrix(0, nrow = nrow(X), ncol = n_intercepts)
+    intercepts[, intercept_ref] <- 1
+    out <- cbind(intercepts, X)
+    colnames(out) <- names(beta)
+    out
+}
+
+
+#' @rdname get_model_matrix
+#' @export
+get_model_matrix.ols <- function(model, newdata, mfx = NULL) {
+    get_model_matrix_rms(model, newdata)
+}
+
+
+#' @rdname get_model_matrix
+#' @export
+get_model_matrix.lrm <- get_model_matrix.ols
+
+
+#' @rdname get_jacobian_analytic
+#' @export
+get_jacobian_analytic.ols <- function(model, type, ...) {
+    if (
+        !identical(class(model)[1], "ols") ||
+            !identical(type, "lp")
+    ) {
+        return(NULL)
+    }
+    jacobian_analytic_model_matrix(
+        model = model,
+        type = type,
+        response_scale = FALSE,
+        ...
+    )
+}
+
+
+#' @rdname get_jacobian_analytic
+#' @export
+get_jacobian_analytic.lrm <- function(model, type, ...) {
+    if (
+        !identical(class(model)[1], "lrm") ||
+            !isTRUE(type %in% c("lp", "fitted"))
+    ) {
+        return(NULL)
+    }
+
+    response_scale <- identical(type, "fitted")
+    if (
+        response_scale &&
+            (!identical(model$non.slopes, 1L) || length(model$famfunctions) > 0L)
+    ) {
+        return(NULL)
+    }
+    jacobian_analytic_model_matrix(
+        model = model,
+        type = type,
+        response_scale = response_scale,
+        family = if (response_scale) stats::binomial("logit") else NULL,
+        ...
+    )
+}
+
+
 
 ### AUTODIFF: 
-### DO NOT DO THIS BECAUSE get_model_matrix() doesn't work with these models
+### The analytic path above uses predictrms(type = "x"). Keep the old JAX
+### sketches below disabled unless they can use that same RMS-native matrix.
 
 # #' @keywords internal
 # #' @export

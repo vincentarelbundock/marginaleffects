@@ -1,0 +1,69 @@
+## Get an exact analytic Jacobian when supported {.unnumbered}
+
+
+### Description
+
+Get an exact analytic Jacobian when supported
+
+
+
+### Usage
+
+<pre><code class='language-R'>get_jacobian_analytic(model, ...)
+
+## Default S3 method:
+get_jacobian_analytic(model, ...)
+
+## S3 method for class 'negbin'
+get_jacobian_analytic(model, type, ...)
+
+## S3 method for class 'rlm'
+get_jacobian_analytic(model, type, ...)
+
+## S3 method for class 'brglmFit'
+get_jacobian_analytic(model, type, ...)
+
+## S3 method for class 'geeglm'
+get_jacobian_analytic(model, type, ...)
+
+## S3 method for class 'ivreg'
+get_jacobian_analytic(model, type, ...)
+
+## S3 method for class 'rq'
+get_jacobian_analytic(model, type, ...)
+
+## S3 method for class 'ols'
+get_jacobian_analytic(model, type, ...)
+
+## S3 method for class 'lrm'
+get_jacobian_analytic(model, type, ...)
+
+## S3 method for class 'lm'
+get_jacobian_analytic(model, type, ...)
+
+## S3 method for class 'glm'
+get_jacobian_analytic(model, type, ...)
+
+## S3 method for class 'svyglm'
+get_jacobian_analytic(model, type, ...)
+</code></pre>
+
+
+### Arguments
+
+<table role = "presentation">
+<tr><td style = "white-space: collapse; font-family: monospace; vertical-align: top"><code id="model">model</code></td>
+<td>
+A model object.
+</td></tr>
+<tr><td style = "white-space: collapse; font-family: monospace; vertical-align: top"><code id="...">...</code></td>
+<td>
+Arguments passed to model-specific methods.
+</td></tr>
+</table>
+
+
+### Value
+
+A numeric Jacobian matrix, or <code>NULL</code> when the model or estimand is
+not eligible for the analytic path.

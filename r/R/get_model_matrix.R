@@ -13,37 +13,21 @@ get_model_matrix <- function(model, newdata, mfx = NULL) {
 #' @keywords internal
 #' @export
 get_model_matrix.default <- function(model, newdata, mfx = NULL) {
-    # some models require the response variable first value only allows us to
-    # handle `newdata="balanced"` and friends. This is a hack, but it probably
-    # doesn't matter. There can be many response variables, so we loop.
-    if (!is.null(mfx)) {
-        dv <- mfx@variable_names_response
-        for (d in dv) {
-            if (!d %in% colnames(newdata)) {
-                if (nrow(newdata) == nrow(mfx@modeldata)) {
-                    newdata[[d]] <- mfx@modeldata[[d]]
-                } else {
-                    # For different sized newdata, use first value as placeholder
-                    newdata[[d]] <- mfx@modeldata[[d]][1]
-                }
-            }
-        }
-    }
+    NULL
+}
 
-    # faster
-    if (class(model)[1] %in% c("lm", "glm")) {
-        out <- stats::model.matrix(model, data = newdata)
-        # more general
-    } else {
-        out <- hush(insight::get_modelmatrix(model, data = newdata))
-    }
 
-    beta <- get_coef(model)
-    if (!isTRUE(nrow(out) == nrow(newdata)) || !isTRUE(ncol(out) == length(beta))) {
-        return(NULL)
-    } else {
-        return(out)
+model_has_effective_offset <- function(model) {
+    offset <- model[["offset"]]
+    if (is.null(offset)) {
+        return(FALSE)
     }
+    tt <- tryCatch(stats::terms(model), error = function(e) NULL)
+    formula_offset <- length(attr(tt, "offset")) > 0L
+    call_offset <- "offset" %in% names(model$call)
+    malformed_or_nonzero <-
+        !is.numeric(offset) || anyNA(offset) || any(offset != 0)
+    formula_offset || call_offset || malformed_or_nonzero
 }
 
 
@@ -65,7 +49,10 @@ add_model_matrix_attribute <- function(mfx, newdata = NULL) {
     }
 
     # supported models (no inheritance)
-    supported <- c("lm", "glm", "rq", "ols", "lrm", "ivreg")
+    supported <- c(
+        "lm", "glm", "rq", "ols", "lrm", "ivreg", "geeglm", "svyglm",
+        "negbin", "rlm", "brglmFit"
+    )
     if (!isTRUE(class(model)[1] %in% supported)) {
         return(newdata)
     }
@@ -76,8 +63,9 @@ add_model_matrix_attribute <- function(mfx, newdata = NULL) {
         return(newdata)
     }
 
-    # we don't support offsets, so revert to stats::predict()
-    if (!is.null(model[["offset"]])) {
+    # geeglm stores an all-zero offset even without an offset term. Explicit,
+    # nonzero, or malformed offsets still fall back to package prediction.
+    if (model_has_effective_offset(model)) {
         return(newdata)
     }
 
@@ -88,7 +76,23 @@ add_model_matrix_attribute <- function(mfx, newdata = NULL) {
 
     nd <- as.data.frame(newdata)[, vars, drop = FALSE]
 
-    MM <- hush(get_model_matrix(model, newdata = nd, mfx = mfx))
+    # This cache is optional. Model-specific matrix methods should fail closed
+    # without paying the connection overhead of hush()/capture.output().
+    MM <- suppressMessages(suppressWarnings(
+        tryCatch(
+            get_model_matrix(model, newdata = nd, mfx = mfx),
+            error = function(e) NULL
+        )
+    ))
+
+    # Cached consumers align rows positionally and coefficients by column name.
+    # Dropping unused observation labels avoids retaining one string per row in
+    # prediction Jacobians and other long-data inference objects. Every method
+    # above constructs a fresh matrix, so removing dimnames by reference is safe
+    # and avoids copying the complete numeric payload.
+    if (is.matrix(MM)) {
+        data.table::setattr(MM, "dimnames", list(NULL, colnames(MM)))
+    }
 
     attr(newdata, "marginaleffects_model_matrix") <- MM
     return(newdata)

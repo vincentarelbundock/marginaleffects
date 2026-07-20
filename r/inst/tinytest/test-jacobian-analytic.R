@@ -38,6 +38,71 @@ expect_equivalent(
     sqrt(rowSums(tcrossprod(J_glm, vcov(mod_glm)) * J_glm))
 )
 
+# Package-owned lm/glm matrices reproduce predict.lm() for factors and
+# data-dependent bases on new data.
+mod_basis_lm <- lm(mpg ~ factor(cyl) + splines::ns(hp, 3), data = mtcars)
+newdata_basis <- mtcars[1:8, , drop = FALSE]
+newdata_basis$hp <- newdata_basis$hp + 5
+X_basis_lm <- marginaleffects:::get_model_matrix(mod_basis_lm, newdata_basis)
+expect_equivalent(
+    drop(X_basis_lm %*% coef(mod_basis_lm)),
+    as.numeric(predict(mod_basis_lm, newdata_basis))
+)
+
+mod_basis_glm <- suppressWarnings(glm(
+    am ~ factor(cyl) + splines::ns(hp, 3),
+    family = binomial,
+    data = mtcars
+))
+X_basis_glm <- marginaleffects:::get_model_matrix(mod_basis_glm, newdata_basis)
+expect_equivalent(
+    drop(X_basis_glm %*% coef(mod_basis_glm)),
+    as.numeric(predict(mod_basis_glm, newdata_basis, type = "link"))
+)
+
+# Response-scale GLMs apply the inverse-link derivative to each model-matrix
+# row before applying comparison and aggregation operators.
+cmp_glm_response <- comparisons(
+    mod_glm,
+    variables = list(hp = c(100, 110)),
+    newdata = "mean",
+    type = "response"
+)
+lo <- data.frame(hp = 100, wt = mean(mtcars$wt))
+hi <- data.frame(hp = 110, wt = mean(mtcars$wt))
+X_lo <- marginaleffects:::get_model_matrix(mod_glm, lo)
+X_hi <- marginaleffects:::get_model_matrix(mod_glm, hi)
+eta_lo <- drop(X_lo %*% coef(mod_glm))
+eta_hi <- drop(X_hi %*% coef(mod_glm))
+expected_response <-
+    X_hi * as.vector(mod_glm$family$mu.eta(eta_hi)) -
+    X_lo * as.vector(mod_glm$family$mu.eta(eta_lo))
+attributes(expected_response) <- list(
+    dim = dim(expected_response),
+    dimnames = list(NULL, names(coef(mod_glm)))
+)
+expect_equivalent(
+    components(cmp_glm_response, "jacobian"),
+    expected_response
+)
+
+pred_glm_response <- predictions(
+    mod_basis_glm,
+    newdata = newdata_basis,
+    type = "response"
+)
+eta <- drop(X_basis_glm %*% coef(mod_basis_glm))
+expected_pred_response <-
+    X_basis_glm * as.vector(mod_basis_glm$family$mu.eta(eta))
+attributes(expected_pred_response) <- list(
+    dim = dim(expected_pred_response),
+    dimnames = list(NULL, names(coef(mod_basis_glm)))
+)
+expect_equivalent(
+    components(pred_glm_response, "jacobian"),
+    expected_pred_response
+)
+
 # Named covariance matrices are aligned to the analytic Jacobian by coefficient.
 X <- model.matrix(mod_lm, data = mtcars[1:5, , drop = FALSE])
 X <- matrix(as.numeric(X), nrow = nrow(X),
@@ -104,6 +169,41 @@ colnames(expected_by) <- names(coef(mod_interaction))
 rownames(expected_by) <- NULL
 expect_equivalent(components(avg_by, "jacobian"), expected_by)
 
+# Average comparisons bypass the observation-level comparison Jacobian. This
+# guards the allocation-saving path in addition to its numerical result above.
+assign("analytic_comparison_group_calls", 0L, envir = .GlobalEnv)
+suppressMessages(invisible(utils::capture.output(
+    trace(
+        "jacobian_analytic_comparison_groups",
+        where = asNamespace("marginaleffects"),
+        tracer = quote({
+            .GlobalEnv$analytic_comparison_group_calls <-
+                .GlobalEnv$analytic_comparison_group_calls + 1L
+        }),
+        print = FALSE
+    )
+)))
+tryCatch(
+    {
+        avg_comparisons(
+            mod_interaction,
+            variables = list(hp = c(100, 110)),
+            by = "am",
+            wts = "cyl"
+        )
+        expect_equal(.GlobalEnv$analytic_comparison_group_calls, 0L)
+    },
+    finally = {
+        suppressMessages(invisible(utils::capture.output(
+            untrace(
+                "jacobian_analytic_comparison_groups",
+                where = asNamespace("marginaleffects")
+            )
+        )))
+        rm("analytic_comparison_group_calls", envir = .GlobalEnv)
+    }
+)
+
 avg_hypothesis <- avg_comparisons(
     mod_interaction,
     variables = list(hp = c(100, 110)),
@@ -138,6 +238,23 @@ attributes(X_lm) <- list(
     dimnames = list(NULL, colnames(X_lm))
 )
 expect_identical(components(pred_lm, "jacobian"), X_lm)
+
+# The prediction plan may reuse values only when get_predict() confirms that
+# those values came from the cached model matrix.
+cached_newdata <- components(pred_lm, "newdata")
+cached_prediction <- marginaleffects:::get_predict(
+    mod_lm,
+    newdata = cached_newdata,
+    type = "response"
+)
+expect_true(isTRUE(attr(
+    cached_prediction,
+    "marginaleffects_model_matrix_used"
+)))
+expect_equivalent(
+    attr(cached_prediction, "marginaleffects_linear_predictor"),
+    cached_prediction$estimate
+)
 
 pred_hypothesis <- predictions(
     mod_lm,
@@ -176,6 +293,150 @@ pred_invlink <- predictions(
     type = "invlink(link)"
 )
 expect_identical(components(pred_invlink, "jacobian"), X_glm)
+
+# Response-scale derivatives must include mu.eta() at every prediction row.
+# Compare against the public numerical fallback across datasets, families,
+# links, predictions, and simple differences.
+dat_mtcars <- mtcars
+dat_mtcars$cyl_f <- factor(dat_mtcars$cyl)
+dat_iris <- iris
+dat_iris$high_width <- as.integer(
+    dat_iris$Sepal.Width > stats::median(dat_iris$Sepal.Width)
+)
+
+response_cases <- suppressWarnings(list(
+    mtcars_binomial_logit = list(
+        model = glm(am ~ hp + wt + cyl_f, dat_mtcars, family = binomial("logit")),
+        data = dat_mtcars,
+        variable = "hp"
+    ),
+    mtcars_binomial_probit = list(
+        model = glm(am ~ hp + wt + cyl_f, dat_mtcars, family = binomial("probit")),
+        data = dat_mtcars,
+        variable = "hp"
+    ),
+    mtcars_binomial_cloglog = list(
+        model = glm(am ~ hp + wt + cyl_f, dat_mtcars, family = binomial("cloglog")),
+        data = dat_mtcars,
+        variable = "hp"
+    ),
+    mtcars_binomial_cauchit = list(
+        model = glm(am ~ mpg + drat, dat_mtcars, family = binomial("cauchit")),
+        data = dat_mtcars,
+        variable = "mpg"
+    ),
+    mtcars_gaussian_log = list(
+        model = glm(mpg ~ hp + wt + cyl_f, dat_mtcars, family = gaussian("log")),
+        data = dat_mtcars,
+        variable = "hp"
+    ),
+    mtcars_gaussian_inverse = list(
+        model = glm(mpg ~ hp + wt + cyl_f, dat_mtcars, family = gaussian("inverse")),
+        data = dat_mtcars,
+        variable = "hp"
+    ),
+    mtcars_poisson_log = list(
+        model = glm(cyl ~ hp + wt, dat_mtcars, family = poisson("log")),
+        data = dat_mtcars,
+        variable = "hp"
+    ),
+    mtcars_poisson_sqrt = list(
+        model = glm(cyl ~ hp + wt, dat_mtcars, family = poisson("sqrt")),
+        data = dat_mtcars,
+        variable = "hp"
+    ),
+    mtcars_gamma_log = list(
+        model = glm(mpg ~ hp + wt, dat_mtcars, family = Gamma("log")),
+        data = dat_mtcars,
+        variable = "hp"
+    ),
+    mtcars_gamma_inverse = list(
+        model = glm(mpg ~ hp + wt, dat_mtcars, family = Gamma("inverse")),
+        data = dat_mtcars,
+        variable = "hp"
+    )
+))
+for (link in c("logit", "probit", "cloglog", "cauchit")) {
+    response_cases[[paste0("iris_binomial_", link)]] <- list(
+        model = glm(
+            high_width ~ Sepal.Length + Petal.Length + Species,
+            dat_iris,
+            family = binomial(link)
+        ),
+        data = dat_iris,
+        variable = "Sepal.Length"
+    )
+}
+
+force_jacobian_fallback <- function(fun) {
+    old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+    on.exit(options(old_option), add = TRUE)
+    fun()
+}
+
+for (case in response_cases) {
+    nd <- case$data[seq_len(min(25L, nrow(case$data))), , drop = FALSE]
+    pred_analytic <- predictions(case$model, newdata = nd, type = "response")
+    pred_fallback <- force_jacobian_fallback(function() {
+        predictions(case$model, newdata = nd, type = "response")
+    })
+    expect_equivalent(pred_analytic$estimate, pred_fallback$estimate)
+    expect_equivalent(
+        components(pred_analytic, "jacobian"),
+        components(pred_fallback, "jacobian"),
+        tolerance = 1e-4
+    )
+
+    cmp_analytic <- comparisons(
+        case$model,
+        variables = case$variable,
+        newdata = nd,
+        type = "response"
+    )
+    cmp_fallback <- force_jacobian_fallback(function() {
+        comparisons(
+            case$model,
+            variables = case$variable,
+            newdata = nd,
+            type = "response"
+        )
+    })
+    expect_equivalent(cmp_analytic$estimate, cmp_fallback$estimate)
+    expect_equivalent(
+        components(cmp_analytic, "jacobian"),
+        components(cmp_fallback, "jacobian"),
+        tolerance = 1e-4
+    )
+}
+
+# Exercise response-scale derivatives after weighted grouping and a matrix
+# hypothesis, where the row-level mu.eta() values must be aggregated first.
+mod_iris_probit <- response_cases$iris_binomial_probit$model
+hypothesis_iris <- matrix(c(1, -1, 0), ncol = 1)
+avg_analytic <- avg_comparisons(
+    mod_iris_probit,
+    variables = "Sepal.Length",
+    by = "Species",
+    wts = "Sepal.Width",
+    hypothesis = hypothesis_iris,
+    type = "response"
+)
+avg_fallback <- force_jacobian_fallback(function() {
+    avg_comparisons(
+        mod_iris_probit,
+        variables = "Sepal.Length",
+        by = "Species",
+        wts = "Sepal.Width",
+        hypothesis = hypothesis_iris,
+        type = "response"
+    )
+})
+expect_equivalent(avg_analytic$estimate, avg_fallback$estimate)
+expect_equivalent(
+    components(avg_analytic, "jacobian"),
+    components(avg_fallback, "jacobian"),
+    tolerance = 1e-4
+)
 
 # Unsupported estimands use finite differences. Instrumentation is always
 # removed in `finally` so a failed assertion cannot contaminate later tests.
@@ -276,7 +537,49 @@ tryCatch(
             type = "response",
             numderiv = "fdforward"
         )
+        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
+
+        # The global opt-out must actually invoke the fallback, not merely
+        # produce a numerically identical result through the analytic route.
+        old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+        tryCatch(
+            comparisons(
+                mod_lm,
+                variables = "hp",
+                newdata = "mean",
+                numderiv = "fdforward"
+            ),
+            finally = options(old_option)
+        )
         expect_equal(.GlobalEnv$analytic_fd_calls, 6L)
+
+        mod_glm_offset <- glm(
+            am ~ hp + offset(log(wt)),
+            data = mtcars,
+            family = binomial()
+        )
+        comparisons(
+            mod_glm_offset,
+            variables = "hp",
+            newdata = "mean",
+            type = "response",
+            numderiv = "fdforward"
+        )
+        expect_equal(.GlobalEnv$analytic_fd_calls, 7L)
+
+        mod_glm_rank_deficient <- glm(
+            am ~ hp + I(hp),
+            data = mtcars,
+            family = binomial()
+        )
+        suppressWarnings(comparisons(
+            mod_glm_rank_deficient,
+            variables = "hp",
+            newdata = "mean",
+            type = "response",
+            numderiv = "fdforward"
+        ))
+        expect_equal(.GlobalEnv$analytic_fd_calls, 8L)
     },
     finally = {
         suppressMessages(invisible(utils::capture.output(

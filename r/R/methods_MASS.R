@@ -118,3 +118,55 @@ get_predict.lda <- function(
     out <- add_rowid(out, newdata)
     return(out)
 }
+
+
+#' @rdname get_model_matrix
+#' @export
+get_model_matrix.negbin <- function(model, newdata, mfx = NULL) {
+    get_model_matrix.glm(model, newdata, mfx = mfx)
+}
+
+
+#' @rdname get_jacobian_analytic
+#' @export
+get_jacobian_analytic.negbin <- function(model, type, ...) {
+    if (
+        !identical(class(model)[1], "negbin") ||
+            !isTRUE(type %in% c("response", "link"))
+    ) {
+        return(NULL)
+    }
+    response_scale <- identical(type, "response")
+    jacobian_analytic_model_matrix(
+        model = model,
+        type = type,
+        response_scale = response_scale,
+        family = if (response_scale) stats::family(model) else NULL,
+        ...
+    )
+}
+
+
+#' @rdname get_model_matrix
+#' @export
+get_model_matrix.rlm <- function(model, newdata, mfx = NULL) {
+    get_model_matrix.lm(model, newdata, mfx = mfx)
+}
+
+
+#' @rdname get_jacobian_analytic
+#' @export
+get_jacobian_analytic.rlm <- function(model, type, ...) {
+    if (
+        !identical(class(model)[1], "rlm") ||
+            !identical(type, "response")
+    ) {
+        return(NULL)
+    }
+    jacobian_analytic_model_matrix(
+        model = model,
+        type = type,
+        response_scale = FALSE,
+        ...
+    )
+}
