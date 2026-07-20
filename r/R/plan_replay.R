@@ -277,10 +277,14 @@ plan_std_error <- function(
     # Explicit user Jacobians retain priority. Otherwise, use a validated exact
     # analytic derivative before trying autodiff and numerical differentiation.
     custom_jacobian <- settings_get("jacobian_function")
-    if (is.null(custom_jacobian)) {
+    analytic_enabled <- isTRUE(getOption(
+        "marginaleffects_analytic_jacobian",
+        default = TRUE
+    ))
+    if (is.null(custom_jacobian) && analytic_enabled) {
         J <- get_jacobian_analytic(
+            model = mfx@model,
             plan = plan,
-            mfx = mfx,
             kind = kind,
             type = type,
             estimate = estimates[["estimate"]],

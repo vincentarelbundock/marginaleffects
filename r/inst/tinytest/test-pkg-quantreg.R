@@ -12,6 +12,30 @@ expect_predictions(mod_simple)
 expect_hypotheses(mod_simple)
 expect_comparisons(mod_simple)
 
+# predict.rq() constructs this matrix directly, so cached predictions and the
+# analytic Jacobian must agree with both package predictions and finite diffs.
+mod_analytic <- quantreg::rq(
+    mpg ~ wt * factor(cyl) + splines::ns(hp, 3),
+    data = mtcars
+)
+newdata <- mtcars[1:12, , drop = FALSE]
+X <- marginaleffects:::get_model_matrix(mod_analytic, newdata)
+expect_equivalent(
+    drop(X %*% coef(mod_analytic)),
+    as.numeric(predict(mod_analytic, newdata = newdata))
+)
+cmp_analytic <- avg_comparisons(mod_analytic, variables = "wt")
+J_analytic <- components(cmp_analytic, "jacobian")
+old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+cmp_fallback <- avg_comparisons(mod_analytic, variables = "wt")
+options(old_option)
+expect_equivalent(cmp_analytic$estimate, cmp_fallback$estimate)
+expect_equivalent(
+    J_analytic,
+    components(cmp_fallback, "jacobian"),
+    tolerance = 1e-5
+)
+
 # marginaleffects: rq: Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$quantreg_rq_01
 model <- suppressWarnings(quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcars))

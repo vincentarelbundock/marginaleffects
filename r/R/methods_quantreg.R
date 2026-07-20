@@ -11,12 +11,14 @@ get_predict.rq <- function(
     MM <- attr(newdata, "marginaleffects_model_matrix")
     if (isTRUE(checkmate::check_matrix(MM))) {
         beta <- get_coef(model)
-        out <- drop(MM %*% beta)
-        if (isTRUE(checkmate::check_numeric(out, len = nrow(newdata)))) {
-            out <- data.table(estimate = out)
+        eta <- drop(MM %*% beta)
+        if (isTRUE(checkmate::check_numeric(eta, len = nrow(newdata)))) {
+            out <- data.table(estimate = eta)
         } else {
-            out <- data.table(estimate = out)
+            out <- data.table(estimate = eta)
         }
+        attr(out, "marginaleffects_linear_predictor") <- eta
+        attr(out, "marginaleffects_model_matrix_used") <- TRUE
     } else {
         out <- quantreg::predict.rq(model, newdata = newdata, ...)
         out <- data.table(estimate = out)
@@ -38,19 +40,38 @@ sanitize_model_specific.rqs <- function(model, ...) {
     )
 }
 
-# #' @rdname get_model_matrix
-# #' @keywords internal
-# #' @export
-# get_model_matrix.rq <- function(object, newdata) {
-#         tt <- stats::terms(object)
-#         Terms <- delete.response(tt)
-#         m <- model.frame(Terms, newdata, na.action = na.pass, xlev = object$xlevels)
-#         if (!is.null(cl <- attr(Terms, "dataClasses")))
-#             stats::.checkMFClasses(cl, m)
-#         X <- model.matrix(Terms, m, contrasts.arg = object$contrasts)
-#         if (!isTRUE(nrow(X) == nrow(newdata))) {
-#             return(NULL)
-#         } else {
-#             return(X)
-#         }
-# }
+#' @rdname get_model_matrix
+#' @export
+get_model_matrix.rq <- function(model, newdata, mfx = NULL) {
+    # Match predict.rq(): its predictions are X %*% coefficients.
+    tt <- stats::delete.response(stats::terms(model))
+    mf <- stats::model.frame(
+        tt,
+        data = newdata,
+        na.action = stats::na.pass,
+        xlev = model$xlevels
+    )
+    stats::model.matrix(
+        tt,
+        mf,
+        contrasts.arg = model$contrasts
+    )
+}
+
+
+#' @noRd
+#' @export
+get_jacobian_analytic.rq <- function(model, type, ...) {
+    if (
+        !identical(class(model)[1], "rq") ||
+            !identical(type, "response")
+    ) {
+        return(NULL)
+    }
+    jacobian_analytic_model_matrix(
+        model = model,
+        type = type,
+        response_scale = FALSE,
+        ...
+    )
+}

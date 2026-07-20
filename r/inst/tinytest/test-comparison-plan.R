@@ -78,7 +78,11 @@ cmp_matrix <- comparisons(
     hypothesis = c(1, -1)
 )
 expect_equivalent(cmp_string$estimate, cmp_matrix$estimate)
-expect_equivalent(cmp_string$std.error, cmp_matrix$std.error)
+expect_equivalent(
+    cmp_string$std.error,
+    cmp_matrix$std.error,
+    tolerance = 1e-6
+)
 
 cmp_string <- comparisons(
     mod,

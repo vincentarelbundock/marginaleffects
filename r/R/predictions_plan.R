@@ -44,6 +44,8 @@ prediction_plan_build <- function(
         mfx = mfx,
         ...
     )
+    linear_predictor <- attr(out, "marginaleffects_linear_predictor")
+    model_matrix_used <- isTRUE(attr(out, "marginaleffects_model_matrix_used"))
     data.table::setDT(out)
 
     if (
@@ -97,6 +99,8 @@ prediction_plan_build <- function(
         prediction_plan_build_frequentist(
             out = out,
             raw_estimate = raw_estimate,
+            linear_predictor = linear_predictor,
+            model_matrix_used = model_matrix_used,
             keep = keep,
             newdata = newdata,
             type = type,
