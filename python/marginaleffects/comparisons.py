@@ -14,8 +14,8 @@ from .sanitize import (
     handle_pyfixest_vcov_limitation,
 )
 from .classes import MarginaleffectsResult
-from .uncertainty import get_jacobian, get_se
-from .plan import (
+from .inference import analytic_try, get_jacobian, get_se
+from .planning import (
     CompGroup,
     ComparisonPlan,
     comparison_plan_apply,
@@ -25,11 +25,11 @@ from .plan import (
 from .utils import (
     get_pad,
     upcast,
-    validate_string_columns,
     finalize_result,
     call_avg,
     prepare_base_inputs,
 )
+from .sanitize.utils import validate_string_columns
 from .docstrings import doc
 
 
@@ -331,7 +331,11 @@ def _assemble_prediction_table(model, coefs, nd, nd_X, hi_X, lo_X, capture_align
         tmp = tmp.drop("_merge_id")
 
     else:
-        raise ValueError("Something went wrong")
+        raise ValueError(
+            "Could not align counterfactual predictions with their metadata: "
+            f"the model returned {tmp.shape[0]} prediction rows for "
+            f"{nd.shape[0]} counterfactual rows and did not provide a `group` column."
+        )
 
     if capture_align:
         plan_predictions = (
@@ -755,13 +759,25 @@ def comparisons(
         comparison_functions=comparison_functions,
     )
     if vcov is not None and vcov is not False and V is not None:
-        ad = autodiff_try(
-            plan=plan,
-            model=model,
-            V=V,
-            estimate=out["estimate"].to_numpy(),
-            kind="comparisons",
-        )
+        # An explicit `eps_vcov` requests finite differences with that step size,
+        # so the exact-derivative paths are skipped when the user supplies one.
+        ad = None
+        if eps_vcov is None:
+            ad = analytic_try(
+                plan=plan,
+                model=model,
+                V=V,
+                estimate=out["estimate"].to_numpy(),
+                kind="comparisons",
+            )
+            if ad is None:
+                ad = autodiff_try(
+                    plan=plan,
+                    model=model,
+                    V=V,
+                    estimate=out["estimate"].to_numpy(),
+                    kind="comparisons",
+                )
         if ad is not None:
             J = ad.jacobian
             out = out.with_columns(pl.Series(ad.std_error).alias("std_error"))

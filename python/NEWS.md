@@ -1,3 +1,21 @@
+# 0.6.1
+
+Breaking changes:
+
+* Model wrappers returned by `fit_statsmodels()`, `fit_sklearn()`, and
+  `fit_linearmodels()` no longer forward unknown attributes to the underlying
+  fitted object. Calls such as `mod.summary()` or `mod.params` now raise
+  `AttributeError`. Use `mod.get_fitted_model()` to reach the engine object.
+
+New:
+
+* Analytic Jacobians for linear model-matrix plans. Standard errors for
+  `predictions()`, `comparisons()`, and their `avg_*` counterparts are computed
+  in closed form when the plan supports it, instead of by finite differences.
+  Supplying `eps_vcov` still selects the finite-difference path.
+* `jax` is no longer a required dependency. Install the optional `autodiff`
+  extra to enable automatic differentiation.
+
 # 0.6.0
 
 Breaking changes:

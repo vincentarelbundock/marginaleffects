@@ -12,7 +12,7 @@ The Python source lives in `marginaleffects/`, organized by task (e.g., `predict
 - `make readme`: rebuild `README.md` from Quarto sources when docstrings change.
 
 ## Coding Style & Naming Conventions
-Target Python 3.10+ with four-space indentation, `black`-style line wrapping, and explicit imports. `ruff` enforces lint rules; do not commit failing lint. Modules and functions use `snake_case`, classes use `PascalCase`, and tests mirror their subject (e.g., `test_predictions.py::test_average_marginal_effects`). Prefer type hints on public APIs and short, factual docstrings—`make qmd` extracts them into Quarto docs.
+Target Python 3.12+ with four-space indentation, `black`-style line wrapping, and explicit imports. `ruff` enforces lint rules; do not commit failing lint. Modules and functions use `snake_case`, classes use `PascalCase`, and tests mirror their subject (e.g., `test_predictions.py::test_average_marginal_effects`). Prefer type hints on public APIs and short, factual docstrings—`make qmd` extracts them into Quarto docs.
 
 ## Testing Guidelines
 Use `pytest` with tests collocated under `tests/`. Name scenarios `test_<feature>_<case>` to align with existing files. Mark heavy plotting checks with `@pytest.mark.plot`; exclude them locally via `uv run --all-extras pytest -m "not plot"`. When introducing regression data, add fixtures to `tests/data/`. Regenerate R comparison artifacts with `make snapshot` and ensure new baselines are committed. Aim to keep coverage steady; verify complex additions with `make coverage`.

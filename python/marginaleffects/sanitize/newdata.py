@@ -4,10 +4,8 @@ import polars as pl
 from ..formula import listwise_deletion
 
 
-def sanitize_newdata(model, newdata, wts, by=[]):
-    # Lazy imports to break the `datagrid -> utils -> sanitize -> newdata -> ...`
-    # circular import that fires when `datagrid` is the first symbol pulled from
-    # marginaleffects in a fresh interpreter (see GH #1724).
+def sanitize_newdata(model, newdata, wts, by=None):
+    # Local imports keep data construction out of the sanitization module graph.
     from ..datagrid import datagrid
     from ..utils import ingest, upcast
 
@@ -53,10 +51,7 @@ def sanitize_newdata(model, newdata, wts, by=[]):
         out = datagrid(**args)
 
     else:
-        try:
-            out = ingest(newdata)
-        except Exception as e:
-            raise e
+        out = ingest(newdata)
 
     # user-supplied newdata may include missing values
     if model is not None and isinstance(out, pl.DataFrame):

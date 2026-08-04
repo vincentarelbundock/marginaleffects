@@ -91,9 +91,11 @@ class ModelLinearmodels(ModelAbstract):
 
         if V is not None:
             V = np.array(V)
-            if V.shape != (len(self.coef), len(self.coef)):
+            n_coef = len(self.get_coef())
+            if V.shape != (n_coef, n_coef):
                 raise ValueError(
-                    "vcov must be a square numpy array with dimensions equal to the length of self.coef"
+                    "vcov must be a square numpy array with dimensions equal to "
+                    f"the number of coefficients ({n_coef}). Got shape {V.shape}."
                 )
 
         return V
@@ -285,9 +287,11 @@ def fit_linearmodels(
     formula: str,
     data: pd.DataFrame,
     engine: None,
-    kwargs_engine: Dict[str, Any] = {},
-    kwargs_fit: Dict[str, Any] = {},
+    kwargs_engine: Dict[str, Any] | None = None,
+    kwargs_fit: Dict[str, Any] | None = None,
 ) -> ModelLinearmodels:
+    kwargs_engine = {} if kwargs_engine is None else kwargs_engine
+    kwargs_fit = {} if kwargs_fit is None else kwargs_fit
     linearmodels_formula, effects = parse_linearmodels_formula(formula)
 
     d = listwise_deletion(linearmodels_formula, data=data)

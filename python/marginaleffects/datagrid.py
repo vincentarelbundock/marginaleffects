@@ -3,7 +3,8 @@ from typing import Any, Dict, Union, List, Callable, Optional
 
 import polars as pl
 
-import marginaleffects.utils as ut
+from .sanitize.utils import sanitize_datagrid_factor
+from .utils import get_mode, mean_na, unique_s
 
 
 # Map variable types to function-defaults keys
@@ -270,7 +271,7 @@ def _normalize_grid_value(key, value, newdata, variable_type):
         original_variable_type = (
             {key: variable_type[key]} if key in variable_type else {}
         )
-        values = ut.sanitize_datagrid_factor(
+        values = sanitize_datagrid_factor(
             values, newdata[key], original_variable_type, key
         )
 
@@ -321,9 +322,9 @@ def _process_datagrid_group(
                 f"Warning: Error applying function to column '{col}': {e}. Using fallback."
             )
             if fun_key == "numeric":
-                implicit_values[col] = ut.mean_na(newdata[col])
+                implicit_values[col] = mean_na(newdata[col])
             else:
-                implicit_values[col] = ut.get_mode(newdata[col])
+                implicit_values[col] = get_mode(newdata[col])
 
     # Convert to DataFrames, preserving Enum/Categorical dtypes
     all_values = {}
@@ -380,21 +381,21 @@ def _get_function_defaults(grid_type, FUN=None):
 
     if grid_type == "balanced":
         defaults = {
-            "binary": ut.unique_s,
-            "character": ut.unique_s,
-            "categorical": ut.unique_s,
-            "logical": ut.unique_s,
-            "numeric": ut.mean_na,
-            "other": ut.mean_na,
+            "binary": unique_s,
+            "character": unique_s,
+            "categorical": unique_s,
+            "logical": unique_s,
+            "numeric": mean_na,
+            "other": mean_na,
         }
     else:
         defaults = {
-            "binary": ut.get_mode,
-            "character": ut.get_mode,
-            "categorical": ut.get_mode,
-            "logical": ut.get_mode,
-            "numeric": ut.mean_na,
-            "other": ut.get_mode,
+            "binary": get_mode,
+            "character": get_mode,
+            "categorical": get_mode,
+            "logical": get_mode,
+            "numeric": mean_na,
+            "other": get_mode,
         }
 
     if FUN is not None:

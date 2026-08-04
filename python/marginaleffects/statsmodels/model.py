@@ -256,8 +256,10 @@ comparisons(model_robust)
 {models_notes_statsmodels}""")
 @validate_types
 def fit_statsmodels(
-    formula: str, data: pl.DataFrame, engine, kwargs_engine={}, kwargs_fit={}
+    formula: str, data: pl.DataFrame, engine, kwargs_engine=None, kwargs_fit=None
 ):
+    kwargs_engine = {} if kwargs_engine is None else kwargs_engine
+    kwargs_fit = {} if kwargs_fit is None else kwargs_fit
     d = fml.listwise_deletion(formula, data=data)
     y, X = fml.model_matrices(formula, d)
     mod = engine(endog=y, exog=X, **kwargs_engine)

@@ -1,7 +1,7 @@
 import polars as pl
 from typing import List, Optional
 
-from .plan import AggGroup
+from .planning import AggGroup
 
 
 def get_by(model, estimand, newdata, by=None, wts=None):

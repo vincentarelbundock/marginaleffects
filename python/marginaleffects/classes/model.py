@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Protocol, runtime_checkable
 
 import numpy as np
 import polars as pl
@@ -31,6 +31,20 @@ class ModelVault:
     original_columns: Optional[List[str]] = None
     # linearmodels-specific
     multiindex: Optional[List[str]] = None
+
+
+@runtime_checkable
+class ModelAdapter(Protocol):
+    """Explicit contract consumed by marginaleffects estimation code."""
+
+    def get_modeldata(self) -> pl.DataFrame: ...
+    def get_vcov(self, vcov=True) -> Optional[np.ndarray]: ...
+    def get_coef(self) -> np.ndarray: ...
+    def get_coefnames(self) -> np.ndarray: ...
+    def get_formula(self): ...
+    def get_exog(self, newdata: pl.DataFrame): ...
+    def get_predict(self, params: np.ndarray, newdata) -> pl.DataFrame: ...
+    def get_df(self) -> float: ...
 
 
 class ModelAbstract(ModelValidation, ABC):
@@ -130,10 +144,9 @@ class ModelAbstract(ModelValidation, ABC):
     def get_autodiff_args(self):
         return None
 
-    def __getattr__(self, name: str) -> Any:
-        """Forward attribute access to the underlying fitted model."""
-        try:
-            return object.__getattribute__(self, name)
-        except AttributeError:
-            # Forward to the wrapped model
-            return getattr(self.model, name)
+    def get_df(self) -> float:
+        return np.inf
+
+    def get_fitted_model(self) -> Any:
+        """Return the wrapped engine object for adapter-specific integrations."""
+        return self.model

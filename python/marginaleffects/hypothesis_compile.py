@@ -6,7 +6,7 @@ from itertools import compress
 import numpy as np
 import polars as pl
 
-from .plan import Hyp
+from .planning import Hyp
 
 
 def _group_term_indices(terms):

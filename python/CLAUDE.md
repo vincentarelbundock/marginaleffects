@@ -34,10 +34,10 @@ Python package for statistical marginal effects analysis. Unified interface for 
 
 The three main functions (`predictions()`, `comparisons()`, `slopes()`) share a common flow:
 
-1. **Input sanitization** (`_input_utils.py:prepare_base_inputs`) — wraps raw model via `sanitize_model()`, validates `newdata`/`by`/`vcov`/`hypothesis`
-2. **Counterfactual computation** — builds modified data grids and computes estimates
-3. **Uncertainty** (`uncertainty.py`) — Jacobian via forward finite differences, delta method for standard errors
-4. **Result wrapping** (`result.py:MarginaleffectsResult`) — dataclass wrapping a Polars DataFrame with metadata (conf_level, jacobian, column mapping, print formatting)
+1. **Input sanitization** (`utils.py:prepare_base_inputs`, `sanitize/`) — wraps raw model via `sanitize_model()`, validates `newdata`/`by`/`vcov`/`hypothesis`
+2. **Counterfactual computation** — builds modified data grids and computes estimates, capturing a reusable plan (`planning/`)
+3. **Uncertainty** (`inference/`) — delta method for standard errors, with the Jacobian obtained from the first path that supports the plan: analytic (`inference/analytic.py`), automatic differentiation (`autodiff/`, opt-in), then forward finite differences (`inference/delta.py`)
+4. **Result wrapping** (`classes/result.py:MarginaleffectsResult`) — dataclass wrapping a Polars DataFrame with metadata (conf_level, jacobian, column mapping, print formatting)
 
 `slopes()` delegates entirely to `comparisons()` with `slope`-specific parameters — it does not reimplement the logic.
 
@@ -51,18 +51,20 @@ Each supported modeling library lives in its own subdirectory with a `model.py`:
 
 Auto-detection happens in `sanitize_model.py`. Sklearn and linearmodels can't be auto-detected because they don't store formula/data, so they use `fit_*()` functions that create the adapter with a "vault" dict holding `coef`, `vcov`, `modeldata`, `formula`, `variables_type`, etc.
 
-All adapters inherit from `ModelAbstract` (`model_abstract.py`), which provides the vault-based accessor interface (`get_coef()`, `get_vcov()`, `get_modeldata()`, `find_variables()`, etc.).
+All adapters inherit from `ModelAbstract` (`classes/model.py`), which provides the vault-based accessor interface (`get_coef()`, `get_vcov()`, `get_modeldata()`, `find_variables()`, etc.). The `ModelAdapter` Protocol in the same file documents the methods estimation code is allowed to call. Adapters do **not** proxy unknown attributes to the fitted object; use `get_fitted_model()` for engine-specific access.
 
 ### Key Infrastructure
 
-- `estimands.py` — defines comparison functions (difference, ratio, etc.)
+- `estimands.py` — defines comparison functions (difference, ratio, etc.). `planning/core.py:_builtin_comparison` mirrors these in numpy for fast replay; the two must stay in sync (`tests/test_planning_estimands.py`)
+- `planning/` — immutable prediction/comparison plans and coefficient-to-estimand replay
+- `inference/` — Jacobians (analytic, finite-difference), delta-method standard errors, test statistics
 - `datagrid.py` — creates reference grids for evaluation points
 - `by.py` — grouping/stratification of results
-- `hypotheses.py` / `hypothesis.py` — hypothesis testing and transformations
+- `hypothesis_compile.py` / `test/` — hypothesis testing, joint tests, equivalence
 - `transform.py` — response transformations (log, logit, etc.)
-- `equivalence.py` — equivalence/non-inferiority tests
-- `classes.py` — variable type detection; `MarginaleffectsDataFrame` is a deprecated alias for `MarginaleffectsResult`
-- `docs.py` — docstring template system with `{param_*}` placeholders
+- `classes/` — `MarginaleffectsResult` and model classes; `MarginaleffectsDataFrame` is a deprecated alias for `MarginaleffectsResult`
+- `docstrings/` — docstring template system with `{param_*}` placeholders
+- `plan.py` and `uncertainty.py` are compatibility façades over `planning/` and `inference/`; import from the packages in new code
 
 ### Data Flow
 

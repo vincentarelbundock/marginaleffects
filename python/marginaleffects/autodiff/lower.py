@@ -6,7 +6,7 @@ import warnings
 import numpy as np
 
 from ..settings import is_autodiff_enabled, is_autodiff_forced
-from ..uncertainty import get_se
+from ..inference import get_se
 from .ops import COMPARISON_OPS
 
 
