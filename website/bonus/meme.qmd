@@ -30,5 +30,7 @@ lightbox: auto
 ![](fig/meme_table2.jpg){group="elsewhere" description="No table 2 fallacy. Source: @mattansb.msbstats.info"}
 
 ![](fig/meme_wrestling.jpg){group="elsewhere" description="Wrestlers arguing about parameters. Source: @stephenjwild."}
+
+![](fig/meme_regression.webp){group="elsewhere" description="Causal inference? Regression. Prediction? Regression. Description? Believe it or not, regression. Source: @bharrap.bsky.social"}
 :::
 
