@@ -2,7 +2,7 @@
 % Please edit documentation in R/vcov_unconditional.R
 \name{vcovUnconditional}
 \alias{vcovUnconditional}
-\title{Request unconditional variance in marginaleffects calls}
+\title{EXPERIMENTAL: Request unconditional variance in marginaleffects calls}
 \usage{
 vcovUnconditional(type = "HC0", cluster = NULL)
 }
@@ -24,7 +24,7 @@ An object which can be supplied to the \code{vcov} argument of
 \code{\link[=avg_predictions]{avg_predictions()}}, \code{\link[=avg_comparisons]{avg_comparisons()}}, or \code{\link[=avg_slopes]{avg_slopes()}}.
 }
 \description{
-Request unconditional variance in marginaleffects calls
+EXPERIMENTAL: Request unconditional variance in marginaleffects calls
 }
 \details{
 The bare function form \code{vcov = vcovUnconditional} is equivalent to
@@ -61,10 +61,12 @@ covariate distribution. Models must provide compatible score and bread
 matrices through \code{sandwich::estfun()}/\code{sandwich::bread()} or model-specific
 equivalents. Supported model classes are validated through an allow-list.
 Survey-weighted linear and generalized linear models fitted by
-\code{survey::svyglm()} are supported using their observation-level coefficient
+\code{\link[survey:svyglm]{survey::svyglm()}} are supported using their observation-level coefficient
 influence functions.
-Multiple-imputation objects, prediction methods that return posterior draws,
-censored and survival models such as \code{tobit}, \code{survreg}, and \code{coxph}, average
+For multiple-imputation objects, unconditional variance is estimated in each
+completed dataset and the results are pooled using Rubin's rules. Prediction
+methods that return posterior draws, censored and survival models such as
+\code{tobit}, \code{survreg}, and \code{coxph}, average
 predictions from \code{fixest} models with fixed effects, and nonlinear \code{fixest}
 models with fixed effects are rejected explicitly. For \code{feols} models with
 fixed effects, unconditional inference is available for additive differences

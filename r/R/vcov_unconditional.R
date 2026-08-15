@@ -22,7 +22,7 @@
 
 # User-facing request -------------------------------------------------------
 
-#' Request unconditional variance in marginaleffects calls
+#' EXPERIMENTAL: Request unconditional variance in marginaleffects calls
 #'
 #' @param type Character string specifying the finite-sample adjustment. The
 #'   available types are `"HC0"` and `"HC1"`. `"HC0"` uses the raw plug-in
