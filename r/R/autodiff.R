@@ -48,36 +48,6 @@ autodiff_pipeline_call <- function(spec, coefs) {
     )
 }
 
-autodiff_se_from_jacobian <- function(J, vcov, coefs, model) {
-    V <- vcov
-
-    flag <- anyDuplicated(colnames(V)) == 0 &&
-        anyDuplicated(names(coefs)) == 0
-    if (
-        flag &&
-            !is.null(dimnames(V)) &&
-            all(names(coefs) %in% colnames(V))
-    ) {
-        bnames <- intersect(names(coefs), colnames(V))
-        V <- V[bnames, bnames, drop = FALSE]
-        colnames(V) <- row.names(V) <- names(coefs)
-    }
-
-    if (!isTRUE(ncol(J) == ncol(V))) {
-        cols <- intersect(colnames(J), colnames(V))
-        if (length(cols) == 0) {
-            return(NULL)
-        }
-        V <- V[cols, cols, drop = FALSE]
-        J <- J[, cols, drop = FALSE]
-    }
-
-    se <- sqrt(rowSums(tcrossprod(J, V) * J))
-    se[se == 0] <- NA_real_
-    se
-}
-
-
 #' @keywords internal
 #' @noRd
 get_autodiff_args <- function(model, mfx, type) {

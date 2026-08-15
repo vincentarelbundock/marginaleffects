@@ -83,10 +83,11 @@ class ModelPyfixest(ModelAbstract):
         return variables
 
     def get_predict(self, params, newdata: pl.DataFrame):
-        # override the coefficients inside the model object to make different
-        # predictions
+        # PyFixest does not expose prediction with arbitrary coefficients. Restore
+        # the fitted coefficients even when prediction raises, so finite-difference
+        # inference never mutates the user's model permanently.
         m = self.model
-        m._beta_hat = params
+        original_params = m._beta_hat
 
         # pyfixest does not support polars
         try:
@@ -94,7 +95,11 @@ class ModelPyfixest(ModelAbstract):
         except:  #  noqa
             pass
 
-        p = m.predict(newdata=newdata)
+        try:
+            m._beta_hat = params
+            p = m.predict(newdata=newdata)
+        finally:
+            m._beta_hat = original_params
         if p.ndim == 1:
             p = pl.DataFrame({"rowid": range(newdata.shape[0]), "estimate": p})
         elif p.ndim == 2:

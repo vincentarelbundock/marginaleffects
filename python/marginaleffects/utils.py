@@ -3,11 +3,6 @@ import numpy as np
 import polars as pl
 from typing import Callable, Optional, Protocol, runtime_checkable, Union, List
 
-from .sanitize.utils import validate_string_columns  # noqa: F401
-from .sanitize.utils import get_type_dictionary  # noqa: F401
-from .sanitize.utils import validate_types  # noqa: F401
-from .sanitize.utils import sanitize_datagrid_factor  # noqa: F401
-
 
 @runtime_checkable
 class ArrowStreamExportable(Protocol):
@@ -264,7 +259,7 @@ def finalize_result(
     """
     Shared helper to add z/p/CI, apply final transforms, and wrap a MarginaleffectsResult.
     """
-    from .uncertainty import get_z_p_ci
+    from .inference import get_z_p_ci
     from .test.equivalence import get_equivalence
     from .classes import MarginaleffectsResult
     from .transform import get_transform
@@ -316,6 +311,7 @@ def prepare_base_inputs(
         sanitize_newdata,
         sanitize_vcov,
     )
+    from .sanitize.utils import validate_string_columns
     from .pyfixest import ModelPyfixest
 
     if callable(newdata):

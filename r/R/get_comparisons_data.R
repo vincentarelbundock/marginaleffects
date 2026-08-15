@@ -172,10 +172,11 @@ get_comparisons_data <- function(
         }
     }
 
-    # get_predict() is much faster if we only build the model matrix once
-    lo <- add_model_matrix_attribute(mfx, lo)
-    hi <- add_model_matrix_attribute(mfx, hi)
-    original <- add_model_matrix_attribute(mfx, original)
+    # Cache model matrices only when delta-method inference will reuse them.
+    if (isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+        lo <- add_model_matrix_attribute(mfx, lo)
+        hi <- add_model_matrix_attribute(mfx, hi)
+    }
 
     out <- list(lo = lo, hi = hi, original = original)
 

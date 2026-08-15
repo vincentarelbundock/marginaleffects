@@ -56,6 +56,10 @@ get_predict.lm <- function(
         pred = pred,
         ...
     )
+    # Analytic derivatives can reuse this exact linear predictor because the
+    # prediction above was computed from the cached model matrix.
+    attr(out, "marginaleffects_linear_predictor") <- pred
+    attr(out, "marginaleffects_model_matrix_used") <- TRUE
     return(out)
 }
 

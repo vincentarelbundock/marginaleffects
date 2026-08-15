@@ -33,7 +33,7 @@ get_labels <- function(
         } else {
             # Create labels by pasting unique combinations of selected columns
             lab_df <- x[, ..lab_cols]
-            labels <- apply(lab_df, 1, paste, collapse = " ")
+            labels <- do.call(paste, c(as.list(lab_df), sep = " "))
 
             # duplicated labels (within groups) revert to b1, b2, ...
             uniq <- TRUE

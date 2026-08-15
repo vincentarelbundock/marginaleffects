@@ -137,11 +137,18 @@ contrast_categories_shortcuts <- function(levs, variable) {
             hi = levs[2:length(levs)]
         )
     } else if (isTRUE(variable$value %in% c("pairwise", "revpairwise"))) {
-        levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
-        levs_idx <- levs_idx[levs_idx$hi != levs_idx$lo, ]
-        levs_idx <- levs_idx[
-            match(levs_idx$lo, levs) < match(levs_idx$hi, levs),
-        ]
+        nlev <- length(levs)
+        if (nlev < 2L) {
+            levs_idx <- data.table::data.table(lo = levs[FALSE], hi = levs[FALSE])
+        } else {
+            n_remaining <- seq.int(nlev - 1L, 1L)
+            lo_idx <- rep.int(seq_len(nlev - 1L), n_remaining)
+            hi_idx <- sequence(n_remaining, from = seq.int(2L, nlev))
+            levs_idx <- data.table::data.table(
+                lo = levs[lo_idx],
+                hi = levs[hi_idx]
+            )
+        }
     } else if (isTRUE(variable$value %in% c("sequential", "revsequential"))) {
         levs_idx <- data.table::data.table(
             lo = levs[1:(length(levs) - 1)],

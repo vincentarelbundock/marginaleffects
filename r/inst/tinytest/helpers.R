@@ -26,6 +26,7 @@ options("tinysnapshot_tol" = 200)
 options("tinysnapshot_ignore_white_space" = TRUE)
 options(marginaleffects_numDeriv = NULL)
 options(marginaleffects_safe = FALSE)
+options(marginaleffects_analytic_jacobian = TRUE)
 options(traceback.max.lines = 5)
 
 if (dir.exists("~/repos/Rdatasets/")) {

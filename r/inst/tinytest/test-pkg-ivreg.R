@@ -13,6 +13,30 @@ expect_predictions(mod_simple)
 expect_hypotheses(mod_simple)
 expect_comparisons(mod_simple)
 
+# Match the two-stage formula handling in predict.ivreg(): the full formula
+# builds the model frame and the stage-two regressors build the prediction X.
+mod_analytic <- ivreg::ivreg(
+    Q ~ P * D + I(D^2) | D + I(D^2) + F + A,
+    data = Kmenta
+)
+newdata <- Kmenta[1:12, , drop = FALSE]
+X <- marginaleffects:::get_model_matrix(mod_analytic, newdata)
+expect_equivalent(
+    drop(X %*% coef(mod_analytic)),
+    as.numeric(predict(mod_analytic, newdata = newdata))
+)
+cmp_analytic <- avg_comparisons(mod_analytic, variables = "P")
+J_analytic <- components(cmp_analytic, "jacobian")
+old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+cmp_fallback <- avg_comparisons(mod_analytic, variables = "P")
+options(old_option)
+expect_equivalent(cmp_analytic$estimate, cmp_fallback$estimate)
+expect_equivalent(
+    J_analytic,
+    components(cmp_fallback, "jacobian"),
+    tolerance = 1e-5
+)
+
 # marginaleffects: vs. margins
 data(Kmenta, package = "ivreg")
 mod <- ivreg::ivreg(Q ~ P * D | D + F + A, data = Kmenta)

@@ -191,6 +191,15 @@ sanitize_model <- function(model, call, newdata = NULL, vcov = NULL, by = FALSE,
     )
     sanity_model_supported_class(model)
 
+    # Aliased coefficients: predictions for combinations of predictors which do
+    # not appear in the data are arbitrary, and can flip when factor levels are
+    # reordered. Cheap O(p) check; a grid-level check would be too costly.
+    co <- hush(get_coef(model))
+    if (is.numeric(co) && anyNA(co)) {
+        msg <- "Some coefficients are `NA`, possibly because the model matrix is rank deficient. In such cases, the quantities produced by `marginaleffects` may depend on the order of factor levels."
+        warn_once(msg, "marginaleffects_rank_deficient")
+    }
+
     # Assign the sanitized model to the slot
     return(model)
 }

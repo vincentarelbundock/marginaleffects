@@ -98,6 +98,45 @@ get_predict.svyglm <- function(
 }
 
 
+#' @rdname get_model_matrix
+#' @export
+get_model_matrix.svyglm <- function(model, newdata, mfx = NULL) {
+    # Match predict.svyglm() exactly. In particular, terms(formula(model))
+    # differs from terms(model) for data-dependent bases such as splines.
+    tt <- stats::delete.response(stats::terms(stats::formula(model)))
+    mf <- stats::model.frame(
+        tt,
+        data = newdata,
+        xlev = model$xlevels
+    )
+    stats::model.matrix(
+        tt,
+        mf,
+        contrasts.arg = model$contrasts
+    )
+}
+
+
+#' @noRd
+#' @export
+get_jacobian_analytic.svyglm <- function(model, type, ...) {
+    if (
+        !identical(class(model)[1], "svyglm") ||
+            !isTRUE(type %in% c("response", "link"))
+    ) {
+        return(NULL)
+    }
+    response_scale <- identical(type, "response")
+    jacobian_analytic_model_matrix(
+        model = model,
+        type = type,
+        response_scale = response_scale,
+        family = if (response_scale) stats::family(model) else NULL,
+        ...
+    )
+}
+
+
 #' @include sanity_model.R
 #' @rdname sanitize_model_specific
 #' @export

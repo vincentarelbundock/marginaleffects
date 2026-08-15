@@ -16,6 +16,129 @@ expect_predictions(mod_simple)
 expect_hypotheses(mod_simple)
 expect_comparisons(mod_simple)
 
+# MASS::rlm delegates prediction to predict.lm after refreshing its weighted
+# QR decomposition, so its cached matrix and analytic Jacobian are linear.
+mod_rlm_analytic <- MASS::rlm(
+    mpg ~ wt * factor(cyl) + splines::ns(hp, 3),
+    data = mtcars
+)
+newdata <- mtcars[1:12, , drop = FALSE]
+X <- marginaleffects:::get_model_matrix(mod_rlm_analytic, newdata)
+expect_equivalent(
+    drop(X %*% coef(mod_rlm_analytic)),
+    as.numeric(predict(mod_rlm_analytic, newdata = newdata))
+)
+cmp_rlm_analytic <- avg_comparisons(
+    mod_rlm_analytic,
+    variables = "wt",
+    by = "am",
+    wts = "cyl",
+    hypothesis = matrix(c(1, -1), ncol = 1)
+)
+old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+cmp_rlm_fallback <- avg_comparisons(
+    mod_rlm_analytic,
+    variables = "wt",
+    by = "am",
+    wts = "cyl",
+    hypothesis = matrix(c(1, -1), ncol = 1)
+)
+options(old_option)
+expect_equivalent(
+    components(cmp_rlm_analytic, "jacobian"),
+    components(cmp_rlm_fallback, "jacobian"),
+    tolerance = 1e-5
+)
+
+# glm.nb returns an ordinary GLM-shaped fit and inherits predict.glm(). Check
+# both the linear predictor and the negative-binomial response derivative.
+mod_nb_analytic <- suppressWarnings(MASS::glm.nb(
+    carb ~ wt * factor(cyl) + splines::ns(hp, 2),
+    data = mtcars
+))
+X <- marginaleffects:::get_model_matrix(mod_nb_analytic, newdata)
+expect_equivalent(
+    drop(X %*% coef(mod_nb_analytic)),
+    as.numeric(predict(mod_nb_analytic, newdata = newdata, type = "link"))
+)
+pred_nb_analytic <- predictions(
+    mod_nb_analytic,
+    newdata = newdata,
+    type = "response"
+)
+old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+pred_nb_fallback <- predictions(
+    mod_nb_analytic,
+    newdata = newdata,
+    type = "response"
+)
+options(old_option)
+expect_equivalent(pred_nb_analytic$estimate, pred_nb_fallback$estimate)
+expect_equivalent(
+    components(pred_nb_analytic, "jacobian"),
+    components(pred_nb_fallback, "jacobian"),
+    tolerance = 1e-5
+)
+
+cmp_nb_analytic <- avg_comparisons(
+    mod_nb_analytic,
+    variables = "wt",
+    by = "am",
+    wts = "cyl",
+    hypothesis = matrix(c(1, -1), ncol = 1),
+    type = "response"
+)
+old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+cmp_nb_fallback <- avg_comparisons(
+    mod_nb_analytic,
+    variables = "wt",
+    by = "am",
+    wts = "cyl",
+    hypothesis = matrix(c(1, -1), ncol = 1),
+    type = "response"
+)
+options(old_option)
+expect_equivalent(
+    components(cmp_nb_analytic, "jacobian"),
+    components(cmp_nb_fallback, "jacobian"),
+    tolerance = 1e-5
+)
+
+assign("mass_fd_calls", 0L, envir = .GlobalEnv)
+suppressMessages(invisible(utils::capture.output(
+    trace(
+        "get_jacobian_fdforward",
+        where = asNamespace("marginaleffects"),
+        tracer = quote({
+            .GlobalEnv$mass_fd_calls <- .GlobalEnv$mass_fd_calls + 1L
+        }),
+        print = FALSE
+    )
+)))
+tryCatch(
+    {
+        avg_comparisons(mod_rlm_analytic, variables = "wt")
+        avg_comparisons(mod_nb_analytic, variables = "wt", type = "response")
+        expect_equal(.GlobalEnv$mass_fd_calls, 0L)
+
+        old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+        tryCatch(
+            avg_comparisons(mod_nb_analytic, variables = "wt", type = "response"),
+            finally = options(old_option)
+        )
+        expect_equal(.GlobalEnv$mass_fd_calls, 1L)
+    },
+    finally = {
+        suppressMessages(invisible(utils::capture.output(
+            untrace(
+                "get_jacobian_fdforward",
+                where = asNamespace("marginaleffects")
+            )
+        )))
+        rm("mass_fd_calls", envir = .GlobalEnv)
+    }
+)
+
 ### marginaleffects
 # rlm: marginaleffects: vs. margins vs. emmeans
 dat <- mtcars

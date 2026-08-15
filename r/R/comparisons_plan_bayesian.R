@@ -135,7 +135,7 @@ comparison_posterior_center <- function(draws) {
         "marginaleffects_posterior_center",
         default = stats::median
     )
-    apply(draws, 1, FUN_CENTER)
+    posterior_draws_center(draws, FUN_CENTER)
 }
 
 

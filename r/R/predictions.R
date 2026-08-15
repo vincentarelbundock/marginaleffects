@@ -262,7 +262,9 @@ predictions <- function(
     mfx <- prediction_prepare_newdata(mfx, variables = variables)
     unpadded_newdata <- mfx@newdata # for degrees of freedom
     mfx@newdata <- pad(mfx@model, mfx@newdata)
-    mfx@newdata <- add_model_matrix_attribute(mfx)
+    if (!isFALSE(vcov)) {
+        mfx@newdata <- add_model_matrix_attribute(mfx)
+    }
 
     ############### sanity checks are over
 
@@ -353,6 +355,15 @@ predictions <- function(
 
     conf_int <- (!isFALSE(vcov) || unconditional) &&
         ("std.error" %in% colnames(out) || !is.null(mfx@draws))
+
+    capture_replay <- identical(inferences_method, "simulation") ||
+        settings_equal("marginaleffects_capture_simulation_replay", TRUE)
+    mfx <- simulation_replay_store(
+        mfx,
+        built$plan,
+        transforms = list(linv, transform),
+        enabled = capture_replay
+    )
 
     return(finalize_estimates(
         out = out,

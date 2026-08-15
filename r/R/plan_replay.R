@@ -164,6 +164,91 @@ validate_plan_replay <- function(kind, baseline, expected) {
     }
 }
 
+
+simulation_replay_store <- function(mfx, plan, transforms = list(), enabled = FALSE) {
+    if (!isTRUE(enabled) || is.null(plan)) {
+        return(mfx)
+    }
+
+    # The inference-free estimate path does not need model-matrix caches. Build
+    # them once here because simulation replay will reuse them for every draw.
+    if (identical(plan$kind, "predictions")) {
+        newdata <- plan$predict_args$newdata
+        if (is.null(attr(newdata, "marginaleffects_model_matrix"))) {
+            plan$predict_args$newdata <- add_model_matrix_attribute_data(mfx, newdata)
+        }
+    } else if (identical(plan$kind, "comparisons")) {
+        if (is.null(attr(plan$predict_args$hi, "marginaleffects_model_matrix"))) {
+            plan$predict_args$hi <- add_model_matrix_attribute_data(mfx, plan$predict_args$hi)
+        }
+        if (is.null(attr(plan$predict_args$lo, "marginaleffects_model_matrix"))) {
+            plan$predict_args$lo <- add_model_matrix_attribute_data(mfx, plan$predict_args$lo)
+        }
+        if (
+            isTRUE(plan$need_y) &&
+                is.null(attr(plan$predict_args$original, "marginaleffects_model_matrix"))
+        ) {
+            plan$predict_args$original <- add_model_matrix_attribute_data(
+                mfx,
+                plan$predict_args$original
+            )
+        }
+    }
+
+    transforms <- Filter(Negate(is.null), transforms)
+    attr(mfx, "marginaleffects_simulation_replay") <- list(
+        plan = plan,
+        transforms = transforms
+    )
+    mfx
+}
+
+
+simulation_replay_evaluate <- function(replay, model) {
+    plan <- replay$plan
+    if (identical(plan$kind, "predictions")) {
+        pred <- prediction_plan_predict(plan, model)
+        estimate <- prediction_plan_apply(plan, pred)
+    } else if (identical(plan$kind, "comparisons")) {
+        pred <- comparison_plan_predict(plan, model)
+        estimate <- comparison_plan_apply(plan, pred$hi, pred$lo, pred$or)
+    } else {
+        stop_sprintf("Unknown simulation replay plan: %s", plan$kind %||% "NULL")
+    }
+
+    for (transform in replay$transforms) {
+        if (is.list(transform)) {
+            transform <- transform[[1]]
+        }
+        estimate <- transform(estimate)
+    }
+    as.vector(estimate)
+}
+
+
+simulation_replay_validate <- function(replay, model, expected) {
+    if (is.null(replay)) {
+        return(NULL)
+    }
+    baseline <- tryCatch(
+        simulation_replay_evaluate(replay, model),
+        error = function(e) NULL
+    )
+    if (
+        length(baseline) != length(expected) ||
+            !isTRUE(all.equal(
+                baseline,
+                expected,
+                tolerance = sqrt(.Machine$double.eps),
+                check.attributes = FALSE
+            ))
+    ) {
+        return(NULL)
+    }
+    replay
+}
+
+
 plan_std_error <- function(
     built,
     mfx,
@@ -204,7 +289,36 @@ plan_std_error <- function(
         return(list(mfx = mfx, estimates = estimates))
     }
 
-    # Try autodiff first; fall back to numerical delta method.
+    # Explicit user Jacobians retain priority. Otherwise, use a validated exact
+    # analytic derivative before trying autodiff and numerical differentiation.
+    custom_jacobian <- settings_get("jacobian_function")
+    analytic_enabled <- isTRUE(getOption(
+        "marginaleffects_analytic_jacobian",
+        default = TRUE
+    ))
+    if (is.null(custom_jacobian) && analytic_enabled) {
+        J <- get_jacobian_analytic(
+            model = mfx@model,
+            plan = plan,
+            kind = kind,
+            type = type,
+            estimate = estimates[["estimate"]],
+            contrast_data = contrast_data
+        )
+        if (!is.null(J)) {
+            propagated <- tryCatch(
+                std_error_from_jacobian(J, mfx@vcov_model, mfx@model),
+                error = function(e) NULL
+            )
+            if (!is.null(propagated)) {
+                mfx@jacobian <- propagated$jacobian
+                estimates[["std.error"]] <- propagated$std.error
+                return(list(mfx = mfx, estimates = estimates))
+            }
+        }
+    }
+
+    # Try autodiff next; fall back to numerical delta method.
     ad_args <- list(
         plan = plan,
         mfx = mfx,
@@ -217,7 +331,7 @@ plan_std_error <- function(
         ad_args$hi <- contrast_data$hi
         ad_args$lo <- contrast_data$lo
     }
-    ad <- do_call(autodiff_try, ad_args)
+    ad <- if (is.null(custom_jacobian)) do_call(autodiff_try, ad_args) else NULL
     if (!is.null(ad)) {
         mfx@jacobian <- ad$jacobian
         estimates[["std.error"]] <- ad$std.error

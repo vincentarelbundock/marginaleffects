@@ -13,6 +13,68 @@ expect_predictions(mod_simple)
 expect_hypotheses(mod_simple)
 expect_comparisons(mod_simple)
 
+# geeglm inherits predict.glm(), including its model-matrix and inverse-link
+# behavior. An all-zero stored offset is the no-offset case for this class.
+dietox$Cu <- factor(dietox$Cu)
+mod_analytic <- suppressWarnings(geepack::geeglm(
+    Weight ~ Time * Cu + splines::ns(Start, 3),
+    id = Pig,
+    data = dietox,
+    family = poisson("log")
+))
+newdata <- dietox[1:12, , drop = FALSE]
+X <- marginaleffects:::get_model_matrix(mod_analytic, newdata)
+expect_equivalent(
+    drop(X %*% coef(mod_analytic)),
+    as.numeric(predict(mod_analytic, newdata = newdata, type = "link"))
+)
+cmp_analytic <- avg_comparisons(
+    mod_analytic,
+    variables = "Time",
+    type = "response"
+)
+J_analytic <- components(cmp_analytic, "jacobian")
+old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+cmp_fallback <- avg_comparisons(
+    mod_analytic,
+    variables = "Time",
+    type = "response"
+)
+options(old_option)
+expect_equivalent(cmp_analytic$estimate, cmp_fallback$estimate)
+expect_equivalent(
+    J_analytic,
+    components(cmp_fallback, "jacobian"),
+    tolerance = 1e-5
+)
+
+# geeglm stores zero offsets even without an offset term, but an explicit
+# offset—zero or otherwise—must remain ineligible for the matrix shortcut.
+mod_offset <- suppressWarnings(geepack::geeglm(
+    Weight ~ Time + offset(log(Start)),
+    id = Pig,
+    data = dietox,
+    family = poisson("log")
+))
+expect_true(marginaleffects:::model_has_effective_offset(mod_offset))
+cmp_offset <- avg_comparisons(
+    mod_offset,
+    variables = "Time",
+    type = "response"
+)
+old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+cmp_offset_fallback <- avg_comparisons(
+    mod_offset,
+    variables = "Time",
+    type = "response"
+)
+options(old_option)
+expect_equivalent(
+    components(cmp_offset, "jacobian"),
+    components(cmp_offset_fallback, "jacobian"),
+    tolerance = 1e-5
+)
+
 # Stata does not replicate coefficients exactly:
 # xtset Pig Time
 # xtgee Weight i.Cu, family(poisson) link(identity) corr(ar 1)

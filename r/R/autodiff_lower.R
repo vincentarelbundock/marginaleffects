@@ -11,8 +11,8 @@ autodiff_lower_fail <- function(reason = "") {
     list(ok = FALSE, spec = NULL, reason = reason)
 }
 
-autodiff_lower_ok <- function(spec) {
-    list(ok = TRUE, spec = spec, reason = "")
+autodiff_lower_ok <- function(spec, coefs) {
+    list(ok = TRUE, spec = spec, coefs = coefs, reason = "")
 }
 
 autodiff_lower_model <- function(plan, mfx, type) {
@@ -137,6 +137,9 @@ autodiff_lower_hyp <- function(hyp) {
     if (identical(hyp$kind, "matrix") && isTRUE(checkmate::check_matrix(hyp$H))) {
         return(list(ok = TRUE, hyp = hyp$H))
     }
+    if (identical(hyp$kind, "matrix") && inherits(hyp$H, "Matrix")) {
+        return(list(ok = TRUE, hyp = as.matrix(hyp$H)))
+    }
     autodiff_lower_fail("this form of the `hypothesis` argument")
 }
 
@@ -182,7 +185,7 @@ autodiff_lower_predictions <- function(plan, mfx, type) {
         agg = agg$agg,
         hyp = hyp$hyp,
         n_out = n_out
-    ))
+    ), coefs = model$coefs)
 }
 
 autodiff_validate_comparison_groups <- function(plan) {
@@ -292,7 +295,7 @@ autodiff_lower_comparisons <- function(plan, mfx, type, hi, lo) {
         agg = agg$agg,
         hyp = hyp$hyp,
         n_out = n_out
-    ))
+    ), coefs = model$coefs)
 }
 
 autodiff_try <- function(plan, mfx, kind, type, vcov, estimate, hi = NULL, lo = NULL) {
@@ -318,7 +321,7 @@ autodiff_try <- function(plan, mfx, kind, type, vcov, estimate, hi = NULL, lo = 
         return(NULL)
     }
 
-    coefs <- get_coef(mfx@model)
+    coefs <- low$coefs
     result <- tryCatch(
         autodiff_pipeline_call(low$spec, coefs),
         error = function(e) {
@@ -346,13 +349,20 @@ autodiff_try <- function(plan, mfx, kind, type, vcov, estimate, hi = NULL, lo = 
         return(NULL)
     }
 
-    se <- autodiff_se_from_jacobian(result$jacobian, vcov, coefs, mfx@model)
-    if (is.null(se)) {
+    propagated <- tryCatch(
+        std_error_from_jacobian(result$jacobian, vcov, mfx@model),
+        error = function(e) NULL
+    )
+    if (is.null(propagated)) {
         return(NULL)
     }
 
     if (isTRUE(getOption("marginaleffects_autodiff_message", default = FALSE))) {
         message("\nJAX is fast!")
     }
-    list(estimate = result$estimate, std.error = se, jacobian = result$jacobian)
+    list(
+        estimate = result$estimate,
+        std.error = propagated$std.error,
+        jacobian = propagated$jacobian
+    )
 }

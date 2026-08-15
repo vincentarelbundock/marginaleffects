@@ -77,13 +77,20 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mf
         fun_comparison <- hypothesis_formula_list[[form$rhs]][[form$lhs]]$comparison
     }
 
-    x <- data.table::as.data.table(data.table::copy(cmp_skeleton))
+    if (is.null(form$group)) {
+        x <- cmp_skeleton
+    } else {
+        group_cols <- intersect(form$group, colnames(cmp_skeleton))
+        x <- as_data_table_select(cmp_skeleton, group_cols)
+    }
     groupval <- hypothesis_formula_groups(x, newdata, form$group)
 
     if (is.null(groupval)) {
         groups <- list(seq_len(nrow(x)))
     } else {
-        combined <- data.table::data.table(marginaleffects_formula_idx = seq_len(nrow(x)))
+        combined <- data.table::data.table(
+            marginaleffects_formula_idx = seq_len(nrow(cmp_skeleton))
+        )
         combined <- cbind(combined, groupval)
         data.table::setDT(combined)
         groups <- combined[
@@ -100,9 +107,118 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mf
         )
     }
 
-    hyp <- list(kind = "formula", apply = apply)
+    H <- hypothesis_compile_formula_matrix(form, groups)
+    if (!is.null(H) && ncol(H) == nrow(cmp)) {
+        apply <- function(est) as.vector(Matrix::crossprod(H, est))
+        hyp <- list(kind = "matrix", apply = apply, H = H)
+    } else {
+        hyp <- list(kind = "formula", apply = apply)
+    }
     attr(hyp, "hypothesis_function_by") <- attr(cmp, "hypothesis_function_by")
     list(cmp = cmp, hyp = hyp)
+}
+
+hypothesis_compile_formula_matrix <- function(form, groups) {
+    if (!isTRUE(form$lhs %in% c("difference", "dotproduct"))) {
+        return(NULL)
+    }
+
+    group_sizes <- lengths(groups)
+    unique_sizes <- unique(group_sizes)
+    block_cache <- tryCatch(
+        lapply(unique_sizes, function(n) {
+            hypothesis_compile_formula_matrix_block(form$rhs, n)
+        }),
+        error = function(e) NULL
+    )
+    if (is.null(block_cache) || any(vapply(block_cache, is.null, logical(1)))) {
+        return(NULL)
+    }
+
+    blocks <- block_cache[match(group_sizes, unique_sizes)]
+    H <- Matrix::bdiag(blocks)
+    row_order <- unlist(groups, use.names = FALSE)
+    H[match(seq_along(row_order), row_order), , drop = FALSE]
+}
+
+hypothesis_compile_formula_matrix_block <- function(shortcut, n) {
+    if (shortcut %in% c("reference", "revreference")) {
+        if (n < 2L) {
+            return(NULL)
+        }
+        s <- if (shortcut == "reference") 1 else -1
+        return(Matrix::sparseMatrix(
+            i = c(seq.int(2L, n), rep.int(1L, n - 1L)),
+            j = rep.int(seq_len(n - 1L), 2L),
+            x = c(rep.int(s, n - 1L), rep.int(-s, n - 1L)),
+            dims = c(n, n - 1L)
+        ))
+    }
+
+    if (shortcut == "sequential") {
+        if (n < 2L) {
+            return(NULL)
+        }
+        return(Matrix::sparseMatrix(
+            i = c(seq.int(2L, n), seq_len(n - 1L)),
+            j = rep.int(seq_len(n - 1L), 2L),
+            x = rep(c(1, -1), each = n - 1L),
+            dims = c(n, n - 1L)
+        ))
+    }
+
+    if (shortcut %in% c("pairwise", "revpairwise")) {
+        if (shortcut == "pairwise") {
+            pairs <- which(lower.tri(matrix(FALSE, n, n)), arr.ind = TRUE)
+        } else {
+            pairs <- which(upper.tri(matrix(FALSE, n, n)), arr.ind = TRUE)
+        }
+        npairs <- nrow(pairs)
+        return(Matrix::sparseMatrix(
+            i = c(pairs[, 1L], pairs[, 2L]),
+            j = rep.int(seq_len(npairs), 2L),
+            x = rep(c(1, -1), each = npairs),
+            dims = c(n, npairs)
+        ))
+    }
+
+    if (shortcut == "trt_vs_ctrl") {
+        if (n < 2L) {
+            return(NULL)
+        }
+        return(Matrix::sparseMatrix(
+            i = seq_len(n),
+            j = rep.int(1L, n),
+            x = c(-1, rep.int(1 / (n - 1L), n - 1L)),
+            dims = c(n, 1L)
+        ))
+    }
+
+    if (shortcut == "meandev") {
+        H <- diag(n) - matrix(1 / n, nrow = n, ncol = n)
+        return(Matrix::Matrix(H, sparse = TRUE))
+    }
+
+    if (shortcut == "meanotherdev") {
+        if (n < 2L) {
+            return(NULL)
+        }
+        H <- diag(n) - matrix(1 / (n - 1L), nrow = n, ncol = n)
+        diag(H) <- 1
+        return(Matrix::Matrix(H, sparse = TRUE))
+    }
+
+    if (shortcut == "poly") {
+        H <- stats::contr.poly(n)
+        H <- H[, seq_len(min(5L, ncol(H))), drop = FALSE]
+        return(Matrix::Matrix(H, sparse = TRUE))
+    }
+
+    if (shortcut == "helmert") {
+        return(Matrix::Matrix(stats::contr.helmert(n), sparse = TRUE))
+    }
+
+    NULL
 }
 
 hypothesis_compile_matrix <- function(hypothesis, cmp_skeleton) {
@@ -139,35 +255,24 @@ hypothesis_compile_string <- function(hypothesis, cmp_skeleton) {
     hyps <- expanded[[1]]
     labs <- expanded[[2]]
 
-    parsed <- vector("list", length(hyps))
-    rowlabels <- vector("list", length(hyps))
+    compiled <- vector("list", length(hyps))
     for (i in seq_along(hyps)) {
         hyp <- hyps[[i]]
-        if (
+        positional <-
             isTRUE(grepl("\\bb\\d+\\b", hyp)) &&
                 !any(grepl("\\bb\\d+\\b", cmp_skeleton[["term"]]))
-        ) {
-            for (j in seq_len(nrow(cmp_skeleton))) {
-                tmp <- paste0("marginaleffects__", j)
-                hyp <- gsub(paste0("b", j), tmp, hyp)
-            }
-            rowlabels[[i]] <- paste0("marginaleffects__", seq_len(nrow(cmp_skeleton)))
-        } else {
-            rowlabels[[i]] <- cmp_skeleton$term
-        }
-        parsed[[i]] <- parse(text = hyp)
+        compiled[[i]] <- hypothesis_string_compile_expression(
+            hyp,
+            rowlabels = if (isTRUE(positional)) NULL else cmp_skeleton$term,
+            n_estimates = nrow(cmp_skeleton),
+            positional = positional,
+            eval_parent = eval_parent
+        )
     }
 
-    apply_one <- function(est, expr, labels) {
-        env <- new.env(parent = eval_parent)
-        for (j in seq_along(est)) {
-            assign(labels[[j]], est[[j]], envir = env)
-        }
-        eval(expr, envir = env)
-    }
     apply <- function(est) {
-        unlist(lapply(seq_along(parsed), function(i) {
-            apply_one(est, parsed[[i]], rowlabels[[i]])
+        unlist(lapply(compiled, function(expr) {
+            hypothesis_string_eval_compiled(est, expr)
         }), use.names = FALSE)
     }
 

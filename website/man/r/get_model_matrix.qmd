@@ -13,6 +13,39 @@ Get a named model matrix
 
 ## Default S3 method:
 get_model_matrix(model, newdata, mfx = NULL)
+
+## S3 method for class 'negbin'
+get_model_matrix(model, newdata, mfx = NULL)
+
+## S3 method for class 'rlm'
+get_model_matrix(model, newdata, mfx = NULL)
+
+## S3 method for class 'brglmFit'
+get_model_matrix(model, newdata, mfx = NULL)
+
+## S3 method for class 'geeglm'
+get_model_matrix(model, newdata, mfx = NULL)
+
+## S3 method for class 'ivreg'
+get_model_matrix(model, newdata, mfx = NULL)
+
+## S3 method for class 'rq'
+get_model_matrix(model, newdata, mfx = NULL)
+
+## S3 method for class 'ols'
+get_model_matrix(model, newdata, mfx = NULL)
+
+## S3 method for class 'lrm'
+get_model_matrix(model, newdata, mfx = NULL)
+
+## S3 method for class 'lm'
+get_model_matrix(model, newdata, mfx = NULL)
+
+## S3 method for class 'glm'
+get_model_matrix(model, newdata, mfx = NULL)
+
+## S3 method for class 'svyglm'
+get_model_matrix(model, newdata, mfx = NULL)
 </code></pre>
 
 

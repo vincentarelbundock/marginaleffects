@@ -4,15 +4,17 @@ __all__ = [
     "MarginaleffectsResult",
     "MarginaleffectsDataFrame",
     "ModelAbstract",
+    "ModelAdapter",
     "ModelVault",
 ]
 
 
 def __getattr__(name):
-    if name in ("ModelAbstract", "ModelVault"):
-        from .model import ModelAbstract, ModelVault
+    if name in ("ModelAbstract", "ModelAdapter", "ModelVault"):
+        from .model import ModelAbstract, ModelAdapter, ModelVault
 
         globals()["ModelAbstract"] = ModelAbstract
+        globals()["ModelAdapter"] = ModelAdapter
         globals()["ModelVault"] = ModelVault
-        return ModelAbstract if name == "ModelAbstract" else ModelVault
+        return globals()[name]
     raise AttributeError(f"module 'marginaleffects.classes' has no attribute {name!r}")

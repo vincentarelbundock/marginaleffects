@@ -177,6 +177,10 @@ comparison_plan_build <- function(
     predictions <- predictions_hi_lo(model, lo, hi, type, ...)
     pred_lo <- predictions$pred_lo
     pred_hi <- predictions$pred_hi
+    eta_lo <- attr(pred_lo, "marginaleffects_linear_predictor")
+    eta_hi <- attr(pred_hi, "marginaleffects_linear_predictor")
+    matrix_used_lo <- isTRUE(attr(pred_lo, "marginaleffects_model_matrix_used"))
+    matrix_used_hi <- isTRUE(attr(pred_hi, "marginaleffects_model_matrix_used"))
     out <- data.table(pred_lo)
 
     elasticity_names <- c(
@@ -191,6 +195,9 @@ comparison_plan_build <- function(
     need_y <- n_elasticities > 0 || custom_fun
 
     if (isTRUE(need_y)) {
+        if (isTRUE(checkmate::check_matrix(mfx@vcov_model))) {
+            original <- add_model_matrix_attribute_data(mfx, original)
+        }
         pred_or <- get_predict_error(
             model,
             type = type,
@@ -357,6 +364,11 @@ comparison_plan_build <- function(
             idx = idx,
             context = comparison_context,
             n_pred = length(pred_lo[["estimate"]]),
+            baseline_hi = pred_hi[["estimate"]],
+            baseline_lo = pred_lo[["estimate"]],
+            eta_hi = eta_hi,
+            eta_lo = eta_lo,
+            model_matrix_used = matrix_used_hi && matrix_used_lo,
             type = type,
             dots = dots,
             hi = hi,

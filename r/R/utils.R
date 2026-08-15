@@ -13,7 +13,7 @@ get_unique_index <- function(x, term_only = FALSE) {
             out[[i]] <- NULL
         }
     }
-    out <- apply(out, 1, toString)
+    out <- do.call(paste, c(as.list(out), sep = ", "))
     return(out)
 }
 
@@ -118,6 +118,15 @@ cjdt <- function(dtlist) {
 }
 
 
+as_data_table_select <- function(x, cols) {
+    if (data.table::is.data.table(x)) {
+        x[, ..cols]
+    } else {
+        data.table::as.data.table(x[, cols, drop = FALSE])
+    }
+}
+
+
 merge_original_data <- function(
     out,
     original,
@@ -142,10 +151,20 @@ merge_original_data <- function(
     }
 
     cols <- intersect(unique(c(keys, payload)), colnames(original))
-    tmp <- data.table::as.data.table(original)[, ..cols]
+    tmp <- as_data_table_select(original, cols)
     bycols <- intersect(colnames(tmp), colnames(out))
     if (!"rowid" %in% bycols || length(bycols) == 0) {
         return(out)
+    }
+
+    # Unit-level predictions usually preserve exact key order. Avoid a full
+    # duplicate scan and join when the payload can be attached positionally.
+    if (
+        !isTRUE(deduplicate) &&
+            nrow(out) == nrow(tmp) &&
+            all(vapply(bycols, function(col) identical(out[[col]], tmp[[col]]), logical(1)))
+    ) {
+        return(cbind(out, tmp[, ..payload]))
     }
 
     if (isTRUE(deduplicate)) {
@@ -153,9 +172,9 @@ merge_original_data <- function(
         tmp <- tmp[!idx]
     } else if (any(duplicated(tmp, by = bycols))) {
         if ("rowid" %in% bycols && nrow(tmp) != nrow(out)) {
-            tmp <- tmp[rowid %in% data.table::as.data.table(out)[["rowid"]]]
+            tmp <- tmp[rowid %in% out[["rowid"]]]
         }
-        outkeys <- data.table::as.data.table(out)[, ..bycols]
+        outkeys <- as_data_table_select(out, bycols)
         tmpkeys <- tmp[, ..bycols]
         if (nrow(outkeys) == nrow(tmpkeys) &&
             isTRUE(all.equal(outkeys, tmpkeys, check.attributes = FALSE))) {

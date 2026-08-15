@@ -28,3 +28,30 @@ get_group_names.bracl <- get_group_names.multinom
 get_coef.bracl <- function(model, ...) {
     stats::coef(model)
 }
+
+
+#' @rdname get_model_matrix
+#' @export
+get_model_matrix.brglmFit <- function(model, newdata, mfx = NULL) {
+    get_model_matrix.glm(model, newdata, mfx = mfx)
+}
+
+
+#' @noRd
+#' @export
+get_jacobian_analytic.brglmFit <- function(model, type, ...) {
+    if (
+        !identical(class(model)[1], "brglmFit") ||
+            !isTRUE(type %in% c("response", "link"))
+    ) {
+        return(NULL)
+    }
+    response_scale <- identical(type, "response")
+    jacobian_analytic_model_matrix(
+        model = model,
+        type = type,
+        response_scale = response_scale,
+        family = if (response_scale) stats::family(model) else NULL,
+        ...
+    )
+}

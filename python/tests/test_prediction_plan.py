@@ -4,9 +4,10 @@ import statsmodels.formula.api as smf
 
 from marginaleffects import get_dataset
 from marginaleffects.by import get_by
+from marginaleffects.planning.core import _nan_weighted_mean
 from marginaleffects.predictions import _predictions_build
 from marginaleffects.test import get_hypothesis
-from marginaleffects.plan import prediction_plan_apply, prediction_plan_predict
+from marginaleffects.planning import prediction_plan_apply, prediction_plan_predict
 from marginaleffects.utils import prepare_base_inputs
 
 
@@ -96,3 +97,8 @@ def test_prediction_plan_replay_matches_full_pipeline_after_perturbation():
         hypothesis=None,
     )
     np.testing.assert_allclose(replay, full["estimate"].to_numpy(), rtol=1e-12)
+
+
+def test_zero_sum_weights_return_nan():
+    out = _nan_weighted_mean(np.asarray([1.0, 2.0]), np.asarray([1.0, -1.0]))
+    assert np.isnan(out)

@@ -2,6 +2,25 @@ source("helpers.R")
 using("marginaleffects")
 tol <- 1e-5
 
+grid_data <- data.frame(
+    rowid = 101:103,
+    x = 3:1,
+    group = factor(c("b", "a", "b")),
+    y = c(0.1, 0.2, 0.3)
+)
+grid_data_original <- grid_data
+actual <- datagrid(
+    newdata = grid_data,
+    x = c(20, 10),
+    grid_type = "counterfactual"
+)
+expect_identical(grid_data, grid_data_original)
+implicit <- grid_data[, setdiff(names(grid_data), "x"), drop = FALSE]
+implicit <- cbind(data.frame(rowidcf = seq_len(nrow(grid_data))), implicit)
+explicit <- data.frame(x = sort(c(20, 10)))
+expected <- merge(implicit, explicit, all = NULL, sort = FALSE)
+expect_equivalent(actual, expected)
+
 requiet("lme4")
 requiet("fixest")
 

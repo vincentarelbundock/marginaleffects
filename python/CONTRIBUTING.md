@@ -67,6 +67,13 @@ Make sure there are no linting errors before submitting your changes.
 
 We appreciate your contributions and look forward to reviewing your pull requests!
 
+## Parity with the R package
+
+Deliberate differences between the R and Python packages are recorded in
+[API_PARITY.md](API_PARITY.md). Add an entry there before release when you
+introduce a Python-specific interface, so structural drift is not mistaken for
+an implementation bug.
+
 ## Makefile
 
 The `marginaleffects` repository includes a `Makefile` to facilitate some common tasks.

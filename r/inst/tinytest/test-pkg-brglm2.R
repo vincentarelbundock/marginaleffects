@@ -13,6 +13,91 @@ expect_predictions(mod_simple)
 expect_hypotheses(mod_simple)
 expect_comparisons(mod_simple)
 
+# brglmFit is produced by glm(method = brglm2::brglmFit) and inherits
+# predict.glm(). Validate a noncanonical inverse-link derivative after weighted
+# grouping and a linear hypothesis.
+mod_analytic <- glm(
+    am ~ hp * wt + factor(cyl),
+    data = mtcars,
+    family = binomial("probit"),
+    method = brglm2::brglmFit
+)
+newdata <- mtcars[1:12, , drop = FALSE]
+X <- marginaleffects:::get_model_matrix(mod_analytic, newdata)
+expect_equivalent(
+    drop(X %*% coef(mod_analytic)),
+    as.numeric(predict(mod_analytic, newdata = newdata, type = "link"))
+)
+pred_analytic <- predictions(mod_analytic, newdata = newdata, type = "response")
+old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+pred_fallback <- predictions(mod_analytic, newdata = newdata, type = "response")
+options(old_option)
+expect_equivalent(pred_analytic$estimate, pred_fallback$estimate)
+expect_equivalent(
+    components(pred_analytic, "jacobian"),
+    components(pred_fallback, "jacobian"),
+    tolerance = 1e-5
+)
+
+cmp_analytic <- avg_comparisons(
+    mod_analytic,
+    variables = "hp",
+    by = "cyl",
+    wts = "wt",
+    hypothesis = matrix(c(1, -1, 0), ncol = 1),
+    type = "response"
+)
+old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+cmp_fallback <- avg_comparisons(
+    mod_analytic,
+    variables = "hp",
+    by = "cyl",
+    wts = "wt",
+    hypothesis = matrix(c(1, -1, 0), ncol = 1),
+    type = "response"
+)
+options(old_option)
+expect_equivalent(cmp_analytic$estimate, cmp_fallback$estimate)
+expect_equivalent(
+    components(cmp_analytic, "jacobian"),
+    components(cmp_fallback, "jacobian"),
+    tolerance = 1e-5
+)
+
+assign("brglm_fd_calls", 0L, envir = .GlobalEnv)
+suppressMessages(invisible(utils::capture.output(
+    trace(
+        "get_jacobian_fdforward",
+        where = asNamespace("marginaleffects"),
+        tracer = quote({
+            .GlobalEnv$brglm_fd_calls <- .GlobalEnv$brglm_fd_calls + 1L
+        }),
+        print = FALSE
+    )
+)))
+tryCatch(
+    {
+        avg_comparisons(mod_analytic, variables = "hp", type = "response")
+        expect_equal(.GlobalEnv$brglm_fd_calls, 0L)
+
+        old_option <- options(marginaleffects_analytic_jacobian = FALSE)
+        tryCatch(
+            avg_comparisons(mod_analytic, variables = "hp", type = "response"),
+            finally = options(old_option)
+        )
+        expect_equal(.GlobalEnv$brglm_fd_calls, 1L)
+    },
+    finally = {
+        suppressMessages(invisible(utils::capture.output(
+            untrace(
+                "get_jacobian_fdforward",
+                where = asNamespace("marginaleffects")
+            )
+        )))
+        rm("brglm_fd_calls", envir = .GlobalEnv)
+    }
+)
+
 # brglm2::brglm_fit vs. margins vs. emtrends
 data("endometrial", package = "brglm2", envir = environment())
 dat <<- endometrial

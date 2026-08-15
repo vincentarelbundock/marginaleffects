@@ -31,6 +31,7 @@ mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
 
 pred <- make_prediction_lowering(mod)
 expect_true(pred$low$ok)
+expect_equal(pred$low$coefs, get_coef(mod))
 expect_equal(pred$low$spec$kind, "predictions")
 expect_equal(nrow(pred$low$spec$X), nrow(mtcars))
 expect_null(pred$low$spec$agg)
@@ -47,6 +48,13 @@ hyp <- make_prediction_lowering(mod, by = "cyl", hypothesis = H)
 expect_true(hyp$low$ok)
 expect_true(is.matrix(hyp$low$spec$hyp))
 expect_equal(ncol(hyp$low$spec$hyp), 1L)
+
+hyp <- make_prediction_lowering(mod, by = "cyl", hypothesis = ~pairwise)
+expect_true(hyp$low$ok)
+expect_equal(hyp$plan$hyp$kind, "matrix")
+expect_inherits(hyp$plan$hyp$H, "sparseMatrix")
+expect_true(is.matrix(hyp$low$spec$hyp))
+expect_equal(dim(hyp$low$spec$hyp), c(3L, 3L))
 
 bad <- pred$plan
 bad$has_na <- TRUE

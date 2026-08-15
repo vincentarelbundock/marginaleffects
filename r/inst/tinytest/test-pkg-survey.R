@@ -44,6 +44,102 @@ expect_equivalent(mfx$estimate, em$nh.trend, tolerance = .001) # CRAN tolerance
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 
+# Exact svyglm model matrices and analytic Jacobians. The spline term checks
+# that we reproduce predict.svyglm(), rather than insight::get_modelmatrix().
+set.seed(48103)
+n <- 300
+dat <- data.frame(
+    y = rbinom(n, 1, .5),
+    x = rnorm(n),
+    z = runif(n),
+    g = factor(sample(letters[1:3], n, replace = TRUE)),
+    w = runif(n, .5, 2)
+)
+design <- svydesign(ids = ~1, weights = ~w, data = dat)
+mod_analytic <- svyglm(
+    y ~ x * g + splines::ns(z, 3),
+    design = design,
+    family = quasibinomial()
+)
+newdata <- dat[1:25, , drop = FALSE]
+X <- marginaleffects:::get_model_matrix(mod_analytic, newdata)
+eta <- drop(X %*% coef(mod_analytic))
+expect_equivalent(
+    eta,
+    as.numeric(predict(mod_analytic, newdata, type = "link", se.fit = FALSE))
+)
+
+cmp_analytic <- avg_comparisons(
+    mod_analytic,
+    variables = "x",
+    by = "g",
+    wts = "(weights)"
+)
+J_analytic <- components(cmp_analytic, "jacobian")
+expect_true(is.matrix(J_analytic))
+expect_identical(colnames(J_analytic), names(coef(mod_analytic)))
+
+fun <- function(b) {
+    mod_tmp <- marginaleffects::set_coef(mod_analytic, b)
+    avg_comparisons(
+        mod_tmp,
+        variables = "x",
+        by = "g",
+        wts = "(weights)",
+        vcov = FALSE
+    )$estimate
+}
+J_finite <- marginaleffects:::get_jacobian_fdforward(fun, coef(mod_analytic))
+colnames(J_finite) <- names(coef(mod_analytic))
+expect_equivalent(J_analytic, J_finite, tolerance = 1e-5)
+
+pred_analytic <- predictions(
+    mod_analytic,
+    newdata = newdata,
+    type = "response"
+)
+J_pred <- components(pred_analytic, "jacobian")
+expected_pred <- X * as.vector(mod_analytic$family$mu.eta(eta))
+attributes(expected_pred) <- list(
+    dim = dim(expected_pred),
+    dimnames = list(NULL, names(coef(mod_analytic)))
+)
+expect_equivalent(J_pred, expected_pred)
+
+assign("svyglm_fd_calls", 0L, envir = .GlobalEnv)
+suppressMessages(invisible(utils::capture.output(
+    trace(
+        "get_jacobian_fdforward",
+        where = asNamespace("marginaleffects"),
+        tracer = quote({
+            .GlobalEnv$svyglm_fd_calls <- .GlobalEnv$svyglm_fd_calls + 1L
+        }),
+        print = FALSE
+    )
+)))
+tryCatch(
+    {
+        avg_comparisons(
+            mod_analytic,
+            variables = "x",
+            by = "g",
+            wts = "(weights)",
+            numderiv = "fdforward"
+        )
+        expect_equal(.GlobalEnv$svyglm_fd_calls, 0L)
+    },
+    finally = {
+        suppressMessages(invisible(utils::capture.output(
+            untrace(
+                "get_jacobian_fdforward",
+                where = asNamespace("marginaleffects")
+            )
+        )))
+        rm("svyglm_fd_calls", envir = .GlobalEnv)
+    }
+)
+
+
 # Issue #1131
 data("lalonde", package = "MatchIt")
 fit <- survey::svyglm(re78 ~ treat, design = survey::svydesign(~1, weights = ~1, data = lalonde))

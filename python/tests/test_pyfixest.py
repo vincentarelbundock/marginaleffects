@@ -13,6 +13,7 @@ import polars as pl
 from polars.testing import assert_series_equal
 import numpy as np
 from marginaleffects import *
+from marginaleffects.pyfixest.model import ModelPyfixest
 
 pytestmark = pytest.mark.skipif(
     not PYFIXEST_AVAILABLE,
@@ -20,6 +21,34 @@ pytestmark = pytest.mark.skipif(
 )
 
 rtol = 1e-4
+
+
+class _FakePyfixest:
+    def __init__(self, fail=False):
+        self._beta_hat = np.asarray([1.0, 2.0])
+        self.fail = fail
+
+    def predict(self, newdata):
+        if self.fail:
+            raise RuntimeError("prediction failed")
+        return np.repeat(self._beta_hat.sum(), newdata.shape[0])
+
+
+def test_prediction_restores_pyfixest_coefficients():
+    adapter = object.__new__(ModelPyfixest)
+    adapter.model = _FakePyfixest()
+    original = adapter.model._beta_hat.copy()
+    adapter.get_predict(np.asarray([8.0, 9.0]), pl.DataFrame({"x": [1, 2]}))
+    np.testing.assert_array_equal(adapter.model._beta_hat, original)
+
+
+def test_prediction_restores_pyfixest_coefficients_after_error():
+    adapter = object.__new__(ModelPyfixest)
+    adapter.model = _FakePyfixest(fail=True)
+    original = adapter.model._beta_hat.copy()
+    with pytest.raises(RuntimeError, match="prediction failed"):
+        adapter.get_predict(np.asarray([8.0, 9.0]), pl.DataFrame({"x": [1, 2]}))
+    np.testing.assert_array_equal(adapter.model._beta_hat, original)
 
 
 def create_test_data():

@@ -7,7 +7,7 @@ from .equivalence import get_equivalence
 from .core import get_hypothesis
 from ..sanitize import sanitize_hypothesis_null, sanitize_vcov
 from ..sanitize import sanitize_model
-from ..uncertainty import get_jacobian, get_se, get_z_p_ci
+from ..inference import get_jacobian, get_se, get_z_p_ci
 from ..utils import sort_columns
 from .joint import joint_hypotheses
 

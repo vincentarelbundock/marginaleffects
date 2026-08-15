@@ -19,11 +19,9 @@ document: r-document py-document ## Both: generate docs and populate website/man
 
 r-runnersup:
 	cd r && awk '!/tinytest/' .Rbuildignore > temp && mv temp .Rbuildignore
-	cd r && awk '/^run <- FALSE/{print "run <- TRUE"; next} 1' tests/tinytest.R > temp && mv temp tests/tinytest.R
 
 r-runnersdown:
 	cd r && git restore .Rbuildignore
-	cd r && git restore tests/tinytest.R
 
 r-install: r-document ## R: install package (dependencies=FALSE)
 	cd r && Rscript -e "devtools::install(dependencies = FALSE)"
@@ -39,19 +37,19 @@ r-document: ## R: generate roxygen docs and populate website/man/r
 	cp -f r/NEWS.md website/bonus/NEWS_r.qmd
 
 r-check: r-document r-runnersup ## R: run R CMD check
-	cd r && Rscript -e "devtools::check()"
-	$(MAKE) r-runnersdown
+	cd r && Rscript -e "devtools::check()"; status=$$?; \
+	cd .. && $(MAKE) r-runnersdown; exit $$status
 
 r-testone: ## R: run single test (testfile=path)
 	cd r && uv run Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
 
 r-testseq: r-runnersup ## R: run all tests sequentially
-	cd r && uv run Rscript -e "pkgload::load_all();tinytest::run_test_dir()"
-	$(MAKE) r-runnersdown
+	cd r && uv run Rscript -e "pkgload::load_all();tinytest::run_test_dir()"; status=$$?; \
+	cd .. && $(MAKE) r-runnersdown; exit $$status
 
 r-test: r-install r-runnersup ## R: build, install, and test in parallel
-	cd r && uv run Rscript -e "tinytest::build_install_test(ncpu = 10)"
-	$(MAKE) r-runnersdown
+	cd r && uv run Rscript -e "tinytest::build_install_test(ncpu = 10)"; status=$$?; \
+	cd .. && $(MAKE) r-runnersdown; exit $$status
 
 r-testplot: ## R: run plot tests
 	$(MAKE) r-testone testfile="inst/tinytest/test-plot_predictions.R"

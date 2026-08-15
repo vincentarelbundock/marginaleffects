@@ -1,6 +1,8 @@
 prediction_plan_build_frequentist <- function(
     out,
     raw_estimate,
+    linear_predictor,
+    model_matrix_used,
     keep,
     newdata,
     type,
@@ -29,6 +31,9 @@ prediction_plan_build_frequentist <- function(
     plan <- list(
         kind = "predictions",
         n_pred = length(raw_estimate),
+        baseline_prediction = raw_estimate,
+        linear_predictor = linear_predictor,
+        model_matrix_used = model_matrix_used,
         predict_args = list(
             type = type,
             newdata = newdata,

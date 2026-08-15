@@ -96,6 +96,33 @@ run_benchmark <- function(lib, label, iterations, n, profile_memory) {
         family = binomial
       )
 
+      # Fixed-size workloads for targeted performance regressions. Keeping
+      # these independent of `n` makes historical benchmark runs comparable.
+      mod_mtcars <- lm(mpg ~ hp + cyl, data = mtcars)
+      nd_mtcars <- mtcars[rep(seq_len(nrow(mtcars)), 100L), , drop = FALSE]
+      nd_mtcars_large <- mtcars[rep(seq_len(nrow(mtcars)), 1000L), , drop = FALSE]
+      nd_mtcars_delta <- mtcars[rep(seq_len(nrow(mtcars)), 200L), , drop = FALSE]
+      sim_predictions <- avg_predictions(
+        mod_mtcars,
+        newdata = nd_mtcars,
+        by = "cyl",
+        vcov = FALSE
+      )
+      sim_comparisons <- avg_comparisons(
+        mod_mtcars,
+        newdata = nd_mtcars,
+        variables = "hp",
+        by = "cyl",
+        vcov = FALSE
+      )
+
+      simulation <- function(x, R) {
+        set.seed(48103)
+        inferences(x, method = "simulation", R = R)
+      }
+
+      options(marginaleffects_safe = FALSE)
+
       out <- bench::mark(
         `comparisons(mod_glm, variables = "treatment")` =
           comparisons(mod_glm, variables = "treatment"),
@@ -103,6 +130,41 @@ run_benchmark <- function(lib, label, iterations, n, profile_memory) {
           slopes(mod_lm, variables = "X3"),
         `avg_comparisons(mod_glm, variables = "treatment", by = "groupid")` =
           avg_comparisons(mod_glm, variables = "treatment", by = "groupid"),
+        `avg_predictions(): vcov=FALSE, 32k rows` =
+          avg_predictions(
+            mod_mtcars,
+            newdata = nd_mtcars_large,
+            by = "cyl",
+            vcov = FALSE
+          ),
+        `avg_comparisons(): vcov=FALSE, 32k rows` =
+          avg_comparisons(
+            mod_mtcars,
+            newdata = nd_mtcars_large,
+            variables = c("hp", "cyl"),
+            by = "cyl",
+            vcov = FALSE
+          ),
+        `avg_comparisons(): delta method, 6.4k rows` =
+          avg_comparisons(
+            mod_mtcars,
+            newdata = nd_mtcars_delta,
+            variables = c("hp", "cyl"),
+            by = "cyl"
+          ),
+        `predictions(): positional hypothesis, 3.2k rows` =
+          predictions(
+            mod_mtcars,
+            newdata = nd_mtcars,
+            hypothesis = "b1 - b3200 = 0",
+            vcov = FALSE
+          ),
+        `inferences(): predictions simulation, R=30` =
+          simulation(sim_predictions, R = 30L),
+        `inferences(): predictions simulation, R=100` =
+          simulation(sim_predictions, R = 100L),
+        `inferences(): comparisons simulation, R=30` =
+          simulation(sim_comparisons, R = 30L),
         check = FALSE,
         iterations = iterations,
         memory = profile_memory,

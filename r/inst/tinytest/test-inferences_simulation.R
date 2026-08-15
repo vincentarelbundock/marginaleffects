@@ -5,6 +5,89 @@ set.seed(1024)
 R <- 25
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width, data = iris)
 
+draws <- matrix(rnorm(200), nrow = 10)
+draw_summary <- marginaleffects:::inferences_simulation_summarize(
+    draws,
+    conf_level = 0.9,
+    interval = TRUE
+)
+expect_equivalent(draw_summary$std.error, apply(draws, 1, stats::sd))
+expect_equivalent(
+    draw_summary$conf.low,
+    apply(draws, 1, stats::quantile, probs = 0.05, names = FALSE)
+)
+expect_equivalent(
+    draw_summary$conf.high,
+    apply(draws, 1, stats::quantile, probs = 0.95, names = FALSE)
+)
+draws_missing <- draws
+draws_missing[1, 1] <- NA_real_
+expect_error(
+    marginaleffects:::inferences_simulation_summarize(draws_missing, 0.9, TRUE),
+    pattern = "missing values"
+)
+
+simulation_full_draws <- function(x, R, seed) {
+    mfx <- attr(x, "marginaleffects")
+    model <- mfx@model
+    V <- mfx@vcov_model
+    if (!is.matrix(V)) {
+        V <- marginaleffects:::get_vcov(model)
+    }
+
+    set.seed(seed)
+    coefmat <- mvtnorm::rmvnorm(R, marginaleffects:::get_coef(model), V)
+    call_mfx <- mfx@call
+    call_mfx[["vcov"]] <- FALSE
+    call_mfx[["modeldata"]] <- mfx@modeldata
+    call_mfx[["newdata"]] <- mfx@newdata
+
+    vapply(seq_len(R), function(i) {
+        call_mfx[["model"]] <- marginaleffects:::set_coef(model, coefmat[i, ])
+        eval(call_mfx, envir = parent.frame())$estimate
+    }, numeric(nrow(x)))
+}
+
+mod_replay <- lm(mpg ~ hp + cyl, data = mtcars)
+pred_replay <- avg_predictions(mod_replay, by = "cyl", transform = exp)
+seed_replay <- 918
+expected_replay <- simulation_full_draws(pred_replay, R = 8, seed = seed_replay)
+set.seed(seed_replay)
+actual_replay <- inferences(pred_replay, method = "simulation", R = 8)
+expect_equivalent(
+    attr(actual_replay, "marginaleffects")@draws,
+    expected_replay,
+    tolerance = 1e-10
+)
+
+cmp_replay <- avg_comparisons(mod_replay, by = "cyl", transform = exp)
+expected_replay <- simulation_full_draws(cmp_replay, R = 8, seed = seed_replay)
+set.seed(seed_replay)
+actual_replay <- inferences(cmp_replay, method = "simulation", R = 8)
+expect_equivalent(
+    attr(actual_replay, "marginaleffects")@draws,
+    expected_replay,
+    tolerance = 1e-10
+)
+expect_null(marginaleffects:::settings_get(
+    "marginaleffects_capture_simulation_replay"
+))
+
+set.seed(seed_replay)
+direct_replay <- avg_predictions(
+    mod_replay,
+    by = "cyl",
+    vcov = "simulation"
+)
+expect_equal(
+    dim(attr(direct_replay, "marginaleffects")@draws),
+    c(3L, 1000L)
+)
+expect_null(attr(
+    attr(direct_replay, "marginaleffects"),
+    "marginaleffects_simulation_replay"
+))
+
 x <- mod |>
     avg_comparisons() |>
     inferences(method = "simulation", R = R)

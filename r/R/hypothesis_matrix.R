@@ -14,7 +14,7 @@ hypothesis_matrix <- function(x, hypothesis) {
         draws <- t(as.matrix(hypothesis)) %*% draws
         out <- data.table(
             term = colnames(hypothesis),
-            tmp = apply(draws, 1, stats::median)
+            tmp = posterior_draws_center(draws, stats::median)
         )
         setnames(out, old = "tmp", new = "estimate")
 

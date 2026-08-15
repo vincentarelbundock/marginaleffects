@@ -21,6 +21,11 @@ comparison_plan_build_frequentist <- function(
     idx,
     context,
     n_pred,
+    baseline_hi,
+    baseline_lo,
+    eta_hi,
+    eta_lo,
+    model_matrix_used,
     type,
     dots,
     hi,
@@ -126,6 +131,11 @@ comparison_plan_build_frequentist <- function(
     plan <- list(
         kind = "comparisons",
         n_pred = n_pred,
+        baseline_hi = baseline_hi,
+        baseline_lo = baseline_lo,
+        eta_hi = eta_hi,
+        eta_lo = eta_lo,
+        model_matrix_used = model_matrix_used,
         need_y = need_y,
         predict_args = list(
             type = type,

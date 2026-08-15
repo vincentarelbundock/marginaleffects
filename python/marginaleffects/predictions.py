@@ -4,9 +4,9 @@ import polars as pl
 from .autodiff.lower import autodiff_try
 from .by import get_by_plan
 from .hypothesis_compile import hypothesis_compile
-from .uncertainty import get_jacobian, get_se
+from .inference import analytic_try, get_jacobian, get_se
 from .classes import MarginaleffectsResult
-from .plan import (
+from .planning import (
     PredictionPlan,
     plan_values_allclose,
     prediction_plan_apply,
@@ -79,38 +79,6 @@ def _prepare_newdata(newdata, modeldata, variables):
     return newdata, list(normalized.keys())
 
 
-def _predictions_fd(
-    model,
-    exog,
-    newdata,
-    by,
-    wts,
-    hypothesis,
-    V,
-    eps_vcov,
-):
-    out, plan = _predictions_build(
-        model=model,
-        exog=exog,
-        newdata=newdata,
-        by=by,
-        wts=wts,
-        hypothesis=hypothesis,
-    )
-    if V is None:
-        return out, None
-
-    J = get_jacobian(
-        lambda beta: prediction_plan_apply(
-            plan, prediction_plan_predict(plan, model, beta)
-        ),
-        model.get_coef(),
-        eps_vcov,
-    )
-    se = get_se(J, V)
-    return out.with_columns(pl.Series(se).alias("std_error")), J
-
-
 def _predictions_build(model, exog, newdata, by, wts, hypothesis):
     raw = model.get_predict(params=np.asarray(model.get_coef()), newdata=exog)
     n_pred = raw.shape[0]
@@ -131,7 +99,11 @@ def _predictions_build(model, exog, newdata, by, wts, hypothesis):
         out = out.drop("_pred_row")
 
     else:
-        raise ValueError("Something went wrong")
+        raise ValueError(
+            "Could not align predictions with `newdata`: "
+            f"the model returned {raw.shape[0]} prediction rows for "
+            f"{newdata.shape[0]} input rows and did not provide a `group` column."
+        )
 
     aligned_baseline = out["estimate"].to_numpy()
     has_na = np.isnan(np.asarray(aligned_baseline, dtype=float)).any()
@@ -148,9 +120,9 @@ def _predictions_build(model, exog, newdata, by, wts, hypothesis):
         n_out=out.height,
     )
 
-    replay = prediction_plan_apply(
-        plan, prediction_plan_predict(plan, model, model.get_coef())
-    )
+    # Reuse the predictions already computed above. Re-predicting here doubled
+    # point-estimate work for every predictions() call.
+    replay = prediction_plan_apply(plan, raw["estimate"].to_numpy())
     if not plan_values_allclose(
         replay,
         out["estimate"].to_numpy(),
@@ -280,13 +252,25 @@ def predictions(
 
     J = None
     if V is not None:
-        ad = autodiff_try(
-            plan=plan,
-            model=model,
-            V=V,
-            estimate=out["estimate"].to_numpy(),
-            kind="predictions",
-        )
+        # An explicit `eps_vcov` requests finite differences with that step size,
+        # so the exact-derivative paths are skipped when the user supplies one.
+        ad = None
+        if eps_vcov is None:
+            ad = analytic_try(
+                plan=plan,
+                model=model,
+                V=V,
+                estimate=out["estimate"].to_numpy(),
+                kind="predictions",
+            )
+            if ad is None:
+                ad = autodiff_try(
+                    plan=plan,
+                    model=model,
+                    V=V,
+                    estimate=out["estimate"].to_numpy(),
+                    kind="predictions",
+                )
         if ad is not None:
             J = ad.jacobian
             out = out.with_columns(pl.Series(ad.std_error).alias("std_error"))
