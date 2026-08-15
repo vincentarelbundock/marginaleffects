@@ -181,3 +181,24 @@ dt[, y := 4 + x + rnorm(1000)]
 mod <- lm(data = dt, y ~ x)
 avg_slopes(mod, variables = "x")
 expect_true(data.table::is.data.table(dt))
+
+
+# Issue #1744: warn when coefficients are NA (rank deficiency)
+options(marginaleffects_safe = TRUE)
+options(marginaleffects_rank_deficient = TRUE)
+set.seed(42)
+n <- 30
+dat <- data.frame(
+    arm = rep(c("control", "A", "A", "B", "B"), each = n),
+    dose = rep(c("none", "low", "high", "low", "high"), each = n))
+dat$y <- rnorm(nrow(dat))
+dat$arm <- factor(dat$arm, levels = c("control", "A", "B"))
+dat$dose <- factor(dat$dose, levels = c("none", "low", "high"))
+mod <- lm(y ~ arm * dose, data = dat)
+expect_warning(avg_predictions(mod, vcov = FALSE), pattern = "order of factor levels")
+# once per session
+expect_silent(avg_comparisons(mod, vcov = FALSE))
+options(marginaleffects_rank_deficient = TRUE)
+expect_warning(avg_comparisons(mod, vcov = FALSE), pattern = "order of factor levels")
+options(marginaleffects_rank_deficient = TRUE)
+options(marginaleffects_safe = FALSE)
