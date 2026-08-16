@@ -144,6 +144,13 @@ class ModelAbstract(ModelValidation, ABC):
     def get_autodiff_args(self):
         return None
 
+    # Adapters predicting on a response scale return `(linkinv, mu_eta)` here.
+    # `mu_eta` is the derivative of the inverse link, which turns a link-scale
+    # design matrix into a response-scale Jacobian. `None` keeps the analytic
+    # path from claiming the model.
+    def get_link_functions(self):
+        return None
+
     def get_df(self) -> float:
         return np.inf
 

@@ -475,14 +475,14 @@ tryCatch(
             comparison = "ratio",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 0L)
 
         avg_comparisons(
             mod_lm,
             variables = list(hp = c(100, 110)),
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 0L)
 
         comparisons(
             mod_lm,
@@ -491,7 +491,7 @@ tryCatch(
             hypothesis = c(1, -1),
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 0L)
 
         comparisons(
             mod_lm,
@@ -500,7 +500,7 @@ tryCatch(
             comparison = function(hi, lo) hi - lo,
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 2L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
 
         mod_offset <- lm(mpg ~ hp + offset(wt), data = mtcars)
         comparisons(
@@ -509,7 +509,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 3L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 2L)
 
         mod_rank_deficient <- lm(mpg ~ hp + I(hp), data = mtcars)
         suppressWarnings(comparisons(
@@ -518,7 +518,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         ))
-        expect_equal(.GlobalEnv$analytic_fd_calls, 4L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 3L)
 
         mod_subclass <- mod_lm
         class(mod_subclass) <- c("analytic_audit_lm", class(mod_subclass))
@@ -528,7 +528,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 4L)
 
         comparisons(
             mod_glm,
@@ -537,7 +537,7 @@ tryCatch(
             type = "response",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 4L)
 
         # The global opt-out must actually invoke the fallback, not merely
         # produce a numerically identical result through the analytic route.
@@ -551,7 +551,7 @@ tryCatch(
             ),
             finally = options(old_option)
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 6L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
 
         mod_glm_offset <- glm(
             am ~ hp + offset(log(wt)),
@@ -565,7 +565,7 @@ tryCatch(
             type = "response",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 7L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 6L)
 
         mod_glm_rank_deficient <- glm(
             am ~ hp + I(hp),
@@ -579,7 +579,7 @@ tryCatch(
             type = "response",
             numderiv = "fdforward"
         ))
-        expect_equal(.GlobalEnv$analytic_fd_calls, 8L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 7L)
     },
     finally = {
         suppressMessages(invisible(utils::capture.output(
@@ -590,4 +590,114 @@ tryCatch(
         )))
         rm("analytic_fd_calls", envir = .GlobalEnv)
     }
+)
+
+
+# Slopes and nonlinear contrasts have closed-form Jacobians. Each estimand is
+# checked against the finite-difference fallback, which is the reference these
+# derivatives replace. The tolerance reflects the accuracy of that reference,
+# not of the analytic path.
+mod_key_lm <- lm(mpg ~ hp + wt + factor(am), data = mtcars)
+mod_key_glm <- glm(vs ~ hp + wt, family = binomial, data = mtcars)
+mod_key_pois <- glm(carb ~ hp + wt, family = poisson, data = mtcars)
+
+expect_analytic_matches_fd <- function(call, tolerance = 1e-3) {
+    call <- substitute(call)
+    analytic <- eval(call, parent.frame())
+    old <- options(marginaleffects_analytic_jacobian = FALSE)
+    numeric <- tryCatch(eval(call, parent.frame()), finally = options(old))
+    expect_equivalent(analytic$std.error, numeric$std.error, tolerance = tolerance)
+    expect_true(all(is.finite(analytic$std.error)))
+    invisible(NULL)
+}
+
+expect_analytic_matches_fd(slopes(mod_key_lm))
+expect_analytic_matches_fd(avg_slopes(mod_key_lm))
+expect_analytic_matches_fd(avg_slopes(mod_key_lm, by = "am"))
+expect_analytic_matches_fd(comparisons(mod_key_lm, comparison = "ratio"))
+expect_analytic_matches_fd(comparisons(mod_key_lm, comparison = "lnratio"))
+expect_analytic_matches_fd(comparisons(mod_key_lm, comparison = "lift"))
+expect_analytic_matches_fd(avg_comparisons(mod_key_lm, comparison = "ratio"))
+expect_analytic_matches_fd(avg_comparisons(mod_key_lm, comparison = "lnratio"))
+expect_analytic_matches_fd(avg_comparisons(mod_key_lm, comparison = "lift"))
+
+expect_analytic_matches_fd(slopes(mod_key_glm, type = "response"))
+expect_analytic_matches_fd(avg_slopes(mod_key_glm, type = "response"))
+expect_analytic_matches_fd(avg_slopes(mod_key_glm, type = "link"))
+expect_analytic_matches_fd(
+    comparisons(mod_key_glm, comparison = "lnor", type = "response")
+)
+expect_analytic_matches_fd(
+    avg_comparisons(mod_key_glm, comparison = "lnor", type = "response")
+)
+expect_analytic_matches_fd(
+    avg_comparisons(mod_key_glm, comparison = "ratio", type = "response")
+)
+
+# Unit-level Poisson slopes are the case where finite differences are least
+# accurate, so they are pinned to the exact derivative below instead.
+expect_analytic_matches_fd(slopes(mod_key_pois, type = "response"), tolerance = 1e-2)
+expect_analytic_matches_fd(avg_slopes(mod_key_pois, type = "response"))
+
+X_pois <- model.matrix(mod_key_pois)
+beta_pois <- coef(mod_key_pois)
+mu_pois <- exp(drop(X_pois %*% beta_pois))
+J_pois <- mu_pois * X_pois * beta_pois[["hp"]]
+J_pois[, "hp"] <- J_pois[, "hp"] + mu_pois
+expect_equivalent(
+    slopes(mod_key_pois, type = "response", variables = "hp")$std.error,
+    sqrt(rowSums(tcrossprod(J_pois, vcov(mod_key_pois)) * J_pois)),
+    tolerance = 1e-6
+)
+
+# The average marginal effect of a logit has a closed form that does not go
+# through the package, so it pins down the analytic path independently.
+X_ame <- model.matrix(mod_key_glm)
+beta_ame <- coef(mod_key_glm)
+mu_ame <- mod_key_glm$family$linkinv(drop(X_ame %*% beta_ame))
+d1_ame <- mu_ame * (1 - mu_ame)
+d2_ame <- d1_ame * (1 - 2 * mu_ame)
+J_ame <- t(sapply(2:3, function(k) {
+    colMeans(d2_ame * X_ame) * beta_ame[[k]] +
+        (seq_along(beta_ame) == k) * mean(d1_ame)
+}))
+expect_equivalent(
+    avg_slopes(mod_key_glm, type = "response")$std.error,
+    sqrt(rowSums(tcrossprod(J_ame, vcov(mod_key_glm)) * J_ame)),
+    tolerance = 1e-6
+)
+
+# Weighted averages divide by the recorded weights, not by the row count.
+dat_wts <- transform(mtcars, wcol = seq(1, 2, length.out = nrow(mtcars)))
+mod_wts <- lm(mpg ~ hp + wt, data = dat_wts)
+expect_analytic_matches_fd(avg_slopes(mod_wts, wts = "wcol", newdata = dat_wts))
+expect_analytic_matches_fd(
+    avg_comparisons(mod_wts, comparison = "ratio", wts = "wcol", newdata = dat_wts)
+)
+
+# A `by` data frame records aggregation in blocks rather than in the comparison
+# groups, so slopes reach the averaging fast path through a different branch.
+dat_byframe <- transform(mtcars, cyl = as.factor(cyl))
+mod_byframe <- lm(mpg ~ hp + wt + cyl, data = dat_byframe)
+by_frame <- data.frame(
+    cyl = factor(c(4, 6, 8)),
+    by = c("small", "small", "big")
+)
+expect_analytic_matches_fd(
+    comparisons(mod_byframe, variables = "cyl", by = by_frame)
+)
+expect_analytic_matches_fd(
+    slopes(mod_byframe, variables = "hp", by = by_frame)
+)
+
+# Elasticities depend on the fitted response, so they keep using the fallback.
+expect_equal(
+    marginaleffects:::get_jacobian_analytic(
+        mod_key_lm,
+        plan = NULL,
+        kind = "comparisons",
+        type = "response",
+        estimate = numeric(0)
+    ),
+    NULL
 )

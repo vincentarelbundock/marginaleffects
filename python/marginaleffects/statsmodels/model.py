@@ -145,6 +145,21 @@ class ModelStatsmodels(ModelAbstract):
     def get_df(self):
         return self.model.df_resid
 
+    def get_link_functions(self):
+        # Read the derivative off the statsmodels link object rather than
+        # switching on the link name, so custom and unlisted links work too.
+        inner_model = self.model.model
+        if type(inner_model).__name__ != "GLM":
+            return None
+        link = getattr(getattr(inner_model, "family", None), "link", None)
+        if link is None:
+            return None
+        linkinv = getattr(link, "inverse", None)
+        mu_eta = getattr(link, "inverse_deriv", None)
+        if not callable(linkinv) or not callable(mu_eta):
+            return None
+        return linkinv, mu_eta
+
     def get_autodiff_args(self):
         inner_model = self.model.model
         model_class = type(inner_model).__name__

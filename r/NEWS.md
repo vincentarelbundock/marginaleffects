@@ -17,6 +17,9 @@ Breaking changes:
 
 Performance:
 
+* `slopes()` and `avg_slopes()` now use exact analytic Jacobians wherever the underlying comparison is eligible, on both the link and response scales. Previously every slope fell back to finite differences over the coefficient vector.
+* The analytic Jacobian now covers the `ratio`, `lnratio`, `lnor`, `lift`, and `expdydx` comparisons in addition to `difference`, along with their `avg` and weighted variants. Elasticities (`eyex`, `eydx`, `dyex`) depend on the fitted response and retain the numerical fallback.
+* Standard errors for these estimands can differ from previous versions in about the 5th significant digit, because the closed form replaces a finite-difference approximation. The analytic values are the accurate ones.
 * Cached model matrices now discard observation row names without copying their numeric payload. Eligible prediction plans reuse baseline linear predictors, and `avg_comparisons()` aggregates exact Jacobians directly from cached matrices instead of materializing observation-level derivatives.
 * `MASS::glm.nb()`, `MASS::rlm()`, and `brglm2::brglmFit()` models now use package-compatible model matrices and exact analytic Jacobians for eligible predictions and built-in difference comparisons. Response-scale `glm.nb` and `brglmFit` derivatives use their fitted inverse-link functions.
 * Set `options(marginaleffects_analytic_jacobian = FALSE)` to disable analytic Jacobians and force the existing autodiff or numerical fallback, which is useful for validation and debugging.

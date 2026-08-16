@@ -204,10 +204,12 @@ def compare_autodiff_vs_finite_diff(func, model, rtol=1e-4, atol=1e-6, **kwargs)
 
 def test_autodiff_autodetect_unsupported_fallback_is_silent(ols_model):
     try:
+        # Elasticities depend on the fitted response, so neither the analytic
+        # nor the autodiff path can differentiate them.
         autodiff(None)
         with warnings.catch_warnings(record=True) as caught:
             warnings.simplefilter("always")
-            comparisons(ols_model, variables="x1", comparison="lift", by=False)
+            comparisons(ols_model, variables="x1", comparison="eyex", by=False)
 
         unsupported = [
             w
@@ -219,9 +221,9 @@ def test_autodiff_autodetect_unsupported_fallback_is_silent(ols_model):
         autodiff(True)
         with pytest.warns(
             UserWarning,
-            match="Automatic differentiation does not support comparison='lift'",
+            match="Automatic differentiation does not support elasticities",
         ):
-            comparisons(ols_model, variables="x1", comparison="lift", by=False)
+            comparisons(ols_model, variables="x1", comparison="eyex", by=False)
     finally:
         autodiff(None)
 

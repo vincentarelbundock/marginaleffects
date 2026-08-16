@@ -1,3 +1,21 @@
+# 0.6.2
+
+Performance:
+
+* Analytic Jacobians now cover GLMs on the response scale. The inverse-link
+  derivative is read from the fitted statsmodels link object, so logit, probit,
+  Poisson, and any other link exposing `inverse_deriv()` are supported without
+  an explicit list.
+* `slopes()` and `avg_slopes()` now use exact analytic Jacobians, along with the
+  `ratio`, `lnratio`, `lnor`, `lift`, and `expdydx` comparisons and their `avg`
+  and weighted variants. Elasticities (`eyex`, `eydx`, `dyex`) depend on the
+  fitted response and retain the numerical fallback.
+* Standard errors for these estimands can differ from previous versions in about
+  the 5th significant digit, because the closed form replaces a finite-difference
+  approximation. The analytic values are the accurate ones.
+* Model adapters may implement `get_link_functions()` to return
+  `(linkinv, mu_eta)` and opt into the response-scale analytic path.
+
 # 0.6.1
 
 Breaking changes:

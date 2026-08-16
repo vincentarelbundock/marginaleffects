@@ -262,7 +262,9 @@ cmp1 <- comparisons(mod, variables = "cyl", comparison = fun, by = "am") |>
 cmp2 <- comparisons(mod, variables = "cyl", comparison = "ratioavg", by = "am") |>
     dplyr::arrange(am, contrast)
 expect_equivalent(cmp1$estimate, cmp2$estimate)
-expect_equivalent(cmp1$std.error, cmp2$std.error)
+# `ratioavg` uses an exact analytic Jacobian; the custom function falls back to
+# finite differences, so the standard errors only match to numerical precision.
+expect_equivalent(cmp1$std.error, cmp2$std.error, tolerance = 1e-6)
 expect_equal(nrow(cmp1), 4)
 
 
