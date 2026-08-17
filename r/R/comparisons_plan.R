@@ -153,7 +153,7 @@ comparison_plan_build <- function(
     newdata <- mfx@newdata
     model <- if (is.null(model_perturbed)) mfx@model else model_perturbed
 
-    predictions <- predictions_hi_lo(model, lo, hi, type, ...)
+    predictions <- predictions_hi_lo(model, lo, hi, type, mfx = mfx, ...)
     pred_lo <- predictions$pred_lo
     pred_hi <- predictions$pred_hi
     eta_lo <- attr(pred_lo, "marginaleffects_linear_predictor")
@@ -181,6 +181,7 @@ comparison_plan_build <- function(
             model,
             type = type,
             newdata = original,
+            mfx = mfx,
             ...
         )
     } else {

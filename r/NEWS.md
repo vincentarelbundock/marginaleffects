@@ -35,6 +35,7 @@ Performance:
 
 Bug fixes:
 
+* `lm` and `glm` estimates no longer fail when the fit object was stripped of its `qr$qr` element to save memory. Linear predictions are now computed from the model matrix when `stats::predict()` fails. Thanks to @trose64 for report #1748.
 * `by` aggregation with posterior or bootstrap draws no longer flattens the draws matrix when a `by` data frame omits some term/group combinations.
 * `predictions()` now assigns the correct `rowid`, `type`, and `estimate` column names when model predictions are returned as a bare vector.
 * `equivalence` tests now support vector-valued degrees of freedom.

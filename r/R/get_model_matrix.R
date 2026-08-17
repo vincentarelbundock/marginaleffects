@@ -97,3 +97,30 @@ add_model_matrix_attribute <- function(mfx, newdata = NULL) {
     attr(newdata, "marginaleffects_model_matrix") <- MM
     return(newdata)
 }
+
+
+#' Attach a model matrix after `stats::predict()` failed
+#'
+#' `get_predict()` methods that can compute a linear predictor from
+#' `X %*% beta` call this to build the model matrix on demand, rather than
+#' giving up on the error raised by `stats::predict()`. When no usable matrix
+#' can be built, the original error is re-raised so unrelated failures keep
+#' their own message.
+#'
+#' @param mfx marginaleffects object, or `NULL` when the caller has none
+#' @param newdata data frame to add attributes to
+#' @param beta coefficient vector the matrix columns must match
+#' @param error condition raised by `stats::predict()`
+#' @keywords internal
+#' @noRd
+model_matrix_retry <- function(mfx, newdata, beta, error) {
+    if (is.null(mfx)) {
+        stop(error)
+    }
+    newdata <- add_model_matrix_attribute(mfx, newdata)
+    MM <- attr(newdata, "marginaleffects_model_matrix")
+    if (!isTRUE(checkmate::check_matrix(MM)) || ncol(MM) != length(beta)) {
+        stop(error)
+    }
+    return(newdata)
+}
