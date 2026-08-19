@@ -508,7 +508,17 @@ plan_std_error <- function(
         variables = variables,
         numderiv = numderiv,
         propagate = function(J) {
-            std_error_from_jacobian(J, mfx@vcov_model, mfx@model)
+            # Model-specific arguments which no formal upstream absorbed must
+            # reach get_coef() during vcov alignment: gamlss models, for one,
+            # cannot extract coefficients without their `what` argument.
+            extra <- dots[setdiff(
+                names(dots),
+                c("", names(formals(get_delta_jacobian)))
+            )]
+            do_call(
+                std_error_from_jacobian,
+                c(list(J, mfx@vcov_model, mfx@model), extra)
+            )
         }
     )
     se <- jac$std.error
