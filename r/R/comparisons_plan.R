@@ -7,6 +7,21 @@ predictions_hi_lo <- function(model, lo, hi, type, ...) {
 }
 
 
+comparison_subset_newdata <- function(newdata, idx) {
+    if (!is.data.frame(newdata) && !is.matrix(newdata)) {
+        return(newdata)
+    }
+    if (
+        anyNA(idx) ||
+            any(idx < 1L) ||
+            any(idx > nrow(newdata))
+    ) {
+        stop_sprintf("Internal error: comparison rows could not be aligned with `newdata`.")
+    }
+    newdata[idx, , drop = FALSE]
+}
+
+
 comparison_call_args <- function(term, wts, tmp_idx, context) {
     tn <- term[1]
     key <- if (isTRUE(context$cross)) 1L else tn
@@ -15,9 +30,15 @@ comparison_call_args <- function(term, wts, tmp_idx, context) {
 
     args <- list(
         "eps" = context$variables[[tn]]$eps,
-        "w" = wts,
-        "newdata" = context$newdata
+        "w" = wts
     )
+
+    # A comparison is evaluated one term/group at a time. Pass only the
+    # matching rows to functions which request `newdata`; otherwise grouped
+    # comparisons receive a full data frame alongside shorter hi/lo vectors.
+    if ("newdata" %in% fun_formals) {
+        args[["newdata"]] <- comparison_subset_newdata(context$newdata, tmp_idx)
+    }
 
     # sometimes x is exactly the same length, but not always
     args[["x"]] <- context$elasticities[[tn]][tmp_idx]

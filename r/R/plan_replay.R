@@ -181,13 +181,21 @@ plan_replay_agrees <- function(a, b, tolerance = sqrt(.Machine$double.eps)) {
         # all.equal() checks element by element for non-numeric types.
         return(isTRUE(all.equal(a, b, check.attributes = FALSE)))
     }
-    na_a <- is.na(a)
-    na_b <- is.na(b)
-    if (!identical(na_a, na_b)) {
+    finite_a <- is.finite(a)
+    finite_b <- is.finite(b)
+    if (!identical(finite_a, finite_b)) {
         return(FALSE)
     }
-    a <- a[!na_a]
-    b <- b[!na_b]
+    # Non-finite entries are compared exactly rather than by subtraction: Inf
+    # minus Inf is NaN, which would read as disagreement and raise the generic
+    # "plan baseline check failed" error on top of whatever the caller was
+    # about to report. A user-supplied `comparison` function returning Inf is a
+    # user error with its own message, not a stale replay plan.
+    if (!identical(a[!finite_a], b[!finite_b])) {
+        return(FALSE)
+    }
+    a <- a[finite_a]
+    b <- b[finite_b]
     delta <- abs(a - b)
     isTRUE(all(delta <= tolerance * pmax(abs(b), 1)))
 }
@@ -290,10 +298,25 @@ plan_std_error <- function(
     mfx,
     estimates,
     type,
+    vcov = NULL,
     dots = list(),
     contrast_data = NULL,
     variables = NULL,
     numderiv = NULL) {
+    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
+        return(plan_unconditional_se(
+            built = built,
+            mfx = mfx,
+            estimates = estimates,
+            type = type,
+            dots = dots,
+            contrast_data = contrast_data,
+            variables = variables,
+            numderiv = numderiv,
+            unconditional = vcov
+        ))
+    }
+
     if ("std.error" %in% colnames(estimates) ||
         (!is.null(mfx) && !is.null(mfx@draws))) {
         return(list(mfx = mfx, estimates = estimates))

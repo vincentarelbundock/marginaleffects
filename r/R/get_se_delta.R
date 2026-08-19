@@ -104,11 +104,21 @@ std_error_from_jacobian <- function(J, V, object, ...) {
     }
 
     # Avoid constructing the full J V J' matrix when only its diagonal is used.
-    se <- sqrt(rowSums(tcrossprod(J, V) * J))
+    variances <- rowSums(tcrossprod(J, V) * J)
+    # tiny negative variances are floating-point noise: clamp them to zero
+    scale <- suppressWarnings(max(abs(variances), na.rm = TRUE))
+    if (!is.finite(scale)) {
+        scale <- 0
+    }
+    tol <- sqrt(.Machine$double.eps) * max(1, scale)
+    variances[variances < 0 & variances > -tol] <- 0
+    se <- sqrt(variances)
     # A zero here is a statement, not a failure: a constant estimand -- a
     # contrast of a level with itself, a zero row of an exact Jacobian -- has
     # variance exactly zero. Test statistics on such rows are undefined and
-    # come out NaN downstream, which is the correct separate signal.
+    # come out NaN downstream, which is the correct separate signal. The
+    # clamping above is deliberately kept separate: it removes negative noise
+    # without turning an exact zero into a missing value.
     list(std.error = se, jacobian = J)
 }
 

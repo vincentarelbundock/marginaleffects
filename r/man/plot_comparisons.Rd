@@ -67,6 +67,12 @@ first entry in the error message is used by default. See the Type section in the
 \itemize{
 \item Heteroskedasticity-consistent: \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, \code{"HC4m"}, \code{"HC5"}. See \code{?sandwich::vcovHC}
 \item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
+\item Unconditional: \code{"unconditional"} accounts for sampling variation in
+the empirical covariate distribution for averaged or aggregated
+predictions, comparisons, and slopes. Hypotheses applied directly to
+unit-level effects are rejected. Use
+\code{vcovUnconditional(cluster = ~cluster)} for
+one-way clustered unconditional inference.
 \item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 \item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
 \item \code{"rsample"}, \code{"boot"}, \code{"fwb"}, or \code{"simulation"}: forward the result to \code{inferences()} using that method.

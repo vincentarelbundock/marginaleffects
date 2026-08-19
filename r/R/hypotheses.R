@@ -159,12 +159,26 @@ hypotheses <- function(
     multcomp = FALSE,
     numderiv = "fdforward",
     ...) {
+    vcov <- sanitize_vcov_request(vcov)
     call <- construct_call(model, "hypotheses")
 
     # Early validation and setup
     if (is.null(model)) model <- ...get("model_perturbed")
     if (is.null(model)) stop_sprintf("`model` is missing.")
     sanity_multcomp(multcomp, hypothesis, joint)
+    internal_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
+    if (inherits(model, internal_classes) && !isTRUE(checkmate::check_flag(vcov))) {
+        msg <- paste0(
+            "The `vcov` argument is not available when `model` is a ",
+            "`predictions`, `comparisons`, `slopes`, or `hypotheses` object. ",
+            "Please specify the type of standard errors in the initial ",
+            "`marginaleffects` call."
+        )
+        stop_sprintf(msg)
+    }
+    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
+        stop_unconditional("hypotheses")
+    }
 
     # Early returns for special cases - removed mice check, moved later
 
@@ -180,13 +194,7 @@ hypotheses <- function(
     }
 
     # Handle marginaleffects objects vs regular models
-    internal_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
     if (inherits(model, internal_classes)) {
-        if (!isTRUE(checkmate::check_flag(vcov))) {
-            stop_sprintf(
-                "The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call."
-            )
-        }
         mfx <- components(model, "all")
         if (!is.null(mfx) && !is.null(mfx@draws)) {
             stop_sprintf(

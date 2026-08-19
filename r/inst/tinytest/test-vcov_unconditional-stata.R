@@ -1,0 +1,130 @@
+source("helpers.R")
+using("marginaleffects")
+
+# Golden values from Stata's `margins, vce(unconditional)`, the analogue of
+# `vcovUnconditional()`. Regenerate with:
+#   cd ~/nix-config/recipes/stata-se
+#   make batch dofile=~/repos/marginaleffects/r/inst/tinytest/stata/unconditional.do
+golden_path <- "stata/results/unconditional.csv"
+if (!file.exists(golden_path)) exit_file("stata/results/unconditional.csv not generated")
+
+golden <- read.csv(golden_path, stringsAsFactors = FALSE)
+
+# The very same file `unconditional.do` reads, so the two sides cannot drift.
+# Built by stata/databases/generate_iris.R; `wide`, `heavy` and `scount` are
+# derived from the original measurements. The factor conversions below are the
+# counterpart of Stata's `i.` prefix.
+ir <- read.csv("stata/databases/iris.csv", stringsAsFactors = FALSE)
+ir <- transform(
+    ir,
+    species = factor(species),
+    heavy = factor(heavy),
+    unit = factor(seq_len(nrow(ir)))
+)
+
+# `margins, vce(unconditional)` inherits the finite-sample multiplier of the
+# estimation command's own robust VCE:
+#
+#   * `regress, vce(robust)` uses n / (n - k), which is `type = "HC1"`.
+#   * the ML commands (logit, probit, poisson, glm) use n / (n - 1), which is
+#     the G / (G - 1) cluster adjustment with one singleton cluster per
+#     observation. Singleton clustering leaves the meat unchanged, so `cluster`
+#     here supplies the multiplier and nothing else.
+V_lm <- vcovUnconditional(type = "HC1")
+V_ml <- vcovUnconditional(cluster = ~unit)
+
+# `canonical`: Stata uses the OBSERVED information matrix while
+# `sandwich::bread()` uses the EXPECTED (Fisher/IRLS) information. The two
+# coincide only for canonical links, so standard errors are asserted tightly
+# there and only loosely otherwise. See PR #1737 (snhansen).
+specs <- list(
+    iris_lm_gaussian_identity = list(
+        model = lm(swidth ~ slength + pwidth + heavy, data = ir),
+        vcov = V_lm, by = "species", fac = "heavy", num = "slength", canonical = TRUE
+    ),
+    iris_glm_binomial_logit = list(
+        model = glm(wide ~ slength + pwidth + heavy, family = binomial("logit"), data = ir),
+        vcov = V_ml, by = "species", fac = "heavy", num = "slength", canonical = TRUE
+    ),
+    iris_glm_poisson_log = list(
+        model = glm(scount ~ slength + pwidth + heavy, family = poisson("log"), data = ir),
+        vcov = V_ml, by = "species", fac = "heavy", num = "slength", canonical = TRUE
+    ),
+    iris_glm_binomial_probit = list(
+        model = glm(wide ~ slength + pwidth + heavy, family = binomial("probit"), data = ir),
+        vcov = V_ml, by = "species", fac = "heavy", num = "slength", canonical = FALSE
+    ),
+    iris_glm_gamma_log = list(
+        model = glm(swidth ~ slength + pwidth + heavy, family = Gamma("log"), data = ir),
+        vcov = V_ml, by = "species", fac = "heavy", num = "slength", canonical = FALSE
+    )
+)
+
+# Point estimates use no information matrix, so they agree for every model. The
+# floor is Stata's own convergence tolerance, not R's.
+tol_estimate <- 1e-4
+
+# Non-canonical standard errors are not expected to agree. The bound below is a
+# regression guard, not a certification of agreement -- see `canonical` above.
+#
+# Slopes get their own canonical bound: marginaleffects differentiates the
+# estimand numerically while Stata does so analytically, which costs about one
+# order of magnitude. This is finite-difference error, not a disagreement about
+# the variance -- shrinking `eps` makes it worse, not better, because the
+# default already sits near the cancellation optimum.
+tol_std_error <- function(canonical, command) {
+    if (!canonical) {
+        return(0.15)
+    }
+    if (startsWith(command, "avg_slopes")) 1e-4 else 1e-5
+}
+
+cmd <- function(spec, command) {
+    m <- spec$model
+    V <- spec$vcov
+    switch(command,
+        avg_predictions = avg_predictions(m, vcov = V),
+        avg_predictions_by = avg_predictions(m, by = spec$by, vcov = V),
+        avg_comparisons_fac = avg_comparisons(m, variables = spec$fac, vcov = V),
+        avg_comparisons_fac_by = avg_comparisons(
+            m,
+            variables = spec$fac,
+            by = spec$by,
+            vcov = V
+        ),
+        # On a continuous variable Stata's `dydx()` is a derivative, so the
+        # counterpart is avg_slopes(), not avg_comparisons(). On a factor the
+        # two coincide, which is what `avg_comparisons_fac` above checks.
+        avg_slopes_num = avg_slopes(m, variables = spec$num, vcov = V),
+        avg_slopes_num_by = avg_slopes(m, variables = spec$num, by = spec$by, vcov = V)
+    )
+}
+
+for (mod_name in unique(golden$model)) {
+    spec <- specs[[mod_name]]
+    expect_true(!is.null(spec), info = paste("no R spec for", mod_name))
+
+    for (command in unique(golden$command[golden$model == mod_name])) {
+        sta <- golden[golden$model == mod_name & golden$command == command, ]
+        sta <- sta[order(sta$index), ]
+
+        mfx <- cmd(spec, command)
+        # Stata's `over()` orders groups by the level ordering, same as `by=`.
+        if (spec$by %in% colnames(mfx)) mfx <- mfx[order(mfx[[spec$by]]), ]
+
+        label <- paste(mod_name, command, sep = ": ")
+        expect_equal(nrow(mfx), nrow(sta), info = paste(label, "nrow"))
+        expect_equal(
+            mfx$estimate,
+            sta$estimate,
+            tolerance = tol_estimate,
+            info = paste(label, "estimate")
+        )
+        expect_equal(
+            mfx$std.error,
+            sta$std_error,
+            tolerance = tol_std_error(spec$canonical, command),
+            info = paste(label, "std.error")
+        )
+    }
+}
