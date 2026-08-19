@@ -114,17 +114,32 @@ commands <- c(
 # These bounds are relative under tinytest/all.equal, with automatic absolute
 # comparison near zero. They accommodate optimizer and numerical-derivative
 # differences while still detecting substantively different results.
+#
+# Two kinds of standard error bound appear below, and they must not be confused
+# for one another. The tight ones -- lm, poisson, negative_binomial,
+# tobit_left, mixed_gaussian -- sit a small multiple above the deviation this
+# package actually produces, so they fail if the delta-method Jacobian
+# degrades. Those bounds depend on the analytic Jacobians: a whole-pipeline
+# numeric derivative leaves finite-difference error an order of magnitude or
+# more above them, and `lm` alone moved from 6.9e-05 to 1.8e-07 when the
+# Jacobian for slopes stopped being differenced.
+#
+# The loose ones -- probit, cloglog, gamma_log, quantile_median,
+# fractional_logit -- absorb a genuine cross-software disagreement in how the
+# standard error itself is defined, not numerical noise. Analytic derivatives
+# do not move them at all, and tightening them would only encode Stata's
+# conventions as if they were ours.
 tol <- list(
-    lm = c(estimate = 1e-6, se = 1e-5),
+    lm = c(estimate = 1e-6, se = 1e-6),
     probit = c(estimate = 1e-4, se = 5e-2),
     cloglog = c(estimate = 1e-4, se = 1e-1),
-    poisson = c(estimate = 1e-5, se = 1e-4),
-    negative_binomial = c(estimate = 1e-4, se = 1e-3),
+    poisson = c(estimate = 1e-5, se = 1e-5),
+    negative_binomial = c(estimate = 1e-4, se = 1e-4),
     gamma_log = c(estimate = 1e-4, se = 2e-2),
     quantile_median = c(estimate = 1e-4, se = 5e-1),
-    tobit_left = c(estimate = 1e-4, se = 1e-2),
+    tobit_left = c(estimate = 1e-4, se = 5e-4),
     fractional_logit = c(estimate = 1e-4, se = 5e-2),
-    mixed_gaussian = c(estimate = 5e-3, se = 1e-2),
+    mixed_gaussian = c(estimate = 5e-3, se = 5e-4),
     # Stata and geepack use different scale/covariance conventions here. Point
     # estimates are comparable; GEE standard errors are deliberately omitted.
     gee_poisson = c(estimate = 1e-3, se = NA_real_)
@@ -155,7 +170,12 @@ nonlinear <- do.call(rbind, nonlinear)
 check_stata("logit_nonlinear", nonlinear, 1e-6, 1e-5)
 
 mod_poisson <- glm(carb ~ hp + wt, family = poisson(), data = mtcars)
-for (slope in c("eyex", "eydx", "dyex")) {
+# `eyex` and `eydx` divide by the prediction, so their comparison groups are
+# marked `uses_y` and stay on the numeric whole-pipeline path; their standard
+# errors carry finite-difference error and need the looser bound. `dyex` has an
+# analytic Jacobian and agrees with Stata three orders of magnitude more
+# closely.
+for (slope in c("eyex", "eydx")) {
     check_stata(
         paste0("poisson_", slope),
         avg_slopes(mod_poisson, variables = c("hp", "wt"), slope = slope),
@@ -163,6 +183,12 @@ for (slope in c("eyex", "eydx", "dyex")) {
         1e-3
     )
 }
+check_stata(
+    "poisson_dyex",
+    avg_slopes(mod_poisson, variables = c("hp", "wt"), slope = "dyex"),
+    1e-6,
+    1e-5
+)
 
 # Selection model: Stata's conditional outcome is conditional on selection,
 # corresponding to the E[yo|ys=1] rows returned by marginaleffects.
@@ -299,7 +325,7 @@ x <- suppressWarnings(avg_slopes(
     variables = c("age", "gender", "race"),
     type = "lp"
 ))
-check_stata("cox_lp", x, 1e-3, 1e-4)
+check_stata("cox_lp", x, 1e-3, 1e-5)
 x <- suppressWarnings(avg_slopes(
     mod_cox,
     variables = c("age", "gender", "race"),
