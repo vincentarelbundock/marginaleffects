@@ -89,9 +89,12 @@ std_error_from_jacobian <- function(J, V, object, ...) {
     vnames <- colnames(V)
     if (
         !is.null(jnames) && !is.null(vnames) &&
+            !identical(jnames, vnames) &&
             anyDuplicated(jnames) == 0L && anyDuplicated(vnames) == 0L &&
             setequal(jnames, vnames)
     ) {
+        # Reorder only when the orders actually differ: subsetting an
+        # already-aligned matrix copies p x p doubles for nothing.
         V <- V[jnames, jnames, drop = FALSE]
     }
     if (!isTRUE(ncol(J) == ncol(V))) {

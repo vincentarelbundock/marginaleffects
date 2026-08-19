@@ -612,6 +612,20 @@ jacobian_analytic_model_matrix <- function(
         difference_groups <- all(vapply(plan$groups, function(g) {
           isTRUE(g$fun_key %in% c("difference", "differenceavg", "differenceavgwts"))
         }, logical(1)))
+        # A group whose function has no recorded closed form -- a custom
+        # closure, or any key outside the derivative registry -- can only end
+        # in rejection, so reject it here, before the model matrices are
+        # scanned and aligned. This is the statically obvious case; every
+        # data-dependent rejection stays where the data is.
+        if (!difference_groups) {
+          supported <- vapply(plan$groups, function(g) {
+            key <- g$fun_key
+            is.character(key) && length(key) == 1L && !is.na(key)
+          }, logical(1))
+          if (!all(supported)) {
+            return(NULL)
+          }
+        }
         X_hi <- align_matrix(attr(
           contrast_data$hi,
           "marginaleffects_model_matrix"

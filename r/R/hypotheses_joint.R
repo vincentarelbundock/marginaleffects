@@ -57,6 +57,16 @@ joint_test <- function(
 
     # V_hat: estimated covariance matrix
     V_hat <- get_vcov(object, vcov = vcov)
+    # For marginaleffects objects V_hat is J V J' with rows in estimate order
+    # by construction; for raw models both come from the same coefficient
+    # vector. A dimension mismatch means neither invariant holds.
+    if (!isTRUE(nrow(V_hat) == length(theta_hat))) {
+        stop_sprintf(
+            "The covariance matrix (%s rows) does not match the parameter vector (%s).",
+            nrow(V_hat),
+            length(theta_hat)
+        )
+    }
 
     # R: Q x P matrix for testing Q hypotheses on P parameters
     # build R matrix based on joint_index

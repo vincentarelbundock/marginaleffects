@@ -1,25 +1,29 @@
-# Classify a parsed hypothesis expression as a strictly linear combination of
-# the estimate references in `labels`, by walking its syntax tree.
+# Extract the coefficient vector of a strictly linear hypothesis expression,
+# by structural recursion on its syntax tree.
 #
 # This is a proof, not a probe: a parse tree built only from estimate
-# references, numeric constants, sums and differences of like kinds, products
-# with a constant side, and division by a constant denotes a linear map as a
-# matter of syntax, wherever it is evaluated. Anything else -- unknown
-# symbols, function calls, an additive constant (which makes the map affine
-# rather than linear), a product of two estimate terms -- is rejected. No
-# finite set of numeric evaluations can establish this property for arbitrary
-# code, because a function can be built to agree with any fixed evaluation
-# points and disagree elsewhere; the syntactic argument has no such gap.
+# references, numeric constants, sums and differences, products with a
+# constant side, and division by a constant denotes a linear map as a matter
+# of syntax, wherever it is evaluated. Anything else -- unknown symbols,
+# function calls, a product of two estimate terms -- yields NULL. No finite
+# set of numeric evaluations can establish this property for arbitrary code,
+# because a function can be built to agree with any fixed evaluation points
+# and disagree elsewhere; the syntactic argument has no such gap. And the
+# same structural walk which proves the map linear also reads off its
+# coefficients, so the contrast matrix comes from the proof itself rather
+# than from re-evaluating the closure against basis vectors.
 #
-# A top-level `=` call is the null-hypothesis form "lhs = rhs": the map whose
-# matrix is wanted is the left-hand side, and the right-hand side is the null
-# value, which must be constant.
-hypothesis_expression_linear <- function(expr, labels) {
-    # A constant subtree contains only numeric literals and arithmetic on
-    # them, so it is safe to evaluate in the base environment. Coefficients
-    # must come out finite: a structurally-constant NaN or Inf (0/0, 1/0,
-    # 2^1e6) would make the recovered matrix garbage even though the shape of
-    # the expression is linear.
+# Returns a list with a `coef` vector of length `n_estimates` aligned to
+# estimate positions and the additive `const`, or NULL when the expression is
+# not a valid combination. Strict linearity is `const == 0`; an affine map
+# has a derivative but no crossprod(H, estimate) representation, so callers
+# must not promote it.
+#
+# `labels` and `idx` are parallel: `labels[k]` is the symbol which stands for
+# estimate position `idx[k]`.
+hypothesis_expression_coefficients <- function(expr, labels, idx, n_estimates) {
+    position <- stats::setNames(as.integer(idx), labels)
+
     const_value <- function(e) {
         v <- tryCatch(eval(e, baseenv()), error = function(err) NULL)
         if (is.numeric(v) && length(v) == 1L && is.finite(v)) {
@@ -27,138 +31,140 @@ hypothesis_expression_linear <- function(expr, labels) {
         }
         NULL
     }
-    kind <- function(e) {
+
+    walk <- function(e) {
         if (is.numeric(e) && length(e) == 1L && is.finite(e)) {
-            return("const")
+            return(list(const = as.numeric(e), coef = numeric(n_estimates)))
         }
         if (is.symbol(e)) {
-            if (as.character(e) %in% labels) {
-                return("linear")
+            pos <- position[[as.character(e)]]
+            if (is.null(pos) || is.na(pos)) {
+                return(NULL)
             }
-            return("bad")
+            coef <- numeric(n_estimates)
+            coef[pos] <- 1
+            return(list(const = 0, coef = coef))
         }
-        if (!is.call(e) || length(e) < 2L) {
-            return("bad")
+        if (!is.call(e) || length(e) < 2L || !is.symbol(e[[1L]])) {
+            return(NULL)
         }
-        op_sym <- e[[1L]]
-        if (!is.symbol(op_sym)) {
-            return("bad")
-        }
-        op <- as.character(op_sym)
+        op <- as.character(e[[1L]])
         if (op == "(" && length(e) == 2L) {
-            return(kind(e[[2L]]))
+            return(walk(e[[2L]]))
         }
         if (op %in% c("+", "-") && length(e) == 2L) {
-            return(kind(e[[2L]]))
+            a <- walk(e[[2L]])
+            if (is.null(a)) {
+                return(NULL)
+            }
+            if (op == "-") {
+                a$const <- -a$const
+                a$coef <- -a$coef
+            }
+            return(a)
         }
         if (op %in% c("+", "-") && length(e) == 3L) {
-            a <- kind(e[[2L]])
-            b <- kind(e[[3L]])
-            if (identical(a, b) && a %in% c("const", "linear")) {
-                return(a)
+            a <- walk(e[[2L]])
+            b <- walk(e[[3L]])
+            if (is.null(a) || is.null(b)) {
+                return(NULL)
             }
-            # linear +/- const is affine: it has a derivative but no
-            # crossprod(H, estimate) representation, so it must not promote.
-            # The one exception is a constant which is exactly zero -- the
-            # null-hypothesis rewrite turns "lhs = 0" into "lhs - (0)".
-            is_zero_const <- function(k, sub) {
-                identical(k, "const") && identical(const_value(sub), 0)
-            }
-            if (identical(a, "linear") && is_zero_const(b, e[[3L]])) {
-                return("linear")
-            }
-            # "0 + x" and "0 - x" are x and -x: both linear.
-            if (identical(b, "linear") && is_zero_const(a, e[[2L]])) {
-                return("linear")
-            }
-            return("bad")
+            s <- if (op == "+") 1 else -1
+            return(list(
+                const = a$const + s * b$const,
+                coef = a$coef + s * b$coef
+            ))
         }
         if (op == "*" && length(e) == 3L) {
-            a <- kind(e[[2L]])
-            b <- kind(e[[3L]])
-            if (identical(a, "const") && identical(b, "const")) {
-                return("const")
+            a <- walk(e[[2L]])
+            b <- walk(e[[3L]])
+            if (is.null(a) || is.null(b)) {
+                return(NULL)
             }
-            # A linear side times a constant side stays linear, but only when
-            # the constant coefficient is a finite number.
-            if (identical(a, "linear") && identical(b, "const")) {
-                if (is.null(const_value(e[[3L]]))) {
-                    return("bad")
-                }
-                return("linear")
+            a_const <- all(a$coef == 0)
+            b_const <- all(b$coef == 0)
+            if (a_const && b_const) {
+                return(list(const = a$const * b$const, coef = a$coef))
             }
-            if (identical(a, "const") && identical(b, "linear")) {
-                if (is.null(const_value(e[[2L]]))) {
-                    return("bad")
-                }
-                return("linear")
+            if (a_const) {
+                return(list(const = a$const * b$const, coef = a$const * b$coef))
             }
-            return("bad")
+            if (b_const) {
+                return(list(const = a$const * b$const, coef = b$const * a$coef))
+            }
+            return(NULL)
         }
         if (op == "/" && length(e) == 3L) {
-            a <- kind(e[[2L]])
-            if (!identical(kind(e[[3L]]), "const")) {
-                return("bad")
+            a <- walk(e[[2L]])
+            b <- walk(e[[3L]])
+            if (is.null(a) || is.null(b) || !all(b$coef == 0) || b$const == 0) {
+                return(NULL)
             }
-            denominator <- const_value(e[[3L]])
-            if (is.null(denominator) || denominator == 0) {
-                return("bad")
-            }
-            if (a %in% c("const", "linear")) {
-                return(a)
-            }
-            return("bad")
+            return(list(const = a$const / b$const, coef = a$coef / b$const))
         }
         if (op == "^" && length(e) == 3L) {
-            if (identical(kind(e[[2L]]), "const") && identical(kind(e[[3L]]), "const")) {
-                return("const")
+            a <- walk(e[[2L]])
+            b <- walk(e[[3L]])
+            if (
+                is.null(a) || is.null(b) ||
+                    !all(a$coef == 0) || !all(b$coef == 0)
+            ) {
+                return(NULL)
             }
-            return("bad")
-        }
-        "bad"
-    }
-    # The null-hypothesis form "lhs = rhs" is meaningful only at the top of
-    # an expression; a nested `=` is not a linear construct and must not be
-    # looked through, because the closure evaluates it as part of the
-    # arithmetic. The rhs must be a constant -- it is the null value.
-    top <- function(e) {
-        if (
-            is.call(e) && length(e) == 3L && is.symbol(e[[1L]]) &&
-                identical(as.character(e[[1L]]), "=")
-        ) {
-            if (is.null(const_value(e[[3L]]))) {
-                return("bad")
+            v <- a$const^b$const
+            if (!is.finite(v)) {
+                return(NULL)
             }
-            return(kind(e[[2L]]))
+            return(list(const = v, coef = a$coef))
         }
-        kind(e)
+        NULL
     }
+
     exprs <- as.list(expr)
-    length(exprs) > 0L &&
-        all(vapply(exprs, function(e) identical(top(e), "linear"), logical(1)))
+    if (length(exprs) != 1L) {
+        return(NULL)
+    }
+    e <- exprs[[1L]]
+    # Top-level "lhs = rhs" is the null-hypothesis form; the map is the lhs
+    # and the rhs must be a constant which is exactly zero, because the
+    # closure computing the estimates evaluates "lhs - (rhs)".
+    if (
+        is.call(e) && length(e) == 3L && is.symbol(e[[1L]]) &&
+            identical(as.character(e[[1L]]), "=")
+    ) {
+        rhs <- const_value(e[[3L]])
+        if (is.null(rhs) || rhs != 0) {
+            return(NULL)
+        }
+        e <- e[[2L]]
+    }
+    out <- walk(e)
+    if (is.null(out) || !all(is.finite(out$coef)) || !is.finite(out$const)) {
+        return(NULL)
+    }
+    out
 }
 
 
 # A hypothesis expressed as a string is very often a linear map of the
 # estimates, even when it is stored as an opaque closure. A linear map has an
 # exact matrix representation, which is faster than any probe, exact rather
-# than approximate, and consumable by the autodiff lowering rules. Recover
-# that matrix when the syntax tree proves linearity and record the hypothesis
-# as a matrix stage; leave the closure in place so estimates are computed
-# exactly as before, and keep every other list element and attribute
-# untouched.
+# than approximate, and consumable by the autodiff lowering rules. Record the
+# hypothesis as a matrix stage when the syntax tree proves linearity; leave
+# the closure in place so estimates are computed exactly as before, and keep
+# every other list element and attribute untouched.
 #
-# `trusted` asserts that linearity has been established syntactically by the
-# caller. Without it no promotion is attempted: the numeric verification
-# inside stage_hypothesis_matrix() evaluates the closure at a fixed, finite
-# set of points, and a nonlinear function can agree with every one of those
-# points while disagreeing at the estimate, so probing alone must never
-# upgrade an arbitrary closure to an exact matrix. User-supplied function
-# hypotheses and formula closures therefore stay on the composed-derivative
-# path, which differentiates them at the estimate instead of extrapolating a
-# structure they were never proven to have.
-hypothesis_promote_matrix <- function(hyp, cmp_skeleton, trusted = FALSE) {
-    if (!isTRUE(trusted)) {
+# `H` is the matrix compiled directly from the syntax tree by the caller: the
+# same walk which proves the map linear also reads off its coefficients, so
+# no basis-vector probing of the closure is involved. User-supplied function
+# hypotheses and formula closures never reach here -- probing cannot prove
+# linearity of arbitrary code, so they stay on the composed-derivative path,
+# which differentiates them at the estimate instead of extrapolating a
+# structure they were never proven to have. The only runtime check retained
+# is one matrix-vector product confirming that H reproduces the estimates the
+# closure computed, which guards the compiler itself.
+hypothesis_promote_matrix <- function(hyp, cmp_skeleton, H = NULL) {
+    if (is.null(H)) {
         return(hyp)
     }
     if (!isTRUE(getOption("marginaleffects_hypothesis_promote", default = TRUE))) {
@@ -168,11 +174,15 @@ hypothesis_promote_matrix <- function(hyp, cmp_skeleton, trusted = FALSE) {
         return(hyp)
     }
     estimate <- cmp_skeleton[["estimate"]]
-    if (!is.numeric(estimate)) {
+    if (!is.numeric(estimate) || nrow(H) != length(estimate)) {
         return(hyp)
     }
-    H <- stage_hypothesis_matrix(hyp$apply, estimate)
-    if (is.null(H)) {
+    want <- drop(crossprod(H, estimate))
+    base <- tryCatch(hyp$apply(estimate), error = function(e) NULL)
+    if (
+        !is.numeric(base) || length(base) != ncol(H) || anyNA(base) ||
+            max(abs(want - base)) > 1e-9 * max(1, max(abs(base)))
+    ) {
         return(hyp)
     }
     out <- hyp
@@ -473,12 +483,28 @@ hypothesis_compile_string <- function(hypothesis, cmp_skeleton) {
 
     hyp <- list(kind = "string", apply = apply)
     # Promotion requires a syntactic proof of linearity for every compiled
-    # expression, not merely a numeric probe passing.
-    trusted <- all(vapply(
-        compiled,
-        function(cc) hypothesis_expression_linear(cc$expr, cc$labels),
-        logical(1)
-    ))
-    hyp <- hypothesis_promote_matrix(hyp, cmp_skeleton, trusted = trusted)
+    # expression, never a numeric probe: the walk which proves the shape also
+    # compiles the contrast matrix, column by column. Any expression outside
+    # the strictly linear fragment (an additive constant, a product of
+    # estimates, a function call) yields NULL and leaves the hypothesis as a
+    # closure.
+    n_estimates <- nrow(cmp_skeleton)
+    columns <- lapply(compiled, function(cc) {
+        out <- hypothesis_expression_coefficients(
+            cc$expr,
+            cc$labels,
+            cc$idx,
+            n_estimates
+        )
+        if (is.null(out) || out$const != 0) {
+            return(NULL)
+        }
+        out$coef
+    })
+    H <- NULL
+    if (length(columns) > 0L && !any(vapply(columns, is.null, logical(1)))) {
+        H <- do.call(cbind, columns)
+    }
+    hyp <- hypothesis_promote_matrix(hyp, cmp_skeleton, H = H)
     list(cmp = cmp, hyp = hyp)
 }
