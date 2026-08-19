@@ -1,7 +1,29 @@
 # 0.6.1
 
+New:
+
+* `by` accepts a data frame of group labels, matching the R package. The frame
+  must hold a `by` column of labels plus one or more columns matched against the
+  estimates, which lets several combinations of predictor values collapse into a
+  single aggregate row. Estimates the label table does not cover are dropped
+  with a warning.
+* `vcov=vcovUnconditional()` requests EXPERIMENTAL influence-function standard
+  errors for averaged or aggregated effects. These account for sampling
+  variation in the empirical distribution of the covariates on top of
+  coefficient uncertainty, and support `type="HC0"`/`"HC1"` and one-way
+  clustering. Available for statsmodels linear and generalized linear models;
+  other model families and unit-level effects are rejected rather than
+  silently approximated.
+
 Bug fixes:
 
+* `comparisons()` and `avg_comparisons()` now aggregate row-level comparisons
+  within `by` groups. A custom callable `comparison` combined with `by`
+  previously returned one row per observation instead of one row per group.
+* Weighted aggregation follows the R missing-value rules: a missing estimate
+  zeroes both itself and its weight, a zero weight blanks the estimate it
+  multiplies so `0 * Inf` cannot poison a group, and a missing weight
+  propagates instead of silently dropping the row it belongs to.
 * `avg_predictions(wts=...)` and other grand-mean aggregations now respect the
   weights column. Previously `by=True` computed an unweighted mean and recorded
   no weights in the aggregation plan, so both the estimate and its standard
