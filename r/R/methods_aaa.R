@@ -31,13 +31,24 @@ get_predict.lm <- function(
     MM <- attr(newdata, "marginaleffects_model_matrix")
     beta <- get_coef(model)
     if (!isTRUE(checkmate::check_matrix(MM)) || ncol(MM) != length(beta)) {
-        out <- get_predict.default(
-            model = model,
-            newdata = newdata,
-            type = type,
-            ...
+        out <- tryCatch(
+            get_predict.default(
+                model = model,
+                newdata = newdata,
+                type = type,
+                ...
+            ),
+            error = function(e) e
         )
-        return(out)
+        if (!inherits(out, "error")) {
+            return(out)
+        }
+        # `stats::predict()` failed. Linear predictions only need the model
+        # matrix and the coefficients, so retry that way. This rescues fit
+        # objects stripped of components that `predict()` requires, such as
+        # `qr$qr` deleted to save memory.
+        newdata <- model_matrix_retry(model, newdata, beta, out)
+        MM <- attr(newdata, "marginaleffects_model_matrix")
     }
     p <- model$rank
     p1 <- seq_len(p)
@@ -72,23 +83,43 @@ get_predict.glm <- function(
     type = "response",
     ...) {
     out <- NULL
+    link <- isTRUE(checkmate::check_choice(type, "link"))
+    response <- isTRUE(checkmate::check_choice(type, "response")) || is.null(type)
     MM <- attr(newdata, "marginaleffects_model_matrix")
-    if (isTRUE(checkmate::check_matrix(MM))) {
-        if (isTRUE(checkmate::check_choice(type, c("link")))) {
-            out <- get_predict.lm(model = model, newdata = newdata, ...)
-        } else if (isTRUE(checkmate::check_choice(type, "response")) || is.null(type)) {
-            out <- get_predict.lm(model = model, newdata = newdata, ...)
+    if (isTRUE(checkmate::check_matrix(MM)) && (link || response)) {
+        out <- get_predict.lm(model = model, newdata = newdata, ...)
+        if (response) {
             out$estimate <- stats::family(model)$linkinv(out$estimate)
         }
     }
 
     if (is.null(out)) {
-        out <- get_predict.default(
-            model = model,
-            newdata = newdata,
-            type = type,
-            ...
+        out <- tryCatch(
+            get_predict.default(
+                model = model,
+                newdata = newdata,
+                type = type,
+                ...
+            ),
+            error = function(e) e
         )
+        if (inherits(out, "error")) {
+            # See the comment in `get_predict.lm()`: retry through the model
+            # matrix, which only makes sense on the link and response scales.
+            if (!link && !response) {
+                stop(out)
+            }
+            newdata <- model_matrix_retry(
+                model,
+                newdata,
+                get_coef(model),
+                out
+            )
+            out <- get_predict.lm(model = model, newdata = newdata, ...)
+            if (response) {
+                out$estimate <- stats::family(model)$linkinv(out$estimate)
+            }
+        }
     }
 
     return(out)

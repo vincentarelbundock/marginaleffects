@@ -44,13 +44,22 @@ model_has_effective_offset <- function(model) {
 #' Add model matrix attribute to newdata
 #' @param mfx marginaleffects object
 #' @param newdata data frame to add attributes to
+#' @param model model object; used only when `mfx` is unavailable
 #' @keywords internal
 #' @noRd
-add_model_matrix_attribute <- function(mfx, newdata = NULL) {
-    model <- mfx@model
+add_model_matrix_attribute <- function(mfx = NULL, newdata = NULL, model = NULL) {
+    if (is.null(model)) {
+        if (is.null(mfx)) {
+            return(newdata)
+        }
+        model <- mfx@model
+    }
 
     # predictions() only passes mfx; comparisons() passes mfx and hi/lo
     if (is.null(newdata)) {
+        if (is.null(mfx)) {
+            return(newdata)
+        }
         newdata <- mfx@newdata
     }
 
@@ -80,11 +89,17 @@ add_model_matrix_attribute <- function(mfx, newdata = NULL) {
     }
 
     # subset variables for listwise deletion
-    vars <- unlist(mfx@variable_names_predictors, use.names = FALSE)
-    vars <- c(vars, unlist(mfx@variable_names_response, use.names = FALSE))
-    vars <- intersect(vars, colnames(newdata))
-
-    nd <- as.data.frame(newdata)[, vars, drop = FALSE]
+    if (is.null(mfx)) {
+        # Exact lm/glm retries can let their terms object select the required
+        # columns directly, without propagating the full marginaleffects state
+        # through every model-specific prediction method.
+        nd <- as.data.frame(newdata)
+    } else {
+        vars <- unlist(mfx@variable_names_predictors, use.names = FALSE)
+        vars <- c(vars, unlist(mfx@variable_names_response, use.names = FALSE))
+        vars <- intersect(vars, colnames(newdata))
+        nd <- as.data.frame(newdata)[, vars, drop = FALSE]
+    }
 
     # This cache is optional. Model-specific matrix methods should fail closed
     # without paying the connection overhead of hush()/capture.output().
@@ -105,5 +120,35 @@ add_model_matrix_attribute <- function(mfx, newdata = NULL) {
     }
 
     attr(newdata, "marginaleffects_model_matrix") <- MM
+    return(newdata)
+}
+
+
+#' Attach a model matrix after `stats::predict()` failed
+#'
+#' `get_predict()` methods that can compute a linear predictor from
+#' `X %*% beta` call this to build the model matrix on demand, rather than
+#' giving up on the error raised by `stats::predict()`. When no usable matrix
+#' can be built, the original error is re-raised so unrelated failures keep
+#' their own message.
+#'
+#' @param model model object
+#' @param newdata data frame to add attributes to
+#' @param beta coefficient vector the matrix columns must match
+#' @param error condition raised by `stats::predict()`
+#' @keywords internal
+#' @noRd
+model_matrix_retry <- function(model, newdata, beta, error) {
+    if (!isTRUE(class(model)[1] %in% c("lm", "glm"))) {
+        stop(error)
+    }
+    newdata <- add_model_matrix_attribute(
+        newdata = newdata,
+        model = model
+    )
+    MM <- attr(newdata, "marginaleffects_model_matrix")
+    if (!isTRUE(checkmate::check_matrix(MM)) || ncol(MM) != length(beta)) {
+        stop(error)
+    }
     return(newdata)
 }

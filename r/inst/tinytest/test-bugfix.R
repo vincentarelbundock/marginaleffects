@@ -334,3 +334,38 @@ expect_error(
     hypotheses(cmp_joint, joint = c("hp", "hp")),
     pattern = "exactly one"
 )
+
+
+# Issue #1748: `stats::predict()` fails when `qr$qr` is deleted from the fit to
+# save memory. Linear predictions do not need a QR decomposition, so the model
+# matrix path produces the same estimates.
+options(marginaleffects_rank_deficient = TRUE)
+dat <- mtcars
+dat$hp2 <- dat$hp + 2
+mod <- lm(mpg ~ hp + hp2, data = dat)
+stripped <- mod
+stripped$qr$qr <- NULL
+for (FUN in list(avg_predictions, avg_comparisons, avg_slopes)) {
+    known <- suppressWarnings(FUN(mod, vcov = FALSE))
+    unknown <- suppressWarnings(FUN(stripped, vcov = FALSE))
+    expect_equivalent(known$estimate, unknown$estimate)
+}
+
+mod <- glm(am ~ hp + hp2, data = dat, family = binomial())
+stripped <- mod
+stripped$qr$qr <- NULL
+for (ty in c("response", "link")) {
+    known <- suppressWarnings(avg_predictions(mod, type = ty, vcov = FALSE))
+    unknown <- suppressWarnings(avg_predictions(stripped, type = ty, vcov = FALSE))
+    expect_equivalent(known$estimate, unknown$estimate)
+}
+known <- suppressWarnings(avg_comparisons(mod, vcov = FALSE))
+unknown <- suppressWarnings(avg_comparisons(stripped, vcov = FALSE))
+expect_equivalent(known$estimate, unknown$estimate)
+
+# unrelated `predict()` failures still report their own cause
+expect_error(
+    predictions(mod, newdata = data.frame(zzz = 1)),
+    pattern = "object 'hp' not found"
+)
+options(marginaleffects_rank_deficient = TRUE)
