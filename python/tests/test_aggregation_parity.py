@@ -460,3 +460,39 @@ def test_a_cluster_formula_string_is_accepted(ols_simple):
     from marginaleffects import vcovUnconditional
 
     assert vcovUnconditional(cluster="~cyl").cluster == "cyl"
+
+
+def test_zero_weights_do_not_poison_weighted_aggregates():
+    """Zero weights are routine (ATT/matching) and must never yield NaN.
+
+    Guards against the double-aggregation defect fixed in the R package,
+    where the weighted comparison stage collapsed each group to one row and
+    a redundant second aggregation divided that lone row's estimate by its
+    stale zero weight (0/0 = NaN).
+    """
+    rng = np.random.default_rng(99)
+    n = 40
+    d = pl.DataFrame(
+        {"x": rng.normal(size=n), "f": ["u", "v"] * (n // 2)}
+    ).with_columns(pl.col("f").cast(pl.Categorical))
+    d = d.with_columns(
+        pl.Series("y", rng.binomial(1, 0.5, n).astype(float)),
+        pl.Series("w", np.concatenate([[0.0], rng.uniform(0.5, 1.0, n - 1)])),
+    )
+    m = smf.glm("y ~ x + f", data=d.to_pandas(), family=sm.families.Binomial()).fit()
+
+    agg = avg_comparisons(m, wts="w", newdata=d).data
+    est = agg["estimate"].to_numpy()
+    se = agg["std_error"].to_numpy()
+    assert np.isfinite(est).all()
+    assert np.isfinite(se).all()
+
+    # The aggregate must equal the weighted mean of the unit-level rows.
+    unit = comparisons(m, newdata=d).data
+    w = d["w"].to_numpy()
+    for row in agg.iter_rows(named=True):
+        sub = unit.filter(pl.col("term") == row["term"])
+        manual = np.average(
+            sub["estimate"].to_numpy(), weights=w[sub["rowid"].to_numpy()]
+        )
+        assert row["estimate"] == pytest.approx(manual, rel=1e-10)

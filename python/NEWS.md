@@ -17,6 +17,11 @@ New:
 
 Bug fixes:
 
+* Delta-method variances that come out as tiny negative numbers -- floating
+  point noise from the quadratic form -- are now clamped to zero instead of
+  producing NaN standard errors, matching the R package. A standard error of
+  exactly zero is preserved: a constant estimand has variance exactly zero,
+  and its undefined test statistic surfaces downstream as its own signal.
 * `comparisons()` and `avg_comparisons()` now aggregate row-level comparisons
   within `by` groups. A custom callable `comparison` combined with `by`
   previously returned one row per observation instead of one row per group.
