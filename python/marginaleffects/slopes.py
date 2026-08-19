@@ -93,14 +93,14 @@ def slopes(
     hypothesis=None,
     equivalence=None,
     wts=None,
-    eps=1e-4,
+    eps=None,
     eps_vcov=None,
     **kwargs,
 ) -> MarginaleffectsResult:
     if callable(newdata):
         newdata = newdata(model)
 
-    assert isinstance(eps, float)
+    assert eps is None or isinstance(eps, float)
 
     if slope not in ["dydx", "eyex", "eydx", "dyex"]:
         raise ValueError("slope must be one of 'dydx', 'eyex', 'eydx', 'dyex'")
@@ -134,7 +134,7 @@ def avg_slopes(
     wts=None,
     hypothesis=None,
     equivalence=None,
-    eps=1e-4,
+    eps=None,
     eps_vcov=None,
     **kwargs,
 ) -> MarginaleffectsResult:

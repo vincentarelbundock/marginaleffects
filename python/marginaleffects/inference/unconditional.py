@@ -573,21 +573,22 @@ def _comparison_empirical(plan, model, rowid, n):
     est_rowid = np.full(plan.n_comp, -1, dtype=int)
     phi = np.zeros((n, plan.n_comp), dtype=float)
 
-    from ..planning.core import _builtin_comparison
+    from ..planning.core import _builtin_comparison, group_eps
 
     for group in plan.groups:
         idx = np.asarray(group.idx, dtype=int)
         yi = None if y is None else y[idx]
+        eps = group_eps(plan, group)
         value = None
         if group.fun_key is not None:
             value = _builtin_comparison(
-                group.fun_key, hi[idx], lo[idx], plan.eps, group.x, yi, group.w
+                group.fun_key, hi[idx], lo[idx], eps, group.x, yi, group.w
             )
         if value is None:
             value = group.fun(
                 hi=pl.Series("predicted_hi", hi[idx]),
                 lo=pl.Series("predicted_lo", lo[idx]),
-                eps=plan.eps,
+                eps=eps,
                 x=None if group.x is None else pl.Series("x", group.x),
                 y=None if yi is None else pl.Series("predicted", yi),
                 w=None if group.w is None else pl.Series("w", group.w),
@@ -605,7 +606,7 @@ def _comparison_empirical(plan, model, rowid, n):
                 )
             column = _known_scalar_phi(group, hi, lo, rowid, n)
             if column is None:
-                column = _jackknife_scalar_phi(group, hi, lo, y, plan.eps, rowid, n)
+                column = _jackknife_scalar_phi(group, hi, lo, y, eps, rowid, n)
             phi[:, group.out_idx[0]] = column
 
     return est, est_rowid, phi

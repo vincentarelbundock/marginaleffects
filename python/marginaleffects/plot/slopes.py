@@ -46,7 +46,7 @@ def plot_slopes(
     by=False,
     wts=None,
     draw=True,
-    eps=1e-4,
+    eps=None,
     eps_vcov=None,
     gray=False,
 ):

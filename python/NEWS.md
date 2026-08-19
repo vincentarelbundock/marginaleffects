@@ -9,6 +9,15 @@ Breaking change:
   nonlinear models. Slopes, elasticities, and the `"sd"` shortcuts keep their
   centered steps, exactly as in R. Cross-language results for the default
   comparison now agree to machine precision.
+* The default `eps` step for slopes and elasticities now follows R exactly:
+  when `eps` is not supplied, each variable uses `1e-4` times the finite
+  range of that variable in the original data (falling back to `1e-4` for a
+  degenerate range), instead of a flat `1e-4` for every variable. This was
+  already what the documentation promised. Slope and elasticity estimates
+  shift slightly for variables whose range is far from 1, and now match R to
+  machine precision. As in R, the step for derivative estimands is always
+  the per-variable `eps`; custom comparison functions requesting `eps`
+  receive the variable's own step, or `None` for non-numeric variables.
 
 New:
 

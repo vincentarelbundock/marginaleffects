@@ -381,6 +381,10 @@ def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions, capture
     """
     Apply comparison functions to predicted_hi/predicted_lo within groups.
 
+    `eps` is either a scalar applied to every term, or a per-term dict as
+    computed by sanitize_variables() -- R's rule of 1e-4 times each numeric
+    variable's finite range, with None for non-numeric variables.
+
     Uses group_by with maintain_order=True (critical for Jacobian alignment).
     """
 
@@ -407,10 +411,11 @@ def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions, capture
         else:
             estimand = estimands[comp]
 
+        eps_val = eps.get(term_val) if isinstance(eps, dict) else eps
         est = estimand(
             hi=x["predicted_hi"],
             lo=x["predicted_lo"],
-            eps=eps,
+            eps=eps_val,
             x=xvar,
             y=x["predicted"],
             w=xwts,
@@ -424,6 +429,7 @@ def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions, capture
                     "x": xvar.to_numpy(),
                     "w": None if xwts is None else xwts.to_numpy(),
                     "scalar": est.shape[0] == 1,
+                    "eps": eps_val,
                 }
             )
         if est.shape[0] == 1:
@@ -609,6 +615,7 @@ def _comparisons_build(
                     if item["fun_key"] is None
                     else item["fun_key"].startswith(("eyex", "eydx"))
                 ),
+                eps=item["eps"],
             )
         )
         start += n_out
@@ -631,7 +638,9 @@ def _comparisons_build(
         exog_nd=nd_X if need_y else None,
         need_y=need_y,
         align=align,
-        eps=eps,
+        # Per-group eps is authoritative; the plan-level scalar remains only
+        # as a fallback for plans built without recorded group eps.
+        eps=None if isinstance(eps, dict) else eps,
         groups=groups,
         n_comp=start,
         hyp=hyp,
@@ -760,7 +769,7 @@ def comparisons(
     equivalence=None,
     cross=False,
     transform=None,
-    eps=1e-4,
+    eps=None,
     eps_vcov=None,
     **kwargs,
 ) -> MarginaleffectsResult:
@@ -815,6 +824,14 @@ def comparisons(
         wts=wts,
         cross=cross,
     )
+
+    # Per-term eps steps, exactly as in R: sanitize_variables() records
+    # 1e-4 times each numeric variable's finite range (or the user's scalar
+    # `eps`), and None for non-numeric variables.
+    eps = {}
+    for v in variables:
+        name = v.variable if isinstance(v.variable, str) else v.variable[0]
+        eps.setdefault(name, getattr(v, "eps", None))
 
     nd_frames, hi_frames, lo_frames = _build_comparison_frames(
         newdata, variables, cross
@@ -922,7 +939,7 @@ def avg_comparisons(
     equivalence=None,
     cross=False,
     transform=None,
-    eps=1e-4,
+    eps=None,
     **kwargs,
 ) -> MarginaleffectsResult:
     return call_avg(

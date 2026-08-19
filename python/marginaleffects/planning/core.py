@@ -183,6 +183,15 @@ class CompGroup:
     x: np.ndarray | None
     w: np.ndarray | None
     uses_y: bool = False
+    # Per-variable eps step, as in R: 1e-4 times the finite range of the
+    # variable unless the user supplied a scalar `eps`. None means the group
+    # was recorded without one; consumers then fall back to the plan's eps.
+    eps: float | None = None
+
+
+def group_eps(plan, group) -> float | None:
+    """The eps step for one comparison group, preferring the recorded value."""
+    return plan.eps if group.eps is None else group.eps
 
 
 @dataclass
@@ -382,16 +391,17 @@ def comparison_plan_apply_stages(plan: ComparisonPlan, hi, lo, y=None) -> Stages
     for group in plan.groups:
         idx = np.asarray(group.idx, dtype=int)
         yi = None if y is None else y[idx]
+        eps = group_eps(plan, group)
         est = None
         if group.fun_key is not None:
             est = _builtin_comparison(
-                group.fun_key, hi[idx], lo[idx], plan.eps, group.x, yi, group.w
+                group.fun_key, hi[idx], lo[idx], eps, group.x, yi, group.w
             )
         if est is None:
             est = group.fun(
                 hi=_series(hi[idx], "predicted_hi"),
                 lo=_series(lo[idx], "predicted_lo"),
-                eps=plan.eps,
+                eps=eps,
                 x=_series(group.x, "x"),
                 y=None if yi is None else _series(yi, "predicted"),
                 w=_series(group.w, "w"),

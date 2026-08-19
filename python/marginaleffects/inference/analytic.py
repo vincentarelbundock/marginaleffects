@@ -7,6 +7,7 @@ import numpy as np
 from ..planning import (
     comparison_plan_apply_stages,
     compile_agg_blocks,
+    group_eps,
     plan_values_allclose,
     prediction_plan_apply_stages,
 )
@@ -206,7 +207,7 @@ def _comparison_jacobian(plan, model):
             group.fun_key,
             hi[idx],
             lo[idx],
-            eps=plan.eps,
+            eps=group_eps(plan, group),
             x=group.x,
             w=group.w,
         )

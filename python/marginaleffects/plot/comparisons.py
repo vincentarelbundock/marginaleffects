@@ -51,7 +51,7 @@ def plot_comparisons(
     hypothesis=None,
     equivalence=None,
     transform=None,
-    eps=1e-4,
+    eps=None,
     gray=False,
 ):
     model = sanitize_model(model)
