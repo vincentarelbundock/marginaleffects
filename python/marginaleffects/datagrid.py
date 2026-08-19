@@ -155,7 +155,10 @@ def datagrid(
             raise ValueError("by must be a string or list of strings")
 
     if model is not None:
-        from .sanitize.sanitize_model import sanitize_model
+        # Import the package export, never the submodule path: reaching
+        # through the package binds the submodule onto it and shadows the
+        # lazy export for the rest of the session.
+        from .sanitize import sanitize_model
 
         model = sanitize_model(model)
 

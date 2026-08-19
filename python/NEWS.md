@@ -36,6 +36,13 @@ New:
 
 Bug fixes:
 
+* `predictions()`, `comparisons()`, and `slopes()` no longer fail with
+  `TypeError: 'module' object is not callable` when `datagrid()` is called
+  first in a session. `datagrid()` imported the `sanitize_model` submodule
+  by its full path, which binds the module onto the `sanitize` package and
+  permanently shadows the lazily exported function of the same name. The
+  submodule is now named after the noun it sanitizes (`sanitize.model`),
+  like every one of its siblings, so the collision cannot recur.
 * An affine `hypothesis` string -- linear in the estimates plus a constant,
   such as `"b0 = 5"` or `"b0 + 1e8 = 0"` -- is now compiled to an exact
   contrast matrix with an offset, and its derivative is the matrix alone.
