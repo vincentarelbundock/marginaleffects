@@ -384,45 +384,15 @@ jacobian_analytic_hypothesis <- function(J, hyp, estimate_pre = NULL) {
     return(J)
   }
 
-  H <- hyp$H
-  if (
-    identical(hyp$kind, "matrix") && !is.null(H) &&
-      nrow(H) == nrow(J) && all(is.finite(H))
-  ) {
-    # Affine hypotheses map estimates with crossprod(H, estimate) + offset,
-    # so H maps every coefficient column of the Jacobian at once; the offset
-    # has zero derivative and never enters.
-    return(as.matrix(Matrix::crossprod(H, J)))
-  }
-
-  # Centering shortcuts carry a structured pullback: their operators are
-  # dense as matrices, and the pullback applies t(H) in O(np) instead. It is
-  # exact, so no numeric-stage provenance attaches.
-  if (is.function(hyp$pullback)) {
-    out <- tryCatch(as.matrix(hyp$pullback(J)), error = function(e) NULL)
-    if (!isTRUE(checkmate::check_matrix(out, mode = "numeric"))) {
-      return(NULL)
-    }
-    return(out)
-  }
-
-  # A hypothesis which is not linear, or whose linearity could not be proved,
-  # is still only a map from a handful of estimates to a handful of tested
-  # quantities. Differentiating that map costs nothing next to a model
-  # evaluation, so the exact Jacobian of everything upstream is composed with a
-  # probe of the hypothesis rather than being discarded.
-  if (!is.function(hyp$apply) || !is.numeric(estimate_pre)) {
+  res <- hypothesis_stage_pullback(hyp, J, at = estimate_pre)
+  if (is.null(res)) {
     return(NULL)
   }
-  if (length(estimate_pre) != nrow(J)) {
-    return(NULL)
+  out <- res$jacobian
+  # Only a probed stage costs the result its analytic provenance.
+  if (!isTRUE(res$exact)) {
+    attr(out, "marginaleffects_numeric_stage") <- TRUE
   }
-  G <- stage_jacobian_dense(hyp$apply, estimate_pre)
-  if (is.null(G) || ncol(G) != nrow(J)) {
-    return(NULL)
-  }
-  out <- G %*% J
-  attr(out, "marginaleffects_numeric_stage") <- TRUE
   out
 }
 

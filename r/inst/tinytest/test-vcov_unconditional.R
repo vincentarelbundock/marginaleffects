@@ -880,4 +880,32 @@ if (requiet("etwfe")) {
     expect_unconditional(emfx_cluster)
 }
 
+# An offset in an affine hypothesis shifts the estimate but not its variance,
+# so the unconditional standard error must be identical with and without it.
+# Differentiating the offset numerically cancels catastrophically.
+mod_offset <- lm(mpg ~ am + hp, data = mtcars)
+h_plain <- avg_comparisons(
+    mod_offset,
+    variables = "am",
+    hypothesis = "b1 = 0",
+    vcov = "unconditional")
+h_offset <- avg_comparisons(
+    mod_offset,
+    variables = "am",
+    hypothesis = "b1 - 1e10 = 0",
+    vcov = "unconditional")
+expect_equivalent(h_offset$std.error, h_plain$std.error, tolerance = 1e-10)
+
+hyp_plain <- avg_predictions(
+    mod_offset,
+    by = "am",
+    hypothesis = "b2 - b1 = 0",
+    vcov = "unconditional")
+hyp_offset <- avg_predictions(
+    mod_offset,
+    by = "am",
+    hypothesis = "b2 - b1 - 1e10 = 0",
+    vcov = "unconditional")
+expect_equivalent(hyp_offset$std.error, hyp_plain$std.error, tolerance = 1e-10)
+
 rm(list = ls())

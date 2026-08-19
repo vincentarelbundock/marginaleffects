@@ -271,43 +271,95 @@ get_unconditional_plan_jacobian <- function(
     V <- diag(length(coefs))
     dimnames(V) <- list(names(coefs), names(coefs))
 
-    if (identical(kind, "predictions")) {
-        fun <- function(model_perturbed, ...) {
-            pred <- prediction_plan_predict(plan, model_perturbed, ...)
-            prediction_plan_apply(plan, pred)
+    # `compose` stops the finite difference before the hypothesis stage, whose
+    # derivative is then supplied by the stage itself.
+    delta_jacobian <- function(compose) {
+        if (identical(kind, "predictions")) {
+            fun <- function(model_perturbed, ...) {
+                pred <- prediction_plan_predict(plan, model_perturbed, ...)
+                stages <- prediction_plan_apply_stages(plan, pred)
+                if (isTRUE(compose)) stages$pre else stages$post
+            }
+            args <- list(
+                mfx = mfx,
+                model_perturbed = mfx@model,
+                vcov = V,
+                type = type,
+                FUN = fun,
+                hypothesis = if (isTRUE(compose)) NULL else mfx@hypothesis
+            )
+        } else {
+            fun <- function(model_perturbed, ...) {
+                preds <- comparison_plan_predict(plan, model_perturbed, ...)
+                stages <- comparison_plan_apply_stages(
+                    plan,
+                    preds$hi,
+                    preds$lo,
+                    preds$or
+                )
+                if (isTRUE(compose)) stages$pre else stages$post
+            }
+            args <- list(
+                mfx = mfx,
+                model_perturbed = mfx@model,
+                vcov = V,
+                type = type,
+                FUN = fun,
+                variables = variables,
+                hypothesis = if (isTRUE(compose)) NULL else mfx@hypothesis,
+                hi = contrast_data$hi,
+                lo = contrast_data$lo,
+                original = contrast_data$original,
+                estimates = estimates,
+                numderiv = numderiv
+            )
         }
-        args <- list(
-            mfx = mfx,
-            model_perturbed = mfx@model,
-            vcov = V,
-            type = type,
-            FUN = fun,
-            hypothesis = mfx@hypothesis
-        )
-    } else {
-        fun <- function(model_perturbed, ...) {
-            preds <- comparison_plan_predict(plan, model_perturbed, ...)
-            comparison_plan_apply(plan, preds$hi, preds$lo, preds$or)
-        }
-        args <- list(
-            mfx = mfx,
-            model_perturbed = mfx@model,
-            vcov = V,
-            type = type,
-            FUN = fun,
-            variables = variables,
-            hypothesis = mfx@hypothesis,
-            hi = contrast_data$hi,
-            lo = contrast_data$lo,
-            original = contrast_data$original,
-            estimates = estimates,
-            numderiv = numderiv
-        )
+        args <- utils::modifyList(args, dots)
+        attr(do_call(get_se_delta, args), "jacobian")
     }
 
-    args <- utils::modifyList(args, dots)
-    se <- do_call(get_se_delta, args)
-    J <- attr(se, "jacobian")
+    hyp <- plan$hyp
+    stage_pull <- NULL
+    if (!is.null(hyp)) {
+        exact <- hypothesis_stage_exact(hyp, n_post = nrow(estimates))
+        estimate_pre <- if (exact) {
+            NULL
+        } else {
+            plan_replay_estimate_pre(
+                plan = plan,
+                kind = kind,
+                estimate = estimates[["estimate"]]
+            )
+        }
+        if (exact || !is.null(estimate_pre)) {
+            stage_pull <- function(J) {
+                res <- hypothesis_stage_pullback(hyp, J, at = estimate_pre)
+                if (is.null(res)) NULL else res$jacobian
+            }
+        }
+    }
+
+    J <- NULL
+    if (!is.null(stage_pull)) {
+        J_pre <- delta_jacobian(TRUE)
+        composed <- if (is.null(J_pre)) {
+            NULL
+        } else {
+            tryCatch(as.matrix(stage_pull(J_pre)), error = function(e) NULL)
+        }
+        # Fail closed: a partially composed derivative would be silently wrong,
+        # so an unusable pull redoes the whole-pipeline difference instead.
+        if (isTRUE(checkmate::check_matrix(
+            composed,
+            mode = "numeric",
+            nrows = nrow(estimates)
+        ))) {
+            J <- composed
+        }
+    }
+    if (is.null(J)) {
+        J <- delta_jacobian(FALSE)
+    }
     if (!isTRUE(checkmate::check_matrix(J, mode = "numeric", nrows = nrow(estimates)))) {
         stop_sprintf("Unable to compute the unconditional effect Jacobian.")
     }
@@ -668,6 +720,14 @@ apply_unconditional_hypothesis_phi <- function(
         theta <- pre_hypothesis_estimate
     } else {
         theta <- apply_plan_aggregation(plan$agg, pre_hypothesis_estimate)
+    }
+
+    # The compiled stage supplies its own derivative when it has one: an affine
+    # hypothesis differentiated numerically would subtract two numbers of the
+    # offset's magnitude and lose the variance to cancellation.
+    res <- hypothesis_stage_pullback(plan$hyp, t(phi), at = theta)
+    if (!is.null(res)) {
+        return(t(res$jacobian))
     }
 
     H <- get_jacobian(

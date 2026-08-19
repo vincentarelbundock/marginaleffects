@@ -404,6 +404,88 @@ hypothesis_formula_pullback <- function(shortcut, groups) {
 }
 
 
+# A compiled stage carries an exact derivative when it has a finite contrast
+# matrix of the right width or a structured pullback. Callers which must decide
+# whether to recover the pre-hypothesis estimates -- an expensive replay, and
+# useless when nothing will probe them -- ask this before the Jacobian exists.
+hypothesis_stage_exact <- function(hyp, n_post = NULL) {
+    if (is.null(hyp)) {
+        return(FALSE)
+    }
+    if (identical(hyp$kind, "matrix") && !is.null(hyp$H)) {
+        H <- as.matrix(hyp$H)
+        if (
+            isTRUE(checkmate::check_matrix(H, mode = "numeric")) &&
+                all(is.finite(H)) &&
+                (is.null(n_post) || ncol(H) == n_post)
+        ) {
+            return(TRUE)
+        }
+    }
+    is.function(hyp$pullback)
+}
+
+
+# Pull a Jacobian back through a compiled hypothesis stage. `J` has one row per
+# pre-hypothesis estimate and the result has one row per post-hypothesis
+# estimate. `at` is the pre-hypothesis estimate vector, consulted only when the
+# stage has to be probed numerically. Returns NULL when the stage cannot be
+# differentiated here: the contract is fail-closed, so callers fall back to
+# differentiating the whole pipeline rather than compose something wrong.
+hypothesis_stage_pullback <- function(hyp, J, at = NULL) {
+    if (is.null(hyp)) {
+        return(NULL)
+    }
+
+    # Affine hypotheses map estimates with crossprod(H, estimate) + offset, so H
+    # maps every coefficient column of the Jacobian at once; the offset has zero
+    # derivative and never enters. Probing it numerically instead cancels
+    # catastrophically once the constant is large relative to the estimates.
+    if (identical(hyp$kind, "matrix") && !is.null(hyp$H)) {
+        H <- as.matrix(hyp$H)
+        if (
+            nrow(H) == nrow(J) &&
+                isTRUE(checkmate::check_matrix(H, mode = "numeric")) &&
+                all(is.finite(H))
+        ) {
+            out <- tryCatch(
+                as.matrix(Matrix::crossprod(hyp$H, J)),
+                error = function(e) NULL
+            )
+            if (!isTRUE(checkmate::check_matrix(out, mode = "numeric"))) {
+                return(NULL)
+            }
+            return(list(jacobian = out, exact = TRUE))
+        }
+    }
+
+    # Centering shortcuts carry a structured pullback: their operators are dense
+    # as matrices, and the pullback applies t(H) in O(np) instead. It is exact,
+    # so no numeric-stage provenance attaches.
+    if (is.function(hyp$pullback)) {
+        out <- tryCatch(as.matrix(hyp$pullback(J)), error = function(e) NULL)
+        if (!isTRUE(checkmate::check_matrix(out, mode = "numeric"))) {
+            return(NULL)
+        }
+        return(list(jacobian = out, exact = TRUE))
+    }
+
+    # A hypothesis which is not linear, or whose linearity could not be proved,
+    # is still only a map from a handful of estimates to a handful of tested
+    # quantities. Differentiating that map costs nothing next to a model
+    # evaluation, so the exact Jacobian of everything upstream is composed with
+    # a probe of the hypothesis rather than being discarded.
+    if (!is.function(hyp$apply) || !is.numeric(at) || length(at) != nrow(J)) {
+        return(NULL)
+    }
+    G <- stage_jacobian_dense(hyp$apply, at)
+    if (is.null(G) || ncol(G) != nrow(J)) {
+        return(NULL)
+    }
+    list(jacobian = as.matrix(G %*% J), exact = FALSE)
+}
+
+
 hypothesis_compile_formula_matrix <- function(form, groups) {
     if (!isTRUE(form$lhs %in% c("difference", "dotproduct"))) {
         return(NULL)

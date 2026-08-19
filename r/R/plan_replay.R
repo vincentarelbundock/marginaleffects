@@ -353,31 +353,22 @@ plan_std_error <- function(
     # A user-supplied Jacobian function is authoritative and already covers the
     # whole pipeline, hypothesis included, so it is never composed with.
     if (!is.null(hyp) && is.null(custom_jacobian)) {
-        if (
-            identical(hyp$kind, "matrix") && !is.null(hyp$H) &&
-                isTRUE(checkmate::check_matrix(as.matrix(hyp$H), mode = "numeric")) &&
-                all(is.finite(as.matrix(hyp$H))) &&
-                ncol(hyp$H) == nrow(estimates)
-        ) {
-            Ht <- t(as.matrix(hyp$H))
-            stage_pull <- function(J) Ht %*% J
-        } else if (is.function(hyp$pullback)) {
-            stage_pull <- hyp$pullback
+        exact <- hypothesis_stage_exact(hyp, n_post = nrow(estimates))
+        # Recovering the pre-hypothesis estimates replays the plan, so it is
+        # only worth doing when the probe is the sole remaining option.
+        estimate_pre <- if (exact) {
+            NULL
         } else {
-            estimate_pre <- plan_replay_estimate_pre(
+            plan_replay_estimate_pre(
                 plan = plan,
                 kind = kind,
                 estimate = estimates[["estimate"]]
             )
-            if (!is.null(estimate_pre)) {
-                G <- stage_jacobian_dense(hyp$apply, estimate_pre)
-                if (
-                    !is.null(G) &&
-                        nrow(G) == nrow(estimates) &&
-                        ncol(G) == length(estimate_pre)
-                ) {
-                    stage_pull <- function(J) G %*% J
-                }
+        }
+        if (exact || !is.null(estimate_pre)) {
+            stage_pull <- function(J) {
+                res <- hypothesis_stage_pullback(hyp, J, at = estimate_pre)
+                if (is.null(res)) NULL else res$jacobian
             }
         }
     }
