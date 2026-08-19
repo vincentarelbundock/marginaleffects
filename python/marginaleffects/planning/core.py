@@ -148,6 +148,11 @@ class Hyp:
     kind: str
     apply: Callable[[np.ndarray], np.ndarray]
     H: np.ndarray | None = None
+    # Affine hypotheses evaluate as `estimate @ H + offset`. The derivative
+    # is H alone -- it does not depend on the constant -- so recording the
+    # offset lets "b1 + 1e8 = 0" keep an exact Jacobian instead of
+    # differentiating through a constant that cancels the probe step.
+    offset: np.ndarray | float = 0.0
 
 
 @dataclass(frozen=True)

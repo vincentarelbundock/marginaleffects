@@ -36,6 +36,14 @@ New:
 
 Bug fixes:
 
+* An affine `hypothesis` string -- linear in the estimates plus a constant,
+  such as `"b0 = 5"` or `"b0 + 1e8 = 0"` -- is now compiled to an exact
+  contrast matrix with an offset, and its derivative is the matrix alone.
+  Previously the constant was differentiated numerically with the rest of the
+  map, and a constant large relative to the estimates cancelled the probe
+  step catastrophically: `"b0 + 1e16 = 0"` reported a standard error of
+  exactly zero with full confidence. This matches the same fix in the R
+  package.
 * Slope-family comparisons are now recognized by family rather than by a
   fixed list of names, which the `*avgwts` rewrites and `expdydx` fell
   outside of. Weighted average slopes were labelled with the raw eps step

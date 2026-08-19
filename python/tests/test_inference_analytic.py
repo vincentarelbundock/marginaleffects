@@ -226,9 +226,13 @@ def test_affine_and_nonlinear_hypotheses_remain_composable():
     import polars as pl
 
     frame = pl.DataFrame({"estimate": [2.0, 5.0]})
+    # Affine maps promote to a matrix plus an offset: the derivative is H
+    # alone, so a large constant can never cancel a numeric probe step.
     _, affine = hypothesis_compile(frame, "b1 - b0 = 1")
     _, nonlinear = hypothesis_compile(frame, "b1**2 - b0 = 0")
-    assert affine.kind == "string"
+    assert affine.kind == "matrix"
+    np.testing.assert_array_equal(np.asarray(affine.H).reshape(-1), [-1.0, 1.0])
+    assert float(np.atleast_1d(affine.offset)[0]) == -1.0
     assert nonlinear.kind == "string"
 
 
