@@ -97,10 +97,24 @@ program define misc
     quietly regress mpg c.hp c.wt i.am
     mfx_runall "lm" cyl am hp
 
-    quietly probit vs c.hp c.wt i.am
+    * Non-canonical link. Stata's Newton-Raphson commands report the observed
+    * information while R's glm() reports the expected information from IRLS,
+    * and the two coincide only for a canonical link. `irls` puts Stata on the
+    * expected information so both sides compute the same variance, which lets
+    * the R side use its default vcov instead of a hand-built matrix.
+    * ltolerance() is tightened because IRLS and Newton-Raphson stop at
+    * slightly different points.
+    quietly glm vs c.hp c.wt i.am, family(binomial) link(probit) irls ltolerance(1e-14)
     mfx_runall "probit" cyl am hp
 
-    quietly cloglog vs c.hp c.wt i.am
+    * Non-canonical link. Stata's Newton-Raphson commands report the observed
+    * information while R's glm() reports the expected information from IRLS,
+    * and the two coincide only for a canonical link. `irls` puts Stata on the
+    * expected information so both sides compute the same variance, which lets
+    * the R side use its default vcov instead of a hand-built matrix.
+    * ltolerance() is tightened because IRLS and Newton-Raphson stop at
+    * slightly different points.
+    quietly glm vs c.hp c.wt i.am, family(binomial) link(cloglog) irls ltolerance(1e-14)
     mfx_runall "cloglog" cyl am hp
 
     quietly poisson carb c.hp c.wt i.am
@@ -109,7 +123,7 @@ program define misc
     quietly nbreg carb c.hp c.wt i.am
     mfx_runall "negative_binomial" cyl am hp
 
-    quietly glm mpg c.hp c.wt i.am, family(gamma) link(log)
+    quietly glm mpg c.hp c.wt i.am, family(gamma) link(log) irls ltolerance(1e-14)
     mfx_runall "gamma_log" cyl am hp
 
     quietly qreg mpg c.hp c.wt i.am

@@ -27,28 +27,6 @@ expect_rel <- function(current, target, tolerance, info) {
     expect_equal(current, target, tolerance = tolerance, scale = scale, info = info)
 }
 
-# Stata's maximum-likelihood commands report the observed information matrix;
-# glm() fits by IRLS and reports the expected (Fisher) information. The two
-# coincide only for a canonical link. Every non-canonical fit below therefore
-# supplies the observed matrix, which is what collapses the standard-error
-# bounds from a few percent to a few parts in a million.
-observed_information_vcov <- function(model) {
-    y <- insight::get_response(model)
-    X <- stats::model.matrix(model)
-    w <- stats::weights(model, type = "prior")
-    if (is.null(w)) w <- rep(1, length(y))
-    offset <- model$offset
-    if (is.null(offset)) offset <- rep(0, length(y))
-    fam <- stats::family(model)
-    deviance_at <- function(b) {
-        mu <- fam$linkinv(as.vector(X %*% b) + offset)
-        sum(fam$dev.resids(y, mu, w))
-    }
-    V <- summary(model)$dispersion * solve(0.5 * numDeriv::hessian(deviance_at, stats::coef(model)))
-    dimnames(V) <- list(names(stats::coef(model)), names(stats::coef(model)))
-    V
-}
-
 check_stata <- function(fixture, x, estimate, se = NA_real_, stata_order = NULL) {
     s <- golden[golden$fixture == fixture, , drop = FALSE]
     tested <<- union(tested, fixture)
@@ -98,24 +76,27 @@ dat <- transform(
 check_six("logit", glm(vs ~ hp + wt + am, family = binomial, data = dat), 1e-6, 1e-5)
 
 # Non-canonical links: the inverse-link derivative that enters the delta method
-# is no longer the variance function. Starting values are supplied where the
-# default ones put the linear predictor outside the link's domain.
-mod_gaussian_log <- glm(mpg ~ hp + wt + am, family = gaussian("log"), data = dat, start = c(3, 0, 0, 0))
-check_six("gaussian_log", mod_gaussian_log, 1e-5, 1e-5,
-          vcov = observed_information_vcov(mod_gaussian_log))
-mod_poisson_identity <- glm(carb ~ hp + wt + am, family = poisson("identity"), data = dat, start = c(1, 0, 0, 0))
-check_six("poisson_identity", mod_poisson_identity, 1e-4, 1e-5,
-          vcov = observed_information_vcov(mod_poisson_identity))
-# The observed information takes this one from 2.5% to 0.4%. The remainder is a
-# uniform scale factor on the covariance that is still unaccounted for: it is
-# not the dispersion estimate (Stata's e(phi) agrees with R's Pearson statistic
-# to 7e-5), and it is not the dispersion being jointly estimated (the beta block
-# of the full two-parameter Hessian is identical to three digits). The bound
-# below is set to what is achieved rather than to what is explained.
-mod_invgauss_log <- glm(mpg ~ hp + wt + am, family = inverse.gaussian("log"), data = dat, start = c(3, 0, 0, 0))
-check_six("inverse_gaussian_log", mod_invgauss_log, 1e-3, 1e-2,
-          vcov = observed_information_vcov(mod_invgauss_log))
-# Gamma with the inverse link is canonical, so no adjustment is needed.
+# is no longer the variance function. The generator fits these with Stata's
+# `irls`, which puts Stata on the expected information that glm() reports, so
+# the comparison runs against the default vcov rather than a hand-built matrix.
+# Starting values are supplied where the defaults put the linear predictor
+# outside the link's domain.
+check_six(
+    "gaussian_log",
+    glm(mpg ~ hp + wt + am, family = gaussian("log"), data = dat, start = c(3, 0, 0, 0)),
+    1e-5, 1e-5
+)
+check_six(
+    "poisson_identity",
+    glm(carb ~ hp + wt + am, family = poisson("identity"), data = dat, start = c(1, 0, 0, 0)),
+    1e-4, 1e-5
+)
+check_six(
+    "inverse_gaussian_log",
+    glm(mpg ~ hp + wt + am, family = inverse.gaussian("log"), data = dat, start = c(3, 0, 0, 0)),
+    1e-4, 1e-5
+)
+# Gamma with the inverse link is canonical, so Stata needs no irls here.
 check_six("gamma_inverse", glm(mpg ~ hp + wt + am, family = Gamma("inverse"), data = dat), 1e-3, 1e-3)
 
 
@@ -213,9 +194,9 @@ mod_zip <- pscl::zeroinfl(
 )
 # marginaleffects sorts terms alphabetically; Stata keeps the dydx() order.
 x <- avg_slopes(mod_zip, variables = c("phd", "ment", "fem", "mar", "kid5"))
-check_stata("zip_response", x, 1e-3, 1e-2, stata_order = match(c("phd", "ment", "fem", "mar", "kid5"), x$term))
+check_stata("zip_response", x, 1e-3, 1e-3, stata_order = match(c("phd", "ment", "fem", "mar", "kid5"), x$term))
 x <- avg_slopes(mod_zip, variables = c("ment", "fem", "kid5"), type = "zero")
-check_stata("zip_zero_probability", x, 1e-3, 1e-2, stata_order = match(c("ment", "fem", "kid5"), x$term))
+check_stata("zip_zero_probability", x, 1e-3, 1e-3, stata_order = match(c("ment", "fem", "kid5"), x$term))
 check_stata("zip_predictions", avg_predictions(mod_zip), 1e-5, 1e-4)
 
 mod_truncreg <- truncreg::truncreg(

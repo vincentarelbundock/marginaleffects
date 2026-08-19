@@ -7,7 +7,6 @@ requiet("AER")
 requiet("lme4")
 requiet("geepack")
 requiet("sandwich")
-requiet("numDeriv")
 requiet("sampleSelection")
 requiet("pscl")
 requiet("nnet")
@@ -27,33 +26,6 @@ tested <- character()
 expect_rel <- function(current, target, tolerance, info) {
     scale <- max(mean(abs(target)), .Machine$double.eps)
     expect_equal(current, target, tolerance = tolerance, scale = scale, info = info)
-}
-
-# Stata's maximum-likelihood commands report the observed information matrix --
-# the Hessian of the log-likelihood at the estimates. R's glm() fits by IRLS and
-# reports the expected (Fisher) information. The two are identical for a
-# canonical link, which is why logit, Poisson-log and Gamma-inverse agree to
-# seven digits here, and differ otherwise: on these data the gap reaches 3% for
-# probit and 11% for cloglog. Supplying the observed matrix removes it, and
-# what is left is the delta-method machinery this suite is meant to test.
-observed_information_vcov <- function(model) {
-    y <- insight::get_response(model)
-    X <- stats::model.matrix(model)
-    w <- stats::weights(model, type = "prior")
-    if (is.null(w)) w <- rep(1, length(y))
-    offset <- model$offset
-    if (is.null(offset)) offset <- rep(0, length(y))
-    fam <- stats::family(model)
-    deviance_at <- function(b) {
-        mu <- fam$linkinv(as.vector(X %*% b) + offset)
-        sum(fam$dev.resids(y, mu, w))
-    }
-    # -2 * loglik = deviance / dispersion + a constant that does not depend on
-    # the coefficients, so the observed information for beta is half the
-    # deviance Hessian divided by the dispersion.
-    V <- summary(model)$dispersion * solve(0.5 * numDeriv::hessian(deviance_at, stats::coef(model)))
-    dimnames(V) <- list(names(stats::coef(model)), names(stats::coef(model)))
-    V
 }
 
 check_stata <- function(
@@ -165,6 +137,11 @@ commands <- c(
 # Jacobian for slopes stopped being differenced.
 #
 # The loose ones -- probit, cloglog, gamma_log, quantile_median,
+# The non-canonical links (probit, cloglog, gamma-log) are fitted with Stata's
+# `irls` in misc.ado, which puts Stata on the same expected information glm()
+# reports. Every model here is therefore compared against marginaleffects' own
+# default variance rather than a matrix built to match Stata.
+#
 # Every bound below binds: `expect_rel` keeps the comparison relative, and each
 # one sits within about a factor of four of what the pair actually achieves.
 # The two entries with no standard-error bound are cases where the two packages
@@ -173,10 +150,10 @@ commands <- c(
 tol <- list(
     lm = c(estimate = 1e-6, se = 1e-6),
     probit = c(estimate = 1e-4, se = 1e-4),
-    cloglog = c(estimate = 1e-4, se = 5e-3),
+    cloglog = c(estimate = 1e-4, se = 1e-3),
     poisson = c(estimate = 1e-5, se = 1e-5),
     negative_binomial = c(estimate = 1e-4, se = 1e-4),
-    gamma_log = c(estimate = 1e-4, se = 5e-4),
+    gamma_log = c(estimate = 1e-4, se = 1e-5),
     # Stata's qreg and quantreg::rq both invert a Koenker-Bassett sandwich, but
     # they estimate the sparsity function -- the conditional density at the
     # quantile -- with different bandwidth rules. insight returns rq's "nid"
@@ -192,11 +169,6 @@ tol <- list(
     gee_poisson = c(estimate = 1e-3, se = NA_real_)
 )
 
-# probit, cloglog and gamma-log all use a non-canonical link, so Stata's
-# observed information and glm()'s expected information do not coincide. See
-# observed_information_vcov() above.
-non_canonical_link <- c("probit", "cloglog", "gamma_log")
-
 for (model_name in names(models)) {
     V <- TRUE
     if (model_name == "fractional_logit") {
@@ -205,8 +177,6 @@ for (model_name in names(models)) {
         # after any maximum-likelihood command.
         n <- stats::nobs(models[[model_name]])
         V <- sandwich::vcovHC(models[[model_name]], type = "HC0") * n / (n - 1)
-    } else if (model_name %in% non_canonical_link) {
-        V <- observed_information_vcov(models[[model_name]])
     }
     for (command in commands) {
         fixture <- paste(model_name, command, sep = "_")

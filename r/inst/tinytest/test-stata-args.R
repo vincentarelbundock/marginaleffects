@@ -3,7 +3,6 @@ using("marginaleffects")
 
 requiet("MASS")
 requiet("sandwich")
-requiet("numDeriv")
 
 # Cross-software fixtures for marginaleffects' *argument* surface. The
 # companion file test-stata-misc.R covers a broad model x command matrix at a
@@ -26,28 +25,6 @@ tested <- character()
 expect_rel <- function(current, target, tolerance, info) {
     scale <- max(mean(abs(target)), .Machine$double.eps)
     expect_equal(current, target, tolerance = tolerance, scale = scale, info = info)
-}
-
-# Stata's maximum-likelihood commands report the observed information matrix;
-# glm() fits by IRLS and reports the expected (Fisher) information. They agree
-# for a canonical link and diverge otherwise -- 3% for probit and 1.5% for
-# gamma-log on these data. Supplying the observed matrix removes the difference
-# so the bound can measure the delta method rather than the information matrix.
-observed_information_vcov <- function(model) {
-    y <- insight::get_response(model)
-    X <- stats::model.matrix(model)
-    w <- stats::weights(model, type = "prior")
-    if (is.null(w)) w <- rep(1, length(y))
-    offset <- model$offset
-    if (is.null(offset)) offset <- rep(0, length(y))
-    fam <- stats::family(model)
-    deviance_at <- function(b) {
-        mu <- fam$linkinv(as.vector(X %*% b) + offset)
-        sum(fam$dev.resids(y, mu, w))
-    }
-    V <- summary(model)$dispersion * solve(0.5 * numDeriv::hessian(deviance_at, stats::coef(model)))
-    dimnames(V) <- list(names(stats::coef(model)), names(stats::coef(model)))
-    V
 }
 
 check_stata <- function(
@@ -264,32 +241,23 @@ models_link <- list(
 # ones absorb optimizer differences, not disagreement about the quantity.
 tol_link <- list(
     logit_link = c(estimate = 1e-6, se = 1e-4),
-    # The residual gap is the accuracy of the numerical Hessian, not a
-    # disagreement about the quantity: with the default expected information it
-    # would be 3.7e-2 rather than 1.6e-4.
-    probit_link = c(estimate = 1e-5, se = 5e-4),
+    probit_link = c(estimate = 1e-5, se = 1e-4),
     poisson_link = c(estimate = 1e-6, se = 1e-5),
     negative_binomial_link = c(estimate = 1e-5, se = 1e-4),
-    gamma_log_link = c(estimate = 1e-5, se = 5e-4)
+    gamma_log_link = c(estimate = 1e-5, se = 1e-4)
 )
-
-# probit and gamma-log use a non-canonical link, so Stata\x27s observed
-# information and glm()\x27s expected information differ; see
-# observed_information_vcov() above.
-non_canonical_link <- c("probit_link", "gamma_log_link")
 
 for (nm in names(models_link)) {
     mod <- models_link[[nm]]
     tol <- tol_link[[nm]]
     e <- tol[["estimate"]]
     s <- tol[["se"]]
-    V <- if (nm %in% non_canonical_link) observed_information_vcov(mod) else TRUE
-    check_stata(paste0(nm, "_avg_predictions"), avg_predictions(mod, type = "link", vcov = V), estimate = e, se = s)
-    check_stata(paste0(nm, "_avg_predictions_by"), avg_predictions(mod, by = "cyl", type = "link", vcov = V), estimate = e, se = s)
-    check_stata(paste0(nm, "_avg_comparisons_factor"), avg_comparisons(mod, variables = "am", type = "link", vcov = V), estimate = e, se = s)
-    check_stata(paste0(nm, "_avg_comparisons_factor_by"), avg_comparisons(mod, variables = "am", by = "cyl", type = "link", vcov = V), estimate = e, se = s)
-    check_stata(paste0(nm, "_avg_slopes"), avg_slopes(mod, variables = "hp", type = "link", vcov = V), estimate = e, se = s)
-    check_stata(paste0(nm, "_avg_slopes_by"), avg_slopes(mod, variables = "hp", by = "cyl", type = "link", vcov = V), estimate = e, se = s)
+    check_stata(paste0(nm, "_avg_predictions"), avg_predictions(mod, type = "link"), estimate = e, se = s)
+    check_stata(paste0(nm, "_avg_predictions_by"), avg_predictions(mod, by = "cyl", type = "link"), estimate = e, se = s)
+    check_stata(paste0(nm, "_avg_comparisons_factor"), avg_comparisons(mod, variables = "am", type = "link"), estimate = e, se = s)
+    check_stata(paste0(nm, "_avg_comparisons_factor_by"), avg_comparisons(mod, variables = "am", by = "cyl", type = "link"), estimate = e, se = s)
+    check_stata(paste0(nm, "_avg_slopes"), avg_slopes(mod, variables = "hp", type = "link"), estimate = e, se = s)
+    check_stata(paste0(nm, "_avg_slopes_by"), avg_slopes(mod, variables = "hp", by = "cyl", type = "link"), estimate = e, se = s)
 }
 
 

@@ -33,15 +33,15 @@ program define models_fixtures
     quietly logit vs c.hp c.wt i.am
     mfx_runall "logit" cyl am hp
 
-    quietly glm mpg c.hp c.wt i.am, family(gaussian) link(log)
+    quietly glm mpg c.hp c.wt i.am, family(gaussian) link(log) irls ltolerance(1e-14)
     mfx_runall "gaussian_log" cyl am hp
 
     capture noisily {
-        quietly glm carb c.hp c.wt i.am, family(poisson) link(identity)
+        quietly glm carb c.hp c.wt i.am, family(poisson) link(identity) irls ltolerance(1e-14)
         mfx_runall "poisson_identity" cyl am hp
     }
 
-    quietly glm mpg c.hp c.wt i.am, family(igaussian) link(log)
+    quietly glm mpg c.hp c.wt i.am, family(igaussian) link(log) irls ltolerance(1e-14)
     mfx_runall "inverse_gaussian_log" cyl am hp
 
     quietly glm mpg c.hp c.wt i.am, family(gamma) link(power -1)

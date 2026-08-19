@@ -103,13 +103,20 @@ program define args_fixtures
     * so the R side can share its model-fitting code.
     quietly logit vs c.hp c.wt i.am
     mfx_runall "logit_link" cyl am hp xb
-    quietly probit vs c.hp c.wt i.am
+    * Non-canonical link. Stata's Newton-Raphson commands report the observed
+    * information while R's glm() reports the expected information from IRLS,
+    * and the two coincide only for a canonical link. `irls` puts Stata on the
+    * expected information so both sides compute the same variance, which lets
+    * the R side use its default vcov instead of a hand-built matrix.
+    * ltolerance() is tightened because IRLS and Newton-Raphson stop at
+    * slightly different points.
+    quietly glm vs c.hp c.wt i.am, family(binomial) link(probit) irls ltolerance(1e-14)
     mfx_runall "probit_link" cyl am hp xb
     quietly poisson carb c.hp c.wt i.am
     mfx_runall "poisson_link" cyl am hp xb
     quietly nbreg carb c.hp c.wt i.am
     mfx_runall "negative_binomial_link" cyl am hp xb
-    quietly glm mpg c.hp c.wt i.am, family(gamma) link(log)
+    quietly glm mpg c.hp c.wt i.am, family(gamma) link(log) irls ltolerance(1e-14)
     mfx_runall "gamma_log_link" cyl am hp xb
 
     * ======================================================================
