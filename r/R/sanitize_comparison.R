@@ -80,7 +80,12 @@ comparison_label_dict <- list(
     "lift" = "lift(%s, %s)",
     "liftavg" = "lift(%s, %s)",
     "liftavgwts" = "lift(%s, %s)",
-    "expdydx" = "exp(dY/dX)"
+    # All three must carry the label: get_comparisons_data_numeric() keys the
+    # eps-step derivative contrast off it, and without an entry the averaged
+    # variants silently fell back to the default "+1" unit contrast.
+    "expdydx" = "exp(dY/dX)",
+    "expdydxavg" = "exp(dY/dX)",
+    "expdydxavgwts" = "exp(dY/dX)"
 )
 
 sanity_comparison <- function(comparison) {
