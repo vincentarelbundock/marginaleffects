@@ -165,6 +165,8 @@ class PredictionPlan:
     agg: list[AggGroup] | None
     hyp: Hyp | None
     n_out: int
+    rowid: np.ndarray | None = None
+    source: Any | None = None
     agg_blocks: AggPlan | None = field(default=None, repr=False, compare=False)
 
     def __post_init__(self):
@@ -198,6 +200,8 @@ class ComparisonPlan:
     has_na: bool = False
     agg: list[AggGroup] | None = None
     n_out: int | None = None
+    rowid: np.ndarray | None = None
+    source: Any | None = None
     agg_blocks: AggPlan | None = field(default=None, repr=False, compare=False)
 
     def __post_init__(self):

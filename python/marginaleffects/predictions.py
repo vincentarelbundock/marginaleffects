@@ -5,7 +5,13 @@ from .by import get_by_plan
 from .classes import MarginaleffectsResult
 from .docstrings import doc
 from .hypothesis_compile import hypothesis_compile
-from .inference import analytic_try, get_jacobian, get_se
+from .inference import (
+    analytic_try,
+    get_jacobian,
+    get_se,
+    is_unconditional,
+    unconditional_result,
+)
 from .planning import (
     PredictionPlan,
     plan_values_allclose,
@@ -107,6 +113,10 @@ def _predictions_build(model, exog, newdata, by, wts, hypothesis):
 
     aligned_baseline = out["estimate"].to_numpy()
     has_na = np.isnan(np.asarray(aligned_baseline, dtype=float)).any()
+    # Which original model-data row each estimand row came from. Recorded
+    # before aggregation, which is where unconditional variance needs it.
+    rowid = out["rowid"].to_numpy() if "rowid" in out.columns else None
+    source = out
 
     out, agg = get_by_plan(model, out, newdata=newdata, by=by, wts=wts)
     if by_is_frame(by):
@@ -121,6 +131,8 @@ def _predictions_build(model, exog, newdata, by, wts, hypothesis):
         agg=agg,
         hyp=hyp,
         n_out=out.height,
+        rowid=rowid,
+        source=source,
     )
 
     # Reuse the predictions already computed above. Re-predicting here doubled
@@ -255,7 +267,17 @@ def predictions(
 
     J = None
     jacobian_method = None
-    if V is not None:
+    if is_unconditional(V):
+        out, J, jacobian_method, _V = unconditional_result(
+            plan=plan,
+            model=model,
+            kind="predictions",
+            request=V,
+            newdata=newdata,
+            out=out,
+            eps_vcov=eps_vcov,
+        )
+    elif V is not None:
         # An explicit `eps_vcov` requests finite differences with that step size,
         # so the exact-derivative paths are skipped when the user supplies one.
         ad = None

@@ -18,6 +18,10 @@ _EXPORTS = {
     "fit_linearmodels": ("marginaleffects.linearmodels.model", "fit_linearmodels"),
     "get_dataset": ("marginaleffects.datasets", "get_dataset"),
     "MarginaleffectsResult": ("marginaleffects.classes", "MarginaleffectsResult"),
+    "vcovUnconditional": (
+        "marginaleffects.inference.unconditional",
+        "vcovUnconditional",
+    ),
 }
 
 __all__ = list(_EXPORTS.keys())

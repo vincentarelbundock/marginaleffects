@@ -9,7 +9,13 @@ from .classes import MarginaleffectsResult
 from .docstrings import doc
 from .estimands import estimands
 from .hypothesis_compile import hypothesis_compile
-from .inference import analytic_try, get_jacobian, get_se
+from .inference import (
+    analytic_try,
+    get_jacobian,
+    get_se,
+    is_unconditional,
+    unconditional_result,
+)
 from .planning import (
     AggGroup,
     ComparisonPlan,
@@ -565,6 +571,10 @@ def _comparisons_build(
         by_keys = _resolve_grouping_keys(["by"], tmp)
     else:
         by_keys = _resolve_grouping_keys(by, tmp)
+    # Captured before the estimand stage regroups rows: `CompGroup.idx` is
+    # numbered in this table's order, so the row ids must be too.
+    rowid = tmp["rowid"].to_numpy() if "rowid" in tmp.columns else None
+    source = tmp
     captured = []
     tmp = _apply_comparison_estimands(
         tmp,
@@ -628,6 +638,8 @@ def _comparisons_build(
         has_na=bool(has_na),
         agg=agg_groups,
         n_out=tmp.height,
+        rowid=rowid,
+        source=source,
     )
 
     hi, lo, y = plan_predictions
@@ -842,7 +854,17 @@ def comparisons(
         comparison_functions=comparison_functions,
     )
     jacobian_method = None
-    if vcov is not None and vcov is not False and V is not None:
+    if is_unconditional(V):
+        out, J, jacobian_method, _V = unconditional_result(
+            plan=plan,
+            model=model,
+            kind="comparisons",
+            request=V,
+            newdata=newdata,
+            out=out,
+            eps_vcov=eps_vcov,
+        )
+    elif vcov is not None and vcov is not False and V is not None:
         # An explicit `eps_vcov` requests finite differences with that step size,
         # so the exact-derivative paths are skipped when the user supplies one.
         ad = None
