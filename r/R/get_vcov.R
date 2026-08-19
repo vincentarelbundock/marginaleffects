@@ -19,6 +19,13 @@ get_vcov.default <- function(model, vcov = NULL, ...) {
 
     vcov <- sanitize_vcov(model = model, vcov = vcov)
     if (isTRUE(checkmate::check_matrix(vcov))) {
+        # A user-supplied matrix is stored and reused in several places: the
+        # delta method, the vcov() extractor, and simulation draws. Aligning
+        # it to coefficient order once, here, keeps every consumer positional
+        # thereafter. The delta method re-aligned locally and was correct, but
+        # the stored matrix reached the other consumers in user order, where
+        # equal dimensions silently multiplied positionally.
+        vcov <- align_vcov_to_coef(vcov, model, ...)
         return(vcov)
     }
 
@@ -121,7 +128,10 @@ get_varcov_args <- function(model, vcov) {
 
     out <- switch(
         vcov,
-        "stata" = list(vcov = "HC2"),
+        # Stata's `regress, vce(robust)` is HC1: HC0 rescaled by n / (n - k).
+        # estimatr's se_type = "stata" and modelsummary's "stata" shortcut
+        # agree. This was HC2 until 2026-08, which matched no Stata estimator.
+        "stata" = list(vcov = "HC1"),
         "robust" = list(vcov = "HC3"),
         "bootstrap" = list(vcov = "BS"),
         "outer-product" = list(vcov = "OPG"),

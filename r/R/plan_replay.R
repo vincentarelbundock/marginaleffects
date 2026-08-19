@@ -163,10 +163,23 @@ apply_plan_aggregation_and_hypothesis <- function(est, agg = NULL, hyp = NULL) {
     apply_plan_stages(est, agg = agg, hyp = hyp)$post
 }
 
+# Element-wise agreement for replay guards. all.equal() compares a *mean*
+# relative difference, under which one badly wrong row hides inside enough
+# correct ones; a guard advertised as fail-closed must bound every element.
+plan_replay_agrees <- function(a, b, tolerance = sqrt(.Machine$double.eps)) {
+    if (!is.numeric(a) || !is.numeric(b) || length(a) != length(b)) {
+        return(FALSE)
+    }
+    delta <- abs(a - b)
+    ok <- delta <= tolerance * pmax(abs(b), 1)
+    # NA anywhere means the guard cannot vouch for the replay.
+    isTRUE(all(ok))
+}
+
+
 validate_plan_replay <- function(kind, baseline, expected) {
     # Guard against stale or incomplete replay plans.
-    tolerance <- sqrt(.Machine$double.eps)
-    if (!isTRUE(all.equal(baseline, expected, tolerance = tolerance, check.attributes = FALSE))) {
+    if (!plan_replay_agrees(baseline, expected)) {
         stop_sprintf("Internal error: %s plan baseline check failed.", kind)
     }
 }
@@ -281,9 +294,34 @@ plan_std_error <- function(
         return(list(mfx = mfx, estimates = estimates))
     }
 
-    # Explicit user Jacobians retain priority. Otherwise, use a validated exact
-    # analytic derivative before trying autodiff and numerical differentiation.
+    # Explicit user Jacobians retain priority. Next comes autodiff, because
+    # autodiff(TRUE) is an explicit per-session opt-in and the documentation
+    # promises that enabling it sets the Jacobian machinery to JAX; the
+    # analytic derivative, which is on by default, must not silently intercept
+    # a path the user asked for. When autodiff is off or declines, the order
+    # is analytic, then numerical differentiation.
     custom_jacobian <- settings_get("jacobian_function")
+
+    ad_args <- list(
+        plan = plan,
+        mfx = mfx,
+        kind = kind,
+        type = type,
+        vcov = mfx@vcov_model,
+        estimate = estimates[["estimate"]]
+    )
+    if (identical(kind, "comparisons")) {
+        ad_args$hi <- contrast_data$hi
+        ad_args$lo <- contrast_data$lo
+    }
+    ad <- if (is.null(custom_jacobian)) do_call(autodiff_try, ad_args) else NULL
+    if (!is.null(ad)) {
+        mfx@jacobian <- ad$jacobian
+        mfx@jacobian_method <- "autodiff"
+        estimates[["std.error"]] <- ad$std.error
+        return(list(mfx = mfx, estimates = estimates))
+    }
+
     analytic_enabled <- isTRUE(getOption(
         "marginaleffects_analytic_jacobian",
         default = TRUE
@@ -309,27 +347,6 @@ plan_std_error <- function(
                 return(list(mfx = mfx, estimates = estimates))
             }
         }
-    }
-
-    # Try autodiff next; fall back to numerical delta method.
-    ad_args <- list(
-        plan = plan,
-        mfx = mfx,
-        kind = kind,
-        type = type,
-        vcov = mfx@vcov_model,
-        estimate = estimates[["estimate"]]
-    )
-    if (identical(kind, "comparisons")) {
-        ad_args$hi <- contrast_data$hi
-        ad_args$lo <- contrast_data$lo
-    }
-    ad <- if (is.null(custom_jacobian)) do_call(autodiff_try, ad_args) else NULL
-    if (!is.null(ad)) {
-        mfx@jacobian <- ad$jacobian
-        mfx@jacobian_method <- "autodiff"
-        estimates[["std.error"]] <- ad$std.error
-        return(list(mfx = mfx, estimates = estimates))
     }
 
     # Numerical differentiation, stopping before the hypothesis stage whenever
@@ -423,6 +440,10 @@ plan_std_error <- function(
             ) {
                 composed <- propagated$std.error
                 attr(composed, "jacobian") <- propagated$jacobian
+                # The inner derivative's provenance survives the composition:
+                # G only rescales the stage a custom or numeric J produced.
+                attr(composed, "jacobian_source") <-
+                    attr(se, "jacobian_source", exact = TRUE)
             }
         }
         # Fail closed. A partially composed result would be silently wrong, so
@@ -430,7 +451,30 @@ plan_std_error <- function(
         se <- if (is.null(composed)) numeric_se(FALSE) else composed
     }
 
-    mfx@jacobian_method <- if (is.null(custom_jacobian)) "numeric" else "custom"
+    # Provenance records what actually produced the stored matrix, not which
+    # options were set: a custom jacobian function which returned NULL fell
+    # back to numerical differentiation and must say so.
+    source_attr <- attr(se, "jacobian_source", exact = TRUE)
+    mfx@jacobian_method <- if (identical(source_attr, "custom")) {
+        "custom"
+    } else {
+        "numeric"
+    }
+
+    # A custom Jacobian is honored, not silently recycled or dropped: if its
+    # row count does not match the estimates it claims to differentiate, the
+    # standard errors it implies are meaningless.
+    if (
+        identical(mfx@jacobian_method, "custom") &&
+            (!is.numeric(se) || length(se) != nrow(estimates))
+    ) {
+        stop_sprintf(
+            "The matrix returned by the `marginaleffects_jacobian_function` option has %s row(s), but there are %s estimates.",
+            length(se),
+            nrow(estimates)
+        )
+    }
+
     if (identical(kind, "predictions")) {
         if (is.numeric(se) && length(se) == nrow(estimates)) {
             mfx@jacobian <- attr(se, "jacobian")

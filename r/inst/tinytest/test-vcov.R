@@ -38,7 +38,8 @@ expect_true(all(cmp1$std.error != cmp2$std.error))
 mod <- lm(mpg ~ hp * wt, data = dat)
 
 # aliases
-mfx1 <- slopes(mod, vcov = "HC2")
+# Stata's `regress, vce(robust)` is HC1, matching estimatr's se_type = "stata".
+mfx1 <- slopes(mod, vcov = "HC1")
 mfx2 <- slopes(mod, vcov = "stata")
 mfx3 <- slopes(mod, vcov = "HC3")
 mfx4 <- slopes(mod, vcov = "robust")
@@ -61,7 +62,7 @@ expect_true(all(mfx5$std.error != mfx6$std.error))
 mod <- lm(mpg ~ hp * wt, data = dat)
 
 # aliases
-pre1 <- predictions(mod, vcov = "HC2")
+pre1 <- predictions(mod, vcov = "HC1")
 pre2 <- predictions(mod, vcov = "stata")
 pre3 <- predictions(mod, vcov = "HC3")
 pre4 <- predictions(mod, vcov = "robust")

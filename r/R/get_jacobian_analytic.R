@@ -1,3 +1,18 @@
+# Finiteness of a whole matrix, in one reduction rather than one comparison per
+# element. Any NA, NaN, or Inf makes the total non-finite, and no combination of
+# them cancels back to a finite value: +Inf and -Inf together give NaN. The one
+# false verdict this can return is on a matrix whose finite entries overflow
+# when summed, which rejects a matrix the elementwise scan would have accepted
+# and so fails in the safe direction. Integers are left to the ordinary scan,
+# because summing them overflows to NA with a warning.
+matrix_all_finite <- function(x) {
+  if (!is.double(x)) {
+    return(all(is.finite(x)))
+  }
+  is.finite(sum(x))
+}
+
+
 jacobian_analytic_comparison_groups <- function(J, plan) {
   out <- matrix(NA_real_, nrow = plan$n_comp, ncol = ncol(J))
 
@@ -28,79 +43,241 @@ jacobian_analytic_comparison_groups <- function(J, plan) {
 }
 
 
+# Exact derivatives of the built-in comparison functions.
+#
+# Every entry mirrors one closed-form definition in
+# `comparison_function_dict`, differentiated by hand with respect to the `hi`
+# and `lo` prediction vectors. Closed forms carry no step size, no structural
+# assumption, and no verification burden: they are correct wherever they are
+# finite, and where they are not finite the caller's finiteness check rejects
+# the group and the estimand falls back to the numeric path.
+#
+# Only recorded built-ins are differentiated. A user-supplied comparison
+# closure is arbitrary code, and no finite set of probe evaluations can prove
+# structural facts about arbitrary code -- a function built to agree with the
+# probes and disagree elsewhere defeats any such scheme. Unknown keys
+# therefore return NULL and keep the whole estimand on the numeric
+# whole-pipeline path.
+#
+# `eyex` and `eydx` never reach this table because their `y` formal marks
+# their groups `uses_y`, which disqualifies the analytic path upstream.
+comparison_gradient_exact <- function(fun_key, hi, lo, args) {
+  n <- length(hi)
+
+  # Normalized averaging weights: NULL for rowwise keys, else a vector
+  # summing to 1 which also encodes plain means.
+  avg <- grepl("avg", fun_key, fixed = TRUE)
+  a <- NULL
+  if (avg) {
+    if (grepl("wts$", fun_key)) {
+      w <- args[["w"]]
+      if (
+        !is.numeric(w) || length(w) != n || any(!is.finite(w)) || sum(w) == 0
+      ) {
+        return(NULL)
+      }
+      a <- w / sum(w)
+    } else {
+      a <- rep.int(1 / n, n)
+    }
+  }
+  wmean_or_mean <- function(x) if (is.null(a)) mean(x) else sum(a * x)
+
+  # Slope-family keys divide by the recorded step; validate it once.
+  eps <- NULL
+  if (fun_key %in% c(
+    "dydx", "dydxavg", "dydxavgwts",
+    "dyex", "dyexavg", "dyexavgwts",
+    "expdydx", "expdydxavg", "expdydxavgwts"
+  )) {
+    eps <- args[["eps"]]
+    if (
+      !is.numeric(eps) || !length(eps) %in% c(1L, n) ||
+        any(!is.finite(eps)) || any(eps == 0)
+    ) {
+      return(NULL)
+    }
+  }
+  x <- args[["x"]]
+
+  switch(fun_key,
+    difference = list(hi = rep.int(1, n), lo = rep.int(-1, n)),
+    differenceavg = ,
+    differenceavgwts = list(hi = a, lo = -a),
+    ratio = ,
+    lift = list(hi = 1 / lo, lo = -hi / lo^2),
+    ratioavg = ,
+    ratioavgwts = ,
+    liftavg = ,
+    liftavgwts = {
+      # liftavg = wmean(hi - lo) / wmean(lo) = wmean(hi) / wmean(lo) - 1,
+      # so its gradient is the gradient of ratioavg.
+      mh <- wmean_or_mean(hi)
+      ml <- wmean_or_mean(lo)
+      list(hi = a / ml, lo = -a * mh / ml^2)
+    },
+    lnratio = list(hi = 1 / hi, lo = -1 / lo),
+    lnratioavg = ,
+    lnratioavgwts = {
+      mh <- wmean_or_mean(hi)
+      ml <- wmean_or_mean(lo)
+      list(hi = a / mh, lo = -a / ml)
+    },
+    lnor = list(
+      hi = 1 / (hi * (1 - hi)),
+      lo = -1 / (lo * (1 - lo))
+    ),
+    lnoravg = ,
+    lnoravgwts = {
+      mh <- wmean_or_mean(hi)
+      ml <- wmean_or_mean(lo)
+      list(hi = a / (mh * (1 - mh)), lo = -a / (ml * (1 - ml)))
+    },
+    dydx = list(hi = rep_len(1 / eps, n), lo = rep_len(-1 / eps, n)),
+    dydxavg = ,
+    dydxavgwts = list(hi = a / eps, lo = -a / eps),
+    dyex = {
+      if (!is.numeric(x) || !length(x) %in% c(1L, n)) {
+        return(NULL)
+      }
+      list(hi = rep_len(x / eps, n), lo = rep_len(-x / eps, n))
+    },
+    dyexavg = ,
+    dyexavgwts = {
+      if (!is.numeric(x) || !length(x) %in% c(1L, n)) {
+        return(NULL)
+      }
+      list(hi = a * x / eps, lo = -a * x / eps)
+    },
+    expdydx = list(
+      hi = exp(hi) / (exp(eps) * eps),
+      lo = -exp(lo) / (exp(eps) * eps)
+    ),
+    expdydxavg = ,
+    expdydxavgwts = list(
+      hi = a * exp(hi) / (exp(eps) * eps),
+      lo = -a * exp(lo) / (exp(eps) * eps)
+    ),
+    NULL
+  )
+}
+
+
 # Comparison groups whose function is not one of the recorded differences.
 #
-# `J_hi` and `J_lo` are the exact derivatives of the hi and lo predictions with
-# respect to the coefficients. The comparison stage combines those predictions
-# with arbitrary arithmetic, so its own derivative is probed and then composed:
+# `X_hi` and `X_lo` are the model matrices of the hi and lo rows, and `d_hi`
+# and `d_lo` the inverse-link derivatives at those rows, or NULL on the link
+# scale. Their product is the exact derivative of the predictions with respect
+# to the coefficients. The comparison stage applies a recorded built-in whose
+# derivative is known in closed form, so the stage gradients compose exactly:
 # d(comparison)/d(beta) = dc/d(hi) * d(hi)/d(beta) + dc/d(lo) * d(lo)/d(beta).
 #
-# Returns NULL whenever a group's structure could not be verified, which keeps
-# the whole estimand on its previous path rather than mixing methods.
-jacobian_analytic_comparison_probe <- function(J_hi, J_lo, pred_hi, pred_lo, plan) {
-  out <- matrix(NA_real_, nrow = plan$n_comp, ncol = ncol(J_hi))
+# The inverse-link derivative is folded into the stage gradient before either
+# touches a model matrix, because that product is a vector and the matrix is
+# not. A group which contracts its rows to a single value then never needs the
+# observation-level derivative at all: its row is a pair of weighted column
+# sums, which `crossprod()` forms without allocating an n x p matrix that the
+# contraction would immediately discard.
+#
+# Returns NULL whenever any group's function is not a recorded built-in or its
+# gradient is not finite, which keeps the whole estimand on its previous path
+# rather than mixing methods.
+jacobian_analytic_comparison_probe <- function(
+  X_hi,
+  X_lo,
+  d_hi,
+  d_lo,
+  pred_hi,
+  pred_lo,
+  plan
+) {
+  out <- matrix(NA_real_, nrow = plan$n_comp, ncol = ncol(X_hi))
 
   for (g in plan$groups) {
-    if (isTRUE(g$uses_y) || is.null(g$fun)) {
+    key <- g$fun_key
+    # A custom closure records fun_key = NA. It must land on the numeric
+    # fallback: arbitrary code has no recorded closed form, and probing it
+    # cannot prove one.
+    if (
+      isTRUE(g$uses_y) || !is.character(key) || length(key) != 1L || is.na(key)
+    ) {
       return(NULL)
     }
     idx <- g$idx
     n_out <- length(g$out_idx)
-    grad <- stage_comparison_gradient(
-      fun = g$fun,
-      args = g$args,
+    grad <- comparison_gradient_exact(
+      fun_key = key,
       hi = pred_hi[idx],
       lo = pred_lo[idx],
-      n_out = if (isTRUE(g$scalar)) 1L else n_out
+      args = g$args
     )
-    if (is.null(grad)) {
+    if (
+      is.null(grad) ||
+        !stage_probe_finite(grad$hi) || !stage_probe_finite(grad$lo) ||
+        length(grad$hi) != length(idx) || length(grad$lo) != length(idx)
+    ) {
       return(NULL)
     }
 
-    block_hi <- J_hi[idx, , drop = FALSE]
-    block_lo <- J_lo[idx, , drop = FALSE]
+    w_hi <- if (is.null(d_hi)) grad$hi else grad$hi * d_hi[idx]
+    w_lo <- if (is.null(d_lo)) grad$lo else grad$lo * d_lo[idx]
+
     if (isTRUE(g$scalar)) {
       if (n_out != 1L) {
         return(NULL)
       }
-      value <- matrix(
-        colSums(block_hi * grad$hi) + colSums(block_lo * grad$lo),
-        nrow = 1L
-      )
+      value <- jacobian_analytic_weighted_columns(X_hi, idx, w_hi) +
+        jacobian_analytic_weighted_columns(X_lo, idx, w_lo)
     } else {
       if (n_out != length(idx)) {
         return(NULL)
       }
-      value <- block_hi * grad$hi + block_lo * grad$lo
+      value <- X_hi[idx, , drop = FALSE] * w_hi +
+        X_lo[idx, , drop = FALSE] * w_lo
     }
     out[g$out_idx, ] <- value
   }
 
-  if (any(!is.finite(out))) {
-    return(NULL)
-  }
   out
 }
 
 
-jacobian_analytic_aggregate <- function(J, agg) {
-  if (is.null(agg)) {
-    return(J)
+# The weights of a recorded aggregation, as the entries of a sparse matrix.
+#
+# An aggregation is a linear map, out = t(W) %*% M. Written densely W is
+# n x agg$n and the product costs n * agg$n * p. But the plan records exactly
+# one (source row, output row) pair per source row, so W has only n entries and
+# the same product costs a single pass over M. Collecting the entries from
+# every block at once also avoids aggregating group by group, which would
+# subset M once per group and so copy the whole matrix across the loop --
+# several times the cost of the arithmetic it feeds.
+#
+# Returns NULL when the recorded aggregation is not of the expected shape.
+jacobian_analytic_aggregate_weights <- function(agg, n_rows) {
+  if (is.null(agg) || length(agg$blocks) == 0L) {
+    return(NULL)
   }
-  out <- matrix(NA_real_, nrow = agg$n, ncol = ncol(J))
+  n_entries <- sum(vapply(agg$blocks, function(b) length(b$idx), integer(1)))
+  if (!is.finite(n_entries) || n_entries == 0L) {
+    return(NULL)
+  }
 
-  # Each block stores equal-size groups as columns of an index matrix. Flatten
-  # once, then rowsum() every Jacobian column simultaneously by recorded group.
+  rows <- integer(n_entries)
+  cols <- integer(n_entries)
+  vals <- numeric(n_entries)
+  at <- 0L
+
   for (block in agg$blocks) {
     idx <- block$idx
     if (
       !is.matrix(idx) || nrow(idx) == 0L ||
-        any(idx < 1L | idx > nrow(J))
+        any(idx < 1L | idx > n_rows)
     ) {
       return(NULL)
     }
-    group <- rep(seq_len(ncol(idx)), each = nrow(idx))
-    value <- J[as.vector(idx), , drop = FALSE]
+    if (length(block$cols) != ncol(idx)) {
+      return(NULL)
+    }
 
     if (isTRUE(agg$weighted)) {
       w <- block$w
@@ -111,18 +288,84 @@ jacobian_analytic_aggregate <- function(J, agg) {
         return(NULL)
       }
       denominator <- colSums(w)
-      if (any(denominator == 0)) {
+      if (any(!is.finite(denominator)) || any(denominator == 0)) {
         return(NULL)
       }
-      value <- rowsum(value * as.vector(w), group, reorder = FALSE)
-      value <- value / denominator
+      # `idx` is column-major, so each group's entries are contiguous and the
+      # per-group denominators line up by repetition.
+      wts <- as.vector(w) / rep(denominator, each = nrow(idx))
     } else {
-      value <- rowsum(value, group, reorder = FALSE) / nrow(idx)
+      wts <- rep.int(1 / nrow(idx), length(idx))
     }
-    out[block$cols, ] <- value
+
+    span <- at + seq_len(length(idx))
+    rows[span] <- as.vector(idx)
+    cols[span] <- rep(block$cols, each = nrow(idx))
+    vals[span] <- wts
+    at <- at + length(idx)
   }
 
-  out
+  list(rows = rows, cols = cols, vals = vals)
+}
+
+
+# Contract a matrix by a recorded aggregation. A single output row -- an
+# unstratified average, the common case -- is one weighted column sum, which
+# crossprod() forms without building any matrix at all.
+jacobian_analytic_aggregate_contract <- function(M, agg, rows, cols, vals) {
+  if (identical(as.integer(agg$n), 1L)) {
+    return(matrix(jacobian_analytic_weighted_columns(M, rows, vals), nrow = 1L))
+  }
+  W <- Matrix::sparseMatrix(
+    i = rows,
+    j = cols,
+    x = vals,
+    dims = c(nrow(M), agg$n)
+  )
+  as.matrix(Matrix::crossprod(W, M))
+}
+
+
+# Aggregated prediction Jacobians, straight from the model matrix.
+#
+# The observation-level Jacobian of a prediction is X scaled row-wise by the
+# inverse-link derivative, and an aggregating estimand immediately contracts
+# those rows away. Forming the n x p product first is wasted work in both
+# directions: it allocates a matrix the size of X only to reduce it to a
+# handful of rows. Folding the row scaling into the aggregation weights -- a
+# vector -- lets the contraction read straight off X instead.
+#
+# `d` is the inverse-link derivative, or NULL on the link scale.
+jacobian_analytic_aggregate_direct <- function(X, d, agg) {
+  weights <- jacobian_analytic_aggregate_weights(agg, nrow(X))
+  if (is.null(weights)) {
+    return(NULL)
+  }
+  vals <- if (is.null(d)) {
+    weights$vals
+  } else {
+    weights$vals * d[weights$rows]
+  }
+  if (!all(is.finite(vals))) {
+    return(NULL)
+  }
+  jacobian_analytic_aggregate_contract(
+    X, agg, weights$rows, weights$cols, vals
+  )
+}
+
+
+jacobian_analytic_aggregate <- function(J, agg) {
+  if (is.null(agg)) {
+    return(J)
+  }
+  weights <- jacobian_analytic_aggregate_weights(agg, nrow(J))
+  if (is.null(weights)) {
+    return(NULL)
+  }
+  jacobian_analytic_aggregate_contract(
+    J, agg, weights$rows, weights$cols, weights$vals
+  )
 }
 
 
@@ -240,34 +483,27 @@ jacobian_analytic_comparison_aggregate <- function(
     return(NULL)
   }
 
-  out <- matrix(NA_real_, nrow = plan$agg$n, ncol = ncol(X_hi))
-  for (block in plan$agg$blocks) {
-    idx <- block$idx
-    if (
-      !is.matrix(idx) || nrow(idx) == 0L ||
-        any(idx < 1L | idx > length(raw_index))
-    ) {
-      return(NULL)
-    }
-    for (j in seq_len(ncol(idx))) {
-      raw <- raw_index[idx[, j]]
-      if (isTRUE(plan$agg$weighted)) {
-        w <- block$w[, j]
-        denominator <- sum(w)
-        if (any(!is.finite(w)) || denominator == 0) {
-          return(NULL)
-        }
-        w <- w / denominator
-      } else {
-        w <- rep.int(1 / length(raw), length(raw))
-      }
-      w_hi <- if (is.null(d_hi)) w else w * d_hi[raw]
-      w_lo <- if (is.null(d_lo)) w else w * d_lo[raw]
-      value <- jacobian_analytic_weighted_columns(X_hi, raw, w_hi) -
-        jacobian_analytic_weighted_columns(X_lo, raw, w_lo)
-      out[block$cols[j], ] <- value
-    }
+  # The aggregation weights are recorded against comparison rows, so map them
+  # through to the model matrix rows those comparisons were built from and
+  # contract hi and lo separately. Group by group this would subset X_hi and
+  # X_lo once each per group, copying both matrices in full across the loop;
+  # as a single sparse contraction it is one pass over each.
+  weights <- jacobian_analytic_aggregate_weights(plan$agg, length(raw_index))
+  if (is.null(weights)) {
+    return(NULL)
   }
+  rows <- raw_index[weights$rows]
+  vals_hi <- if (is.null(d_hi)) weights$vals else weights$vals * d_hi[rows]
+  vals_lo <- if (is.null(d_lo)) weights$vals else weights$vals * d_lo[rows]
+  if (!all(is.finite(vals_hi)) || !all(is.finite(vals_lo))) {
+    return(NULL)
+  }
+  out <- jacobian_analytic_aggregate_contract(
+    X_hi, plan$agg, rows, weights$cols, vals_hi
+  ) -
+    jacobian_analytic_aggregate_contract(
+      X_lo, plan$agg, rows, weights$cols, vals_lo
+    )
   list(J = out, aggregated = TRUE)
 }
 
@@ -341,7 +577,7 @@ jacobian_analytic_model_matrix <- function(
       align_matrix <- function(X) {
         if (
           !isTRUE(checkmate::check_matrix(X, mode = "numeric")) ||
-            ncol(X) != length(beta) || any(!is.finite(X))
+            ncol(X) != length(beta) || !matrix_all_finite(X)
         ) {
           return(NULL)
         }
@@ -398,19 +634,20 @@ jacobian_analytic_model_matrix <- function(
         eta_reuse <- reuse &&
           is.numeric(plan$eta_hi) && length(plan$eta_hi) == nrow(X_hi) &&
           is.numeric(plan$eta_lo) && length(plan$eta_lo) == nrow(X_lo)
-        if (isTRUE(response_scale) && !eta_reuse) {
-          eta_hi <- drop(X_hi %*% beta)
-          eta_lo <- drop(X_lo %*% beta)
-        } else if (eta_reuse) {
+        # The linear predictor is wanted for the inverse-link derivative, and
+        # again to rebuild the predictions when the plan's cached ones cannot
+        # be trusted. Both needs are served by computing it at most once.
+        if (eta_reuse) {
           eta_hi <- plan$eta_hi
           eta_lo <- plan$eta_lo
+        } else if (isTRUE(response_scale) || !reuse) {
+          eta_hi <- drop(X_hi %*% beta)
+          eta_lo <- drop(X_lo %*% beta)
         }
         if (reuse) {
           pred_hi <- plan$baseline_hi
           pred_lo <- plan$baseline_lo
         } else {
-          eta_hi <- drop(X_hi %*% beta)
-          eta_lo <- drop(X_lo %*% beta)
           pred_hi <- if (isTRUE(response_scale)) family$linkinv(eta_hi) else eta_hi
           pred_lo <- if (isTRUE(response_scale)) family$linkinv(eta_lo) else eta_lo
         }
@@ -420,6 +657,14 @@ jacobian_analytic_model_matrix <- function(
         } else {
           d_hi <- NULL
           d_lo <- NULL
+        }
+        # The replay stages tolerate missing predictions (their aggregation
+        # averages with na.rm = TRUE), but the sparse Jacobian aggregation
+        # divides by full group counts. Those two conventions agree only when
+        # nothing is missing, so missing predictions disqualify the analytic
+        # path outright -- the same rejection the autodiff lowering applies.
+        if (anyNA(pred_hi) || anyNA(pred_lo)) {
+          return(NULL)
         }
         # Validate predictions on the effective scale before transforming the
         # derivative matrix with the recorded comparison operations.
@@ -439,21 +684,31 @@ jacobian_analytic_model_matrix <- function(
         eta_reuse <- reuse &&
           is.numeric(plan$linear_predictor) &&
           length(plan$linear_predictor) == nrow(X)
-        if (isTRUE(response_scale) && !eta_reuse) {
-          eta <- drop(X %*% beta)
-        } else if (eta_reuse) {
+        # As above: the linear predictor is computed at most once, whether it
+        # is wanted for the inverse-link derivative, for the predictions, or
+        # for both.
+        if (eta_reuse) {
           eta <- plan$linear_predictor
+        } else if (isTRUE(response_scale) || !reuse) {
+          eta <- drop(X %*% beta)
         }
         if (reuse) {
           pred <- plan$baseline_prediction
         } else {
-          eta <- drop(X %*% beta)
           pred <- if (isTRUE(response_scale)) family$linkinv(eta) else eta
         }
-        if (isTRUE(response_scale)) {
-          J <- X * as.vector(family$mu.eta(eta))
+        # Keep the row scaling as a vector for now. Whether it ever needs to
+        # meet X as a full matrix depends on the aggregation, which is decided
+        # below.
+        d_pred <- if (isTRUE(response_scale)) {
+          as.vector(family$mu.eta(eta))
         } else {
-          J <- X
+          NULL
+        }
+        # Same rejection as the comparisons branch: replay aggregation drops
+        # missing predictions, the sparse weights do not.
+        if (isTRUE(plan$has_na) || anyNA(pred)) {
+          return(NULL)
         }
         replay <- prediction_plan_apply_stages(plan, pred)
       }
@@ -461,14 +716,15 @@ jacobian_analytic_model_matrix <- function(
       # This is a fail-closed correctness guard, not a debugging assertion. It
       # rejects stale matrices, offsets, prediction arguments, and future
       # semantic changes which are not captured by the static whitelist above.
-      if (!isTRUE(all.equal(
-        replay$post,
-        estimate,
-        tolerance = sqrt(.Machine$double.eps),
-        check.attributes = FALSE
-      ))) {
+      # The comparison is element-wise: a mean-relative check would let one
+      # wrong row hide among many correct ones.
+      if (!plan_replay_agrees(replay$post, estimate)) {
         return(NULL)
       }
+
+      # Set by whichever branch below folds the recorded aggregation into the
+      # Jacobian it builds, so that it is not applied a second time.
+      aggregated_early <- FALSE
 
       if (identical(kind, "comparisons")) {
         if (!is.null(plan$na_keep)) {
@@ -490,13 +746,15 @@ jacobian_analytic_model_matrix <- function(
 
         if (!isTRUE(difference_groups)) {
           # The comparison is arbitrary arithmetic on the hi and lo
-          # predictions. Keep both exact prediction Jacobians and let the
-          # comparison stage supply its own derivative.
-          J_hi <- if (isTRUE(response_scale)) X_hi * d_hi else X_hi
-          J_lo <- if (isTRUE(response_scale)) X_lo * d_lo else X_lo
+          # predictions. Hand the stage its model matrices and inverse-link
+          # derivatives separately rather than the pair of prediction
+          # Jacobians, so that a group which aggregates its rows can compose
+          # them without ever forming an observation-level derivative.
           J <- jacobian_analytic_comparison_probe(
-            J_hi = J_hi,
-            J_lo = J_lo,
+            X_hi = X_hi,
+            X_lo = X_lo,
+            d_hi = d_hi,
+            d_lo = d_lo,
             pred_hi = pred_hi,
             pred_lo = pred_lo,
             plan = plan
@@ -535,11 +793,28 @@ jacobian_analytic_model_matrix <- function(
             aggregated_early <- direct$aggregated
           }
         }
-      } else if (!is.null(plan$keep)) {
-        J <- J[plan$keep, , drop = FALSE]
+      } else {
+        # An aggregating estimand contracts the prediction rows away, so the
+        # observation-level Jacobian is an intermediate the answer never needs.
+        # Row subsetting would renumber the recorded aggregation indices, so
+        # the shortcut is taken only when there is nothing to subset.
+        direct <- if (is.null(plan$keep)) {
+          jacobian_analytic_aggregate_direct(X, d_pred, plan$agg)
+        } else {
+          NULL
+        }
+        if (is.null(direct)) {
+          J <- if (is.null(d_pred)) X else X * d_pred
+          if (!is.null(plan$keep)) {
+            J <- J[plan$keep, , drop = FALSE]
+          }
+        } else {
+          J <- direct
+          aggregated_early <- TRUE
+        }
       }
 
-      if (!identical(kind, "comparisons") || !isTRUE(aggregated_early)) {
+      if (!isTRUE(aggregated_early)) {
         J <- jacobian_analytic_aggregate(J, plan$agg)
         if (is.null(J)) {
           return(NULL)
@@ -551,6 +826,17 @@ jacobian_analytic_model_matrix <- function(
       }
 
       if (nrow(J) != length(estimate)) {
+        return(NULL)
+      }
+      # Final guard on the output. The inputs were already screened by
+      # align_matrix(), so this is a backstop for non-finite values produced
+      # by the composition itself (an inverse-link derivative overflowing, a
+      # gradient at a pole). It is a backstop and not the sole guard because
+      # IEEE propagation is a property of IEEE arithmetic, not of every BLAS
+      # kernel: implementations which skip zero multiplicands can turn
+      # 0 * Inf into 0 instead of NaN, so an Inf in a zero-weighted input row
+      # is not guaranteed to surface here.
+      if (!matrix_all_finite(J)) {
         return(NULL)
       }
       # Cached model matrices may carry terms metadata such as `assign` and

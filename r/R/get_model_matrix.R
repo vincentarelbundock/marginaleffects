@@ -18,16 +18,26 @@ get_model_matrix.default <- function(model, newdata, mfx = NULL) {
 
 
 model_has_effective_offset <- function(model) {
-    offset <- model[["offset"]]
+    # The terms and call are consulted before the stored $offset component,
+    # not after it: several supported classes (quantreg::rq, rms::ols) fit
+    # formula offsets without ever storing an $offset element, so gating on
+    # the component would skip the formula check in exactly the case it
+    # exists for.
+    tt <- tryCatch(stats::terms(model), error = function(e) NULL)
+    if (length(attr(tt, "offset")) > 0L) {
+        return(TRUE)
+    }
+    cl <- tryCatch(model$call, error = function(e) NULL)
+    # An explicit `offset = NULL` argument is stored in the call but names no
+    # offset; only a non-NULL argument disqualifies.
+    if ("offset" %in% names(cl) && !is.null(cl[["offset"]])) {
+        return(TRUE)
+    }
+    offset <- tryCatch(model[["offset"]], error = function(e) NULL)
     if (is.null(offset)) {
         return(FALSE)
     }
-    tt <- tryCatch(stats::terms(model), error = function(e) NULL)
-    formula_offset <- length(attr(tt, "offset")) > 0L
-    call_offset <- "offset" %in% names(model$call)
-    malformed_or_nonzero <-
-        !is.numeric(offset) || anyNA(offset) || any(offset != 0)
-    formula_offset || call_offset || malformed_or_nonzero
+    !is.numeric(offset) || anyNA(offset) || any(offset != 0)
 }
 
 

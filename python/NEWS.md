@@ -1,5 +1,15 @@
 # 0.6.1
 
+Bug fixes:
+
+* `avg_predictions(wts=...)` and other grand-mean aggregations now respect the
+  weights column. Previously `by=True` computed an unweighted mean and recorded
+  no weights in the aggregation plan, so both the estimate and its standard
+  error described the unweighted estimand.
+* The analytic and autodiff paths no longer convert a standard error of
+  exactly zero to `NaN`; a constant estimand has variance zero, matching the
+  numerical path.
+
 Breaking changes:
 
 * Model wrappers returned by `fit_statsmodels()`, `fit_sklearn()`, and

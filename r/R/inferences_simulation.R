@@ -154,14 +154,46 @@ inferences_simulation <- function(x, R = 1000, conf_level = 0.95, conf_type = "p
         cols <- setdiff(names(out), c("p.value", "std.error", "statistic", "s.value", "df"))
     } else if (conf_type == "wald") {
         alpha <- 1 - conf_level
-        out$statistic <- out$estimate / out$std.error
+
+        # The user's null and direction travel with the object. Testing
+        # against zero, two-sided, would answer a different question than the
+        # one the user asked with `hypothesis = "... = 1"` or a one-sided
+        # `equivalence`-style direction.
+        hypothesis_null <- mfx@hypothesis_null
+        if (!isTRUE(checkmate::check_number(hypothesis_null))) {
+            hypothesis_null <- 0
+        }
+        hypothesis_direction <- mfx@hypothesis_direction
+        if (
+            !isTRUE(checkmate::check_character(hypothesis_direction, min.len = 1))
+        ) {
+            hypothesis_direction <- "="
+        }
+
+        out$statistic <- (out$estimate - hypothesis_null) / out$std.error
 
         critical <- abs(stats::qnorm(alpha / 2))
 
         out$conf.low <- out$estimate - critical * out$std.error
         out$conf.high <- out$estimate + critical * out$std.error
 
+        if (!length(hypothesis_direction) %in% c(1L, nrow(out))) {
+            stop_sprintf(
+                "Length of hypothesis_direction (%s) must equal number of rows (%s)",
+                length(hypothesis_direction),
+                nrow(out)
+            )
+        }
+        direction <- rep_len(hypothesis_direction, nrow(out))
         out$p.value <- 2 * stats::pnorm(-abs(out$statistic))
+        idx <- direction == "<="
+        if (any(idx)) {
+            out$p.value[idx] <- 1 - stats::pnorm(out$statistic[idx])
+        }
+        idx <- direction == ">="
+        if (any(idx)) {
+            out$p.value[idx] <- stats::pnorm(out$statistic[idx])
+        }
         out$s.value <- -log2(out$p.value)
 
         cols <- setdiff(names(out), "df")

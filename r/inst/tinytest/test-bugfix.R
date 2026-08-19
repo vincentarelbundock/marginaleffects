@@ -202,3 +202,135 @@ options(marginaleffects_rank_deficient = TRUE)
 expect_warning(avg_comparisons(mod, vcov = FALSE), pattern = "order of factor levels")
 options(marginaleffects_rank_deficient = TRUE)
 options(marginaleffects_safe = FALSE)
+
+
+# ---------------------------------------------------------------------------
+# External review 2026-08: uncertainty machinery on the analytic Jacobian path
+# ---------------------------------------------------------------------------
+
+# Mixed-scale predictions: the comparison-stage derivative must stay exact
+# when predictions span many orders of magnitude. A shared probe step scaled
+# to the largest prediction used to overstep the smallest ones and corrupt
+# ratio-type standard errors by orders of magnitude, silently.
+set.seed(7)
+n_span <- 300
+dat_span <- data.frame(x = runif(n_span, -7, 7), z = rbinom(n_span, 1, 0.5))
+dat_span$y <- rpois(n_span, exp(0.5 + 0.95 * dat_span$x + 0.3 * dat_span$z))
+mod_span <- glm(y ~ x + z, data = dat_span, family = poisson)
+for (cmp_fun in c("ratio", "lift", "lnratio")) {
+    old <- options(marginaleffects_analytic_jacobian = TRUE)
+    a <- comparisons(mod_span, variables = "z", comparison = cmp_fun)
+    options(marginaleffects_analytic_jacobian = FALSE)
+    b <- comparisons(mod_span, variables = "z", comparison = cmp_fun)
+    options(old)
+    expect_equal(components(a, "jacobian_method"), "analytic", info = cmp_fun)
+    expect_equal(a$std.error, b$std.error, tolerance = 1e-5, info = cmp_fun)
+}
+
+# A custom comparison closure must fall back to the numeric path: probing
+# arbitrary code cannot prove the structure the composition would rely on.
+old <- options(marginaleffects_analytic_jacobian = TRUE)
+cmp_custom <- comparisons(
+    mod_span,
+    variables = "z",
+    comparison = function(hi, lo) hi - lo
+)
+options(old)
+expect_equal(components(cmp_custom, "jacobian_method"), "numeric")
+
+# User-supplied vcov matrices with permuted names are aligned everywhere:
+# reported standard errors, the vcov() extractor, and stored slots.
+mod_perm <- lm(mpg ~ hp + wt, data = mtcars)
+V_perm <- vcov(mod_perm)
+V_perm <- V_perm[rev(rownames(V_perm)), rev(colnames(V_perm))]
+cmp_named <- comparisons(mod_perm, variables = c("hp", "wt"), newdata = "mean")
+cmp_permuted <- comparisons(
+    mod_perm,
+    variables = c("hp", "wt"),
+    newdata = "mean",
+    vcov = V_perm
+)
+expect_equivalent(cmp_named$std.error, cmp_permuted$std.error)
+expect_equivalent(diag(vcov(cmp_named)), diag(vcov(cmp_permuted)))
+V_bad <- vcov(mod_perm)
+dimnames(V_bad) <- list(c("a", "b", "c"), c("a", "b", "c"))
+expect_error(
+    comparisons(mod_perm, variables = "hp", newdata = "mean", vcov = V_bad),
+    pattern = "names do not match"
+)
+
+# Simulation-based Wald tests subtract the stored null hypothesis value and
+# never a hard-coded zero.
+set.seed(1)
+sim_got <- inferences(
+    hypotheses(
+        avg_comparisons(mod_perm, variables = "hp", comparison = "ratio"),
+        hypothesis = "b1 = 1"
+    ),
+    method = "simulation",
+    R = 200,
+    conf_type = "wald"
+)
+sim_stored_null <- components(sim_got, "hypothesis_null")
+if (!isTRUE(checkmate::check_number(sim_stored_null))) {
+    sim_stored_null <- 0
+}
+expect_equivalent(
+    sim_got$statistic,
+    (sim_got$estimate - sim_stored_null) / sim_got$std.error
+)
+# A scalar numeric `hypothesis` stores a nonzero null; the simulation
+# statistic must subtract it, not test against zero.
+set.seed(1)
+sim_null1 <- inferences(
+    avg_comparisons(mod_perm, variables = "hp", comparison = "ratio", hypothesis = 1),
+    method = "simulation",
+    R = 200,
+    conf_type = "wald"
+)
+expect_equivalent(
+    sim_null1$statistic,
+    (sim_null1$estimate - 1) / sim_null1$std.error
+)
+
+# A constant estimand has variance exactly zero, not NA.
+cmp_zero <- comparisons(
+    mod_perm,
+    variables = c("hp", "wt"),
+    newdata = "mean",
+    hypothesis = matrix(c(0, 0), ncol = 1)
+)
+expect_equivalent(cmp_zero$std.error, 0)
+
+# Stata's vce(robust) is HC1.
+expect_equivalent(
+    marginaleffects:::get_vcov(mod_perm, vcov = "stata"),
+    sandwich::vcovHC(mod_perm, type = "HC1")
+)
+
+# Formula offsets are detected for models which store no $offset component.
+if (requireNamespace("quantreg", quietly = TRUE)) {
+    mod_rq_offset <- quantreg::rq(mpg ~ hp + offset(wt), data = mtcars, tau = 0.5)
+    expect_true(marginaleffects:::model_has_effective_offset(mod_rq_offset))
+    mod_rq_plain <- quantreg::rq(mpg ~ hp, data = mtcars, tau = 0.5)
+    expect_false(marginaleffects:::model_has_effective_offset(mod_rq_plain))
+}
+
+# Richardson accepts its real `side` argument.
+expect_silent(
+    comparisons(
+        mod_perm,
+        variables = "hp",
+        newdata = "mean",
+        numderiv = list("richardson", side = 1)
+    )
+)
+
+# A joint-test name matching zero or several estimates errors instead of
+# silently building a wrong restriction row. (These labels match nothing:
+# the comparison names carry contrast suffixes.)
+cmp_joint <- comparisons(mod_perm, variables = c("hp", "wt"), newdata = "mean")
+expect_error(
+    hypotheses(cmp_joint, joint = c("hp", "hp")),
+    pattern = "exactly one"
+)

@@ -220,12 +220,19 @@ stage_hypothesis_matrix <- function(apply, estimate) {
 #' * row-wise groups have a diagonal Jacobian, so perturbing every input at
 #'   once reads off the whole diagonal in a single pair of evaluations;
 #' * aggregated groups which depend on their inputs only through a mean have a
-#'   constant gradient, so the same pair of evaluations determines it.
+#'   uniform gradient, so the same pair of evaluations determines it.
 #'
-#' Neither structure is assumed. Both are verified by perturbing pseudo-random
-#' subsets of the inputs and checking that the response matches what the
-#' assumed structure predicts, which fails immediately in the presence of
-#' off-diagonal coupling or a non-uniform gradient.
+#' Every perturbation is scaled element by element, so a vector mixing very
+#' large and very small predictions never steps any element by more than a
+#' small fraction of its own magnitude. The recovered gradient is re-probed at
+#' half the step and must agree, which catches magnitude error from curvature
+#' or roundoff, and pseudo-random subsets of the inputs are re-probed to check
+#' the structural assumption, which fails in the presence of off-diagonal
+#' coupling or a non-uniform gradient.
+#'
+#' No finite set of evaluations can prove structure about arbitrary code, so
+#' this is a screen, not a proof: the analytic Jacobian path does not rely on
+#' it. It differentiates only recorded built-ins, in closed form.
 #'
 #' @param fun the comparison function recorded in the plan
 #' @param args the recorded arguments, excluding `hi` and `lo`
@@ -258,64 +265,85 @@ stage_comparison_gradient <- function(fun, args, hi, lo, n_out) {
         out
     }
 
-    base <- eval_fun(hi, lo)
-    if (is.null(base)) {
+    if (is.null(eval_fun(hi, lo))) {
         return(NULL)
     }
 
-    # A single step for the whole vector keeps the perturbation uniform, which
-    # is what makes the subset verification below a clean structural test.
-    step_hi <- max(stage_probe_step(hi))
-    step_lo <- max(stage_probe_step(lo))
+    # Element-wise steps: each entry is perturbed relative to its own
+    # magnitude, with a small absolute floor so exact zeros still move. A
+    # single shared step would let the largest prediction dictate a
+    # perturbation bigger than the smallest one, which pushes ratio-type
+    # functions across poles and corrupts the recovered gradient.
+    elem_step <- function(x) {
+        abs(x) * .Machine$double.eps^(1 / 3) + 1e-9
+    }
+    step_hi <- elem_step(hi)
+    step_lo <- elem_step(lo)
 
-    probe <- function(which, mask, step) {
-        h <- hi
-        l <- lo
+    # Central difference along an element-wise masked direction. The response
+    # is returned in function units, not divided by any step, so callers
+    # compare responses directly.
+    probe <- function(which, mask, scale) {
         if (identical(which, "hi")) {
-            h <- hi + step * mask
+            s <- step_hi * mask * scale
+            up <- eval_fun(hi + s, lo)
+            dn <- eval_fun(hi - s, lo)
         } else {
-            l <- lo + step * mask
+            s <- step_lo * mask * scale
+            up <- eval_fun(hi, lo + s)
+            dn <- eval_fun(hi, lo - s)
         }
-        up <- eval_fun(h, l)
-        h <- hi
-        l <- lo
-        if (identical(which, "hi")) {
-            h <- hi - step * mask
-        } else {
-            l <- lo - step * mask
-        }
-        dn <- eval_fun(h, l)
         if (is.null(up) || is.null(dn)) {
             return(NULL)
         }
-        (up - dn) / (2 * step)
+        (up - dn) / 2
     }
 
     ones <- rep(1, n)
-    d_hi <- probe("hi", ones, step_hi)
-    d_lo <- probe("lo", ones, step_lo)
-    if (is.null(d_hi) || is.null(d_lo)) {
-        return(NULL)
+    recover <- function(which, scale) {
+        r <- probe(which, ones, scale)
+        if (is.null(r)) {
+            return(NULL)
+        }
+        step <- if (identical(which, "hi")) step_hi else step_lo
+        if (rowwise) {
+            # Diagonal Jacobian: each response entry is its own gradient times
+            # its own step.
+            r / (step * scale)
+        } else {
+            # Uniform gradient: the scalar response is the gradient times the
+            # sum of the steps.
+            rep(r / sum(step * scale), n)
+        }
     }
 
-    if (rowwise) {
-        # Diagonal Jacobian: the full-vector probe already is the diagonal.
-        grad_hi <- d_hi
-        grad_lo <- d_lo
-    } else {
-        # Uniform gradient: the full-vector probe is the sum of n equal terms.
-        grad_hi <- rep(d_hi / n, n)
-        grad_lo <- rep(d_lo / n, n)
-    }
+    grad_hi <- recover("hi", 1)
+    grad_lo <- recover("lo", 1)
     if (!stage_probe_finite(grad_hi) || !stage_probe_finite(grad_lo)) {
         return(NULL)
     }
 
-    # Verification against pseudo-random subsets. Under the assumed structure
-    # the response to a masked perturbation is fully determined by the gradient
-    # already recovered, so a mismatch means the structure does not hold.
-    tol_scale <- max(1, max(abs(grad_hi)), max(abs(grad_lo)))
-    # Three subsets of differing density. A uniform gradient is only claimed,
+    # Magnitude check: the same recovery at half the step must agree. A
+    # central difference converges as the square of the step, so agreement
+    # here means the step is inside the function's linear regime; the shared
+    # failure mode of a too-large step -- stepping across a pole or into
+    # curvature -- moves the answer between scales and is caught.
+    for (which in c("hi", "lo")) {
+        g1 <- if (identical(which, "hi")) grad_hi else grad_lo
+        g2 <- recover(which, 0.5)
+        if (!stage_probe_finite(g2)) {
+            return(NULL)
+        }
+        tol <- 1e-5 * pmax(abs(g1), max(abs(g1)) * 1e-3, .Machine$double.eps)
+        if (any(abs(g1 - g2) > tol)) {
+            return(NULL)
+        }
+    }
+
+    # Structural check against pseudo-random subsets. Under the assumed
+    # structure the response to a masked perturbation is fully determined by
+    # the recovered gradient, so a mismatch means the structure does not hold.
+    # Three subsets of differing density: a uniform gradient is only claimed,
     # never derived, so a non-uniform one which happened to sum correctly on a
     # single subset would otherwise be accepted.
     thresholds <- c(0, 0.4, -0.4)
@@ -328,16 +356,19 @@ stage_comparison_gradient <- function(fun, args, hi, lo, n_out) {
             next
         }
         for (which in c("hi", "lo")) {
-            step <- if (identical(which, "hi")) step_hi else step_lo
-            got <- probe(which, mask, step)
+            got <- probe(which, mask, 1)
             if (is.null(got)) {
                 return(NULL)
             }
+            step <- if (identical(which, "hi")) step_hi else step_lo
             grad <- if (identical(which, "hi")) grad_hi else grad_lo
-            want <- if (rowwise) grad * mask else sum(grad * mask)
-            # The tolerance reflects central-difference truncation error on a
-            # cheap arithmetic map, not the accuracy of the final Jacobian.
-            if (max(abs(got - want)) > 1e-5 * tol_scale) {
+            want <- if (rowwise) grad * step * mask else sum(grad * step * mask)
+            # Responses are compared in function units, row by row. The
+            # tolerance reflects central-difference truncation on a cheap
+            # arithmetic map, with a floor for rows whose exact response is
+            # zero because the mask does not touch them.
+            tol <- 1e-5 * pmax(abs(want), max(abs(grad) * step) * 1e-3)
+            if (any(abs(got - want) > tol)) {
                 return(NULL)
             }
         }

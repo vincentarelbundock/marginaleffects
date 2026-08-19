@@ -143,9 +143,13 @@ expect_equivalent(
     )$estimate
 )
 
+# A custom formula function stays a closure even when it happens to be
+# linear: probing cannot prove linearity of arbitrary code, so promotion is
+# reserved for syntax the package itself compiled. The composed Jacobian
+# still differentiates the closure exactly at the estimate.
 custom_formula_fun <- function(x) c(first = x[1], total = sum(x))
 form <- marginaleffects:::hypothesis_compile(~ I(custom_formula_fun(x)) | segment, cmp_skeleton, newdata = cmp_skeleton)
-expect_equal(form$hyp$kind, "matrix")
+expect_equal(form$hyp$kind, "formula")
 expect_equivalent(
     form$hyp$apply(c(2, 4, 8, 16)),
     marginaleffects:::hypothesis_formula(

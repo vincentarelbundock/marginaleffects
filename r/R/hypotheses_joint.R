@@ -65,7 +65,17 @@ joint_test <- function(
         if (is.numeric(joint_index)) {
             R[i, joint_index[i]] <- 1
         } else {
-            R[i, which(names(theta_hat) == joint_index[i])] <- 1
+            idx <- which(names(theta_hat) == joint_index[i])
+            # A duplicated name would put two 1s in this row and silently test
+            # the sum of both parameters instead of the one the user named.
+            if (length(idx) != 1L) {
+                stop_sprintf(
+                    "The name \"%s\" matches %s estimates. Joint tests need each selected name to identify exactly one estimate; use numeric indices instead.",
+                    joint_index[i],
+                    length(idx)
+                )
+            }
+            R[i, idx] <- 1
         }
     }
 

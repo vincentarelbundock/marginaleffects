@@ -136,5 +136,6 @@ def analytic_try(plan, model, V, estimate, kind):
     if not plan_values_allclose(replay, estimate):
         return None
     se = get_se(J, V)
-    se[se == 0] = np.nan
+    # Zero variance is a valid statement about a constant estimand; the
+    # numeric path preserves it, and so must this one.
     return AnalyticResult(std_error=se, jacobian=J)

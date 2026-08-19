@@ -215,5 +215,6 @@ def autodiff_try(plan, model, V, estimate, kind):
     # Coef/vcov positional alignment is guaranteed by each adapter vault.
     J = np.asarray(result["jacobian"], dtype=float)
     se = get_se(J, V)
-    se[se == 0] = np.nan
+    # Zero variance is a valid statement about a constant estimand; the
+    # numeric path preserves it, and so must this one.
     return AutodiffResult(std_error=se, jacobian=J)

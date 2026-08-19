@@ -47,10 +47,59 @@ def _get_by_internal(
     agg_groups: Optional[List[AggGroup]] = None
 
     if by is True:
-        result = estimand.select(["estimate"]).mean()
+        # A grand mean must respect user weights exactly like the named-group
+        # path below does; ignoring `wts` here would silently report a
+        # different estimand than the one requested, with a Jacobian to match.
+        w_arr = None
+        if wts is not None:
+            tmp = estimand
+            if (
+                wts not in tmp.columns
+                and "rowid" in tmp.columns
+                and "rowid" in newdata.columns
+            ):
+                # The recorded weights must line up with the Jacobian rows,
+                # which follow the estimand's row order. A join does not
+                # promise to preserve that order, so carry an explicit
+                # position column through it and restore the order afterward.
+                tmp = tmp.with_columns(
+                    pl.Series(
+                        "_marginaleffects_wpos",
+                        range(tmp.height),
+                        dtype=pl.Int32,
+                    )
+                )
+                tmp = tmp.join(
+                    newdata.select(["rowid", wts]), on="rowid", how="left"
+                )
+                tmp = tmp.sort("_marginaleffects_wpos").drop(
+                    "_marginaleffects_wpos"
+                )
+            if wts not in tmp.columns:
+                raise ValueError(
+                    f"Weights column '{wts}' not found for aggregation."
+                )
+            if tmp.height != estimand.height:
+                raise ValueError(
+                    "Joining the weights column changed the number of rows; "
+                    "`newdata` has duplicated `rowid` values."
+                )
+            if tmp[wts].null_count() > 0:
+                raise ValueError(
+                    f"Weights column '{wts}' has missing values after joining "
+                    "on `rowid`."
+                )
+            result = tmp.select(
+                ((pl.col("estimate") * pl.col(wts)).sum() / pl.col(wts).sum()).alias(
+                    "estimate"
+                )
+            )
+            w_arr = tmp[wts].to_numpy()
+        else:
+            result = estimand.select(["estimate"]).mean()
         if return_plan_groups:
             agg_groups = [
-                AggGroup(idx=pl.Series(range(estimand.height)).to_numpy(), w=None)
+                AggGroup(idx=pl.Series(range(estimand.height)).to_numpy(), w=w_arr)
             ]
         return result, agg_groups
     elif by is False:

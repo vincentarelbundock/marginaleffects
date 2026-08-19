@@ -1,11 +1,166 @@
-# A hypothesis expressed as a string or a formula shortcut is very often a
-# linear map of the estimates, even when it is stored as an opaque closure. A
-# linear map has an exact matrix representation, which is faster than any
-# probe, exact rather than approximate, and consumable by the autodiff lowering
-# rules. Recover that matrix when possible and record the hypothesis as a
-# matrix stage; leave the closure in place so estimates are computed exactly as
-# before, and keep every other list element and attribute untouched.
-hypothesis_promote_matrix <- function(hyp, cmp_skeleton) {
+# Classify a parsed hypothesis expression as a strictly linear combination of
+# the estimate references in `labels`, by walking its syntax tree.
+#
+# This is a proof, not a probe: a parse tree built only from estimate
+# references, numeric constants, sums and differences of like kinds, products
+# with a constant side, and division by a constant denotes a linear map as a
+# matter of syntax, wherever it is evaluated. Anything else -- unknown
+# symbols, function calls, an additive constant (which makes the map affine
+# rather than linear), a product of two estimate terms -- is rejected. No
+# finite set of numeric evaluations can establish this property for arbitrary
+# code, because a function can be built to agree with any fixed evaluation
+# points and disagree elsewhere; the syntactic argument has no such gap.
+#
+# A top-level `=` call is the null-hypothesis form "lhs = rhs": the map whose
+# matrix is wanted is the left-hand side, and the right-hand side is the null
+# value, which must be constant.
+hypothesis_expression_linear <- function(expr, labels) {
+    # A constant subtree contains only numeric literals and arithmetic on
+    # them, so it is safe to evaluate in the base environment. Coefficients
+    # must come out finite: a structurally-constant NaN or Inf (0/0, 1/0,
+    # 2^1e6) would make the recovered matrix garbage even though the shape of
+    # the expression is linear.
+    const_value <- function(e) {
+        v <- tryCatch(eval(e, baseenv()), error = function(err) NULL)
+        if (is.numeric(v) && length(v) == 1L && is.finite(v)) {
+            return(v)
+        }
+        NULL
+    }
+    kind <- function(e) {
+        if (is.numeric(e) && length(e) == 1L && is.finite(e)) {
+            return("const")
+        }
+        if (is.symbol(e)) {
+            if (as.character(e) %in% labels) {
+                return("linear")
+            }
+            return("bad")
+        }
+        if (!is.call(e) || length(e) < 2L) {
+            return("bad")
+        }
+        op_sym <- e[[1L]]
+        if (!is.symbol(op_sym)) {
+            return("bad")
+        }
+        op <- as.character(op_sym)
+        if (op == "(" && length(e) == 2L) {
+            return(kind(e[[2L]]))
+        }
+        if (op %in% c("+", "-") && length(e) == 2L) {
+            return(kind(e[[2L]]))
+        }
+        if (op %in% c("+", "-") && length(e) == 3L) {
+            a <- kind(e[[2L]])
+            b <- kind(e[[3L]])
+            if (identical(a, b) && a %in% c("const", "linear")) {
+                return(a)
+            }
+            # linear +/- const is affine: it has a derivative but no
+            # crossprod(H, estimate) representation, so it must not promote.
+            # The one exception is a constant which is exactly zero -- the
+            # null-hypothesis rewrite turns "lhs = 0" into "lhs - (0)".
+            is_zero_const <- function(k, sub) {
+                identical(k, "const") && identical(const_value(sub), 0)
+            }
+            if (identical(a, "linear") && is_zero_const(b, e[[3L]])) {
+                return("linear")
+            }
+            # "0 + x" and "0 - x" are x and -x: both linear.
+            if (identical(b, "linear") && is_zero_const(a, e[[2L]])) {
+                return("linear")
+            }
+            return("bad")
+        }
+        if (op == "*" && length(e) == 3L) {
+            a <- kind(e[[2L]])
+            b <- kind(e[[3L]])
+            if (identical(a, "const") && identical(b, "const")) {
+                return("const")
+            }
+            # A linear side times a constant side stays linear, but only when
+            # the constant coefficient is a finite number.
+            if (identical(a, "linear") && identical(b, "const")) {
+                if (is.null(const_value(e[[3L]]))) {
+                    return("bad")
+                }
+                return("linear")
+            }
+            if (identical(a, "const") && identical(b, "linear")) {
+                if (is.null(const_value(e[[2L]]))) {
+                    return("bad")
+                }
+                return("linear")
+            }
+            return("bad")
+        }
+        if (op == "/" && length(e) == 3L) {
+            a <- kind(e[[2L]])
+            if (!identical(kind(e[[3L]]), "const")) {
+                return("bad")
+            }
+            denominator <- const_value(e[[3L]])
+            if (is.null(denominator) || denominator == 0) {
+                return("bad")
+            }
+            if (a %in% c("const", "linear")) {
+                return(a)
+            }
+            return("bad")
+        }
+        if (op == "^" && length(e) == 3L) {
+            if (identical(kind(e[[2L]]), "const") && identical(kind(e[[3L]]), "const")) {
+                return("const")
+            }
+            return("bad")
+        }
+        "bad"
+    }
+    # The null-hypothesis form "lhs = rhs" is meaningful only at the top of
+    # an expression; a nested `=` is not a linear construct and must not be
+    # looked through, because the closure evaluates it as part of the
+    # arithmetic. The rhs must be a constant -- it is the null value.
+    top <- function(e) {
+        if (
+            is.call(e) && length(e) == 3L && is.symbol(e[[1L]]) &&
+                identical(as.character(e[[1L]]), "=")
+        ) {
+            if (is.null(const_value(e[[3L]]))) {
+                return("bad")
+            }
+            return(kind(e[[2L]]))
+        }
+        kind(e)
+    }
+    exprs <- as.list(expr)
+    length(exprs) > 0L &&
+        all(vapply(exprs, function(e) identical(top(e), "linear"), logical(1)))
+}
+
+
+# A hypothesis expressed as a string is very often a linear map of the
+# estimates, even when it is stored as an opaque closure. A linear map has an
+# exact matrix representation, which is faster than any probe, exact rather
+# than approximate, and consumable by the autodiff lowering rules. Recover
+# that matrix when the syntax tree proves linearity and record the hypothesis
+# as a matrix stage; leave the closure in place so estimates are computed
+# exactly as before, and keep every other list element and attribute
+# untouched.
+#
+# `trusted` asserts that linearity has been established syntactically by the
+# caller. Without it no promotion is attempted: the numeric verification
+# inside stage_hypothesis_matrix() evaluates the closure at a fixed, finite
+# set of points, and a nonlinear function can agree with every one of those
+# points while disagreeing at the estimate, so probing alone must never
+# upgrade an arbitrary closure to an exact matrix. User-supplied function
+# hypotheses and formula closures therefore stay on the composed-derivative
+# path, which differentiates them at the estimate instead of extrapolating a
+# structure they were never proven to have.
+hypothesis_promote_matrix <- function(hyp, cmp_skeleton, trusted = FALSE) {
+    if (!isTRUE(trusted)) {
+        return(hyp)
+    }
     if (!isTRUE(getOption("marginaleffects_hypothesis_promote", default = TRUE))) {
         return(hyp)
     }
@@ -85,7 +240,8 @@ hypothesis_compile_wrapper <- function(hypothesis, cmp_skeleton, by, newdata, mf
         apply = function(est) apply_df(est)[["estimate"]]
     )
     attr(hyp, "hypothesis_function_by") <- attr(cmp, "hypothesis_function_by")
-    hyp <- hypothesis_promote_matrix(hyp, cmp_skeleton)
+    # Never promoted: the wrapper wraps arbitrary user code, whose linearity
+    # cannot be proven.
     list(cmp = cmp, hyp = hyp)
 }
 
@@ -147,10 +303,13 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mf
         apply <- function(est) as.vector(Matrix::crossprod(H, est))
         hyp <- list(kind = "matrix", apply = apply, H = H)
     } else {
+        # Not promoted: the linear formula shortcuts already produced their
+        # matrix syntactically above, so whatever reaches this branch -- a
+        # ratio shortcut, an arbitrary-function right-hand side -- has no
+        # proven linear structure.
         hyp <- list(kind = "formula", apply = apply)
     }
     attr(hyp, "hypothesis_function_by") <- attr(cmp, "hypothesis_function_by")
-    hyp <- hypothesis_promote_matrix(hyp, cmp_skeleton)
     list(cmp = cmp, hyp = hyp)
 }
 
@@ -313,6 +472,13 @@ hypothesis_compile_string <- function(hypothesis, cmp_skeleton) {
     }
 
     hyp <- list(kind = "string", apply = apply)
-    hyp <- hypothesis_promote_matrix(hyp, cmp_skeleton)
+    # Promotion requires a syntactic proof of linearity for every compiled
+    # expression, not merely a numeric probe passing.
+    trusted <- all(vapply(
+        compiled,
+        function(cc) hypothesis_expression_linear(cc$expr, cc$labels),
+        logical(1)
+    ))
+    hyp <- hypothesis_promote_matrix(hyp, cmp_skeleton, trusted = trusted)
     list(cmp = cmp, hyp = hyp)
 }

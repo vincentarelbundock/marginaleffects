@@ -41,10 +41,10 @@ r-check: r-document r-runnersup ## R: run R CMD check
 	cd .. && $(MAKE) r-runnersdown; exit $$status
 
 r-testone: ## R: run single test (testfile=path)
-	cd r && uv run Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
+	cd r && uv run Rscript -e "pkgload::load_all();r<-tinytest::run_test_file('$(testfile)');print(r);if(any(!sapply(r,isTRUE)))stop('test failures')"
 
 r-testseq: r-runnersup ## R: run all tests sequentially
-	cd r && uv run Rscript -e "pkgload::load_all();tinytest::run_test_dir()"; status=$$?; \
+	cd r && uv run Rscript -e "pkgload::load_all();r<-tinytest::run_test_dir();print(r);if(any(!sapply(r,isTRUE)))stop('test failures')"; status=$$?; \
 	cd .. && $(MAKE) r-runnersdown; exit $$status
 
 r-test: r-install r-runnersup ## R: build, install, and test in parallel

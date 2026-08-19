@@ -1,4 +1,62 @@
+# Reorder a named covariance matrix to coefficient order. A matrix whose
+# names are a permutation of the coefficient names is reordered; a matrix
+# with complete unique names which are not a permutation is an error, because
+# every downstream consumer multiplies positionally and equal dimensions would
+# hide the mismatch. Unnamed or partially named matrices pass through: with no
+# names there is nothing to align by, and rejecting them would break models
+# whose vcov methods return bare matrices.
+align_vcov_to_coef <- function(V, model, ...) {
+    vnames <- colnames(V)
+    if (is.null(vnames) || anyDuplicated(vnames) > 0L) {
+        return(V)
+    }
+    beta <- tryCatch(get_coef(model, ...), error = function(e) NULL)
+    bnames <- names(beta)
+    if (is.null(bnames) || anyDuplicated(bnames) > 0L) {
+        return(V)
+    }
+    rnames <- rownames(V)
+    if (!is.null(rnames) && !identical(rnames, vnames)) {
+        stop_sprintf(
+            "The supplied variance-covariance matrix has row names which differ from its column names."
+        )
+    }
+    if (setequal(vnames, bnames)) {
+        if (!identical(vnames, bnames)) {
+            # Index positionally by matched columns: row names may be absent,
+            # and name-indexing rows would fail with an uninformative
+            # subscript error.
+            idx <- match(bnames, vnames)
+            V <- V[idx, idx, drop = FALSE]
+            dimnames(V) <- list(bnames, bnames)
+        }
+        return(V)
+    }
+    if (ncol(V) == length(beta)) {
+        stop_sprintf(
+            "The supplied variance-covariance matrix has the same dimension as the coefficient vector, but its names do not match the coefficient names."
+        )
+    }
+    V
+}
+
+
 align_jacobian_vcov <- function(J, V, object, ...) {
+    # Equal dimensions with matching name sets still need reordering: without
+    # it the multiplication downstream is positional and silently wrong for a
+    # permuted matrix.
+    jnames <- colnames(J)
+    vnames <- colnames(V)
+    if (
+        !is.null(jnames) && !is.null(vnames) &&
+            anyDuplicated(jnames) == 0L && anyDuplicated(vnames) == 0L &&
+            setequal(jnames, vnames)
+    ) {
+        if (!identical(jnames, vnames)) {
+            V <- V[jnames, jnames, drop = FALSE]
+        }
+        return(list(J = J, V = V))
+    }
     if (!isTRUE(ncol(J) == ncol(V))) {
         beta <- get_coef(object, ...)
         # Issue #718: ordinal::clm in test-pkg-ordinal.R
@@ -44,7 +102,10 @@ std_error_from_jacobian <- function(J, V, object, ...) {
 
     # Avoid constructing the full J V J' matrix when only its diagonal is used.
     se <- sqrt(rowSums(tcrossprod(J, V) * J))
-    se[se == 0] <- NA_real_
+    # A zero here is a statement, not a failure: a constant estimand -- a
+    # contrast of a level with itself, a zero row of an exact Jacobian -- has
+    # variance exactly zero. Test statistics on such rows are undefined and
+    # come out NaN downstream, which is the correct separate signal.
     list(std.error = se, jacobian = J)
 }
 
@@ -185,7 +246,13 @@ get_se_delta <- function(
         return(g)
     }
 
-    if (is.null(J) || !is.null(hypothesis)) {
+    # A matrix returned by the user's `marginaleffects_jacobian_function` is
+    # authoritative for the whole pipeline, hypothesis included: the function
+    # receives the `hypothesis` argument above, so recomputing here would both
+    # discard the user's work and misreport its provenance. Only a NULL return
+    # falls back to numerical differentiation.
+    jacobian_source <- if (is.null(J)) "numeric" else "custom"
+    if (is.null(J)) {
         args <- list(
             func = inner,
             x = coefs,
@@ -198,6 +265,7 @@ get_se_delta <- function(
     propagated <- std_error_from_jacobian(J, vcov, model_perturbed, ...)
     se <- propagated$std.error
     attr(se, "jacobian") <- propagated$jacobian
+    attr(se, "jacobian_source") <- jacobian_source
 
     return(se)
 }
