@@ -1,4 +1,3 @@
-import importlib.util
 import sys
 from importlib import import_module
 
@@ -19,13 +18,7 @@ _EXPORTS = {
     "fit_linearmodels": ("marginaleffects.linearmodels.model", "fit_linearmodels"),
     "get_dataset": ("marginaleffects.datasets", "get_dataset"),
     "MarginaleffectsResult": ("marginaleffects.classes", "MarginaleffectsResult"),
-    "autodiff": ("marginaleffects.settings", "autodiff"),
-    "set_autodiff": ("marginaleffects.settings", "set_autodiff"),
-    "get_autodiff": ("marginaleffects.settings", "get_autodiff"),
 }
-
-if importlib.util.find_spec("jax") is not None:
-    _EXPORTS["autodiff_module"] = ("marginaleffects.autodiff", None)
 
 __all__ = list(_EXPORTS.keys())
 

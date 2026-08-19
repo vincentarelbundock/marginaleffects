@@ -9,7 +9,6 @@ from ..planning import (
     plan_values_allclose,
     prediction_plan_apply_stages,
 )
-from ..settings import is_autodiff_forced
 from .delta import get_se
 from .gradients import EXACT_COMPARISON_KEYS, comparison_gradient_exact
 
@@ -46,7 +45,7 @@ def _model_stage(model, value, n_pred):
     if X.ndim != 2 or X.shape != (n_pred, beta.size) or not np.isfinite(X).all():
         return None
     X = X[:, [columns.index(name) for name in coefnames]]
-    args = model.get_autodiff_args()
+    args = model.get_analytic_args()
     if isinstance(args, dict) and args.get("model_type") == "linear":
         return X, X @ beta, None
     functions = model.get_link_functions()
@@ -249,7 +248,7 @@ def _comparison_jacobian(plan, model):
 
 def analytic_try(plan, model, V, estimate, kind):
     """Compose exact upstream stages with cheap downstream derivatives."""
-    if plan is None or V is None or is_autodiff_forced():
+    if plan is None or V is None:
         return None
     built = (
         _prediction_jacobian(plan, model)

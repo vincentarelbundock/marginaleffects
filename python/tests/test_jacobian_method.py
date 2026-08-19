@@ -5,7 +5,6 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 
 from marginaleffects import (
-    autodiff,
     avg_comparisons,
     comparisons,
     get_dataset,
@@ -29,14 +28,6 @@ def test_public_results_report_jacobian_method():
 def test_explicit_step_reports_finite_difference():
     out = predictions(_model(), eps_vcov=1e-5)
     assert out.jacobian_method == "finite_difference"
-
-
-def test_forced_autodiff_reports_autodiff():
-    try:
-        autodiff(True)
-        assert predictions(_model()).jacobian_method == "autodiff"
-    finally:
-        autodiff(None)
 
 
 def test_nonlinear_hypothesis_reports_composed_numeric_stage():

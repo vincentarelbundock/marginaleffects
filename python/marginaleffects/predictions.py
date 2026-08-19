@@ -1,7 +1,6 @@
 import numpy as np
 import polars as pl
 
-from .autodiff.lower import autodiff_try
 from .by import get_by_plan
 from .classes import MarginaleffectsResult
 from .docstrings import doc
@@ -264,14 +263,6 @@ def predictions(
                 estimate=out["estimate"].to_numpy(),
                 kind="predictions",
             )
-            if ad is None:
-                ad = autodiff_try(
-                    plan=plan,
-                    model=model,
-                    V=V,
-                    estimate=out["estimate"].to_numpy(),
-                    kind="predictions",
-                )
         if ad is not None:
             J = ad.jacobian
             jacobian_method = ad.method

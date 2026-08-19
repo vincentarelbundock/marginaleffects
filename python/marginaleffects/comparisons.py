@@ -4,7 +4,6 @@ import warnings
 import numpy as np
 import polars as pl
 
-from .autodiff.lower import autodiff_try
 from .classes import MarginaleffectsResult
 from .docstrings import doc
 from .estimands import estimands
@@ -778,14 +777,6 @@ def comparisons(
                 estimate=out["estimate"].to_numpy(),
                 kind="comparisons",
             )
-            if ad is None:
-                ad = autodiff_try(
-                    plan=plan,
-                    model=model,
-                    V=V,
-                    estimate=out["estimate"].to_numpy(),
-                    kind="comparisons",
-                )
         if ad is not None:
             J = ad.jacobian
             jacobian_method = ad.method

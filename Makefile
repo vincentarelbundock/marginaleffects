@@ -65,9 +65,6 @@ py-install: ## Py: install package
 py-test: py-install ## Py: run pytest suite
 	cd python && uv run --all-extras pytest -n auto
 
-py-test-autodiff: py-install ## Py: run pytest with autodiff forced on
-	cd python && MARGINALEFFECTS_AUTODIFF=1 uv run --all-extras pytest -n auto
-
 py-lint: ## Py: run ruff linter and formatter
 	cd python && uv run --all-extras ruff check marginaleffects
 	cd python && uv run --all-extras ruff format marginaleffects
@@ -75,9 +72,6 @@ py-lint: ## Py: run ruff linter and formatter
 
 py-precommit: ## Py: run pre-commit on all files
 	cd python && pre-commit run --all-files
-
-py-benchmark: py-install ## Py: run autodiff benchmark
-	cd python && uv run --all-extras python benchmarks/benchmark_autodiff.py
 
 py-snapshot: ## Py: snapshot test
 	cd python && R CMD BATCH tests/r/run.R

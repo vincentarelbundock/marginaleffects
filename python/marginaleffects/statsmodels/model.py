@@ -149,67 +149,9 @@ class ModelStatsmodels(ModelAbstract):
     def get_df(self):
         return self.model.df_resid
 
-    def get_autodiff_args(self):
-        inner_model = self.model.model
-        model_class = type(inner_model).__name__
-
-        if model_class == "OLS":
+    def get_analytic_args(self):
+        if type(self.model.model).__name__ == "OLS":
             return {"model_type": "linear", "family": None, "link": None}
-
-        if model_class == "GLM":
-            if (
-                hasattr(inner_model, "offset")
-                and inner_model.offset is not None
-                and not np.allclose(inner_model.offset, 0)
-            ):
-                return "models with offset or exposure"
-
-            if (
-                hasattr(inner_model, "exposure")
-                and inner_model.exposure is not None
-                and not np.allclose(inner_model.exposure, 0)
-            ):
-                return "models with offset or exposure"
-
-            family_map = {
-                "Gaussian": "gaussian",
-                "Binomial": "binomial",
-                "Poisson": "poisson",
-                "Gamma": "gamma",
-            }
-            link_map = {
-                "Identity": "identity",
-                "identity": "identity",
-                "Log": "log",
-                "log": "log",
-                "Logit": "logit",
-                "logit": "logit",
-                "Probit": "probit",
-                "probit": "probit",
-                "InversePower": "inverse",
-                "inverse_power": "inverse",
-                "InverseSquared": "inverse",
-                "inverse_squared": "inverse",
-                "Sqrt": "sqrt",
-                "sqrt": "sqrt",
-                "CLogLog": "cloglog",
-                "cloglog": "cloglog",
-            }
-
-            family_name = inner_model.family.__class__.__name__
-            link_name = inner_model.family.link.__class__.__name__
-
-            if family_name not in family_map:
-                return f"family '{family_name}'"
-            if link_name not in link_map:
-                return f"link '{link_name}'"
-
-            return {
-                "model_type": "glm",
-                "family": family_map[family_name],
-                "link": link_map[link_name],
-            }
-
         return None
 
     def get_link_functions(self):

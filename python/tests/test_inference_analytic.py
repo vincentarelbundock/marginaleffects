@@ -35,12 +35,12 @@ class LinearAdapter:
     def get_exog_names(self, value):
         return value.columns
 
-    def get_autodiff_args(self):
+    def get_analytic_args(self):
         return {"model_type": "linear", "family": None, "link": None}
 
 
 class LogAdapter(LinearAdapter):
-    def get_autodiff_args(self):
+    def get_analytic_args(self):
         return {"model_type": "glm", "family": "custom", "link": "custom"}
 
     def get_link_functions(self):
@@ -48,7 +48,7 @@ class LogAdapter(LinearAdapter):
 
 
 class LogitAdapter(LinearAdapter):
-    def get_autodiff_args(self):
+    def get_analytic_args(self):
         return {"model_type": "glm", "family": "custom", "link": "custom"}
 
     def get_link_functions(self):

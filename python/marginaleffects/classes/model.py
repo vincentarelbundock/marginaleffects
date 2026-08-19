@@ -141,8 +141,9 @@ class ModelAbstract(ModelValidation, ABC):
     def get_predict(self, params: np.ndarray, newdata) -> pl.DataFrame:
         pass
 
-    def get_autodiff_args(self):
-        return None
+    def get_analytic_args(self):
+        """Return adapter metadata needed by the analytic Jacobian engine."""
+        return
 
     def get_link_functions(self):
         """Return inverse-link and derivative callables for response predictions."""

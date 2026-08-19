@@ -6,12 +6,15 @@ Bug fixes:
   weights column. Previously `by=True` computed an unweighted mean and recorded
   no weights in the aggregation plan, so both the estimate and its standard
   error described the unweighted estimand.
-* The analytic and autodiff paths no longer convert a standard error of
+* The analytic path no longer converts a standard error of
   exactly zero to `NaN`; a constant estimand has variance zero, matching the
   numerical path.
 
 Breaking changes:
 
+* Removed the JAX automatic-differentiation engine and its public configuration
+  API. Verified analytic Jacobians are used when supported, with finite
+  differences as the universal fallback.
 * Model wrappers returned by `fit_statsmodels()`, `fit_sklearn()`, and
   `fit_linearmodels()` no longer forward unknown attributes to the underlying
   fitted object. Calls such as `mod.summary()` or `mod.params` now raise
@@ -23,8 +26,6 @@ New:
   `predictions()`, `comparisons()`, and their `avg_*` counterparts are computed
   in closed form when the plan supports it, instead of by finite differences.
   Supplying `eps_vcov` still selects the finite-difference path.
-* `jax` is no longer a required dependency. Install the optional `autodiff`
-  extra to enable automatic differentiation.
 
 # 0.6.0
 
