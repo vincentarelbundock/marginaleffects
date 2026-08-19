@@ -33,10 +33,14 @@ ir <- transform(
 V_lm <- vcovUnconditional(type = "HC1")
 V_ml <- vcovUnconditional(cluster = ~unit)
 
-# `canonical`: Stata uses the OBSERVED information matrix while
-# `sandwich::bread()` uses the EXPECTED (Fisher/IRLS) information. The two
-# coincide only for canonical links, so standard errors are asserted tightly
-# there and only loosely otherwise. See PR #1737 (snhansen).
+# `canonical` records whether the link is the canonical one for the family.
+# Stata's ML commands report the OBSERVED information matrix while
+# `sandwich::bread()` reports the EXPECTED (Fisher/IRLS) information, and the
+# two coincide only for a canonical link. Rather than bend the R side to
+# Stata's convention, `unconditional.do` estimates the two non-canonical fits
+# with `glm ..., irls`, which puts Stata on the expected information as well.
+# Both sides then compute the same estimator and the same bound applies to
+# every model here. See PR #1737 (snhansen).
 specs <- list(
     iris_lm_gaussian_identity = list(
         model = lm(swidth ~ slength + pwidth + heavy, data = ir),
@@ -64,18 +68,15 @@ specs <- list(
 # floor is Stata's own convergence tolerance, not R's.
 tol_estimate <- 1e-4
 
-# Non-canonical standard errors are not expected to agree. The bound below is a
-# regression guard, not a certification of agreement -- see `canonical` above.
+# Slopes get their own bound: marginaleffects differentiates the estimand
+# numerically while Stata does so analytically, which costs about one order of
+# magnitude. This is finite-difference error, not a disagreement about the
+# variance -- shrinking `eps` makes it worse, not better, because the default
+# already sits near the cancellation optimum.
 #
-# Slopes get their own canonical bound: marginaleffects differentiates the
-# estimand numerically while Stata does so analytically, which costs about one
-# order of magnitude. This is finite-difference error, not a disagreement about
-# the variance -- shrinking `eps` makes it worse, not better, because the
-# default already sits near the cancellation optimum.
+# The non-canonical fits carry the same bounds as the rest: aligning the
+# information matrix in `unconditional.do` took them from 3-10% away to ~1e-5.
 tol_std_error <- function(canonical, command) {
-    if (!canonical) {
-        return(0.15)
-    }
     if (startsWith(command, "avg_slopes")) 1e-4 else 1e-5
 }
 

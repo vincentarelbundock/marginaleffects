@@ -13,11 +13,22 @@
 * `vcovUnconditional()`. It requires `vce(robust)` on the estimation command.
 *
 * EXACTNESS (see snhansen, PR #1737):
-*   - Stata uses the OBSERVED information matrix; sandwich::bread() (which
-*     marginaleffects relies on) uses the EXPECTED/Fisher information. These
-*     coincide only for CANONICAL links, so only the canonical-link models
-*     below are expected to match to high precision. Non-canonical links
-*     agree to ~3-4 significant digits, not exactly.
+*   - Stata's ML commands report the OBSERVED information matrix, while
+*     sandwich::bread() (which marginaleffects relies on) reports the
+*     EXPECTED/Fisher information. The two coincide only for CANONICAL links,
+*     so a non-canonical fit estimated by Newton-Raphson disagrees with R by
+*     3-10% -- not a disagreement about the estimand, just a different
+*     information matrix.
+*
+*     Rather than bend the R side to Stata's convention, the non-canonical
+*     models below are estimated with `glm ..., irls`, which switches Stata to
+*     iteratively reweighted least squares and therefore to the expected
+*     information -- the same matrix R uses. Both sides then compute the same
+*     estimator and agree to ~1e-5, so these fixtures certify agreement instead
+*     of merely guarding against regression. IRLS and Newton-Raphson maximise
+*     the same likelihood but stop at different points under Stata's default
+*     criteria, which moved the estimates by ~3e-4, so the two IRLS fits also
+*     tighten `ltolerance()`, which is the criterion IRLS uses.
 *   - Stata scales the unconditional variance by n / (n - k), so the R side
 *     compares against `vcovUnconditional(type = "HC1")`.
 * ---------------------------------------------------------------------------
@@ -120,12 +131,14 @@ runall "iris_glm_binomial_logit" species heavy slength
 quietly poisson scount slength pwidth i.heavy, vce(robust)
 runall "iris_glm_poisson_log" species heavy slength
 
-* binomial / probit -- NON-canonical
-quietly probit wide slength pwidth i.heavy, vce(robust)
+* binomial / probit -- NON-canonical, so `irls` is used to put Stata on the
+* expected information. `glm ... link(probit)` is the same likelihood `probit`
+* maximises; only the information matrix and hence the standard errors change.
+quietly glm wide slength pwidth i.heavy, family(binomial) link(probit) irls vce(robust) ltolerance(1e-14)
 runall "iris_glm_binomial_probit" species heavy slength
 
-* Gamma / log -- NON-canonical
-quietly glm swidth slength pwidth i.heavy, family(gamma) link(log) vce(robust)
+* Gamma / log -- NON-canonical, `irls` for the same reason as probit above.
+quietly glm swidth slength pwidth i.heavy, family(gamma) link(log) irls vce(robust) ltolerance(1e-14)
 runall "iris_glm_gamma_log" species heavy slength
 
 file close golden
