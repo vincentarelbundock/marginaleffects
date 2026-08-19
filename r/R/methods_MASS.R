@@ -129,8 +129,8 @@ get_model_matrix.negbin <- function(model, newdata, mfx = NULL) {
 
 #' @noRd
 #' @export
-get_jacobian_analytic.negbin <- function(model, type, ...) {
-    jacobian_analytic_glm_family(model, "negbin", type, ...)
+get_prediction_jacobian_spec.negbin <- function(model, type, ...) {
+    prediction_jacobian_spec_glm_family(model, "negbin", type)
 }
 
 
@@ -143,6 +143,6 @@ get_model_matrix.rlm <- function(model, newdata, mfx = NULL) {
 
 #' @noRd
 #' @export
-get_jacobian_analytic.rlm <- function(model, type, ...) {
-    jacobian_analytic_linear(model, "rlm", type, "response", ...)
+get_prediction_jacobian_spec.rlm <- function(model, type, ...) {
+    prediction_jacobian_spec_linear(model, "rlm", type, "response")
 }

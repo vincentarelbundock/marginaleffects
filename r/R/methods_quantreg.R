@@ -61,6 +61,6 @@ get_model_matrix.rq <- function(model, newdata, mfx = NULL) {
 
 #' @noRd
 #' @export
-get_jacobian_analytic.rq <- function(model, type, ...) {
-    jacobian_analytic_linear(model, "rq", type, "response", ...)
+get_prediction_jacobian_spec.rq <- function(model, type, ...) {
+    prediction_jacobian_spec_linear(model, "rq", type, "response")
 }

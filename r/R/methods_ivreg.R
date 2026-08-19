@@ -23,6 +23,6 @@ get_model_matrix.ivreg <- function(model, newdata, mfx = NULL) {
 
 #' @noRd
 #' @export
-get_jacobian_analytic.ivreg <- function(model, type, ...) {
-    jacobian_analytic_linear(model, "ivreg", type, "response", ...)
+get_prediction_jacobian_spec.ivreg <- function(model, type, ...) {
+    prediction_jacobian_spec_linear(model, "ivreg", type, "response")
 }

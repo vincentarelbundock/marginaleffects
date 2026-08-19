@@ -119,8 +119,8 @@ get_model_matrix.svyglm <- function(model, newdata, mfx = NULL) {
 
 #' @noRd
 #' @export
-get_jacobian_analytic.svyglm <- function(model, type, ...) {
-    jacobian_analytic_glm_family(model, "svyglm", type, ...)
+get_prediction_jacobian_spec.svyglm <- function(model, type, ...) {
+    prediction_jacobian_spec_glm_family(model, "svyglm", type)
 }
 
 

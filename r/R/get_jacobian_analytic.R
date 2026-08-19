@@ -350,53 +350,63 @@ jacobian_analytic_comparison_aggregate <- function(
 }
 
 
-#' Get an exact analytic Jacobian when supported
+#' How this model's predictions depend on its coefficients
+#'
+#' The whole model-specific half of the analytic Jacobian contract. A method
+#' answers three questions and nothing else: is this exact class eligible,
+#' does this prediction `type` live on the link scale or the response scale,
+#' and -- on the response scale -- which family supplies `linkinv()` and
+#' `mu.eta()`. Everything downstream of that (matrix alignment, comparison
+#' gradients, aggregation, hypothesis pullback, replay validation) is
+#' model-agnostic and belongs to `compute_analytic_plan_jacobian()`.
+#'
+#' The derivative of the predictions with respect to the coefficients is the
+#' model matrix `X` on the link scale, and `X` scaled row-wise by
+#' `family$mu.eta(eta)` on the response scale. A spec is exactly the
+#' information needed to say which of the two applies.
+#'
 #' @param model A model object.
-#' @param ... Arguments passed to model-specific methods.
-#' @return A numeric Jacobian matrix, or `NULL` when the model or estimand is
-#'   not eligible for the analytic path.
+#' @param type The prediction type requested by the estimand.
+#' @param ... Unused; present for method extension.
+#' @return `NULL` when the model or the requested `type` is not eligible,
+#'   otherwise a list with `response_scale` (a scalar logical) and `family`
+#'   (a family object on the response scale, `NULL` on the link scale).
 #' @keywords internal
 #' @noRd
-get_jacobian_analytic <- function(model, ...) {
-  UseMethod("get_jacobian_analytic", model)
+get_prediction_jacobian_spec <- function(model, type, ...) {
+  UseMethod("get_prediction_jacobian_spec", model)
 }
 
 
 #' @noRd
 #' @export
-get_jacobian_analytic.default <- function(model, ...) {
+get_prediction_jacobian_spec.default <- function(model, type, ...) {
   NULL
 }
 
 
-# Shared bodies for the per-model get_jacobian_analytic() methods. Each
+# Shared bodies for the per-model get_prediction_jacobian_spec() methods. Each
 # method gates on its exact class -- subclasses may override prediction
 # behavior the eligibility whitelist knows nothing about -- and on the
 # prediction types whose scale it can differentiate.
-jacobian_analytic_linear <- function(model, class_expected, type, types_ok, ...) {
+prediction_jacobian_spec_linear <- function(model, class_expected, type, types_ok) {
   if (
     !identical(class(model)[1], class_expected) ||
       !isTRUE(type %in% types_ok)
   ) {
     return(NULL)
   }
-  jacobian_analytic_model_matrix(
-    model = model,
-    type = type,
-    response_scale = FALSE,
-    ...
-  )
+  list(response_scale = FALSE, family = NULL)
 }
 
 
-jacobian_analytic_glm_family <- function(
+prediction_jacobian_spec_glm_family <- function(
   model,
   class_expected,
   type,
   response_type = "response",
   link_type = "link",
-  family = NULL,
-  ...
+  family = NULL
 ) {
   if (
     !identical(class(model)[1], class_expected) ||
@@ -404,30 +414,58 @@ jacobian_analytic_glm_family <- function(
   ) {
     return(NULL)
   }
-  response_scale <- identical(type, response_type)
-  if (isTRUE(response_scale) && is.null(family)) {
+  if (!identical(type, response_type)) {
+    return(list(response_scale = FALSE, family = NULL))
+  }
+  if (is.null(family)) {
     family <- stats::family(model)
   }
-  jacobian_analytic_model_matrix(
-    model = model,
-    type = type,
-    response_scale = response_scale,
-    family = if (response_scale) family else NULL,
-    ...
-  )
+  list(response_scale = TRUE, family = family)
 }
 
 
-jacobian_analytic_model_matrix <- function(
+#' Get an exact analytic Jacobian when supported
+#' @param model A model object.
+#' @param type The prediction type requested by the estimand.
+#' @param ... Arguments passed on to the composer.
+#' @return A numeric Jacobian matrix, or `NULL` when the model or estimand is
+#'   not eligible for the analytic path.
+#' @keywords internal
+#' @noRd
+get_jacobian_analytic <- function(model, type, ...) {
+  UseMethod("get_jacobian_analytic", model)
+}
+
+
+# The entry point is model-agnostic: it asks the model how its predictions
+# depend on its coefficients, and hands that answer to the composer. The
+# generic is kept so that a model class which needs to bypass the spec
+# contract entirely still can, but no method in this package does.
+#' @noRd
+#' @export
+get_jacobian_analytic.default <- function(model, type, ...) {
+  spec <- get_prediction_jacobian_spec(model, type = type)
+  if (is.null(spec)) {
+    return(NULL)
+  }
+  compute_analytic_plan_jacobian(spec = spec, model = model, type = type, ...)
+}
+
+
+# Model-agnostic composition of a prediction-derivative spec with an estimand
+# plan. `spec` is whatever get_prediction_jacobian_spec() returned; nothing
+# else here knows anything about the model class.
+compute_analytic_plan_jacobian <- function(
+  spec,
   model,
   plan,
   kind,
   type,
   estimate,
-  contrast_data = NULL,
-  response_scale = FALSE,
-  family = NULL
+  contrast_data = NULL
 ) {
+  response_scale <- isTRUE(spec$response_scale)
+  family <- if (response_scale) spec$family else NULL
   # NULL means that this estimand is not safely eligible. This is an expected
   # result which preserves the existing finite-difference path.
   tryCatch(

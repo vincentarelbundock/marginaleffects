@@ -23,13 +23,13 @@ get_model_matrix.glm <- get_model_matrix.lm
 
 #' @noRd
 #' @export
-get_jacobian_analytic.lm <- function(model, type, ...) {
-    jacobian_analytic_linear(model, "lm", type, c("response", "link"), ...)
+get_prediction_jacobian_spec.lm <- function(model, type, ...) {
+    prediction_jacobian_spec_linear(model, "lm", type, c("response", "link"))
 }
 
 
 #' @noRd
 #' @export
-get_jacobian_analytic.glm <- function(model, type, ...) {
-    jacobian_analytic_glm_family(model, "glm", type, ...)
+get_prediction_jacobian_spec.glm <- function(model, type, ...) {
+    prediction_jacobian_spec_glm_family(model, "glm", type)
 }
