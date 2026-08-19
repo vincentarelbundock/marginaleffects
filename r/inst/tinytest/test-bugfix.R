@@ -369,3 +369,20 @@ expect_error(
     pattern = "object 'hp' not found"
 )
 options(marginaleffects_rank_deficient = TRUE)
+
+# get_coef() must label the precision parameter the way get_vcov() does, so a
+# user-supplied variance-covariance matrix is accepted. betareg names the lone
+# precision coefficient "(phi)" when the model has no precision formula, and
+# prefixing it again produced "(phi)_(phi)".
+requiet("betareg")
+data("GasolineYield", package = "betareg")
+mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
+expect_equal(names(get_coef(mod)), colnames(get_vcov(mod)))
+expect_inherits(
+    avg_slopes(mod, variables = "temp", vcov = stats::vcov(mod)),
+    "slopes"
+)
+# a precision formula gives the precision coefficients ordinary names, and
+# those must still be prefixed
+mod <- betareg::betareg(yield ~ batch + temp | temp, data = GasolineYield)
+expect_equal(names(get_coef(mod)), colnames(get_vcov(mod)))

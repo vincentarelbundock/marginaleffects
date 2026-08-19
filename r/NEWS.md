@@ -43,6 +43,7 @@ Performance:
 
 Bug fixes:
 
+* `betareg` models fit without a precision formula could not accept a user-supplied `vcov` matrix: `get_coef()` labelled the lone precision parameter `(phi)_(phi)` while `get_vcov()` called it `(phi)`.
 * `lm` and `glm` estimates no longer fail when the fit object was stripped of its `qr$qr` element to save memory. Linear predictions are now computed from the model matrix when `stats::predict()` fails. Thanks to @trose64 for report #1748.
 * `vcov = "stata"` now maps to the HC1 heteroskedasticity-robust estimator, which is what Stata's `regress, vce(robust)` computes, instead of HC2. `estimatr::lm_robust(se_type = "stata")` and `modelsummary`'s `"stata"` shortcut both use HC1, so the previous mapping matched no Stata estimator and disagreed with the rest of the ecosystem. Use `vcov = "HC2"` to keep the old behavior.
 * A user-supplied covariance matrix whose named rows and columns are a permutation of the coefficient names is now reordered to coefficient order once, at intake. Previously only the delta method re-aligned it, so `vcov()` on a result object and `inferences(method = "simulation")` draws multiplied the stored matrix positionally. A same-size named matrix whose names do not match the coefficients is now an error instead of a silent positional product.

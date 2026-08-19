@@ -40,7 +40,14 @@ get_coef.betareg <- function(model, ...) {
     out <- model$coefficients
     for (n in names(out)) {
         if (n %in% c("phi", "precision")) {
-            names(out[[n]]) <- sprintf("(phi)_%s", names(out[[n]]))
+            # With no precision formula betareg already names the single
+            # precision coefficient "(phi)". Prefixing that again yields
+            # "(phi)_(phi)", which stops matching get_vcov() and makes a
+            # user-supplied vcov matrix impossible to name correctly.
+            nms <- names(out[[n]])
+            prefix <- nms != "(phi)"
+            nms[prefix] <- sprintf("(phi)_%s", nms[prefix])
+            names(out[[n]]) <- nms
         }
     }
     out <- stats::setNames(unlist(out), unlist(lapply(out, names)))
