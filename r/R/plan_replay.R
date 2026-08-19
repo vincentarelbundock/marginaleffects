@@ -30,11 +30,12 @@ record_plan_aggregation <- function(
         return(list(out = estimates, agg = NULL))
     }
 
-    missing <- setdiff(setdiff(colnames(by), "by"), colnames(estimates))
-    needs_source_id <- length(missing) > 0 || isTRUE(checkmate::check_data_frame(by))
+    # Only a `by` data frame can reorder or drop rows on its way through the
+    # resolver's merges and joins; explicit source ids keep the replay
+    # indices anchored to the original estimate positions in that case.
+    needs_source_id <- isTRUE(checkmate::check_data_frame(by))
     if (isTRUE(needs_source_id)) {
         estimates <- data.table::copy(estimates)
-        # Needed when joins or filters can change row positions.
         plan_id <- ".marginaleffects_plan_est_id"
         while (plan_id %in% colnames(estimates)) {
             plan_id <- paste0(".", plan_id)
@@ -43,39 +44,10 @@ record_plan_aggregation <- function(
     }
     estimate_source <- estimates[["estimate"]]
 
-    if (length(missing) > 0) {
-        # Bring grouping columns back before computing aggregation groups.
-        estimates <- merge_original_data(
-            estimates,
-            newdata,
-            keys = c("rowid", "rowidcf"),
-            payload = missing,
-            unit_level_only = FALSE
-        )
-    }
+    resolved <- resolve_by_rows(estimates, newdata, by, verbose = verbose)
+    estimates <- resolved$estimates
+    bycols <- resolved$bycols
 
-    if (isTRUE(by)) {
-        regex <- "^term$|^group$|^contrast$|^contrast_"
-        bycols <- grep(regex, colnames(estimates), value = TRUE)
-    } else if (isTRUE(checkmate::check_character(by))) {
-        bycols <- by
-    } else if (isTRUE(checkmate::check_data_frame(by))) {
-        idx <- setdiff(intersect(colnames(estimates), colnames(by)), "by")
-        by <- harmonize_by_types(estimates, by)
-        estimates[by, by := by, on = idx]
-        bycols <- "by"
-    }
-
-    if ("by" %in% colnames(estimates) && anyNA(estimates[["by"]])) {
-        # User-supplied by data can intentionally cover only some rows.
-        msg <- insight::format_message(
-            "The `by` data.frame does not cover all combinations of response levels and/or predictors. Some estimates will not be included in the aggregation."
-        )
-        if (isTRUE(verbose)) warning(msg, call. = FALSE)
-        estimates <- estimates[!is.na(by), drop = FALSE]
-    }
-
-    bycols <- intersect(unique(c("term", bycols)), colnames(estimates))
     weighted <- "marginaleffects_wts_internal" %in% colnames(newdata)
 
     # Record replay indices with the same groups as the displayed aggregate.
@@ -100,11 +72,15 @@ record_plan_aggregation <- function(
     group_len <- lengths(idx)
 
     # Equal-size blocks let replay use colSums without ragged padding.
+    # A single-row group is an identity, not an average: comparison functions
+    # which aggregate (`*avgwts`) already consumed the weights and leave one
+    # row per group, and re-weighting that row by the stale unit-level weight
+    # of its first source row is 0/0 = NaN whenever that weight is zero.
     make_block <- function(cols) {
         n <- group_len[cols][1]
         idx_mat <- matrix(unlist(idx[cols], use.names = FALSE), nrow = n)
         w_mat <- NULL
-        if (isTRUE(weighted)) {
+        if (isTRUE(weighted) && n > 1L) {
             w_mat <- matrix(unlist(w[cols], use.names = FALSE), nrow = n)
         }
         list(cols = cols, idx = idx_mat, w = w_mat)
@@ -129,7 +105,9 @@ apply_plan_aggregation <- function(agg, est) {
         e <- est[block$idx]
         dim(e) <- dim(block$idx)
 
-        if (isTRUE(agg$weighted)) {
+        # `block$w` is NULL for single-row groups even under weights: those
+        # groups are identities, and their recorded weights are stale.
+        if (!is.null(block$w)) {
             w <- block$w
             missing_estimate <- is.na(e)
             e[missing_estimate] <- 0
@@ -157,10 +135,6 @@ apply_plan_stages <- function(est, agg = NULL, hyp = NULL) {
         est <- hyp$apply(est)
     }
     list(pre = pre, post = est)
-}
-
-apply_plan_aggregation_and_hypothesis <- function(est, agg = NULL, hyp = NULL) {
-    apply_plan_stages(est, agg = agg, hyp = hyp)$post
 }
 
 # Element-wise agreement for replay guards. all.equal() compares a *mean*
@@ -471,7 +445,11 @@ plan_std_error <- function(
             }
         }
         # Fail closed. A partially composed result would be silently wrong, so
-        # an unusable composition redoes the original whole-pipeline derivative.
+        # an unusable composition redoes the original whole-pipeline
+        # derivative. The repeat is inherent, not an optimization miss: the
+        # fallback differentiates through the hypothesis stage by re-running
+        # the model, which the pre-hypothesis Jacobian computed above cannot
+        # supply once G is unusable.
         se <- if (is.null(composed)) numeric_se(FALSE) else composed
     }
 
@@ -499,14 +477,12 @@ plan_std_error <- function(
         )
     }
 
-    if (identical(kind, "predictions")) {
-        if (is.numeric(se) && length(se) == nrow(estimates)) {
-            mfx@jacobian <- attr(se, "jacobian")
-            estimates[["std.error"]] <- as.vector(se)
-        }
-    } else {
+    # Same guard for both kinds: an SE vector whose length does not match the
+    # estimates must not be assigned, because data.table recycling would
+    # silently repeat a scalar across every row.
+    if (is.numeric(se) && length(se) == nrow(estimates)) {
         mfx@jacobian <- attr(se, "jacobian")
-        estimates[["std.error"]] <- as.vector(as.numeric(se))
+        estimates[["std.error"]] <- as.vector(se)
     }
 
     list(mfx = mfx, estimates = estimates)

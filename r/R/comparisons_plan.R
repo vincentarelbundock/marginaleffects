@@ -334,7 +334,23 @@ comparison_plan_build <- function(
         tmp <- intersect(colnames(newdata), c(by, colnames(out)))
         if (length(tmp) > 1) {
             tmp <- subset(newdata, select = tmp)
-            out <- tryCatch(merge(out, tmp, all.x = TRUE, sort = FALSE), error = function(e) {warning(e); out})
+            # A failed merge is only tolerable when the grouping columns are
+            # already present: without them, downstream aggregation would
+            # silently drop the user's `by` groups.
+            out <- tryCatch(
+                merge(out, tmp, all.x = TRUE, sort = FALSE),
+                error = function(e) {
+                    if (all(by %in% colnames(out))) {
+                        warning(e)
+                        out
+                    } else {
+                        stop_sprintf(
+                            "Internal error: the `by` columns could not be merged into the comparison estimates: %s",
+                            conditionMessage(e)
+                        )
+                    }
+                }
+            )
             idx <- unique(c(idx, by))
         }
     }

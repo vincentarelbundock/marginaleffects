@@ -386,3 +386,32 @@ expect_inherits(
 # those must still be prefixed
 mod <- betareg::betareg(yield ~ batch + temp | temp, data = GasolineYield)
 expect_equal(names(get_coef(mod)), colnames(get_vcov(mod)))
+
+
+# Zero or missing weights poisoned the redundant re-aggregation of comparison
+# estimates the `*avgwts` functions had already collapsed: each (term,
+# contrast) group survived as a single row carrying the stale unit-level
+# weight of its first source row, and re-averaging that lone row by a zero
+# weight is 0/0 = NaN. Zero weights are routine (ATT/matching), and the
+# failure depended on which row happened to sort first.
+set.seed(1024)
+n <- 40
+dat <- data.frame(
+    x = rnorm(n),
+    f = factor(rep(c("u", "v"), n / 2))
+)
+dat$y <- rbinom(n, 1, plogis(dat$x))
+dat$w <- c(0, runif(n - 1, .5, 1)) # zero weight on the first row
+mod <- glm(y ~ x + f, family = binomial, data = dat)
+cmp <- avg_comparisons(mod, wts = dat$w)
+expect_false(anyNA(cmp$estimate))
+expect_false(anyNA(cmp$std.error))
+# the aggregate must equal the weighted mean of the unit-level comparisons
+uni <- comparisons(mod, wts = dat$w)
+for (i in seq_len(nrow(cmp))) {
+    idx <- uni$term == cmp$term[i] & uni$contrast == cmp$contrast[i]
+    expect_equivalent(
+        cmp$estimate[i],
+        stats::weighted.mean(uni$estimate[idx], dat$w[uni$rowid][idx])
+    )
+}

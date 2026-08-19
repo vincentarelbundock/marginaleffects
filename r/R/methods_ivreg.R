@@ -24,16 +24,5 @@ get_model_matrix.ivreg <- function(model, newdata, mfx = NULL) {
 #' @noRd
 #' @export
 get_jacobian_analytic.ivreg <- function(model, type, ...) {
-    if (
-        !identical(class(model)[1], "ivreg") ||
-            !identical(type, "response")
-    ) {
-        return(NULL)
-    }
-    jacobian_analytic_model_matrix(
-        model = model,
-        type = type,
-        response_scale = FALSE,
-        ...
-    )
+    jacobian_analytic_linear(model, "ivreg", type, "response", ...)
 }

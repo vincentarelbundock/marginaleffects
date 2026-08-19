@@ -99,6 +99,15 @@ average_draws <- function(data, index, draws) {
         }
         g <- collapse::GRP(data, by = index)
 
+        # A single-row group is an identity: comparison functions which
+        # aggregate (`*avgwts`) already consumed the weights, and averaging
+        # the lone survivor with its stale unit-level weight is 0/0 = NaN
+        # whenever that weight is zero.
+        if (!is.null(w)) {
+            lone <- g[["group.sizes"]][g[["group.id"]]] == 1L
+            w[lone] <- 1
+        }
+
         draws <- collapse::fmean(
             draws,
             g = g,
@@ -110,6 +119,10 @@ average_draws <- function(data, index, draws) {
             average = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian)
         )
     } else {
+        # Same identity rule as above for the ungrouped single-row case.
+        if (!is.null(w) && length(w) == 1L) {
+            w <- NULL
+        }
         draws <- collapse::fmean(
             draws,
             w = w,

@@ -163,6 +163,28 @@ hypothesis_expression_coefficients <- function(expr, labels, idx, n_estimates) {
 # structure they were never proven to have. The only runtime check retained
 # is one matrix-vector product confirming that H reproduces the estimates the
 # closure computed, which guards the compiler itself.
+# One matrix-vector product confirming that crossprod(H, estimate) reproduces
+# the estimates some closure computed. This is the runtime guard shared by
+# every promotion of a syntactically compiled hypothesis matrix.
+hypothesis_matrix_reproduces <- function(H, estimate, expected) {
+    if (
+        !is.numeric(estimate) || !is.numeric(expected) ||
+            nrow(H) != length(estimate) || ncol(H) != length(expected) ||
+            anyNA(expected)
+    ) {
+        return(FALSE)
+    }
+    want <- tryCatch(
+        as.vector(Matrix::crossprod(H, estimate)),
+        error = function(e) NULL
+    )
+    if (!is.numeric(want) || length(want) != length(expected) || anyNA(want)) {
+        return(FALSE)
+    }
+    max(abs(want - expected)) <= 1e-9 * max(1, max(abs(expected)))
+}
+
+
 hypothesis_promote_matrix <- function(hyp, cmp_skeleton, H = NULL) {
     if (is.null(H)) {
         return(hyp)
@@ -177,12 +199,8 @@ hypothesis_promote_matrix <- function(hyp, cmp_skeleton, H = NULL) {
     if (!is.numeric(estimate) || nrow(H) != length(estimate)) {
         return(hyp)
     }
-    want <- drop(crossprod(H, estimate))
     base <- tryCatch(hyp$apply(estimate), error = function(e) NULL)
-    if (
-        !is.numeric(base) || length(base) != ncol(H) || anyNA(base) ||
-            max(abs(want - base)) > 1e-9 * max(1, max(abs(base)))
-    ) {
+    if (!hypothesis_matrix_reproduces(H, estimate, base)) {
         return(hyp)
     }
     out <- hyp
@@ -309,7 +327,14 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mf
     }
 
     H <- hypothesis_compile_formula_matrix(form, groups)
-    if (!is.null(H) && ncol(H) == nrow(cmp)) {
+    # Promote only after the runtime check the string path also performs: one
+    # matrix-vector product confirming H reproduces the estimates the closure
+    # computed. Without it, a wrong shortcut block would surface downstream as
+    # an internal replay error instead of degrading to the closure path.
+    if (
+        !is.null(H) && ncol(H) == nrow(cmp) &&
+            hypothesis_matrix_reproduces(H, cmp_skeleton[["estimate"]], cmp[["estimate"]])
+    ) {
         apply <- function(est) as.vector(Matrix::crossprod(H, est))
         hyp <- list(kind = "matrix", apply = apply, H = H)
     } else {

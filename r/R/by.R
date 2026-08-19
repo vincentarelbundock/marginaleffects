@@ -10,19 +10,13 @@ harmonize_by_types <- function(estimates, by) {
 }
 
 
-get_by <- function(
-    estimates,
-    draws,
-    newdata,
-    by,
-    verbose = TRUE,
-    ...) {
-    if (is.null(by) || isFALSE(by) || nrow(estimates) <= 1) {
-        out <- estimates
-        attr(out, "posterior_draws") <- draws
-        return(out)
-    }
-
+# Resolve the `by` argument against a table of estimates: merge grouping
+# columns which live only in `newdata`, join a `by` data frame of labels,
+# warn about and drop rows a partial `by` data frame does not cover, and
+# return the grouping column names. Shared by the display aggregation
+# (get_by) and the replay recording (record_plan_aggregation) so the two can
+# never disagree about what a group is.
+resolve_by_rows <- function(estimates, newdata, by, verbose = TRUE, draws = NULL) {
     missing <- setdiff(setdiff(colnames(by), "by"), colnames(estimates))
     if (length(missing) > 0) {
         estimates <- merge_original_data(
@@ -47,6 +41,7 @@ get_by <- function(
     }
 
     if ("by" %in% colnames(estimates) && anyNA(estimates[["by"]])) {
+        # User-supplied by data can intentionally cover only some rows.
         msg <- insight::format_message(
             "The `by` data.frame does not cover all combinations of response levels and/or predictors. Some estimates will not be included in the aggregation."
         )
@@ -59,6 +54,33 @@ get_by <- function(
     }
 
     bycols <- intersect(unique(c("term", bycols)), colnames(estimates))
+    list(estimates = estimates, draws = draws, bycols = bycols)
+}
+
+
+get_by <- function(
+    estimates,
+    draws,
+    newdata,
+    by,
+    verbose = TRUE,
+    ...) {
+    if (is.null(by) || isFALSE(by) || nrow(estimates) <= 1) {
+        out <- estimates
+        attr(out, "posterior_draws") <- draws
+        return(out)
+    }
+
+    resolved <- resolve_by_rows(
+        estimates,
+        newdata,
+        by,
+        verbose = verbose,
+        draws = draws
+    )
+    estimates <- resolved$estimates
+    draws <- resolved$draws
+    bycols <- resolved$bycols
 
     # bayesian
     if (!is.null(draws)) {
@@ -71,13 +93,21 @@ get_by <- function(
         # frequentist
     } else {
         if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
+            # A single-row group is an identity: comparison functions which
+            # aggregate (`*avgwts`) already consumed the weights, and dividing
+            # the lone survivor by its stale unit-level weight is 0/0 = NaN
+            # whenever that weight is zero.
             estimates <- estimates[,
                 .(
-                    estimate = stats::weighted.mean(
-                        estimate,
-                        marginaleffects_wts_internal,
-                        na.rm = TRUE
-                    )
+                    estimate = if (.N == 1L) {
+                        estimate
+                    } else {
+                        stats::weighted.mean(
+                            estimate,
+                            marginaleffects_wts_internal,
+                            na.rm = TRUE
+                        )
+                    }
                 ),
                 keyby = bycols
             ]

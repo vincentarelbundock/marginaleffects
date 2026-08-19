@@ -120,20 +120,7 @@ get_model_matrix.svyglm <- function(model, newdata, mfx = NULL) {
 #' @noRd
 #' @export
 get_jacobian_analytic.svyglm <- function(model, type, ...) {
-    if (
-        !identical(class(model)[1], "svyglm") ||
-            !isTRUE(type %in% c("response", "link"))
-    ) {
-        return(NULL)
-    }
-    response_scale <- identical(type, "response")
-    jacobian_analytic_model_matrix(
-        model = model,
-        type = type,
-        response_scale = response_scale,
-        family = if (response_scale) stats::family(model) else NULL,
-        ...
-    )
+    jacobian_analytic_glm_family(model, "svyglm", type, ...)
 }
 
 

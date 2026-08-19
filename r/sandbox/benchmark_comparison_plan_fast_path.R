@@ -76,11 +76,11 @@ comparison_plan_apply_fast <- function(plan, hi, lo, y = NULL) {
     if (!is.null(plan$est_keep)) {
         estimate <- estimate[plan$est_keep]
     }
-    marginaleffects:::apply_plan_aggregation_and_hypothesis(
+    marginaleffects:::apply_plan_stages(
         estimate,
         plan$agg,
         plan$hyp
-    )
+    )$post
 }
 
 set.seed(1024)

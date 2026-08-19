@@ -76,6 +76,7 @@ Performance:
 
 Bug fixes:
 
+* Weighted average comparisons (`avg_comparisons(wts = ...)` and friends) returned `NaN` estimates and standard errors when the weight of a group's first row was exactly zero. The weighted comparison functions had already consumed the weights and collapsed each group to one row, but a redundant second aggregation re-weighted that lone row by its stale unit-level weight, dividing zero by zero. Zero weights are routine in ATT and matching workflows, and the failure depended on row order. The same identity rule now applies on the frequentist, Bayesian, and analytic-Jacobian paths.
 * `betareg` models fit without a precision formula could not accept a user-supplied `vcov` matrix: `get_coef()` labelled the lone precision parameter `(phi)_(phi)` while `get_vcov()` called it `(phi)`.
 * `lm` and `glm` estimates no longer fail when the fit object was stripped of its `qr$qr` element to save memory. Linear predictions are now computed from the model matrix when `stats::predict()` fails. Thanks to @trose64 for report #1748.
 * `vcov = "stata"` now maps to the HC1 heteroskedasticity-robust estimator, which is what Stata's `regress, vce(robust)` computes, instead of HC2. `estimatr::lm_robust(se_type = "stata")` and `modelsummary`'s `"stata"` shortcut both use HC1, so the previous mapping matched no Stata estimator and disagreed with the rest of the ecosystem. Use `vcov = "HC2"` to keep the old behavior.

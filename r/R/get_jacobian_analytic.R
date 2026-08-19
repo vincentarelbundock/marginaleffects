@@ -13,33 +13,43 @@ matrix_all_finite <- function(x) {
 }
 
 
-jacobian_analytic_comparison_groups <- function(J, plan) {
-  out <- matrix(NA_real_, nrow = plan$n_comp, ncol = ncol(J))
-
-  for (g in plan$groups) {
-    block <- J[g$idx, , drop = FALSE]
-    value <- switch(g$fun_key,
-      difference = block,
-      differenceavg = matrix(colMeans(block), nrow = 1L),
-      differenceavgwts = {
-        w <- g$args$w
-        if (
-          !is.numeric(w) || length(w) != nrow(block) ||
-            any(!is.finite(w)) || sum(w) == 0
-        ) {
-          return(NULL)
-        }
-        matrix(colSums(block * w) / sum(w), nrow = 1L)
-      },
-      return(NULL)
-    )
-    if (nrow(value) != length(g$out_idx)) {
-      return(NULL)
-    }
-    out[g$out_idx, ] <- value
+# Predictions and inverse-link derivative for one cached model matrix.
+#
+# Reuses the plan's cached predictions and linear predictor when they are
+# trustworthy -- the pipeline's predictions actually came through this matrix
+# and the cached vectors have the right shape -- and recomputes from X and
+# beta otherwise. The linear predictor is computed at most once, whether it
+# is wanted for the inverse-link derivative, for the predictions, or both.
+# `family` may be NULL on the link scale, where `d` is NULL as well.
+jacobian_analytic_scale <- function(
+  X,
+  beta,
+  cached_pred,
+  cached_eta,
+  model_matrix_used,
+  response_scale,
+  family
+) {
+  reuse <- isTRUE(model_matrix_used) &&
+    identical(colnames(X), names(beta)) &&
+    is.numeric(cached_pred) && length(cached_pred) == nrow(X)
+  eta_reuse <- reuse &&
+    is.numeric(cached_eta) && length(cached_eta) == nrow(X)
+  eta <- NULL
+  if (eta_reuse) {
+    eta <- cached_eta
+  } else if (isTRUE(response_scale) || !reuse) {
+    eta <- drop(X %*% beta)
   }
-
-  out
+  pred <- if (reuse) {
+    cached_pred
+  } else if (isTRUE(response_scale)) {
+    family$linkinv(eta)
+  } else {
+    eta
+  }
+  d <- if (isTRUE(response_scale)) as.vector(family$mu.eta(eta)) else NULL
+  list(pred = pred, d = d)
 }
 
 
@@ -279,7 +289,9 @@ jacobian_analytic_aggregate_weights <- function(agg, n_rows) {
       return(NULL)
     }
 
-    if (isTRUE(agg$weighted)) {
+    # As in apply_plan_aggregation(): a NULL `block$w` marks a single-row
+    # identity group whose recorded unit-level weight is stale.
+    if (isTRUE(agg$weighted) && !is.null(block$w)) {
       w <- block$w
       if (
         !is.numeric(w) || !identical(dim(w), dim(idx)) ||
@@ -413,9 +425,12 @@ jacobian_analytic_weighted_columns <- function(X, idx, w) {
 }
 
 
-# Average simple differences directly from cached matrices. This composes the
-# comparison-row mapping with the recorded aggregation weights, avoiding an
-# intermediate n-observation Jacobian for avg_comparisons().
+# Rowwise simple differences with a recorded aggregation, composed directly
+# from cached matrices: the comparison-row mapping folds into the aggregation
+# weights, so the intermediate n-observation Jacobian of avg_comparisons() is
+# never allocated. Scalar-aggregating difference keys do not come here; their
+# per-group gradients in jacobian_analytic_comparison_exact() contract with
+# crossprod() and skip the observation-level matrix just the same.
 jacobian_analytic_comparison_aggregate <- function(
   X_hi,
   X_lo,
@@ -423,46 +438,6 @@ jacobian_analytic_comparison_aggregate <- function(
   d_lo,
   plan
 ) {
-  avg_keys <- c("differenceavg", "differenceavgwts")
-  group_keys <- vapply(plan$groups, `[[`, character(1), "fun_key")
-
-  # avg_comparisons() normally records the averaging operation directly in
-  # each comparison group. Compute those small output rows without ever
-  # allocating the corresponding observation-level derivative matrix.
-  if (length(group_keys) > 0L && all(group_keys %in% avg_keys)) {
-    out <- matrix(NA_real_, nrow = plan$n_comp, ncol = ncol(X_hi))
-    for (g in plan$groups) {
-      if (length(g$out_idx) != 1L || length(g$idx) == 0L) {
-        return(NULL)
-      }
-      if (identical(g$fun_key, "differenceavgwts")) {
-        w <- g$args$w
-        if (
-          !is.numeric(w) || length(w) != length(g$idx) ||
-            any(!is.finite(w))
-        ) {
-          return(NULL)
-        }
-        denominator <- sum(w)
-        if (denominator == 0) {
-          return(NULL)
-        }
-        w <- w / denominator
-      } else {
-        w <- rep.int(1 / length(g$idx), length(g$idx))
-      }
-      w_hi <- if (is.null(d_hi)) w else w * d_hi[g$idx]
-      w_lo <- if (is.null(d_lo)) w else w * d_lo[g$idx]
-      out[g$out_idx, ] <-
-        jacobian_analytic_weighted_columns(X_hi, g$idx, w_hi) -
-        jacobian_analytic_weighted_columns(X_lo, g$idx, w_lo)
-    }
-    if (!is.null(plan$est_keep)) {
-      out <- out[plan$est_keep, , drop = FALSE]
-    }
-    return(list(J = out, aggregated = FALSE))
-  }
-
   if (is.null(plan$agg) || length(plan$agg$blocks) == 0L) {
     return(NULL)
   }
@@ -500,13 +475,12 @@ jacobian_analytic_comparison_aggregate <- function(
   if (!all(is.finite(vals_hi)) || !all(is.finite(vals_lo))) {
     return(NULL)
   }
-  out <- jacobian_analytic_aggregate_contract(
+  jacobian_analytic_aggregate_contract(
     X_hi, plan$agg, rows, weights$cols, vals_hi
   ) -
     jacobian_analytic_aggregate_contract(
       X_lo, plan$agg, rows, weights$cols, vals_lo
     )
-  list(J = out, aggregated = TRUE)
 }
 
 
@@ -526,6 +500,55 @@ get_jacobian_analytic <- function(model, ...) {
 #' @export
 get_jacobian_analytic.default <- function(model, ...) {
   NULL
+}
+
+
+# Shared bodies for the per-model get_jacobian_analytic() methods. Each
+# method gates on its exact class -- subclasses may override prediction
+# behavior the eligibility whitelist knows nothing about -- and on the
+# prediction types whose scale it can differentiate.
+jacobian_analytic_linear <- function(model, class_expected, type, types_ok, ...) {
+  if (
+    !identical(class(model)[1], class_expected) ||
+      !isTRUE(type %in% types_ok)
+  ) {
+    return(NULL)
+  }
+  jacobian_analytic_model_matrix(
+    model = model,
+    type = type,
+    response_scale = FALSE,
+    ...
+  )
+}
+
+
+jacobian_analytic_glm_family <- function(
+  model,
+  class_expected,
+  type,
+  response_type = "response",
+  link_type = "link",
+  family = NULL,
+  ...
+) {
+  if (
+    !identical(class(model)[1], class_expected) ||
+      !isTRUE(type %in% c(response_type, link_type))
+  ) {
+    return(NULL)
+  }
+  response_scale <- identical(type, response_type)
+  if (isTRUE(response_scale) && is.null(family)) {
+    family <- stats::family(model)
+  }
+  jacobian_analytic_model_matrix(
+    model = model,
+    type = type,
+    response_scale = response_scale,
+    family = if (response_scale) family else NULL,
+    ...
+  )
 }
 
 
@@ -640,40 +663,28 @@ jacobian_analytic_model_matrix <- function(
           return(NULL)
         }
 
-        reuse <- isTRUE(plan$model_matrix_used) &&
-          identical(colnames(X_hi), beta_names) &&
-          identical(colnames(X_lo), beta_names) &&
-          is.numeric(plan$baseline_hi) &&
-          length(plan$baseline_hi) == nrow(X_hi) &&
-          is.numeric(plan$baseline_lo) &&
-          length(plan$baseline_lo) == nrow(X_lo)
-        eta_reuse <- reuse &&
-          is.numeric(plan$eta_hi) && length(plan$eta_hi) == nrow(X_hi) &&
-          is.numeric(plan$eta_lo) && length(plan$eta_lo) == nrow(X_lo)
-        # The linear predictor is wanted for the inverse-link derivative, and
-        # again to rebuild the predictions when the plan's cached ones cannot
-        # be trusted. Both needs are served by computing it at most once.
-        if (eta_reuse) {
-          eta_hi <- plan$eta_hi
-          eta_lo <- plan$eta_lo
-        } else if (isTRUE(response_scale) || !reuse) {
-          eta_hi <- drop(X_hi %*% beta)
-          eta_lo <- drop(X_lo %*% beta)
-        }
-        if (reuse) {
-          pred_hi <- plan$baseline_hi
-          pred_lo <- plan$baseline_lo
-        } else {
-          pred_hi <- if (isTRUE(response_scale)) family$linkinv(eta_hi) else eta_hi
-          pred_lo <- if (isTRUE(response_scale)) family$linkinv(eta_lo) else eta_lo
-        }
-        if (isTRUE(response_scale)) {
-          d_hi <- as.vector(family$mu.eta(eta_hi))
-          d_lo <- as.vector(family$mu.eta(eta_lo))
-        } else {
-          d_hi <- NULL
-          d_lo <- NULL
-        }
+        scale_hi <- jacobian_analytic_scale(
+          X_hi,
+          beta,
+          plan$baseline_hi,
+          plan$eta_hi,
+          plan$model_matrix_used,
+          response_scale,
+          family
+        )
+        scale_lo <- jacobian_analytic_scale(
+          X_lo,
+          beta,
+          plan$baseline_lo,
+          plan$eta_lo,
+          plan$model_matrix_used,
+          response_scale,
+          family
+        )
+        pred_hi <- scale_hi$pred
+        pred_lo <- scale_lo$pred
+        d_hi <- scale_hi$d
+        d_lo <- scale_lo$d
         # The replay stages tolerate missing predictions (their aggregation
         # averages with na.rm = TRUE), but the sparse Jacobian aggregation
         # divides by full group counts. Those two conventions agree only when
@@ -693,34 +704,19 @@ jacobian_analytic_model_matrix <- function(
         if (is.null(X)) {
           return(NULL)
         }
-        reuse <- isTRUE(plan$model_matrix_used) &&
-          identical(colnames(X), beta_names) &&
-          is.numeric(plan$baseline_prediction) &&
-          length(plan$baseline_prediction) == nrow(X)
-        eta_reuse <- reuse &&
-          is.numeric(plan$linear_predictor) &&
-          length(plan$linear_predictor) == nrow(X)
-        # As above: the linear predictor is computed at most once, whether it
-        # is wanted for the inverse-link derivative, for the predictions, or
-        # for both.
-        if (eta_reuse) {
-          eta <- plan$linear_predictor
-        } else if (isTRUE(response_scale) || !reuse) {
-          eta <- drop(X %*% beta)
-        }
-        if (reuse) {
-          pred <- plan$baseline_prediction
-        } else {
-          pred <- if (isTRUE(response_scale)) family$linkinv(eta) else eta
-        }
-        # Keep the row scaling as a vector for now. Whether it ever needs to
-        # meet X as a full matrix depends on the aggregation, which is decided
-        # below.
-        d_pred <- if (isTRUE(response_scale)) {
-          as.vector(family$mu.eta(eta))
-        } else {
-          NULL
-        }
+        # The row scaling stays a vector for now. Whether it ever needs to
+        # meet X as a full matrix depends on the aggregation, decided below.
+        scale_pred <- jacobian_analytic_scale(
+          X,
+          beta,
+          plan$baseline_prediction,
+          plan$linear_predictor,
+          plan$model_matrix_used,
+          response_scale,
+          family
+        )
+        pred <- scale_pred$pred
+        d_pred <- scale_pred$d
         # Same rejection as the comparisons branch: replay aggregation drops
         # missing predictions, the sparse weights do not.
         if (isTRUE(plan$has_na) || anyNA(pred)) {
@@ -760,12 +756,28 @@ jacobian_analytic_model_matrix <- function(
           pred_lo <- pred_lo[plan$perm]
         }
 
-        if (!isTRUE(difference_groups)) {
-          # The comparison is arbitrary arithmetic on the hi and lo
-          # predictions. Hand the stage its model matrices and inverse-link
-          # derivatives separately rather than the pair of prediction
-          # Jacobians, so that a group which aggregates its rows can compose
-          # them without ever forming an observation-level derivative.
+        # Rowwise differences feeding a recorded aggregation fold straight
+        # into the aggregation weights and come back already contracted.
+        # Every other group shape goes through the exact per-group gradients:
+        # they hand the stage its model matrices and inverse-link derivatives
+        # separately rather than the pair of prediction Jacobians, so a group
+        # which aggregates its rows composes them without ever forming an
+        # observation-level derivative either.
+        direct <- if (isTRUE(difference_groups)) {
+          jacobian_analytic_comparison_aggregate(
+            X_hi = X_hi,
+            X_lo = X_lo,
+            d_hi = d_hi,
+            d_lo = d_lo,
+            plan = plan
+          )
+        } else {
+          NULL
+        }
+        if (!is.null(direct)) {
+          J <- direct
+          aggregated_early <- TRUE
+        } else {
           J <- jacobian_analytic_comparison_exact(
             X_hi = X_hi,
             X_lo = X_lo,
@@ -782,32 +794,6 @@ jacobian_analytic_model_matrix <- function(
             J <- J[plan$est_keep, , drop = FALSE]
           }
           aggregated_early <- FALSE
-        } else {
-          direct <- jacobian_analytic_comparison_aggregate(
-            X_hi = X_hi,
-            X_lo = X_lo,
-            d_hi = d_hi,
-            d_lo = d_lo,
-            plan = plan
-          )
-          if (is.null(direct)) {
-            aggregated_early <- FALSE
-            if (isTRUE(response_scale)) {
-              J <- X_hi * d_hi - X_lo * d_lo
-            } else {
-              J <- X_hi - X_lo
-            }
-            J <- jacobian_analytic_comparison_groups(J, plan)
-            if (is.null(J)) {
-              return(NULL)
-            }
-            if (!is.null(plan$est_keep)) {
-              J <- J[plan$est_keep, , drop = FALSE]
-            }
-          } else {
-            J <- direct$J
-            aggregated_early <- direct$aggregated
-          }
         }
       } else {
         # An aggregating estimand contracts the prediction rows away, so the

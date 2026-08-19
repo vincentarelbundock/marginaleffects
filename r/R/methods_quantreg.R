@@ -62,16 +62,5 @@ get_model_matrix.rq <- function(model, newdata, mfx = NULL) {
 #' @noRd
 #' @export
 get_jacobian_analytic.rq <- function(model, type, ...) {
-    if (
-        !identical(class(model)[1], "rq") ||
-            !identical(type, "response")
-    ) {
-        return(NULL)
-    }
-    jacobian_analytic_model_matrix(
-        model = model,
-        type = type,
-        response_scale = FALSE,
-        ...
-    )
+    jacobian_analytic_linear(model, "rq", type, "response", ...)
 }

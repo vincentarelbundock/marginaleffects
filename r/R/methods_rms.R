@@ -125,43 +125,28 @@ get_model_matrix.lrm <- get_model_matrix.ols
 #' @noRd
 #' @export
 get_jacobian_analytic.ols <- function(model, type, ...) {
-    if (
-        !identical(class(model)[1], "ols") ||
-            !identical(type, "lp")
-    ) {
-        return(NULL)
-    }
-    jacobian_analytic_model_matrix(
-        model = model,
-        type = type,
-        response_scale = FALSE,
-        ...
-    )
+    jacobian_analytic_linear(model, "ols", type, "lp", ...)
 }
 
 
 #' @noRd
 #' @export
 get_jacobian_analytic.lrm <- function(model, type, ...) {
+    # The fitted scale is a plain logit only for a binary outcome with no
+    # special link functions; ordinal or custom-family fits stay numeric.
     if (
-        !identical(class(model)[1], "lrm") ||
-            !isTRUE(type %in% c("lp", "fitted"))
-    ) {
-        return(NULL)
-    }
-
-    response_scale <- identical(type, "fitted")
-    if (
-        response_scale &&
+        identical(type, "fitted") &&
             (!identical(model$non.slopes, 1L) || length(model$famfunctions) > 0L)
     ) {
         return(NULL)
     }
-    jacobian_analytic_model_matrix(
-        model = model,
-        type = type,
-        response_scale = response_scale,
-        family = if (response_scale) stats::binomial("logit") else NULL,
+    jacobian_analytic_glm_family(
+        model,
+        "lrm",
+        type,
+        response_type = "fitted",
+        link_type = "lp",
+        family = stats::binomial("logit"),
         ...
     )
 }
