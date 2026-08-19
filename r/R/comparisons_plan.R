@@ -183,9 +183,14 @@ comparison_plan_build <- function(
     matrix_used_hi <- isTRUE(attr(pred_hi, "marginaleffects_model_matrix_used"))
     out <- data.table(pred_lo)
 
+    # The `*avgwts` variants are what sanitize_variables() rewrites the `*avg`
+    # shorthands into when `wts` is supplied. Omitting them here left `need_y`
+    # false, so `y` and the elasticity column were never prepared and the
+    # weighted comparison functions returned NA.
     elasticity_names <- c(
         "eyex", "eydx", "dyex",
-        "eyexavg", "eydxavg", "dyexavg"
+        "eyexavg", "eydxavg", "dyexavg",
+        "eyexavgwts", "eydxavgwts", "dyexavgwts"
     )
     fun <- function(x) {
         isTRUE(checkmate::check_choice(x$comparison, choices = elasticity_names))
