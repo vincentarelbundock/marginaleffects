@@ -1,17 +1,19 @@
 import re
+from typing import Any
+
+import narwhals as nw
 import numpy as np
 import pandas as pd
-import narwhals as nw
-from typing import Any, Dict
 import polars as pl
-from ..docstrings import doc
-from ..utils import ingest
 from formulaic.parser.algos.tokenize import tokenize
+
 from ..classes import ModelAbstract, ModelVault
+from ..docstrings import doc
 from ..formula import (
     listwise_deletion,
     model_matrices,
 )
+from ..utils import ingest
 
 
 class ModelLinearmodels(ModelAbstract):
@@ -118,7 +120,7 @@ class ModelLinearmodels(ModelAbstract):
         if isinstance(newdata, np.ndarray):
             exog = newdata
         else:
-            y, exog = model_matrices(
+            _y, exog = model_matrices(
                 self.get_formula(),
                 self._to_pandas(newdata),
                 formula_engine="linearmodels",
@@ -205,7 +207,7 @@ def parse_linearmodels_formula(formula: str):
     formula = f"{lhs.strip()} ~ 0 + {rhs.strip()}"
     tokens = [token.token for token in tokenize(formula)]
 
-    for effect in effects_tokens.keys():
+    for effect in effects_tokens:
         try:
             idx = tokens.index(effect)
             effects_tokens[effect] = True
@@ -287,8 +289,8 @@ def fit_linearmodels(
     formula: str,
     data: pd.DataFrame,
     engine: None,
-    kwargs_engine: Dict[str, Any] | None = None,
-    kwargs_fit: Dict[str, Any] | None = None,
+    kwargs_engine: dict[str, Any] | None = None,
+    kwargs_fit: dict[str, Any] | None = None,
 ) -> ModelLinearmodels:
     kwargs_engine = {} if kwargs_engine is None else kwargs_engine
     kwargs_fit = {} if kwargs_fit is None else kwargs_fit

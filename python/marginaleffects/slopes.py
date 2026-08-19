@@ -1,6 +1,6 @@
-from .docstrings import doc
-from .comparisons import comparisons
 from .classes import MarginaleffectsResult
+from .comparisons import comparisons
+from .docstrings import doc
 from .utils import call_avg
 
 

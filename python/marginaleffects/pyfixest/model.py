@@ -1,6 +1,8 @@
 import re
+
 import numpy as np
 import polars as pl
+
 from ..classes import ModelAbstract, ModelVault
 from ..utils import ingest
 
@@ -17,7 +19,7 @@ class ModelPyfixest(ModelAbstract):
 
         # after super init & validation
         if hasattr(model, "_fixef"):
-            fixef = getattr(model, "_fixef")
+            fixef = model._fixef
             if isinstance(fixef, str) and fixef.strip().lower() in {"", "none"}:
                 fixef = None
             if fixef:
@@ -54,7 +56,7 @@ class ModelPyfixest(ModelAbstract):
             self.model.vcov(vcov)
             V = self.model._vcov
         else:
-            raise ValueError(
+            raise TypeError(
                 '`vcov` must be a boolean, a string like "HC3" or "hetero", '
                 'or a dict like {"CRV1": "clustervar"}.'
             )

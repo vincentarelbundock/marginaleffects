@@ -1,7 +1,6 @@
 import numpy as np
 import polars as pl
 
-
 _TRANSFORMS = {
     "exp": lambda col: np.exp(col),
 }
@@ -20,7 +19,7 @@ def get_transform(x, transform=None):
     elif callable(transform):
         fn = transform
     else:
-        raise ValueError("`transform` must be a string or callable.")
+        raise TypeError("`transform` must be a string or callable.")
 
     for col in ["estimate", "conf_low", "conf_high"]:
         if col in x.columns:

@@ -5,32 +5,32 @@ import numpy as np
 import polars as pl
 
 from .autodiff.lower import autodiff_try
+from .classes import MarginaleffectsResult
+from .docstrings import doc
 from .estimands import estimands
 from .hypothesis_compile import hypothesis_compile
-from .sanitize import sanitize_model
-from .sanitize import (
-    sanitize_variables,
-    handle_deprecated_hypotheses_argument,
-    handle_pyfixest_vcov_limitation,
-)
-from .classes import MarginaleffectsResult
 from .inference import analytic_try, get_jacobian, get_se
 from .planning import (
-    CompGroup,
     ComparisonPlan,
+    CompGroup,
     comparison_plan_apply,
     comparison_plan_predict,
     plan_values_allclose,
 )
-from .utils import (
-    get_pad,
-    upcast,
-    finalize_result,
-    call_avg,
-    prepare_base_inputs,
+from .sanitize import (
+    handle_deprecated_hypotheses_argument,
+    handle_pyfixest_vcov_limitation,
+    sanitize_model,
+    sanitize_variables,
 )
 from .sanitize.utils import validate_string_columns
-from .docstrings import doc
+from .utils import (
+    call_avg,
+    finalize_result,
+    get_pad,
+    prepare_base_inputs,
+    upcast,
+)
 
 
 def _cross_postprocess(cross):
@@ -171,44 +171,44 @@ def _finalize_counterfactual_frames(
 
     dfs = {"nd": nd, "hi": hi, "lo": lo}
 
-    for df_name in dfs:
-        df = dfs[df_name]
+    for df_name, df in dfs.items():
         common_cols = set(pad_df.columns) & set(df.columns)
         for col in common_cols:
             pad_dtype = str(pad_df[col].dtype)
             df_dtype = str(df[col].dtype)
-            if pad_dtype != df_dtype:
-                if pad_dtype.startswith("List(") and df_dtype.startswith("List("):
+            if (
+                pad_dtype != df_dtype
+                and pad_dtype.startswith("List(")
+                and df_dtype.startswith("List(")
+            ):
+                try:
+                    if col in pad_df.columns:
+                        pad_df = pad_df.with_columns(
+                            pad_df[col]
+                            .list.eval(pl.element().cast(pl.String))
+                            .alias(col)
+                        )
+                    if col in df.columns:
+                        df = df.with_columns(
+                            df[col].list.eval(pl.element().cast(pl.String)).alias(col)
+                        )
+                except Exception as e:  # noqa: BLE001 -- dtype recovery path
+                    warnings.warn(
+                        f"Could not convert List column {col} to strings: {e}"
+                    )
                     try:
+                        if col in pad_df.columns and pad_df.height > 0:
+                            pad_df = pad_df.explode(col)
+                        if col in df.columns and df.height > 0:
+                            df = df.explode(col)
+                    except Exception as e2:  # noqa: BLE001 -- final recovery path
+                        warnings.warn(f"Could not explode List column {col}: {e2}")
                         if col in pad_df.columns:
                             pad_df = pad_df.with_columns(
-                                pad_df[col]
-                                .list.eval(pl.element().cast(pl.String))
-                                .alias(col)
+                                pad_df[col].cast(pl.String).alias(col)
                             )
                         if col in df.columns:
-                            df = df.with_columns(
-                                df[col]
-                                .list.eval(pl.element().cast(pl.String))
-                                .alias(col)
-                            )
-                    except Exception as e:
-                        warnings.warn(
-                            f"Could not convert List column {col} to strings: {e}"
-                        )
-                        try:
-                            if col in pad_df.columns and pad_df.height > 0:
-                                pad_df = pad_df.explode(col)
-                            if col in df.columns and df.height > 0:
-                                df = df.explode(col)
-                        except Exception as e2:
-                            warnings.warn(f"Could not explode List column {col}: {e2}")
-                            if col in pad_df.columns:
-                                pad_df = pad_df.with_columns(
-                                    pad_df[col].cast(pl.String).alias(col)
-                                )
-                            if col in df.columns:
-                                df = df.with_columns(df[col].cast(pl.String).alias(col))
+                            df = df.with_columns(df[col].cast(pl.String).alias(col))
 
         dfs[df_name] = df
 
@@ -520,6 +520,8 @@ def _comparisons_build(
                 fun_key=item["fun_key"],
                 x=None if item["x"] is None else np.asarray(item["x"]),
                 w=None if item["w"] is None else np.asarray(item["w"], dtype=float),
+                uses_y=item["fun_key"] is None
+                or item["fun_key"].startswith(("eyex", "eydx")),
             )
         )
         start += n_out
@@ -729,11 +731,13 @@ def comparisons(
     pad_frames = []
     model_vars = model.find_variables()
     if model_vars is not None:
-        model_vars = list(set(re.sub(r"\[.*", "", x) for x in model_vars))
+        model_vars = list({re.sub(r"\[.*", "", x) for x in model_vars})
         for v in model_vars:
-            if v in modeldata.columns:
-                if model.get_variable_type(v) not in ["numeric", "integer"]:
-                    pad_frames.append(get_pad(newdata, v, modeldata[v].unique()))
+            if v in modeldata.columns and model.get_variable_type(v) not in [
+                "numeric",
+                "integer",
+            ]:
+                pad_frames.append(get_pad(newdata, v, modeldata[v].unique()))
     nd, hi, lo, pad_rows = _finalize_counterfactual_frames(
         nd_frames,
         hi_frames,

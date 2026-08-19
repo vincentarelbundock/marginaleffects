@@ -1,7 +1,6 @@
-from importlib import import_module
 import importlib.util
 import sys
-
+from importlib import import_module
 
 _EXPORTS = {
     "avg_comparisons": ("marginaleffects.comparisons", "avg_comparisons"),

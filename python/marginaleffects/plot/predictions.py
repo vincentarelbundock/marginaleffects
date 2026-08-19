@@ -1,14 +1,15 @@
+import copy
+
 from ..docstrings import doc
-from .common import (
-    dt_on_condition,
-    plot_labels,
-    plot_common,
-    validate_plot_args,
-    extract_var_list,
-)
 from ..predictions import predictions
 from ..sanitize import sanitize_model
-import copy
+from .common import (
+    dt_on_condition,
+    extract_var_list,
+    plot_common,
+    plot_labels,
+    validate_plot_args,
+)
 
 
 @doc("""

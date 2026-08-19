@@ -1,15 +1,16 @@
 import numpy as np
 
+from marginaleffects.estimands import estimands
 from marginaleffects.inference.analytic import analytic_try
 from marginaleffects.inference.delta import get_jacobian
 from marginaleffects.planning import (
     AggGroup,
-    CompGroup,
     ComparisonPlan,
+    CompGroup,
+    Hyp,
     PredictionPlan,
     comparison_plan_apply,
 )
-from marginaleffects.estimands import estimands
 
 
 class LinearAdapter:
@@ -21,6 +22,14 @@ class LinearAdapter:
 
     def get_autodiff_args(self):
         return {"model_type": "linear", "family": None, "link": None}
+
+
+class LogAdapter(LinearAdapter):
+    def get_autodiff_args(self):
+        return {"model_type": "glm", "family": "custom", "link": "custom"}
+
+    def get_link_functions(self):
+        return np.exp, np.exp
 
 
 def test_analytic_prediction_jacobian_with_aggregation():
@@ -93,3 +102,55 @@ def test_analytic_ratio_matches_finite_difference():
     np.testing.assert_allclose(analytic.jacobian, numeric, rtol=1e-6, atol=1e-6)
 
     assert analytic_try(plan, model, np.eye(2), estimate + 1.0, "comparisons") is None
+
+
+def test_analytic_glm_response_scale_lnratio():
+    model = LogAdapter([0.2, 0.4])
+    X_hi = np.asarray([[1.0, 2.0], [1.0, 4.0]])
+    X_lo = np.asarray([[1.0, 1.0], [1.0, 3.0]])
+    plan = ComparisonPlan(
+        n_pred=2,
+        exog_hi=X_hi,
+        exog_lo=X_lo,
+        exog_nd=None,
+        need_y=False,
+        align=None,
+        eps=1e-4,
+        groups=[
+            CompGroup(
+                idx=np.arange(2),
+                out_idx=np.arange(2),
+                scalar=False,
+                fun=estimands["lnratio"],
+                fun_key="lnratio",
+                x=None,
+                w=None,
+            )
+        ],
+        n_comp=2,
+        hyp=None,
+    )
+    hi, lo = np.exp(X_hi @ model.get_coef()), np.exp(X_lo @ model.get_coef())
+    estimate = comparison_plan_apply(plan, hi, lo)
+    out = analytic_try(plan, model, np.eye(2), estimate, "comparisons")
+    np.testing.assert_allclose(out.jacobian, X_hi - X_lo, atol=1e-12)
+
+
+def test_analytic_composes_nonlinear_hypothesis():
+    model = LinearAdapter([1.0, 2.0])
+    X = np.asarray([[1.0, 0.0], [1.0, 2.0]])
+    hyp = Hyp(kind="string", apply=lambda z: np.asarray([z[0] * z[1]]))
+    plan = PredictionPlan(
+        n_pred=2,
+        exog=X,
+        align=None,
+        has_na=False,
+        agg=None,
+        hyp=hyp,
+        n_out=1,
+    )
+    pred = X @ model.get_coef()
+    estimate = hyp.apply(pred)
+    out = analytic_try(plan, model, np.eye(2), estimate, "predictions")
+    expected = pred[1] * X[0] + pred[0] * X[1]
+    np.testing.assert_allclose(out.jacobian[0], expected, rtol=1e-9, atol=1e-9)

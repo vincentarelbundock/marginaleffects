@@ -5,7 +5,7 @@ import polars as pl
 def prep(x):
     if isinstance(x, float):
         return pl.Series([x])
-    elif isinstance(x, np.ndarray) or isinstance(x, list):
+    elif isinstance(x, (np.ndarray, list)):
         return pl.Series(x)
     elif np.isscalar(x):
         return pl.Series([x])

@@ -1,10 +1,11 @@
 import re
-import numpy as np
-import scipy.stats as stats
-import polars as pl
 
-from ..sanitize import sanitize_hypothesis_null
+import numpy as np
+import polars as pl
+from scipy import stats
+
 from ..classes import MarginaleffectsResult
+from ..sanitize import sanitize_hypothesis_null
 
 
 def joint_hypotheses(obj, joint_index=None, joint_test="f", hypothesis=0):

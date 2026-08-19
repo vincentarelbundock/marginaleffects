@@ -1,7 +1,9 @@
+from collections.abc import Callable
+from typing import Protocol, runtime_checkable
+
 import narwhals as nw
 import numpy as np
 import polars as pl
-from typing import Callable, Optional, Protocol, runtime_checkable, Union, List
 
 
 @runtime_checkable
@@ -158,7 +160,7 @@ def upcast(df, reference):
     return df
 
 
-def get_mode(series: pl.Series) -> Union[str, int, float, bool]:
+def get_mode(series: pl.Series) -> str | int | float | bool:
     """
     Get the mode (most frequent value) of a Polars Series.
 
@@ -204,7 +206,7 @@ def mean_i(series: pl.Series) -> int:
     int
         Rounded mean value
     """
-    return int(round(series.drop_nulls().mean()))
+    return round(series.drop_nulls().mean())
 
 
 def mean_na(series: pl.Series) -> float:
@@ -224,7 +226,7 @@ def mean_na(series: pl.Series) -> float:
     return series.drop_nulls().mean()
 
 
-def unique_s(series: pl.Series) -> List:
+def unique_s(series: pl.Series) -> list:
     """
     Get unique values sorted, similar to R's unique_s.
 
@@ -253,15 +255,15 @@ def finalize_result(
     conf_level,
     J,
     hypothesis_null=None,
-    equivalence_df: Optional[float] = None,
-    postprocess: Optional[Callable] = None,
+    equivalence_df: float | None = None,
+    postprocess: Callable | None = None,
 ):
     """
     Shared helper to add z/p/CI, apply final transforms, and wrap a MarginaleffectsResult.
     """
+    from .classes import MarginaleffectsResult
     from .inference import get_z_p_ci
     from .test.equivalence import get_equivalence
-    from .classes import MarginaleffectsResult
     from .transform import get_transform
 
     if "std_error" in out.columns:
@@ -304,15 +306,16 @@ def prepare_base_inputs(
     Shared helper to sanitize model, newdata, by, and hypothesis inputs.
     """
     from warnings import warn
-    from .sanitize import sanitize_model
+
+    from .pyfixest import ModelPyfixest
     from .sanitize import (
         sanitize_by,
         sanitize_hypothesis_null,
+        sanitize_model,
         sanitize_newdata,
         sanitize_vcov,
     )
     from .sanitize.utils import validate_string_columns
-    from .pyfixest import ModelPyfixest
 
     if callable(newdata):
         newdata = newdata(model)

@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any
 
 import numpy as np
 import polars as pl
@@ -14,10 +15,13 @@ __all__ = [
     "ComparisonPlan",
     "Hyp",
     "PredictionPlan",
+    "Stages",
     "comparison_plan_apply",
+    "comparison_plan_apply_stages",
     "comparison_plan_predict",
     "plan_values_allclose",
     "prediction_plan_apply",
+    "prediction_plan_apply_stages",
     "prediction_plan_predict",
 ]
 
@@ -33,6 +37,12 @@ class Hyp:
     kind: str
     apply: Callable[[np.ndarray], np.ndarray]
     H: np.ndarray | None = None
+
+
+@dataclass(frozen=True)
+class Stages:
+    pre: np.ndarray
+    post: np.ndarray
 
 
 @dataclass
@@ -55,6 +65,7 @@ class CompGroup:
     fun_key: str | None
     x: np.ndarray | None
     w: np.ndarray | None
+    uses_y: bool = False
 
 
 @dataclass
@@ -197,6 +208,10 @@ def prediction_plan_predict(plan: PredictionPlan, model, coefs) -> np.ndarray:
 
 
 def prediction_plan_apply(plan: PredictionPlan, pred) -> np.ndarray:
+    return prediction_plan_apply_stages(plan, pred).post
+
+
+def prediction_plan_apply_stages(plan: PredictionPlan, pred) -> Stages:
     est = _apply_align(pred, plan.align)
 
     if plan.agg is not None:
@@ -205,6 +220,7 @@ def prediction_plan_apply(plan: PredictionPlan, pred) -> np.ndarray:
             dtype=float,
         )
 
+    pre = est
     if plan.hyp is not None:
         est = _as_float_array(plan.hyp.apply(est))
 
@@ -212,7 +228,7 @@ def prediction_plan_apply(plan: PredictionPlan, pred) -> np.ndarray:
         raise RuntimeError(
             "marginaleffects internal error: prediction plan replay changed shape"
         )
-    return est
+    return Stages(pre=pre, post=est)
 
 
 def comparison_plan_predict(plan: ComparisonPlan, model, coefs):
@@ -230,6 +246,10 @@ def comparison_plan_predict(plan: ComparisonPlan, model, coefs):
 
 
 def comparison_plan_apply(plan: ComparisonPlan, hi, lo, y=None) -> np.ndarray:
+    return comparison_plan_apply_stages(plan, hi, lo, y).post
+
+
+def comparison_plan_apply_stages(plan: ComparisonPlan, hi, lo, y=None) -> Stages:
     hi = _apply_align(hi, plan.align)
     lo = _apply_align(lo, plan.align)
     y = None if y is None else _apply_align(y, plan.align)
@@ -263,7 +283,8 @@ def comparison_plan_apply(plan: ComparisonPlan, hi, lo, y=None) -> np.ndarray:
             )
         out[group.out_idx] = est
 
+    pre = out
     if plan.hyp is not None:
         out = _as_float_array(plan.hyp.apply(out))
 
-    return out
+    return Stages(pre=pre, post=out)

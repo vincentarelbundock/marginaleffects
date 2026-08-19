@@ -4,13 +4,12 @@ from __future__ import annotations
 
 from functools import partial
 
-import numpy as np
 import jax
 import jax.numpy as jnp
+import numpy as np
 
 from .glm.families import Family, Link, linkinv, resolve_link
 from .ops import PIPELINE_OPS
-
 
 _FAMILY = {
     "gaussian": Family.GAUSSIAN,

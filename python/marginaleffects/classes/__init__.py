@@ -1,8 +1,8 @@
-from .result import MarginaleffectsResult, MarginaleffectsDataFrame
+from .result import MarginaleffectsDataFrame, MarginaleffectsResult
 
 __all__ = [
-    "MarginaleffectsResult",
     "MarginaleffectsDataFrame",
+    "MarginaleffectsResult",
     "ModelAbstract",
     "ModelAdapter",
     "ModelVault",

@@ -1,14 +1,15 @@
-from ..docstrings import doc
+import copy
+
 from ..comparisons import comparisons
+from ..docstrings import doc
+from ..sanitize import sanitize_model
 from .common import (
     dt_on_condition,
-    plot_labels,
-    plot_common,
-    validate_plot_args,
     extract_var_list,
+    plot_common,
+    plot_labels,
+    validate_plot_args,
 )
-from ..sanitize import sanitize_model
-import copy
 
 
 @doc("""

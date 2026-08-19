@@ -31,14 +31,14 @@ if _JAX_AVAILABLE:
 
     from . import glm as glm
     from . import pipeline as pipeline
-
-    from .glm.families import Family as Family, Link as Link
+    from .glm.families import Family as Family
+    from .glm.families import Link as Link
 
     __all__ = [
-        "glm",
-        "pipeline",
         "Family",
         "Link",
+        "glm",
+        "pipeline",
     ]
 else:
     # Create dummy module objects that raise helpful errors
@@ -57,4 +57,4 @@ else:
         def __getattribute__(self, name):
             _raise_jax_error()
 
-    __all__ = ["glm", "pipeline", "Family", "Link"]
+    __all__ = ["Family", "Link", "glm", "pipeline"]

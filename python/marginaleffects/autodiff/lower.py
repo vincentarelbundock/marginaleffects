@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 import warnings
+from dataclasses import dataclass
 
 import numpy as np
 
-from ..settings import is_autodiff_enabled, is_autodiff_forced
 from ..inference import get_se
+from ..settings import is_autodiff_enabled, is_autodiff_forced
 from .ops import COMPARISON_OPS
 
 
@@ -191,7 +191,7 @@ def autodiff_try(plan, model, V, estimate, kind):
         from . import pipeline
 
         result = pipeline.compute(beta=model.get_coef(), **lowered.kwargs)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 -- optional backend must fall back
         if warn_on_fallback:
             warnings.warn(
                 "Automatic differentiation failed "

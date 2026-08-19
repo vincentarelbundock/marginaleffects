@@ -6,7 +6,6 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-
 ArrayFn = Callable[[list[Any]], Any]
 WMeanFn = Callable[[Any, Any | None], Any]
 EstimateFn = Callable[[Any, Any, Any | None, ArrayFn, WMeanFn], Any]

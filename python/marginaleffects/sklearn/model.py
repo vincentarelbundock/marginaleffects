@@ -1,10 +1,12 @@
-import numpy as np
 import warnings
+
+import numpy as np
 import polars as pl
-from ..docstrings import doc
-from ..utils import ingest
-from ..formula import listwise_deletion, model_matrices
+
 from ..classes import ModelAbstract, ModelVault
+from ..docstrings import doc
+from ..formula import listwise_deletion, model_matrices
+from ..utils import ingest
 
 
 class ModelSklearn(ModelAbstract):
@@ -227,7 +229,7 @@ def fit_sklearn(formula, data: pl.DataFrame, engine) -> ModelSklearn:
         model_spec = None
 
     else:
-        raise ValueError("The formula must be a string or a callable function.")
+        raise TypeError("The formula must be a string or a callable function.")
 
     engine_running = engine.fit(X=X, y=y)
 

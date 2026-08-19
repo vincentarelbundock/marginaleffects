@@ -1,7 +1,7 @@
-import polars as pl
-from typing import List
-from pydantic import ConfigDict, validate_call
 from functools import wraps
+
+import polars as pl
+from pydantic import ConfigDict, validate_call
 
 
 def validate_string_columns(columns, modeldata, context=""):
@@ -50,7 +50,7 @@ def validate_string_columns(columns, modeldata, context=""):
 
 
 def get_type_dictionary(formula=None, modeldata=None):
-    out = dict()
+    out = {}
     if formula is None or callable(formula):
         variables = modeldata.columns
     else:
@@ -92,7 +92,7 @@ def get_type_dictionary(formula=None, modeldata=None):
 
 
 def sanitize_datagrid_factor(
-    values: List, newdata_col: pl.Series, variable_type: dict, var_name: str
+    values: list, newdata_col: pl.Series, variable_type: dict, var_name: str
 ):
     """
     Sanitize factor values for datagrid, similar to R's sanitize_datagrid_factor.

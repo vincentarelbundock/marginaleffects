@@ -30,9 +30,8 @@ def sanitize_newdata(model, newdata, wts, by=None):
     args = {"model": model}
     if isinstance(by, list) and len(by) > 0:
         for col in by:
-            if isinstance(col, str):
-                if col in modeldata.columns:
-                    args[col] = modeldata[col].unique()
+            if isinstance(col, str) and col in modeldata.columns:
+                args[col] = modeldata[col].unique()
 
     if isinstance(newdata, str) and newdata == "mean":
         out = datagrid(**args)
@@ -87,11 +86,10 @@ def sanitize_newdata(model, newdata, wts, by=None):
 
     out = out.with_columns(pl.Series(range(out.height), dtype=pl.Int32).alias("rowid"))
 
-    if wts is not None:
-        if (isinstance(wts, str) is False) or (wts not in out.columns):
-            raise ValueError(f"`newdata` does not have a column named '{wts}'.")
+    if wts is not None and (not isinstance(wts, str) or wts not in out.columns):
+        raise ValueError(f"`newdata` does not have a column named '{wts}'.")
 
-    if any([isinstance(out[x], pl.Categorical) for x in out.columns]):
+    if any(isinstance(out[x], pl.Categorical) for x in out.columns):
         raise ValueError("Categorical type columns are not supported in `newdata`.")
 
     # ensure all enum levels are in modeldata

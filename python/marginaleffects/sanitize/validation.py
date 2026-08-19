@@ -1,8 +1,10 @@
+import warnings
+
 import numpy as np
 import polars as pl
-import warnings
-from .utils import get_type_dictionary, validate_string_columns
+
 from .. import formula as fml
+from .utils import get_type_dictionary, validate_string_columns
 
 
 class ModelValidation:
@@ -34,7 +36,7 @@ class ModelValidation:
             return
 
         if not callable(formula) and not isinstance(formula, str):
-            raise ValueError(
+            raise TypeError(
                 "formula must be a string or a pre-processing function that returns `y` and `X` matrices."
             )
 
@@ -58,7 +60,7 @@ class ModelValidation:
     def validate_modeldata(self):
         modeldata = self.get_modeldata()
         if not isinstance(modeldata, pl.DataFrame):
-            raise ValueError("data attribute must be a Polars DataFrame")
+            raise TypeError("data attribute must be a Polars DataFrame")
 
         formula = self.get_formula()
         if callable(formula):

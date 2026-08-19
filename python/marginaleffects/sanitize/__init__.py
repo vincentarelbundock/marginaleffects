@@ -2,7 +2,6 @@
 
 from importlib import import_module
 
-
 _EXPORTS = {
     "handle_deprecated_hypotheses_argument": (
         ".deprecated",

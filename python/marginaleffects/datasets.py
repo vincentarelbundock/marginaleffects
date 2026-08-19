@@ -13,15 +13,15 @@ def get_dataset_search(search: str):
             | index["Title"].str.contains(search)
         )
         return index.select(["Package", "Item", "Title", "Rows", "Cols", "CSV"])
-    except BaseException as e:
+    except Exception as e:  # noqa: BLE001 -- normalize backend/network failures
         raise ValueError(f"Error searching dataset: {e}")
 
 
 def get_dataset(
     dataset: str = "thornton",
-    package: str = None,
+    package: str | None = None,
     docs: bool = False,
-    search: str = None,
+    search: str | None = None,
 ):
     """
     # `get_dataset()`
@@ -133,5 +133,5 @@ def get_dataset(
 
         return df
 
-    except BaseException as e:
+    except Exception as e:  # noqa: BLE001 -- normalize backend/network failures
         raise ValueError(f"Error reading dataset: {e}")

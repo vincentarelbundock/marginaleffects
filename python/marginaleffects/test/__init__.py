@@ -1,22 +1,22 @@
-from .main import hypotheses
 from .core import (
-    get_hypothesis,
     eval_string_hypothesis,
-    lincom_multiply,
+    get_hypothesis,
     get_hypothesis_row_labels,
+    lincom_multiply,
 )
-from .joint import joint_hypotheses
-from .formula import eval_hypothesis_formula, parse_hypothesis_formula
 from .equivalence import get_equivalence
+from .formula import eval_hypothesis_formula, parse_hypothesis_formula
+from .joint import joint_hypotheses
+from .main import hypotheses
 
 __all__ = [
-    "hypotheses",
-    "get_hypothesis",
-    "eval_string_hypothesis",
-    "lincom_multiply",
-    "get_hypothesis_row_labels",
-    "joint_hypotheses",
     "eval_hypothesis_formula",
-    "parse_hypothesis_formula",
+    "eval_string_hypothesis",
     "get_equivalence",
+    "get_hypothesis",
+    "get_hypothesis_row_labels",
+    "hypotheses",
+    "joint_hypotheses",
+    "lincom_multiply",
+    "parse_hypothesis_formula",
 ]

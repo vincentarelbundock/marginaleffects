@@ -1,9 +1,10 @@
 import copy
 
 import numpy as np
-from ..datagrid import datagrid  # noqa
-from ..sanitize import sanitize_model
 import polars as pl
+
+from ..datagrid import datagrid
+from ..sanitize import sanitize_model
 
 
 def dt_on_condition(model, condition):
@@ -27,12 +28,12 @@ def dt_on_condition(model, condition):
         to_datagrid = {key: None for key in condition_new}
 
     elif isinstance(condition_new, dict):
-        if not all(key in modeldata.columns for key in condition_new.keys()):
+        if not all(key in modeldata.columns for key in condition_new):
             raise ValueError("All keys of condition must be columns of the model.")
         first_key = next(iter(condition_new))
         to_datagrid = condition_new
 
-    if isinstance(condition_new, dict) and "newdata" in to_datagrid.keys():
+    if isinstance(condition_new, dict) and "newdata" in to_datagrid:
         condition_new.pop("newdata", None)
 
     if not (1 <= len(condition_new) <= 4):
@@ -59,13 +60,12 @@ def dt_on_condition(model, condition):
                     f"Character type variables of more than 10 unique values are not supported. {key} variable has {len(to_datagrid[key])} unique values."
                 )
 
-        elif variable_type in ["boolean", "binary"]:
-            if to_datagrid[key] is None:
-                to_datagrid[key] = modeldata[key].unique().sort().to_list()
+        elif variable_type in ["boolean", "binary"] and to_datagrid[key] is None:
+            to_datagrid[key] = modeldata[key].unique().sort().to_list()
 
     to_datagrid["newdata"] = modeldata
     dt = datagrid(**to_datagrid)
-    return dt  # noqa: F821
+    return dt
 
 
 def condition_numeric(modeldata, key, value, first):
@@ -100,16 +100,16 @@ def plot_labels(model, dt, condition):
     for k, v in condition.items():
         if model.get_variable_type(k) in ["numeric", "integer"]:
             # upgrade this to use match-case when python 3.9 reaches end-of-life
-            if condition[k] == "threenum":
+            if v == "threenum":
                 lab = ["-SD", "Mean", "+SD"]
                 dt = ordered_cat(dt, k, lab)
-            elif condition[k] == "fivenum":
+            elif v == "fivenum":
                 lab = ["Min", "Q1", "Q2", "Q3", "Max"]
                 dt = ordered_cat(dt, k, lab)
-            elif condition[k] == "minmax":
+            elif v == "minmax":
                 lab = ["Min", "Max"]
                 dt = ordered_cat(dt, k, lab)
-            elif condition[k] is None:
+            elif v is None:
                 dt = dt.with_columns(pl.col(k).round_sig_figs(3).alias(k))
     return dt
 
@@ -163,12 +163,12 @@ def extract_var_list(condition, by):
 def plot_common(model, dt, y_label, var_list, gray=False, points=0):
     from plotnine import (
         aes,
-        facet_wrap,
         facet_grid,
-        geom_pointrange,
-        geom_ribbon,
+        facet_wrap,
         geom_line,
         geom_point,
+        geom_pointrange,
+        geom_ribbon,
         ggplot,
         labs,
         position_dodge,
@@ -256,7 +256,7 @@ def plot_common(model, dt, y_label, var_list, gray=False, points=0):
 
     if discrete:
         if interval:
-            if len(var_list) > 1:  #
+            if len(var_list) > 1:
                 p = p + geom_pointrange(
                     aes(shape=var_list[1]) if gray else aes(color=var_list[1]),
                     position=position_dodge(width=0.1),

@@ -1,9 +1,10 @@
 """GLM families and link functions using enum-based approach for JAX compatibility."""
 
+from enum import IntEnum
+
 import jax.numpy as jnp
 from jax import lax
 from jax.scipy.stats import norm
-from enum import IntEnum
 
 
 class Family(IntEnum):
@@ -89,7 +90,7 @@ def validate_family_link(family_type: int, link_type: int) -> bool:
     return link_type in VALID_LINKS[family_type]
 
 
-def resolve_link(family_type: int, link_type: int = None) -> int:
+def resolve_link(family_type: int, link_type: int | None = None) -> int:
     """Resolve link type, using default if None, and validate the combination."""
     if link_type is None:
         return DEFAULT_LINKS.get(family_type, Link.IDENTITY)

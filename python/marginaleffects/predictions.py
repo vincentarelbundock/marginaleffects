@@ -3,18 +3,18 @@ import polars as pl
 
 from .autodiff.lower import autodiff_try
 from .by import get_by_plan
+from .classes import MarginaleffectsResult
+from .docstrings import doc
 from .hypothesis_compile import hypothesis_compile
 from .inference import analytic_try, get_jacobian, get_se
-from .classes import MarginaleffectsResult
 from .planning import (
     PredictionPlan,
     plan_values_allclose,
     prediction_plan_apply,
     prediction_plan_predict,
 )
-from .utils import prepare_base_inputs, finalize_result, call_avg
 from .sanitize import handle_deprecated_hypotheses_argument
-from .docstrings import doc
+from .utils import call_avg, finalize_result, prepare_base_inputs
 
 
 def _prepare_newdata(newdata, modeldata, variables):

@@ -1,8 +1,5 @@
 def is_linearmodels(model):
-    if hasattr(model, "fit_engine") and model.fit_engine == "linearmodels":
-        return True
-    else:
-        return False
+    return bool(hasattr(model, "fit_engine") and model.fit_engine == "linearmodels")
 
 
 def is_statsmodels(model):

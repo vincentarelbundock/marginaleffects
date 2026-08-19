@@ -23,8 +23,8 @@ def _group_term_indices(terms):
 
 
 def _eval_string_function(vec, hypothesis, rowlabels):
-    import scipy
     import numpy
+    import scipy
 
     hypothesis = re.sub(r"Q\(([^()]*(?:\([^()]*\)[^()]*)*)\)", r'Q("\1")', hypothesis)
     term_values = {rowlabel: vec[i] for i, rowlabel in enumerate(rowlabels)}
@@ -197,7 +197,7 @@ def hypothesis_compile(x: pl.DataFrame, hypothesis, by=None):
         hyps = []
         for item in hypothesis:
             if not isinstance(item, str):
-                raise ValueError(
+                raise TypeError(
                     "When `hypothesis` is a sequence, every element must be a string."
                 )
             out, hyp = hypothesis_compile(x, item, by=by)

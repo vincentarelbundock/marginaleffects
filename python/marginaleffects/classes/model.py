@@ -1,36 +1,36 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Protocol, runtime_checkable
+from typing import Any, Protocol, runtime_checkable
 
 import numpy as np
 import polars as pl
 
-from ..sanitize.validation import ModelValidation
 from .. import formula as fml
+from ..sanitize.validation import ModelValidation
 
 
 @dataclass
 class ModelVault:
     """Typed container for model metadata shared across all adapters."""
 
-    coef: Optional[np.ndarray] = None
-    coefnames: Optional[np.ndarray] = None
-    formula: Optional[str] = None
+    coef: np.ndarray | None = None
+    coefnames: np.ndarray | None = None
+    formula: str | None = None
     formula_engine: str = "formulaic"
-    modeldata: Optional[pl.DataFrame] = None
+    modeldata: pl.DataFrame | None = None
     package: str = "unknown"
-    vcov: Optional[np.ndarray] = None
-    variables_type: Dict[str, str] = field(default_factory=dict)
-    variable_names: Optional[List[str]] = None
-    engine_running: Optional[Any] = None
+    vcov: np.ndarray | None = None
+    variables_type: dict[str, str] = field(default_factory=dict)
+    variable_names: list[str] | None = None
+    engine_running: Any | None = None
     # statsmodels-specific
-    design_info_patsy: Optional[Any] = None
-    pandas_categorical_orders: Dict[str, list] = field(default_factory=dict)
+    design_info_patsy: Any | None = None
+    pandas_categorical_orders: dict[str, list] = field(default_factory=dict)
     # sklearn-specific
-    model_spec: Optional[Any] = None
-    original_columns: Optional[List[str]] = None
+    model_spec: Any | None = None
+    original_columns: list[str] | None = None
     # linearmodels-specific
-    multiindex: Optional[List[str]] = None
+    multiindex: list[str] | None = None
 
 
 @runtime_checkable
@@ -38,7 +38,7 @@ class ModelAdapter(Protocol):
     """Explicit contract consumed by marginaleffects estimation code."""
 
     def get_modeldata(self) -> pl.DataFrame: ...
-    def get_vcov(self, vcov=True) -> Optional[np.ndarray]: ...
+    def get_vcov(self, vcov=True) -> np.ndarray | None: ...
     def get_coef(self) -> np.ndarray: ...
     def get_coefnames(self) -> np.ndarray: ...
     def get_formula(self): ...
@@ -53,22 +53,22 @@ class ModelAbstract(ModelValidation, ABC):
         self.vault = vault
         self.validation()
 
-    def get_modeldata(self) -> Optional[pl.DataFrame]:
+    def get_modeldata(self) -> pl.DataFrame | None:
         return self.vault.modeldata
 
-    def get_vcov(self, vcov=False) -> Optional[np.ndarray]:
+    def get_vcov(self, vcov=False) -> np.ndarray | None:
         return self.vault.vcov
 
-    def get_coef(self) -> Optional[np.ndarray]:
+    def get_coef(self) -> np.ndarray | None:
         return self.vault.coef
 
-    def get_coefnames(self) -> Optional[np.ndarray]:
+    def get_coefnames(self) -> np.ndarray | None:
         return self.vault.coefnames
 
-    def get_engine_running(self) -> Optional[Any]:
+    def get_engine_running(self) -> Any | None:
         return self.vault.engine_running
 
-    def get_formula(self) -> Optional[str]:
+    def get_formula(self) -> str | None:
         return self.vault.formula
 
     def get_formula_engine(self) -> str:
@@ -77,7 +77,7 @@ class ModelAbstract(ModelValidation, ABC):
     def get_package(self) -> str:
         return self.vault.package
 
-    def get_variable_type(self, name=None) -> Dict[str, str]:
+    def get_variable_type(self, name=None) -> dict[str, str]:
         variables = self.vault.variables_type
         if isinstance(name, str) and name in variables:
             return variables[name]
@@ -87,7 +87,7 @@ class ModelAbstract(ModelValidation, ABC):
     def set_variable_type(self, name, value):
         self.vault.variables_type[name] = value
 
-    def find_variables(self) -> Optional[List[str]]:
+    def find_variables(self) -> list[str] | None:
         if self.vault.variable_names is not None:
             return self.vault.variable_names
 
@@ -101,14 +101,14 @@ class ModelAbstract(ModelValidation, ABC):
 
         return out
 
-    def find_response(self) -> Optional[str]:
+    def find_response(self) -> str | None:
         vars = self.find_variables()
         if vars is None:
             return None
         else:
             return vars[0]
 
-    def find_predictors(self) -> Optional[List[str]]:
+    def find_predictors(self) -> list[str] | None:
         vars = self.find_variables()
         if vars is None:
             return None
@@ -143,6 +143,10 @@ class ModelAbstract(ModelValidation, ABC):
 
     def get_autodiff_args(self):
         return None
+
+    def get_link_functions(self):
+        """Return inverse-link and derivative callables for response predictions."""
+        return
 
     def get_df(self) -> float:
         return np.inf

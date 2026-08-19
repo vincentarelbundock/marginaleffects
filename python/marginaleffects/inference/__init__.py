@@ -1,7 +1,7 @@
 """Inference primitives shared by predictions, comparisons, and hypotheses."""
 
-from .delta import add_standard_errors, get_jacobian, get_se
 from .analytic import AnalyticResult, analytic_try
+from .delta import add_standard_errors, get_jacobian, get_se
 from .statistics import get_z_p_ci
 
 __all__ = [

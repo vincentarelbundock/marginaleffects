@@ -1,5 +1,4 @@
 import polars as pl
-from typing import List, Optional
 
 from .planning import AggGroup
 
@@ -34,7 +33,7 @@ def _get_by_internal(
     by=None,
     wts=None,
     return_plan_groups: bool = False,
-) -> tuple[pl.DataFrame, Optional[List[AggGroup]]]:
+) -> tuple[pl.DataFrame, list[AggGroup] | None]:
     # for predictions
     if (
         isinstance(by, list)
@@ -44,7 +43,7 @@ def _get_by_internal(
     ):
         by = True
 
-    agg_groups: Optional[List[AggGroup]] = None
+    agg_groups: list[AggGroup] | None = None
 
     if by is True:
         # A grand mean must respect user weights exactly like the named-group
@@ -69,16 +68,10 @@ def _get_by_internal(
                         dtype=pl.Int32,
                     )
                 )
-                tmp = tmp.join(
-                    newdata.select(["rowid", wts]), on="rowid", how="left"
-                )
-                tmp = tmp.sort("_marginaleffects_wpos").drop(
-                    "_marginaleffects_wpos"
-                )
+                tmp = tmp.join(newdata.select(["rowid", wts]), on="rowid", how="left")
+                tmp = tmp.sort("_marginaleffects_wpos").drop("_marginaleffects_wpos")
             if wts not in tmp.columns:
-                raise ValueError(
-                    f"Weights column '{wts}' not found for aggregation."
-                )
+                raise ValueError(f"Weights column '{wts}' not found for aggregation.")
             if tmp.height != estimand.height:
                 raise ValueError(
                     "Joining the weights column changed the number of rows; "
@@ -123,7 +116,7 @@ def _get_by_internal(
     if isinstance(by, list) and len(by) == 0:
         return out, agg_groups
 
-    agg_exprs: List[pl.Expr] = []
+    agg_exprs: list[pl.Expr] = []
     if wts is None:
         agg_exprs.append(pl.col("estimate").mean().alias("estimate"))
     else:

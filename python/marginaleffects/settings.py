@@ -3,7 +3,6 @@ Global settings for marginaleffects.
 """
 
 import os
-from typing import Optional
 
 # Internal state
 _settings = {
@@ -12,7 +11,7 @@ _settings = {
 _MISSING = object()
 
 
-def autodiff(enabled: Optional[bool] = _MISSING) -> Optional[bool]:
+def autodiff(enabled: bool | None = _MISSING) -> bool | None:
     """
     Configure or inspect JAX-based automatic differentiation.
 
@@ -31,7 +30,7 @@ def autodiff(enabled: Optional[bool] = _MISSING) -> Optional[bool]:
     return _get_autodiff()
 
 
-def set_autodiff(enabled: Optional[bool]) -> None:
+def set_autodiff(enabled: bool | None) -> None:
     """
     Backwards-compatible wrapper around autodiff().
 
@@ -42,7 +41,7 @@ def set_autodiff(enabled: Optional[bool]) -> None:
     autodiff(enabled)
 
 
-def get_autodiff() -> Optional[bool]:
+def get_autodiff() -> bool | None:
     """
     Backwards-compatible accessor that returns autodiff() state.
 
@@ -53,7 +52,7 @@ def get_autodiff() -> Optional[bool]:
     return autodiff()
 
 
-def _get_autodiff() -> Optional[bool]:
+def _get_autodiff() -> bool | None:
     """
     Internal helper returning the current autodiff setting without warnings.
     """

@@ -1,11 +1,11 @@
-from functools import reduce, partial
-from typing import Any, Dict, Union, List, Callable, Optional
+from collections.abc import Callable
+from functools import partial, reduce
+from typing import Any
 
 import polars as pl
 
 from .sanitize.utils import sanitize_datagrid_factor
 from .utils import get_mode, mean_na, unique_s
-
 
 # Map variable types to function-defaults keys
 _TYPE_TO_FUN_KEY = {
@@ -21,9 +21,9 @@ _TYPE_TO_FUN_KEY = {
 
 
 def _detect_variable_type(
-    data: pl.DataFrame, model: Optional[Any] = None
-) -> Dict[str, str]:
-    variable_type: Dict[str, str] = {}
+    data: pl.DataFrame, model: Any | None = None
+) -> dict[str, str]:
+    variable_type: dict[str, str] = {}
 
     for col in data.columns:
         dtype = data[col].dtype
@@ -56,10 +56,10 @@ def _detect_variable_type(
 def datagrid(
     model=None,
     newdata=None,
-    by: Optional[Union[str, List[str]]] = None,
+    by: str | list[str] | None = None,
     grid_type="mean_or_mode",
     response: bool = False,
-    FUN: Optional[Callable] = None,
+    FUN: Callable | None = None,
     FUN_binary=None,
     FUN_character=None,
     FUN_factor=None,
@@ -317,7 +317,7 @@ def _process_datagrid_group(
         fun_key = _TYPE_TO_FUN_KEY.get(vtype, "other")
         try:
             implicit_values[col] = func_defaults[fun_key](newdata[col])
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 -- user-supplied summary function
             print(
                 f"Warning: Error applying function to column '{col}': {e}. Using fallback."
             )
@@ -355,7 +355,7 @@ def _process_datagrid_group(
     if grid_type == "dataframe":
         # Column-wise binding — all vectors must have same length (or length 1)
         lengths = [len(df[df.columns[0]]) for df in all_values.values()]
-        unique_lengths = set(length for length in lengths if length > 1)
+        unique_lengths = {length for length in lengths if length > 1}
 
         if len(unique_lengths) > 1:
             raise ValueError(

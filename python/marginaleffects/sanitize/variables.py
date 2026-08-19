@@ -6,7 +6,6 @@ import polars as pl
 
 from .comparison import sanitize_comparison
 
-
 HiLo = namedtuple("HiLo", ["variable", "hi", "lo", "lab", "pad", "comparison"])
 
 
