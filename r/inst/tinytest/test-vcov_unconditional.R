@@ -907,5 +907,3 @@ hyp_offset <- avg_predictions(
     hypothesis = "b2 - b1 - 1e10 = 0",
     vcov = "unconditional")
 expect_equivalent(hyp_offset$std.error, hyp_plain$std.error, tolerance = 1e-10)
-
-rm(list = ls())
