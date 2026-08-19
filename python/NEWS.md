@@ -1,5 +1,15 @@
 # 0.6.1
 
+Breaking change:
+
+* The default contrast for numeric variables is now "forward", from `x` to
+  `x + 1`, matching the R package. Earlier versions centered the contrast on
+  `x`, comparing predictions at `x - 0.5` and `x + 0.5`, so results for the
+  default `+1` contrast (and any explicit numeric `value`) change for
+  nonlinear models. Slopes, elasticities, and the `"sd"` shortcuts keep their
+  centered steps, exactly as in R. Cross-language results for the default
+  comparison now agree to machine precision.
+
 New:
 
 * `by` accepts a data frame of group labels, matching the R package. The frame
@@ -17,6 +27,13 @@ New:
 
 Bug fixes:
 
+* Slope-family comparisons are now recognized by family rather than by a
+  fixed list of names, which the `*avgwts` rewrites and `expdydx` fell
+  outside of. Weighted average slopes were labelled with the raw eps step
+  (`+0.0001`) instead of `dY/dX`, and `expdydx` silently fell back to a `+1`
+  contrast step instead of the eps step, producing wildly wrong estimates.
+* `avg_comparisons(comparison="expdydx")` crashed with recent NumPy/Polars
+  because the `expdydxavg` estimand called `np.mean()` on a Polars Series.
 * Delta-method variances that come out as tiny negative numbers -- floating
   point noise from the quadratic form -- are now clamped to zero instead of
   producing NaN standard errors, matching the R package. A standard error of

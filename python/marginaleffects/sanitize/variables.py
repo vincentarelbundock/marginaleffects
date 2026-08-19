@@ -26,16 +26,15 @@ def _get_one_variable_hi_lo(
     def clean(k):
         return _clean_global(k, newdata.shape[0])
 
-    elasticities = [
-        "eyexavg",
-        "dyexavg",
-        "eydxavg",
-        "dydxavg",
-        "eyex",
-        "dyex",
-        "eydx",
-        "dydx",
-    ]
+    # The slope and elasticity families divide by an eps step and need a
+    # centered contrast. Match by family rather than by enumerating variants:
+    # sanitize_comparison() rewrites these keys to `*avg`/`*avgwts` forms, and
+    # a fixed list silently missed them (the weighted variants lost their
+    # label, and `expdydx` fell back to a +1 step with garbage estimates).
+    slope_families = ("dydx", "eyex", "eydx", "dyex", "expdydx")
+
+    def is_slope_comparison(cmp):
+        return isinstance(cmp, str) and cmp.startswith(slope_families)
 
     # default
     if value is None:
@@ -47,7 +46,7 @@ def _get_one_variable_hi_lo(
             elif comparison in ["eyex", "dyex", "eydx", "dydx"]:
                 comparison = "difference"
         else:
-            if comparison in elasticities:
+            if is_slope_comparison(comparison):
                 value = eps
             else:
                 value = 1
@@ -139,10 +138,16 @@ def _get_one_variable_hi_lo(
             lab = lab.format(hi=value[1], lo=value[0])
 
         elif isinstance(value, (int, float)):
-            if comparison not in elasticities:
+            if is_slope_comparison(comparison):
+                # Slopes and elasticities keep the centered eps step, as in R.
+                hi = newdata[variable] + value / 2
+                lo = newdata[variable] - value / 2
+            else:
+                # R-conformant forward contrast: from x to x + value.
+                # BREAKING: earlier versions centered this contrast on x.
                 lab = f"+{value}"
-            hi = newdata[variable] + value / 2
-            lo = newdata[variable] - value / 2
+                hi = newdata[variable] + value
+                lo = newdata[variable]
 
         elif callable(value):
             tmp = value(newdata[variable])

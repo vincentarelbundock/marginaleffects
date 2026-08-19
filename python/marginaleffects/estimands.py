@@ -70,7 +70,7 @@ estimands = {
         ((np.exp(hi) - np.exp(lo)) / np.exp(eps)) / eps
     ),
     "expdydxavg": lambda hi, lo, eps, x, y, w: prep(
-        np.mean(((hi.exp() - lo.exp()) / np.exp(eps)) / eps)
+        (((hi.exp() - lo.exp()) / np.exp(eps)) / eps).mean()
     ),
     "expdydxavgwts": lambda hi, lo, eps, x, y, w: prep(
         ((((np.exp(hi) - np.exp(lo)) / np.exp(eps)) / eps) * w).sum() / w.sum()
