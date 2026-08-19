@@ -17,29 +17,9 @@ golden_path <- "stata/results/models.csv"
 if (!file.exists(golden_path)) exit_file(golden_path)
 golden <- read.csv(golden_path, stringsAsFactors = FALSE)
 tested <- character()
+source("stata_helpers.R", local = TRUE)
 
-# all.equal() silently falls back to an *absolute* comparison when the mean
-# magnitude of the target drops below `tolerance`, which would let a nominally
-# loose bound accept an unbounded relative error on small standard errors.
-# Passing `scale` keeps every comparison relative.
-expect_rel <- function(current, target, tolerance, info) {
-    scale <- max(mean(abs(target)), .Machine$double.eps)
-    expect_equal(current, target, tolerance = tolerance, scale = scale, info = info)
-}
 
-check_stata <- function(fixture, x, estimate, se = NA_real_, stata_order = NULL) {
-    s <- golden[golden$fixture == fixture, , drop = FALSE]
-    tested <<- union(tested, fixture)
-    x <- as.data.frame(x)
-    if (!is.null(stata_order)) x <- x[stata_order, , drop = FALSE]
-    expect_equal(nrow(x), nrow(s), info = paste(fixture, "nrow"))
-    if (nrow(x) != nrow(s)) return(invisible(NULL))
-    expect_rel(x$estimate, s$estimate, estimate, paste(fixture, "estimate"))
-    if (!is.na(se)) {
-        expect_rel(x$std.error, s$std_error, se, paste(fixture, "std.error"))
-    }
-    invisible(NULL)
-}
 
 # The same six-command matrix misc.ado uses, so results line up with the
 # response-scale fixtures for probit, cloglog and friends.
@@ -197,9 +177,9 @@ mod_zip <- pscl::zeroinfl(
 )
 # marginaleffects sorts terms alphabetically; Stata keeps the dydx() order.
 x <- avg_slopes(mod_zip, variables = c("phd", "ment", "fem", "mar", "kid5"))
-check_stata("zip_response", x, 1e-3, 1e-3, stata_order = match(c("phd", "ment", "fem", "mar", "kid5"), x$term))
+check_stata("zip_response", x, 1e-3, 1e-3, order_x = match(c("phd", "ment", "fem", "mar", "kid5"), x$term))
 x <- avg_slopes(mod_zip, variables = c("ment", "fem", "kid5"), type = "zero")
-check_stata("zip_zero_probability", x, 1e-3, 1e-3, stata_order = match(c("ment", "fem", "kid5"), x$term))
+check_stata("zip_zero_probability", x, 1e-3, 1e-3, order_x = match(c("ment", "fem", "kid5"), x$term))
 check_stata("zip_predictions", avg_predictions(mod_zip), 1e-5, 1e-4)
 
 mod_truncreg <- truncreg::truncreg(
@@ -274,7 +254,7 @@ for (j in seq_along(levels(housing$Sat))) {
         paste0("oprobit_comparisons_outcome", j),
         sub,
         1e-4, 1e-5,
-        stata_order = match(stata_contrast_order, paste(sub$term, sub$contrast, sep = "|"))
+        order_x = match(stata_contrast_order, paste(sub$term, sub$contrast, sep = "|"))
     )
 }
 
@@ -310,7 +290,7 @@ check_stata("betareg_predictions", avg_predictions(mod_betareg, vcov = V_betareg
 # Stata orders the batch contrasts numerically; marginaleffects sorts the
 # contrast labels as strings, which puts "10 - 1" first.
 x <- avg_comparisons(mod_betareg, variables = "batch", vcov = V_betareg)
-check_stata("betareg_comparisons", x, 1e-5, 1e-6, stata_order = match(paste(2:10, "- 1"), x$contrast))
+check_stata("betareg_comparisons", x, 1e-5, 1e-6, order_x = match(paste(2:10, "- 1"), x$contrast))
 check_stata("betareg_slopes", avg_slopes(mod_betareg, variables = "temp", vcov = V_betareg), 1e-5, 1e-4)
 
 

@@ -17,25 +17,9 @@ golden_path <- "stata/results/legacy.csv"
 if (!file.exists(golden_path)) exit_file(golden_path)
 golden <- read.csv(golden_path, stringsAsFactors = FALSE)
 tested <- character()
+source("stata_helpers.R", local = TRUE)
 
-expect_rel <- function(current, target, tolerance, info) {
-    scale <- max(mean(abs(target)), .Machine$double.eps)
-    expect_equal(current, target, tolerance = tolerance, scale = scale, info = info)
-}
 
-# `terms` names the estimates in the order Stata's dydx() lists them;
-# marginaleffects sorts them alphabetically.
-check_stata <- function(fixture, x, estimate, se = NA_real_, terms = NULL) {
-    s <- golden[golden$fixture == fixture, , drop = FALSE]
-    tested <<- union(tested, fixture)
-    x <- as.data.frame(x)
-    if (!is.null(terms)) x <- x[match(terms, x$term), , drop = FALSE]
-    expect_equal(nrow(x), nrow(s), info = paste(fixture, "nrow"))
-    if (nrow(x) != nrow(s)) return(invisible(NULL))
-    expect_rel(x$estimate, s$estimate, estimate, paste(fixture, "estimate"))
-    if (!is.na(se)) expect_rel(x$std.error, s$std_error, se, paste(fixture, "std.error"))
-    invisible(NULL)
-}
 
 
 # ---------------------------------------------------------------------------
@@ -48,20 +32,20 @@ data("Grunfeld", package = "plm")
 panel_terms <- c("value", "capital")
 
 mod_pooling <- plm::plm(inv ~ value + capital, data = Grunfeld, model = "pooling")
-check_stata("panel_pooling_slopes", avg_slopes(mod_pooling, variables = panel_terms), 1e-6, 1e-5, panel_terms)
+check_stata("panel_pooling_slopes", avg_slopes(mod_pooling, variables = panel_terms), 1e-6, 1e-5, terms = panel_terms)
 check_stata("panel_pooling_predictions", avg_predictions(mod_pooling), 1e-6, 1e-5)
 
 # The within estimator, from both packages that implement it.
 mod_within <- plm::plm(inv ~ value + capital, data = Grunfeld, model = "within")
-check_stata("panel_within_slopes", avg_slopes(mod_within, variables = panel_terms), 1e-6, 1e-5, panel_terms)
+check_stata("panel_within_slopes", avg_slopes(mod_within, variables = panel_terms), 1e-6, 1e-5, terms = panel_terms)
 mod_feols <- fixest::feols(inv ~ value + capital | firm, data = Grunfeld)
-check_stata("panel_within_slopes", avg_slopes(mod_feols, variables = panel_terms), 1e-6, 1e-5, panel_terms)
+check_stata("panel_within_slopes", avg_slopes(mod_feols, variables = panel_terms), 1e-6, 1e-5, terms = panel_terms)
 
 mod_feols_cl <- fixest::feols(inv ~ value + capital | firm, data = Grunfeld, cluster = ~firm)
-check_stata("panel_within_cluster_slopes", avg_slopes(mod_feols_cl, variables = panel_terms), 1e-6, 1e-5, panel_terms)
+check_stata("panel_within_cluster_slopes", avg_slopes(mod_feols_cl, variables = panel_terms), 1e-6, 1e-5, terms = panel_terms)
 
 mod_swar <- plm::plm(inv ~ value + capital, data = Grunfeld, model = "random", random.method = "swar")
-check_stata("panel_swamy_arora_slopes", avg_slopes(mod_swar, variables = panel_terms), 1e-6, 1e-5, panel_terms)
+check_stata("panel_swamy_arora_slopes", avg_slopes(mod_swar, variables = panel_terms), 1e-6, 1e-5, terms = panel_terms)
 
 
 # ---------------------------------------------------------------------------
@@ -76,12 +60,12 @@ mod_iv <- ivreg::ivreg(Q ~ P + D | D + F + A, data = Kmenta)
 # the endogenous regressor and 4e-5 on the exogenous one, so not a degrees-of-
 # freedom factor, which would be uniform. On 20 rows this is implementation
 # noise rather than a different estimator.
-check_stata("iv_2sls_slopes", avg_slopes(mod_iv, variables = iv_terms), 1e-6, 1e-3, iv_terms)
+check_stata("iv_2sls_slopes", avg_slopes(mod_iv, variables = iv_terms), 1e-6, 1e-3, terms = iv_terms)
 check_stata("iv_2sls_predictions", avg_predictions(mod_iv), 1e-6, 1e-5)
 
 # se_type = "stata" is HC1, which is what `vce(robust) small` computes.
 mod_iv_robust <- estimatr::iv_robust(Q ~ P + D | D + F + A, data = Kmenta, se_type = "stata")
-check_stata("iv_2sls_robust_slopes", avg_slopes(mod_iv_robust, variables = iv_terms), 1e-6, 1e-3, iv_terms)
+check_stata("iv_2sls_robust_slopes", avg_slopes(mod_iv_robust, variables = iv_terms), 1e-6, 1e-3, terms = iv_terms)
 
 
 # ---------------------------------------------------------------------------
@@ -118,7 +102,7 @@ tobit_terms <- c("age", "yearsmarried", "religiousness", "occupation", "rating")
 check_stata(
     "tobit_twolimit_slopes",
     suppressWarnings(avg_slopes(mod_tobit2, variables = tobit_terms)),
-    1e-5, 1e-3, tobit_terms
+    1e-5, 1e-3, terms = tobit_terms
 )
 check_stata("tobit_twolimit_predictions", suppressWarnings(avg_predictions(mod_tobit2)), 1e-5, 1e-5)
 
@@ -130,18 +114,18 @@ check_stata("tobit_twolimit_predictions", suppressWarnings(avg_predictions(mod_t
 # term, and averaging it is not the same as evaluating it at the mean.
 dat <- transform(mtcars, cyl = factor(cyl))
 hpwt <- c("hp", "wt")
-check_stata("interaction_lm_slopes", avg_slopes(lm(mpg ~ hp * wt, data = dat), variables = hpwt), 1e-6, 1e-6, hpwt)
+check_stata("interaction_lm_slopes", avg_slopes(lm(mpg ~ hp * wt, data = dat), variables = hpwt), 1e-6, 1e-6, terms = hpwt)
 check_stata(
     "interaction_logit_slopes",
     avg_slopes(glm(am ~ hp * wt, family = binomial, data = dat), variables = hpwt),
-    1e-5, 1e-4, hpwt
+    1e-5, 1e-4, terms = hpwt
 )
 # Standard errors are omitted for the same reason as in test-stata-misc.R:
 # Stata's qreg and quantreg::rq estimate the sparsity function differently.
 check_stata(
     "interaction_qreg_slopes",
     suppressWarnings(avg_slopes(quantreg::rq(mpg ~ hp * wt + cyl, tau = 0.5, data = dat), variables = hpwt)),
-    1e-5, NA_real_, hpwt
+    1e-5, NA_real_, terms = hpwt
 )
 
 

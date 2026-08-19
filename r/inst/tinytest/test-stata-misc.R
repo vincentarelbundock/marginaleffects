@@ -17,46 +17,9 @@ golden_path <- "stata/results/misc.csv"
 if (!file.exists(golden_path)) exit_file(golden_path)
 golden <- read.csv(golden_path, stringsAsFactors = FALSE)
 tested <- character()
+source("stata_helpers.R", local = TRUE)
 
-# all.equal() silently falls back to an *absolute* comparison when the mean
-# magnitude of the target drops below `tolerance`. Several of these fixtures
-# have standard errors in the 1e-3 range, so a nominal tolerance of 1e-1 would
-# accept an unbounded relative error. Passing `scale` explicitly keeps every
-# comparison relative, so the declared bound always means what it says.
-expect_rel <- function(current, target, tolerance, info) {
-    scale <- max(mean(abs(target)), .Machine$double.eps)
-    expect_equal(current, target, tolerance = tolerance, scale = scale, info = info)
-}
 
-check_stata <- function(
-    fixture,
-    x,
-    tolerance_estimate,
-    tolerance_se,
-    tolerance_ci = NA_real_,
-    stata_order = NULL
-) {
-    s <- golden[golden$fixture == fixture, , drop = FALSE]
-    if (!is.null(stata_order)) s <- s[stata_order, , drop = FALSE]
-    tested <<- union(tested, fixture)
-    expect_equal(nrow(x), nrow(s), info = paste(fixture, "nrow"))
-    if (nrow(x) != nrow(s)) return(invisible(NULL))
-    expect_rel(x$estimate, s$estimate, tolerance_estimate, paste(fixture, "estimate"))
-    if (!is.na(tolerance_se)) {
-        expect_rel(x$std.error, s$std_error, tolerance_se, paste(fixture, "std.error"))
-    }
-    # Stata exports the whole of r(table), so the interval bounds can be
-    # compared too. This is opt-in because the two packages do not always use
-    # the same reference distribution: `regress` margins are t-based on df_r
-    # while marginaleffects defaults to z, and for a glm the default
-    # type = "invlink(link)" builds the interval on the link scale and back
-    # transforms it rather than adding a symmetric delta-method margin.
-    if (!is.na(tolerance_ci)) {
-        expect_rel(x$conf.low, s$conf_low, tolerance_ci, paste(fixture, "conf.low"))
-        expect_rel(x$conf.high, s$conf_high, tolerance_ci, paste(fixture, "conf.high"))
-    }
-    invisible(NULL)
-}
 
 # The broad Stata matrix uses these same data transformations. `am` is a
 # factor because Stata fits `i.am`; `cyl` remains numeric and is only used by

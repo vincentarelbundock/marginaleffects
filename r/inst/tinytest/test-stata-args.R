@@ -12,50 +12,9 @@ golden_path <- "stata/results/args.csv"
 if (!file.exists(golden_path)) exit_file(golden_path)
 golden <- read.csv(golden_path, stringsAsFactors = FALSE)
 tested <- character()
+source("stata_helpers.R", local = TRUE)
 
-# Each column is opt-in: pass a tolerance to compare it, leave it NA to skip.
-# Stata exports estimate, std_error, statistic, p_value, conf_low and conf_high
-# for every fixture, but not all of them are comparable for every quantity --
-# `transform` drops the standard error, and orthogonal polynomial contrasts
-# agree only up to a scale factor.
-# all.equal() silently falls back to an *absolute* comparison when the mean
-# magnitude of the target drops below `tolerance`, which would let a nominally
-# loose bound accept an unbounded relative error on small standard errors.
-# Passing `scale` keeps every comparison relative.
-expect_rel <- function(current, target, tolerance, info) {
-    scale <- max(mean(abs(target)), .Machine$double.eps)
-    expect_equal(current, target, tolerance = tolerance, scale = scale, info = info)
-}
 
-check_stata <- function(
-    fixture,
-    x,
-    estimate = NA_real_,
-    se = NA_real_,
-    ci = NA_real_,
-    statistic = NA_real_,
-    stata_order = NULL
-) {
-    s <- golden[golden$fixture == fixture, , drop = FALSE]
-    if (!is.null(stata_order)) s <- s[stata_order, , drop = FALSE]
-    tested <<- union(tested, fixture)
-    expect_equal(nrow(x), nrow(s), info = paste(fixture, "nrow"))
-    if (nrow(x) != nrow(s)) return(invisible(NULL))
-    if (!is.na(estimate)) {
-        expect_rel(x$estimate, s$estimate, estimate, paste(fixture, "estimate"))
-    }
-    if (!is.na(se)) {
-        expect_rel(x$std.error, s$std_error, se, paste(fixture, "std.error"))
-    }
-    if (!is.na(ci)) {
-        expect_rel(x$conf.low, s$conf_low, ci, paste(fixture, "conf.low"))
-        expect_rel(x$conf.high, s$conf_high, ci, paste(fixture, "conf.high"))
-    }
-    if (!is.na(statistic)) {
-        expect_rel(x$statistic, s$statistic, statistic, paste(fixture, "statistic"))
-    }
-    invisible(NULL)
-}
 
 # Stata reports a joint Wald chi-square after likelihood-based commands and an
 # F after `regress`; marginaleffects always reports F. The two are related by
@@ -158,7 +117,7 @@ check_stata(
     estimate = 1e-6,
     se = 1e-4,
     # Stata orders contrast-major, marginaleffects group-major.
-    stata_order = c(1, 3, 2, 4)
+    order_golden = c(1, 3, 2, 4)
 )
 check_joint(
     "logit_hyp_reference_by_joint",
@@ -404,7 +363,7 @@ check_stata(
     "by2_comparisons",
     avg_comparisons(mod_poisson, variables = "cyl", by = "vs"),
     estimate = 1e-6, se = 1e-5,
-    stata_order = c(1, 3, 2, 4)
+    order_golden = c(1, 3, 2, 4)
 )
 
 
