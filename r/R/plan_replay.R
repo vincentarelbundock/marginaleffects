@@ -166,14 +166,30 @@ apply_plan_aggregation_and_hypothesis <- function(est, agg = NULL, hyp = NULL) {
 # Element-wise agreement for replay guards. all.equal() compares a *mean*
 # relative difference, under which one badly wrong row hides inside enough
 # correct ones; a guard advertised as fail-closed must bound every element.
+#
+# Missing values are legitimate on some model paths (tidymodels predictions,
+# for one), so a missing entry is agreement exactly when it is missing on
+# both sides -- the same convention all.equal() applies. A value present on
+# one side and missing on the other is disagreement.
 plan_replay_agrees <- function(a, b, tolerance = sqrt(.Machine$double.eps)) {
-    if (!is.numeric(a) || !is.numeric(b) || length(a) != length(b)) {
+    if (length(a) != length(b)) {
         return(FALSE)
     }
+    if (!is.numeric(a) || !is.numeric(b)) {
+        # Classification models predict factors or characters. There is no
+        # tolerance question for those: agreement is exact equality, which
+        # all.equal() checks element by element for non-numeric types.
+        return(isTRUE(all.equal(a, b, check.attributes = FALSE)))
+    }
+    na_a <- is.na(a)
+    na_b <- is.na(b)
+    if (!identical(na_a, na_b)) {
+        return(FALSE)
+    }
+    a <- a[!na_a]
+    b <- b[!na_b]
     delta <- abs(a - b)
-    ok <- delta <= tolerance * pmax(abs(b), 1)
-    # NA anywhere means the guard cannot vouch for the replay.
-    isTRUE(all(ok))
+    isTRUE(all(delta <= tolerance * pmax(abs(b), 1)))
 }
 
 
@@ -294,33 +310,10 @@ plan_std_error <- function(
         return(list(mfx = mfx, estimates = estimates))
     }
 
-    # Explicit user Jacobians retain priority. Next comes autodiff, because
-    # autodiff(TRUE) is an explicit per-session opt-in and the documentation
-    # promises that enabling it sets the Jacobian machinery to JAX; the
-    # analytic derivative, which is on by default, must not silently intercept
-    # a path the user asked for. When autodiff is off or declines, the order
-    # is analytic, then numerical differentiation.
+    # Explicit user Jacobians retain priority. Everything else prefers the
+    # analytic derivative, which is on by default, and falls back to numerical
+    # differentiation when the estimand is not eligible for it.
     custom_jacobian <- settings_get("jacobian_function")
-
-    ad_args <- list(
-        plan = plan,
-        mfx = mfx,
-        kind = kind,
-        type = type,
-        vcov = mfx@vcov_model,
-        estimate = estimates[["estimate"]]
-    )
-    if (identical(kind, "comparisons")) {
-        ad_args$hi <- contrast_data$hi
-        ad_args$lo <- contrast_data$lo
-    }
-    ad <- if (is.null(custom_jacobian)) do_call(autodiff_try, ad_args) else NULL
-    if (!is.null(ad)) {
-        mfx@jacobian <- ad$jacobian
-        mfx@jacobian_method <- "autodiff"
-        estimates[["std.error"]] <- ad$std.error
-        return(list(mfx = mfx, estimates = estimates))
-    }
 
     analytic_enabled <- isTRUE(getOption(
         "marginaleffects_analytic_jacobian",
