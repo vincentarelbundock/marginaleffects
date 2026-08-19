@@ -93,21 +93,13 @@ get_by <- function(
         # frequentist
     } else {
         if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
-            # A single-row group is an identity: comparison functions which
-            # aggregate (`*avgwts`) already consumed the weights, and dividing
-            # the lone survivor by its stale unit-level weight is 0/0 = NaN
-            # whenever that weight is zero.
             estimates <- estimates[,
                 .(
-                    estimate = if (.N == 1L) {
-                        estimate
-                    } else {
-                        stats::weighted.mean(
-                            estimate,
-                            marginaleffects_wts_internal,
-                            na.rm = TRUE
-                        )
-                    }
+                    estimate = stats::weighted.mean(
+                        estimate,
+                        marginaleffects_wts_internal,
+                        na.rm = TRUE
+                    )
                 ),
                 keyby = bycols
             ]

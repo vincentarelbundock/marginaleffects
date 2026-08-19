@@ -15,9 +15,11 @@
 #
 # Returns a list with a `coef` vector of length `n_estimates` aligned to
 # estimate positions and the additive `const`, or NULL when the expression is
-# not a valid combination. Strict linearity is `const == 0`; an affine map
-# has a derivative but no crossprod(H, estimate) representation, so callers
-# must not promote it.
+# not a valid combination. An affine map is promoted as a matrix plus an
+# offset: the estimates are crossprod(H, x) + offset, and the derivative is
+# H alone, independent of the constant. Differentiating the constant
+# numerically instead is catastrophic -- a large offset cancels the probe
+# step and reports a zero standard error with full confidence.
 #
 # `labels` and `idx` are parallel: `labels[k]` is the symbol which stands for
 # estimate position `idx[k]`.
@@ -125,21 +127,26 @@ hypothesis_expression_coefficients <- function(expr, labels, idx, n_estimates) {
         return(NULL)
     }
     e <- exprs[[1L]]
-    # Top-level "lhs = rhs" is the null-hypothesis form; the map is the lhs
-    # and the rhs must be a constant which is exactly zero, because the
-    # closure computing the estimates evaluates "lhs - (rhs)".
+    # Top-level "lhs = rhs" is the null-hypothesis form: the closure
+    # computing the estimates evaluates "lhs - (rhs)", so a constant rhs
+    # folds into the affine constant.
+    rhs <- 0
     if (
         is.call(e) && length(e) == 3L && is.symbol(e[[1L]]) &&
             identical(as.character(e[[1L]]), "=")
     ) {
         rhs <- const_value(e[[3L]])
-        if (is.null(rhs) || rhs != 0) {
+        if (is.null(rhs)) {
             return(NULL)
         }
         e <- e[[2L]]
     }
     out <- walk(e)
     if (is.null(out) || !all(is.finite(out$coef)) || !is.finite(out$const)) {
+        return(NULL)
+    }
+    out$const <- out$const - rhs
+    if (!is.finite(out$const)) {
         return(NULL)
     }
     out
@@ -163,19 +170,21 @@ hypothesis_expression_coefficients <- function(expr, labels, idx, n_estimates) {
 # structure they were never proven to have. The only runtime check retained
 # is one matrix-vector product confirming that H reproduces the estimates the
 # closure computed, which guards the compiler itself.
-# One matrix-vector product confirming that crossprod(H, estimate) reproduces
-# the estimates some closure computed. This is the runtime guard shared by
-# every promotion of a syntactically compiled hypothesis matrix.
-hypothesis_matrix_reproduces <- function(H, estimate, expected) {
+# One matrix-vector product confirming that crossprod(H, estimate) + offset
+# reproduces the estimates some closure computed. This is the runtime guard
+# shared by every promotion of a syntactically compiled hypothesis matrix.
+hypothesis_matrix_reproduces <- function(H, estimate, expected, offset = 0) {
     if (
         !is.numeric(estimate) || !is.numeric(expected) ||
             nrow(H) != length(estimate) || ncol(H) != length(expected) ||
-            anyNA(expected)
+            anyNA(expected) ||
+            !is.numeric(offset) || anyNA(offset) ||
+            !length(offset) %in% c(1L, length(expected))
     ) {
         return(FALSE)
     }
     want <- tryCatch(
-        as.vector(Matrix::crossprod(H, estimate)),
+        as.vector(Matrix::crossprod(H, estimate)) + offset,
         error = function(e) NULL
     )
     if (!is.numeric(want) || length(want) != length(expected) || anyNA(want)) {
@@ -185,7 +194,7 @@ hypothesis_matrix_reproduces <- function(H, estimate, expected) {
 }
 
 
-hypothesis_promote_matrix <- function(hyp, cmp_skeleton, H = NULL) {
+hypothesis_promote_matrix <- function(hyp, cmp_skeleton, H = NULL, offset = 0) {
     if (is.null(H)) {
         return(hyp)
     }
@@ -200,12 +209,16 @@ hypothesis_promote_matrix <- function(hyp, cmp_skeleton, H = NULL) {
         return(hyp)
     }
     base <- tryCatch(hyp$apply(estimate), error = function(e) NULL)
-    if (!hypothesis_matrix_reproduces(H, estimate, base)) {
+    if (!hypothesis_matrix_reproduces(H, estimate, base, offset = offset)) {
         return(hyp)
     }
     out <- hyp
     out$kind <- "matrix"
     out$H <- H
+    # The estimates are crossprod(H, x) + offset; the derivative is H alone.
+    # Recording the offset keeps validation exact for affine hypotheses such
+    # as "b1 - 5 = 0" without ever differentiating through the constant.
+    out$offset <- offset
     # Copy attributes individually: replacing the attribute list wholesale
     # would restore the old `names` and lose the new element.
     for (nm in setdiff(names(attributes(hyp)), "names")) {
@@ -338,15 +351,58 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mf
         apply <- function(est) as.vector(Matrix::crossprod(H, est))
         hyp <- list(kind = "matrix", apply = apply, H = H)
     } else {
-        # Not promoted: the linear formula shortcuts already produced their
-        # matrix syntactically above, so whatever reaches this branch -- a
-        # ratio shortcut, an arbitrary-function right-hand side -- has no
-        # proven linear structure.
+        # Not promoted to a matrix: either the shortcut's operator is dense
+        # (the centering shortcuts, which get a structured pullback instead)
+        # or whatever reaches this branch -- a ratio shortcut, an
+        # arbitrary-function right-hand side -- has no proven linear
+        # structure.
         hyp <- list(kind = "formula", apply = apply)
+        if (
+            isTRUE(getOption("marginaleffects_hypothesis_promote", default = TRUE)) &&
+                isTRUE(form$lhs %in% c("difference", "dotproduct"))
+        ) {
+            hyp$pullback <- hypothesis_formula_pullback(form$rhs, groups)
+        }
     }
     attr(hyp, "hypothesis_function_by") <- attr(cmp, "hypothesis_function_by")
     list(cmp = cmp, hyp = hyp)
 }
+
+# Exact Jacobian pullback for the centering shortcuts, without materializing
+# their operators. meandev is x - mean(x): its matrix is I - 11'/n, dense in
+# every entry, so t(H) %*% J is computed structurally as J minus the
+# broadcast column means, group by group. meanotherdev is
+# (n/(n-1)) x - sum(x)/(n-1), handled the same way. Both operators are
+# symmetric, so the pullback applies H itself.
+#
+# Returns NULL when the shortcut has no structured pullback or a group is
+# too small for it, which leaves the hypothesis on the probe path.
+hypothesis_formula_pullback <- function(shortcut, groups) {
+    if (!shortcut %in% c("meandev", "meanotherdev")) {
+        return(NULL)
+    }
+    if (identical(shortcut, "meanotherdev") && any(lengths(groups) < 2L)) {
+        return(NULL)
+    }
+    force(groups)
+    function(J) {
+        J <- as.matrix(J)
+        out <- vector("list", length(groups))
+        for (k in seq_along(groups)) {
+            idx <- groups[[k]]
+            B <- J[idx, , drop = FALSE]
+            n <- nrow(B)
+            if (identical(shortcut, "meandev")) {
+                out[[k]] <- B - matrix(colMeans(B), n, ncol(B), byrow = TRUE)
+            } else {
+                out[[k]] <- (n / (n - 1)) * B -
+                    matrix(colSums(B) / (n - 1), n, ncol(B), byrow = TRUE)
+            }
+        }
+        do.call(rbind, out)
+    }
+}
+
 
 hypothesis_compile_formula_matrix <- function(form, groups) {
     if (!isTRUE(form$lhs %in% c("difference", "dotproduct"))) {
@@ -424,19 +480,10 @@ hypothesis_compile_formula_matrix_block <- function(shortcut, n) {
         ))
     }
 
-    if (shortcut == "meandev") {
-        H <- diag(n) - matrix(1 / n, nrow = n, ncol = n)
-        return(Matrix::Matrix(H, sparse = TRUE))
-    }
-
-    if (shortcut == "meanotherdev") {
-        if (n < 2L) {
-            return(NULL)
-        }
-        H <- diag(n) - matrix(1 / (n - 1L), nrow = n, ncol = n)
-        diag(H) <- 1
-        return(Matrix::Matrix(H, sparse = TRUE))
-    }
+    # meandev and meanotherdev are handled by hypothesis_formula_pullback():
+    # their operators are dense -- every entry of the n x n matrix is nonzero
+    # -- so materializing them costs O(n^2) memory for what is a rank-one
+    # update applied in O(np).
 
     if (shortcut == "poly") {
         H <- stats::contr.poly(n)
@@ -507,29 +554,27 @@ hypothesis_compile_string <- function(hypothesis, cmp_skeleton) {
     }
 
     hyp <- list(kind = "string", apply = apply)
-    # Promotion requires a syntactic proof of linearity for every compiled
-    # expression, never a numeric probe: the walk which proves the shape also
-    # compiles the contrast matrix, column by column. Any expression outside
-    # the strictly linear fragment (an additive constant, a product of
-    # estimates, a function call) yields NULL and leaves the hypothesis as a
-    # closure.
+    # Promotion requires a syntactic proof of shape for every compiled
+    # expression, never a numeric probe: the walk which proves the map affine
+    # also compiles the contrast matrix column by column, and reads off the
+    # additive constant. Any expression outside the affine fragment (a
+    # product of estimates, a function call) yields NULL and leaves the
+    # hypothesis as a closure.
     n_estimates <- nrow(cmp_skeleton)
     columns <- lapply(compiled, function(cc) {
-        out <- hypothesis_expression_coefficients(
+        hypothesis_expression_coefficients(
             cc$expr,
             cc$labels,
             cc$idx,
             n_estimates
         )
-        if (is.null(out) || out$const != 0) {
-            return(NULL)
-        }
-        out$coef
     })
     H <- NULL
+    offset <- 0
     if (length(columns) > 0L && !any(vapply(columns, is.null, logical(1)))) {
-        H <- do.call(cbind, columns)
+        H <- do.call(cbind, lapply(columns, `[[`, "coef"))
+        offset <- vapply(columns, `[[`, numeric(1), "const")
     }
-    hyp <- hypothesis_promote_matrix(hyp, cmp_skeleton, H = H)
+    hyp <- hypothesis_promote_matrix(hyp, cmp_skeleton, H = H, offset = offset)
     list(cmp = cmp, hyp = hyp)
 }

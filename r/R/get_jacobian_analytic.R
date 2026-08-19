@@ -289,9 +289,7 @@ jacobian_analytic_aggregate_weights <- function(agg, n_rows) {
       return(NULL)
     }
 
-    # As in apply_plan_aggregation(): a NULL `block$w` marks a single-row
-    # identity group whose recorded unit-level weight is stale.
-    if (isTRUE(agg$weighted) && !is.null(block$w)) {
+    if (isTRUE(agg$weighted)) {
       w <- block$w
       if (
         !is.numeric(w) || !identical(dim(w), dim(idx)) ||
@@ -391,9 +389,21 @@ jacobian_analytic_hypothesis <- function(J, hyp, estimate_pre = NULL) {
     identical(hyp$kind, "matrix") && !is.null(H) &&
       nrow(H) == nrow(J) && all(is.finite(H))
   ) {
-    # Linear hypotheses map estimates with crossprod(H, estimate), so the same
-    # multiplication maps every coefficient column of the Jacobian at once.
+    # Affine hypotheses map estimates with crossprod(H, estimate) + offset,
+    # so H maps every coefficient column of the Jacobian at once; the offset
+    # has zero derivative and never enters.
     return(as.matrix(Matrix::crossprod(H, J)))
+  }
+
+  # Centering shortcuts carry a structured pullback: their operators are
+  # dense as matrices, and the pullback applies t(H) in O(np) instead. It is
+  # exact, so no numeric-stage provenance attaches.
+  if (is.function(hyp$pullback)) {
+    out <- tryCatch(as.matrix(hyp$pullback(J)), error = function(e) NULL)
+    if (!isTRUE(checkmate::check_matrix(out, mode = "numeric"))) {
+      return(NULL)
+    }
+    return(out)
   }
 
   # A hypothesis which is not linear, or whose linearity could not be proved,

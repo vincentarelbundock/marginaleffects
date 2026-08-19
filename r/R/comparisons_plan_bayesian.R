@@ -264,7 +264,21 @@ compare_hi_lo_bayesian_scalar <- function(
 
     first_idx <- vapply(group_indices, `[[`, integer(1), 1L)
     settings_set("marginaleffects_safefun_return1", TRUE)
+    # As on the frequentist path: the comparison consumed the unit-level
+    # weights, so the surviving row's weight in any further aggregation is
+    # the group's total weight, not the stale weight of its first source row.
+    total_wts <- NULL
+    if ("marginaleffects_wts_internal" %in% colnames(out)) {
+        total_wts <- vapply(
+            group_indices,
+            function(idx) sum(as.numeric(out$marginaleffects_wts_internal[idx])),
+            numeric(1)
+        )
+    }
     out <- subset(out[first_idx, , drop = FALSE], select = comparison_scalar_columns(out, by))
+    if (!is.null(total_wts)) {
+        out[, "marginaleffects_wts_internal" := total_wts]
+    }
     out[, "estimate" := comparison_posterior_center(draws_scalar)]
 
     return(list(out = out, draws = draws_scalar))

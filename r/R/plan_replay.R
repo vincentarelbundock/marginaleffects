@@ -72,15 +72,11 @@ record_plan_aggregation <- function(
     group_len <- lengths(idx)
 
     # Equal-size blocks let replay use colSums without ragged padding.
-    # A single-row group is an identity, not an average: comparison functions
-    # which aggregate (`*avgwts`) already consumed the weights and leave one
-    # row per group, and re-weighting that row by the stale unit-level weight
-    # of its first source row is 0/0 = NaN whenever that weight is zero.
     make_block <- function(cols) {
         n <- group_len[cols][1]
         idx_mat <- matrix(unlist(idx[cols], use.names = FALSE), nrow = n)
         w_mat <- NULL
-        if (isTRUE(weighted) && n > 1L) {
+        if (isTRUE(weighted)) {
             w_mat <- matrix(unlist(w[cols], use.names = FALSE), nrow = n)
         }
         list(cols = cols, idx = idx_mat, w = w_mat)
@@ -105,9 +101,7 @@ apply_plan_aggregation <- function(agg, est) {
         e <- est[block$idx]
         dim(e) <- dim(block$idx)
 
-        # `block$w` is NULL for single-row groups even under weights: those
-        # groups are identities, and their recorded weights are stale.
-        if (!is.null(block$w)) {
+        if (isTRUE(agg$weighted)) {
             w <- block$w
             missing_estimate <- is.na(e)
             e[missing_estimate] <- 0
@@ -252,15 +246,9 @@ simulation_replay_validate <- function(replay, model, expected) {
         simulation_replay_evaluate(replay, model),
         error = function(e) NULL
     )
-    if (
-        length(baseline) != length(expected) ||
-            !isTRUE(all.equal(
-                baseline,
-                expected,
-                tolerance = sqrt(.Machine$double.eps),
-                check.attributes = FALSE
-            ))
-    ) {
+    # Element-wise, like every other replay gate: a mean-relative check would
+    # let one badly wrong row hide among enough correct ones.
+    if (!plan_replay_agrees(baseline, expected)) {
         return(NULL)
     }
     replay
@@ -355,23 +343,41 @@ plan_std_error <- function(
     # the well-scaled quantity and reuses the Jacobian rather than discarding
     # it (#1750).
     hyp <- plan$hyp
-    G <- NULL
+    # `stage_pull` maps the pre-hypothesis Jacobian to the post-hypothesis
+    # one. Exact when the stage has a compiled matrix (an affine map's
+    # derivative does not depend on its offset -- probing the offset
+    # numerically cancels catastrophically) or a structured pullback (the
+    # centering shortcuts, whose operators are dense as matrices); a
+    # central-difference probe of the stage arithmetic otherwise.
+    stage_pull <- NULL
     # A user-supplied Jacobian function is authoritative and already covers the
     # whole pipeline, hypothesis included, so it is never composed with.
     if (!is.null(hyp) && is.null(custom_jacobian)) {
-        estimate_pre <- plan_replay_estimate_pre(
-            plan = plan,
-            kind = kind,
-            estimate = estimates[["estimate"]]
-        )
-        if (!is.null(estimate_pre)) {
-            G <- stage_jacobian_dense(hyp$apply, estimate_pre)
-            if (
-                !is.null(G) &&
-                    (nrow(G) != nrow(estimates) ||
-                        ncol(G) != length(estimate_pre))
-            ) {
-                G <- NULL
+        if (
+            identical(hyp$kind, "matrix") && !is.null(hyp$H) &&
+                isTRUE(checkmate::check_matrix(as.matrix(hyp$H), mode = "numeric")) &&
+                all(is.finite(as.matrix(hyp$H))) &&
+                ncol(hyp$H) == nrow(estimates)
+        ) {
+            Ht <- t(as.matrix(hyp$H))
+            stage_pull <- function(J) Ht %*% J
+        } else if (is.function(hyp$pullback)) {
+            stage_pull <- hyp$pullback
+        } else {
+            estimate_pre <- plan_replay_estimate_pre(
+                plan = plan,
+                kind = kind,
+                estimate = estimates[["estimate"]]
+            )
+            if (!is.null(estimate_pre)) {
+                G <- stage_jacobian_dense(hyp$apply, estimate_pre)
+                if (
+                    !is.null(G) &&
+                        nrow(G) == nrow(estimates) &&
+                        ncol(G) == length(estimate_pre)
+                ) {
+                    stage_pull <- function(J) G %*% J
+                }
             }
         }
     }
@@ -423,13 +429,20 @@ plan_std_error <- function(
         do_call(get_se_delta, args)
     }
 
-    se <- numeric_se(!is.null(G))
-    if (!is.null(G)) {
+    se <- numeric_se(!is.null(stage_pull))
+    if (!is.null(stage_pull)) {
         composed <- NULL
         J <- attr(se, "jacobian")
-        if (!is.null(J) && ncol(G) == nrow(J)) {
+        composed_J <- if (is.null(J)) {
+            NULL
+        } else {
+            # A dimension mismatch errors inside the pull and lands here as
+            # NULL, which the fail-closed branch below turns into a redo.
+            tryCatch(as.matrix(stage_pull(J)), error = function(e) NULL)
+        }
+        if (!is.null(composed_J) && nrow(composed_J) == nrow(estimates)) {
             propagated <- tryCatch(
-                std_error_from_jacobian(G %*% J, mfx@vcov_model, mfx@model),
+                std_error_from_jacobian(composed_J, mfx@vcov_model, mfx@model),
                 error = function(e) NULL
             )
             if (
@@ -439,7 +452,8 @@ plan_std_error <- function(
                 composed <- propagated$std.error
                 attr(composed, "jacobian") <- propagated$jacobian
                 # The inner derivative's provenance survives the composition:
-                # G only rescales the stage a custom or numeric J produced.
+                # the pull only rescales the stage a custom or numeric J
+                # produced.
                 attr(composed, "jacobian_source") <-
                     attr(se, "jacobian_source", exact = TRUE)
             }
@@ -449,7 +463,7 @@ plan_std_error <- function(
         # derivative. The repeat is inherent, not an optimization miss: the
         # fallback differentiates through the hypothesis stage by re-running
         # the model, which the pre-hypothesis Jacobian computed above cannot
-        # supply once G is unusable.
+        # supply once the pull is unusable.
         se <- if (is.null(composed)) numeric_se(FALSE) else composed
     }
 
@@ -514,12 +528,9 @@ plan_replay_estimate_pre <- function(plan, kind, estimate) {
     if (is.null(stages) || !is.numeric(stages$pre)) {
         return(NULL)
     }
-    if (!isTRUE(all.equal(
-        stages$post,
-        estimate,
-        tolerance = sqrt(.Machine$double.eps),
-        check.attributes = FALSE
-    ))) {
+    # Element-wise, like every other replay gate: a mean-relative check would
+    # let one badly wrong row hide among enough correct ones.
+    if (!plan_replay_agrees(stages$post, estimate)) {
         return(NULL)
     }
     stages$pre

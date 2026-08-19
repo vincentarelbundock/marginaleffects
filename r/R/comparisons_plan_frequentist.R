@@ -32,7 +32,12 @@ comparison_plan_build_frequentist <- function(
     lo,
     original,
     need_y) {
-    na_keep <- if (anyNA(out$predicted_lo)) which(!is.na(out$predicted_lo)) else NULL
+    # Both operands decide missingness symmetrically: a finite lo with a
+    # missing hi is just as uncomputable as the reverse, and letting it
+    # through surfaced later as a misleading complaint about the user's
+    # comparison function.
+    keep_mask <- !is.na(out$predicted_lo) & !is.na(out$predicted_hi)
+    na_keep <- if (all(keep_mask)) NULL else which(keep_mask)
     if (!is.null(na_keep)) {
         out <- out[na_keep]
     }
@@ -58,6 +63,7 @@ comparison_plan_build_frequentist <- function(
     plan_groups <- vector("list", nrow(bounds))
     out_rows <- vector("list", nrow(bounds))
     estimates <- vector("list", nrow(bounds))
+    out_wts <- vector("list", nrow(bounds))
     n_comp <- 0L
     any_scalar_aggregate <- FALSE
 
@@ -65,13 +71,14 @@ comparison_plan_build_frequentist <- function(
         rows <- seq.int(bounds$first[[j]], bounds$last[[j]])
         n <- length(rows)
         term <- out_sorted$term[rows]
+        group_wts <- out_sorted$marginaleffects_wts_internal[rows]
         call <- comparison_call(
             hi = out_sorted$predicted_hi[rows],
             lo = out_sorted$predicted_lo[rows],
             y = out_sorted$predicted[rows],
             n = n,
             term = term,
-            wts = out_sorted$marginaleffects_wts_internal[rows],
+            wts = group_wts,
             tmp_idx = out_sorted$tmp_idx[rows],
             context = context
         )
@@ -84,11 +91,19 @@ comparison_plan_build_frequentist <- function(
             out_idx <- n_comp + 1L
             out_rows[[j]] <- rows[[1]]
             estimates[[j]] <- con
+            # The comparison consumed the unit-level weights and its output
+            # row stands for the whole group. Any further aggregation must
+            # weight that row by the group's total weight -- the pooled
+            # weighted mean -- never by the stale weight of whichever source
+            # row happened to come first, which is 0/0 = NaN when that weight
+            # is zero. Zero weights are routine in ATT/matching workflows.
+            out_wts[[j]] <- sum(group_wts)
             n_comp <- n_comp + 1L
         } else {
             out_idx <- seq.int(n_comp + 1L, n_comp + n)
             out_rows[[j]] <- rows
             estimates[[j]] <- con
+            out_wts[[j]] <- group_wts
             n_comp <- n_comp + n
         }
         plan_groups[[j]] <- list(
@@ -104,6 +119,11 @@ comparison_plan_build_frequentist <- function(
 
     if (isTRUE(any_scalar_aggregate)) {
         out <- out_sorted[unlist(out_rows, use.names = FALSE)]
+        if ("marginaleffects_wts_internal" %in% colnames(out)) {
+            out[,
+                marginaleffects_wts_internal := unlist(out_wts, use.names = FALSE)
+            ]
+        }
     } else {
         out <- out_sorted
     }

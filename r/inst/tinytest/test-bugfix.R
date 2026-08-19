@@ -415,3 +415,72 @@ for (i in seq_len(nrow(cmp))) {
         stats::weighted.mean(uni$estimate[idx], dat$w[uni$rowid][idx])
     )
 }
+
+
+# An affine hypothesis -- linear plus a constant -- was not promoted to an
+# exact contrast matrix, so its derivative came from a finite-difference probe
+# through the hypothesis arithmetic. A large additive constant cancels the
+# probe catastrophically: "b1 + 1e16 = 0" reported SE = 0 with full
+# confidence. The derivative of an affine map does not depend on the
+# constant, so the SE must equal the unhypothesized one exactly.
+mod <- lm(mpg ~ hp + wt, mtcars)
+for (analytic in c(TRUE, FALSE)) {
+    options(marginaleffects_analytic_jacobian = analytic)
+    base <- predictions(mod, newdata = "mean")
+    aff <- predictions(mod, newdata = "mean", hypothesis = "b1 + 1e16 = 0")
+    expect_equivalent(aff$estimate, base$estimate + 1e16)
+    expect_equivalent(aff$std.error, base$std.error, tolerance = 1e-10)
+    aff2 <- predictions(mod, newdata = "mean", hypothesis = "b1 + 1e8 = 0")
+    expect_equivalent(aff2$std.error, base$std.error, tolerance = 1e-10)
+    # nonzero right-hand side is the same affine map
+    aff3 <- predictions(mod, newdata = "mean", hypothesis = "b1 = 5")
+    expect_equivalent(aff3$estimate, base$estimate - 5)
+    expect_equivalent(aff3$std.error, base$std.error, tolerance = 1e-10)
+}
+options(marginaleffects_analytic_jacobian = TRUE)
+
+
+# Policy: a genuine singleton group whose only member has zero weight is an
+# undefined weighted mean and must stay NaN. Only rows the comparison stage
+# already collapsed carry a group-total weight into further aggregation.
+d0 <- data.frame(y = c(1, 2), x = c(0, 1), g = c("a", "b"), w = c(0, 1))
+m0 <- lm(y ~ x, d0)
+p0 <- avg_predictions(m0, newdata = d0, by = "g", wts = "w", vcov = FALSE)
+expect_true(is.nan(p0$estimate[p0$g == "a"]))
+expect_equivalent(p0$estimate[p0$g == "b"], 2)
+
+
+# The centering hypothesis shortcuts must not materialize their dense n x n
+# operators; their structured pullback must equal the dense algebra exactly,
+# and end-to-end standard errors must agree with the numeric path.
+set.seed(11)
+J <- matrix(rnorm(21), nrow = 7)
+groups <- list(1:3, 4:7)
+dense_block <- function(shortcut, n) {
+    if (shortcut == "meandev") {
+        diag(n) - matrix(1 / n, n, n)
+    } else {
+        H <- diag(n) - matrix(1 / (n - 1), n, n)
+        diag(H) <- 1
+        H
+    }
+}
+for (shortcut in c("meandev", "meanotherdev")) {
+    pb <- marginaleffects:::hypothesis_formula_pullback(shortcut, groups)
+    expected <- rbind(
+        t(dense_block(shortcut, 3)) %*% J[1:3, , drop = FALSE],
+        t(dense_block(shortcut, 4)) %*% J[4:7, , drop = FALSE]
+    )
+    expect_equivalent(pb(J), expected)
+}
+dat <- transform(mtcars, cyl = factor(cyl))
+mod <- glm(am ~ mpg + cyl, family = binomial, data = dat)
+for (shortcut in list(~meandev, ~meanotherdev)) {
+    a <- avg_predictions(mod, by = "cyl", hypothesis = shortcut)
+    expect_equal(components(a, "jacobian_method"), "analytic")
+    options(marginaleffects_analytic_jacobian = FALSE)
+    b <- avg_predictions(mod, by = "cyl", hypothesis = shortcut)
+    options(marginaleffects_analytic_jacobian = TRUE)
+    expect_equivalent(a$estimate, b$estimate)
+    expect_equivalent(a$std.error, b$std.error, tolerance = 1e-6)
+}

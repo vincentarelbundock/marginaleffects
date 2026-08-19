@@ -397,11 +397,18 @@ hyp <- compile_string("(b2 + b3) / 2 - b4")
 expect_equal(hyp$kind, "matrix")
 expect_equivalent(as.matrix(hyp$H), matrix(c(0, 0.5, 0.5, -1), ncol = 1))
 
-# Nonlinear and affine maps must not be promoted: the first has no matrix
-# representation at all, and the second cannot be written as crossprod(H, est).
+# Nonlinear maps must not be promoted: they have no matrix representation.
 expect_equal(compile_string("b2 / b1")$kind, "string")
 expect_equal(compile_string("exp(b2 - b1)")$kind, "string")
-expect_equal(compile_string("b1 - 0.5")$kind, "string")
+
+# Affine maps promote as a matrix plus an offset: the estimates are
+# crossprod(H, est) + offset and the derivative is H alone. Differentiating
+# the constant numerically instead cancels catastrophically when the offset
+# dwarfs the estimates ("b1 + 1e16 = 0" reported SE = 0).
+hyp <- compile_string("b1 - 0.5")
+expect_equal(hyp$kind, "matrix")
+expect_equivalent(as.matrix(hyp$H), matrix(c(1, 0, 0, 0), ncol = 1))
+expect_equivalent(hyp$offset, -0.5)
 
 # Promotion is defeatable, which matters because a wrong linearity verdict
 # would silently corrupt standard errors rather than fail.
