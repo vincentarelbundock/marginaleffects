@@ -253,3 +253,32 @@ h4 <- hypotheses(mod, c("b1<=0", "b2>=0"), df = mod$df)
 expect_equal(h1$p.value[1], h4$p.value[1], tolerance = 1e-6)
 # b2>=0 should give the complement p-value of b2<=0
 expect_equal(h3$p.value[1], 1 - h4$p.value[2], tolerance = 1e-6)
+
+
+# Post-hoc `hypotheses()` on an affine hypothesis with a large additive
+# constant: an offset cannot change a variance, but finite-differencing the
+# whole hypothesis map subtracts two numbers of magnitude 1e10 and loses every
+# significant digit.
+mod <- lm(mpg ~ am + hp, data = mtcars)
+p <- avg_predictions(mod, by = "am")
+h1 <- hypotheses(p, hypothesis = "b2 - b1 = 0")
+h2 <- hypotheses(p, hypothesis = "b2 - b1 - 1e10 = 0")
+expect_equal(h2$std.error, h1$std.error, tolerance = 1e-8)
+expect_equal(as.numeric(h2$estimate), as.numeric(h1$estimate) - 1e10, tolerance = 1e-8)
+
+h1 <- hypotheses(mod, hypothesis = "b2 = 0")
+h2 <- hypotheses(mod, hypothesis = "b2 - 1e10 = 0")
+expect_equal(h2$std.error, h1$std.error, tolerance = 1e-8)
+
+h1 <- hypotheses(mod, hypothesis = "b2 - b3 = 0")
+h2 <- hypotheses(mod, hypothesis = "b2 - b3 - 1e10 = 0")
+expect_equal(h2$std.error, h1$std.error, tolerance = 1e-8)
+
+# Named terms and a right-hand side constant take the same exact path
+h1 <- hypotheses(mod, hypothesis = "am = 0")
+h2 <- hypotheses(mod, hypothesis = "am = 1e10")
+expect_equal(h2$std.error, h1$std.error, tolerance = 1e-8)
+
+# Non-affine hypotheses keep their numerical derivative
+h1 <- hypotheses(mod, hypothesis = "exp(b2) = 0")
+expect_true(is.finite(h1$std.error) && h1$std.error > 0)
