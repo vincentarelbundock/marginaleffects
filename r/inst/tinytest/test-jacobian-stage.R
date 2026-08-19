@@ -1,23 +1,21 @@
 source("helpers.R")
 using("marginaleffects")
 
-# Jacobians are computed by one of three paths: an exact analytic derivative, a
-# JAX-backed automatic derivative, or finite differences. This file compares
-# them against each other and, more importantly, against oracles which share no
-# code with any of them.
+# Jacobians are computed by one of two paths: an exact analytic derivative or
+# finite differences. This file compares them against each other and, more
+# importantly, against oracles which share no code with either.
 #
 # Two design points matter and are easy to get wrong.
 #
 # First, setting an option does not mean a path ran. get_jacobian_analytic()
-# returns NULL on any unsupported stage, autodiff_try() returns NULL when
-# lowering fails, and both fall through to finite differences. A suite which
-# only set options could be entirely green while testing the same fallback
-# three times over, which is precisely what a regression narrowing the analytic
-# path would produce. Every helper below asserts the path which actually
-# produced the Jacobian.
+# returns NULL on any unsupported stage and falls through to finite
+# differences. A suite which only set options could be entirely green while
+# testing the same fallback twice over, which is precisely what a regression
+# narrowing the analytic path would produce. Every helper below asserts the
+# path which actually produced the Jacobian.
 #
-# Second, the three paths are not oracles of equal quality. Finite differences
-# are the least accurate of them, so they are never used as the reference: they
+# Second, the two paths are not oracles of equal quality. Finite differences
+# are the less accurate of them, so they are never used as the reference: they
 # are screened loosely, and the absolute scale is pinned by closed-form delta
 # method calculations written out by hand.
 
@@ -28,17 +26,11 @@ using("marginaleffects")
 
 jacobian_path_run <- function(method, f) {
     old_analytic <- getOption("marginaleffects_analytic_jacobian", default = TRUE)
-    void <- capture.output(ad <- autodiff())
-    old_autodiff <- isTRUE(ad)
     on.exit(
-        {
-            options(marginaleffects_analytic_jacobian = old_analytic)
-            void <- capture.output(autodiff(old_autodiff))
-        },
+        options(marginaleffects_analytic_jacobian = old_analytic),
         add = TRUE
     )
     options(marginaleffects_analytic_jacobian = identical(method, "analytic"))
-    void <- capture.output(autodiff(identical(method, "autodiff")))
     f()
 }
 
@@ -308,23 +300,6 @@ cases <- list(
     slopes_plain = function() avg_slopes(mod_grid, variables = "x")
 )
 
-# Cases the JAX lowering rules currently cover. This list is a regression
-# guard, not a specification: a case leaving it means autodiff quietly stopped
-# lowering and fell back. Cases outside it still have their estimates checked.
-autodiff_lowers <- c(
-    "predictions_plain",
-    "predictions_string",
-    "predictions_formula",
-    "predictions_matrix",
-    "comparisons_difference",
-    "comparisons_ratio",
-    "comparisons_by",
-    "comparisons_wts",
-    "comparisons_rowwise",
-    "comparisons_link",
-    "comparisons_hypothesis"
-)
-
 for (nm in names(cases)) {
     f <- cases[[nm]]
     analytic <- jacobian_path_run("analytic", f)
@@ -340,47 +315,57 @@ for (nm in names(cases)) {
         max(abs(analytic$std.error - numeric$std.error)) <
             1e-4 * max(1, max(abs(numeric$std.error)))
     )
-
-    if (isTRUE(AUTODIFF)) {
-        ad <- suppressWarnings(jacobian_path_run("autodiff", f))
-        expect_equal(analytic$estimate, ad$estimate, tolerance = 1e-12)
-        if (nm %in% autodiff_lowers) {
-            # Losing coverage is a regression, and it would otherwise be
-            # invisible: a case which stops lowering falls back silently and
-            # still returns a plausible number.
-            expect_equal(jacobian_method(ad), "autodiff")
-            # Two exact methods. Any disagreement here is a real bug in one of
-            # them, so this is asserted tightly rather than screened.
-            expect_equal(analytic$std.error, ad$std.error, tolerance = 1e-9)
-        }
-    }
 }
 
 
 # ---------------------------------------------------------------------------
-# Issue #1735: promoting a linear hypothesis is what makes autodiff reachable.
+# ---------------------------------------------------------------------------
+# Issue #1735: promoting a linear hypothesis is what makes the hypothesis stage
+# exact.
 #
-# JAX cannot lower an opaque R closure, so a linear hypothesis written as a
-# string used to force the numerical fallback no matter how simple it was.
-# Assert the mechanism rather than the result: turning promotion off must put
-# the same estimand back on the fallback.
+# The analytic Jacobian composes a hypothesis exactly only when it is a matrix.
+# An opaque R closure still keeps the exact Jacobian of everything upstream
+# (#1750), so the fallback is invisible in the label and shows up only in the
+# last digits -- which is precisely why this asserts the mechanism rather than
+# the path name. A promoted string must agree with the same contrast written
+# out as a matrix to the last bit; an unpromoted one must not.
 # ---------------------------------------------------------------------------
 
-if (isTRUE(AUTODIFF)) {
-    mod_promote <- glm(am ~ hp + wt, family = binomial, data = mtcars)
-    f <- function() {
-        avg_predictions(mod_promote, by = "cyl", hypothesis = "b2 - b1 = 0")
-    }
-    with_promotion <- on_path("autodiff", f)
-
-    old <- getOption("marginaleffects_hypothesis_promote")
-    options(marginaleffects_hypothesis_promote = FALSE)
-    without <- suppressWarnings(jacobian_path_run("autodiff", f))
-    options(marginaleffects_hypothesis_promote = old)
-
-    expect_equal(jacobian_method(without), "numeric")
-    expect_equal(with_promotion$estimate, without$estimate, tolerance = 1e-12)
+mod_promote <- glm(am ~ hp + wt, family = binomial, data = mtcars)
+f <- function() {
+    avg_predictions(mod_promote, by = "cyl", hypothesis = "b2 - b1 = 0")
 }
+
+by_matrix <- on_path(
+    "analytic",
+    function() {
+        avg_predictions(
+            mod_promote,
+            by = "cyl",
+            hypothesis = matrix(c(-1, 1, 0), ncol = 1)
+        )
+    }
+)
+
+old <- getOption("marginaleffects_hypothesis_promote")
+options(marginaleffects_hypothesis_promote = TRUE)
+with_promotion <- on_path("analytic", f)
+options(marginaleffects_hypothesis_promote = FALSE)
+without <- suppressWarnings(jacobian_path_run("analytic", f))
+options(marginaleffects_hypothesis_promote = old)
+
+# Exact, to the last bit: the compiled contrast matrix is the same object the
+# explicit matrix argument produces.
+expect_identical(with_promotion$std.error, by_matrix$std.error)
+
+# Losing promotion is not free. The closure stage is probed rather than
+# differentiated in closed form, so the result moves -- a little, but it moves.
+expect_false(identical(without$std.error, by_matrix$std.error))
+expect_equal(without$std.error, by_matrix$std.error, tolerance = 1e-8)
+
+# None of this touches the point estimates.
+expect_equal(with_promotion$estimate, without$estimate, tolerance = 1e-12)
+expect_equal(with_promotion$estimate, by_matrix$estimate, tolerance = 1e-12)
 
 
 # ---------------------------------------------------------------------------

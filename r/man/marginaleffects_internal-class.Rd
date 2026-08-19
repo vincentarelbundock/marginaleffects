@@ -28,7 +28,7 @@ functions to simplify the function signatures and reduce redundant argument pass
 \item{\code{jacobian}}{The jacobian matrix or NULL}
 
 \item{\code{jacobian_method}}{String naming the differentiation path which produced
-the jacobian: "analytic", "autodiff", "numeric", "custom", or NULL}
+the jacobian: "analytic", "numeric", "custom", or NULL}
 
 \item{\code{model}}{The fitted model object}
 

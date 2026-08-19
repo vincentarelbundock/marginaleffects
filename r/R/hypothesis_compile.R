@@ -149,7 +149,7 @@ hypothesis_expression_coefficients <- function(expr, labels, idx, n_estimates) {
 # A hypothesis expressed as a string is very often a linear map of the
 # estimates, even when it is stored as an opaque closure. A linear map has an
 # exact matrix representation, which is faster than any probe, exact rather
-# than approximate, and consumable by the autodiff lowering rules. Record the
+# than approximate, and consumable by the analytic Jacobian. Record the
 # hypothesis as a matrix stage when the syntax tree proves linearity; leave
 # the closure in place so estimates are computed exactly as before, and keep
 # every other list element and attribute untouched.

@@ -158,7 +158,6 @@ Suggests:
     rcmdcheck,
     Rdatasets,
     remotes,
-    reticulate,
     rmarkdown,
     rms,
     robust,
@@ -206,8 +205,6 @@ Collate:
     'add_hypothesis.R'
     'add_rowid.R'
     'attributes.R'
-    'autodiff.R'
-    'autodiff_lower.R'
     'backtransform.R'
     'broom.R'
     'by.R'

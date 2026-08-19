@@ -1,8 +1,3 @@
-#' @keywords internal
-#' @export
-get_autodiff_args.ivreg <- get_autodiff_args.lm
-
-
 #' @rdname get_model_matrix
 #' @export
 get_model_matrix.ivreg <- function(model, newdata, mfx = NULL) {

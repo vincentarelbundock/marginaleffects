@@ -538,7 +538,7 @@ jacobian_analytic_model_matrix <- function(
   family = NULL
 ) {
   # NULL means that this estimand is not safely eligible. This is an expected
-  # result which preserves the existing autodiff and finite-difference paths.
+  # result which preserves the existing finite-difference path.
   tryCatch(
     {
       if (is.null(plan) || model_has_effective_offset(model)) {
@@ -676,7 +676,7 @@ jacobian_analytic_model_matrix <- function(
         # averages with na.rm = TRUE), but the sparse Jacobian aggregation
         # divides by full group counts. Those two conventions agree only when
         # nothing is missing, so missing predictions disqualify the analytic
-        # path outright -- the same rejection the autodiff lowering applies.
+        # path outright.
         if (anyNA(pred_hi) || anyNA(pred_lo)) {
           return(NULL)
         }

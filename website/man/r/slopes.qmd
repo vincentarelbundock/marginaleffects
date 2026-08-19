@@ -205,7 +205,7 @@ Type of uncertainty estimates to report (e.g., for robust standard errors). Acce
 <li> Other: <code>"NeweyWest"</code>, <code>"KernHAC"</code>, <code>"OPG"</code>. See the <code>sandwich</code> package documentation.
 
 </li>
-<li> &quot;rsample&quot;, &quot;boot&quot;, &quot;fwb&quot;, and &quot;simulation&quot; are passed to the <code>method</code> argument of the <code>inferences()</code> function. To customize the bootstrap or simulation process, call <code>inferences()</code> directly.
+<li> <code>"rsample"</code>, <code>"boot"</code>, <code>"fwb"</code>, or <code>"simulation"</code>: forward the result to <code>inferences()</code> using that method.
 
 </li></ul>
 

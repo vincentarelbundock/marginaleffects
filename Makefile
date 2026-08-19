@@ -10,7 +10,6 @@ help:  ## Display this help screen
 
 install: r-install py-install ## Both: install R and Python packages
 test: r-test py-test ## Both: run R and Python test suites
-autodiff: r-autodiff py-test-autodiff ## Both: run autodiff tests
 document: r-document py-document ## Both: generate docs and populate website/man
 
 # ==============================================================================
@@ -41,28 +40,20 @@ r-check: r-document r-runnersup ## R: run R CMD check
 	cd .. && $(MAKE) r-runnersdown; exit $$status
 
 r-testone: ## R: run single test (testfile=path)
-	cd r && uv run Rscript -e "pkgload::load_all();r<-tinytest::run_test_file('$(testfile)');print(r);if(any(!sapply(r,isTRUE)))stop('test failures')"
+	cd r && Rscript -e "pkgload::load_all();r<-tinytest::run_test_file('$(testfile)');print(r);if(any(!sapply(r,isTRUE)))stop('test failures')"
 
 r-testseq: r-runnersup ## R: run all tests sequentially
-	cd r && uv run Rscript -e "pkgload::load_all();r<-tinytest::run_test_dir();print(r);if(any(!sapply(r,isTRUE)))stop('test failures')"; status=$$?; \
+	cd r && Rscript -e "pkgload::load_all();r<-tinytest::run_test_dir();print(r);if(any(!sapply(r,isTRUE)))stop('test failures')"; status=$$?; \
 	cd .. && $(MAKE) r-runnersdown; exit $$status
 
 r-test: r-install r-runnersup ## R: build, install, and test in parallel
-	cd r && uv run Rscript -e "tinytest::build_install_test(ncpu = 10)"; status=$$?; \
+	cd r && Rscript -e "tinytest::build_install_test(ncpu = 10)"; status=$$?; \
 	cd .. && $(MAKE) r-runnersdown; exit $$status
 
 r-testplot: ## R: run plot tests
 	$(MAKE) r-testone testfile="inst/tinytest/test-plot_predictions.R"
 	$(MAKE) r-testone testfile="inst/tinytest/test-plot_comparisons.R"
 	$(MAKE) r-testone testfile="inst/tinytest/test-plot_slopes.R"
-
-r-autodiff: r-uv ## R: run autodiff tests
-	MARGINALEFFECTS_AUTODIFF=1 $(MAKE) r-testone testfile="inst/tinytest/test-autodiff.R"
-	MARGINALEFFECTS_AUTODIFF=1 $(MAKE) r-testone testfile="inst/tinytest/test-autodiff-pipeline.R"
-	MARGINALEFFECTS_AUTODIFF=1 $(MAKE) r-testseq
-
-r-uv: ## R: clean and rebuild uv environment
-	cd r && uv clean && rm -rf .venv && uv sync
 
 # ==============================================================================
 # Python targets

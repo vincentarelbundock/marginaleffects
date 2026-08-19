@@ -124,6 +124,18 @@ add_model_matrix_attribute <- function(mfx = NULL, newdata = NULL, model = NULL)
 }
 
 
+#' Attach a model matrix to a data frame which is not `mfx@newdata`
+#'
+#' The matrix builder reads `mfx@newdata`, so a frame which is not currently
+#' held there is attached by swapping it in on a local copy of `mfx`.
+#' @keywords internal
+#' @noRd
+add_model_matrix_attribute_data <- function(mfx, data) {
+    mfx@newdata <- data
+    add_model_matrix_attribute(mfx)
+}
+
+
 #' Attach a model matrix after `stats::predict()` failed
 #'
 #' `get_predict()` methods that can compute a linear predictor from

@@ -83,8 +83,8 @@ align_jacobian_vcov <- function(J, V, object, ...) {
 
 
 std_error_from_jacobian <- function(J, V, object, ...) {
-    # Covariance propagation is shared algebra. Eligibility for analytic and
-    # autodiff Jacobians remains independent of this helper.
+    # Covariance propagation is shared algebra. Eligibility for the analytic
+    # Jacobian remains independent of this helper.
     jnames <- colnames(J)
     vnames <- colnames(V)
     if (
@@ -167,7 +167,7 @@ get_se_delta <- function(
         coefs <- coefs[bnames]
     }
 
-    # user-supplied jacobian machine (e.g. JAX)
+    # user-supplied jacobian machine
     if (is.null(J)) {
         fun <- settings_get("jacobian_function")
         if (is.null(fun)) {
@@ -194,8 +194,8 @@ get_se_delta <- function(
         )
         checkmate::assert_matrix(J, mode = "numeric", ncols = length(coefs), null.ok = TRUE)
 
-        # Unpad Jacobian for autodiff jax_jacobian if newdata was padded
-        # JAX computes jacobian on padded newdata, but final results are unpadded
+        # A user-supplied jacobian function computes on `mfx@newdata`, which
+        # may be padded; the reported results are not. Drop the padded rows.
         if (!is.null(J) && !is.null(mfx) && "rowid" %in% colnames(mfx@newdata)) {
             idx <- mfx@newdata$rowid > 0
             if (!all(idx) && nrow(J) == nrow(mfx@newdata)) {

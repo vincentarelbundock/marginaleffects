@@ -140,8 +140,6 @@ book:
           href: man/r/plot_comparisons.qmd
         - text: "`plot_slopes`"
           href: man/r/plot_slopes.qmd
-        - text: "`autodiff`"
-          href: man/r/autodiff.qmd
         - text: "`print.marginaleffects`"
           href: man/r/print.marginaleffects.qmd
         - text: "`get_dataset`"

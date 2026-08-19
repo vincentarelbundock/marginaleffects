@@ -359,7 +359,7 @@ comparisons <- function(
     mfx <- se$mfx
     cmp <- se$estimates
 
-    # Common path for both autodiff and fallback
+    # Common path for both the analytic and fallback paths
 
     cmp <- merge_original_data(
         cmp,

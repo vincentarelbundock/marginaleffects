@@ -318,7 +318,7 @@ predictions <- function(
     mfx <- se$mfx
     tmp <- se$estimates
 
-    # Common path for both autodiff and fallback
+    # Common path for both the analytic and fallback paths
 
     mfx <- add_degrees_of_freedom(
         mfx = mfx,

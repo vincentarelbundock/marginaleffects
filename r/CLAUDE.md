@@ -23,16 +23,10 @@ All commands run from the **repo root** (`/Users/vincent/repos/marginaleffects/`
 - `make r-testseq` - Run all tests sequentially using pkgload::load_all()
 - `make r-test` - Build, install, and test in parallel (10 cores)
 - `make r-testplot` - Run plot-specific tests (predictions, comparisons, slopes)
-- `make r-autodiff` - Run automatic differentiation tests (requires uv environment)
 
 ### Documentation & Website
 - `make document` - Generate docs for both R and Python, populate website
 - `make r-document` - Generate R docs only
-
-### UV Environment (Python/JAX for Autodiff)
-- `make r-uv` - Clean and rebuild the uv virtual environment
-- The package uses `uv` for Python dependency management in autodiff features
-- Test commands (`r-testone`, `r-testseq`, `r-test`) run via `uv run Rscript`
 
 ## Architecture
 
@@ -77,10 +71,9 @@ The package achieves broad model compatibility through a modular approach:
   - `difference`, `ratio`, `odds`, `lift` for basic comparisons
   - `dydx`, `eyex`, `eydx`, `dyex` for slopes and elasticities
   - Averaging variants (`*avg`) and weighted variants (`*avgwts`)
-- **Autodiff system**: Uses JAX (via reticulate) for automatic differentiation
-  - `R/autodiff.R` contains the automatic differentiation interface
-  - Falls back to finite differences when autodiff is not supported
-  - Requires Python/JAX setup via `uv` for full functionality
+- **Analytic Jacobians**: Exact closed-form derivatives for eligible estimands
+  - `R/get_jacobian_analytic.R` and `R/jacobian_stage.R` contain the implementation
+  - Falls back to finite differences when an estimand is not eligible
 
 ## Testing Framework
 
@@ -179,7 +172,6 @@ The modular architecture means most new model support requires < 50 lines of cod
 - Core dependencies: `data.table`, `insight`, `checkmate`, `rlang`
 - Performance: No C++/Rcpp in current version (DESCRIPTION shows no compiled code)
 - Extensive suggested packages (100+) for model compatibility testing
-- Python integration via `reticulate` for JAX-based automatic differentiation
 
 ### Development Workflow
 - Uses `devtools` workflow for development (`make install`, `make document`)
@@ -188,7 +180,6 @@ The modular architecture means most new model support requires < 50 lines of cod
   - `runnersdown`: Restores original files using git restore
 - Uses `altdoc` for documentation website generation with Quarto integration
 - Built-in support for both HTML and PDF book rendering
-- Python environment managed via `uv` for autodiff features
 
 ### Code Organization Conventions
 - Model-specific methods follow `get_predict.classname()` pattern
