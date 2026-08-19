@@ -43,29 +43,9 @@ set type double
 
 cd ~/repos/marginaleffects/r/inst/tinytest/stata
 
-* --- helper: dump r(b) / r(V) from the last `margins` call --------------------
-capture program drop mesave
-program define mesave
-    args model command
-    tempname b V
-    matrix `b' = r(b)
-    matrix `V' = r(V)
-    local names : colnames `b'
-    local n = colsof(`b')
-    local row = 0
-    forvalues i = 1/`n' {
-        local nm : word `i' of `names'
-        local est = `b'[1, `i']
-        local se  = sqrt(`V'[`i', `i'])
-        * `margins` emits base and omitted levels as exact zeros. They carry no
-        * information and have no counterpart in the marginaleffects output.
-        if (`se' == 0) continue
-        local ++row
-        file write golden ///
-            "`model'," "`command'," "`row'," "`nm'," ///
-            "`=string(`est', "%20.15g")'," "`=string(`se', "%20.15g")'" _n
-    }
-end
+* The shared mfx_* helpers in this directory do the exporting, so these
+* fixtures use the same schema and the same base-level filtering as every
+* other Stata suite here.
 
 
 * --- helper: the five estimands, for whichever model is in memory -------------
@@ -74,38 +54,32 @@ capture program drop runall
 program define runall
     args model byvar facvar numvar
 
-    * (1) avg_predictions(m)
-    quietly margins, vce(unconditional)
-    mesave "`model'" "avg_predictions"
+    quietly margins, vce(unconditional) level(95)
+    mfx_export, fixture("`model'_avg_predictions")
 
-    * (2) avg_predictions(m, by = byvar)
-    quietly margins, over(`byvar') vce(unconditional)
-    mesave "`model'" "avg_predictions_by"
+    quietly margins, over(`byvar') vce(unconditional) level(95)
+    mfx_export, fixture("`model'_avg_predictions_by")
 
-    * (3) avg_comparisons(m, variables = facvar)  [factor: discrete difference]
-    quietly margins, dydx(i.`facvar') vce(unconditional)
-    mesave "`model'" "avg_comparisons_fac"
+    quietly margins, dydx(i.`facvar') vce(unconditional) level(95)
+    mfx_export, fixture("`model'_avg_comparisons_fac")
 
-    * (4) avg_comparisons(m, variables = facvar, by = byvar)
-    quietly margins, dydx(i.`facvar') over(`byvar') vce(unconditional)
-    mesave "`model'" "avg_comparisons_fac_by"
+    quietly margins, dydx(i.`facvar') over(`byvar') vce(unconditional) level(95)
+    mfx_export, fixture("`model'_avg_comparisons_fac_by")
 
-    * (5) avg_slopes(m, variables = numvar)
     * On a continuous variable `dydx()` is a derivative, so the marginaleffects
     * counterpart is avg_slopes(), not avg_comparisons(). (On a factor the two
     * coincide -- `dydx(i.fac)` above is the discrete difference.)
-    quietly margins, dydx(`numvar') vce(unconditional)
-    mesave "`model'" "avg_slopes_num"
+    quietly margins, dydx(`numvar') vce(unconditional) level(95)
+    mfx_export, fixture("`model'_avg_slopes_num")
 
-    * (6) avg_slopes(m, variables = numvar, by = byvar)
-    quietly margins, dydx(`numvar') over(`byvar') vce(unconditional)
-    mesave "`model'" "avg_slopes_num_by"
+    quietly margins, dydx(`numvar') over(`byvar') vce(unconditional) level(95)
+    mfx_export, fixture("`model'_avg_slopes_num_by")
 end
 
 * --- output file -------------------------------------------------------------
 capture mkdir results
-file open golden using "results/unconditional.csv", write replace
-file write golden "model,command,index,term,estimate,std_error" _n
+tempfile combined
+mfx_open `"`combined'"'
 
 * =============================================================================
 * iris (n = 150). Built from R's `datasets::iris` by databases/generate_iris.R.
@@ -141,7 +115,7 @@ runall "iris_glm_binomial_probit" species heavy slength
 quietly glm swidth slength pwidth i.heavy, family(gamma) link(log) irls vce(robust) ltolerance(1e-14)
 runall "iris_glm_gamma_log" species heavy slength
 
-file close golden
+mfx_close `"`combined'"' "results/unconditional.csv"
 
 display "wrote results/unconditional.csv"
 exit, clear

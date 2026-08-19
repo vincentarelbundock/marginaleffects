@@ -101,13 +101,27 @@ cmd <- function(spec, command) {
     )
 }
 
-for (mod_name in unique(golden$model)) {
-    spec <- specs[[mod_name]]
-    expect_true(!is.null(spec), info = paste("no R spec for", mod_name))
+# `unconditional.do` exports through the shared mfx_* helpers, so a fixture is
+# named "<model>_<command>" and the rows arrive in Stata's own order.
+commands <- c(
+    "avg_predictions",
+    "avg_predictions_by",
+    "avg_comparisons_fac",
+    "avg_comparisons_fac_by",
+    "avg_slopes_num",
+    "avg_slopes_num_by"
+)
 
-    for (command in unique(golden$command[golden$model == mod_name])) {
-        sta <- golden[golden$model == mod_name & golden$command == command, ]
-        sta <- sta[order(sta$index), ]
+tested <- character()
+for (mod_name in names(specs)) {
+    spec <- specs[[mod_name]]
+
+    for (command in commands) {
+        fixture <- paste(mod_name, command, sep = "_")
+        sta <- golden[golden$fixture == fixture, , drop = FALSE]
+        expect_true(nrow(sta) > 0, info = paste("no fixture", fixture))
+        if (nrow(sta) == 0) next
+        tested <- union(tested, fixture)
 
         mfx <- cmd(spec, command)
         # Stata's `over()` orders groups by the level ordering, same as `by=`.
@@ -129,3 +143,9 @@ for (mod_name in unique(golden$model)) {
         )
     }
 }
+
+expect_equal(
+    sort(unique(golden$fixture)),
+    sort(tested),
+    info = "every unconditional.csv fixture is tested"
+)
