@@ -17,6 +17,13 @@ Breaking changes:
 
 Performance:
 
+* Comparison functions other than the built-in differences -- `ratio`, `lnratio`, `lnor`, `lift`, elasticities, and user-supplied functions -- now compose exact prediction Jacobians with a verified derivative of the comparison stage, instead of differentiating the whole pipeline once per coefficient. About 5x faster for `avg_comparisons(comparison = "ratio")` on a model with 121 coefficients, and the gap grows with the number of coefficients.
+* `hypothesis` strings and formula shortcuts which are linear in the estimates are now compiled to exact contrast matrices, which both the analytic Jacobian and the autodiff lowering rules can consume. Issue #1735.
+* A `hypothesis` which is not linear no longer discards the Jacobian of everything upstream of it. The hypothesis is differentiated on its own and composed by the chain rule, which also removes a full re-differentiation of the model.
+* A custom `comparison` function which does not use the observed outcome no longer disqualifies the analytic Jacobian.
+* New `jacobian_method` component records which differentiation path produced the Jacobian: `components(x, "jacobian_method")` returns `"analytic"`, `"autodiff"`, `"numeric"`, or `"custom"`. Setting an option is not evidence that a path ran, since unsupported estimands fall through silently.
+* Set `options(marginaleffects_hypothesis_promote = FALSE)` to disable the promotion of linear hypotheses to contrast matrices.
+* Standard errors for estimands newly eligible for the analytic path may differ from previous builds at about 1e-7. The new values are the exact ones; the old values carried finite-difference error.
 * Cached model matrices now discard observation row names without copying their numeric payload. Eligible prediction plans reuse baseline linear predictors, and `avg_comparisons()` aggregates exact Jacobians directly from cached matrices instead of materializing observation-level derivatives.
 * `MASS::glm.nb()`, `MASS::rlm()`, and `brglm2::brglmFit()` models now use package-compatible model matrices and exact analytic Jacobians for eligible predictions and built-in difference comparisons. Response-scale `glm.nb` and `brglmFit` derivatives use their fitted inverse-link functions.
 * Set `options(marginaleffects_analytic_jacobian = FALSE)` to disable analytic Jacobians and force the existing autodiff or numerical fallback, which is useful for validation and debugging.
@@ -35,6 +42,7 @@ Performance:
 
 Bug fixes:
 
+* Standard errors computed through a `hypothesis` argument no longer lose accuracy as the number of rows grows. Manual g-computation with `avg_predictions()` and a contrast matrix is the same estimand as `avg_comparisons()`, but their standard errors could disagree by tens of percent on large datasets: the delta method differentiated the averaging and the contrast together, so the roundoff of an average over many predictions was amplified by the inverse of the finite-difference step. The hypothesis is now a separate stage composed by the chain rule. Thanks to @nremenyi for report #1750.
 * `by` aggregation with posterior or bootstrap draws no longer flattens the draws matrix when a `by` data frame omits some term/group combinations.
 * `predictions()` now assigns the correct `rowid`, `type`, and `estimate` column names when model predictions are returned as a bare vector.
 * `equivalence` tests now support vector-valued degrees of freedom.

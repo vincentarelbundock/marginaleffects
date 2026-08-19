@@ -52,12 +52,17 @@ prediction_plan_build_frequentist <- function(
 }
 
 
-prediction_plan_apply <- function(plan, pred) {
+prediction_plan_apply_stages <- function(plan, pred) {
     stopifnot(length(pred) == plan$n_pred)
     if (!is.null(plan$keep)) {
         pred <- pred[plan$keep]
     }
-    apply_plan_aggregation_and_hypothesis(pred, plan$agg, plan$hyp)
+    apply_plan_stages(pred, plan$agg, plan$hyp)
+}
+
+
+prediction_plan_apply <- function(plan, pred) {
+    prediction_plan_apply_stages(plan, pred)$post
 }
 
 

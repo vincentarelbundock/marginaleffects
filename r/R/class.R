@@ -28,6 +28,8 @@ setClassUnion("logicalOrNULL", c("logical", "NULL"))
 #' @slot df The degrees of freedom
 #' @slot eps Epsilon value for numerical derivatives
 #' @slot jacobian The jacobian matrix or NULL
+#' @slot jacobian_method String naming the differentiation path which produced
+#'   the jacobian: "analytic", "autodiff", "numeric", "custom", or NULL
 #' @slot model The fitted model object
 #' @slot modeldata The model data frame
 #' @slot newdata The new data frame for predictions
@@ -54,6 +56,7 @@ setClass(
         hypothesis_direction = "ANY",
         inferences = "ANY",
         jacobian = "matrixOrNULL",
+        jacobian_method = "characterOrNULL",
         model = "ANY",
         modeldata = "ANY", # TODO: lmerTest returns nfnGroupedData
         modeldata_available = "logical",
@@ -99,6 +102,7 @@ new_marginaleffects_internal <- function(
     hypothesis_null = NULL,
     hypothesis_direction = NULL,
     jacobian = NULL,
+    jacobian_method = NULL,
     modeldata = NULL,
     numderiv = list("fdforward"),
     type = NULL,
@@ -152,6 +156,7 @@ new_marginaleffects_internal <- function(
         hypothesis_null = hypothesis_null,
         hypothesis_direction = hypothesis_direction,
         jacobian = jacobian,
+        jacobian_method = jacobian_method,
         model = model,
         modeldata = modeldata,
         modeldata_available = TRUE,

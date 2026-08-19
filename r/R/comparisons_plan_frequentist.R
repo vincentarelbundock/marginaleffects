@@ -157,6 +157,11 @@ comparison_plan_build_frequentist <- function(
 
 
 comparison_plan_apply <- function(plan, hi, lo, y = NULL) {
+    comparison_plan_apply_stages(plan, hi, lo, y = y)$post
+}
+
+
+comparison_plan_apply_stages <- function(plan, hi, lo, y = NULL) {
     stopifnot(length(hi) == plan$n_pred)
     stopifnot(length(lo) == plan$n_pred)
     if (!is.null(plan$na_keep)) {
@@ -187,7 +192,7 @@ comparison_plan_apply <- function(plan, hi, lo, y = NULL) {
     if (!is.null(plan$est_keep)) {
         est <- est[plan$est_keep]
     }
-    apply_plan_aggregation_and_hypothesis(est, plan$agg, plan$hyp)
+    apply_plan_stages(est, plan$agg, plan$hyp)
 }
 
 

@@ -145,7 +145,7 @@ expect_equivalent(
 
 custom_formula_fun <- function(x) c(first = x[1], total = sum(x))
 form <- marginaleffects:::hypothesis_compile(~ I(custom_formula_fun(x)) | segment, cmp_skeleton, newdata = cmp_skeleton)
-expect_equal(form$hyp$kind, "formula")
+expect_equal(form$hyp$kind, "matrix")
 expect_equivalent(
     form$hyp$apply(c(2, 4, 8, 16)),
     marginaleffects:::hypothesis_formula(

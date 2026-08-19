@@ -1,3 +1,37 @@
+# A hypothesis expressed as a string or a formula shortcut is very often a
+# linear map of the estimates, even when it is stored as an opaque closure. A
+# linear map has an exact matrix representation, which is faster than any
+# probe, exact rather than approximate, and consumable by the autodiff lowering
+# rules. Recover that matrix when possible and record the hypothesis as a
+# matrix stage; leave the closure in place so estimates are computed exactly as
+# before, and keep every other list element and attribute untouched.
+hypothesis_promote_matrix <- function(hyp, cmp_skeleton) {
+    if (!isTRUE(getOption("marginaleffects_hypothesis_promote", default = TRUE))) {
+        return(hyp)
+    }
+    if (is.null(hyp) || identical(hyp$kind, "matrix") || !is.function(hyp$apply)) {
+        return(hyp)
+    }
+    estimate <- cmp_skeleton[["estimate"]]
+    if (!is.numeric(estimate)) {
+        return(hyp)
+    }
+    H <- stage_hypothesis_matrix(hyp$apply, estimate)
+    if (is.null(H)) {
+        return(hyp)
+    }
+    out <- hyp
+    out$kind <- "matrix"
+    out$H <- H
+    # Copy attributes individually: replacing the attribute list wholesale
+    # would restore the old `names` and lose the new element.
+    for (nm in setdiff(names(attributes(hyp)), "names")) {
+        attr(out, nm) <- attr(hyp, nm)
+    }
+    out
+}
+
+
 hypothesis_compile <- function(hypothesis, cmp_skeleton, by = NULL, newdata = NULL, mfx = NULL) {
     if (is.null(hypothesis)) {
         return(list(cmp = cmp_skeleton, hyp = NULL))
@@ -51,6 +85,7 @@ hypothesis_compile_wrapper <- function(hypothesis, cmp_skeleton, by, newdata, mf
         apply = function(est) apply_df(est)[["estimate"]]
     )
     attr(hyp, "hypothesis_function_by") <- attr(cmp, "hypothesis_function_by")
+    hyp <- hypothesis_promote_matrix(hyp, cmp_skeleton)
     list(cmp = cmp, hyp = hyp)
 }
 
@@ -115,6 +150,7 @@ hypothesis_compile_formula <- function(hypothesis, cmp_skeleton, by, newdata, mf
         hyp <- list(kind = "formula", apply = apply)
     }
     attr(hyp, "hypothesis_function_by") <- attr(cmp, "hypothesis_function_by")
+    hyp <- hypothesis_promote_matrix(hyp, cmp_skeleton)
     list(cmp = cmp, hyp = hyp)
 }
 
@@ -277,5 +313,6 @@ hypothesis_compile_string <- function(hypothesis, cmp_skeleton) {
     }
 
     hyp <- list(kind = "string", apply = apply)
+    hyp <- hypothesis_promote_matrix(hyp, cmp_skeleton)
     list(cmp = cmp, hyp = hyp)
 }

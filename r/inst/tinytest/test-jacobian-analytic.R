@@ -475,14 +475,14 @@ tryCatch(
             comparison = "ratio",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 0L)
 
         avg_comparisons(
             mod_lm,
             variables = list(hp = c(100, 110)),
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 0L)
 
         comparisons(
             mod_lm,
@@ -491,7 +491,7 @@ tryCatch(
             hypothesis = c(1, -1),
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 0L)
 
         comparisons(
             mod_lm,
@@ -500,7 +500,7 @@ tryCatch(
             comparison = function(hi, lo) hi - lo,
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 2L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 0L)
 
         mod_offset <- lm(mpg ~ hp + offset(wt), data = mtcars)
         comparisons(
@@ -509,7 +509,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 3L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
 
         mod_rank_deficient <- lm(mpg ~ hp + I(hp), data = mtcars)
         suppressWarnings(comparisons(
@@ -518,7 +518,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         ))
-        expect_equal(.GlobalEnv$analytic_fd_calls, 4L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 2L)
 
         mod_subclass <- mod_lm
         class(mod_subclass) <- c("analytic_audit_lm", class(mod_subclass))
@@ -528,7 +528,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 3L)
 
         comparisons(
             mod_glm,
@@ -537,7 +537,7 @@ tryCatch(
             type = "response",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 3L)
 
         # The global opt-out must actually invoke the fallback, not merely
         # produce a numerically identical result through the analytic route.
@@ -551,7 +551,7 @@ tryCatch(
             ),
             finally = options(old_option)
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 6L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 4L)
 
         mod_glm_offset <- glm(
             am ~ hp + offset(log(wt)),
@@ -565,7 +565,7 @@ tryCatch(
             type = "response",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 7L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
 
         mod_glm_rank_deficient <- glm(
             am ~ hp + I(hp),
@@ -579,7 +579,7 @@ tryCatch(
             type = "response",
             numderiv = "fdforward"
         ))
-        expect_equal(.GlobalEnv$analytic_fd_calls, 8L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 6L)
     },
     finally = {
         suppressMessages(invisible(utils::capture.output(

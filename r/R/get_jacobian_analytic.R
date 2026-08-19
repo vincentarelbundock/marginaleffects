@@ -28,6 +28,61 @@ jacobian_analytic_comparison_groups <- function(J, plan) {
 }
 
 
+# Comparison groups whose function is not one of the recorded differences.
+#
+# `J_hi` and `J_lo` are the exact derivatives of the hi and lo predictions with
+# respect to the coefficients. The comparison stage combines those predictions
+# with arbitrary arithmetic, so its own derivative is probed and then composed:
+# d(comparison)/d(beta) = dc/d(hi) * d(hi)/d(beta) + dc/d(lo) * d(lo)/d(beta).
+#
+# Returns NULL whenever a group's structure could not be verified, which keeps
+# the whole estimand on its previous path rather than mixing methods.
+jacobian_analytic_comparison_probe <- function(J_hi, J_lo, pred_hi, pred_lo, plan) {
+  out <- matrix(NA_real_, nrow = plan$n_comp, ncol = ncol(J_hi))
+
+  for (g in plan$groups) {
+    if (isTRUE(g$uses_y) || is.null(g$fun)) {
+      return(NULL)
+    }
+    idx <- g$idx
+    n_out <- length(g$out_idx)
+    grad <- stage_comparison_gradient(
+      fun = g$fun,
+      args = g$args,
+      hi = pred_hi[idx],
+      lo = pred_lo[idx],
+      n_out = if (isTRUE(g$scalar)) 1L else n_out
+    )
+    if (is.null(grad)) {
+      return(NULL)
+    }
+
+    block_hi <- J_hi[idx, , drop = FALSE]
+    block_lo <- J_lo[idx, , drop = FALSE]
+    if (isTRUE(g$scalar)) {
+      if (n_out != 1L) {
+        return(NULL)
+      }
+      value <- matrix(
+        colSums(block_hi * grad$hi) + colSums(block_lo * grad$lo),
+        nrow = 1L
+      )
+    } else {
+      if (n_out != length(idx)) {
+        return(NULL)
+      }
+      value <- block_hi * grad$hi + block_lo * grad$lo
+    }
+    out[g$out_idx, ] <- value
+  }
+
+  if (any(!is.finite(out))) {
+    return(NULL)
+  }
+  out
+}
+
+
 jacobian_analytic_aggregate <- function(J, agg) {
   if (is.null(agg)) {
     return(J)
@@ -71,21 +126,37 @@ jacobian_analytic_aggregate <- function(J, agg) {
 }
 
 
-jacobian_analytic_hypothesis <- function(J, hyp) {
+jacobian_analytic_hypothesis <- function(J, hyp, estimate_pre = NULL) {
   if (is.null(hyp)) {
     return(J)
   }
+
   H <- hyp$H
   if (
-    !identical(hyp$kind, "matrix") || is.null(H) ||
-      nrow(H) != nrow(J) || any(!is.finite(H))
+    identical(hyp$kind, "matrix") && !is.null(H) &&
+      nrow(H) == nrow(J) && all(is.finite(H))
   ) {
-    return(NULL)
+    # Linear hypotheses map estimates with crossprod(H, estimate), so the same
+    # multiplication maps every coefficient column of the Jacobian at once.
+    return(as.matrix(Matrix::crossprod(H, J)))
   }
 
-  # Linear hypotheses map estimates with crossprod(H, estimate), so the same
-  # multiplication maps every coefficient column of the Jacobian at once.
-  as.matrix(Matrix::crossprod(H, J))
+  # A hypothesis which is not linear, or whose linearity could not be proved,
+  # is still only a map from a handful of estimates to a handful of tested
+  # quantities. Differentiating that map costs nothing next to a model
+  # evaluation, so the exact Jacobian of everything upstream is composed with a
+  # probe of the hypothesis rather than being discarded.
+  if (!is.function(hyp$apply) || !is.numeric(estimate_pre)) {
+    return(NULL)
+  }
+  if (length(estimate_pre) != nrow(J)) {
+    return(NULL)
+  }
+  G <- stage_jacobian_dense(hyp$apply, estimate_pre)
+  if (is.null(G) || ncol(G) != nrow(J)) {
+    return(NULL)
+  }
+  G %*% J
 }
 
 
@@ -258,10 +329,11 @@ jacobian_analytic_model_matrix <- function(
         return(NULL)
       }
 
+      # A non-matrix hypothesis no longer disqualifies the estimand: it is a
+      # separate stage, composed after the fact by jacobian_analytic_hypothesis().
       if (
         !kind %in% c("comparisons", "predictions") ||
-          !identical(plan$kind, kind) ||
-          (!is.null(plan$hyp) && !identical(plan$hyp$kind, "matrix"))
+          !identical(plan$kind, kind)
       ) {
         return(NULL)
       }
@@ -288,19 +360,22 @@ jacobian_analytic_model_matrix <- function(
       }
 
       if (identical(kind, "comparisons")) {
-        if (
-          is.null(contrast_data) || isTRUE(plan$need_y) ||
-            length(plan$groups) == 0L
-        ) {
+        if (is.null(contrast_data) || length(plan$groups) == 0L) {
           return(NULL)
         }
-        group_ok <- vapply(plan$groups, function(g) {
-          g$fun_key %in% c("difference", "differenceavg", "differenceavgwts") &&
-            !isTRUE(g$uses_y)
-        }, logical(1))
-        if (!all(group_ok)) {
+        # `plan$need_y` is set for every custom comparison function, because a
+        # user function might accept `y`. Whether it actually does is recorded
+        # per group, and that is the condition which matters here: a group
+        # which ignores the observed outcome has a derivative that does not
+        # depend on it.
+        if (plan_groups_use_y(plan)) {
           return(NULL)
         }
+        # Recorded differences have closed-form derivatives. Any other
+        # comparison function is handled as its own stage further down.
+        difference_groups <- all(vapply(plan$groups, function(g) {
+          isTRUE(g$fun_key %in% c("difference", "differenceavg", "differenceavgwts"))
+        }, logical(1)))
         X_hi <- align_matrix(attr(
           contrast_data$hi,
           "marginaleffects_model_matrix"
@@ -348,7 +423,7 @@ jacobian_analytic_model_matrix <- function(
         }
         # Validate predictions on the effective scale before transforming the
         # derivative matrix with the recorded comparison operations.
-        replay <- comparison_plan_apply(plan, pred_hi, pred_lo)
+        replay <- comparison_plan_apply_stages(plan, pred_hi, pred_lo)
       } else {
         X <- align_matrix(attr(
           plan$predict_args$newdata,
@@ -380,14 +455,14 @@ jacobian_analytic_model_matrix <- function(
         } else {
           J <- X
         }
-        replay <- prediction_plan_apply(plan, pred)
+        replay <- prediction_plan_apply_stages(plan, pred)
       }
 
       # This is a fail-closed correctness guard, not a debugging assertion. It
       # rejects stale matrices, offsets, prediction arguments, and future
       # semantic changes which are not captured by the static whitelist above.
       if (!isTRUE(all.equal(
-        replay,
+        replay$post,
         estimate,
         tolerance = sqrt(.Machine$double.eps),
         check.attributes = FALSE
@@ -401,39 +476,63 @@ jacobian_analytic_model_matrix <- function(
           X_lo <- X_lo[plan$na_keep, , drop = FALSE]
           if (!is.null(d_hi)) d_hi <- d_hi[plan$na_keep]
           if (!is.null(d_lo)) d_lo <- d_lo[plan$na_keep]
+          pred_hi <- pred_hi[plan$na_keep]
+          pred_lo <- pred_lo[plan$na_keep]
         }
         if (!is.null(plan$perm)) {
           X_hi <- X_hi[plan$perm, , drop = FALSE]
           X_lo <- X_lo[plan$perm, , drop = FALSE]
           if (!is.null(d_hi)) d_hi <- d_hi[plan$perm]
           if (!is.null(d_lo)) d_lo <- d_lo[plan$perm]
+          pred_hi <- pred_hi[plan$perm]
+          pred_lo <- pred_lo[plan$perm]
         }
 
-        direct <- jacobian_analytic_comparison_aggregate(
-          X_hi = X_hi,
-          X_lo = X_lo,
-          d_hi = d_hi,
-          d_lo = d_lo,
-          plan = plan
-        )
-        if (is.null(direct)) {
-          aggregated_early <- FALSE
-          if (isTRUE(response_scale)) {
-            J <- X_hi * d_hi - X_lo * d_lo
-          } else {
-            J <- X_hi - X_lo
-          }
-        } else {
-          J <- direct$J
-          aggregated_early <- direct$aggregated
-        }
-        if (is.null(direct)) {
-          J <- jacobian_analytic_comparison_groups(J, plan)
+        if (!isTRUE(difference_groups)) {
+          # The comparison is arbitrary arithmetic on the hi and lo
+          # predictions. Keep both exact prediction Jacobians and let the
+          # comparison stage supply its own derivative.
+          J_hi <- if (isTRUE(response_scale)) X_hi * d_hi else X_hi
+          J_lo <- if (isTRUE(response_scale)) X_lo * d_lo else X_lo
+          J <- jacobian_analytic_comparison_probe(
+            J_hi = J_hi,
+            J_lo = J_lo,
+            pred_hi = pred_hi,
+            pred_lo = pred_lo,
+            plan = plan
+          )
           if (is.null(J)) {
             return(NULL)
           }
           if (!is.null(plan$est_keep)) {
             J <- J[plan$est_keep, , drop = FALSE]
+          }
+          aggregated_early <- FALSE
+        } else {
+          direct <- jacobian_analytic_comparison_aggregate(
+            X_hi = X_hi,
+            X_lo = X_lo,
+            d_hi = d_hi,
+            d_lo = d_lo,
+            plan = plan
+          )
+          if (is.null(direct)) {
+            aggregated_early <- FALSE
+            if (isTRUE(response_scale)) {
+              J <- X_hi * d_hi - X_lo * d_lo
+            } else {
+              J <- X_hi - X_lo
+            }
+            J <- jacobian_analytic_comparison_groups(J, plan)
+            if (is.null(J)) {
+              return(NULL)
+            }
+            if (!is.null(plan$est_keep)) {
+              J <- J[plan$est_keep, , drop = FALSE]
+            }
+          } else {
+            J <- direct$J
+            aggregated_early <- direct$aggregated
           }
         }
       } else if (!is.null(plan$keep)) {
@@ -446,7 +545,7 @@ jacobian_analytic_model_matrix <- function(
           return(NULL)
         }
       }
-      J <- jacobian_analytic_hypothesis(J, plan$hyp)
+      J <- jacobian_analytic_hypothesis(J, plan$hyp, replay$pre)
       if (is.null(J)) {
         return(NULL)
       }

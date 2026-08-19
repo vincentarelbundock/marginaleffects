@@ -145,15 +145,22 @@ apply_plan_aggregation <- function(agg, est) {
     out
 }
 
-apply_plan_aggregation_and_hypothesis <- function(est, agg = NULL, hyp = NULL) {
-    # Preserve original pipeline order: aggregate, then transform/test.
+apply_plan_stages <- function(est, agg = NULL, hyp = NULL) {
+    # Preserve original pipeline order: aggregate, then transform/test. The
+    # intermediate value is returned as well because the hypothesis stage is
+    # differentiated at the estimates which feed it, not at its own output.
     if (!is.null(agg)) {
         est <- apply_plan_aggregation(agg, est)
     }
+    pre <- est
     if (!is.null(hyp)) {
         est <- hyp$apply(est)
     }
-    est
+    list(pre = pre, post = est)
+}
+
+apply_plan_aggregation_and_hypothesis <- function(est, agg = NULL, hyp = NULL) {
+    apply_plan_stages(est, agg = agg, hyp = hyp)$post
 }
 
 validate_plan_replay <- function(kind, baseline, expected) {
@@ -297,6 +304,7 @@ plan_std_error <- function(
             )
             if (!is.null(propagated)) {
                 mfx@jacobian <- propagated$jacobian
+                mfx@jacobian_method <- "analytic"
                 estimates[["std.error"]] <- propagated$std.error
                 return(list(mfx = mfx, estimates = estimates))
             }
@@ -319,55 +327,156 @@ plan_std_error <- function(
     ad <- if (is.null(custom_jacobian)) do_call(autodiff_try, ad_args) else NULL
     if (!is.null(ad)) {
         mfx@jacobian <- ad$jacobian
+        mfx@jacobian_method <- "autodiff"
         estimates[["std.error"]] <- ad$std.error
         return(list(mfx = mfx, estimates = estimates))
     }
 
-    if (identical(kind, "predictions")) {
-        # Delta method callback: predict, then replay prediction plan.
-        fun <- function(model_perturbed, ...) {
-            pred <- prediction_plan_predict(plan, model_perturbed, ...)
-            prediction_plan_apply(plan, pred)
-        }
-        args <- list(
-            mfx = mfx,
-            model_perturbed = mfx@model,
-            vcov = mfx@vcov_model,
-            type = type,
-            FUN = fun,
-            hypothesis = mfx@hypothesis
+    # Numerical differentiation, stopping before the hypothesis stage whenever
+    # that stage can be differentiated on its own. Differentiating the whole
+    # composition forces the finite difference to see an average over many
+    # predictions, whose roundoff is then amplified by the inverse of the
+    # coefficient-scaled step; composing instead keeps the model evaluations on
+    # the well-scaled quantity and reuses the Jacobian rather than discarding
+    # it (#1750).
+    hyp <- plan$hyp
+    G <- NULL
+    # A user-supplied Jacobian function is authoritative and already covers the
+    # whole pipeline, hypothesis included, so it is never composed with.
+    if (!is.null(hyp) && is.null(custom_jacobian)) {
+        estimate_pre <- plan_replay_estimate_pre(
+            plan = plan,
+            kind = kind,
+            estimate = estimates[["estimate"]]
         )
+        if (!is.null(estimate_pre)) {
+            G <- stage_jacobian_dense(hyp$apply, estimate_pre)
+            if (
+                !is.null(G) &&
+                    (nrow(G) != nrow(estimates) ||
+                        ncol(G) != length(estimate_pre))
+            ) {
+                G <- NULL
+            }
+        }
+    }
+
+    numeric_se <- function(compose) {
+        if (identical(kind, "predictions")) {
+            # Delta method callback: predict, then replay prediction plan.
+            fun <- function(model_perturbed, ...) {
+                pred <- prediction_plan_predict(plan, model_perturbed, ...)
+                stages <- prediction_plan_apply_stages(plan, pred)
+                if (isTRUE(compose)) stages$pre else stages$post
+            }
+            args <- list(
+                mfx = mfx,
+                model_perturbed = mfx@model,
+                vcov = mfx@vcov_model,
+                type = type,
+                FUN = fun,
+                hypothesis = if (isTRUE(compose)) NULL else mfx@hypothesis
+            )
+        } else {
+            # Delta method callback: predict hi/lo, then replay comparison plan.
+            fun <- function(model_perturbed, ...) {
+                preds <- comparison_plan_predict(plan, model_perturbed, ...)
+                stages <- comparison_plan_apply_stages(
+                    plan,
+                    preds$hi,
+                    preds$lo,
+                    preds$or
+                )
+                if (isTRUE(compose)) stages$pre else stages$post
+            }
+            args <- list(
+                mfx = mfx,
+                model_perturbed = mfx@model,
+                vcov = mfx@vcov_model,
+                type = type,
+                FUN = fun,
+                variables = variables,
+                hypothesis = if (isTRUE(compose)) NULL else mfx@hypothesis,
+                hi = contrast_data$hi,
+                lo = contrast_data$lo,
+                original = contrast_data$original,
+                estimates = estimates,
+                numderiv = numderiv
+            )
+        }
         args <- utils::modifyList(args, dots)
-        se <- do_call(get_se_delta, args)
+        do_call(get_se_delta, args)
+    }
+
+    se <- numeric_se(!is.null(G))
+    if (!is.null(G)) {
+        composed <- NULL
+        J <- attr(se, "jacobian")
+        if (!is.null(J) && ncol(G) == nrow(J)) {
+            propagated <- tryCatch(
+                std_error_from_jacobian(G %*% J, mfx@vcov_model, mfx@model),
+                error = function(e) NULL
+            )
+            if (
+                !is.null(propagated) &&
+                    length(propagated$std.error) == nrow(estimates)
+            ) {
+                composed <- propagated$std.error
+                attr(composed, "jacobian") <- propagated$jacobian
+            }
+        }
+        # Fail closed. A partially composed result would be silently wrong, so
+        # an unusable composition redoes the original whole-pipeline derivative.
+        se <- if (is.null(composed)) numeric_se(FALSE) else composed
+    }
+
+    mfx@jacobian_method <- if (is.null(custom_jacobian)) "numeric" else "custom"
+    if (identical(kind, "predictions")) {
         if (is.numeric(se) && length(se) == nrow(estimates)) {
             mfx@jacobian <- attr(se, "jacobian")
             estimates[["std.error"]] <- as.vector(se)
         }
     } else {
-        # Delta method callback: predict hi/lo, then replay comparison plan.
-        fun <- function(model_perturbed, ...) {
-            preds <- comparison_plan_predict(plan, model_perturbed, ...)
-            comparison_plan_apply(plan, preds$hi, preds$lo, preds$or)
-        }
-        args <- list(
-            mfx = mfx,
-            model_perturbed = mfx@model,
-            vcov = mfx@vcov_model,
-            type = type,
-            FUN = fun,
-            variables = variables,
-            hypothesis = mfx@hypothesis,
-            hi = contrast_data$hi,
-            lo = contrast_data$lo,
-            original = contrast_data$original,
-            estimates = estimates,
-            numderiv = numderiv
-        )
-        args <- utils::modifyList(args, dots)
-        se <- do_call(get_se_delta, args)
         mfx@jacobian <- attr(se, "jacobian")
         estimates[["std.error"]] <- as.vector(as.numeric(se))
     }
 
     list(mfx = mfx, estimates = estimates)
+}
+
+
+# Recover the estimates which feed the hypothesis stage, using the predictions
+# recorded when the plan was built. Fails closed: the recovered stage output
+# must reproduce the reported estimates, otherwise the plan is stale or the
+# pipeline needs a model evaluation this shortcut cannot supply.
+plan_replay_estimate_pre <- function(plan, kind, estimate) {
+    if (plan_groups_use_y(plan)) {
+        return(NULL)
+    }
+    stages <- tryCatch(
+        {
+            if (identical(kind, "predictions")) {
+                prediction_plan_apply_stages(plan, plan$baseline_prediction)
+            } else {
+                comparison_plan_apply_stages(
+                    plan,
+                    plan$baseline_hi,
+                    plan$baseline_lo
+                )
+            }
+        },
+        error = function(e) NULL
+    )
+    if (is.null(stages) || !is.numeric(stages$pre)) {
+        return(NULL)
+    }
+    if (!isTRUE(all.equal(
+        stages$post,
+        estimate,
+        tolerance = sqrt(.Machine$double.eps),
+        check.attributes = FALSE
+    ))) {
+        return(NULL)
+    }
+    stages$pre
 }
