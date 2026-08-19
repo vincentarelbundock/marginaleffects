@@ -36,7 +36,8 @@ def test_string_hypothesis_compiles_duplicate_term_replay():
 
     out, hyp = hypothesis_compile(base, "b - a = 0")
 
-    assert hyp.kind == "string"
+    assert hyp.kind == "matrix"
+    np.testing.assert_array_equal(hyp.H, [[-0.5], [-0.5], [1.0]])
     assert_frame_equal(out, get_hypothesis(base, "b - a = 0"))
     np.testing.assert_allclose(hyp.apply(np.array([2.0, 4.0, 9.0])), [6.0])
 
@@ -46,6 +47,7 @@ def test_sequence_hypothesis_compiles_concatenated_replay():
 
     out, hyp = hypothesis_compile(base, ["b - a = 0", "c - b = 0"])
 
-    assert hyp.kind == "list"
+    assert hyp.kind == "matrix"
+    np.testing.assert_array_equal(hyp.H, [[-1.0, 0.0], [1.0, -1.0], [0.0, 1.0]])
     assert_frame_equal(out, get_hypothesis(base, ["b - a = 0", "c - b = 0"]))
     np.testing.assert_allclose(hyp.apply(np.array([10.0, 13.0, 21.0])), [3.0, 8.0])

@@ -227,6 +227,12 @@ class ModelStatsmodels(ModelAbstract):
             return None
         return linkinv, mu_eta
 
+    def get_exog_names(self, value):
+        names = super().get_exog_names(value)
+        if names is None:
+            names = getattr(self.model.model, "exog_names", None)
+        return None if names is None else list(names)
+
 
 @doc("""
 # `fit_statsmodels()`

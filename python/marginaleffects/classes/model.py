@@ -148,6 +148,14 @@ class ModelAbstract(ModelValidation, ABC):
         """Return inverse-link and derivative callables for response predictions."""
         return
 
+    def get_exog_names(self, value):
+        """Return design-column names, or ``None`` when they are unavailable."""
+        design_info = getattr(value, "design_info", None)
+        columns = getattr(design_info, "column_names", None)
+        if columns is None:
+            columns = getattr(value, "columns", None)
+        return None if columns is None else list(columns)
+
     def get_df(self) -> float:
         return np.inf
 

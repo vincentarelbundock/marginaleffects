@@ -11,7 +11,9 @@ def _wrap_comparison_function(fn):
     sig = inspect.signature(fn)
     params = list(sig.parameters.keys())
     full_params = ["hi", "lo", "eps", "x", "y", "w"]
+    uses_y = "y" in params
     if params == full_params:
+        fn._marginaleffects_uses_y = uses_y
         return fn
 
     def wrapper(hi, lo, eps, x, y, w):
@@ -24,6 +26,7 @@ def _wrap_comparison_function(fn):
             return pl.Series(result)
         return result
 
+    wrapper._marginaleffects_uses_y = uses_y
     return wrapper
 
 
@@ -66,7 +69,10 @@ def sanitize_comparison(comparison, by, wts=None):
         "lnoravgwts": "ln(odds({hi}) / odds({lo}))",
         "lift": "lift",
         "liftavg": "liftavg",
+        "liftavgwts": "liftavg",
         "expdydx": "exp(dY/dX)",
+        "expdydxavg": "exp(dY/dX)",
+        "expdydxavgwts": "exp(dY/dX)",
     }
 
     if out not in lab:

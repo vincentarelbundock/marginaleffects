@@ -254,6 +254,7 @@ def finalize_result(
     newdata,
     conf_level,
     J,
+    jacobian_method=None,
     hypothesis_null=None,
     equivalence_df: float | None = None,
     postprocess: Callable | None = None,
@@ -279,7 +280,12 @@ def finalize_result(
     if postprocess is not None:
         out = postprocess(out)
     return MarginaleffectsResult(
-        out, by=by, conf_level=conf_level, jacobian=J, newdata=newdata
+        out,
+        by=by,
+        conf_level=conf_level,
+        jacobian=J,
+        jacobian_method=jacobian_method,
+        newdata=newdata,
     )
 
 

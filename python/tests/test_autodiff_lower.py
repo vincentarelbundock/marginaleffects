@@ -156,15 +156,15 @@ def test_lower_comparisons_rejects_custom_callable():
     assert lowered.reason == "custom comparison functions"
 
 
-def test_lower_predictions_rejects_string_hypothesis():
+def test_lower_predictions_accepts_compiled_linear_string_hypothesis():
     dat = get_dataset("mtcars", "datasets")
     mod = smf.ols("mpg ~ hp + wt", dat.to_pandas()).fit()
     model, plan = _prediction_plan(mod, by="cyl", hypothesis="b1 - b0 = 0")
 
     lowered = lower_predictions(plan, model)
 
-    assert not lowered.ok
-    assert lowered.reason == "this form of the `hypothesis` argument"
+    assert lowered.ok
+    np.testing.assert_array_equal(lowered.kwargs["H"], [[-1.0], [1.0], [0.0]])
 
 
 def test_get_autodiff_args_rejects_glm_offset_with_reason():

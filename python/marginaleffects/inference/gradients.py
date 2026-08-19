@@ -2,6 +2,33 @@
 
 import numpy as np
 
+EXACT_COMPARISON_KEYS = {
+    "difference",
+    "differenceavg",
+    "differenceavgwts",
+    "ratio",
+    "ratioavg",
+    "ratioavgwts",
+    "lift",
+    "liftavg",
+    "liftavgwts",
+    "lnratio",
+    "lnratioavg",
+    "lnratioavgwts",
+    "lnor",
+    "lnoravg",
+    "lnoravgwts",
+    "dydx",
+    "dydxavg",
+    "dydxavgwts",
+    "dyex",
+    "dyexavg",
+    "dyexavgwts",
+    "expdydx",
+    "expdydxavg",
+    "expdydxavgwts",
+}
+
 
 def comparison_gradient_exact(fun_key, hi, lo, *, eps=None, x=None, w=None):
     n = len(hi)

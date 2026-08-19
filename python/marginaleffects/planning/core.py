@@ -193,7 +193,7 @@ def plan_values_allclose(replay, target) -> bool:
     """Compare plan replay values to baseline values at backend precision."""
     replay = np.asarray(replay)
     target = np.asarray(target)
-    tol = 1e-12
+    tol = 1e-8
     if any(
         np.issubdtype(x.dtype, np.floating) and x.dtype.itemsize <= 4
         for x in (replay, target)

@@ -358,7 +358,15 @@ plan_std_error <- function(
             )
             if (!is.null(propagated)) {
                 mfx@jacobian <- propagated$jacobian
-                mfx@jacobian_method <- "analytic"
+                mfx@jacobian_method <- if (isTRUE(attr(
+                    J,
+                    "marginaleffects_numeric_stage",
+                    exact = TRUE
+                ))) {
+                    "analytic+numeric_stage"
+                } else {
+                    "analytic"
+                }
                 estimates[["std.error"]] <- propagated$std.error
                 return(list(mfx = mfx, estimates = estimates))
             }

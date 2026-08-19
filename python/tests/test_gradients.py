@@ -23,6 +23,7 @@ from marginaleffects.inference.gradients import comparison_gradient_exact
         "lnoravgwts",
         "lift",
         "liftavg",
+        "liftavgwts",
         "dydx",
         "dydxavg",
         "dydxavgwts",

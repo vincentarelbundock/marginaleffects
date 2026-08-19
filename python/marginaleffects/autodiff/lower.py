@@ -21,6 +21,7 @@ class Lowered:
 class AutodiffResult:
     std_error: np.ndarray
     jacobian: np.ndarray
+    method: str = "autodiff"
 
 
 def _fail(reason: str) -> Lowered:

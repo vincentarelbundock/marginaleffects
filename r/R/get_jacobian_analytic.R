@@ -182,7 +182,7 @@ comparison_gradient_exact <- function(fun_key, hi, lo, args) {
 # Returns NULL whenever any group's function is not a recorded built-in or its
 # gradient is not finite, which keeps the whole estimand on its previous path
 # rather than mixing methods.
-jacobian_analytic_comparison_probe <- function(
+jacobian_analytic_comparison_exact <- function(
   X_hi,
   X_lo,
   d_hi,
@@ -399,7 +399,9 @@ jacobian_analytic_hypothesis <- function(J, hyp, estimate_pre = NULL) {
   if (is.null(G) || ncol(G) != nrow(J)) {
     return(NULL)
   }
-  G %*% J
+  out <- G %*% J
+  attr(out, "marginaleffects_numeric_stage") <- TRUE
+  out
 }
 
 
@@ -764,7 +766,7 @@ jacobian_analytic_model_matrix <- function(
           # derivatives separately rather than the pair of prediction
           # Jacobians, so that a group which aggregates its rows can compose
           # them without ever forming an observation-level derivative.
-          J <- jacobian_analytic_comparison_probe(
+          J <- jacobian_analytic_comparison_exact(
             X_hi = X_hi,
             X_lo = X_lo,
             d_hi = d_hi,
@@ -855,10 +857,14 @@ jacobian_analytic_model_matrix <- function(
       }
       # Cached model matrices may carry terms metadata such as `assign` and
       # `contrasts`. A Jacobian's contract includes only dimensions and names.
+      numeric_stage <- isTRUE(attr(J, "marginaleffects_numeric_stage"))
       attributes(J) <- list(
         dim = dim(J),
         dimnames = list(NULL, beta_names)
       )
+      if (numeric_stage) {
+        attr(J, "marginaleffects_numeric_stage") <- TRUE
+      }
 
       J
     },

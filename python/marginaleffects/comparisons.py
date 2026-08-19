@@ -520,8 +520,11 @@ def _comparisons_build(
                 fun_key=item["fun_key"],
                 x=None if item["x"] is None else np.asarray(item["x"]),
                 w=None if item["w"] is None else np.asarray(item["w"], dtype=float),
-                uses_y=item["fun_key"] is None
-                or item["fun_key"].startswith(("eyex", "eydx")),
+                uses_y=(
+                    bool(getattr(item["fun"], "_marginaleffects_uses_y", True))
+                    if item["fun_key"] is None
+                    else item["fun_key"].startswith(("eyex", "eydx"))
+                ),
             )
         )
         start += n_out
@@ -762,6 +765,7 @@ def comparisons(
         eps=eps,
         comparison_functions=comparison_functions,
     )
+    jacobian_method = None
     if vcov is not None and vcov is not False and V is not None:
         # An explicit `eps_vcov` requests finite differences with that step size,
         # so the exact-derivative paths are skipped when the user supplies one.
@@ -784,6 +788,7 @@ def comparisons(
                 )
         if ad is not None:
             J = ad.jacobian
+            jacobian_method = ad.method
             out = out.with_columns(pl.Series(ad.std_error).alias("std_error"))
         else:
 
@@ -792,6 +797,7 @@ def comparisons(
                 return comparison_plan_apply(plan, hi_pred, lo_pred, y_pred)
 
             J = get_jacobian(replay, model.get_coef(), eps_vcov)
+            jacobian_method = "finite_difference"
             se = get_se(J, V)
             out = out.with_columns(pl.Series(se).alias("std_error"))
     else:
@@ -806,6 +812,7 @@ def comparisons(
         newdata=newdata,
         conf_level=conf_level,
         J=J,
+        jacobian_method=jacobian_method,
         hypothesis_null=hypothesis_null,
         equivalence_df=np.inf,
         postprocess=postprocess_cross,

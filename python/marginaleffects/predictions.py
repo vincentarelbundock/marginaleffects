@@ -251,6 +251,7 @@ def predictions(
     )
 
     J = None
+    jacobian_method = None
     if V is not None:
         # An explicit `eps_vcov` requests finite differences with that step size,
         # so the exact-derivative paths are skipped when the user supplies one.
@@ -273,6 +274,7 @@ def predictions(
                 )
         if ad is not None:
             J = ad.jacobian
+            jacobian_method = ad.method
             out = out.with_columns(pl.Series(ad.std_error).alias("std_error"))
         else:
             J = get_jacobian(
@@ -282,6 +284,7 @@ def predictions(
                 model.get_coef(),
                 eps_vcov,
             )
+            jacobian_method = "finite_difference"
             se = get_se(J, V)
             out = out.with_columns(pl.Series(se).alias("std_error"))
 
@@ -294,6 +297,7 @@ def predictions(
         newdata=newdata,
         conf_level=conf_level,
         J=J,
+        jacobian_method=jacobian_method,
         hypothesis_null=hypothesis_null,
     )
 

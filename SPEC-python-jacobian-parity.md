@@ -1,10 +1,33 @@
 # SPEC: bring the Python Jacobian architecture to parity with R
 
-Status: design spec, no code written yet.
+Status: implemented and verified on the Python test suite.
 Date: 2026-08-19
 Scope: `python/marginaleffects/planning/`, `python/marginaleffects/inference/`,
 `python/marginaleffects/classes/model.py`, `python/marginaleffects/statsmodels/model.py`,
 `python/marginaleffects/hypothesis_compile.py`.
+
+## Implementation status
+
+Python now composes the coefficient Jacobian through prediction, comparison,
+aggregation, and hypothesis stages. The implementation includes:
+
+- exact gradients for all recorded built-in comparison functions;
+- response-scale GLM derivatives from adapter-provided inverse-link functions;
+- sparse grouped aggregation and contraction before materialization where possible;
+- exact matrices for structurally linear string and formula hypotheses, with a
+  bounded dense probe for nonlinear hypotheses;
+- unique coefficient/design-name validation and design-column reordering;
+- unconditional fallback for custom comparison stages without an explicit,
+  trusted derivative;
+- element-wise replay, missing-value, offset/exposure, and whole-Jacobian
+  finiteness guards; and
+- public `jacobian_method` result metadata with `analytic`,
+  `analytic+numeric_stage`, `autodiff`, and `finite_difference` values.
+
+The Python comparison plan represents comparison-level aggregation inside its
+`CompGroup` objects rather than adding a second `ComparisonPlan.agg` layer. This
+is the branch's native equivalent of R's recorded aggregation stage and avoids
+applying an average twice.
 
 ## 1. What parity means
 
@@ -36,7 +59,7 @@ unrecognized group key, one non-matrix hypothesis, one GLM, and the entire
 pipeline reverts to finite differences over `beta`. Parity means replacing that
 with composition.
 
-## 2. Current Python state
+## 2. Original Python state
 
 Verified by reading the source, not inferred.
 
@@ -238,10 +261,9 @@ respect to `beta`. `eyex` and `eydx` divide by the fitted response, so their
 gradient needs a product rule over an extra prediction. Their groups are marked
 `uses_y`, which disqualifies them upstream. Do not lump the three together.
 
-**A custom comparison closure records `fun_key = None` and must reach the
-numeric fallback.** Arbitrary code has no recorded closed form, and no finite set
-of probe evaluations can prove one — a function built to agree with the probes
-and disagree elsewhere defeats any such scheme.
+**A custom comparison closure records `fun_key = None` and always reaches the
+numeric fallback unless a future API supplies an explicit, trusted derivative.**
+Probe agreement cannot prove that arbitrary code is linear or differentiable.
 
 ### W4 — response-scale chain rule in the comparison Jacobian
 
@@ -407,25 +429,19 @@ existing autodiff and finite-difference paths.
    closed form can only end in rejection, so reject it before the model matrices
    are aligned. Data-dependent rejections stay where the data is.
 
-### W8 — optional: probe custom comparison functions
+### W8 — custom comparison functions
 
-R can probe a custom comparison closure's stage derivative, exploiting that
-row-wise groups have a diagonal Jacobian and aggregated groups that depend on
-their inputs only through a mean have a uniform gradient. It verifies both
-assumptions — re-probing at half the step for magnitude, and against
-pseudo-random input subsets for structure — using a deterministic
-low-discrepancy sequence so results never depend on the user's RNG state.
-
-Defer this. It is a screen and not a proof, the analytic path does not rely on
-it, and W1–W7 deliver the large majority of the coverage. Port it only after the
-rest is stable, and if it is ported, keep the verification: an unverified probe
-must return `None`.
+R and Python both reject custom comparison closures from the analytic path.
+Custom comparison functions fall back unless a future API lets them carry an
+explicit, trusted derivative. Deterministic re-probing remains a heuristic and
+is not used to claim analytic differentiation.
 
 ## 4. Invariants
 
 - Any failure returns `None` and falls back. Never a partial Jacobian, never a
   mix of methods within one estimand.
-- Closed forms are only ever applied to recorded built-in keys.
+- Closed forms are only ever applied to recorded built-in keys. Custom functions
+  without a trusted derivative always fall back.
 - `uses_y` groups never reach the analytic path.
 - The point estimates are never changed by any of this. Only standard errors
   move, and where they move the analytic values are the accurate ones.

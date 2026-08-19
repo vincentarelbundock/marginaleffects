@@ -193,9 +193,10 @@ oracle_two_arm_exp <- function(model) {
 }
 
 want <- oracle_two_arm_exp(mod)
-got <- on_path("analytic", function() {
+got <- jacobian_path_run("analytic", function() {
     avg_predictions(mod, by = "trt", hypothesis = "exp(b2 - b1) = 0")
 })
+expect_equal(jacobian_method(got), "analytic+numeric_stage")
 expect_equal(got$estimate, want$estimate, tolerance = 1e-10)
 expect_equal(got$std.error, want$std.error, tolerance = 1e-6)
 
@@ -420,44 +421,6 @@ expect_equal(
     c(-exp(0.025), exp(0.025)),
     tolerance = 1e-6
 )
-
-# The comparison probe recovers a row-wise diagonal gradient ...
-grad <- marginaleffects:::stage_comparison_gradient(
-    fun = function(hi, lo) hi / lo,
-    args = list(),
-    hi = c(0.4, 0.5, 0.6),
-    lo = c(0.2, 0.25, 0.3),
-    n_out = 3L
-)
-expect_equal(grad$hi, 1 / c(0.2, 0.25, 0.3), tolerance = 1e-6)
-expect_equal(
-    grad$lo,
-    -c(0.4, 0.5, 0.6) / c(0.2, 0.25, 0.3)^2,
-    tolerance = 1e-6
-)
-
-# ... and a uniform aggregated gradient.
-grad <- marginaleffects:::stage_comparison_gradient(
-    fun = function(hi, lo) mean(hi) / mean(lo),
-    args = list(),
-    hi = c(0.4, 0.5, 0.6),
-    lo = c(0.2, 0.25, 0.3),
-    n_out = 1L
-)
-expect_equal(grad$hi, rep(1 / (3 * 0.25), 3), tolerance = 1e-6)
-expect_equal(grad$lo, rep(-0.5 / (3 * 0.25^2), 3), tolerance = 1e-6)
-
-# A group whose Jacobian is neither diagonal nor uniform must be rejected
-# rather than approximated, so that the caller falls back intact.
-grad <- marginaleffects:::stage_comparison_gradient(
-    fun = function(hi, lo) rev(hi) - lo,
-    args = list(),
-    hi = c(0.4, 0.5, 0.6),
-    lo = c(0.2, 0.25, 0.3),
-    n_out = 3L
-)
-expect_true(is.null(grad))
-
 
 # ---------------------------------------------------------------------------
 # Estimates are never altered by any of this

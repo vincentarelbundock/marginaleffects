@@ -29,7 +29,8 @@ setClassUnion("logicalOrNULL", c("logical", "NULL"))
 #' @slot eps Epsilon value for numerical derivatives
 #' @slot jacobian The jacobian matrix or NULL
 #' @slot jacobian_method String naming the differentiation path which produced
-#'   the jacobian: "analytic", "numeric", "custom", or NULL
+#'   the jacobian: "analytic", "analytic+numeric_stage", "numeric", "custom",
+#'   or NULL
 #' @slot model The fitted model object
 #' @slot modeldata The model data frame
 #' @slot newdata The new data frame for predictions
