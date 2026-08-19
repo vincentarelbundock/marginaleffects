@@ -267,99 +267,26 @@ get_unconditional_plan_jacobian <- function(
     variables = NULL,
     numderiv = NULL) {
 
-    coefs <- get_coef(mfx@model)
-    V <- diag(length(coefs))
-    dimnames(V) <- list(names(coefs), names(coefs))
+    # This path combines the derivative with observation-level influence
+    # functions instead of a coefficient covariance matrix, so the resolver is
+    # asked for the Jacobian alone and no covariance is ever propagated here.
+    # Numerical differentiation only: eligibility for the analytic derivative
+    # is decided for the delta method, whose fallbacks differ from the ones
+    # this decomposition requires.
+    jac <- compute_plan_jacobian(
+        plan = plan,
+        mfx = mfx,
+        estimates = estimates,
+        type = type,
+        kind = kind,
+        dots = dots,
+        contrast_data = contrast_data,
+        variables = variables,
+        numderiv = numderiv,
+        analytic = FALSE
+    )
 
-    # `compose` stops the finite difference before the hypothesis stage, whose
-    # derivative is then supplied by the stage itself.
-    delta_jacobian <- function(compose) {
-        if (identical(kind, "predictions")) {
-            fun <- function(model_perturbed, ...) {
-                pred <- prediction_plan_predict(plan, model_perturbed, ...)
-                stages <- prediction_plan_apply_stages(plan, pred)
-                if (isTRUE(compose)) stages$pre else stages$post
-            }
-            args <- list(
-                mfx = mfx,
-                model_perturbed = mfx@model,
-                vcov = V,
-                type = type,
-                FUN = fun,
-                hypothesis = if (isTRUE(compose)) NULL else mfx@hypothesis
-            )
-        } else {
-            fun <- function(model_perturbed, ...) {
-                preds <- comparison_plan_predict(plan, model_perturbed, ...)
-                stages <- comparison_plan_apply_stages(
-                    plan,
-                    preds$hi,
-                    preds$lo,
-                    preds$or
-                )
-                if (isTRUE(compose)) stages$pre else stages$post
-            }
-            args <- list(
-                mfx = mfx,
-                model_perturbed = mfx@model,
-                vcov = V,
-                type = type,
-                FUN = fun,
-                variables = variables,
-                hypothesis = if (isTRUE(compose)) NULL else mfx@hypothesis,
-                hi = contrast_data$hi,
-                lo = contrast_data$lo,
-                original = contrast_data$original,
-                estimates = estimates,
-                numderiv = numderiv
-            )
-        }
-        args <- utils::modifyList(args, dots)
-        attr(do_call(get_se_delta, args), "jacobian")
-    }
-
-    hyp <- plan$hyp
-    stage_pull <- NULL
-    if (!is.null(hyp)) {
-        exact <- hypothesis_stage_exact(hyp, n_post = nrow(estimates))
-        estimate_pre <- if (exact) {
-            NULL
-        } else {
-            plan_replay_estimate_pre(
-                plan = plan,
-                kind = kind,
-                estimate = estimates[["estimate"]]
-            )
-        }
-        if (exact || !is.null(estimate_pre)) {
-            stage_pull <- function(J) {
-                res <- hypothesis_stage_pullback(hyp, J, at = estimate_pre)
-                if (is.null(res)) NULL else res$jacobian
-            }
-        }
-    }
-
-    J <- NULL
-    if (!is.null(stage_pull)) {
-        J_pre <- delta_jacobian(TRUE)
-        composed <- if (is.null(J_pre)) {
-            NULL
-        } else {
-            tryCatch(as.matrix(stage_pull(J_pre)), error = function(e) NULL)
-        }
-        # Fail closed: a partially composed derivative would be silently wrong,
-        # so an unusable pull redoes the whole-pipeline difference instead.
-        if (isTRUE(checkmate::check_matrix(
-            composed,
-            mode = "numeric",
-            nrows = nrow(estimates)
-        ))) {
-            J <- composed
-        }
-    }
-    if (is.null(J)) {
-        J <- delta_jacobian(FALSE)
-    }
+    J <- jac$jacobian
     if (!isTRUE(checkmate::check_matrix(J, mode = "numeric", nrows = nrow(estimates)))) {
         stop_sprintf("Unable to compute the unconditional effect Jacobian.")
     }

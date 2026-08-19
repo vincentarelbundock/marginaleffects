@@ -123,16 +123,24 @@ std_error_from_jacobian <- function(J, V, object, ...) {
 }
 
 
-#' Compute standard errors using the delta method
+#' Jacobian of a delta method estimand with respect to model coefficients
+#'
+#' Covariance propagation is deliberately left to the caller: the unconditional
+#' variance path needs this derivative without ever forming a coefficient
+#' covariance matrix, and the plan-based delta method propagates the composed
+#' derivative rather than this one.
 #'
 #' @inheritParams slopes
 #' @param FUN a function which accepts a `model` and other inputs and returns a
 #'   vector of estimates (marginal effects, marginal means, etc.)
-#' @return vector of standard errors
+#' @param vcov accepted and ignored, so that callers can build a single
+#'   argument list for this function and for [get_se_delta()].
+#' @return `NULL` when the model admits no delta method, otherwise a list with
+#'   the `jacobian`, the `method` which produced it ("custom" or "numeric"),
+#'   and the `coefs` it was differentiated at.
 #' @noRd
-get_se_delta <- function(
+get_delta_jacobian <- function(
     model_perturbed,
-    vcov,
     FUN,
     mfx = NULL,
     type = NULL,
@@ -147,6 +155,7 @@ get_se_delta <- function(
     lo = NULL,
     original = NULL,
     estimates = NULL,
+    vcov = NULL,
     ...) {
     # Use mfx slots when available
     if (!is.null(mfx)) {
@@ -162,20 +171,6 @@ get_se_delta <- function(
     }
 
     coefs <- get_coef(model_perturbed, ...)
-
-    # some vcov methods return an unnamed matrix, some have duplicate names
-    flag <- anyDuplicated(colnames(vcov)) == 0 &&
-        anyDuplicated(names(coefs)) == 0
-    if (
-        flag &&
-            !is.null(dimnames(vcov)) &&
-            all(names(coefs) %in% colnames(vcov))
-    ) {
-        bnames <- intersect(names(coefs), colnames(vcov))
-        vcov <- vcov[bnames, bnames, drop = FALSE]
-        colnames(vcov) <- row.names(vcov) <- names(coefs)
-        coefs <- coefs[bnames]
-    }
 
     # user-supplied jacobian machine
     if (is.null(J)) {
@@ -264,7 +259,7 @@ get_se_delta <- function(
     # receives the `hypothesis` argument above, so recomputing here would both
     # discard the user's work and misreport its provenance. Only a NULL return
     # falls back to numerical differentiation.
-    jacobian_source <- if (is.null(J)) "numeric" else "custom"
+    method <- if (is.null(J)) "numeric" else "custom"
     if (is.null(J)) {
         args <- list(
             func = inner,
@@ -275,10 +270,80 @@ get_se_delta <- function(
         colnames(J) <- names(coefs)
     }
 
-    propagated <- std_error_from_jacobian(J, vcov, model_perturbed, ...)
+    list(jacobian = J, method = method, coefs = coefs)
+}
+
+
+#' Compute standard errors using the delta method
+#'
+#' @inheritParams slopes
+#' @param FUN a function which accepts a `model` and other inputs and returns a
+#'   vector of estimates (marginal effects, marginal means, etc.)
+#' @return vector of standard errors
+#' @noRd
+get_se_delta <- function(
+    model_perturbed,
+    vcov,
+    FUN,
+    mfx = NULL,
+    type = NULL,
+    newdata = NULL,
+    eps = NULL,
+    J = NULL,
+    hypothesis = NULL,
+    calling_function = NULL,
+    comparison = NULL,
+    by = NULL,
+    hi = NULL,
+    lo = NULL,
+    original = NULL,
+    estimates = NULL,
+    ...) {
+    jac <- get_delta_jacobian(
+        model_perturbed = model_perturbed,
+        FUN = FUN,
+        mfx = mfx,
+        type = type,
+        newdata = newdata,
+        eps = eps,
+        J = J,
+        hypothesis = hypothesis,
+        calling_function = calling_function,
+        comparison = comparison,
+        by = by,
+        hi = hi,
+        lo = lo,
+        original = original,
+        estimates = estimates,
+        ...
+    )
+    if (is.null(jac)) {
+        return(NULL)
+    }
+    coefs <- jac$coefs
+
+    # some vcov methods return an unnamed matrix, some have duplicate names
+    flag <- anyDuplicated(colnames(vcov)) == 0 &&
+        anyDuplicated(names(coefs)) == 0
+    if (
+        flag &&
+            !is.null(dimnames(vcov)) &&
+            all(names(coefs) %in% colnames(vcov))
+    ) {
+        bnames <- intersect(names(coefs), colnames(vcov))
+        vcov <- vcov[bnames, bnames, drop = FALSE]
+        colnames(vcov) <- row.names(vcov) <- names(coefs)
+    }
+
+    propagated <- std_error_from_jacobian(
+        jac$jacobian,
+        vcov,
+        model_perturbed,
+        ...
+    )
     se <- propagated$std.error
     attr(se, "jacobian") <- propagated$jacobian
-    attr(se, "jacobian_source") <- jacobian_source
+    attr(se, "jacobian_source") <- jac$method
 
     return(se)
 }

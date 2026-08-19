@@ -255,6 +255,208 @@ simulation_replay_validate <- function(replay, model, expected) {
 }
 
 
+# Wrap a candidate Jacobian in the resolver's return shape. `propagate` is the
+# caller's covariance propagation, which doubles as a validity check: a
+# derivative whose covariance cannot be formed is not usable, so the candidate
+# is refused and the caller falls back to the next one. `safe` distinguishes a
+# candidate with a fallback behind it from the last resort, whose errors belong
+# to the user.
+plan_jacobian_result <- function(J, method, propagate, safe = TRUE) {
+    if (is.null(propagate)) {
+        return(list(jacobian = J, method = method))
+    }
+    propagated <- if (isTRUE(safe)) {
+        tryCatch(propagate(J), error = function(e) NULL)
+    } else {
+        propagate(J)
+    }
+    if (is.null(propagated)) {
+        return(NULL)
+    }
+    list(
+        jacobian = propagated$jacobian,
+        method = method,
+        std.error = propagated$std.error
+    )
+}
+
+
+# Differentiate a recorded plan with respect to the model coefficients. This is
+# the single entry point for every consumer of a plan Jacobian, so the routing
+# between the user's own derivative, the analytic derivative, and numerical
+# differentiation is decided in one place.
+#
+# `propagate` is an optional function of the candidate Jacobian which returns
+# the propagated `list(std.error, jacobian)`, or NULL when the candidate cannot
+# be propagated; callers which want a Jacobian and nothing else omit it and
+# never form a covariance matrix. Returns NULL when no derivative is available
+# -- posterior draws, for one -- and otherwise a list with `jacobian` (one row
+# per estimate), `method` ("custom", "analytic", "analytic+numeric_stage", or
+# "numeric"), and `std.error` when `propagate` was supplied.
+compute_plan_jacobian <- function(
+    plan,
+    mfx,
+    estimates,
+    type,
+    kind,
+    dots = list(),
+    contrast_data = NULL,
+    variables = NULL,
+    numderiv = NULL,
+    analytic = TRUE,
+    propagate = NULL) {
+    # Explicit user Jacobians retain priority. Everything else prefers the
+    # analytic derivative, which is on by default, and falls back to numerical
+    # differentiation when the estimand is not eligible for it.
+    custom_jacobian <- settings_get("jacobian_function")
+
+    analytic_enabled <- isTRUE(analytic) &&
+        isTRUE(getOption("marginaleffects_analytic_jacobian", default = TRUE))
+    if (is.null(custom_jacobian) && analytic_enabled) {
+        J <- get_jacobian_analytic(
+            model = mfx@model,
+            plan = plan,
+            kind = kind,
+            type = type,
+            estimate = estimates[["estimate"]],
+            contrast_data = contrast_data
+        )
+        if (!is.null(J)) {
+            method <- if (isTRUE(attr(
+                J,
+                "marginaleffects_numeric_stage",
+                exact = TRUE
+            ))) {
+                "analytic+numeric_stage"
+            } else {
+                "analytic"
+            }
+            out <- plan_jacobian_result(J, method, propagate)
+            if (!is.null(out)) {
+                return(out)
+            }
+        }
+    }
+
+    # Numerical differentiation, stopping before the hypothesis stage whenever
+    # that stage can be differentiated on its own. Differentiating the whole
+    # composition forces the finite difference to see an average over many
+    # predictions, whose roundoff is then amplified by the inverse of the
+    # coefficient-scaled step; composing instead keeps the model evaluations on
+    # the well-scaled quantity and reuses the Jacobian rather than discarding
+    # it (#1750).
+    numeric_jacobian <- function(compose) {
+        if (identical(kind, "predictions")) {
+            # Delta method callback: predict, then replay prediction plan.
+            fun <- function(model_perturbed, ...) {
+                pred <- prediction_plan_predict(plan, model_perturbed, ...)
+                stages <- prediction_plan_apply_stages(plan, pred)
+                if (isTRUE(compose)) stages$pre else stages$post
+            }
+            args <- list(
+                mfx = mfx,
+                model_perturbed = mfx@model,
+                type = type,
+                FUN = fun,
+                hypothesis = if (isTRUE(compose)) NULL else mfx@hypothesis
+            )
+        } else {
+            # Delta method callback: predict hi/lo, then replay comparison plan.
+            fun <- function(model_perturbed, ...) {
+                preds <- comparison_plan_predict(plan, model_perturbed, ...)
+                stages <- comparison_plan_apply_stages(
+                    plan,
+                    preds$hi,
+                    preds$lo,
+                    preds$or
+                )
+                if (isTRUE(compose)) stages$pre else stages$post
+            }
+            args <- list(
+                mfx = mfx,
+                model_perturbed = mfx@model,
+                type = type,
+                FUN = fun,
+                variables = variables,
+                hypothesis = if (isTRUE(compose)) NULL else mfx@hypothesis,
+                hi = contrast_data$hi,
+                lo = contrast_data$lo,
+                original = contrast_data$original,
+                estimates = estimates,
+                numderiv = numderiv
+            )
+        }
+        args <- utils::modifyList(args, dots)
+        do_call(get_delta_jacobian, args)
+    }
+
+    hyp <- plan$hyp
+    # `stage_pull` maps the pre-hypothesis Jacobian to the post-hypothesis
+    # one. Exact when the stage has a compiled matrix (an affine map's
+    # derivative does not depend on its offset -- probing the offset
+    # numerically cancels catastrophically) or a structured pullback (the
+    # centering shortcuts, whose operators are dense as matrices); a
+    # central-difference probe of the stage arithmetic otherwise.
+    stage_pull <- NULL
+    # A user-supplied Jacobian function is authoritative and already covers the
+    # whole pipeline, hypothesis included, so it is never composed with.
+    if (!is.null(hyp) && is.null(custom_jacobian)) {
+        exact <- hypothesis_stage_exact(hyp, n_post = nrow(estimates))
+        # Recovering the pre-hypothesis estimates replays the plan, so it is
+        # only worth doing when the probe is the sole remaining option.
+        estimate_pre <- if (exact) {
+            NULL
+        } else {
+            plan_replay_estimate_pre(
+                plan = plan,
+                kind = kind,
+                estimate = estimates[["estimate"]]
+            )
+        }
+        if (exact || !is.null(estimate_pre)) {
+            stage_pull <- function(J) {
+                res <- hypothesis_stage_pullback(hyp, J, at = estimate_pre)
+                if (is.null(res)) NULL else res$jacobian
+            }
+        }
+    }
+
+    jac <- numeric_jacobian(!is.null(stage_pull))
+    if (is.null(jac)) {
+        return(NULL)
+    }
+
+    if (!is.null(stage_pull)) {
+        # A dimension mismatch errors inside the pull and lands here as NULL,
+        # which the fail-closed branch below turns into a redo.
+        composed <- tryCatch(
+            as.matrix(stage_pull(jac$jacobian)),
+            error = function(e) NULL
+        )
+        if (!is.null(composed) && nrow(composed) == nrow(estimates)) {
+            # The inner derivative's provenance survives the composition: the
+            # pull only rescales the stage a custom or numeric J produced.
+            out <- plan_jacobian_result(composed, jac$method, propagate)
+            if (!is.null(out)) {
+                return(out)
+            }
+        }
+        # Fail closed. A partially composed result would be silently wrong, so
+        # an unusable composition redoes the original whole-pipeline
+        # derivative. The repeat is inherent, not an optimization miss: the
+        # fallback differentiates through the hypothesis stage by re-running
+        # the model, which the pre-hypothesis Jacobian computed above cannot
+        # supply once the pull is unusable.
+        jac <- numeric_jacobian(FALSE)
+        if (is.null(jac)) {
+            return(NULL)
+        }
+    }
+
+    plan_jacobian_result(jac$jacobian, jac$method, propagate, safe = FALSE)
+}
+
+
 plan_std_error <- function(
     built,
     mfx,
@@ -295,178 +497,26 @@ plan_std_error <- function(
         return(list(mfx = mfx, estimates = estimates))
     }
 
-    # Explicit user Jacobians retain priority. Everything else prefers the
-    # analytic derivative, which is on by default, and falls back to numerical
-    # differentiation when the estimand is not eligible for it.
-    custom_jacobian <- settings_get("jacobian_function")
-
-    analytic_enabled <- isTRUE(getOption(
-        "marginaleffects_analytic_jacobian",
-        default = TRUE
-    ))
-    if (is.null(custom_jacobian) && analytic_enabled) {
-        J <- get_jacobian_analytic(
-            model = mfx@model,
-            plan = plan,
-            kind = kind,
-            type = type,
-            estimate = estimates[["estimate"]],
-            contrast_data = contrast_data
-        )
-        if (!is.null(J)) {
-            propagated <- tryCatch(
-                std_error_from_jacobian(J, mfx@vcov_model, mfx@model),
-                error = function(e) NULL
-            )
-            if (!is.null(propagated)) {
-                mfx@jacobian <- propagated$jacobian
-                mfx@jacobian_method <- if (isTRUE(attr(
-                    J,
-                    "marginaleffects_numeric_stage",
-                    exact = TRUE
-                ))) {
-                    "analytic+numeric_stage"
-                } else {
-                    "analytic"
-                }
-                estimates[["std.error"]] <- propagated$std.error
-                return(list(mfx = mfx, estimates = estimates))
-            }
+    jac <- compute_plan_jacobian(
+        plan = plan,
+        mfx = mfx,
+        estimates = estimates,
+        type = type,
+        kind = kind,
+        dots = dots,
+        contrast_data = contrast_data,
+        variables = variables,
+        numderiv = numderiv,
+        propagate = function(J) {
+            std_error_from_jacobian(J, mfx@vcov_model, mfx@model)
         }
-    }
-
-    # Numerical differentiation, stopping before the hypothesis stage whenever
-    # that stage can be differentiated on its own. Differentiating the whole
-    # composition forces the finite difference to see an average over many
-    # predictions, whose roundoff is then amplified by the inverse of the
-    # coefficient-scaled step; composing instead keeps the model evaluations on
-    # the well-scaled quantity and reuses the Jacobian rather than discarding
-    # it (#1750).
-    hyp <- plan$hyp
-    # `stage_pull` maps the pre-hypothesis Jacobian to the post-hypothesis
-    # one. Exact when the stage has a compiled matrix (an affine map's
-    # derivative does not depend on its offset -- probing the offset
-    # numerically cancels catastrophically) or a structured pullback (the
-    # centering shortcuts, whose operators are dense as matrices); a
-    # central-difference probe of the stage arithmetic otherwise.
-    stage_pull <- NULL
-    # A user-supplied Jacobian function is authoritative and already covers the
-    # whole pipeline, hypothesis included, so it is never composed with.
-    if (!is.null(hyp) && is.null(custom_jacobian)) {
-        exact <- hypothesis_stage_exact(hyp, n_post = nrow(estimates))
-        # Recovering the pre-hypothesis estimates replays the plan, so it is
-        # only worth doing when the probe is the sole remaining option.
-        estimate_pre <- if (exact) {
-            NULL
-        } else {
-            plan_replay_estimate_pre(
-                plan = plan,
-                kind = kind,
-                estimate = estimates[["estimate"]]
-            )
-        }
-        if (exact || !is.null(estimate_pre)) {
-            stage_pull <- function(J) {
-                res <- hypothesis_stage_pullback(hyp, J, at = estimate_pre)
-                if (is.null(res)) NULL else res$jacobian
-            }
-        }
-    }
-
-    numeric_se <- function(compose) {
-        if (identical(kind, "predictions")) {
-            # Delta method callback: predict, then replay prediction plan.
-            fun <- function(model_perturbed, ...) {
-                pred <- prediction_plan_predict(plan, model_perturbed, ...)
-                stages <- prediction_plan_apply_stages(plan, pred)
-                if (isTRUE(compose)) stages$pre else stages$post
-            }
-            args <- list(
-                mfx = mfx,
-                model_perturbed = mfx@model,
-                vcov = mfx@vcov_model,
-                type = type,
-                FUN = fun,
-                hypothesis = if (isTRUE(compose)) NULL else mfx@hypothesis
-            )
-        } else {
-            # Delta method callback: predict hi/lo, then replay comparison plan.
-            fun <- function(model_perturbed, ...) {
-                preds <- comparison_plan_predict(plan, model_perturbed, ...)
-                stages <- comparison_plan_apply_stages(
-                    plan,
-                    preds$hi,
-                    preds$lo,
-                    preds$or
-                )
-                if (isTRUE(compose)) stages$pre else stages$post
-            }
-            args <- list(
-                mfx = mfx,
-                model_perturbed = mfx@model,
-                vcov = mfx@vcov_model,
-                type = type,
-                FUN = fun,
-                variables = variables,
-                hypothesis = if (isTRUE(compose)) NULL else mfx@hypothesis,
-                hi = contrast_data$hi,
-                lo = contrast_data$lo,
-                original = contrast_data$original,
-                estimates = estimates,
-                numderiv = numderiv
-            )
-        }
-        args <- utils::modifyList(args, dots)
-        do_call(get_se_delta, args)
-    }
-
-    se <- numeric_se(!is.null(stage_pull))
-    if (!is.null(stage_pull)) {
-        composed <- NULL
-        J <- attr(se, "jacobian")
-        composed_J <- if (is.null(J)) {
-            NULL
-        } else {
-            # A dimension mismatch errors inside the pull and lands here as
-            # NULL, which the fail-closed branch below turns into a redo.
-            tryCatch(as.matrix(stage_pull(J)), error = function(e) NULL)
-        }
-        if (!is.null(composed_J) && nrow(composed_J) == nrow(estimates)) {
-            propagated <- tryCatch(
-                std_error_from_jacobian(composed_J, mfx@vcov_model, mfx@model),
-                error = function(e) NULL
-            )
-            if (
-                !is.null(propagated) &&
-                    length(propagated$std.error) == nrow(estimates)
-            ) {
-                composed <- propagated$std.error
-                attr(composed, "jacobian") <- propagated$jacobian
-                # The inner derivative's provenance survives the composition:
-                # the pull only rescales the stage a custom or numeric J
-                # produced.
-                attr(composed, "jacobian_source") <-
-                    attr(se, "jacobian_source", exact = TRUE)
-            }
-        }
-        # Fail closed. A partially composed result would be silently wrong, so
-        # an unusable composition redoes the original whole-pipeline
-        # derivative. The repeat is inherent, not an optimization miss: the
-        # fallback differentiates through the hypothesis stage by re-running
-        # the model, which the pre-hypothesis Jacobian computed above cannot
-        # supply once the pull is unusable.
-        se <- if (is.null(composed)) numeric_se(FALSE) else composed
-    }
+    )
+    se <- jac$std.error
 
     # Provenance records what actually produced the stored matrix, not which
     # options were set: a custom jacobian function which returned NULL fell
     # back to numerical differentiation and must say so.
-    source_attr <- attr(se, "jacobian_source", exact = TRUE)
-    mfx@jacobian_method <- if (identical(source_attr, "custom")) {
-        "custom"
-    } else {
-        "numeric"
-    }
+    mfx@jacobian_method <- jac$method %||% "numeric"
 
     # A custom Jacobian is honored, not silently recycled or dropped: if its
     # row count does not match the estimates it claims to differentiate, the
@@ -486,7 +536,7 @@ plan_std_error <- function(
     # estimates must not be assigned, because data.table recycling would
     # silently repeat a scalar across every row.
     if (is.numeric(se) && length(se) == nrow(estimates)) {
-        mfx@jacobian <- attr(se, "jacobian")
+        mfx@jacobian <- jac$jacobian
         estimates[["std.error"]] <- as.vector(se)
     }
 
