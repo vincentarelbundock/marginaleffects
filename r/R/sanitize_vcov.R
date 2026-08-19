@@ -1,18 +1,35 @@
 # Normalize special user-facing shorthands before model validation and
 # covariance dispatch. Ordinary vcov specifications pass through unchanged.
+
+# `trace()`, `debug()` and coverage instrumentation replace a package function
+# with a wrapper that keeps the original in its `original` slot. Comparing the
+# wrapper with `identical()` fails, so peel the wrappers off both sides first.
+# Test runners which instrument the namespace (scrutin, covr) would otherwise
+# send `vcovUnconditional` down the ordinary estimator path, where it is called
+# with the model as its `type` argument.
+untrace_function <- function(f) {
+    while (inherits(f, "functionWithTrace") && !is.null(attr(f, "original"))) {
+        f <- attr(f, "original")
+    }
+    f
+}
+
 sanitize_vcov_request <- function(vcov) {
     # Most functions supplied to `vcov` are covariance estimators and are
     # called with the model later. `vcovUnconditional` is instead a request
     # constructor, so normalize its bare-function form before generic function
     # dispatch tries to call it with the model as its `type` argument.
-    if (is.function(vcov) && identical(vcov, vcovUnconditional)) {
+    if (
+        is.function(vcov) &&
+            identical(untrace_function(vcov), untrace_function(vcovUnconditional))
+    ) {
         return(vcovUnconditional())
     }
     if (
         is.character(vcov) &&
-        length(vcov) == 1L &&
-        !is.na(vcov) &&
-        identical(tolower(vcov), "unconditional")
+            length(vcov) == 1L &&
+            !is.na(vcov) &&
+            identical(tolower(vcov), "unconditional")
     ) {
         return(vcovUnconditional())
     }

@@ -337,14 +337,17 @@ cmp <- avg_comparisons(
     variables = c("Infl", "Cont", "Type"),
     type = "probs"
 )
+# `multinom()` reaches its optimum by BFGS and reports a numerical Hessian, so
+# the standard errors inherit the optimizer's stopping point: they move by ~1e-5
+# from one platform's BLAS to another's. Point estimates stay at 1e-5.
 for (j in seq_along(levels(housing$Sat_nominal))) {
     group <- levels(housing$Sat_nominal)[j]
-    check_stata(paste0("mlogit_predictions_outcome", j), p[p$group == group, ], 1e-5, 1e-5)
+    check_stata(paste0("mlogit_predictions_outcome", j), p[p$group == group, ], 1e-5, 1e-4)
     check_stata(
         paste0("mlogit_comparisons_outcome", j),
         categorical_order(cmp[cmp$group == group, ], multinomial = TRUE),
         1e-5,
-        1e-5
+        1e-4
     )
 }
 

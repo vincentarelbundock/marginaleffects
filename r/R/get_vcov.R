@@ -126,6 +126,13 @@ get_varcov_args <- function(model, vcov) {
         }
     }
 
+    # `switch()` errors outright on anything but a length-1 vector, so only the
+    # string shorthands go through it. Everything else takes the same route the
+    # default branch would have taken.
+    if (!is.character(vcov) || length(vcov) != 1L || is.na(vcov)) {
+        return(list(vcov = vcov))
+    }
+
     out <- switch(
         vcov,
         # Stata's `regress, vce(robust)` is HC1: HC0 rescaled by n / (n - k).

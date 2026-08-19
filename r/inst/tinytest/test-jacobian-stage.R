@@ -224,10 +224,14 @@ for (N in c(100, 10000, 100000)) {
     # The numeric path is screened, not asserted equal: it is the least
     # accurate of the three and is the method under suspicion, not the
     # reference. It must still stay within striking distance of the truth.
+    # The bound is 1% because the regression under test produced tens of
+    # percent. Anything tighter measures the host's floating-point roundoff
+    # rather than the code: the same forward difference lands at 2e-5 on
+    # Linux and past 1e-4 on macOS.
     d <- on_path("numeric", function() {
         avg_predictions(m, by = "trt", hypothesis = "b2 - b1 = 0")
     })
-    expect_true(abs(d$std.error - ref) / ref < 1e-4)
+    expect_true(abs(d$std.error - ref) / ref < 1e-2)
 }
 
 
