@@ -144,6 +144,14 @@ Type of uncertainty estimates to report (e.g., for robust standard errors). Acce
 <li> Heteroskedasticity and autocorrelation consistent: <code>"HAC"</code>
 
 </li>
+<li> Unconditional: <code>"unconditional"</code> accounts for sampling variation in
+the empirical covariate distribution for averaged or aggregated
+predictions, comparisons, and slopes. Hypotheses applied directly to
+unit-level effects are rejected. Use
+<code>vcovUnconditional(cluster = ~cluster)</code> for
+one-way clustered unconditional inference.
+
+</li>
 <li> Mixed-Models degrees of freedom: &quot;satterthwaite&quot;, &quot;kenward-roger&quot;
 
 </li>
