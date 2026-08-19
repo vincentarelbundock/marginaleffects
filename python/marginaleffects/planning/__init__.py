@@ -1,15 +1,19 @@
 """Immutable estimation plans and coefficient-to-estimand replay."""
 
 from .core import (
+    AggBlock,
     AggGroup,
+    AggPlan,
     ComparisonPlan,
     CompGroup,
     Hyp,
     PredictionPlan,
     Stages,
+    apply_plan_aggregation,
     comparison_plan_apply,
     comparison_plan_apply_stages,
     comparison_plan_predict,
+    compile_agg_blocks,
     plan_values_allclose,
     prediction_plan_apply,
     prediction_plan_apply_stages,
@@ -17,15 +21,19 @@ from .core import (
 )
 
 __all__ = [
+    "AggBlock",
     "AggGroup",
+    "AggPlan",
     "CompGroup",
     "ComparisonPlan",
     "Hyp",
     "PredictionPlan",
     "Stages",
+    "apply_plan_aggregation",
     "comparison_plan_apply",
     "comparison_plan_apply_stages",
     "comparison_plan_predict",
+    "compile_agg_blocks",
     "plan_values_allclose",
     "prediction_plan_apply",
     "prediction_plan_apply_stages",

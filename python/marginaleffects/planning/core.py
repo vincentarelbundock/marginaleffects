@@ -3,22 +3,26 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
 import polars as pl
 
 __all__ = [
+    "AggBlock",
     "AggGroup",
+    "AggPlan",
     "CompGroup",
     "ComparisonPlan",
     "Hyp",
     "PredictionPlan",
     "Stages",
+    "apply_plan_aggregation",
     "comparison_plan_apply",
     "comparison_plan_apply_stages",
     "comparison_plan_predict",
+    "compile_agg_blocks",
     "plan_values_allclose",
     "prediction_plan_apply",
     "prediction_plan_apply_stages",
@@ -28,8 +32,115 @@ __all__ = [
 
 @dataclass
 class AggGroup:
+    """One aggregate row: the source rows it averages, and their weights."""
+
     idx: np.ndarray
     w: np.ndarray | None
+
+
+@dataclass(frozen=True)
+class AggBlock:
+    """Equal-length aggregate rows stacked column-wise for vectorized replay.
+
+    `idx` and `w` are (group_length, n_groups) matrices, so a whole block is
+    reduced with one column-wise sum instead of a Python loop per group.
+    """
+
+    cols: np.ndarray
+    idx: np.ndarray
+    w: np.ndarray | None
+
+
+@dataclass(frozen=True)
+class AggPlan:
+    """Recorded aggregation stage: which source rows feed which output row."""
+
+    blocks: tuple[AggBlock, ...]
+    n: int
+    weighted: bool
+
+
+def compile_agg_blocks(groups) -> AggPlan | None:
+    """Stack equal-length aggregate rows so replay avoids ragged padding."""
+    if groups is None:
+        return None
+    if isinstance(groups, AggPlan):
+        return groups
+    groups = list(groups)
+    if not groups:
+        return None
+
+    weighted = any(group.w is not None for group in groups)
+    lengths = np.asarray([np.asarray(group.idx).size for group in groups])
+
+    def make_block(cols):
+        length = int(lengths[cols[0]])
+        idx = np.stack(
+            [np.asarray(groups[col].idx, dtype=int).reshape(-1) for col in cols],
+            axis=1,
+        )
+        w = None
+        if weighted:
+            w = np.stack(
+                [
+                    (
+                        np.ones(length, dtype=float)
+                        if groups[col].w is None
+                        else np.asarray(groups[col].w, dtype=float).reshape(-1)
+                    )
+                    for col in cols
+                ],
+                axis=1,
+            )
+        return AggBlock(cols=np.asarray(cols, dtype=int), idx=idx, w=w)
+
+    order = np.arange(len(groups))
+    if np.unique(lengths).size == 1:
+        blocks = (make_block(order),)
+    else:
+        blocks = tuple(
+            make_block(order[lengths == length]) for length in np.unique(lengths)
+        )
+    return AggPlan(blocks=blocks, n=len(groups), weighted=weighted)
+
+
+def apply_plan_aggregation(agg, est) -> np.ndarray:
+    """Replay a recorded aggregation stage on a vector of estimates.
+
+    Missing-value handling mirrors the R implementation: an unweighted mean
+    drops missing entries, a weighted mean zeroes both the estimate and its
+    weight wherever the estimate is missing, and a missing weight propagates
+    to the aggregate rather than silently dropping the row it belongs to.
+    """
+    agg = compile_agg_blocks(agg)
+    if agg is None:
+        return _as_float_array(est)
+
+    est = _as_float_array(est)
+    out = np.empty(agg.n, dtype=float)
+    for block in agg.blocks:
+        e = est[block.idx]
+        if agg.weighted:
+            w = np.array(block.w, dtype=float)
+            missing = np.isnan(e)
+            e = np.where(missing, 0.0, e)
+            w = np.where(missing, 0.0, w)
+            # 0 * Inf is NaN, so a zero weight must blank the estimate it
+            # multiplies rather than poisoning the whole group.
+            e = np.where(~np.isnan(w) & (w == 0), 0.0, e)
+            with np.errstate(invalid="ignore", divide="ignore"):
+                out[block.cols] = (e * w).sum(axis=0) / w.sum(axis=0)
+        else:
+            keep = ~np.isnan(e)
+            counts = keep.sum(axis=0)
+            totals = np.where(keep, e, 0.0).sum(axis=0)
+            out[block.cols] = np.divide(
+                totals,
+                counts,
+                out=np.full(counts.shape, np.nan, dtype=float),
+                where=counts > 0,
+            )
+    return out
 
 
 @dataclass
@@ -54,6 +165,10 @@ class PredictionPlan:
     agg: list[AggGroup] | None
     hyp: Hyp | None
     n_out: int
+    agg_blocks: AggPlan | None = field(default=None, repr=False, compare=False)
+
+    def __post_init__(self):
+        self.agg_blocks = compile_agg_blocks(self.agg)
 
 
 @dataclass
@@ -81,6 +196,14 @@ class ComparisonPlan:
     n_comp: int
     hyp: Hyp | None
     has_na: bool = False
+    agg: list[AggGroup] | None = None
+    n_out: int | None = None
+    agg_blocks: AggPlan | None = field(default=None, repr=False, compare=False)
+
+    def __post_init__(self):
+        self.agg_blocks = compile_agg_blocks(self.agg)
+        if self.n_out is None:
+            self.n_out = self.n_comp if self.agg_blocks is None else self.agg_blocks.n
 
 
 def _as_float_array(x) -> np.ndarray:
@@ -215,10 +338,7 @@ def prediction_plan_apply_stages(plan: PredictionPlan, pred) -> Stages:
     est = _apply_align(pred, plan.align)
 
     if plan.agg is not None:
-        est = np.asarray(
-            [_nan_weighted_mean(est[group.idx], group.w) for group in plan.agg],
-            dtype=float,
-        )
+        est = apply_plan_aggregation(plan.agg_blocks or plan.agg, est)
 
     pre = est
     if plan.hyp is not None:
@@ -283,8 +403,15 @@ def comparison_plan_apply_stages(plan: ComparisonPlan, hi, lo, y=None) -> Stages
             )
         out[group.out_idx] = est
 
+    if plan.agg is not None:
+        out = apply_plan_aggregation(plan.agg_blocks or plan.agg, out)
+
     pre = out
     if plan.hyp is not None:
         out = _as_float_array(plan.hyp.apply(out))
 
+    if plan.n_out is not None and out.shape[0] != plan.n_out:
+        raise RuntimeError(
+            "marginaleffects internal error: comparison plan replay changed shape"
+        )
     return Stages(pre=pre, post=out)

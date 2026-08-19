@@ -4,12 +4,14 @@ import warnings
 import numpy as np
 import polars as pl
 
+from .by import _mean_expr, _weighted_mean_expr
 from .classes import MarginaleffectsResult
 from .docstrings import doc
 from .estimands import estimands
 from .hypothesis_compile import hypothesis_compile
 from .inference import analytic_try, get_jacobian, get_se
 from .planning import (
+    AggGroup,
     ComparisonPlan,
     CompGroup,
     comparison_plan_apply,
@@ -433,6 +435,48 @@ def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions, capture
     return tmp
 
 
+def _record_comparison_aggregation(tmp, by_keys, wts, by):
+    """Average row-level comparisons within `by` groups, recording the map.
+
+    The built-in `*avg` estimands already collapse each group to a single row,
+    so this stage only bites when the comparison itself is row-level -- a
+    custom callable, most often. R runs the same two-stage pipeline: compare,
+    then aggregate. Recording which rows feed which aggregate lets the Jacobian
+    replay that average instead of re-deriving the grouping for every perturbed
+    coefficient vector.
+    """
+    if by is None or by is False or not by_keys or tmp.height <= 1:
+        return tmp, None
+
+    position = "_marginaleffects_agg_pos"
+    tmp = tmp.with_columns(pl.Series(position, range(tmp.height), dtype=pl.Int64))
+
+    weighted = wts is not None and wts in tmp.columns
+    agg_exprs = [
+        _weighted_mean_expr(wts) if weighted else _mean_expr(),
+        pl.col(position).alias("_positions"),
+    ]
+    if weighted:
+        agg_exprs.append(pl.col(wts).cast(pl.Float64).alias("_plan_weights"))
+
+    grouped = tmp.group_by(by_keys, maintain_order=True).agg(agg_exprs)
+    positions = grouped["_positions"].to_list()
+    if all(len(entry) == 1 for entry in positions):
+        # Every group is already a single row, so aggregating would be a no-op.
+        # Skipping it keeps the estimand stage's own output columns intact.
+        return tmp.drop(position), None
+
+    weights = grouped["_plan_weights"].to_list() if weighted else None
+    agg_groups = [
+        AggGroup(
+            idx=np.asarray(entry, dtype=int),
+            w=None if weights is None else np.asarray(weights[i], dtype=float),
+        )
+        for i, entry in enumerate(positions)
+    ]
+    return grouped.select([*by_keys, "estimate"]), agg_groups
+
+
 def _compute_fd_estimates(
     coefs,
     *,
@@ -503,6 +547,7 @@ def _comparisons_build(
         comparison_functions,
         capture=captured,
     )
+    tmp, agg_groups = _record_comparison_aggregation(tmp, by_keys, wts, by)
     tmp, hyp = hypothesis_compile(tmp, hypothesis=hypothesis, by=by_keys)
 
     groups = []
@@ -551,6 +596,8 @@ def _comparisons_build(
         n_comp=start,
         hyp=hyp,
         has_na=bool(has_na),
+        agg=agg_groups,
+        n_out=tmp.height,
     )
 
     hi, lo, y = plan_predictions

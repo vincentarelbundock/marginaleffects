@@ -6,6 +6,7 @@ import numpy as np
 
 from ..planning import (
     comparison_plan_apply_stages,
+    compile_agg_blocks,
     plan_values_allclose,
     prediction_plan_apply_stages,
 )
@@ -74,44 +75,30 @@ def _align_rows(value, align):
     return value[align]
 
 
-def _weighted_columns(X, weights):
-    if weights is None:
-        return np.mean(X, axis=0)
-    weights = np.asarray(weights, dtype=float)
-    keep = ~np.isnan(weights)
-    denominator = np.sum(weights[keep])
-    if denominator == 0:
-        return np.full(X.shape[1], np.nan)
-    return weights[keep] @ X[keep] / denominator
+def _aggregate_rows(X, agg):
+    """Apply the recorded aggregation stage to a matrix of Jacobian rows.
 
-
-def _aggregate_rows(X, groups):
-    """Apply disjoint grouped means as one sparse contraction."""
-    if len(groups) == 1:
-        group = groups[0]
-        return np.asarray([_weighted_columns(X[group.idx], group.w)])
-    rows, targets, factors = [], [], []
-    for target, group in enumerate(groups):
-        idx = np.asarray(group.idx, dtype=int)
-        if group.w is None:
-            weight = np.full(idx.size, 1 / idx.size)
-        else:
-            raw = np.asarray(group.w, dtype=float)
-            keep = ~np.isnan(raw)
-            idx, raw = idx[keep], raw[keep]
-            denominator = raw.sum()
-            if denominator == 0:
+    Aggregation is linear in the estimates, so the stage contributes exactly
+    the weight matrix its estimate replay uses. Blocks of equal-length groups
+    contract in one einsum instead of a Python loop per output row.
+    """
+    agg = compile_agg_blocks(agg)
+    if agg is None:
+        return X
+    out = np.zeros((agg.n, X.shape[1]), dtype=float)
+    for block in agg.blocks:
+        if agg.weighted:
+            w = np.asarray(block.w, dtype=float)
+            denominator = w.sum(axis=0)
+            # A missing weight makes the whole aggregate undefined, exactly as
+            # it does in the estimate replay; fall back rather than quietly
+            # differentiating a different estimand than the one reported.
+            if not np.all(np.isfinite(denominator)) or np.any(denominator == 0):
                 return None
-            weight = raw / denominator
-        rows.append(idx)
-        targets.append(np.full(idx.size, target, dtype=int))
-        factors.append(weight)
-    out = np.zeros((len(groups), X.shape[1]), dtype=float)
-    np.add.at(
-        out,
-        np.concatenate(targets),
-        X[np.concatenate(rows)] * np.concatenate(factors)[:, None],
-    )
+            factors = w / denominator
+        else:
+            factors = np.full(block.idx.shape, 1.0 / block.idx.shape[0])
+        out[block.cols] = np.einsum("lc,lcp->cp", factors, X[block.idx])
     return out
 
 
@@ -173,7 +160,7 @@ def _prediction_jacobian(plan, model):
     if J is None:
         return None
     if plan.agg is not None:
-        J = _aggregate_rows(J, plan.agg)
+        J = _aggregate_rows(J, plan.agg_blocks or plan.agg)
         if J is None:
             return None
     replay = prediction_plan_apply_stages(plan, pred)
@@ -235,6 +222,11 @@ def _comparison_jacobian(plan, model):
         else:
             value = X_hi[idx] * grad_hi[:, None] + X_lo[idx] * grad_lo[:, None]
         J[group.out_idx] = np.asarray(value).reshape(-1, beta.size)
+
+    if plan.agg is not None:
+        J = _aggregate_rows(J, plan.agg_blocks or plan.agg)
+        if J is None:
+            return None
 
     replay = comparison_plan_apply_stages(plan, raw_hi, raw_lo)
     composed = _apply_hypothesis(J, plan.hyp, replay.pre)

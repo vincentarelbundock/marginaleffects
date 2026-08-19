@@ -12,6 +12,8 @@ _EXPORTS = {
         "handle_pyfixest_vcov_limitation",
     ),
     "HiLo": (".variables", "HiLo"),
+    "by_frame_keys": (".by", "by_frame_keys"),
+    "by_is_frame": (".by", "by_is_frame"),
     "sanitize_by": (".by", "sanitize_by"),
     "sanitize_comparison": (".comparison", "sanitize_comparison"),
     "sanitize_hypothesis_null": (".hypothesis_null", "sanitize_hypothesis_null"),
