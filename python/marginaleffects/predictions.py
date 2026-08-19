@@ -13,6 +13,7 @@ from .planning import (
     prediction_plan_predict,
 )
 from .sanitize import handle_deprecated_hypotheses_argument
+from .sanitize.by import by_is_frame
 from .utils import call_avg, finalize_result, prepare_base_inputs
 
 
@@ -108,6 +109,9 @@ def _predictions_build(model, exog, newdata, by, wts, hypothesis):
     has_na = np.isnan(np.asarray(aligned_baseline, dtype=float)).any()
 
     out, agg = get_by_plan(model, out, newdata=newdata, by=by, wts=wts)
+    if by_is_frame(by):
+        # The frame has done its work; downstream only sees the label column.
+        by = ["by"]
     out, hyp = hypothesis_compile(out, hypothesis=hypothesis, by=by)
     plan = PredictionPlan(
         n_pred=n_pred,
@@ -129,7 +133,7 @@ def _predictions_build(model, exog, newdata, by, wts, hypothesis):
         raise RuntimeError(
             "marginaleffects internal error: prediction plan baseline check failed"
         )
-    return out, plan
+    return out, plan, by
 
 
 @doc("""
@@ -240,7 +244,7 @@ def predictions(
 
     exog = model.get_exog(newdata)
 
-    out, plan = _predictions_build(
+    out, plan, by = _predictions_build(
         model=model,
         exog=exog,
         newdata=newdata,

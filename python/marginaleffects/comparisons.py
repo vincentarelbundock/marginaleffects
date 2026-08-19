@@ -4,7 +4,7 @@ import warnings
 import numpy as np
 import polars as pl
 
-from .by import _mean_expr, _weighted_mean_expr
+from .by import _mean_expr, _weighted_mean_expr, attach_by_labels
 from .classes import MarginaleffectsResult
 from .docstrings import doc
 from .estimands import estimands
@@ -19,6 +19,7 @@ from .planning import (
     plan_values_allclose,
 )
 from .sanitize import (
+    by_is_frame,
     handle_deprecated_hypotheses_argument,
     handle_pyfixest_vcov_limitation,
     sanitize_model,
@@ -435,6 +436,23 @@ def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions, capture
     return tmp
 
 
+def _attach_comparison_by_labels(tmp, align, by):
+    """Join a `by` data frame's labels onto the comparison table.
+
+    The label becomes an ordinary grouping column, so the estimand stage sees
+    it like any other. Rows the label table does not cover are dropped, and
+    `align` is filtered alongside them: it maps table rows to prediction rows,
+    so removing one without the other would silently shift every index the
+    plan records.
+    """
+    labelled, keep = attach_by_labels(tmp, by)
+    if keep.all():
+        return labelled, align
+    mask = keep.to_numpy()
+    positions = np.arange(tmp.height) if align is None else np.asarray(align)
+    return labelled.filter(keep), positions[mask]
+
+
 def _record_comparison_aggregation(tmp, by_keys, wts, by):
     """Average row-level comparisons within `by` groups, recording the map.
 
@@ -503,8 +521,13 @@ def _compute_fd_estimates(
         coefs = coefs.to_numpy()
 
     tmp = _assemble_prediction_table(model, coefs, nd, nd_X, hi_X, lo_X)
-    by_keys = _resolve_grouping_keys(by, tmp)
+    if by_is_frame(by):
+        tmp, _ = _attach_comparison_by_labels(tmp, None, by)
+        by_keys = _resolve_grouping_keys(["by"], tmp)
+    else:
+        by_keys = _resolve_grouping_keys(by, tmp)
     tmp = _apply_comparison_estimands(tmp, by_keys, wts, eps, comparison_functions)
+    tmp, _ = _record_comparison_aggregation(tmp, by_keys, wts, by)
     tmp = get_hypothesis(tmp, hypothesis=hypothesis, by=by_keys)
     return tmp
 
@@ -537,7 +560,11 @@ def _comparisons_build(
         for col in ["predicted", "predicted_hi", "predicted_lo"]
         if col in tmp.columns
     )
-    by_keys = _resolve_grouping_keys(by, tmp)
+    if by_is_frame(by):
+        tmp, align = _attach_comparison_by_labels(tmp, align, by)
+        by_keys = _resolve_grouping_keys(["by"], tmp)
+    else:
+        by_keys = _resolve_grouping_keys(by, tmp)
     captured = []
     tmp = _apply_comparison_estimands(
         tmp,
@@ -548,6 +575,9 @@ def _comparisons_build(
         capture=captured,
     )
     tmp, agg_groups = _record_comparison_aggregation(tmp, by_keys, wts, by)
+    if by_is_frame(by):
+        # The frame has done its work; downstream only sees the label column.
+        by = ["by"]
     tmp, hyp = hypothesis_compile(tmp, hypothesis=hypothesis, by=by_keys)
 
     groups = []
@@ -609,7 +639,7 @@ def _comparisons_build(
         raise RuntimeError(
             "marginaleffects internal error: comparison plan baseline check failed"
         )
-    return tmp, plan
+    return tmp, plan, by
 
 
 @doc("""
@@ -799,7 +829,7 @@ def comparisons(
 
     comparison_functions = _collect_comparison_functions(variables)
 
-    out, plan = _comparisons_build(
+    out, plan, by = _comparisons_build(
         model=model,
         nd=nd,
         nd_X=nd_X,

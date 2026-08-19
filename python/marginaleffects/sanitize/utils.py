@@ -21,7 +21,11 @@ def validate_string_columns(columns, modeldata, context=""):
     if columns is None or columns is False:
         return
 
-    if isinstance(columns, str):
+    if isinstance(columns, pl.DataFrame):
+        # A `by` data frame validates the columns it matches on; its `by`
+        # column holds labels, which are free to be strings.
+        columns = [x for x in columns.columns if x != "by"]
+    elif isinstance(columns, str):
         columns = [columns]
     elif isinstance(columns, dict):
         columns = list(columns.keys())

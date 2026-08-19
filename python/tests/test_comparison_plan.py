@@ -99,7 +99,7 @@ def test_comparison_build_plan_replays_ratio_by_group():
         by="cyl",
     )
 
-    out, plan = _comparisons_build(
+    out, plan, _by = _comparisons_build(
         model=model,
         nd=nd,
         nd_X=nd_X,
@@ -129,7 +129,7 @@ def test_comparison_plan_replay_matches_full_pipeline_after_perturbation():
         by=False,
     )
 
-    _out, plan = _comparisons_build(
+    _out, plan, _by = _comparisons_build(
         model=model,
         nd=nd,
         nd_X=nd_X,

@@ -61,7 +61,9 @@ def sort_columns(df, by=None, newdata=None):
     ] + df.columns
 
     if by is not None:
-        if isinstance(by, list):
+        if isinstance(by, pl.DataFrame):
+            cols = ["by"] + cols
+        elif isinstance(by, list):
             cols = by + cols
         else:
             cols = [by] + cols
@@ -315,6 +317,8 @@ def prepare_base_inputs(
 
     from .pyfixest import ModelPyfixest
     from .sanitize import (
+        by_frame_keys,
+        by_is_frame,
         sanitize_by,
         sanitize_hypothesis_null,
         sanitize_model,
@@ -353,11 +357,14 @@ def prepare_base_inputs(
         vcov = False
 
     by = sanitize_by(by)
+    # A `by` data frame carries labels, not column names. Consumers that only
+    # understand column names get the columns it matches on instead.
+    by_names = by_frame_keys(by) if by_is_frame(by) else by
     V = sanitize_vcov(vcov, model)
-    newdata = sanitize_newdata(model, newdata, wts=wts, by=by)
+    newdata = sanitize_newdata(model, newdata, wts=wts, by=by_names)
     hypothesis_null = sanitize_hypothesis_null(hypothesis)
 
     modeldata = model.get_modeldata()
-    validate_string_columns(by, modeldata, context="the 'by' parameter")
+    validate_string_columns(by_names, modeldata, context="the 'by' parameter")
 
     return model, by, V, newdata, hypothesis_null, modeldata
