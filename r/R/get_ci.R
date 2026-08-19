@@ -258,8 +258,21 @@ get_ci_draws <- function(x, conf_level, draws, model = NULL) {
     Bs <- apply(draws, 1, FUN_CENTER)
     # comparison returns a single value
     if (nrow(x) < nrow(CIs)) {
-        CIs <- unique(CIs)
-        Bs <- unique(Bs)
+        # Deduplicate the interval and the center jointly: deduplicating them
+        # separately can drop different rows whenever two distinct estimands
+        # coincide in one summary but not the other, silently misaligning
+        # centers with intervals. If the joint deduplication does not land
+        # exactly on the number of estimates, alignment is unknowable.
+        keep <- !duplicated(cbind(Bs, CIs))
+        CIs <- CIs[keep, , drop = FALSE]
+        Bs <- Bs[keep]
+        if (nrow(CIs) != nrow(x)) {
+            stop_sprintf(
+                "Internal error: cannot align posterior draw summaries (%s unique rows) with the %s estimates.",
+                nrow(CIs),
+                nrow(x)
+            )
+        }
     }
     x[["estimate"]] <- Bs
     x[["conf.low"]] <- CIs[, "lower"]

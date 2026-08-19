@@ -1,8 +1,3 @@
-#' @keywords internal
-#' @export
-get_autodiff_args.ivreg <- get_autodiff_args.lm
-
-
 #' @rdname get_model_matrix
 #' @export
 get_model_matrix.ivreg <- function(model, newdata, mfx = NULL) {
@@ -28,17 +23,6 @@ get_model_matrix.ivreg <- function(model, newdata, mfx = NULL) {
 
 #' @noRd
 #' @export
-get_jacobian_analytic.ivreg <- function(model, type, ...) {
-    if (
-        !identical(class(model)[1], "ivreg") ||
-            !identical(type, "response")
-    ) {
-        return(NULL)
-    }
-    jacobian_analytic_model_matrix(
-        model = model,
-        type = type,
-        response_scale = FALSE,
-        ...
-    )
+get_prediction_jacobian_spec.ivreg <- function(model, type, ...) {
+    prediction_jacobian_spec_linear(model, "ivreg", type, "response")
 }

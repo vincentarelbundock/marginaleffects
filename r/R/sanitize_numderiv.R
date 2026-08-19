@@ -17,7 +17,7 @@ add_numderiv <- function(mfx, numderiv) {
                 )
             }
         } else if (numderiv[[1L]] == "richardson") {
-            valid <- c("eps", "d", "zero_tol", "size", "r", "v")
+            valid <- c("eps", "d", "zero_tol", "side", "r", "v")
             if (!all(names(numderiv)[-1L] %in% valid)) {
                 stop(
                     sprintf(

@@ -71,8 +71,13 @@ finalize_estimates <- function(
 
     out <- sort_columns(out, mfx@newdata, by)
     out <- equivalence(out, equivalence = equivalence, df = mfx@df, draws = mfx@draws, ...)
+    estimate_pre_transform <- out[["estimate"]]
     out <- backtransform(out, transform = pre_transform, draws = mfx@draws)
+    mfx <- update_unconditional_vcov_transform(mfx, estimate_pre_transform, pre_transform)
+
+    estimate_pre_transform <- out[["estimate"]]
     out <- backtransform(out, transform = transform, draws = mfx@draws)
+    mfx <- update_unconditional_vcov_transform(mfx, estimate_pre_transform, transform)
 
     new_draws <- attr(out, "posterior_draws")
     if (!is.null(new_draws)) {

@@ -23,10 +23,12 @@ get_jacobian <- function(func, x, numderiv) {
 }
 
 
-get_jacobian_fdforward <- function(func, x, eps = NULL) {
-    # old version. probably not optimal. Keep for posterity.
-    # h <- max(1e-8, 1e-4 * min(abs(x), na.rm = TRUE))
-    baseline <- func(x)
+# Forward and central finite differences share everything but the pair of
+# evaluation points: forward evaluates a shared baseline plus one shifted
+# point per coefficient, central evaluates two half-shifted points and no
+# baseline.
+get_jacobian_fd <- function(func, x, eps = NULL, center = FALSE) {
+    baseline <- if (isTRUE(center)) NULL else func(x)
 
     # we pre-chunk because future does not cache datasets in nodes, which means we
     # must pass every worker the full data and model for every future.
@@ -39,9 +41,16 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
             } else {
                 h <- eps
             }
-            dx <- x
-            dx[i] <- dx[i] + h
-            out[[j]] <- (func(dx) - baseline) / h
+            if (isTRUE(center)) {
+                dx_hi <- dx_lo <- x
+                dx_hi[i] <- dx_hi[i] + h / 2
+                dx_lo[i] <- dx_lo[i] - h / 2
+                out[[j]] <- (func(dx_hi) - func(dx_lo)) / h
+            } else {
+                dx <- x
+                dx[i] <- dx[i] + h
+                out[[j]] <- (func(dx) - baseline) / h
+            }
         }
         out <- do.call(cbind, out)
         return(out)
@@ -66,42 +75,13 @@ get_jacobian_fdforward <- function(func, x, eps = NULL) {
 }
 
 
-get_jacobian_fdcenter <- function(func, x, eps = NULL) {
-    # we pre-chunk because future does not cache datasets in nodes, which means we
-    # must pass every worker the full data and model for every future.
-    inner_loop <- function(chunk, ...) {
-        out <- vector("list", length(chunk))
-        for (j in seq_along(chunk)) {
-            i <- chunk[[j]]
-            if (is.null(eps)) {
-                h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
-            } else {
-                h <- eps
-            }
-            dx_hi <- dx_lo <- x
-            dx_hi[i] <- dx_hi[i] + h / 2
-            dx_lo[i] <- dx_lo[i] - h / 2
-            out[[j]] <- (func(dx_hi) - func(dx_lo)) / h
-        }
-        out <- do.call(cbind, out)
-        return(out)
-    }
+get_jacobian_fdforward <- function(func, x, eps = NULL) {
+    get_jacobian_fd(func, x, eps = eps, center = FALSE)
+}
 
-    if (isTRUE(getOption("marginaleffects_parallel", default = FALSE))) {
-        insight::check_if_installed("future.apply")
-        insight::check_if_installed("future")
-        insight::check_if_installed("parallel")
-        chunks <- parallel::splitIndices(length(x), future::nbrOfWorkers())
-        df <- future.apply::future_lapply(
-            chunks,
-            inner_loop,
-            future.seed = TRUE
-        )
-        df <- do.call("cbind", df)
-    } else {
-        df <- inner_loop(seq_along(x))
-    }
-    return(df)
+
+get_jacobian_fdcenter <- function(func, x, eps = NULL) {
+    get_jacobian_fd(func, x, eps = eps, center = TRUE)
 }
 
 

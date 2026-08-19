@@ -69,6 +69,7 @@ plot_predictions <- function(
   draw = TRUE,
   ...
 ) {
+    vcov <- sanitize_vcov_request(vcov)
     checkmate::assert_number(points, lower = 0, upper = 1)
 
     if (inherits(model, c("mira", "amest"))) {

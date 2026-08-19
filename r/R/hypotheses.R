@@ -159,12 +159,26 @@ hypotheses <- function(
     multcomp = FALSE,
     numderiv = "fdforward",
     ...) {
+    vcov <- sanitize_vcov_request(vcov)
     call <- construct_call(model, "hypotheses")
 
     # Early validation and setup
     if (is.null(model)) model <- ...get("model_perturbed")
     if (is.null(model)) stop_sprintf("`model` is missing.")
     sanity_multcomp(multcomp, hypothesis, joint)
+    internal_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
+    if (inherits(model, internal_classes) && !isTRUE(checkmate::check_flag(vcov))) {
+        msg <- paste0(
+            "The `vcov` argument is not available when `model` is a ",
+            "`predictions`, `comparisons`, `slopes`, or `hypotheses` object. ",
+            "Please specify the type of standard errors in the initial ",
+            "`marginaleffects` call."
+        )
+        stop_sprintf(msg)
+    }
+    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
+        stop_unconditional("hypotheses")
+    }
 
     # Early returns for special cases - removed mice check, moved later
 
@@ -180,13 +194,7 @@ hypotheses <- function(
     }
 
     # Handle marginaleffects objects vs regular models
-    internal_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
     if (inherits(model, internal_classes)) {
-        if (!isTRUE(checkmate::check_flag(vcov))) {
-            stop_sprintf(
-                "The `vcov` argument is not available when `model` is a `predictions`, `comparisons`, `slopes`, or `hypotheses` object. Please specify the type of standard errors in the initial `marginaleffects` call."
-            )
-        }
         mfx <- components(model, "all")
         if (!is.null(mfx) && !is.null(mfx@draws)) {
             stop_sprintf(
@@ -268,10 +276,23 @@ hypotheses <- function(
         if (...length() > 0) {
             args <- utils::modifyList(args, list(...))
         }
-        se <- do_call(get_se_delta, args)
-        J <- attr(se, "jacobian")
+        J <- hypotheses_exact_jacobian(
+            mfx = mfx,
+            model = model,
+            n_post = length(b),
+            hypothesis_is_formula = hypothesis_is_formula,
+            ...
+        )
+        if (is.null(J)) {
+            se <- do_call(get_se_delta, args)
+            J <- attr(se, "jacobian")
+            attr(se, "jacobian") <- NULL
+        } else {
+            propagated <- std_error_from_jacobian(J, vcov, model, ...)
+            se <- propagated$std.error
+            J <- propagated$jacobian
+        }
         mfx@jacobian <- J
-        attr(se, "jacobian") <- NULL
         mfx@draws <- NULL
 
         # no standard error
@@ -332,4 +353,85 @@ hypotheses <- function(
     attr(out, "hypotheses_call") <- TRUE
 
     return(out)
+}
+
+
+# Post-hoc `hypotheses()` differentiates the composition of two maps: the
+# parameters to the estimates the hypothesis reads, and the hypothesis itself.
+# Finite-differencing the composition is wrong whenever the hypothesis is
+# affine with a large constant, because the probe subtracts two nearly equal
+# large numbers and reports a standard error of exactly zero. An affine
+# hypothesis has an exact contrast matrix whose constant has zero derivative,
+# so the first map is differentiated alone and pulled back through the compiled
+# stage.
+#
+# Returns NULL -- differentiate the whole map numerically, exactly as before --
+# whenever anything cannot be proven eligible.
+hypotheses_exact_jacobian <- function(mfx, model, n_post, hypothesis_is_formula, ...) {
+    hypothesis <- mfx@hypothesis
+    if (isTRUE(hypothesis_is_formula) || !isTRUE(checkmate::check_character(hypothesis))) {
+        return(NULL)
+    }
+    if (!isTRUE(getOption("marginaleffects_hypothesis_promote", default = TRUE))) {
+        return(NULL)
+    }
+    # A user-supplied jacobian function receives the `hypothesis` argument, so
+    # its result already covers the hypothesis stage and must not be composed
+    # with it a second time.
+    if (!is.null(settings_get("jacobian_function"))) {
+        return(NULL)
+    }
+
+    skeleton <- tryCatch(
+        get_hypotheses_skeleton(
+            model_perturbed = model,
+            hypothesis = hypothesis,
+            hypothesis_is_formula = FALSE,
+            ...
+        ),
+        error = function(e) NULL
+    )
+    if (!inherits(skeleton, "data.frame") || !is.numeric(skeleton[["estimate"]])) {
+        return(NULL)
+    }
+    skeleton <- data.table::copy(skeleton)
+
+    compiled <- tryCatch(
+        hypothesis_compile_string(hypothesis, skeleton),
+        error = function(e) NULL
+    )
+    if (is.null(compiled) || !hypothesis_stage_exact(compiled$hyp, n_post = n_post)) {
+        return(NULL)
+    }
+
+    # The derivative of the pre-hypothesis estimates with respect to the
+    # parameters. Those estimates are the object's own estimates or the model
+    # parameters, depending on the input kind, and involve no hypothesis
+    # constant, so numerical differentiation is safe here.
+    jac <- tryCatch(
+        get_delta_jacobian(
+            model_perturbed = model,
+            FUN = get_hypotheses,
+            mfx = mfx,
+            hypothesis = NULL,
+            hypothesis_is_formula = FALSE,
+            ...
+        ),
+        error = function(e) NULL
+    )
+    if (is.null(jac) || !identical(jac$method, "numeric")) {
+        return(NULL)
+    }
+    J <- jac$jacobian
+    if (!isTRUE(checkmate::check_matrix(J, mode = "numeric")) || nrow(J) != nrow(skeleton)) {
+        return(NULL)
+    }
+
+    pulled <- hypothesis_stage_pullback(compiled$hyp, J)
+    if (is.null(pulled) || !isTRUE(nrow(pulled$jacobian) == n_post)) {
+        return(NULL)
+    }
+    out <- pulled$jacobian
+    colnames(out) <- colnames(J)
+    out
 }

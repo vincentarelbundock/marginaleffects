@@ -2,7 +2,7 @@ marginaleffects_settings <- new.env()
 
 # https://stackoverflow.com/questions/79786610/solved-r-package-loading-error-onattach-failed-in-attachnamespace
 # The disk config is cached in memory: settings_get() is called in hot loops
-# (e.g., once per estimate for "autodiff" and "marginaleffects_safefun_return1"),
+# (e.g., once per estimate for "marginaleffects_safefun_return1"),
 # and reading the filesystem on every miss is expensive.
 settings_read_persistent <- function() {
     cache <- marginaleffects_settings[[".persistent_config_cache"]]
