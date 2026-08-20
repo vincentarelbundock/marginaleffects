@@ -92,6 +92,9 @@ set_coef(model, coefs, ...)
 ## S3 method for class 'mlm'
 set_coef(model, coefs, ...)
 
+## S3 method for class 'mmrm'
+set_coef(model, coefs, ...)
+
 ## S3 method for class 'nestedLogit'
 set_coef(model, coefs, ...)
 

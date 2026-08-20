@@ -47,6 +47,9 @@ get_vcov(model, vcov = NULL, ...)
 ## S3 method for class 'Learner'
 get_vcov(model, ...)
 
+## S3 method for class 'mmrm'
+get_vcov(model, ...)
+
 ## S3 method for class 'nestedLogit'
 get_vcov(model, vcov = NULL, ...)
 

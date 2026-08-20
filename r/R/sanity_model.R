@@ -106,6 +106,7 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
             "mhurdle",
             "mira",
             "mlogit",
+            "mmrm",
             "nestedLogit",
             "model_fit",
             c("multinom", "nnet"),

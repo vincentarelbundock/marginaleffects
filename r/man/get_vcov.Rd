@@ -3,9 +3,9 @@
 %   R/methods_MCMCglmm.R, R/methods_afex.R, R/methods_aod.R, R/methods_biglm.R,
 %   R/methods_brms.R, R/methods_dbarts.R, R/methods_gamlss.R,
 %   R/methods_glmmTMB.R, R/methods_mhurdle.R, R/methods_mlr3.R,
-%   R/methods_nestedLogit.R, R/methods_rms.R, R/methods_rstpm2.R,
-%   R/methods_scam.R, R/methods_svyVGAM.R, R/methods_systemfit.R,
-%   R/methods_tidymodels.R
+%   R/methods_mmrm.R, R/methods_nestedLogit.R, R/methods_rms.R,
+%   R/methods_rstpm2.R, R/methods_scam.R, R/methods_svyVGAM.R,
+%   R/methods_systemfit.R, R/methods_tidymodels.R
 \name{get_vcov}
 \alias{get_vcov}
 \alias{get_vcov.default}
@@ -20,6 +20,7 @@
 \alias{get_vcov.glmmTMB}
 \alias{get_vcov.mhurdle}
 \alias{get_vcov.Learner}
+\alias{get_vcov.mmrm}
 \alias{get_vcov.nestedLogit}
 \alias{get_vcov.orm}
 \alias{get_vcov.stpm2}
@@ -59,6 +60,8 @@ get_vcov(model, ...)
 \method{get_vcov}{mhurdle}(model, vcov = NULL, ...)
 
 \method{get_vcov}{Learner}(model, ...)
+
+\method{get_vcov}{mmrm}(model, ...)
 
 \method{get_vcov}{nestedLogit}(model, vcov = NULL, ...)
 
