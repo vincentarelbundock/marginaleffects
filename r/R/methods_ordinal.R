@@ -69,12 +69,11 @@ sanitize_model_specific.clm <- function(model, ...) {
 #' @keywords internal
 #' @noRd
 get_tJac_clmm2 <- function(model) {
-    threshold <- model[["threshold"]]
-    if (is.null(threshold) || identical(threshold, "flexible")) {
-        return(diag(length(model$Alpha)))
-    }
+    # `makeThresholds()` returns the identity for `threshold = "flexible"`, so
+    # the flexible case needs no special handling. `threshold` is a `match.arg()`
+    # formal of `clmm2()` and is always populated.
     fun <- get("makeThresholds", asNamespace("ordinal"))
-    fun(model$lev, threshold)$tJac
+    fun(model$lev, model$threshold)$tJac
 }
 
 
