@@ -122,6 +122,7 @@ sanity_model_supported_class <- function(model, custom = TRUE) {
             "phyloglm",
             c("plm", "panelmodel"),
             "polr",
+            "promodel",
             "stpm2",
             "gsm",
             "pstpm2",

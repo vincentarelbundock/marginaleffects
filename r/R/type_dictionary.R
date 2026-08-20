@@ -165,6 +165,14 @@ ordinal_weightit,link
 ordinal_weightit,lp
 ordinal_weightit,mean
 polr,probs
+promodel,mean
+promodel,variance
+promodel,quantile
+promodel,probability
+promodel,density
+promodel,loglikelihood
+promodel,kurtosis
+promodel,skewness
 rendo.base,response
 rendo.base,link
 rlm,response

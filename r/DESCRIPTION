@@ -319,6 +319,7 @@ Collate:
     'methods_systemfit.R'
     'methods_tidymodels.R'
     'methods_tobit1.R'
+    'methods_topmodels.R'
     'modelarchive.R'
     'multcomp.R'
     'myTryCatch.R'

@@ -303,6 +303,9 @@ get_predict(model, newdata, type = NULL, ...)
 
 ## S3 method for class 'tobit1'
 get_predict(model, newdata = get_modeldata(model), type = "response", ...)
+
+## S3 method for class 'promodel'
+get_predict(model, newdata = NULL, type = "mean", ...)
 </code></pre>
 
 

@@ -88,6 +88,9 @@ get_vcov(model, vcov, type = NULL, ...)
 
 ## S3 method for class 'workflow'
 get_vcov(model, vcov, type = NULL, ...)
+
+## S3 method for class 'promodel'
+get_vcov(model, ...)
 </code></pre>
 
 
