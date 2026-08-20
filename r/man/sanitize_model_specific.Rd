@@ -25,6 +25,7 @@
 \alias{sanitize_model_specific.Learner}
 \alias{sanitize_model_specific.mmrm}
 \alias{sanitize_model_specific.clm}
+\alias{sanitize_model_specific.clmm2}
 \alias{sanitize_model_specific.plm}
 \alias{sanitize_model_specific.rqs}
 \alias{sanitize_model_specific.rms}
@@ -80,6 +81,8 @@ sanitize_model_specific(model, ...)
 \method{sanitize_model_specific}{mmrm}(model, ...)
 
 \method{sanitize_model_specific}{clm}(model, ...)
+
+\method{sanitize_model_specific}{clmm2}(model, ...)
 
 \method{sanitize_model_specific}{plm}(model, ...)
 

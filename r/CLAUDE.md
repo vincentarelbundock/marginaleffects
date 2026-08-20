@@ -3,6 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 NEVER CHANGE TESTS UNLESS I ASK YOU TO EXPLICITLY.
+Always use `pkgload::load_all()` never `library()`. This lets you use the new version.
 
 ## Overview
 

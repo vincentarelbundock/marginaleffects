@@ -148,3 +148,125 @@ mfx4 <- slopes(mod, variables = "hp", slope = "dyex")
 expect_equivalent(mfx2$estimate, mfx1$estimate * (mfx1$hp / p$estimate))
 expect_equivalent(mfx3$estimate, mfx1$estimate / p$estimate)
 expect_equivalent(mfx4$estimate, mfx1$estimate * mfx1$hp)
+
+
+# clmm2: Basic tests with binomial mixed model
+requiet("lme4")
+cbpp2 <- rbind(lme4::cbpp[,-(2:3)], lme4::cbpp[,-(2:3)])
+cbpp2 <- within(cbpp2, {
+    incidence <- as.factor(rep(0:1, each = nrow(lme4::cbpp)))
+    freq <- with(lme4::cbpp, c(incidence, size - incidence))
+})
+mod_clmm2 <- clmm2(incidence ~ period, random = herd, weights = freq, data = cbpp2, Hess = 1)
+
+# Test basic functionality
+expect_predictions(mod_clmm2)
+expect_comparisons(mod_clmm2)
+expect_slopes(mod_clmm2)
+
+# Test that predictions return reasonable values
+pred <- predictions(mod_clmm2)
+expect_true(all(pred$estimate >= 0 & pred$estimate <= 1))
+expect_true(all(!is.na(pred$estimate)))
+expect_true(all(!is.na(pred$std.error)))
+
+# Test avg_predictions
+avg_pred <- avg_predictions(mod_clmm2)
+expect_inherits(avg_pred, "predictions")
+
+# Test avg_comparisons
+avg_comp <- avg_comparisons(mod_clmm2)
+expect_inherits(avg_comp, "comparisons")
+
+
+# clmm2: Soup data with symmetric threshold (tests set_coef fix)
+dat_soup <- get_dataset("soup", "ordinal")
+dat_soup <- subset(dat_soup, as.numeric(dat_soup$RESP) <= 24)
+# Ensure variables are factors
+dat_soup$SURENESS <- factor(dat_soup$SURENESS, ordered = TRUE)
+dat_soup$RESP <- factor(dat_soup$RESP)
+dat_soup$RESP <- dat_soup$RESP[drop = TRUE]  # Drop unused levels
+dat_soup$PROD <- factor(dat_soup$PROD)  # Ensure PROD is a factor
+mod_soup <- clmm2(SURENESS ~ PROD, random = RESP, data = dat_soup,
+                  link = "probit", Hess = TRUE, method = "ucminf",
+                  threshold = "symmetric")
+
+# Test that set_coef properly updates Theta from Alpha
+expect_predictions(mod_soup)
+expect_comparisons(mod_soup)
+expect_slopes(mod_soup)
+
+# Test predictions
+pred_soup <- predictions(mod_soup)
+expect_true(all(pred_soup$estimate >= 0 & pred_soup$estimate <= 1))
+expect_true(all(!is.na(pred_soup$estimate)))
+expect_true(all(!is.na(pred_soup$std.error)))
+
+# Test avg_predictions by group
+avg_pred_soup <- avg_predictions(mod_soup, by = "PROD")
+expect_inherits(avg_pred_soup, "predictions")
+expect_true(nrow(avg_pred_soup) == 2)  # Two levels of PROD
+
+# Test avg_slopes
+avg_slopes_soup <- avg_slopes(mod_soup)
+expect_inherits(avg_slopes_soup, "slopes")
+expect_true(nrow(avg_slopes_soup) == 1)  # One term (PROD)
+
+# Test hypotheses
+hyp_soup <- hypotheses(mod_soup)
+expect_inherits(hyp_soup, "hypotheses")
+expect_true(nrow(hyp_soup) == 4)  # 3 threshold params + 1 beta
+
+# Test different quadrature methods (with Hess=TRUE for vcov)
+mod_soup_agq <- update(mod_soup, Hess = TRUE, nAGQ = 3)
+pred_agq <- predictions(mod_soup_agq)
+expect_inherits(pred_agq, "predictions")
+expect_true(all(!is.na(pred_agq$estimate)))
+
+
+# clmm2: `set_coef()` must update `Theta`, not just `Alpha`.
+# `predict.clm2()` reads `Theta`. When `threshold != "flexible"` the two differ,
+# so writing `Alpha` alone froze the thresholds and zeroed out their columns of
+# the Jacobian: standard errors were missing for rows where every other
+# regressor was also zero, and too small everywhere else. Issue #1610.
+for (th in c("flexible", "symmetric", "equidistant")) {
+    m <- clmm2(SURENESS ~ PROD, random = RESP, data = dat_soup,
+               link = "probit", Hess = TRUE, threshold = th)
+    b <- get_coef(m)
+    # perturbing any threshold parameter must move the predictions
+    for (i in seq_along(m$Alpha)) {
+        bb <- b
+        bb[i] <- bb[i] + 0.1
+        p0 <- get_predict(m, newdata = dat_soup, type = "response")$estimate
+        p1 <- get_predict(set_coef(m, bb), newdata = dat_soup, type = "response")$estimate
+        expect_true(max(abs(p1 - p0)) > 1e-6)
+    }
+    p <- predictions(m)
+    expect_true(all(!is.na(p$std.error)))
+    # delta-method standard errors agree with a parametric simulation
+    set.seed(1024)
+    D <- MASS::mvrnorm(500, mu = b, Sigma = get_vcov(m))
+    sim <- apply(D, 1, function(x) {
+        mean(get_predict(set_coef(m, x), newdata = dat_soup, type = "response")$estimate)
+    })
+    expect_equivalent(avg_predictions(m)$std.error, sd(sim), tolerance = 0.1)
+}
+
+
+# clmm2: links which estimate `lambda` report it in `get_coef()` and
+# `get_vcov()`. `insight::get_varcov()` drops it, which left the coefficient
+# vector and the variance matrix misaligned.
+mod_ao <- clmm2(SURENESS ~ PROD, random = RESP, data = dat_soup,
+                link = "Aranda-Ordaz", Hess = TRUE)
+expect_true("lambda" %in% names(get_coef(mod_ao)))
+expect_equivalent(names(get_coef(mod_ao)), colnames(get_vcov(mod_ao)))
+expect_true(all(!is.na(predictions(mod_ao)$std.error)))
+
+
+# clmm2: `scale` and `nominal` components duplicate the names reported by
+# `vcov()`, so the variance matrix cannot be aligned with the coefficients.
+# Reject them instead of returning wrong standard errors.
+mod_scale <- clmm2(SURENESS ~ PROD, scale = ~PROD, random = RESP,
+                   data = dat_soup,
+                   link = "probit", Hess = TRUE)
+expect_error(predictions(mod_scale), pattern = "scale")
