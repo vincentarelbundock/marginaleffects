@@ -2,78 +2,42 @@
 
 Breaking change:
 
-* The default contrast for numeric variables is now "forward", from `x` to
-  `x + 1`, matching the R package. Earlier versions centered the contrast on
-  `x`, comparing predictions at `x - 0.5` and `x + 0.5`, so results for the
-  default `+1` contrast (and any explicit numeric `value`) change for
-  nonlinear models. Slopes, elasticities, and the `"sd"` shortcuts keep their
-  centered steps, exactly as in R. Cross-language results for the default
-  comparison now agree to machine precision.
-* The default `eps` step for slopes and elasticities now follows R exactly:
-  when `eps` is not supplied, each variable uses `1e-4` times the finite
-  range of that variable in the original data (falling back to `1e-4` for a
-  degenerate range), instead of a flat `1e-4` for every variable. This was
-  already what the documentation promised. Slope and elasticity estimates
-  shift slightly for variables whose range is far from 1, and now match R to
-  machine precision. As in R, the step for derivative estimands is always
-  the per-variable `eps`; custom comparison functions requesting `eps`
-  receive the variable's own step, or `None` for non-numeric variables.
+* Numeric variables now use forward contrasts from `x` to `x + 1`, matching R.
+  This changes default and explicit numeric contrasts in nonlinear models.
+  Slopes, elasticities, and `"sd"` shortcuts remain centered.
+* The default `eps` for slopes and elasticities now matches R: `1e-4` times
+  each variable's finite range, or `1e-4` for a degenerate range. Custom
+  comparison functions receive the variable-specific step, or `None` for
+  non-numeric variables.
 
 New:
 
-* `by` accepts a data frame of group labels, matching the R package. The frame
-  must hold a `by` column of labels plus one or more columns matched against the
-  estimates, which lets several combinations of predictor values collapse into a
-  single aggregate row. Estimates the label table does not cover are dropped
-  with a warning.
-* `vcov=vcovUnconditional()` requests EXPERIMENTAL influence-function standard
-  errors for averaged or aggregated effects. These account for sampling
-  variation in the empirical distribution of the covariates on top of
-  coefficient uncertainty, and support `type="HC0"`/`"HC1"` and one-way
-  clustering. Available for statsmodels linear and generalized linear models;
-  other model families and unit-level effects are rejected rather than
-  silently approximated.
+* `by` accepts a data frame containing a `by` label and columns matched to the
+  estimates. Unmatched estimates are dropped with a warning.
+* Experimental `vcov=vcovUnconditional()` standard errors account for
+  coefficient uncertainty and sampling variation in the covariate distribution.
+  HC0, HC1, and one-way clustering are supported for averaged or aggregated
+  statsmodels linear and generalized linear models.
 
 Bug fixes:
 
-* `predictions()`, `comparisons()`, and `slopes()` no longer fail with
-  `TypeError: 'module' object is not callable` when `datagrid()` is called
-  first in a session. `datagrid()` imported the `sanitize_model` submodule
-  by its full path, which binds the module onto the `sanitize` package and
-  permanently shadows the lazily exported function of the same name. The
-  submodule is now named after the noun it sanitizes (`sanitize.model`),
-  like every one of its siblings, so the collision cannot recur.
-* An affine `hypothesis` string -- linear in the estimates plus a constant,
-  such as `"b0 = 5"` or `"b0 + 1e8 = 0"` -- is now compiled to an exact
-  contrast matrix with an offset, and its derivative is the matrix alone.
-  Previously the constant was differentiated numerically with the rest of the
-  map, and a constant large relative to the estimates cancelled the probe
-  step catastrophically: `"b0 + 1e16 = 0"` reported a standard error of
-  exactly zero with full confidence. This matches the same fix in the R
-  package.
-* Slope-family comparisons are now recognized by family rather than by a
-  fixed list of names, which the `*avgwts` rewrites and `expdydx` fell
-  outside of. Weighted average slopes were labelled with the raw eps step
-  (`+0.0001`) instead of `dY/dX`, and `expdydx` silently fell back to a `+1`
-  contrast step instead of the eps step, producing wildly wrong estimates.
+* Calling `datagrid()` first in a session no longer causes `predictions()`,
+  `comparisons()`, or `slopes()` to fail with a module/function name collision.
+* Affine `hypothesis` strings now use exact derivatives, preventing large
+  constants from producing incorrect zero standard errors. This matches R.
+* Weighted average slopes now have the correct `dY/dX` labels, and `expdydx`
+  uses the `eps` step instead of a `+1` contrast.
 * `avg_comparisons(comparison="expdydx")` crashed with recent NumPy/Polars
   because the `expdydxavg` estimand called `np.mean()` on a Polars Series.
-* Delta-method variances that come out as tiny negative numbers -- floating
-  point noise from the quadratic form -- are now clamped to zero instead of
-  producing NaN standard errors, matching the R package. A standard error of
-  exactly zero is preserved: a constant estimand has variance exactly zero,
-  and its undefined test statistic surfaces downstream as its own signal.
+* Tiny negative delta-method variances caused by floating-point noise are now
+  clamped to zero. Exact zero standard errors remain zero, matching R.
 * `comparisons()` and `avg_comparisons()` now aggregate row-level comparisons
   within `by` groups. A custom callable `comparison` combined with `by`
   previously returned one row per observation instead of one row per group.
-* Weighted aggregation follows the R missing-value rules: a missing estimate
-  zeroes both itself and its weight, a zero weight blanks the estimate it
-  multiplies so `0 * Inf` cannot poison a group, and a missing weight
-  propagates instead of silently dropping the row it belongs to.
-* `avg_predictions(wts=...)` and other grand-mean aggregations now respect the
-  weights column. Previously `by=True` computed an unweighted mean and recorded
-  no weights in the aggregation plan, so both the estimate and its standard
-  error described the unweighted estimand.
+* Weighted aggregation now follows R's missing-value rules and avoids `0 * Inf`
+  contaminating a group.
+* `avg_predictions(wts=...)` and other grand-mean aggregations now use the
+  weights column for both estimates and standard errors.
 * The analytic path no longer converts a standard error of
   exactly zero to `NaN`; a constant estimand has variance zero, matching the
   numerical path.
