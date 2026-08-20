@@ -11,7 +11,9 @@ def _wrap_comparison_function(fn):
     sig = inspect.signature(fn)
     params = list(sig.parameters.keys())
     full_params = ["hi", "lo", "eps", "x", "y", "w"]
+    uses_y = "y" in params
     if params == full_params:
+        fn._marginaleffects_uses_y = uses_y
         return fn
 
     def wrapper(hi, lo, eps, x, y, w):
@@ -20,12 +22,11 @@ def _wrap_comparison_function(fn):
         result = fn(**call_kwargs)
         if isinstance(result, (float, int, np.integer, np.floating)):
             return pl.Series([result])
-        elif isinstance(result, np.ndarray):
-            return pl.Series(result)
-        elif isinstance(result, list):
+        elif isinstance(result, (np.ndarray, list)):
             return pl.Series(result)
         return result
 
+    wrapper._marginaleffects_uses_y = uses_y
     return wrapper
 
 
@@ -35,13 +36,11 @@ def sanitize_comparison(comparison, by, wts=None):
         return (_wrap_comparison_function(comparison), "custom")
 
     out = comparison
-    if by is not False:
-        if f"{comparison}avg" in estimands.keys():
-            out = comparison + "avg"
+    if by is not False and f"{comparison}avg" in estimands:
+        out = comparison + "avg"
 
-    if wts is not None:
-        if f"{out}wts" in estimands.keys():
-            out = out + "wts"
+    if wts is not None and f"{out}wts" in estimands:
+        out = out + "wts"
 
     lab = {
         "difference": "{hi} - {lo}",
@@ -70,10 +69,13 @@ def sanitize_comparison(comparison, by, wts=None):
         "lnoravgwts": "ln(odds({hi}) / odds({lo}))",
         "lift": "lift",
         "liftavg": "liftavg",
+        "liftavgwts": "liftavg",
         "expdydx": "exp(dY/dX)",
+        "expdydxavg": "exp(dY/dX)",
+        "expdydxavgwts": "exp(dY/dX)",
     }
 
-    if out not in lab.keys():
+    if out not in lab:
         raise ValueError(f"`comparison` must be one of: {', '.join(list(lab.keys()))}.")
 
     return (out, lab[out])

@@ -1,5 +1,0 @@
-Configure or inspect JAX-based automatic differentiation.
-
-For more information, visit the website: https://marginaleffects.com/
-
-Or type: `help(autodiff)`

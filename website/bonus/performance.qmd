@@ -186,42 +186,57 @@ p <- avg_predictions(mod)
 toc()
 ```
 
-### Solution B: Automatic differentiation
+### Solution B: Analytic Jacobians
 
-For some models, `marginaleffects` can compute standard errors using [automatic differentiation (AD)](https://en.wikipedia.org/wiki/Automatic_differentiation). This is often much faster (and sometimes more accurate) than the default finite difference approach.
+For many models, `marginaleffects` computes standard errors from an exact
+closed-form Jacobian rather than by finite differences. This is both faster and
+more accurate: the default strategy calls `predict()` once per coefficient,
+whereas the analytic path evaluates a single matrix expression, and it carries
+no step-size error at all.
 
-
-To enable AD, we need to install the `marginaleffects` package for Python, and call it via the `reticulate` package. This sounds more complicated than it is. In most cases, all the user has to do is call the `autodiff()` function supplied by `marginaleffects`.
+This happens automatically whenever the model and the estimand are eligible; there
+is nothing to install and nothing to enable. The `jacobian_method` component
+reports which path actually produced the numbers.
 
 ```{r}
-#| eval: false
-install.packages("reticulate")
-library("marginaleffects")
-autodiff(install = TRUE)
+p <- avg_predictions(mod)
+components(p, "jacobian_method")
 ```
 
-After installing the dependencies, we can call `autodiff(TRUE)` to enable AD for the current R session, and we call the `microbenchmark` package to compare the performance of two similar calls. The AD approach is *much* faster in this example.
+Eligible models include `lm`, `glm`, `MASS::glm.nb()`, `MASS::rlm()`,
+`brglm2::brglmFit()`, `rms::ols()`, `rms::lrm()`, `quantreg::rq()`,
+`ivreg::ivreg()`, `geepack::geeglm()`, and `survey::svyglm()`, on both the link
+and response scales. Predictions, the built-in `comparison` functions, `by`
+groups, weights, and linear `hypothesis` arguments are all supported. Anything
+outside that set falls back to finite differences automatically.
+
+To see the difference the analytic path makes, disable it and compare:
 
 ```{r}
 #| warning: false
-automatic_differentiation <- function() {
-    autodiff(TRUE)
+analytic <- function() {
+    options(marginaleffects_analytic_jacobian = TRUE)
     avg_predictions(mod)
 }
 finite_differences <- function() {
-    autodiff(FALSE)
+    options(marginaleffects_analytic_jacobian = FALSE)
     avg_predictions(mod)
 }
 microbenchmark(
-    automatic_differentiation(),
+    analytic(),
     finite_differences(),
     times = 5
 )
 ```
 
+```{r}
+#| include: false
+options(marginaleffects_analytic_jacobian = TRUE)
+```
+
 ### Solution C: Parallel processing
 
-For models and calls that are not supported by automatic differentiation, another option is to compute standard errors in parallel. 
+For models and calls which are not eligible for the analytic path, another option is to compute standard errors in parallel. 
 
 Parallel processing does not always speed up `marginaleffects` much, because of the overhead involved in passing large datasets between different cores or forked processes. This strategy is more likely to be useful when:
 

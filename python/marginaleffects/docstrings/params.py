@@ -39,12 +39,16 @@ Specifies a hypothesis test or custom contrast.
 - See the Examples section and the vignette: https://marginaleffects.com/chapters/hypothesis.html"""
 
 PARAM_BY = """\
-#### `by`: (bool, List[str], optional)
+#### `by`: (bool, str, List[str], DataFrame, optional)
 
-A logical value or a list of column names in `newdata`.
+A logical value, one or more column names in `newdata`, or a data frame of group labels.
 
 - True: estimate is aggregated across the whole dataset.
-- list: estimates are aggregated for each unique combination of values in the columns."""
+- str or list: estimates are aggregated for each unique combination of values in the columns.
+- DataFrame: must hold a `by` column of labels plus one or more columns matched
+  against the estimates. Several combinations of predictor values can share a
+  label, which aggregates them into a single row. Estimates the label table does
+  not cover are excluded from the aggregation, with a warning."""
 
 PARAM_CONF_LEVEL = """\
 #### `conf_level`: (float, default=0.95)
@@ -92,7 +96,10 @@ Type of uncertainty estimates to report (e.g. for robust standard errors). Accep
 - False: Do not compute standard errors.
 - String: Literal indicating the kind of uncertainty estimates to return:
     - Heteroskedasticity-consistent: "HC0", "HC1", "HC2", "HC3".
-- np.ndarray: A custom square covariance matrix."""
+- np.ndarray: A custom square covariance matrix.
+- `vcovUnconditional()`: EXPERIMENTAL. Influence-function standard errors that
+  add sampling variation in the empirical distribution of the covariates to
+  coefficient uncertainty. Only available for averaged or aggregated effects."""
 
 PARAM_EQUIVALENCE = """\
 #### `equivalence`: (list, optional)

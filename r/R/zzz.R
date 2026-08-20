@@ -26,14 +26,4 @@
 
 .onLoad <- function(lib, pkg) {
     backports::import(pkg)
-    if (isNamespaceLoaded("reticulate")) {
-        py_require_marginaleffects()
-    } else {
-        setHook(packageEvent("reticulate", "onLoad"), py_require_marginaleffects)
-    }
-}
-
-py_require_marginaleffects <- function(...) {
-    reticulate::py_require("marginaleffects")
-    reticulate::py_require("jax")
 }

@@ -5,7 +5,7 @@ import polars as pl
 def prep(x):
     if isinstance(x, float):
         return pl.Series([x])
-    elif isinstance(x, np.ndarray) or isinstance(x, list):
+    elif isinstance(x, (np.ndarray, list)):
         return pl.Series(x)
     elif np.isscalar(x):
         return pl.Series([x])
@@ -63,11 +63,14 @@ estimands = {
     ),
     "lift": lambda hi, lo, eps, x, y, w: prep((hi - lo) / lo),
     "liftavg": lambda hi, lo, eps, x, y, w: prep((hi.mean() - lo.mean()) / lo.mean()),
+    "liftavgwts": lambda hi, lo, eps, x, y, w: prep(
+        ((hi * w).sum() - (lo * w).sum()) / (lo * w).sum()
+    ),
     "expdydx": lambda hi, lo, eps, x, y, w: prep(
         ((np.exp(hi) - np.exp(lo)) / np.exp(eps)) / eps
     ),
     "expdydxavg": lambda hi, lo, eps, x, y, w: prep(
-        np.mean(((hi.exp() - lo.exp()) / np.exp(eps)) / eps)
+        (((hi.exp() - lo.exp()) / np.exp(eps)) / eps).mean()
     ),
     "expdydxavgwts": lambda hi, lo, eps, x, y, w: prep(
         ((((np.exp(hi) - np.exp(lo)) / np.exp(eps)) / eps) * w).sum() / w.sum()

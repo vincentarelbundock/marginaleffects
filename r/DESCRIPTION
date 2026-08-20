@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.32.0.9995
+Version: 0.32.0.10001
 Authors@R:
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -50,6 +50,7 @@ Suggests:
     Amelia,
     afex,
     aod,
+    adrftools,
     arrow,
     bayestestR,
     bench,
@@ -158,7 +159,6 @@ Suggests:
     rcmdcheck,
     Rdatasets,
     remotes,
-    reticulate,
     rmarkdown,
     rms,
     robust,
@@ -206,8 +206,6 @@ Collate:
     'add_hypothesis.R'
     'add_rowid.R'
     'attributes.R'
-    'autodiff.R'
-    'autodiff_lower.R'
     'backtransform.R'
     'broom.R'
     'by.R'
@@ -260,6 +258,7 @@ Collate:
     'inferences_fwb.R'
     'inferences_rsample.R'
     'inferences_simulation.R'
+    'jacobian_stage.R'
     'matrix_apply.R'
     'mean_or_mode.R'
     'methods.R'
@@ -359,6 +358,8 @@ Collate:
     'type_dictionary.R'
     'unpack_matrix_cols.R'
     'utils.R'
+    'vcov_unconditional.R'
+    'vcov_unconditional_sanitization.R'
     'zzz.R'
 Language: en-US
 VignetteBuilder: knitr, quarto

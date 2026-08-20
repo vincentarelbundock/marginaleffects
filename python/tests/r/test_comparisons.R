@@ -1,6 +1,9 @@
 source(here::here("tests/r/load.R"))
 
-Guerry <- fread("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")
+# Use the same vendored data as the Python tests (tests/helpers.py), with the
+# same missing-value rules: polars treats the empty Region of Corse as null,
+# so fread must too, or the two sides disagree by one row.
+Guerry <- fread(here("tests/data/Guerry.csv"), na.strings = c("NA", ""))
 Guerry <- na.omit(Guerry)
 
 Guerry$Bool <- Guerry$Area > median(Guerry$Area)

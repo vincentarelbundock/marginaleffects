@@ -5,7 +5,6 @@ import narwhals as nw
 import numpy as np
 from narwhals.typing import IntoFrame
 
-
 __all__ = ["listwise_deletion", "model_matrices"]
 
 

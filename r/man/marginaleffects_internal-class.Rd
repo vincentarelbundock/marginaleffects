@@ -27,6 +27,10 @@ functions to simplify the function signatures and reduce redundant argument pass
 
 \item{\code{jacobian}}{The jacobian matrix or NULL}
 
+\item{\code{jacobian_method}}{String naming the differentiation path which produced
+the jacobian: "analytic", "analytic+numeric_stage", "numeric", "custom",
+or NULL}
+
 \item{\code{model}}{The fitted model object}
 
 \item{\code{modeldata}}{The model data frame}

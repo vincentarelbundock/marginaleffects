@@ -53,7 +53,7 @@ def test_prediction_build_plan_replays_grouped_weighted_matrix_hypothesis():
     )
     hypothesis = np.eye(newdata["Region"].n_unique())[:, :2]
 
-    out, plan = _predictions_build(
+    out, plan, _by = _predictions_build(
         model=model,
         exog=exog,
         newdata=newdata,
@@ -75,7 +75,7 @@ def test_prediction_plan_replay_matches_full_pipeline_after_perturbation():
     mod = smf.ols("mpg ~ hp + cyl", dat.to_pandas()).fit()
     model, by, newdata, exog = _prepared(mod, by="cyl")
 
-    _out, plan = _predictions_build(
+    _out, plan, _by = _predictions_build(
         model=model,
         exog=exog,
         newdata=newdata,

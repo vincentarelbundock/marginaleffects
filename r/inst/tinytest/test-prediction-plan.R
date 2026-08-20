@@ -58,14 +58,23 @@ linear_forms <- list(
     ~helmert,
     difference ~ pairwise | segment
 )
+# The centering shortcuts compile to a structured pullback rather than a
+# matrix: their operators are dense in every entry, so materializing them is
+# O(n^2) memory for a rank-one update.
+pullback_forms <- c("meandev", "meanotherdev")
 for (hypothesis in linear_forms) {
     form <- marginaleffects:::hypothesis_compile(
         hypothesis,
         cmp_skeleton,
         newdata = cmp_skeleton
     )
-    expect_equal(form$hyp$kind, "matrix")
-    expect_inherits(form$hyp$H, "sparseMatrix")
+    if (as.character(hypothesis)[2] %in% pullback_forms) {
+        expect_equal(form$hyp$kind, "formula")
+        expect_true(is.function(form$hyp$pullback))
+    } else {
+        expect_equal(form$hyp$kind, "matrix")
+        expect_inherits(form$hyp$H, "sparseMatrix")
+    }
     expected <- marginaleffects:::hypothesis_formula(
         data.table::copy(cmp_skeleton),
         hypothesis = hypothesis,
@@ -143,6 +152,10 @@ expect_equivalent(
     )$estimate
 )
 
+# A custom formula function stays a closure even when it happens to be
+# linear: probing cannot prove linearity of arbitrary code, so promotion is
+# reserved for syntax the package itself compiled. The composed Jacobian
+# still differentiates the closure exactly at the estimate.
 custom_formula_fun <- function(x) c(first = x[1], total = sum(x))
 form <- marginaleffects:::hypothesis_compile(~ I(custom_formula_fun(x)) | segment, cmp_skeleton, newdata = cmp_skeleton)
 expect_equal(form$hyp$kind, "formula")

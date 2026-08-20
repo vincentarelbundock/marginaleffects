@@ -1,6 +1,5 @@
 from importlib import import_module
 
-
 _EXPORTS = {
     "ModelStatsmodels": ("marginaleffects.statsmodels.model", "ModelStatsmodels"),
     "fit_statsmodels": ("marginaleffects.statsmodels.model", "fit_statsmodels"),

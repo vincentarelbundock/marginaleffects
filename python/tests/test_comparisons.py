@@ -270,9 +270,11 @@ def test_issue82_cross():
     mtcars = get_dataset("mtcars", "datasets").to_pandas()
     mod = smf.ols("mpg ~ am * hp", data=mtcars).fit()
     cmp = avg_comparisons(mod, variables=["am", "hp"], cross=True)
+    # Reference value from R avg_comparisons(mod, variables = c("am", "hp"),
+    # cross = TRUE); the forward `+1` contrast matches R's default.
     np.testing.assert_almost_equal(
         cmp["estimate"].to_numpy(),
-        np.array([5.21781687]),
+        np.array([5.21801831414]),
     )
     assert cmp.height == 1
     cmp = comparisons(mod, variables=["am", "hp"], cross=True)
@@ -415,3 +417,26 @@ def test_callable_comparison_flexible_signature():
     assert cmp_pairwise["contrast"].to_list() == expected_pairwise
 
     assert set(cmp_pairwise["contrast"]) < set(cmp_all["contrast"])
+
+
+def test_slope_family_recognized_across_variants():
+    """Slope-family comparisons must keep their eps step and label through the
+    `*avg`/`*avgwts` rewrites, and `expdydx` must use the eps step rather than
+    falling back to a `+1` contrast. Reference values from R marginaleffects.
+    """
+    pois = smf.glm(
+        "carb ~ mpg + wt", data=mtcars.to_pandas(), family=sm.families.Poisson()
+    ).fit()
+
+    weighted = avg_slopes(pois, variables="mpg", wts="wt")
+    assert weighted["contrast"][0] == "dY/dX"
+    np.testing.assert_allclose(
+        weighted["estimate"].to_numpy(), [-0.257935869160], rtol=1e-5
+    )
+
+    # Python now uses R's per-variable eps (1e-4 times the finite range), so
+    # the eps-sensitive expdydx estimand matches R tightly. The regression
+    # this guards produced 18155 instead of roughly -7.3.
+    exp = avg_comparisons(pois, variables="mpg", comparison="expdydx")
+    assert exp["contrast"][0] == "exp(dY/dX)"
+    np.testing.assert_allclose(exp["estimate"].to_numpy(), [-7.275478782587], rtol=1e-6)

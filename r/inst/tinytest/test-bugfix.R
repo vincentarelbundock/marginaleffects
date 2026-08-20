@@ -202,3 +202,285 @@ options(marginaleffects_rank_deficient = TRUE)
 expect_warning(avg_comparisons(mod, vcov = FALSE), pattern = "order of factor levels")
 options(marginaleffects_rank_deficient = TRUE)
 options(marginaleffects_safe = FALSE)
+
+
+# ---------------------------------------------------------------------------
+# External review 2026-08: uncertainty machinery on the analytic Jacobian path
+# ---------------------------------------------------------------------------
+
+# Mixed-scale predictions: the comparison-stage derivative must stay exact
+# when predictions span many orders of magnitude. A shared probe step scaled
+# to the largest prediction used to overstep the smallest ones and corrupt
+# ratio-type standard errors by orders of magnitude, silently.
+set.seed(7)
+n_span <- 300
+dat_span <- data.frame(x = runif(n_span, -7, 7), z = rbinom(n_span, 1, 0.5))
+dat_span$y <- rpois(n_span, exp(0.5 + 0.95 * dat_span$x + 0.3 * dat_span$z))
+mod_span <- glm(y ~ x + z, data = dat_span, family = poisson)
+for (cmp_fun in c("ratio", "lift", "lnratio")) {
+    old <- options(marginaleffects_analytic_jacobian = TRUE)
+    a <- comparisons(mod_span, variables = "z", comparison = cmp_fun)
+    options(marginaleffects_analytic_jacobian = FALSE)
+    b <- comparisons(mod_span, variables = "z", comparison = cmp_fun)
+    options(old)
+    expect_equal(components(a, "jacobian_method"), "analytic", info = cmp_fun)
+    expect_equal(a$std.error, b$std.error, tolerance = 1e-5, info = cmp_fun)
+}
+
+# A custom comparison closure must fall back to the numeric path: probing
+# arbitrary code cannot prove the structure the composition would rely on.
+old <- options(marginaleffects_analytic_jacobian = TRUE)
+cmp_custom <- comparisons(
+    mod_span,
+    variables = "z",
+    comparison = function(hi, lo) hi - lo
+)
+options(old)
+expect_equal(components(cmp_custom, "jacobian_method"), "numeric")
+
+# User-supplied vcov matrices with permuted names are aligned everywhere:
+# reported standard errors, the vcov() extractor, and stored slots.
+mod_perm <- lm(mpg ~ hp + wt, data = mtcars)
+V_perm <- vcov(mod_perm)
+V_perm <- V_perm[rev(rownames(V_perm)), rev(colnames(V_perm))]
+cmp_named <- comparisons(mod_perm, variables = c("hp", "wt"), newdata = "mean")
+cmp_permuted <- comparisons(
+    mod_perm,
+    variables = c("hp", "wt"),
+    newdata = "mean",
+    vcov = V_perm
+)
+expect_equivalent(cmp_named$std.error, cmp_permuted$std.error)
+expect_equivalent(diag(vcov(cmp_named)), diag(vcov(cmp_permuted)))
+V_bad <- vcov(mod_perm)
+dimnames(V_bad) <- list(c("a", "b", "c"), c("a", "b", "c"))
+expect_error(
+    comparisons(mod_perm, variables = "hp", newdata = "mean", vcov = V_bad),
+    pattern = "names do not match"
+)
+
+# Simulation-based Wald tests subtract the stored null hypothesis value and
+# never a hard-coded zero.
+set.seed(1)
+sim_got <- inferences(
+    hypotheses(
+        avg_comparisons(mod_perm, variables = "hp", comparison = "ratio"),
+        hypothesis = "b1 = 1"
+    ),
+    method = "simulation",
+    R = 200,
+    conf_type = "wald"
+)
+sim_stored_null <- components(sim_got, "hypothesis_null")
+if (!isTRUE(checkmate::check_number(sim_stored_null))) {
+    sim_stored_null <- 0
+}
+expect_equivalent(
+    sim_got$statistic,
+    (sim_got$estimate - sim_stored_null) / sim_got$std.error
+)
+# A scalar numeric `hypothesis` stores a nonzero null; the simulation
+# statistic must subtract it, not test against zero.
+set.seed(1)
+sim_null1 <- inferences(
+    avg_comparisons(mod_perm, variables = "hp", comparison = "ratio", hypothesis = 1),
+    method = "simulation",
+    R = 200,
+    conf_type = "wald"
+)
+expect_equivalent(
+    sim_null1$statistic,
+    (sim_null1$estimate - 1) / sim_null1$std.error
+)
+
+# A constant estimand has variance exactly zero, not NA.
+cmp_zero <- comparisons(
+    mod_perm,
+    variables = c("hp", "wt"),
+    newdata = "mean",
+    hypothesis = matrix(c(0, 0), ncol = 1)
+)
+expect_equivalent(cmp_zero$std.error, 0)
+
+# Stata's vce(robust) is HC1.
+expect_equivalent(
+    marginaleffects:::get_vcov(mod_perm, vcov = "stata"),
+    sandwich::vcovHC(mod_perm, type = "HC1")
+)
+
+# Formula offsets are detected for models which store no $offset component.
+if (requireNamespace("quantreg", quietly = TRUE)) {
+    mod_rq_offset <- quantreg::rq(mpg ~ hp + offset(wt), data = mtcars, tau = 0.5)
+    expect_true(marginaleffects:::model_has_effective_offset(mod_rq_offset))
+    mod_rq_plain <- quantreg::rq(mpg ~ hp, data = mtcars, tau = 0.5)
+    expect_false(marginaleffects:::model_has_effective_offset(mod_rq_plain))
+}
+
+# Richardson accepts its real `side` argument.
+expect_silent(
+    comparisons(
+        mod_perm,
+        variables = "hp",
+        newdata = "mean",
+        numderiv = list("richardson", side = 1)
+    )
+)
+
+# A joint-test name matching zero or several estimates errors instead of
+# silently building a wrong restriction row. (These labels match nothing:
+# the comparison names carry contrast suffixes.)
+cmp_joint <- comparisons(mod_perm, variables = c("hp", "wt"), newdata = "mean")
+expect_error(
+    hypotheses(cmp_joint, joint = c("hp", "hp")),
+    pattern = "exactly one"
+)
+
+
+# Issue #1748: `stats::predict()` fails when `qr$qr` is deleted from the fit to
+# save memory. Linear predictions do not need a QR decomposition, so the model
+# matrix path produces the same estimates.
+options(marginaleffects_rank_deficient = TRUE)
+dat <- mtcars
+dat$hp2 <- dat$hp + 2
+mod <- lm(mpg ~ hp + hp2, data = dat)
+stripped <- mod
+stripped$qr$qr <- NULL
+for (FUN in list(avg_predictions, avg_comparisons, avg_slopes)) {
+    known <- suppressWarnings(FUN(mod, vcov = FALSE))
+    unknown <- suppressWarnings(FUN(stripped, vcov = FALSE))
+    expect_equivalent(known$estimate, unknown$estimate)
+}
+
+mod <- glm(am ~ hp + hp2, data = dat, family = binomial())
+stripped <- mod
+stripped$qr$qr <- NULL
+for (ty in c("response", "link")) {
+    known <- suppressWarnings(avg_predictions(mod, type = ty, vcov = FALSE))
+    unknown <- suppressWarnings(avg_predictions(stripped, type = ty, vcov = FALSE))
+    expect_equivalent(known$estimate, unknown$estimate)
+}
+known <- suppressWarnings(avg_comparisons(mod, vcov = FALSE))
+unknown <- suppressWarnings(avg_comparisons(stripped, vcov = FALSE))
+expect_equivalent(known$estimate, unknown$estimate)
+
+# unrelated `predict()` failures still report their own cause
+expect_error(
+    predictions(mod, newdata = data.frame(zzz = 1)),
+    pattern = "object 'hp' not found"
+)
+options(marginaleffects_rank_deficient = TRUE)
+
+# get_coef() must label the precision parameter the way get_vcov() does, so a
+# user-supplied variance-covariance matrix is accepted. betareg names the lone
+# precision coefficient "(phi)" when the model has no precision formula, and
+# prefixing it again produced "(phi)_(phi)".
+requiet("betareg")
+data("GasolineYield", package = "betareg")
+mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
+expect_equal(names(get_coef(mod)), colnames(get_vcov(mod)))
+expect_inherits(
+    avg_slopes(mod, variables = "temp", vcov = stats::vcov(mod)),
+    "slopes"
+)
+# a precision formula gives the precision coefficients ordinary names, and
+# those must still be prefixed
+mod <- betareg::betareg(yield ~ batch + temp | temp, data = GasolineYield)
+expect_equal(names(get_coef(mod)), colnames(get_vcov(mod)))
+
+
+# Zero or missing weights poisoned the redundant re-aggregation of comparison
+# estimates the `*avgwts` functions had already collapsed: each (term,
+# contrast) group survived as a single row carrying the stale unit-level
+# weight of its first source row, and re-averaging that lone row by a zero
+# weight is 0/0 = NaN. Zero weights are routine (ATT/matching), and the
+# failure depended on which row happened to sort first.
+set.seed(1024)
+n <- 40
+dat <- data.frame(
+    x = rnorm(n),
+    f = factor(rep(c("u", "v"), n / 2))
+)
+dat$y <- rbinom(n, 1, plogis(dat$x))
+dat$w <- c(0, runif(n - 1, .5, 1)) # zero weight on the first row
+mod <- glm(y ~ x + f, family = binomial, data = dat)
+cmp <- avg_comparisons(mod, wts = dat$w)
+expect_false(anyNA(cmp$estimate))
+expect_false(anyNA(cmp$std.error))
+# the aggregate must equal the weighted mean of the unit-level comparisons
+uni <- comparisons(mod, wts = dat$w)
+for (i in seq_len(nrow(cmp))) {
+    idx <- uni$term == cmp$term[i] & uni$contrast == cmp$contrast[i]
+    expect_equivalent(
+        cmp$estimate[i],
+        stats::weighted.mean(uni$estimate[idx], dat$w[uni$rowid][idx])
+    )
+}
+
+
+# An affine hypothesis -- linear plus a constant -- was not promoted to an
+# exact contrast matrix, so its derivative came from a finite-difference probe
+# through the hypothesis arithmetic. A large additive constant cancels the
+# probe catastrophically: "b1 + 1e16 = 0" reported SE = 0 with full
+# confidence. The derivative of an affine map does not depend on the
+# constant, so the SE must equal the unhypothesized one exactly.
+mod <- lm(mpg ~ hp + wt, mtcars)
+for (analytic in c(TRUE, FALSE)) {
+    options(marginaleffects_analytic_jacobian = analytic)
+    base <- predictions(mod, newdata = "mean")
+    aff <- predictions(mod, newdata = "mean", hypothesis = "b1 + 1e16 = 0")
+    expect_equivalent(aff$estimate, base$estimate + 1e16)
+    expect_equivalent(aff$std.error, base$std.error, tolerance = 1e-10)
+    aff2 <- predictions(mod, newdata = "mean", hypothesis = "b1 + 1e8 = 0")
+    expect_equivalent(aff2$std.error, base$std.error, tolerance = 1e-10)
+    # nonzero right-hand side is the same affine map
+    aff3 <- predictions(mod, newdata = "mean", hypothesis = "b1 = 5")
+    expect_equivalent(aff3$estimate, base$estimate - 5)
+    expect_equivalent(aff3$std.error, base$std.error, tolerance = 1e-10)
+}
+options(marginaleffects_analytic_jacobian = TRUE)
+
+
+# Policy: a genuine singleton group whose only member has zero weight is an
+# undefined weighted mean and must stay NaN. Only rows the comparison stage
+# already collapsed carry a group-total weight into further aggregation.
+d0 <- data.frame(y = c(1, 2), x = c(0, 1), g = c("a", "b"), w = c(0, 1))
+m0 <- lm(y ~ x, d0)
+p0 <- avg_predictions(m0, newdata = d0, by = "g", wts = "w", vcov = FALSE)
+expect_true(is.nan(p0$estimate[p0$g == "a"]))
+expect_equivalent(p0$estimate[p0$g == "b"], 2)
+
+
+# The centering hypothesis shortcuts must not materialize their dense n x n
+# operators; their structured pullback must equal the dense algebra exactly,
+# and end-to-end standard errors must agree with the numeric path.
+set.seed(11)
+J <- matrix(rnorm(21), nrow = 7)
+groups <- list(1:3, 4:7)
+dense_block <- function(shortcut, n) {
+    if (shortcut == "meandev") {
+        diag(n) - matrix(1 / n, n, n)
+    } else {
+        H <- diag(n) - matrix(1 / (n - 1), n, n)
+        diag(H) <- 1
+        H
+    }
+}
+for (shortcut in c("meandev", "meanotherdev")) {
+    pb <- marginaleffects:::hypothesis_formula_pullback(shortcut, groups)
+    expected <- rbind(
+        t(dense_block(shortcut, 3)) %*% J[1:3, , drop = FALSE],
+        t(dense_block(shortcut, 4)) %*% J[4:7, , drop = FALSE]
+    )
+    expect_equivalent(pb(J), expected)
+}
+dat <- transform(mtcars, cyl = factor(cyl))
+mod <- glm(am ~ mpg + cyl, family = binomial, data = dat)
+for (shortcut in list(~meandev, ~meanotherdev)) {
+    a <- avg_predictions(mod, by = "cyl", hypothesis = shortcut)
+    expect_equal(components(a, "jacobian_method"), "analytic")
+    options(marginaleffects_analytic_jacobian = FALSE)
+    b <- avg_predictions(mod, by = "cyl", hypothesis = shortcut)
+    options(marginaleffects_analytic_jacobian = TRUE)
+    expect_equivalent(a$estimate, b$estimate)
+    expect_equivalent(a$std.error, b$std.error, tolerance = 1e-6)
+}

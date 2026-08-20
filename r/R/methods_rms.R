@@ -124,114 +124,28 @@ get_model_matrix.lrm <- get_model_matrix.ols
 
 #' @noRd
 #' @export
-get_jacobian_analytic.ols <- function(model, type, ...) {
-    if (
-        !identical(class(model)[1], "ols") ||
-            !identical(type, "lp")
-    ) {
-        return(NULL)
-    }
-    jacobian_analytic_model_matrix(
-        model = model,
-        type = type,
-        response_scale = FALSE,
-        ...
-    )
+get_prediction_jacobian_spec.ols <- function(model, type, ...) {
+    prediction_jacobian_spec_linear(model, "ols", type, "lp")
 }
 
 
 #' @noRd
 #' @export
-get_jacobian_analytic.lrm <- function(model, type, ...) {
+get_prediction_jacobian_spec.lrm <- function(model, type, ...) {
+    # The fitted scale is a plain logit only for a binary outcome with no
+    # special link functions; ordinal or custom-family fits stay numeric.
     if (
-        !identical(class(model)[1], "lrm") ||
-            !isTRUE(type %in% c("lp", "fitted"))
-    ) {
-        return(NULL)
-    }
-
-    response_scale <- identical(type, "fitted")
-    if (
-        response_scale &&
+        identical(type, "fitted") &&
             (!identical(model$non.slopes, 1L) || length(model$famfunctions) > 0L)
     ) {
         return(NULL)
     }
-    jacobian_analytic_model_matrix(
-        model = model,
-        type = type,
-        response_scale = response_scale,
-        family = if (response_scale) stats::binomial("logit") else NULL,
-        ...
+    prediction_jacobian_spec_glm_family(
+        model,
+        "lrm",
+        type,
+        response_type = "fitted",
+        link_type = "lp",
+        family = stats::binomial("logit")
     )
 }
-
-
-
-### AUTODIFF: 
-### The analytic path above uses predictrms(type = "x"). Keep the old JAX
-### sketches below disabled unless they can use that same RMS-native matrix.
-
-# #' @keywords internal
-# #' @export
-# get_autodiff_args.ols <- function(model, mfx) {
-#     # no inheritance! Important to avoid breaking other models
-#     if (!class(model)[1] == "ols") {
-#         return(NULL)
-#     }
-#
-#     if (!is.null(model$offset)) {
-#         autodiff_warning("models with offsets")
-#         return(NULL)
-#     }
-#
-#     if (!is.null(model$penalty)) {
-#         autodiff_warning("models with offsets")
-#         return(NULL)
-#     }
-#
-#     # Check type support
-#     if (!mfx@type %in% c("lp")) {
-#         autodiff_warning(sprintf("`type='%s'`", mfx@type))
-#         return(NULL)
-#     }
-#
-#     # If all checks pass, return supported arguments
-#     out <- list(model_type = "linear")
-#     return(out)
-# }
-#
-#
-# #' @keywords internal
-# #' @export
-# get_autodiff_args.lrm <- function(model, mfx) {
-#     # no inheritance! Important to avoid breaking other models
-#     if (!class(model)[1] == "lrm") {
-#         return(NULL)
-#     }
-#
-#     if (!is.null(model$offset)) {
-#         autodiff_warning("models with offsets")
-#         return(NULL)
-#     }
-#
-#     if (!is.null(model$penalty)) {
-#         autodiff_warning("models with offsets")
-#         return(NULL)
-#     }
-#
-#     # Check type support
-#     if (!mfx@type %in% c("fitted", "lp")) {
-#         autodiff_warning(sprintf("`type='%s'`", mfx@type))
-#         return(NULL)
-#     }
-#
-#     # If all checks pass, return supported arguments
-#     mAD <- settings_get("mAD")
-#     out <- list(
-#         model_type = "glm",
-#         family_type = mAD$glm$families$Family$BINOMIAL,
-#         link_type = mAD$glm$families$Link$LOGIT
-#     )
-#     return(out)
-# }

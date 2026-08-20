@@ -1,14 +1,12 @@
 import polars as pl
 
-from ..docstrings import doc
-
 from ..classes import MarginaleffectsResult
-from .equivalence import get_equivalence
-from .core import get_hypothesis
-from ..sanitize import sanitize_hypothesis_null, sanitize_vcov
-from ..sanitize import sanitize_model
+from ..docstrings import doc
 from ..inference import get_jacobian, get_se, get_z_p_ci
+from ..sanitize import sanitize_hypothesis_null, sanitize_model, sanitize_vcov
 from ..utils import sort_columns
+from .core import get_hypothesis
+from .equivalence import get_equivalence
 from .joint import joint_hypotheses
 
 

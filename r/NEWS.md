@@ -4,6 +4,27 @@
 
 New:
 
+* New `vcov = "unconditional"` standard errors for average predictions,
+  comparisons, and slopes account for sampling variation in the covariate
+  distribution. `vcovUnconditional()` supports HC0 (default), HC1, one-way
+  clustering, built-in contrasts, and weighted targets. Thanks to @grantmcdermott
+  and @ngreifer for the discussion in #1240 and #1737, and especially to
+  @pedrohcgs for the code submission in #1737 and to @snhansen for theoretical
+  guidance and independent testing.
+* `vcov = "unconditional"` now supports survey-weighted linear and generalized
+  linear models fitted by `survey::svyglm()`, using their observation-level
+  coefficient influence functions. Thanks to @ngreifer for the `svyglm` code.
+* `vcov = "unconditional"` gives informative errors for unsupported
+  multiple-imputation, `hypotheses()`, and fixed-effect `fixest` cases. Valid
+  `feols` cases remain supported. `vcov = vcovUnconditional` is equivalent to
+  `vcov = vcovUnconditional()`.
+* Unconditional inference is limited to `lm`, `glm`, `svyglm`, and validated
+  `fixest` cases. Tobit, `survreg`, and `coxph` models now direct users to
+  bootstrap inference because censored and survival models are outside the
+  currently validated conditional-mean setup.
+* Custom comparison functions which accept `newdata` now receive rows aligned
+  with each comparison group and delete-one sample. The fallback jackknife
+  linearization is centered at the mean delete-one estimate.
 * Support for `svyVGAM::svy_vglm()` models. Thanks to @kkranker for Issue #1730.
 * New `set_modeldata()` function to attach training data to a model object explicitly. `get_modeldata()` now checks for this attribute first, and emits a once-per-session warning when `insight::get_data()` raises warnings about data retrieval. This is safer for `lapply()`, Shiny, and nested function workflows.
 * Support for `glmtoolbox::glmgee()` and `glmtoolbox::gnm()` models. Thanks to @luifrancgom for report #1148.
@@ -14,27 +35,73 @@ New:
 Breaking changes:
 
 * The `byfun` argument is no longer supported. Use `hypothesis` for custom aggregations.
+* `autodiff()`, the JAX differentiation path, and the `reticulate` dependency
+  have been removed. Exact analytic Jacobians now cover more models and
+  built-in comparisons, with equivalent standard errors up to floating-point
+  noise. Remove calls to `autodiff()`.
 
 Performance:
 
+* Built-in ratios, lifts, slopes, and elasticities now use exact closed-form
+  derivatives. `avg_comparisons(comparison = "ratio")` is about 5x faster in a
+  121-coefficient benchmark. Custom comparison functions remain numerical.
+* Linear `hypothesis` strings and formula shortcuts now compile to exact
+  contrast matrices. Custom functions and arbitrary formula code remain
+  numerical. Issue #1735.
+* A `hypothesis` which is not linear no longer discards the Jacobian of everything upstream of it. The hypothesis is differentiated on its own and composed by the chain rule, which also removes a full re-differentiation of the model.
+* Downstream hypotheses now compose with custom comparison functions instead of
+  re-differentiating the full pipeline. The comparison stage remains numerical.
+* New `components(x, "jacobian_method")` reports `"analytic"`, `"numeric"`, or
+  `"custom"`, reflecting the path actually used.
+* `marginaleffects_jacobian_function` is now honored with `hypothesis`, and its
+  dimensions are validated. Hooks must return the Jacobian of the final estimates.
+* Set `options(marginaleffects_hypothesis_promote = FALSE)` to disable the promotion of linear hypotheses to contrast matrices.
+* Standard errors for estimands newly eligible for the analytic path may differ from previous builds at about 1e-7. The new values are the exact ones; the old values carried finite-difference error.
 * Cached model matrices now discard observation row names without copying their numeric payload. Eligible prediction plans reuse baseline linear predictors, and `avg_comparisons()` aggregates exact Jacobians directly from cached matrices instead of materializing observation-level derivatives.
 * `MASS::glm.nb()`, `MASS::rlm()`, and `brglm2::brglmFit()` models now use package-compatible model matrices and exact analytic Jacobians for eligible predictions and built-in difference comparisons. Response-scale `glm.nb` and `brglmFit` derivatives use their fitted inverse-link functions.
-* Set `options(marginaleffects_analytic_jacobian = FALSE)` to disable analytic Jacobians and force the existing autodiff or numerical fallback, which is useful for validation and debugging.
+* Set `options(marginaleffects_analytic_jacobian = FALSE)` to disable analytic Jacobians and force the numerical fallback, which is useful for validation and debugging.
 * `rms::ols()` and `rms::lrm()` now use matrices constructed by `predictrms(type = "x")` for exact analytic Jacobians. This supports `ols` linear predictors and binary `lrm` link and fitted scales; unsupported ordinal response transformations retain the numerical fallback.
 * `rq`, `ivreg`, and `geeglm` predictions and eligible built-in difference comparisons now use package-compatible model matrices and exact analytic Jacobians. `geeglm` supports both link and response scales.
 * `svyglm` predictions and built-in difference comparisons now use exact analytic Jacobians on the link and response scales, including grouped and weighted averages.
-* Eligible predictions and built-in difference comparisons for `lm` models and link- or response-scale `glm` models now use exact analytic Jacobians. Matrix-native operations support unweighted and fixed-weight averages and linear matrix hypotheses without replaying individual coefficient columns. Unsupported estimands retain the existing autodiff and numerical fallbacks.
-* Automatic differentiation now lowers recorded prediction/comparison plans to a single JAX pipeline, including grouped predictions and comparisons, and uses the normal R result pipeline for estimates, labels, and row ordering. This removes duplicated group/order reconstruction and adds autodiff support for `wts`, `by` data frames, matrix/vector hypotheses, and `comparison = "ratio"` with grouped averages.
+* Eligible predictions and built-in difference comparisons for `lm` models and link- or response-scale `glm` models now use exact analytic Jacobians. Matrix-native operations support unweighted and fixed-weight averages and linear matrix hypotheses without replaying individual coefficient columns. Unsupported estimands retain the numerical fallback.
 * Formula hypotheses such as `~ pairwise` and grouped variants now reuse compiled contrast plans during delta-method standard error calculations.
 * Delta-method standard errors for `comparisons()`, `avg_comparisons()`, `slopes()`, `avg_slopes()`, `predictions()`, and `avg_predictions()` now reuse a plan built from the baseline estimates instead of rebuilding loop-invariant result tables for every coefficient perturbation.
 * Grouped prediction standard errors may differ from previous development builds at about 1e-7 due to the new plan-based numeric aggregation kernel.
 * Large speedup (3x and more on large datasets) for `comparisons()` and `slopes()`: predictions returned as named vectors no longer trigger expensive row-name duplicate checks; several unnecessary full-table copies were removed from the internal comparison pipeline; and the standard error machinery no longer merges covariate columns back into intermediate results it only uses for the `estimate` column.
-* Persistent settings are now cached in memory, avoiding repeated filesystem access in hot code paths (e.g., once per call for autodiff checks and once per estimate for internal comparison bookkeeping).
+* Persistent settings are now cached in memory, avoiding repeated filesystem access in hot code paths (e.g., once per estimate for internal comparison bookkeeping).
 * Bayesian comparisons: row indexing and subsetting are now computed once per term instead of once per posterior draw column, which speeds up `comparisons()` and `slopes()` for models with many draws.
 * Removed dead computations in `inferences(method = "boot")` that summarized the full bootstrap draw matrix without using the result.
 
 Bug fixes:
 
+* Weighted average comparisons no longer return `NaN` when a group's first
+  weight is zero. Groups with zero total weight remain undefined.
+* Affine `hypothesis` strings now use exact derivatives, preventing large
+  constants from producing incorrect zero standard errors.
+* Post-hoc `hypotheses()` now uses exact derivatives for affine string
+  hypotheses on result objects, models, and estimate data frames.
+* Unconditional inference now uses exact derivatives for affine hypotheses,
+  preventing large constants from producing zero or missing standard errors.
+* `~meandev` and `~meanotherdev` now use `O(np)` time and memory instead of
+  dense `n x n` matrices (formerly 573 MB for 10,000 estimates).
+* Comparison rows are now dropped when either prediction is missing.
+* `betareg` models fit without a precision formula could not accept a user-supplied `vcov` matrix: `get_coef()` labelled the lone precision parameter `(phi)_(phi)` while `get_vcov()` called it `(phi)`.
+* `lm` and `glm` estimates no longer fail when the fit object was stripped of its `qr$qr` element to save memory. Linear predictions are now computed from the model matrix when `stats::predict()` fails. Thanks to @trose64 for report #1748.
+* `vcov = "stata"` now maps to HC1, matching Stata, `estimatr`, and
+  `modelsummary`. Use `vcov = "HC2"` for the old behavior.
+* Named user-supplied covariance matrices are reordered to coefficient order.
+  Non-matching names now produce an error instead of positional multiplication.
+* `inferences(method = "simulation", conf_type = "wald")` now tests against the stored `hypothesis` null value and respects one-sided directions, instead of always testing zero two-sided.
+* Exact zero standard errors are now reported as `0` instead of `NA`, matching
+  Python. The corresponding test statistic remains undefined.
+* Offsets declared in a model formula are now detected for model classes which do not store an `$offset` component (`quantreg::rq()`, `rms::ols()`), which keeps those models off the cached-model-matrix paths their offsets would invalidate.
+* `hypotheses(joint = ...)` now errors when a selected coefficient name matches more than one estimate, instead of silently testing their sum.
+* The `numderiv = list("richardson", side = ...)` argument is now accepted; the validator previously rejected `side` and accepted a nonexistent `size` argument.
+* Standard errors computed through `hypothesis` no longer lose accuracy on
+  large datasets. Thanks to @nremenyi for report #1750.
+* Unconditional inference now rejects non-finite scalar comparison results,
+  uses the analytic log-ratio influence function when both means are negative,
+  and permits clustered HC0 inference for saturated linear models.
 * `by` aggregation with posterior or bootstrap draws no longer flattens the draws matrix when a `by` data frame omits some term/group combinations.
 * `predictions()` now assigns the correct `rowid`, `type`, and `estimate` column names when model predictions are returned as a bare vector.
 * `equivalence` tests now support vector-valued degrees of freedom.

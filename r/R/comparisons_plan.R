@@ -7,6 +7,21 @@ predictions_hi_lo <- function(model, lo, hi, type, ...) {
 }
 
 
+comparison_subset_newdata <- function(newdata, idx) {
+    if (!is.data.frame(newdata) && !is.matrix(newdata)) {
+        return(newdata)
+    }
+    if (
+        anyNA(idx) ||
+            any(idx < 1L) ||
+            any(idx > nrow(newdata))
+    ) {
+        stop_sprintf("Internal error: comparison rows could not be aligned with `newdata`.")
+    }
+    newdata[idx, , drop = FALSE]
+}
+
+
 comparison_call_args <- function(term, wts, tmp_idx, context) {
     tn <- term[1]
     key <- if (isTRUE(context$cross)) 1L else tn
@@ -15,9 +30,15 @@ comparison_call_args <- function(term, wts, tmp_idx, context) {
 
     args <- list(
         "eps" = context$variables[[tn]]$eps,
-        "w" = wts,
-        "newdata" = context$newdata
+        "w" = wts
     )
+
+    # A comparison is evaluated one term/group at a time. Pass only the
+    # matching rows to functions which request `newdata`; otherwise grouped
+    # comparisons receive a full data frame alongside shorter hi/lo vectors.
+    if ("newdata" %in% fun_formals) {
+        args[["newdata"]] <- comparison_subset_newdata(context$newdata, tmp_idx)
+    }
 
     # sometimes x is exactly the same length, but not always
     args[["x"]] <- context$elasticities[[tn]][tmp_idx]
@@ -162,9 +183,14 @@ comparison_plan_build <- function(
     matrix_used_hi <- isTRUE(attr(pred_hi, "marginaleffects_model_matrix_used"))
     out <- data.table(pred_lo)
 
+    # The `*avgwts` variants are what sanitize_variables() rewrites the `*avg`
+    # shorthands into when `wts` is supplied. Omitting them here left `need_y`
+    # false, so `y` and the elasticity column were never prepared and the
+    # weighted comparison functions returned NA.
     elasticity_names <- c(
         "eyex", "eydx", "dyex",
-        "eyexavg", "eydxavg", "dyexavg"
+        "eyexavg", "eydxavg", "dyexavg",
+        "eyexavgwts", "eydxavgwts", "dyexavgwts"
     )
     fun <- function(x) {
         isTRUE(checkmate::check_choice(x$comparison, choices = elasticity_names))
@@ -308,7 +334,23 @@ comparison_plan_build <- function(
         tmp <- intersect(colnames(newdata), c(by, colnames(out)))
         if (length(tmp) > 1) {
             tmp <- subset(newdata, select = tmp)
-            out <- tryCatch(merge(out, tmp, all.x = TRUE, sort = FALSE), error = function(e) {warning(e); out})
+            # A failed merge is only tolerable when the grouping columns are
+            # already present: without them, downstream aggregation would
+            # silently drop the user's `by` groups.
+            out <- tryCatch(
+                merge(out, tmp, all.x = TRUE, sort = FALSE),
+                error = function(e) {
+                    if (all(by %in% colnames(out))) {
+                        warning(e)
+                        out
+                    } else {
+                        stop_sprintf(
+                            "Internal error: the `by` columns could not be merged into the comparison estimates: %s",
+                            conditionMessage(e)
+                        )
+                    }
+                }
+            )
             idx <- unique(c(idx, by))
         }
     }

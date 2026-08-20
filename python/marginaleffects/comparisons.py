@@ -4,33 +4,41 @@ import warnings
 import numpy as np
 import polars as pl
 
-from .autodiff.lower import autodiff_try
+from .by import _mean_expr, _weighted_mean_expr, attach_by_labels
+from .classes import MarginaleffectsResult
+from .docstrings import doc
 from .estimands import estimands
 from .hypothesis_compile import hypothesis_compile
-from .sanitize import sanitize_model
-from .sanitize import (
-    sanitize_variables,
-    handle_deprecated_hypotheses_argument,
-    handle_pyfixest_vcov_limitation,
+from .inference import (
+    analytic_try,
+    get_jacobian,
+    get_se,
+    is_unconditional,
+    unconditional_result,
 )
-from .classes import MarginaleffectsResult
-from .inference import analytic_try, get_jacobian, get_se
 from .planning import (
-    CompGroup,
+    AggGroup,
     ComparisonPlan,
+    CompGroup,
     comparison_plan_apply,
     comparison_plan_predict,
     plan_values_allclose,
 )
-from .utils import (
-    get_pad,
-    upcast,
-    finalize_result,
-    call_avg,
-    prepare_base_inputs,
+from .sanitize import (
+    by_is_frame,
+    handle_deprecated_hypotheses_argument,
+    handle_pyfixest_vcov_limitation,
+    sanitize_model,
+    sanitize_variables,
 )
 from .sanitize.utils import validate_string_columns
-from .docstrings import doc
+from .utils import (
+    call_avg,
+    finalize_result,
+    get_pad,
+    prepare_base_inputs,
+    upcast,
+)
 
 
 def _cross_postprocess(cross):
@@ -171,44 +179,44 @@ def _finalize_counterfactual_frames(
 
     dfs = {"nd": nd, "hi": hi, "lo": lo}
 
-    for df_name in dfs:
-        df = dfs[df_name]
+    for df_name, df in dfs.items():
         common_cols = set(pad_df.columns) & set(df.columns)
         for col in common_cols:
             pad_dtype = str(pad_df[col].dtype)
             df_dtype = str(df[col].dtype)
-            if pad_dtype != df_dtype:
-                if pad_dtype.startswith("List(") and df_dtype.startswith("List("):
+            if (
+                pad_dtype != df_dtype
+                and pad_dtype.startswith("List(")
+                and df_dtype.startswith("List(")
+            ):
+                try:
+                    if col in pad_df.columns:
+                        pad_df = pad_df.with_columns(
+                            pad_df[col]
+                            .list.eval(pl.element().cast(pl.String))
+                            .alias(col)
+                        )
+                    if col in df.columns:
+                        df = df.with_columns(
+                            df[col].list.eval(pl.element().cast(pl.String)).alias(col)
+                        )
+                except Exception as e:  # noqa: BLE001 -- dtype recovery path
+                    warnings.warn(
+                        f"Could not convert List column {col} to strings: {e}"
+                    )
                     try:
+                        if col in pad_df.columns and pad_df.height > 0:
+                            pad_df = pad_df.explode(col)
+                        if col in df.columns and df.height > 0:
+                            df = df.explode(col)
+                    except Exception as e2:  # noqa: BLE001 -- final recovery path
+                        warnings.warn(f"Could not explode List column {col}: {e2}")
                         if col in pad_df.columns:
                             pad_df = pad_df.with_columns(
-                                pad_df[col]
-                                .list.eval(pl.element().cast(pl.String))
-                                .alias(col)
+                                pad_df[col].cast(pl.String).alias(col)
                             )
                         if col in df.columns:
-                            df = df.with_columns(
-                                df[col]
-                                .list.eval(pl.element().cast(pl.String))
-                                .alias(col)
-                            )
-                    except Exception as e:
-                        warnings.warn(
-                            f"Could not convert List column {col} to strings: {e}"
-                        )
-                        try:
-                            if col in pad_df.columns and pad_df.height > 0:
-                                pad_df = pad_df.explode(col)
-                            if col in df.columns and df.height > 0:
-                                df = df.explode(col)
-                        except Exception as e2:
-                            warnings.warn(f"Could not explode List column {col}: {e2}")
-                            if col in pad_df.columns:
-                                pad_df = pad_df.with_columns(
-                                    pad_df[col].cast(pl.String).alias(col)
-                                )
-                            if col in df.columns:
-                                df = df.with_columns(df[col].cast(pl.String).alias(col))
+                            df = df.with_columns(df[col].cast(pl.String).alias(col))
 
         dfs[df_name] = df
 
@@ -373,6 +381,10 @@ def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions, capture
     """
     Apply comparison functions to predicted_hi/predicted_lo within groups.
 
+    `eps` is either a scalar applied to every term, or a per-term dict as
+    computed by sanitize_variables() -- R's rule of 1e-4 times each numeric
+    variable's finite range, with None for non-numeric variables.
+
     Uses group_by with maintain_order=True (critical for Jacobian alignment).
     """
 
@@ -399,10 +411,11 @@ def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions, capture
         else:
             estimand = estimands[comp]
 
+        eps_val = eps.get(term_val) if isinstance(eps, dict) else eps
         est = estimand(
             hi=x["predicted_hi"],
             lo=x["predicted_lo"],
-            eps=eps,
+            eps=eps_val,
             x=xvar,
             y=x["predicted"],
             w=xwts,
@@ -416,6 +429,7 @@ def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions, capture
                     "x": xvar.to_numpy(),
                     "w": None if xwts is None else xwts.to_numpy(),
                     "scalar": est.shape[0] == 1,
+                    "eps": eps_val,
                 }
             )
         if est.shape[0] == 1:
@@ -432,6 +446,65 @@ def _apply_comparison_estimands(tmp, by, wts, eps, comparison_functions, capture
         function=lambda x: applyfun(x, by=by, wts=wts, capture=capture)
     )
     return tmp
+
+
+def _attach_comparison_by_labels(tmp, align, by):
+    """Join a `by` data frame's labels onto the comparison table.
+
+    The label becomes an ordinary grouping column, so the estimand stage sees
+    it like any other. Rows the label table does not cover are dropped, and
+    `align` is filtered alongside them: it maps table rows to prediction rows,
+    so removing one without the other would silently shift every index the
+    plan records.
+    """
+    labelled, keep = attach_by_labels(tmp, by)
+    if keep.all():
+        return labelled, align
+    mask = keep.to_numpy()
+    positions = np.arange(tmp.height) if align is None else np.asarray(align)
+    return labelled.filter(keep), positions[mask]
+
+
+def _record_comparison_aggregation(tmp, by_keys, wts, by):
+    """Average row-level comparisons within `by` groups, recording the map.
+
+    The built-in `*avg` estimands already collapse each group to a single row,
+    so this stage only bites when the comparison itself is row-level -- a
+    custom callable, most often. R runs the same two-stage pipeline: compare,
+    then aggregate. Recording which rows feed which aggregate lets the Jacobian
+    replay that average instead of re-deriving the grouping for every perturbed
+    coefficient vector.
+    """
+    if by is None or by is False or not by_keys or tmp.height <= 1:
+        return tmp, None
+
+    position = "_marginaleffects_agg_pos"
+    tmp = tmp.with_columns(pl.Series(position, range(tmp.height), dtype=pl.Int64))
+
+    weighted = wts is not None and wts in tmp.columns
+    agg_exprs = [
+        _weighted_mean_expr(wts) if weighted else _mean_expr(),
+        pl.col(position).alias("_positions"),
+    ]
+    if weighted:
+        agg_exprs.append(pl.col(wts).cast(pl.Float64).alias("_plan_weights"))
+
+    grouped = tmp.group_by(by_keys, maintain_order=True).agg(agg_exprs)
+    positions = grouped["_positions"].to_list()
+    if all(len(entry) == 1 for entry in positions):
+        # Every group is already a single row, so aggregating would be a no-op.
+        # Skipping it keeps the estimand stage's own output columns intact.
+        return tmp.drop(position), None
+
+    weights = grouped["_plan_weights"].to_list() if weighted else None
+    agg_groups = [
+        AggGroup(
+            idx=np.asarray(entry, dtype=int),
+            w=None if weights is None else np.asarray(weights[i], dtype=float),
+        )
+        for i, entry in enumerate(positions)
+    ]
+    return grouped.select([*by_keys, "estimate"]), agg_groups
 
 
 def _compute_fd_estimates(
@@ -460,8 +533,13 @@ def _compute_fd_estimates(
         coefs = coefs.to_numpy()
 
     tmp = _assemble_prediction_table(model, coefs, nd, nd_X, hi_X, lo_X)
-    by_keys = _resolve_grouping_keys(by, tmp)
+    if by_is_frame(by):
+        tmp, _ = _attach_comparison_by_labels(tmp, None, by)
+        by_keys = _resolve_grouping_keys(["by"], tmp)
+    else:
+        by_keys = _resolve_grouping_keys(by, tmp)
     tmp = _apply_comparison_estimands(tmp, by_keys, wts, eps, comparison_functions)
+    tmp, _ = _record_comparison_aggregation(tmp, by_keys, wts, by)
     tmp = get_hypothesis(tmp, hypothesis=hypothesis, by=by_keys)
     return tmp
 
@@ -494,7 +572,15 @@ def _comparisons_build(
         for col in ["predicted", "predicted_hi", "predicted_lo"]
         if col in tmp.columns
     )
-    by_keys = _resolve_grouping_keys(by, tmp)
+    if by_is_frame(by):
+        tmp, align = _attach_comparison_by_labels(tmp, align, by)
+        by_keys = _resolve_grouping_keys(["by"], tmp)
+    else:
+        by_keys = _resolve_grouping_keys(by, tmp)
+    # Captured before the estimand stage regroups rows: `CompGroup.idx` is
+    # numbered in this table's order, so the row ids must be too.
+    rowid = tmp["rowid"].to_numpy() if "rowid" in tmp.columns else None
+    source = tmp
     captured = []
     tmp = _apply_comparison_estimands(
         tmp,
@@ -504,6 +590,10 @@ def _comparisons_build(
         comparison_functions,
         capture=captured,
     )
+    tmp, agg_groups = _record_comparison_aggregation(tmp, by_keys, wts, by)
+    if by_is_frame(by):
+        # The frame has done its work; downstream only sees the label column.
+        by = ["by"]
     tmp, hyp = hypothesis_compile(tmp, hypothesis=hypothesis, by=by_keys)
 
     groups = []
@@ -520,6 +610,12 @@ def _comparisons_build(
                 fun_key=item["fun_key"],
                 x=None if item["x"] is None else np.asarray(item["x"]),
                 w=None if item["w"] is None else np.asarray(item["w"], dtype=float),
+                uses_y=(
+                    bool(getattr(item["fun"], "_marginaleffects_uses_y", True))
+                    if item["fun_key"] is None
+                    else item["fun_key"].startswith(("eyex", "eydx"))
+                ),
+                eps=item["eps"],
             )
         )
         start += n_out
@@ -542,11 +638,17 @@ def _comparisons_build(
         exog_nd=nd_X if need_y else None,
         need_y=need_y,
         align=align,
-        eps=eps,
+        # Per-group eps is authoritative; the plan-level scalar remains only
+        # as a fallback for plans built without recorded group eps.
+        eps=None if isinstance(eps, dict) else eps,
         groups=groups,
         n_comp=start,
         hyp=hyp,
         has_na=bool(has_na),
+        agg=agg_groups,
+        n_out=tmp.height,
+        rowid=rowid,
+        source=source,
     )
 
     hi, lo, y = plan_predictions
@@ -558,7 +660,7 @@ def _comparisons_build(
         raise RuntimeError(
             "marginaleffects internal error: comparison plan baseline check failed"
         )
-    return tmp, plan
+    return tmp, plan, by
 
 
 @doc("""
@@ -667,7 +769,7 @@ def comparisons(
     equivalence=None,
     cross=False,
     transform=None,
-    eps=1e-4,
+    eps=None,
     eps_vcov=None,
     **kwargs,
 ) -> MarginaleffectsResult:
@@ -723,17 +825,27 @@ def comparisons(
         cross=cross,
     )
 
+    # Per-term eps steps, exactly as in R: sanitize_variables() records
+    # 1e-4 times each numeric variable's finite range (or the user's scalar
+    # `eps`), and None for non-numeric variables.
+    eps = {}
+    for v in variables:
+        name = v.variable if isinstance(v.variable, str) else v.variable[0]
+        eps.setdefault(name, getattr(v, "eps", None))
+
     nd_frames, hi_frames, lo_frames = _build_comparison_frames(
         newdata, variables, cross
     )
     pad_frames = []
     model_vars = model.find_variables()
     if model_vars is not None:
-        model_vars = list(set(re.sub(r"\[.*", "", x) for x in model_vars))
+        model_vars = list({re.sub(r"\[.*", "", x) for x in model_vars})
         for v in model_vars:
-            if v in modeldata.columns:
-                if model.get_variable_type(v) not in ["numeric", "integer"]:
-                    pad_frames.append(get_pad(newdata, v, modeldata[v].unique()))
+            if v in modeldata.columns and model.get_variable_type(v) not in [
+                "numeric",
+                "integer",
+            ]:
+                pad_frames.append(get_pad(newdata, v, modeldata[v].unique()))
     nd, hi, lo, pad_rows = _finalize_counterfactual_frames(
         nd_frames,
         hi_frames,
@@ -746,7 +858,7 @@ def comparisons(
 
     comparison_functions = _collect_comparison_functions(variables)
 
-    out, plan = _comparisons_build(
+    out, plan, by = _comparisons_build(
         model=model,
         nd=nd,
         nd_X=nd_X,
@@ -758,7 +870,18 @@ def comparisons(
         eps=eps,
         comparison_functions=comparison_functions,
     )
-    if vcov is not None and vcov is not False and V is not None:
+    jacobian_method = None
+    if is_unconditional(V):
+        out, J, jacobian_method, _V = unconditional_result(
+            plan=plan,
+            model=model,
+            kind="comparisons",
+            request=V,
+            newdata=newdata,
+            out=out,
+            eps_vcov=eps_vcov,
+        )
+    elif vcov is not None and vcov is not False and V is not None:
         # An explicit `eps_vcov` requests finite differences with that step size,
         # so the exact-derivative paths are skipped when the user supplies one.
         ad = None
@@ -770,16 +893,9 @@ def comparisons(
                 estimate=out["estimate"].to_numpy(),
                 kind="comparisons",
             )
-            if ad is None:
-                ad = autodiff_try(
-                    plan=plan,
-                    model=model,
-                    V=V,
-                    estimate=out["estimate"].to_numpy(),
-                    kind="comparisons",
-                )
         if ad is not None:
             J = ad.jacobian
+            jacobian_method = ad.method
             out = out.with_columns(pl.Series(ad.std_error).alias("std_error"))
         else:
 
@@ -788,6 +904,7 @@ def comparisons(
                 return comparison_plan_apply(plan, hi_pred, lo_pred, y_pred)
 
             J = get_jacobian(replay, model.get_coef(), eps_vcov)
+            jacobian_method = "finite_difference"
             se = get_se(J, V)
             out = out.with_columns(pl.Series(se).alias("std_error"))
     else:
@@ -802,6 +919,7 @@ def comparisons(
         newdata=newdata,
         conf_level=conf_level,
         J=J,
+        jacobian_method=jacobian_method,
         hypothesis_null=hypothesis_null,
         equivalence_df=np.inf,
         postprocess=postprocess_cross,
@@ -821,7 +939,7 @@ def avg_comparisons(
     equivalence=None,
     cross=False,
     transform=None,
-    eps=1e-4,
+    eps=None,
     **kwargs,
 ) -> MarginaleffectsResult:
     return call_avg(

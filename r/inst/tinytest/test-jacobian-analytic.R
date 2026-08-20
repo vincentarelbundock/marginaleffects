@@ -170,11 +170,13 @@ rownames(expected_by) <- NULL
 expect_equivalent(components(avg_by, "jacobian"), expected_by)
 
 # Average comparisons bypass the observation-level comparison Jacobian. This
-# guards the allocation-saving path in addition to its numerical result above.
+# guards the allocation-saving path in addition to its numerical result above:
+# rowwise differences feeding a recorded aggregation (a `by` data frame) must
+# contract directly and never reach the general per-group gradient builder.
 assign("analytic_comparison_group_calls", 0L, envir = .GlobalEnv)
 suppressMessages(invisible(utils::capture.output(
     trace(
-        "jacobian_analytic_comparison_groups",
+        "jacobian_analytic_comparison_exact",
         where = asNamespace("marginaleffects"),
         tracer = quote({
             .GlobalEnv$analytic_comparison_group_calls <-
@@ -185,18 +187,21 @@ suppressMessages(invisible(utils::capture.output(
 )))
 tryCatch(
     {
-        avg_comparisons(
+        direct_by <- avg_comparisons(
             mod_interaction,
             variables = list(hp = c(100, 110)),
-            by = "am",
-            wts = "cyl"
+            by = data.frame(am = c(0, 1), by = c("automatic", "manual"))
         )
         expect_equal(.GlobalEnv$analytic_comparison_group_calls, 0L)
+        expect_equivalent(
+            components(direct_by, "jacobian")[order(direct_by$by), ],
+            expected_by
+        )
     },
     finally = {
         suppressMessages(invisible(utils::capture.output(
             untrace(
-                "jacobian_analytic_comparison_groups",
+                "jacobian_analytic_comparison_exact",
                 where = asNamespace("marginaleffects")
             )
         )))
@@ -475,14 +480,14 @@ tryCatch(
             comparison = "ratio",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 0L)
 
         avg_comparisons(
             mod_lm,
             variables = list(hp = c(100, 110)),
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 0L)
 
         comparisons(
             mod_lm,
@@ -491,8 +496,11 @@ tryCatch(
             hypothesis = c(1, -1),
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 0L)
 
+        # A custom closure must fall back: only recorded built-ins have
+        # closed-form stage derivatives, and probing arbitrary code cannot
+        # prove the structure the composition would rely on.
         comparisons(
             mod_lm,
             variables = list(hp = c(100, 110)),
@@ -500,7 +508,7 @@ tryCatch(
             comparison = function(hi, lo) hi - lo,
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 2L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 1L)
 
         mod_offset <- lm(mpg ~ hp + offset(wt), data = mtcars)
         comparisons(
@@ -509,7 +517,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 3L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 2L)
 
         mod_rank_deficient <- lm(mpg ~ hp + I(hp), data = mtcars)
         suppressWarnings(comparisons(
@@ -518,7 +526,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         ))
-        expect_equal(.GlobalEnv$analytic_fd_calls, 4L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 3L)
 
         mod_subclass <- mod_lm
         class(mod_subclass) <- c("analytic_audit_lm", class(mod_subclass))
@@ -528,7 +536,7 @@ tryCatch(
             newdata = "mean",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 4L)
 
         comparisons(
             mod_glm,
@@ -537,7 +545,7 @@ tryCatch(
             type = "response",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 4L)
 
         # The global opt-out must actually invoke the fallback, not merely
         # produce a numerically identical result through the analytic route.
@@ -551,7 +559,7 @@ tryCatch(
             ),
             finally = options(old_option)
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 6L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 5L)
 
         mod_glm_offset <- glm(
             am ~ hp + offset(log(wt)),
@@ -565,7 +573,7 @@ tryCatch(
             type = "response",
             numderiv = "fdforward"
         )
-        expect_equal(.GlobalEnv$analytic_fd_calls, 7L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 6L)
 
         mod_glm_rank_deficient <- glm(
             am ~ hp + I(hp),
@@ -579,7 +587,7 @@ tryCatch(
             type = "response",
             numderiv = "fdforward"
         ))
-        expect_equal(.GlobalEnv$analytic_fd_calls, 8L)
+        expect_equal(.GlobalEnv$analytic_fd_calls, 7L)
     },
     finally = {
         suppressMessages(invisible(utils::capture.output(

@@ -86,7 +86,6 @@ Every interpretation task decomposes into five questions:
 - [`plot_predictions()`](https://marginaleffects.com/man/r/plot_predictions.html): Plot predicted values
 - [`plot_comparisons()`](https://marginaleffects.com/man/r/plot_comparisons.html): Plot comparisons
 - [`plot_slopes()`](https://marginaleffects.com/man/r/plot_slopes.html): Plot slopes (marginal effects)
-- [`autodiff()`](https://marginaleffects.com/man/r/autodiff.html): Automatic differentiation for marginal effects
 - [`get_dataset()`](https://marginaleffects.com/man/r/get_dataset.html): Load example datasets
 
 ## Function reference (Python)

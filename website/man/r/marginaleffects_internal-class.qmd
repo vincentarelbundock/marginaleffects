@@ -28,6 +28,10 @@ functions to simplify the function signatures and reduce redundant argument pass
 </dd>
 <dt><code>jacobian</code></dt><dd>The jacobian matrix or NULL
 </dd>
+<dt><code>jacobian_method</code></dt><dd>String naming the differentiation path which produced
+the jacobian: &quot;analytic&quot;, &quot;analytic+numeric_stage&quot;, &quot;numeric&quot;, &quot;custom&quot;,
+or NULL
+</dd>
 <dt><code>model</code></dt><dd>The fitted model object
 </dd>
 <dt><code>modeldata</code></dt><dd>The model data frame

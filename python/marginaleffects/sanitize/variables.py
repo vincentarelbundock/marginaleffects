@@ -6,8 +6,29 @@ import polars as pl
 
 from .comparison import sanitize_comparison
 
+HiLo = namedtuple(
+    "HiLo",
+    ["variable", "hi", "lo", "lab", "pad", "comparison", "eps"],
+    defaults=(None,),
+)
 
-HiLo = namedtuple("HiLo", ["variable", "hi", "lo", "lab", "pad", "comparison"])
+
+def _default_eps(series):
+    """R's default step: 1e-4 times the finite range of the variable.
+
+    Mirrors add_epsilon_values() in the R package: missing and non-finite
+    values are ignored, and a degenerate (single-value) range falls back to
+    a bare 1e-4.
+    """
+    values = np.asarray(
+        series.drop_nulls().to_numpy() if hasattr(series, "drop_nulls") else series,
+        dtype=float,
+    )
+    values = values[np.isfinite(values)]
+    if values.size == 0:
+        return 1e-4
+    spread = float(values.max() - values.min())
+    return 1e-4 * spread if spread != 0 else 1e-4
 
 
 def _clean_global(k, n):
@@ -27,16 +48,23 @@ def _get_one_variable_hi_lo(
     def clean(k):
         return _clean_global(k, newdata.shape[0])
 
-    elasticities = [
-        "eyexavg",
-        "dyexavg",
-        "eydxavg",
-        "dydxavg",
-        "eyex",
-        "dyex",
-        "eydx",
-        "dydx",
-    ]
+    # The slope and elasticity families divide by an eps step and need a
+    # centered contrast. Match by family rather than by enumerating variants:
+    # sanitize_comparison() rewrites these keys to `*avg`/`*avgwts` forms, and
+    # a fixed list silently missed them (the weighted variants lost their
+    # label, and `expdydx` fell back to a +1 step with garbage estimates).
+    slope_families = ("dydx", "eyex", "eydx", "dyex", "expdydx")
+
+    def is_slope_comparison(cmp):
+        return isinstance(cmp, str) and cmp.startswith(slope_families)
+
+    # Per-variable eps, exactly as in R: an explicit user `eps` wins,
+    # otherwise 1e-4 times the finite range of the variable in the original
+    # data. Non-numeric variables carry no eps.
+    eps_value = None
+    if vartype in ["integer", "numeric"]:
+        source = modeldata if modeldata is not None else model.get_modeldata()
+        eps_value = eps if eps is not None else _default_eps(source[variable])
 
     # default
     if value is None:
@@ -48,8 +76,8 @@ def _get_one_variable_hi_lo(
             elif comparison in ["eyex", "dyex", "eydx", "dydx"]:
                 comparison = "difference"
         else:
-            if comparison in elasticities:
-                value = eps
+            if is_slope_comparison(comparison):
+                value = eps_value
             else:
                 value = 1
 
@@ -140,10 +168,19 @@ def _get_one_variable_hi_lo(
             lab = lab.format(hi=value[1], lo=value[0])
 
         elif isinstance(value, (int, float)):
-            if comparison not in elasticities:
+            if is_slope_comparison(comparison):
+                # Slopes and elasticities keep the centered eps step. As in R,
+                # the step is always the per-variable eps: a numeric `value`
+                # does not override it for derivative estimands.
+                step = eps_value if eps_value is not None else value
+                hi = newdata[variable] + step / 2
+                lo = newdata[variable] - step / 2
+            else:
+                # R-conformant forward contrast: from x to x + value.
+                # BREAKING: earlier versions centered this contrast on x.
                 lab = f"+{value}"
-            hi = newdata[variable] + value / 2
-            lo = newdata[variable] - value / 2
+                hi = newdata[variable] + value
+                lo = newdata[variable]
 
         elif callable(value):
             tmp = value(newdata[variable])
@@ -166,6 +203,7 @@ def _get_one_variable_hi_lo(
                 lab=lab,
                 pad=None,
                 comparison=comparison,
+                eps=eps_value,
             )
         ]
         return out

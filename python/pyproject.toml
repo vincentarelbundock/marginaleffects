@@ -29,15 +29,12 @@ test = [
     "pandas >=2.2.2",
     "pre-commit>=4.2.0",
     "numba",
-    "jax >=0.4.0",
     "pyfixest >=0.28.0",
     "statsmodels >=0.14.0",
     "scikit-learn",
     "typing-extensions >=4.7.0",
     "xgboost",
 ]
-autodiff = ["jax >=0.4.0"]
-
 [dependency-groups]
 dev = [
   "ipython",

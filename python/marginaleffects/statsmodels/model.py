@@ -1,11 +1,12 @@
 import numpy as np
-import polars as pl
 import patsy
-from ..docstrings import doc
-from ..classes import ModelAbstract, ModelVault
+import polars as pl
+
 from .. import formula as fml
-from ..utils import ingest
+from ..classes import ModelAbstract, ModelVault
+from ..docstrings import doc
 from ..sanitize.utils import validate_types
+from ..utils import ingest
 
 
 class ModelStatsmodels(ModelAbstract):
@@ -91,7 +92,7 @@ class ModelStatsmodels(ModelAbstract):
                     f"Then use vcov=True in marginaleffects functions."
                 )
         else:
-            raise ValueError(
+            raise TypeError(
                 '`vcov` must be a boolean, a string like "HC3", or a numpy array.'
             )
 
@@ -116,12 +117,15 @@ class ModelStatsmodels(ModelAbstract):
             exog = newdata.to_numpy()
         else:
             newdata = newdata.to_pandas()
-            y, exog = patsy.dmatrices(self.get_formula(), newdata)
+            _y, exog = patsy.dmatrices(self.get_formula(), newdata)
         # OrderedModel uses thresholds instead of intercept, so strip the
         # intercept column that patsy adds to the design matrix.
-        if self._is_ordered_model() and isinstance(exog, np.ndarray):
-            if exog.shape[1] == self.model.model.k_vars + 1:
-                exog = exog[:, 1:]
+        if (
+            self._is_ordered_model()
+            and isinstance(exog, np.ndarray)
+            and exog.shape[1] == self.model.model.k_vars + 1
+        ):
+            exog = exog[:, 1:]
         p = self.model.model.predict(params, exog)
         if p.ndim == 1:
             p = pl.DataFrame({"rowid": range(newdata.shape[0]), "estimate": p})
@@ -145,62 +149,31 @@ class ModelStatsmodels(ModelAbstract):
     def get_df(self):
         return self.model.df_resid
 
-    def get_autodiff_args(self):
-        inner_model = self.model.model
-        model_class = type(inner_model).__name__
-
-        if model_class == "OLS":
+    def get_analytic_args(self):
+        if type(self.model.model).__name__ == "OLS":
             return {"model_type": "linear", "family": None, "link": None}
-
-        if model_class == "GLM":
-            if hasattr(inner_model, "offset") and inner_model.offset is not None:
-                if not np.allclose(inner_model.offset, 0):
-                    return "models with offset or exposure"
-
-            if hasattr(inner_model, "exposure") and inner_model.exposure is not None:
-                if not np.allclose(inner_model.exposure, 0):
-                    return "models with offset or exposure"
-
-            family_map = {
-                "Gaussian": "gaussian",
-                "Binomial": "binomial",
-                "Poisson": "poisson",
-                "Gamma": "gamma",
-            }
-            link_map = {
-                "Identity": "identity",
-                "identity": "identity",
-                "Log": "log",
-                "log": "log",
-                "Logit": "logit",
-                "logit": "logit",
-                "Probit": "probit",
-                "probit": "probit",
-                "InversePower": "inverse",
-                "inverse_power": "inverse",
-                "InverseSquared": "inverse",
-                "inverse_squared": "inverse",
-                "Sqrt": "sqrt",
-                "sqrt": "sqrt",
-                "CLogLog": "cloglog",
-                "cloglog": "cloglog",
-            }
-
-            family_name = inner_model.family.__class__.__name__
-            link_name = inner_model.family.link.__class__.__name__
-
-            if family_name not in family_map:
-                return f"family '{family_name}'"
-            if link_name not in link_map:
-                return f"link '{link_name}'"
-
-            return {
-                "model_type": "glm",
-                "family": family_map[family_name],
-                "link": link_map[link_name],
-            }
-
         return None
+
+    def get_link_functions(self):
+        inner_model = self.model.model
+        if type(inner_model).__name__ != "GLM":
+            return None
+        for name in ("offset", "exposure"):
+            value = getattr(inner_model, name, None)
+            if value is not None and not np.allclose(value, 0):
+                return None
+        link = getattr(getattr(inner_model, "family", None), "link", None)
+        linkinv = getattr(link, "inverse", None)
+        mu_eta = getattr(link, "inverse_deriv", None)
+        if not callable(linkinv) or not callable(mu_eta):
+            return None
+        return linkinv, mu_eta
+
+    def get_exog_names(self, value):
+        names = super().get_exog_names(value)
+        if names is None:
+            names = getattr(self.model.model, "exog_names", None)
+        return None if names is None else list(names)
 
 
 @doc("""

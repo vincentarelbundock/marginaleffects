@@ -4,7 +4,7 @@ import warnings
 
 import numpy as np
 import polars as pl
-import scipy.stats as stats
+from scipy import stats
 
 
 def get_z_p_ci(df, model, conf_level, hypothesis_null=0):

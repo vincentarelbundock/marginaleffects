@@ -1,125 +1,246 @@
-"""Analytic Jacobians for model-matrix based linear predictions."""
+"""Stage-composed analytic Jacobians for model-matrix predictions."""
 
 from dataclasses import dataclass
 
 import numpy as np
 
 from ..planning import (
-    comparison_plan_apply,
+    comparison_plan_apply_stages,
+    compile_agg_blocks,
+    group_eps,
     plan_values_allclose,
-    prediction_plan_apply,
+    prediction_plan_apply_stages,
 )
 from .delta import get_se
+from .gradients import EXACT_COMPARISON_KEYS, comparison_gradient_exact
+
+STAGE_PROBE_MAX_DIM = 500
 
 
 @dataclass(frozen=True)
 class AnalyticResult:
     std_error: np.ndarray
     jacobian: np.ndarray
+    method: str = "analytic"
 
 
-def _linear_design(model, value, n_pred):
-    args = model.get_autodiff_args()
-    if not isinstance(args, dict) or args.get("model_type") != "linear":
+def _model_stage(model, value, n_pred):
+    coefnames = model.get_coefnames()
+    if coefnames is None:
         return None
-    X = np.asarray(value, dtype=float)
-    coefs = np.asarray(model.get_coef()).reshape(-1)
-    if X.ndim != 2 or X.shape != (n_pred, coefs.size):
+    coefnames = [str(name) for name in np.asarray(coefnames).reshape(-1)]
+    if len(coefnames) != len(set(coefnames)):
         return None
-    return X
+
+    columns = model.get_exog_names(value)
+    if columns is None:
+        return None
+    columns = [str(name) for name in columns]
+    if len(columns) != len(set(columns)) or set(columns) != set(coefnames):
+        return None
+
+    try:
+        X = np.asarray(value, dtype=float)
+        beta = np.asarray(model.get_coef(), dtype=float).reshape(-1)
+    except (TypeError, ValueError):
+        return None
+    if X.ndim != 2 or X.shape != (n_pred, beta.size) or not np.isfinite(X).all():
+        return None
+    X = X[:, [columns.index(name) for name in coefnames]]
+    args = model.get_analytic_args()
+    if isinstance(args, dict) and args.get("model_type") == "linear":
+        return X, X @ beta, None
+    functions = model.get_link_functions()
+    if functions is None:
+        return None
+    linkinv, mu_eta = functions
+    try:
+        eta = X @ beta
+        pred = np.asarray(linkinv(eta), dtype=float).reshape(-1)
+        deriv = np.asarray(mu_eta(eta), dtype=float).reshape(-1)
+    except Exception:  # noqa: BLE001 -- adapters must fail closed
+        return None
+    if pred.shape != (n_pred,) or deriv.shape != (n_pred,):
+        return None
+    if not np.isfinite(pred).all() or not np.isfinite(deriv).all():
+        return None
+    return X, pred, deriv
 
 
-def _align_rows(X, align):
+def _align_rows(value, align):
     if align is None:
-        return X
+        return value
     align = np.asarray(align, dtype=int)
     if np.any(align < 0):
         return None
-    return X[align]
+    return value[align]
 
 
-def _apply_hypothesis(J, hyp):
-    if hyp is None:
-        return J
-    if hyp.kind != "matrix" or hyp.H is None:
+def _aggregate_rows(X, agg):
+    """Apply the recorded aggregation stage to a matrix of Jacobian rows.
+
+    Aggregation is linear in the estimates, so the stage contributes exactly
+    the weight matrix its estimate replay uses. Blocks of equal-length groups
+    contract in one einsum instead of a Python loop per output row.
+    """
+    agg = compile_agg_blocks(agg)
+    if agg is None:
+        return X
+    out = np.zeros((agg.n, X.shape[1]), dtype=float)
+    for block in agg.blocks:
+        if agg.weighted:
+            w = np.asarray(block.w, dtype=float)
+            denominator = w.sum(axis=0)
+            # A missing weight makes the whole aggregate undefined, exactly as
+            # it does in the estimate replay; fall back rather than quietly
+            # differentiating a different estimand than the one reported.
+            if not np.all(np.isfinite(denominator)) or np.any(denominator == 0):
+                return None
+            factors = w / denominator
+        else:
+            factors = np.full(block.idx.shape, 1.0 / block.idx.shape[0])
+        out[block.cols] = np.einsum("lc,lcp->cp", factors, X[block.idx])
+    return out
+
+
+def _try_stage(f, x):
+    try:
+        out = np.asarray(f(x), dtype=float).reshape(-1)
+    except Exception:  # noqa: BLE001 -- arbitrary hypothesis callables fail closed
         return None
-    return np.asarray(hyp.H, dtype=float).T @ J
+    return out if np.isfinite(out).all() else None
 
 
-def _weighted_rows(X, weights):
-    if weights is None:
-        return np.mean(X, axis=0)
-    weights = np.asarray(weights, dtype=float)
-    keep = ~np.isnan(weights)
-    denominator = np.sum(weights[keep])
-    if denominator == 0:
-        return np.full(X.shape[1], np.nan)
-    return np.sum(X[keep] * weights[keep, None], axis=0) / denominator
+def stage_jacobian_dense(f, x, step_scale=1.0):
+    """Differentiate cheap downstream arithmetic without re-running the model."""
+    x = np.asarray(x, dtype=float).reshape(-1)
+    if x.size == 0 or x.size > STAGE_PROBE_MAX_DIM or not np.isfinite(x).all():
+        return None
+    base = _try_stage(f, x)
+    if base is None:
+        return None
+    step = np.maximum(np.abs(x), 1.0) * np.finfo(float).eps ** (1 / 3) * step_scale
+    out = np.empty((base.size, x.size), dtype=float)
+    for j in range(x.size):
+        hi, lo = x.copy(), x.copy()
+        hi[j] += step[j]
+        lo[j] -= step[j]
+        fhi, flo = _try_stage(f, hi), _try_stage(f, lo)
+        if (
+            fhi is None
+            or flo is None
+            or fhi.shape != base.shape
+            or flo.shape != base.shape
+        ):
+            return None
+        out[:, j] = (fhi - flo) / (2 * step[j])
+    return out if np.isfinite(out).all() else None
+
+
+def _apply_hypothesis(J, hyp, estimate_pre):
+    if hyp is None:
+        return J, False
+    if hyp.kind == "matrix" and hyp.H is not None:
+        H = np.asarray(hyp.H, dtype=float)
+        if H.ndim == 2 and H.shape[0] == J.shape[0] and np.isfinite(H).all():
+            return H.T @ J, False
+        return None
+    if not callable(hyp.apply) or len(estimate_pre) != J.shape[0]:
+        return None
+    G = stage_jacobian_dense(hyp.apply, estimate_pre)
+    return None if G is None or G.shape[1] != J.shape[0] else (G @ J, True)
 
 
 def _prediction_jacobian(plan, model):
-    X = _linear_design(model, plan.exog, plan.n_pred)
-    if X is None or plan.has_na:
+    stage = _model_stage(model, plan.exog, plan.n_pred)
+    if stage is None or plan.has_na:
         return None
-    J = _align_rows(X, plan.align)
+    X, pred, deriv = stage
+    J = X if deriv is None else X * deriv[:, None]
+    J = _align_rows(J, plan.align)
     if J is None:
         return None
     if plan.agg is not None:
-        J = np.asarray([_weighted_rows(J[g.idx], g.w) for g in plan.agg])
-    J = _apply_hypothesis(J, plan.hyp)
-    if J is None:
+        J = _aggregate_rows(J, plan.agg_blocks or plan.agg)
+        if J is None:
+            return None
+    replay = prediction_plan_apply_stages(plan, pred)
+    composed = _apply_hypothesis(J, plan.hyp, replay.pre)
+    if composed is None:
         return None
-    beta = np.asarray(model.get_coef(), dtype=float).reshape(-1)
-    return J, prediction_plan_apply(plan, X @ beta)
+    J, numerical_stage = composed
+    if not np.isfinite(J).all():
+        return None
+    return J, replay.post, numerical_stage
 
 
 def _comparison_jacobian(plan, model):
-    raw_hi = _linear_design(model, plan.exog_hi, plan.n_pred)
-    raw_lo = _linear_design(model, plan.exog_lo, plan.n_pred)
-    if raw_hi is None or raw_lo is None or plan.need_y or plan.has_na:
+    if (
+        plan.has_na
+        or any(group.uses_y for group in plan.groups)
+        or any(group.fun_key is None for group in plan.groups)
+    ):
         return None
-    X_hi = _align_rows(raw_hi, plan.align)
-    X_lo = _align_rows(raw_lo, plan.align)
-    if X_hi is None or X_lo is None:
+    if any(
+        group.fun_key is not None and group.fun_key not in EXACT_COMPARISON_KEYS
+        for group in plan.groups
+    ):
+        return None
+    hi_stage = _model_stage(model, plan.exog_hi, plan.n_pred)
+    lo_stage = _model_stage(model, plan.exog_lo, plan.n_pred)
+    if hi_stage is None or lo_stage is None:
+        return None
+    X_hi, raw_hi, d_hi = hi_stage
+    X_lo, raw_lo, d_lo = lo_stage
+    X_hi, X_lo = _align_rows(X_hi, plan.align), _align_rows(X_lo, plan.align)
+    hi, lo = _align_rows(raw_hi, plan.align), _align_rows(raw_lo, plan.align)
+    d_hi = None if d_hi is None else _align_rows(d_hi, plan.align)
+    d_lo = None if d_lo is None else _align_rows(d_lo, plan.align)
+    if any(value is None for value in (X_hi, X_lo, hi, lo)):
         return None
 
     beta = np.asarray(model.get_coef(), dtype=float).reshape(-1)
-    hi = X_hi @ beta
-    lo = X_lo @ beta
     J = np.empty((plan.n_comp, beta.size), dtype=float)
     for group in plan.groups:
         idx = np.asarray(group.idx, dtype=int)
-        key = group.fun_key
-        if key == "difference":
-            value = X_hi[idx] - X_lo[idx]
-        elif key == "ratio":
-            value = (X_hi[idx] * lo[idx, None] - X_lo[idx] * hi[idx, None]) / np.square(
-                lo[idx, None]
-            )
-        elif key in {"differenceavg", "differenceavgwts"}:
-            value = _weighted_rows(X_hi[idx] - X_lo[idx], group.w)
-        elif key in {"ratioavg", "ratioavgwts"}:
-            mean_hi = _weighted_rows(X_hi[idx], group.w)
-            mean_lo = _weighted_rows(X_lo[idx], group.w)
-            pred_hi = float(mean_hi @ beta)
-            pred_lo = float(mean_lo @ beta)
-            value = (mean_hi * pred_lo - mean_lo * pred_hi) / pred_lo**2
-        else:
+        gradients = comparison_gradient_exact(
+            group.fun_key,
+            hi[idx],
+            lo[idx],
+            eps=group_eps(plan, group),
+            x=group.x,
+            w=group.w,
+        )
+        if gradients is None:
             return None
+        grad_hi, grad_lo = gradients
+        if d_hi is not None:
+            grad_hi = grad_hi * d_hi[idx]
+        if d_lo is not None:
+            grad_lo = grad_lo * d_lo[idx]
+        if group.scalar:
+            value = grad_hi @ X_hi[idx] + grad_lo @ X_lo[idx]
+        else:
+            value = X_hi[idx] * grad_hi[:, None] + X_lo[idx] * grad_lo[:, None]
         J[group.out_idx] = np.asarray(value).reshape(-1, beta.size)
-    J = _apply_hypothesis(J, plan.hyp)
-    if J is None:
+
+    if plan.agg is not None:
+        J = _aggregate_rows(J, plan.agg_blocks or plan.agg)
+        if J is None:
+            return None
+
+    replay = comparison_plan_apply_stages(plan, raw_hi, raw_lo)
+    composed = _apply_hypothesis(J, plan.hyp, replay.pre)
+    if composed is None:
         return None
-    return J, comparison_plan_apply(plan, raw_hi @ beta, raw_lo @ beta)
+    J, numerical_stage = composed
+    if not np.isfinite(J).all():
+        return None
+    return J, replay.post, numerical_stage
 
 
 def analytic_try(plan, model, V, estimate, kind):
-    """Return analytic delta-method results when the full plan is supported.
-
-    The closed-form Jacobian is only returned when replaying the plan from the
-    linear predictor reproduces the point estimates it is meant to differentiate.
-    Otherwise the caller falls back to automatic or numerical differentiation.
-    """
+    """Compose exact upstream stages with cheap downstream derivatives."""
     if plan is None or V is None:
         return None
     built = (
@@ -129,12 +250,9 @@ def analytic_try(plan, model, V, estimate, kind):
     )
     if built is None:
         return None
-    J, replay = built
+    J, replay, numerical_stage = built
     estimate = np.asarray(estimate, dtype=float).reshape(-1)
-    if J.shape[0] != estimate.size:
+    if J.shape[0] != estimate.size or not plan_values_allclose(replay, estimate):
         return None
-    if not plan_values_allclose(replay, estimate):
-        return None
-    se = get_se(J, V)
-    se[se == 0] = np.nan
-    return AnalyticResult(std_error=se, jacobian=J)
+    method = "analytic+numeric_stage" if numerical_stage else "analytic"
+    return AnalyticResult(std_error=get_se(J, V), jacobian=J, method=method)

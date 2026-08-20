@@ -1,7 +1,52 @@
 # 0.6.1
 
+Breaking change:
+
+* Numeric variables now use forward contrasts from `x` to `x + 1`, matching R.
+  This changes default and explicit numeric contrasts in nonlinear models.
+  Slopes, elasticities, and `"sd"` shortcuts remain centered.
+* The default `eps` for slopes and elasticities now matches R: `1e-4` times
+  each variable's finite range, or `1e-4` for a degenerate range. Custom
+  comparison functions receive the variable-specific step, or `None` for
+  non-numeric variables.
+
+New:
+
+* `by` accepts a data frame containing a `by` label and columns matched to the
+  estimates. Unmatched estimates are dropped with a warning.
+* Experimental `vcov=vcovUnconditional()` standard errors account for
+  coefficient uncertainty and sampling variation in the covariate distribution.
+  HC0, HC1, and one-way clustering are supported for averaged or aggregated
+  statsmodels linear and generalized linear models.
+
+Bug fixes:
+
+* Calling `datagrid()` first in a session no longer causes `predictions()`,
+  `comparisons()`, or `slopes()` to fail with a module/function name collision.
+* Affine `hypothesis` strings now use exact derivatives, preventing large
+  constants from producing incorrect zero standard errors. This matches R.
+* Weighted average slopes now have the correct `dY/dX` labels, and `expdydx`
+  uses the `eps` step instead of a `+1` contrast.
+* `avg_comparisons(comparison="expdydx")` crashed with recent NumPy/Polars
+  because the `expdydxavg` estimand called `np.mean()` on a Polars Series.
+* Tiny negative delta-method variances caused by floating-point noise are now
+  clamped to zero. Exact zero standard errors remain zero, matching R.
+* `comparisons()` and `avg_comparisons()` now aggregate row-level comparisons
+  within `by` groups. A custom callable `comparison` combined with `by`
+  previously returned one row per observation instead of one row per group.
+* Weighted aggregation now follows R's missing-value rules and avoids `0 * Inf`
+  contaminating a group.
+* `avg_predictions(wts=...)` and other grand-mean aggregations now use the
+  weights column for both estimates and standard errors.
+* The analytic path no longer converts a standard error of
+  exactly zero to `NaN`; a constant estimand has variance zero, matching the
+  numerical path.
+
 Breaking changes:
 
+* Removed the JAX automatic-differentiation engine and its public configuration
+  API. Verified analytic Jacobians are used when supported, with finite
+  differences as the universal fallback.
 * Model wrappers returned by `fit_statsmodels()`, `fit_sklearn()`, and
   `fit_linearmodels()` no longer forward unknown attributes to the underlying
   fitted object. Calls such as `mod.summary()` or `mod.params` now raise
@@ -13,8 +58,6 @@ New:
   `predictions()`, `comparisons()`, and their `avg_*` counterparts are computed
   in closed form when the plan supports it, instead of by finite differences.
   Supplying `eps_vcov` still selects the finite-difference path.
-* `jax` is no longer a required dependency. Install the optional `autodiff`
-  extra to enable automatic differentiation.
 
 # 0.6.0
 

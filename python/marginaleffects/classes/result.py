@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import warnings
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
-from typing import Any, Dict, Iterable, Iterator, Optional
+from typing import Any
 
 import polars as pl
 
@@ -10,7 +11,7 @@ import polars as pl
 def _default_mapping(
     data: pl.DataFrame,
     datagrid_explicit: Iterable[str],
-) -> Dict[str, str]:
+) -> dict[str, str]:
     datagrid_explicit = list(datagrid_explicit)
     datagrid_map = dict(zip(datagrid_explicit, datagrid_explicit))
     contrast_columns = {
@@ -18,7 +19,7 @@ def _default_mapping(
         for col in data.columns
         if col.startswith("contrast_")
     }
-    mapping: Dict[str, str] = {
+    mapping: dict[str, str] = {
         "term": "Term",
         "group": "Group",
         **datagrid_map,
@@ -40,12 +41,13 @@ def _default_mapping(
 
 @dataclass
 class _Metadata:
-    by: Optional[Any]
+    by: Any | None
     conf_level: float
-    jacobian: Optional[Any]
+    jacobian: Any | None
+    jacobian_method: str | None
     datagrid_explicit: Iterable[str]
     print_head: str
-    mapping: Dict[str, str]
+    mapping: dict[str, str]
 
 
 class MarginaleffectsResult:
@@ -58,11 +60,12 @@ class MarginaleffectsResult:
         self,
         data: pl.DataFrame,
         *,
-        by: Optional[Any] = None,
+        by: Any | None = None,
         conf_level: float = 0.95,
-        jacobian: Optional[Any] = None,
-        newdata: Optional[Any] = None,
-        mapping: Optional[Dict[str, str]] = None,
+        jacobian: Any | None = None,
+        jacobian_method: str | None = None,
+        newdata: Any | None = None,
+        mapping: dict[str, str] | None = None,
         print_head: str = "",
     ) -> None:
         if not isinstance(data, pl.DataFrame):
@@ -82,6 +85,7 @@ class MarginaleffectsResult:
             by=by,
             conf_level=conf_level,
             jacobian=jacobian,
+            jacobian_method=jacobian_method,
             datagrid_explicit=list(datagrid_explicit),
             print_head=print_head,
             mapping=final_mapping,
@@ -96,7 +100,7 @@ class MarginaleffectsResult:
         return self._data
 
     @property
-    def by(self) -> Optional[Any]:
+    def by(self) -> Any | None:
         return self._meta.by
 
     @property
@@ -104,8 +108,13 @@ class MarginaleffectsResult:
         return self._meta.conf_level
 
     @property
-    def jacobian(self) -> Optional[Any]:
+    def jacobian(self) -> Any | None:
         return self._meta.jacobian
+
+    @property
+    def jacobian_method(self) -> str | None:
+        """Method used to differentiate the coefficient-to-estimand map."""
+        return self._meta.jacobian_method
 
     @property
     def datagrid_explicit(self) -> Iterable[str]:
@@ -205,6 +214,7 @@ class MarginaleffectsResult:
                         by=self.by,
                         conf_level=self.conf_level,
                         jacobian=self.jacobian,
+                        jacobian_method=self.jacobian_method,
                         mapping=self._meta.mapping.copy(),
                         print_head=self._meta.print_head,
                     )

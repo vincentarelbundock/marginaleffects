@@ -24,6 +24,7 @@ Constructor for marginaleffects_internal class
   hypothesis_null = NULL,
   hypothesis_direction = NULL,
   jacobian = NULL,
+  jacobian_method = NULL,
   modeldata = NULL,
   numderiv = list("fdforward"),
   type = NULL,

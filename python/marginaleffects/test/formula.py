@@ -1,7 +1,7 @@
-from formulaic import Formula
 import formulaic
 import numpy as np
 import polars as pl
+from formulaic import Formula
 
 
 def reference_ratio_comparison(x):
@@ -234,10 +234,10 @@ def parse_hypothesis_formula(hypothesis):
 
     # right-hand side
     if isinstance(formula.rhs, formulaic.formula.SimpleFormula):
-        rhs = list(formula.rhs.required_variables)[0]
+        rhs = next(iter(formula.rhs.required_variables))
         by = None
     elif isinstance(formula.rhs, tuple):
-        rhs = list(formula.rhs[0].required_variables)[0]
+        rhs = next(iter(formula.rhs[0].required_variables))
         by = list(formula.rhs[1].required_variables)
 
     msg = f"The right-hand side of the `hypothesis` formula must be element of: {', '.join(rhs_ok)}."

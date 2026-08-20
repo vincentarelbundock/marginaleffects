@@ -23,37 +23,13 @@ get_model_matrix.glm <- get_model_matrix.lm
 
 #' @noRd
 #' @export
-get_jacobian_analytic.lm <- function(model, type, ...) {
-    if (
-        !identical(class(model)[1], "lm") ||
-            !isTRUE(type %in% c("response", "link"))
-    ) {
-        return(NULL)
-    }
-    jacobian_analytic_model_matrix(
-        model = model,
-        type = type,
-        response_scale = FALSE,
-        ...
-    )
+get_prediction_jacobian_spec.lm <- function(model, type, ...) {
+    prediction_jacobian_spec_linear(model, "lm", type, c("response", "link"))
 }
 
 
 #' @noRd
 #' @export
-get_jacobian_analytic.glm <- function(model, type, ...) {
-    if (
-        !identical(class(model)[1], "glm") ||
-            !isTRUE(type %in% c("response", "link"))
-    ) {
-        return(NULL)
-    }
-    response_scale <- identical(type, "response")
-    jacobian_analytic_model_matrix(
-        model = model,
-        type = type,
-        response_scale = response_scale,
-        family = if (response_scale) stats::family(model) else NULL,
-        ...
-    )
+get_prediction_jacobian_spec.glm <- function(model, type, ...) {
+    prediction_jacobian_spec_glm_family(model, "glm", type)
 }

@@ -1,11 +1,9 @@
-from typing import Union
-
 import numpy as np
 import polars as pl
 
 
 def get_equivalence(
-    x: pl.DataFrame, equivalence: Union[list, None], df: float = np.inf
+    x: pl.DataFrame, equivalence: list | None, df: float = np.inf
 ) -> pl.DataFrame:
     if equivalence is None:
         return x

@@ -8,7 +8,7 @@ def get_categorical_combinations(
         return _clean_global(k, newdata.shape[0])
 
     if not isinstance(combo, str):
-        raise ValueError("The 'variables' value must be a string.")
+        raise TypeError("The 'variables' value must be a string.")
 
     if len(uniqs) > 25:
         raise ValueError("There are too many unique categories to compute comparisons.")
@@ -140,7 +140,7 @@ def _get_cross_factorial_combinations(
     level_lists = [var_levels[vn] for vn in var_names]
     grid_combinations = list(product(*level_lists))
 
-    comparison_obj, lab = sanitize_comparison(comparison, by, wts)
+    comparison_obj, _lab = sanitize_comparison(comparison, by, wts)
 
     out = []
 

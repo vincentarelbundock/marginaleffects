@@ -36,7 +36,7 @@ The three main functions (`predictions()`, `comparisons()`, `slopes()`) share a 
 
 1. **Input sanitization** (`utils.py:prepare_base_inputs`, `sanitize/`) — wraps raw model via `sanitize_model()`, validates `newdata`/`by`/`vcov`/`hypothesis`
 2. **Counterfactual computation** — builds modified data grids and computes estimates, capturing a reusable plan (`planning/`)
-3. **Uncertainty** (`inference/`) — delta method for standard errors, with the Jacobian obtained from the first path that supports the plan: analytic (`inference/analytic.py`), automatic differentiation (`autodiff/`, opt-in), then forward finite differences (`inference/delta.py`)
+3. **Uncertainty** (`inference/`) — delta method for standard errors, using analytic Jacobians when the plan has a verified derivative and forward finite differences otherwise (`inference/delta.py`)
 4. **Result wrapping** (`classes/result.py:MarginaleffectsResult`) — dataclass wrapping a Polars DataFrame with metadata (conf_level, jacobian, column mapping, print formatting)
 
 `slopes()` delegates entirely to `comparisons()` with `slope`-specific parameters — it does not reimplement the logic.
@@ -80,4 +80,3 @@ All adapters inherit from `ModelAbstract` (`classes/model.py`), which provides t
 - `tests/helpers.py` and `tests/utilities.py` provide test comparison helpers
 - Plot tests use image regression: `@pytest.mark.plot`, images in `tests/images/`
 - Generate R snapshots: `make py-snapshot` (runs `tests/r/run.R`)
-- Autodiff tests: `make py-test-autodiff` (sets `MARGINALEFFECTS_AUTODIFF=1`)

@@ -50,6 +50,141 @@ comparison_function_dict <- list(
     "expdydxavgwts" = function(hi, lo, eps, w) wmean(((exp(hi) - exp(lo)) / exp(eps)) / eps, w)
 )
 
+# Exact derivatives of the built-in comparison functions.
+#
+# Every entry mirrors one closed-form definition in
+# `comparison_function_dict` directly above, differentiated by hand with
+# respect to the `hi` and `lo` prediction vectors. The two tables sit in one
+# file so that a shorthand cannot be added or edited here without its
+# derivative in view; R/inst/tinytest/test-comparison-registry.R asserts that
+# they stay in step. Closed forms carry no step size, no structural
+# assumption, and no verification burden: they are correct wherever they are
+# finite, and where they are not finite the caller's finiteness check rejects
+# the group and the estimand falls back to the numeric path.
+#
+# Only recorded built-ins are differentiated. A user-supplied comparison
+# closure is arbitrary code, and no finite set of probe evaluations can prove
+# structural facts about arbitrary code -- a function built to agree with the
+# probes and disagree elsewhere defeats any such scheme. Unknown keys
+# therefore return NULL and keep the whole estimand on the numeric
+# whole-pipeline path.
+#
+# `eyex` and `eydx` never reach this table because their `y` formal marks
+# their groups `uses_y`, which disqualifies the analytic path upstream.
+comparison_gradient_exact <- function(fun_key, hi, lo, args) {
+  n <- length(hi)
+
+  # Normalized averaging weights: NULL for rowwise keys, else a vector
+  # summing to 1 which also encodes plain means.
+  avg <- grepl("avg", fun_key, fixed = TRUE)
+  a <- NULL
+  if (avg) {
+    if (grepl("wts$", fun_key)) {
+      w <- args[["w"]]
+      if (
+        !is.numeric(w) || length(w) != n || any(!is.finite(w)) || sum(w) == 0
+      ) {
+        return(NULL)
+      }
+      a <- w / sum(w)
+    } else {
+      a <- rep.int(1 / n, n)
+    }
+  }
+  wmean_or_mean <- function(x) if (is.null(a)) mean(x) else sum(a * x)
+
+  # Slope-family keys divide by the recorded step; validate it once.
+  eps <- NULL
+  if (fun_key %in% c(
+    "dydx", "dydxavg", "dydxavgwts",
+    "dyex", "dyexavg", "dyexavgwts",
+    "expdydx", "expdydxavg", "expdydxavgwts"
+  )) {
+    eps <- args[["eps"]]
+    if (
+      !is.numeric(eps) || !length(eps) %in% c(1L, n) ||
+        any(!is.finite(eps)) || any(eps == 0)
+    ) {
+      return(NULL)
+    }
+  }
+  x <- args[["x"]]
+
+  switch(fun_key,
+    difference = list(hi = rep.int(1, n), lo = rep.int(-1, n)),
+    differenceavg = ,
+    differenceavgwts = list(hi = a, lo = -a),
+    ratio = ,
+    lift = list(hi = 1 / lo, lo = -hi / lo^2),
+    ratioavg = ,
+    ratioavgwts = ,
+    liftavg = ,
+    liftavgwts = {
+      # liftavg = wmean(hi - lo) / wmean(lo) = wmean(hi) / wmean(lo) - 1,
+      # so its gradient is the gradient of ratioavg.
+      mh <- wmean_or_mean(hi)
+      ml <- wmean_or_mean(lo)
+      list(hi = a / ml, lo = -a * mh / ml^2)
+    },
+    lnratio = list(hi = 1 / hi, lo = -1 / lo),
+    lnratioavg = ,
+    lnratioavgwts = {
+      mh <- wmean_or_mean(hi)
+      ml <- wmean_or_mean(lo)
+      list(hi = a / mh, lo = -a / ml)
+    },
+    lnor = list(
+      hi = 1 / (hi * (1 - hi)),
+      lo = -1 / (lo * (1 - lo))
+    ),
+    lnoravg = ,
+    lnoravgwts = {
+      mh <- wmean_or_mean(hi)
+      ml <- wmean_or_mean(lo)
+      list(hi = a / (mh * (1 - mh)), lo = -a / (ml * (1 - ml)))
+    },
+    dydx = list(hi = rep_len(1 / eps, n), lo = rep_len(-1 / eps, n)),
+    dydxavg = ,
+    dydxavgwts = list(hi = a / eps, lo = -a / eps),
+    dyex = {
+      if (!is.numeric(x) || !length(x) %in% c(1L, n)) {
+        return(NULL)
+      }
+      list(hi = rep_len(x / eps, n), lo = rep_len(-x / eps, n))
+    },
+    dyexavg = ,
+    dyexavgwts = {
+      if (!is.numeric(x) || !length(x) %in% c(1L, n)) {
+        return(NULL)
+      }
+      list(hi = a * x / eps, lo = -a * x / eps)
+    },
+    expdydx = list(
+      hi = exp(hi) / (exp(eps) * eps),
+      lo = -exp(lo) / (exp(eps) * eps)
+    ),
+    expdydxavg = ,
+    expdydxavgwts = list(
+      hi = a * exp(hi) / (exp(eps) * eps),
+      lo = -a * exp(lo) / (exp(eps) * eps)
+    ),
+    NULL
+  )
+}
+
+
+# Comparison keys the derivative table above is not expected to handle: `eyex`
+# and `eydx` and their averaged variants divide by the observed outcome `y`,
+# which marks their groups `uses_y` and disqualifies the analytic path
+# upstream, so no closed form is recorded for them by design. Kept as data so
+# the registry test can assert the exclusion rather than hardcode it twice.
+comparison_gradient_excluded <- c(
+    "eyex", "eydx",
+    "eyexavg", "eydxavg",
+    "eyexavgwts", "eydxavgwts"
+)
+
+
 comparison_label_dict <- list(
     "difference" = "%s - %s",
     "differenceavg" = "%s - %s",
@@ -80,7 +215,12 @@ comparison_label_dict <- list(
     "lift" = "lift(%s, %s)",
     "liftavg" = "lift(%s, %s)",
     "liftavgwts" = "lift(%s, %s)",
-    "expdydx" = "exp(dY/dX)"
+    # All three must carry the label: get_comparisons_data_numeric() keys the
+    # eps-step derivative contrast off it, and without an entry the averaged
+    # variants silently fell back to the default "+1" unit contrast.
+    "expdydx" = "exp(dY/dX)",
+    "expdydxavg" = "exp(dY/dX)",
+    "expdydxavgwts" = "exp(dY/dX)"
 )
 
 sanity_comparison <- function(comparison) {

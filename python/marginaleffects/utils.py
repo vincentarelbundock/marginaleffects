@@ -1,7 +1,9 @@
+from collections.abc import Callable
+from typing import Protocol, runtime_checkable
+
 import narwhals as nw
 import numpy as np
 import polars as pl
-from typing import Callable, Optional, Protocol, runtime_checkable, Union, List
 
 
 @runtime_checkable
@@ -59,7 +61,9 @@ def sort_columns(df, by=None, newdata=None):
     ] + df.columns
 
     if by is not None:
-        if isinstance(by, list):
+        if isinstance(by, pl.DataFrame):
+            cols = ["by"] + cols
+        elif isinstance(by, list):
             cols = by + cols
         else:
             cols = [by] + cols
@@ -158,7 +162,7 @@ def upcast(df, reference):
     return df
 
 
-def get_mode(series: pl.Series) -> Union[str, int, float, bool]:
+def get_mode(series: pl.Series) -> str | int | float | bool:
     """
     Get the mode (most frequent value) of a Polars Series.
 
@@ -204,7 +208,7 @@ def mean_i(series: pl.Series) -> int:
     int
         Rounded mean value
     """
-    return int(round(series.drop_nulls().mean()))
+    return round(series.drop_nulls().mean())
 
 
 def mean_na(series: pl.Series) -> float:
@@ -224,7 +228,7 @@ def mean_na(series: pl.Series) -> float:
     return series.drop_nulls().mean()
 
 
-def unique_s(series: pl.Series) -> List:
+def unique_s(series: pl.Series) -> list:
     """
     Get unique values sorted, similar to R's unique_s.
 
@@ -252,16 +256,17 @@ def finalize_result(
     newdata,
     conf_level,
     J,
+    jacobian_method=None,
     hypothesis_null=None,
-    equivalence_df: Optional[float] = None,
-    postprocess: Optional[Callable] = None,
+    equivalence_df: float | None = None,
+    postprocess: Callable | None = None,
 ):
     """
     Shared helper to add z/p/CI, apply final transforms, and wrap a MarginaleffectsResult.
     """
+    from .classes import MarginaleffectsResult
     from .inference import get_z_p_ci
     from .test.equivalence import get_equivalence
-    from .classes import MarginaleffectsResult
     from .transform import get_transform
 
     if "std_error" in out.columns:
@@ -277,7 +282,12 @@ def finalize_result(
     if postprocess is not None:
         out = postprocess(out)
     return MarginaleffectsResult(
-        out, by=by, conf_level=conf_level, jacobian=J, newdata=newdata
+        out,
+        by=by,
+        conf_level=conf_level,
+        jacobian=J,
+        jacobian_method=jacobian_method,
+        newdata=newdata,
     )
 
 
@@ -304,15 +314,18 @@ def prepare_base_inputs(
     Shared helper to sanitize model, newdata, by, and hypothesis inputs.
     """
     from warnings import warn
-    from .sanitize import sanitize_model
+
+    from .pyfixest import ModelPyfixest
     from .sanitize import (
+        by_frame_keys,
+        by_is_frame,
         sanitize_by,
         sanitize_hypothesis_null,
+        sanitize_model,
         sanitize_newdata,
         sanitize_vcov,
     )
     from .sanitize.utils import validate_string_columns
-    from .pyfixest import ModelPyfixest
 
     if callable(newdata):
         newdata = newdata(model)
@@ -344,11 +357,14 @@ def prepare_base_inputs(
         vcov = False
 
     by = sanitize_by(by)
+    # A `by` data frame carries labels, not column names. Consumers that only
+    # understand column names get the columns it matches on instead.
+    by_names = by_frame_keys(by) if by_is_frame(by) else by
     V = sanitize_vcov(vcov, model)
-    newdata = sanitize_newdata(model, newdata, wts=wts, by=by)
+    newdata = sanitize_newdata(model, newdata, wts=wts, by=by_names)
     hypothesis_null = sanitize_hypothesis_null(hypothesis)
 
     modeldata = model.get_modeldata()
-    validate_string_columns(by, modeldata, context="the 'by' parameter")
+    validate_string_columns(by_names, modeldata, context="the 'by' parameter")
 
     return model, by, V, newdata, hypothesis_null, modeldata

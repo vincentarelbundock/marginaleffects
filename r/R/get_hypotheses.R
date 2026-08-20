@@ -1,4 +1,8 @@
-get_hypotheses <- function(model_perturbed, hypothesis, hypothesis_is_formula, newparams = NULL, ...) {
+# The estimates on which the hypothesis is evaluated, before the hypothesis is
+# applied. Callers which need to differentiate the hypothesis exactly must
+# compile it against these estimates, so the extraction is factored out here
+# rather than duplicated.
+get_hypotheses_skeleton <- function(model_perturbed, hypothesis, hypothesis_is_formula, newparams = NULL, ...) {
     if (isTRUE(checkmate::check_numeric(model_perturbed))) {
         out <- data.frame(term = seq_along(model_perturbed), estimate = model_perturbed)
     } else if (inherits(model_perturbed, "data.frame")) {
@@ -42,6 +46,18 @@ get_hypotheses <- function(model_perturbed, hypothesis, hypothesis_is_formula, n
         out <- model_perturbed
     }
 
+    return(out)
+}
+
+
+get_hypotheses <- function(model_perturbed, hypothesis, hypothesis_is_formula, newparams = NULL, ...) {
+    out <- get_hypotheses_skeleton(
+        model_perturbed = model_perturbed,
+        hypothesis = hypothesis,
+        hypothesis_is_formula = hypothesis_is_formula,
+        newparams = newparams,
+        ...
+    )
 
     tmp <- get_hypothesis(out, hypothesis = hypothesis)
 

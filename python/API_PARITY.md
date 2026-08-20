@@ -11,7 +11,6 @@ Matching names imply matching user-facing semantics unless noted below.
 | Degrees of freedom | `df` | Adapter-provided | Deliberate Python default |
 | Numerical derivative method | `numderiv` | Forward difference plus automatic/analytic paths | Different interface |
 | Analytic Jacobian | Model methods and model matrix | Linear model-matrix plans | Partial; other plans fall back |
-| Automatic differentiation | Extension mechanism | Optional JAX extra | Python-specific |
 | Simulation inference/replay | Yes | No | Planned |
 | Bootstrap/conformal inference | Yes | No | Planned |
 | Bayesian posterior draws | Yes | No | Planned |

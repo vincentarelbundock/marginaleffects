@@ -67,6 +67,7 @@ plot_slopes <- function(
     gray = getOption("marginaleffects_plot_gray", default = FALSE),
     draw = TRUE,
     ...) {
+    vcov <- sanitize_vcov_request(vcov)
     if ("effect" %in% ...names()) {
         if (is.null(variables)) {
             variables <- ...elt(match("effect", ...names())[1L])

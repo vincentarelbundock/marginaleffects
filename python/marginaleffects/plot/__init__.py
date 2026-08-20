@@ -1,6 +1,5 @@
 from importlib import import_module
 
-
 _EXPORTS = {
     "plot_predictions": ("marginaleffects.plot.predictions", "plot_predictions"),
     "plot_comparisons": ("marginaleffects.plot.comparisons", "plot_comparisons"),

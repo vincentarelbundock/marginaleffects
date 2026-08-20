@@ -5,10 +5,25 @@ joint_test <- function(
     joint_test = "f",
     df = NULL,
     vcov = TRUE) {
+    vcov <- sanitize_vcov_request(vcov)
     checkmate::assert_choice(joint_test, c("f", "chisq"))
 
     # do not use components() because this may be a model object
     mfx <- attr(object, "marginaleffects")
+    internal_classes <- c("predictions", "comparisons", "slopes", "hypotheses")
+
+    if (inherits(object, internal_classes) && !isTRUE(vcov)) {
+        msg <- paste0(
+            "The `vcov` argument is not available when `object` is a ",
+            "`predictions`, `comparisons`, `slopes`, or `hypotheses` object. ",
+            "Please specify the type of standard errors in the initial ",
+            "`marginaleffects` call."
+        )
+        stop_sprintf(msg)
+    }
+    if (inherits(vcov, "marginaleffects_vcov_unconditional")) {
+        stop_unconditional("hypotheses")
+    }
 
     # Create mfx object if it doesn't exist (needed for joint tests on model objects)
     if (is.null(mfx) && !inherits(object, c("slopes", "comparisons", "predictions", "hypotheses"))) {
@@ -57,6 +72,16 @@ joint_test <- function(
 
     # V_hat: estimated covariance matrix
     V_hat <- get_vcov(object, vcov = vcov)
+    # For marginaleffects objects V_hat is J V J' with rows in estimate order
+    # by construction; for raw models both come from the same coefficient
+    # vector. A dimension mismatch means neither invariant holds.
+    if (!isTRUE(nrow(V_hat) == length(theta_hat))) {
+        stop_sprintf(
+            "The covariance matrix (%s rows) does not match the parameter vector (%s).",
+            nrow(V_hat),
+            length(theta_hat)
+        )
+    }
 
     # R: Q x P matrix for testing Q hypotheses on P parameters
     # build R matrix based on joint_index
@@ -65,7 +90,17 @@ joint_test <- function(
         if (is.numeric(joint_index)) {
             R[i, joint_index[i]] <- 1
         } else {
-            R[i, which(names(theta_hat) == joint_index[i])] <- 1
+            idx <- which(names(theta_hat) == joint_index[i])
+            # A duplicated name would put two 1s in this row and silently test
+            # the sum of both parameters instead of the one the user named.
+            if (length(idx) != 1L) {
+                stop_sprintf(
+                    "The name \"%s\" matches %s estimates. Joint tests need each selected name to identify exactly one estimate; use numeric indices instead.",
+                    joint_index[i],
+                    length(idx)
+                )
+            }
+            R[i, idx] <- 1
         }
     }
 

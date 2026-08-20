@@ -59,7 +59,6 @@ utils::globalVariables(c(
     "lo",
     "logLik",
     "m",
-    "mAD",
     "marginaleffects_contrast_hi",
     "marginaleffects_contrast_lo",
     "marginaleffects_formula_idx",

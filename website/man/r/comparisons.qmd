@@ -304,13 +304,21 @@ Type of uncertainty estimates to report (e.g., for robust standard errors). Acce
 <li> Heteroskedasticity and autocorrelation consistent: <code>"HAC"</code>
 
 </li>
+<li> Unconditional: <code>"unconditional"</code> accounts for sampling variation in
+the empirical covariate distribution for averaged or aggregated
+predictions, comparisons, and slopes. Hypotheses applied directly to
+unit-level effects are rejected. Use
+<code>vcovUnconditional(cluster = ~cluster)</code> for
+one-way clustered unconditional inference.
+
+</li>
 <li> Mixed-Models degrees of freedom: &quot;satterthwaite&quot;, &quot;kenward-roger&quot;
 
 </li>
 <li> Other: <code>"NeweyWest"</code>, <code>"KernHAC"</code>, <code>"OPG"</code>. See the <code>sandwich</code> package documentation.
 
 </li>
-<li> &quot;rsample&quot;, &quot;boot&quot;, &quot;fwb&quot;, and &quot;simulation&quot; are passed to the <code>method</code> argument of the <code>inferences()</code> function. To customize the bootstrap or simulation process, call <code>inferences()</code> directly.
+<li> <code>"rsample"</code>, <code>"boot"</code>, <code>"fwb"</code>, or <code>"simulation"</code>: forward the result to <code>inferences()</code> using that method.
 
 </li></ul>
 
@@ -1437,6 +1445,9 @@ Some of the most common <code>type</code> values are:
 
 </li>
 <li> Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020. &quot;Surprise!&quot; American Journal of Epidemiology 190 (2): 191–93. [doi:10.1093/aje/kwaa136](https://doi.org/10.1093/aje/kwaa136)
+
+</li>
+<li> Hansen SN, Overgaard M (2025). “Variance Estimation for Average Treatment Effects Estimated by G-Computation.” <em>Metrika</em>, <em>88</em>(4), 419–443. [doi:10.1007/s00184-024-00962-4](https://doi.org/10.1007/s00184-024-00962-4)
 
 </li></ul>
 
