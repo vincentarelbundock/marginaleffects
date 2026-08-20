@@ -3,9 +3,10 @@
 %   R/methods_aod.R, R/methods_betareg.R, R/methods_biglm.R, R/methods_brms.R,
 %   R/methods_dbarts.R, R/methods_fixest.R, R/methods_gamlss.R,
 %   R/methods_glmmTMB.R, R/methods_lme4.R, R/methods_mclogit.R,
-%   R/methods_mlogit.R, R/methods_mlr3.R, R/methods_ordinal.R, R/methods_plm.R,
-%   R/methods_quantreg.R, R/methods_rms.R, R/methods_survey.R,
-%   R/methods_survival.R, R/methods_svyVGAM.R
+%   R/methods_mlogit.R, R/methods_mlr3.R, R/methods_mmrm.R,
+%   R/methods_ordinal.R, R/methods_plm.R, R/methods_quantreg.R,
+%   R/methods_rms.R, R/methods_survey.R, R/methods_survival.R,
+%   R/methods_svyVGAM.R
 \name{sanitize_model_specific}
 \alias{sanitize_model_specific}
 \alias{sanitize_model_specific.default}
@@ -22,6 +23,7 @@
 \alias{sanitize_model_specific.mblogit}
 \alias{sanitize_model_specific.mlogit}
 \alias{sanitize_model_specific.Learner}
+\alias{sanitize_model_specific.mmrm}
 \alias{sanitize_model_specific.clm}
 \alias{sanitize_model_specific.plm}
 \alias{sanitize_model_specific.rqs}
@@ -74,6 +76,8 @@ sanitize_model_specific(model, ...)
 \method{sanitize_model_specific}{mlogit}(model, calling_function = NULL, ...)
 
 \method{sanitize_model_specific}{Learner}(model, calling_function, ...)
+
+\method{sanitize_model_specific}{mmrm}(model, ...)
 
 \method{sanitize_model_specific}{clm}(model, ...)
 

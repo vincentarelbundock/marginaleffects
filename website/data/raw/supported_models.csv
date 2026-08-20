@@ -59,6 +59,7 @@ mgcv,gam
 mhurdle,mhurdle
 mlogit,mlogit
 mlr3,Learner
+mmrm,mmrm
 mvgam,mvgam
 mvgam,mvgam
 nlme,gls

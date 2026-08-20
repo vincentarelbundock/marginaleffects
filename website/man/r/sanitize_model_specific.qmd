@@ -63,6 +63,9 @@ sanitize_model_specific(model, calling_function = NULL, ...)
 ## S3 method for class 'Learner'
 sanitize_model_specific(model, calling_function, ...)
 
+## S3 method for class 'mmrm'
+sanitize_model_specific(model, ...)
+
 ## S3 method for class 'clm'
 sanitize_model_specific(model, ...)
 
