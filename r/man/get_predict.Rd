@@ -47,6 +47,7 @@
 \alias{get_predict.mmrm}
 \alias{get_predict.nestedLogit}
 \alias{get_predict.clm}
+\alias{get_predict.clmm2}
 \alias{get_predict.rq}
 \alias{get_predict.rms}
 \alias{get_predict.orm}
@@ -216,6 +217,8 @@ get_predict(
 )
 
 \method{get_predict}{clm}(model, newdata = get_modeldata(model), type = "prob", ...)
+
+\method{get_predict}{clmm2}(model, newdata = get_modeldata(model), type = "prob", ...)
 
 \method{get_predict}{rq}(model, newdata = get_modeldata(model), type = NULL, ...)
 

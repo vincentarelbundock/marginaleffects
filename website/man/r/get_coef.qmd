@@ -83,6 +83,9 @@ get_coef(model, ...)
 ## S3 method for class 'nestedLogit'
 get_coef(model, ...)
 
+## S3 method for class 'clmm2'
+get_coef(model, ...)
+
 ## S3 method for class 'selection'
 get_coef(model, ...)
 

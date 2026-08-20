@@ -14,6 +14,7 @@
 \alias{get_group_names.mlm}
 \alias{get_group_names.nestedLogit}
 \alias{get_group_names.clm}
+\alias{get_group_names.clmm2}
 \alias{get_group_names.hurdle}
 \alias{get_group_names.svyolr}
 \title{Get levels of the outcome variable in grouped or multivariate models}
@@ -37,6 +38,8 @@ get_group_names(model, ...)
 \method{get_group_names}{nestedLogit}(model, type, ...)
 
 \method{get_group_names}{clm}(model, ...)
+
+\method{get_group_names}{clmm2}(model, ...)
 
 \method{get_group_names}{hurdle}(model, type = "count", ...)
 

@@ -500,6 +500,7 @@ Some of the most common \code{type} values are:\tabular{ll}{
    brmsfit \tab response, link, prediction, average \cr
    brmultinom \tab probs, class \cr
    clm \tab prob, cum.prob, linear.predictor \cr
+   clmm2 \tab prob \cr
    clogit \tab expected, lp, risk, survival \cr
    coxph \tab survival, expected, lp, risk \cr
    coxph_weightit \tab survival, expected, lp, risk \cr

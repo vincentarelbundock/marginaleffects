@@ -101,6 +101,9 @@ set_coef(model, coefs, ...)
 ## S3 method for class 'lme'
 set_coef(model, coefs, ...)
 
+## S3 method for class 'clmm2'
+set_coef(model, coefs, ...)
+
 ## S3 method for class 'hurdle'
 set_coef(model, coefs, ...)
 

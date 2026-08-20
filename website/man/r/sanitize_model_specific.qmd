@@ -69,6 +69,9 @@ sanitize_model_specific(model, ...)
 ## S3 method for class 'clm'
 sanitize_model_specific(model, ...)
 
+## S3 method for class 'clmm2'
+sanitize_model_specific(model, ...)
+
 ## S3 method for class 'plm'
 sanitize_model_specific(model, ...)
 

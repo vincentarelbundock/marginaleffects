@@ -5,9 +5,9 @@
 %   R/methods_brms.R, R/methods_dataframe.R, R/methods_gamlss.R,
 %   R/methods_glmmTMB.R, R/methods_glmtoolbox.R, R/methods_lme4.R,
 %   R/methods_mclogit.R, R/methods_mgcv.R, R/methods_mlm.R, R/methods_mmrm.R,
-%   R/methods_nestedLogit.R, R/methods_sampleSelection.R, R/methods_scam.R,
-%   R/methods_survey.R, R/methods_svyVGAM.R, R/methods_systemfit.R,
-%   R/methods_tidymodels.R
+%   R/methods_nestedLogit.R, R/methods_ordinal.R, R/methods_sampleSelection.R,
+%   R/methods_scam.R, R/methods_survey.R, R/methods_svyVGAM.R,
+%   R/methods_systemfit.R, R/methods_tidymodels.R
 \name{get_coef}
 \alias{get_coef}
 \alias{get_coef.default}
@@ -34,6 +34,7 @@
 \alias{get_coef.mlm}
 \alias{get_coef.mmrm}
 \alias{get_coef.nestedLogit}
+\alias{get_coef.clmm2}
 \alias{get_coef.selection}
 \alias{get_coef.scam}
 \alias{get_coef.svyolr}
@@ -91,6 +92,8 @@ get_coef(model, ...)
 \method{get_coef}{mmrm}(model, ...)
 
 \method{get_coef}{nestedLogit}(model, ...)
+
+\method{get_coef}{clmm2}(model, ...)
 
 \method{get_coef}{selection}(model, ...)
 
