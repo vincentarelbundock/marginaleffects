@@ -73,8 +73,8 @@ py-lint: ## Py: run ruff linter and formatter
 py-precommit: ## Py: run pre-commit on all files
 	cd python && pre-commit run --all-files
 
-py-snapshot: ## Py: snapshot test
-	cd python && R CMD BATCH tests/r/run.R
+py-snapshot: ## Py: regenerate R reference fixtures in python/tests/r
+	cd python && Rscript tests/r/run.R
 
 py-document: ## Py: populate website/man/python from docstrings
 	@mkdir -p website/man/python

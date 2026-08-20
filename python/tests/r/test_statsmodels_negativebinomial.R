@@ -1,6 +1,6 @@
 source(here::here("tests/r/load.R"))
 
-dat = fread("https://vincentarelbundock.github.io/Rdatasets/csv/MASS/quine.csv")
+dat <- fread(here("tests/data/quine.csv"), na.strings = c("NA", ""))
 mod <- glm.nb(Days ~ Sex/(Age + Eth*Lrn), data = dat)
 
 predictions(mod, type = "response") |> 

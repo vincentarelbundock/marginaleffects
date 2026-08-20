@@ -1,6 +1,6 @@
 source(here::here("tests/r/load.R"))
 
-dat = fread("https://vincentarelbundock.github.io/Rdatasets/csv/geepack/dietox.csv")
+dat <- fread(here("tests/data/dietox.csv"), na.strings = c("NA", ""))
 mod = lmer(Weight ~ Time * Litter + (1 | Pig), data = dat)
 
 predictions(mod, type = "response", re.form = NA) |> 

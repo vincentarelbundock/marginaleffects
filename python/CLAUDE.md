@@ -80,3 +80,19 @@ All adapters inherit from `ModelAbstract` (`classes/model.py`), which provides t
 - `tests/helpers.py` and `tests/utilities.py` provide test comparison helpers
 - Plot tests use image regression: `@pytest.mark.plot`, images in `tests/images/`
 - Generate R snapshots: `make py-snapshot` (runs `tests/r/run.R`)
+
+R fixture generation is hermetic and must stay that way. Every script in
+`tests/r/` reads a vendored CSV from `tests/data/` — never a URL and never
+`get_dataset()`, which downloads — and the Python test it feeds reads the same
+file. Two consecutive runs of `make py-snapshot` produce byte-identical output,
+so a non-empty `git diff python/tests/r/` after regenerating means R behavior
+actually changed. Matching rules that are easy to get wrong:
+
+- `fread(..., na.strings = c("NA", ""))`, because polars treats an empty CSV
+  field as null and data.table does not.
+- Spell out factor level order on both sides (see `test_statsmodels_ordinal.R`);
+  a CSV carries no factor metadata and the default lexical order differs.
+- Seed anything random (`set.seed` / `default_rng`), even for columns that are
+  not in the fitted model — they are still written into the fixture.
+- Do not name a helper column `rowid`; a user column of that name silently
+  overwrites the `rowid` that marginaleffects emits.

@@ -20,7 +20,8 @@ dat = guerry.with_columns(
 dat = dat.with_columns(
     pl.col("Bin").cast(pl.Int32),
     pl.Series(
-        np.random.choice(["a", "b", "c"], dat.shape[0]), dtype=pl.Categorical
+        np.random.default_rng(1024).choice(["a", "b", "c"], dat.shape[0]),
+        dtype=pl.Categorical,
     ).alias("Char"),
 ).to_pandas()
 dat = sort_categories_pandas(dat)

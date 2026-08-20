@@ -5,7 +5,7 @@ from marginaleffects import *
 from tests.utilities import sort_categories_pandas
 
 dat = (
-    get_dataset("dietox", "geepack")
+    pl.read_csv("tests/data/dietox.csv", null_values="NA")
     .select("Weight", "Time", "Litter", "Pig", "Cu")
     .drop_nulls()
     .with_columns(

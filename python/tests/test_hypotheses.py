@@ -6,12 +6,14 @@ from marginaleffects import *
 from marginaleffects import MarginaleffectsResult
 
 
+# Read the same vendored CSV as tests/r/test_hypotheses.R so the R fixtures and the Python
+# results are computed from identical bytes.
 guerry = (
-    get_dataset("Guerry", "HistData")
+    pl.read_csv("tests/data/Guerry.csv", null_values="NA")
     .select("Literacy", "Pop1831", "Desertion")
     .drop_nulls()
 )
-mtcars = get_dataset("mtcars", "datasets")
+mtcars = pl.read_csv("tests/data/mtcars.csv", null_values="NA")
 mod = smf.ols("Literacy ~ Pop1831 * Desertion", guerry).fit()
 mtcars_mod = smf.ols("mpg ~ hp + cyl", data=mtcars).fit()
 

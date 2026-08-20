@@ -5,7 +5,7 @@ from marginaleffects import *
 from polars.testing import assert_series_equal
 
 dat = (
-    get_dataset("penguins", "palmerpenguins")
+    pl.read_csv("tests/data/penguins.csv", null_values="NA")
     .drop_nulls(["species", "island", "bill_length_mm", "flipper_length_mm"])
     .with_columns(
         pl.col("island").replace_strict({"Biscoe": 1, "Dream": 2, "Torgersen": 3}),

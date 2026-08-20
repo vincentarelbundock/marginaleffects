@@ -35,7 +35,7 @@ def test_def_contrast():
 
 
 def test_interaction_01_data():
-    df = get_dataset("interaction_01")
+    df = pl.read_csv("tests/data/interaction_01.csv", null_values="NA")
     df = df.with_columns(pl.col("M").cast(pl.Categorical))
     mod = smf.glm("Y ~ X * M", data=df.to_pandas(), family=sm.families.Binomial()).fit()
     cmp_py = avg_comparisons(mod, by=["X", "M"]).sort(["term", "contrast"])

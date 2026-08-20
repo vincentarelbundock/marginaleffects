@@ -4,8 +4,17 @@ import pandas as pd
 from marginaleffects import *
 from statsmodels.miscmodels.ordinal_model import OrderedModel
 
-dat = get_dataset("affairs").to_pandas()
-dat["affairs"] = pd.Categorical(dat["affairs"], ordered=True)
+# Read the same vendored CSV as tests/r/test_statsmodels_ordinal.R. The level
+# order is spelled out on both sides: a CSV carries no factor metadata, and
+# pandas would otherwise sort lexically and put ">10" first.
+AFFAIRS_LEVELS = ["0", "1", "2", "3", "4-10", ">10"]
+
+dat = pl.read_csv(
+    "tests/data/affairs.csv",
+    null_values="NA",
+    schema_overrides={"affairs": pl.String},
+).to_pandas()
+dat["affairs"] = pd.Categorical(dat["affairs"], categories=AFFAIRS_LEVELS, ordered=True)
 dat["children"] = pd.Categorical(dat["children"])
 dat["gender"] = pd.Categorical(dat["gender"])
 

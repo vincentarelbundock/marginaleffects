@@ -4,7 +4,11 @@ import statsmodels.formula.api as smf
 from marginaleffects import *
 
 
-dat = get_dataset("thornton").drop_nulls(["outcome", "distance", "age"])
+# Read the same vendored CSV as tests/r/test_statsmodels_vcov.R so the R fixtures and the Python
+# results are computed from identical bytes.
+dat = pl.read_csv("tests/data/thornton.csv", null_values="NA").drop_nulls(
+    ["outcome", "distance", "age"]
+)
 mod = smf.ols("outcome ~ distance + age", data=dat.to_pandas()).fit()
 
 
