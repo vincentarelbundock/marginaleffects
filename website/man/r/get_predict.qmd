@@ -193,6 +193,9 @@ get_predict(
 ## S3 method for class 'clm'
 get_predict(model, newdata = get_modeldata(model), type = "prob", ...)
 
+## S3 method for class 'clmm2'
+get_predict(model, newdata = get_modeldata(model), type = "prob", ...)
+
 ## S3 method for class 'rq'
 get_predict(model, newdata = get_modeldata(model), type = NULL, ...)
 

@@ -202,15 +202,31 @@ expect_true(all(pred_soup$estimate >= 0 & pred_soup$estimate <= 1))
 expect_true(all(!is.na(pred_soup$estimate)))
 expect_true(all(!is.na(pred_soup$std.error)))
 
+# clmm2: `predictions()` must return one row per response level, not one row
+# per observation holding Pr(Y = the observed category). `predict.clm2()` takes
+# no `type` argument and always predicts whatever category sits in `newdata`,
+# and unlike `predict.clm()` it errors when the response is dropped rather than
+# returning every level -- so `get_predict.clmm2()` overwrites the response
+# level by level instead. Caught by the Stata cross-check in
+# test-stata-models.R, which the per-observation quantity silently passed.
+expect_true("group" %in% colnames(pred_soup))
+expect_equal(nrow(pred_soup), nrow(dat_soup) * nlevels(dat_soup$SURENESS))
+expect_equivalent(
+    as.vector(tapply(pred_soup$estimate, pred_soup$rowid, sum)),
+    rep(1, nrow(dat_soup))
+)
+
 # Test avg_predictions by group
 avg_pred_soup <- avg_predictions(mod_soup, by = "PROD")
 expect_inherits(avg_pred_soup, "predictions")
-expect_true(nrow(avg_pred_soup) == 2)  # Two levels of PROD
+# Two levels of PROD x one row per response level.
+expect_true(nrow(avg_pred_soup) == 2 * nlevels(dat_soup$SURENESS))
 
 # Test avg_slopes
 avg_slopes_soup <- avg_slopes(mod_soup)
 expect_inherits(avg_slopes_soup, "slopes")
-expect_true(nrow(avg_slopes_soup) == 1)  # One term (PROD)
+# One term (PROD), reported once per response level.
+expect_true(nrow(avg_slopes_soup) == nlevels(dat_soup$SURENESS))
 
 # Test hypotheses
 hyp_soup <- hypotheses(mod_soup)
@@ -243,13 +259,17 @@ for (th in c("flexible", "symmetric", "equidistant")) {
     }
     p <- predictions(m)
     expect_true(all(!is.na(p$std.error)))
-    # delta-method standard errors agree with a parametric simulation
-    set.seed(1024)
-    D <- MASS::mvrnorm(500, mu = b, Sigma = get_vcov(m))
-    sim <- apply(D, 1, function(x) {
-        mean(get_predict(set_coef(m, x), newdata = dat_soup, type = "response")$estimate)
-    })
-    expect_equivalent(avg_predictions(m)$std.error, sd(sim), tolerance = 0.1)
+    # The Alpha -> Theta map itself. `ordinal` fits both vectors and stores
+    # them side by side, so this pins `get_tJac_clmm2()` against the package's
+    # own answer: exact, no tolerance, no RNG.
+    #
+    # A simulation cannot do this job. It draws in the `Alpha` basis and pushes
+    # the draws through the same `set_coef()`, so a wrong `tJac` corrupts the
+    # simulated and the delta-method standard errors identically and the two
+    # still agree. Stata cannot either: `meoprobit` has no constrained-threshold
+    # parametrization, so the cross-software fixtures in test-stata-models.R
+    # only ever reach `threshold = "flexible"`, where `tJac` is the identity.
+    expect_equivalent(drop(get_tJac_clmm2(m) %*% m$Alpha), unname(m$Theta))
 }
 
 

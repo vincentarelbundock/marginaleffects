@@ -42,6 +42,55 @@ get_predict.clm <- function(
 #' @export
 get_group_names.clm <- get_group_names.polr
 
+#' @rdname get_predict
+#' @export
+get_predict.clmm2 <- function(
+    model,
+    newdata = get_modeldata(model),
+    type = "prob",
+    ...) {
+    # `get_predict.clm()` gets one probability per response level by *deleting*
+    # the response from `newdata`. That trick does not carry over: `predict.clm2()`
+    # builds its model frame from the full formula, so a missing response is an
+    # error rather than a request for every level. It also takes no `type`
+    # argument and always returns the probability of the category recorded in
+    # `newdata`. Loop over the levels, overwriting the response each time.
+    newdata <- as.data.frame(newdata)
+    resp <- insight::find_response(model)
+    lev <- model[["lev"]]
+
+    # The training response fixes the class that `.checkMFClasses()` demands;
+    # an ordered factor must stay ordered.
+    y <- model[["location"]][[resp]]
+    ordered <- isTRUE(is.ordered(y))
+
+    pred <- vapply(
+        lev,
+        function(k) {
+            nd <- newdata
+            nd[[resp]] <- factor(k, levels = lev, ordered = ordered)
+            stats::predict(model, newdata = nd)
+        },
+        numeric(nrow(newdata))
+    )
+    pred <- matrix(pred, nrow = nrow(newdata), dimnames = list(NULL, lev))
+
+    out <- data.table(
+        group = rep(colnames(pred), each = nrow(pred)),
+        estimate = c(pred)
+    )
+    out$group <- group_to_factor(out$group, model)
+    out <- add_rowid(out, newdata)
+    return(out)
+}
+
+
+#' @include get_group_names.R
+#' @rdname get_group_names
+#' @export
+get_group_names.clmm2 <- get_group_names.polr
+
+
 
 #' @include sanity_model.R
 #' @rdname sanitize_model_specific

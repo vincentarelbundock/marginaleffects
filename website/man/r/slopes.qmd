@@ -951,6 +951,10 @@ Some of the most common <code>type</code> values are:
 </tr>
 <tr>
  <td style="text-align: left;">
+   clmm2 </td><td style="text-align: left;"> prob </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
    clogit </td><td style="text-align: left;"> expected, lp, risk, survival </td>
 </tr>
 <tr>

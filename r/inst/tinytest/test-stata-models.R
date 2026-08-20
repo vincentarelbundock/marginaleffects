@@ -294,6 +294,55 @@ check_stata("betareg_comparisons", x, 1e-5, 1e-6, order_x = match(paste(2:10, "-
 check_stata("betareg_slopes", avg_slopes(mod_betareg, variables = "temp", vcov = V_betareg), 1e-5, 1e-4)
 
 
+
+
+# ---------------------------------------------------------------------------
+# 11. Mixed-effects ordered probit (random intercept)
+# ---------------------------------------------------------------------------
+# ordinal::clmm2() is the counterpart of meoprobit. Two settings must line up
+# or the models are not the same: nAGQ = 7 matches Stata's intpoints(7)
+# (clmm2() defaults to the Laplace approximation, nAGQ = 1), and predict.clm2()
+# holds the random effect at zero, which is Stata's `fixedonly`.
+#
+# The generator subsets with `keep if resp <= 24`, a numeric comparison on the
+# respondent id. soup$RESP is a factor whose level *index* runs ahead of its
+# labels, so as.numeric() would keep a different -- and larger -- set of
+# respondents. Compare the labels, not the indices.
+#
+# Only `threshold = "flexible"` is reachable here: Stata has no counterpart to
+# clmm2()'s "symmetric" or "equidistant" parametrizations, which is why the
+# Alpha -> Theta map is pinned by the tJac invariant in test-pkg-ordinal.R
+# instead.
+requiet("ordinal")
+data("soup", package = "ordinal")
+# Not named `soup`: tinytest evaluates data() into the global environment, and
+# a modified local copy sharing the name can be silently re-resolved there.
+dat_soup <- soup[as.integer(as.character(soup$RESP)) <= 24, ]
+dat_soup$RESP <- droplevels(dat_soup$RESP)
+mod_clmm2 <- ordinal::clmm2(
+    SURENESS ~ PROD,
+    random = RESP,
+    data = dat_soup,
+    link = "probit",
+    Hess = TRUE,
+    nAGQ = 7
+)
+p_clmm2 <- avg_predictions(mod_clmm2, by = "group")
+cmp_clmm2 <- avg_comparisons(mod_clmm2, variables = "PROD")
+for (j in seq_along(levels(dat_soup$SURENESS))) {
+    group <- levels(dat_soup$SURENESS)[j]
+    check_stata(
+        paste0("clmm2_predictions_outcome", j),
+        p_clmm2[p_clmm2$group == group, ],
+        1e-5, 1e-5
+    )
+    check_stata(
+        paste0("clmm2_comparisons_outcome", j),
+        cmp_clmm2[cmp_clmm2$group == group, ],
+        1e-5, 1e-5
+    )
+}
+
 expect_equal(
     sort(unique(golden$fixture)),
     sort(tested),

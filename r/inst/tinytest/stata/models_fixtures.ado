@@ -196,6 +196,34 @@ program define models_fixtures
         mfx_runthree "betareg" batch temp
     }
 
+    * ======================================================================
+    * 11. Mixed-effects ordered probit (random intercept)
+    * ======================================================================
+    * The R counterpart is ordinal::clmm2(). Two settings have to line up or
+    * the models are simply different: nAGQ = 7 in R matches intpoints(7)
+    * here (clmm2()'s default is the Laplace approximation, nAGQ = 1), and
+    * `fixedonly` holds the random effect at zero, which is what
+    * predict.clm2() does.
+    *
+    * Only the flexible threshold parametrization is reachable here --
+    * Stata has no counterpart to clmm2()'s threshold = "symmetric" or
+    * "equidistant", so those are covered by the tJac invariant in
+    * test-pkg-ordinal.R rather than cross-checked against Stata.
+    import delimited `"`rd'/ordinal/soup.csv"', clear varnames(1)
+    keep if resp <= 24
+    encode prod, generate(prod_f)
+    capture noisily {
+        quietly meoprobit sureness i.prod_f || resp:, ///
+            intmethod(mvaghermite) intpoints(7)
+        forvalues outcome = 1/6 {
+            quietly margins, predict(pr outcome(`outcome') fixedonly) level(95)
+            mfx_export, fixture("clmm2_predictions_outcome`outcome'")
+            quietly margins, dydx(i.prod_f) ///
+                predict(pr outcome(`outcome') fixedonly) level(95)
+            mfx_export, fixture("clmm2_comparisons_outcome`outcome'")
+        }
+    }
+
     mfx_close `"`combined'"' `"`resultsdir'/models.csv"'
 
     display as result "marginaleffects model fixtures written to `resultsdir'"

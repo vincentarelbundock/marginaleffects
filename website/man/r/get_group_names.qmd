@@ -38,6 +38,9 @@ get_group_names(model, type, ...)
 ## S3 method for class 'clm'
 get_group_names(model, ...)
 
+## S3 method for class 'clmm2'
+get_group_names(model, ...)
+
 ## S3 method for class 'hurdle'
 get_group_names(model, type = "count", ...)
 
